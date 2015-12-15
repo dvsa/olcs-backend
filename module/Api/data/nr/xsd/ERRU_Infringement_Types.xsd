@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="https://webgate.ec.testa.eu/erru/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://webgate.ec.testa.eu/erru/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="./ERRU_Global_Types.xsd"/>
+	<xs:complexType name="inAcknowledgementBodyBaseType">
+		<xs:attribute name="acknowledgementId" type="globalBusinessReferenceType" use="required"/>
+		<xs:attribute name="acknowledgementType" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="IN_Ack"/>
+					<xs:enumeration value="IR_Ack"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="businessCaseId" type="globalBusinessReferenceType" use="required"/>
+		<xs:attribute name="originatingAuthority" type="globalAuthorityIdentifierType" use="required"/>
+		<xs:attribute name="licensingAuthority" type="globalAuthorityIdentifierType" use="required"/>
+		<xs:attribute name="ackDateTime" type="globalDateTimeType" use="required"/>
+		<xs:attribute name="statusMessage" type="globalStatusMessage255Type" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="inAcknowledgementBodyType">
+		<xs:complexContent>
+			<xs:extension base="inAcknowledgementBodyBaseType">
+				<xs:attribute name="statusCode" type="inAcknowledgementStatusCodeType" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="inAckBodyType">
+		<xs:complexContent>
+			<xs:extension base="inAcknowledgementBodyBaseType">
+				<xs:attribute name="statusCode" type="inAcknowledgementStatusCodeINFType" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="inRequestBodyType">
+		<xs:attribute name="businessCaseId" type="globalBusinessReferenceType" use="required"/>
+		<xs:attribute name="originatingAuthority" type="globalAuthorityIdentifierType" use="required"/>
+		<xs:attribute name="notificationDateTime" type="globalDateTimeType" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="inRequestPenaltyImposedType">
+		<xs:attribute name="finalDecisionDate" type="xs:date" use="required"/>
+		<xs:attribute name="penaltyTypeImposed" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:integer">
+					<xs:enumeration value="101"/>
+					<xs:enumeration value="102"/>
+					<xs:enumeration value="201"/>
+					<xs:enumeration value="202"/>
+					<xs:enumeration value="203"/>
+					<xs:enumeration value="204"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="startDate" type="xs:date" use="optional"/>
+		<xs:attribute name="endDate" type="xs:date" use="optional"/>
+		<xs:attribute name="isExecuted" type="inIsExecutedEnumType" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="inRequestTransportUndertakingType">
+		<xs:attribute name="name" type="globalName100Type" use="optional"/>
+		<xs:attribute name="communityLicenceNumber" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:normalizedString">
+					<xs:minLength value="1"></xs:minLength>
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="vehicleRegNumber" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:normalizedString">
+					<xs:minLength value="1"></xs:minLength>
+					<xs:maxLength value="15"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="inResponseBodyType">
+		<xs:attribute name="businessCaseId" type="globalBusinessReferenceType" use="required"/>
+		<xs:attribute name="originatingAuthority" type="globalAuthorityIdentifierType" use="required"/>
+		<xs:attribute name="licensingAuthority" type="globalAuthorityIdentifierType" use="required"/>
+		<xs:attribute name="responseDateTime" type="globalDateTimeType" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="inResponsePenaltyImposedType">
+		<xs:attribute name="authorityImposingPenalty" type="globalAuthorityIdentifierType" use="required"/>
+		<xs:attribute name="isImposed" type="inIsImposedEnumType" use="required"/>
+		<xs:attribute name="penaltyTypeImposed" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:integer">
+					<xs:enumeration value="101"/>
+					<xs:enumeration value="102"/>
+					<xs:enumeration value="301"/>
+					<xs:enumeration value="302"/>
+					<xs:enumeration value="303"/>
+					<xs:enumeration value="304"/>
+					<xs:enumeration value="305"/>
+					<xs:enumeration value="306"/>
+					<xs:enumeration value="307"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="startDate" type="xs:date" use="optional"/>
+		<xs:attribute name="endDate" type="xs:date" use="optional"/>
+		<xs:attribute name="reason" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:normalizedString">
+					<xs:minLength value="1"></xs:minLength>
+					<xs:maxLength value="500"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="inResponseTransportUndertakingType">
+		<xs:attribute name="name" type="globalName100Type" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="inPenaltyRequestedType">
+		<xs:attribute name="penaltyTypeRequested" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:integer">
+					<xs:enumeration value="101"/>
+					<xs:enumeration value="301"/>
+					<xs:enumeration value="302"/>
+					<xs:enumeration value="303"/>
+					<xs:enumeration value="304"/>
+					<xs:enumeration value="305"/>
+					<xs:enumeration value="306"/>
+					<xs:enumeration value="307"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="duration" type="xs:positiveInteger" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="inSeriousInfringementType">
+		<xs:attribute name="dateOfInfringement" type="xs:date" use="required"/>
+		<xs:attribute name="category" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="MSI"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="infringementType" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:integer">
+					<xs:enumeration value="101"/>
+					<xs:enumeration value="102"/>
+					<xs:enumeration value="201"/>
+					<xs:enumeration value="202"/>
+					<xs:enumeration value="203"/>
+					<xs:enumeration value="204"/>
+					<xs:enumeration value="205"/>
+					<xs:enumeration value="206"/>
+					<xs:enumeration value="301"/>
+					<xs:enumeration value="302"/>
+					<xs:enumeration value="401"/>
+					<xs:enumeration value="402"/>
+					<xs:enumeration value="403"/>
+					<xs:enumeration value="501"/>
+					<xs:enumeration value="502"/>
+					<xs:enumeration value="503"/>
+					<xs:enumeration value="504"/>
+					<xs:enumeration value="601"/>
+					<xs:enumeration value="602"/>
+					<xs:enumeration value="603"/>
+					<xs:enumeration value="701"/>
+					<xs:enumeration value="702"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="dateOfCheck" type="xs:date" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="inAcknowledgementStatusCodeType">
+		<xs:union memberTypes="globalStatusCodeBaseType globalOKStatusCodeType"/>
+	</xs:simpleType>
+	<xs:simpleType name="inAcknowledgementStatusCodeINFType">
+		<xs:union memberTypes="globalStatusCodeBaseType globalOKStatusCodeType globalDuplicateRequestStatusCodeType globalResponseNotCorrelatedStatusCodeType globalValidResponseExistsStatusCodeType"/>
+	</xs:simpleType>
+	<xs:simpleType name="inIsExecutedEnumType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Yes"/>
+			<xs:enumeration value="No"/>
+			<xs:enumeration value="Unknown"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="inIsImposedEnumType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Yes"/>
+			<xs:enumeration value="No"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
