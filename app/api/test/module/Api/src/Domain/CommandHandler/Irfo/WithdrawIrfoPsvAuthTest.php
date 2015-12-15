@@ -1,25 +1,25 @@
 <?php
 
 /**
- * Refuse Irfo Psv Auth Test
+ * Withdraw Irfo Psv Auth Test
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Irfo;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelIrfoPsvAuthFees as CancelFeesDto;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\RefuseIrfoPsvAuth as Sut;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\WithdrawIrfoPsvAuth as Sut;
 use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPsvAuth as UpdateIrfoPsvAuthCmd;
 use Dvsa\Olcs\Api\Domain\Repository\IrfoPsvAuth as IrfoPsvAuthRepo;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
-use Dvsa\Olcs\Transfer\Command\Irfo\RefuseIrfoPsvAuth as Cmd;
+use Dvsa\Olcs\Transfer\Command\Irfo\WithdrawIrfoPsvAuth as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
 /**
- * Refuse Irfo Psv Auth Test
+ * Withdraw Irfo Psv Auth Test
  */
-class RefuseIrfoPsvAuthTest extends CommandHandlerTestCase
+class WithdrawIrfoPsvAuthTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
@@ -32,7 +32,7 @@ class RefuseIrfoPsvAuthTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            IrfoPsvAuthEntity::STATUS_REFUSED,
+            IrfoPsvAuthEntity::STATUS_WITHDRAWN,
         ];
 
         parent::initReferences();
@@ -81,9 +81,9 @@ class RefuseIrfoPsvAuthTest extends CommandHandlerTestCase
 
         /** @var IrfoPsvAuthEntity $irfoPsvAuth */
         $irfoPsvAuth = m::mock(IrfoPsvAuthEntity::class);
-        $irfoPsvAuth->shouldReceive('refuse')
+        $irfoPsvAuth->shouldReceive('withdraw')
             ->once()
-            ->with($this->refData[IrfoPsvAuthEntity::STATUS_REFUSED])
+            ->with($this->refData[IrfoPsvAuthEntity::STATUS_WITHDRAWN])
             ->shouldReceive('getId')
             ->andReturn($id);
 
