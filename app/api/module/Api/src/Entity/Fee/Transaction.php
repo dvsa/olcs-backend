@@ -218,7 +218,8 @@ class Transaction extends AbstractTransaction
         $feeTransactions = [];
 
         foreach ($this->getFeeTransactions() as $ft) {
-            if (!$ft->isRefundedOrReversed()) {
+            if (empty($ft->getReversedFeeTransaction()) && !$ft->isRefundedOrReversed()) {
+                // only return feeTransactions that aren't reversed or reversing
                 $feeTransactions[] = $ft;
             }
         }
@@ -255,7 +256,7 @@ class Transaction extends AbstractTransaction
      */
     public function displayReversalOption()
     {
-        return ($this->isPayment() && $this->isComplete());
+        return (($this->isPayment() || $this->isAdjustment()) && $this->isComplete());
     }
 
     /**
