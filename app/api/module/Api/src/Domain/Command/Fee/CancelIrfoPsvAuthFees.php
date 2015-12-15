@@ -20,4 +20,5 @@ final class CancelIrfoPsvAuthFees extends AbstractIdOnlyCommand
     public function getFeeTypeFeeType()
     {
         return $this->feeTypeFeeType;
-    }}
+    }
+}
