@@ -7,7 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
@@ -60,9 +59,6 @@ class Organisation extends AbstractRepository
             ->with('tradingNames', 'tn')
             ->withContactDetails('irfoContactDetails')
             ->byId($id);
-
-        // get only trading names which are not linked to a licence
-        $qb->andWhere($qb->expr()->isNull('tn.licence'));
 
         $results = $qb->getQuery()->getResult($hydrateMode);
 
