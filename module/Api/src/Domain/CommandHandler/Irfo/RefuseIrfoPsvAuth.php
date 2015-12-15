@@ -72,7 +72,8 @@ final class RefuseIrfoPsvAuth extends AbstractCommandHandler implements Transact
         return $this->getCommandHandler()->handleCommand(
             CancelFeesDto::create(
                 [
-                    'id' => $command->getId()
+                    'id' => $command->getId(),
+                    'exclusions' => [RefDataEntity::FEE_TYPE_IRFOPSVAPP]
                 ]
             )
         );
