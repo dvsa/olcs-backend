@@ -72,6 +72,7 @@ final class WithdrawIrfoPsvAuth extends AbstractCommandHandler implements Transa
             CancelFeesDto::create(
                 [
                     'id' => $command->getId(),
+                    'exclusions' => []
                 ]
             )
         );
