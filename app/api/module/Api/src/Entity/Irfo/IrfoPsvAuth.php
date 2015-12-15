@@ -50,7 +50,16 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
 
     /**
      * Update
-     * @return IrfoPsvAuth
+     *
+     * @param IrfoPsvAuthType $type
+     * @param $validityPeriod
+     * @param \DateTime $inForceDate
+     * @param $serviceRouteFrom
+     * @param $serviceRouteTo
+     * @param RefData $journeyFrequency
+     * @param $copiesRequired
+     * @param $copiesRequiredTotal
+     * @return $this
      */
     public function update(
         IrfoPsvAuthType $type,
@@ -215,7 +224,7 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
      * @return $this
      * @throws BadRequestException
      */
-    public function refuse(RefData $status, $fees = array())
+    public function refuse(RefData $status)
     {
         if (!$this->isRefusable()) {
             throw new BadRequestException(
