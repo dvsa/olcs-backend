@@ -88,6 +88,7 @@ return [
     CommandHandler\Organisation\UpdateTradingNames::class                             => NoValidationRequired::class,
     CommandHandler\Fee\CancelFee::class                                               => NoValidationRequired::class,
     CommandHandler\Fee\CancelIrfoGvPermitFees::class                                  => NoValidationRequired::class,
+    CommandHandler\Fee\CancelIrfoPsvAuthFees::class                                   => NoValidationRequired::class,
     CommandHandler\Fee\PayFee::class                                                  => NoValidationRequired::class,
     CommandHandler\Transaction\ResolvePayment::class                                  => NoValidationRequired::class,
     AppCompCommandHandler\UpdateTypeOfLicenceStatus::class                            => NoValidationRequired::class,
