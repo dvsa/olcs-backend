@@ -75,7 +75,9 @@ class CancelIrfoPsvAuthFeesTest extends CommandHandlerTestCase
         $this->expectedSideEffect(CancelFeeCommand::class, ['id' => 24], new Result());
         $this->expectedSideEffect(CancelFeeCommand::class, ['id' => 25], new Result());
 
-        $command = CancelIrfoPsvAuthFeesCommand::create(['id' => 542]);
+        $command = CancelIrfoPsvAuthFeesCommand::create(
+            ['id' => 542, 'exclusions' => [RefDataEntity::FEE_TYPE_IRFOPSVAPP]]
+        );
         $result = $this->sut->handleCommand($command);
 
         $this->assertContains('IRFO PSV Auth fees cancelled successfully', $result->getMessages());
