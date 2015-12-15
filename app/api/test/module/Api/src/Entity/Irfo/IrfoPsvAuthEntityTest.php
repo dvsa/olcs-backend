@@ -235,4 +235,19 @@ class IrfoPsvAuthEntityTest extends EntityTester
 
         $this->assertEquals($newStatus, $this->entity->getStatus());
     }
+
+    /**
+     * @expectedException Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testRefuseThrowsException()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_REFUSED);
+        $this->entity->setStatus($status);
+
+        $newStatus = new RefData();
+        $newStatus->setId(Entity::STATUS_REFUSED);
+
+        $this->entity->refuse($newStatus);
+    }
 }
