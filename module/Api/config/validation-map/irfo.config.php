@@ -23,5 +23,6 @@ return [
     CommandHandler\Irfo\UpdateIrfoGvPermit::class                                 => IsInternalUser::class,
     CommandHandler\Irfo\UpdateIrfoPermitStock::class                              => IsInternalUser::class,
     CommandHandler\Irfo\UpdateIrfoPsvAuth::class                                  => IsInternalUser::class,
-    CommandHandler\Irfo\WithdrawIrfoGvPermit::class                               => IsInternalUser::class
+    CommandHandler\Irfo\WithdrawIrfoGvPermit::class                               => IsInternalUser::class,
+    CommandHandler\Irfo\WithdrawIrfoPsvAuth::class                                => IsInternalUser::class
 ];

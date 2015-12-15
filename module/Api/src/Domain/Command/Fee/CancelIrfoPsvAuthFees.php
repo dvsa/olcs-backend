@@ -12,4 +12,13 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class CancelIrfoPsvAuthFees extends AbstractIdOnlyCommand
 {
+    protected $exclusions;
+
+    /**
+     * @return mixed
+     */
+    public function getExclusions()
+    {
+        return $this->exclusions;
+    }
 }
