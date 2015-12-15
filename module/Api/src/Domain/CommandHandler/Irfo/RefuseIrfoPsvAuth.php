@@ -15,6 +15,7 @@ use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPsvAuth as UpdateDto;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelIrfoPsvAuthFees as CancelFeesDto;
 use Olcs\Logging\Log\Logger;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 
 /**
  * Refuse IrfoPsvAuth
@@ -72,6 +73,7 @@ final class RefuseIrfoPsvAuth extends AbstractCommandHandler implements Transact
             CancelFeesDto::create(
                 [
                     'id' => $command->getId(),
+                    'exclusions' => [RefDataEntity::FEE_TYPE_IRFOPSVAPP]
                 ]
             )
         );

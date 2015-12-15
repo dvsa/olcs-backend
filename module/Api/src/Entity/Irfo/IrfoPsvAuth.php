@@ -220,7 +220,6 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
      * Refuse
      *
      * @param RefData $status
-     * @param array $fees
      * @return $this
      * @throws BadRequestException
      */
@@ -229,6 +228,63 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
         if (!$this->isRefusable()) {
             throw new BadRequestException(
                 ['Irfo Psv Auth is not refusable']
+            );
+        }
+
+        $this->setStatus($status);
+
+        return $this;
+    }
+
+
+    /**
+     * Is withdrawable? Yes if entity status is renew/pending/cns/approved
+     *
+     * @return bool
+     */
+    public function isWithdrawable()
+    {
+        if ($this->isWithdrawableState()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Is in a withdrawable state. Yes if entity status is renew/pending/cns/approved
+     *
+     * @return bool
+     */
+    private function isWithdrawableState()
+    {
+        if (in_array(
+            $this->getStatus()->getId(),
+            [
+                self::STATUS_RENEW,
+                self::STATUS_PENDING,
+                self::STATUS_CNS,
+                self::STATUS_APPROVED
+            ]
+        )) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Withdraw
+     *
+     * @param RefData $status
+     * @return $this
+     * @throws BadRequestException
+     */
+    public function withdraw(RefData $status)
+    {
+        if (!$this->isWithdrawable()) {
+            throw new BadRequestException(
+                ['Irfo Psv Auth is not withdrawable']
             );
         }
 

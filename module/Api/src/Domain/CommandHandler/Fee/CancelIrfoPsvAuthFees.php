@@ -10,7 +10,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 
 /**
  * Cancel Irfo Psv Auth Fees
@@ -27,7 +26,7 @@ final class CancelIrfoPsvAuthFees extends AbstractCommandHandler implements Tran
 
         /* @var $fee \Dvsa\Olcs\Api\Entity\Fee\Fee */
         foreach ($fees as $fee) {
-            if ($fee->getFeeType()->getFeeType() !== RefDataEntity::FEE_TYPE_IRFOPSVAPP) {
+            if (!in_array($fee->getFeeType()->getFeeType(), $command->getExclusions())) {
                 $result->merge(
                     $this->getCommandHandler()->handleCommand(
                         CancelFeeCommand::create(['id' => $fee->getId()])
