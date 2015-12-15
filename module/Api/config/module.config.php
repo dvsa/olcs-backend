@@ -547,6 +547,15 @@ return [
         ),
     ],
     'submissions' => require(__DIR__ . '/submissions.config.php'),
+    'nr' => [
+        'inr_service' => [
+            'uri' => 'http://testServiceAddress',
+            'options' => ['timeout' => 30]
+        ],
+        'repute_url' => [
+            'uri' => 'https://r-inr-01.corp.vosa.gov.uk:444/INR.BackofficeWeb/Repute/SubmitCheck.aspx?'
+        ]
+    ],
     'ebsr' => [
         'transexchange_publisher' => [
             'uri' => 'http://localhost:8080/txc/publisherService',
