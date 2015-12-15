@@ -12,13 +12,4 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class CancelIrfoPsvAuthFees extends AbstractIdOnlyCommand
 {
-    protected $feeTypeFeeType;
-
-    /**
-     * @return mixed
-     */
-    public function getFeeTypeFeeType()
-    {
-        return $this->feeTypeFeeType;
-    }
 }
