@@ -256,6 +256,16 @@ class Transaction extends AbstractTransaction
      */
     public function displayReversalOption()
     {
+        return $this->isCompletePaymentOrAdjustment();
+    }
+
+    /**
+     * This is a common check when doing refunds/reversals/adjustments
+     *
+     * @return  boolean
+     */
+    public function isCompletePaymentOrAdjustment()
+    {
         return (($this->isPayment() || $this->isAdjustment()) && $this->isComplete());
     }
 
