@@ -302,7 +302,8 @@ return [
     TransferCommand\Publication\UpdatePublicationLink::class => CommandHandler\Publication\UpdatePublicationLink::class,
 
     // Transfer - My Account
-    TransferCommand\MyAccount\UpdateMyAccount::class => CommandHandler\MyAccount\UpdateMyAccount::class,
+    Command\MyAccount\UpdateMyAccount::class => CommandHandler\MyAccount\UpdateMyAccount::class,
+    TransferCommand\MyAccount\UpdateMyAccount::class => CommandHandler\MyAccount\UpdateMyAccountInternal::class,
     TransferCommand\MyAccount\UpdateMyAccountSelfserve::class
         => CommandHandler\MyAccount\UpdateMyAccountSelfserve::class,
 

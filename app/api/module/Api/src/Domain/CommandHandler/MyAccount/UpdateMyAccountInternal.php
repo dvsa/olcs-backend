@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Update MyAccount Selfserve
+ * Update MyAccount Internal
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\MyAccount;
 
@@ -9,9 +9,9 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
- * Update MyAccount Selfserve
+ * Update MyAccount Internal
  */
-final class UpdateMyAccountSelfserve extends AbstractCommandHandler
+final class UpdateMyAccountInternal extends AbstractCommandHandler
 {
     public function handleCommand(CommandInterface $command)
     {
