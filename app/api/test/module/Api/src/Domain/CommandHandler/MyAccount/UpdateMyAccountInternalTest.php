@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Update MyAccount Selfserve Test
+ * Update MyAccount Internal Test
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\MyAccount;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\MyAccount\UpdateMyAccountSelfserve as Sut;
-use Dvsa\Olcs\Transfer\Command\MyAccount\UpdateMyAccountSelfserve as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\MyAccount\UpdateMyAccountInternal as Sut;
+use Dvsa\Olcs\Transfer\Command\MyAccount\UpdateMyAccount as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
 /**
- * Update MyAccount Selfserve Test
+ * Update MyAccount Internal Test
  */
-class UpdateMyAccountSelfserveTest extends CommandHandlerTestCase
+class UpdateMyAccountInternalTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
@@ -27,6 +27,7 @@ class UpdateMyAccountSelfserveTest extends CommandHandlerTestCase
         $data = [
             'id' => 111,
             'version' => 1,
+            'team' => 1,
             'loginId' => 'login_id',
             'contactDetails' => [
                 'emailAddress' => 'test1@test.me',
