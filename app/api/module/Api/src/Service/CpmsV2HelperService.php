@@ -757,7 +757,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'receiver_address' => $this->formatAddress($fee->getCustomerAddressForInvoice()),
             'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
             'deferment_period' => (string) $fee->getDefermentPeriod(),
-            // 'country_code' ('GB' or 'NI') is optional and deliberately omitted
+            'country_code' => $fee->getFeeType()->getCountryCode(),
             'sales_person_reference' => $fee->getSalesPersonReference(),
         ];
 

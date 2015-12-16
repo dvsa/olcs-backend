@@ -47,6 +47,10 @@ class FeeType extends AbstractFeeType
     const COST_CENTRE_REF_TYPE_LICENSING = 'TA';
     const COST_CENTRE_REF_TYPE_IRFO = 'IR';
 
+    // country codes for CPMS
+    const COUNTRY_CODE_GB = 'GB';
+    const COUNTRY_CODE_NI = 'NI';
+
     /**
      * Alias of getIsMiscellaneous
      * @return bool
@@ -75,5 +79,15 @@ class FeeType extends AbstractFeeType
     public function getAmount()
     {
         return $this->getFixedValue() > 0 ? $this->getFixedValue() : $this->getFiveYearValue();
+    }
+
+    /**
+     * Get the CPMS country code based on the is_ni flag
+     *
+     * @return string
+     */
+    public function getCountryCode()
+    {
+        return $this->getIsNi() === 'Y' ? self::COUNTRY_CODE_NI : self::COUNTRY_CODE_GB;
     }
 }
