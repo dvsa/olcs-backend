@@ -70,4 +70,29 @@ class FeeTypeEntityTest extends EntityTester
             ],
         ];
     }
+
+    /**
+     * @param mixed $isNi
+     * @param boolean $expected
+     *
+     * @dataProvider countryCodeProvider
+     */
+    public function testGetCountryCode($isNi, $expected)
+    {
+        $this->sut->setIsNi($isNi);
+
+        $this->assertSame($expected, $this->sut->getCountryCode());
+    }
+
+    /**
+     * @return array
+     */
+    public function countryCodeProvider()
+    {
+        return [
+            ['Y', 'NI'],
+            ['N', 'GB'],
+            [null, 'GB'],
+        ];
+    }
 }
