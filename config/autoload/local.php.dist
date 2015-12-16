@@ -174,4 +174,11 @@ return array(
             'uri' => 'http://localhost:8080/txc/publisherService',
         ],
     ],
+    'nr' => [
+        // @to-do currently waiting on the actual nr address
+        'inr_service' => [
+            'uri' => 'http://testServiceAddress',
+            'options' => ['timeout' => 30]
+        ]
+    ],
 );
