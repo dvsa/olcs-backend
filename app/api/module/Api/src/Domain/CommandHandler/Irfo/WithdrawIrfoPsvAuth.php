@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Refuse IrfoPsvAuth
+ * Withdraw IrfoPsvAuth
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Irfo;
 
@@ -15,12 +15,11 @@ use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPsvAuth as UpdateDto;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelIrfoPsvAuthFees as CancelFeesDto;
 use Olcs\Logging\Log\Logger;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 
 /**
- * Refuse IrfoPsvAuth
+ * Withdraw IrfoPsvAuth
  */
-final class RefuseIrfoPsvAuth extends AbstractCommandHandler implements TransactionedInterface
+final class WithdrawIrfoPsvAuth extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'IrfoPsvAuth';
 
@@ -41,10 +40,10 @@ final class RefuseIrfoPsvAuth extends AbstractCommandHandler implements Transact
 
         /*
         Update does not affect status or fees, so there is no need to ensure we have the updated entity prior to
-        granting. Refusing only affects the status
+        withdrawing. Withdrawing only affects the status
          */
-        $irfoPsvAuth->refuse(
-            $this->getRepo()->getRefdataReference(IrfoPsvAuth::STATUS_REFUSED)
+        $irfoPsvAuth->withdraw(
+            $this->getRepo()->getRefdataReference(IrfoPsvAuth::STATUS_WITHDRAWN)
         );
 
         $this->getRepo()->save($irfoPsvAuth);
@@ -56,7 +55,7 @@ final class RefuseIrfoPsvAuth extends AbstractCommandHandler implements Transact
 
         $result = new Result();
         $result->addId('irfoPsvAuth', $irfoPsvAuth->getId());
-        $result->addMessage('IRFO PSV Auth refused successfully');
+        $result->addMessage('IRFO PSV Auth withdrawn successfully');
 
         return $result;
     }
@@ -73,7 +72,7 @@ final class RefuseIrfoPsvAuth extends AbstractCommandHandler implements Transact
             CancelFeesDto::create(
                 [
                     'id' => $command->getId(),
-                    'exclusions' => [RefDataEntity::FEE_TYPE_IRFOPSVAPP]
+                    'exclusions' => []
                 ]
             )
         );

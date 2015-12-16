@@ -204,13 +204,18 @@ class IrfoPsvAuthEntityTest extends EntityTester
         $this->assertEquals($newStatus, $this->entity->getStatus());
     }
 
-    public function testIsRefusable()
+    /**
+     * @dataProvider isRefusableStates
+     * @param $input
+     * @param $expected
+     */
+    public function testIsRefusable($input, $expected)
     {
         $status = new RefData();
-        $status->setId(Entity::STATUS_PENDING);
+        $status->setId($input);
         $this->entity->setStatus($status);
 
-        $this->assertTrue($this->entity->isRefusable());
+        $this->assertEquals($expected, $this->entity->isRefusable());
     }
 
     public function testIsRefusableInvalidState()
@@ -249,5 +254,73 @@ class IrfoPsvAuthEntityTest extends EntityTester
         $newStatus->setId(Entity::STATUS_REFUSED);
 
         $this->entity->refuse($newStatus);
+    }
+
+    /**
+     * @dataProvider isWithdrawableStates
+     */
+    public function testIsWithdrawable($input, $expected)
+    {
+        $status = new RefData();
+        $status->setId($input);
+        $this->entity->setStatus($status);
+
+        $this->assertEquals($expected, $this->entity->isWithdrawable());
+    }
+
+    public function testWithdraw()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_PENDING);
+        $this->entity->setStatus($status);
+
+        $newStatus = new RefData();
+        $newStatus->setId(Entity::STATUS_WITHDRAWN);
+
+        $this->entity->withdraw($newStatus);
+
+        $this->assertEquals($newStatus, $this->entity->getStatus());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testWithdrawThrowsException()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_WITHDRAWN);
+        $this->entity->setStatus($status);
+
+        $newStatus = new RefData();
+        $newStatus->setId(Entity::STATUS_WITHDRAWN);
+
+        $this->entity->withdraw($newStatus);
+    }
+
+
+    public function isWithdrawableStates()
+    {
+        return [
+            [Entity::STATUS_PENDING, true],
+            [Entity::STATUS_CNS, true],
+            [Entity::STATUS_RENEW, true],
+            [Entity::STATUS_APPROVED, true],
+            [Entity::STATUS_WITHDRAWN, false],
+            [Entity::STATUS_GRANTED, false],
+            [Entity::STATUS_REFUSED, false]
+        ];
+    }
+
+    public function isRefusableStates()
+    {
+        return [
+            [Entity::STATUS_PENDING, true],
+            [Entity::STATUS_CNS, false],
+            [Entity::STATUS_RENEW, true],
+            [Entity::STATUS_APPROVED, false],
+            [Entity::STATUS_WITHDRAWN, false],
+            [Entity::STATUS_GRANTED, false],
+            [Entity::STATUS_REFUSED, false]
+        ];
     }
 }
