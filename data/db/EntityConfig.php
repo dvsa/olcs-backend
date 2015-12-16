@@ -1175,7 +1175,10 @@ return array(
     'fee_type' => array(
         'expire_fee_with_licence' => array(
             'type' => 'yesno'
-        )
+        ),
+        'is_ni' => array(
+            'type' => 'yesno'
+        ),
     ),
     'waive_reason' => array(
         'is_irfo' => array(

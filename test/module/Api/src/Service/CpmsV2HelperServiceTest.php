@@ -120,6 +120,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
@@ -146,6 +147,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
@@ -218,6 +220,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
@@ -244,6 +247,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
@@ -316,6 +320,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
@@ -342,6 +347,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
@@ -449,6 +455,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
@@ -475,6 +482,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
@@ -569,6 +577,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
@@ -595,6 +604,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
@@ -697,6 +707,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
@@ -723,6 +734,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
@@ -1032,6 +1044,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn('TEST_FEE_TYPE');
         $fee->shouldReceive('getFeeType->getVatCode')->andReturn('VAT_CODE');
         $fee->shouldReceive('getFeeType->getVatRate')->andReturn('VAT_RATE');
+        $fee->shouldReceive('getFeeType->getCountryCode')->andReturn('NI');
 
         $ft->shouldReceive('getFee')->andReturn($fee);
 
@@ -1067,6 +1080,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                             ],
                             'rule_start_date' => '2015-10-12',
                             'deferment_period' => '1',
+                            'country_code' => 'NI',
                             'sales_person_reference' => 'TEST_SALES_PERSON_REF',
                         ],
                     ],
@@ -1147,6 +1161,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => null,
                     'deferment_period' => '',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ],
             ],
