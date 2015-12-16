@@ -153,4 +153,5 @@ return [
     CommandHandler\Variation\EndInterim::class                                        => NoValidationRequired::class,
     CommandHandler\SystemParameter\Update::class                                      => NoValidationRequired::class,
     QueryHandler\Queue\NextItem::class                                                => NoValidationRequired::class,
+    CommandHandler\MyAccount\UpdateMyAccount::class                                   => NoValidationRequired::class,
 ];
