@@ -1178,7 +1178,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn($response);
 
         $fee1 = $this->getStubFee(100, '100.00');
-        $fees = [$fee1];
+        $fee2 = $this->getStubFee(101, '100.00');
+        $fees = [$fee1, $fee2];
 
         $originalTransaction = m::mock(TransactionEntity::class)
             ->makePartial()
@@ -1201,7 +1202,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $newTransaction
             ->shouldReceive('getAmountAllocatedToFeeId')
             ->with(100)
-            ->andReturn('10.00');
+            ->andReturn('10.00')
+            ->shouldReceive('getAmountAllocatedToFeeId')
+            ->with(101)
+            ->andReturn('0.00');
 
         $this->feesHelper
             ->shouldReceive('allocatePayments')
