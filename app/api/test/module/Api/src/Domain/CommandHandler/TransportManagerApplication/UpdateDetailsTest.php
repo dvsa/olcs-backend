@@ -101,7 +101,6 @@ class UpdateDetailsTest extends CommandHandlerTestCase
             )
         );
         $tma->getTransportManager()->getHomeCd()->setPerson(new \Dvsa\Olcs\Api\Entity\Person\Person());
-        $tma->getTransportManager()->getHomeCd()->setAddress(new \Dvsa\Olcs\Api\Entity\ContactDetails\Address());
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 234)->andReturn($tma);
