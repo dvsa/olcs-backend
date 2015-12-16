@@ -547,12 +547,6 @@ return [
         ),
     ],
     'submissions' => require(__DIR__ . '/submissions.config.php'),
-    'nr' => [
-        'inr_service' => [
-            'uri' => 'http://testServiceAddress',
-            'options' => ['timeout' => 30]
-        ]
-    ],
     'ebsr' => [
         'transexchange_publisher' => [
             'uri' => 'http://localhost:8080/txc/publisherService',
