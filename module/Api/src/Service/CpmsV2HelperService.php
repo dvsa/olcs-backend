@@ -577,6 +577,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
                 continue;
             }
             $allocation = $newTransaction->getAmountAllocatedToFeeId($fee->getId());
+            if ($allocation == 0) {
+                continue;
+            }
             $extraPaymentData = ['allocated_amount' => $allocation];
             $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
             if (!empty($paymentData)) {
