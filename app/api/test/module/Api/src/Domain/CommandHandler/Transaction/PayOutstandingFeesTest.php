@@ -1060,14 +1060,18 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('recordCashPayment')
             ->once()
-            ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsResponseException('ohnoes'));
+            ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsResponseException('ohnoes', 400));
 
         $this->mockFeesHelperService
             ->shouldReceive('getMinPaymentForFees')
             ->with($fees)
             ->andReturn(0.01);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->setExpectedException(
+            \Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class,
+            'ohnoes',
+            400
+        );
 
         $this->sut->handleCommand($command);
     }
