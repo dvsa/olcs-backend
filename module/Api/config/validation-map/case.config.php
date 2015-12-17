@@ -90,4 +90,5 @@ return [
     QueryHandler\Cases\Statement\StatementList::class                       => IsInternalUser::class,
     QueryHandler\Organisation\UnlicensedCases::class                        => IsInternalUser::class,
     QueryHandler\Cases\Si\GetList::class                                    => IsInternalUser::class,
+    QueryHandler\Cases\PresidingTc\GetList::class                           => IsInternalUser::class,
 ];

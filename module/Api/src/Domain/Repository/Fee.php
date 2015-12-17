@@ -264,6 +264,29 @@ class Fee extends AbstractRepository
     }
 
     /**
+     * Fetch all fees by irfoPsvAuthId
+     *
+     * @param int $irfoPsvAuthId
+     *
+     * @return array
+     */
+    public function fetchFeesByIrfoPsvAuthId($irfoPsvAuthId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($doctrineQb)
+            ->withRefdata()
+            ->order('invoicedDate', 'ASC');
+
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.irfoPsvAuth', ':irfoPsvAuthId'))
+            ->setParameter('irfoPsvAuthId', $irfoPsvAuthId);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
      * Fetch Application fee by irfoPsvAuthId
      *
      * @param int $irfoPsvAuthId

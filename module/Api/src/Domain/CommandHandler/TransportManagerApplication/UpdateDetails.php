@@ -7,15 +7,16 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
-use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateDetails as UpdateDetailsCommand;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateDetails as UpdateDetailsCommand;
 
 /**
  * UpdateDetails
@@ -94,6 +95,10 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
      */
     protected function updateHomeAddress(TransportManagerApplication $tma, array $address)
     {
+        if (!$tma->getTransportManager()->getHomeCd()->getAddress()) {
+            $tma->getTransportManager()->getHomeCd()->setAddress(new Address());
+        }
+
         $this->populateAddress($tma->getTransportManager()->getHomeCd()->getAddress(), $address);
     }
 
@@ -113,12 +118,7 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
             );
         }
         if (!$tma->getTransportManager()->getWorkCd()->getAddress()) {
-            $tma->getTransportManager()->getWorkCd()->setAddress(new \Dvsa\Olcs\Api\Entity\ContactDetails\Address());
-        }
-
-        $countryCode = null;
-        if (!empty($address['countryCode'])) {
-            $countryCode = $this->getRepo()->getReference(Country::class, $address['countryCode']);
+            $tma->getTransportManager()->getWorkCd()->setAddress(new Address());
         }
 
         $this->populateAddress($tma->getTransportManager()->getWorkCd()->getAddress(), $address);
@@ -127,12 +127,12 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
     }
 
     /**
-     * Populate and Address entity
+     * Populate an Address entity
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Address $address
+     * @param Address $address
      * @param array $addressData
      */
-    protected function populateAddress(\Dvsa\Olcs\Api\Entity\ContactDetails\Address $address, array $addressData)
+    protected function populateAddress(Address $address, array $addressData)
     {
         $countryCode = null;
         if (!empty($addressData['countryCode'])) {

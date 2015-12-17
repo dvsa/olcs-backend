@@ -20,6 +20,13 @@ class IrfoPsvAuth extends AbstractQueryHandler
 
     protected $extraRepos = ['Fee'];
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
         /** @var IrfoPsvAuthEntity $irfoPsvAuth */
@@ -35,7 +42,10 @@ class IrfoPsvAuth extends AbstractQueryHandler
             [
                 'isGrantable' => $irfoPsvAuth->isGrantable(
                     $this->getRepo('Fee')->fetchApplicationFeeByPsvAuthId($irfoPsvAuth->getId())
-                )
+                ),
+                'isRefusable' => $irfoPsvAuth->isRefusable(),
+                'isWithdrawable' => $irfoPsvAuth->isWithdrawable(),
+                'isResetable' => $irfoPsvAuth->isResetable()
             ]
         );
     }

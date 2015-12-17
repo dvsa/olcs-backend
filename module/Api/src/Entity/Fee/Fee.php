@@ -465,7 +465,7 @@ class Fee extends AbstractFee
 
         // can only refund if there are non-refunded payments
         foreach ($this->getFeeTransactions() as $ft) {
-            if ($ft->getTransaction()->isPayment() && !$ft->isRefundedOrReversed()) {
+            if ($ft->getTransaction()->isCompletePaymentOrAdjustment() && !$ft->isRefundedOrReversed()) {
                 return true;
             }
         }
@@ -481,8 +481,11 @@ class Fee extends AbstractFee
         $feeTransactions = [];
 
         foreach ($this->getFeeTransactions() as $ft) {
-            $txn = $ft->getTransaction();
-            if ($txn->isPayment() && $txn->isComplete() && !$ft->isRefundedOrReversed()) {
+            if (
+                $ft->getTransaction()->isCompletePaymentOrAdjustment()
+                && !$ft->isRefundedOrReversed()
+                && empty($ft->getReversedFeeTransaction())
+            ) {
                 $feeTransactions[] = $ft;
             }
         }

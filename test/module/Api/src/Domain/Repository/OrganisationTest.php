@@ -130,13 +130,6 @@ class OrganisationTest extends RepositoryTestCase
         $command->shouldReceive('getId')
             ->andReturn(111);
 
-         /** @var Expr $expr */
-        $expr = m::mock(QueryBuilder::class);
-        $expr->shouldReceive('isNull')
-            ->once()
-            ->with('tn.licence')
-            ->andReturnSelf();
-
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
         $qb->shouldReceive('getQuery->getResult')
@@ -148,11 +141,6 @@ class OrganisationTest extends RepositoryTestCase
                     ]
                 ]
             );
-        $qb->shouldReceive('expr')
-            ->andReturn($expr);
-        $qb->shouldReceive('andWhere')
-            ->with($expr)
-            ->andReturnSelf();
 
         $this->queryBuilder->shouldReceive('modifyQuery')
             ->once()

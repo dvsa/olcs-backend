@@ -40,7 +40,7 @@ class UpdateMyAccountSelfserveTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Transfer\Command\MyAccount\UpdateMyAccount::class,
+            \Dvsa\Olcs\Api\Domain\Command\MyAccount\UpdateMyAccount::class,
             $data,
             new Result()
         );
