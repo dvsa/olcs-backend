@@ -178,7 +178,9 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
     public function grant(RefData $status, Fee $applicationFee)
     {
         if (!$this->isGrantable($applicationFee)) {
-            throw new BadRequestException('Irfo Psv Auth is not grantable');
+            throw new BadRequestException(
+                'Irfo Psv Auth is not grantable'
+            );
         }
 
         $this->setStatus($status);
@@ -224,14 +226,15 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
     public function refuse(RefData $status)
     {
         if (!$this->isRefusable()) {
-            throw new BadRequestException('Irfo Psv Auth is not refusable');
+            throw new BadRequestException(
+                'Irfo Psv Auth is not refusable'
+            );
         }
 
         $this->setStatus($status);
 
         return $this;
     }
-
 
     /**
      * Is withdrawable? Yes if entity status is renew/pending/cns/approved
@@ -279,7 +282,53 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
     public function withdraw(RefData $status)
     {
         if (!$this->isWithdrawable()) {
-            throw new BadRequestException('Irfo Psv Auth is not withdrawable');
+            throw new BadRequestException(
+                'Irfo Psv Auth is not withdrawable'
+            );
+        }
+
+        $this->setStatus($status);
+
+        return $this;
+    }
+
+    /**
+     * Is resetable? Yes if entity status is not pending
+     *
+     * @return bool
+     */
+    public function isResetable()
+    {
+        return $this->isResetableState();
+    }
+
+    /**
+     * Is in a resetable state. Always
+     *
+     * @return bool
+     */
+    private function isResetableState()
+    {
+        if ($this->getStatus()->getId() !== self::STATUS_PENDING) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Reset
+     *
+     * @param RefData $status
+     * @return $this
+     * @throws BadRequestException
+     */
+    public function reset(RefData $status)
+    {
+        if (!$this->isResetable()) {
+            throw new BadRequestException(
+                'Irfo Psv Auth cannot be reset'
+            );
         }
 
         $this->setStatus($status);
