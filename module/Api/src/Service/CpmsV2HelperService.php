@@ -438,7 +438,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         if (isset($response['code']) && $response['code'] === self::RESPONSE_SUCCESS) {
             return $response;
         } else {
-            $e = new CpmsResponseException('Invalid refund response');
+            $statusCode = $this->getCpmsHttpStatusCode();
+            $e = new CpmsResponseException('Invalid refund response', $statusCode);
             $e->setResponse($response);
             throw $e;
         }
@@ -694,7 +695,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             }
         }
 
-        $e = new CpmsResponseException('Invalid payment response');
+        $statusCode = $this->getCpmsHttpStatusCode();
+        $e = new CpmsResponseException('Invalid payment response', $statusCode);
         $e->setResponse($response);
         throw $e;
     }
@@ -849,5 +851,17 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
                 ),
             ]
         );
+    }
+
+    /**
+     * @return int HTTP status code of the last CPMS Client response
+     */
+    private function getCpmsHttpStatusCode()
+    {
+        return $this->getClient() // CpmsClient\Service\ApiService
+            ->getClient()         // CpmsClient\Client\HttpRestJsonClient
+            ->getHttpClient()     // Zend\Http\Client
+            ->getResponse()       // Zend\HttpResponse
+            ->getStatusCode();
     }
 }
