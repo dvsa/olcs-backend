@@ -431,4 +431,6 @@ return [
     TransferQuery\SubCategory\GetList::class => QueryHandler\SubCategory\GetList::class,
     TransferQuery\SubCategoryDescription\GetList::class => QueryHandler\SubCategoryDescription\GetList::class,
     TransferQuery\DocTemplate\GetList::class => QueryHandler\DocTemplate\GetList::class,
+
+    TransferQuery\ContactDetail\CountryList::class => QueryHandler\ContactDetail\CountryList::class,
 ];
