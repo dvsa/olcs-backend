@@ -50,7 +50,16 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
 
     /**
      * Update
-     * @return IrfoPsvAuth
+     *
+     * @param IrfoPsvAuthType $type
+     * @param $validityPeriod
+     * @param \DateTime $inForceDate
+     * @param $serviceRouteFrom
+     * @param $serviceRouteTo
+     * @param RefData $journeyFrequency
+     * @param $copiesRequired
+     * @param $copiesRequiredTotal
+     * @return $this
      */
     public function update(
         IrfoPsvAuthType $type,
@@ -162,14 +171,163 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
      * Grant
      *
      * @param RefData $status
-     * @param array $fees
-     * @return IrfoGvPermit
+     * @param Fee $applicationFee
+     * @return $this
+     * @throws BadRequestException
      */
     public function grant(RefData $status, Fee $applicationFee)
     {
         if (!$this->isGrantable($applicationFee)) {
             throw new BadRequestException(
-                ['Irfo Psv Auth is not grantable']
+                'Irfo Psv Auth is not grantable'
+            );
+        }
+
+        $this->setStatus($status);
+
+        return $this;
+    }
+
+    /**
+     * Is refusable? Yes if entity status is renew/pending
+     *
+     * @return bool
+     */
+    public function isRefusable()
+    {
+        if ($this->isRefusableState()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Is in a refusable state
+     *
+     * @return bool
+     */
+    private function isRefusableState()
+    {
+        if (in_array($this->getStatus()->getId(), [self::STATUS_RENEW, self::STATUS_PENDING])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Refuse
+     *
+     * @param RefData $status
+     * @return $this
+     * @throws BadRequestException
+     */
+    public function refuse(RefData $status)
+    {
+        if (!$this->isRefusable()) {
+            throw new BadRequestException(
+                'Irfo Psv Auth is not refusable'
+            );
+        }
+
+        $this->setStatus($status);
+
+        return $this;
+    }
+
+    /**
+     * Is withdrawable? Yes if entity status is renew/pending/cns/approved
+     *
+     * @return bool
+     */
+    public function isWithdrawable()
+    {
+        if ($this->isWithdrawableState()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Is in a withdrawable state. Yes if entity status is renew/pending/cns/approved
+     *
+     * @return bool
+     */
+    private function isWithdrawableState()
+    {
+        if (in_array(
+            $this->getStatus()->getId(),
+            [
+                self::STATUS_RENEW,
+                self::STATUS_PENDING,
+                self::STATUS_CNS,
+                self::STATUS_APPROVED
+            ]
+        )) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Withdraw
+     *
+     * @param RefData $status
+     * @return $this
+     * @throws BadRequestException
+     */
+    public function withdraw(RefData $status)
+    {
+        if (!$this->isWithdrawable()) {
+            throw new BadRequestException(
+                'Irfo Psv Auth is not withdrawable'
+            );
+        }
+
+        $this->setStatus($status);
+
+        return $this;
+    }
+
+    /**
+     * Is resetable? Yes if entity status is not pending
+     *
+     * @return bool
+     */
+    public function isResetable()
+    {
+        return $this->isResetableState();
+    }
+
+    /**
+     * Is in a resetable state. Always
+     *
+     * @return bool
+     */
+    private function isResetableState()
+    {
+        if ($this->getStatus()->getId() !== self::STATUS_PENDING) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Reset
+     *
+     * @param RefData $status
+     * @return $this
+     * @throws BadRequestException
+     */
+    public function reset(RefData $status)
+    {
+        if (!$this->isResetable()) {
+            throw new BadRequestException(
+                'Irfo Psv Auth cannot be reset'
             );
         }
 

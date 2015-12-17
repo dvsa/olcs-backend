@@ -438,7 +438,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         if (isset($response['code']) && $response['code'] === self::RESPONSE_SUCCESS) {
             return $response;
         } else {
-            $e = new CpmsResponseException('Invalid refund response');
+            $statusCode = $this->getCpmsHttpStatusCode();
+            $e = new CpmsResponseException('Invalid refund response', $statusCode);
             $e->setResponse($response);
             throw $e;
         }
@@ -577,6 +578,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
                 continue;
             }
             $allocation = $newTransaction->getAmountAllocatedToFeeId($fee->getId());
+            if ($allocation == 0) {
+                continue;
+            }
             $extraPaymentData = ['allocated_amount' => $allocation];
             $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
             if (!empty($paymentData)) {
@@ -691,7 +695,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             }
         }
 
-        $e = new CpmsResponseException('Invalid payment response');
+        $statusCode = $this->getCpmsHttpStatusCode();
+        $e = new CpmsResponseException('Invalid payment response', $statusCode);
         $e->setResponse($response);
         throw $e;
     }
@@ -754,7 +759,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'receiver_address' => $this->formatAddress($fee->getCustomerAddressForInvoice()),
             'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
             'deferment_period' => (string) $fee->getDefermentPeriod(),
-            // 'country_code' ('GB' or 'NI') is optional and deliberately omitted
+            'country_code' => $fee->getFeeType()->getCountryCode(),
             'sales_person_reference' => $fee->getSalesPersonReference(),
         ];
 
@@ -846,5 +851,17 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
                 ),
             ]
         );
+    }
+
+    /**
+     * @return int HTTP status code of the last CPMS Client response
+     */
+    private function getCpmsHttpStatusCode()
+    {
+        return $this->getClient() // CpmsClient\Service\ApiService
+            ->getClient()         // CpmsClient\Client\HttpRestJsonClient
+            ->getHttpClient()     // Zend\Http\Client
+            ->getResponse()       // Zend\HttpResponse
+            ->getStatusCode();
     }
 }

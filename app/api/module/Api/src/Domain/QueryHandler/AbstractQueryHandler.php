@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\NationalRegisterAwareInterface;
 
 /**
  * Abstract Query Handler
@@ -68,6 +69,10 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
 
         if ($this instanceof \Dvsa\Olcs\Address\Service\AddressServiceAwareInterface) {
             $this->setAddressService($mainServiceLocator->get('AddressService'));
+        }
+
+        if ($this instanceof NationalRegisterAwareInterface) {
+            $this->setNationalRegisterConfig($mainServiceLocator->get('Config')['nr']);
         }
 
         $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');

@@ -1,5 +1,6 @@
 <?php
 
+
 namespace Dvsa\OlcsTest\Api\Entity\Fee;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -1011,7 +1012,7 @@ class FeeEntityTest extends EntityTester
 
         $nonRefundedFeeTransaction = m::mock(FeeTransaction::class);
         $nonRefundedFeeTransaction
-            ->shouldReceive('getTransaction->isPayment')
+            ->shouldReceive('getTransaction->isCompletePaymentOrAdjustment')
             ->andReturn(true);
         $nonRefundedFeeTransaction
             ->shouldReceive('isRefundedOrReversed')
@@ -1019,7 +1020,7 @@ class FeeEntityTest extends EntityTester
 
         $refundedFeeTransaction = m::mock(FeeTransaction::class);
         $refundedFeeTransaction
-            ->shouldReceive('getTransaction->isPayment')
+            ->shouldReceive('getTransaction->isCompletePaymentOrAdjustment')
             ->andReturn(true);
         $refundedFeeTransaction
             ->shouldReceive('isRefundedOrReversed')
@@ -1040,9 +1041,7 @@ class FeeEntityTest extends EntityTester
     public function testGetFeeTransactionsForRefund()
     {
         $txn1 = m::mock(Transaction::class)
-            ->shouldReceive('isPayment')
-            ->andReturn(true)
-            ->shouldReceive('isComplete')
+            ->shouldReceive('isCompletePaymentOrAdjustment')
             ->andReturn(true)
             ->getMock();
         $nonRefundedFeeTransaction = m::mock(FeeTransaction::class);
@@ -1050,12 +1049,12 @@ class FeeEntityTest extends EntityTester
             ->shouldReceive('getTransaction')
             ->andReturn($txn1)
             ->shouldReceive('isRefundedOrReversed')
-            ->andReturn(false);
+            ->andReturn(false)
+            ->shouldReceive('getReversedFeeTransaction')
+            ->andReturn(null);
 
         $txn2 = m::mock(Transaction::class)
-            ->shouldReceive('isPayment')
-            ->andReturn(true)
-            ->shouldReceive('isComplete')
+            ->shouldReceive('isCompletePaymentOrAdjustment')
             ->andReturn(true)
             ->getMock();
         $refundedFeeTransaction = m::mock(FeeTransaction::class);
@@ -1063,9 +1062,26 @@ class FeeEntityTest extends EntityTester
             ->shouldReceive('getTransaction')
             ->andReturn($txn2)
             ->shouldReceive('isRefundedOrReversed')
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getReversedFeeTransaction')
+            ->andReturn(null);
 
-        $this->sut->setFeeTransactions([$nonRefundedFeeTransaction, $refundedFeeTransaction]);
+        $reversingFeeTransaction = m::mock(FeeTransaction::class);
+        $reversingFeeTransaction
+            ->shouldReceive('getTransaction')
+            ->andReturn($txn2)
+            ->shouldReceive('isRefundedOrReversed')
+            ->andReturn(false)
+            ->shouldReceive('getReversedFeeTransaction')
+            ->andReturn(m::mock(FeeTransaction::class));
+
+        $this->sut->setFeeTransactions(
+            [
+                $nonRefundedFeeTransaction,
+                $refundedFeeTransaction,
+                $reversingFeeTransaction,
+            ]
+        );
 
         $this->assertEquals(
             [$nonRefundedFeeTransaction],

@@ -120,6 +120,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
@@ -146,6 +147,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
@@ -218,6 +220,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
@@ -244,6 +247,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
@@ -316,6 +320,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
@@ -342,6 +347,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
@@ -377,12 +383,16 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     public function testInitiateCardRequestInvalidApiResponse()
     {
-        $this->setExpectedException(CpmsResponseException::class, 'Invalid payment response');
+        $this->setExpectedException(CpmsResponseException::class, 'Invalid payment response', 400);
 
         $this->cpmsClient
             ->shouldReceive('post')
             ->with('/api/payment/card', 'CARD', m::any())
             ->andReturn([]);
+
+        $this->cpmsClient
+            ->shouldReceive('getClient->getHttpClient->getResponse->getStatusCode')
+            ->andReturn(400);
 
         $this->sut->initiateCardRequest('http://olcs-selfserve/foo', []);
     }
@@ -449,6 +459,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
@@ -475,6 +486,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
@@ -569,6 +581,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
@@ -595,6 +608,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
@@ -697,6 +711,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
@@ -723,6 +738,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
@@ -1032,6 +1048,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn('TEST_FEE_TYPE');
         $fee->shouldReceive('getFeeType->getVatCode')->andReturn('VAT_CODE');
         $fee->shouldReceive('getFeeType->getVatRate')->andReturn('VAT_RATE');
+        $fee->shouldReceive('getFeeType->getCountryCode')->andReturn('NI');
 
         $ft->shouldReceive('getFee')->andReturn($fee);
 
@@ -1067,6 +1084,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                             ],
                             'rule_start_date' => '2015-10-12',
                             'deferment_period' => '1',
+                            'country_code' => 'NI',
                             'sales_person_reference' => 'TEST_SALES_PERSON_REF',
                         ],
                     ],
@@ -1095,7 +1113,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     public function testBatchRefundWithInvalidResponse()
     {
-        $this->setExpectedException(CpmsResponseException::class, 'Invalid refund response');
+        $this->setExpectedException(CpmsResponseException::class, 'Invalid refund response', 401);
 
         $fee = m::mock(FeeEntity::class);
         $fee
@@ -1108,6 +1126,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('post')
             ->with('/api/refund', 'REFUND', m::any())
             ->andReturn([]);
+
+        $this->cpmsClient
+            ->shouldReceive('getClient->getHttpClient->getResponse->getStatusCode')
+            ->andReturn(401);
 
         $this->sut->batchRefund($fee);
     }
@@ -1147,6 +1169,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => null,
                     'deferment_period' => '',
+                    'country_code' => 'GB',
                     'sales_person_reference' => 'Traffic Area Ref',
                 ],
             ],
@@ -1178,7 +1201,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn($response);
 
         $fee1 = $this->getStubFee(100, '100.00');
-        $fees = [$fee1];
+        $fee2 = $this->getStubFee(101, '100.00');
+        $fees = [$fee1, $fee2];
 
         $originalTransaction = m::mock(TransactionEntity::class)
             ->makePartial()
@@ -1201,7 +1225,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $newTransaction
             ->shouldReceive('getAmountAllocatedToFeeId')
             ->with(100)
-            ->andReturn('10.00');
+            ->andReturn('10.00')
+            ->shouldReceive('getAmountAllocatedToFeeId')
+            ->with(101)
+            ->andReturn('0.00');
 
         $this->feesHelper
             ->shouldReceive('allocatePayments')
