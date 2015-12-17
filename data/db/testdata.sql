@@ -1193,6 +1193,8 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
   (1, NULL, 2, 2, now(), now(), 'system', null, null, NULL, NULL, '10236fc8becc3b78f6956e26de661d57bc67d9424424fbdbe584d9736ba6aa38') -- System User
 ;
 
+UPDATE `user` SET pid = SHA2(login_id, 256);
+
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator`) VALUES
   (1, 542, 0),
   (1, 543, 0),
