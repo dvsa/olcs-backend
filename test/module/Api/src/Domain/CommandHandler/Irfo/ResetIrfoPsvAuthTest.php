@@ -79,13 +79,6 @@ class ResetIrfoPsvAuthTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        // handle update
-        $this->expectedSideEffect(
-            UpdateIrfoPsvAuthCmd::class, $command->getArrayCopy(),
-            (new Result())->addMessage('IRFO PSV Auth updated successfully')
-                ->addId('irfoPsvAuth', $data['id'])
-        );
-
         /** @var IrfoPsvAuthEntity $irfoPsvAuth */
         $irfoPsvAuth = m::mock(IrfoPsvAuthEntity::class)->makePartial()->setStatus($this->refData[$status]);
         $irfoPsvAuth->shouldReceive('reset')
