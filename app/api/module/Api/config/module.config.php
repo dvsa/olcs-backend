@@ -269,6 +269,7 @@ return [
             'CasesReadAudit' => RepositoryFactory::class,
             'Team' => RepositoryFactory::class,
             'SeriousInfringement' => RepositoryFactory::class,
+            'Country' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
