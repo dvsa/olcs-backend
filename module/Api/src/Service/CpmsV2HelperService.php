@@ -440,8 +440,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         if (isset($response['code']) && $response['code'] === self::RESPONSE_SUCCESS) {
             return $response;
         } else {
-            $errorCode = isset($response['code']) ? $response['code'] : null;
-            $statusCode = $this->mapErrorCode($errorCode);
+            $statusCode = $this->getCpmsHttpStatusCode();
             $e = new CpmsResponseException('Invalid refund response', $statusCode);
             $e->setResponse($response);
             throw $e;
@@ -698,8 +697,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             }
         }
 
-        $errorCode = isset($response['code']) ? $response['code'] : null;
-        $statusCode = $this->mapErrorCode($errorCode);
+        $statusCode = $this->getCpmsHttpStatusCode();
         $e = new CpmsResponseException('Invalid payment response', $statusCode);
         $e->setResponse($response);
         throw $e;
@@ -858,72 +856,14 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
-     * The CPMS shared client (CpmsClient\Service\ApiService) does not expose
-     * the HTTP response code from their API so we hold a mapping here of error
-     * codes to HTTP codes, in order to implement the requirement of
-     * OLCS-11404.
-     *
-     * Based on the all the documented error codes as at 2015-12-17:
-     * @link https://wiki.i-env.net/display/EA/CPMS+Interface+Service+Definition#CPMSInterfaceServiceDefinition-ErrorCodes
-     *
-     * @param int $code
-     * @return int HTTP response code
+     * @return int HTTP status code of the last CPMS Client response
      */
-    private function mapErrorCode($code)
+    private function getCpmsHttpStatusCode()
     {
-
-        $map = [
-            // API errors
-            CpmsError::METHOD_NOT_ALLOWED           => Http::STATUS_CODE_405,
-            CpmsError::NOT_PERMITTED                => Http::STATUS_CODE_403,
-            CpmsError::MISSING_PARAMETER            => Http::STATUS_CODE_401,
-            CpmsError::INVALID_PARAMETER            => Http::STATUS_CODE_401,
-            CpmsError::UNKNOWN_ERROR                => Http::STATUS_CODE_500,
-            CpmsError::RESOURCE_NOT_FOUND           => Http::STATUS_CODE_404,
-            CpmsError::NOT_IMPLEMENTED              => Http::STATUS_CODE_405,
-            CpmsError::AN_ERROR_OCCURRED            => Http::STATUS_CODE_400,
-
-            CpmsError::SCHEME_NOT_AUTHORISED        => Http::STATUS_CODE_403,
-            // CpmsError::IP_NOT_ALLOWED               => Http::STATUS_CODE_401,
-            CpmsError::TOKEN_GENERATION_ERROR       => Http::STATUS_CODE_400,
-            CpmsError::ACCESS_TOKEN_EXPIRED         => Http::STATUS_CODE_401,
-            CpmsError::INVALID_ACCESS_TOKEN         => Http::STATUS_CODE_401,
-            CpmsError::UNAUTHORISED_SCOPE           => Http::STATUS_CODE_401,
-            CpmsError::MISSING_AUTHORISATION_HEADER => Http::STATUS_CODE_401,
-
-            //Gateway Errors
-            CpmsError::GATEWAY_ERROR => Http::STATUS_CODE_500,
-
-            // Database error codes
-            CpmsError::TRANSACTION_NOT_FOUND                     => Http::STATUS_CODE_400,
-            CpmsError::ERROR_CREATING_TRANSACTION                => Http::STATUS_CODE_404,
-            CpmsError::ERROR_COULD_NOT_AUTHENTICATE              => Http::STATUS_CODE_400,
-            CpmsError::ERROR_INVALID_REQUEST_METHOD              => Http::STATUS_CODE_400,
-            CpmsError::ERROR_AUTHORISE_TRANSACTION_FAILED        => Http::STATUS_CODE_401,
-            CpmsError::ERROR_FAILED_TO_SET_STATUS                => Http::STATUS_CODE_400,
-            CpmsError::ERROR_REFUND_FAILED_NO_PARENT_TRANSACTION => Http::STATUS_CODE_404,
-            CpmsError::ERROR_REFUND_ALREADY_EXISTS               => Http::STATUS_CODE_400,
-            CpmsError::ERROR_REFUND_AMOUNT_EXCEEDED              => Http::STATUS_CODE_400,
-            CpmsError::ERROR_CREATING_MANDATE                    => Http::STATUS_CODE_400,
-            CpmsError::ERROR_UPDATING_MANDATE                    => Http::STATUS_CODE_400,
-            CpmsError::ERROR_CREATING_DIRECT_DEBIT_TRANSACTION   => Http::STATUS_CODE_400,
-            CpmsError::ERROR_IN_DIRECT_DEBIT_WEBHOOK_DATA        => Http::STATUS_CODE_400,
-            CpmsError::ERROR_UPDATING_DIRECT_DEBIT_TRANSACTION   => Http::STATUS_CODE_400,
-            CpmsError::ERROR_MANDATE_NOT_FOUND                   => Http::STATUS_CODE_404,
-            CpmsError::ERROR_INCORRECT_MANDATE_STATUS            => Http::STATUS_CODE_400,
-            CpmsError::ERROR_INVALID_MANDATE_STATUS              => Http::STATUS_CODE_400,
-            CpmsError::ERROR_GETTING_MANDATE_STATUS              => Http::STATUS_CODE_400,
-            CpmsError::INVALID_STATUS_CHANGE                     => Http::STATUS_CODE_400,
-            CpmsError::ERROR_INSUFFICIENT_TRANSACTION_BALANCE    => Http::STATUS_CODE_400,
-        ];
-
-        // if mapping exists, return mapped HTTP response code
-        if ($code && array_key_exists($code, $map)) {
-            return $map[$code];
-        }
-
-        // default to 500 internal server error response code
-        return Response::STATUS_CODE_500;
+        return $this->getClient() // CpmsClient\Service\ApiService
+            ->getClient()         // CpmsClient\Client\HttpRestJsonClient
+            ->getHttpClient()     // Zend\Http\Client
+            ->getResponse()       // Zend\HttpResponse
+            ->getStatusCode();
     }
-
 }
