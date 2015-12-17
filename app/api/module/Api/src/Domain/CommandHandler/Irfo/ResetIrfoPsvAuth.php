@@ -23,8 +23,6 @@ final class ResetIrfoPsvAuth extends AbstractCommandHandler implements Transacti
 {
     protected $repoServiceName = 'IrfoPsvAuth';
 
-    // do we need this protected $extraRepos = ['IrfoPsvAuthNumber'];
-
     /**
      * Handle Reset command
      *
@@ -40,16 +38,6 @@ final class ResetIrfoPsvAuth extends AbstractCommandHandler implements Transacti
         /** @var IrfoPsvAuth $irfoPsvAuth */
         $irfoPsvAuth = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
-        $this->handleSideEffect(
-            UpdateDto::create(
-                $command->getArrayCopy()
-            )
-        );
-
-        /*
-        Update does not affect status or fees, so there is no need to ensure we have the updated entity prior to
-        resetting. Reseting only affects the status
-         */
         $newStatus = IrfoPsvAuth::STATUS_PENDING;
         if ($irfoPsvAuth->getStatus() == IrfoPsvAuth::STATUS_CNS) {
             $newStatus = IrfoPsvAuth::STATUS_RENEW;
