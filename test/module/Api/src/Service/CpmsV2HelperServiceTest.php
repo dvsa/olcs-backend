@@ -383,12 +383,16 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     public function testInitiateCardRequestInvalidApiResponse()
     {
-        $this->setExpectedException(CpmsResponseException::class, 'Invalid payment response');
+        $this->setExpectedException(CpmsResponseException::class, 'Invalid payment response', 400);
 
         $this->cpmsClient
             ->shouldReceive('post')
             ->with('/api/payment/card', 'CARD', m::any())
             ->andReturn([]);
+
+        $this->cpmsClient
+            ->shouldReceive('getClient->getHttpClient->getResponse->getStatusCode')
+            ->andReturn(400);
 
         $this->sut->initiateCardRequest('http://olcs-selfserve/foo', []);
     }
@@ -1109,7 +1113,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     public function testBatchRefundWithInvalidResponse()
     {
-        $this->setExpectedException(CpmsResponseException::class, 'Invalid refund response');
+        $this->setExpectedException(CpmsResponseException::class, 'Invalid refund response', 401);
 
         $fee = m::mock(FeeEntity::class);
         $fee
@@ -1122,6 +1126,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('post')
             ->with('/api/refund', 'REFUND', m::any())
             ->andReturn([]);
+
+        $this->cpmsClient
+            ->shouldReceive('getClient->getHttpClient->getResponse->getStatusCode')
+            ->andReturn(401);
 
         $this->sut->batchRefund($fee);
     }
