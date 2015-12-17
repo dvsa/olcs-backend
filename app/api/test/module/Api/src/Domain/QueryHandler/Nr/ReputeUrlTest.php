@@ -14,18 +14,45 @@ use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TmEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Transfer\Query\Nr\ReputeUrl as Qry;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 
 /**
  * Repute Url test
  */
 class ReputeUrlTest extends QueryHandlerTestCase
 {
+    protected $nationalRegisterConfig = [
+        'nr' => [
+            'repute_url' => [
+                'uri' => 'https://repute-url.com'
+            ]
+        ]
+    ];
+
     public function setUp()
     {
         $this->sut = new ReputeUrl();
         $this->mockRepo('TransportManager', TransportManagerRepo::class);
 
-        parent::setUp();
+        $this->repoManager = m::mock(RepositoryServiceManager::class);
+
+        foreach ($this->repoMap as $alias => $service) {
+            $this->repoManager
+                ->shouldReceive('get')
+                ->with($alias)
+                ->andReturn($service);
+        }
+
+        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
+        $sm->shouldReceive('get')->with('Config')->andReturn($this->nationalRegisterConfig);
+
+        $this->queryHandler = m::mock(QueryHandlerManager::class);
+        $this->queryHandler->shouldReceive('getServiceLocator')->andReturn($sm);
+
+        $this->sut = $this->sut->createService($this->queryHandler);
     }
 
     /**
@@ -99,7 +126,8 @@ class ReputeUrlTest extends QueryHandlerTestCase
             'Target' => ReputeUrl::FIELD_TARGET
         ];
 
-        $expectedResult = ['reputeUrl' => ReputeUrl::BASE_URL . http_build_query($expectedQueryVars)];
+        $baseUrl = $this->nationalRegisterConfig['nr']['repute_url']['uri'];
+        $expectedResult = ['reputeUrl' => $baseUrl . http_build_query($expectedQueryVars)];
 
         $this->assertEquals($expectedResult, $this->sut->handleQuery($query));
     }
@@ -113,7 +141,7 @@ class ReputeUrlTest extends QueryHandlerTestCase
     {
         return [
             [null, ReputeUrl::FIELD_QUAL_UNKNOWN,'GB', 'UK'],
-            ['serialNo', 'serialNo','GB', 'UK']
+            ['serialNo', 'serialNo', 'GB', 'UK']
         ];
     }
 }

@@ -11,19 +11,22 @@ use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TmQualification as TmQualificationEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\NationalRegisterAwareInterface;
+use Dvsa\Olcs\Api\Domain\NationalRegisterAwareTrait;
 
 /**
  * Repute Url
  */
-class ReputeUrl extends AbstractQueryHandler
+class ReputeUrl extends AbstractQueryHandler implements NationalRegisterAwareInterface
 {
+    use NationalRegisterAwareTrait;
+
     protected $repoServiceName = 'TransportManager';
 
     const DATE_FORMAT = 'd/m/Y';
     const FIELD_CA = 'Traffic Commissioner';
     const FIELD_TARGET = 'ZZ';
     const FIELD_QUAL_UNKNOWN = 'Unknown';
-    const BASE_URL = 'https://r-inr-01.corp.vosa.gov.uk:444/INR.BackofficeWeb/Repute/SubmitCheck.aspx?';
 
     public function handleQuery(QueryInterface $query)
     {
@@ -59,6 +62,6 @@ class ReputeUrl extends AbstractQueryHandler
             'Target' => self::FIELD_TARGET
         ];
 
-        return ['reputeUrl' => self::BASE_URL . http_build_query($queryVars)];
+        return ['reputeUrl' => $this->getNationalRegisterConfig()['repute_url']['uri'] . http_build_query($queryVars)];
     }
 }
