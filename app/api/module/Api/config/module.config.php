@@ -270,6 +270,7 @@ return [
             'Team' => RepositoryFactory::class,
             'SeriousInfringement' => RepositoryFactory::class,
             'Country' => RepositoryFactory::class,
+            'PresidingTc' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

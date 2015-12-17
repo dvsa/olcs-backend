@@ -19,6 +19,8 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Domain\Exception\RestResponseException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -96,8 +98,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             }
         } catch (CpmsResponseException $e) {
             // rethrow as Domain exception
-            throw new RuntimeException(
-                'Error from CPMS service: ' . json_encode($e->getResponse()),
+            throw new RestResponseException(
+                sprintf('Error from CPMS service [%s] %s', $e->getMessage(), json_encode($e->getResponse())),
                 $e->getCode(),
                 $e
             );
@@ -238,6 +240,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
 
     /**
      * @return array|false
+     * @throws BadRequestException if paymentMethod is invalid
      */
     protected function recordPaymentInCpms($command, $fees)
     {
@@ -271,7 +274,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                 );
                 break;
             default:
-                throw new RuntimeException('invalid payment method: ' . $command->getPaymentMethod());
+                throw new BadRequestException('invalid payment method: ' . $command->getPaymentMethod());
         }
 
         return $response;
