@@ -240,6 +240,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
 
     /**
      * @return array|false
+     * @throws BadRequestException if paymentMethod is invalid
      */
     protected function recordPaymentInCpms($command, $fees)
     {

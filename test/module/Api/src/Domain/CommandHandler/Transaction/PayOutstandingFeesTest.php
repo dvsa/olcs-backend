@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Transaction\PayOutstandingFees;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository;
@@ -1310,6 +1311,53 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertEquals(PaymentEntity::STATUS_OUTSTANDING, $savedPayment->getStatus()->getId());
+    }
+
+    public function testHandleCommandInvalidPaymentMethod()
+    {
+        $feeIds = [1, 2];
+
+        $data = [
+            'feeIds' => $feeIds,
+            'paymentMethod' => 'foo',
+            'received' => '35.79',
+        ];
+
+        $command = Cmd::create($data);
+
+        $fee1 = $this->getStubFee(99, 12.34);
+        $fee2 = $this->getStubFee(100, 23.45);
+        $fees = [$fee1, $fee2];
+
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        $this->mockFeesHelperService
+            ->shouldReceive('getMinPaymentForFees')
+            ->with($fees)
+            ->andReturn(12.35);
+
+        $allocations = [
+            99 => '12.34',
+            100 => '23.45',
+        ];
+        $this->mockFeesHelperService
+            ->shouldReceive('allocatePayments')
+            ->with('35.79', $fees)
+            ->andReturn($allocations);
+
+        $opData = [
+            'receivedAmount' => '35.79',
+            'fees' => $fees,
+        ];
+        $this->expectedSideEffect(CreateOverpaymentFeeCmd::class, $opData, new Result());
+
+        $this->setExpectedException(BadRequestException::class, 'invalid payment method: foo');
+
+        $this->sut->handleCommand($command);
     }
 
     /**
