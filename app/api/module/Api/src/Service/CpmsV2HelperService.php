@@ -11,13 +11,11 @@
 namespace Dvsa\Olcs\Api\Service;
 
 use CpmsClient\Service\ApiService;
-use CpmsCommon\Service\ErrorCodeService as CpmsError;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Olcs\Logging\Log\Logger;
-use Zend\Http\Response as Http;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
