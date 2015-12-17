@@ -465,7 +465,7 @@ class Fee extends AbstractFee
 
         // can only refund if there are non-refunded payments
         foreach ($this->getFeeTransactions() as $ft) {
-            if ($ft->getTransaction()->isPayment() && !$ft->isRefundedOrReversed()) {
+            if ($ft->getTransaction()->isCompletePaymentOrAdjustment() && !$ft->isRefundedOrReversed()) {
                 return true;
             }
         }
@@ -481,8 +481,11 @@ class Fee extends AbstractFee
         $feeTransactions = [];
 
         foreach ($this->getFeeTransactions() as $ft) {
-            $txn = $ft->getTransaction();
-            if ($txn->isPayment() && $txn->isComplete() && !$ft->isRefundedOrReversed()) {
+            if (
+                $ft->getTransaction()->isCompletePaymentOrAdjustment()
+                && !$ft->isRefundedOrReversed()
+                && empty($ft->getReversedFeeTransaction())
+            ) {
                 $feeTransactions[] = $ft;
             }
         }
@@ -525,5 +528,47 @@ class Fee extends AbstractFee
     public static function amountToPounds($amount)
     {
         return number_format($amount / 100, 2, '.', '');
+    }
+
+    /**
+     * @return string formatted amount
+     */
+    public function getAmountAllocatedByTransactionId($transactionId)
+    {
+        $amount = null;
+
+        $this->getFeeTransactions()->forAll(
+            function ($key, $feeTransaction) use ($transactionId, &$amount) {
+                unset($key); // unused
+                if ($feeTransaction->getTransaction()->getId() == $transactionId) {
+                    $amount = $feeTransaction->getAmount();
+                    return false;
+                }
+                return true;
+            }
+        );
+
+        return $amount;
+    }
+
+    /**
+     * Adjust a transaction amount. We wouldn't normally persist this change
+     * (we would create negative fee transactions and then add new positive ones)
+     * but this is useful for calculating the adjusted amounts we need to pass to
+     * CPMS
+     */
+    public function adjustTransactionAmount($transactionId, $adjustment)
+    {
+        $this->getFeeTransactions()->forAll(
+            function ($key, $feeTransaction) use ($transactionId, &$adjustment) {
+                unset($key); // unused
+                if ($feeTransaction->getTransaction()->getId() == $transactionId) {
+                    $amount = $feeTransaction->getAmount();
+                    $feeTransaction->setAmount($amount + $adjustment);
+                    return false;
+                }
+                return true;
+            }
+        );
     }
 }

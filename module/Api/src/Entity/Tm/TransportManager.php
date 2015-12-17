@@ -300,6 +300,49 @@ class TransportManager extends AbstractTransportManager implements ContextProvid
     }
 
     /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getMostRecentQualification()
+    {
+        $criteria = Criteria::create()
+            ->orderBy(['issuedDate' => Criteria::DESC, 'id' => Criteria::DESC])
+            ->setMaxResults(1);
+
+        return $this->getQualifications()->matching($criteria);
+    }
+
+    /**
+     * Returns whether the entity has all the necessary date for a repute check
+     *
+     * return bool
+     */
+    public function hasReputeCheckData()
+    {
+        // mandatory fields
+        $fields = [
+            'getForename',
+            'getFamilyName',
+            'getBirthDate',
+            'getBirthPlace'
+        ];
+
+        $person = $this->homeCd->getPerson();
+
+        foreach ($fields as $field) {
+            if (empty($person->$field())) {
+                return false;
+            }
+        }
+
+        //qualifications array collection
+        if ($this->qualifications->isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Return extra properties when serialzed
      *
      * @return array

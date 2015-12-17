@@ -160,6 +160,7 @@ return [
     TransferQuery\Cases\ByLicence::class => QueryHandler\Cases\ByLicence::class,
 
     TransferQuery\Cases\Si\GetList::class => QueryHandler\Cases\Si\GetList::class,
+    TransferQuery\Cases\PresidingTc\GetList::class => QueryHandler\Cases\PresidingTc\GetList::class,
 
     // Submission
     TransferQuery\Submission\SubmissionAction::class => QueryHandler\Submission\SubmissionAction::class,
@@ -293,6 +294,9 @@ return [
     // TmEmployment
     TransferQuery\TmEmployment\GetSingle::class => QueryHandler\TmEmployment\GetSingle::class,
     TransferQuery\TmEmployment\GetList::class => QueryHandler\TmEmployment\GetList::class,
+
+    // National Register
+    TransferQuery\Nr\ReputeUrl::class => QueryHandler\Nr\ReputeUrl::class,
 
     // Bus Reg History View
     TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,

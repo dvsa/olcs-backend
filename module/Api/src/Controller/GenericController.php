@@ -28,6 +28,8 @@ class GenericController extends AbstractRestfulController
             return $this->response()->notFound();
         } catch (Exception\NotReadyException $ex) {
             return $this->response()->notReady($ex->getRetryAfter());
+        } catch (Exception\RestResponseException $ex) {
+            return $this->response()->error($ex->getCode(), $ex->getMessage());
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
@@ -49,7 +51,7 @@ class GenericController extends AbstractRestfulController
 
             $count = $result['count'];
             $results = $result['result'];
-            $countUnfiltered = $result['count-unfiltered'];
+            $countUnfiltered = isset($result['count-unfiltered']) ? $result['count-unfiltered'] : $count;
             unset($result['count'], $result['result'], $result['count-unfiltered']);
 
             return $this->response()->multipleResults($count, $results, $countUnfiltered, $result);
@@ -79,6 +81,8 @@ class GenericController extends AbstractRestfulController
             return $this->response()->error(409, $ex->getMessages());
         } catch (Exception\NotFoundException $ex) {
             return $this->response()->notFound();
+        } catch (Exception\RestResponseException $ex) {
+            return $this->response()->error($ex->getCode(), $ex->getMessage());
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
@@ -117,6 +121,8 @@ class GenericController extends AbstractRestfulController
         try {
             $result = $this->handleCommand($dto);
             return $this->response()->successfulCreate($result);
+        } catch (Exception\RestResponseException $ex) {
+            return $this->response()->error($ex->getCode(), $ex->getMessages());
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {

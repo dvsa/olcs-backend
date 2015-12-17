@@ -970,7 +970,7 @@ INSERT INTO `disqualification` (
 
 INSERT INTO `pi` (`id`,`agreed_by_tc_id`,`agreed_by_tc_role`,`assigned_to`,`decided_by_tc_id`,`decided_by_tc_role`,
   `pi_status`,`written_outcome`,`case_id`,`created_by`,`last_modified_by`,`brief_to_tc_date`,`call_up_letter_date`,
-  `written_decision_letter_sent`,`decision_letter_sent_date`,`decision_notes`,`licence_curtailed_at_pi`,
+  `written_decision_letter_date`,`decision_letter_sent_date`,`decision_notes`,`licence_curtailed_at_pi`,
   `licence_revoked_at_pi`,`licence_suspended_at_pi`,`notification_date`,`section_code_text`,`tc_written_decision_date`,
   `tc_written_reason_date`,`written_reason_date`,`written_reason_letter_date`,`agreed_date`,`closed_date`,`comment`,
   `created_on`,`decision_date`,`deleted_date`,`is_cancelled`,`last_modified_on`,`version`,`witnesses`)
@@ -2013,8 +2013,8 @@ INSERT INTO `licence` (`id`,`correspondence_cd_id`,`organisation_id`,`goods_or_p
     (701,145,106,'lcat_gv','ltyp_r','lsts_unlicenced','UOB3'),
     (702,145,107,'lcat_psv','ltyp_r','lsts_unlicenced','UOB4');
 INSERT INTO `licence_no_gen` (`id`, `licence_id`) VALUES
-    (3,701),
-    (4,702);
+    (4,701),
+    (5,702);
 INSERT INTO `contact_details` (`id`,`address_id`,`contact_type`,`email_address`) VALUES
     (145,1124,'ct_corr','unlicensed@foo.bar'),
     (146,1125,'ct_corr','unlicensed@foo.bar');
@@ -2195,5 +2195,64 @@ INSERT INTO `submission_action` (`id`, `created_by`, `last_modified_by`, `submis
   (4,NULL,NULL,1,'Team Leaders Recommendation\r\n\r\nI agree with Steve’s recommendation.\r\n\r\nBob Submission\r\n01/05/2015','2015-10-06 13:39:40',0,NULL,1),
   (5,NULL,NULL,1,'TRAFFIC COMMISSIONER’S DECISION:\r\n\r\nPlease proceed as recommended for the reasons you give.\r\nSB/TC/13 5 15','2015-10-06 13:42:17',1,NULL,1);
 INSERT INTO `submission_action_reason` (`submission_action_id`, `reason_id`) VALUES (3,122),(4,122),(5,122);
+
+-- Start: Application 9 - new Goods Vehicle Standard National application ready to submit
+BEGIN;
+INSERT INTO `address` (`id`, `admin_area`, `country_code`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`, `paon_end`, `paon_start`, `postcode`, `saon_end`, `saon_start`, `town`, `uprn`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (216,NULL,'GB',NULL,NULL,'DVSA','','','',NULL,NULL,'LS9 6NF',NULL,NULL,'Leeds',NULL,'2015-03-27 12:29:38',NULL,NULL,NULL,1);
+INSERT INTO `address` (`id`, `admin_area`, `country_code`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`, `paon_end`, `paon_start`, `postcode`, `saon_end`, `saon_start`, `town`, `uprn`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (217,NULL,'GB',NULL,NULL,'DVSA','','','',NULL,NULL,'LS9 6NF',NULL,NULL,'Leeds',NULL,'2015-03-27 12:29:38',NULL,NULL,NULL,1);
+INSERT INTO `address` (`id`, `admin_area`, `country_code`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`, `paon_end`, `paon_start`, `postcode`, `saon_end`, `saon_start`, `town`, `uprn`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (218,NULL,'GB',NULL,NULL,'DVSA','','','',NULL,NULL,'LS9 6NF',NULL,NULL,'Leeds',NULL,'2015-03-27 12:30:12',NULL,NULL,NULL,1);
+INSERT INTO `address` (`id`, `admin_area`, `country_code`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`, `paon_end`, `paon_start`, `postcode`, `saon_end`, `saon_start`, `town`, `uprn`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (219,NULL,'GB',NULL,NULL,'DVSA','','','',NULL,NULL,'LS9 6NF',NULL,NULL,'Leeds',NULL,'2015-03-27 12:31:05',NULL,NULL,NULL,1);
+INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `fao`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (224,216,'ct_corr',NULL,NULL,NULL,NULL,0,'2015-03-27 12:29:38',NULL,NULL,'dvsa@stolenegg.com',NULL,NULL,NULL,1);
+INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `fao`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (225,217,'ct_est',NULL,NULL,NULL,NULL,0,'2015-03-27 12:29:38',NULL,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `fao`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (226,219,'ct_work',NULL,NULL,NULL,NULL,0,'2015-03-27 12:31:05',NULL,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `operating_centre` (`id`, `address_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `olbs_key`, `version`, `vi_action`) VALUES (273,218,NULL,NULL,'2015-03-27 12:30:12',NULL,NULL,1,NULL);
+INSERT INTO `licence`
+    (`id`, `correspondence_cd_id`, `enforcement_area_id`, `establishment_cd_id`, `organisation_id`,
+    `tachograph_ins`, `transport_consultant_cd_id`, `created_by`, `goods_or_psv`, `last_modified_by`,
+    `licence_type`, `status`, `traffic_area_id`, `fabs_reference`, `fee_date`, `psv_discs_to_be_printed_no`,
+    `review_date`, `safety_ins`, `safety_ins_trailers`, `safety_ins_varies`, `safety_ins_vehicles`,
+    `surrendered_date`, `tachograph_ins_name`, `trailers_in_possession`, `translate_to_welsh`, `created_on`, `deleted_date`,
+    `expiry_date`, `granted_date`, `in_force_date`, `is_maintenance_suitable`, `last_modified_on`, `lic_no`, `olbs_key`,
+    `tot_auth_trailers`, `tot_auth_vehicles`,
+    `tot_community_licences`, `version`, `vi_action`)
+    VALUES
+    (213,224,NULL,225,1,
+    'tach_internal',NULL,NULL,NULL,NULL,
+    NULL,'lsts_not_submitted','B',NULL,NULL,NULL,
+    NULL,0,1,0,1,
+    NULL,'Dan',NULL,0,'2015-03-27 12:28:05',NULL,
+    NULL,NULL,NULL,NULL,'2015-03-27 12:31:10','OB3',NULL,
+    NULL,NULL,
+    NULL,7,NULL);
+INSERT INTO `licence_no_gen` (`id`, `licence_id`) VALUES (3,213);
+INSERT INTO `application` (
+    `id`, `interim_status`, `licence_id`, `created_by`, `goods_or_psv`, `last_modified_by`, `licence_type`, `status`,
+    `withdrawn_reason`, `administration`, `bankrupt`, `convictions_confirmation`, `declaration_confirmation`, `disqualified`,
+    `financial_evidence_uploaded`, `has_entered_reg`, `insolvency_confirmation`, `insolvency_details`, `interim_auth_trailers`,
+    `interim_auth_vehicles`, `interim_end`, `interim_reason`, `interim_start`, `is_variation`, `liquidation`, `override_ooo`,
+    `prev_been_at_pi`, `prev_been_disqualified_tc`, `prev_been_refused`, `prev_been_revoked`, `prev_conviction`, `prev_had_licence`,
+    `prev_has_licence`, `prev_purchased_assets`, `psv_limousines`, `psv_medium_vhl_confirmation`, `psv_medium_vhl_notes`,
+    `psv_no_limousine_confirmation`, `psv_no_small_vhl_confirmation`, `psv_only_limousines_confirmation`, `psv_operate_small_vhl`,
+    `psv_small_vhl_confirmation`, `psv_small_vhl_notes`, `receivership`, `refused_date`, `safety_confirmation`, `target_completion_date`,
+    `created_on`, `deleted_date`, `granted_date`, `is_maintenance_suitable`, `last_modified_on`, `ni_flag`, `received_date`,
+    `tot_auth_trailers`, `tot_auth_vehicles`,
+    `tot_community_licences`, `version`, `withdrawn_date`, `applied_via`)
+VALUES (
+    9,NULL,213,NULL,'lcat_gv',NULL,'ltyp_sn','apsts_not_submitted',
+    NULL,0,0,1,1,0,0,0,1,'',NULL,NULL,NULL,NULL,NULL,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,1,NULL,'2015-03-27 12:28:06',NULL,NULL,NULL,'2015-03-27 12:32:04',0,NULL,
+    1,1,
+    NULL,10,NULL,'applied_via_selfserve');
+INSERT INTO `application_completion` (`id`, `application_id`, `created_by`, `last_modified_by`, `addresses_status`, `business_details_status`, `business_type_status`, `community_licences_status`, `conditions_undertakings_status`, `convictions_penalties_status`, `discs_status`, `financial_evidence_status`, `financial_history_status`, `last_section`, `licence_history_status`, `operating_centres_status`, `people_status`, `safety_status`, `taxi_phv_status`, `transport_managers_status`, `type_of_licence_status`, `undertakings_status`, `vehicles_declarations_status`, `vehicles_psv_status`, `vehicles_status`, `created_on`, `last_modified_on`, `version`) VALUES (6,9,NULL,NULL,2,2,2,NULL,NULL,2,NULL,2,2,NULL,2,2,2,2,NULL,2,2,2,NULL,NULL,2,'2015-03-27 12:28:07','2015-03-27 12:32:04',19);
+INSERT INTO `application_operating_centre` (`id`, `application_id`, `created_by`, `last_modified_by`, `operating_centre_id`, `s4_id`, `ad_placed`, `publication_appropriate`, `sufficient_parking`, `action`, `ad_placed_date`, `ad_placed_in`, `created_on`, `deleted_date`, `is_interim`, `last_modified_on`, `no_of_trailers_required`, `no_of_vehicles_required`, `olbs_key`, `permission`, `version`, `vi_action`) VALUES (6,9,NULL,NULL,273,NULL,0,0,1,'A',NULL,'','2015-03-27 12:30:12',NULL,0,NULL,1,1,NULL,1,1,NULL);
+INSERT INTO `application_tracking` (`id`, `application_id`, `created_by`, `last_modified_by`, `addresses_status`, `business_details_status`, `business_type_status`, `community_licences_status`, `conditions_undertakings_status`, `convictions_penalties_status`, `discs_status`, `financial_evidence_status`, `financial_history_status`, `licence_history_status`, `operating_centres_status`, `people_status`, `safety_status`, `taxi_phv_status`, `transport_managers_status`, `type_of_licence_status`, `declarations_internal_status`, `vehicles_declarations_status`, `vehicles_psv_status`, `vehicles_status`, `created_on`, `last_modified_on`, `version`) VALUES (6,9,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2015-03-27 12:28:07',NULL,1);
+INSERT INTO `fee`
+    (`id`,`fee_status`,`fee_type_id`,`application_id`,`licence_id`,`net_amount`,`vat_amount`,`gross_amount`,`invoiced_date`,`description`)
+    VALUES
+    (201,'lfs_ot',344,9,213,100.00,0.00,100.00,'2015-03-27 00:00:00','Interim Fee for application 9'),
+    (202,'lfs_ot',338,9,213,100.00,0.00,100.00,'2015-03-27 00:00:00','Application Fee for application 9');
+INSERT INTO `phone_contact` (`id`, `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (211,224,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
+INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, `last_modified_by`, `is_external`, `maintenance`, `safety_inspection`, `created_on`, `last_modified_on`, `olbs_key`, `removed_date`, `version`) VALUES (3,213,226,NULL,NULL,0,0,0,'2015-03-27 12:31:05',NULL,NULL,NULL,1);
+COMMIT;
+-- End: Application 9
 
 SET foreign_key_checks = 1;

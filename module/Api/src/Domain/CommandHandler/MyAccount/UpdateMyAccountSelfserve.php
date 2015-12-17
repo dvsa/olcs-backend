@@ -15,6 +15,6 @@ final class UpdateMyAccountSelfserve extends AbstractCommandHandler
 {
     public function handleCommand(CommandInterface $command)
     {
-        return $this->proxyCommand($command, \Dvsa\Olcs\Transfer\Command\MyAccount\UpdateMyAccount::class);
+        return $this->proxyCommand($command, \Dvsa\Olcs\Api\Domain\Command\MyAccount\UpdateMyAccount::class);
     }
 }

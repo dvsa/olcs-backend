@@ -707,7 +707,6 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
             'mapSupplied',
             'trcConditionChecked',
             'copiedToLaPte',
-            'laShortNote',
             'applicationSigned'
         ];
 
@@ -767,6 +766,10 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
 
         if (empty($this->shortNotice)) {
             // no short notice details makes it non-grantable
+            return false;
+        }
+
+        if ($this->laShortNote !== 'Y') {
             return false;
         }
 

@@ -38,11 +38,12 @@ final class UpdateSla extends AbstractCommandHandler implements TransactionedInt
         $pi = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         switch ($writtenOutcome) {
-            case SlaEntity::WRITTEN_OUTCOME_NONE:
-                $pi->updateWrittenOutcomeNone(
+            case SlaEntity::VERBAL_DECISION_ONLY:
+                $pi->updateWrittenOutcomeVerbal(
                     $this->getRepo()->getRefdataReference($writtenOutcome),
                     $command->getCallUpLetterDate(),
-                    $command->getBriefToTcDate()
+                    $command->getBriefToTcDate(),
+                    $command->getDecisionLetterSentDate()
                 );
                 break;
             case SlaEntity::WRITTEN_OUTCOME_DECISION:
@@ -51,7 +52,7 @@ final class UpdateSla extends AbstractCommandHandler implements TransactionedInt
                     $command->getCallUpLetterDate(),
                     $command->getBriefToTcDate(),
                     $command->getTcWrittenDecisionDate(),
-                    $command->getDecisionLetterSentDate()
+                    $command->getWrittenDecisionLetterDate()
                 );
                 break;
             case SlaEntity::WRITTEN_OUTCOME_REASON:

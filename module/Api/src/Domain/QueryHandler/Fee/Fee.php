@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepository;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
 
 /**
  * Fee
@@ -90,14 +91,21 @@ class Fee extends AbstractQueryHandler
                 'transactionId' => $transaction->getId(),
                 'type' => $transaction->getType()->getDescription(),
                 'completedDate' => $transaction->getCompletedDate(),
-                'method' => $transaction->getPaymentMethod()->getDescription(),
-                'processedBy' => $transaction->getProcessedByLoginId(),
+                'method' => $this->getMethod($transaction),
+                'processedBy' => $transaction->getProcessedByFullName(),
                 'amount' => $ft->getAmount(),
                 'status' => $transaction->getStatus(),
             ];
         }
 
         return $displayData;
+    }
+
+    private function getMethod(TransactionEntity $transaction)
+    {
+        $method = $transaction->getPaymentMethod() ? $transaction->getPaymentMethod()->getDescription() : '';
+
+        return $method . ' ' . $transaction->getDisplayAmount();
     }
 
     /**

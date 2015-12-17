@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command\Fee\ResetFees as ResetFeesCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Transaction\ReverseTransaction;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -177,16 +178,13 @@ class ReverseTransactionTest extends CommandHandlerTestCase
                 }
             );
 
-        $this->repoMap['Fee']
-            ->shouldReceive('save')
-            ->once()
-            ->with($fee)
-            ->andReturnUsing(
-                function ($fee) {
-                    $this->assertEquals($this->mapRefData(FeeEntity::STATUS_OUTSTANDING), $fee->getFeeStatus());
-                    return;
-                }
-            );
+        $this->expectedSideEffect(
+            ResetFeesCmd::class,
+            [
+                'fees' => [69 => $fee]
+            ],
+            (new Result())->addMessage('Fee 69 reset to Outstanding')
+        );
 
         $result = $this->sut->handleCommand($command);
 

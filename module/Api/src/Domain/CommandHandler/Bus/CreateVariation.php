@@ -30,8 +30,6 @@ final class CreateVariation extends AbstractCommandHandler
         $result->addId('bus', $bus->getId());
         $result->addMessage('Variation created successfully');
 
-        $result->merge($this->handleSideEffect(CreateBusFeeCmd::create(['id' => $bus->getId()])));
-
         return $result;
     }
 

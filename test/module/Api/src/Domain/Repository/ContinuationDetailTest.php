@@ -51,6 +51,7 @@ class ContinuationDetailTest extends RepositoryTestCase
         $year = $dateTime->format('Y');
         $futureYear = $year + 4;
         $month = $dateTime->format('n');
+        $pastYear = $year - 4;
 
         $expectedQuery = <<<EOT
 BLAH AND m.licence = [[95]]
@@ -58,6 +59,9 @@ BLAH AND m.licence = [[95]]
     AND (c.month >= [[$month]] AND c.year = [[$year]])
         OR (c.year > [[$year]] AND c.year < [[$futureYear]])
         OR (c.month <= [[$month]] AND c.year = [[$futureYear]])
+        OR (c.month <= [[$month]] AND c.year = [[$year]])
+        OR (c.year > [[$pastYear]] AND c.year < [[$year]])
+        OR (c.month >= [[$month]] AND c.year = [[$pastYear]])
     AND m.status IN ([[["con_det_sts_printed","con_det_sts_acceptable","con_det_sts_unacceptable"]]])
         OR (m.status = 'con_det_sts_complete' AND m.received = 'N')
 EOT;

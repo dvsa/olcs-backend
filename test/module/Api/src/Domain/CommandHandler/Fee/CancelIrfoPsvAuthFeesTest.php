@@ -1,0 +1,85 @@
+<?php
+
+/**
+ * CancelIrfoPsvAuthFeesTest
+ */
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee;
+
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCommand;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelIrfoPsvAuthFees as CancelIrfoPsvAuthFeesCommand;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Fee\CancelIrfoPsvAuthFees as Sut;
+use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
+
+/**
+ * CancelIrfoPsvAuthFeesTest
+ */
+class CancelIrfoPsvAuthFeesTest extends CommandHandlerTestCase
+{
+    public function setUp()
+    {
+        $this->sut = new Sut();
+        $this->mockRepo('Fee', FeeRepo::class);
+
+        parent::setUp();
+    }
+
+    protected function initReferences()
+    {
+        $this->references = [
+            FeeEntity::class => [
+                23 => m::mock(FeeEntity::class)
+                    ->makePartial()
+                    ->setFeeType(
+                        m::mock(FeeTypeEntity::class)
+                            ->shouldReceive('getFeeType')
+                            ->andReturn(RefDataEntity::FEE_TYPE_IRFOPSVAPP)->getMock()
+                    ),
+                24 => m::mock(FeeEntity::class)
+                    ->makePartial()
+                    ->setFeeType(
+                        m::mock(FeeTypeEntity::class)
+                            ->shouldReceive('getFeeType')
+                            ->andReturn(RefDataEntity::FEE_TYPE_IRFOPSVCOPY)->getMock()
+                    ),
+                25 => m::mock(FeeEntity::class)
+                    ->makePartial()
+                    ->setFeeType(
+                        m::mock(FeeTypeEntity::class)
+                            ->shouldReceive('getFeeType')
+                            ->andReturn(RefDataEntity::FEE_TYPE_IRFOPSVANN)->getMock()
+                    ),
+            ]
+        ];
+
+        parent::initReferences();
+    }
+
+    public function testHandleCommand()
+    {
+        $fees = [
+            $this->references[FeeEntity::class][23],
+            $this->references[FeeEntity::class][24],
+            $this->references[FeeEntity::class][25]
+        ];
+
+        $this->repoMap['Fee']->shouldReceive('fetchFeesByIrfoPsvAuthId')->with(542)->once()
+            ->andReturn($fees);
+
+        // 23 shouldn't be deleted as its type is FEE_TYPE_IRFOPSVAPP
+        $this->expectedSideEffect(CancelFeeCommand::class, ['id' => 24], new Result());
+        $this->expectedSideEffect(CancelFeeCommand::class, ['id' => 25], new Result());
+
+        $command = CancelIrfoPsvAuthFeesCommand::create(
+            ['id' => 542, 'exclusions' => [RefDataEntity::FEE_TYPE_IRFOPSVAPP]]
+        );
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertContains('IRFO PSV Auth fees cancelled successfully', $result->getMessages());
+    }
+}

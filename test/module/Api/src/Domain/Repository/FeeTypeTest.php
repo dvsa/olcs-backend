@@ -23,6 +23,7 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 
 /**
  * Fee Type repository test
@@ -69,7 +70,7 @@ class FeeTypeTest extends RepositoryTestCase
             ->shouldReceive('getId')
             ->andReturn($applicationId)
             ->shouldReceive('getLicenceType')
-            ->andReturn('LICENCE_TYPE')
+            ->andReturn(new RefData('LICENCE_TYPE'))
             ->shouldReceive('getGoodsOrPsv')
             ->andReturn('GOODS_OR_PSV')
             ->getMock();
@@ -106,15 +107,8 @@ class FeeTypeTest extends RepositoryTestCase
             ->with('ft.effectiveFrom', 'DESC');
 
         $this->em
-            ->shouldReceive('getReference')
-            ->with(ApplicationEntity::class, $applicationId)
+            ->shouldReceive('getReference')->with(ApplicationEntity::class, $applicationId)
             ->andReturn($mockApplication);
-
-        $this->em
-            ->shouldReceive('getReference')
-            ->with(TrafficAreaEntity::class, 'N')
-            ->once()
-            ->andReturn('NI_TRAFFIC_AREA');
 
         $this->sut->shouldReceive('fetchPaginatedList')
             ->andReturn(['RESULTS']);
@@ -130,10 +124,11 @@ class FeeTypeTest extends RepositoryTestCase
         $expectedQuery = 'QUERY'
          . ' AND ft.effectiveFrom <= [[2014-10-26T00:00:00+01:00]]'
          . ' AND ft.isMiscellaneous = [[0]]'
-         . ' AND ft.costCentreRef != [[IR]]'
+         . ' AND ft.feeType IN ["APP","VAR","GRANT","GRANTINT"]'
          . ' AND ft.goodsOrPsv = [[GOODS_OR_PSV]]'
-         . ' AND (ft.licenceType = [[LICENCE_TYPE]] OR ft.licenceType IS NULL)'
-         . ' AND (ft.trafficArea != [[NI_TRAFFIC_AREA]] OR ft.trafficArea IS NULL)';
+         . ' AND ft.licenceType = [[LICENCE_TYPE]]'
+         . ' LEFT JOIN ft.trafficArea ta'
+         . ' AND (ta.isNi = 0 OR ta.isNi IS NULL)';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -146,7 +141,7 @@ class FeeTypeTest extends RepositoryTestCase
             ->shouldReceive('getId')
             ->andReturn($licenceId)
             ->shouldReceive('getLicenceType')
-            ->andReturn('LICENCE_TYPE')
+            ->andReturn(new RefData('LICENCE_TYPE'))
             ->shouldReceive('getGoodsOrPsv')
             ->andReturn('GOODS_OR_PSV')
             ->getMock();
@@ -183,15 +178,8 @@ class FeeTypeTest extends RepositoryTestCase
             ->with('ft.effectiveFrom', 'DESC');
 
         $this->em
-            ->shouldReceive('getReference')
-            ->with(LicenceEntity::class, $licenceId)
+            ->shouldReceive('getReference')->with(LicenceEntity::class, $licenceId)
             ->andReturn($mockLicence);
-
-        $this->em
-            ->shouldReceive('getReference')
-            ->with(TrafficAreaEntity::class, 'N')
-            ->once()
-            ->andReturn('NI_TRAFFIC_AREA');
 
         $this->sut->shouldReceive('fetchPaginatedList')
             ->andReturn(['RESULTS']);
@@ -206,11 +194,10 @@ class FeeTypeTest extends RepositoryTestCase
 
         $expectedQuery = 'QUERY'
          . ' AND ft.effectiveFrom <= [[2014-10-26T00:00:00+01:00]]'
-         . ' AND ft.isMiscellaneous = [[0]]'
-         . ' AND ft.costCentreRef != [[IR]]'
-         . ' AND ft.goodsOrPsv = [[GOODS_OR_PSV]]'
-         . ' AND (ft.licenceType = [[LICENCE_TYPE]] OR ft.licenceType IS NULL)'
-         . ' AND ft.trafficArea = [[NI_TRAFFIC_AREA]]';
+         . ' AND ft.feeType IN ["CONT"]'
+         . ' AND ft.licenceType = [[LICENCE_TYPE]]'
+         . ' LEFT JOIN ft.trafficArea ta'
+         . ' AND ta.isNi = 1';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -259,17 +246,123 @@ class FeeTypeTest extends RepositoryTestCase
         $expectedQuery = 'QUERY'
          . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
          . ' AND ft.isMiscellaneous = [[0]]'
-         . ' AND ft.costCentreRef = [[IR]]';
+         . ' AND ft.feeType IN ["IRFOGVPERMIT","IRFOPSVANN","IRFOPSVAPP","IRFOPSVCOPY"]';
 
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchListForBusReg()
+    {
+        $now = new DateTime();
+        $expectedDate = $now->format(DateTime::W3C);
+
+        $mockLicence = m::mock(LicenceEntity::class)
+            ->shouldReceive('getLicenceType')
+            ->andReturn(new RefData('LICENCE_TYPE'))
+            ->getMock();
+
+        $qb = $this->createMockQb('QUERY');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('feeType', 'ftft')
+            ->once()
+            ->andReturnSelf();
+
+        $qb
+            ->shouldReceive('addOrderBy')
+            ->once()
+            ->with('ftft.id', 'ASC')
+            ->shouldReceive('addOrderBy')
+            ->once()
+            ->with('ft.effectiveFrom', 'DESC');
+
+        $this->em
+            ->shouldReceive('getReference')->with(LicenceEntity::class, 99)
+            ->andReturn($mockLicence);
+
+        $this->sut->shouldReceive('fetchPaginatedList')
+            ->andReturn(['RESULTS']);
+
+        $queryDto = FeeTypeListQry::create(
+            [
+                'busReg' => 1412,
+                'licence' => 99,
+            ]
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
+
+        $expectedQuery = 'QUERY'
+         . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
+         . ' AND ft.isMiscellaneous = [[0]]'
+         . ' AND ft.feeType IN ["BUSAPP","BUSVAR"]'
+         . ' AND ft.licenceType = [[LICENCE_TYPE]]';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchListForBusRegMissingLicence()
+    {
+        $now = new DateTime();
+
+        $mockLicence = m::mock(LicenceEntity::class)
+            ->shouldReceive('getLicenceType')
+            ->andReturn(new RefData('LICENCE_TYPE'))
+            ->getMock();
+
+        $qb = $this->createMockQb('QUERY');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('feeType', 'ftft')
+            ->once()
+            ->andReturnSelf();
+
+        $qb
+            ->shouldReceive('addOrderBy')
+            ->once()
+            ->with('ftft.id', 'ASC')
+            ->shouldReceive('addOrderBy')
+            ->once()
+            ->with('ft.effectiveFrom', 'DESC');
+
+        $this->em
+            ->shouldReceive('getReference')->with(LicenceEntity::class, 99)
+            ->andReturn($mockLicence);
+
+        $this->sut->shouldReceive('fetchPaginatedList')
+            ->andReturn(['RESULTS']);
+
+        $queryDto = FeeTypeListQry::create(
+            [
+                'busReg' => 1412,
+            ]
+        );
+
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->assertEquals($this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
     }
 
     public function testFetchListMiscellaneous()
     {
         $now = new DateTime();
         $expectedDate = $now->format(DateTime::W3C);
-
-        $organisationId = 99;
 
         $qb = $this->createMockQb('QUERY');
 
@@ -300,7 +393,7 @@ class FeeTypeTest extends RepositoryTestCase
 
         $queryDto = FeeTypeListQry::create(
             [
-                'isMiscellaneous' => 1,
+                'isMiscellaneous' => 'Y',
             ]
         );
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));

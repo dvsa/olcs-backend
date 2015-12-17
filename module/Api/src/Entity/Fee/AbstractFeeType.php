@@ -177,6 +177,15 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     protected $isMiscellaneous = 0;
 
     /**
+     * Is ni
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_ni", nullable=false, options={"default": 0})
+     */
+    protected $isNi = 0;
+
+    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -600,6 +609,29 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     public function getIsMiscellaneous()
     {
         return $this->isMiscellaneous;
+    }
+
+    /**
+     * Set the is ni
+     *
+     * @param string $isNi
+     * @return FeeType
+     */
+    public function setIsNi($isNi)
+    {
+        $this->isNi = $isNi;
+
+        return $this;
+    }
+
+    /**
+     * Get the is ni
+     *
+     * @return string
+     */
+    public function getIsNi()
+    {
+        return $this->isNi;
     }
 
     /**
