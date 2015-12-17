@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Exception;
 
+use Zend\Http\Response;
+
 /**
  * RestResponseException
  *
@@ -14,7 +16,7 @@ namespace Dvsa\Olcs\Api\Domain\Exception;
  */
 class RestResponseException extends Exception
 {
-    public function __construct($message = null, $code = 0, $previous = null)
+    public function __construct($message = null, $code = Response::STATUS_CODE_500, $previous = null)
     {
         parent::__construct($message, $code, $previous);
 
