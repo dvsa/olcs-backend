@@ -178,9 +178,7 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
     public function grant(RefData $status, Fee $applicationFee)
     {
         if (!$this->isGrantable($applicationFee)) {
-            throw new BadRequestException(
-                ['Irfo Psv Auth is not grantable']
-            );
+            throw new BadRequestException('Irfo Psv Auth is not grantable');
         }
 
         $this->setStatus($status);
@@ -226,9 +224,7 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
     public function refuse(RefData $status)
     {
         if (!$this->isRefusable()) {
-            throw new BadRequestException(
-                ['Irfo Psv Auth is not refusable']
-            );
+            throw new BadRequestException('Irfo Psv Auth is not refusable');
         }
 
         $this->setStatus($status);
@@ -283,9 +279,7 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
     public function withdraw(RefData $status)
     {
         if (!$this->isWithdrawable()) {
-            throw new BadRequestException(
-                ['Irfo Psv Auth is not withdrawable']
-            );
+            throw new BadRequestException('Irfo Psv Auth is not withdrawable');
         }
 
         $this->setStatus($status);
