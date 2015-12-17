@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Tm;
 
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
@@ -13,6 +14,8 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
 use Dvsa\Olcs\Api\Entity\Tm\TmQualification;
+use Dvsa\Olcs\Api\Entity\Person\Person;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * TransportManager Entity Unit Tests
@@ -543,5 +546,86 @@ class TransportManagerEntityTest extends EntityTester
         $entity->addTmLicences(new \Doctrine\Common\Collections\ArrayCollection([$tml3, $tml1, $tml2]));
 
         $this->assertSame($niFlag === 'N', $entity->isSiQualificationRequiredOnVariation($niFlag));
+    }
+
+    /**
+     * @dataProvider testHasReputeCheckDataProvider
+     *
+     * @param string|null $forename
+     * @param string|null $familyName
+     * @param \DateTime|null $birthDate
+     * @param string|null $birthPlace
+     * @param ArrayCollection|null $qualifications
+     * @param bool $result
+     */
+    public function testHasReputeCheckData($forename, $familyName, $birthDate, $birthPlace, $qualifications, $result)
+    {
+        $entity = new Entity();
+
+        $entity->setQualifications($qualifications);
+
+        $person = new Person();
+        $person->setForename($forename);
+        $person->setFamilyName($familyName);
+        $person->setBirthDate($birthDate);
+        $person->setBirthPlace($birthPlace);
+
+        $contactDetails = m::mock(ContactDetails::class);
+        $contactDetails->shouldReceive('getPerson')->andReturn($person);
+
+        $entity->setHomeCd($contactDetails);
+
+        $this->assertEquals($result, $entity->hasReputeCheckData());
+    }
+
+    /**
+     * Data provider for testHasReputeCheckData
+     *
+     * @return array
+     */
+    public function testHasReputeCheckDataProvider()
+    {
+        $forename = 'forename';
+        $familyName = 'family name';
+        $birthDate = new \DateTime('2015-12-25');
+        $birthPlace = 'birth place';
+        $qualification = m::mock(TmQualification::class);
+        $qualifications = new ArrayCollection([$qualification]);
+
+        return [
+            [null, $familyName, $birthDate, $birthPlace, $qualifications, false],
+            [$forename, null, $birthDate, $birthPlace, $qualifications, false],
+            [$forename, $familyName, null, $birthPlace, $qualifications, false],
+            [$forename, $familyName, $birthDate, null, $qualifications, false],
+            [$forename, $familyName, $birthDate, $birthPlace, new ArrayCollection(), false],
+            [$forename, $familyName, $birthDate, $birthPlace, $qualifications, true]
+        ];
+    }
+
+    public function testGetMostRecentQualification()
+    {
+        $qual1 = new TmQualification();
+        $qual1->setIssuedDate(new \DateTime('2015-12-25 00:00:00'));
+        $qual1->setId(1);
+
+        $qual2 = new TmQualification();
+        $qual2->setIssuedDate(new \DateTime('2015-12-24 00:00:00'));
+        $qual2->setId(2);
+
+        //qual 3 has joint latest date, so is selected based on the later id
+        $qual3 = new TmQualification();
+        $qual3->setIssuedDate(new \DateTime('2015-12-25 00:00:00'));
+        $qual3->setId(3);
+
+        $qual4 = new TmQualification();
+        $qual4->setIssuedDate(new \DateTime('2015-12-23 00:00:00'));
+        $qual4->setId(4);
+
+        $qualifications = new ArrayCollection([$qual1, $qual2, $qual3, $qual4]);
+
+        $entity = new Entity();
+        $entity->setQualifications($qualifications);
+
+        $this->assertEquals(new ArrayCollection([$qual3]), $entity->getMostRecentQualification());
     }
 }
