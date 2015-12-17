@@ -43,12 +43,6 @@ class CreateBusFeeTest extends CommandHandlerTestCase
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
         ];
 
-        $this->references = [
-            TrafficArea::class => [
-                TrafficArea::SCOTTISH_TRAFFIC_AREA_CODE => m::mock(TrafficArea::class)
-            ]
-        ];
-
         parent::initReferences();
     }
 
@@ -73,7 +67,7 @@ class CreateBusFeeTest extends CommandHandlerTestCase
         /** @var TrafficArea $ta */
         $ta = m::mock(TrafficArea::class)->makePartial();
         $ta->setId('M');
-        $ta->setIsScotland('Y');
+        $ta->setIsScotland(true);
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
@@ -102,7 +96,7 @@ class CreateBusFeeTest extends CommandHandlerTestCase
                 $goodsOrPsv,
                 $licenceType,
                 m::type('\DateTime'),
-                $this->references[TrafficArea::class][TrafficArea::SCOTTISH_TRAFFIC_AREA_CODE]
+                TrafficArea::SCOTTISH_TRAFFIC_AREA_CODE
             )
             ->andReturn($feeType);
 

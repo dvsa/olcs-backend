@@ -285,6 +285,10 @@ class RepositoryTestCase extends MockeryTestCase
             return $value->format(\DateTime::W3C);
         }
 
+        if ($value instanceof \Dvsa\Olcs\Api\Entity\System\RefData) {
+            return $value->getId();
+        }
+
         if (is_object($value)) {
             $value = get_class($value);
         }

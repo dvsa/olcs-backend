@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Service;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Service\FeesHelperService;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -191,10 +192,7 @@ class FeesHelperServiceTest extends MockeryTestCase
                     $this->getStubFee('10', '99.99'),
                     $this->getStubFee('11', '100.01'),
                 ],
-                [
-                    '10' => '0.00',
-                    '11' => '0.00',
-                ]
+                []
             ],
             [
                 '200.00',
@@ -219,7 +217,6 @@ class FeesHelperServiceTest extends MockeryTestCase
                     '11' => '50.01',
                     '12' => '100.00',
                     '10' => '49.99',
-                    '13' => '0.00',
                 ]
             ],
             [
@@ -234,26 +231,9 @@ class FeesHelperServiceTest extends MockeryTestCase
                 [
                     '2' => '100.00',
                     '3' => '100.00',
-                    '4' => '0.00',
-                    '1' => '0.00',
                 ]
             ]
         ];
-    }
-
-    public function testAllocatePaymentsOverPaymentThrowsException()
-    {
-        $amount = '500';
-        $fees = [
-            $this->getStubFee('10', '99.99', '2015-09-04'),
-            $this->getStubFee('11', '50.01', '2015-09-02'),
-            $this->getStubFee('12', '100.00', '2015-09-03'),
-            $this->getStubFee('13', '100.00', '2015-09-05'),
-        ];
-
-        $this->setExpectedException(\Dvsa\Olcs\Api\Service\Exception::class, 'Overpayments not permitted');
-
-        $this->sut->allocatePayments($amount, $fees);
     }
 
     public function testGetMinPaymentForFees()
@@ -316,6 +296,39 @@ class FeesHelperServiceTest extends MockeryTestCase
         ];
     }
 
+    public function testGetIdsFromFee()
+    {
+        $application  = m::mock()->shouldReceive('getId')->andReturn(2)->getMock();
+        $licence      = m::mock()->shouldReceive('getId')->andReturn(3)->getMock();
+        $busReg       = m::mock()->shouldReceive('getId')->andReturn(4)->getMock();
+        $irfoGvPermit = m::mock()->shouldReceive('getId')->andReturn(5)->getMock();
+        $irfoPsvAuth  = m::mock()->shouldReceive('getId')->andReturn(6)->getMock();
+
+        $fee = m::mock(FeeEntity::class)
+            ->shouldReceive('getApplication')
+            ->andReturn($application)
+            ->shouldReceive('getLicence')
+            ->andReturn($licence)
+            ->shouldReceive('getBusReg')
+            ->andReturn($busReg)
+            ->shouldReceive('getIrfoGvPermit')
+            ->andReturn($irfoGvPermit)
+            ->shouldReceive('getIrfoPsvAuth')
+            ->andReturn($irfoPsvAuth)
+            ->getMock();
+
+        $this->assertEquals(
+            [
+                'application' => 2,
+                'licence' => 3,
+                'busReg' => 4,
+                'irfoGvPermit' => 5,
+                'irfoPsvAuth' => 6,
+            ],
+            $this->sut->getIdsFromFee($fee)
+        );
+    }
+
     /**
      * Helper function to generate a stub fee entity
      *
@@ -332,7 +345,9 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->shouldReceive('getOutstandingAmount')
             ->andReturn($amount)
             ->shouldReceive('getInvoicedDate')
-            ->andReturn(new \DateTime($invoicedDate));
+            ->andReturn(new \DateTime($invoicedDate))
+            ->shouldReceive('isCancelled')
+            ->andReturn(false);
 
         return $fee;
     }

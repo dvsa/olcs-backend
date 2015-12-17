@@ -14,6 +14,7 @@ use CpmsClient\Service\ApiService;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -437,7 +438,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         if (isset($response['code']) && $response['code'] === self::RESPONSE_SUCCESS) {
             return $response;
         } else {
-            $e = new CpmsResponseException('Invalid refund response');
+            $statusCode = $this->getCpmsHttpStatusCode();
+            $e = new CpmsResponseException('Invalid refund response', $statusCode);
             $e->setResponse($response);
             throw $e;
         }
@@ -524,6 +526,67 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'scope' => $scope,
             'customer_reference' => (string) $this->getCustomerReference($fees),
         ];
+
+        $response = $this->send($method, $endPoint, $scope, $params);
+
+        return $this->validatePaymentResponse($response, false);
+    }
+
+    /**
+     * Adjust a transaction
+     *
+     * @param  Transaction $originalTransaction
+     * @param  Transaction $newTransaction
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
+     */
+    public function adjustTransaction($originalTransaction, $newTransaction)
+    {
+        $method   = 'post';
+        $endPoint = '/api/payment/'.$originalTransaction->getReference().'/adjustment';
+        $scope    = ApiService::SCOPE_ADJUSTMENT;
+
+        $newAmount = $newTransaction->getAmountAfterAdjustment();
+        $fees = $newTransaction->getFees();
+
+        $chequeNo = $poNo = null;
+        switch ($newTransaction->getPaymentMethod()->getId()) {
+            case Fee::METHOD_CHEQUE:
+                $chequeNo = $newTransaction->getChequePoNumber();
+                break;
+            case Fee::METHOD_POSTAL_ORDER:
+                $poNo = $newTransaction->getChequePoNumber();
+                break;
+            default:
+                break;
+        }
+
+        $extraParams = [
+            'cheque_date' => $this->formatDate($newTransaction->getChequePoDate()),
+            'cheque_number' => (string) $chequeNo,
+            'postal_order_number' => (string) $poNo,
+            'slip_number' => (string) $newTransaction->getPayingInSlipNumber(),
+            'batch_number' => (string) $newTransaction->getPayingInSlipNumber(),
+            'name_on_cheque' => $newTransaction->getPayerName(),
+            'scope' => $scope,
+            'total_amount' => $this->formatAmount($newAmount),
+        ];
+        $params = $this->getParametersForFees($fees, $extraParams);
+
+        foreach ($fees as $fee) {
+            if ($fee->isBalancingFee()) {
+                continue;
+            }
+            $allocation = $newTransaction->getAmountAllocatedToFeeId($fee->getId());
+            if ($allocation == 0) {
+                continue;
+            }
+            $extraPaymentData = ['allocated_amount' => $allocation];
+            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
+            if (!empty($paymentData)) {
+                $params['payment_data'][] = $paymentData;
+            }
+        }
 
         $response = $this->send($method, $endPoint, $scope, $params);
 
@@ -632,7 +695,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             }
         }
 
-        $e = new CpmsResponseException('Invalid payment response');
+        $statusCode = $this->getCpmsHttpStatusCode();
+        $e = new CpmsResponseException('Invalid payment response', $statusCode);
         $e->setResponse($response);
         throw $e;
     }
@@ -695,7 +759,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'receiver_address' => $this->formatAddress($fee->getCustomerAddressForInvoice()),
             'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
             'deferment_period' => (string) $fee->getDefermentPeriod(),
-            // 'country_code' ('GB' or 'NI') is optional and deliberately omitted
+            'country_code' => $fee->getFeeType()->getCountryCode(),
             'sales_person_reference' => $fee->getSalesPersonReference(),
         ];
 
@@ -787,5 +851,17 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
                 ),
             ]
         );
+    }
+
+    /**
+     * @return int HTTP status code of the last CPMS Client response
+     */
+    private function getCpmsHttpStatusCode()
+    {
+        return $this->getClient() // CpmsClient\Service\ApiService
+            ->getClient()         // CpmsClient\Client\HttpRestJsonClient
+            ->getHttpClient()     // Zend\Http\Client
+            ->getResponse()       // Zend\HttpResponse
+            ->getStatusCode();
     }
 }

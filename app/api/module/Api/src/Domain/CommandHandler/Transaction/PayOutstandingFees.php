@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as CreateFeeCmd;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CreateOverpaymentFee as CreateOverpaymentFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
@@ -18,6 +19,8 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Domain\Exception\RestResponseException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -62,14 +65,12 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         // if payment method in CARD_ONLINE (ie it came from external) and disable card payments is set
         if ($command->getPaymentMethod()===FeeEntity::METHOD_CARD_ONLINE &&
             $this->getRepo('SystemParameter')->getDisableSelfServeCardPayments()
         ) {
-            $result->addMessage('Card payments are disabled');
-            return $result;
+            $this->result->addMessage('Card payments are disabled');
+            return $this->result;
         }
 
         if (!empty($command->getOrganisationId())) {
@@ -81,24 +82,24 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         }
 
         // filter out fees that may have been paid by resolving outstanding payments
-        $feesToPay = $this->resolvePaidFees($fees, $result);
+        $feesToPay = $this->resolvePaidFees($fees);
 
         if (empty($feesToPay)) {
-            $result->addMessage('No fees to pay');
-            return $result;
+            $this->result->addMessage('No fees to pay');
+            return $this->result;
         }
 
         try {
             $cardMethods = [FeeEntity::METHOD_CARD_ONLINE, FeeEntity:: METHOD_CARD_OFFLINE];
             if (in_array($command->getPaymentMethod(), $cardMethods)) {
-                return $this->cardPayment($command, $feesToPay, $result);
+                return $this->cardPayment($command, $feesToPay);
             } else {
-                return $this->immediatePayment($command, $feesToPay, $result);
+                return $this->immediatePayment($command, $feesToPay);
             }
         } catch (CpmsResponseException $e) {
             // rethrow as Domain exception
-            throw new RuntimeException(
-                'Error from CPMS service: ' . json_encode($e->getResponse()),
+            throw new RestResponseException(
+                sprintf('Error from CPMS service [%s] %s', $e->getMessage(), json_encode($e->getResponse())),
                 $e->getCode(),
                 $e
             );
@@ -110,11 +111,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      *
      * @param CommandInterface $command
      * @param array $feesToPay
-     * @param Result $result
      *
      * @return Result
      */
-    protected function cardPayment($command, $feesToPay, $result)
+    protected function cardPayment($command, $feesToPay)
     {
         // fire off to CPMS
         if ($command->getPaymentMethod() === FeeEntity::METHOD_CARD_OFFLINE) {
@@ -143,7 +143,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         $transaction->setFeeTransactions($feeTransactions);
         foreach ($feesToPay as $fee) {
 
-            $result->merge($this->maybeCancelPendingWaive($fee));
+            $this->result->merge($this->maybeCancelPendingWaive($fee));
 
             $feeTransaction = new FeeTransactionEntity();
             $feeTransaction
@@ -156,10 +156,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         // persist
         $this->getRepo()->save($transaction);
 
-        $result->addId('transaction', $transaction->getId());
-        $result->addMessage('Transaction record created');
+        $this->result->addId('transaction', $transaction->getId());
+        $this->result->addMessage('Transaction record created');
 
-        return $result;
+        return $this->result;
     }
 
     /**
@@ -167,17 +167,16 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      *
      * @param CommandInterface $command
      * @param array $fees
-     * @param Result $result
      *
      * @return Result
      */
-    protected function immediatePayment($command, $fees, $result)
+    protected function immediatePayment($command, $fees)
     {
         $this->validateAmount($command->getReceived(), $fees);
 
         // work out the allocation of the payment amount to fees, will create
         // balancing entry to handle any overpayment
-        $allocations = $this->allocatePayments($command->getReceived(), $fees, $result);
+        $allocations = $this->allocatePayments($command->getReceived(), $fees);
 
         // fire off to relevant CPMS method to record payment
         $response = $this->recordPaymentInCpms($command, $fees);
@@ -203,7 +202,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         // create feeTransaction record(s) and cancel any pending waives
         foreach ($fees as $fee) {
 
-            $result->merge($this->maybeCancelPendingWaive($fee));
+            $this->result->merge($this->maybeCancelPendingWaive($fee));
 
             $allocatedAmount = $allocations[$fee->getId()];
             $markAsPaid = ($allocatedAmount === $fee->getOutstandingAmount());
@@ -217,30 +216,31 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             if ($markAsPaid) {
                 $fee->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID));
                 $method = $this->getRepo()->getRefdataReference($command->getPaymentMethod())->getDescription();
-                $result->addMessage('Fee ID ' . $fee->getId() . ' updated as paid by ' . $method);
+                $this->result->addMessage('Fee ID ' . $fee->getId() . ' updated as paid by ' . $method);
                 // We need to call save() on the fee, it won't cascade persist from the transaction
                 $this->getRepo('Fee')->save($fee);
-                $result->merge($this->handleSideEffect(PayFeeCmd::create(['id' => $fee->getId()])));
+                $this->result->merge($this->handleSideEffect(PayFeeCmd::create(['id' => $fee->getId()])));
             } elseif ($fee->getLicence()) {
                 // Generate Insufficient Fee Request letter
-                $result->merge($this->generateInsufficientFeeRequestLetter($fee, $allocatedAmount));
+                $this->result->merge($this->generateInsufficientFeeRequestLetter($fee, $allocatedAmount));
             }
         }
 
         // persist transaction
         $this->getRepo()->save($transaction);
 
-        $result
+        $this->result
             ->addId('transaction', $transaction->getId())
             ->addMessage('Transaction record created: ' . $transaction->getReference())
             ->addId('feeTransaction', $transaction->getFeeTransactionIds())
             ->addMessage('FeeTransaction record(s) created');
 
-        return $result;
+        return $this->result;
     }
 
     /**
      * @return array|false
+     * @throws BadRequestException if paymentMethod is invalid
      */
     protected function recordPaymentInCpms($command, $fees)
     {
@@ -274,7 +274,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                 );
                 break;
             default:
-                throw new RuntimeException('invalid payment method: ' . $command->getPaymentMethod());
+                throw new BadRequestException('invalid payment method: ' . $command->getPaymentMethod());
         }
 
         return $response;
@@ -289,10 +289,9 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
 
     /**
      * @param FeeEntity $fee
-     * @param Result $result
      * @return boolean whether fee was paid
      */
-    protected function resolveOutstandingPayments($fee, $result)
+    protected function resolveOutstandingPayments($fee)
     {
         $paid = false;
 
@@ -308,7 +307,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                         'paymentMethod' => $ft->getTransaction()->getPaymentMethod()->getId(),
                     ]
                 );
-                $result->merge($this->getCommandHandler()->handleCommand($dto));
+                $this->result->merge($this->getCommandHandler()->handleCommand($dto));
 
                 // check payment status
                 $transaction = $this->getRepo()->fetchById($transactionId);
@@ -324,15 +323,14 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
 
     /**
      * @param array $fees
-     * @param Result $result
      * @return array
      */
-    public function resolvePaidFees($fees, $result)
+    public function resolvePaidFees($fees)
     {
         $feesToPay = [];
         foreach ($fees as $fee) {
             if ($fee->hasOutstandingPayment()) {
-                $paid = $this->resolveOutstandingPayments($fee, $result);
+                $paid = $this->resolveOutstandingPayments($fee);
                 if (!$paid) {
                     $feesToPay[] = $fee;
                 }
@@ -384,19 +382,23 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     /**
      * @param string $receivedAmount
      * @param array $fees - passed by reference as we may need to append
-     * @param Result $result
      * @return array
      */
-    protected function allocatePayments($receivedAmount, &$fees, $result)
+    protected function allocatePayments($receivedAmount, &$fees)
     {
-        $feeResult = $this->maybeCreateOverpaymentFee($receivedAmount, $fees);
+        $dtoData = [
+            'receivedAmount' => $receivedAmount,
+            'fees' => $fees,
+        ];
+
+        $feeResult = $this->handleSideEffect(CreateOverpaymentFeeCmd::create($dtoData));
 
         if ($feeResult->getId('fee')) {
             // an overpayment balancing fee was created, add it to the list
             $fees[] = $this->getRepo('Fee')->fetchById($feeResult->getId('fee'));
         }
 
-        $result->merge($feeResult);
+        $this->result->merge($feeResult);
 
         try {
             // work out the allocation of the payment amount to fees
@@ -407,86 +409,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         }
 
         return $allocations;
-    }
-
-    /**
-     * @param string $receivedAmount
-     * @param array $fees
-     * @return Result
-     */
-    protected function maybeCreateOverpaymentFee($receivedAmount, $fees)
-    {
-        $overpaymentAmount = $this->feesHelper->getOverpaymentAmount($receivedAmount, $fees);
-
-        if ($overpaymentAmount > 0) {
-
-            // sort fees
-            $fees = $this->feesHelper->sortFeesByInvoiceDate($fees);
-
-            // get IDs for description
-            $feeIds = array_map(
-                function ($fee) {
-                    return $fee->getId();
-                },
-                $fees
-            );
-
-            // we get licenceId, applicationId, busRegId, irfoGvPermitId,from the first existing fee
-            $existingFee = reset($fees);
-            $ids = $this->getIdsFromFee($existingFee);
-
-            // get correct feeType
-            $feeType = $this->getRepo('FeeType')->fetchLatestForOverpayment();
-
-            $dtoData = array_merge(
-                [
-                    'amount'       => $overpaymentAmount,
-                    'invoicedDate' => (new DateTime())->format(\DateTime::W3C),
-                    'feeType'      => $feeType->getId(),
-                    'description'  => 'Overpayment on fees: ' . implode(', ', $feeIds),
-                ],
-                $ids
-            );
-
-            return $this->handleSideEffect(CreateFeeCmd::create($dtoData));
-        }
-
-        // if no overpayment, return empty result
-        return new Result();
-    }
-
-    /**
-     * @param FeeEntity $existingFee
-     * @return array
-     */
-    private function getIdsFromFee($existingFee)
-    {
-        $licenceId = null;
-        if ($existingFee->getLicence()) {
-            $licenceId = $existingFee->getLicence()->getId();
-        }
-
-        $applicationId = null;
-        if ($existingFee->getApplication()) {
-            $applicationId = $existingFee->getApplication()->getId();
-        }
-
-        $busRegId = null;
-        if ($existingFee->getBusReg()) {
-            $busRegId = $existingFee->getBusReg()->getId();
-        }
-
-        $irfoGvPermitId = null;
-        if ($existingFee->getIrfoGvPermit()) {
-            $irfoGvPermitId = $existingFee->getIrfoGvPermit()->getId();
-        }
-
-        return [
-            'licence'      => $licenceId,
-            'application'  => $applicationId,
-            'busReg'       => $busRegId,
-            'irfoGvPermit' => $irfoGvPermitId,
-        ];
     }
 
     private function generateInsufficientFeeRequestLetter(FeeEntity $fee, $allocatedAmount)

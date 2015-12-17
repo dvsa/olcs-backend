@@ -1,5 +1,6 @@
 <?php
 
+
 namespace Dvsa\OlcsTest\Api\Entity\Fee;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -287,9 +288,11 @@ class FeeEntityTest extends EntityTester
         $createdOn,
         $statusId = Transaction::STATUS_COMPLETE,
         $typeId = Transaction::TYPE_PAYMENT,
-        $comment = ''
+        $comment = '',
+        $transactionId = null
     ) {
         $transaction = new Transaction();
+        $transaction->setId($transactionId);
         $feeTransaction = new FeeTransaction();
         $feeTransaction->setTransaction($transaction);
         $feeTransaction->setAmount($amount);
@@ -1009,7 +1012,7 @@ class FeeEntityTest extends EntityTester
 
         $nonRefundedFeeTransaction = m::mock(FeeTransaction::class);
         $nonRefundedFeeTransaction
-            ->shouldReceive('getTransaction->isPayment')
+            ->shouldReceive('getTransaction->isCompletePaymentOrAdjustment')
             ->andReturn(true);
         $nonRefundedFeeTransaction
             ->shouldReceive('isRefundedOrReversed')
@@ -1017,7 +1020,7 @@ class FeeEntityTest extends EntityTester
 
         $refundedFeeTransaction = m::mock(FeeTransaction::class);
         $refundedFeeTransaction
-            ->shouldReceive('getTransaction->isPayment')
+            ->shouldReceive('getTransaction->isCompletePaymentOrAdjustment')
             ->andReturn(true);
         $refundedFeeTransaction
             ->shouldReceive('isRefundedOrReversed')
@@ -1038,9 +1041,7 @@ class FeeEntityTest extends EntityTester
     public function testGetFeeTransactionsForRefund()
     {
         $txn1 = m::mock(Transaction::class)
-            ->shouldReceive('isPayment')
-            ->andReturn(true)
-            ->shouldReceive('isComplete')
+            ->shouldReceive('isCompletePaymentOrAdjustment')
             ->andReturn(true)
             ->getMock();
         $nonRefundedFeeTransaction = m::mock(FeeTransaction::class);
@@ -1048,12 +1049,12 @@ class FeeEntityTest extends EntityTester
             ->shouldReceive('getTransaction')
             ->andReturn($txn1)
             ->shouldReceive('isRefundedOrReversed')
-            ->andReturn(false);
+            ->andReturn(false)
+            ->shouldReceive('getReversedFeeTransaction')
+            ->andReturn(null);
 
         $txn2 = m::mock(Transaction::class)
-            ->shouldReceive('isPayment')
-            ->andReturn(true)
-            ->shouldReceive('isComplete')
+            ->shouldReceive('isCompletePaymentOrAdjustment')
             ->andReturn(true)
             ->getMock();
         $refundedFeeTransaction = m::mock(FeeTransaction::class);
@@ -1061,9 +1062,26 @@ class FeeEntityTest extends EntityTester
             ->shouldReceive('getTransaction')
             ->andReturn($txn2)
             ->shouldReceive('isRefundedOrReversed')
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getReversedFeeTransaction')
+            ->andReturn(null);
 
-        $this->sut->setFeeTransactions([$nonRefundedFeeTransaction, $refundedFeeTransaction]);
+        $reversingFeeTransaction = m::mock(FeeTransaction::class);
+        $reversingFeeTransaction
+            ->shouldReceive('getTransaction')
+            ->andReturn($txn2)
+            ->shouldReceive('isRefundedOrReversed')
+            ->andReturn(false)
+            ->shouldReceive('getReversedFeeTransaction')
+            ->andReturn(m::mock(FeeTransaction::class));
+
+        $this->sut->setFeeTransactions(
+            [
+                $nonRefundedFeeTransaction,
+                $refundedFeeTransaction,
+                $reversingFeeTransaction,
+            ]
+        );
 
         $this->assertEquals(
             [$nonRefundedFeeTransaction],
@@ -1162,7 +1180,7 @@ class FeeEntityTest extends EntityTester
         $this->assertSame($expected, Entity::AmountToPounds($input));
     }
 
-   public function amountToPoundsProvider()
+    public function amountToPoundsProvider()
     {
         return [
             [100, '1.00'],
@@ -1171,6 +1189,60 @@ class FeeEntityTest extends EntityTester
             [3516, '35.16'],
             [123456, '1234.56'],
             [-456, '-4.56'],
+        ];
+    }
+
+    /**
+     * @dataProvider amountByTransactionProvider
+     */
+    public function testGetAmountAllocatedByTransactionId($feeTransactions, $transactionId, $expected)
+    {
+        $this->sut->setFeeTransactions($feeTransactions);
+        $this->assertEquals($expected, $this->sut->getAmountAllocatedByTransactionId($transactionId));
+    }
+
+    public function amountByTransactionProvider()
+    {
+        return [
+            'no transactions' => [
+                new ArrayCollection(),
+                99,
+                null,
+            ],
+            'one complete transaction matched' => [
+                new ArrayCollection(
+                    [
+                        $this->getStubFeeTransaction(
+                            '234.56',
+                            '2015-09-01',
+                            '2015-09-02',
+                            Transaction::STATUS_COMPLETE,
+                            Transaction::TYPE_PAYMENT,
+                            '',
+                            99
+                        ),
+                    ]
+                ),
+                99,
+                '234.56',
+            ],
+            'one complete transaction unmatched' => [
+                new ArrayCollection(
+                    [
+                        $this->getStubFeeTransaction(
+                            '234.56',
+                            '2015-09-01',
+                            '2015-09-02',
+                            Transaction::STATUS_COMPLETE,
+                            Transaction::TYPE_PAYMENT,
+                            '',
+                            98
+                        ),
+                    ]
+                ),
+                99,
+                null,
+            ],
         ];
     }
 }

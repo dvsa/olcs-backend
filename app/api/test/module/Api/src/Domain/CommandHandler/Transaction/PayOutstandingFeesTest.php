@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Pay Outstanding Fees Test
  *
@@ -10,10 +11,12 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as CreateFeeCmd;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CreateOverpaymentFee as CreateOverpaymentFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Transaction\PayOutstandingFees;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository;
@@ -572,32 +575,16 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
         // overpayment balancing fee should be created
         //////////////////////////////////////////////////////////////////////
-        $fee2 = $this->getStubFee(100, 0.01, FeeTypeEntity::FEE_TYPE_ADJUSTMENT); // overpayment
-        $now = (new DateTime())->format(\DateTime::W3C);
-        $overpaymentTypeId = 1234;
-        $this->repoMap['FeeType']
-            ->shouldReceive('fetchLatestForOverpayment')
-            ->once()
-            ->andReturn(
-                m::mock(FeeTypeEntity::class)
-                    ->shouldReceive('getId')
-                    ->andReturn($overpaymentTypeId)
-                    ->getMock()
-            );
         $newFeeData = [
-            'amount'       => '0.01',
-            'invoicedDate' => $now,
-            'feeType'      => $overpaymentTypeId,
-            'description'  => 'Overpayment on fees: 99',
-            'licence'      => $licenceId,
-            'application'  => $applicationId,
-            'busReg'       => null,
-            'irfoGvPermit' => null,
+            'receivedAmount' => '100.00',
+            'fees' => [$fee1],
         ];
         $newFeeResult = new Result();
         $newFeeResult->addId('fee', 100);
         $newFeeResult->addMessage('Overpayment balancing fee created', 100);
-        $this->expectedSideEffect(CreateFeeCmd::class, $newFeeData, $newFeeResult);
+        $this->expectedSideEffect(CreateOverpaymentFeeCmd::class, $newFeeData, $newFeeResult);
+
+        $fee2 = $this->getStubFee(100, 0.01, FeeTypeEntity::FEE_TYPE_ADJUSTMENT); // overpayment
         $this->repoMap['Fee']
             ->shouldReceive('fetchById')
             ->with(100)
@@ -759,10 +746,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                 ]
             );
 
-        $this->mockFeesHelperService
-            ->shouldReceive('getOverpaymentAmount')
-            ->with('99.99', $fees)
-            ->andReturn('0.00');
+        $this->expectedSideEffect(
+            CreateOverpaymentFeeCmd::class,
+            ['receivedAmount' => '99.99', 'fees' => $fees],
+            new Result()
+        );
 
         $this->repoMap['Fee']
             ->shouldReceive('save')
@@ -873,10 +861,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                 ]
             );
 
-        $this->mockFeesHelperService
-            ->shouldReceive('getOverpaymentAmount')
-            ->with('99.99', $fees)
-            ->andReturn('0.00');
+        $this->expectedSideEffect(
+            CreateOverpaymentFeeCmd::class,
+            ['receivedAmount' => '99.99', 'fees' => $fees],
+            new Result()
+        );
 
         $this->repoMap['Fee']
             ->shouldReceive('save')
@@ -1010,10 +999,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->with($fees)
             ->andReturn('0.01');
 
-        $this->mockFeesHelperService
-            ->shouldReceive('getOverpaymentAmount')
-            ->with('1000', $fees)
-            ->andReturn('0.00');
+        $this->expectedSideEffect(
+            CreateOverpaymentFeeCmd::class,
+            ['receivedAmount' => '1000', 'fees' => $fees],
+            new Result()
+        );
 
         $this->mockFeesHelperService
             ->shouldReceive('allocatePayments')
@@ -1062,22 +1052,27 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                 ]
             );
 
-        $this->mockFeesHelperService
-            ->shouldReceive('getOverpaymentAmount')
-            ->with('99.99', $fees)
-            ->andReturn('0.00');
+        $this->expectedSideEffect(
+            CreateOverpaymentFeeCmd::class,
+            ['receivedAmount' => '99.99', 'fees' => $fees],
+            new Result()
+        );
 
         $this->mockCpmsService
             ->shouldReceive('recordCashPayment')
             ->once()
-            ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsResponseException('ohnoes'));
+            ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsResponseException('ohnoes', 400));
 
         $this->mockFeesHelperService
             ->shouldReceive('getMinPaymentForFees')
             ->with($fees)
             ->andReturn(0.01);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->setExpectedException(
+            \Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class,
+            'ohnoes',
+            400
+        );
 
         $this->sut->handleCommand($command);
     }
@@ -1142,10 +1137,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                 ]
             );
 
-        $this->mockFeesHelperService
-            ->shouldReceive('getOverpaymentAmount')
-            ->with('10.00', $fees)
-            ->andReturn('0.00');
+        $this->expectedSideEffect(
+            CreateOverpaymentFeeCmd::class,
+            ['receivedAmount' => '10.00', 'fees' => $fees],
+            new Result()
+        );
 
         $docData = [
             'template' => 'FEE_REQ_INSUFFICIENT',
@@ -1315,6 +1311,53 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertEquals(PaymentEntity::STATUS_OUTSTANDING, $savedPayment->getStatus()->getId());
+    }
+
+    public function testHandleCommandInvalidPaymentMethod()
+    {
+        $feeIds = [1, 2];
+
+        $data = [
+            'feeIds' => $feeIds,
+            'paymentMethod' => 'foo',
+            'received' => '35.79',
+        ];
+
+        $command = Cmd::create($data);
+
+        $fee1 = $this->getStubFee(99, 12.34);
+        $fee2 = $this->getStubFee(100, 23.45);
+        $fees = [$fee1, $fee2];
+
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        $this->mockFeesHelperService
+            ->shouldReceive('getMinPaymentForFees')
+            ->with($fees)
+            ->andReturn(12.35);
+
+        $allocations = [
+            99 => '12.34',
+            100 => '23.45',
+        ];
+        $this->mockFeesHelperService
+            ->shouldReceive('allocatePayments')
+            ->with('35.79', $fees)
+            ->andReturn($allocations);
+
+        $opData = [
+            'receivedAmount' => '35.79',
+            'fees' => $fees,
+        ];
+        $this->expectedSideEffect(CreateOverpaymentFeeCmd::class, $opData, new Result());
+
+        $this->setExpectedException(BadRequestException::class, 'invalid payment method: foo');
+
+        $this->sut->handleCommand($command);
     }
 
     /**

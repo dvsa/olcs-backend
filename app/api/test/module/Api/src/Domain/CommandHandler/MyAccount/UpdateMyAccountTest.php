@@ -8,6 +8,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\MyAccount;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Mockery as m;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\MyAccount\UpdateMyAccount as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\MyAccount\UpdateMyAccount;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\User;
@@ -16,7 +17,6 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Transfer\Command\MyAccount\UpdateMyAccount as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use ZfcRbac\Service\AuthorizationService;
 

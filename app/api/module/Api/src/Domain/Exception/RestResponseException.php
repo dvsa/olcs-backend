@@ -1,11 +1,13 @@
 <?php
 
 /**
- * RestRequestException
+ * RestResponseException
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\Exception;
+
+use Zend\Http\Response;
 
 /**
  * RestResponseException
@@ -14,8 +16,10 @@ namespace Dvsa\Olcs\Api\Domain\Exception;
  */
 class RestResponseException extends Exception
 {
-    public function __construct($message = null)
+    public function __construct($message = null, $code = Response::STATUS_CODE_500, $previous = null)
     {
+        parent::__construct($message, $code, $previous);
+
         $this->messages = [$message];
     }
 }
