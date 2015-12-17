@@ -179,7 +179,7 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
     {
         if (!$this->isGrantable($applicationFee)) {
             throw new BadRequestException(
-                ['Irfo Psv Auth is not grantable']
+                'Irfo Psv Auth is not grantable'
             );
         }
 
@@ -227,7 +227,7 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
     {
         if (!$this->isRefusable()) {
             throw new BadRequestException(
-                ['Irfo Psv Auth is not refusable']
+                'Irfo Psv Auth is not refusable'
             );
         }
 
@@ -283,7 +283,7 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
     {
         if (!$this->isWithdrawable()) {
             throw new BadRequestException(
-                ['Irfo Psv Auth is not withdrawable']
+                'Irfo Psv Auth is not withdrawable'
             );
         }
 
@@ -327,7 +327,7 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
     {
         if (!$this->isResetable()) {
             throw new BadRequestException(
-                ['Irfo Psv Auth cannot be reset']
+                'Irfo Psv Auth cannot be reset'
             );
         }
 

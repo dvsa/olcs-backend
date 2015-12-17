@@ -39,7 +39,7 @@ final class ResetIrfoPsvAuth extends AbstractCommandHandler implements Transacti
         $irfoPsvAuth = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
         $newStatus = IrfoPsvAuth::STATUS_PENDING;
-        if ($irfoPsvAuth->getStatus() == IrfoPsvAuth::STATUS_CNS) {
+        if ($irfoPsvAuth->getStatus()->getId() === IrfoPsvAuth::STATUS_CNS) {
             $newStatus = IrfoPsvAuth::STATUS_RENEW;
         }
 
