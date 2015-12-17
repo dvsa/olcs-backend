@@ -174,4 +174,14 @@ return array(
             'uri' => 'http://localhost:8080/txc/publisherService',
         ],
     ],
+    'nr' => [
+        // @to-do currently waiting on the actual nr address
+        'inr_service' => [
+            'uri' => 'http://testServiceAddress',
+            'options' => ['timeout' => 30]
+        ],
+        'repute_url' => [
+            'uri' => 'https://r-inr-01.corp.vosa.gov.uk:444/INR.BackofficeWeb/Repute/SubmitCheck.aspx?'
+        ]
+    ],
 );
