@@ -35,34 +35,42 @@ class CancelIrfoPsvAuthFeesTest extends CommandHandlerTestCase
             FeeEntity::class => [
                 23 => m::mock(FeeEntity::class)
                     ->makePartial()
-                    ->setFeeStatus(FeeEntity::STATUS_OUTSTANDING)
+                    ->setFeeStatus(new RefDataEntity(FeeEntity::STATUS_OUTSTANDING))
                     ->setFeeType(
                         m::mock(FeeTypeEntity::class)
                             ->shouldReceive('getFeeType')
+                            ->andReturnSelf()
+                            ->shouldReceive('getId')
                             ->andReturn(RefDataEntity::FEE_TYPE_IRFOPSVAPP)->getMock()
                     ),
                 24 => m::mock(FeeEntity::class)
                     ->makePartial()
-                    ->setFeeStatus(FeeEntity::STATUS_OUTSTANDING)
+                    ->setFeeStatus(new RefDataEntity(FeeEntity::STATUS_OUTSTANDING))
                     ->setFeeType(
                         m::mock(FeeTypeEntity::class)
                             ->shouldReceive('getFeeType')
+                            ->andReturnSelf()
+                            ->shouldReceive('getId')
                             ->andReturn(RefDataEntity::FEE_TYPE_IRFOPSVCOPY)->getMock()
                     ),
                 25 => m::mock(FeeEntity::class)
                     ->makePartial()
-                    ->setFeeStatus(FeeEntity::STATUS_OUTSTANDING)
+                    ->setFeeStatus(new RefDataEntity(FeeEntity::STATUS_OUTSTANDING))
                     ->setFeeType(
                         m::mock(FeeTypeEntity::class)
                             ->shouldReceive('getFeeType')
+                            ->andReturnSelf()
+                            ->shouldReceive('getId')
                             ->andReturn(RefDataEntity::FEE_TYPE_IRFOPSVANN)->getMock()
                     ),
                 26 => m::mock(FeeEntity::class)
                     ->makePartial()
-                    ->setFeeStatus(FeeEntity::STATUS_PAID)
+                    ->setFeeStatus(new RefDataEntity(FeeEntity::STATUS_PAID))
                     ->setFeeType(
                         m::mock(FeeTypeEntity::class)
                             ->shouldReceive('getFeeType')
+                            ->andReturnSelf()
+                            ->shouldReceive('getId')
                             ->andReturn(RefDataEntity::FEE_TYPE_IRFOPSVANN)->getMock()
                     ),
             ]
