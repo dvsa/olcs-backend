@@ -788,6 +788,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'customer_manager_name' => $firstFee->getCustomerNameForInvoice(),
             'customer_address' => $this->formatAddress($firstFee->getCustomerAddressForInvoice()),
             'refund_overpayment' => $this->isOverpayment($fees),
+            'country_code' => $firstFee->getFeeType()->getCountryCode(),
         ];
 
         return array_merge($commonParams, $extraParams);
