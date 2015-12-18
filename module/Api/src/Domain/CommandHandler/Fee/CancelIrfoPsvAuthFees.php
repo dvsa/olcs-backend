@@ -28,9 +28,9 @@ final class CancelIrfoPsvAuthFees extends AbstractCommandHandler implements Tran
         /* @var $fee \Dvsa\Olcs\Api\Entity\Fee\Fee */
         foreach ($fees as $fee) {
             if (
-                $fee->getFeeStatus() == Fee::STATUS_OUTSTANDING &&
+                $fee->getFeeStatus()->getId() == Fee::STATUS_OUTSTANDING &&
                 !in_array(
-                    $fee->getFeeType()->getFeeType(),
+                    $fee->getFeeType()->getFeeType()->getId(),
                     $command->getExclusions()
                 )
             ) {
