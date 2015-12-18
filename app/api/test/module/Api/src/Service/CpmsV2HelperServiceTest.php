@@ -66,7 +66,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         return parent::setUp();
     }
 
-    private function createService($api, $feesHelper)
+    private function createService($api, $feesHelper, $config = [])
     {
         $sm = m::mock('\Zend\ServiceManager\ServiceLocatorInterface');
         $sm
@@ -75,7 +75,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn($api)
             ->shouldReceive('get')
             ->with('FeesHelperService')
-            ->andReturn($feesHelper);
+            ->andReturn($feesHelper)
+            ->shouldReceive('get')
+            ->with('config')
+            ->andReturn($config);
 
         $sut = new Sut();
         return $sut->createService($sm);
@@ -1245,5 +1248,25 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $result = $this->sut->adjustTransaction($originalTransaction, $newTransaction);
 
         $this->assertSame($response, $result);
+    }
+
+    public function testCreateServiceWithInvoicePrefix()
+    {
+        $sut = $this->createService(null, null, ['cpms' => ['invoice_prefix' => 'PREFIX']]);
+
+        $this->assertSame('PREFIX', $sut->getInvoicePrefix());
+    }
+
+    public function testGetSetInvoicePrefix()
+    {
+        $this->assertSame(null, $this->sut->getInvoicePrefix());
+        $this->sut->setInvoicePrefix('PREFIX');
+        $this->assertSame('PREFIX', $this->sut->getInvoicePrefix());
+    }
+
+    public function testSetInvoicePrefixTooLong()
+    {
+        $this->setExpectedException(\RuntimeException::class, 'Invoice prefix needs to be less than 8 chars');
+        $this->sut->setInvoicePrefix('TOO_LONGX');
     }
 }

@@ -137,6 +137,11 @@ return array(
         'client_secret' => 'f7c3cd7d55c0dc0f3bcadc68d2867beedc28b463'
     ),
 
+    'cpms' => array(
+        // Prefix added to invoice numbers went sent to CPMS
+        'invoice_prefix' => 'LOCAL-',
+    ),
+
     // Email config
     'email' => array(
         // Debugging option forces all email to be sent to an address
