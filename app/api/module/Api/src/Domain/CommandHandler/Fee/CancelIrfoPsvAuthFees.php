@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -26,7 +27,13 @@ final class CancelIrfoPsvAuthFees extends AbstractCommandHandler implements Tran
 
         /* @var $fee \Dvsa\Olcs\Api\Entity\Fee\Fee */
         foreach ($fees as $fee) {
-            if (!in_array($fee->getFeeType()->getFeeType(), $command->getExclusions())) {
+            if (
+                $fee->getFeeStatus() == Fee::STATUS_OUTSTANDING &&
+                !in_array(
+                    $fee->getFeeType()->getFeeType(),
+                    $command->getExclusions()
+                )
+            ) {
                 $result->merge(
                     $this->getCommandHandler()->handleCommand(
                         CancelFeeCommand::create(['id' => $fee->getId()])
