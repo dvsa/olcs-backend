@@ -249,4 +249,22 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         $dtoData = $originalCommand->getArrayCopy();
         return $this->handleSideEffect($proxyCommandClassName::create($dtoData));
     }
+
+    /**
+     * Logs an exception thrown during execution of rollbackCommand
+     *
+     * @param \Exception $e
+     * @throws \Exception rethrows original Exception
+     */
+    protected function logRollbackCommandFailure(\Exception $e)
+    {
+        $rethrow = $e;
+
+        do {
+            Logger::warn(get_class($this) . ': ' . $e->getMessage());
+            $e = $e->getPrevious();
+        } while ($e);
+
+        throw $rethrow;
+    }
 }
