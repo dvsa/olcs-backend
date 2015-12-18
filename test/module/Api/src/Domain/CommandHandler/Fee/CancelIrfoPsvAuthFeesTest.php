@@ -35,23 +35,42 @@ class CancelIrfoPsvAuthFeesTest extends CommandHandlerTestCase
             FeeEntity::class => [
                 23 => m::mock(FeeEntity::class)
                     ->makePartial()
+                    ->setFeeStatus(new RefDataEntity(FeeEntity::STATUS_OUTSTANDING))
                     ->setFeeType(
                         m::mock(FeeTypeEntity::class)
                             ->shouldReceive('getFeeType')
+                            ->andReturnSelf()
+                            ->shouldReceive('getId')
                             ->andReturn(RefDataEntity::FEE_TYPE_IRFOPSVAPP)->getMock()
                     ),
                 24 => m::mock(FeeEntity::class)
                     ->makePartial()
+                    ->setFeeStatus(new RefDataEntity(FeeEntity::STATUS_OUTSTANDING))
                     ->setFeeType(
                         m::mock(FeeTypeEntity::class)
                             ->shouldReceive('getFeeType')
+                            ->andReturnSelf()
+                            ->shouldReceive('getId')
                             ->andReturn(RefDataEntity::FEE_TYPE_IRFOPSVCOPY)->getMock()
                     ),
                 25 => m::mock(FeeEntity::class)
                     ->makePartial()
+                    ->setFeeStatus(new RefDataEntity(FeeEntity::STATUS_OUTSTANDING))
                     ->setFeeType(
                         m::mock(FeeTypeEntity::class)
                             ->shouldReceive('getFeeType')
+                            ->andReturnSelf()
+                            ->shouldReceive('getId')
+                            ->andReturn(RefDataEntity::FEE_TYPE_IRFOPSVANN)->getMock()
+                    ),
+                26 => m::mock(FeeEntity::class)
+                    ->makePartial()
+                    ->setFeeStatus(new RefDataEntity(FeeEntity::STATUS_PAID))
+                    ->setFeeType(
+                        m::mock(FeeTypeEntity::class)
+                            ->shouldReceive('getFeeType')
+                            ->andReturnSelf()
+                            ->shouldReceive('getId')
                             ->andReturn(RefDataEntity::FEE_TYPE_IRFOPSVANN)->getMock()
                     ),
             ]
@@ -65,13 +84,15 @@ class CancelIrfoPsvAuthFeesTest extends CommandHandlerTestCase
         $fees = [
             $this->references[FeeEntity::class][23],
             $this->references[FeeEntity::class][24],
-            $this->references[FeeEntity::class][25]
+            $this->references[FeeEntity::class][25],
+            $this->references[FeeEntity::class][26]
         ];
 
         $this->repoMap['Fee']->shouldReceive('fetchFeesByIrfoPsvAuthId')->with(542)->once()
             ->andReturn($fees);
 
         // 23 shouldn't be deleted as its type is FEE_TYPE_IRFOPSVAPP
+        // 26 shouldn't be cancelled as its not 'outstanding'
         $this->expectedSideEffect(CancelFeeCommand::class, ['id' => 24], new Result());
         $this->expectedSideEffect(CancelFeeCommand::class, ['id' => 25], new Result());
 
