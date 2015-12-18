@@ -39,6 +39,12 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     protected $cpmsClient;
 
     /**
+     *
+     * @var string
+     */
+    private $invoicePrefix;
+
+    /**
      * @var \Dvsa\Olcs\Api\Service\FeesHelperService
      */
     protected $feesHelper;
@@ -49,6 +55,11 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $config = $serviceLocator->get('config');
+        if (isset($config['cpms']['invoice_prefix'])) {
+            $this->setInvoicePrefix($config['cpms']['invoice_prefix']);
+        }
+
         $this->cpmsClient = $serviceLocator->get('cpms\service\api');
         $this->feesHelper = $serviceLocator->get('FeesHelperService');
         return $this;
@@ -749,7 +760,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'tax_code' => $fee->getFeeType()->getVatCode(),
             'tax_rate' => $fee->getFeeType()->getVatRate(),
             'invoice_date' => $this->formatDate($fee->getInvoicedDate()),
-            'sales_reference' => (string) $fee->getId(),
+            'sales_reference' => $this->getInvoicePrefix() . (string) $fee->getId(),
             // note, as per OLCS-11438 product_reference should come from the
             // fee_type description, NOT the product_reference column!
             'product_reference' => $fee->getFeeType()->getDescription(),
@@ -864,5 +875,31 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             ->getHttpClient()     // Zend\Http\Client
             ->getResponse()       // Zend\HttpResponse
             ->getStatusCode();
+    }
+
+    /**
+     * Set a prefix for the invoice number
+     *
+     * @param string $prefix
+     *
+     * @throws \RuntimeException
+     */
+    public function setInvoicePrefix($prefix)
+    {
+        if (strlen($prefix) > 8) {
+            throw new \RuntimeException('Invoice prefix needs to be less than 8 chars');
+        }
+
+        $this->invoicePrefix = $prefix;
+    }
+
+    /**
+     * Get the invoice prefix
+     *
+     * @return string
+     */
+    public function getInvoicePrefix()
+    {
+        return $this->invoicePrefix;
     }
 }
