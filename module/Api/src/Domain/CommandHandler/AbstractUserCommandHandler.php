@@ -52,7 +52,7 @@ abstract class AbstractUserCommandHandler extends AbstractCommandHandler
      * @return void
      * @throws \Exception
      */
-    protected function rollbackCommand(CommandInterface $command, \Exception $exception)
+    public function rollbackCommand(CommandInterface $command, \Exception $exception)
     {
         if ($exception instanceof RollbackUserCreatedException) {
             $loginId = method_exists($command, 'getUsername') ? $command->getUsername() : $command->getLoginId();
