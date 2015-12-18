@@ -240,8 +240,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         /** @var LicenceEntity $licence */
         foreach ($licences as $licence) {
             $outstandingApplications = $licence->getOutstandingApplications()->toArray();
-
-            $applications += $outstandingApplications;
+            $applications = array_merge($applications, $outstandingApplications);
         }
         return new ArrayCollection($applications);
     }
