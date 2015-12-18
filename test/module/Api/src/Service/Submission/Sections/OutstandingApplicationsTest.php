@@ -54,6 +54,42 @@ class OutstandingApplicationsTest extends SubmissionSectionTest
                         'receivedDate' => '05/05/2014',
                         'oor' => 'Unknown',
                         'ooo' => 'Unknown'
+                    ],
+                    4 => [
+
+                        'id' => 1,
+                        'version' => 2,
+                        'applicationType' => 'TBC',
+                        'receivedDate' => '05/05/2014',
+                        'oor' => 'Unknown',
+                        'ooo' => 'Unknown'
+                    ],
+                    5 => [
+
+                        'id' => 101,
+                        'version' => 202,
+                        'applicationType' => 'TBC',
+                        'receivedDate' => '05/05/2014',
+                        'oor' => 'Unknown',
+                        'ooo' => 'Unknown'
+                    ],
+                    6 => [
+
+                        'id' => 2,
+                        'version' => 4,
+                        'applicationType' => 'TBC',
+                        'receivedDate' => '05/05/2014',
+                        'oor' => 'Unknown',
+                        'ooo' => 'Unknown'
+                    ],
+                    7 => [
+
+                        'id' => 102,
+                        'version' => 204,
+                        'applicationType' => 'TBC',
+                        'receivedDate' => '05/05/2014',
+                        'oor' => 'Unknown',
+                        'ooo' => 'Unknown'
                     ]
 
                 ]
