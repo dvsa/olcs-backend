@@ -559,10 +559,7 @@ class CreateUserTest extends CommandHandlerTestCase
 
         $exception = new RollbackUserCreatedException();
 
-        $reflection = new \ReflectionClass(Sut::class);
-        $method = $reflection->getMethod('rollbackCommand');
-        $method->setAccessible(true);
-        $method->invokeArgs($this->sut, [$command, $exception]);
+        $this->sut->rollbackCommand($command, $exception);
     }
 
     public function testRollbackCommandForOtherException()
@@ -578,9 +575,6 @@ class CreateUserTest extends CommandHandlerTestCase
 
         $exception = new \Exception();
 
-        $reflection = new \ReflectionClass(Sut::class);
-        $method = $reflection->getMethod('rollbackCommand');
-        $method->setAccessible(true);
-        $method->invokeArgs($this->sut, [$command, $exception]);
+        $this->sut->rollbackCommand($command, $exception);
     }
 }
