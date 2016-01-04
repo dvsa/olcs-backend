@@ -433,5 +433,6 @@ return [
     TransferQuery\DocTemplate\GetList::class => QueryHandler\DocTemplate\GetList::class,
 
     TransferQuery\ContactDetail\CountryList::class => QueryHandler\ContactDetail\CountryList::class,
+    TransferQuery\ContactDetail\ContactDetailsList::class => QueryHandler\ContactDetail\ContactDetailsList::class,
     TransferQuery\TrafficArea\TrafficAreaList::class => QueryHandler\TrafficArea\TrafficAreaList::class,
 ];

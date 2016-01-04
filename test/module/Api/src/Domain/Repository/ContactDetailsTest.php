@@ -65,4 +65,21 @@ class ContactDetailsTest extends RepositoryTestCase
             $result
         );
     }
+
+    public function testApplyListFiltersLicence()
+    {
+        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $mockDqb->shouldReceive('expr->eq')->with('m.contactType', ':contactType')->once()
+            ->andReturn('EXPR');
+        $mockDqb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
+        $mockDqb->shouldReceive('setParameter')->with('contactType', 'ct_partner')->once();
+
+        $params = [
+            'contactType' => 'ct_partner'
+        ];
+        $query = \Dvsa\Olcs\Transfer\Query\ContactDetail\ContactDetailsList::create($params);
+        $sut->applyListFilters($mockDqb, $query);
+    }
 }
