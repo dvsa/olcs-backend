@@ -145,7 +145,9 @@ return [
             Queue::TYPE_CPMS_REPORT_DOWNLOAD
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms\ReportDownload::class,
             Queue::TYPE_EBSR_REQUEST_MAP
-            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\RequestMap::class,
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\RequestMap::class,
+            Queue::TYPE_EMAIL
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send::class,
         ],
         'factories' => [
             'que_typ_cpid_export_csv'
