@@ -9,6 +9,8 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as Entity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * ContactDetails
@@ -73,5 +75,19 @@ class ContactDetails extends AbstractRepository
         }
 
         return $contactParams;
+    }
+
+    /**
+     * Filter list
+     *
+     * @param \Dvsa\Olcs\Api\Domain\Repository\QueryBuilder $qb
+     * @param \Dvsa\Olcs\Api\Domain\Repository\QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        if ($query->getContactType()) {
+            $qb->andWhere($qb->expr()->eq($this->alias .'.contactType', ':contactType'))
+                ->setParameter('contactType', $query->getContactType());
+        }
     }
 }
