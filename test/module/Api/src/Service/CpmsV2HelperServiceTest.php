@@ -66,7 +66,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         return parent::setUp();
     }
 
-    private function createService($api, $feesHelper)
+    private function createService($api, $feesHelper, $config = [])
     {
         $sm = m::mock('\Zend\ServiceManager\ServiceLocatorInterface');
         $sm
@@ -75,7 +75,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn($api)
             ->shouldReceive('get')
             ->with('FeesHelperService')
-            ->andReturn($feesHelper);
+            ->andReturn($feesHelper)
+            ->shouldReceive('get')
+            ->with('config')
+            ->andReturn($config);
 
         $sut = new Sut();
         return $sut->createService($sm);
@@ -166,6 +169,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'disable_redirection' => true,
             'scope' => 'CARD',
             'refund_overpayment' => false,
+            'country_code' => 'GB',
         ];
 
         $response = ['receipt_reference' => 'guid_123'];
@@ -266,6 +270,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'disable_redirection' => true,
             'scope' => 'CNP',
             'refund_overpayment' => false,
+            'country_code' => 'GB',
         ];
 
         $response = ['receipt_reference' => 'guid_123'];
@@ -366,6 +371,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'disable_redirection' => true,
             'scope' => 'STORED_CARD',
             'refund_overpayment' => false,
+            'country_code' => 'GB',
         ];
 
         $response = ['receipt_reference' => 'guid_123'];
@@ -506,6 +512,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'receipt_date' => '2015-09-10',
             'scope' => 'CASH',
             'refund_overpayment' => true,
+            'country_code' => 'GB',
         ];
 
          $response = [
@@ -631,6 +638,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'cheque_date' => '2015-09-01',
             'name_on_cheque' => $payer,
             'refund_overpayment' => false,
+            'country_code' => 'GB',
         ];
 
         $response = [
@@ -759,6 +767,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'scope' => 'POSTAL_ORDER',
             'postal_order_number' => '00666666',
             'refund_overpayment' => false,
+            'country_code' => 'GB',
         ];
 
          $response = [
@@ -1185,6 +1194,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                 'postcode' => 'LS9 6NF',
             ],
             'refund_overpayment' => false,
+            'country_code' => 'GB',
             'cheque_date' => '2015-12-02',
             'cheque_number' => '2346',
             'postal_order_number' => '',
@@ -1238,5 +1248,25 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $result = $this->sut->adjustTransaction($originalTransaction, $newTransaction);
 
         $this->assertSame($response, $result);
+    }
+
+    public function testCreateServiceWithInvoicePrefix()
+    {
+        $sut = $this->createService(null, null, ['cpms' => ['invoice_prefix' => 'PREFIX']]);
+
+        $this->assertSame('PREFIX', $sut->getInvoicePrefix());
+    }
+
+    public function testGetSetInvoicePrefix()
+    {
+        $this->assertSame(null, $this->sut->getInvoicePrefix());
+        $this->sut->setInvoicePrefix('PREFIX');
+        $this->assertSame('PREFIX', $this->sut->getInvoicePrefix());
+    }
+
+    public function testSetInvoicePrefixTooLong()
+    {
+        $this->setExpectedException(\RuntimeException::class, 'Invoice prefix needs to be less than 8 chars');
+        $this->sut->setInvoicePrefix('TOO_LONGX');
     }
 }

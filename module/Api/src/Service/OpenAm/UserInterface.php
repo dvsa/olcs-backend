@@ -11,12 +11,14 @@ namespace Dvsa\Olcs\Api\Service\OpenAm;
 interface UserInterface
 {
     /**
-     * @param $loginId
-     * @param $emailAddress
-     * @param $firstName
-     * @param $lastName
-     * @param $realm
-     * @return string
+     * Registers a user
+     *
+     * @param string $loginId
+     * @param string $emailAddress
+     * @param string $realm
+     * @param callable $callback
+     *
+     * @return void
      * @throws FailedRequestException
      */
     public function registerUser($loginId, $emailAddress, $realm, $callback = null);
@@ -28,7 +30,35 @@ interface UserInterface
      */
     public function reservePid();
 
-    public function updateUser($username, $emailAddress = null, $enabled = null);
+    /**
+     * Updates a user
+     *
+     * @param string $username
+     * @param string $emailAddress
+     * @param bool $disabled
+     *
+     * @return void
+     * @throws FailedRequestException
+     */
+    public function updateUser($username, $emailAddress = null, $disabled = null);
 
+    /**
+     * Disables a user
+     *
+     * @param string $username
+     *
+     * @return void
+     * @throws FailedRequestException
+     */
     public function disableUser($username);
+
+    /**
+     * Deletes a user
+     *
+     * @param string $username
+     *
+     * @return void
+     * @throws FailedRequestException
+     */
+    public function deleteUser($username);
 }

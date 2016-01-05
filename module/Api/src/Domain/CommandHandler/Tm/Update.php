@@ -7,14 +7,15 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Tm;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as SaveAddressCmd;
-use Dvsa\Olcs\Api\Domain\Command\Person\UpdateFull as UpdatePersonCmd;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as SaveAddressCmd;
+use Dvsa\Olcs\Api\Domain\Command\Person\UpdateFull as UpdatePersonCmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Transport Manager / Update
@@ -56,7 +57,8 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
                 'addressLine4' => $command->getWorkAddressLine4(),
                 'town'         => $command->getWorkTown(),
                 'postcode'     => $command->getWorkPostcode(),
-                'countryCode'  => $command->getWorkCountryCode()
+                'countryCode'  => $command->getWorkCountryCode(),
+                'contactType'  => ContactDetails::CONTACT_TYPE_TRANSPORT_MANAGER
             ]
         );
         $workAddressResult = $this->getCommandHandler()->handleCommand($saveWorkAddress);
@@ -71,7 +73,8 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
                 'addressLine4' => $command->getHomeAddressLine4(),
                 'town'         => $command->getHomeTown(),
                 'postcode'     => $command->getHomePostcode(),
-                'countryCode'  => $command->getHomeCountryCode()
+                'countryCode'  => $command->getHomeCountryCode(),
+                'contactType'  => ContactDetails::CONTACT_TYPE_TRANSPORT_MANAGER,
             ]
         );
         $homeAddressResult = $this->getCommandHandler()->handleCommand($saveHomeAddress);

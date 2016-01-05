@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Domain\Exception\RollbackUserCreatedException;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
@@ -79,6 +80,8 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
             )
         );
 
+        $result = new Result();
+
         $this->getRepo()->save($user);
 
         $password = null;
@@ -92,32 +95,34 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
             }
         );
 
-        $result = new Result();
+        try {
+            if (isset($licence)) {
+                // for the current licence holder a letter with generated password needs to be sent
+                $result->merge(
+                    $this->sendLetter($licence, $password)
+                );
+            } else {
+                // send welcome email
+                $this->handleSideEffect(
+                    SendUserRegisteredDto::create(
+                        [
+                            'user' => $user,
+                        ]
+                    )
+                );
 
-        if (isset($licence)) {
-            // for the current licence holder a letter with generated password needs to be sent
-            $result->merge(
-                $this->sendLetter($licence, $password)
-            );
-        } else {
-            // send welcome email
-            $this->handleSideEffect(
-                SendUserRegisteredDto::create(
-                    [
-                        'user' => $user,
-                    ]
-                )
-            );
-
-            // send temporary password email
-            $this->handleSideEffect(
-                SendUserTemporaryPasswordDto::create(
-                    [
-                        'user' => $user,
-                        'password' => $password,
-                    ]
-                )
-            );
+                // send temporary password email
+                $this->handleSideEffect(
+                    SendUserTemporaryPasswordDto::create(
+                        [
+                            'user' => $user,
+                            'password' => $password,
+                        ]
+                    )
+                );
+            }
+        } catch (\Exception $e) {
+            throw new RollbackUserCreatedException('Rollback command after exception', null, $e);
         }
 
         $result->addId('user', $user->getId());

@@ -36,6 +36,11 @@ class User implements UserInterface
         $this->randomGenerator = $randomGenerator;
     }
 
+    /**
+     * Reserves a pid
+     *
+     * @return string
+     */
     public function reservePid()
     {
         if ($this->reservedPid === null) {
@@ -45,10 +50,13 @@ class User implements UserInterface
     }
 
     /**
-     * @param $loginId
-     * @param $emailAddress
-     * @param $realm
-     * @param $callback
+     * Registers a user
+     *
+     * @param string $loginId
+     * @param string $emailAddress
+     * @param string $realm
+     * @param callable $callback
+     *
      * @return void
      * @throws FailedRequestException
      */
@@ -78,6 +86,16 @@ class User implements UserInterface
         }
     }
 
+    /**
+     * Updates a user
+     *
+     * @param string $username
+     * @param string $emailAddress
+     * @param bool $disabled
+     *
+     * @return void
+     * @throws FailedRequestException
+     */
     public function updateUser($username, $emailAddress = null, $disabled = null)
     {
         $payload = [];
@@ -105,6 +123,14 @@ class User implements UserInterface
         $this->openAmClient->updateUser($username, $payload);
     }
 
+    /**
+     * Disables a user
+     *
+     * @param string $username
+     *
+     * @return void
+     * @throws FailedRequestException
+     */
     public function disableUser($username)
     {
         $payload[] = [
@@ -116,11 +142,34 @@ class User implements UserInterface
         $this->openAmClient->updateUser($username, $payload);
     }
 
+    /**
+     * Deletes a user
+     *
+     * @param string $username
+     *
+     * @return void
+     * @throws FailedRequestException
+     */
+    public function deleteUser($username)
+    {
+        $this->openAmClient->deleteUser($username);
+    }
+
+    /**
+     * Generates a pid
+     *
+     * @return string
+     */
     private function generatePid()
     {
         return $this->randomGenerator->generateString(32, '0123456789abcdef');
     }
 
+    /**
+     * Generates a password
+     *
+     * @return string
+     */
     private function generatePassword()
     {
         return $this->randomGenerator->generateString(12);
@@ -129,8 +178,8 @@ class User implements UserInterface
     /**
      * Calls the callback function/method if exists.
      *
-     * @param unknown_type $callback
-     * @param unknown_type $params
+     * @param callable $callback
+     * @param array $params
      * @throws \Exception
      */
     private function callCallbackIfExists($callback, $params)
