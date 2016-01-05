@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\RollbackUserCreatedException;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
@@ -97,24 +98,28 @@ final class CreateUser extends AbstractUserCommandHandler implements
             }
         );
 
-        // send welcome email
-        $this->handleSideEffect(
-            SendUserCreatedDto::create(
-                [
-                    'user' => $user,
-                ]
-            )
-        );
+        try {
+            // send welcome email
+            $this->handleSideEffect(
+                SendUserCreatedDto::create(
+                    [
+                        'user' => $user,
+                    ]
+                )
+            );
 
-        // send temporary password email
-        $this->handleSideEffect(
-            SendUserTemporaryPasswordDto::create(
-                [
-                    'user' => $user,
-                    'password' => $password,
-                ]
-            )
-        );
+            // send temporary password email
+            $this->handleSideEffect(
+                SendUserTemporaryPasswordDto::create(
+                    [
+                        'user' => $user,
+                        'password' => $password,
+                    ]
+                )
+            );
+        } catch (\Exception $e) {
+            throw new RollbackUserCreatedException('Rollback command after exception', null, $e);
+        }
 
         $result = new Result();
         $result->addId('user', $user->getId());

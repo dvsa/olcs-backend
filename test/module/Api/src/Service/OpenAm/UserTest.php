@@ -135,4 +135,20 @@ class UserTest extends MockeryTestCase
 
         $sut->disableUser($loginId);
     }
+
+    public function testDeleteUser()
+    {
+        $loginId = 'login_id';
+
+        $mockRandom = m::mock(\RandomLib\Generator::class);
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('deleteUser')
+            ->once()
+            ->with($loginId);
+
+        $sut = new User($mockClient, $mockRandom);
+
+        $sut->deleteUser($loginId);
+    }
 }
