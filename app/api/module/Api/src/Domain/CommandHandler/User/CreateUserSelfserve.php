@@ -14,7 +14,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\Exception\RollbackUserCreatedException;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
@@ -126,7 +125,7 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
                 )
             );
         } catch (\Exception $e) {
-            throw new RollbackUserCreatedException('Rollback command after exception', null, $e);
+            // swallow any exception
         }
 
         $result = new Result();

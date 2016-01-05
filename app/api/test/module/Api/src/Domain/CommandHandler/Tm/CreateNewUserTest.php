@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendTmUserCreated as SendTmUserCreatedDto
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\CreateNewUser;
-use Dvsa\Olcs\Api\Domain\Exception\RollbackUserCreatedException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
@@ -415,38 +414,5 @@ class CreateNewUserTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->sut->handleCommand($command);
-    }
-
-    public function testRollbackCommandForRollbackUserCreatedException()
-    {
-        $data = [
-            'username' => 'login_id',
-        ];
-
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('deleteUser')
-            ->with('login_id')
-            ->once();
-
-        $command = Cmd::create($data);
-
-        $exception = new RollbackUserCreatedException();
-
-        $this->sut->rollbackCommand($command, $exception);
-    }
-
-    public function testRollbackCommandForOtherException()
-    {
-        $data = [
-            'username' => 'login_id',
-        ];
-
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('deleteUser')
-            ->never();
-
-        $command = Cmd::create($data);
-
-        $exception = new \Exception();
-
-        $this->sut->rollbackCommand($command, $exception);
     }
 }

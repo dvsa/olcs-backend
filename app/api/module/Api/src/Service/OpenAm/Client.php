@@ -92,25 +92,6 @@ class Client implements ClientInterface
     }
 
     /**
-     * Deletes (hard delete) a user
-     *
-     * @param string $username
-     *
-     * @return void
-     * @throws FailedRequestException
-     */
-    public function deleteUser($username)
-    {
-        $request = $this->createRequest('/users/' . $username, Request::METHOD_DELETE);
-
-        $response = $this->httpClient->send($request);
-
-        if (!$response->isSuccess()) {
-            throw new FailedRequestException($response);
-        }
-    }
-
-    /**
      * Creates a request
      *
      * @param string $path

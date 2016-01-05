@@ -51,14 +51,4 @@ interface UserInterface
      * @throws FailedRequestException
      */
     public function disableUser($username);
-
-    /**
-     * Deletes a user
-     *
-     * @param string $username
-     *
-     * @return void
-     * @throws FailedRequestException
-     */
-    public function deleteUser($username);
 }
