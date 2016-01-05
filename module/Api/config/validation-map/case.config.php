@@ -59,6 +59,8 @@ return [
     CommandHandler\TmCaseDecision\UpdateReputeNotLost::class                => IsInternalUser::class,
     CommandHandler\Cases\Si\SendResponse::class                             => IsInternalUser::class,
     CommandHandler\Cases\Si\Applied\Delete::class                           => IsInternalUser::class,
+    CommandHandler\Cases\Si\Applied\Create::class                           => IsInternalUser::class,
+    CommandHandler\Cases\Si\Applied\Update::class                           => IsInternalUser::class,
     QueryHandler\Cases\AnnualTestHistory::class                             => IsInternalUser::class,
     QueryHandler\Cases\ByLicence::class                                     => IsInternalUser::class,
     QueryHandler\Cases\ByTransportManager::class                            => IsInternalUser::class,
