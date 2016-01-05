@@ -30,6 +30,15 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
     abstract public function getCommandData(QueueEntity $item);
 
     /**
+     * @param QueueEntity $item
+     * @return string
+     */
+    protected function getCommandName(QueueEntity $item)
+    {
+        return $this->commandName;
+    }
+
+    /**
      * Process the message item
      *
      * @param QueueEntity $item
@@ -37,7 +46,7 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
      */
     public function processMessage(QueueEntity $item)
     {
-        $commandClass = $this->commandName;
+        $commandClass = $this->getCommandName($item);
         $commandData = $this->getCommandData($item);
         $command = $commandClass::create($commandData);
 

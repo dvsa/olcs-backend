@@ -161,6 +161,7 @@ local_authority_id, organisation_id, file_read, variation_no, created_on) VALUES
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
+    (1008,NULL,NULL,'Unit 9b','Shapely Industrial Estate','Harehills','','LS9 2FA','Leeds','GB',NOW(),NOW(),1),
     (1021,NULL,NULL,'Unit 9','Shapely Industrial Estate','Harehills','','LS9 2FA','Leeds','GB',NOW(),NOW(),1),
     (1025,NULL,NULL,'209 Errwood Road','','','','M19 1JB','Manchester','GB',NOW(),NOW(),1),
     (1026,NULL,NULL,'5 High Street','Harehills','','','LS9 6GN','Leeds','GB',NOW(),NOW(),1),
@@ -1192,6 +1193,8 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
   (612, NULL, 2, 2, now(), now(), 'usr612', 101, null, NULL, NULL, 'b999205cdacd2c4516598d99b420d29786443e9908556a65f583a6fd4765ee4a'), -- SSADMIN, Self Service Administrators NB Does not use a role. Instead see organisation_user link table where is_administrator=1 for users with the self service role	SelfServe
   (1, NULL, 2, 2, now(), now(), 'system', null, null, NULL, NULL, '10236fc8becc3b78f6956e26de661d57bc67d9424424fbdbe584d9736ba6aa38') -- System User
 ;
+
+UPDATE `user` SET pid = SHA2(login_id, 256);
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator`) VALUES
   (1, 542, 0),

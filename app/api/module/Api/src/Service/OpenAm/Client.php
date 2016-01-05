@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
 use Zend\Http\Client as HttpClient;
-use Zend\Http\Header\Accept;
 use Zend\Http\Request;
 use Zend\Uri\Http as Uri;
 
@@ -36,13 +35,17 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param $username
-     * @param $pid
-     * @param $emailAddress
-     * @param $surname
-     * @param $commonName
-     * @param $realm
-     * @param $password
+     * Registers a user
+     *
+     * @param string $username
+     * @param string $pid
+     * @param string $emailAddress
+     * @param string $surname
+     * @param string $commonName
+     * @param string $realm
+     * @param string $password
+     *
+     * @return void
      * @throws FailedRequestException
      */
     public function registerUser($username, $pid, $emailAddress, $surname, $commonName, $realm, $password)
@@ -67,6 +70,15 @@ class Client implements ClientInterface
         }
     }
 
+    /**
+     * Updates a user
+     *
+     * @param string $username
+     * @param array $updates
+     *
+     * @return void
+     * @throws FailedRequestException
+     */
     public function updateUser($username, $updates)
     {
         $request = $this->createRequest('/users/' . $username, Request::METHOD_PATCH);
@@ -80,8 +92,30 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param $path
-     * @param $method
+     * Deletes (hard delete) a user
+     *
+     * @param string $username
+     *
+     * @return void
+     * @throws FailedRequestException
+     */
+    public function deleteUser($username)
+    {
+        $request = $this->createRequest('/users/' . $username, Request::METHOD_DELETE);
+
+        $response = $this->httpClient->send($request);
+
+        if (!$response->isSuccess()) {
+            throw new FailedRequestException($response);
+        }
+    }
+
+    /**
+     * Creates a request
+     *
+     * @param string $path
+     * @param string $method
+     *
      * @return Request
      */
     private function createRequest($path, $method)

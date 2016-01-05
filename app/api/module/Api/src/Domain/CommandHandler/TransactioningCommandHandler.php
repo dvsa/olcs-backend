@@ -57,6 +57,10 @@ class TransactioningCommandHandler implements CommandHandlerInterface
             return $result;
 
         } catch (\Exception $e) {
+            if (method_exists($this->wrapped, 'rollbackCommand')) {
+                // wrapped command rollback
+                $this->wrapped->rollbackCommand($command, $e);
+            }
             $this->repo->rollback();
             throw $e;
         }

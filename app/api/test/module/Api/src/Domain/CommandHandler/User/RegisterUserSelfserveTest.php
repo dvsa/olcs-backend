@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemp
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\RegisterUserSelfserve as Sut;
+use Dvsa\Olcs\Api\Domain\Exception\RollbackUserCreatedException;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation;
@@ -350,5 +351,38 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
             ->andReturn([m::mock(UserEntity::class)]);
 
         $this->sut->handleCommand($command);
+    }
+
+    public function testRollbackCommandForRollbackUserCreatedException()
+    {
+        $data = [
+            'loginId' => 'login_id',
+        ];
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('deleteUser')
+            ->with('login_id')
+            ->once();
+
+        $command = Cmd::create($data);
+
+        $exception = new RollbackUserCreatedException();
+
+        $this->sut->rollbackCommand($command, $exception);
+    }
+
+    public function testRollbackCommandForOtherException()
+    {
+        $data = [
+            'loginId' => 'login_id',
+        ];
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('deleteUser')
+            ->never();
+
+        $command = Cmd::create($data);
+
+        $exception = new \Exception();
+
+        $this->sut->rollbackCommand($command, $exception);
     }
 }

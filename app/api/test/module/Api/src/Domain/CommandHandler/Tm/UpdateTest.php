@@ -126,7 +126,7 @@ class UpdateTest extends CommandHandlerTestCase
                 'town'         => $data['workTown'],
                 'postcode'     => $data['workPostcode'],
                 'countryCode'  => $data['workCountryCode'],
-                'contactType'  => null
+                'contactType'  => 'ct_tm',
             ],
             $workAddressResult
         );
@@ -145,7 +145,7 @@ class UpdateTest extends CommandHandlerTestCase
                 'town'         => $data['homeTown'],
                 'postcode'     => $data['homePostcode'],
                 'countryCode'  => $data['homeCountryCode'],
-                'contactType'  => null
+                'contactType'  => 'ct_tm',
             ],
             $homeAddressResult
         );
