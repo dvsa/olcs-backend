@@ -271,6 +271,7 @@ return [
             'SeriousInfringement' => RepositoryFactory::class,
             'Country' => RepositoryFactory::class,
             'PresidingTc' => RepositoryFactory::class,
+            'RefData' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
