@@ -269,6 +269,7 @@ return [
             'CasesReadAudit' => RepositoryFactory::class,
             'Team' => RepositoryFactory::class,
             'SeriousInfringement' => RepositoryFactory::class,
+            'SiPenalty' => RepositoryFactory::class,
             'Country' => RepositoryFactory::class,
             'PresidingTc' => RepositoryFactory::class,
         ]
