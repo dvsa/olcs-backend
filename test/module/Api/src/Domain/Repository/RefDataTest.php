@@ -2,65 +2,66 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Domain\Repository\RefData;
+use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Repository\RefData as Repo;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Class RefDataTest
  * @package OlcsTest\Db\Entity\Repository
  */
-class RefDataTest extends \PHPUnit_Framework_TestCase
+class RefDataTest extends RepositoryTestCase
 {
-    public function testFindAllByCategoryAndLanguage()
+    public function testApplyListFilters()
     {
-        $category = 'category';
-        $lang = 'en_GB';
-        $data = [['id' => 'category.1', 'description' => 'First Category']];
+        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $expectedParams = [
-            [
-                \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-                'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
-            ],
-            [\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1],
-            [\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $lang]
+        $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $mockDqb->shouldReceive('expr->eq')->with('m.refDataCategoryId', ':category')->once()
+            ->andReturn('EXPR');
+        $mockDqb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
+        $mockDqb->shouldReceive('setParameter')->with('category', 'cat')->once()->andReturnSelf();
+        $mockDqb->shouldReceive('orderBy')->with('m.displayOrder')->once()->andReturnSelf();
+
+        $mockDqb->shouldReceive('getQuery')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('setHint')
+                ->with(
+                    \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+                    'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+                )
+                ->once()
+                ->shouldReceive('setHint')
+                ->with(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1)
+                ->once()
+                ->shouldReceive('setHint')
+                ->with(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, 'en')
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $params = [
+            'refDataCategory' => 'cat',
+            'language' => 'en'
         ];
-        $expectedCallsRemaining = 3;
-        $matcher = function ($p1, $p2) use (&$expectedParams, &$expectedCallsRemaining) {
-            $parameters = [$p1, $p2];
+        $query = \Dvsa\Olcs\Transfer\Query\RefData\RefDataList::create($params);
+        $sut->applyListFilters($mockDqb, $query);
+    }
 
-            $expectedCallsRemaining--;
-            $matchKey = array_search($parameters, $expectedParams);
+    public function testApplyListJoins()
+    {
+        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-            $this->assertNotFalse(
-                $matchKey,
-                "Called parameters were not found in the expected values, or were used more than once"
-            );
-            unset($expectedParams[$matchKey]);
-        };
+        $mockQb = m::mock(QueryBuilder::class);
 
-        \Closure::bind($matcher, $this, $this);
+        $mockQb->shouldReceive('modifyQuery')->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('parent', 'p')->once()->andReturnSelf();
+        $sut->shouldReceive('getQueryBuilder')->with()->andReturn($mockQb);
 
-        $mockQ = $this->getMock('\StdClass', ['setHint', 'getArrayResult']);
-        $mockQ->expects($this->any())->method('setHint')->willReturnCallback($matcher);
-        $mockQ->expects($this->once())->method('getArrayResult')->willReturn($data);
-
-        $mockEm = $this->getMock('\Doctrine\ORM\EntityManagerInterface');
-
-        $mockQb = $this->getMock('\Doctrine\ORM\QueryBuilder', ['getQuery'], [], '', false);
-        $mockQb->expects($this->once())->method('getQuery')->willReturn($mockQ);
-
-        $mockEm->expects($this->once())->method('createQueryBuilder')->willReturn($mockQb);
-
-        $mockMetaData = $this->getMock(
-            '\Doctrine\ORM\Mapping\ClassMetadata',
-            [],
-            ['Olcs\Db\Entity\Repository\RefData']
-        );
-
-        $sut = new RefData($mockEm, $mockMetaData);
-        $result = $sut->findAllByCategoryAndLanguage($category, $lang);
-
-        $this->assertEquals($data, $result);
-        $this->assertEquals(0, $expectedCallsRemaining, 'setHint was not called the expected number of times');
+        $sut->applyListJoins($mockQb);
     }
 }
