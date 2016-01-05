@@ -143,19 +143,6 @@ class User implements UserInterface
     }
 
     /**
-     * Deletes a user
-     *
-     * @param string $username
-     *
-     * @return void
-     * @throws FailedRequestException
-     */
-    public function deleteUser($username)
-    {
-        $this->openAmClient->deleteUser($username);
-    }
-
-    /**
      * Generates a pid
      *
      * @return string
