@@ -69,13 +69,10 @@ class CreateTest extends CommandHandlerTestCase
         $seriousInfringements = new ArrayCollection([$seriousInfringement]);
 
         $caseEntity = m::mock(CasesEntity::class)->makePartial();
-        $caseEntity->shouldReceive('getSeriousInfringements')->andReturn($seriousInfringements);
-        $caseEntity->shouldReceive('getId')->andReturn($caseId);
+        $caseEntity->shouldReceive('getSeriousInfringements')->once()->andReturn($seriousInfringements);
+        $caseEntity->shouldReceive('getId')->once()->andReturn($caseId);
 
-        $this->repoMap['Cases']->shouldReceive('fetchById')
-            ->with($caseId)
-            ->once()
-            ->andReturn($caseEntity);
+        $this->repoMap['Cases']->shouldReceive('fetchById')->with($caseId)->once()->andReturn($caseEntity);
 
         $this->repoMap['SiPenalty']->shouldReceive('save')
             ->with(m::type(SiPenaltyEntity::class))
