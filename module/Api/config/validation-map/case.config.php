@@ -58,6 +58,9 @@ return [
     CommandHandler\TmCaseDecision\UpdateNoFurtherAction::class              => IsInternalUser::class,
     CommandHandler\TmCaseDecision\UpdateReputeNotLost::class                => IsInternalUser::class,
     CommandHandler\Cases\Si\SendResponse::class                             => IsInternalUser::class,
+    CommandHandler\Cases\Si\Applied\Delete::class                           => IsInternalUser::class,
+    CommandHandler\Cases\Si\Applied\Create::class                           => IsInternalUser::class,
+    CommandHandler\Cases\Si\Applied\Update::class                           => IsInternalUser::class,
     QueryHandler\Cases\AnnualTestHistory::class                             => IsInternalUser::class,
     QueryHandler\Cases\ByLicence::class                                     => IsInternalUser::class,
     QueryHandler\Cases\ByTransportManager::class                            => IsInternalUser::class,
@@ -89,6 +92,7 @@ return [
     QueryHandler\Cases\Statement\Statement::class                           => IsInternalUser::class,
     QueryHandler\Cases\Statement\StatementList::class                       => IsInternalUser::class,
     QueryHandler\Organisation\UnlicensedCases::class                        => IsInternalUser::class,
+    QueryHandler\Cases\Si\Applied\Penalty::class                            => IsInternalUser::class,
     QueryHandler\Cases\Si\GetList::class                                    => IsInternalUser::class,
     QueryHandler\Cases\PresidingTc\GetList::class                           => IsInternalUser::class,
 ];

@@ -798,13 +798,16 @@ class SubmissionSectionTest extends MockeryTestCase
 
     protected function generateAppliedPenalty($id)
     {
-        $entity = new SiPenalty();
+        $entity = new SiPenalty(
+            new SeriousInfringement(),
+            $this->generateSiPenaltyType(533),
+            new \DateTime('2013-06-31'),
+            new \DateTime('2013-08-31'),
+            'imposed',
+            'imposed reason'
+        );
         $entity->setId($id);
         $entity->setVersion(6);
-        $entity->setSiPenaltyType($this->generateSiPenaltyType(533));
-        $entity->setStartDate(new \DateTime('2013-06-31'));
-        $entity->setEndDate(new \DateTime('2013-08-31'));
-        $entity->setImposed('imposed');
 
         return $entity;
     }
