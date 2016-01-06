@@ -34,14 +34,4 @@ interface ClientInterface
      * @throws FailedRequestException
      */
     public function updateUser($username, $updates);
-
-    /**
-     * Deletes (hard delete) a user
-     *
-     * @param string $username
-     *
-     * @return void
-     * @throws FailedRequestException
-     */
-    public function deleteUser($username);
 }
