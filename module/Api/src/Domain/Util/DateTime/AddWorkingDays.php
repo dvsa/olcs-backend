@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\Util\DateTime;
 
+use Olcs\Logging\Log\Logger;
+
 /**
  * Class AddWorkingDays
  */
@@ -25,20 +27,12 @@ class AddWorkingDays implements DateTimeCalculatorInterface
      */
     public function calculateDate(\DateTime $date, $days)
     {
-        $currentDay = (int) $date->format('w');
-        $workingWeeks = floor($days / 5);
-        $totalDays = $workingWeeks * 7;
-        $daysLeft = $days - ($workingWeeks * 5);
 
-        $t = $currentDay + $daysLeft;
+        $workingDate = new \DateTime();
+        $workingDate->setTimestamp(strtotime("$days weekdays", $date->getTimestamp()));
+        $totalDays = $date->diff($workingDate)->format('%a');
 
-        if ($t % 7 === 6) {
-            $daysLeft +=2;
-        } elseif ($t % 7 === 0) {
-            $daysLeft +=1;
-        }
-
-        $totalDays += $daysLeft;
+        Logger::debug('AddWorkingDays : processing working days -> ' . $totalDays);
 
         return $this->wrapped->calculateDate($date, $totalDays);
     }
