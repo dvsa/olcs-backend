@@ -2,22 +2,28 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use Dvsa\Olcs\Api\Entity\System\RefData as Entity;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * class RefData
  */
-class RefData extends EntityRepository
+class RefData extends AbstractRepository
 {
-    public function findAllByCategoryAndLanguage($category, $language)
-    {
-        $qb = $this->createQueryBuilder('r');
-        $qb->select(['r', 'p']);
-        $qb->where('r.refDataCategoryId = ?0');
-        $qb->orderBy('r.displayOrder');
-        $qb->leftJoin('r.parent', 'p');
+    protected $entity = Entity::class;
 
-        $qb->setParameters([$category]);
+    /**
+     * Filter list
+     *
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @param \Dvsa\Olcs\Transfer\Query\QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        $qb->andWhere($qb->expr()->eq($this->alias .'.refDataCategoryId', ':category'))
+            ->setParameter('category', $query->getRefDataCategory());
+        $qb->orderBy($this->alias. '.displayOrder');
 
         $q = $qb->getQuery();
         $q->setHint(
@@ -25,29 +31,14 @@ class RefData extends EntityRepository
             'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
         );
         $q->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
-        $q->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
-
-        return $q->getArrayResult();
+        $q->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $query->getLanguage());
     }
 
-    public function findByIdentifierAndLanguage($id, $language)
+    /**
+     * @param QueryBuilder $qb
+     */
+    protected function applyListJoins(QueryBuilder $qb)
     {
-        $qb = $this->createQueryBuilder('r');
-        $qb->select(['r', 'p']);
-        $qb->where('r.id = ?0');
-        $qb->orderBy('r.displayOrder');
-        $qb->leftJoin('r.parent', 'p');
-
-        $qb->setParameters([$id]);
-
-        $q = $qb->getQuery();
-        $q->setHint(
-            \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
-        );
-        $q->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
-        $q->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
-
-        return $q->getArrayResult();
+        $this->getQueryBuilder()->modifyQuery($qb)->with('parent', 'p');
     }
 }

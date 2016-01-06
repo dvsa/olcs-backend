@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * RefData Entity
  *
- * @ORM\Entity(repositoryClass="Dvsa\Olcs\Api\Domain\Repository\RefData")
+ * @ORM\Entity
  * @ORM\Table(name="ref_data",
  *    indexes={
  *        @ORM\Index(name="ix_ref_data_parent_id", columns={"parent_id"}),
