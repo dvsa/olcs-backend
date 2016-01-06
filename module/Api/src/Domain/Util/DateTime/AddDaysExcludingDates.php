@@ -32,9 +32,9 @@ class AddDaysExcludingDates implements DateTimeCalculatorInterface
         // calculate using AddWorkingDays after weekend days have been added
         //Logger::debug('days -> ' . $days);
         $endDate = $date;
-
+        $processedHolidays = [];
         $count = 0;
-        while ($days > 0 || $count > 10) {
+        while ($days !== 0 || $count > 10) {
             Logger::debug('LOOP ' . $count . "\n");
             Logger::debug('days => ' . $days);
 
@@ -47,8 +47,15 @@ class AddDaysExcludingDates implements DateTimeCalculatorInterface
 
             $excludedDates = $this->excluded->between($endDate, $wdEndDate);
 
+            $excludedDateCount = 0;
             foreach ($excludedDates as $ed) {
-                Logger::debug('Excluding date -> ' . $ed['publicHolidayDate']);
+                if (!in_array($ed['publicHolidayDate'], $processedHolidays)) {
+                    $processedHolidays[] = $ed['publicHolidayDate'];
+                    Logger::debug('Excluding date -> ' . $ed['publicHolidayDate']);
+                    $excludedDateCount++;
+                } else {
+                    Logger::debug('ALREADY PROCESSED date -> ' . $ed['publicHolidayDate']);
+                }
             }
             //$endDate = $this->wrapped->calculateDate($wdEndDate, count($excludedDates));
 
@@ -56,7 +63,7 @@ class AddDaysExcludingDates implements DateTimeCalculatorInterface
             //$days = $wdEndDate->diff($endDate)->format('%a');
             $endDate = $wdEndDate;
 
-            $days = count($excludedDates);
+            $days = $excludedDateCount;
             //Logger::debug('new endDate => ' . $endDate->format('d/m/Y'));
             Logger::debug('END LOOP ' . $count . "\n\n");
             $count++;
