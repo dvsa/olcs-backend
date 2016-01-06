@@ -420,10 +420,71 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * Refund a fee
+     *
+     * @param Fee $fee
+     *
+     * @return array of refund receipt references one for each payment. key = payment ref, value = refund ref
+     */
+    public function refundFee(Fee $fee)
+    {
+        if (count($fee->getFeeTransactionsForRefund()) === 1) {
+            return $this->singlePaymentRefund($fee);
+        } else {
+            return $this->batchRefund($fee);
+        }
+    }
+
+    /**
+     * Refund a fee that has a single payment
+     *
+     * @param Fee $fee
+     *
+     * @return array key = payment ref, value = refund ref
+     * @throws \Dvsa\Olcs\Api\Service\CpmsResponseException
+     */
+    private function singlePaymentRefund(Fee $fee)
+    {
+        $feeTransactions = $fee->getFeeTransactionsForRefund();
+        // get first (and only) fee transaction
+        /* @var $ft FeeTransaction */
+        $ft = array_shift($feeTransactions);
+
+        $method   = 'post';
+        $endPoint = '/api/payment/'. $ft->getTransaction()->getReference() .'/refund';
+        $scope    = ApiService::SCOPE_REFUND;
+
+        $params = array_merge(
+            $this->getRefundPaymentDataForFeeTransaction($ft),
+            [
+                'scope' => $scope,
+                'total_amount' => $this->formatAmount($ft->getAmount()),
+                'customer_reference' => (string) $this->getCustomerReference([$fee]),
+                'customer_name' => $fee->getCustomerNameForInvoice(),
+                'customer_manager_name' => $fee->getCustomerNameForInvoice(),
+                'customer_address' => $this->formatAddress($fee->getCustomerAddressForInvoice()),
+                'country_code' => $fee->getFeeType()->getCountryCode(),
+            ]
+        );
+
+        $response = $this->send($method, $endPoint, $scope, $params);
+
+        if (isset($response['code']) && $response['code'] === self::PAYMENT_REFUNDED) {
+            return [$ft->getTransaction()->getReference() => $response['receipt_reference']];
+        } else {
+            $statusCode = $this->getCpmsHttpStatusCode();
+            $e = new CpmsResponseException('Invalid refund response', $statusCode);
+            $e->setResponse($response);
+            throw $e;
+        }
+    }
+
+    /**
      * Refund payments in a batch
      *
      * @param Fee $fee
-     * @return array
+     *
+     * @return array one for each fee payment, key = payment ref, value = refund ref
      * @throws CpmsResponseException if response is invalid
      */
     public function batchRefund($fee)
@@ -447,38 +508,13 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $response = $this->send($method, $endPoint, $scope, $params);
 
         if (isset($response['code']) && $response['code'] === self::RESPONSE_SUCCESS) {
-            return $response;
+            return $response['receipt_references'];
         } else {
             $statusCode = $this->getCpmsHttpStatusCode();
             $e = new CpmsResponseException('Invalid refund response', $statusCode);
             $e->setResponse($response);
             throw $e;
         }
-    }
-
-    /**
-     * @todo remove when CPMS refund end point is working
-     */
-    private function stubBatchRefundResponse($payments)
-    {
-        $receiptRefs = array_map(
-            function ($payment) {
-                return $payment['receipt_reference'];
-            },
-            $payments
-        );
-        $count = 0;
-        $refundRefs = array_map(
-            function ($payment) use (&$count) {
-                return sprintf('REFUND-REF-%d', ++$count);
-            },
-            $receiptRefs
-        );
-        return [
-           'code' => self::RESPONSE_SUCCESS,
-           'receipt_references' => array_combine($receiptRefs, $refundRefs),
-           'message' => '** stubbed response from ' . __METHOD__ . ' **',
-        ];
     }
 
     /**
@@ -491,7 +527,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $paymentData = $this->getPaymentDataForFee(
             $ft->getFee(),
             [
-                'allocated_amount' => $this->formatAmount($ft->getAmount()),
+                'amount' => $this->formatAmount($ft->getAmount()),
             ]
         );
 

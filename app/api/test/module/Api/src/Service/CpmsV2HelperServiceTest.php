@@ -1005,7 +1005,188 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->assertSame($response, $result);
     }
 
-    public function testBatchRefund()
+    public function testRefundFeeSinglePayment()
+    {
+        $fee = m::mock(FeeEntity::class);
+
+        $ft = m::mock(FeeTransactionEntity::class);
+        $ft->shouldReceive('getTransaction->getReference')->andReturn('payment_ref');
+        $ft->shouldReceive('getAmount')->andReturn('100.00');
+
+        $address = new Address();
+        $address->updateAddress('ADDR1', 'ADDR2', 'ADDR3', 'ADDR4', 'TOWN', 'POSTCODE');
+        $fee
+            ->shouldReceive('getFeeTransactionsForRefund')
+            ->andReturn([$ft])
+            ->shouldReceive('getOrganisation')
+            ->andReturn(null)
+            ->shouldReceive('getId')
+            ->andReturn(101)
+            ->shouldReceive('isBalancingFee')
+            ->andReturn(false)
+            ->shouldReceive('getInvoiceLineNo')
+            ->andReturn('LINE_NO')
+            ->shouldReceive('getAmount')
+            ->andReturn('200.00')
+            ->shouldReceive('getOutstandingAmount')
+            ->andReturn('0.00')
+            ->shouldReceive('getInvoicedDate')
+            ->andReturn(new \DateTime('2015-10-09'))
+            ->shouldReceive('getCustomerNameForInvoice')
+            ->andReturn('Test Customer')
+            ->shouldReceive('getCustomerAddressForInvoice')
+            ->andReturn($address)
+            ->shouldReceive('getRuleStartDate')
+            ->andReturn(new \DateTime('2015-10-12'))
+            ->shouldReceive('getDefermentPeriod')
+            ->andReturn('1')
+            ->shouldReceive('getSalesPersonReference')
+            ->andReturn('TEST_SALES_PERSON_REF')
+            ->shouldReceive('getNetAmount')
+            ->andReturn('12.00')
+            ->shouldReceive('getVatAmount')
+            ->andReturn('15.00')
+            ->shouldReceive('getGrossAmount')
+            ->andReturn('9.99');
+
+        $fee->shouldReceive('getFeeType->getDescription')->andReturn('TEST_FEE_TYPE');
+        $fee->shouldReceive('getFeeType->getVatCode')->andReturn('VAT_CODE');
+        $fee->shouldReceive('getFeeType->getVatRate')->andReturn('VAT_RATE');
+        $fee->shouldReceive('getFeeType->getCountryCode')->andReturn('NI');
+
+        $ft->shouldReceive('getFee')->andReturn($fee);
+
+        $params =  [
+            'receipt_reference' => 'payment_ref',
+            'refund_reason' => 'Refund',
+            'payment_data' => [
+                [
+                    'line_identifier' => '101',
+                    'amount' => '100.00',
+                    'allocated_amount' => '0.00',
+                    'net_amount' => '12.00',
+                    'tax_amount' => '15.00',
+                    'tax_code' => 'VAT_CODE',
+                    'tax_rate' => 'VAT_RATE',
+                    'invoice_date' => '2015-10-09',
+                    'sales_reference' => '101',
+                    'product_reference' => 'TEST_FEE_TYPE',
+                    'product_description' => 'TEST_FEE_TYPE',
+                    'receiver_reference' => 'Miscellaneous',
+                    'receiver_name' => 'Test Customer',
+                    'receiver_address' => [
+                        'line_1' => 'ADDR1',
+                        'line_2' => 'ADDR2',
+                        'line_3' => 'ADDR3',
+                        'line_4' => 'ADDR4',
+                        'city' => 'TOWN',
+                        'postcode' => 'POSTCODE',
+                    ],
+                    'rule_start_date' => '2015-10-12',
+                    'deferment_period' => '1',
+                    'country_code' => 'NI',
+                    'sales_person_reference' => 'TEST_SALES_PERSON_REF',
+                ],
+            ],
+            'scope' => 'REFUND',
+            'total_amount' => '100.00',
+            'customer_reference' => 'Miscellaneous',
+            'customer_name' => 'Test Customer',
+            'customer_manager_name' => 'Test Customer',
+            'customer_address' => [
+                'line_1' => 'ADDR1',
+                'line_2' => 'ADDR2',
+                'line_3' => 'ADDR3',
+                'line_4' => 'ADDR4',
+                'city' => 'TOWN',
+                'postcode' => 'POSTCODE',
+            ],
+            'country_code' => 'NI',
+        ];
+
+        $response = [
+            'code' => Sut::PAYMENT_REFUNDED,
+            'receipt_reference' => 'RECEIPT_REF',
+        ];
+
+        $this->cpmsClient
+            ->shouldReceive('post')
+            ->with('/api/payment/payment_ref/refund', 'REFUND', $params)
+            ->once()
+            ->andReturn($response);
+
+        $result = $this->sut->refundFee($fee);
+
+        $this->assertSame(['payment_ref' => 'RECEIPT_REF'], $result);
+    }
+
+    public function testRefundFeeSinglePaymentErrorResponse()
+    {
+        $this->setExpectedException(CpmsResponseException::class, 'Invalid refund response', 401);
+
+        $fee = m::mock(FeeEntity::class);
+
+        $ft = m::mock(FeeTransactionEntity::class);
+        $ft->shouldReceive('getTransaction->getReference')->andReturn('payment_ref');
+        $ft->shouldReceive('getAmount')->andReturn('100.00');
+
+        $address = new Address();
+        $address->updateAddress('ADDR1', 'ADDR2', 'ADDR3', 'ADDR4', 'TOWN', 'POSTCODE');
+        $fee
+            ->shouldReceive('getFeeTransactionsForRefund')
+            ->andReturn([$ft])
+            ->shouldReceive('getOrganisation')
+            ->andReturn(null)
+            ->shouldReceive('getId')
+            ->andReturn(101)
+            ->shouldReceive('isBalancingFee')
+            ->andReturn(false)
+            ->shouldReceive('getInvoiceLineNo')
+            ->andReturn('LINE_NO')
+            ->shouldReceive('getAmount')
+            ->andReturn('200.00')
+            ->shouldReceive('getOutstandingAmount')
+            ->andReturn('0.00')
+            ->shouldReceive('getInvoicedDate')
+            ->andReturn(new \DateTime('2015-10-09'))
+            ->shouldReceive('getCustomerNameForInvoice')
+            ->andReturn('Test Customer')
+            ->shouldReceive('getCustomerAddressForInvoice')
+            ->andReturn($address)
+            ->shouldReceive('getRuleStartDate')
+            ->andReturn(new \DateTime('2015-10-12'))
+            ->shouldReceive('getDefermentPeriod')
+            ->andReturn('1')
+            ->shouldReceive('getSalesPersonReference')
+            ->andReturn('TEST_SALES_PERSON_REF')
+            ->shouldReceive('getNetAmount')
+            ->andReturn('12.00')
+            ->shouldReceive('getVatAmount')
+            ->andReturn('15.00')
+            ->shouldReceive('getGrossAmount')
+            ->andReturn('9.99');
+
+        $fee->shouldReceive('getFeeType->getDescription')->andReturn('TEST_FEE_TYPE');
+        $fee->shouldReceive('getFeeType->getVatCode')->andReturn('VAT_CODE');
+        $fee->shouldReceive('getFeeType->getVatRate')->andReturn('VAT_RATE');
+        $fee->shouldReceive('getFeeType->getCountryCode')->andReturn('NI');
+
+        $ft->shouldReceive('getFee')->andReturn($fee);
+
+        $this->cpmsClient
+            ->shouldReceive('post')
+            ->with('/api/payment/payment_ref/refund', 'REFUND', m::any())
+            ->andReturn([]);
+
+        $this->cpmsClient
+            ->shouldReceive('getClient->getHttpClient->getResponse->getStatusCode')
+            ->andReturn(401);
+
+        $this->sut->refundFee($fee);
+    }
+
+
+    public function testRefundFeeMultiplePayments()
     {
         $fee = m::mock(FeeEntity::class);
 
@@ -1017,11 +1198,19 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getAmount')
             ->andReturn('100.00');
 
+        $ft2 = m::mock(FeeTransactionEntity::class);
+        $ft2
+            ->shouldReceive('getTransaction->getReference')
+            ->andReturn('payment_ref');
+        $ft2
+            ->shouldReceive('getAmount')
+            ->andReturn('201.00');
+
         $address = new Address();
         $address->updateAddress('ADDR1', 'ADDR2', 'ADDR3', 'ADDR4', 'TOWN', 'POSTCODE');
         $fee
             ->shouldReceive('getFeeTransactionsForRefund')
-            ->andReturn([$ft])
+            ->andReturn([$ft, $ft2])
             ->shouldReceive('getOrganisation')
             ->andReturn(null)
             ->shouldReceive('getId')
@@ -1060,6 +1249,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $fee->shouldReceive('getFeeType->getCountryCode')->andReturn('NI');
 
         $ft->shouldReceive('getFee')->andReturn($fee);
+        $ft2->shouldReceive('getFee')->andReturn($fee);
 
         $params =  [
             'scope' => 'REFUND',
@@ -1071,8 +1261,41 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'payment_data' => [
                         [
                             'line_identifier' => '101',
-                            'amount' => '9.99',
-                            'allocated_amount' => '100.00',
+                            'amount' => '100.00',
+                            'allocated_amount' => '0.00',
+                            'net_amount' => '12.00',
+                            'tax_amount' => '15.00',
+                            'tax_code' => 'VAT_CODE',
+                            'tax_rate' => 'VAT_RATE',
+                            'invoice_date' => '2015-10-09',
+                            'sales_reference' => '101',
+                            'product_reference' => 'TEST_FEE_TYPE',
+                            'product_description' => 'TEST_FEE_TYPE',
+                            'receiver_reference' => 'Miscellaneous',
+                            'receiver_name' => 'Test Customer',
+                            'receiver_address' => [
+                                'line_1' => 'ADDR1',
+                                'line_2' => 'ADDR2',
+                                'line_3' => 'ADDR3',
+                                'line_4' => 'ADDR4',
+                                'city' => 'TOWN',
+                                'postcode' => 'POSTCODE',
+                            ],
+                            'rule_start_date' => '2015-10-12',
+                            'deferment_period' => '1',
+                            'country_code' => 'NI',
+                            'sales_person_reference' => 'TEST_SALES_PERSON_REF',
+                        ],
+                    ],
+                ],
+                [
+                    'receipt_reference' => 'payment_ref',
+                    'refund_reason' => 'Refund',
+                    'payment_data' => [
+                        [
+                            'line_identifier' => '101',
+                            'amount' => '201.00',
+                            'allocated_amount' => '0.00',
                             'net_amount' => '12.00',
                             'tax_amount' => '15.00',
                             'tax_code' => 'VAT_CODE',
@@ -1115,9 +1338,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
-        $result = $this->sut->batchRefund($fee);
+        $result = $this->sut->refundFee($fee);
 
-        $this->assertSame($response, $result);
+        $this->assertSame($response['receipt_references'], $result);
     }
 
     public function testBatchRefundWithInvalidResponse()
