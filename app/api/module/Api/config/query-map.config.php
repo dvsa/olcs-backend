@@ -399,7 +399,7 @@ return [
         => QueryHandler\VariationOperatingCentre\VariationOperatingCentre::class,
 
     // Organisation Person
-   TransferQuery\OrganisationPerson\GetSingle::class => QueryHandler\OrganisationPerson\GetSingle::class,
+    TransferQuery\OrganisationPerson\GetSingle::class => QueryHandler\OrganisationPerson\GetSingle::class,
 
     // Disc Printing
     TransferQuery\DiscSequence\DiscPrefixes::class => QueryHandler\DiscSequence\DiscPrefixes::class,
@@ -435,4 +435,6 @@ return [
     TransferQuery\ContactDetail\CountryList::class => QueryHandler\ContactDetail\CountryList::class,
     TransferQuery\ContactDetail\ContactDetailsList::class => QueryHandler\ContactDetail\ContactDetailsList::class,
     TransferQuery\TrafficArea\TrafficAreaList::class => QueryHandler\TrafficArea\TrafficAreaList::class,
+
+    TransferQuery\RefData\RefDataList::class => QueryHandler\RefData\RefDataList::class,
 ];
