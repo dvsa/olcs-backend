@@ -13,12 +13,11 @@ use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyType as SiPenaltyTypeEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\Applied\Create as CreatePenaltyCmd;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * Create Erru applied penalty
  */
-final class Create extends AbstractCommandHandler implements TransactionedInterface
+final class Create extends AbstractCommandHandler
 {
     const DATE_FORMAT = 'Y-m-d';
 

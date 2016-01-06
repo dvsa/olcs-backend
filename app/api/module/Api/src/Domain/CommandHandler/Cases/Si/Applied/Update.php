@@ -11,12 +11,11 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyType as SiPenaltyTypeEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\Applied\Update as UpdatePenaltyCmd;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * Update Erru applied penalty
  */
-final class Update extends AbstractCommandHandler implements TransactionedInterface
+final class Update extends AbstractCommandHandler
 {
     const DATE_FORMAT = 'Y-m-d';
 
