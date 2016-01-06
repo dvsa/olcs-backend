@@ -147,6 +147,10 @@ return [
     TransferCommand\Cases\Pi\Close::class => CommandHandler\Cases\Pi\Close::class,
     TransferCommand\Cases\Pi\Reopen::class => CommandHandler\Cases\Pi\Reopen::class,
 
+    // Transfer - Si, Erru
+    TransferCommand\Cases\Si\Applied\Delete::class => CommandHandler\Cases\Si\Applied\Delete::class,
+    TransferCommand\Cases\Si\Applied\Create::class => CommandHandler\Cases\Si\Applied\Create::class,
+    TransferCommand\Cases\Si\Applied\Update::class => CommandHandler\Cases\Si\Applied\Update::class,
     TransferCommand\Cases\Si\SendResponse::class => CommandHandler\Cases\Si\SendResponse::class,
 
     // Transfer - Bus

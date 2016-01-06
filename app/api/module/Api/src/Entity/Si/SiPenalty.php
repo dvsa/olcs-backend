@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Si;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
+use Dvsa\Olcs\Api\Entity\Si\SiPenaltyType as SiPenaltyTypeEntity;
 
 /**
  * SiPenalty Entity
@@ -19,5 +21,45 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SiPenalty extends AbstractSiPenalty
 {
+    /**
+     * SiPenalty constructor.
+     * @param SeriousInfringement $seriousInfringement
+     * @param SiPenaltyType $siPenaltyType
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param string $imposed
+     * @param string $reasonNotImposed
+     */
+    public function __construct(
+        SiEntity $seriousInfringement,
+        SiPenaltyTypeEntity $siPenaltyType,
+        \DateTime $startDate,
+        \DateTime $endDate,
+        $imposed,
+        $reasonNotImposed
+    ) {
+        $this->seriousInfringement = $seriousInfringement;
+        $this->update($siPenaltyType, $startDate, $endDate, $imposed, $reasonNotImposed);
+    }
 
+    /**
+     * @param SiPenaltyType $siPenaltyType
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param string $imposed
+     * @param string $reasonNotImposed
+     */
+    public function update(
+        SiPenaltyTypeEntity $siPenaltyType,
+        \DateTime $startDate,
+        \DateTime $endDate,
+        $imposed,
+        $reasonNotImposed
+    ) {
+        $this->siPenaltyType = $siPenaltyType;
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+        $this->imposed = $imposed;
+        $this->reasonNotImposed = $reasonNotImposed;
+    }
 }
