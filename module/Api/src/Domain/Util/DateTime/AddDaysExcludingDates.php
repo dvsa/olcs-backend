@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\Util\DateTime;
 
+use Olcs\Logging\Log\Logger;
+
 /**
  * AddDaysExcludingDates
  */
@@ -25,10 +27,41 @@ class AddDaysExcludingDates implements DateTimeCalculatorInterface
      */
     public function calculateDate(\DateTime $date, $days)
     {
-        $endDate = $this->wrapped->calculateDate($date, $days);
+        Logger::debug('AddDaysExcludingDates : Calculating SLA date ' . $days . ' days from ' . $date->format('d-m-Y'));
 
-        $excludedDates = $this->excluded->between($date, $endDate);
+        // calculate using AddWorkingDays after weekend days have been added
+        //Logger::debug('days -> ' . $days);
+        $endDate = $date;
 
-        return $this->wrapped->calculateDate($endDate, count($excludedDates));
+        $count = 0;
+        while ($days > 0 || $count > 10) {
+            Logger::debug('LOOP ' . $count . "\n");
+            Logger::debug('days => ' . $days);
+
+            $wdEndDate = $this->wrapped->calculateDate($endDate, $days);
+
+            Logger::debug('new endDate => ' . $wdEndDate->format('d/m/Y'));
+            Logger::debug(
+                'Getting dates to exclude between ' . $endDate->format('d/m/Y') . ' and ' . $wdEndDate->format('d/m/Y')
+            );
+
+            $excludedDates = $this->excluded->between($endDate, $wdEndDate);
+
+            foreach ($excludedDates as $ed) {
+                Logger::debug('Excluding date -> ' . $ed['publicHolidayDate']);
+            }
+            //$endDate = $this->wrapped->calculateDate($wdEndDate, count($excludedDates));
+
+            //$newDiffDate = new \DateTime()
+            //$days = $wdEndDate->diff($endDate)->format('%a');
+            $endDate = $wdEndDate;
+
+            $days = count($excludedDates);
+            //Logger::debug('new endDate => ' . $endDate->format('d/m/Y'));
+            Logger::debug('END LOOP ' . $count . "\n\n");
+            $count++;
+        }
+
+        return $endDate;
     }
 }
