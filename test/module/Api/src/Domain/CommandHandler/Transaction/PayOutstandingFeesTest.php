@@ -1071,7 +1071,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->setExpectedException(
             \Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class,
             'ohnoes',
-            400
+            500
         );
 
         $this->sut->handleCommand($command);
