@@ -128,18 +128,14 @@ class RefundFeeTest extends CommandHandlerTestCase
             ->andReturn($fee);
 
         $this->mockCpmsService
-            ->shouldReceive('batchRefund')
+            ->shouldReceive('refundFee')
             ->once()
             ->with($fee)
             ->andReturn(
                 [
-                    'receipt_references' => [
-                        'payment_ref_1' => 'refund_ref_1',
-                        'payment_ref_2' => 'refund_ref_2',
-                        // 'payment_ref_3 NOT refunded
-                    ],
-                    'code' => CpmsHelper::RESPONSE_SUCCESS,
-                    'message' => 'ok',
+                    'payment_ref_1' => 'refund_ref_1',
+                    'payment_ref_2' => 'refund_ref_2',
+                    // 'payment_ref_3 NOT refunded
                 ]
             );
 
@@ -208,7 +204,7 @@ class RefundFeeTest extends CommandHandlerTestCase
             ->andReturn($fee);
 
         $this->mockCpmsService
-            ->shouldReceive('batchRefund')
+            ->shouldReceive('refundFee')
             ->once()
             ->with($fee)
             ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsResponseException('ohnoes'));

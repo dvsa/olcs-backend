@@ -46,7 +46,7 @@ final class RefundFee extends AbstractCommandHandler implements
         $fee = $this->getRepo()->fetchUsingId($command);
 
         try {
-            $response = $this->getCpmsService()->batchRefund($fee);
+            $references = $this->getCpmsService()->refundFee($fee);
         } catch (CpmsResponseException $e) {
             // rethrow as Domain exception
             throw new RuntimeException(
@@ -56,7 +56,6 @@ final class RefundFee extends AbstractCommandHandler implements
             );
         }
 
-        $references = $response['receipt_references'];
         // note, we don't record a transaction reference as CPMS returns one per original receipt_reference
         $transactionReference = null;
         $comment = self::REFUND_COMMENT . ' ' . implode(', ', $references);
