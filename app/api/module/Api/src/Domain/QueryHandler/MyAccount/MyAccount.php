@@ -31,6 +31,8 @@ class MyAccount extends AbstractQueryHandler implements AuthAwareInterface
             [
                 'team',
                 'transportManager',
+                'partnerContactDetails',
+                'localAuthority',
                 'contactDetails' => [
                     'person' => ['title'],
                     'address' => ['countryCode'],
