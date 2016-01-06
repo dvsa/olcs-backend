@@ -10,7 +10,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Tm;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendTmUserCreated as SendTmUserCreatedDto;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
-use Dvsa\Olcs\Api\Domain\Exception\RollbackUserCreatedException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
@@ -244,7 +243,7 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
                 )
             );
         } catch (\Exception $e) {
-            throw new RollbackUserCreatedException('Rollback command after exception', null, $e);
+            // swallow any exception
         }
 
         return $user;
