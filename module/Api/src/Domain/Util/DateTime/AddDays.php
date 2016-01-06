@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\Util\DateTime;
 
+use Olcs\Logging\Log\Logger;
+
 /**
  * Add Days
  */
@@ -16,6 +18,7 @@ class AddDays implements DateTimeCalculatorInterface
      */
     public function calculateDate(\DateTime $date, $days)
     {
+        Logger::debug('AddDays : processing days -> ' . $days);
         $endDate = clone $date;
         if ($days > 0) {
             $endDate->add(new \DateInterval('P' . $days . 'D'));
@@ -23,6 +26,7 @@ class AddDays implements DateTimeCalculatorInterface
             $endDate->sub(new \DateInterval('P' . abs($days) . 'D'));
         }
 
+        //Logger::debug('SLA target calculated as -> ' . $endDate->format('d-m-Y'));
         return $endDate;
     }
 }
