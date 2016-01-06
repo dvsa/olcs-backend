@@ -100,7 +100,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             // rethrow as Domain exception
             throw new RestResponseException(
                 sprintf('Error from CPMS service [%s] %s', $e->getMessage(), json_encode($e->getResponse())),
-                $e->getCode(),
+                \Zend\Http\Response::STATUS_CODE_500,
                 $e
             );
         }
