@@ -18,6 +18,9 @@ class AddDays implements DateTimeCalculatorInterface
      */
     public function calculateDate(\DateTime $date, $days)
     {
+        // ensure date is set to midnight to avoid date discrepancies
+        $date->setTime(0,0,0);
+
         Logger::debug('AddDays : processing days -> ' . $days);
         $endDate = clone $date;
         if ($days > 0) {
