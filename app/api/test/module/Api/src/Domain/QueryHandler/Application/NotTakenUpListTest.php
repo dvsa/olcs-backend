@@ -86,8 +86,7 @@ class NotTakenUpListTest extends QueryHandlerTestCase
         $this->repoMap['PublicHoliday']
             ->shouldReceive('fetchBetweenByTa')
             ->with(m::type(DateTime::class), m::type(DateTime::class), $mockTrafficArea)
-            ->andReturn([1, 2, 3])
-            ->once();
+            ->andReturn([1, 2, 3]);
 
         $result = $this->sut->handleQuery($query);
 
