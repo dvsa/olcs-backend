@@ -13,11 +13,17 @@ class Sla extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    public function fetchByCategory($category)
+    /**
+     * Fetches SLAs by array of category names
+     * @param $category
+     * @return array
+     */
+    public function fetchByCategories($categories)
     {
         $qb = $this->createQueryBuilder();
-        $qb->where($qb->expr()->eq($this->alias . '.category', ':category'));
-        $qb->setParameter('category', $category);
+        $qb->andWhere(
+            $qb->expr()->in($this->alias . '.category', ':category')
+        )->setParameter('category', $categories);
 
         return $qb->getQuery()->getResult();
     }
