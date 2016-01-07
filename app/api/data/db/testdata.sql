@@ -2023,7 +2023,8 @@ INSERT INTO `contact_details` (`id`,`address_id`,`contact_type`,`email_address`)
     (146,1125,'ct_corr','unlicensed@foo.bar');
 INSERT INTO `address` (`id`,`saon_desc`,`paon_desc`,`street`,`locality`,`town`,`postcode`,`country_code`) VALUES
     (1124,'Address Line 1','Address Line 2','Address Line 3','Address Line 4','Address Line 5','LS9 6NF','GB'),
-    (1125,'Address Line 1','Address Line 2','Address Line 3','Address Line 4','Address Line 5','LS9 6NF','GB');
+    (1125,'Address Line 1','Address Line 2','Address Line 3','Address Line 4','Address Line 5','LS9 6NF','GB'),
+    (1126,'Address Line 1','Address Line 2','Address Line 3','Address Line 4','Address Line 5','LS9 6NF','GB');
 INSERT INTO `phone_contact` (`id`,`contact_details_id`,`phone_contact_type`,`phone_number`) VALUES
     (113,145,'phone_t_tel','012345'),
     (114,145,'phone_t_home','012346'),
