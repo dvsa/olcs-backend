@@ -11,12 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Team\TeamList as QueryHandler;
 use Dvsa\Olcs\Transfer\Query\Team\TeamList as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Team as TeamRepo;
-use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Doctrine\ORM\Query as DoctrineQuery;
 
 /**
@@ -30,10 +25,6 @@ class TeamListTest extends QueryHandlerTestCase
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('Team', TeamRepo::class);
-        $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
-        ];
-        $this->mockAuthService();
 
         parent::setUp();
     }
@@ -44,12 +35,6 @@ class TeamListTest extends QueryHandlerTestCase
 
         $mockTeam = m::mock();
         $mockTeam->shouldReceive('serialize')->once()->andReturn('foo');
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('isGranted')
-            ->with(Permission::CAN_MANAGE_USER_INTERNAL, null)
-            ->once()
-            ->andReturn(true);
 
         $this->repoMap['Team']
             ->shouldReceive('fetchList')
@@ -69,30 +54,5 @@ class TeamListTest extends QueryHandlerTestCase
             ],
             $this->sut->handleQuery($query)
         );
-    }
-
-    public function testHandleQueryWithException()
-    {
-        $query = Query::create(['id' => 1]);
-
-        $this->setExpectedException(ForbiddenException::class);
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('isGranted')
-            ->with(Permission::CAN_MANAGE_USER_INTERNAL, null)
-            ->once()
-            ->andReturn(false);
-        $this->sut->handleQuery($query);
-    }
-
-    protected function mockAuthService()
-    {
-        /** @var User $mockUser */
-        $mockUser = m::mock(User::class)->makePartial();
-        $mockUser->setId(1);
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('getIdentity->getUser')
-            ->andReturn($mockUser);
     }
 }
