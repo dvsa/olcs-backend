@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\TransportManagerLicence\GetForResponsibili
 use Dvsa\Olcs\Transfer\Query\TransportManagerLicence\GetForResponsibilities as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TransportMangerLicenceRepo;
-use Dvsa\Olcs\Api\Domain\Repository\OtherLicence as OtherLicenceRepo;
+use Mockery as m;
 
 /**
  * GetForResponsibilities Test
@@ -24,7 +24,6 @@ class GetForResponsibilitiesTest extends QueryHandlerTestCase
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('TransportManagerLicence', TransportMangerLicenceRepo::class);
-        $this->mockRepo('OtherLicence', OtherLicenceRepo::class);
 
         parent::setUp();
     }
@@ -33,27 +32,21 @@ class GetForResponsibilitiesTest extends QueryHandlerTestCase
     {
         $query = Query::create(['id' => 1]);
 
+        $tma = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
+        $tma->shouldReceive('serialize')->with(
+            [
+                'otherLicences',
+                'licence'
+            ]
+        )->once()->andReturn(['foo' => 'bar']);
+
         $this->repoMap['TransportManagerLicence']
             ->shouldReceive('fetchForResponsibilities')
             ->with(1)
             ->once()
-            ->andReturn(['tml'])
+            ->andReturn($tma)
             ->getMock();
 
-        $this->repoMap['OtherLicence']
-            ->shouldReceive('fetchForTransportManagerLicence')
-            ->with(1)
-            ->once()
-            ->andReturn(['otherLicences'])
-            ->getMock();
-
-        $this->assertEquals(
-            [
-                'result' => ['tml'],
-                'count'  => 1,
-                'otherLicences' => ['otherLicences']
-            ],
-            $this->sut->handleQuery($query)
-        );
+        $this->assertSame(['foo' => 'bar'], $this->sut->handleQuery($query)->serialize());
     }
 }
