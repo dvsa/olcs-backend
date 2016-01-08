@@ -29,7 +29,6 @@ class AddDays implements DateTimeCalculatorInterface
             $endDate->sub(new \DateInterval('P' . abs($days) . 'D'));
         }
 
-        //Logger::debug('SLA target calculated as -> ' . $endDate->format('d-m-Y'));
         return $endDate;
     }
 }
