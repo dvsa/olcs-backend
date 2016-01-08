@@ -40,8 +40,8 @@ final class SendUserTemporaryPassword extends AbstractCommandHandler implements
             'user-temporary-password',
             [
                 'password' => $command->getPassword(),
-                // @NOTE the http://selfserve part gets replaced
-                'url' => 'http://selfserve/'
+                // @NOTE the http://selfserve / http://internal part gets replaced
+                'url' => $user->isInternal() ? 'http://internal/' : 'http://selfserve/'
             ]
         );
 
