@@ -20,18 +20,13 @@ class GetForResponsibilities extends AbstractQueryHandler
 {
     protected $repoServiceName = 'TransportManagerLicence';
 
-    protected $extraRepos = [
-        'OtherLicence'
-    ];
-
     public function handleQuery(QueryInterface $query)
     {
         $transportManagerLicence = $this->getRepo()->fetchForResponsibilities($query->getId());
-        $otherLicences = $this->getRepo('OtherLicence')->fetchForTransportManagerLicence($query->getId());
-        return [
-            'result'        => $transportManagerLicence,
-            'count'         => count($transportManagerLicence),
-            'otherLicences' => $otherLicences
-        ];
+        return $this->result(
+            $transportManagerLicence,
+            ['otherLicences', 'licence', 'operatingCentres']
+        );
+
     }
 }
