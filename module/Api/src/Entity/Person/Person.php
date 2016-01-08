@@ -41,9 +41,7 @@ class Person extends AbstractPerson implements OrganisationProviderInterface
         $this->setForename($forename);
         $this->setFamilyName($familyName);
 
-        if ($title !== null) {
-            $this->setTitle($title);
-        }
+        $this->setTitle($title);
 
         if ($birthDate !== null) {
             $this->setBirthDate(new \DateTime($birthDate));
