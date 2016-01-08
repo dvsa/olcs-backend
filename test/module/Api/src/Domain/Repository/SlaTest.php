@@ -11,7 +11,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository;
 
 /**
- * Sla Test
+ * Sla Repo Test
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
