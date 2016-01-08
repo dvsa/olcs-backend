@@ -7,14 +7,11 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Util;
 
-use Dvsa\Olcs\Api\Domain\Util\DateTime\AddDays;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\AddWorkingDays;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Util\SlaCalculator;
 use Dvsa\Olcs\Api\Entity\System\Sla;
-use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
 use Dvsa\Olcs\Api\Domain\Util\TimeProcessorBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\PublicHoliday as PublicHolidayRepo;
 
@@ -23,7 +20,7 @@ use Dvsa\Olcs\Api\Domain\Repository\PublicHoliday as PublicHolidayRepo;
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class AddWorkingDaysSlaTest extends MockeryTestCase
+class SlaCalculatorTest extends MockeryTestCase
 {
     public function setUp()
     {
@@ -52,8 +49,7 @@ class AddWorkingDaysSlaTest extends MockeryTestCase
         $publicHolidays,
         $trafficArea,
         $expected
-    )
-    {
+    ) {
         $date = new \DateTime($date);
 
         $this->publicHolidayRepo->shouldReceive('fetchBetweenByTa')
