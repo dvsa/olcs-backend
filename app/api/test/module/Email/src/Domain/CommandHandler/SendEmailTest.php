@@ -35,7 +35,8 @@ class SendEmailTest extends CommandHandlerTestCase
                 'from_name' => 'Terry',
                 'from_email' => 'terry.valtech@gmail.com',
                 'send_all_mail_to' => 'terry.valtech@gmail.com',
-                'selfserve_uri' => 'olcs-selfserve'
+                'selfserve_uri' => 'http://olcs-selfserve/',
+                'internal_uri' => 'http://olcs-internal/'
             ]
         ];
 
@@ -100,7 +101,7 @@ class SendEmailTest extends CommandHandlerTestCase
             'cc' => ['bar@foo.com'],
             'subject' => 'Some subject',
             'html' => false,
-            'body' => 'This is the email http://selfserve'
+            'body' => 'This is the email http://selfserve/ http://internal/'
         ];
 
         $command = Cmd::create($data);
@@ -114,7 +115,7 @@ class SendEmailTest extends CommandHandlerTestCase
                 'Foo',
                 'foo@bar.com',
                 'translated-Some subject',
-                'translated-This is the email olcs-selfserve',
+                'translated-This is the email http://olcs-selfserve/ http://olcs-internal/',
                 false,
                 ['bar@foo.com']
             );

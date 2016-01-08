@@ -8,6 +8,7 @@ return [
         'from_name' => 'OLCS do not reply',
         'from_email' => 'donotreply@otc.gsi.gov.uk',
         'selfserve_uri' => 'http://olcs-selfserve/',
+        'internal_uri' => 'http://olcs-internal/',
     ],
     'service_manager' => [
         'factories' => [

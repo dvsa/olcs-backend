@@ -148,6 +148,8 @@ return array(
         // 'send_all_mail_to' => 'terry.valtech@gmail.com',
         // Selfserve/external URI e.g. http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa *Environment specific*
         'selfserve_uri' => 'http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa',
+        // Internal URI e.g. http://demo_dvsa-internal.web03.olcs.mgt.mtpdvsa *Environment specific*
+        'internal_uri' => 'http://demo_dvsa-internal.web03.olcs.mgt.mtpdvsa',
     ),
     'mail' => array(),
     'mailboxes' => array(

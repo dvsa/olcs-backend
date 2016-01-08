@@ -34,7 +34,11 @@ class SendUserTemporaryPasswordTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider handleCommandDataProvider
+     *
+     */
+    public function testHandleCommand($isInternal, $expectedUrl)
     {
         $userId = 111;
         $emailAddress = 'me@test.me';
@@ -54,6 +58,7 @@ class SendUserTemporaryPasswordTest extends CommandHandlerTestCase
         $user = m::mock(User::class)->makePartial();
         $user->setId($userId);
         $user->setContactDetails($contactDetails);
+        $user->shouldReceive('isInternal')->andReturn($isInternal);
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->with($userId)
@@ -66,7 +71,7 @@ class SendUserTemporaryPasswordTest extends CommandHandlerTestCase
                 'user-temporary-password',
                 [
                     'password' => 'GENERATED_PASSWORD',
-                    'url' => 'http://selfserve/'
+                    'url' => $expectedUrl
                 ],
                 null
             );
@@ -91,5 +96,13 @@ class SendUserTemporaryPasswordTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function handleCommandDataProvider()
+    {
+        return [
+            [false, 'http://selfserve/'],
+            [true, 'http://internal/'],
+        ];
     }
 }

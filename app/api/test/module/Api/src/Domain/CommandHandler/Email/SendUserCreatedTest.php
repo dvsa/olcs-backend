@@ -36,7 +36,7 @@ class SendUserCreatedTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleCommand()
+    public function testHandleCommandForSelfserveUser()
     {
         $userId = 111;
         $emailAddress = 'me@test.me';
@@ -82,6 +82,67 @@ class SendUserCreatedTest extends CommandHandlerTestCase
                     'orgName' => $orgName,
                     'loginId' => $loginId,
                     'url' => 'http://selfserve/'
+                ],
+                null
+            );
+
+        $this->expectedSideEffect(
+            SendEmail::class,
+            [
+                'to' => $emailAddress
+            ],
+            new Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'user' => $userId
+            ],
+            'messages' => [
+                'User created email sent'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandForInternalUser()
+    {
+        $userId = 111;
+        $emailAddress = 'me@test.me';
+        $loginId = 'username';
+
+        $command = Cmd::create(
+            [
+                'user' => $userId,
+            ]
+        );
+
+        /** @var ContactDetails $contactDetails */
+        $contactDetails = m::mock(ContactDetails::class)->makePartial();
+        $contactDetails->setEmailAddress($emailAddress);
+
+        /** @var User $user */
+        $user = new User('', User::USER_TYPE_INTERNAL);
+        $user->setId($userId);
+        $user->setLoginId($loginId);
+        $user->setContactDetails($contactDetails);
+
+        $this->repoMap['User']->shouldReceive('fetchById')
+            ->with($userId)
+            ->andReturn($user);
+
+        $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')
+            ->once()
+            ->with(
+                m::type(Message::class),
+                'user-created',
+                [
+                    'orgName' => 'DVSA',
+                    'loginId' => $loginId,
+                    'url' => 'http://internal/'
                 ],
                 null
             );
