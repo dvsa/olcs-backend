@@ -93,8 +93,8 @@ class PiTest extends QueryHandlerTestCase
             ->with($query, Query::HYDRATE_OBJECT)
             ->andReturn($pi);
 
-        $this->repoMap['Sla']->shouldReceive('fetchByCategory')
-        ->with('pi', Query::HYDRATE_OBJECT)
+        $this->repoMap['Sla']->shouldReceive('fetchByCategories')
+        ->with(['pi', 'pi_hearing'], Query::HYDRATE_OBJECT)
         ->andReturn($slas);
 
         $this->assertInstanceOf(Result::class, $this->sut->handleQuery($query));
@@ -139,8 +139,8 @@ class PiTest extends QueryHandlerTestCase
             ->with(TrafficAreaEntity::class, TrafficAreaEntity::SE_MET_TRAFFIC_AREA_CODE)
             ->andReturn($trafficArea);
 
-        $this->repoMap['Sla']->shouldReceive('fetchByCategory')
-            ->with('pi', Query::HYDRATE_OBJECT)
+        $this->repoMap['Sla']->shouldReceive('fetchByCategories')
+            ->with(['pi', 'pi_hearing'], Query::HYDRATE_OBJECT)
             ->andReturn($slas);
 
         $this->assertInstanceOf(Result::class, $this->sut->handleQuery($query));

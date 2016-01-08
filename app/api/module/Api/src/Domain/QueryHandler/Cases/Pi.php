@@ -66,7 +66,7 @@ final class Pi extends AbstractQueryHandler
             $trafficArea = $result->getCase()->getLicence()->getTrafficArea();
         }
 
-        $slas = $this->getRepo('Sla')->fetchByCategory('pi', Query::HYDRATE_OBJECT);
+        $slas = $this->getRepo('Sla')->fetchByCategories(['pi', 'pi_hearing'], Query::HYDRATE_OBJECT);
 
         foreach ($slas as $sla) {
             /** @var SlaEntity $sla*/
