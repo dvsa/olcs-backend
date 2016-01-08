@@ -89,6 +89,7 @@ class User implements UserInterface
     /**
      * Updates a user
      *
+     * @param string $pid
      * @param string $username
      * @param string $emailAddress
      * @param bool $disabled
@@ -96,9 +97,17 @@ class User implements UserInterface
      * @return void
      * @throws FailedRequestException
      */
-    public function updateUser($username, $emailAddress = null, $disabled = null)
+    public function updateUser($pid, $username = null, $emailAddress = null, $disabled = null)
     {
         $payload = [];
+
+        if ($username !== null) {
+            $payload[] = [
+                'operation' => 'replace',
+                'field' => 'userName',
+                'value' => $username
+            ];
+        }
 
         if ($emailAddress !== null) {
             $payload[] = [
@@ -120,7 +129,7 @@ class User implements UserInterface
             return;
         }
 
-        $this->openAmClient->updateUser($username, $payload);
+        $this->openAmClient->updateUser($pid, $payload);
     }
 
     /**
@@ -159,7 +168,7 @@ class User implements UserInterface
      */
     private function generatePassword()
     {
-        return $this->randomGenerator->generateString(12);
+        return $this->randomGenerator->generateString(12, Generator::EASY_TO_READ);
     }
 
     /**

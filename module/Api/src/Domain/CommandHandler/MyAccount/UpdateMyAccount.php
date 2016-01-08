@@ -15,6 +15,8 @@ use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Update MyAccount
@@ -35,11 +37,14 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
     {
         $data = $command->getArrayCopy();
 
+        /** @var UserEntity $user */
         $user = $this->getRepo()->fetchById(
             $this->getCurrentUser()->getId(),
             Query::HYDRATE_OBJECT,
             $command->getVersion()
         );
+
+        $newUsername = ($command->getLoginId() !== $user->getLoginId()) ? $command->getLoginId() : null;
 
         // validate username
         $this->validateUsername($data['loginId'], $user->getLoginId());
@@ -70,7 +75,8 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
         $this->getRepo()->save($user);
 
         $this->getOpenAmUser()->updateUser(
-            $user->getLoginId(),
+            $user->getPid(),
+            $newUsername,
             $command->getContactDetails()['emailAddress']
         );
 
