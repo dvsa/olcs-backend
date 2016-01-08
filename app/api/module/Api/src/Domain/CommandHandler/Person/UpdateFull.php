@@ -28,7 +28,7 @@ final class UpdateFull extends AbstractCommandHandler
         $person->updatePerson(
             $command->getFirstName(),
             $command->getLastName(),
-            $this->getRepo()->getRefdataReference($command->getTitle()),
+            $command->getTitle() ? $this->getRepo()->getRefdataReference($command->getTitle()) : null,
             $command->getBirthDate(),
             $command->getBirthPlace()
         );
