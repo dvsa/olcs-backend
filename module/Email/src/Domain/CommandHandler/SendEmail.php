@@ -48,6 +48,11 @@ class SendEmail extends AbstractCommandHandler
     private $selfServeUri;
 
     /**
+     * @var string
+     */
+    private $internalUri;
+
+    /**
      * @var EmailService
      */
     private $emailService;
@@ -74,6 +79,10 @@ class SendEmail extends AbstractCommandHandler
             $this->setSelfServeUri($config['email']['selfserve_uri']);
         }
 
+        if (isset($config['email']['internal_uri'])) {
+            $this->setInternalUri($config['email']['internal_uri']);
+        }
+
         $this->setTranslator($mainServiceLocator->get('translator'));
 
         $this->setEmailService($mainServiceLocator->get('EmailService'));
@@ -95,6 +104,22 @@ class SendEmail extends AbstractCommandHandler
     public function setSelfServeUri($selfServeUri)
     {
         $this->selfServeUri = rtrim($selfServeUri, '/');
+    }
+
+    /**
+     * @return string
+     */
+    public function getInternalUri()
+    {
+        return $this->internalUri;
+    }
+
+    /**
+     * @param string $internalUri
+     */
+    public function setInternalUri($internalUri)
+    {
+        $this->internalUri = rtrim($internalUri, '/');
     }
 
     /**
@@ -240,7 +265,7 @@ class SendEmail extends AbstractCommandHandler
     }
 
     /**
-     * Replace "selfserve" URI with the real URI
+     * Replace selfserve / internal URI with the real URI
      *
      * @param string $text
      *
@@ -248,6 +273,12 @@ class SendEmail extends AbstractCommandHandler
      */
     protected function replaceUris($text)
     {
-        return str_replace('http://selfserve', $this->getSelfServeUri(), $text);
+        return strtr(
+            $text,
+            [
+                'http://selfserve/' => $this->getSelfServeUri().'/',
+                'http://internal/' => $this->getInternalUri().'/',
+            ]
+        );
     }
 }

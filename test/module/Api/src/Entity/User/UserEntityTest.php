@@ -35,14 +35,21 @@ class UserEntityTest extends EntityTester
      * @dataProvider getUserTypeDataProvider
      *
      */
-    public function testGetUserType($team, $localAuthority, $transportManager, $partnerContactDetails, $expected)
-    {
+    public function testGetUserType(
+        $team,
+        $localAuthority,
+        $transportManager,
+        $partnerContactDetails,
+        $expected,
+        $expectedIsInternal
+    ) {
         $this->entity->setTeam($team);
         $this->entity->setLocalAuthority($localAuthority);
         $this->entity->setTransportManager($transportManager);
         $this->entity->setPartnerContactDetails($partnerContactDetails);
 
         $this->assertEquals($expected, $this->entity->getUserType());
+        $this->assertEquals($expectedIsInternal, $this->entity->isInternal());
     }
 
     public function getUserTypeDataProvider()
@@ -53,11 +60,11 @@ class UserEntityTest extends EntityTester
         $partnerContactDetails = m::mock(ContactDetailsEntity::class);
 
         return [
-            [$team, null, null, null, Entity::USER_TYPE_INTERNAL],
-            [null, $localAuthority, null, null, Entity::USER_TYPE_LOCAL_AUTHORITY],
-            [null, null, $transportManager, null, Entity::USER_TYPE_TRANSPORT_MANAGER],
-            [null, null, null, $partnerContactDetails, Entity::USER_TYPE_PARTNER],
-            [null, null, null, null, Entity::USER_TYPE_OPERATOR],
+            [$team, null, null, null, Entity::USER_TYPE_INTERNAL, true],
+            [null, $localAuthority, null, null, Entity::USER_TYPE_LOCAL_AUTHORITY, false],
+            [null, null, $transportManager, null, Entity::USER_TYPE_TRANSPORT_MANAGER, false],
+            [null, null, null, $partnerContactDetails, Entity::USER_TYPE_PARTNER, false],
+            [null, null, null, null, Entity::USER_TYPE_OPERATOR, false],
         ];
     }
 
