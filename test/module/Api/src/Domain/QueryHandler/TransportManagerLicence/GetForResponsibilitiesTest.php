@@ -36,7 +36,8 @@ class GetForResponsibilitiesTest extends QueryHandlerTestCase
         $tma->shouldReceive('serialize')->with(
             [
                 'otherLicences',
-                'licence'
+                'licence',
+                'operatingCentres'
             ]
         )->once()->andReturn(['foo' => 'bar']);
 
