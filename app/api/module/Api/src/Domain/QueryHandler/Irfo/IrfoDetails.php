@@ -32,7 +32,12 @@ class IrfoDetails extends AbstractQueryHandler
                 ],
                 'irfoNationality',
                 'irfoPartners',
-                'irfoContactDetails'
+                'irfoContactDetails' => [
+                    'address' => [
+                        'countryCode'
+                    ],
+                    'phoneContacts'
+                ]
             ]
         );
     }
