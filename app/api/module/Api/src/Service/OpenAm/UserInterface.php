@@ -33,6 +33,7 @@ interface UserInterface
     /**
      * Updates a user
      *
+     * @param string $pid
      * @param string $username
      * @param string $emailAddress
      * @param bool $disabled
@@ -40,7 +41,7 @@ interface UserInterface
      * @return void
      * @throws FailedRequestException
      */
-    public function updateUser($username, $emailAddress = null, $disabled = null);
+    public function updateUser($pid, $username = null, $emailAddress = null, $disabled = null);
 
     /**
      * Disables a user
