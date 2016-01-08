@@ -433,6 +433,16 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
+     * Checks whether the user is of internal type
+     *
+     * @return bool
+     */
+    public function isInternal()
+    {
+        return (self::USER_TYPE_INTERNAL === $this->getUserType());
+    }
+
+    /**
      * @return string
      */
     public function getPermission()
