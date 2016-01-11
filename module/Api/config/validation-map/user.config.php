@@ -12,6 +12,7 @@ return [
     QueryHandler\User\Partner::class                                            => IsInternalUser::class,
     QueryHandler\User\PartnerList::class                                        => IsInternalUser::class,
     QueryHandler\User\RoleList::class                                           => NoValidationRequired::class,
+    QueryHandler\User\Pid::class                                                => NoValidationRequired::class,
 
     // Commands
     CommandHandler\MyAccount\UpdateMyAccountInternal::class                     => IsInternalUser::class,

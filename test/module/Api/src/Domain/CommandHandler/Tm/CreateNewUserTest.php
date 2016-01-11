@@ -195,7 +195,7 @@ class CreateNewUserTest extends CommandHandlerTestCase
 
         $mockApplication = m::mock(Application::class);
 
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('generatePid')->with('Foo')->andReturn('pid');
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
             ->with('Foo', 'foo@bar.com', 'selfserve', m::type('callable'))

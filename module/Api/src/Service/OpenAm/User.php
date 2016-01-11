@@ -22,11 +22,6 @@ class User implements UserInterface
     private $randomGenerator;
 
     /**
-     * @var string
-     */
-    private $reservedPid;
-
-    /**
      * @param ClientInterface $openAmClient
      * @param Generator $randomGenerator
      */
@@ -37,16 +32,15 @@ class User implements UserInterface
     }
 
     /**
-     * Reserves a pid
+     * Generates a pid
+     *
+     * @param string $loginId
      *
      * @return string
      */
-    public function reservePid()
+    public function generatePid($loginId)
     {
-        if ($this->reservedPid === null) {
-            $this->reservedPid = $this->generatePid();
-        }
-        return $this->reservedPid;
+        return hash('sha256', $loginId);
     }
 
     /**
@@ -62,8 +56,7 @@ class User implements UserInterface
      */
     public function registerUser($loginId, $emailAddress, $realm, $callback = null)
     {
-        $pid = $this->reservePid();
-        $this->reservedPid = null;
+        $pid = $this->generatePid($loginId);
 
         $password = $this->generatePassword();
 
@@ -89,6 +82,7 @@ class User implements UserInterface
     /**
      * Updates a user
      *
+     * @param string $pid
      * @param string $username
      * @param string $emailAddress
      * @param bool $disabled
@@ -96,9 +90,17 @@ class User implements UserInterface
      * @return void
      * @throws FailedRequestException
      */
-    public function updateUser($username, $emailAddress = null, $disabled = null)
+    public function updateUser($pid, $username = null, $emailAddress = null, $disabled = null)
     {
         $payload = [];
+
+        if ($username !== null) {
+            $payload[] = [
+                'operation' => 'replace',
+                'field' => 'userName',
+                'value' => $username
+            ];
+        }
 
         if ($emailAddress !== null) {
             $payload[] = [
@@ -120,7 +122,7 @@ class User implements UserInterface
             return;
         }
 
-        $this->openAmClient->updateUser($username, $payload);
+        $this->openAmClient->updateUser($pid, $payload);
     }
 
     /**
@@ -143,23 +145,13 @@ class User implements UserInterface
     }
 
     /**
-     * Generates a pid
-     *
-     * @return string
-     */
-    private function generatePid()
-    {
-        return $this->randomGenerator->generateString(32, '0123456789abcdef');
-    }
-
-    /**
      * Generates a password
      *
      * @return string
      */
     private function generatePassword()
     {
-        return $this->randomGenerator->generateString(12);
+        return $this->randomGenerator->generateString(12, Generator::EASY_TO_READ);
     }
 
     /**

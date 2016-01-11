@@ -51,8 +51,9 @@ class Client implements ClientInterface
     public function registerUser($username, $pid, $emailAddress, $surname, $commonName, $realm, $password)
     {
         $payload = [
-            '_id' => $username,
+            '_id' => $pid,
             'pid' => $pid,
+            'userName' => $username,
             'emailAddress' => $emailAddress,
             'surName' => $surname,
             'commonName' => $commonName,

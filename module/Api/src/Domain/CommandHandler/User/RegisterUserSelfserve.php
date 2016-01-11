@@ -64,7 +64,7 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
         $data['roles'] = User::getRolesByUserType(User::USER_TYPE_OPERATOR, User::PERMISSION_ADMIN);
 
         $user = User::create(
-            $this->getOpenAmUser()->reservePid(),
+            $this->getOpenAmUser()->generatePid($command->getLoginId()),
             User::USER_TYPE_OPERATOR,
             $this->getRepo()->populateRefDataReference($data)
         );

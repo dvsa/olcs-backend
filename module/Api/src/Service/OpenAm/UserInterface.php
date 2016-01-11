@@ -24,15 +24,18 @@ interface UserInterface
     public function registerUser($loginId, $emailAddress, $realm, $callback = null);
 
     /**
-     * Generate and reserve a Pid for a user
+     * Generate a Pid for a user
+     *
+     * @param string $loginId
      *
      * @return string
      */
-    public function reservePid();
+    public function generatePid($loginId);
 
     /**
      * Updates a user
      *
+     * @param string $pid
      * @param string $username
      * @param string $emailAddress
      * @param bool $disabled
@@ -40,7 +43,7 @@ interface UserInterface
      * @return void
      * @throws FailedRequestException
      */
-    public function updateUser($username, $emailAddress = null, $disabled = null);
+    public function updateUser($pid, $username = null, $emailAddress = null, $disabled = null);
 
     /**
      * Disables a user

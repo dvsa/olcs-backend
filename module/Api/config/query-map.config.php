@@ -244,6 +244,7 @@ return [
     // User
     TransferQuery\User\Partner::class => QueryHandler\User\Partner::class,
     TransferQuery\User\PartnerList::class => QueryHandler\User\PartnerList::class,
+    TransferQuery\User\Pid::class => QueryHandler\User\Pid::class,
     TransferQuery\User\User::class => QueryHandler\User\User::class,
     TransferQuery\User\UserList::class => QueryHandler\User\UserList::class,
     TransferQuery\User\UserSelfserve::class => QueryHandler\User\UserSelfserve::class,
