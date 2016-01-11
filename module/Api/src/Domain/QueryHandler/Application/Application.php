@@ -64,7 +64,9 @@ class Application extends AbstractQueryHandler
                 'applicationCompletion',
                 's4s' => [
                     'outcome'
-                ]
+                ],
+                'status',
+                'goodsOrPsv'
             ],
             [
                 'sections' => $this->sectionAccessService->getAccessibleSections($application),
