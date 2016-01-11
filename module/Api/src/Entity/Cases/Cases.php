@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\CloseableInterface;
 use Dvsa\Olcs\Api\Entity\ReopenableInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
+use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SeriousInfringementEntity;
 
 /**
  * Cases Entity
@@ -322,6 +323,36 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
     }
 
     /**
+     * Returns whether the case is an Erru case
+     *
+     * @return bool
+     */
+    public function isErru()
+    {
+        return (bool) $this->erruCaseType != null;
+    }
+
+    /**
+     * Returns whether an Erru Msi response can be sent
+     *
+     * @return bool
+     */
+    public function canSendMsiResponse()
+    {
+        if ($this->isErru() && !$this->seriousInfringements->isEmpty()) {
+            /** @var SeriousInfringementEntity $si */
+            $si = $this->seriousInfringements->first();
+
+            //we need to have applied penalties and to have not already sent our response
+            if ($si->getErruResponseSent() === 'Y' && !$si->getAppliedPenalties()->isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Calculated values to be added to a bundle
      *
      * @return array
@@ -331,7 +362,8 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
         return [
             'isClosed' => $this->isClosed(),
             'canReopen' => $this->canReopen(),
-            'canClose' => $this->canClose()
+            'canClose' => $this->canClose(),
+            'canSendMsiResponse' => $this->canSendMsiResponse()
         ];
     }
 
