@@ -39,7 +39,11 @@ class LicenceTest extends QueryHandlerTestCase
         /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->shouldReceive('serialize')
-            ->andReturn(['foo' => 'bar']);
+            ->andReturn(['foo' => 'bar'])
+            ->shouldReceive('getNiFlag')
+            ->andReturn('N')
+            ->once()
+            ->getMock();
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($query)
@@ -56,7 +60,8 @@ class LicenceTest extends QueryHandlerTestCase
 
         $expected = [
             'foo' => 'bar',
-            'sections' => ['bar', 'cake']
+            'sections' => ['bar', 'cake'],
+            'niFlag' => 'N'
         ];
 
         $this->assertEquals($expected, $result->serialize());

@@ -70,6 +70,7 @@ class Licence extends AbstractQueryHandler
             ],
             [
                 'sections' => $this->sectionAccessService->getAccessibleSectionsForLicence($licence),
+                'niFlag' => $licence->getNiFlag()
             ]
         );
     }
