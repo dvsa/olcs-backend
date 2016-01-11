@@ -47,6 +47,8 @@ class FeeTypeListTest extends QueryHandlerTestCase
             ->getMock();
 
         $feeType1 = m::mock(Entity::class)
+            ->shouldReceive('getTrafficArea')
+            ->andReturn(null)
             ->shouldReceive('getId')
             ->andReturn(1)
             ->shouldReceive('getDescription')
@@ -61,6 +63,8 @@ class FeeTypeListTest extends QueryHandlerTestCase
             ->andReturn(['id' => 1])
             ->getMock();
         $feeType2 = m::mock(Entity::class)
+            ->shouldReceive('getTrafficArea')
+            ->andReturn(null)
             ->shouldReceive('getId')
             ->andReturn(2)
             ->shouldReceive('getDescription')
@@ -77,6 +81,8 @@ class FeeTypeListTest extends QueryHandlerTestCase
         $mockList = new \ArrayObject([$feeType1, $feeType2]);
 
         $this->repoMap['FeeType']
+            ->shouldReceive('getReference')
+            ->andReturn(null)
             ->shouldReceive('fetchList')
             ->with($query, DoctrineQuery::HYDRATE_OBJECT)
             ->once()
@@ -105,6 +111,168 @@ class FeeTypeListTest extends QueryHandlerTestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testHandleQueryNonIrfoTrafficAreaLicence()
+    {
+        $query = Qry::create([]);
+
+        $feeTypeRefData = m::mock(RefData::class)
+            ->shouldReceive('getId')
+            ->andReturn(99)
+            ->getMock();
+
+        $mockTrafficArea = m::mock(\Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea::class);
+
+        $feeType1 = m::mock(Entity::class)
+            ->shouldReceive('getTrafficArea')
+            ->andReturn(null)
+            ->shouldReceive('getId')
+            ->andReturn(34)
+            ->shouldReceive('getDescription')
+            ->andReturn('fee type 1')
+            ->shouldReceive('getIrfoFeeType')
+            ->andReturn(null)
+            ->shouldReceive('getFeeType')
+            ->andReturn($feeTypeRefData)
+            ->shouldReceive('getEffectiveFrom')
+            ->andReturn('2015-10-23')
+            ->shouldReceive('serialize')
+            ->andReturn(['id' => 1])
+            ->getMock();
+        $feeType2 = m::mock(Entity::class)
+            ->shouldReceive('getTrafficArea')
+            ->andReturn($mockTrafficArea)
+            ->shouldReceive('getId')
+            ->andReturn(24)
+            ->shouldReceive('getDescription')
+            ->andReturn('fee type 2')
+            ->shouldReceive('getIrfoFeeType')
+            ->andReturn(null)
+            ->shouldReceive('getFeeType')
+            ->andReturn($feeTypeRefData)
+            ->shouldReceive('getEffectiveFrom')
+            ->andReturn('2014-10-23')
+            ->shouldReceive('serialize')
+            ->andReturn(['id' => 24])
+            ->getMock();
+        $mockList = new \ArrayObject([$feeType1, $feeType2]);
+
+        $this->repoMap['FeeType']
+            ->shouldReceive('getReference')
+            ->andReturn(
+                m::mock()->shouldReceive('getTrafficArea')->andReturn($mockTrafficArea)->getMock()
+            )
+            ->shouldReceive('fetchList')
+            ->with($query, DoctrineQuery::HYDRATE_OBJECT)
+            ->once()
+            ->andReturn($mockList)
+            ->shouldReceive('fetchCount')
+            ->with($query)
+            ->andReturn(2);
+
+        $result = $this->sut->handleQuery($query);
+
+        $expected = [
+            'result' => [
+                ['id' => 24],
+            ],
+            'count' => 1,
+            'valueOptions' => [
+                'feeType' => [
+                    // we should only get the latest as feeType1 and feeType2 have the same feeType
+                    24 => 'fee type 2',
+                ],
+                'irfoGvPermit' => [],
+                'irfoPsvAuth' => [],
+            ],
+         ];
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testHandleQueryNonIrfoTrafficAreaApplication()
+    {
+        $query = Qry::create([]);
+
+        $feeTypeRefData = m::mock(RefData::class)
+            ->shouldReceive('getId')
+            ->andReturn(99)
+            ->getMock();
+
+        $mockTrafficArea = m::mock(\Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea::class);
+
+        $feeType1 = m::mock(Entity::class)
+            ->shouldReceive('getTrafficArea')
+            ->andReturn(null)
+            ->shouldReceive('getId')
+            ->andReturn(34)
+            ->shouldReceive('getDescription')
+            ->andReturn('fee type 1')
+            ->shouldReceive('getIrfoFeeType')
+            ->andReturn(null)
+            ->shouldReceive('getFeeType')
+            ->andReturn($feeTypeRefData)
+            ->shouldReceive('getEffectiveFrom')
+            ->andReturn('2015-10-23')
+            ->shouldReceive('serialize')
+            ->andReturn(['id' => 1])
+            ->getMock();
+        $feeType2 = m::mock(Entity::class)
+            ->shouldReceive('getTrafficArea')
+            ->andReturn($mockTrafficArea)
+            ->shouldReceive('getId')
+            ->andReturn(24)
+            ->shouldReceive('getDescription')
+            ->andReturn('fee type 2')
+            ->shouldReceive('getIrfoFeeType')
+            ->andReturn(null)
+            ->shouldReceive('getFeeType')
+            ->andReturn($feeTypeRefData)
+            ->shouldReceive('getEffectiveFrom')
+            ->andReturn('2014-10-23')
+            ->shouldReceive('serialize')
+            ->andReturn(['id' => 24])
+            ->getMock();
+        $mockList = new \ArrayObject([$feeType1, $feeType2]);
+
+        $this->repoMap['FeeType']
+            ->shouldReceive('getReference')
+            ->with(\Dvsa\Olcs\Api\Entity\Licence\Licence::class, null)
+            ->andReturn(null)
+            ->shouldReceive('getReference')
+            ->with(\Dvsa\Olcs\Api\Entity\Application\Application::class, null)
+            ->andReturn(
+                m::mock()->shouldReceive('getLicence')->andReturn(
+                    m::mock()->shouldReceive('getTrafficArea')->andReturn($mockTrafficArea)->getMock()
+                )->getMock()
+            )
+            ->shouldReceive('fetchList')
+            ->with($query, DoctrineQuery::HYDRATE_OBJECT)
+            ->once()
+            ->andReturn($mockList)
+            ->shouldReceive('fetchCount')
+            ->with($query)
+            ->andReturn(2);
+
+        $result = $this->sut->handleQuery($query);
+
+        $expected = [
+            'result' => [
+                ['id' => 24],
+            ],
+            'count' => 1,
+            'valueOptions' => [
+                'feeType' => [
+                    // we should only get the latest as feeType1 and feeType2 have the same feeType
+                    24 => 'fee type 2',
+                ],
+                'irfoGvPermit' => [],
+                'irfoPsvAuth' => [],
+            ],
+         ];
+
+        $this->assertEquals($expected, $result);
+    }
+
     public function testHandleQueryIrfo()
     {
         $query = Qry::create(['organisation' => 123]);
@@ -115,6 +283,8 @@ class FeeTypeListTest extends QueryHandlerTestCase
             ->getMock();
 
         $feeType1 = m::mock(Entity::class)
+            ->shouldReceive('getTrafficArea')
+            ->andReturn(null)
             ->shouldReceive('getId')
             ->andReturn(1)
             ->shouldReceive('getDescription')
@@ -127,6 +297,8 @@ class FeeTypeListTest extends QueryHandlerTestCase
             ->andReturn(['id' => 1])
             ->getMock();
         $feeType2 = m::mock(Entity::class)
+            ->shouldReceive('getTrafficArea')
+            ->andReturn(null)
             ->shouldReceive('getId')
             ->andReturn(2)
             ->shouldReceive('getDescription')
@@ -167,10 +339,12 @@ class FeeTypeListTest extends QueryHandlerTestCase
             ->once()
             ->andReturn('auth description');
         $this->repoMap['FeeType']
-            ->shouldReceive('getReference')
-            ->twice()
-            ->with(Organisation::class, 123)
-            ->andReturn($mockOrganisation);
+            ->shouldReceive('getReference')->twice()->with(Organisation::class, 123)->andReturn($mockOrganisation);
+        $this->repoMap['FeeType']
+            ->shouldReceive('getReference')->with(\Dvsa\Olcs\Api\Entity\Licence\Licence::class, null)->andReturn(null);
+        $this->repoMap['FeeType']
+            ->shouldReceive('getReference')->with(\Dvsa\Olcs\Api\Entity\Application\Application::class, null)
+            ->andReturn(null);
         $this->repoMap['IrfoGvPermit']
             ->shouldReceive('fetchByOrganisation')
             ->once()
