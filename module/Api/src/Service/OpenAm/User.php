@@ -22,11 +22,6 @@ class User implements UserInterface
     private $randomGenerator;
 
     /**
-     * @var string
-     */
-    private $reservedPid;
-
-    /**
      * @param ClientInterface $openAmClient
      * @param Generator $randomGenerator
      */
@@ -37,16 +32,15 @@ class User implements UserInterface
     }
 
     /**
-     * Reserves a pid
+     * Generates a pid
+     *
+     * @param string $loginId
      *
      * @return string
      */
-    public function reservePid()
+    public function generatePid($loginId)
     {
-        if ($this->reservedPid === null) {
-            $this->reservedPid = $this->generatePid();
-        }
-        return $this->reservedPid;
+        return hash('sha256', $loginId);
     }
 
     /**
@@ -62,8 +56,7 @@ class User implements UserInterface
      */
     public function registerUser($loginId, $emailAddress, $realm, $callback = null)
     {
-        $pid = $this->reservePid();
-        $this->reservedPid = null;
+        $pid = $this->generatePid($loginId);
 
         $password = $this->generatePassword();
 
@@ -149,16 +142,6 @@ class User implements UserInterface
         ];
 
         $this->openAmClient->updateUser($username, $payload);
-    }
-
-    /**
-     * Generates a pid
-     *
-     * @return string
-     */
-    private function generatePid()
-    {
-        return $this->randomGenerator->generateString(32, '0123456789abcdef');
     }
 
     /**
