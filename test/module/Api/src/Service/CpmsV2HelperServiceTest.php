@@ -1258,6 +1258,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                 [
                     'receipt_reference' => 'payment_ref',
                     'refund_reason' => 'Refund',
+                    'country_code' => 'NI',
                     'payment_data' => [
                         [
                             'line_identifier' => '101',
@@ -1291,6 +1292,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                 [
                     'receipt_reference' => 'payment_ref',
                     'refund_reason' => 'Refund',
+                    'country_code' => 'NI',
                     'payment_data' => [
                         [
                             'line_identifier' => '101',
