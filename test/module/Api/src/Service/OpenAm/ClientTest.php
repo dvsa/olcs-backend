@@ -43,13 +43,14 @@ class ClientTest extends MockeryTestCase
             $sentRequest->renderRequestLine()
         );
         $expected = [
-            '_id' => 'username',
+            '_id' => 'pid',
             'pid' => 'pid',
             'emailAddress' => 'email',
             'surName' => 'surname',
             'commonName' => 'commonname',
             'realm' => 'internal',
-            'password' => 'password'
+            'password' => 'password',
+            'userName' => 'username'
         ];
         $this->assertEquals($expected, json_decode($sentRequest->getContent(), JSON_OBJECT_AS_ARRAY));
     }
