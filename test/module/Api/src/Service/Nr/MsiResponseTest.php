@@ -1,6 +1,6 @@
 <?php
 
-namespace OlcsTest\Nr\Filter\Format;
+namespace Dvsa\OlcsTest\Api\Service\Nr;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Service\Nr\MsiResponse;
