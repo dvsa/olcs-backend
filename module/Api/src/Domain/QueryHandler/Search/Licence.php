@@ -61,12 +61,14 @@ class Licence extends AbstractQueryHandler
             [],
             [
                 'licenceContactDetails' => [
-                    'phoneContacts' => $this->resultList(
+                    'phoneContacts' => !empty($licence->getCorrespondenceCd()) ? $this->resultList(
                         $licence->getCorrespondenceCd()->getPhoneContacts(),
                         ['phoneContactType']
-                    ),
-                    'address' => $licence->getCorrespondenceCd()->getAddress(),
-                    'emailAddress' => $licence->getCorrespondenceCd()->getEmailAddress(),
+                    ) : null,
+                    'address' => !empty($licence->getCorrespondenceCd()) ?
+                        $licence->getCorrespondenceCd()->getAddress() : null,
+                    'emailAddress' => !empty($licence->getCorrespondenceCd()) ?
+                        $licence->getCorrespondenceCd()->getEmailAddress() : null,
                 ],
                 'totalAuthVehicles' => $licence->getTotAuthVehicles(),
                 'totalAuthTrailers' => $licence->getTotAuthTrailers(),
