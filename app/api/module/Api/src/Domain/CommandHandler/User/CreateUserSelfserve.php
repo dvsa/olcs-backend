@@ -77,7 +77,7 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
         $data['roles'] = User::getRolesByUserType($data['userType'], $data['permission']);
 
         $user = User::create(
-            $this->getOpenAmUser()->reservePid(),
+            $this->getOpenAmUser()->generatePid($command->getLoginId()),
             $data['userType'],
             $this->getRepo()->populateRefDataReference($data)
         );

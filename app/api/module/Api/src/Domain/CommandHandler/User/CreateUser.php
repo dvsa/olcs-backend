@@ -63,7 +63,7 @@ final class CreateUser extends AbstractUserCommandHandler implements
         }
 
         $user = User::create(
-            $this->getOpenAmUser()->reservePid(),
+            $this->getOpenAmUser()->generatePid($command->getLoginId()),
             $command->getUserType(),
             $this->getRepo()->populateRefDataReference($data)
         );
