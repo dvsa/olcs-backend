@@ -23,7 +23,7 @@ class Pid extends AbstractQueryHandler
     public function handleQuery(QueryInterface $query)
     {
         /** @var UserEntity $user */
-        $user = $this->getRepo()->fetchUsingId($query);
+        $user = $this->getRepo()->fetchOneByLoginId($query->getId());
 
         return [
             'pid' => $user->getPid()
