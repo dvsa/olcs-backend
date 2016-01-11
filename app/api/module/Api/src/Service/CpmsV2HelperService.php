@@ -532,6 +532,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         );
 
         return [
+            'country_code' => $ft->getFee()->getFeeType()->getCountryCode(),
             'receipt_reference' => $ft->getTransaction()->getReference(),
             'refund_reason' => self::REFUND_REASON,
             'payment_data' => [
