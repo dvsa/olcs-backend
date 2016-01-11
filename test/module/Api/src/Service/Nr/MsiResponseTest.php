@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Mockery as m;
 
 /**
@@ -63,7 +62,7 @@ class MsiDetailTest extends MockeryTestCase
         $penalty2->shouldReceive('getStartDate')->once()->andReturn($startDate);
         $penalty2->shouldReceive('getEndDate')->once()->andReturn($endDate);
         $penalty2->shouldReceive('getImposed')->once()->andReturn('Y');
-        $penalty2->shouldReceive('getReasonNotImposed')->never()->andReturn($reasonNotImposed);
+        $penalty2->shouldReceive('getReasonNotImposed')->never();
 
         $appliedPenalties = new ArrayCollection([$penalty1, $penalty2]);
 
