@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Service\OpenAm\Client;
 use Dvsa\Olcs\Api\Service\OpenAm\User;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use RandomLib\Generator;
 
 /**
  * User Test
@@ -22,12 +23,12 @@ class UserTest extends MockeryTestCase
         $emailAddress = 'email@test.com';
         $password = 'password1234';
 
-        $mockRandom = m::mock(\RandomLib\Generator::class);
+        $mockRandom = m::mock(Generator::class);
         $mockRandom->shouldReceive('generateString')
             ->with(32, '0123456789abcdef')
             ->andReturn($pid);
         $mockRandom->shouldReceive('generateString')
-            ->with(12)
+            ->with(12, Generator::EASY_TO_READ)
             ->andReturn($password);
 
         $mockClient = m::mock(Client::class);
@@ -69,28 +70,69 @@ class UserTest extends MockeryTestCase
      * @param $emailAddress
      * @param $enabled
      */
-    public function testUpdateUser($expected, $emailAddress, $enabled)
+    public function testUpdateUser($expected, $loginId, $emailAddress, $enabled)
     {
-        $loginId = 'login_id';
+        $pid = 'some-pid';
 
         $mockRandom = m::mock(\RandomLib\Generator::class);
 
         $mockClient = m::mock(Client::class);
 
         if ($expected !== null) {
-            $mockClient->shouldReceive('updateUser')->once()->with($loginId, $expected);
+            $mockClient->shouldReceive('updateUser')->once()->with($pid, $expected);
         }
 
         $sut = new User($mockClient, $mockRandom);
 
-        $sut->updateUser($loginId, $emailAddress, $enabled);
+        $sut->updateUser($pid, $loginId, $emailAddress, $enabled);
     }
 
     public function provideUpdateUser()
     {
         return [
-            [
+            'New Username' => [
                 [
+                    [
+                        'operation' => 'replace',
+                        'field' => 'userName',
+                        'value' => 'new_login_id'
+                    ]
+                ],
+                'new_login_id',
+                null,
+                null
+            ],
+            'New Email address' => [
+                [
+                    [
+                        'operation' => 'replace',
+                        'field' => 'emailAddress',
+                        'value' => 'email@test.com'
+                    ]
+                ],
+                null,
+                'email@test.com',
+                null
+            ],
+            'New State' => [
+                [
+                    [
+                        'operation' => 'replace',
+                        'field' => 'inActive',
+                        'value' => true
+                    ]
+                ],
+                null,
+                null,
+                true
+            ],
+            'Full Update' => [
+                [
+                    [
+                        'operation' => 'replace',
+                        'field' => 'userName',
+                        'value' => 'new_login_id'
+                    ],
                     [
                         'operation' => 'replace',
                         'field' => 'emailAddress',
@@ -102,10 +144,12 @@ class UserTest extends MockeryTestCase
                         'value' => true
                     ]
                 ],
+                'new_login_id',
                 'email@test.com',
                 true
             ],
-            [
+            'No change' => [
+                null,
                 null,
                 null,
                 null
