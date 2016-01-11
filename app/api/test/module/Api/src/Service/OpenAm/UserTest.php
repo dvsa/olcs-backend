@@ -18,15 +18,12 @@ class UserTest extends MockeryTestCase
 {
     public function testRegisterUser()
     {
-        $pid = '1234567891234567891234567890aced';
         $loginId = 'login_id';
+        $pid = hash('sha256', 'login_id');
         $emailAddress = 'email@test.com';
         $password = 'password1234';
 
         $mockRandom = m::mock(Generator::class);
-        $mockRandom->shouldReceive('generateString')
-            ->with(32, '0123456789abcdef')
-            ->andReturn($pid);
         $mockRandom->shouldReceive('generateString')
             ->with(12, Generator::EASY_TO_READ)
             ->andReturn($password);

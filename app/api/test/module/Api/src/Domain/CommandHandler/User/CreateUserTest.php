@@ -113,7 +113,7 @@ class CreateUserTest extends CommandHandlerTestCase
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
 
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('generatePid')->with('login_id')->andReturn('pid');
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
             ->with('login_id', 'test1@test.me', 'internal', m::type('callable'))
@@ -246,7 +246,7 @@ class CreateUserTest extends CommandHandlerTestCase
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
 
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('generatePid')->with('login_id')->andReturn('pid');
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
             ->with('login_id', 'test1@test.me', 'selfserve', m::type('callable'))
@@ -390,7 +390,7 @@ class CreateUserTest extends CommandHandlerTestCase
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
 
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('generatePid')->with('login_id')->andReturn('pid');
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
             ->with('login_id', 'test1@test.me', 'selfserve', m::type('callable'))

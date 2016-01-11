@@ -204,7 +204,7 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
             'transportManager' => $transportManagerApplication->getTransportManager()
         ];
 
-        $pid = $this->getOpenAmUser()->reservePid();
+        $pid = $this->getOpenAmUser()->generatePid($command->getUsername());
 
         $user = User::create($pid, User::USER_TYPE_TRANSPORT_MANAGER, $userData);
         $user->setContactDetails($contactDetails);

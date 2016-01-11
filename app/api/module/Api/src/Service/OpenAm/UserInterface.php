@@ -24,11 +24,13 @@ interface UserInterface
     public function registerUser($loginId, $emailAddress, $realm, $callback = null);
 
     /**
-     * Generate and reserve a Pid for a user
+     * Generate a Pid for a user
+     *
+     * @param string $loginId
      *
      * @return string
      */
-    public function reservePid();
+    public function generatePid($loginId);
 
     /**
      * Updates a user
