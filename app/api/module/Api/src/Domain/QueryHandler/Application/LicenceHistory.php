@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
+use Zend\Filter\Word\UnderscoreToCamelCase;
 
 /**
  * Licence History
@@ -23,25 +24,28 @@ class LicenceHistory extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        $applicationRepo = $this->getRepo();
-        $application = $applicationRepo->fetchUsingId($query, Query::HYDRATE_OBJECT);
+        $application = $this->getRepo()->fetchUsingId($query, Query::HYDRATE_OBJECT);
+
         $data = $application->jsonSerialize();
 
         $types = [
-            'current'        => OtherLicence::TYPE_CURRENT,
-            'applied'        => OtherLicence::TYPE_APPLIED,
-            'refused'        => OtherLicence::TYPE_REFUSED,
-            'revoked'        => OtherLicence::TYPE_REVOKED,
-            'public-inquiry' => OtherLicence::TYPE_PUBLIC_INQUIRY,
-            'disqualified'   => OtherLicence::TYPE_DISQUALIFIED,
-            'held'           => OtherLicence::TYPE_HELD
+            OtherLicence::TYPE_CURRENT,
+            OtherLicence::TYPE_APPLIED,
+            OtherLicence::TYPE_REFUSED,
+            OtherLicence::TYPE_REVOKED,
+            OtherLicence::TYPE_PUBLIC_INQUIRY,
+            OtherLicence::TYPE_DISQUALIFIED,
+            OtherLicence::TYPE_HELD
         ];
 
-        foreach ($types as $key => $type) {
-            $otherLicences = $application->getOtherLicencesByType(
-                $applicationRepo->getRefdataReference($type)
-            );
-            $data['otherLicences'][$key] = $otherLicences->toArray();
+        $filter = new UnderscoreToCamelCase();
+
+        foreach ($types as $type) {
+
+            $formattedType = lcfirst($filter->filter($type));
+
+            $otherLicences = $application->getOtherLicencesByType($this->getRepo()->getRefdataReference($type));
+            $data['otherLicences'][$formattedType] = $otherLicences->toArray();
         }
 
         return $data;
