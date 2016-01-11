@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Entity\Cases;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -257,6 +258,52 @@ class CasesEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider canSendMsiResponseProvider
+     *
+     * @param RefData|null $erruCaseType
+     * @param ArrayCollection $si
+     * @param bool $expectedResult
+     */
+    public function testCanSendMsiResponse($erruCaseType, $si, $expectedResult)
+    {
+        $sut = $this->instantiate($this->entityClass);
+        $sut->setSeriousInfringements($si);
+        $sut->setErruCaseType($erruCaseType);
+
+        $this->assertEquals($expectedResult, $sut->canSendMsiResponse());
+    }
+
+    /**
+     * data provider for testCanSendMsiResponse
+     *
+     * @return array
+     */
+    public function canSendMsiResponseProvider()
+    {
+        $siNotValid1 = m::mock(SeriousInfringement::class);
+        $siNotValid1->shouldReceive('getErruResponseSent')->andReturn('Y');
+        $siNotValid1->shouldReceive('getAppliedPenalties->isEmpty')->andReturn(true);
+
+        $siNotValid2 = m::mock(SeriousInfringement::class);
+        $siNotValid2->shouldReceive('getErruResponseSent')->andReturn('N');
+        $siNotValid2->shouldReceive('getAppliedPenalties->isEmpty')->andReturn(true);
+
+        $siValid = m::mock(SeriousInfringement::class);
+        $siValid->shouldReceive('getErruResponseSent')->andReturn('Y');
+        $siValid->shouldReceive('getAppliedPenalties->isEmpty')->andReturn(false);
+
+        $erruCaseType = new RefData('erru_case_t_msi');
+
+        return [
+            [null, new ArrayCollection([$siValid]), false],
+            [$erruCaseType, new ArrayCollection(), false],
+            [$erruCaseType, new ArrayCollection([$siNotValid1]), false],
+            [$erruCaseType, new ArrayCollection([$siNotValid2]), false],
+            [$erruCaseType, new ArrayCollection([$siValid]), true]
+        ];
+    }
+
+    /**
      * Tests getCalculatedBundleValues
      */
     public function testGetCalculatedBundleValues()
@@ -265,6 +312,7 @@ class CasesEntityTest extends EntityTester
             'isClosed' => false,
             'canReopen' => false,
             'canClose' => false,
+            'canSendMsiResponse' => false,
         ];
 
         $this->assertEquals($expected, $this->entity->getCalculatedBundleValues());
