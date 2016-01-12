@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Olcs\XmlTools\Xml\XmlNodeBuilder;
 
 /**
  * Class MsiResponse
@@ -32,6 +33,24 @@ class MsiResponse
      * @var String
      */
     private $authority;
+
+    /**
+     * @var XmlNodeBuilder
+     */
+    private $xmlBuilder;
+
+    public function __construct(XmlNodeBuilder $xmlBuilder)
+    {
+        $this->xmlBuilder = $xmlBuilder;
+    }
+
+    /**
+     * @return XmlNodeBuilder
+     */
+    public function getXmlBuilder()
+    {
+        return $this->xmlBuilder;
+    }
 
     /**
      * @return mixed
@@ -107,12 +126,13 @@ class MsiResponse
 
         $si = $case->getSeriousInfringements()->first();
 
-        $xmlArray = [
+        $xmlData = [
             'Header' => $this->getHeader($si),
             'Body' => $this->getBody($case, $si)
         ];
 
-        return $xmlArray;
+        $this->xmlBuilder->setData($xmlData);
+        return $this->xmlBuilder->buildTemplate();
     }
 
     /**
