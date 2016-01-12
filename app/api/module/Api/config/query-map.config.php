@@ -162,6 +162,7 @@ return [
     TransferQuery\Cases\Si\Applied\Penalty::class => QueryHandler\Cases\Si\Applied\Penalty::class,
     TransferQuery\Cases\Si\GetList::class => QueryHandler\Cases\Si\GetList::class,
     TransferQuery\Cases\PresidingTc\GetList::class => QueryHandler\Cases\PresidingTc\GetList::class,
+    TransferQuery\Cases\PiVenue\PiVenueList::class => QueryHandler\Cases\PiVenue\PiVenueList::class,
 
     // Submission
     TransferQuery\Submission\SubmissionAction::class => QueryHandler\Submission\SubmissionAction::class,
