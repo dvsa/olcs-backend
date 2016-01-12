@@ -282,6 +282,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $vehicleCollection = new ArrayCollection();
         $licence->setLicenceVehicles($vehicleCollection);
 
+        $licence->shouldReceive('getActiveCommunityLicences->count')->andReturn(6);
+
         $licence->setTotAuthVehicles(10);
 
         return $licence;
@@ -302,6 +304,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $psvDiscsCollection->add(['foo' => 'bar']);
         $licence->setPsvDiscs($psvDiscsCollection);
 
+        $licence->shouldReceive('getActiveCommunityLicences->count')->andReturn(6);
+
         return $licence;
     }
 
@@ -319,6 +323,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $licence->setPsvDiscs($psvDiscsCollection);
 
         $licence->setTotAuthVehicles(3);
+
+        $licence->shouldReceive('getActiveCommunityLicences->count')->andReturn(6);
 
         return $licence;
     }
@@ -817,7 +823,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 'N',
                 []
             ],
-            'Decalrations Internal unchanged' => [
+            'Declarations Internal unchanged' => [
                 'declarationsInternal',
                 $this->getApplicationState3(),
                 $this->getLicenceState2(),
@@ -830,7 +836,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 0,
                 []
             ],
-            'Decalrations Internal authSignature set' => [
+            'Declarations Internal authSignature set' => [
                 'declarationsInternal',
                 $this->getApplicationState5(),
                 $this->getLicenceState2(),

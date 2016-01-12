@@ -606,6 +606,11 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         if (!$this->hasActuallyUpdatedOperatingCentres() && $this->application->isPsvDowngrade() === false) {
             $this->markSectionUnchanged('operating_centres');
         }
+
+        // If we have changed the auth, check that the Community Lic section is still ok
+        if ($this->hasActuallyUpdatedOperatingCentres() && $this->isTotAuthLessThanComLic()) {
+            $this->markSectionRequired('community_licences');
+        }
     }
 
     protected function updateRelatedPeopleSections()
@@ -666,15 +671,20 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
 
     protected function updateRelatedCommunityLicencesSections()
     {
-        $activeComLics = (int)$this->licence->getActiveCommunityLicences()->count();
-        $totAuth = (int)$this->application->getTotAuthVehicles();
-
-        if ($totAuth < $activeComLics) {
+        if ($this->isTotAuthLessThanComLic()) {
             $this->markSectionRequired('community_licences');
             return;
         }
 
         $this->markSectionUpdated('community_licences');
+    }
+
+    protected function isTotAuthLessThanComLic()
+    {
+        $activeComLics = (int)$this->licence->getActiveCommunityLicences()->count();
+        $totAuth = (int)$this->application->getTotAuthVehicles();
+
+        return ($totAuth < $activeComLics);
     }
 
     /**
