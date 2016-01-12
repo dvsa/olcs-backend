@@ -111,13 +111,7 @@ class Licence extends AbstractQueryHandler
                         ]
                     ]
                 )->serialize() : null,
-                'partners' => $this->resultList(
-                    $licence->getOrganisation()->getOrganisationPersons(),
-                    [
-                        'person'
-                    ]
-                ),
-                'directors' => $this->resultList(
+                'people' => $this->resultList(
                     $licence->getOrganisation()->getOrganisationPersons(),
                     [
                         'person'
