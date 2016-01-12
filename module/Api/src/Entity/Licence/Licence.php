@@ -202,6 +202,9 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
                         CommunityLic::STATUS_SUSPENDED
                     ]
                 )
+            )
+            ->andWhere(
+                Criteria::expr()->neq('issueNo', 0)
             );
 
         return $this->getCommunityLics()->matching($criteria);
