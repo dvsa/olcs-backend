@@ -5,8 +5,8 @@ namespace Dvsa\Olcs\Api\Service\Nr;
 use Zend\Http\Client as RestClient;
 
 /**
- * Class Client
- * @package Olcs\Nr\Service
+ * Class InrClient
+ * @package Dvsa\Olcs\Api\Service\Nr
  */
 class InrClient implements InrClientInterface
 {
