@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime as DateTimeExtended;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\PersistentCollection;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Olcs\XmlTools\Xml\XmlNodeBuilder;
