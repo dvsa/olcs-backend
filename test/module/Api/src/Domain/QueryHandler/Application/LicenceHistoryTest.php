@@ -110,13 +110,13 @@ class LicenceHistoryTest extends QueryHandlerTestCase
         $expected = [
             'application' => 'application',
             'otherLicences' => [
-                'current' => 'licences',
-                'applied' => 'licences',
-                'refused' => 'licences',
-                'revoked' => 'licences',
-                'public-inquiry' => 'licences',
-                'disqualified' => 'licences',
-                'held' => 'licences'
+                'prevHasLicence' => 'licences',
+                'prevHadLicence' => 'licences',
+                'prevBeenRefused' => 'licences',
+                'prevBeenRevoked' => 'licences',
+                'prevBeenAtPi' => 'licences',
+                'prevBeenDisqualifiedTc' => 'licences',
+                'prevPurchasedAssets' => 'licences'
             ]
         ];
         $result = $this->sut->handleQuery($query);
