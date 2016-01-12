@@ -22,11 +22,11 @@ class InrClientFactory implements FactoryInterface
     {
         $config = $serviceLocator->get('Config');
 
-        if (!isset($config['inr_service'])) {
+        if (!isset($config['nr']['inr_service'])) {
             throw new \RuntimeException('Missing INR service config');
         }
 
-        $httpClient = new RestClient($config['inr_service']['uri'], $config['inr_service']['options']);
+        $httpClient = new RestClient($config['nr']['inr_service']['uri'], $config['nr']['inr_service']['options']);
 
         return new InrClient($httpClient);
     }

@@ -32,9 +32,11 @@ class InrClientFactoryTest extends TestCase
     public function testCreateService()
     {
         $config = [
-            'inr_service' => [
-                'uri' => 'http://testServiceAddress',
-                'options' => ['timeout' => 30]
+            'nr' => [
+                'inr_service' => [
+                    'uri' => 'http://testServiceAddress',
+                    'options' => ['timeout' => 30]
+                ]
             ]
         ];
 
