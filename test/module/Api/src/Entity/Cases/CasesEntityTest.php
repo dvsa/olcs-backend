@@ -288,8 +288,12 @@ class CasesEntityTest extends EntityTester
         $siNotValid2->shouldReceive('getErruResponseSent')->andReturn('N');
         $siNotValid2->shouldReceive('getAppliedPenalties->isEmpty')->andReturn(true);
 
+        $siNotValid3 = m::mock(SeriousInfringement::class);
+        $siNotValid3->shouldReceive('getErruResponseSent')->andReturn('Y');
+        $siNotValid3->shouldReceive('getAppliedPenalties->isEmpty')->andReturn(false);
+
         $siValid = m::mock(SeriousInfringement::class);
-        $siValid->shouldReceive('getErruResponseSent')->andReturn('Y');
+        $siValid->shouldReceive('getErruResponseSent')->andReturn('N');
         $siValid->shouldReceive('getAppliedPenalties->isEmpty')->andReturn(false);
 
         $erruCaseType = new RefData('erru_case_t_msi');
