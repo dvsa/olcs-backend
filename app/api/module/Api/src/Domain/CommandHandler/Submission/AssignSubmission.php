@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
 use Dvsa\Olcs\Transfer\Command\Submission\AssignSubmission as Cmd;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
@@ -83,19 +84,24 @@ final class AssignSubmission extends AbstractCommandHandler implements
     {
         $submission = $this->getRepo()->fetchWithCaseAndLicenceById($command->getId());
 
+        /** @var UserEntity $recipientUser */
         $recipientUser = $this->getRepo('User')->fetchById($command->getRecipientUser());
 
         $description = 'Licence ' . $submission->getCase()->getLicence()->getId() .
             ' Case ' . $submission->getCase()->getId() .
             ' Submission ' . $submission->getId();
 
+        $teamId = null;
+        if ($recipientUser->getTeam() instanceof TeamEntity) {
+            $teamId = $recipientUser->getTeam()->getId();
+        }
         $data = [
             'category' => TaskEntity::CATEGORY_SUBMISSION,
             'subCategory' => TaskEntity::SUBCATEGORY_SUBMISSION_ASSIGNMENT,
             'description' => $description,
             'actionDate' => date('Y-m-d'),
             'assignedToUser' => $recipientUser->getId(),
-            'assignedToTeam' => $recipientUser->getTeam()->getId(),
+            'assignedToTeam' => $teamId,
             'assignedByUser' => $this->getCurrentUser()->getId(),
             'case' => $submission->getCase()->getId(),
             'submission' => $submission->getId(),
