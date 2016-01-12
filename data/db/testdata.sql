@@ -1654,8 +1654,9 @@ VALUES
 INSERT INTO `irfo_psv_auth` (`organisation_id`, `irfo_psv_auth_type_id`, `status`, `journey_frequency`,
                              `irfo_file_no`, `service_route_from`, `service_route_to`, `validity_period`,
                              `in_force_date`, `created_on`, `expiry_date`, `renewal_date`, `irfo_fee_id`)
-VALUES (101, 1, 'irfo_auth_s_approved', 'psv_freq_daily', '17/1', 'From', 'To', 3, '2015-03-10',  NOW(), '2016-03-09',
-     '2016-03-09', 'FeeId');
+VALUES
+    (101, 1, 'irfo_auth_s_approved', 'psv_freq_daily', '17/1', 'From', 'To', 3, '2015-03-10',  NOW(), '2018-03-09', '2018-03-09', 'FeeId'),
+    (101, 1, 'irfo_auth_s_renew', 'psv_freq_daily', '17/2', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-19', '2016-10-19', 'FeeId');
 
 INSERT INTO `irfo_permit_stock` (`serial_no`, `irfo_country_id`, `status`, `valid_for_year`, `created_on`)
 VALUES
