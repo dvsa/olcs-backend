@@ -344,7 +344,7 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
             $si = $this->seriousInfringements->first();
 
             //we need to have applied penalties and to have not already sent our response
-            if ($si->getErruResponseSent() === 'Y' && !$si->getAppliedPenalties()->isEmpty()) {
+            if ($si->getErruResponseSent() === 'N' && !$si->getAppliedPenalties()->isEmpty()) {
                 return true;
             }
         }
