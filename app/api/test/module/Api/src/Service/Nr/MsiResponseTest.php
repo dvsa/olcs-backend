@@ -2,7 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Nr;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\PersistentCollection;
 use Dvsa\Olcs\Api\Service\Nr\MsiResponse;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
@@ -65,7 +67,11 @@ class MsiDetailTest extends MockeryTestCase
         $penalty2->shouldReceive('getImposed')->once()->andReturn('Y');
         $penalty2->shouldReceive('getReasonNotImposed')->never();
 
-        $appliedPenalties = new ArrayCollection([$penalty1, $penalty2]);
+        $appliedPenalties = new PersistentCollection(
+            m::mock(EntityManagerInterface::class),
+            SiPenaltyEntity::class,
+            new ArrayCollection([$penalty1, $penalty2])
+        );
 
         $seriousInfringement = m::mock(SiEntity::class);
         $seriousInfringement->shouldReceive('getAppliedPenalties')->once()->andReturn($appliedPenalties);
