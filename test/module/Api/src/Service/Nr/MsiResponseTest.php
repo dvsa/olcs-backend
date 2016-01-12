@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Service\Nr\MsiResponse;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
+use Olcs\XmlTools\Xml\XmlNodeBuilder;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
@@ -25,7 +26,7 @@ class MsiDetailTest extends MockeryTestCase
         $cases = m::mock(CasesEntity::class);
         $cases->shouldReceive('canSendMsiResponse')->once()->andReturn(false);
 
-        $sut = new MsiResponse();
+        $sut = new MsiResponse(m::mock(XmlNodeBuilder::class));
         $sut->create($cases);
     }
 
@@ -81,8 +82,12 @@ class MsiDetailTest extends MockeryTestCase
         $cases->shouldReceive('getErruOriginatingAuthority')->once()->andReturn($erruOriginatingAuthority);
         $cases->shouldReceive('getLicence')->once()->andReturn($licence);
 
-        $sut = new MsiResponse();
-        $actualOutput = $sut->create($cases);
+        $expectedXmlResponse = 'xml';
+        $xmlNodeBuilder = m::mock(XmlNodeBuilder::class)->makePartial();
+        $xmlNodeBuilder->shouldReceive('buildTemplate')->once()->andReturn($expectedXmlResponse);
+
+        $sut = new MsiResponse($xmlNodeBuilder);
+        $actualXmlResponse = $sut->create($cases);
 
         $header = [
             'name' => 'Header',
@@ -146,12 +151,13 @@ class MsiDetailTest extends MockeryTestCase
             ]
         ];
 
-        $expectedOutput = [
+        $expectedXmlData = [
             'Header' => $header,
             'Body' => $body
         ];
 
-        $this->assertEquals($expectedOutput, $actualOutput);
+        $this->assertEquals($expectedXmlData, $sut->getXmlBuilder()->getData());
+        $this->assertEquals($expectedXmlResponse, $actualXmlResponse);
     }
 
     /**
