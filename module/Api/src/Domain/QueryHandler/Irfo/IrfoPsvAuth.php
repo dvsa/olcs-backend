@@ -6,9 +6,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
 
 /**
@@ -45,6 +43,7 @@ class IrfoPsvAuth extends AbstractQueryHandler
                 ),
                 'isRefusable' => $irfoPsvAuth->isRefusable(),
                 'isWithdrawable' => $irfoPsvAuth->isWithdrawable(),
+                'isCnsable' => $irfoPsvAuth->isCnsable(),
                 'isResetable' => $irfoPsvAuth->isResetable()
             ]
         );
