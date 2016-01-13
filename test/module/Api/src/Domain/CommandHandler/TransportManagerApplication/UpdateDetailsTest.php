@@ -58,6 +58,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
                 'version' => 234,
                 'email' => 'fred@fred.com',
                 'placeOfBirth' => 'Leeds',
+                'dob' => '2015-11-26',
                 'homeAddress' => [
                     'addressLine1' => 'LINE_1',
                     'addressLine2' => 'LINE_2',
