@@ -88,6 +88,9 @@ return [
             'EbsrXmlStructure' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory::class,
             'EbsrBusRegInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory::class,
             'TrafficAreaValidator' => \Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator::class,
+
+            \Dvsa\Olcs\Api\Service\Nr\InrClientInterface::class => Dvsa\Olcs\Api\Service\Nr\InrClientFactory::class,
+            \Dvsa\Olcs\Api\Service\Nr\MsiResponse::class => \Dvsa\Olcs\Api\Service\Nr\MsiResponseFactory::class
         ],
     ],
     'view_manager' => [

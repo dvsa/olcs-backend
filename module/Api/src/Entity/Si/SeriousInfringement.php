@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Si;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * SeriousInfringement Entity
@@ -27,5 +28,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SeriousInfringement extends AbstractSeriousInfringement
 {
-
+    /**
+     * Updates the serious infringement with an erru response
+     *
+     * @param UserEntity $user
+     * @param \DateTime $responseDateTime
+     */
+    public function updateErruResponse(UserEntity $user, \DateTime $responseDateTime)
+    {
+        $this->setErruResponseUser($user);
+        $this->setErruResponseTime($responseDateTime);
+        $this->setErruResponseSent('Y');
+    }
 }
