@@ -335,4 +335,48 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
 
         return $this;
     }
+
+    /**
+     * Is CNSable?
+     *
+     * @return bool
+     */
+    public function isCnsable()
+    {
+        return $this->isCnsableState();
+    }
+
+    /**
+     * Is in a CNSable state.
+     *
+     * @return bool
+     */
+    private function isCnsableState()
+    {
+        if ($this->getStatus()->getId() === self::STATUS_RENEW) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Continuation Not Sought
+     *
+     * @param RefData $status
+     * @return $this
+     * @throws BadRequestException
+     */
+    public function continuationNotSought(RefData $status)
+    {
+        if (!$this->isCnsable()) {
+            throw new BadRequestException(
+                'Irfo Psv Auth cannot be set as CNS'
+            );
+        }
+
+        $this->setStatus($status);
+
+        return $this;
+    }
 }

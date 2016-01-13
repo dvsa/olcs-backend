@@ -28,7 +28,7 @@ class IrfoPsvAuthTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQueryGrantable()
+    public function testHandleQuery()
     {
         $id = 4;
         $query = Qry::create(['id' => $id]);
@@ -54,7 +54,12 @@ class IrfoPsvAuthTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertContains('isGrantable', $result->serialize());
+        $results = $result->serialize();
+        $this->assertContains('isGrantable', $results);
+        $this->assertContains('isRefusable', $results);
+        $this->assertContains('isWithdrawable', $results);
+        $this->assertContains('isCnsable', $results);
+        $this->assertContains('isResetable', $results);
     }
 
     public function testHandleQueryNotGrantable()
