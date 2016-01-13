@@ -1,0 +1,172 @@
+<?php
+
+/**
+ * DeletePeopleTest
+ *
+ * @author Mat Evans <mat.evans@valtech.co.uk>
+ */
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
+
+use Dvsa\Olcs\Api\Domain\Repository\Licence as  LicenceRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Person as  PersonRepo;
+use Dvsa\Olcs\Api\Domain\Repository\ApplicationOrganisationPerson as AppOrgPersonRepo;
+use Dvsa\Olcs\Api\Domain\Repository\OrganisationPerson as OrgPersonRepo;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Application\DeletePeople as CommandHandler;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Transfer\Command\Application\DeletePeople as Command;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
+
+/**
+ * DeletePeopleTest
+ *
+ * @author Mat Evans <mat.evans@valtech.co.uk>
+ */
+class DeletePeopleTest extends CommandHandlerTestCase
+{
+    public function setUp()
+    {
+        $this->sut = new CommandHandler();
+        $this->mockRepo('Application', LicenceRepo::class);
+        $this->mockRepo('Person', PersonRepo::class);
+        $this->mockRepo('ApplicationOrganisationPerson', AppOrgPersonRepo::class);
+        $this->mockRepo('OrganisationPerson', OrgPersonRepo::class);
+
+        parent::setUp();
+    }
+
+    protected function initReferences()
+    {
+        $this->refData = [
+            'title_mr', 'org_t_rc', 'org_t_st'
+        ];
+
+        $this->references = [
+            \Dvsa\Olcs\Api\Entity\Person\Person::class => [
+                234 => m::mock(\Dvsa\Olcs\Api\Entity\Person\Person::class)
+            ]
+        ];
+
+        parent::initReferences();
+    }
+
+    public function testHandleCommandNotDelta()
+    {
+        $data = [
+            'id' => 52,
+            'personIds' => [79, 234]
+        ];
+        $command = Command::create($data);
+
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $organisation->setType($this->refData['org_t_st']);
+        $organisation->setId(87);
+        $licence = new \Dvsa\Olcs\Api\Entity\Licence\Licence($organisation, new \Dvsa\Olcs\Api\Entity\System\RefData());
+        $application = new ApplicationEntity($licence, new \Dvsa\Olcs\Api\Entity\System\RefData(), 0);
+        $application->setId(52);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
+
+        $orgPerson1 = new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson();
+        $orgPerson1->setId(179);
+        $orgPerson2 = new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson();
+        $orgPerson2->setId(1234);
+        $orgPerson2->setPerson((new \Dvsa\Olcs\Api\Entity\Person\Person())->setId(234));
+
+        $this->repoMap['OrganisationPerson']->shouldReceive('fetchListForOrganisationAndPerson')
+            ->with(87, 79)->once()->andReturn([$orgPerson1]);
+        $this->repoMap['OrganisationPerson']->shouldReceive('delete')
+            ->with($orgPerson1)->once();
+
+        $this->repoMap['OrganisationPerson']->shouldReceive('fetchListForPerson')
+            ->with(79)->once()->andReturn(['SOME']);
+
+        $this->repoMap['OrganisationPerson']->shouldReceive('fetchListForOrganisationAndPerson')
+            ->with(87, 234)->once()->andReturn([$orgPerson2]);
+        $this->repoMap['OrganisationPerson']->shouldReceive('delete')
+            ->with($orgPerson2)->once();
+
+        $this->repoMap['OrganisationPerson']->shouldReceive('fetchListForPerson')
+            ->with(234)->once()->andReturn([]);
+        $this->repoMap['Person']->shouldReceive('delete')
+            ->with($orgPerson2->getPerson())->once();
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::class,
+            ['section' => 'people', 'id' => 52],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
+        $response = $this->sut->handleCommand($command);
+
+        $this->assertSame(
+            [
+                'OrganisationPerson ID 179 deleted',
+                'OrganisationPerson ID 1234 deleted',
+                'Person ID 234 deleted'
+            ],
+            $response->getMessages()
+        );
+    }
+
+    public function testHandleCommandDelta()
+    {
+        $data = [
+            'id' => 52,
+            'personIds' => [79, 234]
+        ];
+        $command = Command::create($data);
+
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $organisation->setType($this->refData['org_t_rc']);
+        $organisation->setId(87);
+        $licence = new \Dvsa\Olcs\Api\Entity\Licence\Licence($organisation, new \Dvsa\Olcs\Api\Entity\System\RefData());
+        $application = new ApplicationEntity($licence, new \Dvsa\Olcs\Api\Entity\System\RefData(), 1);
+        $application->setId(52);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
+
+        $appOrgPerson1 = new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson();
+        $appOrgPerson1->setId(179);
+        $appOrgPerson1->setPerson((new \Dvsa\Olcs\Api\Entity\Person\Person())->setId(79));
+
+        $this->repoMap['ApplicationOrganisationPerson']->shouldReceive('fetchForApplicationAndPerson')
+            ->with(52, 79)->once()->andReturn($appOrgPerson1);
+        $this->repoMap['ApplicationOrganisationPerson']->shouldReceive('delete')
+            ->with($appOrgPerson1)->once();
+        $this->repoMap['Person']->shouldReceive('delete')
+            ->with($appOrgPerson1->getPerson())->once();
+
+        $this->repoMap['ApplicationOrganisationPerson']->shouldReceive('fetchForApplicationAndPerson')
+            ->with(52, 234)->once()->andThrow(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+
+        $this->repoMap['ApplicationOrganisationPerson']->shouldReceive('save')->once()->andReturnUsing(
+            function (\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson $appOrgPerson) use (
+                $organisation,
+                $application
+            ) {
+                $this->assertSame('D', $appOrgPerson->getAction());
+                $this->assertSame($organisation, $appOrgPerson->getOrganisation());
+                $this->assertSame($application, $appOrgPerson->getApplication());
+                $this->assertSame(234, $appOrgPerson->getPerson()->getId());
+                $appOrgPerson->setId(923);
+            }
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::class,
+            ['section' => 'people', 'id' => 52],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
+        $response = $this->sut->handleCommand($command);
+
+        $this->assertSame(
+            [
+                'ApplicationOrganisationPerson ID 179 deleted',
+                'ApplicationOrganisationPerson ID 923 delete delta created',
+            ],
+            $response->getMessages()
+        );
+    }
+}

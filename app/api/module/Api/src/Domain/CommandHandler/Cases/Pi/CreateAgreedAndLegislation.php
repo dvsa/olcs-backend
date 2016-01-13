@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * Creates Pi with agreed and legislation info
+ */
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Pi;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
+use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
+use Dvsa\Olcs\Api\Entity\Pi\Reason as ReasonEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Transfer\Command\Cases\Pi\CreateAgreedAndLegislation as CreateCmd;
+use Doctrine\ORM\Query;
+
+/**
+ * Creates Pi with agreed and legislation info
+ */
+final class CreateAgreedAndLegislation extends AbstractCommandHandler implements TransactionedInterface
+{
+    protected $repoServiceName = 'Pi';
+
+    /**
+     * Creates a Pi with agreed and legislation
+     *
+     * @param CommandInterface $command
+     * @return Result
+     */
+    public function handleCommand(CommandInterface $command)
+    {
+        $result = new Result();
+
+        /** @var CreateCmd $command */
+        $types = $this->processTypes($command->getPiTypes());
+        $reasons = $this->processReasons($command->getReasons());
+
+        /** @var PresidingTcEntity $agreedByTc */
+        $agreedByTc = $this->getRepo()->getReference(PresidingTcEntity::class, $command->getAgreedByTc());
+
+        /** @var CasesEntity $case */
+        $case = $this->getRepo()->getReference(CasesEntity::class, $command->getCase());
+
+        /** @var RefData $decidedByTcRole */
+        $decidedByTcRole = $this->getRepo()->getRefdataReference($command->getAgreedByTcRole());
+
+        /** @var RefData $piStatus */
+        $piStatus = $this->getRepo()->getRefdataReference(PiEntity::STATUS_REGISTERED);
+
+        $agreedDate = \DateTime::createFromFormat('Y-m-d', $command->getAgreedDate());
+
+        $pi = new PiEntity(
+            $case,
+            $agreedByTc,
+            $decidedByTcRole,
+            $types,
+            $reasons,
+            $agreedDate,
+            $piStatus,
+            $command->getComment()
+        );
+
+        $this->getRepo()->save($pi);
+        $result->addMessage('Pi created');
+        $result->addId('Pi', $pi->getId());
+
+        return $result;
+    }
+
+    /**
+     * Returns collection of reasons.
+     *
+     * @param array $reasons
+     * @return ArrayCollection
+     */
+    private function processReasons($reasons)
+    {
+        $result = new ArrayCollection();
+
+        if (!empty($reasons)) {
+            foreach ($reasons as $reason) {
+                $result->add($this->getRepo()->getReference(ReasonEntity::class, $reason));
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns collection of types.
+     *
+     * @param array $types
+     * @return ArrayCollection
+     */
+    private function processTypes($types)
+    {
+        $result = new ArrayCollection();
+
+        if (!empty($types)) {
+            foreach ($types as $type) {
+                $result->add($this->getRepo()->getRefdataReference($type));
+            }
+        }
+
+        return $result;
+    }
+}

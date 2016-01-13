@@ -1150,14 +1150,25 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testGetServiceWithName()
     {
+        $lang = 'en-gb';
+
         $this->getMockController(array('getServiceLocator', 'serviceExists'));
 
-        $serviceFactoryMock = $this->getMock('\stdClass', array('getService'));
+        $serviceMock = $this->getMock('\stdClass', array('setLanguage'));
+        $serviceMock->expects($this->once())->method('setLanguage')->with($lang)->willReturnSelf();
 
+        $serviceFactoryMock = $this->getMock('\stdClass', array('getService'));
         $serviceFactoryMock->expects($this->once())
             ->method('getService')
             ->with('Bob')
-            ->will($this->returnValue('Service'));
+            ->willReturn($serviceMock);
+
+        // Setup request.
+        $request = $this->getMock('Zend\Http\Request', ['getHeaders', 'getFieldValue']);
+        $request->expects($this->once())->method('getHeaders')->willReturnSelf();
+        $request->expects($this->once())->method('getFieldValue')->willReturn($lang);
+
+        $this->controller->getEvent()->setRequest($request);
 
         $serviceLocatorMock = $this->getMock('\stdClass', array('get'));
 
@@ -1175,7 +1186,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
             ->with('Bob')
             ->will($this->returnValue(true));
 
-        $this->assertEquals('Service', $this->controller->getService('Bob'));
+        $this->assertEquals($serviceMock, $this->controller->getService('Bob'));
     }
 
     /**
@@ -1224,14 +1235,25 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testGetServiceWithoutNameWithSetServiceName()
     {
+        $lang = 'en-gb';
+
         $this->getMockController(array('getServiceLocator', 'serviceExists'));
 
-        $serviceFactoryMock = $this->getMock('\stdClass', array('getService'));
+        $serviceMock = $this->getMock('\stdClass', array('setLanguage'));
+        $serviceMock->expects($this->once())->method('setLanguage')->with($lang)->willReturnSelf();
 
+        $serviceFactoryMock = $this->getMock('\stdClass', array('getService'));
         $serviceFactoryMock->expects($this->once())
             ->method('getService')
             ->with('Bob')
-            ->will($this->returnValue('Service'));
+            ->will($this->returnValue($serviceMock));
+
+        // Setup request.
+        $request = $this->getMock('Zend\Http\Request', ['getHeaders', 'getFieldValue']);
+        $request->expects($this->once())->method('getHeaders')->willReturnSelf();
+        $request->expects($this->once())->method('getFieldValue')->willReturn($lang);
+
+        $this->controller->getEvent()->setRequest($request);
 
         $serviceLocatorMock = $this->getMock('\stdClass', array('get'));
 
@@ -1251,7 +1273,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->controller->setServiceName('Bob');
 
-        $this->assertEquals('Service', $this->controller->getService());
+        $this->assertEquals($serviceMock, $this->controller->getService());
     }
 
     /**
@@ -1302,14 +1324,24 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testGetServiceWithoutNameWithGetControllerName()
     {
+        $lang = 'lang-one';
+
         $this->getMockController(array('getServiceLocator', 'serviceExists', 'getControllerName'));
 
-        $serviceFactoryMock = $this->getMock('\stdClass', array('getService'));
+        $serviceMock = $this->getMock('\stdClass', array('setLanguage'));
+        $serviceMock->expects($this->once())->method('setLanguage')->with($lang)->willReturnSelf();
 
+        $serviceFactoryMock = $this->getMock('\stdClass', array('getService'));
         $serviceFactoryMock->expects($this->once())
             ->method('getService')
             ->with('Bob')
-            ->will($this->returnValue('Service'));
+            ->will($this->returnValue($serviceMock));
+
+        // Setup request.
+        $request = $this->getMock('Zend\Http\Request', ['getHeaders', 'getFieldValue']);
+        $request->expects($this->once())->method('getHeaders')->willReturnSelf();
+        $request->expects($this->once())->method('getFieldValue')->willReturn($lang);
+        $this->controller->getEvent()->setRequest($request);
 
         $serviceLocatorMock = $this->getMock('\stdClass', array('get'));
 
@@ -1331,7 +1363,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
             ->method('getControllerName')
             ->will($this->returnValue('Bob'));
 
-        $this->assertEquals('Service', $this->controller->getService());
+        $this->assertEquals($serviceMock, $this->controller->getService());
     }
 
     /**

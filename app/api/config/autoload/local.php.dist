@@ -12,30 +12,184 @@
  * credentials from accidentally being committed into version control.
  */
 return array(
+
+     // Postcode/Address service
+    'address' => [
+        'client' => [
+            // URI e.g. http://postcode.cit.olcs.mgt.mtpdvsa/ *Environment specific*
+            'baseuri' => 'http://postcode.cit.olcs.mgt.mtpdvsa/'
+        ]
+    ],
+
+    // Elastic search
     'elastic_search' => array(
-        'host'=> 'scdv-db02.sc.npm',
+        // Hostname e.g. elasticsearch-dev.olcs.mgt.mtpdvsa *Environment specific*
+        'host'=> 'elasticsearch-dev.olcs.mgt.mtpdvsa',
+        // Port, e.g. 9200
         'port'=> '9200'
     ),
+
+    // Doctrine
     'doctrine' => array(
         'connection' => array(
             'orm_default' => array(
                 'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
+                // Database connection details
                 'params' => array(
+                    // *Environment specific*
                     'host' => 'localhost',
+                    // *Environment specific*
                     'port' => '3306',
+                    // *Environment specific*
                     'user' => 'olcs_be',
+                    // *Environment specific*
                     'password' => 'password',
+                    // *Environment specific*
                     'dbname' => 'olcs_be',
                 )
             )
-        )
+        ),
+        'driver' => array(
+            'EntityDriver' => array(
+                'cache' => 'apc'
+            ),
+            'translatable_metadata_driver' => array(
+                'cache' => 'apc',
+            )
+        ),
+        'configuration' => array(
+            'orm_default' => array(
+                'metadata_cache' => 'apc'
+            )
+        ),
     ),
+
+    // Companies house XML gateway credentials
     'companies_house_credentials' => array(
+        // Companies house XML gateway userID *Environment specific*
+        'userId'     => 'XMLGatewayTestUserID',
+        // Companies house XML gateway password *Environment specific*
         'password'   => 'XMLGatewayTestPassword',
-        'userId'     => 'XMLGatewayTestUserID'
     ),
-    // Set the following if you need to go via a proxy to get to Companies House
+
+    // Set the following if you need to go via a proxy to get to Companies house XML gateway
+    // *Environment specific*
     // 'companies_house_connection' => array(
     //    'proxy'      => 'proxy.gw.npm:80'
-    // )
+    // ),
+
+    // Document service
+    'document_share' => array(
+        'client' => array(
+            // Document service URI *Environment specific*
+            'baseuri' => 'http://fs01.olcs.mgt.mtpdvsa:8080/hfs/',
+            // Document service user ID *Environment specific*
+            'uuid' => 'uD12345',
+            // Document service workspace "olcs"
+            'workspace' => 'olcs'
+        ),
+    ),
+
+    // Companies house RESTful API
+    'companies_house' => [
+        'http' => [
+            // Set the following if you need to go via a proxy to get to Companies House RESTful API
+            // *Environment specific*
+            // 'curloptions' => [
+            //     CURLOPT_PROXY => 'http://fp01.inf.mgt.mtpdvsa:3128',
+            // ],
+        ],
+        'auth' => [
+            // Companies House API key (register one at https://developer.companieshouse.gov.uk/) *Environment specific*
+            'username' => '',
+            // Leave this empty
+            'password' => '',
+        ],
+        'client' => [
+            'baseuri' => 'https://api.companieshouse.gov.uk/',
+        ],
+    ],
+
+    // CPMS service
+    'cpms_api' => array(
+        'logger_alias' => 'Logger', // Zend logger service manager alias - use 'Logger' for the main OLCS log
+        'identity_provider' => 'CpmsIdentityProvider', // Should implement CpmsClient\Authenticate\IdentityProviderInterface
+        'enable_cache' => true,
+        'cache_storage' => 'array',
+        'rest_client' => array(
+            'options' => array(
+                //CPMS API version to use
+                'version' => 2,
+                // CPMS hostname e.g. 'payment-service.psqa-ap01.ps.npm' *Environment specific*
+                'domain' => 'payment-service.psqa-ap01.ps.npm', // QA
+            ),
+        ),
+    ),
+
+    // CPMS service authentication - used by CpmsIdentityProvider service
+    'cpms_credentials' => array(
+        // CPMS user ID *Environment specific*
+        // (this can be left as is, will be deprecated in the future once authentication is implemented)
+        'user_id' => '1234',
+        // CPMS client ID *Environment specific*
+        'client_id' => 'OLCS',
+        // CPMS Client secret *Environment specific*
+        'client_secret' => 'f7c3cd7d55c0dc0f3bcadc68d2867beedc28b463'
+    ),
+
+    'cpms' => array(
+        // Prefix added to invoice numbers went sent to CPMS
+        'invoice_prefix' => 'LOCAL-',
+    ),
+
+    // Email config
+    'email' => array(
+        // Debugging option forces all email to be sent to an address
+        // 'send_all_mail_to' => 'terry.valtech@gmail.com',
+        // Selfserve/external URI e.g. http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa *Environment specific*
+        'selfserve_uri' => 'http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa',
+        // Internal URI e.g. http://demo_dvsa-internal.web03.olcs.mgt.mtpdvsa *Environment specific*
+        'internal_uri' => 'http://demo_dvsa-internal.web03.olcs.mgt.mtpdvsa',
+    ),
+    'mail' => array(),
+    'mailboxes' => array(
+        // IMAP connection to a the mailbox for reading inspection request emails
+        'inspection_request' => array(
+            // IMAP hostname *Environment specific*
+            'host'     => 'mail01.olcs.mgt.mtpdvsa',
+            // IMAP user *Environment specific*
+            'user'     => 'olcsemail',
+            // IMAP password *Environment specific*
+            'password' => '74398f7g39',
+            // IMAP port 993 *Environment specific*
+            'port'     => 993,
+            'ssl'      => 'SSL',
+        ),
+    ),
+
+    'openam' => [
+        'username' => 'olcs_app',
+        'password' => 'password',
+        'uri' => 'http://olcs-openam.olcs.gov.uk:18080',
+        'pid_header' => 'X-Pid'
+    ],
+    'ebsr' => [
+        'transexchange_publisher' => [
+            'uri' => 'http://localhost:8080/txc/publisherService',
+        ],
+    ],
+    'nr' => [
+        // @to-do currently waiting on the actual nr address
+        'inr_service' => [
+            'uri' => 'http://testServiceAddress',
+            'options' => ['timeout' => 30]
+        ],
+        'repute_url' => [
+            'uri' => 'https://r-inr-01.corp.vosa.gov.uk:444/INR.BackofficeWeb/Repute/SubmitCheck.aspx?'
+        ],
+        'msi_response' => [
+            'parent_node' => 'MS2ERRU_Infringement_Res',
+            'ns' => 'https://webgate.ec.testa.eu/erru/1.0'
+        ]
+    ],
 );

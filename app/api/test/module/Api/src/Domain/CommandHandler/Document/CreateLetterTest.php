@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * Create Letter Test
+ *
+ * @author Rob Caiger <rob@clocal.co.uk>
+ */
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
+
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository\DocTemplate;
+use Mockery as m;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Document\CreateLetter;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Transfer\Command\Document\CreateLetter as Cmd;
+use Dvsa\Olcs\Api\Entity;
+
+/**
+ * Create Letter Test
+ *
+ * @author Rob Caiger <rob@clocal.co.uk>
+ */
+class CreateLetterTest extends CommandHandlerTestCase
+{
+    public function setUp()
+    {
+        $this->sut = new CreateLetter();
+        $this->mockRepo('DocTemplate', DocTemplate::class);
+
+        parent::setUp();
+    }
+
+    public function testHandleCommand()
+    {
+        $queryData = ['details' => ['category' => '123', 'documentSubCategory' => '321']];
+        $expectedQueryData = ['details' => ['category' => '123', 'documentSubCategory' => '321']];
+
+        $data = [
+            'template' => 111,
+            'data' => $queryData,
+            'meta' => 'foo'
+        ];
+
+        $command = Cmd::create($data);
+
+        /** @var Entity\Doc\DocTemplate $template */
+        $template = m::mock(Entity\Doc\DocTemplate::class)->makePartial();
+        $template->setDescription('Foo-:Bar_Cake Cheese');
+        $template->shouldReceive('getDocument->getIdentifier')
+            ->andReturn('Foo-Bar_Cake Cheese.rtf');
+
+        $this->repoMap['DocTemplate']->shouldReceive('fetchById')
+            ->with(111)
+            ->andReturn($template);
+
+        $result = new Result();
+        $result->addMessage('GenerateAndStore');
+        $data = [
+            'template' => 'Foo-Bar_Cake Cheese.rtf',
+            'query' => $expectedQueryData,
+            'description' => 'Foo-:Bar_Cake Cheese',
+            'category' => '123',
+            'subCategory' => '321',
+            'isExternal' => false,
+            'isScan' => false,
+            'metadata' => 'foo'
+        ];
+        $this->expectedSideEffect(GenerateAndStore::class, $data, $result);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'GenerateAndStore'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+}

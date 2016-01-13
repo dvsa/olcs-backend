@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
 return [
     'router' => [
         'routes' => [
@@ -15,7 +8,7 @@ return [
                 'options' => [
                     'route' => '/[:service][/:id]',
                     'constraints' => [
-                        'service' => '[a-z\-]+',
+                        'service' => '[a-z0-9\-]+',
                         'id' => '[0-9]+'
                     ],
                     'defaults' => [
@@ -26,7 +19,7 @@ return [
             'search' => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '/search/:query[/:index]',
+                    'route' => '/search/:index',
                     'defaults' => [
                         'controller' => 'Search'
                     ]
@@ -35,10 +28,9 @@ return [
             'ref-data' => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '/ref-data/:id[/:lang]',
+                    'route' => '/ref-data[/category/:category][/:id]',
                     'defaults' => [
-                        'controller' => 'ref-data',
-                        'lang' => 'en_en'
+                        'controller' => 'ref-data'
                     ]
                 ]
             ],
@@ -135,9 +127,25 @@ return [
                     ]
                 ]
             ],
+            'continuation-detail-checklists' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/continuation-detail/checklists[/:id][/]',
+                    'constraints' => [
+                        'id' => '[0-9]+'
+                    ],
+                    'defaults' => [
+                        'controller' => 'continuation-detail-checklists'
+                    ]
+                ]
+            ],
         ]
     ],
     'service_manager' => [
+        'shared' => [
+            'BundleQuery' => false,
+            'PaginateQuery' => false
+        ],
         'abstract_factories' => [
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
             'Zend\Log\LoggerAbstractServiceFactory'
@@ -145,10 +153,20 @@ return [
         'factories' => [
             'serviceFactory' => '\Olcs\Db\Service\Factory',
             'ElasticSearch\Client' => '\Olcs\Db\Service\Search\ClientFactory',
-            'ElasticSearch\Search' => '\Olcs\Db\Service\Search\SearchFactory'
+            'ElasticSearch\Search' => '\Olcs\Db\Service\Search\SearchFactory',
+            'Olcs\Db\Service\BusReg\OtherServicesManager' =>
+                'Olcs\Db\Service\BusReg\OtherServicesManager',
+            'Olcs\Db\Service\ContactDetails\PhoneContactsManager' =>
+                'Olcs\Db\Service\ContactDetails\PhoneContactsManager',
+            'Olcs\Db\Service\Organisation\IrfoPartnersManager' =>
+                'Olcs\Db\Service\Organisation\IrfoPartnersManager',
+            'EntityManagerHelper' => 'Olcs\Db\Service\EntityManager\EntityManagerHelperFactory',
         ],
-        'services' => [
-            'ExpressionBuilder' => new \Olcs\Db\Utility\ExpressionBuilder
+        'invokables' => [
+            'ExpressionBuilder' => '\Olcs\Db\Utility\ExpressionBuilder',
+            'BundleQuery' => '\Olcs\Db\Utility\BundleQuery',
+            'PaginateQuery' => '\Olcs\Db\Utility\PaginateQuery',
+            'CompaniesHouse/Queue' => 'Olcs\Db\Service\CompaniesHouse\Queue',
         ]
     ],
     'controllers' => [
@@ -158,14 +176,8 @@ return [
             'licencevehicleusage' => 'Olcs\Db\Controller\LicenceVehicleUsageController',
             'licence-vehicle' => 'Olcs\Db\Controller\LicenceVehicleController',
             'note' => 'Olcs\Db\Controller\NoteController',
-            'operator-search' => 'Olcs\Db\Controller\OperatorSearchController',
-            'person-search' => 'Olcs\Db\Controller\PersonSearchController',
-            'person-licence-search' => 'Olcs\Db\Controller\PersonLicenceSearchController',
             'TradingNames' => 'Olcs\Db\Controller\TradingNamesController',
-            'defendant-search' => 'Olcs\Db\Controller\DefendantSearchController',
-            'organisation-search' => 'Olcs\Db\Controller\OrganisationSearchController',
             'ref-data' => 'Olcs\Db\Controller\RefDataController',
-            'bookmark-search' => 'Olcs\Db\Controller\BookmarkSearchController',
         ]
     ],
     'view_manager' => [
@@ -181,48 +193,5 @@ return [
              'error/index' => __DIR__ . '/../view/error/index.phtml',
              'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
          ],
-    ],
-    'doctrine' => [
-        'driver' => [
-            'EntityDriver' => [
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'cache' => 'array',
-                'paths' => [
-                    __DIR__ . '/../src/Entity'
-                ]
-            ],
-            'translatable_metadata_driver' => [
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'cache' => 'array',
-                'paths' => [
-                    'vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity',
-                ],
-            ],
-            'orm_default' => [
-                'drivers' => [
-                    'Olcs\Db\Entity' => 'EntityDriver',
-                    'Gedmo\Translatable\Entity' => 'translatable_metadata_driver'
-                ]
-            ]
-        ],
-        'eventmanager' => [
-            'orm_default' => [
-                'subscribers' => [
-                    'Gedmo\SoftDeleteable\SoftDeleteableListener',
-                    'Gedmo\Translatable\TranslatableListener'
-                ],
-            ],
-        ],
-        'configuration' => [
-            'orm_default' => [
-                'filters' => [
-                    'soft-deleteable' => 'Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter'
-                ],
-                'types' => [
-                    'yesno' => 'Olcs\Db\Entity\Types\YesNoType',
-                    'yesnonull' => 'Olcs\Db\Entity\Types\YesNoNullType',
-                ]
-            ],
-        ]
     ]
 ];
