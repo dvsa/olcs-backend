@@ -1,11 +1,4 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
 
 namespace Olcs\Db;
 
@@ -21,13 +14,16 @@ class Module implements BootstrapListenerInterface
 {
     public function onBootstrap(EventInterface $e)
     {
+        $sm = $e->getApplication()->getServiceManager();
+
         /** @var MvcEvent $e */
-        $eventManager        = $e->getApplication()->getEventManager();
+        $eventManager = $e->getApplication()->getEventManager();
+
         $moduleRouteListener = new ModuleRouteListener();
-        $moduleRouteListener->attach($eventManager);
+        $moduleRouteListener->attach($eventManager, 1);
 
         // Enable and configure Doctrine filters
-        $entityManager = $e->getApplication()->getServiceManager()->get('doctrine.entitymanager.orm_default');
+        $entityManager = $sm->get('doctrine.entitymanager.orm_default');
         $entityManager->getFilters()->enable('soft-deleteable');
     }
 

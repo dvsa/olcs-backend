@@ -1,0 +1,84 @@
+<?php
+
+/**
+ * Query Handler Test Case
+ *
+ * @author Rob Caiger <rob@clocal.co.uk>
+ */
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler;
+
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
+use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+
+/**
+ * Query Handler Test Case
+ *
+ * @author Rob Caiger <rob@clocal.co.uk>
+ */
+class QueryHandlerTestCase extends MockeryTestCase
+{
+    /**
+     * @var QueryHandlerInterface
+     */
+    protected $sut;
+
+    /**
+     * @var QueryHandlerManager
+     */
+    protected $queryHandler;
+
+    /**
+     * @var ServiceLocatorInterface
+     */
+    protected $repoManager;
+
+    protected $repoMap = [];
+
+    protected $mockedSmServices = [];
+
+    public function setUp()
+    {
+        $this->repoManager = m::mock(RepositoryServiceManager::class);
+
+        foreach ($this->repoMap as $alias => $service) {
+            $this->repoManager
+                ->shouldReceive('get')
+                ->with($alias)
+                ->andReturn($service);
+        }
+
+        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
+
+        foreach ($this->mockedSmServices as $serviceName => $service) {
+            $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
+        }
+
+        $this->queryHandler = m::mock(QueryHandlerManager::class);
+        $this->queryHandler
+            ->shouldReceive('getServiceLocator')
+            ->andReturn($sm);
+
+        $this->sut = $this->sut->createService($this->queryHandler);
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        unset($this->sut);
+        unset($this->queryHandler);
+        unset($this->repoManager);
+        unset($this->repoMap);
+        unset($this->mockedSmServices);
+    }
+
+    protected function mockRepo($name, $class)
+    {
+        $this->repoMap[$name] = m::mock($class);
+    }
+}

@@ -1,0 +1,251 @@
+<?php
+
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\Tm;
+
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+
+/**
+ * Merge Transport Manager
+ *
+ * @author Mat Evans <mat.evans@valtech.co.uk>
+ */
+final class Merge extends AbstractCommandHandler implements TransactionedInterface
+{
+    protected $repoServiceName = 'TransportManager';
+    protected $extraRepos = ['Task', 'Note', 'EventHistory'];
+
+    /**
+     * Record of changes made during the merge
+     * @var array
+     */
+    protected $changes = [];
+
+    public function handleCommand(CommandInterface $command)
+    {
+        /* @var $donorTm TransportManager */
+        $donorTm = $this->getRepo()->fetchById($command->getId());
+        /* @var $recipientTm TransportManager */
+        $recipientTm = $this->getRepo()->fetchById($command->getRecipientTransportManager());
+
+        $this->validate($donorTm, $recipientTm);
+
+        $this->transferLva($donorTm, $recipientTm);
+        $this->transferCases($donorTm, $recipientTm);
+        $this->transferDocuments($donorTm, $recipientTm);
+        $this->transferTasks($donorTm, $recipientTm);
+        $this->transferNotes($donorTm, $recipientTm);
+        $this->transferEventHistory($donorTm, $recipientTm);
+        $this->transferUserAccount($donorTm, $recipientTm);
+
+        // record what has been merge on donarTm
+        $donorTm->setMergeToTransportManager($recipientTm);
+        $donorTm->setMergeDetails($this->getRecordChanges());
+
+        // Populate the losing transport manager removed date
+        $donorTm->setRemovedDate(new DateTime());
+
+        $donorTm->setTmStatus(
+            $this->getRepo()->getRefdataReference(TransportManager::TRANSPORT_MANAGER_STATUS_REMOVED)
+        );
+
+        $this->getRepo()->save($donorTm);
+
+        $result = new Result();
+        $result->addMessage(
+            sprintf(
+                'Merged Transport Manager id %d into TransportManager id %d.',
+                $donorTm->getId(),
+                $recipientTm->getId()
+            )
+        );
+
+        return $result;
+    }
+
+    /**
+     * Validate the donor and recipient Transport Managers
+     *
+     * @param TransportManager $donorTm
+     * @param TransportManager $recipientTm
+     *
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    protected function validate(TransportManager $donorTm, TransportManager $recipientTm)
+    {
+        $messages = [];
+        if ($donorTm === $recipientTm) {
+            throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
+                ['TM_MERGE_DONAR_RECIPIENT_SAME' => 'Cannot merge into self']
+            );
+        }
+
+        // If both the losing and winning transport manager has a linked user account, an error is raised
+        if (!$donorTm->getUsers()->isEmpty() && !$recipientTm->getUsers()->isEmpty()) {
+            $messages['TM_MERGE_BOTH_HAVE_USER_ACCOUNTS'] = 'Both transport managers have linked user accounts. You '
+                . 'must remove one of the user accounts prior to merge.';
+        }
+
+        // check if already merged, dont allow
+        if ($donorTm->getMergeToTransportManager()) {
+            $messages['TM_MERGE_ALREADY_MERGED'] = 'Transport Manager has aleady been merged';
+        }
+
+        if (!empty($messages)) {
+            throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException($messages);
+        }
+    }
+
+    /**
+     * Record what changes have been made
+     *
+     * @param string $entityName Entity name where merges are happening
+     * @param int    $id         ID (PK) of entity that have been merged
+     */
+    protected function recordChange($entity)
+    {
+        $name = $this->getEntityName($entity);
+
+        $this->changes[$name][] = $entity->getId();
+    }
+
+    /**
+     * Get the name of an entity
+     *
+     * @param object $entity
+     *
+     * @return string
+     */
+    protected function getEntityName($entity)
+    {
+        return get_class($entity);
+    }
+
+    /**
+     * Get all the changes that have been made as part of the merge
+     *
+     * @return array
+     */
+    protected function getRecordChanges()
+    {
+        return $this->changes;
+    }
+
+    /**
+     * Transfer any associated licences, new applications or variations
+     *
+     * @param TransportManager $donorTm
+     * @param TransportManager $recipientTm
+     */
+    protected function transferLva(TransportManager $donorTm, TransportManager $recipientTm)
+    {
+        /* @var $tml \Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence */
+        foreach ($donorTm->getTmLicences() as $tml) {
+            $tml->setTransportManager($recipientTm);
+            $this->recordChange($tml);
+        }
+
+        /* @var $tma \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication */
+        foreach ($donorTm->getTmApplications() as $tma) {
+            $tma->setTransportManager($recipientTm);
+            $this->recordChange($tma);
+        }
+    }
+
+    /**
+     * Transfer any associated cases
+     *
+     * @param TransportManager $donorTm
+     * @param TransportManager $recipientTm
+     */
+    protected function transferCases(TransportManager $donorTm, TransportManager $recipientTm)
+    {
+        /* @var $case \Dvsa\Olcs\Api\Entity\Cases\Cases */
+        foreach ($donorTm->getCases() as $case) {
+            $case->setTransportManager($recipientTm);
+            $this->recordChange($case);
+        }
+    }
+
+    /**
+     * Transfer any associated documents
+     *
+     * @param TransportManager $donorTm
+     * @param TransportManager $recipientTm
+     */
+    protected function transferDocuments(TransportManager $donorTm, TransportManager $recipientTm)
+    {
+        /* @var $document \Dvsa\Olcs\Api\Entity\Doc\Document */
+        foreach ($donorTm->getDocuments() as $document) {
+            $document->setTransportManager($recipientTm);
+            $this->recordChange($document);
+        }
+    }
+
+    /**
+     * Transfer any associated tasks
+     *
+     * @param TransportManager $donorTm
+     * @param TransportManager $recipientTm
+     */
+    protected function transferTasks(TransportManager $donorTm, TransportManager $recipientTm)
+    {
+        $tasks = $this->getRepo('Task')->fetchByTransportManager($donorTm);
+        /* @var $task \Dvsa\Olcs\Api\Entity\Task\Task */
+        foreach ($tasks as $task) {
+            $task->setTransportManager($recipientTm);
+            $this->recordChange($task);
+        }
+    }
+
+    /**
+     * Transfer any associated notes
+     *
+     * @param TransportManager $donorTm
+     * @param TransportManager $recipientTm
+     */
+    protected function transferNotes(TransportManager $donorTm, TransportManager $recipientTm)
+    {
+        $notes = $this->getRepo('Note')->fetchByTransportManager($donorTm);
+        /* @var $note \Dvsa\Olcs\Api\Entity\Note\Note */
+        foreach ($notes as $note) {
+            $note->setTransportManager($recipientTm);
+            $this->recordChange($note);
+        }
+    }
+
+    /**
+     * Transfer any event history
+     *
+     * @param TransportManager $donorTm
+     * @param TransportManager $recipientTm
+     */
+    protected function transferEventHistory(TransportManager $donorTm, TransportManager $recipientTm)
+    {
+        $eventHistorys = $this->getRepo('EventHistory')->fetchByTransportManager($donorTm);
+        /* @var $eventHistory \Dvsa\Olcs\Api\Entity\EventHistory\EventHistory */
+        foreach ($eventHistorys as $eventHistory) {
+            $eventHistory->setTransportManager($recipientTm);
+            $this->recordChange($eventHistory);
+        }
+    }
+
+    /**
+     * Transfer the loser's linked user account (if applicable)
+     *
+     * @param TransportManager $donorTm
+     * @param TransportManager $recipientTm
+     */
+    protected function transferUserAccount(TransportManager $donorTm, TransportManager $recipientTm)
+    {
+        /* @var $user \Dvsa\Olcs\Api\Entity\User\User */
+        foreach ($donorTm->getUsers() as $user) {
+            $user->setTransportManager($recipientTm);
+            $this->recordChange($user);
+        }
+    }
+}
