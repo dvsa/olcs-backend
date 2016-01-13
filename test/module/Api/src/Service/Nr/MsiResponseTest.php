@@ -15,8 +15,8 @@ use Mockery as m;
 
 /**
  * Class MsiResponseTest
- * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  * @package Dvsa\OlcsTest\Api\Service\Nr
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
 class MsiResponseTest extends MockeryTestCase
 {

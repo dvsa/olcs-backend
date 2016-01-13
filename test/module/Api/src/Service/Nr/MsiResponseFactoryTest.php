@@ -14,8 +14,8 @@ use Olcs\XmlTools\Xml\XmlNodeBuilder;
 
 /**
  * Class MsiResponseFactoryTest
- * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  * @package Dvsa\OlcsTest\Api\Service\Nr
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
 class MsiResponseFactoryTest extends TestCase
 {
