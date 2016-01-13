@@ -45,7 +45,7 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler
             $this->handleSideEffects(
                 [
                     // Remove any vehicles
-                    RemoveLicenceVehicle::create(['licenceVehicles' => $licence->getLicenceVehicles()]),
+                    RemoveLicenceVehicle::create(['licence' => $licence->getId()]),
                     // Unlink any Transport Managers
                     DeleteTransportManagerLicence::create(['licence' => $licence->getId()]),
                     // Expire community licences that are of status 'Pending', 'Active' or 'Suspended'

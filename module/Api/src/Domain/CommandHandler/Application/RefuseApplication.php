@@ -75,7 +75,10 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
         $this->result->merge(
             $this->handleSideEffect(CeaseGoodsDiscs::create(['licence' => $application->getLicence()->getId()]))
         );
-        $this->clearLicenceVehicleSpecifiedDatesAndInterimApp($application->getLicence()->getLicenceVehicles());
+
+        $this->getRepo('LicenceVehicle')->clearLicenceVehicleSpecifiedDateAndInterimApp(
+            $application->getLicence()->getId()
+        );
 
         $communityLicences = $application->getLicence()->getCommunityLics()->toArray();
         if (!empty($communityLicences)) {
@@ -110,15 +113,6 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
     {
         $data = ['id' => $applicationId, 'event' => CreateSnapshotCmd::ON_REFUSE];
         return $this->handleSideEffect(CreateSnapshotCmd::create($data));
-    }
-
-    protected function clearLicenceVehicleSpecifiedDatesAndInterimApp($licenceVehilces)
-    {
-        foreach ($licenceVehilces as $licenceVehilce) {
-            $licenceVehilce->setSpecifiedDate(null);
-            $licenceVehilce->setInterimApplication(null);
-            $this->getRepo('LicenceVehicle')->save($licenceVehilce);
-        }
     }
 
     /**

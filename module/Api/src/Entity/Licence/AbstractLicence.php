@@ -508,7 +508,8 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
      *
      * @ORM\OneToMany(
      *     targetEntity="Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic",
-     *     mappedBy="licence"
+     *     mappedBy="licence",
+     *     fetch="EXTRA_LAZY"
      * )
      */
     protected $communityLics;
