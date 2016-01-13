@@ -59,15 +59,7 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
 
         $result->merge($this->handleSideEffect($dto));
 
-        $result->merge(
-            $this->handleSideEffect(
-                RemoveLicenceVehicle::create(
-                    [
-                        'licenceVehicles' => $licence->getLicenceVehicles()
-                    ]
-                )
-            )
-        );
+        $result->merge($this->handleSideEffect(RemoveLicenceVehicle::create(['licence' => $licence->getId()])));
 
         $result->merge(
             $this->handleSideEffect(

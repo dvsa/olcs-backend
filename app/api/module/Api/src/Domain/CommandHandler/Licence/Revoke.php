@@ -49,15 +49,7 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
         $result = new Result();
         $result->merge($this->handleSideEffect($commandCeaseDiscs));
 
-        $result->merge(
-            $this->handleSideEffect(
-                RemoveLicenceVehicle::create(
-                    [
-                        'licenceVehicles' => $licence->getLicenceVehicles()
-                    ]
-                )
-            )
-        );
+        $result->merge($this->handleSideEffect(RemoveLicenceVehicle::create(['licence' => $licence->getId()])));
 
         $result->merge(
             $this->handleSideEffect(

@@ -63,16 +63,13 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
         $this->result->merge(
             $this->handleSideEffect(CeaseGoodsDiscs::create(['licence' => $application->getLicence()->getId()]))
         );
-        $this->clearLicenceVehicleSpecifiedDatesAndInterimApp($application->getLicence()->getLicenceVehicles());
+
+        $this->getRepo('LicenceVehicle')->clearLicenceVehicleSpecifiedDateAndInterimApp(
+            $application->getLicence()->getId()
+        );
 
         $this->result->merge(
-            $this->handleSideEffect(
-                RemoveLicenceVehicle::create(
-                    [
-                        'licenceVehicles' => $application->getLicence()->getLicenceVehicles()
-                    ]
-                )
-            )
+            $this->handleSideEffect(RemoveLicenceVehicle::create(['licence' => $application->getLicence()->getId()]))
         );
 
         $transportManagers = $application->getTransportManagers()->toArray();
@@ -146,15 +143,6 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
     {
         $data = ['id' => $applicationId, 'event' => CreateSnapshotCmd::ON_NTU];
         return $this->handleSideEffect(CreateSnapshotCmd::create($data));
-    }
-
-    protected function clearLicenceVehicleSpecifiedDatesAndInterimApp($licenceVehilces)
-    {
-        foreach ($licenceVehilces as $licenceVehilce) {
-            $licenceVehilce->setSpecifiedDate(null);
-            $licenceVehilce->setInterimApplication(null);
-            $this->getRepo('LicenceVehicle')->save($licenceVehilce);
-        }
     }
 
     /**

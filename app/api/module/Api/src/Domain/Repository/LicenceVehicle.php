@@ -323,7 +323,15 @@ class LicenceVehicle extends AbstractRepository
 
     public function clearLicenceVehicleSpecifiedDateAndInterimApp($licenceId)
     {
-        return $this->getDbQueryManager()->get('clearLicenceVehicleSpecifiedDateAndInterimApp')
+        return $this->getDbQueryManager()->get('LicenceVehicle\ClearSpecifiedDateAndInterimAppForLicence')
             ->execute(['licence' => $licenceId]);
+    }
+
+    public function removeAllForLicence($licenceId)
+    {
+        return $this->getDbQueryManager()->get('LicenceVehicle\RemoveAllForLicence')
+            ->execute(['licence' => $licenceId]);
+
+        //$licenceVehicle->setRemovalDate(new \DateTime());
     }
 }

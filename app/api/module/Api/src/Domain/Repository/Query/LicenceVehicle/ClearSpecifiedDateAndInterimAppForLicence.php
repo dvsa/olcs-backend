@@ -1,20 +1,21 @@
 <?php
 
 /**
- * Clear Licence Vehicle Specified Date And Interim App
+ * Clear Specified Date And Interim App For Licence
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-namespace Dvsa\Olcs\Api\Domain\Repository\Query;
+namespace Dvsa\Olcs\Api\Domain\Repository\Query\LicenceVehicle;
 
+use Dvsa\Olcs\Api\Domain\Repository\Query\AbstractRawQuery;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 
 /**
- * Clear Licence Vehicle Specified Date And Interim App
+ * Clear Specified Date And Interim App For Licence
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ClearLicenceVehicleSpecifiedDateAndInterimApp extends AbstractRawQuery
+class ClearSpecifiedDateAndInterimAppForLicence extends AbstractRawQuery
 {
     protected $templateMap = [
         'lv' => LicenceVehicle::class
