@@ -12,6 +12,7 @@ use Olcs\XmlTools\Xml\XmlNodeBuilder;
 
 /**
  * Class MsiResponse
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  * @package Dvsa\Olcs\Api\Service\Nr
  */
 class MsiResponse
