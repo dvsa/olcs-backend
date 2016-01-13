@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateDetails as UpdateDetailsCommand;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * UpdateDetails
@@ -43,6 +44,7 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
         $this->updateWorkAddress($tma, $command->getWorkAddress());
         $tma->getTransportManager()->getHomeCd()->setEmailAddress($command->getEmail());
         $tma->getTransportManager()->getHomeCd()->getPerson()->setBirthPlace($command->getPlaceOfBirth());
+        $tma->getTransportManager()->getHomeCd()->getPerson()->setBirthDate(new DateTime($command->getDob()));
 
         if ($command->getSubmit() === 'Y') {
             // could validate the TMA here?
