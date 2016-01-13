@@ -14,10 +14,11 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
 /**
- * Class MsiDetailTest
- * @package OlcsTest\Nr\Filter\Format
+ * Class MsiResponseTest
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ * @package Dvsa\OlcsTest\Api\Service\Nr
  */
-class MsiDetailTest extends MockeryTestCase
+class MsiResponseTest extends MockeryTestCase
 {
 
     /**
