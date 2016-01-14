@@ -1,7 +1,9 @@
 <?php
 
 /**
- * Irfo Country
+ * IrfoCountry
+ *
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
@@ -12,7 +14,9 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * Irfo Psv Auth
+ * IrfoCountry
+ *
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 class IrfoCountry extends AbstractRepository
 {
