@@ -440,4 +440,5 @@ return [
     TransferQuery\TrafficArea\TrafficAreaList::class => QueryHandler\TrafficArea\TrafficAreaList::class,
 
     TransferQuery\RefData\RefDataList::class => QueryHandler\RefData\RefDataList::class,
+    TransferQuery\LocalAuthority\LocalAuthorityList::class => QueryHandler\LocalAuthority\LocalAuthorityList::class,
 ];
