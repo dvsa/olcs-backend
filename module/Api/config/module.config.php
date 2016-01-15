@@ -187,6 +187,7 @@ return [
             'IrfoPermitStock' => RepositoryFactory::class,
             'IrfoPsvAuth' => RepositoryFactory::class,
             'IrfoPsvAuthNumber' => RepositoryFactory::class,
+            'IrfoCountry' => RepositoryFactory::class,
             'Impounding' => RepositoryFactory::class,
             'CommunityLic' => RepositoryFactory::class,
             'Workshop' => RepositoryFactory::class,
