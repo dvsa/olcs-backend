@@ -166,10 +166,15 @@ class CreateUserTest extends CommandHandlerTestCase
                 }
             );
 
-        $this->repoMap['User']->shouldReceive('fetchByLoginId')
+        $this->repoMap['User']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
+            ->shouldReceive('fetchByLoginId')
             ->once()
             ->with('login_id')
-            ->andReturn(null);
+            ->andReturn([])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         $result = $this->sut->handleCommand($command);
 
@@ -260,10 +265,14 @@ class CreateUserTest extends CommandHandlerTestCase
             );
 
         $this->repoMap['User']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchByLoginId')
             ->once()
             ->with($data['loginId'])
-            ->andReturn([]);
+            ->andReturn([])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         $this->repoMap['User']
             ->shouldReceive('populateRefDataReference')
@@ -404,10 +413,14 @@ class CreateUserTest extends CommandHandlerTestCase
             );
 
         $this->repoMap['User']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchByLoginId')
             ->once()
             ->with($data['loginId'])
-            ->andReturn([]);
+            ->andReturn([])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         $this->repoMap['User']
             ->shouldReceive('populateRefDataReference')
@@ -536,10 +549,14 @@ class CreateUserTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->repoMap['User']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchByLoginId')
             ->once()
             ->with($data['loginId'])
-            ->andReturn([m::mock(UserEntity::class)]);
+            ->andReturn([m::mock(UserEntity::class)])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         $this->sut->handleCommand($command);
     }

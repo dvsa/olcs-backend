@@ -36,7 +36,10 @@ class ReadOrganisationTest extends QueryHandlerTestCase
         $mockRecord = m::mock();
         $mockRecord->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
 
-        $this->repoMap['OrganisationReadAudit']->shouldReceive('fetchList')
+        $this->repoMap['OrganisationReadAudit']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
+            ->shouldReceive('fetchList')
             ->once()
             ->with($query, Query::HYDRATE_OBJECT)
             ->andReturn([$mockRecord])

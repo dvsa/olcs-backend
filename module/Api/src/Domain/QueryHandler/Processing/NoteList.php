@@ -95,6 +95,7 @@ class NoteList extends AbstractQueryHandler
 
         /** @var NoteRepository $repo */
         $repo = $this->getRepo();
+        $repo->disableSoftDeleteable();
 
         $data = $query->getArrayCopy();
 

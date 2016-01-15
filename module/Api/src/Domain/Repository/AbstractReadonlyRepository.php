@@ -55,6 +55,42 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
+     * Disables SoftDeleteable filter, if enabled.
+     * If list of entities is provided, the filter will only be disabled for those classes.
+     *
+     * @param array $entities List of class names
+     *
+     * @return void
+     */
+    public function disableSoftDeleteable(array $entities = null)
+    {
+        if ($this->getEntityManager()->getFilters()->isEnabled('soft-deleteable')) {
+            if (!empty($entities)) {
+                // disable soft-deleteable filtering for given entities only
+                $filter = $this->getEntityManager()->getFilters()->getFilter('soft-deleteable');
+
+                foreach ($entities as $entity) {
+                    $filter->disableForEntity($entity);
+                }
+            } else {
+                // disable soft-deleteable filtering for everything
+                $this->getEntityManager()->getFilters()->disable('soft-deleteable');
+            }
+        }
+    }
+
+    /**
+     * Enables SoftDeleteable filter
+     *
+     * @return void
+     */
+    public function enableSoftDeleteable()
+    {
+        // enable soft-deleteable filtering
+        $this->getEntityManager()->getFilters()->enable('soft-deleteable');
+    }
+
+    /**
      * Called from the factory to allow additional services to be injected
      *
      * @param RepositoryServiceManager $serviceManager

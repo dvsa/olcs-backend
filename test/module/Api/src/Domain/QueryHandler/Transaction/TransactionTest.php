@@ -71,6 +71,8 @@ class TransactionTest extends QueryHandlerTestCase
             ->andReturn(null);
 
         $this->repoMap['Transaction']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchUsingId')
             ->with($query)
             ->once()
@@ -156,6 +158,8 @@ class TransactionTest extends QueryHandlerTestCase
             );
 
         $this->repoMap['Transaction']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchUsingId')
             ->with($query)
             ->once()

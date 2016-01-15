@@ -34,7 +34,10 @@ abstract class AbstractUserCommandHandler extends AbstractCommandHandler
             return true;
         }
 
-        $users = $this->getRepo('User')->fetchByLoginId($new);
+        $repo = $this->getRepo();
+        $repo->disableSoftDeleteable();
+        $users = $repo->fetchByLoginId($new);
+        $repo->enableSoftDeleteable();
 
         if (!empty($users)) {
             throw new ValidationException([$this->usernameErrorKey => [self::ERR_USERNAME_EXISTS]]);

@@ -279,10 +279,14 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
             ->andReturn($user);
 
         $this->repoMap['User']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchByLoginId')
             ->once()
             ->with($data['loginId'])
-            ->andReturn([m::mock(UserEntity::class)]);
+            ->andReturn([m::mock(UserEntity::class)])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         $this->sut->handleCommand($command);
     }
