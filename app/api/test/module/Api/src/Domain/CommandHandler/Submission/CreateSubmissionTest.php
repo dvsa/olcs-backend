@@ -158,7 +158,6 @@ class CreateSubmissionTest extends CommandHandlerTestCase
                     SubmissionEntity $submission
                 ) use (&$savedSubmission) {
                     $submission->setId(111);
-                    $savedSubmission = $submission;
                 }
             );
 
