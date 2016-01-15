@@ -35,6 +35,7 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with(MapXmlFile::class)->andReturn($mockMapFilter);
         $mockSl->shouldReceive('get')->with('InjectIsTxcApp')->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with('InjectReceivedDate')->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with('InjectNaptanCodes')->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with('IsScottishRules')->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with('Format\Subsidy')->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with('Format\Via')->andReturn($mockFilter);
