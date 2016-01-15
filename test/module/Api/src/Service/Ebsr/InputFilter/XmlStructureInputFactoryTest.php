@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\InputFilter;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
