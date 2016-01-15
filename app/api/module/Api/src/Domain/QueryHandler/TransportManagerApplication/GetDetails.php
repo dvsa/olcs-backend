@@ -8,19 +8,18 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre;
-use Dvsa\Olcs\Api\Domain\Repository\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Get a Transport Manager Application
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class GetDetails extends AbstractQueryHandler
+class GetDetails extends AbstractQueryHandler implements \Dvsa\Olcs\Api\Domain\AuthAwareInterface
 {
+    use \Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+
     protected $repoServiceName = 'TransportManagerApplication';
 
     protected $extraRepos = [
@@ -101,6 +100,9 @@ class GetDetails extends AbstractQueryHandler
                     ],
                 ],
                 'otherLicences'
+            ],
+            [
+                'isTmLoggedInUser' => $this->getCurrentUser()->getTransportManager() === $tma->getTransportManager()
             ]
         );
     }
