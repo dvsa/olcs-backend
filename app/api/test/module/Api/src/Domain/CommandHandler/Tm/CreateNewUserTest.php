@@ -208,9 +208,14 @@ class CreateNewUserTest extends CommandHandlerTestCase
                 }
             );
 
-        $this->repoMap['User']->shouldReceive('fetchByLoginId')
+        $this->repoMap['User']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
+            ->shouldReceive('fetchByLoginId')
             ->with('Foo')
-            ->andReturn([]);
+            ->andReturn([])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         $this->repoMap['Application']->shouldReceive('fetchById')
             ->once()
@@ -370,10 +375,15 @@ class CreateNewUserTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        $this->repoMap['User']->shouldReceive('fetchByLoginId')
+        $this->repoMap['User']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
+            ->shouldReceive('fetchByLoginId')
             ->once()
             ->with('Foo')
-            ->andReturn(['foo']);
+            ->andReturn(['foo'])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         $this->sut->handleCommand($command);
     }

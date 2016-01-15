@@ -36,7 +36,10 @@ class ReadLicenceTest extends QueryHandlerTestCase
         $mockRecord = m::mock();
         $mockRecord->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
 
-        $this->repoMap['LicenceReadAudit']->shouldReceive('fetchList')
+        $this->repoMap['LicenceReadAudit']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
+            ->shouldReceive('fetchList')
             ->once()
             ->with($query, Query::HYDRATE_OBJECT)
             ->andReturn([$mockRecord])
