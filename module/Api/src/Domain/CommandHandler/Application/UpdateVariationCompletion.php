@@ -48,9 +48,7 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         'addresses' => [
             'business_type'
         ],
-        'people' => [
-            'business_type'
-        ],
+        'people' => [],
         'operating_centres' => [],
         'financial_evidence' => [],
         'transport_managers' => [],
