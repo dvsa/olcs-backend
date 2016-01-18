@@ -184,6 +184,7 @@ return [
             'Note' => RepositoryFactory::class,
             'TradingName' => RepositoryFactory::class,
             'IrfoGvPermit' => RepositoryFactory::class,
+            'IrfoGvPermitType' => RepositoryFactory::class,
             'IrfoPermitStock' => RepositoryFactory::class,
             'IrfoPsvAuth' => RepositoryFactory::class,
             'IrfoPsvAuthNumber' => RepositoryFactory::class,
