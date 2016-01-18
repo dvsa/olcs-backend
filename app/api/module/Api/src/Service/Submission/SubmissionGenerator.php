@@ -13,6 +13,8 @@ use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
  */
 class SubmissionGenerator
 {
+    const MAX_GENERATE_SUBMISSION_TIME = 90;
+
     private $submissionConfig;
     private $sectionGeneratorPluginManager;
 
@@ -47,6 +49,8 @@ class SubmissionGenerator
         }
 
         $requiredSections = $this->getRequiredSections($sectionTypeId, $sections, $isTm);
+
+        set_time_limit(self::MAX_GENERATE_SUBMISSION_TIME);
 
         // foreach section
         foreach ($requiredSections as $sectionId) {
