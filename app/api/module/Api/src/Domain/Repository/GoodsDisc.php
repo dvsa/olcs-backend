@@ -138,6 +138,7 @@ class GoodsDisc extends AbstractRepository
 
     public function ceaseDiscsForLicence($licenceId)
     {
-        return $this->getDbQueryManager()->get('ceaseDiscsForLicence')->execute(['licence' => $licenceId]);
+        return $this->getDbQueryManager()->get('LicenceVehicle\CeaseDiscsForLicence')
+            ->execute(['licence' => $licenceId]);
     }
 }
