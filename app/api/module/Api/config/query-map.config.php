@@ -229,6 +229,7 @@ return [
     TransferQuery\Irfo\IrfoPermitStockList::class => QueryHandler\Irfo\IrfoPermitStockList::class,
     TransferQuery\Irfo\IrfoPsvAuth::class => QueryHandler\Irfo\IrfoPsvAuth::class,
     TransferQuery\Irfo\IrfoPsvAuthList::class => QueryHandler\Irfo\IrfoPsvAuthList::class,
+    TransferQuery\Irfo\IrfoPsvAuthTypeList::class => QueryHandler\Irfo\IrfoPsvAuthTypeList::class,
 
     // Publication
     TransferQuery\Publication\Recipient::class => QueryHandler\Publication\Recipient::class,
