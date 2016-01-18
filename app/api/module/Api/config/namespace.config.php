@@ -153,6 +153,7 @@ return [
     'TransportManager' => 'Tm',
     'TransportManagerApplication' => 'Tm',
     'TransportManagerLicence' => 'Tm',
+    'HistoricTm' => 'Tm',
     'AdminAreaTrafficArea' => 'TrafficArea',
     'TrafficArea' => 'TrafficArea',
     'TrafficAreaEnforcementArea' => 'TrafficArea',
