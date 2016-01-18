@@ -188,6 +188,7 @@ return [
             'IrfoPsvAuth' => RepositoryFactory::class,
             'IrfoPsvAuthType' => RepositoryFactory::class,
             'IrfoPsvAuthNumber' => RepositoryFactory::class,
+            'IrfoCountry' => RepositoryFactory::class,
             'Impounding' => RepositoryFactory::class,
             'CommunityLic' => RepositoryFactory::class,
             'Workshop' => RepositoryFactory::class,
