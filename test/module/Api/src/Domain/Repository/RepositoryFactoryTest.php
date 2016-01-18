@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\EntityManager;
+use Dvsa\Olcs\Api\Domain\DbQueryServiceManager;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Mockery as m;
@@ -40,9 +41,11 @@ class RepositoryFactoryTest extends MockeryTestCase
 
         $em = m::mock(EntityManager::class);
         $qb = m::mock(QueryBuilder::class);
+        $dbs = m::mock(DbQueryServiceManager::class);
 
         $sm->setService('doctrine.entitymanager.orm_default', $em);
         $sm->setService('QueryBuilder', $qb);
+        $sm->setService('DbQueryServiceManager', $dbs);
 
         $name = 'Application';
         $requestedName = 'Application';
