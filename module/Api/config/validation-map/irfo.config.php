@@ -8,6 +8,7 @@ return [
     QueryHandler\Irfo\IrfoDetails::class                                          => IsInternalUser::class,
     QueryHandler\Irfo\IrfoGvPermit::class                                         => IsInternalUser::class,
     QueryHandler\Irfo\IrfoGvPermitList::class                                     => IsInternalUser::class,
+    QueryHandler\Irfo\IrfoGvPermitTypeList::class                                 => IsInternalUser::class,
     QueryHandler\Irfo\IrfoPermitStockList::class                                  => IsInternalUser::class,
     QueryHandler\Irfo\IrfoPsvAuth::class                                          => IsInternalUser::class,
     QueryHandler\Irfo\IrfoPsvAuthList::class                                      => IsInternalUser::class,
