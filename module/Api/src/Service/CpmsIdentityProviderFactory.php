@@ -49,14 +49,8 @@ class CpmsIdentityProviderFactory implements FactoryInterface
             throw new RuntimeException('The logged in user must have a PID');
         }
 
-        $service->setUserId($pid);
-
-        // @todo remove this temporary workaround for OLCS-11448 which sends the
-        // user id rather than the PID.
-        ////////////////////////////////////////
-        $userId = $authService->getIdentity()->getUser()->getId();
+        $userId = sha1($authService->getIdentity()->getUser()->getId());
         $service->setUserId($userId);
-        ////////////////////////////////////////
 
         $service->setClientId($config['client_id']);
         $service->setClientSecret($config['client_secret']);

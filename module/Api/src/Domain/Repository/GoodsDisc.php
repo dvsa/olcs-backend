@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Doctrine\ORM\Query;
 
 /**
  * Goods Disc
@@ -29,18 +30,15 @@ class GoodsDisc extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $this->getQueryBuilder()
-            ->modifyQuery($qb)
-            ->withRefdata()
-            ->with('licenceVehicle', 'lv')
-            ->with('lv.licence', 'lvl')
-            ->with('lvl.goodsOrPsv', 'lvlgp')
-            ->with('lvl.licenceType', 'lvllt')
-            ->with('lvl.trafficArea', 'lvlta')
-            ->with('lv.vehicle', 'lvv')
-            ->with('lv.application', 'lva')
-            ->with('lva.licenceType', 'lvalt')
-            ->with('lva.goodsOrPsv', 'lvagp');
+        $qb->leftJoin('gd.licenceVehicle', 'lv')
+            ->leftJoin('lv.licence', 'lvl')
+            ->leftJoin('lvl.goodsOrPsv', 'lvlgp')
+            ->leftJoin('lvl.licenceType', 'lvllt')
+            ->leftJoin('lvl.trafficArea', 'lvlta')
+            ->leftJoin('lv.vehicle', 'lvv')
+            ->leftJoin('lv.application', 'lva')
+            ->leftJoin('lva.licenceType', 'lvalt')
+            ->leftJoin('lva.goodsOrPsv', 'lvagp');
 
         $this->addFilteringConditions($qb, $niFlag, $licenceType);
 
@@ -57,15 +55,13 @@ class GoodsDisc extends AbstractRepository
                     $qb->expr()->andX(
                         $qb->expr()->eq('lvlta.isNi', 1),
                         $qb->expr()->eq($this->alias. '.isInterim', 1),
-                        $qb->expr()->eq('lvalt.id', ':applicationLicenceType'),
-                        $qb->expr()->eq('lvlta.id', ':licenceTrafficAreaId')
+                        $qb->expr()->eq('lvalt.id', ':applicationLicenceType')
                     ),
                     // isInterm = 0
                     $qb->expr()->andX(
                         $qb->expr()->eq('lvlta.isNi', 1),
                         $qb->expr()->eq($this->alias. '.isInterim', 0),
-                        $qb->expr()->eq('lvllt.id', ':licenceLicenceType'),
-                        $qb->expr()->eq('lvlta.id', ':licenceTrafficAreaId1')
+                        $qb->expr()->eq('lvllt.id', ':licenceLicenceType')
                     )
                 )
             );
@@ -73,31 +69,27 @@ class GoodsDisc extends AbstractRepository
             $qb->andWhere($qb->expr()->isNull('gd.ceasedDate'));
 
             $qb->setParameter('applicationLicenceType', $licenceType);
-            $qb->setParameter('licenceTrafficAreaId', TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
 
             $qb->setParameter('licenceLicenceType', $licenceType);
-            $qb->setParameter('licenceTrafficAreaId1', TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
         } else {
             // for non-NI licences we should check operator type as well
             $qb->andWhere(
                 $qb->expr()->orX(
                     //isInterm = 1
                     $qb->expr()->andX(
+                        // need to pick up discs from all traffic areas apart from NI
                         $qb->expr()->eq('lvlta.isNi', 0),
                         $qb->expr()->eq($this->alias. '.isInterim', 1),
                         $qb->expr()->eq('lvagp.id', ':operatorType'),
-                        $qb->expr()->eq('lvalt.id', ':applicationLicenceType'),
-                        // need to pick up discs from all traffic areas apart from NI
-                        $qb->expr()->neq('lvlta.id', ':licenceTrafficAreaId')
+                        $qb->expr()->eq('lvalt.id', ':applicationLicenceType')
                     ),
                     //isInterm = 0
                     $qb->expr()->andX(
+                        // need to pick up discs from all traffic areas apart from NI
                         $qb->expr()->eq('lvlta.isNi', 0),
                         $qb->expr()->eq($this->alias. '.isInterim', 0),
                         $qb->expr()->eq('lvlgp.id', ':operatorType1'),
-                        $qb->expr()->eq('lvllt.id', ':licenceLicenceType'),
-                        // need to pick up discs from all traffic areas apart from NI
-                        $qb->expr()->neq('lvlta.id', ':licenceTrafficAreaId1')
+                        $qb->expr()->eq('lvllt.id', ':licenceLicenceType')
                     )
                 )
             );
@@ -106,11 +98,9 @@ class GoodsDisc extends AbstractRepository
 
             $qb->setParameter('operatorType', LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE);
             $qb->setParameter('applicationLicenceType', $licenceType);
-            $qb->setParameter('licenceTrafficAreaId', TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
 
             $qb->setParameter('operatorType1', LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE);
             $qb->setParameter('licenceLicenceType', $licenceType);
-            $qb->setParameter('licenceTrafficAreaId1', TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
 
         }
     }
