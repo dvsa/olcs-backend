@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Licence\Withdraw;
@@ -73,18 +74,21 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
         }
 
         $this->result->merge(
-            $this->handleSideEffect(
-                CeaseGoodsDiscs::create(
-                    [
-                        'licenceVehicles' => $application->getLicence()->getLicenceVehicles()
-                    ]
-                )
-            )
+            $this->handleSideEffect(CeaseGoodsDiscs::create(['licence' => $application->getLicence()->getId()]))
         );
-        $this->clearLicenceVehicleSpecifiedDatesAndInterimApp($application->getLicence()->getLicenceVehicles());
 
-        $communityLicences = $application->getLicence()->getCommunityLics()->toArray();
-        if (!empty($communityLicences)) {
+        memdump('pre clear');
+
+        $this->getRepo('LicenceVehicle')->clearLicenceVehicleSpecifiedDateAndInterimApp(
+            $application->getLicence()->getId()
+        );
+
+        memdump('pre comm lics');
+
+        if ($application->getLicence()->getCommunityLics()->count() > 0) {
+
+            memdump('pre command');
+
             $this->result->merge(
                 $this->handleSideEffect(
                     ReturnAllCommunityLicences::create(
@@ -96,6 +100,8 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
             );
         }
 
+        memdump('pre end interim');
+
         if (
             $application->isGoods() &&
             $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
@@ -103,12 +109,18 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
             $this->result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
         }
 
+        memdump('pre s4');
+
         $this->cancelS4($application);
+
+        memdump('pre fees');
 
         $this->cancelOutstandingFees($application);
 
         $this->result->addMessage('Application ' . $application->getId() . ' withdrawn.');
 
+        memdump('after command');
+        exit;
         return $this->result;
     }
 
@@ -116,15 +128,6 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
     {
         $data = ['id' => $applicationId, 'event' => CreateSnapshotCmd::ON_WITHDRAW];
         return $this->handleSideEffect(CreateSnapshotCmd::create($data));
-    }
-
-    protected function clearLicenceVehicleSpecifiedDatesAndInterimApp($licenceVehilces)
-    {
-        foreach ($licenceVehilces as $licenceVehilce) {
-            $licenceVehilce->setSpecifiedDate(null);
-            $licenceVehilce->setInterimApplication(null);
-            $this->getRepo('LicenceVehicle')->save($licenceVehilce);
-        }
     }
 
     /**

@@ -61,13 +61,7 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
         );
 
         $this->result->merge(
-            $this->handleSideEffect(
-                CeaseGoodsDiscs::create(
-                    [
-                        'licenceVehicles' => $application->getLicence()->getLicenceVehicles()
-                    ]
-                )
-            )
+            $this->handleSideEffect(CeaseGoodsDiscs::create(['licence' => $application->getLicence()->getId()]))
         );
         $this->clearLicenceVehicleSpecifiedDatesAndInterimApp($application->getLicence()->getLicenceVehicles());
 

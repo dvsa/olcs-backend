@@ -14,6 +14,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Dvsa\Olcs\Api\Domain\DbQueryServiceManager;
 use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -48,10 +49,19 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
 
     private $references = [];
 
-    public function __construct(EntityManagerInterface $em, QueryBuilderInterface $queryBuilder)
-    {
+    /**
+     * @var DbQueryServiceManager
+     */
+    private $dbQueryManager;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        QueryBuilderInterface $queryBuilder,
+        DbQueryServiceManager $dbQueryManager
+    ) {
         $this->em = $em;
         $this->queryBuilder = $queryBuilder;
+        $this->dbQueryManager = $dbQueryManager;
     }
 
     /**
@@ -76,6 +86,14 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         }
 
         return false;
+    }
+
+    /**
+     * @return DbQueryServiceManager
+     */
+    protected function getDbQueryManager()
+    {
+        return $this->dbQueryManager;
     }
 
     protected function fetchByX($fetchBy, $args)

@@ -66,19 +66,9 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler
     private function createDiscsCommand($licence)
     {
         if ($licence->isGoods()) {
-            $commandClass = CeaseGoodsDiscs::class;
-            $dtoData = [
-                'licenceVehicles' => $licence->getLicenceVehicles(),
-            ];
-        } else {
-            $commandClass = CeasePsvDiscs::class;
-            $dtoData = [
-                'discs' => $licence->getPsvDiscs(),
-            ];
+            return CeaseGoodsDiscs::create(['licence' => $licence->getId()]);
         }
 
-        $discsCommand = $commandClass::create($dtoData);
-
-        return $discsCommand;
+        return CeasePsvDiscs::create(['discs' => $licence->getPsvDiscs()]);
     }
 }
