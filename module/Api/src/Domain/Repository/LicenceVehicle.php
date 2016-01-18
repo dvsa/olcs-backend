@@ -320,4 +320,10 @@ class LicenceVehicle extends AbstractRepository
 
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
+
+    public function clearLicenceVehicleSpecifiedDateAndInterimApp($licenceId)
+    {
+        return $this->getDbQueryManager()->get('clearLicenceVehicleSpecifiedDateAndInterimApp')
+            ->execute(['licence' => $licenceId]);
+    }
 }

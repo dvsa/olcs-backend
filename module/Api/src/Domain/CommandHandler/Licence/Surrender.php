@@ -50,18 +50,14 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
         $licence->setSurrenderedDate(new \DateTime($command->getSurrenderDate()));
 
         $result = new Result();
-        $discsCommand = $licence->isGoods() ? CeaseGoodsDiscs::class : CeasePsvDiscs::class;
 
         if ($licence->isGoods()) {
-            $params = [
-                'licenceVehicles' => $licence->getLicenceVehicles()
-            ];
+            $dto = CeaseGoodsDiscs::create(['licence' => $licence->getId()]);
         } else {
-            $params = [
-                'discs' => $licence->getPsvDiscs()
-            ];
+            $dto = CeasePsvDiscs::create(['discs' => $licence->getPsvDiscs()]);
         }
-        $result->merge($this->handleSideEffect($discsCommand::create($params)));
+
+        $result->merge($this->handleSideEffect($dto));
 
         $result->merge(
             $this->handleSideEffect(
