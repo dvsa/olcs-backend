@@ -331,7 +331,5 @@ class LicenceVehicle extends AbstractRepository
     {
         return $this->getDbQueryManager()->get('LicenceVehicle\RemoveAllForLicence')
             ->execute(['licence' => $licenceId]);
-
-        //$licenceVehicle->setRemovalDate(new \DateTime());
     }
 }
