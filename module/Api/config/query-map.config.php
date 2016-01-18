@@ -390,6 +390,7 @@ return [
     // Transport Manager
     TransferQuery\Tm\TransportManager::class => QueryHandler\Tm\TransportManager::class,
     TransferQuery\Tm\Documents::class => QueryHandler\Tm\Documents::class,
+    TransferQuery\Tm\HistoricTm::class => QueryHandler\Tm\HistoricTm::class,
 
     // Search
     TransferQuery\Search\Licence::class => QueryHandler\Search\Licence::class,
