@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Tm\TransportManager as Entity;
+use Dvsa\Olcs\Api\Entity\Tm\HistoricTm as Entity;
 
 /**
  * Historic TM Repo
