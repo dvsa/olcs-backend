@@ -73,18 +73,15 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
         }
 
         $this->result->merge(
-            $this->handleSideEffect(
-                CeaseGoodsDiscs::create(
-                    [
-                        'licenceVehicles' => $application->getLicence()->getLicenceVehicles()
-                    ]
-                )
-            )
+            $this->handleSideEffect(CeaseGoodsDiscs::create(['licence' => $application->getLicence()->getId()]))
         );
-        $this->clearLicenceVehicleSpecifiedDatesAndInterimApp($application->getLicence()->getLicenceVehicles());
 
-        $communityLicences = $application->getLicence()->getCommunityLics()->toArray();
-        if (!empty($communityLicences)) {
+        $this->getRepo('LicenceVehicle')->clearSpecifiedDateAndInterimApp(
+            $application->getLicence()->getId()
+        );
+
+        if ($application->getLicence()->getCommunityLics()->count() > 0) {
+
             $this->result->merge(
                 $this->handleSideEffect(
                     ReturnAllCommunityLicences::create(
@@ -99,7 +96,7 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
         if (
             $application->isGoods() &&
             $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
-            ) {
+        ) {
             $this->result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
         }
 
@@ -116,15 +113,6 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
     {
         $data = ['id' => $applicationId, 'event' => CreateSnapshotCmd::ON_WITHDRAW];
         return $this->handleSideEffect(CreateSnapshotCmd::create($data));
-    }
-
-    protected function clearLicenceVehicleSpecifiedDatesAndInterimApp($licenceVehilces)
-    {
-        foreach ($licenceVehilces as $licenceVehilce) {
-            $licenceVehilce->setSpecifiedDate(null);
-            $licenceVehilce->setInterimApplication(null);
-            $this->getRepo('LicenceVehicle')->save($licenceVehilce);
-        }
     }
 
     /**

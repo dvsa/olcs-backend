@@ -112,4 +112,15 @@ class CommunityLic extends AbstractRepository
             ->orderBy($this->alias . '.issueNo', 'ASC');
         return $qb->getQuery()->execute();
     }
+
+    public function expireAllForLicence($licenceId, $status = null)
+    {
+        $params = ['licence' => $licenceId];
+
+        if ($status !== null) {
+            $params['status'] = $status;
+        }
+
+        $this->getDbQueryManager()->get('CommunityLicence\ExpireAllForLicence')->execute($params);
+    }
 }

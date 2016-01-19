@@ -1,31 +1,21 @@
 <?php
 
 /**
- * RemoveLicenceVehicle.php
+ * Remove Licence Vehicle
  *
- * @author Josh Curtis <josh.curtis@valtech.co.uk>
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\Command\LicenceVehicle;
 
-use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
+use Dvsa\Olcs\Transfer\Command\AbstractCommand;
+use Dvsa\Olcs\Transfer\FieldType\Traits\Licence;
 
 /**
- * Class RemoveLicenceVehicle
+ * Remove Licence Vehicle
  *
- * Remove licence vehicle.
- *
- * @package Dvsa\Olcs\Api\Domain\Command\LicenceVehicle
- * @author Josh Curtis <josh.curtis@valtech.co.uk>
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class RemoveLicenceVehicle extends AbstractIdOnlyCommand
+final class RemoveLicenceVehicle extends AbstractCommand
 {
-    protected $licenceVehicles;
-
-    /**
-     * @return mixed
-     */
-    public function getLicenceVehicles()
-    {
-        return $this->licenceVehicles;
-    }
+    use Licence;
 }

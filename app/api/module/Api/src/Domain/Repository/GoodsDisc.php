@@ -8,6 +8,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
@@ -133,5 +134,11 @@ class GoodsDisc extends AbstractRepository
             $fetched->setIssuedDate(new DateTime('now'));
             $this->save($fetched);
         }
+    }
+
+    public function ceaseDiscsForLicence($licenceId)
+    {
+        return $this->getDbQueryManager()->get('LicenceVehicle\CeaseDiscsForLicence')
+            ->execute(['licence' => $licenceId]);
     }
 }
