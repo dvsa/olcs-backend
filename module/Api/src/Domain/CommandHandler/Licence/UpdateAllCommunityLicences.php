@@ -6,11 +6,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Domain\Command\Licence\UpdateTotalCommunityLicences as UpdateTotalCommunityLicencesCmd;
 
 /**
- * UpdateAllCommunityLicences
+ * Update All Community Licences
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  * @author Dan Eggleston <dan@stolenegg.com>
@@ -28,35 +27,18 @@ abstract class UpdateAllCommunityLicences extends AbstractCommandHandler impleme
         /* @var $licence Licence */
         $licence = $this->getRepo()->fetchById($command->getId());
 
-        $result = new \Dvsa\Olcs\Api\Domain\Command\Result();
-
         $status = $this->getRepo()->getRefdataReference($this->status);
 
-        $count = 0;
-        /* @var $communityLicence \Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic */
-        foreach ($licence->getCommunityLics() as $communityLicence) {
-            // only change status and expiry if not already expired
-            if ($communityLicence->getExpiredDate() === null) {
-                $communityLicence->changeStatusAndExpiryDate($status, new DateTime());
-                $this->getRepo('CommunityLic')->save($communityLicence);
-                $count++;
-            }
-        }
+        $this->getRepo('CommunityLic')->expireAllForLicence($licence->getId(), $this->status);
 
-        $result->addMessage(
-            sprintf(
-                '%d Community licence(s) updated to %s',
-                $count,
-                $status->getDescription()
-            )
-        );
+        $this->result->addMessage(sprintf('Community licence(s) updated to %s', $status->getDescription()));
 
-        $result->merge(
+        $this->result->merge(
             $this->handleSideEffect(
-                \Dvsa\Olcs\Api\Domain\Command\Licence\UpdateTotalCommunityLicences::create(['id' => $licence->getId()])
+                UpdateTotalCommunityLicencesCmd::create(['id' => $command->getId()])
             )
         );
 
-        return $result;
+        return $this->result;
     }
 }

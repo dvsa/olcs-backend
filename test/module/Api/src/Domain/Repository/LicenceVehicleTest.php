@@ -456,4 +456,22 @@ class LicenceVehicleTest extends RepositoryTestCase
             $this->query
         );
     }
+
+    public function testClearSpecifiedDateAndInterimApp()
+    {
+        $licenceId = 123;
+
+        $this->expectQueryWithData('LicenceVehicle\ClearSpecifiedDateAndInterimAppForLicence', ['licence' => 123]);
+
+        $this->sut->clearSpecifiedDateAndInterimApp($licenceId);
+    }
+
+    public function testRemoveAllForLicence()
+    {
+        $licenceId = 123;
+
+        $this->expectQueryWithData('LicenceVehicle\RemoveAllForLicence', ['licence' => 123]);
+
+        $this->sut->removeAllForLicence($licenceId);
+    }
 }

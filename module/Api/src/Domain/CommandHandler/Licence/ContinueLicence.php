@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -139,13 +140,7 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
     private function processGoods(Licence $licence, ContinuationDetail $continuationDetail, Result $result)
     {
         //Void any discs
-        $result->merge(
-            $this->handleSideEffect(
-                \Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs::create(
-                    ['licenceVehicles' => $licence->getLicenceVehicles()]
-                )
-            )
-        );
+        $result->merge($this->handleSideEffect(CeaseGoodsDiscs::create(['licence' => $licence->getId()])));
 
         //Create a new Goods disc for each vehicle that has a specified date (and is not ceased)
         $licencedVehicleIds = [];

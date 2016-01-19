@@ -10,15 +10,11 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\DBAL\LockMode;
 use Dvsa\Olcs\Api\Entity\Legacy\LegacyOffence;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\LegacyOffence as Repo;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\EntityRepository;
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 
 /**
  * LegacyOffence Repo test

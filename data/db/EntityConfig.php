@@ -1717,7 +1717,8 @@ return array(
         'licence_id' => array(
             'inversedBy' => array(
                 'entity' => 'Licence',
-                'property' => 'communityLic'
+                'property' => 'communityLic',
+                'fetch' => 'EXTRA_LAZY'
             )
         ),
     ),

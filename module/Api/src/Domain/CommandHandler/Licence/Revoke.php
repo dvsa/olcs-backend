@@ -41,31 +41,15 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
         $licence->setRevokedDate(new \DateTime());
 
         if ($licence->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE) {
-            $commandCeaseDiscs = CeaseGoodsDiscs::create(
-                [
-                    'licenceVehicles' => $licence->getLicenceVehicles()
-                ]
-            );
+            $commandCeaseDiscs = CeaseGoodsDiscs::create(['licence' => $licence->getId()]);
         } else {
-            $commandCeaseDiscs = CeasePsvDiscs::create(
-                [
-                    'discs' => $licence->getPsvDiscs()
-                ]
-            );
+            $commandCeaseDiscs = CeasePsvDiscs::create(['discs' => $licence->getPsvDiscs()]);
         }
 
         $result = new Result();
         $result->merge($this->handleSideEffect($commandCeaseDiscs));
 
-        $result->merge(
-            $this->handleSideEffect(
-                RemoveLicenceVehicle::create(
-                    [
-                        'licenceVehicles' => $licence->getLicenceVehicles()
-                    ]
-                )
-            )
-        );
+        $result->merge($this->handleSideEffect(RemoveLicenceVehicle::create(['licence' => $licence->getId()])));
 
         $result->merge(
             $this->handleSideEffect(

@@ -79,7 +79,7 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             CeaseGoodsDiscs::class,
-            ['licenceVehicles' => $licenceVehicles],
+            ['licence' => 69],
             (new Result())->addMessage('Goods discs ceased')
         );
 
@@ -91,7 +91,7 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
-            ['licenceVehicles' => $licenceVehicles],
+            ['licence' => 69],
             (new Result())->addMessage('Licence vehicles removed')
         );
 
@@ -168,7 +168,7 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
-            ['licenceVehicles' => $licenceVehicles],
+            ['licence' => 69],
             (new Result())->addMessage('Licence vehicles removed')
         );
 

@@ -57,19 +57,12 @@ class RefuseApplicationTest extends CommandHandlerTestCase
 
         $this->setupIsInternalUser(false);
 
-        $mockLicenceVehicle = m::mock()
-            ->shouldReceive('setSpecifiedDate')->with(null)->once()
-            ->shouldReceive('setInterimApplication')->with(null)->once()->getMock();
-
         $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
         $trafficArea->setId('TA');
 
         $licence = m::mock(Licence::class)
             ->shouldReceive('getId')
             ->andReturn(123)
-            ->shouldReceive('getLicenceVehicles')
-            ->andReturn([$mockLicenceVehicle])
-            ->twice()
             ->shouldReceive('getCommunityLics')
             ->andReturn(
                 m::mock()
@@ -107,13 +100,14 @@ class RefuseApplicationTest extends CommandHandlerTestCase
             ->once()
             ->with(m::type(Application::class));
 
-        $this->repoMap['LicenceVehicle']->shouldReceive('save')
-            ->with($mockLicenceVehicle)
+        $this->repoMap['LicenceVehicle']
+            ->shouldReceive('clearSpecifiedDateAndInterimApp')
+            ->with(123)
             ->once()
             ->getMock();
 
         $this->expectedSideEffect(Refuse::class, ['id' => 123], new Result());
-        $this->expectedSideEffect(CeaseGoodsDiscs::class, ['licenceVehicles' => [$mockLicenceVehicle]], new Result());
+        $this->expectedSideEffect(CeaseGoodsDiscs::class, ['licence' => 123], new Result());
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
@@ -155,19 +149,12 @@ class RefuseApplicationTest extends CommandHandlerTestCase
 
         $this->setupIsInternalUser(true);
 
-        $mockLicenceVehicle = m::mock()
-            ->shouldReceive('setSpecifiedDate')->with(null)->once()
-            ->shouldReceive('setInterimApplication')->with(null)->once()->getMock();
-
         $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
         $trafficArea->setId('TA');
 
         $licence = m::mock(Licence::class)
             ->shouldReceive('getId')
             ->andReturn(123)
-            ->shouldReceive('getLicenceVehicles')
-            ->andReturn([$mockLicenceVehicle])
-            ->twice()
             ->shouldReceive('getCommunityLics')
             ->andReturn(
                 m::mock()
@@ -204,13 +191,13 @@ class RefuseApplicationTest extends CommandHandlerTestCase
             ->once()
             ->with(m::type(Application::class));
 
-        $this->repoMap['LicenceVehicle']->shouldReceive('save')
-            ->with($mockLicenceVehicle)
+        $this->repoMap['LicenceVehicle']->shouldReceive('clearSpecifiedDateAndInterimApp')
+            ->with(123)
             ->once()
             ->getMock();
 
         $this->expectedSideEffect(Refuse::class, ['id' => 123], new Result());
-        $this->expectedSideEffect(CeaseGoodsDiscs::class, ['licenceVehicles' => [$mockLicenceVehicle]], new Result());
+        $this->expectedSideEffect(CeaseGoodsDiscs::class, ['licence' => 123], new Result());
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
@@ -272,6 +259,7 @@ class RefuseApplicationTest extends CommandHandlerTestCase
 
         $licence = $this->getTestingLicence()
             ->setLicenceType(new \Dvsa\Olcs\Api\Entity\System\RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $licence->setId('123');
 
         $application = $this->getTestingApplication($licence)
             ->setId(1)
@@ -281,9 +269,14 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $this->repoMap['Application']->shouldReceive('fetchById')->with(532)->andReturn($application);
         $this->repoMap['Application']->shouldReceive('save')->once()->with(m::type(Application::class));
 
+        $this->repoMap['LicenceVehicle']->shouldReceive('clearSpecifiedDateAndInterimApp')
+            ->with(123)
+            ->once()
+            ->getMock();
+
         $this->expectedSideEffect(
             CeaseGoodsDiscs::class,
-            ['licenceVehicles' => $licence->getLicenceVehicles()],
+            ['licence' => 123],
             new Result()
         );
         $this->expectedSideEffect(
@@ -315,6 +308,7 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $licence = $this->getTestingLicence()
             ->setTrafficArea($trafficArea)
             ->setLicenceType(new \Dvsa\Olcs\Api\Entity\System\RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $licence->setId('123');
 
         $application = $this->getTestingApplication($licence)
             ->setId(1)
@@ -323,6 +317,11 @@ class RefuseApplicationTest extends CommandHandlerTestCase
 
         $this->repoMap['Application']->shouldReceive('fetchById')->with(532)->andReturn($application);
         $this->repoMap['Application']->shouldReceive('save')->once()->with(m::type(Application::class));
+
+        $this->repoMap['LicenceVehicle']->shouldReceive('clearSpecifiedDateAndInterimApp')
+            ->with(123)
+            ->once()
+            ->getMock();
 
         $this->expectedSideEffect(
             CreateSnapshot::class,
@@ -341,7 +340,7 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         );
         $this->expectedSideEffect(
             CeaseGoodsDiscs::class,
-            ['licenceVehicles' => $licence->getLicenceVehicles()],
+            ['licence' => 123],
             new Result()
         );
 

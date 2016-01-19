@@ -1,9 +1,9 @@
 <?php
 
 /**
- * RemoveLicenceVehicle.php
+ * Remove Licence Vehicle
  *
- * @author Joshua Curtis <josh.curtis@valtech.co.uk>
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\LicenceVehicle;
 
@@ -11,31 +11,27 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle as Cmd;
 
 /**
- * Class RemoveLicenceVehicle
+ * Remove Licence Vehicle
  *
- * Remove vehicles.
- *
- * @package Dvsa\Olcs\Api\Domain\CommandHandler\Licence
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
 final class RemoveLicenceVehicle extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'LicenceVehicle';
 
+    /**
+     * @param Cmd $command
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
-        $licenceVehicles = $command->getLicenceVehicles()->toArray();
+        $this->getRepo()->removeAllForLicence($command->getLicence());
 
-        foreach ($licenceVehicles as $licenceVehicle) {
-            $licenceVehicle->setRemovalDate(new \DateTime());
+        $this->result->addMessage('Removed vehicles for licence.');
 
-            $this->getRepo()->save($licenceVehicle);
-        }
-
-        $result = new Result();
-        $result->addMessage('Removed vehicles for licence.');
-
-        return $result;
+        return $this->result;
     }
 }

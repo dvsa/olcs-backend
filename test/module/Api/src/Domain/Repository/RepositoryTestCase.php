@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\EntityManager;
+use Dvsa\Olcs\Api\Domain\DbQueryServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
@@ -36,6 +37,11 @@ class RepositoryTestCase extends MockeryTestCase
      */
     protected $queryBuilder;
 
+    /**
+     * @var DbQueryServiceManager
+     */
+    protected $dbQueryService;
+
     protected $query = '';
     protected $qb;
 
@@ -43,13 +49,14 @@ class RepositoryTestCase extends MockeryTestCase
     {
         $this->em = m::mock(EntityManager::class);
         $this->queryBuilder = m::mock(QueryBuilderInterface::class);
+        $this->dbQueryService = m::mock(DbQueryServiceManager::class);
 
         if ($mockSut) {
-            $this->sut = m::mock($class, [$this->em, $this->queryBuilder])
+            $this->sut = m::mock($class, [$this->em, $this->queryBuilder, $this->dbQueryService])
                 ->makePartial()
                 ->shouldAllowMockingProtectedMethods();
         } else {
-            $this->sut = new $class($this->em, $this->queryBuilder);
+            $this->sut = new $class($this->em, $this->queryBuilder, $this->dbQueryService);
         }
 
         $this->query = '';
@@ -298,5 +305,17 @@ class RepositoryTestCase extends MockeryTestCase
         }
 
         return $value;
+    }
+
+    protected function expectQueryWithData($queryName, $data = [])
+    {
+        $query = m::mock();
+        $query->shouldReceive('execute')
+            ->once()
+            ->with($data);
+
+        $this->dbQueryService->shouldReceive('get')
+            ->with($queryName)
+            ->andReturn($query);
     }
 }

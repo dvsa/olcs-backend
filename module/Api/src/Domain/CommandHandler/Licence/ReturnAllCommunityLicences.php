@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 
 /**
- * ReturnAllCommunityLicences
+ * Return All Community Licences
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
