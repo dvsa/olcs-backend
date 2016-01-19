@@ -31,6 +31,8 @@ final class PrintJob extends AbstractCommandHandler implements UploaderAwareInte
 
     protected $repoServiceName = 'Document';
 
+    protected $extraRepos = ['User'];
+
     /**
      * @param Cmd $command
      */
@@ -53,11 +55,15 @@ final class PrintJob extends AbstractCommandHandler implements UploaderAwareInte
         $fileName = $this->createTmpFile($file, $command->getId(), basename($document->getFilename()));
 
         $this->printFile($fileName, $command->getTitle(), $printer->getPrinterName());
+
+        $this->result->addMessage('Printed successfully');
+
+        return $this->result;
     }
 
     protected function createTmpFile(File $file, $prefix = '', $fileSuffix = '')
     {
-        $tmpFile = '/tmp/' . $prefix . '-' . uniqid() . '-' . $fileSuffix;
+        $tmpFile = str_replace(' ', '_', '/tmp/' . $prefix . '-' . uniqid() . '-' . $fileSuffix);
 
         if (file_put_contents($tmpFile, base64_decode($file->getContent()))) {
             return $tmpFile;
@@ -69,7 +75,7 @@ final class PrintJob extends AbstractCommandHandler implements UploaderAwareInte
     protected function printFile($fileName, $jobTitle, $destination)
     {
         $command = sprintf(
-            'lpr %s -H print01.olcs.mgt.mtpdvsa:631 -C %s -h',
+            'lpr "%s" -H print01.olcs.mgt.mtpdvsa:631 -C "%s" -h -P OLCS',
             $fileName,
             $jobTitle/*,
             //$destination*/
