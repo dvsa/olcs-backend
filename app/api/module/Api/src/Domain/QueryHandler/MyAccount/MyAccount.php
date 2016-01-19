@@ -42,6 +42,9 @@ class MyAccount extends AbstractQueryHandler implements AuthAwareInterface
                     'organisation',
                 ],
                 'roles' => ['role']
+            ],
+            [
+                'hasActivePsvLicence' => $user->hasActivePsvLicence()
             ]
         );
     }

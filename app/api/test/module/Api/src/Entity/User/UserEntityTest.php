@@ -6,6 +6,8 @@ use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 use Dvsa\Olcs\Api\Entity\User\User as Entity;
@@ -782,5 +784,21 @@ class UserEntityTest extends EntityTester
     public function testAnonUsernameReserved()
     {
         Entity::create('123456', Entity::USER_TYPE_INTERNAL, ['loginId' => 'anon']);
+    }
+
+    public function testHasActivePsvLicence()
+    {
+        $user = new Entity('pid', Entity::USER_TYPE_OPERATOR);
+        $this->assertEquals(false, $user->hasActivePsvLicence());
+
+        $org = m::mock(OrganisationEntity::class)->makePartial();
+        $org->shouldReceive('hasActiveLicences')->with(LicenceEntity::LICENCE_CATEGORY_PSV)->andReturn(true);
+
+        $orgUser = new OrganisationUserEntity();
+        $orgUser->setUser($user);
+        $orgUser->setOrganisation($org);
+
+        $user->addOrganisationUsers($orgUser);
+        $this->assertEquals(true, $user->hasActivePsvLicence());
     }
 }
