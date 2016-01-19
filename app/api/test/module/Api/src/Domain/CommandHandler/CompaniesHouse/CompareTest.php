@@ -34,6 +34,7 @@ class CompareTest extends CommandHandlerTestCase
         $this->mockApi = m::mock(CompaniesHouseApi::class);
         $this->mockedSmServices = [
             CompaniesHouseApi::class => $this->mockApi,
+            'Config' => []
         ];
         $this->sut = new Compare();
         $this->mockRepo('CompaniesHouseCompany', CompanyRepo::class);
