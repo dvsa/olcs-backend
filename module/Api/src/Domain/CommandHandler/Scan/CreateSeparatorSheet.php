@@ -83,13 +83,13 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements Trans
             'DOC_DESCRIPTION_NAME_SCAN'  => $descriptionName,
         ];
 
-        $identifier = $this->generateDocument($knownValues);
+        $documentId = $this->generateDocument($knownValues);
 
         $this->result->merge(
             $this->handleSideEffect(
                 Enqueue::create(
                     [
-                        'fileIdentifier' => $identifier,
+                        'documentId' => $documentId,
                         'jobName' => 'Scanning Separator Sheet',
                     ]
                 )
@@ -230,6 +230,6 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements Trans
 
         $this->result->merge($result);
 
-        return $result->getId('identifier');
+        return $result->getId('document');
     }
 }
