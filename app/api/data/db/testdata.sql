@@ -116,7 +116,7 @@ TRUNCATE TABLE `correspondence_inbox`; -- no inserts, not sure we need to trunca
 TRUNCATE TABLE `grace_period`;
 TRUNCATE TABLE `printer`;
 TRUNCATE TABLE `team_printer`;
-
+TRUNCATE TABLE `historic_tm`;
 
 /* Test documents */
 INSERT IGNORE INTO document(id,licence_id,bus_reg_id,description,filename,is_external,category_id,sub_category_id,
@@ -1140,6 +1140,13 @@ INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_sta
     (1,NULL,NULL,'tm_s_cur','tm_t_i',115,117,NULL,NULL,NULL,1),
     (2,NULL,NULL,'tm_s_dis','tm_t_e',116,118,NULL,NULL,NULL,1),
     (3,NULL,NULL,'tm_s_rem','tm_t_i',104,119,NULL,NULL,NULL,1);
+
+INSERT INTO `historic_tm` (`id`, `historic_id`, `forename`, `family_name`, `birth_date`, `qualification_type`,
+`certificate_no`, `lic_or_app`, `date_added`, `date_removed`, `lic_no`, `application_id`, `seen_contract`,
+`seen_qualification`, `hours_per_week`)
+VALUES
+    (1,1,'John','Smith', '1972-02-15','tm_qt_cpcsi','1','L', '2013-11-21', '2015-01-18', 'OB1234567', 1, 1, 1, 32),
+    (2,2,'Tim','Cooper', '1975-03-15','tm_qt_cpcsi','1','A', '2013-11-21', '2015-01-18', 'OB1223267', 1, 1, 1, 40);
 
 INSERT INTO `other_licence` (`id`, `application_id`,`transport_manager_id`,`lic_no`,`created_by`, `last_modified_by`,
 `created_on`, `last_modified_on`, `version`, `role`, `operating_centres`, `total_auth_vehicles`, `hours_per_week`,

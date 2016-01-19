@@ -281,6 +281,7 @@ return [
             'Country' => RepositoryFactory::class,
             'PresidingTc' => RepositoryFactory::class,
             'RefData' => RepositoryFactory::class,
+            'HistoricTm' => RepositoryFactory::class
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
