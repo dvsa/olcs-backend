@@ -14,18 +14,18 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  */
 final class Enqueue extends AbstractCommand
 {
-    protected $fileIdentifier;
+    protected $documentId;
 
     protected $jobName;
 
     /**
-     * Get file identifier
+     * Get the document ID
      *
-     * @return string
+     * @return int
      */
-    public function getFileIdentifier()
+    public function getDocumentId()
     {
-        return $this->fileIdentifier;
+        return $this->documentId;
     }
 
     /**

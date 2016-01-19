@@ -114,6 +114,9 @@ TRUNCATE TABLE `inspection_request`;
 TRUNCATE TABLE `user_role`;
 TRUNCATE TABLE `correspondence_inbox`; -- no inserts, not sure we need to truncate?
 TRUNCATE TABLE `grace_period`;
+TRUNCATE TABLE `printer`;
+TRUNCATE TABLE `team_printer`;
+
 
 /* Test documents */
 INSERT IGNORE INTO document(id,licence_id,bus_reg_id,description,filename,is_external,category_id,sub_category_id,
@@ -2259,5 +2262,9 @@ INSERT INTO `phone_contact` (`id`, `contact_details_id`, `phone_contact_type`, `
 INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, `last_modified_by`, `is_external`, `maintenance`, `safety_inspection`, `created_on`, `last_modified_on`, `olbs_key`, `removed_date`, `version`) VALUES (3,213,226,NULL,NULL,0,0,0,'2015-03-27 12:31:05',NULL,NULL,NULL,1);
 COMMIT;
 -- End: Application 9
+
+INSERT INTO `printer` (`id`, `printer_name`) VALUES (1, 'Test Printer');
+
+INSERT INTO `team_printer` (`id`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (1, 1, 1, 1, 1);
 
 SET foreign_key_checks = 1;
