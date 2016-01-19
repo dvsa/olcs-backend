@@ -208,6 +208,7 @@ return [
     TransferQuery\Bus\RegistrationHistoryList::class => QueryHandler\Bus\RegistrationHistoryList::class,
     TransferQuery\Bus\PaginatedRegistrationHistoryList::class =>
         QueryHandler\Bus\PaginatedRegistrationHistoryList::class,
+    TransferQuery\Bus\BusNoticePeriodList::class => QueryHandler\Bus\BusNoticePeriodList::class,
     Query\Bus\ByLicenceRoute::class => QueryHandler\Bus\ByLicenceRoute::class,
 
     // Bus - Ebsr
