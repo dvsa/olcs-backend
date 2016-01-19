@@ -35,6 +35,16 @@ abstract class AbstractCommandHandler extends DomainAbstractCommandHandler imple
     {
         parent::createService($serviceLocator);
         $this->api = $serviceLocator->getServiceLocator()->get(CompaniesHouseClient::class);
+        $config = $serviceLocator->getServiceLocator()->get('Config');
+        if (isset($config['companies_house_connection']['proxy'])) {
+            $proxy = explode(':', $config['companies_house_connection']['proxy']);
+            $config = array(
+                'adapter'    => 'Zend\Http\Client\Adapter\Proxy',
+                'proxy_host' => $proxy[0],
+                'proxy_port' => isset($proxy[1]) ? $proxy[1] : '',
+            );
+            $this->api->getHttpClient()->setOptions($config);
+        }
         $this->wordFilter = new \Zend\Filter\Word\UnderscoreToCamelCase();
         return $this;
     }
