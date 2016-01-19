@@ -99,7 +99,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             ->once()
             ->with(m::type(Application::class));
 
-        $this->repoMap['LicenceVehicle']->shouldReceive('clearLicenceVehicleSpecifiedDateAndInterimApp')
+        $this->repoMap['LicenceVehicle']->shouldReceive('clearSpecifiedDateAndInterimApp')
             ->with(123)
             ->once()
             ->getMock();
@@ -191,7 +191,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             ->once()
             ->with(m::type(Application::class));
 
-        $this->repoMap['LicenceVehicle']->shouldReceive('clearLicenceVehicleSpecifiedDateAndInterimApp')
+        $this->repoMap['LicenceVehicle']->shouldReceive('clearSpecifiedDateAndInterimApp')
             ->with(123)
             ->once()
             ->getMock();
@@ -271,7 +271,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $this->repoMap['Application']->shouldReceive('fetchById')->with(532)->andReturn($application);
         $this->repoMap['Application']->shouldReceive('save')->once()->with(m::type(Application::class));
 
-        $this->repoMap['LicenceVehicle']->shouldReceive('clearLicenceVehicleSpecifiedDateAndInterimApp')
+        $this->repoMap['LicenceVehicle']->shouldReceive('clearSpecifiedDateAndInterimApp')
             ->with(123)
             ->once()
             ->getMock();
@@ -319,7 +319,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $this->repoMap['Application']->shouldReceive('fetchById')->with(532)->andReturn($application);
         $this->repoMap['Application']->shouldReceive('save')->once()->with(m::type(Application::class));
 
-        $this->repoMap['LicenceVehicle']->shouldReceive('clearLicenceVehicleSpecifiedDateAndInterimApp')
+        $this->repoMap['LicenceVehicle']->shouldReceive('clearSpecifiedDateAndInterimApp')
             ->with(123)
             ->once()
             ->getMock();

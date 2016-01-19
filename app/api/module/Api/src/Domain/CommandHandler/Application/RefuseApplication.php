@@ -76,7 +76,7 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
             $this->handleSideEffect(CeaseGoodsDiscs::create(['licence' => $application->getLicence()->getId()]))
         );
 
-        $this->getRepo('LicenceVehicle')->clearLicenceVehicleSpecifiedDateAndInterimApp(
+        $this->getRepo('LicenceVehicle')->clearSpecifiedDateAndInterimApp(
             $application->getLicence()->getId()
         );
 

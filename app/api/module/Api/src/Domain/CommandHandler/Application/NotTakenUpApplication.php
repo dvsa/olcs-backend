@@ -64,7 +64,7 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
             $this->handleSideEffect(CeaseGoodsDiscs::create(['licence' => $application->getLicence()->getId()]))
         );
 
-        $this->getRepo('LicenceVehicle')->clearLicenceVehicleSpecifiedDateAndInterimApp(
+        $this->getRepo('LicenceVehicle')->clearSpecifiedDateAndInterimApp(
             $application->getLicence()->getId()
         );
 

@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository\Query\LicenceVehicle;
 
 use Dvsa\Olcs\Api\Domain\Repository\Query\AbstractRawQuery;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 
 /**
@@ -28,8 +29,10 @@ class RemoveAllForLicence extends AbstractRawQuery
      */
     protected function getParams()
     {
+        $today = new DateTime();
+
         return [
-            'removalDate' => date('Y-m-d H:i:s')
+            'removalDate' => $today->format('Y-m-d H:i:s')
         ];
     }
 }
