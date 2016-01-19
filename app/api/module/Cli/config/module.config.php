@@ -148,6 +148,8 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\RequestMap::class,
             Queue::TYPE_EMAIL
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send::class,
+            Queue::TYPE_PRINT
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob::class,
         ],
         'factories' => [
             'que_typ_cpid_export_csv'
