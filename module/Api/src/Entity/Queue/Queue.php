@@ -44,6 +44,7 @@ class Queue extends AbstractQueue
     const TYPE_CPMS_REPORT_DOWNLOAD = 'que_typ_cpms_report_download';
     const TYPE_EBSR_REQUEST_MAP = 'que_typ_ebsr_request_map';
     const TYPE_EMAIL = 'que_typ_email';
+    const TYPE_PRINT = 'que_typ_print';
 
     protected $types = [
         self::TYPE_COMPANIES_HOUSE_INITIAL,
@@ -54,7 +55,8 @@ class Queue extends AbstractQueue
         self::TYPE_TM_SNAPSHOT,
         self::TYPE_CPMS_REPORT_DOWNLOAD,
         self::TYPE_EBSR_REQUEST_MAP,
-        self::TYPE_EMAIL
+        self::TYPE_EMAIL,
+        self::TYPE_PRINT,
     ];
 
     public function incrementAttempts()
