@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository\Query\CommunityLicence;
 
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Domain\Repository\Query\AbstractRawQuery;
 
@@ -30,9 +31,11 @@ class ExpireAllForLicence extends AbstractRawQuery
      */
     protected function getParams()
     {
+        $today = new DateTime();
+
         return [
             'status' => CommunityLic::STATUS_EXPIRED,
-            'expiredDate' => date('Y-m-d H:i:s')
+            'expiredDate' => $today->format('Y-m-d H:i:s')
         ];
     }
 }

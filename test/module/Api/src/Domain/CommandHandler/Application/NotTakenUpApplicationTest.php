@@ -122,7 +122,7 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             ->with(m::type(Application::class));
 
         $this->repoMap['LicenceVehicle']
-            ->shouldReceive('clearLicenceVehicleSpecifiedDateAndInterimApp')
+            ->shouldReceive('clearSpecifiedDateAndInterimApp')
             ->with(123)
             ->once()
             ->getMock();
@@ -248,7 +248,7 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             ->with(m::type(Application::class));
 
         $this->repoMap['LicenceVehicle']
-            ->shouldReceive('clearLicenceVehicleSpecifiedDateAndInterimApp')
+            ->shouldReceive('clearSpecifiedDateAndInterimApp')
             ->with(123)
             ->once()
             ->getMock();

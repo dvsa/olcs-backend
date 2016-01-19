@@ -233,4 +233,13 @@ class GoodsDiscTest extends RepositoryTestCase
 
         $this->assertNull($sut->setIsPrintingOffAndAssignNumbers([$mockDisc], 1));
     }
+
+    public function testCeaseDiscsForLicence()
+    {
+        $licenceId = 123;
+
+        $this->expectQueryWithData('LicenceVehicle\CeaseDiscsForLicence', ['licence' => 123]);
+
+        $this->sut->ceaseDiscsForLicence($licenceId);
+    }
 }

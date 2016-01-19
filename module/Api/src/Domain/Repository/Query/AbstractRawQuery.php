@@ -91,11 +91,7 @@ abstract class AbstractRawQuery implements QueryInterface, FactoryInterface
         try {
             $statement = $this->connection->prepare($query);
 
-            foreach ($params as $param => $value) {
-                $statement->bindValue($param, $value);
-            }
-
-            return $statement->execute();
+            return $statement->execute($params);
         } catch (\Exception $ex) {
             throw new RuntimeException('An unexpected error occurred while running query: ' . get_class($this));
         }
@@ -165,10 +161,10 @@ abstract class AbstractRawQuery implements QueryInterface, FactoryInterface
      */
     private function buildQueryFromTemplate($template)
     {
-       return preg_replace_callback(
-           '/\{(?P<alias>[a-zA-Z]+)(?:\.(?P<field>[a-zA-Z]+))?\}/',
-           [$this, 'replaceTableOrField'],
-           $template
+        return preg_replace_callback(
+            '/\{(?P<alias>[a-zA-Z]+)(?:\.(?P<field>[a-zA-Z]+))?\}/',
+            [$this, 'replaceTableOrField'],
+            $template
         );
     }
 

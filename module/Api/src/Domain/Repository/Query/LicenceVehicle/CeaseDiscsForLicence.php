@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository\Query\LicenceVehicle;
 
 use Dvsa\Olcs\Api\Domain\Repository\Query\AbstractRawQuery;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 
@@ -33,8 +34,10 @@ class CeaseDiscsForLicence extends AbstractRawQuery
      */
     protected function getParams()
     {
+        $today = new DateTime();
+
         return [
-            'ceasedDate' => date('Y-m-d H:i:s')
+            'ceasedDate' => $today->format('Y-m-d H:i:s')
         ];
     }
 }
