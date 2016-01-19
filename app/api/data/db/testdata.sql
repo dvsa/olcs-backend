@@ -1145,8 +1145,19 @@ INSERT INTO `historic_tm` (`id`, `historic_id`, `forename`, `family_name`, `birt
 `certificate_no`, `lic_or_app`, `date_added`, `date_removed`, `lic_no`, `application_id`, `seen_contract`,
 `seen_qualification`, `hours_per_week`)
 VALUES
-    (1,1,'John','Smith', '1972-02-15','tm_qt_cpcsi','1','L', '2013-11-21', '2015-01-18', 'OB1234567', 1, 1, 1, 32),
-    (2,2,'Tim','Cooper', '1975-03-15','tm_qt_cpcsi','1','A', '2013-11-21', '2015-01-18', 'OB1223267', 1, 1, 1, 40);
+(1,1,'ANON1000','Surname1000','1965-10-11','EX2               ',NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),
+(2,2,'ANON10000','Surname10000','1920-10-11','EX2               ',NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),
+(3,3,'ANON100000','Surname100000','1909-10-11','EX2               ','*********','L',NULL,'2006-12-13','PM0000002 ',NULL,0,0,0),
+(4,3,'ANON100001','Surname100001','1959-10-11','EX2               ','*********','A','2006-11-22',NULL,'PM1007722 ',118596,1,1,0),
+(5,3,'ANON100002','Surname100002','1900-01-01','EX2               ','*********','L','2006-12-06','2008-11-26','PM1007722 ',NULL,0,0,0),
+(6,4,'ANON100003','Surname100003','1912-10-11','RSA2              ',NULL,'L','2004-11-19',NULL,'PM0002188 ',NULL,0,0,0),
+(7,4,'ANON100004','Surname100004','1999-10-11','RSA2              ',NULL,'L','2004-12-03',NULL,'PM0001544 ',NULL,0,0,10),
+(8,4,'ANON100005','Surname100005','1910-10-11','RSA2              ',NULL,'L','2005-09-02',NULL,'OM0028724 ',NULL,0,0,20),
+(9,5,'ANON100006','Surname100006','1916-10-11','OCR2              ','NOT KNOWN','L',NULL,'2011-04-08','PM0000004 ',NULL,0,0,0),
+(10,5,'ANON100007','Surname100007','1912-10-11','OCR2              ','NOT KNOWN','L','2005-11-18',NULL,'PM0001031 ',NULL,0,0,10),
+(11,5,'ANON100008','Surname100008','1949-10-11','OCR2              ','NOT KNOWN','A','2003-06-11',NULL,'PM0002607 ',44038,1,1,38),
+(12,5,'ANON100009','Surname100009','1946-10-11','OCR2              ','NOT KNOWN','A','2005-10-28',NULL,'PM0001031 ',97004,1,1,10),
+(13,5,'ANON10001','Surname10001','1921-10-11','OCR2              ','NOT KNOWN','L','2003-08-11',NULL,'PM0002607 ',NULL,1,1,38);
 
 INSERT INTO `other_licence` (`id`, `application_id`,`transport_manager_id`,`lic_no`,`created_by`, `last_modified_by`,
 `created_on`, `last_modified_on`, `version`, `role`, `operating_centres`, `total_auth_vehicles`, `hours_per_week`,
