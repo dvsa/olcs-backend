@@ -60,6 +60,7 @@ class Licence extends AbstractQueryHandler
             $licence,
             [],
             [
+                'tradingNames' => $licence->getAllTradingNames(),
                 'licenceContactDetails' => [
                     'phoneContacts' => !empty($licence->getCorrespondenceCd()) ? $this->resultList(
                         $licence->getCorrespondenceCd()->getPhoneContacts(),
@@ -93,7 +94,6 @@ class Licence extends AbstractQueryHandler
                                 'phoneContactType'
                             ]
                         ],
-                        'tradingNames',
                         'leadTcArea' => [
                             'contactDetails' => [
                                 'person'
