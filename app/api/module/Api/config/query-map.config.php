@@ -210,6 +210,7 @@ return [
         QueryHandler\Bus\PaginatedRegistrationHistoryList::class,
     TransferQuery\Bus\BusNoticePeriodList::class => QueryHandler\Bus\BusNoticePeriodList::class,
     Query\Bus\ByLicenceRoute::class => QueryHandler\Bus\ByLicenceRoute::class,
+    TransferQuery\Bus\BusServiceTypeList::class => QueryHandler\Bus\BusServiceTypeList::class,
 
     // Bus - Ebsr
     TransferQuery\Bus\Ebsr\TxcInboxList::class => QueryHandler\Bus\Ebsr\TxcInboxList::class,
