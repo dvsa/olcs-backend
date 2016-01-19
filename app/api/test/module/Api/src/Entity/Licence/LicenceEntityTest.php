@@ -479,6 +479,34 @@ class LicenceEntityTest extends EntityTester
         $this->assertEquals('Bar', $licence->getTradingName());
     }
 
+    public function testGetAllTradingNames()
+    {
+        $tradingName1 = m::mock(TradingNameEntity::class)
+            ->makePartial()
+            ->setName('Foo')
+            ->setCreatedOn('2015-06-01 00:00:00');
+        $tradingName2 = m::mock(TradingNameEntity::class)
+            ->makePartial()
+            ->setName('Bar')
+            ->setCreatedOn('2015-06-01 00:00:00');
+        $tradingName3 = m::mock(TradingNameEntity::class)
+            ->makePartial()
+            ->setName('Baz')
+            ->setCreatedOn('2015-07-01 00:00:00');
+        $tradingNames = new ArrayCollection();
+        $tradingNames->add($tradingName1);
+        $tradingNames->add($tradingName2);
+        $tradingNames->add($tradingName3);
+
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence
+            ->shouldReceive('getTradingNames')
+            ->once()
+            ->andReturn($tradingNames);
+
+        $this->assertEquals(['Bar', 'Foo', 'Baz'], $licence->getAllTradingNames());
+    }
+
     public function testGetOpenComplaintsCount()
     {
         $case1 = m::mock(CaseEntity::class)->makePartial();
