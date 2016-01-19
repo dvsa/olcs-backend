@@ -54,13 +54,11 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
 
         $template = $this->templateParams[$command->getType()]['template'];
 
-        $identifier = $this->generateDocument($template, $queryData, $knownValues);
+        $documentId = $this->generateDocument($template, $queryData, $knownValues);
 
         $printQueue = EnqueueFileCommand::create(
             [
-                'fileIdentifier' => $identifier,
-                // @note not working for now, just migrated, will be implemented in future stories
-                'options' => [PrintSchedulerInterface::OPTION_DOUBLE_SIDED],
+                'documentId' => $documentId,
                 'jobName' => $command->getType() . ' Disc List'
             ]
         );
@@ -88,6 +86,6 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
 
         $this->result->merge($result);
 
-        return $result->getId('identifier');
+        return $result->getId('document');
     }
 }

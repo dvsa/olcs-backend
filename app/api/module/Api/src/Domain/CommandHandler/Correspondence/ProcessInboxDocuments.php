@@ -111,15 +111,11 @@ final class ProcessInboxDocuments extends AbstractCommandHandler implements Emai
             $licence = $row->getLicence();
             $document = $row->getDocument();
 
-            $file = new File();
-            $file->fromData(
-                ['identifier' => $document->getIdentifier()]
-            );
             $result->addMessage('Printing document for licence ' . $licence->getId());
 
             $printQueue = EnqueueFileCommand::create(
                 [
-                    'fileIdentifier' => $file->getIdentifier(),
+                    'documentId' => $document->getId(),
                     'jobName' => $document->getDescription()
                 ]
             );
