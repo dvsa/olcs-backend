@@ -5,7 +5,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Si\Applied;
 
-use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\Applied\Update as UpdatePenalty;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
@@ -51,9 +50,9 @@ class UpdateTest extends CommandHandlerTestCase
             [
                 'id' => $penaltyId,
                 'siPenaltyType' => $siPenaltyType,
+                'imposed' => $imposed,
                 'startDate' => $startDate,
                 'endDate' => $endDate,
-                'imposed' => $imposed,
                 'imposedReason' => $imposedReason
             ]
         );

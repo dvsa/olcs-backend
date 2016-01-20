@@ -34,7 +34,7 @@ class SiPenaltyEntityTest extends EntityTester
         $imposed = 'Y';
         $reasonNotImposed = 'reason not imposed';
 
-        $entity = new Entity($si, $penaltyType, $startDate, $endDate, $imposed, $reasonNotImposed);
+        $entity = new Entity($si, $penaltyType, $imposed, $startDate, $endDate, $reasonNotImposed);
 
         $this->assertEquals($si, $entity->getSeriousInfringement());
         $this->assertEquals($penaltyType, $entity->getSiPenaltyType());
