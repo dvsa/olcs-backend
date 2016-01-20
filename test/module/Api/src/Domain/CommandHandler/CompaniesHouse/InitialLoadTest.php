@@ -29,8 +29,7 @@ class InitialLoadTest extends CommandHandlerTestCase
     {
         $this->mockApi = m::mock(CompaniesHouseApi::class);
         $this->mockedSmServices = [
-            CompaniesHouseApi::class => $this->mockApi,
-            'Config' => []
+            CompaniesHouseApi::class => $this->mockApi
         ];
         $this->sut = new InitialLoad();
         $this->mockRepo('CompaniesHouseCompany', Repo::class);
