@@ -16,12 +16,12 @@ class EnqueueTest extends PHPUnit_Framework_TestCase
     {
         $command = Enqueue::create(
             [
-                'fileIdentifier' => 'FILE_ID',
+                'documentId' => 12,
                 'jobName' => 'JOB_NAME',
             ]
         );
 
-        $this->assertEquals('FILE_ID', $command->getFileIdentifier());
+        $this->assertEquals(12, $command->getDocumentId());
         $this->assertEquals('JOB_NAME', $command->getJobName());
     }
 }

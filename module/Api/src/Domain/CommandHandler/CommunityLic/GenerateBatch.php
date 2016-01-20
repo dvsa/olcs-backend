@@ -58,9 +58,7 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
 
             $printQueue = EnqueueFileCommand::create(
                 [
-                    'fileIdentifier' => $docId,
-                    // @note not working for now, just migrated, will be implemented in future stories
-                    'options' => [PrintSchedulerInterface::OPTION_DOUBLE_SIDED],
+                    'documentId' => $docId,
                     'jobName' => 'Community Licence'
                 ]
             );
@@ -89,7 +87,7 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
 
         $this->result->merge($result);
 
-        return $result->getId('identifier');
+        return $result->getId('document');
     }
 
     /**

@@ -43,7 +43,7 @@ class CreatePsvVehicleListForDiscsTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $printData = [
-            'fileIdentifier' => 'id1',
+            'documentId' => 'id1',
             'jobName' => 'New disc notification'
         ];
 
@@ -74,8 +74,7 @@ class CreatePsvVehicleListForDiscsTest extends CommandHandlerTestCase
         ];
 
         $createDocResult = new Result();
-        $createDocResult->addId('doc', 1);
-        $createDocResult->addId('identifier', 'id1');
+        $createDocResult->addId('document', 'id1');
         $createDocResult->addMessage('message');
         $this->expectedSideEffect(GenerateAndStore::class, $createDocData, $createDocResult);
 
@@ -83,8 +82,7 @@ class CreatePsvVehicleListForDiscsTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'doc' => 1,
-                'identifier' => 'id1'
+                'document' => 'id1'
             ],
             'messages' => [
                 'message'

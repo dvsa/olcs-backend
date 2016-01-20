@@ -156,7 +156,7 @@ class DispatchDocumentTest extends CommandHandlerTestCase
         $this->expectedSideEffect(CreateDocumentSpecific::class, $command->getArrayCopy(), $result1);
 
         $data = [
-            'fileIdentifier' => 'ABC123',
+            'documentId' => 123,
             'jobName' => 'foo'
         ];
         $result2 = new Result();
@@ -216,7 +216,7 @@ class DispatchDocumentTest extends CommandHandlerTestCase
         $this->expectedSideEffect(CreateDocumentSpecific::class, $command->getArrayCopy(), $result1);
 
         $data = [
-            'fileIdentifier' => 'ABC123',
+            'documentId' => 123,
             'jobName' => 'foo'
         ];
         $result2 = new Result();

@@ -41,7 +41,7 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $data = [
-            'fileIdentifier' => 123,
+            'documentId' => 123,
             'jobName' => 'Goods Vehicle List'
         ];
         $result1 = new Result();
@@ -69,14 +69,14 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
             'issuedDate' => null
         ];
         $result2 = new Result();
-        $result2->addId('identifier', 123);
+        $result2->addId('document', 123);
         $this->expectedSideEffect(GenerateAndStore::class, $data, $result2);
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [
-                'identifier' => 123
+                'document' => 123
             ],
             'messages' => []
         ];
@@ -93,7 +93,7 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $data = [
-            'fileIdentifier' => 123,
+            'documentId' => 123,
             'jobName' => 'New disc notification'
         ];
         $result1 = new Result();
@@ -121,14 +121,14 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
             'issuedDate' => null
         ];
         $result2 = new Result();
-        $result2->addId('identifier', 123);
+        $result2->addId('document', 123);
         $this->expectedSideEffect(GenerateAndStore::class, $data, $result2);
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [
-                'identifier' => 123
+                'document' => 123
             ],
             'messages' => []
         ];
