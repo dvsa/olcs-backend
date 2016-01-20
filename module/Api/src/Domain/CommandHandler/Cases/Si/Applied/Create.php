@@ -41,13 +41,19 @@ final class Create extends AbstractCommandHandler
         $case = $this->getRepo('Cases')->fetchById($command->getCase());
         $si = $case->getSeriousInfringements()->first(); //there will only ever be one si
         $siPenaltyType = $this->getRepo()->getReference(SiPenaltyTypeEntity::class, $command->getSiPenaltyType());
+        $startDate
+            = ($command->getStartDate() !== null)
+                ? \DateTime::createFromFormat(self::DATE_FORMAT, $command->getStartDate()) : null;
+        $endDate
+            = ($command->getEndDate() !== null)
+                ? \DateTime::createFromFormat(self::DATE_FORMAT, $command->getEndDate()) : null;
 
         $penalty = new SiPenaltyEntity(
             $si,
             $siPenaltyType,
-            \DateTime::createFromFormat(self::DATE_FORMAT, $command->getStartDate()),
-            \DateTime::createFromFormat(self::DATE_FORMAT, $command->getEndDate()),
             $command->getImposed(),
+            $startDate,
+            $endDate,
             $command->getReasonNotImposed()
         );
 
