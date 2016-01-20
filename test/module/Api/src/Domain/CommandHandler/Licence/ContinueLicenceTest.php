@@ -277,7 +277,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs::class,
-            ['licenceVehicles' => [$lv1, $lv2]],
+            ['licence' => 717],
             new Result()
         );
         $this->expectedSideEffect(
@@ -332,7 +332,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs::class,
-            ['licenceVehicles' => [$lv1, $lv2]],
+            ['licence' => 717],
             new Result()
         );
         $this->expectedSideEffect(

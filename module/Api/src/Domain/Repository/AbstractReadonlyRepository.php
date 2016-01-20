@@ -14,6 +14,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Dvsa\Olcs\Api\Domain\DbQueryServiceManager;
 use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -48,10 +49,55 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
 
     private $references = [];
 
-    public function __construct(EntityManagerInterface $em, QueryBuilderInterface $queryBuilder)
-    {
+    /**
+     * @var DbQueryServiceManager
+     */
+    private $dbQueryManager;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        QueryBuilderInterface $queryBuilder,
+        DbQueryServiceManager $dbQueryManager
+    ) {
         $this->em = $em;
         $this->queryBuilder = $queryBuilder;
+        $this->dbQueryManager = $dbQueryManager;
+    }
+
+    /**
+     * Disables SoftDeleteable filter, if enabled.
+     * If list of entities is provided, the filter will only be disabled for those classes.
+     *
+     * @param array $entities List of class names
+     *
+     * @return void
+     */
+    public function disableSoftDeleteable(array $entities = null)
+    {
+        if ($this->getEntityManager()->getFilters()->isEnabled('soft-deleteable')) {
+            if (!empty($entities)) {
+                // disable soft-deleteable filtering for given entities only
+                $filter = $this->getEntityManager()->getFilters()->getFilter('soft-deleteable');
+
+                foreach ($entities as $entity) {
+                    $filter->disableForEntity($entity);
+                }
+            } else {
+                // disable soft-deleteable filtering for everything
+                $this->getEntityManager()->getFilters()->disable('soft-deleteable');
+            }
+        }
+    }
+
+    /**
+     * Enables SoftDeleteable filter
+     *
+     * @return void
+     */
+    public function enableSoftDeleteable()
+    {
+        // enable soft-deleteable filtering
+        $this->getEntityManager()->getFilters()->enable('soft-deleteable');
     }
 
     /**
@@ -76,6 +122,14 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         }
 
         return false;
+    }
+
+    /**
+     * @return DbQueryServiceManager
+     */
+    protected function getDbQueryManager()
+    {
+        return $this->dbQueryManager;
     }
 
     protected function fetchByX($fetchBy, $args)

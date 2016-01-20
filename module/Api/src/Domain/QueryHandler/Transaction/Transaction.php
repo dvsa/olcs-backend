@@ -9,7 +9,6 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Transaction;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as Entity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
 
@@ -24,7 +23,10 @@ class Transaction extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        $transaction = $this->getRepo()->fetchUsingId($query);
+        $repo = $this->getRepo();
+        $repo->disableSoftDeleteable();
+
+        $transaction = $repo->fetchUsingId($query);
 
         return $this->result(
             $transaction,

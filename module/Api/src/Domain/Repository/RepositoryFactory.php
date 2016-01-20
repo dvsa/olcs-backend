@@ -28,7 +28,11 @@ class RepositoryFactory implements FactoryInterface
         $class = __NAMESPACE__ . '\\' . $requestedName;
         $sm = $serviceLocator->getServiceLocator();
 
-        $repo = new $class($sm->get('doctrine.entitymanager.orm_default'), $sm->get('QueryBuilder'));
+        $repo = new $class(
+            $sm->get('doctrine.entitymanager.orm_default'),
+            $sm->get('QueryBuilder'),
+            $sm->get('DbQueryServiceManager')
+        );
 
         $repo->initService($serviceLocator);
 

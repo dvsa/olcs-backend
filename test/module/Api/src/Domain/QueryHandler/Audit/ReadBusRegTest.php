@@ -36,7 +36,10 @@ class ReadBusRegTest extends QueryHandlerTestCase
         $mockRecord = m::mock();
         $mockRecord->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
 
-        $this->repoMap['BusRegReadAudit']->shouldReceive('fetchList')
+        $this->repoMap['BusRegReadAudit']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
+            ->shouldReceive('fetchList')
             ->once()
             ->with($query, Query::HYDRATE_OBJECT)
             ->andReturn([$mockRecord])

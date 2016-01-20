@@ -21,7 +21,6 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Licence\NotTakenUp;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Delete;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Domain\Command\CommunityLic\Void;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
@@ -63,19 +62,12 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
 
         $this->setupIsInternalUser(false);
 
-        $mockLicenceVehicle = m::mock()
-            ->shouldReceive('setSpecifiedDate')->with(null)->once()
-            ->shouldReceive('setInterimApplication')->with(null)->once()->getMock();
-
         $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
         $trafficArea->setId('TA');
 
         $licence = m::mock(Licence::class)
             ->shouldReceive('getId')
             ->andReturn(123)
-            ->shouldReceive('getLicenceVehicles')
-            ->andReturn([$mockLicenceVehicle])
-            ->times(3)
             ->shouldReceive('getTrafficArea')->with()->once()->andReturn($trafficArea)
             ->getMock();
 
@@ -129,8 +121,9 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             ->once()
             ->with(m::type(Application::class));
 
-        $this->repoMap['LicenceVehicle']->shouldReceive('save')
-            ->with($mockLicenceVehicle)
+        $this->repoMap['LicenceVehicle']
+            ->shouldReceive('clearSpecifiedDateAndInterimApp')
+            ->with(123)
             ->once()
             ->getMock();
 
@@ -143,7 +136,7 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             CeaseGoodsDiscs::class,
             [
-                'licenceVehicles' => [$mockLicenceVehicle],
+                'licence' => 123,
             ],
             new Result()
         );
@@ -151,7 +144,7 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
             [
-                'licenceVehicles' => [$mockLicenceVehicle],
+                'licence' => 123,
                 'id' => null
             ],
             new Result()
@@ -195,19 +188,12 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
 
         $this->setupIsInternalUser(true);
 
-        $mockLicenceVehicle = m::mock()
-            ->shouldReceive('setSpecifiedDate')->with(null)->once()
-            ->shouldReceive('setInterimApplication')->with(null)->once()->getMock();
-
         $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
         $trafficArea->setId('TA');
 
         $licence = m::mock(Licence::class)
             ->shouldReceive('getId')
             ->andReturn(123)
-            ->shouldReceive('getLicenceVehicles')
-            ->andReturn([$mockLicenceVehicle])
-            ->times(3)
             ->shouldReceive('getTrafficArea')->with()->once()->andReturn($trafficArea)
             ->getMock();
 
@@ -261,8 +247,9 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             ->once()
             ->with(m::type(Application::class));
 
-        $this->repoMap['LicenceVehicle']->shouldReceive('save')
-            ->with($mockLicenceVehicle)
+        $this->repoMap['LicenceVehicle']
+            ->shouldReceive('clearSpecifiedDateAndInterimApp')
+            ->with(123)
             ->once()
             ->getMock();
 
@@ -275,7 +262,7 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             CeaseGoodsDiscs::class,
             [
-                'licenceVehicles' => [$mockLicenceVehicle],
+                'licence' => 123,
             ],
             new Result()
         );
@@ -283,7 +270,7 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
             [
-                'licenceVehicles' => [$mockLicenceVehicle],
+                'licence' => 123,
                 'id' => null
             ],
             new Result()

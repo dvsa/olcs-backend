@@ -22,6 +22,7 @@ class Fee extends AbstractQueryHandler
     {
         /** @var FeeRepository $repo */
         $repo = $this->getRepo();
+        $repo->disableSoftDeleteable();
 
         $fee = $repo->fetchUsingId($query);
 

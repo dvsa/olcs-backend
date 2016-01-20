@@ -46,29 +46,14 @@ class ReturnAllCommunityLicencesTest extends CommandHandlerTestCase
 
         $licence = new Licence(new \Dvsa\Olcs\Api\Entity\Organisation\Organisation(), new RefData());
         $licence->setId(608);
-        $comLic1 = new CommunityLic();
-        $comLic2 = new CommunityLic();
-        $comLic2->setExpiredDate(new DateTime());
-        $comLic3 = new CommunityLic();
-        $licence->setCommunityLics(new ArrayCollection([$comLic1, $comLic2, $comLic3]));
 
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(608)
             ->andReturn($licence);
 
-        $this->repoMap['CommunityLic']->shouldReceive('save')->with($comLic1)->andReturnUsing(
-            function (CommunityLic $communityLic) {
-                $this->assertSame($this->refData[CommunityLic::STATUS_RETURNDED], $communityLic->getStatus());
-                $this->assertEquals(new DateTime(), $communityLic->getExpiredDate());
-            }
-        );
-
-        $this->repoMap['CommunityLic']->shouldReceive('save')->with($comLic3)->andReturnUsing(
-            function (CommunityLic $communityLic) {
-                $this->assertSame($this->refData[CommunityLic::STATUS_RETURNDED], $communityLic->getStatus());
-                $this->assertEquals(new DateTime(), $communityLic->getExpiredDate());
-            }
-        );
+        $this->repoMap['CommunityLic']->shouldReceive('expireAllForLicence')
+            ->with(608, CommunityLic::STATUS_RETURNDED)
+            ->once();
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Licence\UpdateTotalCommunityLicences::class,
@@ -81,7 +66,7 @@ class ReturnAllCommunityLicencesTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                '2 Community licence(s) updated to returned',
+                'Community licence(s) updated to returned',
                 'UpdateTotalCommunityLicences',
             ]
         ];

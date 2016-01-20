@@ -69,7 +69,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
             ->andReturn($mockLicence);
 
         $docResult = new Result();
-        $docResult->addId('identifier', 1);
+        $docResult->addId('document', 12);
         $docResult->addMessage('Create Document');
         $data = [
             'template' => $template,
@@ -92,7 +92,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             EnqueueFileCmd::class,
             [
-                'fileIdentifier' => 1,
+                'documentId' => 12,
                 'jobName' => 'Community Licence'
             ],
             $printResult
@@ -103,7 +103,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
         $expected = [
             'id' => [
                 'file' => 1,
-                'identifier' => 1
+                'document' => 12
             ],
             'messages' => [
                 'Create Document',
@@ -153,7 +153,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
             ->andReturn($mockApplication);
 
         $docResult = new Result();
-        $docResult->addId('identifier', 1);
+        $docResult->addId('document', 13);
         $docResult->addMessage('Create Document');
         $data = [
             'template' => $template,
@@ -176,7 +176,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             EnqueueFileCmd::class,
             [
-                'fileIdentifier' => 1,
+                'documentId' => 13,
                 'jobName' => 'Community Licence'
             ],
             $printResult
@@ -187,7 +187,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
         $expected = [
             'id' => [
                 'file' => 1,
-                'identifier' => 1
+                'document' => 13,
             ],
             'messages' => [
                 'Create Document',

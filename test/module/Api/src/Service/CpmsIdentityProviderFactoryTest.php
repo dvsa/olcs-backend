@@ -114,7 +114,7 @@ class CpmsIdentityProviderFactoryTest extends MockeryTestCase
             ]
         );
 
-        $this->assertEquals('99', $service->getUserId());
+        $this->assertEquals(sha1('99'), $service->getUserId());
         $this->assertEquals(4321, $service->getClientId());
         $this->assertEquals('secret', $service->getClientSecret());
     }

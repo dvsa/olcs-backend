@@ -33,9 +33,9 @@ final class CreateVehicleListDocument extends AbstractCommandHandler implements 
             $description = 'Goods Vehicle List';
         }
 
-        $identifier = $this->generateDocument($template, $command, $description);
+        $documentId = $this->generateDocument($template, $command, $description);
 
-        $printData = ['fileIdentifier' => $identifier, 'jobName' => $description];
+        $printData = ['documentId' => $documentId, 'jobName' => $description];
         $this->result->merge($this->handleSideEffect(Enqueue::create($printData)));
 
         return $this->result;
@@ -60,6 +60,6 @@ final class CreateVehicleListDocument extends AbstractCommandHandler implements 
 
         $this->result->merge($result);
 
-        return $result->getId('identifier');
+        return $result->getId('document');
     }
 }

@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
 
 /**
  * Licence Entity
@@ -456,6 +457,34 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         );
 
         return array_shift($tradingNames)->getName();
+    }
+
+    /**
+     * Helper method to get the all trading names from a licence
+     * (Sorts trading names by createdOn date then alphabetically)
+     *
+     * @return string
+     */
+    public function getAllTradingNames()
+    {
+        $iterator = (array) $this->getTradingNames()->getIterator();
+
+        usort(
+            $iterator,
+            function ($a, $b) {
+                if ($a->getCreatedOn() == $b->getCreatedOn()) {
+                    return strcasecmp($a->getName(), $b->getName());
+                }
+                return strtotime($a->getCreatedOn()) < strtotime($b->getCreatedOn()) ? -1 : 1;
+            }
+        );
+
+        $data = [];
+        /** @var TradingNameEntity $tradingName */
+        foreach ($iterator as $tradingName) {
+            $data[] = $tradingName->getName();
+        }
+        return $data;
     }
 
     public function getOpenComplaintsCount()

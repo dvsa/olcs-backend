@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\TransportManagerApplication\GetDetails as 
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as Repo;
 use Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetDetails as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use ZfcRbac\Service\AuthorizationService;
 use Mockery as m;
 
 /**
@@ -32,6 +33,8 @@ class GetDetailsTest extends QueryHandlerTestCase
         $this->mockRepo('PreviousConviction', \Dvsa\Olcs\Api\Domain\Repository\PreviousConviction::class);
         $this->mockRepo('OtherLicence', \Dvsa\Olcs\Api\Domain\Repository\OtherLicence::class);
         $this->mockRepo('TmEmployment', \Dvsa\Olcs\Api\Domain\Repository\TmEmployment::class);
+
+        $this->mockedSmServices = [AuthorizationService::class => m::mock('ZfcRbac\Service\AuthorizationService')];
 
         parent::setUp();
     }
@@ -61,6 +64,8 @@ class GetDetailsTest extends QueryHandlerTestCase
         $tma->setTransportManager($tm);
         $tma->setOtherLicences([$tmaOl]);
 
+        $mockUser = m::mock()->shouldReceive('getTransportManager')->andReturn($tm)->getMock();
+
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchDetails')->with(32)->once()->andReturn($tma);
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchWithOperatingCentres')->with(32)->once();
 
@@ -78,6 +83,9 @@ class GetDetailsTest extends QueryHandlerTestCase
 
         // loadTransportManagerEmployements
         $this->repoMap['TmEmployment']->shouldReceive('fetchByTransportManager')->with(213)->once();
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
 
         $this->sut->handleQuery($query);
     }

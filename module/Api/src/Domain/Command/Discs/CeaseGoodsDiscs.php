@@ -1,29 +1,21 @@
 <?php
 
 /**
- * CeaseDiscs.php
+ * Cease Goods Discs
  *
- * @author Josh Curtis <josh.curtis@valtech.co.uk>
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\Command\Discs;
 
-/**
- * Class CeaseDisc
- *
- * Cease discs dto.
- *
- * @package Dvsa\Olcs\Api\Domain\Command\Discs
- * @author Josh Curtis <josh.curtis@valtech.co.uk>
- */
-final class CeaseGoodsDiscs extends \Dvsa\Olcs\Transfer\Command\AbstractCommand
-{
-    protected $licenceVehicles;
+use Dvsa\Olcs\Transfer\FieldType\Traits\Licence;
+use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
-    /**
-     * @return mixed
-     */
-    public function getLicenceVehicles()
-    {
-        return $this->licenceVehicles;
-    }
+/**
+ * Cease Goods Discs
+ *
+ * @author Rob Caiger <rob@clocal.co.uk>
+ */
+final class CeaseGoodsDiscs extends AbstractCommand
+{
+    use Licence;
 }

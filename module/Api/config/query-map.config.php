@@ -208,7 +208,9 @@ return [
     TransferQuery\Bus\RegistrationHistoryList::class => QueryHandler\Bus\RegistrationHistoryList::class,
     TransferQuery\Bus\PaginatedRegistrationHistoryList::class =>
         QueryHandler\Bus\PaginatedRegistrationHistoryList::class,
+    TransferQuery\Bus\BusNoticePeriodList::class => QueryHandler\Bus\BusNoticePeriodList::class,
     Query\Bus\ByLicenceRoute::class => QueryHandler\Bus\ByLicenceRoute::class,
+    TransferQuery\Bus\BusServiceTypeList::class => QueryHandler\Bus\BusServiceTypeList::class,
 
     // Bus - Ebsr
     TransferQuery\Bus\Ebsr\TxcInboxList::class => QueryHandler\Bus\Ebsr\TxcInboxList::class,
@@ -226,9 +228,12 @@ return [
     TransferQuery\Irfo\IrfoDetails::class => QueryHandler\Irfo\IrfoDetails::class,
     TransferQuery\Irfo\IrfoGvPermit::class => QueryHandler\Irfo\IrfoGvPermit::class,
     TransferQuery\Irfo\IrfoGvPermitList::class => QueryHandler\Irfo\IrfoGvPermitList::class,
+    TransferQuery\Irfo\IrfoGvPermitTypeList::class => QueryHandler\Irfo\IrfoGvPermitTypeList::class,
     TransferQuery\Irfo\IrfoPermitStockList::class => QueryHandler\Irfo\IrfoPermitStockList::class,
     TransferQuery\Irfo\IrfoPsvAuth::class => QueryHandler\Irfo\IrfoPsvAuth::class,
     TransferQuery\Irfo\IrfoPsvAuthList::class => QueryHandler\Irfo\IrfoPsvAuthList::class,
+    TransferQuery\Irfo\IrfoPsvAuthTypeList::class => QueryHandler\Irfo\IrfoPsvAuthTypeList::class,
+    TransferQuery\Irfo\IrfoCountryList::class => QueryHandler\Irfo\IrfoCountryList::class,
 
     // Publication
     TransferQuery\Publication\Recipient::class => QueryHandler\Publication\Recipient::class,
@@ -440,4 +445,5 @@ return [
     TransferQuery\TrafficArea\TrafficAreaList::class => QueryHandler\TrafficArea\TrafficAreaList::class,
 
     TransferQuery\RefData\RefDataList::class => QueryHandler\RefData\RefDataList::class,
+    TransferQuery\LocalAuthority\LocalAuthorityList::class => QueryHandler\LocalAuthority\LocalAuthorityList::class,
 ];

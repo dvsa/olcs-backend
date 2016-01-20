@@ -49,7 +49,10 @@ class TaskTest extends QueryHandlerTestCase
             )
             ->andReturn(['foo' => 'bar']);
 
-        $this->repoMap['Task']->shouldReceive('fetchUsingId')
+        $this->repoMap['Task']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
+            ->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($task);
 

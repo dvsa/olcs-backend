@@ -11,9 +11,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
@@ -39,17 +36,15 @@ class RemoveLicenceVehicleTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'licenceVehicles' => new ArrayCollection([
-                m::mock(LicenceVehicle::class)->makePartial()
-            ])
+            'licence' => 123
         ];
 
         $command = Cmd::create($data);
 
         $this->repoMap['LicenceVehicle']
-            ->shouldReceive('save')
+            ->shouldReceive('removeAllForLicence')
             ->once()
-            ->with(m::type(LicenceVehicle::class));
+            ->with(123);
 
         $result = $this->sut->handleCommand($command);
 

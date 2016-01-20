@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 
 /**
- * ReturnAllCommunityLicences
+ * Expire All Community Licences
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */

@@ -38,6 +38,7 @@ class NoteListTest extends QueryHandlerTestCase
 
         $query = Qry::create($data);
 
+        $this->repoMap['Note']->shouldReceive('disableSoftDeleteable')->once();
         $this->repoMap['Note']->shouldReceive('fetchList')->once()->with($query)->andReturn(['foo' => 'bar']);
         $this->repoMap['Note']->shouldReceive('fetchCount')->with($query)->andReturn(5);
         $this->repoMap['Note']->shouldReceive('hasRows')->with(m::type(Qry::class))->andReturn(1);

@@ -173,4 +173,22 @@ class CommunityLicTest extends RepositoryTestCase
 
         $sut->applyListFilters($mockQb, $mockQuery);
     }
+
+    public function testExpireAllForLicence()
+    {
+        $licenceId = 123;
+
+        $this->expectQueryWithData('CommunityLicence\ExpireAllForLicence', ['licence' => 123, 'status' => 'foo']);
+
+        $this->sut->expireAllForLicence($licenceId, 'foo');
+    }
+
+    public function testExpireAllForLicenceNoStatus()
+    {
+        $licenceId = 123;
+
+        $this->expectQueryWithData('CommunityLicence\ExpireAllForLicence', ['licence' => 123]);
+
+        $this->sut->expireAllForLicence($licenceId);
+    }
 }
