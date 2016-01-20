@@ -22,7 +22,8 @@ class EntityCloner
         'createdOn',
         'createdBy',
         'lastModifiedOn',
-        'lastModifiedBy'
+        'lastModifiedBy',
+        'olbsKey',
     ];
 
     /**
@@ -51,7 +52,10 @@ class EntityCloner
             $getter = 'get' . ucfirst($ignoredProperty);
             $setter = 'set' . ucfirst($ignoredProperty);
 
-            $clone->$setter($template->$getter());
+            // check the setter exists as some properties (eg olbsKey) may get removed in the future
+            if (method_exists($clone, $setter)) {
+                $clone->$setter($template->$getter());
+            }
         }
 
         unset($template);
