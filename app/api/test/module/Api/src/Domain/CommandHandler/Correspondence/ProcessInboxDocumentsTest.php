@@ -78,7 +78,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
                 ]
             )
             ->twice()
-            ->shouldReceive('getIdentifier')
+            ->shouldReceive('getId')
             ->andReturn('id')
             ->once()
             ->shouldReceive('getDescription')
@@ -132,7 +132,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
         $this->expectedSideEffect(SendEmail::class, $data, $result);
 
         $params = [
-            'fileIdentifier' => 'id',
+            'documentId' => 'id',
             'jobName' => 'desc'
         ];
         $this->expectedSideEffect(EnqueueFileCommand::class, $params, new Result());
@@ -177,7 +177,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
                 ]
             )
             ->twice()
-            ->shouldReceive('getIdentifier')
+            ->shouldReceive('getId')
             ->andReturn('id')
             ->once()
             ->shouldReceive('getDescription')
@@ -212,7 +212,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
             ->getMock();
 
         $params = [
-            'fileIdentifier' => 'id',
+            'documentId' => 'id',
             'jobName' => 'desc'
         ];
         $this->expectedSideEffect(EnqueueFileCommand::class, $params, new Result());

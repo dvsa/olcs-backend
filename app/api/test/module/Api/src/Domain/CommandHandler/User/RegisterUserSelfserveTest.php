@@ -255,9 +255,9 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
                 }
             );
 
-        $identifier = 333;
+        $documentId = 333;
         $generateAndStoreResult = new Result();
-        $generateAndStoreResult->addId('identifier', $identifier);
+        $generateAndStoreResult->addId('document', $documentId);
 
         $this->expectedSideEffect(
             GenerateAndStore::class,
@@ -281,7 +281,7 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             EnqueueFileCommand::class,
             [
-                'fileIdentifier' => $identifier,
+                'documentId' => $documentId,
                 'jobName' => 'New temporary password'
             ],
             new Result()
