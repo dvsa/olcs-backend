@@ -17,12 +17,15 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * TxcInboxList
+ * This QueryHandler will query one of two tables.
+ * Either the TxcInbox table (for LAs) or the EbsrSubmission table (operators/organisation users).
  */
 class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
     protected $repoServiceName = 'TxcInbox';
+    protected $extraRepos = ['EbsrSubmission'];
 
     /**
      * @return array
@@ -38,7 +41,7 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
         $organisation = $this->getCurrentOrganisation();
 
         if (empty($localAuthority) && $organisation instanceof Organisation) {
-            $txcInboxEntries = $repo->fetchUnreadListForOrganisation(
+            $txcInboxEntries = $this->getRepo('EbsrSubmission')->fetchListForOrganisation(
                 $organisation,
                 $query->getEbsrSubmissionType(),
                 $query->getEbsrSubmissionStatus()
