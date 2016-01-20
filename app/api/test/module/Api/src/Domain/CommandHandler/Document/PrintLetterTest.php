@@ -250,7 +250,7 @@ class PrintLetterTest extends CommandHandlerTestCase
 
         $data = [
             'jobName' => 'foo',
-            'fileIdentifier' => 12345
+            'documentId' => 111
         ];
         $result = new Result();
         $result->addMessage('Enqueue');
@@ -313,7 +313,7 @@ class PrintLetterTest extends CommandHandlerTestCase
 
         $data = [
             'jobName' => 'foo',
-            'fileIdentifier' => 12345
+            'documentId' => 111
         ];
         $result = new Result();
         $result->addMessage('Enqueue');
@@ -364,7 +364,7 @@ class PrintLetterTest extends CommandHandlerTestCase
 
         $data = [
             'jobName' => 'foo',
-            'fileIdentifier' => 12345
+            'documentId' => 111
         ];
         $result = new Result();
         $result->addMessage('Enqueue');

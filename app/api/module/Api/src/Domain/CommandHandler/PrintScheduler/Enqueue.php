@@ -35,10 +35,9 @@ final class Enqueue extends AbstractCommandHandler implements \Dvsa\Olcs\Api\Dom
             );
         }
 
-
         $user = $this->getCurrentUser();
 
-        // If user has no team, most likely they are selfserve user, in which case we don;t know which printer
+        // If user has no team, most likely they are selfserve user, in which case we don't know which printer
         // @todo Temporarily stub the printing from these users
         if ($user->getTeam() == null) {
 
@@ -73,7 +72,9 @@ final class Enqueue extends AbstractCommandHandler implements \Dvsa\Olcs\Api\Dom
         ];
         $this->handleSideEffect(\Dvsa\Olcs\Api\Domain\Command\Queue\Create::create($dtoData));
 
-        $this->result->addMessage("Document id '{$command->getDocumentId()}', '{$command->getJobName()}' queued for print");
+        $this->result->addMessage(
+            "Document id '{$command->getDocumentId()}', '{$command->getJobName()}' queued for print"
+        );
         return $this->result;
     }
 
@@ -81,6 +82,7 @@ final class Enqueue extends AbstractCommandHandler implements \Dvsa\Olcs\Api\Dom
      * Stub printing by add a document to licence 7
      *
      * @todo remove this method when stubbing no longer required
+     * @codeCoverageIgnore
      *
      * @param string $fileIdentifier
      * @param string $jobName

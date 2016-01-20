@@ -157,11 +157,11 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
             'SELF_SERVICE_PASSWORD' => $password,
         ];
 
-        $identifier = $this->generateDocument($template, $queryData, $knownValues);
+        $documentId = $this->generateDocument($template, $queryData, $knownValues);
 
         $printQueue = EnqueueFileCommand::create(
             [
-                'fileIdentifier' => $identifier,
+                'documentId' => $documentId,
                 'jobName' => 'New temporary password'
             ]
         );
@@ -184,6 +184,6 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
 
         $result = $this->handleSideEffect(GenerateAndStore::create($dtoData));
 
-        return $result->getId('identifier');
+        return $result->getId('document');
     }
 }
