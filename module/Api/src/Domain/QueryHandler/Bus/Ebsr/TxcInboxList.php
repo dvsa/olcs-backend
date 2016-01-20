@@ -41,7 +41,7 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
         $organisation = $this->getCurrentOrganisation();
 
         if (empty($localAuthority) && $organisation instanceof Organisation) {
-            $txcInboxEntries = $this->getRepo('EbsrSubmission')->fetchListForOrganisation(
+            $txcInboxEntries = $this->getRepo('EbsrSubmission')->fetchByOrganisation(
                 $organisation,
                 $query->getEbsrSubmissionType(),
                 $query->getEbsrSubmissionStatus()

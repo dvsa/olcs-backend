@@ -15,13 +15,15 @@ class EbsrSubmission extends AbstractRepository
     protected $entity = Entity::class;
 
     /**
-     * Fetch a list for an organisation
+     * Fetch a list for an organisation, searchable on ebsrSubmissionType and ebsrSubmissionStatus
      *
-     * @param int|\Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
-     *
+     * @param $organisation
+     * @param null $ebsrSubmissionType
+     * @param null $ebsrSubmissionStatus
+     * @param int $hydrateMode
      * @return array
      */
-    public function fetchListForOrganisation(
+    public function fetchByOrganisation(
         $organisation,
         $ebsrSubmissionType = null,
         $ebsrSubmissionStatus = null,
