@@ -6,7 +6,6 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Si\Applied;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\Applied\Create as CreatePenalty;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
@@ -57,9 +56,9 @@ class CreateTest extends CommandHandlerTestCase
             [
                 'case' => $caseId,
                 'siPenaltyType' => $siPenaltyType,
+                'imposed' => $imposed,
                 'startDate' => $startDate,
                 'endDate' => $endDate,
-                'imposed' => $imposed,
                 'imposedReason' => $imposedReason
             ]
         );
@@ -78,9 +77,8 @@ class CreateTest extends CommandHandlerTestCase
             ->with(m::type(SiPenaltyEntity::class))
             ->once()
             ->andReturnUsing(
-                function (SiPenaltyEntity $siPenalty) use (&$savedSiPenalty) {
+                function (SiPenaltyEntity $siPenalty) {
                     $siPenalty->setId(111);
-                    $savedSiPenalty = $siPenalty;
                 }
             );
 

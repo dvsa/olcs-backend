@@ -25,41 +25,48 @@ class SiPenalty extends AbstractSiPenalty
      * SiPenalty constructor.
      * @param SeriousInfringement $seriousInfringement
      * @param SiPenaltyType $siPenaltyType
+     * @param string $imposed
      * @param \DateTime $startDate
      * @param \DateTime $endDate
-     * @param string $imposed
      * @param string $reasonNotImposed
      */
     public function __construct(
         SiEntity $seriousInfringement,
         SiPenaltyTypeEntity $siPenaltyType,
-        \DateTime $startDate,
-        \DateTime $endDate,
         $imposed,
-        $reasonNotImposed
+        \DateTime $startDate = null,
+        \DateTime $endDate = null,
+        $reasonNotImposed = null
     ) {
         $this->seriousInfringement = $seriousInfringement;
-        $this->update($siPenaltyType, $startDate, $endDate, $imposed, $reasonNotImposed);
+        $this->update($siPenaltyType, $imposed, $startDate, $endDate, $reasonNotImposed);
     }
 
     /**
      * @param SiPenaltyType $siPenaltyType
+     * @param string $imposed
      * @param \DateTime $startDate
      * @param \DateTime $endDate
-     * @param string $imposed
      * @param string $reasonNotImposed
      */
     public function update(
         SiPenaltyTypeEntity $siPenaltyType,
-        \DateTime $startDate,
-        \DateTime $endDate,
         $imposed,
-        $reasonNotImposed
+        \DateTime $startDate = null,
+        \DateTime $endDate = null,
+        $reasonNotImposed = null
     ) {
         $this->siPenaltyType = $siPenaltyType;
-        $this->startDate = $startDate;
-        $this->endDate = $endDate;
         $this->imposed = $imposed;
-        $this->reasonNotImposed = $reasonNotImposed;
+
+        if ($startDate !== null) {
+            $this->startDate = $startDate;
+        }
+        if ($endDate !== null) {
+            $this->endDate = $endDate;
+        }
+        if ($reasonNotImposed !== null) {
+            $this->reasonNotImposed = $reasonNotImposed;
+        }
     }
 }

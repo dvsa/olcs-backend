@@ -801,9 +801,9 @@ class SubmissionSectionTest extends MockeryTestCase
         $entity = new SiPenalty(
             new SeriousInfringement(),
             $this->generateSiPenaltyType(533),
+            'imposed',
             new \DateTime('2013-06-31'),
             new \DateTime('2013-08-31'),
-            'imposed',
             'imposed reason'
         );
         $entity->setId($id);
