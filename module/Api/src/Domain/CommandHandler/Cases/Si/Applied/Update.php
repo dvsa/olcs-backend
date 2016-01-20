@@ -36,12 +36,18 @@ final class Update extends AbstractCommandHandler
          */
         $penalty = $this->getRepo()->fetchUsingId($command);
         $siPenaltyType = $this->getRepo()->getReference(SiPenaltyTypeEntity::class, $command->getSiPenaltyType());
+        $startDate
+            = ($command->getStartDate() !== null)
+                ? \DateTime::createFromFormat(self::DATE_FORMAT, $command->getStartDate()) : null;
+        $endDate
+            = ($command->getEndDate() !== null)
+                ? \DateTime::createFromFormat(self::DATE_FORMAT, $command->getEndDate()) : null;
 
         $penalty->update(
             $siPenaltyType,
-            \DateTime::createFromFormat(self::DATE_FORMAT, $command->getStartDate()),
-            \DateTime::createFromFormat(self::DATE_FORMAT, $command->getEndDate()),
             $command->getImposed(),
+            $startDate,
+            $endDate,
             $command->getReasonNotImposed()
         );
 
