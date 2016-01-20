@@ -54,7 +54,12 @@ final class PrintJob extends AbstractCommandHandler implements UploaderAwareInte
 
         $fileName = $this->createTmpFile($file, $command->getId(), basename($document->getFilename()));
 
-        $this->printFile($fileName, $command->getTitle(), $printer->getPrinterName());
+        $this->printFile(
+            $fileName,
+            $command->getTitle(),
+            $printer->getPrinterName(),
+            $user->getContactDetails()->getPerson()->getFullName()
+        );
 
         $this->result->addMessage('Printed successfully');
 
@@ -65,20 +70,22 @@ final class PrintJob extends AbstractCommandHandler implements UploaderAwareInte
     {
         $tmpFile = str_replace(' ', '_', '/tmp/' . $prefix . '-' . uniqid() . '-' . $fileSuffix);
 
-        if (file_put_contents($tmpFile, base64_decode($file->getContent()))) {
+        if (file_put_contents($tmpFile, $file->getContent())) {
             return $tmpFile;
         }
 
         throw new Exception('Can\'t create tmp file');
     }
 
-    protected function printFile($fileName, $jobTitle, $destination)
+    protected function printFile($fileName, $jobTitle, $destination, $username)
     {
         $command = sprintf(
-            'lpr "%s" -H print01.olcs.mgt.mtpdvsa:631 -C "%s" -h -P OLCS',
+            'lpr "%s" -H print01.olcs.mgt.mtpdvsa:631 -C "%s" -h -P OLCS -U "%s"',
             $fileName,
-            $jobTitle/*,
-            //$destination*/
+            $jobTitle,
+            //$destination,
+            //$username,
+            'caigerr'
         );
 
         exec($command, $output, $result);
