@@ -26,8 +26,7 @@ class EbsrSubmission extends AbstractRepository
         $ebsrSubmissionType = null,
         $ebsrSubmissionStatus = null,
         $hydrateMode = Query::HYDRATE_OBJECT
-    )
-    {
+    ) {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
 
