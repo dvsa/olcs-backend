@@ -42,6 +42,8 @@ class FeeTest extends QueryHandlerTestCase
         $mockFee = m::mock(FeeEntity::class);
 
         $this->repoMap['Fee']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchUsingId')
             ->with($query)
             ->once()

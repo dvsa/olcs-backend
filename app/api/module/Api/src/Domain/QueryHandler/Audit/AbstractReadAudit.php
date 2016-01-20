@@ -20,6 +20,8 @@ abstract class AbstractReadAudit extends AbstractQueryHandler
 {
     public function handleQuery(QueryInterface $query)
     {
+        $this->getRepo()->disableSoftDeleteable();
+
         return [
             'results' => $this->resultList(
                 $this->getRepo()->fetchList($query, Query::HYDRATE_OBJECT),
