@@ -17,11 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
  *    indexes={
  *        @ORM\Index(name="ix_team_printer_printer_id", columns={"printer_id"}),
  *        @ORM\Index(name="ix_team_printer_team_id", columns={"team_id"}),
- *        @ORM\Index(name="ix_team_printer_sub_category_id", columns={"team_id"}),
- *        @ORM\Index(name="ix_team_printer_user_id", columns={"team_id"}),
- *        @ORM\Index(name="fk_team_printer_sub_category_id_sub_category_id",
-     *     columns={"sub_category_id"}),
- *        @ORM\Index(name="fk_team_printer_user_id_user_id", columns={"user_id"})
+ *        @ORM\Index(name="ix_team_printer_sub_category_id", columns={"sub_category_id"}),
+ *        @ORM\Index(name="ix_team_printer_user_id", columns={"user_id"})
  *    }
  * )
  */
