@@ -303,10 +303,14 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             ->andReturn($user);
 
         $this->repoMap['User']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchByLoginId')
             ->once()
             ->with($data['loginId'])
-            ->andReturn([m::mock(UserEntity::class)]);
+            ->andReturn([m::mock(UserEntity::class)])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         $this->sut->handleCommand($command);
     }
@@ -375,9 +379,13 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             ->shouldReceive('populateRefDataReference')
             ->once()
             ->andReturn($data)
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchByLoginId')
             ->with('login_id')
-            ->andReturn([]);
+            ->andReturn([])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         $this->repoMap['ContactDetails']->shouldReceive('populateRefDataReference')
             ->once()
@@ -442,9 +450,13 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             ->once()
             ->with($userId, Query::HYDRATE_OBJECT, 1)
             ->andReturn($user)
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchByLoginId')
             ->with('login_id')
-            ->andReturn(['clashed_user']);
+            ->andReturn(['clashed_user'])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         $this->sut->handleCommand($command);
     }

@@ -90,10 +90,14 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->repoMap['User']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchByLoginId')
             ->once()
             ->with($data['loginId'])
-            ->andReturn([]);
+            ->andReturn([])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         $this->repoMap['User']
             ->shouldReceive('populateRefDataReference')
@@ -276,10 +280,14 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->repoMap['User']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchByLoginId')
             ->once()
             ->with($data['loginId'])
-            ->andReturn([]);
+            ->andReturn([])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         /** @var TeamEntity $user */
         $team = m::mock(Team::class)->makePartial();
@@ -327,10 +335,14 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->repoMap['User']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchByLoginId')
             ->once()
             ->with($data['loginId'])
-            ->andReturn([m::mock(UserEntity::class)]);
+            ->andReturn([m::mock(UserEntity::class)])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         $this->sut->handleCommand($command);
     }

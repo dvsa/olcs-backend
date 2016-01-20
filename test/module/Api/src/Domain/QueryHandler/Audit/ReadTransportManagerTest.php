@@ -36,7 +36,10 @@ class ReadTransportManagerTest extends QueryHandlerTestCase
         $mockRecord = m::mock();
         $mockRecord->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
 
-        $this->repoMap['TransportManagerReadAudit']->shouldReceive('fetchList')
+        $this->repoMap['TransportManagerReadAudit']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
+            ->shouldReceive('fetchList')
             ->once()
             ->with($query, Query::HYDRATE_OBJECT)
             ->andReturn([$mockRecord])

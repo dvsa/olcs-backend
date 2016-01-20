@@ -1,30 +1,26 @@
 <?php
 
 /**
- * Read Bus Reg Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * History List Test
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Audit;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Audit\ReadBusReg;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\HistoryList;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Transfer\Query\Audit\ReadBusReg as Qry;
+use Dvsa\Olcs\Transfer\Query\Bus\HistoryList as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**
- * Read Bus Reg Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * History List Test
  */
-class ReadBusRegTest extends QueryHandlerTestCase
+class HistoryListTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new ReadBusReg();
-        $this->mockRepo('BusRegReadAudit', Repository\BusRegReadAudit::class);
+        $this->sut = new HistoryList();
+        $this->mockRepo('BusRegHistory', Repository\BusRegHistory::class);
 
         parent::setUp();
     }
@@ -36,7 +32,7 @@ class ReadBusRegTest extends QueryHandlerTestCase
         $mockRecord = m::mock();
         $mockRecord->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
 
-        $this->repoMap['BusRegReadAudit']
+        $this->repoMap['BusRegHistory']
             ->shouldReceive('disableSoftDeleteable')
             ->once()
             ->shouldReceive('fetchList')
@@ -49,7 +45,7 @@ class ReadBusRegTest extends QueryHandlerTestCase
             ->andReturn(1);
 
         $expected = [
-            'results' => [
+            'result' => [
                 ['foo' => 'bar']
             ],
             'count' => 1
