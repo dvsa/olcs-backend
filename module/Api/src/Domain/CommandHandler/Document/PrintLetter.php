@@ -164,7 +164,7 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
      */
     protected function attemptPrint(Entity\Doc\Document $document)
     {
-        $dtoData = ['fileIdentifier' => $document->getIdentifier(), 'jobName' => $document->getDescription()];
+        $dtoData = ['documentId' => $document->getId(), 'jobName' => $document->getDescription()];
 
         $this->result->merge($this->handleSideEffect(Enqueue::create($dtoData)));
     }

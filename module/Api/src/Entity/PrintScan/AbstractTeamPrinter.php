@@ -60,7 +60,7 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
      * @var \Dvsa\Olcs\Api\Entity\System\SubCategory
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\SubCategory", fetch="LAZY")
-     * @ORM\JoinColumn(name="sub_category_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="sub_category_id", referencedColumnName="id", nullable=true)
      */
     protected $subCategory;
 
@@ -84,7 +84,7 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
     protected $user;
 

@@ -31,10 +31,10 @@ final class ProcessDuplicateVehicleWarning extends AbstractCommandHandler implem
         $licenceVehicle = $this->getRepo()->fetchUsingId($command);
 
         $description = 'Duplicate vehicle letter';
-        $identifier = $this->generateDocument($licenceVehicle, $description);
+        $documentId = $this->generateDocument($licenceVehicle, $description);
 
         $data = [
-            'fileIdentifier' => $identifier,
+            'documentId' => $documentId,
             'jobName' => $description
         ];
         $this->result->merge($this->handleSideEffect(Enqueue::create($data)));
@@ -67,6 +67,6 @@ final class ProcessDuplicateVehicleWarning extends AbstractCommandHandler implem
 
         $this->result->merge($result);
 
-        return $result->getId('identifier');
+        return $result->getId('document');
     }
 }

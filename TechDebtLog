@@ -1,2 +1,0 @@
-The print scheduler command handlers: enqueue and enqueueFile appear to have duplicate functionality. Currently these are
-just stubs. When printing is implemented for real, this duplication needs to be removed.

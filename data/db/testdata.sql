@@ -2263,8 +2263,10 @@ INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, 
 COMMIT;
 -- End: Application 9
 
-INSERT INTO `printer` (`id`, `printer_name`) VALUES (1, 'Test Printer');
+INSERT INTO `printer` (`id`, `printer_name`) VALUES (1, 'Test Default Printer');
+INSERT INTO `printer` (`id`, `printer_name`) VALUES (2, 'Test Printer');
 
-INSERT INTO `team_printer` (`id`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (1, 1, 1, 1, 1);
+INSERT INTO `team_printer` (`id`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (1, 1, 1, NULL, NULL);
+INSERT INTO `team_printer` (`id`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (2, 2, 2, 1, 1);
 
 SET foreign_key_checks = 1;

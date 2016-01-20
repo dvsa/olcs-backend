@@ -150,7 +150,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('Create Document');
-        $result1->addId('identifier', 'ABCDEFG');
+        $result1->addId('document', 654);
         $dtoData = [
             'template' => 'Scanning_SeparatorSheet',
             'query' => [],
@@ -178,7 +178,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
             [
-                'fileIdentifier' => 'ABCDEFG',
+                'documentId' => 654,
                 'jobName' => 'Scanning Separator Sheet'
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
@@ -186,7 +186,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['identifier' => 'ABCDEFG', 'scan' => 74], $result->getIds());
+        $this->assertSame(['document' => 654, 'scan' => 74], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID 74 created'], $result->getMessages());
     }
 
@@ -231,7 +231,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('Create Document');
-        $result1->addId('identifier', 'ABCDEFG');
+        $result1->addId('document', 987);
         $dtoData = [
             'template' => 'Scanning_SeparatorSheet',
             'query' => [],
@@ -259,7 +259,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
             [
-                'fileIdentifier' => 'ABCDEFG',
+                'documentId' => 987,
                 'jobName' => 'Scanning Separator Sheet'
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
@@ -267,7 +267,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['identifier' => 'ABCDEFG', 'scan' => 74], $result->getIds());
+        $this->assertSame(['document' => 987, 'scan' => 74], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID 74 created'], $result->getMessages());
     }
 
@@ -312,7 +312,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('Create Document');
-        $result1->addId('identifier', 'ABCDEFG');
+        $result1->addId('document', 342);
         $dtoData = [
             'template' => 'Scanning_SeparatorSheet',
             'query' => [],
@@ -340,7 +340,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
             [
-                'fileIdentifier' => 'ABCDEFG',
+                'documentId' => 342,
                 'jobName' => 'Scanning Separator Sheet'
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
@@ -348,7 +348,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['identifier' => 'ABCDEFG', 'scan' => 74], $result->getIds());
+        $this->assertSame(['document' => 342, 'scan' => 74], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID 74 created'], $result->getMessages());
     }
 
@@ -393,7 +393,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('Create Document');
-        $result1->addId('identifier', 'ABCDEFG');
+        $result1->addId('document', 123);
         $dtoData = [
             'template' => 'Scanning_SeparatorSheet',
             'query' => [],
@@ -421,7 +421,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
             [
-                'fileIdentifier' => 'ABCDEFG',
+                'documentId' => 123,
                 'jobName' => 'Scanning Separator Sheet'
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
@@ -429,7 +429,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['identifier' => 'ABCDEFG', 'scan' => 74], $result->getIds());
+        $this->assertSame(['document' => 123, 'scan' => 74], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID 74 created'], $result->getMessages());
     }
 
@@ -481,7 +481,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('Create Document');
-        $result1->addId('identifier', 'ABCDEFG');
+        $result1->addId('document', 124);
         $dtoData = [
             'template' => 'Scanning_SeparatorSheet',
             'query' => [],
@@ -509,7 +509,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
             [
-                'fileIdentifier' => 'ABCDEFG',
+                'documentId' => 124,
                 'jobName' => 'Scanning Separator Sheet'
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
@@ -517,7 +517,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['identifier' => 'ABCDEFG', 'scan' => 74], $result->getIds());
+        $this->assertSame(['document' => 124, 'scan' => 74], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID 74 created'], $result->getMessages());
     }
 
@@ -562,7 +562,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('Create Document');
-        $result1->addId('identifier', 'ABCDEFG');
+        $result1->addId('document', 125);
         $dtoData = [
             'template' => 'Scanning_SeparatorSheet',
             'query' => [],
@@ -590,7 +590,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
             [
-                'fileIdentifier' => 'ABCDEFG',
+                'documentId' => 125,
                 'jobName' => 'Scanning Separator Sheet'
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
@@ -598,7 +598,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['identifier' => 'ABCDEFG', 'scan' => 74], $result->getIds());
+        $this->assertSame(['document' => 125, 'scan' => 74], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID 74 created'], $result->getMessages());
     }
 
@@ -639,7 +639,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('Create Document');
-        $result1->addId('identifier', 'ABCDEFG');
+        $result1->addId('document', 134);
         $dtoData = [
             'template' => 'Scanning_SeparatorSheet',
             'query' => [],
@@ -667,7 +667,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
             [
-                'fileIdentifier' => 'ABCDEFG',
+                'documentId' => 134,
                 'jobName' => 'Scanning Separator Sheet'
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
@@ -675,7 +675,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['identifier' => 'ABCDEFG', 'scan' => 74], $result->getIds());
+        $this->assertSame(['document' => 134, 'scan' => 74], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID 74 created'], $result->getMessages());
     }
 
@@ -729,7 +729,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('Create Document');
-        $result1->addId('identifier', 'ABCDEFG');
+        $result1->addId('document', 123);
         $dtoData = [
             'template' => 'Scanning_SeparatorSheet',
             'query' => [],
@@ -757,7 +757,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
             [
-                'fileIdentifier' => 'ABCDEFG',
+                'documentId' => 123,
                 'jobName' => 'Scanning Separator Sheet'
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
@@ -765,7 +765,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['identifier' => 'ABCDEFG', 'scan' => 74], $result->getIds());
+        $this->assertSame(['document' => 123, 'scan' => 74], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID 74 created'], $result->getMessages());
     }
 }

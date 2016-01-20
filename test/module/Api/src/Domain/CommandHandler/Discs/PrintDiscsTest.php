@@ -50,7 +50,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $result1 = new Result();
-        $result1->addId('identifier', 'id1');
+        $result1->addId('document', 'id1');
         $saveDocData = [
             'template' => $template,
             'query' => [0 => 1],
@@ -64,14 +64,14 @@ class PrintDiscsTest extends CommandHandlerTestCase
         $this->expectedSideEffect(GenerateAndStore::class, $saveDocData, $result1);
 
         $printQueueData = [
-            'fileIdentifier' => 'id1',
+            'documentId' => 'id1',
             'jobName' => 'Goods Disc List'
         ];
         $this->expectedSideEffect(EnqueueFileCommand::class, $printQueueData, new Result());
 
         $expected = [
             'id' => [
-                'identifier' => 'id1'
+                'document' => 'id1'
             ],
             'messages' => ['Discs printed']
         ];
