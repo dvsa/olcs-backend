@@ -9,8 +9,11 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler;
 
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\PrintJob as Cmd;
+use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
+use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\Exception;
 use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
@@ -25,9 +28,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface
+final class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface, ConfigAwareInterface
 {
-    use UploaderAwareTrait;
+    use UploaderAwareTrait,
+        ConfigAwareTrait;
 
     protected $repoServiceName = 'Document';
 
@@ -54,11 +58,20 @@ final class PrintJob extends AbstractCommandHandler implements UploaderAwareInte
 
         $fileName = $this->createTmpFile($file, $command->getId(), basename($document->getFilename()));
 
+        // @todo Get the destination from the printer
+        //$destination = $printer->getPrinterName();
+        $destination = 'OLCS';
+
+        // @todo Get the real username
+        //$username = $user->getContactDetails()->getPerson()->getFullName();
+        // Hardcoded to my username for now, as this places the PDFs in my home dir, so I can check the output
+        $username = 'caigerr';
+
         $this->printFile(
             $fileName,
             $command->getTitle(),
-            $printer->getPrinterName(),
-            $user->getContactDetails()->getPerson()->getFullName()
+            $destination,
+            $username
         );
 
         $this->result->addMessage('Printed successfully');
@@ -79,13 +92,20 @@ final class PrintJob extends AbstractCommandHandler implements UploaderAwareInte
 
     protected function printFile($fileName, $jobTitle, $destination, $username)
     {
+        $config = $this->getConfig();
+
+        if (empty($config['print']['server'])) {
+            throw new RuntimeException('print.server is not set in config');
+        }
+
+        $printServer = $config['print']['server'];
         $command = sprintf(
-            'lpr "%s" -H print01.olcs.mgt.mtpdvsa:631 -C "%s" -h -P OLCS -U "%s"',
+            'lpr "%s" -H %s -C "%s" -h -P %s -U "%s"',
             $fileName,
+            $printServer,
             $jobTitle,
-            //$destination,
-            //$username,
-            'caigerr'
+            $destination,
+            $username
         );
 
         exec($command, $output, $result);
