@@ -7,6 +7,7 @@ use RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Http\Client as HttpClient;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Class ClientFactory
@@ -40,10 +41,16 @@ class ClientFactory implements FactoryInterface
         $httpOptions = $this->getOptions($serviceLocator, 'http');
         $httpClient = new HttpClient();
         $httpClient->setOptions($httpOptions);
+        Logger::debug(
+            'HTTP options: ' . serialize($httpOptions)
+        );
 
         $authOptions = $this->getOptions($serviceLocator, 'auth');
         if (isset($authOptions['username']) && isset($authOptions['password'])) {
             $httpClient->setAuth($authOptions['username'], $authOptions['password']);
+            Logger::debug(
+                'Auth options: ' . serialize($authOptions)
+            );
         }
 
         $wrapper = new ClientAdapterLoggingWrapper();
