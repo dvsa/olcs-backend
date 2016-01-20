@@ -21,6 +21,6 @@ class Note extends AbstractQueryHandler
         /** @var NoteRepository $repo */
         $repo = $this->getRepo();
 
-        return $repo->fetchUsingId($query);
+        return $this->result($repo->fetchUsingId($query));
     }
 }

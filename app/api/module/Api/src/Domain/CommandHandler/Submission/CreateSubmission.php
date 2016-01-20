@@ -14,13 +14,17 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
 use \Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as SectionCommentCommand;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Create Submission
  */
-final class CreateSubmission extends AbstractCommandHandler implements SubmissionGeneratorAwareInterface
+final class CreateSubmission extends AbstractCommandHandler implements SubmissionGeneratorAwareInterface,
+ AuthAwareInterface
 {
     use SubmissionGeneratorAwareTrait;
+    use AuthAwareTrait;
 
     protected $repoServiceName = 'Submission';
 
@@ -63,6 +67,11 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
             $this->getRepo()->getReference(CasesEntity::class, $command->getCase()),
             $this->getRepo()->getRefdataReference($command->getSubmissionType())
         );
+
+        $currentUser = $this->getCurrentUser();
+        $submissionEntity->setAssignedDate(new \DateTime('now'));
+        $submissionEntity->setSenderUser($currentUser);
+        $submissionEntity->setRecipientUser($currentUser);
 
         return $submissionEntity;
     }

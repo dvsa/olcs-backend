@@ -76,10 +76,14 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->repoMap['User']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchByLoginId')
             ->once()
             ->with($data['loginId'])
-            ->andReturn([]);
+            ->andReturn([])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('generatePid')->with('login_id')->andReturn('pid');
 
@@ -195,10 +199,14 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->repoMap['User']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchByLoginId')
             ->once()
             ->with($data['loginId'])
-            ->andReturn([]);
+            ->andReturn([])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('generatePid')->with('login_id')->andReturn('pid');
 
@@ -247,9 +255,9 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
                 }
             );
 
-        $identifier = 333;
+        $documentId = 333;
         $generateAndStoreResult = new Result();
-        $generateAndStoreResult->addId('identifier', $identifier);
+        $generateAndStoreResult->addId('document', $documentId);
 
         $this->expectedSideEffect(
             GenerateAndStore::class,
@@ -273,7 +281,7 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             EnqueueFileCommand::class,
             [
-                'fileIdentifier' => $identifier,
+                'documentId' => $documentId,
                 'jobName' => 'New temporary password'
             ],
             new Result()
@@ -324,10 +332,14 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->repoMap['User']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchByLoginId')
             ->once()
             ->with($data['loginId'])
-            ->andReturn([]);
+            ->andReturn([])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         $this->sut->handleCommand($command);
     }
@@ -344,10 +356,14 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->repoMap['User']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
             ->shouldReceive('fetchByLoginId')
             ->once()
             ->with($data['loginId'])
-            ->andReturn([m::mock(UserEntity::class)]);
+            ->andReturn([m::mock(UserEntity::class)])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
 
         $this->sut->handleCommand($command);
     }

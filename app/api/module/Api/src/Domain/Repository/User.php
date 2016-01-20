@@ -94,6 +94,10 @@ class User extends AbstractRepository
             $qb->andWhere($qb->expr()->eq($this->alias . '.team', ':team'))
                 ->setParameter('team', (int) $query->getTeam());
         }
+
+        if (method_exists($query, 'getIsInternal') && $query->getIsInternal() == true) {
+            $qb->andWhere($qb->expr()->isNotNull($this->alias . '.team'));
+        }
     }
 
     public function fetchForTma($userId)

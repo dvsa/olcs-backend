@@ -99,7 +99,7 @@ class SurrenderTest extends CommandHandlerTestCase
         $removeVehicleResult = new Result();
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
-            array('licenceVehicles' => new ArrayCollection(), 'id' => null),
+            array('licence' => 532, 'id' => null),
             $removeVehicleResult
         );
 
@@ -172,14 +172,14 @@ class SurrenderTest extends CommandHandlerTestCase
         $ceaseDiscsResult = new Result();
         $this->expectedSideEffect(
             CeaseGoodsDiscs::class,
-            array('licenceVehicles' => new ArrayCollection(['lv1', 'lv2'])),
+            array('licence' => 532),
             $ceaseDiscsResult
         );
 
         $removeVehicleResult = new Result();
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
-            array('licenceVehicles' => new ArrayCollection(['lv1', 'lv2']), 'id' => null),
+            array('licence' => 532, 'id' => null),
             $removeVehicleResult
         );
 
@@ -260,7 +260,7 @@ class SurrenderTest extends CommandHandlerTestCase
         $removeVehicleResult = new Result();
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
-            array('licenceVehicles' => new ArrayCollection(), 'id' => null),
+            array('licence' => 532, 'id' => null),
             $removeVehicleResult
         );
 
@@ -341,7 +341,7 @@ class SurrenderTest extends CommandHandlerTestCase
         );
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
-            array('licenceVehicles' => new ArrayCollection(), 'id' => null),
+            array('licence' => 532, 'id' => null),
             new Result()
         );
         $this->expectedSideEffect(

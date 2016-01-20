@@ -65,7 +65,7 @@ class ProcessDuplicateVehicleWarningTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('GenerateAndStore');
-        $result1->addId('identifier', 12345);
+        $result1->addId('document', 12345);
         $data = [
             'template' => 'GV_Duplicate_vehicle_letter',
             'query' => ['licence' => 222, 'vehicle' => 333],
@@ -81,7 +81,7 @@ class ProcessDuplicateVehicleWarningTest extends CommandHandlerTestCase
         $result2 = new Result();
         $result2->addMessage('Enqueue');
         $data = [
-            'fileIdentifier' => 12345,
+            'documentId' => 12345,
             'jobName' => 'Duplicate vehicle letter'
         ];
         $this->expectedSideEffect(Enqueue::class, $data, $result2);
@@ -90,7 +90,7 @@ class ProcessDuplicateVehicleWarningTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'identifier' => 12345
+                'document' => 12345
             ],
             'messages' => [
                 'GenerateAndStore',

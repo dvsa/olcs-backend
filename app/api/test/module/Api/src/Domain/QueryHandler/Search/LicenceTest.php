@@ -48,6 +48,9 @@ class LicenceTest extends QueryHandlerTestCase
 
         /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence
+            ->shouldReceive('getAllTradingNames')
+            ->andReturn(['foo', 'bar']);
 
         /** @var TrafficAreaEntity $trafficArea */
         $trafficArea = m::mock(TrafficAreaEntity::class);

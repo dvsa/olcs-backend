@@ -53,7 +53,7 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
         if ($licence->getOrganisation()->getAllowEmail() === 'N'
             || !$this->hasAdminEmailAddresses($licence->getOrganisation())
         ) {
-            return $this->attemptPrint($command->getIdentifier(), $command->getDescription(), $result);
+            return $this->attemptPrint($documentResult->getId('document'), $command->getDescription(), $result);
         }
 
         $result->merge(
@@ -113,9 +113,9 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
         return false;
     }
 
-    protected function attemptPrint($fileIdentifier, $description, Result $result)
+    protected function attemptPrint($documentId, $description, Result $result)
     {
-        $dtoData = ['fileIdentifier' => $fileIdentifier, 'jobName' => $description];
+        $dtoData = ['documentId' => $documentId, 'jobName' => $description];
 
         $result->merge($this->handleSideEffect(Enqueue::create($dtoData)));
 

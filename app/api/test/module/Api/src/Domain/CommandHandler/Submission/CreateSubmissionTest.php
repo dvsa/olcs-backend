@@ -21,6 +21,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use \Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as CommentCommand;
+use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * Create Submission Test
@@ -50,6 +52,7 @@ class CreateSubmissionTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             SubmissionGenerator::class => m::mock(SubmissionGenerator::class),
+            AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
         ];
 
         // copied from parent,
@@ -82,6 +85,16 @@ class CreateSubmissionTest extends CommandHandlerTestCase
 
         $this->sideEffects = [];
         $this->commands = [];
+
+        /** @var UserEntity $mockUser */
+        $mockUser = m::mock(UserEntity::class)
+            ->shouldReceive('getLoginId')
+            ->andReturn('bob')
+            ->getMock();
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
 
         $this->initReferences();
     }
@@ -145,7 +158,6 @@ class CreateSubmissionTest extends CommandHandlerTestCase
                     SubmissionEntity $submission
                 ) use (&$savedSubmission) {
                     $submission->setId(111);
-                    $savedSubmission = $submission;
                 }
             );
 

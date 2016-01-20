@@ -16,22 +16,15 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="team_printer",
  *    indexes={
  *        @ORM\Index(name="ix_team_printer_printer_id", columns={"printer_id"}),
- *        @ORM\Index(name="ix_team_printer_team_id", columns={"team_id"})
+ *        @ORM\Index(name="ix_team_printer_team_id", columns={"team_id"}),
+ *        @ORM\Index(name="ix_team_printer_sub_category_id", columns={"sub_category_id"}),
+ *        @ORM\Index(name="ix_team_printer_user_id", columns={"user_id"})
  *    }
  * )
  */
 abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
-
-    /**
-     * Document type
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="document_type", length=45, nullable=true)
-     */
-    protected $documentType;
 
     /**
      * Identifier - Id
@@ -59,6 +52,16 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
     protected $printer;
 
     /**
+     * Sub category
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\SubCategory
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\SubCategory", fetch="LAZY")
+     * @ORM\JoinColumn(name="sub_category_id", referencedColumnName="id", nullable=true)
+     */
+    protected $subCategory;
+
+    /**
      * Team
      *
      * @var \Dvsa\Olcs\Api\Entity\User\Team
@@ -73,27 +76,14 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
     protected $team;
 
     /**
-     * Set the document type
+     * User
      *
-     * @param string $documentType
-     * @return TeamPrinter
-     */
-    public function setDocumentType($documentType)
-    {
-        $this->documentType = $documentType;
-
-        return $this;
-    }
-
-    /**
-     * Get the document type
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @return string
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
-    public function getDocumentType()
-    {
-        return $this->documentType;
-    }
+    protected $user;
 
     /**
      * Set the id
@@ -142,6 +132,29 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
     }
 
     /**
+     * Set the sub category
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory
+     * @return TeamPrinter
+     */
+    public function setSubCategory($subCategory)
+    {
+        $this->subCategory = $subCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the sub category
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\SubCategory
+     */
+    public function getSubCategory()
+    {
+        return $this->subCategory;
+    }
+
+    /**
      * Set the team
      *
      * @param \Dvsa\Olcs\Api\Entity\User\Team $team
@@ -162,6 +175,29 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
     public function getTeam()
     {
         return $this->team;
+    }
+
+    /**
+     * Set the user
+     *
+     * @param \Dvsa\Olcs\Api\Entity\User\User $user
+     * @return TeamPrinter
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get the user
+     *
+     * @return \Dvsa\Olcs\Api\Entity\User\User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 
 

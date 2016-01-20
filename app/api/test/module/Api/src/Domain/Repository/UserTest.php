@@ -100,6 +100,7 @@ class UserTest extends RepositoryTestCase
             [
                 'organisation' => 43,
                 'team' => 112,
+                'isInternal' => true
             ]
         );
 
@@ -112,6 +113,8 @@ class UserTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr->eq')->with('u.team', ':team')->once()
             ->andReturn('team');
         $mockQb->shouldReceive('setParameter')->with('team', 112)->once();
+        $mockQb->shouldReceive('expr->isNotNull')->with('u.team')->andReturn('isInternal')->once();
+        $mockQb->shouldReceive('andWhere')->with('isInternal')->once()->andReturnSelf();
 
         $sut->applyListFilters($mockQb, $query);
     }

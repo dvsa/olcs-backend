@@ -21,10 +21,11 @@ class Task extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        $task = $this->getRepo()->fetchUsingId($query);
+        $repo = $this->getRepo();
+        $repo->disableSoftDeleteable();
 
         return $this->result(
-            $task,
+            $repo->fetchUsingId($query),
             [
                 'category',
                 'subCategory',

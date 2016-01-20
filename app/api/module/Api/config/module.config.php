@@ -45,6 +45,7 @@ return [
             'DomainValidatorManager' => \Dvsa\Olcs\Api\Domain\ValidatorManagerFactory::class,
             'QueryPartialServiceManager' => \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::class,
             'RepositoryServiceManager' => \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::class,
+            'DbQueryServiceManager' => \Dvsa\Olcs\Api\Domain\DbQueryServiceManagerFactory::class,
             'QueryBuilder' => \Dvsa\Olcs\Api\Domain\QueryBuilderFactory::class,
             Util\SlaCalculatorInterface::class => Util\SlaCalculatorFactory::class,
             Util\TimeProcessorBuilderInterface::class => Util\TimeProcessorBuilderFactory::class,
@@ -115,6 +116,7 @@ return [
             'Api\Generic' => \Dvsa\Olcs\Api\Controller\GenericController::class,
         ]
     ],
+    \Dvsa\Olcs\Api\Domain\DbQueryServiceManagerFactory::CONFIG_KEY => include(__DIR__ . '/db-query-map.config.php'),
     \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::CONFIG_KEY => [
         'factories' => require(__DIR__ . '/command-map.config.php')
     ],
@@ -184,9 +186,12 @@ return [
             'Note' => RepositoryFactory::class,
             'TradingName' => RepositoryFactory::class,
             'IrfoGvPermit' => RepositoryFactory::class,
+            'IrfoGvPermitType' => RepositoryFactory::class,
             'IrfoPermitStock' => RepositoryFactory::class,
             'IrfoPsvAuth' => RepositoryFactory::class,
+            'IrfoPsvAuthType' => RepositoryFactory::class,
             'IrfoPsvAuthNumber' => RepositoryFactory::class,
+            'IrfoCountry' => RepositoryFactory::class,
             'Impounding' => RepositoryFactory::class,
             'CommunityLic' => RepositoryFactory::class,
             'Workshop' => RepositoryFactory::class,

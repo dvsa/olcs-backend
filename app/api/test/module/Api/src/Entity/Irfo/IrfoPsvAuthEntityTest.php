@@ -10,7 +10,6 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType as IrfoPsvAuthTypeEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 
 /**
  * IrfoPsvAuth Entity Unit Tests
@@ -322,5 +321,59 @@ class IrfoPsvAuthEntityTest extends EntityTester
             [Entity::STATUS_GRANTED, false],
             [Entity::STATUS_REFUSED, false]
         ];
+    }
+
+    /**
+     * @dataProvider isCnsableStates
+     */
+    public function testIsCnsable($input, $expected)
+    {
+        $status = new RefData();
+        $status->setId($input);
+        $this->entity->setStatus($status);
+
+        $this->assertEquals($expected, $this->entity->isCnsable());
+    }
+
+    public function isCnsableStates()
+    {
+        return [
+            [Entity::STATUS_PENDING, false],
+            [Entity::STATUS_CNS, false],
+            [Entity::STATUS_RENEW, true],
+            [Entity::STATUS_APPROVED, false],
+            [Entity::STATUS_WITHDRAWN, false],
+            [Entity::STATUS_GRANTED, false],
+            [Entity::STATUS_REFUSED, false]
+        ];
+    }
+
+    public function testContinuationNotSought()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_RENEW);
+        $this->entity->setStatus($status);
+
+        $newStatus = new RefData();
+        $newStatus->setId(Entity::STATUS_CNS);
+
+        $this->entity->continuationNotSought($newStatus);
+
+        $this->assertEquals($newStatus, $this->entity->getStatus());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testContinuationNotSoughtThrowsException()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_PENDING);
+        $this->entity->setStatus($status);
+
+        $newStatus = new RefData();
+        $newStatus->setId(Entity::STATUS_CNS);
+
+        $this->entity->continuationNotSought($newStatus);
     }
 }

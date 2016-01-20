@@ -18,7 +18,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    indexes={
  *        @ORM\Index(name="ix_goods_disc_licence_vehicle_id", columns={"licence_vehicle_id"}),
  *        @ORM\Index(name="ix_goods_disc_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_goods_disc_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_goods_disc_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_goods_disc_ceased_date", columns={"ceased_date"}),
+ *        @ORM\Index(name="ix_goods_disc_issued_date", columns={"issued_date"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_goods_disc_olbs_key", columns={"olbs_key"})
