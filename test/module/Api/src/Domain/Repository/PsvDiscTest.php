@@ -204,4 +204,13 @@ class PsvDiscTest extends RepositoryTestCase
 
         $sut->fetchList($query);
     }
+
+    public function testCeaseDiscsForLicence()
+    {
+        $licenceId = 123;
+
+        $this->expectQueryWithData('Discs\CeaseDiscsForLicence', ['licence' => 123]);
+
+        $this->sut->ceaseDiscsForLicence($licenceId);
+    }
 }

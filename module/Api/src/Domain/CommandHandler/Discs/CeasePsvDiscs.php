@@ -28,7 +28,7 @@ final class CeasePsvDiscs extends AbstractCommandHandler implements Transactione
         $this->getRepo()->ceaseDiscsForLicence($command->getLicence());
 
         $result = new Result();
-        $result->addMessage('Ceased discs for licence.');
+        $result->addMessage('Discs ceased');
 
         return $result;
     }
