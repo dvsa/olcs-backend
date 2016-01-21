@@ -4,6 +4,7 @@
  * VoidAllCommunityLicencesTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
@@ -12,11 +13,15 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\VoidAllCommunityLicences as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Licence\VoidAllCommunityLicences as Command;
+use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
+use Dvsa\Olcs\Api\Domain\Command\Licence\UpdateTotalCommunityLicences as UpdateTotalCommunityLicencesCommand;
 
 /**
  * VoidAllCommunityLicencesTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  *
  */
 class VoidAllCommunityLicencesTest extends CommandHandlerTestCase
@@ -24,40 +29,22 @@ class VoidAllCommunityLicencesTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new CommandHandler();
-        $this->mockRepo('Licence', \Dvsa\Olcs\Api\Entity\Licence\Licence::class);
+        $this->mockRepo('CommunityLic', CommunityLicRepo::class);
 
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [];
-
-        parent::initReferences();
-    }
-
     public function testHandleCommand()
     {
-        $data = [
-            'id' => 717,
-        ];
-
-        $command = Command::create($data);
-
-        $cl1 = new \Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic();
-        $cl1->setId(43);
-        $cl2 = new \Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic();
-        $cl2->setId(38);
-
-        $mockLicence = m::mock();
-        $mockLicence->shouldReceive('getCommunityLics')->with()->once()->andReturn([$cl1, $cl2]);
-        $mockLicence->shouldReceive('getId')->with()->once()->andReturn(717);
-
-        $this->repoMap['Licence']->shouldReceive('fetchById')->with(717)->once()->andReturn($mockLicence);
+        $command = Command::create(['id' => 717]);
+        $this->repoMap['CommunityLic']
+            ->shouldReceive('expireAllForLicence')
+            ->with(717, CommunityLicEntity::STATUS_VOID)
+            ->once();
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\CommunityLic\Void::class,
-            ['licence' => 717, 'communityLicenceIds' => [43, 38], 'checkOfficeCopy' => false],
+            UpdateTotalCommunityLicencesCommand::class,
+            ['id' => 717],
             new Result()
         );
 
