@@ -104,4 +104,10 @@ class PsvDisc extends AbstractRepository
             ->addSelect($this->alias . '.discNo+0 as HIDDEN intDiscNo')
             ->orderBy('intDiscNo', 'ASC');
     }
+
+    public function ceaseDiscsForLicence($licenceId)
+    {
+        return $this->getDbQueryManager()->get('Discs\CeaseDiscsForLicence')
+            ->execute(['licence' => $licenceId]);
+    }
 }

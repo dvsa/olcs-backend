@@ -9,5 +9,6 @@ return [
         'LicenceVehicle\ClearSpecifiedDateAndInterimAppForLicence'
             => Query\LicenceVehicle\ClearSpecifiedDateAndInterimAppForLicence::class,
         'LicenceVehicle\RemoveAllForLicence' => Query\LicenceVehicle\RemoveAllForLicence::class,
+        'Discs\CeaseDiscsForLicence' => Query\Discs\CeaseDiscsForLicence::class,
     ]
 ];
