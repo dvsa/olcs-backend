@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
+use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
 use Dvsa\Olcs\Transfer\Query\Bus\Ebsr\TxcInboxList as Qry;
 use Mockery as m;
 
@@ -25,6 +26,7 @@ class TxcInboxListTest extends QueryHandlerTestCase
     {
         $this->sut = new TxcInboxList();
         $this->mockRepo('TxcInbox', TxcInboxRepo::class);
+        $this->mockRepo('EbsrSubmission', EbsrSubmissionRepo::class);
 
         $this->mockedSmServices = [
             'ZfcRbac\Service\AuthorizationService' => m::mock('ZfcRbac\Service\AuthorizationService')
@@ -99,7 +101,7 @@ class TxcInboxListTest extends QueryHandlerTestCase
 
         $mockResult = m::mock(TxcInboxEntity::class)->makePartial();
 
-        $this->repoMap['TxcInbox']->shouldReceive('fetchUnreadListForOrganisation')
+        $this->repoMap['EbsrSubmission']->shouldReceive('fetchByOrganisation')
             ->andReturn([$mockResult]);
         $result = $this->sut->handleQuery($query);
         $this->assertCount(2, $result);
