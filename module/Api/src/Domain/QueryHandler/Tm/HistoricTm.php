@@ -19,6 +19,8 @@ use Dvsa\Olcs\Api\Entity\Tm\HistoricTm as HistoricTmEntity;
  */
 class HistoricTm extends AbstractQueryHandler
 {
+    const LICENCE_FLAG = 'L';
+
     protected $repoServiceName = 'HistoricTm';
 
     /**
@@ -73,6 +75,7 @@ class HistoricTm extends AbstractQueryHandler
         $index = 0;
         foreach ($results as $result) {
             if (!empty($result['applicationId'])) {
+                $applicationData[$index]['licNo'] = $result['licNo'];
                 $applicationData[$index]['applicationId'] = $result['applicationId'];
                 $applicationData[$index]['seenContract'] = $result['seenContract'];
                 $applicationData[$index]['seenQualification'] = $result['seenQualification'];
@@ -98,8 +101,8 @@ class HistoricTm extends AbstractQueryHandler
         $licenceData = [];
         $index = 0;
         foreach ($results as $result) {
-            if (!empty($result['licNo'])) {
-                $licenceData[$index]['licNo'] = $result['applicationId'];
+            if (!empty($result['licNo']) && $result['licOrApp'] === self::LICENCE_FLAG) {
+                $licenceData[$index]['licNo'] = $result['licNo'];
                 $licenceData[$index]['licenceOrApp'] = $result['licOrApp'];
                 $licenceData[$index]['seenContract'] = $result['seenContract'];
                 $licenceData[$index]['seenQualification'] = $result['seenQualification'];
