@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateDetails as UpdateDetailsCommand;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * UpdateDetails
@@ -44,12 +45,15 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
         $this->updateWorkAddress($tma, $command->getWorkAddress());
         $tma->getTransportManager()->getHomeCd()->setEmailAddress($command->getEmail());
         $tma->getTransportManager()->getHomeCd()->getPerson()->setBirthPlace($command->getPlaceOfBirth());
-        $tma->getTransportManager()->getHomeCd()->getPerson()->setBirthDate(new DateTime($command->getDob()));
 
         if ($command->getSubmit() === 'Y') {
+            $this->validateDob($command->getDob());
             // could validate the TMA here?
             $tma->setDeclarationConfirmation('Y');
         }
+        $tma->getTransportManager()->getHomeCd()->getPerson()->setBirthDate(
+            $command->getDob() ? new DateTime($command->getDob()) : null
+        );
 
         $this->getRepo()->save($tma);
 
@@ -150,5 +154,24 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
             $addressData['postcode'],
             $countryCode
         );
+    }
+
+    /**
+     * Validate dob field
+     *
+     * @param array $dob
+     * @throws ValidationException
+     */
+    protected function validateDob($dob)
+    {
+        if (!$dob) {
+            throw new ValidationException(
+                [
+                    'dob' => [
+                        TransportManagerApplication::ERROR_DOB_REQUIRED => 'Date of birth is required'
+                    ]
+                ]
+            );
+        }
     }
 }
