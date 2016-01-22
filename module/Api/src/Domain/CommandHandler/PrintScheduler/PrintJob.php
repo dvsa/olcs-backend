@@ -62,14 +62,11 @@ final class PrintJob extends AbstractCommandHandler implements UploaderAwareInte
         //$destination = $printer->getPrinterName();
         $destination = 'OLCS';
 
-        // @todo Get the real username
-        //$username = $user->getContactDetails()->getPerson()->getFullName();
-        // Hardcoded to my username for now, as this places the PDFs in my home dir, so I can check the output
-        $username = 'caigerr';
+        $username = $user->getContactDetails()->getPerson()->getFullName();
 
         $this->printFile(
             $fileName,
-            $command->getTitle(),
+            basename($fileName),
             $destination,
             $username
         );
@@ -83,7 +80,7 @@ final class PrintJob extends AbstractCommandHandler implements UploaderAwareInte
     {
         $tmpFile = str_replace(' ', '_', '/tmp/' . $prefix . '-' . uniqid() . '-' . $fileSuffix);
 
-        if (file_put_contents($tmpFile, $file->getContent())) {
+        if (file_put_contents($tmpFile, trim($file->getContent()))) {
             return $tmpFile;
         }
 
