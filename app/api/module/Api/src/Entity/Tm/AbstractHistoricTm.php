@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\Tm;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;

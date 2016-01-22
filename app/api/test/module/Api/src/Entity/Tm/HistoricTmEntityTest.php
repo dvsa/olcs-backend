@@ -1,9 +1,9 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Entity;
+namespace Dvsa\OlcsTest\Api\Entity\Tm;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\HistoricTm as Entity;
+use Dvsa\Olcs\Api\Entity\Tm\HistoricTm as Entity;
 
 /**
  * HistoricTm Entity Unit Tests

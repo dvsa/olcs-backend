@@ -13,14 +13,15 @@ return [
     QueryHandler\TransportManagerApplication\GetDetails::class             => Misc\CanAccessTmaWithId::class,
     QueryHandler\TransportManagerApplication\GetForResponsibilities::class => Misc\CanAccessTmaWithId::class,
     QueryHandler\TransportManagerApplication\Review::class                 => Misc\CanAccessTmaWithId::class,
+    QueryHandler\TransportManagerApplication\GetList::class => Handler\TransportManagerApplication\GetList::class,
 
     QueryHandler\TransportManagerLicence\GetForResponsibilities::class     => Misc\CanAccessTmlWithId::class,
-
-    QueryHandler\TransportManagerApplication\GetList::class => Handler\TransportManagerApplication\GetList::class,
     QueryHandler\TransportManagerLicence\GetList::class            => Misc\CanAccessLicenceWithLicence::class,
     QueryHandler\TransportManagerLicence\GetListByVariation::class => Misc\CanAccessVariationWithVariation::class,
 
     QueryHandler\Tm\TransportManager::class                        => Misc\IsInternalUser::class,
+
+    QueryHandler\Tm\HistoricTm::class => Misc\IsInternalUser::class,
 
     // Commands
     CommandHandler\TransportManagerApplication\Create::class => Handler\TransportManagerApplication\Create::class,
