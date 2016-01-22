@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\Tm\HistoricTm as HistoricTmEntity;
 class HistoricTm extends AbstractQueryHandler
 {
     const LICENCE_FLAG = 'L';
+    const APPLICATION_FLAG = 'A';
 
     protected $repoServiceName = 'HistoricTm';
 
@@ -74,7 +75,7 @@ class HistoricTm extends AbstractQueryHandler
         $applicationData = [];
         $index = 0;
         foreach ($results as $result) {
-            if (!empty($result['applicationId'])) {
+            if (!empty($result['applicationId']) && $result['licOrApp'] === self::APPLICATION_FLAG) {
                 $applicationData[$index]['licNo'] = $result['licNo'];
                 $applicationData[$index]['applicationId'] = $result['applicationId'];
                 $applicationData[$index]['seenContract'] = $result['seenContract'];
