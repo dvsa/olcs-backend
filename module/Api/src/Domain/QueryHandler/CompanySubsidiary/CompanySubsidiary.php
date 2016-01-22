@@ -21,6 +21,9 @@ class CompanySubsidiary extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchUsingId($query);
+        return $this->result(
+            $this->getRepo()->fetchUsingId($query),
+            []
+        );
     }
 }
