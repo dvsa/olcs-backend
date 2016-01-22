@@ -38,6 +38,7 @@ class TransportManagerApplication extends AbstractTransportManagerApplication im
     const STATUS_RECEIVED = 'tmap_st_received';
 
     const ERROR_TM_EXIST = 'tm_exist';
+    const ERROR_DOB_REQUIRED = 'dob_required';
 
     const ERROR_MON = 'err_mon';
     const ERROR_TUE = 'err_tue';
