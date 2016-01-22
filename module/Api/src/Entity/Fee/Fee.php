@@ -33,8 +33,6 @@ class Fee extends AbstractFee
 {
     const STATUS_OUTSTANDING       = 'lfs_ot';
     const STATUS_PAID              = 'lfs_pd';
-    const STATUS_WAIVE_RECOMMENDED = 'lfs_wr'; // @deprecated
-    const STATUS_WAIVED            = 'lfs_w'; // @deprecated
     const STATUS_CANCELLED         = 'lfs_cn';
 
     const ACCRUAL_RULE_LICENCE_START = 'acr_licence_start';

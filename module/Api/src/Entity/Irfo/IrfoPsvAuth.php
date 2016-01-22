@@ -125,13 +125,7 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
      */
     private function isPaidFor($applicationFeeStatusId = null)
     {
-        if (!empty($applicationFeeStatusId) &&
-            in_array($applicationFeeStatusId, [Fee::STATUS_PAID, Fee::STATUS_WAIVED])
-        ) {
-            return true;
-        }
-
-        return false;
+        return ($applicationFeeStatusId === Fee::STATUS_PAID);
     }
 
     /**
