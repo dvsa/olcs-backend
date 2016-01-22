@@ -195,4 +195,7 @@ return [
             'ns' => 'https://webgate.ec.testa.eu/erru/1.0'
         ]
     ],
+    'print' => [
+        'server' => 'print01.olcs.mgt.mtpdvsa:631'
+    ]
 );

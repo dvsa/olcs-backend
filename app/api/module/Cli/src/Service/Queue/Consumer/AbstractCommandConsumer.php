@@ -18,6 +18,8 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
  */
 abstract class AbstractCommandConsumer extends AbstractConsumer
 {
+    protected $maxAttempts;
+
     /**
      * @var string the command to handle processing
      */
@@ -46,6 +48,10 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
      */
     public function processMessage(QueueEntity $item)
     {
+        if (!empty($this->maxAttempts) && $item->getAttempts() > $this->maxAttempts) {
+            return $this->failed($item, 'Maximum attempts exceeded');
+        }
+
         $commandClass = $this->getCommandName($item);
         $commandData = $this->getCommandData($item);
         $command = $commandClass::create($commandData);

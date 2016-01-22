@@ -862,4 +862,6 @@ return [
     TransferCommand\Cpms\DownloadReport::class => CommandHandler\Cpms\DownloadReport::class,
 
     Command\SystemParameter\Update::class => CommandHandler\SystemParameter\Update::class,
+
+    Command\PrintScheduler\PrintJob::class => CommandHandler\PrintScheduler\PrintJob::class,
 ];
