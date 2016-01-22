@@ -181,7 +181,7 @@ class ContinuationDetail extends AbstractRepository
         return $this->filterByFee(
             $qb->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY),
             FeeTypeEntity::FEE_TYPE_CONT,
-            [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED]
+            [FeeEntity::STATUS_OUTSTANDING]
         );
     }
 
