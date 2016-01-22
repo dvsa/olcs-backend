@@ -1,29 +1,21 @@
 <?php
 
 /**
- * CeasePsvDiscs.php
+ * Cease Psv Discs
  *
- * @author Josh Curtis <josh.curtis@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\Command\Discs;
 
-/**
- * Class CeasePsvDiscs
- *
- * Cease discs dto.
- *
- * @package Dvsa\Olcs\Api\Domain\Command\Discs
- * @author Josh Curtis <josh.curtis@valtech.co.uk>
- */
-final class CeasePsvDiscs extends \Dvsa\Olcs\Transfer\Command\AbstractCommand
-{
-    protected $discs;
+use Dvsa\Olcs\Transfer\FieldType\Traits\Licence;
+use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
-    /**
-     * @return mixed
-     */
-    public function getDiscs()
-    {
-        return $this->discs;
-    }
+/**
+ * Cease Psv Discs
+ *
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ */
+final class CeasePsvDiscs extends AbstractCommand
+{
+    use Licence;
 }

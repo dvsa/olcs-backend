@@ -1129,7 +1129,7 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-transfer.git",
-                "reference": "5f2d33f6b6b49ebd7804a509aca53d0a15225562"
+                "reference": "0f5bc3468ecf00e0c277754471e21cf883f31f8b"
             },
             "require": {
                 "php": ">=5.4",
@@ -1147,7 +1147,7 @@
                 }
             },
             "description": "OLCS Transfer",
-            "time": "2016-01-19 10:54:39"
+            "time": "2016-01-22 11:20:51"
         },
         {
             "name": "olcs/olcs-utils",

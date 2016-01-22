@@ -52,10 +52,15 @@ class IrfoPsvAuthTest extends QueryHandlerTestCase
             ->with($id)
             ->andReturn($mockApplicationFee);
 
+        $this->repoMap['Fee']->shouldReceive('fetchFeesByIrfoPsvAuthId')
+            ->with($id, true)
+            ->andReturn([]);
+
         $result = $this->sut->handleQuery($query);
 
         $results = $result->serialize();
         $this->assertContains('isGrantable', $results);
+        $this->assertContains('isApprovable', $results);
         $this->assertContains('isRefusable', $results);
         $this->assertContains('isWithdrawable', $results);
         $this->assertContains('isCnsable', $results);
@@ -85,6 +90,10 @@ class IrfoPsvAuthTest extends QueryHandlerTestCase
         $this->repoMap['Fee']->shouldReceive('fetchApplicationFeeByPsvAuthId')
             ->with($id)
             ->andReturn($mockApplicationFee);
+
+        $this->repoMap['Fee']->shouldReceive('fetchFeesByIrfoPsvAuthId')
+            ->with($id, true)
+            ->andReturn([]);
 
         $result = $this->sut->handleQuery($query);
 

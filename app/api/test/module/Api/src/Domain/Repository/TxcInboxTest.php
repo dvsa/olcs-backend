@@ -160,34 +160,4 @@ class TxcInboxTest extends RepositoryTestCase
             ' AND m.localAuthority IS NULL';
         $this->assertEquals($expectedQuery, $this->query);
     }
-
-    /**
-     * Test fetch for operator. Uses same method but queries where local_authority IS NULL
-     */
-    public function testFetchUnreadListForOperator()
-    {
-        $qb = $this->createMockQb('BLAH');
-
-        $this->mockCreateQueryBuilder($qb);
-
-        $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('m.busReg', 'b')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('b.ebsrSubmissions', 'e')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('b.licence', 'l')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('b.otherServices')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('l.organisation')->once()->andReturnSelf();
-
-        $qb->shouldReceive('getQuery')->andReturn(
-            m::mock()->shouldReceive('execute')
-                ->shouldReceive('getResult')
-                ->andReturn(['RESULTS'])
-                ->getMock()
-        );
-        $this->assertEquals(['RESULTS'], $this->sut->fetchUnreadListForOrganisation(1, 'SUB_TYPE', 'SUB_STATUS'));
-
-        $expectedQuery = 'BLAH AND e.ebsrSubmissionType = [[SUB_TYPE]] ' .
-            'AND e.ebsrSubmissionStatus = [[SUB_STATUS]] AND m.localAuthority IS NULL AND m.organisation = [[1]]';
-        $this->assertEquals($expectedQuery, $this->query);
-    }
 }

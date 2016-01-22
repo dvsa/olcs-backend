@@ -293,6 +293,7 @@ return [
     TransferCommand\Irfo\CreateIrfoPsvAuth::class => CommandHandler\Irfo\CreateIrfoPsvAuth::class,
     TransferCommand\Irfo\UpdateIrfoPsvAuth::class => CommandHandler\Irfo\UpdateIrfoPsvAuth::class,
     TransferCommand\Irfo\GrantIrfoPsvAuth::class => CommandHandler\Irfo\GrantIrfoPsvAuth::class,
+    TransferCommand\Irfo\ApproveIrfoPsvAuth::class => CommandHandler\Irfo\ApproveIrfoPsvAuth::class,
     TransferCommand\Irfo\RefuseIrfoPsvAuth::class => CommandHandler\Irfo\RefuseIrfoPsvAuth::class,
     TransferCommand\Irfo\WithdrawIrfoPsvAuth::class => CommandHandler\Irfo\WithdrawIrfoPsvAuth::class,
     TransferCommand\Irfo\CnsIrfoPsvAuth::class => CommandHandler\Irfo\CnsIrfoPsvAuth::class,
@@ -861,4 +862,6 @@ return [
     TransferCommand\Cpms\DownloadReport::class => CommandHandler\Cpms\DownloadReport::class,
 
     Command\SystemParameter\Update::class => CommandHandler\SystemParameter\Update::class,
+
+    Command\PrintScheduler\PrintJob::class => CommandHandler\PrintScheduler\PrintJob::class,
 ];

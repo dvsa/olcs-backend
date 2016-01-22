@@ -69,6 +69,6 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler
             return CeaseGoodsDiscs::create(['licence' => $licence->getId()]);
         }
 
-        return CeasePsvDiscs::create(['discs' => $licence->getPsvDiscs()]);
+        return CeasePsvDiscs::create(['licence' => $licence->getId()]);
     }
 }
