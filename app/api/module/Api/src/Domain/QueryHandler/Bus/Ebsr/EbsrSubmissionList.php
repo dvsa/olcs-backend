@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TxcInbox List
+ * EbsrSubmission List
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr;
 
@@ -10,22 +10,21 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as Repository;
+use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as Repository;
 use Doctrine\ORM\Query as DoctrineQuery;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
- * TxcInboxList
+ * EbsrSubmissionList
  * This QueryHandler will query one of two tables.
- * Either the TxcInbox table (for LAs) or the EbsrSubmission table (operators/organisation users).
+ * Either the EbsrSubmission table (for LAs) or the EbsrSubmission table (operators/organisation users).
  */
-class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
+class EbsrSubmissionList extends AbstractQueryHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
-    protected $repoServiceName = 'TxcInbox';
-    protected $extraRepos = ['EbsrSubmission'];
+    protected $repoServiceName = 'EbsrSubmission';
 
     /**
      * @return array
@@ -35,18 +34,16 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
         /** @var Repository $repo */
         $repo = $this->getRepo();
 
-        $currentUser = $this->getCurrentUser();
+        $organisation = $this->getCurrentOrganisation();
 
-        $localAuthority = $currentUser->getLocalAuthority();
-
-        $txcInboxEntries = $repo->fetchUnreadListForLocalAuthority(
+        $ebsrSubmissionEntries = $repo->fetchByOrganisation(
             $query,
-            $localAuthority
+            $organisation
         );
 
         return [
             'result' => $this->resultList(
-                $txcInboxEntries,
+                $ebsrSubmissionEntries,
                 [
                     'busReg' => [
                         'ebsrSubmissions' => [
@@ -60,7 +57,7 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
                     ]
                 ]
             ),
-            'count' => count($txcInboxEntries)
+            'count' => count($ebsrSubmissionEntries)
         ];
     }
 }

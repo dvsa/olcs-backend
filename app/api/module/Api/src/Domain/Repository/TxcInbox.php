@@ -4,6 +4,9 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as Entity;
 use Doctrine\ORM\Query;
+use Zend\Stdlib\ArraySerializableInterface as QryCmd;
+use Dvsa\Olcs\Transfer\Query\OrderedQueryInterface;
+use Dvsa\Olcs\Transfer\Query\PagedQueryInterface;
 
 /**
  * TxcInbox
@@ -99,12 +102,11 @@ class TxcInbox extends AbstractRepository
      * @return array
      */
     public function fetchUnreadListForLocalAuthority(
+        QryCmd $query,
         $localAuthority,
-        $ebsrSubmissionType = null,
-        $ebsrSubmissionStatus = null,
         $hydrateMode = Query::HYDRATE_OBJECT
     ) {
-        $qb = $this->getUnreadListQuery($ebsrSubmissionType, $ebsrSubmissionStatus);
+        $qb = $this->getUnreadListQuery($query);
 
         if (empty($localAuthority)) {
             $qb->andWhere($qb->expr()->isNull($this->alias . '.localAuthority'));
@@ -124,10 +126,8 @@ class TxcInbox extends AbstractRepository
      * @param null $ebsrSubmissionStatus
      * @return \Doctrine\Orm\QueryBuilder
      */
-    private function getUnreadListQuery(
-        $ebsrSubmissionType = null,
-        $ebsrSubmissionStatus = null
-    ) {
+    private function getUnreadListQuery(QryCmd $query)
+    {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
 
@@ -139,14 +139,31 @@ class TxcInbox extends AbstractRepository
             ->with('b.otherServices')
             ->with('l.organisation');
 
-        if (!empty($ebsrSubmissionType)) {
-            $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionType', ':ebsrSubmissionType'))
-                ->setParameter('ebsrSubmissionType', $ebsrSubmissionType);
+        if ($query instanceof PagedQueryInterface) {
+            $this->getQueryBuilder()->paginate($query->getPage(), $query->getLimit());
         }
 
-        if (!empty($ebsrSubmissionStatus)) {
+        if ($query instanceof OrderedQueryInterface) {
+            if (!empty($query->getSort())) {
+                // allow ordering by multiple columns
+                $sortColumns = explode(',', $query->getSort());
+                $orderColumns = explode(',', $query->getOrder());
+                for ($i = 0; $i < count($sortColumns); $i++) {
+                    // if multiple order value doesn't exist then use the first one
+                    $order = isset($orderColumns[$i]) ? $orderColumns[$i] : $orderColumns[0];
+                    $this->getQueryBuilder()->order($sortColumns[$i], $order);
+                }
+            }
+        }
+
+        if (!empty($query->getEbsrSubmissionType())) {
+            $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionType', ':ebsrSubmissionType'))
+                ->setParameter('ebsrSubmissionType', $query->getEbsrSubmissionType());
+        }
+
+        if (!empty($query->getEbsrSubmissionStatus())) {
             $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionStatus', ':ebsrSubmissionStatus'))
-                ->setParameter('ebsrSubmissionStatus', $ebsrSubmissionStatus);
+                ->setParameter('ebsrSubmissionStatus', $query->getEbsrSubmissionStatus());
         }
 
         return $qb;
