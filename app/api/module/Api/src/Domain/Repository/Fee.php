@@ -267,10 +267,11 @@ class Fee extends AbstractRepository
      * Fetch all fees by irfoPsvAuthId
      *
      * @param int $irfoPsvAuthId
+     * @param bool $outstanding Only get fees that are outstanding
      *
      * @return array
      */
-    public function fetchFeesByIrfoPsvAuthId($irfoPsvAuthId)
+    public function fetchFeesByIrfoPsvAuthId($irfoPsvAuthId, $outstanding = false)
     {
         $doctrineQb = $this->createQueryBuilder();
 
@@ -282,6 +283,10 @@ class Fee extends AbstractRepository
         $doctrineQb
             ->andWhere($doctrineQb->expr()->eq($this->alias . '.irfoPsvAuth', ':irfoPsvAuthId'))
             ->setParameter('irfoPsvAuthId', $irfoPsvAuthId);
+
+        if ($outstanding) {
+            $this->whereOutstandingFee($doctrineQb);
+        }
 
         return $doctrineQb->getQuery()->getResult();
     }

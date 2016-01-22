@@ -41,6 +41,9 @@ class IrfoPsvAuth extends AbstractQueryHandler
                 'isGrantable' => $irfoPsvAuth->isGrantable(
                     $this->getRepo('Fee')->fetchApplicationFeeByPsvAuthId($irfoPsvAuth->getId())
                 ),
+                'isApprovable' => $irfoPsvAuth->isApprovable(
+                    $this->getRepo('Fee')->fetchFeesByIrfoPsvAuthId($irfoPsvAuth->getId(), true)
+                ),
                 'isRefusable' => $irfoPsvAuth->isRefusable(),
                 'isWithdrawable' => $irfoPsvAuth->isWithdrawable(),
                 'isCnsable' => $irfoPsvAuth->isCnsable(),
