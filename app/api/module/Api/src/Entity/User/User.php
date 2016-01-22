@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 
 /**
@@ -501,6 +502,22 @@ class User extends AbstractUser implements OrganisationProviderInterface
             return null;
         }
         return $this->getOrganisationUsers()->current()->getOrganisation();
+    }
+
+    /**
+     * Checks if the user belongs to an org with at least one active PSV Licence
+     *
+     * @return bool
+     */
+    public function hasActivePsvLicence()
+    {
+        $org = $this->getRelatedOrganisation();
+
+        if ($org !== null) {
+            return $org->hasActiveLicences(LicenceEntity::LICENCE_CATEGORY_PSV);
+        }
+
+        return false;
     }
 
     /**
