@@ -62,7 +62,10 @@ final class PrintJob extends AbstractCommandHandler implements UploaderAwareInte
         //$destination = $printer->getPrinterName();
         $destination = 'OLCS';
 
+        // @todo Print server doesn't have perm to gen PDF unless the user exists on the box :(
         $username = $user->getContactDetails()->getPerson()->getFullName();
+        // Hardcoded to my username for now, as this places the PDFs in my home dir, so I can check the output
+        $username = 'caigerr';
 
         $this->printFile(
             $fileName,
