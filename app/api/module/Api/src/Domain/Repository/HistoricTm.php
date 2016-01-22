@@ -25,7 +25,6 @@ class HistoricTm extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        /** DTO $query */
         $qb->andWhere($qb->expr()->eq($this->alias . '.historicId', ':historicId'))
             ->setParameter('historicId', $query->getHistoricId());
     }
