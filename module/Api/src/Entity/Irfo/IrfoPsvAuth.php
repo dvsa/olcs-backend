@@ -189,6 +189,48 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
     }
 
     /**
+     * Is in an approvable state
+     *
+     * @return bool
+     */
+    private function isApprovableState()
+    {
+        return ($this->getStatus()->getId() === self::STATUS_GRANTED);
+    }
+
+    /**
+     * Is approvable?
+     *
+     * @param array $outstandingFees
+     * @return bool
+     */
+    public function isApprovable($outstandingFees)
+    {
+        return ($this->isApprovableState() && empty($outstandingFees));
+    }
+
+    /**
+     * Approve
+     *
+     * @param RefData $status
+     * @param array $outstandingFees
+     * @return $this
+     * @throws BadRequestException
+     */
+    public function approve(RefData $status, $outstandingFees)
+    {
+        if (!$this->isApprovable($outstandingFees)) {
+            throw new BadRequestException(
+                'Irfo Psv Auth is not approvable'
+            );
+        }
+
+        $this->setStatus($status);
+
+        return $this;
+    }
+
+    /**
      * Is refusable? Yes if entity status is renew/pending
      *
      * @return bool

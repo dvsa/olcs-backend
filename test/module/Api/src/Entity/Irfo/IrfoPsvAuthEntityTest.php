@@ -376,4 +376,59 @@ class IrfoPsvAuthEntityTest extends EntityTester
 
         $this->entity->continuationNotSought($newStatus);
     }
+
+    /**
+     * @dataProvider isApprovableStates
+     */
+    public function testIsApprovable($statusId, $outstandingFees, $expected)
+    {
+        $status = new RefData();
+        $status->setId($statusId);
+        $this->entity->setStatus($status);
+
+        $this->assertEquals($expected, $this->entity->isApprovable($outstandingFees));
+    }
+
+    public function isApprovableStates()
+    {
+        return [
+            [Entity::STATUS_PENDING, [], false],
+            [Entity::STATUS_CNS, [], false],
+            [Entity::STATUS_RENEW, [], false],
+            [Entity::STATUS_APPROVED, [], false],
+            [Entity::STATUS_WITHDRAWN, [], false],
+            [Entity::STATUS_GRANTED, [], true],
+            [Entity::STATUS_GRANTED, ['FEE'], false],
+            [Entity::STATUS_REFUSED, [], false]
+        ];
+    }
+
+    public function testApprove()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_GRANTED);
+        $this->entity->setStatus($status);
+
+        $newStatus = new RefData();
+        $newStatus->setId(Entity::STATUS_APPROVED);
+
+        $this->entity->approve($newStatus, []);
+
+        $this->assertEquals($newStatus, $this->entity->getStatus());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testApproveThrowsException()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_GRANTED);
+        $this->entity->setStatus($status);
+
+        $newStatus = new RefData();
+        $newStatus->setId(Entity::STATUS_APPROVED);
+
+        $this->entity->approve($newStatus, ['FEE']);
+    }
 }
