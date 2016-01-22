@@ -37,8 +37,7 @@ class HistoricTm extends AbstractQueryHandler
     {
         /* @var $repo HistoricTmRepo */
         $repo = $this->getRepo();
-        $applicationData = [];
-        $licenceData = [];
+        $additionalData = ['applications', 'licences'];
         $historicTm = null;
 
         /** @var \ArrayIterator $results */
@@ -47,74 +46,54 @@ class HistoricTm extends AbstractQueryHandler
         if (!empty($results)) {
             /** @var HistoricTmEntity $historicTm */
             $historicTm = $repo->fetchById($results[0]['id']);
-            if ($historicTm instanceof HistoricTmEntity) {
-                $applicationData = $this->generateApplicationData($results);
-                $licenceData = $this->generateLicenceData($results);
-            }
+            $additionalData = $this->generateAdditionalData($results);
         }
 
         return $this->result(
             $historicTm,
             [],
             [
-                'applicationData' => $applicationData,
-                'licenceData' => $licenceData
+                'applicationData' => $additionalData['applications'],
+                'licenceData' => $additionalData['licences']
             ]
         );
     }
 
     /**
-     * Extract application data from each result
+     * Extract application and licence data from each result
      *
      * @param $results
      *
      * @return array
      */
-    private function generateApplicationData($results)
+    private function generateAdditionalData($results)
     {
         $applicationData = [];
-        $index = 0;
-        foreach ($results as $result) {
-            if (!empty($result['applicationId']) && $result['licOrApp'] === self::APPLICATION_FLAG) {
-                $applicationData[$index]['licNo'] = $result['licNo'];
-                $applicationData[$index]['applicationId'] = $result['applicationId'];
-                $applicationData[$index]['seenContract'] = $result['seenContract'];
-                $applicationData[$index]['seenQualification'] = $result['seenQualification'];
-                $applicationData[$index]['hoursPerWeek'] = $result['hoursPerWeek'];
-                $applicationData[$index]['dateAdded'] = $result['dateAdded'];
-                $applicationData[$index]['dateRemoved'] = $result['dateRemoved'];
-
-                $index++;
-            }
-        }
-        return $applicationData;
-    }
-
-    /**
-     * Extract licence data from each result
-     *
-     * @param $results
-     *
-     * @return array
-     */
-    private function generateLicenceData($results)
-    {
         $licenceData = [];
-        $index = 0;
+        $appIndex = 0;
+        $licIndex = 0;
         foreach ($results as $result) {
-            if (!empty($result['licNo']) && $result['licOrApp'] === self::LICENCE_FLAG) {
-                $licenceData[$index]['licNo'] = $result['licNo'];
-                $licenceData[$index]['licenceOrApp'] = $result['licOrApp'];
-                $licenceData[$index]['seenContract'] = $result['seenContract'];
-                $licenceData[$index]['seenQualification'] = $result['seenQualification'];
-                $licenceData[$index]['hoursPerWeek'] = $result['hoursPerWeek'];
-                $licenceData[$index]['dateAdded'] = $result['dateAdded'];
-                $licenceData[$index]['dateRemoved'] = $result['dateRemoved'];
-
-                $index++;
+            if ($result['licOrApp'] === self::APPLICATION_FLAG) {
+                $applicationData[$appIndex]['licNo'] = $result['licNo'];
+                $applicationData[$appIndex]['applicationId'] = $result['applicationId'];
+                $applicationData[$appIndex]['seenContract'] = $result['seenContract'];
+                $applicationData[$appIndex]['seenQualification'] = $result['seenQualification'];
+                $applicationData[$appIndex]['hoursPerWeek'] = $result['hoursPerWeek'];
+                $applicationData[$appIndex]['dateAdded'] = $result['dateAdded'];
+                $applicationData[$appIndex]['dateRemoved'] = $result['dateRemoved'];
+                $appIndex++;
+            } else {
+                $licenceData[$licIndex]['licNo'] = $result['licNo'];
+                $licenceData[$licIndex]['licenceOrApp'] = $result['licOrApp'];
+                $licenceData[$licIndex]['seenContract'] = $result['seenContract'];
+                $licenceData[$licIndex]['seenQualification'] = $result['seenQualification'];
+                $licenceData[$licIndex]['hoursPerWeek'] = $result['hoursPerWeek'];
+                $licenceData[$licIndex]['dateAdded'] = $result['dateAdded'];
+                $licenceData[$licIndex]['dateRemoved'] = $result['dateRemoved'];
+                $licIndex++;
             }
         }
 
-        return $licenceData;
+        return ['applications' => $applicationData, 'licences' => $licenceData];
     }
 }
