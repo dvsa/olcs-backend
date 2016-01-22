@@ -54,7 +54,7 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
         if ($licence->isGoods()) {
             $dto = CeaseGoodsDiscs::create(['licence' => $licence->getId()]);
         } else {
-            $dto = CeasePsvDiscs::create(['discs' => $licence->getPsvDiscs()]);
+            $dto = CeasePsvDiscs::create(['licence' => $licence->getId()]);
         }
 
         $result->merge($this->handleSideEffect($dto));

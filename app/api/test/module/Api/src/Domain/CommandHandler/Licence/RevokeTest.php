@@ -94,7 +94,7 @@ class RevokeTest extends CommandHandlerTestCase
         $ceaseDiscsResult = new Result();
         $this->expectedSideEffect(
             CeasePsvDiscs::class,
-            array('discs' => new ArrayCollection()),
+            array('licence' => 532),
             $ceaseDiscsResult
         );
 
@@ -172,7 +172,7 @@ class RevokeTest extends CommandHandlerTestCase
         $ceaseDiscsResult = new Result();
         $this->expectedSideEffect(
             CeasePsvDiscs::class,
-            array('discs' => new ArrayCollection()),
+            array('licence' => 532),
             $ceaseDiscsResult
         );
 

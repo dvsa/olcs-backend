@@ -54,7 +54,7 @@ final class Void extends AbstractCommandHandler implements TransactionedInterfac
         $updateResult = $this->handleSideEffect($updateTotalCommunityLicences);
         $result->merge($updateResult);
 
-        if ($command->getApplication()) {
+        if (method_exists($command, 'getApplication') && $command->getApplication()) {
             $result->merge(
                 $this->handleSideEffect(
                     UpdateApplicationCompletion::create(

@@ -92,7 +92,7 @@ class SurrenderTest extends CommandHandlerTestCase
         $ceaseDiscsResult = new Result();
         $this->expectedSideEffect(
             CeasePsvDiscs::class,
-            array('discs' => new ArrayCollection(['disc1', 'disc2'])),
+            array('licence' => 532),
             $ceaseDiscsResult
         );
 
@@ -253,7 +253,7 @@ class SurrenderTest extends CommandHandlerTestCase
         $ceaseDiscsResult = new Result();
         $this->expectedSideEffect(
             CeasePsvDiscs::class,
-            array('discs' => new ArrayCollection(['disc1', 'disc2'])),
+            array('licence' => 532),
             $ceaseDiscsResult
         );
 
@@ -337,7 +337,7 @@ class SurrenderTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             CeasePsvDiscs::class,
-            array('discs' => new ArrayCollection(['disc1', 'disc2'])), new Result()
+            array('licence' => 532), new Result()
         );
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
