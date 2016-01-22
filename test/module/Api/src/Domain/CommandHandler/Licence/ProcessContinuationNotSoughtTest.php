@@ -156,7 +156,7 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             CeasePsvDiscs::class,
-            ['discs' => $psvDiscs],
+            ['licence' => $licenceId],
             (new Result())->addMessage('PSV discs ceased')
         );
 
