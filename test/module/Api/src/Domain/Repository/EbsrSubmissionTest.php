@@ -24,6 +24,10 @@ class EbsrSubmissionTest extends RepositoryTestCase
         $qb = $this->createMockQb('BLAH');
 
         $this->mockCreateQueryBuilder($qb);
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('withRefdata')->with()->once()->andReturnSelf()
+            ->shouldReceive('with')->andReturnSelf();
 
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()->shouldReceive('execute')
@@ -31,9 +35,19 @@ class EbsrSubmissionTest extends RepositoryTestCase
                 ->andReturn(['RESULTS'])
                 ->getMock()
         );
-        $this->assertEquals(['RESULTS'], $this->sut->fetchByOrganisation('ORG1'));
 
-        $expectedQuery = 'BLAH AND m.organisation = [[ORG1]]';
+        $this->assertEquals(
+            [
+                'RESULTS'
+            ], $this->sut->fetchByOrganisation(
+                'ORG1',
+                'submission_type',
+                'submission_status'
+            )
+        );
+
+        $expectedQuery = 'BLAH AND m.ebsrSubmissionType = [[submission_type]] AND e.ebsrSubmissionStatus = ' .
+            '[[submission_status]] AND m.organisation = [[ORG1]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 }

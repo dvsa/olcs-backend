@@ -90,7 +90,7 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
         // Void any discs
         $result->merge(
             $this->handleSideEffect(
-                \Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs::create(['discs' => $licence->getPsvDiscs()])
+                \Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs::create(['licence' => $licence->getId()])
             )
         );
 

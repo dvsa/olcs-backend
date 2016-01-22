@@ -768,4 +768,57 @@ class FeeTest extends RepositoryTestCase
             $this->sut->fetchFeesByIrfoPsvAuthId($irfoPsvAuthId)
         );
     }
+
+    public function testFetchFeesByIrfoPsvAuthIdOutstanding()
+    {
+        $irfoPsvAuthId = 123;
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->em
+            ->shouldReceive('getReference')
+            ->with(
+                \Dvsa\Olcs\Api\Entity\System\RefData::class,
+                \Dvsa\Olcs\Api\Entity\Fee\Fee::STATUS_OUTSTANDING
+            )
+            ->once()
+            ->andReturn('ot')
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('f')
+            ->once()
+            ->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($mockQb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('order')
+            ->with('invoicedDate', 'ASC')
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb
+            ->shouldReceive('expr->eq');
+        $mockQb
+            ->shouldReceive('andWhere')
+            ->andReturnSelf();
+        $mockQb
+            ->shouldReceive('setParameter')
+            ->with('irfoPsvAuthId', $irfoPsvAuthId)
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('feeStatus', 'ot')
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('result');
+
+        $this->assertSame(
+            'result',
+            $this->sut->fetchFeesByIrfoPsvAuthId($irfoPsvAuthId, true)
+        );
+    }
 }

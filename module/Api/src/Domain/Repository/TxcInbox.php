@@ -118,31 +118,7 @@ class TxcInbox extends AbstractRepository
     }
 
     /**
-     * Fetch a list of unread docs filtered for an Organisation, submission type and status
-     *
-     * @param $organisation
-     * @param null $ebsrSubmissionType
-     * @param null $ebsrSubmissionStatus
-     * @param int $hydrateMode
-     * @return array
-     */
-    public function fetchUnreadListForOrganisation(
-        $organisation,
-        $ebsrSubmissionType = null,
-        $ebsrSubmissionStatus = null,
-        $hydrateMode = Query::HYDRATE_OBJECT
-    ) {
-        $qb = $this->getUnreadListQuery($ebsrSubmissionType, $ebsrSubmissionStatus);
-
-        $qb->andWhere($qb->expr()->isNull($this->alias . '.localAuthority'));
-        $qb->andWhere($qb->expr()->eq($this->alias . '.organisation', ':organisation'))
-            ->setParameter('organisation', $organisation);
-
-        return $qb->getQuery()->getResult($hydrateMode);
-    }
-
-    /**
-     * General Query for unread txc inbox list. Used by LA and operators
+     * General Query for unread txc inbox list. Used by LAs
      *
      * @param null $ebsrSubmissionType
      * @param null $ebsrSubmissionStatus

@@ -157,7 +157,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs::class,
-            ['discs' => ['disc1', 'disc2']],
+            ['licence' => 717],
             new Result()
         );
         $this->expectedSideEffect(
@@ -211,7 +211,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs::class,
-            ['discs' => ['disc1', 'disc2']],
+            ['licence' => 717],
             new Result()
         );
         $this->expectedSideEffect(

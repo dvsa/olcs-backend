@@ -25,18 +25,10 @@ final class CeasePsvDiscs extends AbstractCommandHandler implements Transactione
 
     public function handleCommand(CommandInterface $command)
     {
-        /** @var \Dvsa\Olcs\Api\Entity\Licence\Licence $licence */
-        $discs = $command->getDiscs();
-
-        if(!empty($discs)) {
-            foreach ($discs as $disc) {
-                $disc->cease(new \DateTime());
-                $this->getRepo()->save($disc);
-            }
-        }
+        $this->getRepo()->ceaseDiscsForLicence($command->getLicence());
 
         $result = new Result();
-        $result->addMessage('Ceased '. count($discs) .' discs for licence.');
+        $result->addMessage('Discs ceased');
 
         return $result;
     }
