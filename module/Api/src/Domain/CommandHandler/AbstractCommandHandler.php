@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
@@ -177,6 +178,10 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
         if ($this instanceof TransExchangeAwareInterface) {
             $this->setTransExchange($mainServiceLocator->get(TransExchangeClient::class));
+        }
+
+        if ($this instanceof ConfigAwareInterface) {
+            $this->setConfig($mainServiceLocator->get('Config'));
         }
     }
 
