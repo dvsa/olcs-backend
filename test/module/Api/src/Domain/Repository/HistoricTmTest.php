@@ -17,7 +17,7 @@ use Mockery as m;
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class BusServiceTypeTest extends RepositoryTestCase
+class HistoricTmTest extends RepositoryTestCase
 {
     public function setUp()
     {
