@@ -140,9 +140,25 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     }
 
     /**
+     * Has active licences
+     *
+     * @param string $goodsOrPsv Check only licences of a given goodsOrPsv value
+     *
+     * @return bool
+     */
+    public function hasActiveLicences($goodsOrPsv = null)
+    {
+        return !$this->getActiveLicences($goodsOrPsv)->isEmpty();
+    }
+
+    /**
+     * Get active licences
+     *
+     * @param string $goodsOrPsv Return only licences of a given goodsOrPsv value
+     *
      * @return array LicenceEntity[]
      */
-    public function getActiveLicences()
+    public function getActiveLicences($goodsOrPsv = null)
     {
         $criteria = Criteria::create();
         $criteria->where(
@@ -155,6 +171,10 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                 ]
             )
         );
+
+        if ($goodsOrPsv !== null) {
+            $criteria->andWhere($criteria->expr()->in('goodsOrPsv', [$goodsOrPsv]));
+        }
 
         return $this->getLicences()->matching($criteria);
     }

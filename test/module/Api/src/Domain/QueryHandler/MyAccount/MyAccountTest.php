@@ -36,8 +36,8 @@ class MyAccountTest extends QueryHandlerTestCase
         /** @var User $mockUser */
         $mockUser = m::mock(User::class)->makePartial();
         $mockUser->setId($userId);
-        $mockUser->shouldReceive('serialize')
-            ->andReturn(['foo']);
+        $mockUser->shouldReceive('serialize')->andReturn(['foo']);
+        $mockUser->shouldReceive('hasActivePsvLicence')->andReturn(false);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
@@ -45,7 +45,10 @@ class MyAccountTest extends QueryHandlerTestCase
         $query = Qry::create([]);
 
         $result = $this->sut->handleQuery($query);
-        $this->assertEquals(['foo'], $result->serialize());
+        $this->assertEquals(
+            ['foo', 'hasActivePsvLicence' => false],
+            $result->serialize()
+        );
     }
 
     public function testHandleQueryThrowsNotFoundException()
