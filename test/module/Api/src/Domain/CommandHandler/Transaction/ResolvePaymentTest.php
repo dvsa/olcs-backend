@@ -358,6 +358,10 @@ class ResolvePaymentTest extends CommandHandlerTestCase
                 'Transaction 69 is pending, CPMS status is 827',
             ],
             [
+                CpmsHelper::PAYMENT_ACTIVELY_BEING_TAKEN,
+                'Transaction 69 is pending, CPMS status is 830',
+            ],
+            [
                 'FooBar',
                 'Unexpected status received from CPMS, transaction 69 status FooBar'
             ],
