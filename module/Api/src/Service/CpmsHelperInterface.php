@@ -17,14 +17,18 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 interface CpmsHelperInterface
 {
+    const PAYMENT_IN_PROGRESS  = 800;
     const PAYMENT_SUCCESS      = 801;
     const PAYMENT_FAILURE      = 802;
     const PAYMENT_CANCELLATION = 807;
-    const PAYMENT_IN_PROGRESS  = 800;
     const PAYMENT_REFUNDED     = 809;
     const PAYMENT_GATEWAY_ERROR = 810;
-    const PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED = 825;
     const PAYMENT_PAYMENT_CHARGED_BACK = 820;
+    const PAYMENT_AWAITING_GATEWAY_URL = 824;
+    const PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED = 825;
+    const PAYMENT_END_OF_FLOW_SIGNALLED = 826;
+    const PAYMENT_CARD_PAYMENT_CONFIRMED = 827;
+    const PAYMENT_SYSTEM_ERROR = 828;
 
     const RESPONSE_SUCCESS = '000';
 
