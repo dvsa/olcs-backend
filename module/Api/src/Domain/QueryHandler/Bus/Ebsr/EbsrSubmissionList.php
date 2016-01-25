@@ -36,14 +36,12 @@ class EbsrSubmissionList extends AbstractQueryHandler implements AuthAwareInterf
 
         $organisation = $this->getCurrentOrganisation();
 
-        $ebsrSubmissionEntries = $repo->fetchByOrganisation(
-            $query,
-            $organisation
-        );
-
         return [
-            'result' => $this->resultList(
-                $ebsrSubmissionEntries,
+            'results' => $this->resultList(
+                $repo->fetchByOrganisation(
+                    $query,
+                    $organisation
+                ),
                 [
                     'busReg' => [
                         'ebsrSubmissions' => [
@@ -57,7 +55,7 @@ class EbsrSubmissionList extends AbstractQueryHandler implements AuthAwareInterf
                     ]
                 ]
             ),
-            'count' => count($ebsrSubmissionEntries)
+            'count' => $repo->fetchCount()
         ];
     }
 }
