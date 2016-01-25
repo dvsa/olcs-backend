@@ -62,6 +62,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
             ]
         );
         $workAddressResult = $this->getCommandHandler()->handleCommand($saveWorkAddress);
+        $workCdId = $workAddressResult->getId('contactDetails');
 
         $saveHomeAddress = SaveAddressCmd::create(
             [
@@ -80,7 +81,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         $homeAddressResult = $this->getCommandHandler()->handleCommand($saveHomeAddress);
 
         $contactDetails = $this->updateHomeContactDetails($command);
-        $transportManager = $this->updateTransportManager($command);
+        $transportManager = $this->updateTransportManager($command, $workCdId);
 
         $result->addId('transportManager', $transportManager->getId());
         $result->addMessage('Transport Manager updated successfully');
@@ -92,7 +93,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
             $result->addMessage('Home address updated');
         }
         if ($workAddressResult->getFlag('hasChanged')) {
-            $result->addId('workAddress', $command->getWorkAddressId());
+            $result->addId('workAddress', $workAddressResult->getId('address'));
             $result->addMessage('Work address updated');
         }
         if ($command->getHomeCdVersion() !== $contactDetails->getVersion()) {
@@ -114,13 +115,13 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         return $contactDetails;
     }
 
-    protected function updateTransportManager($command)
+    protected function updateTransportManager($command, $workCdId = null)
     {
         $transportManager = $this->getRepo('TransportManager')->fetchById($command->getId());
         $transportManager->updateTransportManager(
             $this->getRepo()->getRefdataReference($command->getType()),
             $this->getRepo()->getRefdataReference($command->getStatus()),
-            null,
+            $workCdId ? $this->getRepo()->getReference(ContactDetails::class, $workCdId) : null,
             null,
             null,
             $this->getCurrentUser()
