@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LaEntity;
  * Class LocalAuthorityMissingTest
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator
  */
-class LocalAuthorityNotRequiredTest extends MockeryTestCase
+class LocalAuthorityMissingTest extends MockeryTestCase
 {
     /**
      * tests whether missing local authorities not required are correctly identified
