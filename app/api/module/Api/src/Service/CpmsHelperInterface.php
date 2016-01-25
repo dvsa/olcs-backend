@@ -29,6 +29,7 @@ interface CpmsHelperInterface
     const PAYMENT_END_OF_FLOW_SIGNALLED = 826;
     const PAYMENT_CARD_PAYMENT_CONFIRMED = 827;
     const PAYMENT_SYSTEM_ERROR = 828;
+    const PAYMENT_ACTIVELY_BEING_TAKEN = 830;
 
     const RESPONSE_SUCCESS = '000';
 

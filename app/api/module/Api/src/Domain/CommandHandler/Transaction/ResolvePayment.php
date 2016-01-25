@@ -79,6 +79,7 @@ final class ResolvePayment extends AbstractCommandHandler implements
             case Cpms::PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED:
             case Cpms::PAYMENT_END_OF_FLOW_SIGNALLED:
             case Cpms::PAYMENT_CARD_PAYMENT_CONFIRMED:
+            case Cpms::PAYMENT_ACTIVELY_BEING_TAKEN:
                 // do nothing, wait for CPMS to update status
                 $result->addMessage(
                     sprintf('Transaction %d is pending, CPMS status is %s', $transaction->getId(), $cpmsStatus)
