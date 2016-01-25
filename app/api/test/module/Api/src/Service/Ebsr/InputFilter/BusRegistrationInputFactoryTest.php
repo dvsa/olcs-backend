@@ -49,7 +49,7 @@ class BusRegistrationInputFactoryTest extends TestCase
         $service = $sut->createService($mockSl);
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
-        $this->assertCount(6, $service->getFilterChain());
+        $this->assertCount(7, $service->getFilterChain());
         $this->assertCount(3, $service->getValidatorChain());
 
         foreach ($service->getValidatorChain()->getValidators() as $validator) {
