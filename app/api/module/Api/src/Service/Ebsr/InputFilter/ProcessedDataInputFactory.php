@@ -21,8 +21,6 @@ class ProcessedDataInputFactory implements FactoryInterface
     {
         $service = new Input('processed_data');
 
-        $filterChain = $service->getFilterChain();
-
         $validatorChain = $service->getValidatorChain();
         $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\LocalAuthorityNotRequired'));
         $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\LocalAuthorityMissing'));
