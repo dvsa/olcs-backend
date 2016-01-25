@@ -265,22 +265,27 @@ class ResolvePaymentTest extends CommandHandlerTestCase
                 'Transaction 69 resolved as PAYMENT CANCELLED',
             ],
             [
-                CpmsHelper::PAYMENT_IN_PROGRESS,
+                CpmsHelper::PAYMENT_GATEWAY_ERROR,
                 PaymentEntity::STATUS_FAILED,
                 'Transaction 69 resolved as PAYMENT FAILED',
             ],
             [
-                CpmsHelper::PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED,
+                CpmsHelper::PAYMENT_SYSTEM_ERROR,
                 PaymentEntity::STATUS_FAILED,
                 'Transaction 69 resolved as PAYMENT FAILED',
             ],
         ];
     }
 
-    public function testHandleCommandInvalidCpmsStatus()
+    /**
+     *
+     * @param int    $cpmsStatus
+     * @param string $expectedMessage
+     *
+     * @dataProvider otherStatusProvider
+     */
+    public function testHandleCommandOtherStatus($cpmsStatus, $expectedMessage)
     {
-        $cpmsStatus = 'INVALID STATUS';
-
         // set up data
         $paymentId = 69;
         $guid = 'OLCS-1234-ABCDE';
@@ -310,8 +315,52 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ->with($guid)
             ->andReturn($cpmsStatus);
 
-        $this->setExpectedException(ValidationException::class);
+        // payment status should not be changed
+        $payment->shouldReceive('setStatus')->never();
+        // payment(transation) should not be updated
+        $this->repoMap['Transaction']->shouldReceive('save')->never();
 
-        $this->sut->handleCommand($command);
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'transaction' => 69,
+            ],
+            'messages' => [
+                $expectedMessage
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function otherStatusProvider()
+    {
+        return [
+            [
+                CpmsHelper::PAYMENT_IN_PROGRESS,
+                'Transaction 69 is pending, CPMS status is 800',
+            ],
+            [
+                CpmsHelper::PAYMENT_AWAITING_GATEWAY_URL,
+                'Transaction 69 is pending, CPMS status is 824',
+            ],
+            [
+                CpmsHelper::PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED,
+                'Transaction 69 is pending, CPMS status is 825',
+            ],
+            [
+                CpmsHelper::PAYMENT_END_OF_FLOW_SIGNALLED,
+                'Transaction 69 is pending, CPMS status is 826',
+            ],
+            [
+                CpmsHelper::PAYMENT_CARD_PAYMENT_CONFIRMED,
+                'Transaction 69 is pending, CPMS status is 827',
+            ],
+            [
+                'FooBar',
+                'Unexpected status received from CPMS, transaction 69 status FooBar'
+            ],
+        ];
     }
 }
