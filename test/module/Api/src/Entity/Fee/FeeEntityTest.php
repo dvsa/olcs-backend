@@ -1245,4 +1245,50 @@ class FeeEntityTest extends EntityTester
             ],
         ];
     }
+
+    /**
+     * @dataProvider dataProviderIsRuleBeforeInvoiceDate
+     */
+    public function testIsRuleBeforeInvoiceDate($expected, $invoicedDate)
+    {
+        // force the rule date to be now
+        $feeType = m::mock()
+            ->shouldReceive('getAccrualRule')
+            ->andReturn((new RefData())->setId(Entity::ACCRUAL_RULE_IMMEDIATE))
+            ->getMock();
+        $this->sut->setFeeType($feeType);
+
+        $this->sut->setInvoicedDate($invoicedDate);
+
+        $this->assertSame($expected, $this->sut->isRuleBeforeInvoiceDate());
+    }
+
+    public function dataProviderIsRuleBeforeInvoiceDate()
+    {
+        return [
+            [true, (new DateTime())->modify('1 second')],
+            [true, (new DateTime())->modify('1 day')],
+            [false, new DateTime()],
+            [false, (new DateTime())->modify('-1 day')],
+            [false, (new DateTime())->modify('-1 second')],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderGetInvoicedDateTime
+     */
+    public function testGetInvoicedDateTime($expected, $invoicedDate)
+    {
+        $this->sut->setInvoicedDate($invoicedDate);
+        $this->assertEquals($expected, $this->sut->getInvoicedDateTime());
+    }
+
+    public function dataProviderGetInvoicedDateTime()
+    {
+        return [
+            [new DateTime('2016-01-25'), new DateTime('2016-01-25')],
+            [new DateTime('2016-01-25'), '2016-01-25'],
+            [null, null],
+        ];
+    }
 }
