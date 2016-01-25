@@ -36,17 +36,14 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
         $repo = $this->getRepo();
 
         $currentUser = $this->getCurrentUser();
-
         $localAuthority = $currentUser->getLocalAuthority();
-
-        $txcInboxEntries = $repo->fetchUnreadListForLocalAuthority(
-            $query,
-            $localAuthority
-        );
 
         return [
             'result' => $this->resultList(
-                $txcInboxEntries,
+                $repo->fetchUnreadListForLocalAuthority(
+                    $query,
+                    $localAuthority
+                ),
                 [
                     'busReg' => [
                         'ebsrSubmissions' => [
@@ -60,7 +57,7 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
                     ]
                 ]
             ),
-            'count' => count($txcInboxEntries)
+            'count' => $repo->fetchCount($query)
         ];
     }
 }
