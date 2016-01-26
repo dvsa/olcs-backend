@@ -159,9 +159,9 @@ final class ProcessPacks extends AbstractCommandHandler implements
             $matchedBusReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
 
             //now do the validation we can only do post doctrine
-            $this->processedDataInput->setValue($ebsrData, ['busReg' => $matchedBusReg]);
+            $this->processedDataInput->setValue($ebsrData);
 
-            if (!$this->processedDataInput->isValid()) {
+            if (!$this->processedDataInput->isValid(['busReg' => $matchedBusReg])) {
                 $invalidPacks++;
                 $messages = $this->processedDataInput->getMessages();
                 $result = $this->addErrorMessages($result, $document, $messages, $xmlFilename);
