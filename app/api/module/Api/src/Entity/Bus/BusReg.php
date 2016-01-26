@@ -199,6 +199,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
                 'lastModifiedBy' => null,
                 'createdOn' => null,
                 'lastModifiedOn' => null,
+                'olbsKey' => null,
                 // new variation reasons will be required for a new variation
                 'variationReasons' => null,
             ]
