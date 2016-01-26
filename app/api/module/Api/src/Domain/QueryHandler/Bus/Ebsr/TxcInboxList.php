@@ -7,8 +7,6 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as Repository;
 use Doctrine\ORM\Query as DoctrineQuery;
@@ -27,7 +25,6 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
     use AuthAwareTrait;
 
     protected $repoServiceName = 'TxcInbox';
-    protected $extraRepos = ['EbsrSubmission'];
 
     /**
      * @return array

@@ -7,14 +7,13 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as Repository;
 use Doctrine\ORM\Query as DoctrineQuery;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Query\Bus\EbsrSubmissionList as ListDto;
+use Doctrine\ORM\Query;
 
 /**
  * EbsrSubmissionList
@@ -35,18 +34,17 @@ class EbsrSubmissionList extends AbstractQueryHandler implements AuthAwareInterf
         /** @var Repository $repo */
         $repo = $this->getRepo();
 
-        $organisation = $this->getCurrentOrganisation();
-
         // get data from transfer query
         $data = $query->getArrayCopy();
 
         $data['organisation'] = $this->getCurrentOrganisation()->getId();
 
         $listDto = ListDto::create($data);
+        $results = $repo->fetchList($listDto, Query::HYDRATE_OBJECT);
 
         return [
             'results' => $this->resultList(
-                $repo->fetchByOrganisation($listDto),
+                $results,
                 [
                     'busReg' => [
                         'ebsrSubmissions' => [
@@ -60,7 +58,7 @@ class EbsrSubmissionList extends AbstractQueryHandler implements AuthAwareInterf
                     ]
                 ]
             ),
-            'count' => $repo->fetchCount()
+            'count' => $repo->fetchCount($listDto)
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as Entity;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Transfer\Query\OrderedQueryInterface;
 use Dvsa\Olcs\Transfer\Query\PagedQueryInterface;
@@ -31,46 +32,41 @@ class EbsrSubmission extends AbstractRepository
         QueryInterface $query,
         $hydrateMode = Query::HYDRATE_OBJECT
     ) {
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
-        $qb = $this->createQueryBuilder();
+        return $this->fetchList($query, $hydrateMode);
+    }
 
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefdata()
-            ->with($this->alias . '.busReg', 'b')
+
+    /**
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query)
+    {
+        parent::buildDefaultListQuery($qb, $query);
+
+        // join in person details
+        $this->getQueryBuilder()->with($this->alias . '.busReg', 'b')
             ->with('b.licence', 'l')
             ->with('b.otherServices')
             ->with('l.organisation');
+    }
 
-        if ($query instanceof PagedQueryInterface) {
-            $this->getQueryBuilder()->paginate($query->getPage(), $query->getLimit());
+    /**
+     * @param QueryBuilder   $qb
+     * @param QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        $qb->andWhere($qb->expr()->eq($this->alias . '.organisation', ':organisation'))
+            ->setParameter('organisation', $query->getOrganisation());
+
+        if (method_exists($query, 'getStatus') && !empty($query->getStatus())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.ebsrSubmissionStatus', ':ebsrSubmissionStatus'))
+                ->setParameter('ebsrSubmissionStatus', $query->getStatus());
         }
-
-        if ($query instanceof OrderedQueryInterface) {
-            if (!empty($query->getSort())) {
-                // allow ordering by multiple columns
-                $sortColumns = explode(',', $query->getSort());
-                $orderColumns = explode(',', $query->getOrder());
-                for ($i = 0; $i < count($sortColumns); $i++) {
-                    // if multiple order value doesn't exist then use the first one
-                    $order = isset($orderColumns[$i]) ? $orderColumns[$i] : $orderColumns[0];
-                    $this->getQueryBuilder()->order($sortColumns[$i], $order);
-                }
-            }
-        }
-
-        if (!empty($query->getSubType())) {
+        if (method_exists($query, 'getSubType') && !empty($query->getSubType())) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.ebsrSubmissionType', ':ebsrSubmissionType'))
                 ->setParameter('ebsrSubmissionType', $query->getSubType());
         }
-
-        if (!empty($query->getStatus())) {
-            $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionStatus', ':ebsrSubmissionStatus'))
-                ->setParameter('ebsrSubmissionStatus', $query->getStatus());
-        }
-
-        $qb->andWhere($qb->expr()->eq($this->alias . '.organisation', ':organisation'))
-            ->setParameter('organisation', $organisation);
-
-        return $qb->getQuery()->getResult($hydrateMode);
     }
 }
