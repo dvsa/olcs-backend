@@ -29,12 +29,36 @@ class EbsrSubmission extends AbstractRepository
      * @return array
      */
     public function fetchByOrganisation(
-        QueryInterface $query,
+        $organisation,
+        $ebsrSubmissionType = null,
+        $ebsrSubmissionStatus = null,
         $hydrateMode = Query::HYDRATE_OBJECT
     ) {
-        return $this->fetchList($query, $hydrateMode);
-    }
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
 
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with($this->alias . '.busReg', 'b')
+            ->with('b.licence', 'l')
+            ->with('b.otherServices')
+            ->with('l.organisation');
+
+        if (!empty($ebsrSubmissionType)) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.ebsrSubmissionType', ':ebsrSubmissionType'))
+                ->setParameter('ebsrSubmissionType', $ebsrSubmissionType);
+        }
+
+        if (!empty($ebsrSubmissionStatus)) {
+            $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionStatus', ':ebsrSubmissionStatus'))
+                ->setParameter('ebsrSubmissionStatus', $ebsrSubmissionStatus);
+        }
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.organisation', ':organisation'))
+            ->setParameter('organisation', $organisation);
+
+        return $qb->getQuery()->getResult($hydrateMode);
+    }
 
     /**
      * @param QueryBuilder $qb
