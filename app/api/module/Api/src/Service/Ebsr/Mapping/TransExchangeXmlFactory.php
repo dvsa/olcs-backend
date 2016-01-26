@@ -48,11 +48,10 @@ class TransExchangeXmlFactory implements FactoryInterface
      */
     protected function getStopPoints()
     {
-        $specification = [
-            'Descriptor' => new Recursion('CommonName', new MultiNodeValue('stoppingArrangements'))
-        ];
 
-        return ['StopPoint' => new Recursion($specification)];
+        return [
+            'AnnotatedStopPointRef' => new Recursion('StopPointRef', new MultiNodeValue('stops'))
+        ];
     }
 
     /**

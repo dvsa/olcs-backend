@@ -68,6 +68,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
 
     protected $busRegInput;
 
+    protected $processedDataInput;
+
     /**
      * @var FileProcessor
      */
@@ -79,6 +81,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
 
         $this->xmlStructure = $mainServiceLocator->get('EbsrXmlStructure');
         $this->busRegInput = $mainServiceLocator->get('EbsrBusRegInput');
+        $this->processedDataInput = $mainServiceLocator->get('EbsrProcessedDataInput');
         $this->fileProcessor = $mainServiceLocator->get(FileProcessorInterface::class);
 
         return parent::createService($serviceLocator);
@@ -113,13 +116,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
                 $xmlFilename = $this->fileProcessor->fetchXmlFileNameFromDocumentStore($document->getIdentifier());
             } catch (\RuntimeException $e) {
                 $invalidPacks++;
-
-                $result->addId(
-                    'error_messages',
-                    'Error with ' . $document->getDescription() . ': ' . $e->getMessage() . ' - not processed',
-                    true
-                );
-
+                $result = $this->addErrorMessages($result, $document, [$e->getMessage()], false);
                 $this->setEbsrSubmissionFailed($ebsrSubmission);
 
                 continue;
@@ -129,14 +126,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
 
             if (!$this->xmlStructure->isValid(['xml_filename' => $xmlFilename])) {
                 $invalidPacks++;
-
-                $result->addId(
-                    'error_messages',
-                    'Error with ' . $document->getDescription() . '(' . basename($xmlFilename) .
-                    '): ' . strtolower(implode(', ', $this->xmlStructure->getMessages())) . ' - not processed',
-                    true
-                );
-
+                $result = $this->addErrorMessages($result, $document, $this->xmlStructure->getMessages(), $xmlFilename);
                 $this->setEbsrSubmissionFailed($ebsrSubmission);
 
                 continue;
@@ -153,20 +143,31 @@ final class ProcessPacks extends AbstractCommandHandler implements
 
             if (!$this->busRegInput->isValid($busRegInputContext)) {
                 $invalidPacks++;
-
-                $result->addId(
-                    'error_messages',
-                    'Error with ' . $document->getDescription() . '(' . basename($xmlFilename) .
-                    '): ' . strtolower(implode(', ', $this->busRegInput->getMessages())) . ' - not processed',
-                    true
-                );
-
+                $result = $this->addErrorMessages($result, $document, $this->busRegInput->getMessages(), $xmlFilename);
                 $this->setEbsrSubmissionFailed($ebsrSubmission);
 
                 continue;
             }
 
+            //this is ebsr data we could validate without the help of doctrine
             $ebsrData = $this->busRegInput->getValue();
+
+            //get the parts of the data we need doctrine for
+            $ebsrData = $this->processEbsrInformation($ebsrData);
+
+            //now do the validation we can only do post doctrine
+            $this->processedDataInput->setValue($ebsrData);
+
+            if (!$this->processedDataInput->isValid()) {
+                $invalidPacks++;
+                $messages = $this->processedDataInput->getMessages();
+                $result = $this->addErrorMessages($result, $document, $messages, $xmlFilename);
+                $this->setEbsrSubmissionFailed($ebsrSubmission);
+
+                continue;
+            }
+
+            $ebsrData = $this->processedDataInput->getValue();
 
             $ebsrSubmission->updateStatus(
                 $this->getRepo()->getRefdataReference(EbsrSubmissionEntity::VALIDATED_STATUS)
@@ -178,32 +179,17 @@ final class ProcessPacks extends AbstractCommandHandler implements
             $ebsrSubmission->setOrganisationEmailAddress($ebsrData['organisationEmail']);
             $this->getRepo('EbsrSubmission')->save($ebsrSubmission);
 
-            $ebsrData = $this->processEbsrInformation($ebsrData);
-
             try {
                 $busReg = $this->createBusReg($ebsrData);
             } catch (Exception\NotFoundException $e) {
                 $invalidPacks++;
-                //@todo make message specific
-                $result->addId(
-                    'error_messages',
-                    'Error with ' . $document->getDescription() . ': ' . strtolower($e->getMessages()[0]) .
-                    ' - not processed',
-                    true
-                );
-
+                $result = $this->addErrorMessages($result, $document, $e->getMessages(), $xmlFilename);
                 $this->setEbsrSubmissionFailed($ebsrSubmission);
 
                 continue;
             } catch (Exception\ForbiddenException $e) {
                 $invalidPacks++;
-                $result->addId(
-                    'error_messages',
-                    'Error with ' . $document->getDescription() . ': ' . strtolower($e->getMessages()[0]) .
-                    ' - not processed',
-                    true
-                );
-
+                $result = $this->addErrorMessages($result, $document, $e->getMessages(), $xmlFilename);
                 $this->setEbsrSubmissionFailed($ebsrSubmission);
 
                 continue;
@@ -235,6 +221,31 @@ final class ProcessPacks extends AbstractCommandHandler implements
 
         $result->addId('valid', $validPacks);
         $result->addId('errors', $invalidPacks);
+
+        return $result;
+    }
+
+    /**
+     * @param Result $result
+     * @param DocumentEntity $document
+     * @param array $messages
+     * @param string|bool $xmlFilename
+     * @return Result
+     */
+    private function addErrorMessages(Result $result, DocumentEntity $document, array $messages, $xmlFilename)
+    {
+        $filename = '';
+
+        if ($xmlFilename) {
+            $filename = ' (' . basename($xmlFilename) . ')';
+        }
+
+        $result->addId(
+            'error_messages',
+            'Error with ' . $document->getDescription() . $filename .
+            ': ' . strtolower(implode(', ', $messages)) . ' - not processed',
+            true
+        );
 
         return $result;
     }
@@ -595,8 +606,9 @@ final class ProcessPacks extends AbstractCommandHandler implements
     private function processEbsrInformation(array $ebsrData)
     {
         $ebsrData['subsidised'] = $this->getRepo()->getRefdataReference($ebsrData['subsidised']);
+        $ebsrData['naptanAuthorities'] = $this->processNaptan($ebsrData['naptan']);
         $ebsrData['localAuthoritys'] = $this->processLocalAuthority($ebsrData['localAuthorities']);
-        $ebsrData['trafficAreas'] = $this->processTrafficAreas($ebsrData['trafficAreas']);
+        $ebsrData['trafficAreas'] = $this->processTrafficAreas($ebsrData['trafficAreas'], $ebsrData['localAuthoritys']);
         $ebsrData['busServiceTypes'] = $this->processServiceTypes($ebsrData['serviceClassifications']);
         $ebsrData['busNoticePeriod'] = $this->getRepo()->getReference(
             BusNoticePeriodEntity::class, $ebsrData['busNoticePeriod']
@@ -669,12 +681,35 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns collection of local authorities based on the naptan codes.
+     *
+     * @param array $naptan
+     * @return ArrayCollection
+     */
+    private function processNaptan(array $naptan)
+    {
+        $result = new ArrayCollection();
+
+        if (!empty($naptan)) {
+            $laList = $this->getRepo('LocalAuthority')->fetchByNaptan($naptan);
+
+            /** @var LocalAuthorityEntity $la */
+            foreach ($laList as $la) {
+                $result->add($la);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Returns collection of traffic areas.
      *
      * @param array $trafficAreas
+     * @param ArrayCollection $localAuthorities
      * @return ArrayCollection
      */
-    private function processTrafficAreas(array $trafficAreas)
+    private function processTrafficAreas(array $trafficAreas, ArrayCollection $localAuthorities)
     {
         $result = new ArrayCollection();
 
@@ -683,6 +718,17 @@ final class ProcessPacks extends AbstractCommandHandler implements
 
             /** @var TrafficAreaEntity $ta */
             foreach ($taList as $ta) {
+                $result->add($ta);
+            }
+        }
+
+        /**
+         * @var LocalAuthorityEntity $la
+         */
+        foreach ($localAuthorities as $la) {
+            $ta = $la->getTrafficArea();
+
+            if (!$result->contains($ta)) {
                 $result->add($ta);
             }
         }
