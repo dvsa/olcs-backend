@@ -505,13 +505,6 @@ final class ProcessPacks extends AbstractCommandHandler implements
      */
     private function createNew(array $ebsrData)
     {
-        /** @var BusRegEntity $busReg */
-        $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
-
-        if ($busReg instanceof BusRegEntity) {
-            throw new Exception\ForbiddenException('A new application must not reuse an existing registration number');
-        }
-
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo('Licence')->fetchByLicNo($ebsrData['licNo']);
 
@@ -540,10 +533,6 @@ final class ProcessPacks extends AbstractCommandHandler implements
     {
         /** @var BusRegEntity $busReg */
         $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
-
-        if (!$busReg instanceof BusRegEntity) {
-            throw new Exception\ForbiddenException('The bus registration number you provided wasn\'t found');
-        }
 
         if (!$busReg->getStatus()->getId() === BusRegEntity::STATUS_REGISTERED) {
             throw new Exception\ForbiddenException(
@@ -575,10 +564,6 @@ final class ProcessPacks extends AbstractCommandHandler implements
     {
         /** @var BusRegEntity $busReg */
         $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
-
-        if (!$busReg instanceof BusRegEntity) {
-            throw new Exception\ForbiddenException('The bus registration number you provided wasn\'t found');
-        }
 
         if (!$busReg->getStatus()->getId() === BusRegEntity::STATUS_REGISTERED) {
             throw new Exception\ForbiddenException(
