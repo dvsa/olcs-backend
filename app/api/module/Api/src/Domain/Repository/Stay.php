@@ -5,10 +5,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\Cases\Stay as Entity;
 use Doctrine\ORM\QueryBuilder;
@@ -20,13 +18,6 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 class Stay extends AbstractRepository
 {
     protected $entity = Entity::class;
-
-    public function __construct(
-        EntityManagerInterface $em,
-        QueryBuilderInterface $queryBuilder
-    ) {
-        parent::__construct($em, $queryBuilder);
-    }
 
     /**
      * Fetch the default record by it's id
