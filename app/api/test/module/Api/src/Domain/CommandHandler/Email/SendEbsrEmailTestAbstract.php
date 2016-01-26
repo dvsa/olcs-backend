@@ -63,6 +63,8 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
         $regNo = 5678;
         $busRegId = 12;
         $laDescription1 = 'la description 1';
+        $laEmail1 = 'terry.valtech@gmail.com';
+        $laEmail2 = 'terry.valtech+1@gmail.com';
         $laDescription2 = 'la description 2';
         $startPoint = 'start point';
         $endPoint = 'end point';
@@ -77,9 +79,11 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
 
         $la1 = m::mock(LocalAuthorityEntity::class)->makePartial();
         $la1->setDescription($laDescription1);
+        $la1->setEmailAddress($laEmail1);
 
         $la2 = m::mock(LocalAuthorityEntity::class)->makePartial();
         $la2->setDescription($laDescription2);
+        $la2->setEmailAddress($laEmail2);
 
         $la = new ArrayCollection([$la1, $la2]);
 
