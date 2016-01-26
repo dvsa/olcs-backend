@@ -4,9 +4,11 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as Entity;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Transfer\Query\OrderedQueryInterface;
 use Dvsa\Olcs\Transfer\Query\PagedQueryInterface;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * TxcInbox
@@ -102,32 +104,9 @@ class TxcInbox extends AbstractRepository
      * @return array
      */
     public function fetchUnreadListForLocalAuthority(
-        QryCmd $query,
-        $localAuthority,
+        QueryInterface $query,
         $hydrateMode = Query::HYDRATE_OBJECT
     ) {
-        $qb = $this->getUnreadListQuery($query);
-
-        if (empty($localAuthority)) {
-            $qb->andWhere($qb->expr()->isNull($this->alias . '.localAuthority'));
-        } else {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.fileRead', '0'));
-            $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
-                ->setParameter('localAuthority', $localAuthority);
-        }
-
-        return $qb->getQuery()->getResult($hydrateMode);
-    }
-
-    /**
-     * General Query for unread txc inbox list. Used by LAs
-     *
-     * @param null $ebsrSubmissionType
-     * @param null $ebsrSubmissionStatus
-     * @return \Doctrine\Orm\QueryBuilder
-     */
-    private function getUnreadListQuery(QryCmd $query)
-    {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
 
@@ -156,16 +135,19 @@ class TxcInbox extends AbstractRepository
             }
         }
 
-        if (!empty($query->getEbsrSubmissionType())) {
+        $qb->andWhere($qb->expr()->eq($this->alias . '.fileRead', '0'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
+            ->setParameter('localAuthority', $query->getLocalAuthority());
+
+        if (!empty($query->getSubType())) {
             $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionType', ':ebsrSubmissionType'))
-                ->setParameter('ebsrSubmissionType', $query->getEbsrSubmissionType());
+                ->setParameter('ebsrSubmissionType', $this->getRefdataReference($query->getSubType()));
         }
-
-        if (!empty($query->getEbsrSubmissionStatus())) {
+        if (!empty($query->getStatus())) {
             $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionStatus', ':ebsrSubmissionStatus'))
-                ->setParameter('ebsrSubmissionStatus', $query->getEbsrSubmissionStatus());
+                ->setParameter('ebsrSubmissionStatus', $this->getRefdataReference($query->getStatus()));
         }
 
-        return $qb;
+        return $this->fetchList($query, $hydrateMode);
     }
 }
