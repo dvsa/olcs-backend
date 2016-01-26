@@ -1,32 +1,29 @@
 <?php
 
 /**
- * TxcInboxList Test
+ * EbsrSubmissionListList Test
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Tests\Common\Collections\ArrayCollectionTest;
-use Dvsa\Olcs\Api\Domain\QueryHandler\ResultList;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr\TxcInboxList;
-use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr\EbsrSubmissionList;
+use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
-use Dvsa\Olcs\Transfer\Query\Bus\Ebsr\TxcInboxList as Qry;
+use Dvsa\Olcs\Transfer\Query\Bus\Ebsr\EbsrSubmissionList as Qry;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 
 /**
- * TxcInboxListTest
+ * EbsrSubmissionListTest
  */
-class TxcInboxListTest extends QueryHandlerTestCase
+class EbsrSubmissionListTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new TxcInboxList();
-        $this->mockRepo('TxcInbox', TxcInboxRepo::class);
+        $this->sut = new EbsrSubmissionList();
         $this->mockRepo('EbsrSubmission', EbsrSubmissionRepo::class);
 
         $this->mockedSmServices = [
@@ -79,11 +76,11 @@ class TxcInboxListTest extends QueryHandlerTestCase
 
         $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
             ->shouldReceive('getIdentity->getUser')
-            ->andReturn($this->getCurrentUser(5));
+            ->andReturn($this->getCurrentUser(null, 5));
 
-        $mockResult = m::mock(TxcInboxEntity::class)->makePartial();
+        $mockResult = m::mock(EbsrSubmissionEntity::class)->makePartial();
 
-        $this->repoMap['TxcInbox']->shouldReceive('fetchList')
+        $this->repoMap['EbsrSubmission']->shouldReceive('fetchList')
             ->andReturn([$mockResult])
             ->shouldReceive('fetchCount')
             ->andReturn(1);
