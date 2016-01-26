@@ -594,10 +594,10 @@ return [
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class,
-            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityNotRequired::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityNotRequired::class,
-            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityMissing::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityMissing::class
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityNotRequired::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityNotRequired::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class
         ],
         'aliases' => [
             'Structure\Operator' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class,
@@ -607,10 +607,10 @@ return [
             'Rules\EffectiveDate' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate::class,
             'Rules\ApplicationType' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class,
             'Rules\Licence' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class,
-            'Rules\LocalAuthorityNotRequired' =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityNotRequired::class,
-            'Rules\LocalAuthorityMissing' =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityMissing::class
+            'Rules\ProcessedData\LocalAuthorityNotRequired' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityNotRequired::class,
+            'Rules\ProcessedData\LocalAuthorityMissing' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class
         ]
     ],
     'filters' => [

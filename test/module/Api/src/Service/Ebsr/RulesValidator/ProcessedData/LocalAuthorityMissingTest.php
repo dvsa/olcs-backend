@@ -1,21 +1,21 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator;
+namespace Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator\ProcessedData;
 
-use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityNotRequired;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LaEntity;
 
 /**
- * Class LocalAuthorityNotRequiredTest
- * @package Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator
+ * Class LocalAuthorityMissingTest
+ * @package Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator\ProcessedData
  */
-class LocalAuthorityNotRequiredTest extends MockeryTestCase
+class LocalAuthorityMissingTest extends MockeryTestCase
 {
     /**
-     * tests whether local authorities not required are correctly identified
+     * tests whether missing local authorities not required are correctly identified
      *
      * @dataProvider isValidProvider
      *
@@ -25,7 +25,7 @@ class LocalAuthorityNotRequiredTest extends MockeryTestCase
      */
     public function testIsValid($la, $naptan, $valid)
     {
-        $sut = new LocalAuthorityNotRequired();
+        $sut = new LocalAuthorityMissing();
 
         $value = [
             'localAuthoritys' => $la,
@@ -52,8 +52,8 @@ class LocalAuthorityNotRequiredTest extends MockeryTestCase
         $la3->setId(3);
 
         return [
-            [new ArrayCollection([$la1, $la2]), new ArrayCollection([$la3, $la2]), false],
-            [new ArrayCollection([$la3]), new ArrayCollection([$la3, $la2]), true],
+            [new ArrayCollection([$la3, $la2]), new ArrayCollection([$la1, $la2]), false],
+            [new ArrayCollection([$la3, $la2]), new ArrayCollection([$la3]), true],
             [new ArrayCollection([$la3]), new ArrayCollection([$la3]), true],
         ];
     }
