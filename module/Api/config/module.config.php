@@ -88,6 +88,7 @@ return [
 
             'EbsrXmlStructure' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory::class,
             'EbsrBusRegInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory::class,
+            'EbsrProcessedDataInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory::class,
             'TrafficAreaValidator' => \Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator::class,
 
             \Dvsa\Olcs\Api\Service\Nr\InrClientInterface::class => Dvsa\Olcs\Api\Service\Nr\InrClientFactory::class,
@@ -592,7 +593,11 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityNotRequired::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityNotRequired::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityMissing::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityMissing::class
         ],
         'aliases' => [
             'Structure\Operator' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class,
@@ -601,7 +606,11 @@ return [
             'Structure\SupportingDocuments' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments::class,
             'Rules\EffectiveDate' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate::class,
             'Rules\ApplicationType' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class,
-            'Rules\Licence' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class
+            'Rules\Licence' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class,
+            'Rules\LocalAuthorityNotRequired' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityNotRequired::class,
+            'Rules\LocalAuthorityMissing' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityMissing::class
         ]
     ],
     'filters' => [
@@ -610,6 +619,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate::class =>
@@ -623,6 +634,7 @@ return [
             'IsScottishRules' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
             'InjectReceivedDate' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate::class,
             'InjectIsTxcApp' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp::class,
+            'InjectNaptanCodes' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes::class,
             'Format\Subsidy' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class,
             'Format\Via' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class,
         ]
