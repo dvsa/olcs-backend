@@ -597,7 +597,9 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityNotRequired::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityNotRequired::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\NewAppAlreadyExists::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\NewAppAlreadyExists::class
         ],
         'aliases' => [
             'Structure\Operator' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class,
@@ -610,7 +612,9 @@ return [
             'Rules\ProcessedData\LocalAuthorityNotRequired' =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityNotRequired::class,
             'Rules\ProcessedData\LocalAuthorityMissing' =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class,
+            'Rules\ProcessedData\NewAppAlreadyExists' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\NewAppAlreadyExists::class
         ]
     ],
     'filters' => [
