@@ -33,7 +33,7 @@ class NewAppAlreadyExists extends AbstractValidator
      */
     public function isValid($value, $context = [])
     {
-        if ($value['txcAppType'] === 'new' && $context['busReg'] instanceof BusRegEntity) {
+        if (strtolower($value['txcAppType']) === 'new' && $context['busReg'] instanceof BusRegEntity) {
             $this->error(self::NEW_APP_ALREADY_EXISTS_ERROR, $value['existingRegNo']);
             return false;
         }
