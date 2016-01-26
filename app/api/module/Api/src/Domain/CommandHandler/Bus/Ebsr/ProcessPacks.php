@@ -116,7 +116,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
                 $xmlFilename = $this->fileProcessor->fetchXmlFileNameFromDocumentStore($document->getIdentifier());
             } catch (\RuntimeException $e) {
                 $invalidPacks++;
-                $result = $this->addErrorMessages($result, $document, [$e->getMessage()], false);
+                $result = $this->addErrorMessages($result, $document, [$e->getMessage()], '');
                 $this->setEbsrSubmissionFailed($ebsrSubmission);
 
                 continue;
@@ -229,14 +229,14 @@ final class ProcessPacks extends AbstractCommandHandler implements
      * @param Result $result
      * @param DocumentEntity $document
      * @param array $messages
-     * @param string|bool $xmlFilename
+     * @param string $xmlFilename
      * @return Result
      */
     private function addErrorMessages(Result $result, DocumentEntity $document, array $messages, $xmlFilename)
     {
         $filename = '';
 
-        if ($xmlFilename) {
+        if (!empty($xmlFilename)) {
             $filename = ' (' . basename($xmlFilename) . ')';
         }
 
