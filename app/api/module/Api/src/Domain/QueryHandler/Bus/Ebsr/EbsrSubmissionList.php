@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as Repository;
 use Doctrine\ORM\Query as DoctrineQuery;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Query\Bus\EbsrSubmissionList as ListDto;
 
 /**
  * EbsrSubmissionList
@@ -36,12 +37,16 @@ class EbsrSubmissionList extends AbstractQueryHandler implements AuthAwareInterf
 
         $organisation = $this->getCurrentOrganisation();
 
+        // get data from transfer query
+        $data = $query->getArrayCopy();
+
+        $data['organisation'] = $this->getCurrentOrganisation()->getId();
+
+        $listDto = ListDto::create($data);
+
         return [
             'results' => $this->resultList(
-                $repo->fetchByOrganisation(
-                    $query,
-                    $organisation
-                ),
+                $repo->fetchByOrganisation($listDto),
                 [
                     'busReg' => [
                         'ebsrSubmissions' => [

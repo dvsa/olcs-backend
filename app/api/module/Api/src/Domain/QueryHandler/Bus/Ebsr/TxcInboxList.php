@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as Repository;
 use Doctrine\ORM\Query as DoctrineQuery;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Query\Bus\TxcInboxList as ListDto;
 
 /**
  * TxcInboxList
@@ -35,15 +36,16 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
         /** @var Repository $repo */
         $repo = $this->getRepo();
 
-        $currentUser = $this->getCurrentUser();
-        $localAuthority = $currentUser->getLocalAuthority();
+        // get data from transfer query
+        $data = $query->getArrayCopy();
+
+        $data['localAuthority'] = $this->getCurrentUser()->getLocalAuthority()->getId();
+
+        $listDto = ListDto::create($data);
 
         return [
             'result' => $this->resultList(
-                $repo->fetchUnreadListForLocalAuthority(
-                    $query,
-                    $localAuthority
-                ),
+                $repo->fetchUnreadListForLocalAuthority($listDto),
                 [
                     'busReg' => [
                         'ebsrSubmissions' => [
