@@ -5,11 +5,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding as Entity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -35,13 +30,6 @@ class Impounding extends AbstractRepository
             ->with('impoundingLegislationTypes')
             ->with('piVenue')
             ->byId($id);
-    }
-
-    public function __construct(
-        EntityManagerInterface $em,
-        QueryBuilderInterface $queryBuilder
-    ) {
-        parent::__construct($em, $queryBuilder);
     }
 
     /**
