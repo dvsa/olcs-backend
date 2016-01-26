@@ -155,8 +155,11 @@ final class ProcessPacks extends AbstractCommandHandler implements
             //get the parts of the data we need doctrine for
             $ebsrData = $this->processEbsrInformation($ebsrData);
 
+            /** @var BusRegEntity $matchedBusReg */
+            $matchedBusReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
+
             //now do the validation we can only do post doctrine
-            $this->processedDataInput->setValue($ebsrData);
+            $this->processedDataInput->setValue($ebsrData, ['busReg' => $matchedBusReg]);
 
             if (!$this->processedDataInput->isValid()) {
                 $invalidPacks++;
@@ -503,7 +506,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
     private function createNew(array $ebsrData)
     {
         /** @var BusRegEntity $busReg */
-        $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['licNo'] . '/' . $ebsrData['routeNo']);
+        $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
 
         if ($busReg instanceof BusRegEntity) {
             throw new Exception\ForbiddenException('A new application must not reuse an existing registration number');
@@ -536,7 +539,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
     private function createCancel(array $ebsrData)
     {
         /** @var BusRegEntity $busReg */
-        $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['licNo'] . '/' . $ebsrData['routeNo']);
+        $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
 
         if (!$busReg instanceof BusRegEntity) {
             throw new Exception\ForbiddenException('The bus registration number you provided wasn\'t found');
@@ -571,7 +574,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
     private function createVar(array $ebsrData)
     {
         /** @var BusRegEntity $busReg */
-        $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['licNo'] . '/' . $ebsrData['routeNo']);
+        $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
 
         if (!$busReg instanceof BusRegEntity) {
             throw new Exception\ForbiddenException('The bus registration number you provided wasn\'t found');
