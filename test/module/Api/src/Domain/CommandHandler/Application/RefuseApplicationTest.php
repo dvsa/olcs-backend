@@ -78,11 +78,6 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $application->setId(1);
         $application->setLicence($licence);
 
-        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($application, $licence);
-        $s4->setId(2909);
-        $application->shouldReceive('getS4s')->with()->once()
-            ->andReturn(new \Doctrine\Common\Collections\ArrayCollection([$s4]));
-
         $application->shouldReceive('getIsVariation')->andReturn(false);
 
         $application->shouldReceive('getCurrentInterimStatus')
@@ -121,8 +116,8 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         );
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Schedule41\CancelS4::class,
-            ['id' => 2909],
+            \Dvsa\Olcs\Transfer\Command\Application\Schedule41Cancel::class,
+            ['id' => 1],
             new Result()
         );
 
@@ -171,11 +166,6 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $application->setLicence($licence);
         $application->shouldReceive('getIsVariation')->andReturn(false);
 
-        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($application, $licence);
-        $s4->setId(2909);
-        $application->shouldReceive('getS4s')->with()->once()
-            ->andReturn(new \Doctrine\Common\Collections\ArrayCollection([$s4]));
-
         $application->shouldReceive('getCurrentInterimStatus')
             ->andReturn(Application::INTERIM_STATUS_INFORCE)
             ->once()
@@ -210,8 +200,8 @@ class RefuseApplicationTest extends CommandHandlerTestCase
             new Result()
         );
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Schedule41\CancelS4::class,
-            ['id' => 2909],
+            \Dvsa\Olcs\Transfer\Command\Application\Schedule41Cancel::class,
+            ['id' => 1],
             new Result()
         );
 
