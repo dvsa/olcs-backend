@@ -107,47 +107,43 @@ class TxcInbox extends AbstractRepository
         QueryInterface $query,
         $hydrateMode = Query::HYDRATE_OBJECT
     ) {
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
-        $qb = $this->createQueryBuilder();
+        return $this->fetchList($query, $hydrateMode);
+    }
 
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefdata()
-            ->with('m.busReg', 'b')
+    /**
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query)
+    {
+        parent::buildDefaultListQuery($qb, $query);
+
+        // join in person details
+        $this->getQueryBuilder()->with($this->alias . '.busReg', 'b')
             ->with('b.ebsrSubmissions', 'e')
             ->with('b.licence', 'l')
             ->with('b.otherServices')
             ->with('l.organisation');
+    }
 
-        if ($query instanceof PagedQueryInterface) {
-            $this->getQueryBuilder()->paginate($query->getPage(), $query->getLimit());
+    /**
+     * @param QueryBuilder   $qb
+     * @param QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        if (method_exists($query, 'getLocalAuthority') && !empty($query->getLocalAuthority())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
+                ->setParameter('localAuthority', $query->getLocalAuthority());
         }
-
-        if ($query instanceof OrderedQueryInterface) {
-            if (!empty($query->getSort())) {
-                // allow ordering by multiple columns
-                $sortColumns = explode(',', $query->getSort());
-                $orderColumns = explode(',', $query->getOrder());
-                for ($i = 0; $i < count($sortColumns); $i++) {
-                    // if multiple order value doesn't exist then use the first one
-                    $order = isset($orderColumns[$i]) ? $orderColumns[$i] : $orderColumns[0];
-                    $this->getQueryBuilder()->order($sortColumns[$i], $order);
-                }
-            }
-        }
-
-        $qb->andWhere($qb->expr()->eq($this->alias . '.fileRead', '0'));
-        $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
-            ->setParameter('localAuthority', $query->getLocalAuthority());
-
-        if (!empty($query->getSubType())) {
-            $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionType', ':ebsrSubmissionType'))
-                ->setParameter('ebsrSubmissionType', $this->getRefdataReference($query->getSubType()));
-        }
-        if (!empty($query->getStatus())) {
+        if (method_exists($query, 'getStatus') && !empty($query->getStatus())) {
             $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionStatus', ':ebsrSubmissionStatus'))
-                ->setParameter('ebsrSubmissionStatus', $this->getRefdataReference($query->getStatus()));
+                ->setParameter('ebsrSubmissionStatus', $query->getStatus());
         }
-
-        return $this->fetchList($query, $hydrateMode);
+        if (method_exists($query, 'getSubType') && !empty($query->getSubType())) {
+            $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionType', ':ebsrSubmissionType'))
+                ->setParameter('ebsrSubmissionType', $query->getSubType());
+        }
+        $qb->andWhere($qb->expr()->eq($this->alias . '.fileRead', '0'));
     }
 }
