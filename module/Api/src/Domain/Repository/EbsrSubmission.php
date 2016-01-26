@@ -7,6 +7,7 @@ use Doctrine\ORM\Query;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Transfer\Query\OrderedQueryInterface;
 use Dvsa\Olcs\Transfer\Query\PagedQueryInterface;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * EbsrSubmission
@@ -27,8 +28,7 @@ class EbsrSubmission extends AbstractRepository
      * @return array
      */
     public function fetchByOrganisation(
-        QryCmd $query,
-        $organisation,
+        QueryInterface $query,
         $hydrateMode = Query::HYDRATE_OBJECT
     ) {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
@@ -58,14 +58,14 @@ class EbsrSubmission extends AbstractRepository
             }
         }
 
-        if (!empty($query->getEbsrSubmissionType())) {
+        if (!empty($query->getSubType())) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.ebsrSubmissionType', ':ebsrSubmissionType'))
-                ->setParameter('ebsrSubmissionType', $query->getEbsrSubmissionType());
+                ->setParameter('ebsrSubmissionType', $query->getSubType());
         }
 
-        if (!empty($query->getEbsrSubmissionStatus())) {
+        if (!empty($query->getStatus())) {
             $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionStatus', ':ebsrSubmissionStatus'))
-                ->setParameter('ebsrSubmissionStatus', $query->getEbsrSubmissionStatus());
+                ->setParameter('ebsrSubmissionStatus', $query->getStatus());
         }
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.organisation', ':organisation'))
