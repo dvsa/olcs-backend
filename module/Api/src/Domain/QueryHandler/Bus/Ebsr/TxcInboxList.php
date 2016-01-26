@@ -15,6 +15,7 @@ use Doctrine\ORM\Query as DoctrineQuery;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Query\Bus\TxcInboxList as ListDto;
+use Doctrine\ORM\Query;
 
 /**
  * TxcInboxList
@@ -43,9 +44,11 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
 
         $listDto = ListDto::create($data);
 
+        $results = $repo->fetchList($listDto, Query::HYDRATE_OBJECT);
+
         return [
             'result' => $this->resultList(
-                $repo->fetchUnreadListForLocalAuthority($listDto),
+                $results,
                 [
                     'busReg' => [
                         'ebsrSubmissions' => [
@@ -59,7 +62,7 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
                     ]
                 ]
             ),
-            'count' => $repo->fetchCount($query)
+            'count' => $repo->fetchCount($listDto)
         ];
     }
 }
