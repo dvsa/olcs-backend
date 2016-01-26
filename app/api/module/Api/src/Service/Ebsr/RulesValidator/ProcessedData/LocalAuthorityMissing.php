@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Ebsr\RulesValidator;
+namespace Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData;
 
 use Zend\Validator\AbstractValidator;
 use Zend\Validator\Exception;
@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LaEntity;
 
 /**
  * Class LocalAuthorityMissing
- * @package Dvsa\Olcs\Api\Service\Ebsr\RulesValidator
+ * @package Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData
  */
 class LocalAuthorityMissing extends AbstractValidator
 {
