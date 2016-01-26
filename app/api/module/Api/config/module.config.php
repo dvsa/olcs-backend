@@ -629,6 +629,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class
         ],
         'aliases' => [
             'IsScottishRules' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
@@ -637,6 +639,7 @@ return [
             'InjectNaptanCodes' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes::class,
             'Format\Subsidy' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class,
             'Format\Via' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class,
+            'Format\ExistingRegNo' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class,
         ]
     ],
 ];
