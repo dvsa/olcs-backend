@@ -91,6 +91,7 @@ return [
     TransferCommand\Application\Schedule41Approve::class => CommandHandler\Application\Schedule41Approve::class,
     TransferCommand\Application\Schedule41Reset::class => CommandHandler\Application\Schedule41Reset::class,
     TransferCommand\Application\Schedule41Refuse::class => CommandHandler\Application\Schedule41Refuse::class,
+    TransferCommand\Application\Schedule41Cancel::class => CommandHandler\Application\Schedule41Cancel::class,
     TransferCommand\Application\GenerateOrganisationName::class =>
         CommandHandler\Application\GenerateOrganisationName::class,
     TransferCommand\Application\PrintInterimDocument::class => CommandHandler\Application\PrintInterimDocument::class,
