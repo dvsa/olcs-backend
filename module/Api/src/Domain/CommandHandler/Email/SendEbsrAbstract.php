@@ -84,8 +84,11 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
 
         /** @var LocalAuthority $localAuth */
         foreach ($busReg->getLocalAuthoritys() as $localAuth) {
-            $localAuthoritiesList[] = $localAuth->getDescription();
-            $localAuthoritiesCc[] = $localAuth->getEmailAddress();
+            /** @todo Temp fix for authorities who lack an email address. Waiting for answer from John Spellman */
+            if ($localAuth->getEmailAddress() !== null) {
+                $localAuthoritiesList[] = $localAuth->getDescription();
+                $localAuthoritiesCc[] = $localAuth->getEmailAddress();
+            }
         }
 
         if (!empty($localAuthoritiesList)) {
