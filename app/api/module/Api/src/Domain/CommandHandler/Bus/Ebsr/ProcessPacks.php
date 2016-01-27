@@ -282,11 +282,13 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * Creates the bus registration
+     *
      * @param array $ebsrData
-     * @throws Exception\ForbiddenException
+     * @param BusRegEntity $previousBusReg
      * @return BusRegEntity
      */
-    private function createBusReg(array $ebsrData)
+    private function createBusReg(array $ebsrData, BusRegEntity $previousBusReg)
     {
         //decide what to do based on txcAppType
         switch ($ebsrData['txcAppType']) {
@@ -294,10 +296,10 @@ final class ProcessPacks extends AbstractCommandHandler implements
                 $busReg = $this->createNew($ebsrData);
                 break;
             case 'cancel':
-                $busReg = $this->createCancel($ebsrData);
+                $busReg = $this->createVariation($previousBusReg, BusRegEntity::STATUS_CANCEL);
                 break;
             default:
-                $busReg = $this->createVar($ebsrData);
+                $busReg = $this->createVariation($previousBusReg, BusRegEntity::STATUS_VAR);
         }
 
         $busReg->fromData($this->prepareBusRegData($ebsrData));
@@ -507,11 +509,12 @@ final class ProcessPacks extends AbstractCommandHandler implements
     {
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo('Licence')->fetchByLicNo($ebsrData['licNo']);
+        $refDataStatus = $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_NEW);
 
         $newBusReg = BusRegEntity::createNew(
             $licence,
-            $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_NEW),
-            $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_NEW),
+            $refDataStatus,
+            $refDataStatus,
             $ebsrData['subsidised'],
             $ebsrData['busNoticePeriod']
         );
@@ -523,39 +526,14 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
-     * Create a cancellation
-     *
-     * @param array $ebsrData
-     * @throws Exception\ForbiddenException
+     * @param BusRegEntity $busReg
+     * @param string $status
      * @return BusRegEntity
      */
-    private function createCancel(array $ebsrData)
+    private function createVariation(BusRegEntity $busReg, $status)
     {
-        /** @var BusRegEntity $busReg */
-        $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
-
-        return $busReg->createVariation(
-            $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_CANCEL),
-            $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_CANCEL)
-        );
-    }
-
-    /**
-     * Create a variation
-     *
-     * @param array $ebsrData
-     * @throws Exception\ForbiddenException
-     * @return BusRegEntity
-     */
-    private function createVar(array $ebsrData)
-    {
-        /** @var BusRegEntity $busReg */
-        $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
-
-        return $busReg->createVariation(
-            $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_VAR),
-            $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_VAR)
-        );
+        $refDataStatus = $this->getRepo()->getRefdataReference($status);
+        return $busReg->createVariation($refDataStatus, $refDataStatus);
     }
 
     /**
