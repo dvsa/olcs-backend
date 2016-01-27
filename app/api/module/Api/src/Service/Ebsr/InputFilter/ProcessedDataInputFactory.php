@@ -22,6 +22,10 @@ class ProcessedDataInputFactory implements FactoryInterface
         $service = new Input('processed_data');
 
         $validatorChain = $service->getValidatorChain();
+        $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\BusRegNotFound'));
+        $validatorChain->attach(
+            $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\NewAppAlreadyExists')
+        );
         $validatorChain->attach(
             $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\RegisteredBusRoute')
         );

@@ -19,9 +19,23 @@ class ProcessedDataInputFactoryTest extends TestCase
         $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
-        $mockSl->shouldReceive('get')->with('Rules\ProcessedData\RegisteredBusRoute')->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')->with('Rules\ProcessedData\LocalAuthorityNotRequired')->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')->with('Rules\ProcessedData\LocalAuthorityMissing')->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with('Rules\ProcessedData\BusRegNotFound')->once()->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')
+            ->with('Rules\ProcessedData\NewAppAlreadyExists')
+            ->once()
+            ->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')
+            ->with('Rules\ProcessedData\RegisteredBusRoute')
+            ->once()
+            ->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')
+            ->with('Rules\ProcessedData\LocalAuthorityNotRequired')
+            ->once()
+            ->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')
+            ->with('Rules\ProcessedData\LocalAuthorityMissing')
+            ->once()
+            ->andReturn($mockValidator);
 
         $sut = new ProcessedDataInputFactory();
         $service = $sut->createService($mockSl);
