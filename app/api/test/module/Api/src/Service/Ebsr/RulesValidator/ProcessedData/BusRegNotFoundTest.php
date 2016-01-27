@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 class BusRegNotFoundTest extends MockeryTestCase
 {
     /**
-     * tests whether a new application is prevented from reusing an existing number
+     * tests whether a bus reg has been found
      *
      * @dataProvider isValidProvider
      *
