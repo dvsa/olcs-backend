@@ -669,6 +669,7 @@ class BusRegEntityTest extends EntityTester
         $this->entity->addOtherServices($otherService1);
         $this->entity->addOtherServices($otherService2);
         $this->entity->setStatus(new RefDataEntity(Entity::STATUS_REGISTERED));
+        $this->entity->setOlbsKey(123);
 
         $busReg = $this->entity->createVariation($status, $revertStatus);
 
@@ -680,6 +681,7 @@ class BusRegEntityTest extends EntityTester
         $this->assertNull($busReg->getId());
         $this->assertNull($busReg->getVersion());
         $this->assertNull($busReg->getVariationReasons());
+        $this->assertNull($busReg->getOlbsKey());
 
         // test variation specific values
         $this->assertEquals($this->entity, $busReg->getParent());
