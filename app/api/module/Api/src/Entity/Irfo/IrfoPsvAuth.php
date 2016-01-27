@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Irfo;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -220,6 +221,9 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
         }
 
         $this->setStatus($status);
+
+        // set renewal date to today's date
+        $this->setRenewalDate(new DateTime());
 
         return $this;
     }

@@ -35,6 +35,7 @@ class Module implements ConsoleUsageProviderInterface
             'enqueue-ch-compare [--verbose|-v]' => 'Enqueue Companies House lookups for all Organisations',
             'duplicate-vehicle-warning [--verbose|-v]' => 'Send duplicate vehicle warning letters',
             'process-inbox [--verbose|-v]' => 'Process inbox documents',
+            'process-ntu [--verbose|-v]' => 'Process Not Taken Up Applications',
             'batch-cns  [--verbose|-v] [--dryrun|-d]' => 'Process Licences for Continuation Not Sought',
             'inspection-request-email [--verbose|-v]' => 'Process inspection request email',
             'remove-read-audit [--verbose|-v]' => 'Process deletion of old read audit records',

@@ -2,8 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Domain\Query\Bus\TxcInboxList;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as Repo;
+use \Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * TxcInboxTest
@@ -107,57 +110,79 @@ class TxcInboxTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
-    public function testFetchUnreadListForLocalAuthority()
+    public function testBuildDefaultQuery()
     {
-        $qb = $this->createMockQb('BLAH');
+        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $this->mockCreateQueryBuilder($qb);
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $mockQi = m::mock(\Dvsa\Olcs\Transfer\Query\QueryInterface::class);
 
-        $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('m.busReg', 'b')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('b.ebsrSubmissions', 'e')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('b.licence', 'l')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('b.otherServices')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('l.organisation')->once()->andReturnSelf();
+        $sut->shouldReceive('getQueryBuilder')->with()->andReturn($mockQb);
 
-        $qb->shouldReceive('getQuery')->andReturn(
-            m::mock()->shouldReceive('execute')
-                ->shouldReceive('getResult')
-                ->andReturn(['RESULTS'])
-                ->getMock()
-        );
-        $this->assertEquals(['RESULTS'], $this->sut->fetchUnreadListForLocalAuthority('2', 'SUB_TYPE', 'SUB_STATUS'));
+        $mockQb->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $mockQb->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('m.busReg', 'b')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('b.ebsrSubmissions', 'e')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('b.licence', 'l')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('b.otherServices')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('l.organisation')->once()->andReturnSelf();
 
-        $expectedQuery = 'BLAH AND e.ebsrSubmissionType = [[SUB_TYPE]] AND e.ebsrSubmissionStatus = [[SUB_STATUS]]' .
-        ' AND m.fileRead = 0 AND m.localAuthority = [[2]]';
-        $this->assertEquals($expectedQuery, $this->query);
+        $sut->buildDefaultListQuery($mockQb, $mockQi);
     }
 
-    public function testFetchUnreadListForOtherUser()
+    public function testApplyListFilters()
     {
-        $qb = $this->createMockQb('BLAH');
+        $this->setUpSut(Repo::class, true);
 
-        $this->mockCreateQueryBuilder($qb);
+        $mockQb = m::mock(QueryBuilder::class);
 
-        $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('m.busReg', 'b')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('b.ebsrSubmissions', 'e')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('b.licence', 'l')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('b.otherServices')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('l.organisation')->once()->andReturnSelf();
+        // organisation clause
+        $mockQb->shouldReceive('expr')
+            ->andReturnSelf()
+            ->shouldReceive('eq')
+            ->with('m.localAuthority', ':localAuthority')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('localAuthority', 3)
+            ->andReturnSelf();
 
-        $qb->shouldReceive('getQuery')->andReturn(
-            m::mock()->shouldReceive('execute')
-                ->shouldReceive('getResult')
-                ->andReturn(['RESULTS'])
-                ->getMock()
-        );
-        $this->assertEquals(['RESULTS'], $this->sut->fetchUnreadListForLocalAuthority(null, 'SUB_TYPE', 'SUB_STATUS'));
+        // status clause
+        $mockQb->shouldReceive('expr')
+            ->andReturnSelf()
+            ->shouldReceive('eq')
+            ->with('e.ebsrSubmissionStatus', ':ebsrSubmissionStatus')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('ebsrSubmissionStatus', 'foo')
+            ->andReturnSelf();
 
-        $expectedQuery = 'BLAH AND e.ebsrSubmissionType = [[SUB_TYPE]] AND e.ebsrSubmissionStatus = [[SUB_STATUS]]' .
-            ' AND m.localAuthority IS NULL';
-        $this->assertEquals($expectedQuery, $this->query);
+        // subType clause
+        $mockQb->shouldReceive('expr')
+            ->andReturnSelf()
+            ->shouldReceive('eq')
+            ->with('e.ebsrSubmissionType', ':ebsrSubmissionType')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('ebsrSubmissionType', 'bar')
+            ->andReturnSelf();
+
+        // fileRead clause
+        $mockQb->shouldReceive('expr')
+            ->andReturnSelf()
+            ->shouldReceive('eq')
+            ->with('m.fileRead', '0')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf();
+
+        $query = TxcInboxList::create(['localAuthority' => 3, 'subType' => 'bar', 'status' => 'foo']);
+
+        $this->sut->applyListFilters($mockQb, $query);
     }
 }

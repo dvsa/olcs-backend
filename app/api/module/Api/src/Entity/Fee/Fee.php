@@ -110,6 +110,22 @@ class Fee extends AbstractFee
         }
     }
 
+    /**
+     * Is the Accrual rule date before the invoice date
+     *
+     * @return boolean
+     */
+    public function isRuleBeforeInvoiceDate()
+    {
+        $ruleDate = $this->getRuleStartDate();
+        if ($ruleDate instanceof \DateTime && $this->getInvoicedDateTime() instanceof \DateTime) {
+            $diff = $this->getInvoicedDateTime()->diff($ruleDate);
+            return $diff->invert === 1;
+        }
+
+        return false;
+    }
+
     public function getDefermentPeriod()
     {
         $map = [
@@ -296,6 +312,7 @@ class Fee extends AbstractFee
             'outstanding' => $this->getOutstandingAmount(),
             'receiptNo' => $this->getLatestPaymentRef(),
             'amount' => $this->getGrossAmount(),
+            'ruleDateBeforeInvoice' => $this->isRuleBeforeInvoiceDate(),
         ];
     }
 
@@ -568,5 +585,19 @@ class Fee extends AbstractFee
                 return true;
             }
         );
+    }
+
+    /**
+     * Get InvoicedDate as a DateTime
+     *
+     * @return \DateTime!null
+     */
+    public function getInvoicedDateTime()
+    {
+        if (is_string(parent::getInvoicedDate())) {
+            return new \DateTime(parent::getInvoicedDate());
+        }
+
+        return parent::getInvoicedDate();
     }
 }

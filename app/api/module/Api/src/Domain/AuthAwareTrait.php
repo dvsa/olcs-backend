@@ -95,4 +95,30 @@ trait AuthAwareTrait
     {
         return ($this->isGranted(\Dvsa\Olcs\Api\Entity\User\Permission::SELFSERVE_USER));
     }
+
+    /**
+     * Does the current user have a Local Authority user role
+     *
+     * @return bool
+     */
+    public function isLocalAuthority()
+    {
+        return (
+            $this->isGranted(\Dvsa\Olcs\Api\Entity\User\Permission::LOCAL_AUTHORITY_USER) ||
+            $this->isGranted(\Dvsa\Olcs\Api\Entity\User\Permission::LOCAL_AUTHORITY_ADMIN)
+        );
+    }
+
+    /**
+     * Does the current user have an Operator user role
+     *
+     * @return bool
+     */
+    public function isOperator()
+    {
+        return (
+            $this->isGranted(\Dvsa\Olcs\Api\Entity\User\Permission::OPERATOR_ADMIN) ||
+            $this->isGranted(\Dvsa\Olcs\Api\Entity\User\Permission::OPERATOR_USER)
+        );
+    }
 }

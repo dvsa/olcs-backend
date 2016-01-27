@@ -215,6 +215,7 @@ return [
     // Bus - Ebsr
     TransferQuery\Bus\Ebsr\TxcInboxList::class => QueryHandler\Bus\Ebsr\TxcInboxList::class,
     TransferQuery\Bus\Ebsr\BusRegWithTxcInbox::class => QueryHandler\Bus\Ebsr\BusRegWithTxcInbox::class,
+    TransferQuery\Bus\Ebsr\EbsrSubmissionList::class => QueryHandler\Bus\Ebsr\EbsrSubmissionList::class,
 
     // Trailer
     TransferQuery\Licence\Trailers::class => QueryHandler\Licence\Trailers::class,

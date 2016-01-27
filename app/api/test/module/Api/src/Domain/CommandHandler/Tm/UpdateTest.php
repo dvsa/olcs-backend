@@ -75,8 +75,8 @@ class UpdateTest extends CommandHandlerTestCase
             'personVersion' => 6,
             'homeAddressId' => 7,
             'homeAddressVersion' => 8,
-            'workAddressId' => 9,
-            'workAddressVersion' => 10,
+            'workAddressId' => null,
+            'workAddressVersion' => null,
             'homeAddressLine1' => 'hal1',
             'homeAddressLine2' => 'hal2',
             'homeAddressLine3' => 'hal3',
@@ -114,6 +114,7 @@ class UpdateTest extends CommandHandlerTestCase
 
         $workAddressResult = new Result();
         $workAddressResult->setFlag('hasChanged', true);
+        $workAddressResult->addId('address', 10);
         $this->expectedSideEffect(
             SaveAddressCmd::class,
             [
@@ -203,7 +204,7 @@ class UpdateTest extends CommandHandlerTestCase
         $res = $result->toArray();
         $this->assertEquals($res['id']['transportManager'], $id);
         $this->assertEquals($res['id']['homeAddress'], $data['homeAddressId']);
-        $this->assertEquals($res['id']['workAddress'], $data['workAddressId']);
+        $this->assertEquals($res['id']['workAddress'], 10);
         $this->assertEquals($res['id']['homeContactDetails'], $data['homeCdId']);
         $this->assertEquals($res['id']['person'], $data['personId']);
     }

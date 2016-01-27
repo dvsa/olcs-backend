@@ -412,9 +412,12 @@ class IrfoPsvAuthEntityTest extends EntityTester
         $newStatus = new RefData();
         $newStatus->setId(Entity::STATUS_APPROVED);
 
+        $this->assertNull($this->entity->getRenewalDate());
+
         $this->entity->approve($newStatus, []);
 
         $this->assertEquals($newStatus, $this->entity->getStatus());
+        $this->assertInstanceOf(\DateTime::class, $this->entity->getRenewalDate());
     }
 
     /**
