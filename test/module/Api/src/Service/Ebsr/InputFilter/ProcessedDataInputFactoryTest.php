@@ -20,6 +20,7 @@ class ProcessedDataInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
         $mockSl->shouldReceive('get')->with('Rules\ProcessedData\BusRegNotFound')->once()->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with('Rules\ProcessedData\VariationNumber')->once()->andReturn($mockValidator);
         $mockSl->shouldReceive('get')
             ->with('Rules\ProcessedData\NewAppAlreadyExists')
             ->once()

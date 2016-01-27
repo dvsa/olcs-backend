@@ -534,13 +534,6 @@ final class ProcessPacks extends AbstractCommandHandler implements
         /** @var BusRegEntity $busReg */
         $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
 
-        //variation should be the same as the variation on the original bus reg
-        if ($busReg->getVariationNo() != $ebsrData['variationNo']) {
-            throw new Exception\ForbiddenException(
-                'Variation number should be 1 greater than the previous variation number'
-            );
-        }
-
         return $busReg->createVariation(
             $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_CANCEL),
             $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_CANCEL)
@@ -559,18 +552,10 @@ final class ProcessPacks extends AbstractCommandHandler implements
         /** @var BusRegEntity $busReg */
         $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
 
-        $newBusReg = $busReg->createVariation(
+        return $busReg->createVariation(
             $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_VAR),
             $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_VAR)
         );
-
-        if ($newBusReg->getVariationNo() != $ebsrData['variationNo']) {
-            throw new Exception\ForbiddenException(
-                'Variation number should be 1 greater than the previous variation number'
-            );
-        }
-
-        return $newBusReg;
     }
 
     /**
