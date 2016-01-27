@@ -19,8 +19,9 @@ class ProcessedDataInputFactoryTest extends TestCase
         $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
-        $mockSl->shouldReceive('get')->with('Rules\LocalAuthorityNotRequired')->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')->with('Rules\LocalAuthorityMissing')->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with('Rules\ProcessedData\RegisteredBusRoute')->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with('Rules\ProcessedData\LocalAuthorityNotRequired')->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with('Rules\ProcessedData\LocalAuthorityMissing')->andReturn($mockValidator);
 
         $sut = new ProcessedDataInputFactory();
         $service = $sut->createService($mockSl);
