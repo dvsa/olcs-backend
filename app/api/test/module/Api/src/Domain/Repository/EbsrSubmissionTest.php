@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Domain\Query\Bus\EbsrSubmissionList;
 use Mockery as m;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as Repo;
@@ -93,7 +94,7 @@ class EbsrSubmissionTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr')
             ->andReturnSelf()
             ->shouldReceive('eq')
-            ->with('m.ebsrSubmissionStatus')
+            ->with('m.ebsrSubmissionStatus', ':ebsrSubmissionStatus')
             ->andReturnSelf()
             ->shouldReceive('andWhere')
             ->andReturnSelf()
@@ -105,7 +106,7 @@ class EbsrSubmissionTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr')
             ->andReturnSelf()
             ->shouldReceive('eq')
-            ->with('m.ebsrSubmissionType')
+            ->with('m.ebsrSubmissionType', ':ebsrSubmissionType')
             ->andReturnSelf()
             ->shouldReceive('andWhere')
             ->andReturnSelf()
@@ -113,14 +114,8 @@ class EbsrSubmissionTest extends RepositoryTestCase
             ->with('ebsrSubmissionType', 'bar')
             ->andReturnSelf();
 
-        $mockQ = m::mock(QueryInterface::class);
-        $mockQ->shouldReceive('getOrganisation')
-            ->andReturn(3)
-            ->shouldReceive('getEbsrSubmissionType')
-            ->andReturn('subType')
-            ->shouldReceive('getStatus')
-            ->andReturn('foo');
+        $query = EbsrSubmissionList::create(['organisation' => 3, 'subType' => 'bar', 'status' => 'foo']);
 
-        $this->sut->applyListFilters($mockQb, $mockQ);
+        $this->sut->applyListFilters($mockQb, $query);
     }
 }

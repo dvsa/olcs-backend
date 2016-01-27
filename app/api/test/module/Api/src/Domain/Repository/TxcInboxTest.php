@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Domain\Query\Bus\TxcInboxList;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as Repo;
 use \Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -139,19 +140,19 @@ class TxcInboxTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr')
             ->andReturnSelf()
             ->shouldReceive('eq')
-            ->with('m.organisation', ':organisation')
+            ->with('m.localAuthority', ':localAuthority')
             ->andReturnSelf()
             ->shouldReceive('andWhere')
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with('organisation', 3)
+            ->with('localAuthority', 3)
             ->andReturnSelf();
 
         // status clause
         $mockQb->shouldReceive('expr')
             ->andReturnSelf()
             ->shouldReceive('eq')
-            ->with('m.ebsrSubmissionStatus')
+            ->with('e.ebsrSubmissionStatus', ':ebsrSubmissionStatus')
             ->andReturnSelf()
             ->shouldReceive('andWhere')
             ->andReturnSelf()
@@ -163,7 +164,7 @@ class TxcInboxTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr')
             ->andReturnSelf()
             ->shouldReceive('eq')
-            ->with('m.ebsrSubmissionType')
+            ->with('e.ebsrSubmissionType', ':ebsrSubmissionType')
             ->andReturnSelf()
             ->shouldReceive('andWhere')
             ->andReturnSelf()
@@ -180,14 +181,8 @@ class TxcInboxTest extends RepositoryTestCase
             ->shouldReceive('andWhere')
             ->andReturnSelf();
 
-        $mockQ = m::mock(QueryInterface::class);
-        $mockQ->shouldReceive('getLocalAuthority')
-            ->andReturn(3)
-            ->shouldReceive('getEbsrSubmissionType')
-            ->andReturn('subType')
-            ->shouldReceive('getStatus')
-            ->andReturn('foo');
+        $query = TxcInboxList::create(['localAuthority' => 3, 'subType' => 'bar', 'status' => 'foo']);
 
-        $this->sut->applyListFilters($mockQb, $mockQ);
+        $this->sut->applyListFilters($mockQb, $query);
     }
 }
