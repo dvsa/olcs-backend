@@ -773,7 +773,7 @@ INSERT INTO `licence_status_rule` (`licence_id`, `licence_status`, `start_date`,
 
 INSERT INTO `local_authority` (`id`, `created_by`, `last_modified_by`, `traffic_area_id`, `naptan_code`, `txc_name`, `created_on`, `description`, `email_address`, `last_modified_on`, `version`)
 VALUES
-  (1, 1, 1, 'N', '639', 'N', NULL, 'Local Auth 1', NULL, NULL, 1),
+  (1, 1, 1, 'N', '050', 'Cambridgeshire', NULL, 'Cambridgeshire Local Authority', 'terry.valtech+1@gmail.com', NULL, 1),
   (2, 1, 1, 'H', '639', 'H', NULL, 'Local Auth 2', NULL, NULL, 1),
   (3, 1, 1, 'B', '639', 'B', NULL, 'Local Auth 3', NULL, NULL, 1),
   (4, 1, 1, 'F', '639', 'F', NULL, 'Local Auth 4', NULL, NULL, 1),

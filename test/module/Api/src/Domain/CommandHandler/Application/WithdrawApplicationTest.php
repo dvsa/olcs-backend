@@ -87,11 +87,6 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
 
         $application->shouldReceive('getIsVariation')->andReturn(false);
 
-        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($application, $licence);
-        $s4->setId(2909);
-        $application->shouldReceive('getS4s')->with()->once()
-            ->andReturn(new \Doctrine\Common\Collections\ArrayCollection([$s4]));
-
         $this->repoMap['Application']->shouldReceive('fetchById')
             ->with(532)
             ->andReturn($application)
@@ -119,8 +114,8 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         );
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Schedule41\CancelS4::class,
-            ['id' => 2909],
+            \Dvsa\Olcs\Transfer\Command\Application\Schedule41Cancel::class,
+            ['id' => 1],
             new Result()
         );
 
@@ -179,11 +174,6 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
 
         $application->shouldReceive('getIsVariation')->andReturn(false);
 
-        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($application, $licence);
-        $s4->setId(2915);
-        $application->shouldReceive('getS4s')->with()->once()
-            ->andReturn(new \Doctrine\Common\Collections\ArrayCollection([$s4]));
-
         $this->repoMap['Application']->shouldReceive('fetchById')
             ->with(532)
             ->andReturn($application)
@@ -229,8 +219,8 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         );
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Schedule41\CancelS4::class,
-            ['id' => 2915],
+            \Dvsa\Olcs\Transfer\Command\Application\Schedule41Cancel::class,
+            ['id' => 1],
             new Result()
         );
 

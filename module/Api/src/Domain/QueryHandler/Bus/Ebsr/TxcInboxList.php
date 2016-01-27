@@ -7,13 +7,13 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as Repository;
 use Doctrine\ORM\Query as DoctrineQuery;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Query\Bus\TxcInboxList as ListDto;
+use Doctrine\ORM\Query;
 
 /**
  * TxcInboxList
@@ -25,7 +25,6 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
     use AuthAwareTrait;
 
     protected $repoServiceName = 'TxcInbox';
-    protected $extraRepos = ['EbsrSubmission'];
 
     /**
      * @return array
@@ -35,27 +34,18 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
         /** @var Repository $repo */
         $repo = $this->getRepo();
 
-        $currentUser = $this->getCurrentUser();
+        // get data from transfer query
+        $data = $query->getArrayCopy();
 
-        $localAuthority = $currentUser->getLocalAuthority();
-        $organisation = $this->getCurrentOrganisation();
+        $data['localAuthority'] = $this->getCurrentUser()->getLocalAuthority()->getId();
 
-        if (empty($localAuthority) && $organisation instanceof Organisation) {
-            $txcInboxEntries = $this->getRepo('EbsrSubmission')->fetchByOrganisation(
-                $organisation,
-                $query->getEbsrSubmissionType(),
-                $query->getEbsrSubmissionStatus()
-            );
-        } else {
-            $txcInboxEntries = $repo->fetchUnreadListForLocalAuthority(
-                $localAuthority,
-                $query->getEbsrSubmissionType(),
-                $query->getEbsrSubmissionStatus()
-            );
-        }
+        $listDto = ListDto::create($data);
+
+        $results = $repo->fetchList($listDto, Query::HYDRATE_OBJECT);
+
         return [
             'result' => $this->resultList(
-                $txcInboxEntries,
+                $results,
                 [
                     'busReg' => [
                         'ebsrSubmissions' => [
@@ -69,7 +59,7 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
                     ]
                 ]
             ),
-            'count' => count($txcInboxEntries)
+            'count' => $repo->fetchCount($listDto)
         ];
     }
 }

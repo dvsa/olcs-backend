@@ -45,6 +45,7 @@ final class ResolvePayment extends AbstractCommandHandler implements
         $transaction = $this->getRepo()->fetchUsingId($command);
 
         $result = new Result();
+        $result->addId('transaction', $transaction->getId());
 
         if ($transaction->isWaive()) {
             $result->addMessage(sprintf('Waive transaction %d not resolved', $transaction->getId()));
@@ -64,25 +65,40 @@ final class ResolvePayment extends AbstractCommandHandler implements
                 $transaction->setStatus($this->getRepo()->getRefdataReference(Transaction::STATUS_PAID));
                 $result->merge($this->updateFees($transaction));
                 break;
-            case Cpms::PAYMENT_FAILURE:
-                $transaction->setStatus($this->getRepo()->getRefdataReference(Transaction::STATUS_FAILED));
-                break;
             case Cpms::PAYMENT_CANCELLATION:
                 $transaction->setStatus($this->getRepo()->getRefdataReference(Transaction::STATUS_CANCELLED));
                 break;
-            case Cpms::PAYMENT_IN_PROGRESS:
-            case Cpms::PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED:
+            case Cpms::PAYMENT_FAILURE:
             case Cpms::PAYMENT_GATEWAY_ERROR:
+            case Cpms::PAYMENT_SYSTEM_ERROR:
                 // resolve any abandoned payments as 'failed'
                 $transaction->setStatus($this->getRepo()->getRefdataReference(Transaction::STATUS_FAILED));
                 break;
+            case Cpms::PAYMENT_IN_PROGRESS:
+            case Cpms::PAYMENT_AWAITING_GATEWAY_URL:
+            case Cpms::PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED:
+            case Cpms::PAYMENT_END_OF_FLOW_SIGNALLED:
+            case Cpms::PAYMENT_CARD_PAYMENT_CONFIRMED:
+            case Cpms::PAYMENT_ACTIVELY_BEING_TAKEN:
+                // do nothing, wait for CPMS to update status
+                $result->addMessage(
+                    sprintf('Transaction %d is pending, CPMS status is %s', $transaction->getId(), $cpmsStatus)
+                );
+                return $result;
             default:
-                throw new ValidationException(['Unknown CPMS payment_status: '.$cpmsStatus]);
+                // output something to the console log and continue
+                $result->addMessage(
+                    sprintf(
+                        'Unexpected status received from CPMS, transaction %d status %s',
+                        $transaction->getId(),
+                        $cpmsStatus
+                    )
+                );
+                return $result;
         }
 
         $this->getRepo()->save($transaction);
 
-        $result->addId('transaction', $transaction->getId());
         $result->addMessage(
             sprintf(
                 'Transaction %d resolved as %s',

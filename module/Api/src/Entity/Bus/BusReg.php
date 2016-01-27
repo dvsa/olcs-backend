@@ -199,6 +199,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
                 'lastModifiedBy' => null,
                 'createdOn' => null,
                 'lastModifiedOn' => null,
+                'olbsKey' => null,
                 // new variation reasons will be required for a new variation
                 'variationReasons' => null,
             ]
@@ -580,12 +581,15 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
         if ($cancellationPeriod > 0 && $variationNo > 0) {
             $parent = $this->getParent();
 
-            if (!$parent) {
+            if (!$parent || empty($parent->getEffectiveDate())) {
                 //if we don't have a parent record, the result is undefined.
                 return null;
             }
 
-            $lastDateTime = clone $parent->getEffectiveDate();
+            $lastDateTime
+                = ($parent->getEffectiveDate() instanceof \DateTime)
+                    ? clone $parent->getEffectiveDate() : new \DateTime($parent->getEffectiveDate());
+
             $interval = new \DateInterval('P' . $cancellationPeriod . 'D');
 
             if ($lastDateTime->add($interval)->setTime(0, 0) >= $effectiveDate->setTime(0, 0)) {

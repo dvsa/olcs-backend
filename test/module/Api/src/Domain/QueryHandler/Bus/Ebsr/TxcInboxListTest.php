@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
 use Dvsa\Olcs\Transfer\Query\Bus\Ebsr\TxcInboxList as Qry;
 use Mockery as m;
+use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 
 /**
  * TxcInboxListTest
@@ -35,74 +36,58 @@ class TxcInboxListTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    private function getCurrentUser()
+    /**
+     * Set up a user for testing
+     *
+     * @param null $localAuthorityId
+     * @param null $organisationId
+     * @return m\Mock
+     */
+    private function getCurrentUser($localAuthorityId = null, $organisationId = null)
     {
-        $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
-
-        $mockUser->shouldReceive('getLocalAuthority')
-            ->andReturnNull();
-
-        $mockUser->shouldReceive('getRelatedOrganisation')
-            ->andReturnNull();
-
-        $organisationUsers = new ArrayCollection([$mockUser]);
-        $mockUser->shouldReceive('getOrganisationUsers')
-            ->andReturn($organisationUsers);
-
-        return $mockUser;
-    }
-
-    private function getCurrentOrganisationUser()
-    {
-        $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
+        $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $mockUser->shouldReceive('getUser')
             ->andReturnSelf();
 
-        $mockUser->shouldReceive('getLocalAuthority')
-            ->andReturnNull();
+        if (!empty($localAuthorityId)) {
+            $localAuthority = new \Dvsa\Olcs\Api\Entity\Bus\LocalAuthority();
+            $localAuthority->setId($localAuthorityId);
+        } else {
+            $localAuthority = null;
+        }
+        $mockUser->setLocalAuthority($localAuthority);
 
-        $organisation = m::mock(Organisation::class)->makePartial();
+        $organisationUsers = new ArrayCollection();
 
-        $mockUser->shouldReceive('getRelatedOrganisation')
-            ->andReturn($organisation);
+        if (!empty($organisationId)) {
+            $organisation = new Organisation();
+            $organisation->setId($organisationId);
 
-        $organisationUsers = new ArrayCollection([$mockUser]);
-        $mockUser->shouldReceive('getOrganisationUsers')
-            ->andReturn($organisationUsers);
+            $organisationUser = new OrganisationUser();
+
+            $organisationUser->setOrganisation($organisation);
+            $organisationUsers->add($organisationUser);
+        }
+        $mockUser->setOrganisationUsers($organisationUsers);
 
         return $mockUser;
     }
 
-    public function testHandleQueryForLocalAuthority()
+    public function testHandleQuery()
     {
         $query = Qry::create([]);
 
         $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
             ->shouldReceive('getIdentity->getUser')
-            ->andReturn($this->getCurrentUser());
+            ->andReturn($this->getCurrentUser(5));
 
         $mockResult = m::mock(TxcInboxEntity::class)->makePartial();
 
-        $this->repoMap['TxcInbox']->shouldReceive('fetchUnreadListForLocalAuthority')
-            ->andReturn([$mockResult]);
-        $result = $this->sut->handleQuery($query);
-        $this->assertCount(2, $result);
-        $this->assertEquals(1, $result['count']);
-    }
+        $this->repoMap['TxcInbox']->shouldReceive('fetchList')
+            ->andReturn([$mockResult])
+            ->shouldReceive('fetchCount')
+            ->andReturn(1);
 
-    public function testHandleQueryForOrganisation()
-    {
-        $query = Qry::create([]);
-
-        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
-            ->shouldReceive('getIdentity')
-            ->twice()
-            ->andReturn($this->getCurrentOrganisationUser());
-
-        $mockResult = m::mock(TxcInboxEntity::class)->makePartial();
-
-        $this->repoMap['EbsrSubmission']->shouldReceive('fetchByOrganisation')
-            ->andReturn([$mockResult]);
         $result = $this->sut->handleQuery($query);
         $this->assertCount(2, $result);
         $this->assertEquals(1, $result['count']);

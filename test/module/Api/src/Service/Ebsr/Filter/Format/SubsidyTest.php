@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\Filter\Format;
 
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy;

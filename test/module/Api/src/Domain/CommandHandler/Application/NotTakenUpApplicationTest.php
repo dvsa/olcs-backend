@@ -75,11 +75,6 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $application->setId(1);
         $application->setLicence($licence);
 
-        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($application, $licence);
-        $s4->setId(2909);
-        $application->shouldReceive('getS4s')->with()->once()
-            ->andReturn(new \Doctrine\Common\Collections\ArrayCollection([$s4]));
-
         $application->shouldReceive('getTransportManagers->toArray')
             ->once()
             ->andReturn(
@@ -166,8 +161,8 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             new Result()
         );
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Schedule41\CancelS4::class,
-            ['id' => 2909],
+            \Dvsa\Olcs\Transfer\Command\Application\Schedule41Cancel::class,
+            ['id' => 1],
             new Result()
         );
 
@@ -200,11 +195,6 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $application = m::mock(Application::class)->makePartial();
         $application->setId(1);
         $application->setLicence($licence);
-
-        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($application, $licence);
-        $s4->setId(2909);
-        $application->shouldReceive('getS4s')->with()->once()
-            ->andReturn(new \Doctrine\Common\Collections\ArrayCollection([$s4]));
 
         $application->shouldReceive('getTransportManagers->toArray')
             ->once()
@@ -303,8 +293,8 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             (new Result())->addMessage('CLOSE_FEEDUE_TASK')
         );
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Schedule41\CancelS4::class,
-            ['id' => 2909],
+            \Dvsa\Olcs\Transfer\Command\Application\Schedule41Cancel::class,
+            ['id' => 1],
             new Result()
         );
 

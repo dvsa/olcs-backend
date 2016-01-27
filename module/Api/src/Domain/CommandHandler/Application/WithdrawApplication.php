@@ -141,16 +141,12 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
      */
     protected function cancelS4(Application $application)
     {
-        // Refuse any S4's attached to the application
         if ($application->isGoods()) {
-            foreach ($application->getS4s() as $s4) {
-                /* @var $s4 \Dvsa\Olcs\Api\Entity\Application\S4 */
-                $this->result->merge(
-                    $this->handleSideEffect(
-                        \Dvsa\Olcs\Api\Domain\Command\Schedule41\CancelS4::create(['id' => $s4->getId()])
-                    )
-                );
-            }
+            $this->result->merge(
+                $this->handleSideEffect(
+                    \Dvsa\Olcs\Transfer\Command\Application\Schedule41Cancel::create(['id' => $application->getId()])
+                )
+            );
         }
     }
 

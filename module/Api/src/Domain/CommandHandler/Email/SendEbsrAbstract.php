@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as Repository;
@@ -81,9 +82,13 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
         $localAuthoritiesList = [];
         $localAuthoritiesString = '';
 
+        /** @var LocalAuthority $localAuth */
         foreach ($busReg->getLocalAuthoritys() as $localAuth) {
-            $localAuthoritiesList[] = $localAuth->getDescription();
-            $localAuthoritiesCc[] = $localAuth->getEmailAddress();
+            /** @todo Temp fix for authorities who lack an email address. Waiting for answer from John Spellman */
+            if ($localAuth->getEmailAddress() !== null) {
+                $localAuthoritiesList[] = $localAuth->getDescription();
+                $localAuthoritiesCc[] = $localAuth->getEmailAddress();
+            }
         }
 
         if (!empty($localAuthoritiesList)) {

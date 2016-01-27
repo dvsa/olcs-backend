@@ -9,10 +9,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Entity\User\User as User;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Organisation Entity Unit Tests
@@ -222,6 +219,49 @@ class OrganisationEntityTest extends EntityTester
             ['active licences'],
             $organisation->getActiveLicences()->toArray()
         );
+    }
+
+    public function testHasActiveLicences()
+    {
+        /** @var Entity $organisation */
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getLicences->matching')
+            ->with(m::type(Criteria::class))
+            ->andReturnUsing(
+                function (Criteria $criteria) {
+
+                    /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
+                    $expr = $criteria->getWhereExpression()->getExpressionList();
+
+                    $this->assertEquals('status', $expr[0]->getField());
+                    $this->assertEquals('IN', $expr[0]->getOperator());
+                    $this->assertEquals(
+                        [
+                            LicenceEntity::LICENCE_STATUS_VALID,
+                            LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                            LicenceEntity::LICENCE_STATUS_CURTAILED,
+                        ],
+                        $expr[0]->getValue()->getValue()
+                    );
+
+                    $this->assertEquals('goodsOrPsv', $expr[1]->getField());
+                    $this->assertEquals('IN', $expr[1]->getOperator());
+                    $this->assertEquals(
+                        [
+                            LicenceEntity::LICENCE_CATEGORY_PSV,
+                        ],
+                        $expr[1]->getValue()->getValue()
+                    );
+
+                    $collection = m::mock();
+                    $collection->shouldReceive('isEmpty')
+                        ->andReturn(false);
+
+                    return $collection;
+                }
+            );
+
+        $this->assertEquals(true, $organisation->hasActiveLicences(LicenceEntity::LICENCE_CATEGORY_PSV));
     }
 
     public function testGetDisqualificationNull()
