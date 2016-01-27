@@ -155,13 +155,13 @@ final class ProcessPacks extends AbstractCommandHandler implements
             //get the parts of the data we need doctrine for
             $ebsrData = $this->processEbsrInformation($ebsrData);
 
-            /** @var BusRegEntity $matchedBusReg */
-            $matchedBusReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
+            /** @var BusRegEntity $previousBusReg */
+            $previousBusReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
 
             //now do the validation we can only do post doctrine
             $this->processedDataInput->setValue($ebsrData);
 
-            if (!$this->processedDataInput->isValid(['busReg' => $matchedBusReg])) {
+            if (!$this->processedDataInput->isValid(['busReg' => $previousBusReg])) {
                 $invalidPacks++;
                 $messages = $this->processedDataInput->getMessages();
                 $result = $this->addErrorMessages($result, $document, $messages, $xmlFilename);
