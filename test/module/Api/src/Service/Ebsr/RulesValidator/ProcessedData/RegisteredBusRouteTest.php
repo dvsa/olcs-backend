@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 class RegisteredBusRouteTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * tests whether a new application is prevented from reusing an existing number
+     * tests whether the bus route has a status of registered
      *
      * @dataProvider isValidProvider
      *
