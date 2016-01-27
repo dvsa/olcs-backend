@@ -1,30 +1,30 @@
 <?php
 
 /**
- * TxcInbox List
+ * EbsrSubmission List
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as Repository;
+use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as Repository;
 use Doctrine\ORM\Query as DoctrineQuery;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Query\Bus\TxcInboxList as ListDto;
+use Dvsa\Olcs\Api\Domain\Query\Bus\EbsrSubmissionList as ListDto;
 use Doctrine\ORM\Query;
 
 /**
- * TxcInboxList
+ * EbsrSubmissionList
  * This QueryHandler will query one of two tables.
- * Either the TxcInbox table (for LAs) or the EbsrSubmission table (operators/organisation users).
+ * Either the EbsrSubmission table (for LAs) or the EbsrSubmission table (operators/organisation users).
  */
-class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
+class EbsrSubmissionList extends AbstractQueryHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
-    protected $repoServiceName = 'TxcInbox';
+    protected $repoServiceName = 'EbsrSubmission';
 
     /**
      * @return array
@@ -37,14 +37,13 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
         // get data from transfer query
         $data = $query->getArrayCopy();
 
-        $data['localAuthority'] = $this->getCurrentUser()->getLocalAuthority()->getId();
+        $data['organisation'] = $this->getCurrentOrganisation()->getId();
 
         $listDto = ListDto::create($data);
-
         $results = $repo->fetchList($listDto, Query::HYDRATE_OBJECT);
 
         return [
-            'result' => $this->resultList(
+            'results' => $this->resultList(
                 $results,
                 [
                     'busReg' => [

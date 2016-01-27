@@ -4,6 +4,11 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as Entity;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Zend\Stdlib\ArraySerializableInterface as QryCmd;
+use Dvsa\Olcs\Transfer\Query\OrderedQueryInterface;
+use Dvsa\Olcs\Transfer\Query\PagedQueryInterface;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * TxcInbox
@@ -90,65 +95,39 @@ class TxcInbox extends AbstractRepository
     }
 
     /**
-     * Fetch a list of unread docs filtered by local authority, submission type and status
-     *
-     * @param $localAuthority
-     * @param null $ebsrSubmissionType
-     * @param null $ebsrSubmissionStatus
-     * @param int $hydrateMode
-     * @return array
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
      */
-    public function fetchUnreadListForLocalAuthority(
-        $localAuthority,
-        $ebsrSubmissionType = null,
-        $ebsrSubmissionStatus = null,
-        $hydrateMode = Query::HYDRATE_OBJECT
-    ) {
-        $qb = $this->getUnreadListQuery($ebsrSubmissionType, $ebsrSubmissionStatus);
+    protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query)
+    {
+        parent::buildDefaultListQuery($qb, $query);
 
-        if (empty($localAuthority)) {
-            $qb->andWhere($qb->expr()->isNull($this->alias . '.localAuthority'));
-        } else {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.fileRead', '0'));
-            $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
-                ->setParameter('localAuthority', $localAuthority);
-        }
-
-        return $qb->getQuery()->getResult($hydrateMode);
-    }
-
-    /**
-     * General Query for unread txc inbox list. Used by LAs
-     *
-     * @param null $ebsrSubmissionType
-     * @param null $ebsrSubmissionStatus
-     * @return \Doctrine\Orm\QueryBuilder
-     */
-    private function getUnreadListQuery(
-        $ebsrSubmissionType = null,
-        $ebsrSubmissionStatus = null
-    ) {
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
-        $qb = $this->createQueryBuilder();
-
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefdata()
-            ->with('m.busReg', 'b')
+        // join in person details
+        $this->getQueryBuilder()->with($this->alias . '.busReg', 'b')
             ->with('b.ebsrSubmissions', 'e')
             ->with('b.licence', 'l')
             ->with('b.otherServices')
             ->with('l.organisation');
+    }
 
-        if (!empty($ebsrSubmissionType)) {
-            $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionType', ':ebsrSubmissionType'))
-                ->setParameter('ebsrSubmissionType', $ebsrSubmissionType);
+    /**
+     * @param QueryBuilder   $qb
+     * @param QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        if (method_exists($query, 'getLocalAuthority') && !empty($query->getLocalAuthority())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
+                ->setParameter('localAuthority', $query->getLocalAuthority());
         }
-
-        if (!empty($ebsrSubmissionStatus)) {
+        if (method_exists($query, 'getStatus') && !empty($query->getStatus())) {
             $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionStatus', ':ebsrSubmissionStatus'))
-                ->setParameter('ebsrSubmissionStatus', $ebsrSubmissionStatus);
+                ->setParameter('ebsrSubmissionStatus', $query->getStatus());
         }
-
-        return $qb;
+        if (method_exists($query, 'getSubType') && !empty($query->getSubType())) {
+            $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionType', ':ebsrSubmissionType'))
+                ->setParameter('ebsrSubmissionType', $query->getSubType());
+        }
+        $qb->andWhere($qb->expr()->eq($this->alias . '.fileRead', '0'));
     }
 }
