@@ -8,7 +8,6 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus\Ebsr;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr\BusRegWithTxcInbox;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
-use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
