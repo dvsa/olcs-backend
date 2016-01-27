@@ -23,6 +23,9 @@ class ProcessedDataInputFactory implements FactoryInterface
 
         $validatorChain = $service->getValidatorChain();
         $validatorChain->attach(
+            $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\RegisteredBusRoute')
+        );
+        $validatorChain->attach(
             $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\LocalAuthorityNotRequired')
         );
         $validatorChain->attach(

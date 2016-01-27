@@ -534,12 +534,6 @@ final class ProcessPacks extends AbstractCommandHandler implements
         /** @var BusRegEntity $busReg */
         $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
 
-        if (!$busReg->getStatus()->getId() === BusRegEntity::STATUS_REGISTERED) {
-            throw new Exception\ForbiddenException(
-                'You can only create a cancellation against a registered bus route'
-            );
-        }
-
         //variation should be the same as the variation on the original bus reg
         if ($busReg->getVariationNo() != $ebsrData['variationNo']) {
             throw new Exception\ForbiddenException(
@@ -564,12 +558,6 @@ final class ProcessPacks extends AbstractCommandHandler implements
     {
         /** @var BusRegEntity $busReg */
         $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
-
-        if (!$busReg->getStatus()->getId() === BusRegEntity::STATUS_REGISTERED) {
-            throw new Exception\ForbiddenException(
-                'You can only create a variation against a registered bus route'
-            );
-        }
 
         $newBusReg = $busReg->createVariation(
             $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_VAR),
