@@ -45,6 +45,9 @@ class Queue extends AbstractQueue
     const TYPE_EBSR_REQUEST_MAP = 'que_typ_ebsr_request_map';
     const TYPE_EMAIL = 'que_typ_email';
     const TYPE_PRINT = 'que_typ_print';
+    const TYPE_DISC_PRINTING = 'que_typ_disc_printing';
+    const TYPE_CREATE_GOODS_VEHICLE_LIST = 'que_typ_create_gds_vehciles_list';
+    const TYPE_CREATE_PSV_VEHICLE_LIST = 'que_typ_create_psv_vehciles_list';
 
     protected $types = [
         self::TYPE_COMPANIES_HOUSE_INITIAL,
@@ -57,6 +60,9 @@ class Queue extends AbstractQueue
         self::TYPE_EBSR_REQUEST_MAP,
         self::TYPE_EMAIL,
         self::TYPE_PRINT,
+        self::TYPE_DISC_PRINTING,
+        self::TYPE_CREATE_GOODS_VEHICLE_LIST,
+        self::TYPE_CREATE_PSV_VEHICLE_LIST
     ];
 
     public function incrementAttempts()

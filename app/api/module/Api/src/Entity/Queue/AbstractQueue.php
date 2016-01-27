@@ -112,7 +112,7 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="options", length=4000, nullable=true)
+     * @ORM\Column(type="text", name="options", nullable=true)
      */
     protected $options;
 

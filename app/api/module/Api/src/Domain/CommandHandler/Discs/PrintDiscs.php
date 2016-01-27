@@ -12,9 +12,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
-use Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler\PrintSchedulerInterface;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreatQueue;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 
 /**
  * Print Discs
@@ -23,26 +24,45 @@ use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
  */
 final class PrintDiscs extends AbstractCommandHandler implements TransactionedInterface
 {
-    private $templateParams = [
+    const BATCH_SIZE = 30;
+
+    protected $repoServiceName = 'GoodsDisc';
+    protected $extraRepos = ['PsvDisc'];
+
+    private $params = [
         'PSV' => [
             'template' => 'PSVDiscTemplate',
-            'bookmark' => 'Psv_Disc_Page'
+            'bookmark' => 'Psv_Disc_Page',
+            'repo' => 'PsvDisc'
         ],
         'Goods' => [
             'template' => 'GVDiscTemplate',
-            'bookmark' => 'Disc_List'
+            'bookmark' => 'Disc_List',
+            'repo' => 'GoodsDisc'
         ]
     ];
 
     public function handleCommand(CommandInterface $command)
     {
-        $bookmark = $this->templateParams[$command->getType()]['bookmark'];
+        $bookmark = $this->params[$command->getType()]['bookmark'];
+        $options = null;
 
-        $discsToPrint = $command->getDiscs();
-        $queryData = [];
-        foreach ($discsToPrint as $disc) {
-            $queryData[] = $disc->getId();
+        $discsToPrintIds = $command->getDiscs();
+
+        if (count($discsToPrintIds) > self::BATCH_SIZE) {
+            $queuedDiscsIds = array_slice($discsToPrintIds, self::BATCH_SIZE);
+            $discsToPrintIds = array_slice($discsToPrintIds, 0, self::BATCH_SIZE);
+            $queuedStartNumber = $command->getStartNumber() + self::BATCH_SIZE;
+            $options = [
+                'discs' => $queuedDiscsIds,
+                'startNumber' => $queuedStartNumber,
+                'type' => $command->getType()
+            ];
         }
+        $discsToPrint = $this->getRepo($this->params[$command->getType()]['repo'])
+            ->fetchDiscsToPrintByIds($discsToPrintIds);
+
+        $queryData = $discsToPrintIds;
 
         $knownValues = [
             $bookmark => []
@@ -52,7 +72,7 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
             $knownValues[$bookmark][$i]['discNo'] = $discNumber++;
         }
 
-        $template = $this->templateParams[$command->getType()]['template'];
+        $template = $this->params[$command->getType()]['template'];
 
         $documentId = $this->generateDocument($template, $queryData, $knownValues);
 
@@ -65,6 +85,17 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
         $printQueueResult = $this->handleSideEffect($printQueue);
         $this->result->merge($printQueueResult);
         $this->result->addMessage("Discs printed");
+
+        if ($options) {
+            $params = [
+                'type' => Queue::TYPE_DISC_PRINTING,
+                'status' => Queue::STATUS_QUEUED,
+                'options' => json_encode($options)
+            ];
+            $this->handleSideEffect(CreatQueue::create($params));
+        }
+
+        $this->getRepo($this->params[$command->getType()]['repo'])->setIsPrintingOn($discsToPrintIds);
 
         return $this->result;
     }

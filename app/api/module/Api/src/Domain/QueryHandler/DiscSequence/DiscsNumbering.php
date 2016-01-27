@@ -36,11 +36,11 @@ class DiscsNumbering extends AbstractQueryHandler
 
         if ($query->getOperatorType() === LicenceEntity::LICENCE_CATEGORY_PSV) {
             $result['discsToPrint'] = count(
-                $this->getRepo('PsvDisc')->fetchDiscsToPrint($query->getLicenceType())
+                $this->getRepo('PsvDisc')->fetchDiscsToPrintMin($query->getLicenceType())
             );
         } else {
             $result['discsToPrint'] = count(
-                $this->getRepo('GoodsDisc')->fetchDiscsToPrint($query->getNiFlag(), $query->getLicenceType())
+                $this->getRepo('GoodsDisc')->fetchDiscsToPrintMin($query->getNiFlag(), $query->getLicenceType())
             );
         }
 

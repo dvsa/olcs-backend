@@ -70,6 +70,15 @@ class NamingModel
      */
     public function getDate($flag)
     {
+        /*
+         * DateTime return zeros as a microseconds so we need to do the trick
+         */
+        if (!empty($flag) && substr($flag, -1) === 'u') {
+            list($usec, $sec) = explode(' ', microtime());
+            $usec = substr($usec, 2, 6);
+            $flag = substr($flag, 0, strlen($flag) - 1);
+            return $this->date->format($flag) . $usec;
+        }
         return $this->date->format($flag);
     }
 
