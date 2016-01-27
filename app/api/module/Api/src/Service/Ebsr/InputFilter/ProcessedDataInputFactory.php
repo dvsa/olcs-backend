@@ -35,6 +35,7 @@ class ProcessedDataInputFactory implements FactoryInterface
         $validatorChain->attach(
             $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\LocalAuthorityMissing')
         );
+        $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\VariationNumber'));
 
         return $service;
     }
