@@ -208,6 +208,10 @@ return [
     TransferCommand\Licence\UpdateTrailers::class => CommandHandler\Licence\UpdateTrailers::class,
     TransferCommand\Licence\UpdateVehicles::class => CommandHandler\Licence\UpdateVehicles::class,
     Command\Licence\TmNominatedTask::class => CommandHandler\Licence\TmNominatedTask::class,
+    Command\Licence\BatchVehicleListGeneratorForGoodsDiscs::class =>
+        CommandHandler\Licence\BatchVehicleListGeneratorForGoodsDiscs::class,
+    Command\Discs\BatchVehicleListGeneratorForPsvDiscs::class =>
+        CommandHandler\Discs\BatchVehicleListGeneratorForPsvDiscs::class,
 
     Command\Licence\Withdraw::class => CommandHandler\Licence\Withdraw::class,
     Command\Licence\Grant::class => CommandHandler\Licence\Grant::class,

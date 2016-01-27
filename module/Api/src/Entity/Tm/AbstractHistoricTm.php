@@ -149,18 +149,18 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Seen contract
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="seen_contract", nullable=false)
+     * @ORM\Column(type="yesno", name="seen_contract", nullable=false)
      */
     protected $seenContract;
 
     /**
      * Seen qualification
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="seen_qualification", nullable=false)
+     * @ORM\Column(type="yesno", name="seen_qualification", nullable=false)
      */
     protected $seenQualification;
 
@@ -466,7 +466,7 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the seen contract
      *
-     * @param boolean $seenContract
+     * @param string $seenContract
      * @return HistoricTm
      */
     public function setSeenContract($seenContract)
@@ -479,7 +479,7 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Get the seen contract
      *
-     * @return boolean
+     * @return string
      */
     public function getSeenContract()
     {
@@ -489,7 +489,7 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the seen qualification
      *
-     * @param boolean $seenQualification
+     * @param string $seenQualification
      * @return HistoricTm
      */
     public function setSeenQualification($seenQualification)
@@ -502,7 +502,7 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Get the seen qualification
      *
-     * @return boolean
+     * @return string
      */
     public function getSeenQualification()
     {

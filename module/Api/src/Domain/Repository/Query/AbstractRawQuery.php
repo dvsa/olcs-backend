@@ -62,6 +62,13 @@ abstract class AbstractRawQuery implements QueryInterface, FactoryInterface
     protected $params = [];
 
     /**
+     * Param types
+     *
+     * @var array
+     */
+    protected $paramTypes = [];
+
+    /**
      * Inject the DB connection object
      *
      * @param ServiceLocatorInterface $serviceLocator
@@ -98,6 +105,26 @@ abstract class AbstractRawQuery implements QueryInterface, FactoryInterface
     }
 
     /**
+     * Execute the update. Can be used if we need to pass param types.
+     *
+     * @param array $params
+     * @param array $paramTypes
+     * @return mixed
+     */
+    public function executeUpdate(array $params = [], array $paramTypes = [])
+    {
+        $params = array_merge($this->getParams(), $params);
+        $paramTypes = array_merge($this->getParamTypes(), $paramTypes);
+        $query = $this->buildQueryFromTemplate($this->getQueryTemplate());
+
+        try {
+            $this->connection->executeUpdate($query, $params, $paramTypes);
+        } catch (\Exception $ex) {
+            throw new RuntimeException('An unexpected error occurred while running query: ' . get_class($this));
+        }
+    }
+
+    /**
      * Get the query template.
      *
      * @return string
@@ -115,6 +142,16 @@ abstract class AbstractRawQuery implements QueryInterface, FactoryInterface
     protected function getParams()
     {
         return $this->params;
+    }
+
+    /**
+     * Get the default query param types
+     *
+     * @return array
+     */
+    protected function getParamTypes()
+    {
+        return $this->paramTypes;
     }
 
     /**

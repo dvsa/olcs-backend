@@ -154,4 +154,6 @@ return [
     CommandHandler\SystemParameter\Update::class                                      => NoValidationRequired::class,
     QueryHandler\Queue\NextItem::class                                                => NoValidationRequired::class,
     CommandHandler\MyAccount\UpdateMyAccount::class                                   => NoValidationRequired::class,
+    CommandHandler\Licence\BatchVehicleListGeneratorForGoodsDiscs::class              => NoValidationRequired::class,
+    CommandHandler\Discs\BatchVehicleListGeneratorForPsvDiscs::class                  => NoValidationRequired::class,
 ];

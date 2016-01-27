@@ -8,12 +8,10 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Doctrine\ORM\Query;
+use Doctrine\DBAL\Connection;
 
 /**
  * Goods Disc
@@ -31,23 +29,32 @@ class GoodsDisc extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->leftJoin('gd.licenceVehicle', 'lv')
-            ->leftJoin('lv.licence', 'lvl')
-            ->leftJoin('lvl.goodsOrPsv', 'lvlgp')
-            ->leftJoin('lvl.licenceType', 'lvllt')
-            ->leftJoin('lvl.trafficArea', 'lvlta')
-            ->leftJoin('lv.vehicle', 'lvv')
-            ->leftJoin('lv.application', 'lva')
-            ->leftJoin('lva.licenceType', 'lvalt')
-            ->leftJoin('lva.goodsOrPsv', 'lvagp');
-
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->with('gd.licenceVehicle', 'lv')
+            ->with('lv.licence', 'lvl')
+            ->with('lvl.goodsOrPsv', 'lvlgp')
+            ->with('lvl.licenceType', 'lvllt')
+            ->with('lvl.trafficArea', 'lvlta')
+            ->with('lv.vehicle', 'lvv')
+            ->with('lv.application', 'lva')
+            ->with('lva.licenceType', 'lvalt')
+            ->with('lva.goodsOrPsv', 'lvagp');
         $this->addFilteringConditions($qb, $niFlag, $licenceType);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
     protected function addFilteringConditions($qb, $niFlag, $licenceType)
     {
+        $activeStatuses = [
+            LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+            LicenceEntity::LICENCE_STATUS_GRANTED,
+            LicenceEntity::LICENCE_STATUS_VALID,
+            LicenceEntity::LICENCE_STATUS_CURTAILED,
+            LicenceEntity::LICENCE_STATUS_SUSPENDED
+        ];
+
         if ($niFlag == 'Y') {
             // for NI licences we don't check operator type
             $qb->andWhere(
@@ -104,36 +111,36 @@ class GoodsDisc extends AbstractRepository
             $qb->setParameter('licenceLicenceType', $licenceType);
 
         }
+        $qb->andWhere($qb->expr()->in('lvl.status', ':activeStatuses'));
+        $qb->setParameter('activeStatuses', $activeStatuses);
     }
 
-    public function setIsPrintingOn($discs)
+    public function setIsPrintingOn($discIds)
     {
-        $this->setIsPrinting('Y', $discs);
+        $this->setIsPrinting(1, $discIds);
     }
 
-    public function setIsPrintingOff($discs)
+    public function setIsPrintingOff($discIds)
     {
-        $this->setIsPrinting('N', $discs);
+        $this->setIsPrinting(0, $discIds);
     }
 
-    protected function setIsPrinting($type, $discs)
+    protected function setIsPrinting($type, $discIds)
     {
-        foreach ($discs as $disc) {
-            $fetched = $this->fetchById($disc->getId());
-            $fetched->setIsPrinting($type);
-            $this->save($fetched);
-        }
+        return $this->getDbQueryManager()->get('Discs\GoodsDiscsSetIsPrinting')
+            ->executeUpdate(
+                ['isPrinting' => $type, 'ids' => $discIds],
+                ['isPrinting' => \PDO::PARAM_INT, 'ids' => Connection::PARAM_INT_ARRAY]
+            );
     }
 
-    public function setIsPrintingOffAndAssignNumbers($discs, $startNumber)
+    public function setIsPrintingOffAndAssignNumbers($discIds, $startNumber)
     {
-        foreach ($discs as $disc) {
-            $fetched = $this->fetchById($disc->getId());
-            $fetched->setIsPrinting('N');
-            $fetched->setDiscNo($startNumber++);
-            $fetched->setIssuedDate(new DateTime('now'));
-            $this->save($fetched);
-        }
+        return $this->getDbQueryManager()->get('Discs\GoodsDiscsSetIsPrintingOffAndDiscNo')
+            ->executeUpdate(
+                ['ids' => $discIds, 'startNumber' => $startNumber],
+                ['ids' => Connection::PARAM_INT_ARRAY, 'startNumber' => \PDO::PARAM_INT]
+            );
     }
 
     public function ceaseDiscsForLicence($licenceId)
@@ -141,4 +148,43 @@ class GoodsDisc extends AbstractRepository
         return $this->getDbQueryManager()->get('LicenceVehicle\CeaseDiscsForLicence')
             ->execute(['licence' => $licenceId]);
     }
+
+    public function fetchDiscsToPrintByIds($ids = [])
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->leftJoin('gd.licenceVehicle', 'lv')
+            ->leftJoin('lv.licence', 'lvl')
+            ->leftJoin('lvl.goodsOrPsv', 'lvlgp')
+            ->leftJoin('lvl.licenceType', 'lvllt')
+            ->leftJoin('lvl.trafficArea', 'lvlta')
+            ->leftJoin('lv.vehicle', 'lvv')
+            ->leftJoin('lv.application', 'lva')
+            ->leftJoin('lva.licenceType', 'lvalt')
+            ->leftJoin('lva.goodsOrPsv', 'lvagp');
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->filterByIds($ids);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function fetchDiscsToPrintMin($niFlag, $licenceType)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->leftJoin('gd.licenceVehicle', 'lv')
+            ->leftJoin('lv.licence', 'lvl')
+            ->leftJoin('lvl.goodsOrPsv', 'lvlgp')
+            ->leftJoin('lvl.licenceType', 'lvllt')
+            ->leftJoin('lvl.trafficArea', 'lvlta')
+            ->leftJoin('lv.vehicle', 'lvv')
+            ->leftJoin('lv.application', 'lva')
+            ->leftJoin('lva.licenceType', 'lvalt')
+            ->leftJoin('lva.goodsOrPsv', 'lvagp');
+        $this->addFilteringConditions($qb, $niFlag, $licenceType);
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
+
 }

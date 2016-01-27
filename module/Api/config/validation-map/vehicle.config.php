@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceVehicleWithId 
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceVehiclesWithIds as LicenceVehicleByIds;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Vehicle\CanTransfer;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalOrSystemUser;
 
 return [
     CommandHandler\Application\CreateGoodsVehicle::class        => CanAccessApplicationWithId::class,
@@ -31,7 +32,7 @@ return [
 
     CommandHandler\Licence\CreateGoodsVehicle::class        => CanAccessLicenceWithId::class,
     CommandHandler\Licence\CreatePsvVehicle::class          => CanAccessLicenceWithLicence::class,
-    CommandHandler\Licence\CreateVehicleListDocument::class => CanAccessLicenceWithId::class,
+    CommandHandler\Licence\CreateVehicleListDocument::class => IsInternalOrSystemUser::class,
     CommandHandler\Licence\TransferVehicles::class          => CanTransfer::class,
     CommandHandler\Licence\UpdateVehicles::class            => CanAccessLicenceWithId::class,
     CommandHandler\Vehicle\DeleteLicenceVehicle::class      => LicenceVehicleByIds::class,
