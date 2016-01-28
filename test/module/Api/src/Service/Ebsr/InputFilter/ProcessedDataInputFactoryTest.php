@@ -42,6 +42,6 @@ class ProcessedDataInputFactoryTest extends TestCase
         $service = $sut->createService($mockSl);
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
-        $this->assertCount(2, $service->getValidatorChain());
+        $this->assertCount(6, $service->getValidatorChain());
     }
 }
