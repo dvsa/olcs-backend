@@ -33,6 +33,7 @@ class BusRegNotFound extends AbstractValidator
      */
     public function isValid($value, $context = [])
     {
+        //this check is only done for records which are not new applications
         if (strtolower($value['txcAppType']) !== 'new' && !$context['busReg'] instanceof BusRegEntity) {
             $this->error(self::BUS_REG_NOT_FOUND_ERROR, $value['existingRegNo']);
             return false;
