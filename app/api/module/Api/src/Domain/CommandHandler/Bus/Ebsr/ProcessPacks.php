@@ -199,8 +199,10 @@ final class ProcessPacks extends AbstractCommandHandler implements
                 continue;
             }
 
-            //short notice is valid,
-            $busReg->getShortNotice()->fromData($ebsrData['busShortNotice']);
+            //short notice has passed validation
+            if ($busReg->getIsShortNotice() === 'Y') {
+                $busReg->getShortNotice()->fromData($ebsrData['busShortNotice']);
+            }
 
             //save the submission and the bus reg
             $this->getRepo('EbsrSubmission')->save($ebsrSubmission);
