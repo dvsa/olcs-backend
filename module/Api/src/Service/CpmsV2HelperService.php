@@ -33,6 +33,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
     const REFUND_REASON = 'Refund';
 
+    const PARAM_CUSTOMER_NAME_LIMIT = 100;
+    const PARAM_CUSTOMER_MANAGER_NAME_LIMIT = 100;
+    const PARAM_RECEIVER_NAME_LIMIT = 150;
+
     /**
      * @var ApiService
      */
@@ -460,8 +464,11 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
                 'scope' => $scope,
                 'total_amount' => $this->formatAmount($ft->getAmount()),
                 'customer_reference' => (string) $this->getCustomerReference([$fee]),
-                'customer_name' => $fee->getCustomerNameForInvoice(),
-                'customer_manager_name' => $fee->getCustomerNameForInvoice(),
+                'customer_name' => $this->truncate($fee->getCustomerNameForInvoice(), self::PARAM_CUSTOMER_NAME_LIMIT),
+                'customer_manager_name' => $this->truncate(
+                    $fee->getCustomerNameForInvoice(),
+                    self::PARAM_CUSTOMER_MANAGER_NAME_LIMIT
+                ),
                 'customer_address' => $this->formatAddress($fee->getCustomerAddressForInvoice()),
                 'country_code' => $fee->getFeeType()->getCountryCode(),
             ]
@@ -774,7 +781,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * Get data for 'payment_data' elements of a payment request
      *
      * @param Fee $fee
-     * @param array $extraPayment data
+     * @param array $extraPaymentData data
      * @return array|null (will return null if we don't want to include a fee,
      * e.g. overpayment balancing fees)
      */
@@ -803,7 +810,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'product_reference' => $fee->getFeeType()->getDescription(),
             'product_description' => $fee->getFeeType()->getDescription(),
             'receiver_reference' => (string) $this->getCustomerReference([$fee]),
-            'receiver_name' => $fee->getCustomerNameForInvoice(),
+            'receiver_name' => $this->truncate($fee->getCustomerNameForInvoice(), self::PARAM_RECEIVER_NAME_LIMIT),
             'receiver_address' => $this->formatAddress($fee->getCustomerAddressForInvoice()),
             'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
             'deferment_period' => (string) $fee->getDefermentPeriod(),
@@ -832,8 +839,11 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'customer_reference' => (string) $this->getCustomerReference($fees),
             'payment_data' => [],
             'total_amount' => $this->formatAmount($totalAmount),
-            'customer_name' => $firstFee->getCustomerNameForInvoice(),
-            'customer_manager_name' => $firstFee->getCustomerNameForInvoice(),
+            'customer_name' => $this->truncate($firstFee->getCustomerNameForInvoice(), self::PARAM_CUSTOMER_NAME_LIMIT),
+            'customer_manager_name' => $this->truncate(
+                $firstFee->getCustomerNameForInvoice(),
+                self::PARAM_CUSTOMER_MANAGER_NAME_LIMIT
+            ),
             'customer_address' => $this->formatAddress($firstFee->getCustomerAddressForInvoice()),
             'refund_overpayment' => $this->isOverpayment($fees),
             'country_code' => $firstFee->getFeeType()->getCountryCode(),
@@ -938,5 +948,18 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     public function getInvoicePrefix()
     {
         return $this->invoicePrefix;
+    }
+
+    /**
+     * Truncate a string
+     *
+     * @param string $text   String to truncate
+     * @param int    $length Number of chars to truncate to
+     *
+     * @return string The truncated string
+     */
+    private function truncate($text, $length)
+    {
+        return substr($text, 0, $length);
     }
 }
