@@ -70,6 +70,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
 
     protected $processedDataInput;
 
+    protected $shortNoticeInput;
+
     /**
      * @var FileProcessor
      */
@@ -82,6 +84,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
         $this->xmlStructure = $mainServiceLocator->get('EbsrXmlStructure');
         $this->busRegInput = $mainServiceLocator->get('EbsrBusRegInput');
         $this->processedDataInput = $mainServiceLocator->get('EbsrProcessedDataInput');
+        $this->shortNoticeInput = $mainServiceLocator->get('EbsrShortNoticeInput');
         $this->fileProcessor = $mainServiceLocator->get(FileProcessorInterface::class);
 
         return parent::createService($serviceLocator);
@@ -180,28 +183,28 @@ final class ProcessPacks extends AbstractCommandHandler implements
             $ebsrSubmission->setVariationNo($ebsrData['variationNo']);
             $ebsrSubmission->setRegistrationNo($ebsrData['routeNo']);
             $ebsrSubmission->setOrganisationEmailAddress($ebsrData['organisationEmail']);
-            $this->getRepo('EbsrSubmission')->save($ebsrSubmission);
 
-            try {
-                $busReg = $this->createBusReg($ebsrData);
-            } catch (Exception\NotFoundException $e) {
-                $invalidPacks++;
-                $result = $this->addErrorMessages($result, $document, $e->getMessages(), $xmlFilename);
-                $this->setEbsrSubmissionFailed($ebsrSubmission);
+            //bus reg data is valid, so we can create
+            $busReg = $this->createBusReg($ebsrData);
 
-                continue;
-            } catch (Exception\ForbiddenException $e) {
+            //now do the validation we can only do post doctrine
+            $this->shortNoticeInput->setValue($ebsrData);
+
+            if (!$this->shortNoticeInput->isValid(['busReg' => $busReg])) {
                 $invalidPacks++;
-                $result = $this->addErrorMessages($result, $document, $e->getMessages(), $xmlFilename);
+                $messages = $this->shortNoticeInput->getMessages();
+                $result = $this->addErrorMessages($result, $document, $messages, $xmlFilename);
                 $this->setEbsrSubmissionFailed($ebsrSubmission);
 
                 continue;
             }
 
-            $busSubmissions = new ArrayCollection();
-            $busSubmissions->add($ebsrSubmission);
-            $busReg->setEbsrSubmissions($busSubmissions);
+            //short notice is valid,
+            $busReg->getShortNotice()->fromData($ebsrData['busShortNotice']);
 
+            //save the submission and the bus reg
+            $this->getRepo('EbsrSubmission')->save($ebsrSubmission);
+            $busReg->setEbsrSubmissions(new ArrayCollection([$ebsrSubmission]));
             $this->getRepo()->save($busReg);
 
             $sideEffects = $this->getSideEffects($ebsrData, $busReg, dirname($xmlFilename));
@@ -303,19 +306,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
         }
 
         $busReg->fromData($this->prepareBusRegData($ebsrData));
-
         $busReg->populateShortNotice();
-
-        if ($busReg->getIsShortNotice() === 'Y') {
-            if (empty($ebsrData['busShortNotice'])) {
-                throw new Exception\ForbiddenException(
-                    'This application is short notice, but the file doesn\'t have a short notice section'
-                );
-            }
-
-            $busReg->getShortNotice()->createEbsrShortNotice($ebsrData['busShortNotice']);
-        }
-
         $this->processServiceNumbers($busReg, $ebsrData['otherServiceNumbers']);
 
         return $busReg;
@@ -583,7 +574,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
     /**
      * @param BusRegEntity $busReg
      * @param array $serviceNumbers
-     * @return array
+     * @return BusRegEntity
      */
     private function processServiceNumbers(BusRegEntity $busReg, array $serviceNumbers)
     {
