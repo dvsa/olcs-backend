@@ -39,7 +39,8 @@ class RegisteredBusRoute extends AbstractValidator
         $busReg = $context['busReg'];
         $txcAppType = strtolower($value['txcAppType']);
 
-        if ($txcAppType !== 'new' && $busReg instanceof BusRegEntity && !$busReg->isRegistered()) {
+        //this check is not done for new applications
+        if ($txcAppType !== 'new' && !$busReg->isRegistered()) {
             $type = ($txcAppType === 'cancel' ? self::TYPE_CANCELLATION : self::TYPE_VARIATION);
             $this->error(self::REGISTERED_BUS_ROUTE_ERROR, $type);
             return false;
