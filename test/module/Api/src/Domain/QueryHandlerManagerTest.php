@@ -64,6 +64,26 @@ class QueryHandlerManagerTest extends MockeryTestCase
         $this->assertEquals(['response'], $this->sut->handleQuery($query));
     }
 
+    public function testHandleQueryReturningEntity()
+    {
+        $query = m::mock(QueryInterface::class)->makePartial();
+        $query->shouldReceive('getArrayCopy')->once()->andReturn(['foo' => 'bar']);
+
+        $response = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
+        $response->shouldReceive('serialize')->with()->once()->andReturn(['response']);
+
+        $mockService = m::mock(QueryHandlerInterface::class);
+        $mockService->shouldReceive('handleQuery')->with($query)->andReturn($response);
+
+        $mockValidator = m::mock(HandlerInterface::class);
+        $mockValidator->shouldReceive('isValid')->with($query)->andReturn(true);
+        $this->vhm->setService(get_class($mockService), $mockValidator);
+
+        $this->sut->setService(get_class($query), $mockService);
+
+        $this->assertEquals($response, $this->sut->handleQuery($query));
+    }
+
     public function testHandleQueryFailingValidator()
     {
         $this->setExpectedException(ForbiddenException::class);
