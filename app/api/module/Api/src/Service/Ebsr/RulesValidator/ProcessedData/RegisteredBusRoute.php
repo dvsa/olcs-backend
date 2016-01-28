@@ -20,7 +20,7 @@ class RegisteredBusRoute extends AbstractValidator
      * @var array
      */
     protected $messageTemplates = [
-        self::REGISTERED_BUS_ROUTE_ERROR => 'You can only create a %type% against a registered bus route'
+        self::REGISTERED_BUS_ROUTE_ERROR => 'You can only create a %value% against a registered bus route'
     ];
 
     /**
