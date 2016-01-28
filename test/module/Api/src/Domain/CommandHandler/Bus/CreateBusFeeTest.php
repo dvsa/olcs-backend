@@ -57,7 +57,8 @@ class CreateBusFeeTest extends CommandHandlerTestCase
         $busRegId = 111;
         $regNo = 12345;
 
-        $receivedDate = new \DateTime('2015-01-01');
+        $receivedDate = '2015-01-01';
+        $receivedDateTime = new \DateTime($receivedDate);
         $feeTypeRef = $this->refData[$feeType];
         $goodsOrPsv = $this->refData[Licence::LICENCE_CATEGORY_PSV];
         $licenceType = $this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL];
@@ -109,7 +110,7 @@ class CreateBusFeeTest extends CommandHandlerTestCase
             'task' => null,
             'application' => null,
             'licence' => 222,
-            'invoicedDate' => $receivedDate->format('Y-m-d'),
+            'invoicedDate' => $receivedDateTime->format('Y-m-d'),
             'description' => 'Fee description ' . $regNo . ' V' . $variationNumber,
             'feeType' => 444,
             'amount' => 10.5,
