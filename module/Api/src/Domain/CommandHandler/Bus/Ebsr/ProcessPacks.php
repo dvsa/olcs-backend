@@ -185,7 +185,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
             $ebsrSubmission->setOrganisationEmailAddress($ebsrData['organisationEmail']);
 
             //bus reg data is valid, so we can create
-            $busReg = $this->createBusReg($ebsrData);
+            $busReg = $this->createBusReg($ebsrData, $previousBusReg);
 
             //now do the validation we can only do post doctrine
             $this->shortNoticeInput->setValue($ebsrData);
