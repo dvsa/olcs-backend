@@ -172,25 +172,6 @@ class BusShortNotice extends AbstractBusShortNotice
     }
 
     /**
-     * @param array $data
-     * @return ForbiddenException
-     */
-    public function createEbsrShortNotice(array $data)
-    {
-        if ((!isset($data['notAvailableChange']) || $data['notAvailableChange'] == 'N')
-            && (!isset($data['timetableChange']) || $data['timetableChange'] == 'N')) {
-            //if the change is available to the public and its not a timetable (low impact) change, an additional
-            //reason must be supplied, thus the busShortNoticeArray must contain at least 3 elements.
-            //(not available, timetable change and the additional reason element)
-            if (count($data) < 3) {
-                return new ForbiddenException('A short notice reason hasn\'t been provided');
-            }
-        }
-
-        $this->fromData($data);
-    }
-
-    /**
      * Populate properties from data
      *
      * @param array $data
