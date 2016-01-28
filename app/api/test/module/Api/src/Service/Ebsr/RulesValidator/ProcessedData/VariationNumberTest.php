@@ -88,7 +88,7 @@ class VariationNumberTest extends \PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    public function IsValidWhenNotValidProvider()
+    public function isValidWhenNotValidProvider()
     {
         return [
             ['new', 1, null, VariationNumber::NEW_VARIATION_NUMBER_ERROR],
