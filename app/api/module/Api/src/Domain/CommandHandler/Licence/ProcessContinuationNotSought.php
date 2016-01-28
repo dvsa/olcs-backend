@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
@@ -24,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\Command\Publication\Licence as PublicationLicenceCmd;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class ProcessContinuationNotSought extends AbstractCommandHandler
+final class ProcessContinuationNotSought extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Licence';
 

@@ -249,24 +249,7 @@ class BatchControllerTest extends TestCase
             );
 
         $mockConsole = m::mock(AdapterInterface::class);
-        $mockConsole
-            ->shouldReceive('writeLine')
-            ->with($now->format(\DateTime::W3C))
-            ->shouldReceive('writeLine')
-            ->with('2 Licence(s) found to change to CNS')
-            ->once()
-            ->shouldReceive('writeLine')
-            ->with('Processing Licence ID 1')
-            ->once()
-            ->shouldReceive('writeLine')
-            ->with('Processing Licence ID 2')
-            ->once()
-            ->shouldReceive('writeLine')
-            ->with('Licence updated')
-            ->twice()
-            ->shouldReceive('writeLine')
-            ->with('Email sent')
-            ->once();
+        $mockConsole->shouldReceive('writeLine')->times(11);
         $this->sut->setConsole($mockConsole);
 
         $this->sut->continuationNotSoughtAction();
