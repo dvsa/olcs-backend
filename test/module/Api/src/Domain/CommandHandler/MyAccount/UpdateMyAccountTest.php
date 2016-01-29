@@ -113,7 +113,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             ->andReturn($user);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('some-pid', null, 'test1@test.me');
+            ->with('some-pid', 'login_id', 'test1@test.me');
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -208,7 +208,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             ->andReturn($mockUser);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('some-pid', null, 'test1@test.me');
+            ->with('some-pid', 'login_id', 'test1@test.me');
 
         $command = Cmd::create($data);
 

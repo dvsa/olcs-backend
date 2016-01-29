@@ -156,7 +156,7 @@ class UserTest extends MockeryTestCase
 
     public function testDisableUser()
     {
-        $loginId = 'login_id';
+        $pid = 'pid';
         $expected = [
             [
                 'operation' => 'replace',
@@ -170,10 +170,10 @@ class UserTest extends MockeryTestCase
         $mockClient = m::mock(Client::class);
         $mockClient->shouldReceive('updateUser')
             ->once()
-            ->with($loginId, $expected);
+            ->with($pid, $expected);
 
         $sut = new User($mockClient, $mockRandom);
 
-        $sut->disableUser($loginId);
+        $sut->disableUser($pid);
     }
 }

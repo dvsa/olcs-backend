@@ -48,7 +48,7 @@ final class DeleteUserSelfserve extends AbstractCommandHandler implements
         $this->getRepo()->delete($user);
 
         $this->getOpenAmUser()->disableUser(
-            $user->getLoginId()
+            $user->getPid()
         );
 
         $result = new Result();

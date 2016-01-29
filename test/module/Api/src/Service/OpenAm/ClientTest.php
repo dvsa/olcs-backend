@@ -94,12 +94,12 @@ class ClientTest extends MockeryTestCase
 
         $sut = new Client($mockClient, $request);
 
-        $sut->updateUser('username', [['operation' => 'replace', 'field' => 'emailAddress', 'value' => 'email2']]);
+        $sut->updateUser('pid', [['operation' => 'replace', 'field' => 'emailAddress', 'value' => 'email2']]);
 
         $this->assertInstanceOf(Request::class, $sentRequest);
         $this->assertNotSame($request, $sentRequest);
         $this->assertStringStartsWith(
-            'PATCH http://testing.com:80/users/username',
+            'PATCH http://testing.com:80/users/pid',
             $sentRequest->renderRequestLine()
         );
         $expected = [['operation' => 'replace', 'field' => 'emailAddress', 'value' => 'email2']];
@@ -125,6 +125,6 @@ class ClientTest extends MockeryTestCase
 
         $sut = new Client($mockClient, $request);
 
-        $sut->updateUser('username', [['operation' => 'replace', 'field' => 'emailAddress', 'value' => 'email2']]);
+        $sut->updateUser('pid', [['operation' => 'replace', 'field' => 'emailAddress', 'value' => 'email2']]);
     }
 }
