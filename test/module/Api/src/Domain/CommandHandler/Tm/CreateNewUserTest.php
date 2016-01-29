@@ -194,6 +194,7 @@ class CreateNewUserTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $mockApplication = m::mock(Application::class);
+        $mockApplication->shouldReceive('getLicence->getOrganisation')->with()->andReturn('ORG1');
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('generatePid')->with('Foo')->andReturn('pid');
 
