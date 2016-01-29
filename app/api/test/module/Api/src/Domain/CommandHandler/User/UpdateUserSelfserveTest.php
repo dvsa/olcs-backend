@@ -70,6 +70,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
         $user->setId($userId);
+        $user->setPid('pid');
         $user->setLoginId($data['loginId']);
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
 
@@ -79,7 +80,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
             ->andReturn(true);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('login_id', 'test1@test.me');
+            ->with('pid', 'login_id', 'test1@test.me');
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -162,6 +163,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
         $user->setId($userId);
+        $user->setPid('pid');
         $user->setLoginId($data['loginId']);
         $user->setContactDetails($contactDetails);
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
@@ -172,7 +174,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
             ->andReturn(true);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('login_id', 'test1@test.me');
+            ->with('pid', 'login_id', 'test1@test.me');
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
