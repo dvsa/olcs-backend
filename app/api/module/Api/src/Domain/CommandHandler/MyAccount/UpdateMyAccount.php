@@ -44,8 +44,6 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
             $command->getVersion()
         );
 
-        $newUsername = ($command->getLoginId() !== $user->getLoginId()) ? $command->getLoginId() : null;
-
         // validate username
         $this->validateUsername($data['loginId'], $user->getLoginId());
 
@@ -76,7 +74,7 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
 
         $this->getOpenAmUser()->updateUser(
             $user->getPid(),
-            $newUsername,
+            $command->getLoginId(),
             $command->getContactDetails()['emailAddress']
         );
 

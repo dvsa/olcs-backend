@@ -87,6 +87,7 @@ final class UpdateUser extends AbstractUserCommandHandler implements
         $this->getRepo()->save($user);
 
         $this->getOpenAmUser()->updateUser(
+            $user->getPid(),
             $user->getLoginId(),
             $command->getContactDetails()['emailAddress'],
             ($command->getAccountDisabled() === 'Y') ? true : false

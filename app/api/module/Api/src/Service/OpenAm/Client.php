@@ -74,15 +74,15 @@ class Client implements ClientInterface
     /**
      * Updates a user
      *
-     * @param string $username
+     * @param string $pid
      * @param array $updates
      *
      * @return void
      * @throws FailedRequestException
      */
-    public function updateUser($username, $updates)
+    public function updateUser($pid, $updates)
     {
-        $request = $this->createRequest('/users/' . $username, Request::METHOD_PATCH);
+        $request = $this->createRequest('/users/' . $pid, Request::METHOD_PATCH);
         $request->setContent(json_encode($updates));
 
         $response = $this->httpClient->send($request);
