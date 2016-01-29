@@ -232,8 +232,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
         $xmlName,
         $value,
         $context = []
-    )
-    {
+    ) {
         $inputFilter = $filter . 'Input';
 
         $this->$inputFilter->setValue($value);
