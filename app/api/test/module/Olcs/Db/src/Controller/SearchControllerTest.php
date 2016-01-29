@@ -19,7 +19,7 @@ class SearchControllerTest extends \PHPUnit_Framework_TestCase
         $mockParams->shouldReceive('fromRoute')->andReturn([]);
         $mockParams->shouldReceive('fromQuery')->andReturn(
             [
-                'query' => 'test',
+                'q' => 'test',
                 'index' => 'application',
                 'page' => 1,
                 'limit' => 10

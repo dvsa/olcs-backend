@@ -8,7 +8,8 @@
 
 namespace OlcsTest\Db\Service;
 
-use PHPUnit_Framework_TestCase;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Olcs\Db\Service\Factory;
 
 /**
@@ -16,7 +17,7 @@ use Olcs\Db\Service\Factory;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class FactoryTest extends PHPUnit_Framework_TestCase
+class FactoryTest extends MockeryTestCase
 {
 
     /**
@@ -62,14 +63,9 @@ class FactoryTest extends PHPUnit_Framework_TestCase
 
         $mockEntityManager = $this->getMock('\stdClass');
 
-        $serviceManager = $this->getMockBuilder(
-            '\Zend\ServiceManager\ServiceManager',
-            array('get')
-        )->disableOriginalConstructor()->getMock();
-
-        $serviceManager->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue($mockEntityManager));
+        $serviceManager = m::mock('\Zend\ServiceManager\ServiceManager')->makePartial();
+        $serviceManager->setService('Config', ['entity_namespaces' => ['Missing' => 'Missing']]);
+        $serviceManager->setService('doctrine.entitymanager.orm_default', $mockEntityManager);
 
         $mockGenericService = $this->getMock(
             'GenericMockService',
@@ -111,14 +107,9 @@ class FactoryTest extends PHPUnit_Framework_TestCase
 
         $mockEntityManager = $this->getMock('\stdClass');
 
-        $serviceManager = $this->getMockBuilder(
-            '\Zend\ServiceManager\ServiceManager',
-            array('get')
-        )->disableOriginalConstructor()->getMock();
-
-        $serviceManager->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue($mockEntityManager));
+        $serviceManager = m::mock('\Zend\ServiceManager\ServiceManager')->makePartial();
+        $serviceManager->setService('Config', ['entity_namespaces' => []]);
+        $serviceManager->setService('doctrine.entitymanager.orm_default', $mockEntityManager);
 
         $factory = $this->getMock('\Olcs\Db\Service\Factory', array('getServiceClassName'));
 

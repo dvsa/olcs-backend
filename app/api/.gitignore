@@ -7,9 +7,14 @@ nbproject
 .project
 .settings
 composer.lock
+composer.phar
 vendor
 vendor/bin
 test/coverage-report
 *.sw?
 data/mapping
 data/DoctrineORMModule
+data/cache/*
+data/db/Etl
+data/db/live-like-data.sql
+data/db/test-olcs-refdata.sql

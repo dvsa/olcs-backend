@@ -25,7 +25,7 @@ trait EntityManagerAwareTrait
     /**
      * Returns and instance of the Doctrine 2.x entity manager.
      *
-     * @return \Doctrine\ORM\EntityManagerInterface
+     * @return \Doctrine\ORM\EntityManager
      */
     public function getEntityManager()
     {

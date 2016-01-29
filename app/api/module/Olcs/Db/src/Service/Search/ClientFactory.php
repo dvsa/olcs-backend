@@ -3,6 +3,8 @@
 namespace Olcs\Db\Service\Search;
 
 use Elastica\Client;
+use Olcs\Logging\Log\Logger;
+use Olcs\Logging\Log\ZendLogPsr3Adapter;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\Exception;
@@ -28,6 +30,11 @@ class ClientFactory implements FactoryInterface
         }
 
         $service = new Client($config['elastic_search']);
+
+        if (isset($config['elastic_search']['log'])) {
+            $log = new ZendLogPsr3Adapter(Logger::getLogger());
+            $service->setLogger($log);
+        }
 
         return $service;
     }
