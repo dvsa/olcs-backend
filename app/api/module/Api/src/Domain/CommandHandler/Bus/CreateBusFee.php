@@ -57,21 +57,24 @@ final class CreateBusFee extends AbstractCommandHandler
             $feeTrafficArea = TrafficAreaEntity::SCOTTISH_TRAFFIC_AREA_CODE;
         }
 
+        $receivedDate = $busReg->getReceivedDate();
+
+        if (!$receivedDate instanceof \DateTime) {
+            $receivedDate = new \DateTime($receivedDate);
+        }
+
         $feeType = $this->feeTypeRepo->fetchLatest(
             $feeType,
             $busReg->getLicence()->getGoodsOrPsv(),
             $busReg->getLicence()->getLicenceType(),
-            $busReg->getReceivedDate(),
+            $receivedDate,
             $feeTrafficArea
         );
-
-        $invoicedDate
-            = ($busReg->getReceivedDate() instanceof \DateTime) ? $busReg->getReceivedDate()->format('Y-m-d') : null;
 
         $data = [
             'busReg' => $busReg->getId(),
             'licence' => $busReg->getLicence()->getId(),
-            'invoicedDate' => $invoicedDate,
+            'invoicedDate' => $receivedDate->format('Y-m-d'),
             'description' => $feeType->getDescription() . ' ' . $busReg->getRegNo() . ' V' . $busReg->getVariationNo(),
             'feeType' => $feeType->getId(),
             'feeStatus' => FeeEntity::STATUS_OUTSTANDING,
