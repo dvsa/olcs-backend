@@ -4,13 +4,13 @@ namespace Dvsa\OlcsTest\Api\Service\Ebsr\InputFilter;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory;
+use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory;
 
 /**
- * Class ProcessedDataInputFactoryTest
+ * Class ShortNoticeInputFactoryTest
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\InputFilter
  */
-class ProcessedDataInputFactoryTest extends TestCase
+class ShortNoticeInputFactoryTest extends TestCase
 {
     /**
      * Tests create service
@@ -23,30 +23,14 @@ class ProcessedDataInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
-        $mockSl->shouldReceive('get')->with('Rules\ProcessedData\BusRegNotFound')->once()->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')->with('Rules\ProcessedData\VariationNumber')->once()->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')
-            ->with('Rules\ProcessedData\NewAppAlreadyExists')
-            ->once()
-            ->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')
-            ->with('Rules\ProcessedData\RegisteredBusRoute')
-            ->once()
-            ->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')
-            ->with('Rules\ProcessedData\LocalAuthorityNotRequired')
-            ->once()
-            ->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')
-            ->with('Rules\ProcessedData\LocalAuthorityMissing')
-            ->once()
-            ->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with('Rules\ShortNotice\MissingSection')->once()->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with('Rules\ShortNotice\MissingReason')->once()->andReturn($mockValidator);
 
-        $sut = new ProcessedDataInputFactory();
+        $sut = new ShortNoticeInputFactory();
         $service = $sut->createService($mockSl);
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
-        $this->assertCount(6, $service->getValidatorChain());
+        $this->assertCount(2, $service->getValidatorChain());
     }
 
     /**
@@ -57,7 +41,7 @@ class ProcessedDataInputFactoryTest extends TestCase
         $config = [
             'ebsr' => [
                 'validate' => [
-                    'processed_data' => false
+                    'short_notice' => false
                 ]
             ]
         ];
@@ -65,7 +49,7 @@ class ProcessedDataInputFactoryTest extends TestCase
         $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
 
-        $sut = new ProcessedDataInputFactory();
+        $sut = new ShortNoticeInputFactory();
         $service = $sut->createService($mockSl);
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
