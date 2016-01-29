@@ -3,59 +3,88 @@
     "description": "Back End Application for OLCS Project",
     "repositories": [
         {
-            "type": "git",
-            "url": "https://github.com/MajorCaiger/doctrine2.git"
+            "packagist": false
         },
         {
-            "url": "git@gitlab.clb.npm:olcs/olcs-logging.git",
+            "url": "http://satis.inf.mgt.mtpdvsa",
+            "type": "composer"
+        },
+        {
+            "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-logging.git",
             "type": "vcs"
         },
         {
-            "type": "package",
-            "package": {
-                "name": "olcs/companies-house",
-                "version": "dev-develop",
-                "source": {
-                    "url": "git@gitlab.clb.npm:olcs/companies-house.git",
-                    "type": "git",
-                    "reference": "origin/develop"
-                }
-            }
+            "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-transfer.git",
+            "type": "vcs"
+        },
+        {
+            "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-utils.git",
+            "type": "vcs"
+        },
+        {
+            "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/companies-house.git",
+            "type": "vcs"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/MajorCaiger/phpcov.git"
+            "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-autoload.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@gitlab.inf.mgt.mtpdvsa:cpms/cpms-client.git"
+        },
+        {
+            "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-xmltools.git",
+            "type": "vcs"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.4",
         "zendframework/zendframework": "~2.3.3",
-        "doctrine/orm": "dev-master",
-        "doctrine/doctrine-orm-module": "0.*",
+        "doctrine/orm": "~2.5.0",
+        "doctrine/doctrine-orm-module": "~0.9.0",
+        "doctrine/annotations": "^1.2.3",
         "gedmo/doctrine-extensions": "~2.3.9",
+        "ruflin/Elastica": "v1.4.3.0",
         "olcs/companies-house": "dev-develop",
-        "ruflin/Elastica": "dev-master",
-        "olcs/olcs-logging": "dev-develop"
+        "olcs/olcs-transfer": "dev-develop",
+        "olcs/olcs-utils": "dev-develop",
+        "olcs/olcs-logging": "dev-develop",
+        "olcs/autoload": "dev-develop",
+        "zf-commons/zfc-rbac": "~2.4.0",
+        "cpms/client": "~2.0",
+        "soflomo/purifier": "~0.1.0",
+        "symfony/Filesystem": "~2.6.0",
+        "symfony/Finder": "~2.6.0",
+        "olcs/olcs-xmltools": "dev-master",
+        "ircmaxell/random-lib": "^1.1"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "~1.5.3",
-        "phpunit/phpunit": "4.*",
-        "sebastian/diff": "dev-master",
-        "phpunit/phpcov": "dev-master",
-        "mockery/mockery": "~0.9.2"
+        "phpunit/phpunit": "~4.8",
+        "mockery/mockery": "~0.9.3",
+        "mikey179/vfsStream": "~1.4.0"
     },
     "autoload": {
+        "classmap": [
+            "module/Olcs/Db/src",
+            "vendor/olcs/companies-house/lib"
+        ],
         "psr-4": {
             "Olcs\\Db\\": "module/Olcs/Db/src",
+            "Dvsa\\Olcs\\Api\\": "module/Api/src",
+            "Dvsa\\Olcs\\DocumentShare\\": "module/DocumentShare/src",
+            "Dvsa\\Olcs\\Cli\\": "module/Cli/src",
+            "Dvsa\\Olcs\\Email\\": "module/Email/src",
+            "Dvsa\\Olcs\\CompaniesHouse\\": "module/CompaniesHouse/src",
+            "Dvsa\\Olcs\\Address\\": "module/Address/src",
+            "Dvsa\\Olcs\\Snapshot\\": "module/Snapshot/src",
             "CompaniesHouse\\": "vendor/olcs/companies-house/lib"
         }
     },
     "config": {
-      "preferred-install": "dist",
+        "preferred-install": "dist",
         "github-oauth": {
-          "github.com": "5cdf40f8d81a7675fdaa5fc92e9381526ef4db7f"
-      }
+            "github.com": "9d28c36d14775b5d8c4a5ffeee6172eecbd8c9f4"
+        }
     }
-
 }

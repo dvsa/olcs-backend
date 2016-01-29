@@ -1,0 +1,45 @@
+<<?php /* Cheeky Hack */ ?>?php
+
+namespace <?php echo $details['namespace']; ?>;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * <?php echo $details['name']; ?> Entity
+ *
+<?php if (isset($details['repository'])):?>
+ * @ORM\Entity(repositoryClass="<?php echo $details['repository']; ?>")
+<?php else:?>
+ * @ORM\Entity
+<?php endif; ?>
+ * @ORM\Table(name="<?php echo $details['table']; ?>"<?php
+if (!empty($details['indexes'])) {
+?>
+,
+ *    indexes={
+<?php foreach ($details['indexes'] as $key => $index): ?>
+ *        @ORM\Index(<?php echo $this->generateOptionsFromAttributes($index['@attributes'], 'indexes'); ?>)<?php echo ($key < (count($details['indexes']) - 1) ? ',' : ''); ?>
+
+<?php endforeach; ?>
+ *    }<?php if (empty($details['unique-constraints'])): ?>
+
+ * <?php endif;
+}
+if (!empty($details['unique-constraints'])) {
+?>
+,
+ *    uniqueConstraints={
+<?php foreach ($details['unique-constraints'] as $key => $index): ?>
+ *        @ORM\UniqueConstraint(<?php echo $this->generateOptionsFromAttributes($index['@attributes'], 'unique-constraints'); ?>)<?php echo ($key < (count($details['unique-constraints']) - 1) ? ',' : ''); ?>
+
+<?php endforeach; ?>
+ *    }
+ * <?php
+}
+?>)
+ */
+class <?php echo $details['name']; ?> extends Abstract<?php echo $details['name']; ?>
+
+{
+
+}

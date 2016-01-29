@@ -1,17 +1,36 @@
 <?php
+
+// Ensures at the very least we send a 500 response on fatal
+register_shutdown_function('handleFatal');
+function handleFatal()
+{
+    $error = error_get_last();
+    if ($error) {
+        http_response_code(500);
+        ob_clean();
+        echo json_encode(
+            [
+                'messages' => [
+                    'An unexpected fatal error occurred' => [
+                        $error['message'],
+                        $error['file'] . ': ' . $error['line']
+                    ]
+                ]
+            ]
+        );
+        exit;
+    }
+}
+
 $profile = getenv("XHPROF_ENABLE") == 1;
 
 if ($profile) {
     xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
+    $start = microtime(true);
 }
 
 error_reporting(E_ALL | E_STRICT);
-ini_set('display_errors', 1);
-set_error_handler(
-    function ($errno, $errstr, $errfile, $errline) {
-        throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-    }
-);
+ini_set('display_errors', 0);
 
 /**
  * This makes our life easier when dealing with paths. Everything is relative
@@ -31,10 +50,11 @@ require 'init_autoloader.php';
 Zend\Mvc\Application::init(require 'config/application.config.php')->run();
 
 if ($profile) {
+    $end = microtime(true);
     $xhprof_data = xhprof_disable();
 
-    require_once "/workspace/xhprof/xhprof_lib/utils/xhprof_lib.php";
-    require_once "/workspace/xhprof/xhprof_lib/utils/xhprof_runs.php";
+    require_once __DIR__ . "../../../xhprof/xhprof_lib/utils/xhprof_lib.php";
+    require_once __DIR__ . "../../../xhprof/xhprof_lib/utils/xhprof_runs.php";
 
     $xhprof_runs = new XHProfRuns_Default();
 
@@ -44,8 +64,18 @@ if ($profile) {
 
     $uri = strtok($_SERVER['REQUEST_URI'], "?");
     $request = $_SERVER['REQUEST_METHOD'] . " " . $uri;
-    $content = "[olcs-backend] " . date("Y-m-d H:i:s") . " " . $request
-        . " http://192.168.149.2/xhprof/xhprof_html/index.php?run=" . $run_id . "&source=olcs-backend\n";
+
+    $content = "[olcs-backend] - %s(ms) - %s %s "
+        . "http://192.168.149.12/private/xhprof/xhprof_html/index.php?run=%s&source=olcs-backend\n";
+
+    $content = sprintf(
+        $content,
+        round(($end - $start) * 1000),
+        date("Y-m-d H:i:s"),
+        $request,
+        $run_id
+    );
+
     fwrite($fp, $content);
     fclose($fp);
 }

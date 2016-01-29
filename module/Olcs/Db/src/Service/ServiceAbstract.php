@@ -8,24 +8,29 @@
 
 namespace Olcs\Db\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareTrait as ZendServiceLocatorAwareTrait;
+use Doctrine\Instantiator\Instantiator;
+use Olcs\Db\Traits\LanguageAwareTrait;
+use Olcs\Logging\Log\Logger;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Olcs\Db\Traits\EntityManagerAwareTrait;
-use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\DBAL\LockMode;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Olcs\Db\Utility\Paginator;
+use Doctrine\ORM\Query;
 
 /**
  * Abstract service that handles the generic crud functions for an entity
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class ServiceAbstract
+abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 {
-    use ZendServiceLocatorAwareTrait,
+    use ServiceLocatorAwareTrait,
         EntityManagerAwareTrait,
-        OlcsLoggerAwareTrait;
+        LanguageAwareTrait;
+
+    protected $entityNamespace = '\Dvsa\Olcs\Api\Entity\\';
 
     /**
      * Holds the Entity Name
@@ -33,6 +38,8 @@ abstract class ServiceAbstract
      * @var string
      */
     protected $entityName;
+
+    protected $services = array();
 
     /**
      * Holds the control keys
@@ -67,114 +74,108 @@ abstract class ServiceAbstract
      */
     protected $classMetadata = array();
 
+    protected $replacementReferences = [];
+
+    public function setEntityNamespace($namespace)
+    {
+        $this->entityNamespace = $namespace;
+    }
+
     /**
-     * Should enter a value into the database and return the
-     * identifier for the record that has been created.
+     * Set the entity name
+     *
+     * @param string $entityName
+     */
+    public function setEntityName($entityName)
+    {
+        $this->entityName = $entityName;
+
+        return $this;
+    }
+
+    /**
+     * Returns the value of the entityName property.
+     *
+     * @return string
+     */
+    public function getEntityName()
+    {
+        if (!isset($this->entityName)) {
+            $class = get_called_class();
+
+            $parts = explode('\\', $class);
+
+            return $this->formatEntityName(array_pop($parts));
+        }
+
+        return $this->entityName;
+    }
+
+    /**
+     * Should enter a value into the database and return the identifier for the record that has been created.
      *
      * @param array $data
      * @return mixed
      */
     public function create($data)
     {
-        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        Logger::info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         $data = $this->processAddressEntity($data);
 
         $entity = $this->getNewEntity();
 
-        $hydrator = $this->getDoctrineHydrator();
+        if (isset($data['_OPTIONS_']['cascade'])) {
+            $data = $this->processCascades($entity, $data);
+        }
 
+        $hydrator = $this->getDoctrineHydrator();
         $hydrator->hydrate($data, $entity);
 
         $this->dbPersist($entity);
         $this->dbFlush();
 
-        return $this->getId($entity);
-    }
-
-    /**
-     * Get entity id(s)
-     *
-     * @NOTE: Haven't unit tested this method yet, as this is awaiting changes to the doctrine ORM, the interface may be
-     * difference
-     *
-     * @param EntityInterface $entity
-     * @return mixed
-     */
-    public function getId($entity)
-    {
-        $id = $this->getEntityManager()->getUnitOfWork()->getEntityIdentifier($entity);
-
-        $class = $this->getEntityManager()->getClassMetadata(get_class($entity));
-
-        $identifierConverter = new \Doctrine\ORM\Utility\IdentifierFlattener(
-            $this->getEntityManager()->getUnitOfWork(),
-            $this->getEntityManager()->getMetadataFactory()
-        );
-
-        $flatIds = $identifierConverter->flattenIdentifier($class, $id);
-
-        if (count($flatIds) == 1) {
-            return array_values($flatIds)[0];
-        }
-
-        return $flatIds;
+        return $entity->getId();
     }
 
     /**
      * Gets a matching record by identifying value.
      *
      * @param string|int $id
+     * @param array $data
      *
      * @return array
      */
     public function get($id, array $data = array())
     {
-        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        Logger::info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
-        $entity = $this->getEntityById($id);
+        $criteria = array('id' => is_numeric($id) ? (int)$id : $id);
 
-        if (!$entity) {
+        list($qb, $replacements) = $this->getBundleQuery($criteria, $data);
+
+        $query = $qb->getQuery();
+
+        $language = $this->getLanguage();
+
+        $query->setHint(
+            \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+        );
+        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
+        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
+
+        $query->setHint(\Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS, true);
+
+        $response = $query->getArrayResult();
+
+        if (!$response) {
             return null;
         }
 
-        $data = $this->getBundleCreator()->buildEntityBundle($entity, $data);
+        $this->processReplacements($response, $replacements);
 
-        return $data;
-    }
-
-    /**
-     * Return an instance of BundleCreator
-     *
-     * @return \Olcs\Db\Service\Bundle\BundleCreator
-     */
-    public function getBundleCreator()
-    {
-        return new Bundle\BundleCreator($this->getDoctrineHydrator());
-    }
-
-    /**
-     * Returns valid pagination values where they exist in the array given.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    public function getPaginationValues(array $data)
-    {
-        return array_intersect_key($data, array_flip(['page', 'limit', 'sort', 'order']));
-    }
-
-    /**
-     * Get the result offset
-     *
-     * @param int $page
-     * @param int $limit
-     * @return int
-     */
-    protected function getOffset($page, $limit)
-    {
-        return ($page * $limit) - $limit;
+        return $response[0];
     }
 
     /**
@@ -184,87 +185,262 @@ abstract class ServiceAbstract
      */
     public function getList($data)
     {
-        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        Logger::info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
-        return $this->getEntityList($data);
+        $criteria = $this->pickValidKeys($data, $this->getValidSearchFields());
+
+        list($qb, $replacements) = $this->getBundleQuery($criteria, $data);
+
+        // Paginate
+        $paginateQuery = $this->getServiceLocator()->get('PaginateQuery');
+        $paginateQuery->setQueryBuilder($qb);
+        $paginateQuery->setOptions(
+            array_intersect_key($data, array_flip(['page', 'limit', 'sort', 'order']))
+        );
+        $paginateQuery->filterQuery();
+
+        $query = $qb->getQuery()->setHydrationMode(Query::HYDRATE_ARRAY);
+
+        $language = $this->getLanguage();
+
+        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
+        $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
+        $query->setHint(\Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS, true);
+
+        $paginator = new Paginator($query);
+
+        $results = (array)$paginator->getIterator();
+        $this->processReplacements($results, $replacements);
+
+        return array(
+            'Count' => $paginator->count(),
+            'Results' => $results
+        );
     }
 
     /**
-     * Returns a list of entities
-     *  Abstracted this logic away and added extra flags to maintain backwards compat
+     * Iterate through the data and find the ref data ids
      *
-     * @param array $data
-     * @param boolean $filter
-     * @param boolean $bundle
-     * @param boolean $paginate
+     * @param array $results
+     * @param array $replacements
      * @return array
      */
-    private function getEntityList($data, $filter = true, $bundle = true, $paginate = true)
+    protected function getRefDataValues(&$results, $replacements)
     {
-        $searchFields = $this->pickValidKeys($data, $this->getValidSearchFields());
+        $values = [];
 
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $entityName = $this->getEntityName();
+        foreach ($results as &$result) {
 
-        $qb->select('a')->from($entityName, 'a');
+            foreach ($replacements as $replacement) {
 
-        $eb = $this->getServiceLocator()->get('ExpressionBuilder');
+                $stack = $replacement['stack'];
 
-        $eb->setQueryBuilder($qb);
-        $eb->setEntityManager($this->getEntityManager());
-        $eb->setEntity($entityName);
-
-        $expression = $eb->buildWhereExpression($searchFields);
-
-        if ($expression !== null) {
-            $qb->where($expression);
-
-            $params = $eb->getParams();
-
-            if (!empty($params)) {
-                $qb->setParameters($params);
+                $values = array_merge($values, $this->getStackedValues($result, $stack));
             }
         }
 
-        if ($filter) {
-            $pag = $this->getPaginationValues($data);
-            $page = isset($pag['page']) ? $pag['page'] : 1;
+        return $values;
+    }
 
-            if (!isset($pag['limit']) || $pag['limit'] != 'all') {
-                $limit = isset($pag['limit']) ? $pag['limit'] : 10;
-                $qb->setFirstResult($this->getOffset($page, $limit));
-                $qb->setMaxResults($limit);
+    /**
+     * This method is recursive and builds a list of ref data ids for the given result node and stack
+     * This method builds an array of references to be used when replacing the ids
+     */
+    protected function getStackedValues(&$result, $stack)
+    {
+        $this->camelCaseMetaFields($result);
+
+        $values = [];
+        $resultRef = &$result;
+
+        // Iterate through the stack indexes to get deeper into the node
+        while (count($stack) > 1) {
+            $stackItem = array_shift($stack);
+
+            if (!isset($resultRef[$stackItem])) {
+                return $values;
             }
 
-            $this->setOrderBy($qb, $data);
+            $resultRef = &$resultRef[$stackItem];
+
+            $this->camelCaseMetaFields($resultRef);
+
+            // If we have a list here, we need to loop and recurse back through this method
+            if ($this->isList($resultRef)) {
+                foreach ($resultRef as &$value) {
+                    $values = array_merge($values, $this->getStackedValues($value, $stack));
+                }
+
+                return $values;
+            }
         }
+
+        if (!is_array($resultRef) || empty($resultRef)) {
+            return $values;
+        }
+
+        $stackItem = array_shift($stack);
+
+        // Added extra check in case column is suffixed with Id
+        if (!isset($resultRef[$stackItem]) && isset($resultRef[$stackItem . 'Id'])) {
+            $value = $resultRef[$stackItem . 'Id'];
+
+            $resultRef[$stackItem] = $value;
+
+            $resultRef = &$resultRef[$stackItem];
+            $this->replacementReferences[] = &$resultRef;
+            $values[$value] = $value;
+            return $values;
+        }
+
+        $resultRef = &$resultRef[$stackItem];
+
+        if (!empty($resultRef)) {
+            $this->replacementReferences[] = &$resultRef;
+            $values[$resultRef] = $resultRef;
+        } else {
+            $resultRef = null;
+        }
+
+        return $values;
+    }
+
+    /**
+     * This method replaces all referenced refdata ids with their ref data arrays
+     */
+    protected function replaceValues($refDataMap)
+    {
+        foreach ($this->replacementReferences as &$ref) {
+            $ref = $refDataMap[$ref];
+        }
+    }
+
+    /**
+     * Does what it sez on't tin
+     */
+    protected function camelCaseMetaFields(&$array)
+    {
+        $filter = new \Zend\Filter\Word\UnderscoreToCamelCase();
+        foreach ($array as $field => $value) {
+            if (strstr($field, '_')) {
+                $newField = lcfirst($filter->filter($field));
+
+                if (array_key_exists($newField, $array)) {
+                    // don't override existing fields if they've already been populated by a join!
+                    unset($array[$field]);
+                    continue;
+                }
+
+                $array[$newField] = $value;
+                unset($array[$field]);
+            }
+        }
+    }
+
+    /**
+     * Checks if an array is non assoc
+     */
+    protected function isList($array)
+    {
+        return array_keys($array) === range(0, count($array) - 1);
+    }
+
+    /**
+     * If we have some Stacked ref data replacements, iterate through the results to find the ref data id's we need to
+     * lookup. Once we have the ref data id's (and the translations) iterate through the results and replace the id's
+     * with the ref data arrays
+     *
+     * @param array $results
+     * @param array $replacements
+     * @return array
+     */
+    protected function processReplacements(array &$results, array $replacements)
+    {
+        if (empty($replacements)) {
+            return;
+        }
+
+        $refDatas = $this->getRefDataValues($results, $replacements);
+
+        if (!empty($refDatas)) {
+            $repo = $this->getEntityManager()->getRepository('\Dvsa\Olcs\Api\Entity\System\RefData');
+            $qb = $repo->createQueryBuilder('r');
+
+            $qb->where($qb->expr()->in('r.id', $refDatas));
+
+            $query = $qb->getQuery();
+
+            $language = $this->getLanguage();
+
+            $query->setHint(
+                \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+                'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+            );
+            $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
+            $query->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $language);
+
+            $refDataResults = $query->getArrayResult();
+
+            $indexedRefDataResults = [];
+            foreach ($refDataResults as $result) {
+                $indexedRefDataResults[$result['id']] = $result;
+            }
+        } else {
+            $indexedRefDataResults = [];
+        }
+
+        $this->replaceValues($indexedRefDataResults);
+
+        return $results;
+    }
+
+    /**
+     * Deletes record based on identifying value.
+     *
+     * @param mixed $id
+     *
+     * @return boolean success or failure
+     */
+    public function delete($id)
+    {
+        Logger::info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
+
+        $entity = $this->getEntityById($id);
+
+        if (!$entity) {
+            return false;
+        }
+
+        $this->getEntityManager()->remove($entity);
+        $this->dbFlush();
+
+        return true;
+    }
+
+    /**
+     * Delete a list of entities
+     *
+     * @param array $data
+     */
+    public function deleteList($data)
+    {
+        $criteria = $this->pickValidKeys($data, $this->getValidSearchFields());
+
+        list($qb, $replacements) = $this->getBundleQuery($criteria, $data);
 
         $query = $qb->getQuery();
 
         $results = $query->getResult();
 
-        if ($bundle && !empty($results)) {
-
-            $rows = array();
-
-            foreach ($results as $row) {
-
-                $rows[] = $this->getBundleCreator()->buildEntityBundle($row, $data);
-            }
-
-            $results = $rows;
+        foreach ($results as $row) {
+            $this->getEntityManager()->remove($row);
         }
 
-        if ($paginate) {
-            $paginator = $this->getPaginator($query, false);
-
-            $results = array(
-                'Count' => count($paginator),
-                'Results' => $results
-            );
+        if (count($results) > 0) {
+            $this->dbFlush();
         }
 
-        return $results;
+        return true;
     }
 
     /**
@@ -277,7 +453,7 @@ abstract class ServiceAbstract
      */
     public function update($id, $data)
     {
-        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        Logger::info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         return $this->doUpdate($id, $data);
     }
@@ -292,9 +468,67 @@ abstract class ServiceAbstract
      */
     public function patch($id, $data)
     {
-        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        Logger::info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         return $this->doUpdate($id, $data);
+    }
+
+    /**
+     * Create a query builder object from the given bundle
+     *
+     * @param array $criteria
+     * @param array $data
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    protected function getBundleQuery($criteria, $data = array())
+    {
+        $params = array();
+
+        $bundleConfig = $this->getBundleConfig($data);
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select(array('m'))->from($this->getEntityName(), 'm');
+
+        $replacements = [];
+        if (!empty($bundleConfig)) {
+            $bundleQuery = $this->getServiceLocator()->get('BundleQuery');
+            $bundleQuery->setQueryBuilder($qb);
+            $bundleQuery->build($bundleConfig);
+            $replacements = $bundleQuery->getRefDataReplacements();
+            $params = $bundleQuery->getParams();
+        }
+
+        $eb = $this->getServiceLocator()->get('ExpressionBuilder');
+
+        $eb->setQueryBuilder($qb);
+        $eb->setEntityManager($this->getEntityManager());
+        $eb->setEntity($this->getEntityName());
+        $eb->setParams($params);
+
+        $expression = $eb->buildWhereExpression($criteria, 'm');
+
+        if ($expression !== null) {
+            $qb->andWhere($expression);
+        }
+
+        $qb->setParameters($eb->getParams());
+
+        return [$qb, $replacements];
+    }
+
+    protected function getBundleConfig($data)
+    {
+        $bundleConfig = null;
+
+        if (isset($data['bundle'])) {
+            $bundleConfig = json_decode($data['bundle'], true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \Exception('Invalid bundle configuration: Expected JSON');
+            }
+        }
+
+        return $bundleConfig;
     }
 
     /**
@@ -305,7 +539,7 @@ abstract class ServiceAbstract
      * @return boolean
      * @throws NoVersionException
      */
-    private function doUpdate($id, $data)
+    protected function doUpdate($id, $data)
     {
         // @NOTE if force is true, we should be able to force the update without a version number
         //  This should only be used in exception circumstances
@@ -331,8 +565,11 @@ abstract class ServiceAbstract
 
         $entity->clearProperties(array_keys($data));
 
-        $hydrator = $this->getDoctrineHydrator();
+        if (isset($data['_OPTIONS_']['cascade'])) {
+            $data = $this->processCascades($entity, $data);
+        }
 
+        $hydrator = $this->getDoctrineHydrator();
         $entity = $hydrator->hydrate($data, $entity);
 
         if (!$force) {
@@ -346,98 +583,15 @@ abstract class ServiceAbstract
     }
 
     /**
-     * Deletes record based on identifying value.
-     *
-     * @param mixed $id
-     *
-     * @return boolean success or failure
-     */
-    public function delete($id)
-    {
-        $this->getLogger()->info('Service excution', ['location' => __METHOD__, 'data' => func_get_args()]);
-
-        $entity = $this->getEntityById($id);
-
-        if (!$entity) {
-            return false;
-        }
-
-        $this->getEntityManager()->remove($entity);
-        $this->dbFlush();
-
-        return true;
-    }
-
-    /**
-     * Delete a list of entities
-     *
-     * @param array $data
-     */
-    public function deleteList($data)
-    {
-        $results = $this->getEntityList($data, false, false, false);
-
-        foreach ($results as $row) {
-            $this->getEntityManager()->remove($row);
-        }
-
-        if (count($results) > 0) {
-            $this->dbFlush();
-        }
-
-        return true;
-    }
-
-    /**
-     * Method to allow easier testing
-     *
-     * @param \Doctrine\ORM\Query $query
-     * @param boolean $fetchJoinColumns
-     * @return \Doctrine\ORM\Tools\Pagination\Paginator
-     */
-    public function getPaginator($query, $fetchJoinColumns = false)
-    {
-        return new Paginator($query, $fetchJoinColumns);
-    }
-
-    /**
-     * Returns valid order by values where they exist in the array given.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    public function getOrderByValues(array $data)
-    {
-        return array_intersect_key($data, ['sort' => '', 'order' => '']);
-    }
-
-    /**
-     * Sets the sort by columns.
-     *
-     * @param unknown_type $qb
-     * @param unknown_type $data
-     */
-    public function setOrderBy($qb, $data)
-    {
-        $orderByValues = $this->getOrderByValues($data);
-        $sort = isset($orderByValues['sort']) ? $orderByValues['sort'] : '';
-        if ($sort) {
-            $sortString = 'a.' . $sort;
-            $orderString = isset($orderByValues['order']) ? $orderByValues['order'] : 'ASC';
-
-            $qb->orderBy($sortString, $orderString);
-        }
-    }
-
-    /**
      * Return a new instance of DoctrineHydrator
      *
-     * @return DoctrineObject
+     * @return \DoctrineModule\Stdlib\Hydrator\DoctrineObject
      */
-    public function getDoctrineHydrator()
+    protected function getDoctrineHydrator()
     {
-        return new DoctrineHydrator($this->getEntityManager());
+        return $this->getServiceLocator()
+            ->get('HydratorManager')
+            ->get('DoctrineModule\Stdlib\Hydrator\DoctrineObject');
     }
 
     /**
@@ -450,51 +604,26 @@ abstract class ServiceAbstract
      */
     protected function pickValidKeys(array $data, array $keys)
     {
-        return array_intersect_key($data, array_flip($keys));
+        $validKeys = [];
+
+        foreach ($data as $key => $val) {
+            if (is_numeric($key) || in_array($key, $keys)) {
+                $validKeys[$key] = $val;
+            }
+        }
+
+        return $validKeys;
     }
 
     /**
      * Returns a new instance of the entity.
-     *
-     * @return \Olcs\Db\Entity\EntityInterface
      */
-    public function getNewEntity()
+    protected function getNewEntity()
     {
         $entityName = $this->getEntityName();
 
-        return new $entityName();
-    }
-
-    /**
-     * Returns the value of the entityName property.
-     *
-     * @return string
-     */
-    public function getEntityName()
-    {
-        if (!isset($this->entityName)) {
-            $entityPrefix = '\Olcs\Db\Entity\\';
-
-            $class = get_called_class();
-
-            $parts = explode('\\', $class);
-
-            return $entityPrefix . array_pop($parts);
-        }
-
-        return $this->entityName;
-    }
-
-    /**
-     * Set the entity name
-     *
-     * @param string $entityName
-     */
-    public function setEntityName($entityName)
-    {
-        $this->entityName = $entityName;
-
-        return $this;
+        $instantiator = new Instantiator();
+        return $instantiator->instantiate($entityName);
     }
 
     /**
@@ -503,10 +632,16 @@ abstract class ServiceAbstract
      * @param int $id
      * @return object
      */
-    public function getEntityById($id)
+    protected function getEntityById($id)
+    {
+        return $this->getEntityByTypeAndId($this->getEntityName(), $id);
+    }
+
+    protected function getEntityByTypeAndId($entityType, $id)
     {
         $id = is_numeric($id) ? (int) $id : $id;
-        return $this->getEntityManager()->find($this->getEntityName(), $id);
+
+        return $this->getEntityManager()->find($entityType, $id);
     }
 
     /**
@@ -515,11 +650,14 @@ abstract class ServiceAbstract
      * @param string $name
      * @return object
      */
-    public function getService($name)
+    protected function getService($name)
     {
-        $serviceFactory = $this->getServiceLocator()->get('serviceFactory');
+        if (!isset($this->services[$name])) {
+            $serviceFactory = $this->getServiceLocator()->get('serviceFactory');
+            $this->services[$name] = $serviceFactory->getService($name);
+        }
 
-        return $serviceFactory->getService($name);
+        return $this->services[$name];
     }
 
     /**
@@ -530,7 +668,7 @@ abstract class ServiceAbstract
      *
      * @return array
      */
-    public function getValidSearchFields()
+    protected function getValidSearchFields()
     {
         if (empty($this->validSearchFields)) {
             $this->validSearchFields = $this->getEntityPropertyNames();
@@ -544,7 +682,7 @@ abstract class ServiceAbstract
      *
      * @return \ReflectionClass
      */
-    public function getReflectedEntity()
+    protected function getReflectedEntity()
     {
         return new \ReflectionClass($this->getEntityName());
     }
@@ -554,7 +692,7 @@ abstract class ServiceAbstract
      *
      * @return array
      */
-    public function getEntityPropertyNames()
+    protected function getEntityPropertyNames()
     {
         if (empty($this->entityProperties)) {
             $this->entityProperties = array_map(
@@ -575,11 +713,11 @@ abstract class ServiceAbstract
      *
      * @return array
      */
-    public function processAddressEntity($data)
+    protected function processAddressEntity($data)
     {
-        $properties = $this->getEntityPropertyNames();
-
         if (isset($data['addresses']) && is_array($data['addresses'])) {
+
+            $properties = $this->getEntityPropertyNames();
 
             foreach ($data['addresses'] as $key => $addressDetails) {
                 if (!in_array($key, $properties)) {
@@ -602,5 +740,91 @@ abstract class ServiceAbstract
         }
 
         return $data;
+    }
+
+    protected function formatEntityName($entity)
+    {
+        $namespaces = $this->getServiceLocator()->get('Config')['entity_namespaces'];
+
+        if (empty($namespaces[$entity])) {
+            return $this->entityNamespace . $entity;
+        }
+
+        return $this->entityNamespace . $namespaces[$entity] . '\\' . $entity;
+    }
+
+    protected function processCascades($parentEntity, $data)
+    {
+        if (isset($data['_OPTIONS_']['cascade']['list'])) {
+            $data = $this->processCascadeList($parentEntity, $data);
+        }
+
+        if (isset($data['_OPTIONS_']['cascade']['single'])) {
+            $data = $this->processCascadeSingle($parentEntity, $data);
+        }
+
+        unset($data['_OPTIONS_']['cascade']);
+
+        return $data;
+    }
+
+    protected function processCascadeList($parentEntity, $data)
+    {
+        foreach ($data['_OPTIONS_']['cascade']['list'] as $property => $cascadeOptions) {
+
+            $entityClass = $this->formatEntityName($cascadeOptions['entity']);
+
+            foreach ($data[$property] as $key => $entityData) {
+
+                $data[$property][$key] = $this->generateCascadeEntity(
+                    $entityClass,
+                    $entityData,
+                    $cascadeOptions,
+                    $parentEntity
+                );
+            }
+        }
+
+        unset($data['_OPTIONS_']['cascade']['list']);
+
+        return $data;
+    }
+
+    protected function processCascadeSingle($parentEntity, $data)
+    {
+        foreach ($data['_OPTIONS_']['cascade']['single'] as $property => $cascadeOptions) {
+
+            $entityClass = $this->formatEntityName($cascadeOptions['entity']);
+
+            $entityData = $data[$property];
+
+            $data[$property] = $this->generateCascadeEntity($entityClass, $entityData, $cascadeOptions, $parentEntity);
+        }
+
+        unset ($data['_OPTIONS_']['cascade']['single']);
+
+        return $data;
+    }
+
+    protected function generateCascadeEntity($entityClass, $entityData, $cascadeOptions, $parentEntity)
+    {
+        if (isset($entityData['id'])) {
+            $cascadeEntity = $this->getEntityByTypeAndId($entityClass, $entityData['id']);
+        } else {
+            $cascadeEntity = new $entityClass();
+        }
+
+        if (isset($entityData['_OPTIONS_']['cascade'])) {
+            $entityData = $this->processCascades($cascadeEntity, $entityData);
+        }
+
+        $hydrator = $this->getDoctrineHydrator();
+        $hydrator->hydrate($entityData, $cascadeEntity);
+
+        if (isset($cascadeOptions['parent'])) {
+            $cascadeEntity->{'set' . ucfirst($cascadeOptions['parent'])}($parentEntity);
+        }
+
+        return $cascadeEntity;
     }
 }
