@@ -114,7 +114,7 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
             ->once()
-            ->with('login_id', 'test1@test.me', false);
+            ->with('pid', 'login_id', 'test1@test.me', false);
 
         /** @var TeamEntity $user */
         $team = m::mock(Team::class)->makePartial();
@@ -122,9 +122,9 @@ class UpdateUserTest extends CommandHandlerTestCase
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
         $user->setId($userId);
+        $user->setPid('pid');
         $user->setLoginId($data['loginId']);
         $user->setTeam($team);
-        $user->setLoginId('login_id');
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
 
         $this->repoMap['User']->shouldReceive('fetchById')
@@ -229,7 +229,7 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
             ->once()
-            ->with('login_id', 'test1@test.me', true);
+            ->with('pid', 'login_id', 'test1@test.me', true);
 
         /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
@@ -244,9 +244,9 @@ class UpdateUserTest extends CommandHandlerTestCase
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
         $user->setId($userId);
+        $user->setPid('pid');
         $user->setLoginId($data['loginId']);
         $user->setTeam($team);
-        $user->setLoginId('login_id');
         $user->setContactDetails($contactDetails);
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
 
@@ -356,7 +356,7 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
             ->once()
-            ->with('login_id', 'test1@test.me', false);
+            ->with('pid', 'login_id', 'test1@test.me', false);
 
         /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
@@ -371,9 +371,9 @@ class UpdateUserTest extends CommandHandlerTestCase
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
         $user->setId($userId);
+        $user->setPid('pid');
         $user->setLoginId($data['loginId']);
         $user->setTeam($team);
-        $user->setLoginId('login_id');
         $user->setContactDetails($contactDetails);
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
 

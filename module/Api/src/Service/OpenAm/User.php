@@ -128,12 +128,12 @@ class User implements UserInterface
     /**
      * Disables a user
      *
-     * @param string $username
+     * @param string $pid
      *
      * @return void
      * @throws FailedRequestException
      */
-    public function disableUser($username)
+    public function disableUser($pid)
     {
         $payload[] = [
             'operation' => 'replace',
@@ -141,7 +141,7 @@ class User implements UserInterface
             'value' => true
         ];
 
-        $this->openAmClient->updateUser($username, $payload);
+        $this->openAmClient->updateUser($pid, $payload);
     }
 
     /**

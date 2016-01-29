@@ -27,11 +27,11 @@ interface ClientInterface
     /**
      * Updates a user
      *
-     * @param string $username
+     * @param string $pid
      * @param array $updates
      *
      * @return void
      * @throws FailedRequestException
      */
-    public function updateUser($username, $updates);
+    public function updateUser($pid, $updates);
 }
