@@ -59,8 +59,6 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
                 'type' => $command->getType()
             ];
         }
-        $discsToPrint = $this->getRepo($this->params[$command->getType()]['repo'])
-            ->fetchDiscsToPrintByIds($discsToPrintIds);
 
         $queryData = $discsToPrintIds;
 
@@ -68,7 +66,7 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
             $bookmark => []
         ];
         $discNumber = (int) $command->getStartNumber();
-        for ($i = 0; $i < count($discsToPrint); $i++) {
+        for ($i = 0; $i < count($discsToPrintIds); $i++) {
             $knownValues[$bookmark][$i]['discNo'] = $discNumber++;
         }
 

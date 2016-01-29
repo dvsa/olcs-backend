@@ -13,7 +13,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Doctrine\DBAL\Connection;
 
 /**
  * Psv Disc test
@@ -24,6 +24,13 @@ class PsvDiscTest extends RepositoryTestCase
 {
     public function setUp()
     {
+        $this->activeStatuses = [
+            LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+            LicenceEntity::LICENCE_STATUS_GRANTED,
+            LicenceEntity::LICENCE_STATUS_VALID,
+            LicenceEntity::LICENCE_STATUS_CURTAILED,
+            LicenceEntity::LICENCE_STATUS_SUSPENDED
+        ];
         $this->setUpSut(PsvDiscRepo::class);
     }
 
@@ -60,6 +67,12 @@ class PsvDiscTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr->isNull')->with('psv.issuedDate')->once()->andReturn('noIssuedDateCond');
         $mockQb->shouldReceive('andWhere')->with('noCeasedDateCond')->once()->andReturnSelf();
         $mockQb->shouldReceive('andWhere')->with('noIssuedDateCond')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->in')->with('l.status', ':activeStatuses')->once()->andReturn('activeStatuses');
+        $mockQb->shouldReceive('andWhere')->with('activeStatuses')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('activeStatuses', $this->activeStatuses)
+            ->once()
+            ->andReturnSelf();
 
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('withRefdata')->once()->andReturnSelf();
@@ -76,10 +89,10 @@ class PsvDiscTest extends RepositoryTestCase
 
     public function testSetPrintingOn()
     {
-        $discs = ['d1', 'd2'];
+        $discs = [1, 2];
         $sut = m::mock(PsvDiscRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $sut->shouldReceive('setIsPrinting')
-            ->with('Y', $discs)
+            ->with(1, $discs)
             ->once()
             ->getMock();
 
@@ -88,10 +101,10 @@ class PsvDiscTest extends RepositoryTestCase
 
     public function testSetPrintingOff()
     {
-        $discs = ['d1', 'd2'];
+        $discs = [1, 2];
         $sut = m::mock(PsvDiscRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $sut->shouldReceive('setIsPrinting')
-            ->with('N', $discs)
+            ->with(0, $discs)
             ->once()
             ->getMock();
 
@@ -100,66 +113,24 @@ class PsvDiscTest extends RepositoryTestCase
 
     public function testSetPrinting()
     {
-        $type = 'Y';
-        $sut = m::mock(PsvDiscRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->expectUpdateWithData(
+            'Discs\PsvDiscsSetIsPrinting',
+            ['isPrinting' => 1, 'ids' => [1, 2]],
+            ['isPrinting' => \PDO::PARAM_INT, 'ids' => Connection::PARAM_INT_ARRAY]
+        );
 
-        $mockDisc = m::mock()
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->once()
-            ->getMock();
-
-        $mockFetched = m::mock()
-            ->shouldReceive('setIsPrinting')
-            ->with($type)
-            ->once()
-            ->getMock();
-
-        $sut->shouldReceive('fetchById')
-            ->with(1)
-            ->andReturn($mockFetched)
-            ->once()
-            ->shouldReceive('save')
-            ->with($mockFetched)
-            ->once()
-            ->getMock();
-
-        $this->assertNull($sut->setIsPrinting($type, [$mockDisc]));
+        $this->sut->setIsPrintingOn([1, 2]);
     }
 
     public function testSetIsPrintingOffAndAssignNumbers()
     {
-        $type = 'N';
-        $sut = m::mock(PsvDiscRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->expectUpdateWithData(
+            'Discs\PsvDiscsSetIsPrintingOffAndDiscNo',
+            ['ids' => [1, 2], 'startNumber' => 1],
+            ['ids' => Connection::PARAM_INT_ARRAY, 'startNumber' => \PDO::PARAM_INT]
+        );
 
-        $mockDisc = m::mock()
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->once()
-            ->getMock();
-
-        $mockFetched = m::mock()
-            ->shouldReceive('setIsPrinting')
-            ->with($type)
-            ->once()
-            ->shouldReceive('setDiscNo')
-            ->with(1)
-            ->once()
-            ->shouldReceive('setIssuedDate')
-            ->with(m::type(DateTime::class))
-            ->once()
-            ->getMock();
-
-        $sut->shouldReceive('fetchById')
-            ->with(1)
-            ->andReturn($mockFetched)
-            ->once()
-            ->shouldReceive('save')
-            ->with($mockFetched)
-            ->once()
-            ->getMock();
-
-        $this->assertNull($sut->setIsPrintingOffAndAssignNumbers([$mockDisc], 1));
+        $this->sut->setIsPrintingOffAndAssignNumbers([1, 2], 1);
     }
 
     public function testApplyListFiltersIncludeCeasedFalse()
@@ -212,5 +183,56 @@ class PsvDiscTest extends RepositoryTestCase
         $this->expectQueryWithData('Discs\CeaseDiscsForLicence', ['licence' => 123]);
 
         $this->sut->ceaseDiscsForLicence($licenceId);
+    }
+
+    public function testFetchDiscsToPrintMin()
+    {
+        $licenceType = 'ltyp_r';
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr->eq')->with('lta.isNi', 0)->once()->andReturn('condition1');
+        $mockQb->shouldReceive('expr->eq')->with('llt.id', ':licenceType')->once()->andReturn('condition2');
+        $mockQb->shouldReceive('expr->neq')
+            ->with('lta.id', ':licenceTrafficAreaId')->once()->andReturn('condition3');
+        $mockQb->shouldReceive('expr->eq')
+            ->with('lgp.id', ':goodsOrPsv')->once()->andReturn('condition4');
+        $mockQb->shouldReceive('expr->andX')
+            ->with('condition1', 'condition2', 'condition3', 'condition4')->once()->andReturn('conditionAndX');
+
+        $mockQb->shouldReceive('andWhere')->with('conditionAndX')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('setParameter')
+            ->with('licenceType', $licenceType)
+            ->once()
+            ->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('licenceTrafficAreaId', TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE)
+            ->once()
+            ->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('goodsOrPsv', LicenceEntity::LICENCE_CATEGORY_PSV)
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->isNull')->with('psv.ceasedDate')->once()->andReturn('noCeasedDateCond');
+        $mockQb->shouldReceive('expr->isNull')->with('psv.issuedDate')->once()->andReturn('noIssuedDateCond');
+        $mockQb->shouldReceive('andWhere')->with('noCeasedDateCond')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->with('noIssuedDateCond')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->in')->with('l.status', ':activeStatuses')->once()->andReturn('activeStatuses');
+        $mockQb->shouldReceive('andWhere')->with('activeStatuses')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('activeStatuses', $this->activeStatuses)
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('leftJoin')->with('psv.licence', 'l')->once()->andReturnSelf();
+        $mockQb->shouldReceive('leftJoin')->with('l.trafficArea', 'lta')->once()->andReturnSelf();
+        $mockQb->shouldReceive('leftJoin')->with('l.licenceType', 'llt')->once()->andReturnSelf();
+        $mockQb->shouldReceive('leftJoin')->with('l.goodsOrPsv', 'lgp')->once()->andReturnSelf();
+
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('psv')->once()->andReturn($mockQb);
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['result']);
+
+        $this->sut->fetchDiscsToPrintMin($licenceType);
     }
 }

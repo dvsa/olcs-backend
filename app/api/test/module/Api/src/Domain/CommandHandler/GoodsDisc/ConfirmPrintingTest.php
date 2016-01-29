@@ -51,10 +51,10 @@ class ConfirmPrintingTest extends CommandHandlerTestCase
         $this->repoMap['GoodsDisc']
             ->shouldReceive('fetchDiscsToPrint')
             ->with($niFlag, $licenceType)
-            ->andReturn('discs')
+            ->andReturn([['id' => 23, 'foo' => 'bar']])
             ->once()
             ->shouldReceive('setIsPrintingOffAndAssignNumbers')
-            ->with('discs', $startNumber)
+            ->with([23], $startNumber)
             ->getMock();
 
         $mockDiscSequence = m::mock()
@@ -103,10 +103,10 @@ class ConfirmPrintingTest extends CommandHandlerTestCase
         $this->repoMap['GoodsDisc']
             ->shouldReceive('fetchDiscsToPrint')
             ->with($niFlag, $licenceType)
-            ->andReturn('discs')
+            ->andReturn([['id' => 23, 'foo' => 'bar']])
             ->once()
             ->shouldReceive('setIsPrintingOff')
-            ->with('discs')
+            ->with([23])
             ->getMock();
 
         $result = $this->sut->handleCommand($command);

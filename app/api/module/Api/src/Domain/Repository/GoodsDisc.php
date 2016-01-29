@@ -149,26 +149,6 @@ class GoodsDisc extends AbstractRepository
             ->execute(['licence' => $licenceId]);
     }
 
-    public function fetchDiscsToPrintByIds($ids = [])
-    {
-        $qb = $this->createQueryBuilder();
-        $qb->leftJoin('gd.licenceVehicle', 'lv')
-            ->leftJoin('lv.licence', 'lvl')
-            ->leftJoin('lvl.goodsOrPsv', 'lvlgp')
-            ->leftJoin('lvl.licenceType', 'lvllt')
-            ->leftJoin('lvl.trafficArea', 'lvlta')
-            ->leftJoin('lv.vehicle', 'lvv')
-            ->leftJoin('lv.application', 'lva')
-            ->leftJoin('lva.licenceType', 'lvalt')
-            ->leftJoin('lva.goodsOrPsv', 'lvagp');
-
-        $this->getQueryBuilder()
-            ->modifyQuery($qb)
-            ->filterByIds($ids);
-
-        return $qb->getQuery()->getResult();
-    }
-
     public function fetchDiscsToPrintMin($niFlag, $licenceType)
     {
         $qb = $this->createQueryBuilder();
@@ -186,5 +166,4 @@ class GoodsDisc extends AbstractRepository
 
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
-
 }

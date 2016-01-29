@@ -118,7 +118,7 @@ abstract class AbstractRawQuery implements QueryInterface, FactoryInterface
         $query = $this->buildQueryFromTemplate($this->getQueryTemplate());
 
         try {
-            $this->connection->executeUpdate($query, $params, $paramTypes);
+            return $this->connection->executeUpdate($query, $params, $paramTypes);
         } catch (\Exception $ex) {
             throw new RuntimeException('An unexpected error occurred while running query: ' . get_class($this));
         }
