@@ -19,11 +19,17 @@ class ShortNoticeInputFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $service = new Input('short_notice');
+        $inputName = 'short_notice';
+        $service = new Input($inputName);
+        $config = $serviceLocator->get('Config');
 
         $validatorChain = $service->getValidatorChain();
-        $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\ShortNotice\MissingSection'));
-        $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\ShortNotice\MissingReason'));
+
+        //allows validators to be switched off (debug only, not to be used for production)
+        if (!isset($config['ebsr']['validate'][$inputName]) || $config['ebsr']['validate'][$inputName] === true) {
+            $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\ShortNotice\MissingSection'));
+            $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\ShortNotice\MissingReason'));
+        }
 
         return $service;
     }

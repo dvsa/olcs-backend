@@ -21,20 +21,26 @@ class XmlStructureInputFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $service = new Input('dom_document');
+        $inputName = 'xml_structure';
+        $service = new Input($inputName);
+        $config = $serviceLocator->get('Config');
 
         $filterChain = $service->getFilterChain();
         $filterChain->attach($serviceLocator->get('FilterManager')->get(ParseXml::class));
 
-        $xsdValidator = $serviceLocator->get('ValidatorManager')->get(Xsd::class);
-        $xsdValidator->setXsd('http://www.transxchange.org.uk/schema/2.1/TransXChange_registration.xsd');
-
         $validatorchain = $service->getValidatorChain();
-        $validatorchain->attach($xsdValidator);
-        $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\ServiceClassification'));
-        $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\Operator'));
-        $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\Registration'));
-        $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\SupportingDocuments'));
+
+        //allows validators to be switched off (debug only, not to be used for production)
+        if (!isset($config['ebsr']['validate'][$inputName]) || $config['ebsr']['validate'][$inputName] === true) {
+            $xsdValidator = $serviceLocator->get('ValidatorManager')->get(Xsd::class);
+            $xsdValidator->setXsd('http://www.transxchange.org.uk/schema/2.1/TransXChange_registration.xsd');
+
+            $validatorchain->attach($xsdValidator);
+            $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\ServiceClassification'));
+            $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\Operator'));
+            $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\Registration'));
+            $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\SupportingDocuments'));
+        }
 
         return $service;
     }

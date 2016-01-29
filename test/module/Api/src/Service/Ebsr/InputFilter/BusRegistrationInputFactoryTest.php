@@ -14,6 +14,9 @@ use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
  */
 class BusRegistrationInputFactoryTest extends TestCase
 {
+    /**
+     * Tests create service
+     */
     public function testCreateService()
     {
         $mockMappings = m::mock(SpecificationInterface::class);
@@ -26,6 +29,7 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockMapFilter->shouldReceive('setMapping')->with($mockMappings);
 
         $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
@@ -59,5 +63,48 @@ class BusRegistrationInputFactoryTest extends TestCase
                 $this->assertFalse($validator['breakChainOnFailure'], 'Break chain on failure set incorrectly');
             }
         }
+    }
+
+    /**
+     * Tests create service with disabled validators
+     */
+    public function testCreateServiceDisabledValidators()
+    {
+        $config = [
+            'ebsr' => [
+                'validate' => [
+                    'bus_registration' => false
+                ]
+            ]
+        ];
+        $mockMappings = m::mock(SpecificationInterface::class);
+
+        $mockFilter = m::mock('Zend\Filter\AbstractFilter');
+
+        $mockMapFilter = m::mock(MapXmlFile::class);
+        $mockMapFilter->shouldReceive('setMapping')->with($mockMappings);
+
+        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
+        $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
+
+        $mockSl->shouldReceive('get')->with('TransExchangeXmlMapping')->andReturn($mockMappings);
+
+        $mockSl->shouldReceive('get')->with(MapXmlFile::class)->andReturn($mockMapFilter);
+        $mockSl->shouldReceive('get')->with('InjectIsTxcApp')->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with('InjectReceivedDate')->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with('InjectNaptanCodes')->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with('IsScottishRules')->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with('Format\Subsidy')->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with('Format\Via')->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with('Format\ExistingRegNo')->andReturn($mockFilter);
+
+        $sut = new BusRegistrationInputFactory();
+        /** @var \Zend\InputFilter\Input $service */
+        $service = $sut->createService($mockSl);
+
+        $this->assertInstanceOf('Zend\InputFilter\Input', $service);
+        $this->assertCount(8, $service->getFilterChain());
+        $this->assertCount(0, $service->getValidatorChain());
     }
 }

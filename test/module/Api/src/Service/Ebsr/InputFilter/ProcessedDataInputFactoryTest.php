@@ -12,11 +12,15 @@ use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory;
  */
 class ProcessedDataInputFactoryTest extends TestCase
 {
+    /**
+     * Tests create service
+     */
     public function testCreateService()
     {
         $mockValidator = m::mock('Zend\Validator\AbstractValidator');
 
         $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
         $mockSl->shouldReceive('get')->with('Rules\ProcessedData\BusRegNotFound')->once()->andReturn($mockValidator);
@@ -43,5 +47,28 @@ class ProcessedDataInputFactoryTest extends TestCase
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
         $this->assertCount(6, $service->getValidatorChain());
+    }
+
+    /**
+     * Tests create service with disabled validators
+     */
+    public function testCreateServiceDisabledValidators()
+    {
+        $config = [
+            'ebsr' => [
+                'validate' => [
+                    'processed_data' => false
+                ]
+            ]
+        ];
+
+        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
+
+        $sut = new ProcessedDataInputFactory();
+        $service = $sut->createService($mockSl);
+
+        $this->assertInstanceOf('Zend\InputFilter\Input', $service);
+        $this->assertCount(0, $service->getValidatorChain());
     }
 }
