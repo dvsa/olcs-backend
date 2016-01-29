@@ -25,5 +25,4 @@ final class BatchVehicleListGeneratorForGoodsDiscs extends AbstractCommand
     {
         return $this->licences;
     }
-
 }

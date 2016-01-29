@@ -24,5 +24,4 @@ class GoodsDiscsSetIsPrinting extends AbstractRawQuery
     protected $queryTemplate = 'UPDATE {gd}
       SET {gd.isPrinting} = :isPrinting
       WHERE {gd.id} IN (:ids)';
-
 }

@@ -119,21 +119,6 @@ class PsvDisc extends AbstractRepository
             ->execute(['licence' => $licenceId]);
     }
 
-    public function fetchDiscsToPrintByIds($ids = [])
-    {
-        $qb = $this->createQueryBuilder();
-        $qb->leftJoin('psv.licence', 'l')
-            ->leftJoin('l.trafficArea', 'lta')
-            ->leftJoin('l.licenceType', 'llt')
-            ->leftJoin('l.goodsOrPsv', 'lgp');
-
-        $this->getQueryBuilder()
-            ->modifyQuery($qb)
-            ->filterByIds($ids);
-
-        return $qb->getQuery()->getResult();
-    }
-
     public function fetchDiscsToPrintMin($licenceType)
     {
         $qb = $this->createQueryBuilder();

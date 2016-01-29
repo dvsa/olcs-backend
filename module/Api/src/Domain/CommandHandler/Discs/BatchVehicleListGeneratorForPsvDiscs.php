@@ -58,6 +58,6 @@ final class BatchVehicleListGeneratorForPsvDiscs extends AbstractCommandHandler 
             $this->handleSideEffect(CreatQueue::create($params));
         }
 
-        return $this->result;
+        return $result;
     }
 }

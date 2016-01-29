@@ -26,7 +26,7 @@ class IsInternalOrSystemUser extends AbstractHandler implements AuthAwareInterfa
      */
     public function isValid($dto)
     {
-        $team = $this->getUser()->getTeam()->getId();
+        $team = ($this->getUser() && $this->getUser()->getTeam()) ? $this->getUser()->getTeam()->getId() : null;
         return $this->isInternalUser() || $team === UserEntity::SYSTEM_TEAM_ID;
     }
 }

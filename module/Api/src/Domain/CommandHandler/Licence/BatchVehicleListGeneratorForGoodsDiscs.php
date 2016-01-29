@@ -53,6 +53,6 @@ final class BatchVehicleListGeneratorForGoodsDiscs extends AbstractCommandHandle
             $this->handleSideEffect(CreatQueue::create($params));
         }
 
-        return $this->result;
+        return $result;
     }
 }

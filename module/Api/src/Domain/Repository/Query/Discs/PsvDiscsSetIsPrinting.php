@@ -24,5 +24,4 @@ class PsvDiscsSetIsPrinting extends AbstractRawQuery
     protected $queryTemplate = 'UPDATE {pd}
       SET {pd.isPrinting} = :isPrinting
       WHERE {pd.id} IN (:ids)';
-
 }
