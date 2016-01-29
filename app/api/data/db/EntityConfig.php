@@ -569,6 +569,15 @@ return array(
             )
         )
     ),
+    'sla_target_date' => array(
+        'document_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Document',
+                'property' => 'slaTargetDate',
+                'fetch' => 'LAZY'
+            )
+        )
+    ),
     'doc_template' => array(
         'is_ni' => array(
             'type' => 'yesno'

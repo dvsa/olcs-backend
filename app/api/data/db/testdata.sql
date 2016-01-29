@@ -117,6 +117,7 @@ TRUNCATE TABLE `grace_period`;
 TRUNCATE TABLE `printer`;
 TRUNCATE TABLE `team_printer`;
 TRUNCATE TABLE `historic_tm`;
+TRUNCATE TABLE `sla_target_date`;
 
 /* Test documents */
 INSERT IGNORE INTO document(id,licence_id,bus_reg_id,description,filename,is_external,category_id,sub_category_id,
@@ -2286,5 +2287,18 @@ INSERT INTO `printer` (`id`, `printer_name`) VALUES (2, 'Test Printer');
 
 INSERT INTO `team_printer` (`id`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (1, 1, 1, NULL, NULL);
 INSERT INTO `team_printer` (`id`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (2, 2, 2, 1, 1);
+
+
+/* Test document sla target dates */
+INSERT IGNORE INTO sla_target_date(id,document_id,agreed_date, target_date, sent_date, under_delegation, notes,
+                                   created_by, last_modified_by, created_on, version) VALUES
+  (1,682,'2014-08-25 12:04:35','2014-08-30 12:04:35','2014-08-27 12:04:35', 1,'Passed SLA target',273, 273,
+   '2014-08-25 12:04:35', 1),
+  (2,672,'2014-08-25 12:04:35','2014-09-23 12:04:35','2014-09-27 12:04:35', 1,'Failed SLA target',273, 273,
+     '2014-08-25 12:04:35', 1),
+  (3,673,'2014-08-25 12:04:35','2014-08-30 12:04:35','2014-08-27 12:04:35', 1,'Passed SLA target',273, 273,
+     '2014-08-25 12:04:35', 1),
+  (4,674,'2014-08-25 12:04:35','2014-08-30 12:04:35','2014-08-27 12:04:35', 1,'Passed SLA target',273, 273,
+     '2014-08-25 12:04:35', 1);
 
 SET foreign_key_checks = 1;
