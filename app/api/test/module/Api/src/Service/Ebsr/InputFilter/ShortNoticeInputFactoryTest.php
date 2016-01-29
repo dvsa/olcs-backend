@@ -12,11 +12,15 @@ use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory;
  */
 class ShortNoticeInputFactoryTest extends TestCase
 {
+    /**
+     * Tests create service
+     */
     public function testCreateService()
     {
         $mockValidator = m::mock('Zend\Validator\AbstractValidator');
 
         $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
         $mockSl->shouldReceive('get')->with('Rules\ShortNotice\MissingSection')->once()->andReturn($mockValidator);
@@ -27,5 +31,28 @@ class ShortNoticeInputFactoryTest extends TestCase
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
         $this->assertCount(2, $service->getValidatorChain());
+    }
+
+    /**
+     * Tests create service with disabled validators
+     */
+    public function testCreateServiceDisabledValidators()
+    {
+        $config = [
+            'ebsr' => [
+                'validate' => [
+                    'short_notice' => false
+                ]
+            ]
+        ];
+
+        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
+
+        $sut = new ShortNoticeInputFactory();
+        $service = $sut->createService($mockSl);
+
+        $this->assertInstanceOf('Zend\InputFilter\Input', $service);
+        $this->assertCount(0, $service->getValidatorChain());
     }
 }

@@ -20,7 +20,9 @@ class BusRegistrationInputFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $service = new Input('bus_registration');
+        $inputName = 'bus_registration';
+        $service = new Input($inputName);
+        $config = $serviceLocator->get('Config');
 
         /** @var MapXmlFile $mapXmlFile */
         $mapXmlFile = $serviceLocator->get('FilterManager')->get(MapXmlFile::class);
@@ -37,9 +39,13 @@ class BusRegistrationInputFactory implements FactoryInterface
         $filterChain->attach($serviceLocator->get('FilterManager')->get('Format\ExistingRegNo'));
 
         $validatorChain = $service->getValidatorChain();
-        $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\EffectiveDate'));
-        $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\ApplicationType'));
-        $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\Licence'));
+
+        //allows validators to be switched off (debug only, not to be used for production)
+        if (!isset($config['ebsr']['validate'][$inputName]) || $config['ebsr']['validate'][$inputName] === true) {
+            $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\EffectiveDate'));
+            $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\ApplicationType'));
+            $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\Licence'));
+        }
 
         return $service;
     }
