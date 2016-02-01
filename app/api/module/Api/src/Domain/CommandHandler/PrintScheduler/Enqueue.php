@@ -35,47 +35,58 @@ final class Enqueue extends AbstractCommandHandler implements \Dvsa\Olcs\Api\Dom
             );
         }
 
-        $user = $this->getCurrentUser();
-
-        // If user has no team, most likely they are selfserve user, in which case we don't know which printer
-        // @todo Temporarily stub the printing from these users
-        if ($user->getTeam() == null) {
-
-            $document = $this->getRepo()->fetchById($command->getDocumentId());
-            /* @var $document \Dvsa\Olcs\Api\Entity\Doc\Document */
-            $this->stubPrint($document->getIdentifier(), $command->getJobName());
-
-            $this->result->addMessage(
-                "Document '{$document->getIdentifier()}', '{$command->getJobName()}' queued for print"
-            );
-            return $this->result;
-        }
-
-        // check the user does not have at least on printer then fail
-        if ($user->getTeam()->getPrinters()->isEmpty()) {
-            throw new \Dvsa\Olcs\Api\Domain\Exception\BadRequestException(
-                'Failed to generate document as there are no printer settings for the current user'
-            );
-        }
-
-        $dtoData = [
-            'entityId' => $command->getDocumentId(),
-            'type' => Queue::TYPE_PRINT,
-            'status' => Queue::STATUS_QUEUED,
-            'user' => $user->getId(),
-            'options' => json_encode(
-                [
-                    'userId' => $user->getId(),
-                    'jobName' => $command->getJobName()
-                ]
-            ),
-        ];
-        $this->handleSideEffect(\Dvsa\Olcs\Api\Domain\Command\Queue\Create::create($dtoData));
+        // @todo Temporarily go back to attaching printed documents to licence 7
+        // Needed for release 3 needs to be removed for release 4
+        $document = $this->getRepo()->fetchById($command->getDocumentId());
+        /* @var $document \Dvsa\Olcs\Api\Entity\Doc\Document */
+        $this->stubPrint($document->getIdentifier(), $command->getJobName());
 
         $this->result->addMessage(
-            "Document id '{$command->getDocumentId()}', '{$command->getJobName()}' queued for print"
+            "Document '{$document->getIdentifier()}', '{$command->getJobName()}' queued for print"
         );
         return $this->result;
+
+        //        $user = $this->getCurrentUser();
+        //
+        //        // If user has no team, most likely they are selfserve user, in which case we don't know which printer
+        //        // @todo Temporarily stub the printing from these users
+        //        if ($user->getTeam() == null) {
+        //
+        //            $document = $this->getRepo()->fetchById($command->getDocumentId());
+        //            /* @var $document \Dvsa\Olcs\Api\Entity\Doc\Document */
+        //            $this->stubPrint($document->getIdentifier(), $command->getJobName());
+        //
+        //            $this->result->addMessage(
+        //                "Document '{$document->getIdentifier()}', '{$command->getJobName()}' queued for print"
+        //            );
+        //            return $this->result;
+        //        }
+        //
+        //        // check the user does not have at least on printer then fail
+        //        if ($user->getTeam()->getPrinters()->isEmpty()) {
+        //            throw new \Dvsa\Olcs\Api\Domain\Exception\BadRequestException(
+        //                'Failed to generate document as there are no printer settings for the current user'
+        //            );
+        //        }
+        //
+        //        $dtoData = [
+        //            'entityId' => $command->getDocumentId(),
+        //            'type' => Queue::TYPE_PRINT,
+        //            'status' => Queue::STATUS_QUEUED,
+        //            'user' => $user->getId(),
+        //            'options' => json_encode(
+        //                [
+        //                    'userId' => $user->getId(),
+        //                    'jobName' => $command->getJobName()
+        //                ]
+        //            ),
+        //        ];
+        //        $this->handleSideEffect(\Dvsa\Olcs\Api\Domain\Command\Queue\Create::create($dtoData));
+        //
+        //        $this->result->addMessage(
+        //            "Document id '{$command->getDocumentId()}', '{$command->getJobName()}' queued for print"
+        //        );
+        //        return $this->result;
     }
 
     /**

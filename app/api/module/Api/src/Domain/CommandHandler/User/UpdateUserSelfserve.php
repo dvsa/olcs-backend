@@ -76,6 +76,7 @@ final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
         $this->getRepo()->save($user);
 
         $this->getOpenAmUser()->updateUser(
+            $user->getPid(),
             $user->getLoginId(),
             $command->getContactDetails()['emailAddress']
         );

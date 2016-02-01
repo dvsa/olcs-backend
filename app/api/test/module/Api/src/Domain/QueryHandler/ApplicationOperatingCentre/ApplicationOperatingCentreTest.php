@@ -56,7 +56,9 @@ class ApplicationOperatingCentreTest extends QueryHandlerTestCase
             ->shouldReceive('isNew')
             ->andReturn(true)
             ->shouldReceive('isVariation')
-            ->andReturn(false);
+            ->andReturn(false)
+            ->shouldReceive('getNiFlag')
+            ->andReturn('Y');
 
         /** @var ApplicationOperatingCentreEntity $aoc */
         $aoc = m::mock(ApplicationOperatingCentreEntity::class)->makePartial();
@@ -79,7 +81,8 @@ class ApplicationOperatingCentreTest extends QueryHandlerTestCase
             'canUpdateAddress' => true,
             'wouldIncreaseRequireAdditionalAdvertisement' => false,
             'currentVehiclesRequired' => null,
-            'currentTrailersRequired' => null
+            'currentTrailersRequired' => null,
+            'niFlag' => 'Y'
         ];
 
         $this->assertEquals($expected, $result->serialize());
@@ -100,7 +103,9 @@ class ApplicationOperatingCentreTest extends QueryHandlerTestCase
             ->shouldReceive('isNew')
             ->andReturn(true)
             ->shouldReceive('isVariation')
-            ->andReturn(false);
+            ->andReturn(false)
+            ->shouldReceive('getNiFlag')
+            ->andReturn('Y');
 
         /** @var ApplicationOperatingCentreEntity $aoc */
         $aoc = m::mock(ApplicationOperatingCentreEntity::class)->makePartial();
@@ -131,7 +136,8 @@ class ApplicationOperatingCentreTest extends QueryHandlerTestCase
             'canUpdateAddress' => true,
             'wouldIncreaseRequireAdditionalAdvertisement' => false,
             'currentVehiclesRequired' => 10,
-            'currentTrailersRequired' => 9
+            'currentTrailersRequired' => 9,
+            'niFlag' => 'Y'
         ];
 
         $this->assertEquals($expected, $result->serialize());

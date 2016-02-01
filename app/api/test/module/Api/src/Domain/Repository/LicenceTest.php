@@ -486,6 +486,7 @@ class LicenceTest extends RepositoryTestCase
 
         $now = new DateTime();
 
+        $qb->shouldReceive('select')->with('m', 'ta')->once();
         $this->assertEquals(['RESULTS'], $this->sut->fetchForContinuationNotSought($now));
 
         $expectedQuery = '[QUERY] AND m.expiryDate < [[' . $now->format(\DateTime::W3C) . ']] '

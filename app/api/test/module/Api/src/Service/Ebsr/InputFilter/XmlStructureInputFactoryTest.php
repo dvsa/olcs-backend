@@ -14,6 +14,9 @@ use Olcs\XmlTools\Validator\Xsd;
  */
 class XmlStructureInputFactoryTest extends TestCase
 {
+    /**
+     * Tests create service
+     */
     public function testCreateService()
     {
         $mockXsdValidator = m::mock('Zend\Validator\AbstractValidator');
@@ -24,6 +27,7 @@ class XmlStructureInputFactoryTest extends TestCase
         $mockValidator = m::mock('Zend\Validator\AbstractValidator');
 
         $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
@@ -40,5 +44,33 @@ class XmlStructureInputFactoryTest extends TestCase
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
         $this->assertCount(1, $service->getFilterChain());
         $this->assertCount(5, $service->getValidatorChain());
+    }
+
+    /**
+     * Tests create service with validation disabled
+     */
+    public function testCreateServiceDisabledValidators()
+    {
+        $config = [
+            'ebsr' => [
+                'validate' => [
+                    'xml_structure' => false
+                ]
+            ]
+        ];
+
+        $mockFilter = m::mock('Zend\Filter\AbstractFilter');
+
+        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
+        $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
+        $mockSl->shouldReceive('get')->with(ParseXml::class)->andReturn($mockFilter);
+
+        $sut = new XmlStructureInputFactory();
+        $service = $sut->createService($mockSl);
+
+        $this->assertInstanceOf('Zend\InputFilter\Input', $service);
+        $this->assertCount(1, $service->getFilterChain());
+        $this->assertCount(0, $service->getValidatorChain());
     }
 }

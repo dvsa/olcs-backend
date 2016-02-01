@@ -162,13 +162,24 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
         return $busReg;
     }
 
+    /**
+     * Returns whether the bus reg is a registered bus route
+     *
+     * @return bool
+     */
+    public function isRegistered()
+    {
+        return $this->status->getId() === self::STATUS_REGISTERED;
+    }
+
+    /**
+     * Returns whether a variation can be created
+     *
+     * @return bool
+     */
     public function canCreateVariation()
     {
-        if ($this->status->getId() === self::STATUS_REGISTERED) {
-            return true;
-        }
-
-        return false;
+        return $this->isRegistered();
     }
 
     /**
@@ -1050,7 +1061,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      */
     private function getPublicationSectionForGrantEmailRegistered($revertStatus, $shortNotice)
     {
-        if ($this->status->getId() !== self::STATUS_REGISTERED) {
+        if (!$this->isRegistered()) {
             throw new RuntimeException('status mismatch generating registered grant email');
         }
 

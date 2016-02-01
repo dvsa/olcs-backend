@@ -69,7 +69,6 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
 
         $this->updateTradingNames(
             $licence->getId(),
-            $organisation->getId(),
             $command->getTradingNames()
         );
 
@@ -120,13 +119,12 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
         );
     }
 
-    private function updateTradingNames($licenceId, $organisationId, $tradingNames)
+    private function updateTradingNames($licenceId, $tradingNames)
     {
         $result = $this->handleSideEffect(
             UpdateTradingNames::create(
                 [
                     'licence' => $licenceId,
-                    'organisation' => $organisationId,
                     'tradingNames' => $tradingNames
                 ]
             )

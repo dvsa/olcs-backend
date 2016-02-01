@@ -281,6 +281,10 @@ class Licence extends AbstractRepository
             ->setParameter('psv', Entity::LICENCE_CATEGORY_PSV)
             ->setParameter('sr', Entity::LICENCE_TYPE_SPECIAL_RESTRICTED);
 
+        // The query can generate a lot of data which can exceed PHP memory_limit
+        // minimize this by only selecting the root entity
+        $qb->select($this->alias, 'ta');
+
         $query = $qb->getQuery();
 
         return $query->getResult();
