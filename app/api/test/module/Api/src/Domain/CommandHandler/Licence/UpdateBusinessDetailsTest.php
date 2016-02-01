@@ -176,7 +176,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
         // Update trading names
         $expectedData = [
             'licence' => 222,
-            'organisation' => 111,
+            'organisation' => null,
             'tradingNames' => [
                 'Foo ltd',
                 'Bar ltd'
@@ -280,7 +280,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
         // Update trading names
         $expectedData = [
             'licence' => 222,
-            'organisation' => 111,
+            'organisation' => null,
             'tradingNames' => [
                 'Foo ltd',
                 'Bar ltd'
@@ -378,7 +378,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
         // Update trading names
         $expectedData = [
             'licence' => 222,
-            'organisation' => 111,
+            'organisation' => null,
             'tradingNames' => [
                 'Foo ltd',
                 'Bar ltd'
@@ -501,7 +501,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
         // Update trading names
         $expectedData = [
             'licence' => 222,
-            'organisation' => 111,
+            'organisation' => null,
             'tradingNames' => [
                 'Foo ltd',
                 'Bar ltd'
