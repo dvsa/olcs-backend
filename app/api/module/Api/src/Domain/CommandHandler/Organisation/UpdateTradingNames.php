@@ -32,7 +32,7 @@ final class UpdateTradingNames extends AbstractCommandHandler implements Transac
         if ($command->getLicence() !== null) {
             /** @var Licence $licence */
             $licence = $this->getRepo()->fetchById($command->getLicence());
-            $organisation = $licence->getOrganisation();
+            $organisation = null;
             $current = $licence->getTradingNames();
         } else {
             $licence = null;
@@ -72,7 +72,7 @@ final class UpdateTradingNames extends AbstractCommandHandler implements Transac
     private function updateTradingNames(
         Collection $current,
         array $new,
-        Organisation $organisation,
+        Organisation $organisation = null,
         Licence $licence = null
     ) {
         // Differentiate between trading names to keep and trading names to remove
@@ -110,7 +110,7 @@ final class UpdateTradingNames extends AbstractCommandHandler implements Transac
         return [$newCount, $unchangedCount, $removedCount];
     }
 
-    private function createTradingName($name, Organisation $organisation, Licence $licence = null)
+    private function createTradingName($name, Organisation $organisation = null, Licence $licence = null)
     {
         $tradingName = new TradingName($name, $organisation);
 
