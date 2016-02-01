@@ -212,6 +212,33 @@ class DocumentSearchView
     protected $deletedDate;
 
     /**
+     * Agreed date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="agreed_date", nullable=true)
+     */
+    protected $agreedDate;
+
+    /**
+     * Target date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="target_date", nullable=true)
+     */
+    protected $targetDate;
+
+    /**
+     * Sent date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="sent_date", nullable=true)
+     */
+    protected $sendDate;
+
+    /**
      * Get the id
      *
      * @return int
@@ -439,5 +466,35 @@ class DocumentSearchView
     public function isDeleted()
     {
         return !is_null($this->deletedDate);
+    }
+
+    /**
+     * Get the agreed date
+     *
+     * @return \DateTime
+     */
+    public function getAgreedDate()
+    {
+        return $this->agreedDate;
+    }
+
+    /**
+     * Get the target date
+     *
+     * @return \DateTime
+     */
+    public function getTargetDate()
+    {
+        return $this->targetDate;
+    }
+
+    /**
+     * Get the sent date
+     *
+     * @return \DateTime
+     */
+    public function getSentDate()
+    {
+        return $this->sentDate;
     }
 }
