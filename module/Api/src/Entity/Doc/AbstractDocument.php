@@ -391,15 +391,15 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     /**
      * Sla target date
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var \Dvsa\Olcs\Api\Entity\System\SlaTargetDate
      *
-     * @ORM\OneToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\SlaTargetDate",
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\SlaTargetDate",
      *     mappedBy="document",
-     *     fetch="LAZY"
+     *     cascade={"persist"}
      * )
      */
-    protected $slaTargetDates;
+    protected $slaTargetDate;
 
     /**
      * Initialise the collections
@@ -413,7 +413,6 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     {
         $this->continuationDetails = new ArrayCollection();
         $this->templates = new ArrayCollection();
-        $this->slaTargetDates = new ArrayCollection();
     }
 
     /**
@@ -1229,61 +1228,24 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     /**
      * Set the sla target date
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates
+     * @param \Dvsa\Olcs\Api\Entity\System\SlaTargetDate $slaTargetDate
      * @return Document
      */
-    public function setSlaTargetDates($slaTargetDates)
+    public function setSlaTargetDate($slaTargetDate)
     {
-        $this->slaTargetDates = $slaTargetDates;
+        $this->slaTargetDate = $slaTargetDate;
 
         return $this;
     }
 
     /**
-     * Get the sla target dates
+     * Get the sla target date
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return \Dvsa\Olcs\Api\Entity\System\SlaTargetDate
      */
-    public function getSlaTargetDates()
+    public function getSlaTargetDate()
     {
-        return $this->slaTargetDates;
-    }
-
-    /**
-     * Add a sla target dates
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates
-     * @return Document
-     */
-    public function addSlaTargetDates($slaTargetDates)
-    {
-        if ($slaTargetDates instanceof ArrayCollection) {
-            $this->slaTargetDates = new ArrayCollection(
-                array_merge(
-                    $this->slaTargetDates->toArray(),
-                    $slaTargetDates->toArray()
-                )
-            );
-        } elseif (!$this->slaTargetDates->contains($slaTargetDates)) {
-            $this->slaTargetDates->add($slaTargetDates);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a sla target dates
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates
-     * @return Document
-     */
-    public function removeSlaTargetDates($slaTargetDates)
-    {
-        if ($this->slaTargetDates->contains($slaTargetDates)) {
-            $this->slaTargetDates->removeElement($slaTargetDates);
-        }
-
-        return $this;
+        return $this->slaTargetDate;
     }
 
     /**
