@@ -26,7 +26,8 @@ class Pid extends AbstractQueryHandler
         $user = $this->getRepo()->fetchOneByLoginId($query->getId());
 
         return [
-            'pid' => $user->getPid()
+            'pid' => $user->getPid(),
+            'isActive' => true,
         ];
     }
 }
