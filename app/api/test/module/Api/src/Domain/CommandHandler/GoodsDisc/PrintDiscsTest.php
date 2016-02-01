@@ -15,8 +15,9 @@ use Dvsa\Olcs\Api\Domain\Repository\GoodsDisc as GoodsDiscRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\GoodsDisc\PrintDiscs as Cmd;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\Command\Discs\PrintDiscs as PrintDiscsCommand;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as CreateVehicleListDocumentCommand;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreatQueue;
 
 /**
  * Print goods discs
@@ -114,31 +115,12 @@ class PrintDiscsTest extends CommandHandlerTestCase
         ];
         $command = Cmd::create($data);
 
-        $mockDisc = m::mock()
-            ->shouldReceive('getLicenceVehicle')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('getLicence')
-                ->andReturn(
-                    m::mock()
-                    ->shouldReceive('getId')
-                    ->andReturn(3)
-                    ->once()
-                    ->getMock()
-                )
-                ->once()
-                ->getMock()
-            )
-            ->once()
-            ->getMock();
+        $disc = ['id' => 12, 'licenceVehicle' => ['licence' => ['id' => 3]]];
 
         $this->repoMap['GoodsDisc']
             ->shouldReceive('fetchDiscsToPrint')
             ->with($niFlag, $licenceType)
-            ->andReturn([$mockDisc])
-            ->once()
-            ->shouldReceive('setIsPrintingOn')
-            ->with([$mockDisc])
+            ->andReturn([$disc])
             ->once()
             ->getMock();
 
@@ -156,24 +138,38 @@ class PrintDiscsTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $printDiscData = [
-            'discs' => [$mockDisc],
+        $options = [
+            'discs' => [12],
             'type' => 'Goods',
             'startNumber' => $startNumber
         ];
-        $this->expectedSideEffect(PrintDiscsCommand::class, $printDiscData, new Result());
-
-        $createVehicleListData = [
-            'id' => 3,
-            'type' => 'dp'
+        $params = [
+            'type' => Queue::TYPE_DISC_PRINTING,
+            'status' => Queue::STATUS_QUEUED,
+            'options' => json_encode($options)
         ];
-        $this->expectedSideEffect(CreateVehicleListDocumentCommand::class, $createVehicleListData, new Result());
+        $this->expectedSideEffect(CreatQueue::class, $params, new Result());
+
+        $licences = [
+            3 => [
+                'id' => 3,
+                'type' => 'dp'
+            ]
+        ];
+        $options = [
+            'licences' => $licences
+        ];
+        $params = [
+            'type' => Queue::TYPE_CREATE_GOODS_VEHICLE_LIST,
+            'status' => Queue::STATUS_QUEUED,
+            'options' => json_encode($options)
+        ];
+        $this->expectedSideEffect(CreatQueue::class, $params, new Result());
 
         $expected = [
             'id' => [],
             'messages' => [
-                'Goods discs printed',
-                'Vehicle list generated for licence 3'
+                'Goods discs printed'
             ]
         ];
         $result = $this->sut->handleCommand($command);

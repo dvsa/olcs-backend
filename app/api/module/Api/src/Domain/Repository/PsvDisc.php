@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Licence\PsvDisc as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Doctrine\DBAL\Connection;
 
 /**
  * Psv Disc
@@ -41,11 +41,18 @@ class PsvDisc extends AbstractRepository
 
         $this->addFilteringConditions($qb, $licenceType);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
     protected function addFilteringConditions($qb, $licenceType)
     {
+        $activeStatuses = [
+            LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+            LicenceEntity::LICENCE_STATUS_GRANTED,
+            LicenceEntity::LICENCE_STATUS_VALID,
+            LicenceEntity::LICENCE_STATUS_CURTAILED,
+            LicenceEntity::LICENCE_STATUS_SUSPENDED
+        ];
         $qb->andWhere(
             $qb->expr()->andX(
                 $qb->expr()->eq('lta.isNi', 0),
@@ -59,36 +66,37 @@ class PsvDisc extends AbstractRepository
         $qb->setParameter('licenceType', $licenceType);
         $qb->setParameter('licenceTrafficAreaId', TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
         $qb->setParameter('goodsOrPsv', LicenceEntity::LICENCE_CATEGORY_PSV);
+
+        $qb->andWhere($qb->expr()->in('l.status', ':activeStatuses'));
+        $qb->setParameter('activeStatuses', $activeStatuses);
     }
 
-    public function setIsPrintingOn($discs)
+    public function setIsPrintingOn($discIds)
     {
-        $this->setIsPrinting('Y', $discs);
+        $this->setIsPrinting(1, $discIds);
     }
 
-    public function setIsPrintingOff($discs)
+    public function setIsPrintingOff($discIds)
     {
-        $this->setIsPrinting('N', $discs);
+        $this->setIsPrinting(0, $discIds);
     }
 
-    protected function setIsPrinting($type, $discs)
+    protected function setIsPrinting($type, $discIds)
     {
-        foreach ($discs as $disc) {
-            $fetched = $this->fetchById($disc->getId());
-            $fetched->setIsPrinting($type);
-            $this->save($fetched);
-        }
+        return $this->getDbQueryManager()->get('Discs\PsvDiscsSetIsPrinting')
+            ->execute(
+                ['isPrinting' => $type, 'ids' => $discIds],
+                ['isPrinting' => \PDO::PARAM_INT, 'ids' => Connection::PARAM_INT_ARRAY]
+            );
     }
 
-    public function setIsPrintingOffAndAssignNumbers($discs, $startNumber)
+    public function setIsPrintingOffAndAssignNumbers($discIds, $startNumber)
     {
-        foreach ($discs as $disc) {
-            $fetched = $this->fetchById($disc->getId());
-            $fetched->setIsPrinting('N');
-            $fetched->setDiscNo($startNumber++);
-            $fetched->setIssuedDate(new DateTime('now'));
-            $this->save($fetched);
-        }
+        return $this->getDbQueryManager()->get('Discs\PsvDiscsSetIsPrintingOffAndDiscNo')
+            ->execute(
+                ['ids' => $discIds, 'startNumber' => $startNumber],
+                ['ids' => Connection::PARAM_INT_ARRAY, 'startNumber' => \PDO::PARAM_INT]
+            );
     }
 
     protected function applyListFilters(\Doctrine\ORM\QueryBuilder $qb, \Dvsa\Olcs\Transfer\Query\QueryInterface $query)
@@ -109,5 +117,19 @@ class PsvDisc extends AbstractRepository
     {
         return $this->getDbQueryManager()->get('Discs\CeaseDiscsForLicence')
             ->execute(['licence' => $licenceId]);
+    }
+
+    public function fetchDiscsToPrintMin($licenceType)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->leftJoin('psv.licence', 'l')
+            ->leftJoin('l.trafficArea', 'lta')
+            ->leftJoin('l.licenceType', 'llt')
+            ->leftJoin('l.goodsOrPsv', 'lgp');
+
+        $this->addFilteringConditions($qb, $licenceType);
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 }

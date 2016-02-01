@@ -45,9 +45,11 @@ class RemoveAllForLicenceTest extends AbstractDbQueryTestCase
         return [
             [
                 [],
+                [],
                 [
                     'removalDate' => $today->format('Y-m-d H:i:s')
-                ]
+                ],
+                []
             ]
         ];
     }
