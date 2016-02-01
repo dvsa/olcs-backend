@@ -73,7 +73,7 @@ class NamingModel
         /*
          * DateTime return zeros as a microseconds so we need to do the trick
          */
-        if (!empty($flag) && strpos($flag,'u') !== false) {
+        if (!empty($flag) && strpos($flag, 'u') !== false) {
             list($usec, $sec) = explode(' ', microtime());
             $usec = substr($usec, 2, 6);
             $date = $this->date->format($flag);
