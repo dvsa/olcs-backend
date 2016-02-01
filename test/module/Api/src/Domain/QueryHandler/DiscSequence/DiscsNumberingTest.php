@@ -80,7 +80,7 @@ class DiscNumberingTest extends QueryHandlerTestCase
             ->getMock();
 
         $this->repoMap['PsvDisc']
-            ->shouldReceive('fetchDiscsToPrint')
+            ->shouldReceive('fetchDiscsToPrintMin')
             ->with($licenceType)
             ->andReturn(['d1', 'd2', 'd3'])
             ->once()
@@ -132,7 +132,7 @@ class DiscNumberingTest extends QueryHandlerTestCase
             ->getMock();
 
         $this->repoMap['GoodsDisc']
-            ->shouldReceive('fetchDiscsToPrint')
+            ->shouldReceive('fetchDiscsToPrintMin')
             ->with($niFlag, $licenceType)
             ->andReturn(['d1', 'd2', 'd3'])
             ->once()

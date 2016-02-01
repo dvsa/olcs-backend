@@ -49,10 +49,12 @@ class ExpireAllForLicenceTest extends AbstractDbQueryTestCase
         return [
             [
                 [],
+                [],
                 [
                     'status' => CommunityLic::STATUS_EXPIRED,
                     'expiredDate' => $today->format('Y-m-d H:i:s')
-                ]
+                ],
+                []
             ]
         ];
     }

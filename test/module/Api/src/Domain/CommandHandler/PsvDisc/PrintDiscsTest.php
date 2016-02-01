@@ -15,8 +15,8 @@ use Dvsa\Olcs\Api\Domain\Repository\PsvDisc as PsvDiscRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\PsvDisc\PrintDiscs as Cmd;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\Command\Discs\PrintDiscs as PrintDiscsCommand;
-use Dvsa\Olcs\Api\Domain\Command\Discs\CreatePsvVehicleListForDiscs as CreatePsvVehicleListForDiscsCommand;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreatQueue;
 
 /**
  * Print PSV discs
@@ -110,25 +110,12 @@ class PrintDiscsTest extends CommandHandlerTestCase
         ];
         $command = Cmd::create($data);
 
-        $mockDisc = m::mock()
-            ->shouldReceive('getLicence')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('getId')
-                ->andReturn(3)
-                ->once()
-                ->getMock()
-            )
-            ->once()
-            ->getMock();
+        $disc = ['id' => 12, 'licence' => ['id' => 3]];
 
         $this->repoMap['PsvDisc']
             ->shouldReceive('fetchDiscsToPrint')
             ->with($licenceType)
-            ->andReturn([$mockDisc])
-            ->once()
-            ->shouldReceive('setIsPrintingOn')
-            ->with([$mockDisc])
+            ->andReturn([$disc])
             ->once()
             ->getMock();
 
@@ -146,24 +133,37 @@ class PrintDiscsTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $printDiscData = [
-            'discs' => [$mockDisc],
+        $options = [
+            'discs' => [12],
             'type' => 'PSV',
             'startNumber' => $startNumber
         ];
-        $this->expectedSideEffect(PrintDiscsCommand::class, $printDiscData, new Result());
-
-        $createVehicleListData = [
-            'id' => 3,
-            'knownValues' => ['NO_DISCS_PRINTED' => ['count' => 1]]
+        $params = [
+            'type' => Queue::TYPE_DISC_PRINTING,
+            'status' => Queue::STATUS_QUEUED,
+            'options' => json_encode($options)
         ];
-        $this->expectedSideEffect(CreatePsvVehicleListForDiscsCommand::class, $createVehicleListData, new Result());
+        $this->expectedSideEffect(CreatQueue::class, $params, new Result());
+
+        $options = [
+            'bookmarks' => [
+                3 => ['NO_DISCS_PRINTED' => ['count' => 1]]
+            ],
+            'queries' => [
+                3 => ['id' => 3]
+            ]
+        ];
+        $params = [
+            'type' => Queue::TYPE_CREATE_PSV_VEHICLE_LIST,
+            'status' => Queue::STATUS_QUEUED,
+            'options' => json_encode($options)
+        ];
+        $this->expectedSideEffect(CreatQueue::class, $params, new Result());
 
         $expected = [
             'id' => [],
             'messages' => [
-                'PSV discs printed',
-                'Vehicle list generated for licence 3'
+                'PSV discs printed'
             ]
         ];
         $result = $this->sut->handleCommand($command);
