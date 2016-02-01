@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\System;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -16,9 +16,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="sla_target_date",
  *    indexes={
- *        @ORM\Index(name="ix_country_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_country_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_sla_target_date_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_sla_target_date_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_sla_target_date_document_id", columns={"document_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_sla_target_date_document_id", columns={"document_id"})
  *    }
  * )
  */
@@ -59,10 +62,10 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
      *
      * @var \Dvsa\Olcs\Api\Entity\Doc\Document
      *
-     * @ORM\ManyToOne(
+     * @ORM\OneToOne(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document",
      *     fetch="LAZY",
-     *     inversedBy="slaTargetDates"
+     *     inversedBy="slaTargetDate"
      * )
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=false)
      */
