@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  */
 class TradingName extends AbstractTradingName
 {
-    public function __construct($name, Organisation $organisation)
+    public function __construct($name, Organisation $organisation = null)
     {
         $this->setOrganisation($organisation);
         $this->setName($name);

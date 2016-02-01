@@ -179,6 +179,12 @@ return [
         'transexchange_publisher' => [
             'uri' => 'http://localhost:8080/txc/publisherService',
         ],
+        'validate' => [
+            'xml_structure' => true,
+            'bus_registration' => true,
+            'processed_data' => true,
+            'short_notice' => true
+        ]
     ],
 
     'nr' => [
@@ -198,4 +204,4 @@ return [
     'print' => [
         'server' => 'print01.olcs.mgt.mtpdvsa:631'
     ]
-);
+];

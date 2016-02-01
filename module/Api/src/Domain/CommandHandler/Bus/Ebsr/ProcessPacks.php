@@ -42,7 +42,6 @@ use Doctrine\ORM\Query;
 
 /**
  * Process Ebsr packs
- * @todo Ian L 29/10/15 - General tidy up. Refine and reorganise (mainly validation), improve error messages
  */
 final class ProcessPacks extends AbstractCommandHandler implements
     AuthAwareInterface,
@@ -64,25 +63,44 @@ final class ProcessPacks extends AbstractCommandHandler implements
         'BusServiceType'
     ];
 
-    protected $xmlStructure;
+    protected $xmlStructureInput;
 
     protected $busRegInput;
 
     protected $processedDataInput;
+
+    protected $shortNoticeInput;
+
+    /**
+     * @var Result
+     */
+    protected $result;
 
     /**
      * @var FileProcessor
      */
     protected $fileProcessor;
 
+    /**
+     * @var int
+     */
+    protected $validPacks = 0;
+
+    /**
+     * @var int
+     */
+    protected $invalidPacks = 0;
+
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->xmlStructure = $mainServiceLocator->get('EbsrXmlStructure');
+        $this->xmlStructureInput = $mainServiceLocator->get('EbsrXmlStructure');
         $this->busRegInput = $mainServiceLocator->get('EbsrBusRegInput');
         $this->processedDataInput = $mainServiceLocator->get('EbsrProcessedDataInput');
+        $this->shortNoticeInput = $mainServiceLocator->get('EbsrShortNoticeInput');
         $this->fileProcessor = $mainServiceLocator->get(FileProcessorInterface::class);
+        $this->result = new Result();
 
         return parent::createService($serviceLocator);
     }
@@ -95,195 +113,217 @@ final class ProcessPacks extends AbstractCommandHandler implements
     public function handleCommand(CommandInterface $command)
     {
         /** @var ProcessPacksCmd $command */
-        $result = new Result();
-
         $packs = $command->getPacks();
 
         /** @var OrganisationEntity $organisation */
         $organisation = $this->getCurrentOrganisation();
 
-        $validPacks = 0;
-        $invalidPacks = 0;
-
         foreach ($packs as $packId) {
-            /** @var DocumentEntity $document */
-            $document = $this->getRepo('Document')->fetchById($packId);
-            $ebsrSubmission = $this->createEbsrSubmission($organisation, $document, $command->getSubmissionType());
-            $this->getRepo('EbsrSubmission')->save($ebsrSubmission);
-            $result->addId('ebsrSubmission_' . $ebsrSubmission->getId(), $ebsrSubmission->getId());
+            /** @var DocumentEntity $doc */
+            $doc = $this->getRepo('Document')->fetchById($packId);
+            $ebsrSub = $this->createEbsrSubmission($organisation, $doc, $command->getSubmissionType());
+            $this->getRepo('EbsrSubmission')->save($ebsrSub);
+            $this->result->addId('ebsrSubmission_' . $ebsrSub->getId(), $ebsrSub->getId());
 
             try {
-                $xmlFilename = $this->fileProcessor->fetchXmlFileNameFromDocumentStore($document->getIdentifier());
+                $xmlName = $this->fileProcessor->fetchXmlFileNameFromDocumentStore($doc->getIdentifier());
             } catch (\RuntimeException $e) {
-                $invalidPacks++;
-                $result = $this->addErrorMessages($result, $document, [$e->getMessage()], false);
-                $this->setEbsrSubmissionFailed($ebsrSubmission);
+                $this->invalidPacks++;
+                $this->addErrorMessages($doc, [$e->getMessage()], '');
+                $this->setEbsrSubmissionFailed($ebsrSub);
 
                 continue;
             }
 
-            $this->xmlStructure->setValue($xmlFilename);
+            //validate the xml structure
+            $xmlDocContext = ['xml_filename' => $xmlName];
+            $ebsrDoc = $this->validateInput('xmlStructure', $ebsrSub, $doc, $xmlName, $xmlName, $xmlDocContext);
 
-            if (!$this->xmlStructure->isValid(['xml_filename' => $xmlFilename])) {
-                $invalidPacks++;
-                $result = $this->addErrorMessages($result, $document, $this->xmlStructure->getMessages(), $xmlFilename);
-                $this->setEbsrSubmissionFailed($ebsrSubmission);
-
+            if ($ebsrDoc === false) {
                 continue;
             }
-
-            $ebsrDoc = $this->xmlStructure->getValue();
-
-            $this->busRegInput->setValue($ebsrDoc);
 
             $busRegInputContext = [
                 'submissionType' => $command->getSubmissionType(),
                 'organisation' => $organisation
             ];
 
-            if (!$this->busRegInput->isValid($busRegInputContext)) {
-                $invalidPacks++;
-                $result = $this->addErrorMessages($result, $document, $this->busRegInput->getMessages(), $xmlFilename);
-                $this->setEbsrSubmissionFailed($ebsrSubmission);
+            //do some pre-doctrine data processing
+            $ebsrData = $this->validateInput('busReg', $ebsrSub, $doc, $xmlName, $ebsrDoc, $busRegInputContext);
 
+            if ($ebsrData === false) {
                 continue;
             }
 
-            //this is ebsr data we could validate without the help of doctrine
-            $ebsrData = $this->busRegInput->getValue();
+            //we now have xml data we can add to our ebsr submission record
+            $ebsrSub = $this->addXmlDataToEbsrSubmission($ebsrSub, $ebsrData);
 
             //get the parts of the data we need doctrine for
-            $ebsrData = $this->processEbsrInformation($ebsrData);
+            $ebsrData = $this->getDoctrineInformation($ebsrData);
 
-            //now do the validation we can only do post doctrine
-            $this->processedDataInput->setValue($ebsrData);
+            /** @var BusRegEntity $previousBusReg */
+            $previousBusReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
 
-            if (!$this->processedDataInput->isValid()) {
-                $invalidPacks++;
-                $messages = $this->processedDataInput->getMessages();
-                $result = $this->addErrorMessages($result, $document, $messages, $xmlFilename);
-                $this->setEbsrSubmissionFailed($ebsrSubmission);
+            //we now have the data from doctrine, so validate this additional data
+            $processedContext = ['busReg' => $previousBusReg];
+            $ebsrData = $this->validateInput('processedData', $ebsrSub, $doc, $xmlName, $ebsrData, $processedContext);
 
+            if ($ebsrData === false) {
                 continue;
             }
 
-            $ebsrData = $this->processedDataInput->getValue();
+            //we have valid data, so build a bus reg record
+            $busReg = $this->createBusReg($ebsrData, $previousBusReg);
 
-            $ebsrSubmission->updateStatus(
-                $this->getRepo()->getRefdataReference(EbsrSubmissionEntity::VALIDATED_STATUS)
-            );
-
-            $ebsrSubmission->setLicenceNo($ebsrData['licNo']);
-            $ebsrSubmission->setVariationNo($ebsrData['variationNo']);
-            $ebsrSubmission->setRegistrationNo($ebsrData['routeNo']);
-            $ebsrSubmission->setOrganisationEmailAddress($ebsrData['organisationEmail']);
-            $this->getRepo('EbsrSubmission')->save($ebsrSubmission);
-
-            try {
-                $busReg = $this->createBusReg($ebsrData);
-            } catch (Exception\NotFoundException $e) {
-                $invalidPacks++;
-                $result = $this->addErrorMessages($result, $document, $e->getMessages(), $xmlFilename);
-                $this->setEbsrSubmissionFailed($ebsrSubmission);
-
-                continue;
-            } catch (Exception\ForbiddenException $e) {
-                $invalidPacks++;
-                $result = $this->addErrorMessages($result, $document, $e->getMessages(), $xmlFilename);
-                $this->setEbsrSubmissionFailed($ebsrSubmission);
-
+            //we can only validate short notice data once we've created the bus reg
+            if (!$this->validateInput('shortNotice', $ebsrSub, $doc, $xmlName, $ebsrData, ['busReg' => $busReg])) {
                 continue;
             }
 
-            $busSubmissions = new ArrayCollection();
-            $busSubmissions->add($ebsrSubmission);
-            $busReg->setEbsrSubmissions($busSubmissions);
+            //short notice has passed validation
+            if ($busReg->getIsShortNotice() === 'Y') {
+                $busReg->getShortNotice()->fromData($ebsrData['busShortNotice']);
+            }
 
+            //update the ebsr submission to show a validated status
+            $ebsrSub->updateStatus($this->getRepo()->getRefdataReference(EbsrSubmissionEntity::VALIDATED_STATUS));
+
+            //save the submission and the bus reg
+            $this->getRepo('EbsrSubmission')->save($ebsrSub);
+            $busReg->setEbsrSubmissions(new ArrayCollection([$ebsrSub]));
             $this->getRepo()->save($busReg);
 
-            $sideEffects = $this->getSideEffects($ebsrData, $busReg, dirname($xmlFilename));
+            //update submission status to processed
+            $ebsrSub->updateStatus($this->getRepo()->getRefdataReference(EbsrSubmissionEntity::PROCESSED_STATUS));
+            $ebsrSub->setBusReg($busReg);
+            $this->getRepo('EbsrSubmission')->save($ebsrSub);
 
-            $ebsrSubmission->updateStatus(
-                $this->getRepo()->getRefdataReference(EbsrSubmissionEntity::PROCESSED_STATUS)
-            );
-
-            $ebsrSubmission->setBusReg($busReg);
-
-            $this->getRepo('EbsrSubmission')->save($ebsrSubmission);
-
+            //trigger side effects (persist docs, txc inbox, create task, request a route map, create fee, send email)
+            $sideEffects = $this->getSideEffects($ebsrData, $busReg, dirname($xmlName));
             $this->handleSideEffects($sideEffects);
-            $validPacks++;
 
-            $result->addMessage(
-                $document->getDescription() . '(' . basename($xmlFilename) . '): file processed successfully'
+            $this->validPacks++;
+
+            $this->result->addMessage(
+                $doc->getDescription() . '(' . basename($xmlName) . '): file processed successfully'
             );
         }
 
-        $result->addId('valid', $validPacks);
-        $result->addId('errors', $invalidPacks);
+        $this->result->addId('valid', $this->validPacks);
+        $this->result->addId('errors', $this->invalidPacks);
 
-        return $result;
+        return $this->result;
     }
 
     /**
-     * @param Result $result
-     * @param DocumentEntity $document
-     * @param array $messages
-     * @param string|bool $xmlFilename
-     * @return Result
+     * @param string $filter
+     * @param EbsrSubmissionEntity $ebsrSub
+     * @param DocumentEntity $doc
+     * @param string $xmlName
+     * @param array $value
+     * @param array $context
+     *
+     * @return array|bool
      */
-    private function addErrorMessages(Result $result, DocumentEntity $document, array $messages, $xmlFilename)
-    {
-        $filename = '';
+    private function validateInput(
+        $filter,
+        EbsrSubmissionEntity $ebsrSub,
+        DocumentEntity $doc,
+        $xmlName,
+        $value,
+        $context = []
+    ) {
+        $inputFilter = $filter . 'Input';
 
-        if ($xmlFilename) {
-            $filename = ' (' . basename($xmlFilename) . ')';
+        $this->$inputFilter->setValue($value);
+
+        if (!$this->$inputFilter->isValid($context)) {
+            $this->invalidPacks++;
+            $messages = $this->$inputFilter->getMessages();
+            $this->addErrorMessages($doc, $messages, $xmlName);
+            $this->setEbsrSubmissionFailed($ebsrSub);
+
+            return false;
         }
 
-        $result->addId(
-            'error_messages',
-            'Error with ' . $document->getDescription() . $filename .
-            ': ' . strtolower(implode(', ', $messages)) . ' - not processed',
-            true
-        );
+        return $this->$inputFilter->getValue();
+    }
 
-        return $result;
+    /**
+     * @param DocumentEntity $doc
+     * @param array $messages
+     * @param string $xmlName
+     * @return Result
+     */
+    private function addErrorMessages(DocumentEntity $doc, array $messages, $xmlName)
+    {
+        $filename = '';
+        $joinedMessages = strtolower(implode(', ', $messages));
+
+        if (!empty($xmlName)) {
+            $filename = ' (' . basename($xmlName) . ')';
+        }
+
+        $errorMsg = 'Error with ' . $doc->getDescription() . $filename . ': ' . $joinedMessages . ' - not processed';
+        $this->result->addId('error_messages', $errorMsg, true);
+
+        return $this->result;
     }
 
     /**
      * @param OrganisationEntity $organisation
-     * @param DocumentEntity $document
+     * @param DocumentEntity $doc
      * @param $submissionType
      * @return EbsrSubmissionEntity
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
-    private function createEbsrSubmission(OrganisationEntity $organisation, DocumentEntity $document, $submissionType)
+    private function createEbsrSubmission(OrganisationEntity $organisation, DocumentEntity $doc, $submissionType)
     {
         return new EbsrSubmissionEntity(
             $organisation,
             $this->getRepo()->getRefdataReference(EbsrSubmissionEntity::VALIDATING_STATUS),
             $this->getRepo()->getRefdataReference($submissionType),
-            $document,
+            $doc,
             new \DateTime()
         );
     }
 
-    private function setEbsrSubmissionFailed($ebsrSubmission)
+    /**
+     * Add in ebsr submission data after the file has been processed
+     *
+     * @param EbsrSubmissionEntity $ebsrSub
+     * @param array $ebsrData
+     * @return EbsrSubmissionEntity
+     */
+    private function addXmlDataToEbsrSubmission(EbsrSubmissionEntity $ebsrSub, array $ebsrData)
     {
-        $ebsrSubmission->updateStatus(
-            $this->getRepo()->getRefdataReference(EbsrSubmissionEntity::FAILED_STATUS)
-        );
+        $ebsrSub->setLicenceNo($ebsrData['licNo']);
+        $ebsrSub->setVariationNo($ebsrData['variationNo']);
+        $ebsrSub->setRegistrationNo($ebsrData['routeNo']);
+        $ebsrSub->setOrganisationEmailAddress($ebsrData['organisationEmail']);
 
-        $this->getRepo('EbsrSubmission')->save($ebsrSubmission);
-        return $ebsrSubmission;
+        return $ebsrSub;
     }
 
     /**
+     * @param EbsrSubmissionEntity $ebsrSub
+     * @return EbsrSubmissionEntity
+     */
+    private function setEbsrSubmissionFailed($ebsrSub)
+    {
+        $ebsrSub->updateStatus($this->getRepo()->getRefdataReference(EbsrSubmissionEntity::FAILED_STATUS));
+        $this->getRepo('EbsrSubmission')->save($ebsrSub);
+        return $ebsrSub;
+    }
+
+    /**
+     * Creates the bus registration
+     *
      * @param array $ebsrData
-     * @throws Exception\ForbiddenException
+     * @param BusRegEntity $previousBusReg
      * @return BusRegEntity
      */
-    private function createBusReg(array $ebsrData)
+    private function createBusReg(array $ebsrData, BusRegEntity $previousBusReg)
     {
         //decide what to do based on txcAppType
         switch ($ebsrData['txcAppType']) {
@@ -291,26 +331,14 @@ final class ProcessPacks extends AbstractCommandHandler implements
                 $busReg = $this->createNew($ebsrData);
                 break;
             case 'cancel':
-                $busReg = $this->createCancel($ebsrData);
+                $busReg = $this->createVariation($previousBusReg, BusRegEntity::STATUS_CANCEL);
                 break;
             default:
-                $busReg = $this->createVar($ebsrData);
+                $busReg = $this->createVariation($previousBusReg, BusRegEntity::STATUS_VAR);
         }
 
         $busReg->fromData($this->prepareBusRegData($ebsrData));
-
         $busReg->populateShortNotice();
-
-        if ($busReg->getIsShortNotice() === 'Y') {
-            if (empty($ebsrData['busShortNotice'])) {
-                throw new Exception\ForbiddenException(
-                    'This application is short notice, but the file doesn\'t have a short notice section'
-                );
-            }
-
-            $busReg->getShortNotice()->createEbsrShortNotice($ebsrData['busShortNotice']);
-        }
-
         $this->processServiceNumbers($busReg, $ebsrData['otherServiceNumbers']);
 
         return $busReg;
@@ -333,11 +361,12 @@ final class ProcessPacks extends AbstractCommandHandler implements
     /**
      * @param array $ebsrData
      * @param BusRegEntity $busReg
+     * @param string $docPath
      * @return array
      */
-    private function getSideEffects(array $ebsrData, BusRegEntity $busReg, $documentPath)
+    private function getSideEffects(array $ebsrData, BusRegEntity $busReg, $docPath)
     {
-        $sideEffects = $this->persistDocuments($ebsrData, $busReg, $documentPath);
+        $sideEffects = $this->persistDocuments($ebsrData, $busReg, $docPath);
         $sideEffects[] = $this->createTxcInboxCmd($busReg->getId());
         $sideEffects[] = $this->createTaskCommand($busReg);
         $sideEffects[] = $this->getRequestMapQueueCmd($busReg->getId());
@@ -348,13 +377,13 @@ final class ProcessPacks extends AbstractCommandHandler implements
             $sideEffects[] = CreateBusFeeCmd::create(['id' => $busReg->getId()]);
         }
 
-        /** @var EbsrSubmissionEntity $ebsrSubmission */
-        $ebsrSubmission = $busReg->getEbsrSubmissions()->first();
+        /** @var EbsrSubmissionEntity $ebsrSub */
+        $ebsrSub = $busReg->getEbsrSubmissions()->first();
 
-        if ($ebsrSubmission->isDataRefresh()) {
-            $sideEffects[] = $this->getEbsrRefreshedEmailCmd($ebsrSubmission->getId());
+        if ($ebsrSub->isDataRefresh()) {
+            $sideEffects[] = $this->getEbsrRefreshedEmailCmd($ebsrSub->getId());
         } else {
-            $sideEffects[] = $this->getEbsrReceivedEmailCmd($ebsrSubmission->getId());
+            $sideEffects[] = $this->getEbsrReceivedEmailCmd($ebsrSub->getId());
         }
 
         return $sideEffects;
@@ -363,32 +392,25 @@ final class ProcessPacks extends AbstractCommandHandler implements
     /**
      * @param array $ebsrData
      * @param BusRegEntity $busReg
+     * @param string $docPath
      * @return array
      */
-    private function persistDocuments(array $ebsrData, BusRegEntity $busReg, $documentPath)
+    private function persistDocuments(array $ebsrData, BusRegEntity $busReg, $docPath)
     {
         $sideEffects = [];
 
         //store any supporting documents
         if (isset($ebsrData['documents'])) {
-            foreach ($ebsrData['documents'] as $documentName) {
-                $sideEffects[] = $this->persistSupportingDocument(
-                    $documentPath . '/' . $documentName,
-                    $busReg,
-                    $documentName,
-                    'Supporting document'
-                );
+            foreach ($ebsrData['documents'] as $docName) {
+                $path = $docPath . '/' . $docName;
+                $sideEffects[] = $this->persistSupportingDoc($path, $busReg, $docName, 'Supporting document');
             }
         }
 
         //store a new map if present
         if (isset($ebsrData['map'])) {
-            $sideEffects[] = $this->persistSupportingDocument(
-                $documentPath . '/' . $ebsrData['map'],
-                $busReg,
-                $ebsrData['map'],
-                'Schematic map'
-            );
+            $path = $docPath . '/' . $ebsrData['map'];
+            $sideEffects[] = $this->persistSupportingDoc($path, $busReg, $ebsrData['map'], 'Schematic map');
         }
 
         return $sideEffects;
@@ -401,7 +423,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
      * @param string $description
      * @return UploadCmd
      */
-    private function persistSupportingDocument($content, BusRegEntity $busReg, $filename, $description)
+    private function persistSupportingDoc($content, BusRegEntity $busReg, $filename, $description)
     {
         $data = [
             'content' => base64_encode(file_get_contents($content)),
@@ -502,20 +524,14 @@ final class ProcessPacks extends AbstractCommandHandler implements
      */
     private function createNew(array $ebsrData)
     {
-        /** @var BusRegEntity $busReg */
-        $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['licNo'] . '/' . $ebsrData['routeNo']);
-
-        if ($busReg instanceof BusRegEntity) {
-            throw new Exception\ForbiddenException('A new application must not reuse an existing registration number');
-        }
-
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo('Licence')->fetchByLicNo($ebsrData['licNo']);
+        $refDataStatus = $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_NEW);
 
         $newBusReg = BusRegEntity::createNew(
             $licence,
-            $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_NEW),
-            $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_NEW),
+            $refDataStatus,
+            $refDataStatus,
             $ebsrData['subsidised'],
             $ebsrData['busNoticePeriod']
         );
@@ -527,74 +543,14 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
-     * Create a cancellation
-     *
-     * @param array $ebsrData
-     * @throws Exception\ForbiddenException
+     * @param BusRegEntity $busReg
+     * @param string $status
      * @return BusRegEntity
      */
-    private function createCancel(array $ebsrData)
+    private function createVariation(BusRegEntity $busReg, $status)
     {
-        /** @var BusRegEntity $busReg */
-        $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['licNo'] . '/' . $ebsrData['routeNo']);
-
-        if (!$busReg instanceof BusRegEntity) {
-            throw new Exception\ForbiddenException('The bus registration number you provided wasn\'t found');
-        }
-
-        if (!$busReg->getStatus()->getId() === BusRegEntity::STATUS_REGISTERED) {
-            throw new Exception\ForbiddenException(
-                'You can only create a cancellation against a registered bus route'
-            );
-        }
-
-        //variation should be the same as the variation on the original bus reg
-        if ($busReg->getVariationNo() != $ebsrData['variationNo']) {
-            throw new Exception\ForbiddenException(
-                'Variation number should be 1 greater than the previous variation number'
-            );
-        }
-
-        return $busReg->createVariation(
-            $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_CANCEL),
-            $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_CANCEL)
-        );
-    }
-
-    /**
-     * Create a variation
-     *
-     * @param array $ebsrData
-     * @throws Exception\ForbiddenException
-     * @return BusRegEntity
-     */
-    private function createVar(array $ebsrData)
-    {
-        /** @var BusRegEntity $busReg */
-        $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['licNo'] . '/' . $ebsrData['routeNo']);
-
-        if (!$busReg instanceof BusRegEntity) {
-            throw new Exception\ForbiddenException('The bus registration number you provided wasn\'t found');
-        }
-
-        if (!$busReg->getStatus()->getId() === BusRegEntity::STATUS_REGISTERED) {
-            throw new Exception\ForbiddenException(
-                'You can only create a variation against a registered bus route'
-            );
-        }
-
-        $newBusReg = $busReg->createVariation(
-            $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_VAR),
-            $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_VAR)
-        );
-
-        if ($newBusReg->getVariationNo() != $ebsrData['variationNo']) {
-            throw new Exception\ForbiddenException(
-                'Variation number should be 1 greater than the previous variation number'
-            );
-        }
-
-        return $newBusReg;
+        $refDataStatus = $this->getRepo()->getRefdataReference($status);
+        return $busReg->createVariation($refDataStatus, $refDataStatus);
     }
 
     /**
@@ -603,7 +559,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
      * @param array $ebsrData
      * @return array
      */
-    private function processEbsrInformation(array $ebsrData)
+    private function getDoctrineInformation(array $ebsrData)
     {
         $ebsrData['subsidised'] = $this->getRepo()->getRefdataReference($ebsrData['subsidised']);
         $ebsrData['naptanAuthorities'] = $this->processNaptan($ebsrData['naptan']);
@@ -625,7 +581,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
      */
     private function processServiceTypes(array $serviceTypes)
     {
-        $result = new ArrayCollection();
+        $collection = new ArrayCollection();
 
         if (!empty($serviceTypes)) {
             $serviceTypeArray = array_keys($serviceTypes);
@@ -634,17 +590,17 @@ final class ProcessPacks extends AbstractCommandHandler implements
 
             /** @var BusServiceTypeEntity $serviceType */
             foreach ($serviceTypeList as $serviceType) {
-                $result->add($serviceType);
+                $collection->add($serviceType);
             }
         }
 
-        return $result;
+        return $collection;
     }
 
     /**
      * @param BusRegEntity $busReg
      * @param array $serviceNumbers
-     * @return array
+     * @return BusRegEntity
      */
     private function processServiceNumbers(BusRegEntity $busReg, array $serviceNumbers)
     {
@@ -666,18 +622,18 @@ final class ProcessPacks extends AbstractCommandHandler implements
      */
     private function processLocalAuthority(array $localAuthority)
     {
-        $result = new ArrayCollection();
+        $collection = new ArrayCollection();
 
         if (!empty($localAuthority)) {
             $laList = $this->getRepo('LocalAuthority')->fetchByTxcName($localAuthority);
 
             /** @var LocalAuthorityEntity $la */
             foreach ($laList as $la) {
-                $result->add($la);
+                $collection->add($la);
             }
         }
 
-        return $result;
+        return $collection;
     }
 
     /**
@@ -688,18 +644,18 @@ final class ProcessPacks extends AbstractCommandHandler implements
      */
     private function processNaptan(array $naptan)
     {
-        $result = new ArrayCollection();
+        $collection = new ArrayCollection();
 
         if (!empty($naptan)) {
             $laList = $this->getRepo('LocalAuthority')->fetchByNaptan($naptan);
 
             /** @var LocalAuthorityEntity $la */
             foreach ($laList as $la) {
-                $result->add($la);
+                $collection->add($la);
             }
         }
 
-        return $result;
+        return $collection;
     }
 
     /**
@@ -711,14 +667,14 @@ final class ProcessPacks extends AbstractCommandHandler implements
      */
     private function processTrafficAreas(array $trafficAreas, ArrayCollection $localAuthorities)
     {
-        $result = new ArrayCollection();
+        $collection = new ArrayCollection();
 
         if (!empty($trafficAreas)) {
             $taList = $this->getRepo('TrafficArea')->fetchByTxcName($trafficAreas);
 
             /** @var TrafficAreaEntity $ta */
             foreach ($taList as $ta) {
-                $result->add($ta);
+                $collection->add($ta);
             }
         }
 
@@ -728,11 +684,11 @@ final class ProcessPacks extends AbstractCommandHandler implements
         foreach ($localAuthorities as $la) {
             $ta = $la->getTrafficArea();
 
-            if (!$result->contains($ta)) {
-                $result->add($ta);
+            if (!$collection->contains($ta)) {
+                $collection->add($ta);
             }
         }
 
-        return $result;
+        return $collection;
     }
 }

@@ -89,6 +89,7 @@ return [
             'EbsrXmlStructure' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory::class,
             'EbsrBusRegInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory::class,
             'EbsrProcessedDataInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory::class,
+            'EbsrShortNoticeInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory::class,
             'TrafficAreaValidator' => \Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator::class,
 
             \Dvsa\Olcs\Api\Service\Nr\InrClientInterface::class => Dvsa\Olcs\Api\Service\Nr\InrClientFactory::class,
@@ -594,10 +595,22 @@ return [
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class,
-            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityNotRequired::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityNotRequired::class,
-            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityMissing::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityMissing::class
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityNotRequired::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityNotRequired::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\NewAppAlreadyExists::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\NewAppAlreadyExists::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\BusRegNotFound::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\BusRegNotFound::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\RegisteredBusRoute::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\RegisteredBusRoute::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\VariationNumber::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\VariationNumber::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingSection::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingSection::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason::class
         ],
         'aliases' => [
             'Structure\Operator' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class,
@@ -607,10 +620,22 @@ return [
             'Rules\EffectiveDate' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate::class,
             'Rules\ApplicationType' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class,
             'Rules\Licence' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class,
-            'Rules\LocalAuthorityNotRequired' =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityNotRequired::class,
-            'Rules\LocalAuthorityMissing' =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\LocalAuthorityMissing::class
+            'Rules\ProcessedData\LocalAuthorityNotRequired' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityNotRequired::class,
+            'Rules\ProcessedData\LocalAuthorityMissing' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class,
+            'Rules\ProcessedData\NewAppAlreadyExists' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\NewAppAlreadyExists::class,
+            'Rules\ProcessedData\BusRegNotFound' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\BusRegNotFound::class,
+            'Rules\ProcessedData\RegisteredBusRoute' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\RegisteredBusRoute::class,
+            'Rules\ProcessedData\VariationNumber' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\VariationNumber::class,
+            'Rules\ShortNotice\MissingSection' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingSection::class,
+            'Rules\ShortNotice\MissingReason' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason::class
         ]
     ],
     'filters' => [
@@ -629,6 +654,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class
         ],
         'aliases' => [
             'IsScottishRules' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
@@ -637,6 +664,7 @@ return [
             'InjectNaptanCodes' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes::class,
             'Format\Subsidy' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class,
             'Format\Via' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class,
+            'Format\ExistingRegNo' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class,
         ]
     ],
 ];

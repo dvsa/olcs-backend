@@ -44,7 +44,8 @@ class ApplicationOperatingCentre extends AbstractQueryHandler
                 'canUpdateAddress' => ($application->isNew() || $aoc->getAction() === 'A'),
                 'wouldIncreaseRequireAdditionalAdvertisement' => $application->isVariation(),
                 'currentVehiclesRequired' => $this->getNoOfVehiclesRequired($aoc, $application->getLicence()),
-                'currentTrailersRequired' => $this->getNoOfTrailersRequired($aoc, $application->getLicence())
+                'currentTrailersRequired' => $this->getNoOfTrailersRequired($aoc, $application->getLicence()),
+                'niFlag' => $application->getNiFlag()
             ]
         );
     }

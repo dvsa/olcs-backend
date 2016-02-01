@@ -12,20 +12,63 @@ use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory;
  */
 class ProcessedDataInputFactoryTest extends TestCase
 {
+    /**
+     * Tests create service
+     */
     public function testCreateService()
     {
         $mockValidator = m::mock('Zend\Validator\AbstractValidator');
 
         $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
-        $mockSl->shouldReceive('get')->with('Rules\LocalAuthorityNotRequired')->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')->with('Rules\LocalAuthorityMissing')->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with('Rules\ProcessedData\BusRegNotFound')->once()->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with('Rules\ProcessedData\VariationNumber')->once()->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')
+            ->with('Rules\ProcessedData\NewAppAlreadyExists')
+            ->once()
+            ->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')
+            ->with('Rules\ProcessedData\RegisteredBusRoute')
+            ->once()
+            ->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')
+            ->with('Rules\ProcessedData\LocalAuthorityNotRequired')
+            ->once()
+            ->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')
+            ->with('Rules\ProcessedData\LocalAuthorityMissing')
+            ->once()
+            ->andReturn($mockValidator);
 
         $sut = new ProcessedDataInputFactory();
         $service = $sut->createService($mockSl);
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
-        $this->assertCount(2, $service->getValidatorChain());
+        $this->assertCount(6, $service->getValidatorChain());
+    }
+
+    /**
+     * Tests create service with disabled validators
+     */
+    public function testCreateServiceDisabledValidators()
+    {
+        $config = [
+            'ebsr' => [
+                'validate' => [
+                    'processed_data' => false
+                ]
+            ]
+        ];
+
+        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
+
+        $sut = new ProcessedDataInputFactory();
+        $service = $sut->createService($mockSl);
+
+        $this->assertInstanceOf('Zend\InputFilter\Input', $service);
+        $this->assertCount(0, $service->getValidatorChain());
     }
 }

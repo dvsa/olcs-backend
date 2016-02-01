@@ -48,10 +48,10 @@ interface UserInterface
     /**
      * Disables a user
      *
-     * @param string $username
+     * @param string $pid
      *
      * @return void
      * @throws FailedRequestException
      */
-    public function disableUser($username);
+    public function disableUser($pid);
 }

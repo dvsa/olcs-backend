@@ -107,7 +107,7 @@ class BatchController extends AbstractConsoleController
         // build array of commands (once per licence)
         $commands = [];
         foreach ($licences as $licence) {
-            $this->writeVerboseMessages("Processing Licence ID {$licence['id']}");
+            $this->writeVerboseMessages("Queue Licence ID {$licence['id']}");
             $commands[] = Command\Licence\ProcessContinuationNotSought::create(
                 [
                     'id' => $licence['id'],
@@ -126,6 +126,7 @@ class BatchController extends AbstractConsoleController
 
         // execute commands
         if (!$dryRun) {
+            $this->writeVerboseMessages("Processing commands");
             return $this->handleExitStatus($this->handleCommand($commands));
         }
 
@@ -249,12 +250,11 @@ class BatchController extends AbstractConsoleController
      */
     protected function handleCommand(array $dto)
     {
-        $this->writeVerboseMessages((new DateTime())->format(\DateTime::W3C));
-
         try {
-            $result = new Command\Result();
             foreach ($dto as $dtoCommand) {
-                $result->merge($this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dtoCommand));
+                $this->writeVerboseMessages("Handle command ". get_class($dtoCommand));
+                $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dtoCommand);
+                $this->writeVerboseMessages($result->getMessages());
             }
         } catch (Exception\NotFoundException $e) {
             $this->writeVerboseMessages(['NotFoundException', $e->getMessage()]);
@@ -266,8 +266,6 @@ class BatchController extends AbstractConsoleController
             $this->writeVerboseMessages($e->getMessage());
             return 500;
         }
-
-        $this->writeVerboseMessages($result->getMessages());
 
         return 0;
     }
@@ -281,9 +279,8 @@ class BatchController extends AbstractConsoleController
      */
     protected function handleQuery(QueryInterface $dto)
     {
-        $this->writeVerboseMessages((new DateTime())->format(\DateTime::W3C));
-
         try {
+            $this->writeVerboseMessages("Handle command ". get_class($dto));
             return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
         } catch (Exception\NotFoundException $e) {
             $this->writeVerboseMessages(['NotFoundException', $e->getMessage()]);
@@ -321,7 +318,7 @@ class BatchController extends AbstractConsoleController
             $messages = [$messages];
         }
         foreach ($messages as $message) {
-            $this->getConsole()->writeLine($message);
+            $this->getConsole()->writeLine((new DateTime())->format(\DateTime::W3C) .' '. $message);
         }
     }
 }

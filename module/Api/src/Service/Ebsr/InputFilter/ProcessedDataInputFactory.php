@@ -19,11 +19,34 @@ class ProcessedDataInputFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $service = new Input('processed_data');
+        $inputName = 'processed_data';
+        $service = new Input($inputName);
+        $config = $serviceLocator->get('Config');
 
         $validatorChain = $service->getValidatorChain();
-        $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\LocalAuthorityNotRequired'));
-        $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\LocalAuthorityMissing'));
+
+        //allows validators to be switched off (debug only, not to be used for production)
+        if (!isset($config['ebsr']['validate'][$inputName]) || $config['ebsr']['validate'][$inputName] === true) {
+            $validatorChain->attach(
+                $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\BusRegNotFound'),
+                true
+            );
+            $validatorChain->attach(
+                $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\NewAppAlreadyExists')
+            );
+            $validatorChain->attach(
+                $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\RegisteredBusRoute')
+            );
+            $validatorChain->attach(
+                $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\LocalAuthorityNotRequired')
+            );
+            $validatorChain->attach(
+                $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\LocalAuthorityMissing')
+            );
+            $validatorChain->attach(
+                $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\VariationNumber')
+            );
+        }
 
         return $service;
     }

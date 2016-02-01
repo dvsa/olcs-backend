@@ -49,9 +49,11 @@ class QueryHandlerManager extends AbstractPluginManager implements QueryHandlerI
         $this->validateDto($query, $queryHandlerFqcl);
 
         $response = $queryHandler->handleQuery($query);
-
         if ($query instanceof LoggerOmitResponseInterface) {
             $logData = ['*** OMITTED ***'];
+        } elseif (is_object($response) && $response instanceof QueryHandler\BundleSerializableInterface) {
+            // if response is an Entity
+            $logData = $response->serialize();
         } else {
             $logData = (array)$response;
         }

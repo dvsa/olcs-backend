@@ -53,11 +53,11 @@ class DeleteUserTest extends CommandHandlerTestCase
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('disableUser')
             ->once()
-            ->with('login_id');
+            ->with('pid');
 
         $userEntity = m::mock(UserEntity::class)->makePartial();
         $userEntity->setId(1);
-        $userEntity->setLoginId('login_id');
+        $userEntity->setPid('pid');
 
         $this->repoMap['User']
             ->shouldReceive('fetchUsingId')
