@@ -209,6 +209,13 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
         $user = User::create($pid, User::USER_TYPE_TRANSPORT_MANAGER, $userData);
         $user->setContactDetails($contactDetails);
 
+        $organisationUser = new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser();
+        $organisationUser->setUser($user);
+        $organisationUser->setOrganisation(
+            $transportManagerApplication->getApplication()->getLicence()->getOrganisation()
+        );
+        $user->addOrganisationUsers($organisationUser);
+
         $this->getRepo('User')->save($user);
 
         $password = null;
