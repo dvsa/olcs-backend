@@ -236,7 +236,7 @@ class DocumentSearchView
      *
      * @ORM\Column(type="datetime", name="sent_date", nullable=true)
      */
-    protected $sendDate;
+    protected $sentDate;
 
     /**
      * Get the id
