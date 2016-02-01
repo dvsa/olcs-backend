@@ -27,6 +27,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Tm\CreateNewUser as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 
 /**
  * Create New User
@@ -77,6 +78,14 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
         $this->result->addId('transportManagerId', $transportManager->getId());
 
         $transportManagerApplication = $this->createTmApplication($transportManager, $application, $command);
+
+        $this->result->merge(
+            $this->handleSideEffect(
+                UpdateApplicationCompletion::create(
+                    ['id' => $command->getApplication(), 'section' => 'transportManagers']
+                )
+            )
+        );
 
         $this->result->addId('transportManagerApplicationId', $transportManagerApplication->getId());
 
