@@ -25,6 +25,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Tm\CreateNewUser as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 
 /**
  * Create New User Test
@@ -161,6 +162,15 @@ class CreateNewUserTest extends CommandHandlerTestCase
                     );
                 }
             );
+
+        $this->expectedSideEffect(
+            UpdateApplicationCompletion::class,
+            [
+                'id' => 111,
+                'section' => 'transportManagers'
+            ],
+            new Result()
+        );
 
         $response = $this->sut->handleCommand($command);
 
@@ -340,6 +350,15 @@ class CreateNewUserTest extends CommandHandlerTestCase
                     );
                 }
             );
+
+        $this->expectedSideEffect(
+            UpdateApplicationCompletion::class,
+            [
+                'id' => 111,
+                'section' => 'transportManagers'
+            ],
+            new Result()
+        );
 
         $response = $this->sut->handleCommand($command);
 
