@@ -14,10 +14,20 @@ final class PublicationLinkList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'PublicationLink';
 
+    protected $extraRepos = ['Application'];
+
     public function handleQuery(QueryInterface $query)
     {
         /* @var $query Query */
         $repo = $this->getRepo();
+
+        $applicationId = $query->getApplication();
+        if ($applicationId) {
+            $application = $this->getRepo('Application')->fetchWithLicence($applicationId);
+            $licenceId = $application->getLicence()->getId();
+            $query->setLicence($licenceId);
+            $query->setApplication(null);
+        }
 
         return [
             'result' => $this->resultList(
