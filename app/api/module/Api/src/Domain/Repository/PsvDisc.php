@@ -84,7 +84,7 @@ class PsvDisc extends AbstractRepository
     protected function setIsPrinting($type, $discIds)
     {
         return $this->getDbQueryManager()->get('Discs\PsvDiscsSetIsPrinting')
-            ->executeUpdate(
+            ->execute(
                 ['isPrinting' => $type, 'ids' => $discIds],
                 ['isPrinting' => \PDO::PARAM_INT, 'ids' => Connection::PARAM_INT_ARRAY]
             );
@@ -93,7 +93,7 @@ class PsvDisc extends AbstractRepository
     public function setIsPrintingOffAndAssignNumbers($discIds, $startNumber)
     {
         return $this->getDbQueryManager()->get('Discs\PsvDiscsSetIsPrintingOffAndDiscNo')
-            ->executeUpdate(
+            ->execute(
                 ['ids' => $discIds, 'startNumber' => $startNumber],
                 ['ids' => Connection::PARAM_INT_ARRAY, 'startNumber' => \PDO::PARAM_INT]
             );

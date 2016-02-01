@@ -19,40 +19,104 @@ use Zend\ServiceManager\ServiceManager;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractDbQueryTestCase extends AbstractDbTestCase
+abstract class AbstractDbQueryTestCase extends MockeryTestCase
 {
     /**
-     * @dataProvider paramProvider
+     * @var EntityManager
      */
-    public function testExecuteWithException($inputParams, $expectedParams)
+    protected $em;
+
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    protected $sut;
+
+    protected $tableNameMap = [];
+
+    protected $columnNameMap = [];
+
+    private $metaMap = [];
+
+    abstract public function paramProvider();
+    abstract protected function getSut();
+    abstract protected function getExpectedQuery();
+
+    public function setUp()
     {
-        $this->setExpectedException(RuntimeException::class);
+        $this->connection = m::mock(Connection::class);
+        $this->em = m::mock(EntityManager::class);
+        $this->em->shouldReceive('getConnection')->andReturn($this->connection);
 
-        $this->connection->shouldReceive('prepare')
-            ->with($this->getExpectedQuery())
-            ->once()
-            ->andThrow(new \Exception());
+        $this->em->shouldReceive('getClassMetadata')
+            ->andReturnUsing([$this, 'getClassMetadata']);
 
-        $this->sut->execute($inputParams);
+        $sm = m::mock(ServiceManager::class)->makePartial();
+        $sm->shouldReceive('getServiceLocator')->andReturnSelf();
+        $sm->setService('doctrine.entitymanager.orm_default', $this->em);
+
+        $sut = $this->getSut();
+        $this->sut = $sut->createService($sm);
+
+        $this->assertSame($sut, $this->sut);
+    }
+
+    public function getClassMetadata($entity)
+    {
+        if (empty($this->metaMap[$entity])) {
+            $this->metaMap[$entity] = m::mock();
+
+            $this->metaMap[$entity]->shouldReceive('getTableName')->andReturn($this->tableNameMap[$entity]);
+
+            foreach ($this->columnNameMap[$entity] as $column => $details) {
+
+                $isAssociation = isset($details['isAssociation']) ? $details['isAssociation'] : false;
+
+                $this->metaMap[$entity]->shouldReceive('isAssociationWithSingleJoinColumn')
+                    ->with($column)
+                    ->andReturn($isAssociation);
+
+                if ($isAssociation) {
+                    $this->metaMap[$entity]->shouldReceive('getSingleAssociationJoinColumnName')
+                        ->with($column)
+                        ->andReturn($details['column']);
+                } else {
+                    $this->metaMap[$entity]->shouldReceive('getColumnName')
+                        ->with($column)
+                        ->andReturn($details['column']);
+                }
+            }
+        }
+
+        return $this->metaMap[$entity];
     }
 
     /**
      * @dataProvider paramProvider
      */
-    public function testExecute($inputParams, $expectedParams)
+    public function testExecuteWithException($inputParams, $inputTypes, $expectedParams, $expectedTypes)
     {
-        $statement = m::mock();
+        $this->setExpectedException(RuntimeException::class);
 
-        $this->connection->shouldReceive('prepare')
-            ->with($this->getExpectedQuery())
+        $this->connection->shouldReceive('executeQuery')
+            ->with($this->getExpectedQuery(), $expectedParams, $expectedTypes)
             ->once()
-            ->andReturn($statement);
+            ->andThrow(new \Exception());
 
-        $statement->shouldReceive('execute')
-            ->with($expectedParams)
+        $this->sut->execute($inputParams, $inputTypes);
+    }
+
+    /**
+     * @dataProvider paramProvider
+     */
+    public function testExecute($inputParams, $inputTypes, $expectedParams, $expectedTypes)
+    {
+        $this->connection->shouldReceive('executeQuery')
+            ->with($this->getExpectedQuery(), $expectedParams, $expectedTypes)
             ->once()
             ->andReturn('result');
 
-        $this->assertEquals('result', $this->sut->execute($inputParams));
+        $this->assertEquals('result', $this->sut->execute($inputParams, $inputTypes));
     }
 }

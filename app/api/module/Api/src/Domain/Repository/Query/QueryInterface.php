@@ -19,5 +19,5 @@ interface QueryInterface
      *
      * @return mixed
      */
-    public function execute(array $params = []);
+    public function execute(array $params = [], array $paramTypes = []);
 }

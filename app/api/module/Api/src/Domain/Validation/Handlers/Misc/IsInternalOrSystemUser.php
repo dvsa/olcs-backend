@@ -10,7 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider as PidIdentityProviderEntity;
 
 /**
  * Is Internal or System User
@@ -27,6 +27,6 @@ class IsInternalOrSystemUser extends AbstractHandler implements AuthAwareInterfa
     public function isValid($dto)
     {
         $team = ($this->getUser() && $this->getUser()->getTeam()) ? $this->getUser()->getTeam()->getId() : null;
-        return $this->isInternalUser() || $team === UserEntity::SYSTEM_TEAM_ID;
+        return $this->isInternalUser() || $team === PidIdentityProviderEntity::SYSTEM_TEAM;
     }
 }

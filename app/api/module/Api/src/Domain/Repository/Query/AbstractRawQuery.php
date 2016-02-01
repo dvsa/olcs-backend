@@ -88,37 +88,18 @@ abstract class AbstractRawQuery implements QueryInterface, FactoryInterface
      * Execute the query
      *
      * @param array $params
-     * @return mixed
-     */
-    public function execute(array $params = [])
-    {
-        $params = array_merge($this->getParams(), $params);
-        $query = $this->buildQueryFromTemplate($this->getQueryTemplate());
-
-        try {
-            $statement = $this->connection->prepare($query);
-
-            return $statement->execute($params);
-        } catch (\Exception $ex) {
-            throw new RuntimeException('An unexpected error occurred while running query: ' . get_class($this));
-        }
-    }
-
-    /**
-     * Execute the update. Can be used if we need to pass param types.
-     *
-     * @param array $params
      * @param array $paramTypes
      * @return mixed
      */
-    public function executeUpdate(array $params = [], array $paramTypes = [])
+    public function execute(array $params = [], array $paramTypes = [])
     {
         $params = array_merge($this->getParams(), $params);
-        $paramTypes = array_merge($this->getParamTypes(), $paramTypes);
         $query = $this->buildQueryFromTemplate($this->getQueryTemplate());
 
         try {
-            return $this->connection->executeUpdate($query, $params, $paramTypes);
+            $paramTypes = array_merge($this->getParamTypes(), $paramTypes);
+            return $this->connection->executeQuery($query, $params, $paramTypes);
+
         } catch (\Exception $ex) {
             throw new RuntimeException('An unexpected error occurred while running query: ' . get_class($this));
         }
