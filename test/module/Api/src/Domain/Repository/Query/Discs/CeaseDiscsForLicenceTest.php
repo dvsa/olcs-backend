@@ -45,9 +45,11 @@ class CeaseDiscsForLicenceTest extends AbstractDbQueryTestCase
         return [
             [
                 [],
+                [],
                 [
                     'ceasedDate' => $today->format('Y-m-d H:i:s')
-                ]
+                ],
+                []
             ]
         ];
     }

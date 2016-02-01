@@ -9,7 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository\Query\Discs;
 
 use Dvsa\Olcs\Api\Domain\Repository\Query\Discs\GoodsDiscsSetIsPrinting;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
-use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbUpdateTestCase;
+use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbQueryTestCase;
 use Doctrine\DBAL\Connection;
 use Mockery as m;
 
@@ -18,7 +18,7 @@ use Mockery as m;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class GoodsDiscsSetIsPrintingTest extends AbstractDbUpdateTestCase
+class GoodsDiscsSetIsPrintingTest extends AbstractDbQueryTestCase
 {
     protected $tableNameMap = [
         GoodsDisc::class => 'goods_disc'

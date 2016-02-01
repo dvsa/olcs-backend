@@ -12,7 +12,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalOrSystemUser;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider as PidIdentityProviderEntity;
 
 /**
  * Is Internal or System User Test
@@ -44,7 +44,7 @@ class IsInternalOrSystemUserTest extends AbstractHandlerTestCase
             ->andReturn(
                 m::mock()
                 ->shouldReceive('getId')
-                ->andReturn(UserEntity::SYSTEM_TEAM_ID)
+                ->andReturn(PidIdentityProviderEntity::SYSTEM_TEAM)
                 ->once()
                 ->getMock()
             )

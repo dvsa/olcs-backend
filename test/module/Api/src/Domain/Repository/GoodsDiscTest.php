@@ -196,7 +196,7 @@ class GoodsDiscTest extends RepositoryTestCase
 
     public function testSetPrinting()
     {
-        $this->expectUpdateWithData(
+        $this->expectQueryWithData(
             'Discs\GoodsDiscsSetIsPrinting',
             ['isPrinting' => 1, 'ids' => [1, 2]],
             ['isPrinting' => \PDO::PARAM_INT, 'ids' => Connection::PARAM_INT_ARRAY]
@@ -207,7 +207,7 @@ class GoodsDiscTest extends RepositoryTestCase
 
     public function testSetIsPrintingOffAndAssignNumbers()
     {
-        $this->expectUpdateWithData(
+        $this->expectQueryWithData(
             'Discs\GoodsDiscsSetIsPrintingOffAndDiscNo',
             ['ids' => [1, 2], 'startNumber' => 1],
             ['ids' => Connection::PARAM_INT_ARRAY, 'startNumber' => \PDO::PARAM_INT]

@@ -9,7 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository\Query\Discs;
 
 use Dvsa\Olcs\Api\Domain\Repository\Query\Discs\PsvDiscsSetIsPrintingOffAndDiscNo;
 use Dvsa\Olcs\Api\Entity\Licence\PsvDisc;
-use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbUpdateTestCase;
+use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbQueryTestCase;
 use Doctrine\DBAL\Connection;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class PsvDiscsSetIsPrintingOffAndDiscNoTest extends AbstractDbUpdateTestCase
+class PsvDiscsSetIsPrintingOffAndDiscNoTest extends AbstractDbQueryTestCase
 {
     protected $tableNameMap = [
         PsvDisc::class => 'psv_disc'

@@ -42,9 +42,6 @@ class User extends AbstractUser implements OrganisationProviderInterface
     const ERROR_ADMIN_USER_ALREADY_EXISTS = 'err_admin_user_already_exists';
     const ERR_ANON_USERNAME = 'ERR_ANON_USERNAME';
 
-    const SYSTEM_USER_ID = 1;
-    const SYSTEM_TEAM_ID = 1;
-
     /**
      * List of all roles available by user type
      *

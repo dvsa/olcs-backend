@@ -128,7 +128,7 @@ class GoodsDisc extends AbstractRepository
     protected function setIsPrinting($type, $discIds)
     {
         return $this->getDbQueryManager()->get('Discs\GoodsDiscsSetIsPrinting')
-            ->executeUpdate(
+            ->execute(
                 ['isPrinting' => $type, 'ids' => $discIds],
                 ['isPrinting' => \PDO::PARAM_INT, 'ids' => Connection::PARAM_INT_ARRAY]
             );
@@ -137,7 +137,7 @@ class GoodsDisc extends AbstractRepository
     public function setIsPrintingOffAndAssignNumbers($discIds, $startNumber)
     {
         return $this->getDbQueryManager()->get('Discs\GoodsDiscsSetIsPrintingOffAndDiscNo')
-            ->executeUpdate(
+            ->execute(
                 ['ids' => $discIds, 'startNumber' => $startNumber],
                 ['ids' => Connection::PARAM_INT_ARRAY, 'startNumber' => \PDO::PARAM_INT]
             );
