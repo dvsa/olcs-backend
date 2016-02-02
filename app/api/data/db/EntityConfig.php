@@ -1912,6 +1912,9 @@ return array(
                     'persist'
                 )
             )
-        )
+        ),
+        'under_delegation' => array(
+            'type' => 'yesno'
+        ),
     ),
 );

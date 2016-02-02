@@ -131,9 +131,9 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Under delegation
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="under_delegation", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno", name="under_delegation", nullable=false, options={"default": 0})
      */
     protected $underDelegation = 0;
 
@@ -380,7 +380,7 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Set the under delegation
      *
-     * @param boolean $underDelegation
+     * @param string $underDelegation
      * @return SlaTargetDate
      */
     public function setUnderDelegation($underDelegation)
@@ -393,7 +393,7 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Get the under delegation
      *
-     * @return boolean
+     * @return string
      */
     public function getUnderDelegation()
     {
