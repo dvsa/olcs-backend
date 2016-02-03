@@ -127,4 +127,81 @@ class ClientTest extends MockeryTestCase
 
         $sut->updateUser('pid', [['operation' => 'replace', 'field' => 'emailAddress', 'value' => 'email2']]);
     }
+
+    public function testFetchUser()
+    {
+        $expected = ['pid' => 'some-pid'];
+
+        $sentRequest = null;
+
+        $return = function ($request) use (&$sentRequest, $expected) {
+            $sentRequest = $request;
+
+            $resp = new Response();
+            $resp->setContent(json_encode($expected));
+            return $resp;
+        };
+
+        $mockClient = m::mock(HttpClient::class);
+        $mockClient->shouldReceive('send')->with(m::type(Request::class))->andReturnUsing($return);
+
+        $request = new Request();
+        $request->setUri('http://testing.com');
+
+        $sut = new Client($mockClient, $request);
+
+        $userData = $sut->fetchUser('some-pid');
+
+        $this->assertInstanceOf(Request::class, $sentRequest);
+        $this->assertNotSame($request, $sentRequest);
+        $this->assertStringStartsWith(
+            'GET http://testing.com:80/users/some-pid',
+            $sentRequest->renderRequestLine()
+        );
+        $this->assertEquals($expected, $userData);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException
+     */
+    public function testFetchUserError()
+    {
+        $return = function () {
+            $resp = new Response();
+            $resp->setStatusCode(500);
+            return $resp;
+        };
+
+        $mockClient = m::mock(HttpClient::class);
+        $mockClient->shouldReceive('send')->with(m::type(Request::class))->andReturnUsing($return);
+
+        $request = new Request();
+        $request->setUri('http://testing.com');
+
+        $sut = new Client($mockClient, $request);
+
+        $sut->fetchUser('some-pid');
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testFetchUserJsonError()
+    {
+        $return = function () {
+            $resp = new Response();
+            $resp->setContent('invalid json');
+            return $resp;
+        };
+
+        $mockClient = m::mock(HttpClient::class);
+        $mockClient->shouldReceive('send')->with(m::type(Request::class))->andReturnUsing($return);
+
+        $request = new Request();
+        $request->setUri('http://testing.com');
+
+        $sut = new Client($mockClient, $request);
+
+        $sut->fetchUser('some-pid');
+    }
 }
