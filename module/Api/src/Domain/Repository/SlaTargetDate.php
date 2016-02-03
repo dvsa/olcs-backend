@@ -15,8 +15,6 @@ class SlaTargetDate extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    private $references = [];
-
     /**
      * Fetches SLA target date by Entity ID and Entity Type
      * Uses this as the Add command requires an entity type + an entity Id, hence this provides a composite key to
@@ -29,8 +27,8 @@ class SlaTargetDate extends AbstractRepository
     public function fetchUsingEntityIdAndType(
         $entityType,
         $entityId,
-        $hydrateMode = Query::HYDRATE_OBJECT,
-        $version = null
+        $version = null,
+        $hydrateMode = Query::HYDRATE_OBJECT
     )
     {
         $qb = $this->createQueryBuilder();
