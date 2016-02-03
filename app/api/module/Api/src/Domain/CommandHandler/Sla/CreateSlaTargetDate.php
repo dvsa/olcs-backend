@@ -5,6 +5,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Sla;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -14,8 +16,10 @@ use Dvsa\Olcs\Transfer\Command\Sla\CreateSlaTargetDate as Cmd;
 /**
  * Create SlaTargetDate
  */
-final class CreateSlaTargetDate extends AbstractCommandHandler
+final class CreateSlaTargetDate extends AbstractCommandHandler implements AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'SlaTargetDate';
 
     protected $extraRepos = ['document'];
@@ -50,11 +54,23 @@ final class CreateSlaTargetDate extends AbstractCommandHandler
         // @ to-do put entity types into ref data
         $slaTargetDateEntity = new SlaTargetDateEntity(
             $entity,
-            \DateTime::createFromFormat('Y-m-d H:i:s', $command->getAgreedDate()),
+            new \DateTime($command->getAgreedDate()),
             $command->getUnderDelegation()
         );
 
+        $currentUser = $this->getCurrentUser();
+
         $slaTargetDateEntity->setCreatedOn(new \DateTime('now'));
+        $slaTargetDateEntity->setCreatedBy($currentUser);
+
+        if (!empty($command->getTargetDate())) {
+            $slaTargetDateEntity->setTargetDate($command->getTargetDate());
+        }
+
+        if (!empty($command->getSentDate())) {
+            $slaTargetDateEntity->setSentDate($command->getSentDate());
+        }
+
         $slaTargetDateEntity->setNotes($command->getNotes());
 
         return $slaTargetDateEntity;
