@@ -176,4 +176,42 @@ class UserTest extends MockeryTestCase
 
         $sut->disableUser($pid);
     }
+
+    /**
+     * @dataProvider provideIsActiveUser
+     * @param $userData
+     * @param $expected
+     */
+    public function testIsActiveUser($userData, $expected)
+    {
+        $pid = 'some-pid';
+
+        $mockRandom = m::mock(\RandomLib\Generator::class);
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('fetchUser')->once()->with($pid)->andReturn($userData);
+
+        $sut = new User($mockClient, $mockRandom);
+
+        $this->assertSame($expected, $sut->isActiveUser($pid));
+    }
+
+    public function provideIsActiveUser()
+    {
+        return [
+            'user never logged in before' => [
+                [
+                    'pid' => 'some-pid',
+                ],
+                false
+            ],
+            'user logged in before' => [
+                [
+                    'pid' => 'some-pid',
+                    'lastLoginTime' => '2016-02-02'
+                ],
+                true
+            ],
+        ];
+    }
 }
