@@ -320,10 +320,10 @@ final class ProcessPacks extends AbstractCommandHandler implements
      * Creates the bus registration
      *
      * @param array $ebsrData
-     * @param BusRegEntity $previousBusReg
+     * @param BusRegEntity|array $previousBusReg
      * @return BusRegEntity
      */
-    private function createBusReg(array $ebsrData, BusRegEntity $previousBusReg)
+    private function createBusReg(array $ebsrData, $previousBusReg)
     {
         //decide what to do based on txcAppType
         switch ($ebsrData['txcAppType']) {
