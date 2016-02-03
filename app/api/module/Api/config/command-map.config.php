@@ -877,5 +877,5 @@ return [
 
     // Sla Target Dates
     TransferCommand\Sla\CreateSlaTargetDate::class => CommandHandler\Sla\CreateSlaTargetDate::class,
-    TransferCommand\Sla\UpateSlaTargetDate::class => CommandHandler\Sla\UpdateSlaTargetDate::class,
+    TransferCommand\Sla\UpdateSlaTargetDate::class => CommandHandler\Sla\UpdateSlaTargetDate::class,
 ];
