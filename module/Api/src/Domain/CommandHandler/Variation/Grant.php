@@ -152,7 +152,12 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         $criteria->andWhere($criteria->expr()->neq('specifiedDate', null));
         $criteria->andWhere($criteria->expr()->isNull('removalDate'));
         $criteria->andWhere($criteria->expr()->isNull('interimApplication'));
-        $criteria->andWhere($criteria->expr()->neq('application', $application));
+        $criteria->andWhere(
+            $criteria->expr()->orX(
+                $criteria->expr()->neq('application', $application),
+                $criteria->expr()->isNull('application')
+            )
+        );
 
         $vehicles = $licence->getLicenceVehicles()->matching($criteria);
 
