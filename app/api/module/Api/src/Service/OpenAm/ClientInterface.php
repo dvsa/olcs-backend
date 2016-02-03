@@ -34,4 +34,15 @@ interface ClientInterface
      * @throws FailedRequestException
      */
     public function updateUser($pid, $updates);
+
+    /**
+     * Fetches a user
+     *
+     * @param string $pid
+     *
+     * @return array
+     * @throws FailedRequestException
+     * @throws \RuntimeException
+     */
+    public function fetchUser($pid);
 }
