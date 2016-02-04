@@ -48,54 +48,20 @@ class ProcessDuplicateVehiclesTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        /** @var Entity\Licence\LicenceVehicle $licenceVehicle1 */
-        $licenceVehicle1 = m::mock(Entity\Licence\LicenceVehicle::class)->makePartial();
-        $licenceVehicle1->shouldReceive('getVehicle->getVrm')->andReturn('AB1');
-
-        /** @var Entity\Licence\LicenceVehicle $licenceVehicle2 */
-        $licenceVehicle2 = m::mock(Entity\Licence\LicenceVehicle::class)->makePartial();
-        $licenceVehicle2->shouldReceive('getVehicle->getVrm')->andReturn('AB2');
-
-        $licenceVehicles = new ArrayCollection();
-        $licenceVehicles->add($licenceVehicle1);
-        $licenceVehicles->add($licenceVehicle2);
-
-        /** @var Entity\Licence\Licence $licence */
-        $licence = m::mock(Entity\Licence\Licence::class)->makePartial();
-
         /** @var Entity\Application\Application $application */
         $application = m::mock(Entity\Application\Application::class)->makePartial();
-        $application->setLicence($licence);
-        $application->setLicenceVehicles($licenceVehicles);
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($application);
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
 
-        /** @var Entity\Licence\LicenceVehicle $duplicate */
-        $duplicate = m::mock(Entity\Licence\LicenceVehicle::class)->makePartial();
-        $duplicate->shouldReceive('markAsDuplicate')->once();
-
-        $duplicates = [
-            $duplicate
-        ];
-
-        $this->repoMap['LicenceVehicle']->shouldReceive('fetchDuplicates')
-            ->with($licence, 'AB1')
-            ->andReturn(null)
-            ->shouldReceive('fetchDuplicates')
-            ->with($licence, 'AB2')
-            ->andReturn($duplicates)
-            ->shouldReceive('save')
-            ->once()
-            ->with($duplicate);
+        $this->repoMap['LicenceVehicle']->shouldReceive('markDuplicateVehiclesForApplication')->with($application)
+            ->once()->andReturn(42);
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
-                '1 vehicle(s) marked as duplicate'
+                '42 vehicle(s) marked as duplicate'
             ]
         ];
 

@@ -25,46 +25,13 @@ final class ProcessDuplicateVehicles extends AbstractCommandHandler implements T
 
     public function handleCommand(CommandInterface $command)
     {
-        /** @var Entity\Application\Application $application */
+        /* @var $application  Entity\Application\Application */
         $application = $this->getRepo()->fetchUsingId($command);
 
-        $licence = $application->getLicence();
-
-        $licenceVehicles = $application->getLicenceVehicles();
-
-        $count = 0;
-
-        /** @var Entity\Licence\LicenceVehicle $licenceVehicle */
-        foreach ($licenceVehicles as $licenceVehicle) {
-            $count += $this->processDuplicatesForLicenceVehicle($licenceVehicle, $licence);
-        }
+        $count = $this->getRepo('LicenceVehicle')->markDuplicateVehiclesForApplication($application);
 
         $this->result->addMessage($count . ' vehicle(s) marked as duplicate');
 
         return $this->result;
-    }
-
-    protected function processDuplicatesForLicenceVehicle(
-        Entity\Licence\LicenceVehicle $licenceVehicle,
-        Entity\Licence\Licence $licence
-    ) {
-        $vrm = $licenceVehicle->getVehicle()->getVrm();
-
-        $duplicates = $this->getRepo('LicenceVehicle')->fetchDuplicates($licence, $vrm);
-
-        if ($duplicates === null) {
-            return 0;
-        }
-
-        $count = 0;
-
-        /** @var Entity\Licence\LicenceVehicle $duplicate */
-        foreach ($duplicates as $duplicate) {
-            $count++;
-            $duplicate->markAsDuplicate();
-            $this->getRepo('LicenceVehicle')->save($duplicate);
-        }
-
-        return $count;
     }
 }
