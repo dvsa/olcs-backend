@@ -145,6 +145,21 @@ class User implements UserInterface
     }
 
     /**
+     * Is active
+     *
+     * @param string $pid
+     *
+     * @return bool
+     * @throws FailedRequestException
+     * @throws \RuntimeException
+     */
+    public function isActiveUser($pid)
+    {
+        // is active if successfully logged in at least once
+        return !empty($this->openAmClient->fetchUser($pid)['lastLoginTime']);
+    }
+
+    /**
      * Generates a password
      *
      * @return string

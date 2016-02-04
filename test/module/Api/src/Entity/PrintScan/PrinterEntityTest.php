@@ -18,4 +18,13 @@ class PrinterEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testCanDelete()
+    {
+        $printer = new Entity();
+        $this->assertTrue($printer->canDelete());
+
+        $printer->addTeams(new \Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter());
+        $this->assertFalse($printer->canDelete());
+    }
 }

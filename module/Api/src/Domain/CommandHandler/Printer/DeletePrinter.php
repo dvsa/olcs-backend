@@ -25,7 +25,14 @@ final class DeletePrinter extends AbstractCommandHandler
     public function handleCommand(CommandInterface $command)
     {
         $printer = $this->getRepo()->fetchWithTeams($command->getId());
-        $this->validatePrinter($printer);
+        if (!$printer->canDelete()) {
+            throw new ValidationException(
+                [
+                    PrinterEntity::ERROR_TEAMS_EXISTS =>
+                        'You cannot delete a printer that is allocated to a team or user'
+                ]
+            );
+        }
 
         $result = new Result();
 
@@ -39,18 +46,5 @@ final class DeletePrinter extends AbstractCommandHandler
         $result->addId('printer', $printer->getId());
         $result->addMessage('Printer deleted successfully');
         return $result;
-    }
-
-    protected function validatePrinter($printer)
-    {
-        $errors = [];
-        if (count($printer->getTeams())) {
-            $errors[PrinterEntity::ERROR_TEAMS_EXISTS] =
-                'You cannot delete a printer that is allocated to a team or user';
-        }
-
-        if ($errors) {
-            throw new ValidationException($errors);
-        }
     }
 }
