@@ -14,6 +14,8 @@ use Zend\ServiceManager\ConfigInterface;
  * Db Query Service Manager
  *
  * @author Rob Caiger <rob@clocal.co.uk>
+ *
+ * @method Repository\Query\AbstractRawQuery get() Get the Query service
  */
 class DbQueryServiceManager extends AbstractPluginManager
 {

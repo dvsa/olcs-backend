@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository\Query;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
@@ -89,7 +89,8 @@ abstract class AbstractRawQuery implements QueryInterface, FactoryInterface
      *
      * @param array $params
      * @param array $paramTypes
-     * @return mixed
+     *
+     * @return \Doctrine\DBAL\Driver\Statement
      */
     public function execute(array $params = [], array $paramTypes = [])
     {
