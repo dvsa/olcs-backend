@@ -47,10 +47,6 @@ class EbsrSubmissionList extends AbstractQueryHandler implements AuthAwareInterf
                 $results,
                 [
                     'busReg' => [
-                        'ebsrSubmissions' => [
-                            'ebsrSubmissionType',
-                            'ebsrSubmissionStatus'
-                        ],
                         'licence' => [
                             'organisation'
                         ],
