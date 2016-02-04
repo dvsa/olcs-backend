@@ -7,11 +7,11 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
@@ -21,16 +21,17 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Task\Task;
-use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Fee\CreateFee as Cmd;
+use Dvsa\Olcs\Transfer\Command\Fee\RecommendWaive as RecommendWaiveCmd;
+use Dvsa\Olcs\Transfer\Command\Fee\ApproveWaive as ApproveWaiveCmd;
 
 /**
  * Create Fee
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateFee extends AbstractCommandHandler implements AuthAwareInterface
+final class CreateFee extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
     use AuthAwareTrait;
 
@@ -45,6 +46,18 @@ final class CreateFee extends AbstractCommandHandler implements AuthAwareInterfa
         $fee = $this->createFeeObject($command);
 
         $this->getRepo()->save($fee);
+
+        if ($fee->getFeeStatus()->getId() === Fee::STATUS_PAID) {
+            // created fee is paid - recommend / approve waive
+            $waiveData = [
+                'id' => $fee->getId(),
+                'version' => $fee->getVersion(),
+                'waiveReason' => method_exists($command, 'getWaiveReason') ? $command->getWaiveReason() : null,
+            ];
+
+            $this->handleSideEffect(RecommendWaiveCmd::create($waiveData));
+            $this->handleSideEffect(ApproveWaiveCmd::create($waiveData));
+        }
 
         $result = new Result();
         $result->addId('fee', $fee->getId());
@@ -89,6 +102,9 @@ final class CreateFee extends AbstractCommandHandler implements AuthAwareInterfa
             $fee->setVatandGrossAmountsFromNetAmountUsingRate($feeType->getVatRate());
         }
 
+        if (method_exists($command, 'getIrfoFeeExempt') && ($command->getIrfoFeeExempt() !== null)) {
+            $fee->setIrfoFeeExempt($command->getIrfoFeeExempt());
+        }
         // if amount is 0 set the status to paid
         if (empty((float) $fee->getNetAmount())) {
             $fee->setFeeStatus($this->getRepo()->getRefdataReference(Fee::STATUS_PAID));

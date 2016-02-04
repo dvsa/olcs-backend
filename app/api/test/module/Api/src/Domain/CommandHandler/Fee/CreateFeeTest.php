@@ -7,8 +7,8 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\Fee;
@@ -21,6 +21,8 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Transfer\Command\Fee\RecommendWaive as RecommendWaiveCmd;
+use Dvsa\Olcs\Transfer\Command\Fee\ApproveWaive as ApproveWaiveCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
@@ -276,6 +278,7 @@ class CreateFeeTest extends CommandHandlerTestCase
             'feeType' => 99,
             'irfoGvPermit' => 55,
             'invoicedDate' => '2015-01-01',
+            'irfoFeeExempt' => 'Y',
         ];
 
         $this->mapReference(FeeType::class, 99)
@@ -324,6 +327,7 @@ class CreateFeeTest extends CommandHandlerTestCase
         $this->assertEquals(0, $savedFee->getVatAmount());
         $this->assertSame($this->refData[FeeEntity::STATUS_OUTSTANDING], $savedFee->getFeeStatus());
         $this->assertSame($this->references[FeeType::class][99], $savedFee->getFeeType());
+        $this->assertEquals('Y', $savedFee->getIrfoFeeExempt());
     }
 
     public function testHandleCommandForIrfoPsvAuthFee()
@@ -514,6 +518,7 @@ class CreateFeeTest extends CommandHandlerTestCase
             'feeType' => 101,
             'amount' => $amount,
             'invoicedDate' => '2015-01-01',
+            'waiveReason' => 'waive reason',
         ];
 
         $this->mapReference(FeeType::class, 101)
@@ -536,6 +541,20 @@ class CreateFeeTest extends CommandHandlerTestCase
                     $savedFee = $fee;
                 }
             );
+
+        if ($status === FeeEntity::STATUS_PAID) {
+            $waiveData = ['id' => 111, 'version' => 1, 'waiveReason' => 'waive reason'];
+            $this->expectedSideEffect(
+                RecommendWaiveCmd::class,
+                $waiveData,
+                (new Result())->addMessage('waive recommended')
+            );
+            $this->expectedSideEffect(
+                ApproveWaiveCmd::class,
+                $waiveData,
+                (new Result())->addMessage('waive approved')
+            );
+        }
 
         $result = $this->sut->handleCommand($command);
 
