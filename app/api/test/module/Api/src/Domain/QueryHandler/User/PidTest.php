@@ -9,6 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\User;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\User\Pid as QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\User as Repo;
+use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Transfer\Query\User\User as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -25,6 +26,10 @@ class PidTest extends QueryHandlerTestCase
         $this->sut = new QueryHandler();
         $this->mockRepo('User', Repo::class);
 
+        $this->mockedSmServices = [
+            UserInterface::class => m::mock(UserInterface::class)
+        ];
+
         parent::setUp();
     }
 
@@ -37,8 +42,13 @@ class PidTest extends QueryHandlerTestCase
 
         $this->repoMap['User']->shouldReceive('fetchOneByLoginId')->with('login_id')->andReturn($mockUser);
 
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('isActiveUser')
+            ->once()
+            ->with('some-pid')
+            ->andReturn(false);
+
         $result = $this->sut->handleQuery($query);
 
-        $this->assertSame(['pid' => 'some-pid'], $result);
+        $this->assertSame(['pid' => 'some-pid', 'isActive' => false], $result);
     }
 }

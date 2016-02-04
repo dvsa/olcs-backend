@@ -54,4 +54,15 @@ interface UserInterface
      * @throws FailedRequestException
      */
     public function disableUser($pid);
+
+    /**
+     * Is active
+     *
+     * @param string $pid
+     *
+     * @return bool
+     * @throws FailedRequestException
+     * @throws \RuntimeException
+     */
+    public function isActiveUser($pid);
 }

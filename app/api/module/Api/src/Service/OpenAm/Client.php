@@ -93,6 +93,34 @@ class Client implements ClientInterface
     }
 
     /**
+     * Fetches a user
+     *
+     * @param string $pid
+     *
+     * @return array
+     * @throws FailedRequestException
+     * @throws \RuntimeException
+     */
+    public function fetchUser($pid)
+    {
+        $request = $this->createRequest('/users/' . $pid, Request::METHOD_GET);
+
+        $response = $this->httpClient->send($request);
+
+        if (!$response->isSuccess()) {
+            throw new FailedRequestException($response);
+        }
+
+        $decoded = json_decode($response->getBody(), true);
+
+        if ($decoded === null) {
+            throw new \RuntimeException('Unable to JSON decode response body: ' . json_last_error_msg());
+        }
+
+        return $decoded;
+    }
+
+    /**
      * Creates a request
      *
      * @param string $path
