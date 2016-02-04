@@ -34,4 +34,16 @@ class Team extends AbstractRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function fetchWithPrinters($id, $type)
+    {
+        $qb = $this->createQueryBuilder();
+        $this->buildDefaultQuery($qb, $id)
+            ->with('teamPrinters', 'tp')
+            ->with('tp.printer', 'tpp')
+            ->with('tp.user', 'pu')
+            ->with('tp.subCategory', 'ps');
+
+        return $qb->getQuery()->getSingleResult($type);
+    }
 }
