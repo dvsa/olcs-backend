@@ -31,7 +31,9 @@ class CreateFeeTest extends PHPUnit_Framework_TestCase
             'description' => 'Some fee',
             'busReg' => 555,
             'irfoGvPermit' => 1,
-            'irfoPsvAuth' => 2
+            'irfoPsvAuth' => 2,
+            'irfoFeeExempt' => 'Y',
+            'waiveReason' => 'testing',
         ];
 
         $command = CreateFee::create($data);
@@ -47,6 +49,8 @@ class CreateFeeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(555, $command->getBusReg());
         $this->assertEquals(1, $command->getIrfoGvPermit());
         $this->assertEquals(2, $command->getIrfoPsvAuth());
+        $this->assertEquals('Y', $command->getIrfoFeeExempt());
+        $this->assertEquals('testing', $command->getWaiveReason());
 
         $this->assertEquals(
             [
@@ -61,6 +65,8 @@ class CreateFeeTest extends PHPUnit_Framework_TestCase
                 'busReg' => 555,
                 'irfoGvPermit' => 1,
                 'irfoPsvAuth' => 2,
+                'irfoFeeExempt' => 'Y',
+                'waiveReason' => 'testing',
             ],
             $command->getArrayCopy()
         );
