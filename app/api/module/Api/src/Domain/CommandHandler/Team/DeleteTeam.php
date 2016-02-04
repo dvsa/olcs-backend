@@ -75,7 +75,7 @@ final class DeleteTeam extends AbstractCommandHandler implements AuthAwareInterf
         if (count($team->getTaskAllocationRules())) {
             $errors[TeamEntity::ERROR_TEAM_LINKED_TO_TASK_ALLOCATION_RULES] = '- It is used to allocate tasks';
         }
-        if (count($team->getPrinters())) {
+        if (count($team->getTeamPrinters())) {
             $errors[TeamEntity::ERROR_TEAM_LINKED_TO_PRINTER_SETTINGS] =
                 '- It is used by printing (see administration page)';
         }

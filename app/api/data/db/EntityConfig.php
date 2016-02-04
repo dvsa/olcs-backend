@@ -329,13 +329,16 @@ return array(
         'team_id' => array(
             'inversedBy' => array(
                 'entity' => 'Team',
-                'property' => 'printer'
+                'property' => 'teamPrinter',
+                'cascade' => array(
+                    'persist'
+                ),
             )
         ),
         'printer_id' => array(
             'inversedBy' => array(
                 'entity' => 'Printer',
-                'property' => 'team'
+                'property' => 'teamPrinter'
             )
         )
     ),
