@@ -40,8 +40,8 @@ class DeletePrinterTest extends CommandHandlerTestCase
         );
 
         $mockPrinter = m::mock(PrinterEntity::class)
-            ->shouldReceive('getTeams')
-            ->andReturn([])
+            ->shouldReceive('canDelete')
+            ->andReturn(true)
             ->once()
             ->shouldReceive('getId')
             ->andReturn(111)
@@ -74,8 +74,8 @@ class DeletePrinterTest extends CommandHandlerTestCase
         );
 
         $mockPrinter = m::mock(PrinterEntity::class)
-            ->shouldReceive('getTeams')
-            ->andReturn([])
+            ->shouldReceive('canDelete')
+            ->andReturn(true)
             ->once()
             ->getMock();
 
@@ -103,8 +103,8 @@ class DeletePrinterTest extends CommandHandlerTestCase
         );
 
         $mockPrinter = m::mock(PrinterEntity::class)
-            ->shouldReceive('getTeams')
-            ->andReturn(['team1', 'team2'])
+            ->shouldReceive('canDelete')
+            ->andReturn(false)
             ->once()
             ->getMock();
 
