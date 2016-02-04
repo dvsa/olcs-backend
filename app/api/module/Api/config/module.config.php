@@ -278,6 +278,7 @@ return [
             'TransportManagerReadAudit' => RepositoryFactory::class,
             'CasesReadAudit' => RepositoryFactory::class,
             'Team' => RepositoryFactory::class,
+            'Printer' => RepositoryFactory::class,
             'SeriousInfringement' => RepositoryFactory::class,
             'SiPenalty' => RepositoryFactory::class,
             'Country' => RepositoryFactory::class,

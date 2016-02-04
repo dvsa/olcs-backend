@@ -262,6 +262,10 @@ return [
     TransferQuery\Team\Team::class => QueryHandler\Team\Team::class,
     TransferQuery\Team\TeamList::class => QueryHandler\Team\TeamList::class,
 
+    // Printer
+    TransferQuery\Printer\Printer::class => QueryHandler\Printer\Printer::class,
+    TransferQuery\Printer\PrinterList::class => QueryHandler\Printer\PrinterList::class,
+
     // Workshop
     TransferQuery\Workshop\Workshop::class => QueryHandler\Workshop\Workshop::class,
 
