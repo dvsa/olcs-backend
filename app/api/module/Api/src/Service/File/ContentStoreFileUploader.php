@@ -93,6 +93,9 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
      */
     public function upload($identifier)
     {
+        /**
+         * @todo Do we need to do this?
+         */
         $file = $this->getFile();
 
         $storeFile = new ContentStoreFile();

@@ -149,6 +149,18 @@ class File
         return $this;
     }
 
+    public function setContentAndSize($content)
+    {
+        if (is_array($content)) {
+            $this->content = file_get_contents($content['tmp_name']);
+            $this->size = $content['size'];
+            return;
+        }
+
+        $this->content = base64_decode($content);
+        $this->size = strlen($this->content);
+    }
+
     /**
      * Getter for content
      *
@@ -187,13 +199,13 @@ class File
      */
     public function fromData($data)
     {
-        $propertyMap = array(
-            'name' => array('name', 'filename'),
-            'path' => array('tmp_name'),
-            'size' => array('size'),
-            'content' => array('content'),
-            'identifier' => array('identifier')
-        );
+        $propertyMap = [
+            'name' => ['name', 'filename'],
+            'path' => ['tmp_name'],
+            'size' => ['size'],
+            'content' => ['content'],
+            'identifier' => ['identifier']
+        ];
 
         foreach ($data as $key => $value) {
             foreach ($propertyMap as $name => $map) {
@@ -212,12 +224,12 @@ class File
      */
     public function toArray()
     {
-        return array(
+        return [
             'identifier' => $this->getIdentifier(),
             'name' => $this->getName(),
             'path' => $this->getPath(),
             'size' => $this->getSize(),
             'content' => $this->getContent()
-        );
+        ];
     }
 }
