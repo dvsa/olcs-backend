@@ -9,6 +9,7 @@ return [
         'LicenceVehicle\ClearSpecifiedDateAndInterimAppForLicence'
             => Query\LicenceVehicle\ClearSpecifiedDateAndInterimAppForLicence::class,
         'LicenceVehicle\RemoveAllForLicence' => Query\LicenceVehicle\RemoveAllForLicence::class,
+        'LicenceVehicle\MarkDuplicateVrmsForLicence' => Query\LicenceVehicle\MarkDuplicateVrmsForLicence::class,
         'Discs\CeaseDiscsForLicence' => Query\Discs\CeaseDiscsForLicence::class,
         'Discs\GoodsDiscsSetIsPrinting' => Query\Discs\GoodsDiscsSetIsPrinting::class,
         'Discs\GoodsDiscsSetIsPrintingOffAndDiscNo' => Query\Discs\GoodsDiscsSetIsPrintingOffAndDiscNo::class,

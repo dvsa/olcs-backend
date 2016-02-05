@@ -144,6 +144,26 @@ class LicenceVehicle extends AbstractRepository
         return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
     }
 
+    /**
+     * If any VRM's duplicate those on the application then mark them as duplicates
+     *
+     * @param ApplicationEntity $application
+     *
+     * @return int number of vehicles that have been marked duplicates
+     */
+    public function markDuplicateVehiclesForApplication(ApplicationEntity $application)
+    {
+        $vrms = [];
+        foreach ($application->getLicenceVehicles() as $licenceVehicle) {
+            /* @var $licenceVehicle Entity\Licence\LicenceVehicle */
+            $vrms[] = $licenceVehicle->getVehicle()->getVrm();
+        }
+
+        return $this->getDbQueryManager()->get('LicenceVehicle\MarkDuplicateVrmsForLicence')
+            ->execute(['vrms' => $vrms, 'licence' => $application->getLicence()->getId()])
+            ->rowCount();
+    }
+
     public function fetchQueuedForWarning()
     {
         $qb = $this->createQueryBuilder();
