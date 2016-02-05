@@ -77,12 +77,9 @@ final class Upload extends AbstractCommandHandler implements
 
     protected function uploadFile(Cmd $command, $identifier)
     {
-        // Upload the file
-        $file = [
-            'name' => $command->getFilename(),
-            'content' => base64_decode($command->getContent()),
-            'size' => strlen($command->getContent())
-        ];
+        $file = new File();
+        $file->setName($command->getFilename());
+        $file->setContentAndSize($command->getContent());
 
         try {
             $this->getUploader()->setFile($file);

@@ -11,6 +11,7 @@ namespace Dvsa\Olcs\Api\Service\Document;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
+use Dvsa\Olcs\Api\Service\File\File;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -122,7 +123,8 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
      */
     public function uploadGeneratedContent($content, $fileName)
     {
-        $file = ['content' => $content];
+        $file = new File();
+        $file->setContent($content);
 
         $this->uploader->setFile($file);
 
