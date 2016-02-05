@@ -166,7 +166,12 @@ class User implements UserInterface
      */
     private function generatePassword()
     {
-        return $this->randomGenerator->generateString(12, Generator::EASY_TO_READ);
+        // make sure that generated password contains at least one upper-case, lower-case and digit
+        return
+            $this->randomGenerator->generateString(1, Generator::CHAR_UPPER).
+            $this->randomGenerator->generateString(1, Generator::CHAR_LOWER).
+            $this->randomGenerator->generateString(1, Generator::CHAR_DIGITS).
+            $this->randomGenerator->generateString(9, Generator::EASY_TO_READ);
     }
 
     /**
