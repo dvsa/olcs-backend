@@ -64,7 +64,7 @@ class TransportManagerMainReviewService extends AbstractReviewService
                     ],
                     [
                         'label' => 'tm-review-main-work-address',
-                        'value' => $workContactDetails->getAddress() ?
+                        'value' => $workContactDetails && $workContactDetails->getAddress() ?
                             $this->formatFullAddress($workContactDetails->getAddress()) : ''
                     ]
                 ]
