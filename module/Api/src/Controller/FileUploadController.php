@@ -35,7 +35,7 @@ class FileUploadController extends AbstractRestfulController
 
             try {
                 $uploader->setFile($file);
-                $file = $uploader->upload($files['file']['tmp_name']);
+                $file = $uploader->upload('tmp/' . basename($files['file']['tmp_name']));
             } catch (MimeNotAllowedException $ex) {
                 return $this->response()->error(400, ['message' => 'Invalid mime']);
             }
