@@ -29,47 +29,13 @@ class SlaTargetDate extends AbstractRepository
         $entityId,
         $version = null,
         $hydrateMode = Query::HYDRATE_OBJECT
-    )
-    {
+    ){
         $qb = $this->createQueryBuilder();
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.' . $entityType, ':byEntityId'))
             ->setParameter('byEntityId', $entityId);
 
         return $qb->getQuery()->getSingleResult();
-
-/*        // If we are not locking and requesting an object, check the cache first
-        $cache = ($version === null && $hydrateMode === Query::HYDRATE_OBJECT);
-        if ($cache && isset($this->references[$id])) {
-            return $this->references[$id];
-        }
-
-        $qb = $this->getRepository()->createQueryBuilder($this->alias);
-        $query = $this->getQueryBuilder()->modifyQuery($qb)->withRefdata();
-
-        $qb = $this->getQueryBuilder()
-            ->modifyQuery($qb)
-            ->withRefdata();
-            $qb->andWhere($qb->expr()->eq($this->alias . '.' . $entityType, ':by' . ucfirst($entityType)))
-            ->setParameter('by' . ucfirst($entityType), $entityId);
-
-        $results = $qb->getQuery()->getResult($hydrateMode);
-
-        if (empty($results)) {
-            throw new Exception\NotFoundException(
-                sprintf('Resource not found (%s id %s)', $this->entity, $id)
-            );
-        }
-
-        if ($hydrateMode === Query::HYDRATE_OBJECT && $version !== null) {
-            $this->lock($results[0], $version);
-        }
-
-        if ($cache) {
-            $this->references[$id] = $results[0];
-        }
-
-        return $results[0];*/
     }
 
     /**
