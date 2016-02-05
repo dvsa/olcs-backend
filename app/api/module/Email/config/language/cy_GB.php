@@ -2,12 +2,6 @@
 
 return array(
     'email.cns.subject' => 'WELSH Licences set to CNS between %s and %s',
-    'email.ebsr-cancelled.subject' => 'WELSH EBSR Application Cancelled - %s - EBSR ID: %s',
-    'email.ebsr-received.subject' => 'WELSH EBSR Application Received - %s - EBSR ID: %s',
-    'email.ebsr-refreshed.subject' => 'WELSH EBSR Data Refresh Completed - %s - EBSR ID: %s',
-    'email.ebsr-refused.subject' => 'WELSH EBSR Application Refused - %s - EBSR ID: %s',
-    'email.ebsr-registered.subject' => 'WELSH EBSR Application Registered - %s - EBSR ID: %s',
-    'email.ebsr-withdrawn.subject' => 'WELSH EBSR Application Withdrawn - %s - EBSR ID: %s',
     'email.inbox-reminder.continuation.subject' => 'WELSH Operator licence continuation/expiry - Reminder',
     'email.inbox-reminder.standard.subject' => 'WELSH Operator licensing information - Reminder',
     'email.licensing-information.continuation.subject' => 'Parhad/terfyn trwydded gweithredwr',
