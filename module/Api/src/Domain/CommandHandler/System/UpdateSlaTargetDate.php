@@ -3,11 +3,14 @@
 /**
  * Update SlaTargetDate
  */
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\Sla;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\System;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\System\SlaTargetDate;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as SlaTargetDateEntity;
@@ -43,18 +46,27 @@ final class UpdateSlaTargetDate extends AbstractCommandHandler implements AuthAw
     }
 
     /**
-     * @param Cmd $command
-     * @return SlaTargetDateEntity
+     * @param CommandInterface $command
+     * @return mixed
+     * @throws NotFoundException
+     * @throws ValidationException
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     private function UpdateSlaTargetDate(CommandInterface $command)
     {
+        if (!in_array($command->getEntityType(), $this->extraRepos)) {
+            throw new ValidationException(['Cannot add SLA target date for unsupported entity type']);
+        }
+
         $slaTargetDateEntity = $this->getRepo()->fetchUsingEntityIdAndType(
             $command->getEntityType(),
             $command->getEntityId(),
             $command->getVersion()
         );
 
+        if (!$slaTargetDateEntity instanceof SlaTargetDate) {
+            throw new NotFoundException();
+        }
         $slaTargetDateEntity->setAgreedDate($command->getAgreedDate());
         $slaTargetDateEntity->setTargetDate($command->getTargetDate());
         $slaTargetDateEntity->setSentDate($command->getSentDate());
@@ -66,17 +78,5 @@ final class UpdateSlaTargetDate extends AbstractCommandHandler implements AuthAw
         $slaTargetDateEntity->setLastModifiedBy($currentUser);
 
         return $slaTargetDateEntity;
-    }
-
-    /**
-     * Fetches the required entity that the SLA target date relates to.
-     *
-     * @param Cmd $command
-     * @return mixed
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
-    private function fetchEntity(Cmd $command)
-    {
-        return $this->getRepo($command->getEntityType())->fetchById($command->getEntityId());
     }
 }

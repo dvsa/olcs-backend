@@ -1,11 +1,10 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\Sla;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\System;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Entity\Sla\SlaTargetDate as SlaTargetDateEntity;
 
 /**
  * SlaTargetDate

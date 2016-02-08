@@ -454,6 +454,6 @@ return [
     TransferQuery\LocalAuthority\LocalAuthorityList::class => QueryHandler\LocalAuthority\LocalAuthorityList::class,
 
     // Sla Target Dates
-    TransferQuery\Sla\SlaTargetDate::class => QueryHandler\Sla\SlaTargetDate::class,
+    TransferQuery\System\SlaTargetDate::class => QueryHandler\System\SlaTargetDate::class,
 
 ];
