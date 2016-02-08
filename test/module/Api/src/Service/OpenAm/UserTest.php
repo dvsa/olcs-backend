@@ -21,12 +21,14 @@ class UserTest extends MockeryTestCase
         $loginId = 'login_id';
         $pid = hash('sha256', 'login_id');
         $emailAddress = 'email@test.com';
-        $password = 'password1234';
+        $password = 'Ab1password1';
 
         $mockRandom = m::mock(Generator::class);
-        $mockRandom->shouldReceive('generateString')
-            ->with(12, Generator::EASY_TO_READ)
-            ->andReturn($password);
+        $mockRandom
+            ->shouldReceive('generateString')->with(1, Generator::CHAR_UPPER)->andReturn('A')
+            ->shouldReceive('generateString')->with(1, Generator::CHAR_LOWER)->andReturn('b')
+            ->shouldReceive('generateString')->with(1, Generator::CHAR_DIGITS)->andReturn('1')
+            ->shouldReceive('generateString')->with(9, Generator::EASY_TO_READ)->andReturn('password1');
 
         $mockClient = m::mock(Client::class);
 
