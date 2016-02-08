@@ -876,6 +876,6 @@ return [
     Command\PrintScheduler\PrintJob::class => CommandHandler\PrintScheduler\PrintJob::class,
 
     // Sla Target Dates
-    TransferCommand\Sla\CreateSlaTargetDate::class => CommandHandler\Sla\CreateSlaTargetDate::class,
-    TransferCommand\Sla\UpdateSlaTargetDate::class => CommandHandler\Sla\UpdateSlaTargetDate::class,
+    TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
+    TransferCommand\System\UpdateSlaTargetDate::class => CommandHandler\System\UpdateSlaTargetDate::class,
 ];

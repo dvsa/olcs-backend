@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\System;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Zend\Loader\Exception\BadMethodCallException;
 
@@ -39,7 +40,7 @@ class SlaTargetDate extends AbstractSlaTargetDate
         if ($entity instanceof Document) {
             $this->setDocument($entity);
         } else {
-            throw new BadMethodCallException('Entity not supported');
+            throw new NotFoundException('Entity not found');
         }
 
         $this->setAgreedDate($agreedDate);

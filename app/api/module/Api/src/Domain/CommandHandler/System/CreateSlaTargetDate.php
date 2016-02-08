@@ -3,11 +3,13 @@
 /**
  * Create SlaTargetDate
  */
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\Sla;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\System;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as SlaTargetDateEntity;
@@ -85,6 +87,10 @@ final class CreateSlaTargetDate extends AbstractCommandHandler implements AuthAw
      */
     private function fetchEntity(Cmd $command)
     {
+        if (!in_array($command->getEntityType(), $this->extraRepos)) {
+            throw new ValidationException(['Cannot add SLA target date for unsupported entity type']);
+        }
+
         return $this->getRepo($command->getEntityType())->fetchById($command->getEntityId());
     }
 }

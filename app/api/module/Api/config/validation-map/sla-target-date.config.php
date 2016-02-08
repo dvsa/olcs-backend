@@ -6,9 +6,9 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers as Handler;
 
 return [
     // Queries
-    QueryHandler\Sla\SlaTargetDate::class                           => Handler\Misc\IsInternalUser::class,
+    QueryHandler\System\SlaTargetDate::class                           => Handler\Misc\IsInternalUser::class,
 
     // Commands
-    CommandHandler\Sla\CreateSlaTargetDate::class                   => Handler\Misc\IsInternalUser::class,
-    CommandHandler\Sla\UpdateSlaTargetDate::class                   => Handler\Misc\IsInternalUser::class,
+    CommandHandler\System\CreateSlaTargetDate::class                   => Handler\Misc\IsInternalUser::class,
+    CommandHandler\System\UpdateSlaTargetDate::class                   => Handler\Misc\IsInternalUser::class,
 ];
