@@ -36,7 +36,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
 {
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['GoodsDisc'];
+    protected $extraRepos = ['GoodsDisc', 'PsvDisc'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -116,28 +116,16 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
 
     protected function updateExistingPsvDiscs(Licence $licence, Result $result)
     {
-        $criteria = Criteria::create();
-        $criteria->andWhere($criteria->expr()->isNull('ceasedDate'));
-
-        $psvDiscs = $licence->getPsvDiscs()->matching($criteria);
-        if (!count($psvDiscs)) {
+        $discCount = $licence->getPsvDiscsNotCeased()->count();
+        if ($discCount === 0) {
             return;
         }
 
-        $ids = array_map(
-            function (PsvDisc $v) {
-                return $v->getId();
-            },
-            $psvDiscs->toArray()
-        );
-
-        $params = ['licence' => $licence->getId(), 'ids' => $ids];
-
-        $result->merge($this->handleSideEffect(VoidPsvDiscs::create($params)));
+        $this->getRepo('PsvDisc')->ceaseDiscsForLicence($licence->getId());
 
         $dtoData = [
             'licence' => $licence->getId(),
-            'amount' => count($ids),
+            'amount' => $discCount,
             'isCopy' => 'N'
         ];
 
