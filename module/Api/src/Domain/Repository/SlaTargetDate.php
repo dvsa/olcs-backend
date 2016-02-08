@@ -29,7 +29,7 @@ class SlaTargetDate extends AbstractRepository
         $entityId,
         $version = null,
         $hydrateMode = Query::HYDRATE_OBJECT
-    ){
+    ) {
         $qb = $this->createQueryBuilder();
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.' . $entityType, ':byEntityId'))
