@@ -38,6 +38,7 @@ class GrantTest extends CommandHandlerTestCase
         $this->sut = new Grant();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
         $this->mockRepo('GoodsDisc', \Dvsa\Olcs\Api\Domain\Repository\GoodsDisc::class);
+        $this->mockRepo('PsvDisc', \Dvsa\Olcs\Api\Domain\Repository\GoodsDisc::class);
 
         parent::setUp();
     }
@@ -276,16 +277,9 @@ class GrantTest extends CommandHandlerTestCase
             ->shouldReceive('isPublishable')
             ->andReturn(false);
 
-        /** @var PsvDisc $psvDisc */
-        $psvDisc = m::mock(PsvDisc::class)->makePartial();
-        $psvDisc->setId(123);
-
-        $psvDiscs = new ArrayCollection([$psvDisc]);
-
         $licence->shouldReceive('copyInformationFromApplication')
-            ->with($application)
-            ->shouldReceive('getPsvDiscs->matching')
-            ->andReturn($psvDiscs);
+            ->with($application);
+        $licence->shouldReceive('getPsvDiscsNotCeased->count')->with()->once()->andReturn(123);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -293,6 +287,8 @@ class GrantTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->once()
             ->with($application);
+
+        $this->repoMap['PsvDisc']->shouldReceive('ceaseDiscsForLicence')->with(222)->once();
 
         $result1 = new Result();
         $result1->addMessage('CreateSnapshot');
@@ -312,13 +308,13 @@ class GrantTest extends CommandHandlerTestCase
         $result4->addMessage('CommonGrant');
         $this->expectedSideEffect(CommonGrant::class, $data, $result4);
 
-        $result5 = new Result();
-        $result5->addMessage('VoidPsvDiscs');
-        $this->expectedSideEffect(VoidPsvDiscs::class, ['licence' => 222, 'ids' => [123]], $result5);
-
         $result6 = new Result();
         $result6->addMessage('CreatePsvDiscs');
-        $this->expectedSideEffect(CreatePsvDiscs::class, ['licence' => 222, 'amount' => 1, 'isCopy' => 'N'], $result6);
+        $this->expectedSideEffect(
+            CreatePsvDiscs::class,
+            ['licence' => 222, 'amount' => 123, 'isCopy' => 'N'],
+            $result6
+        );
 
         $result = $this->sut->handleCommand($command);
 
@@ -326,7 +322,6 @@ class GrantTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'CreateSnapshot',
-                'VoidPsvDiscs',
                 'CreatePsvDiscs',
                 'CreateDiscRecords',
                 'ProcessApplicationOperatingCentres',
@@ -352,6 +347,8 @@ class GrantTest extends CommandHandlerTestCase
         $licence->setId(222);
         $licence->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
         $licence->setTotAuthVehicles(10);
+
+        $licence->shouldReceive('getPsvDiscsNotCeased->count')->with()->once()->andReturn(0);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
