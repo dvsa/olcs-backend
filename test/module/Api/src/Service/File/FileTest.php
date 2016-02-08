@@ -103,4 +103,27 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($file, $file->setPath('foo'));
         $this->assertSame($file, $file->setSize('foo'));
     }
+
+    public function testSetContentAndSizeFromString()
+    {
+        $file = new File();
+        $file->setContentAndSize(base64_encode('<foo>'));
+
+        $this->assertEquals('<foo>', $file->getContent());
+        $this->assertEquals(5, $file->getSize());
+    }
+
+    public function testSetContentAndSizeFromFileData()
+    {
+        $file = new File();
+        $file->setContentAndSize(
+            [
+                'size' => 22,
+                'tmp_name' => __DIR__ . '/Resources/TestFile.txt'
+            ]
+        );
+
+        $this->assertEquals('Don\'t modify this file', $file->getContent());
+        $this->assertEquals(22, $file->getSize());
+    }
 }
