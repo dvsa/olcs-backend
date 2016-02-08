@@ -91,7 +91,7 @@ class PayloadValidationListener implements ListenerAggregateInterface
             if ($contentType->getMediaType() == 'application/json') {
                 $data = json_decode($request->getContent(), true);
             } else {
-                $data = $request->getPost();
+                $data = (array)$request->getPost();
 
                 $files = $request->getFiles();
 
