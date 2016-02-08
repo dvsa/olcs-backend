@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Mvc;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
+use Zend\Http\Header\ContentType;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router;
 use Dvsa\Olcs\Transfer\Util\Annotation\AnnotationBuilder;
@@ -84,7 +85,20 @@ class PayloadValidationListener implements ListenerAggregateInterface
             }
         } else {
 
-            $data = json_decode($request->getContent(), true);
+            /** @var ContentType $contentType */
+            $contentType = $request->getHeader('contenttype');
+
+            if ($contentType->getMediaType() == 'application/json') {
+                $data = json_decode($request->getContent(), true);
+            } else {
+                $data = (array)$request->getPost();
+
+                $files = $request->getFiles();
+
+                foreach ($files as $fieldName => $fileData) {
+                    $data[$fieldName] = $fileData;
+                }
+            }
 
             $dto->exchangeArray($data);
 
