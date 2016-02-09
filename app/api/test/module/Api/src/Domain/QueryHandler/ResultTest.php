@@ -60,4 +60,20 @@ class ResultTest extends MockeryTestCase
         $result = new Result($entity, ['blah' => 'blah'], $data);
         $this->assertEquals($expected, $result->serialize());
     }
+
+    public function testResultWithEntityAndBundleAndDataSetValue()
+    {
+        $data = ['cake' => 'mix', 'stuff' => 'foo'];
+        $expected = ['foo' => 'bar', 'cake' => 'choc', 'stuff' => 'foo'];
+
+        /** @var BundleSerializableInterface $entity */
+        $entity = m::mock(BundleSerializableInterface::class);
+
+        $entity->shouldReceive('serialize')->once()->with(['blah' => 'blah'])
+            ->andReturn(['foo' => 'bar', 'cake' => 'bar']);
+
+        $result = new Result($entity, ['blah' => 'blah'], $data);
+        $result->setValue('cake', 'choc');
+        $this->assertEquals($expected, $result->serialize());
+    }
 }
