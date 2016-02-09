@@ -48,7 +48,7 @@ class SlaTargetDateTest extends QueryHandlerTestCase
                     ->shouldReceive('serialize')
                     ->andReturn(['foo'])
                     ->getMock()
-                );
+            );
 
         $result = $this->sut->handleQuery($query);
 
