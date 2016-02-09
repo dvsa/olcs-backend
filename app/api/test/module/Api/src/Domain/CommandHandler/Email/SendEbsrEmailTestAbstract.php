@@ -70,6 +70,8 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
         $endPoint = 'end point';
         $serviceNumbers = '99999 (12345, 567910)';
         $orgAdminEmails = [0 => $adminEmail];
+        $submissionResultArray = [];
+        $submissionResult = serialize($submissionResultArray);
 
         $submittedDate = '2015-01-15';
         $formattedSubmittedDate = date(SendEbsrAbstract::DATE_FORMAT, strtotime($submittedDate));
@@ -94,12 +96,12 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
 
         $busRegEntity = m::mock(BusRegEntity::class);
         $busRegEntity->shouldReceive('getId')->once()->andReturn($busRegId);
-        $busRegEntity->shouldReceive('getRegNo')->once()->andReturn($regNo);
+        $busRegEntity->shouldReceive('getRegNo')->times(2)->andReturn($regNo);
         $busRegEntity->shouldReceive('getStartPoint')->once()->andReturn($startPoint);
         $busRegEntity->shouldReceive('getFinishPoint')->once()->andReturn($endPoint);
         $busRegEntity->shouldReceive('getEffectiveDate')->once()->andReturn($effectiveDate);
         $busRegEntity->shouldReceive('getLicence->getTranslateToWelsh')->once()->andReturn(false);
-        $busRegEntity->shouldReceive('getLocalAuthoritys')->once()->andReturn($la);
+        $busRegEntity->shouldReceive('getLocalAuthoritys')->times(2)->andReturn($la);
         $busRegEntity->shouldReceive('getPublicationSectionForGrantEmail')->never(); //only for registered & cancelled
         $busRegEntity->shouldReceive('getPublicationLinksForGrantEmail')->never(); //only for registered & cancelled
 
@@ -109,6 +111,7 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
         $ebsrSubmissionEntity->shouldReceive('getOrganisationEmailAddress')->once()->andReturn($orgEmail);
         $ebsrSubmissionEntity->shouldReceive('getBusReg')->once()->andReturn($busRegEntity);
         $ebsrSubmissionEntity->shouldReceive('getOrganisation->getAdminEmailAddresses')->andReturn($orgAdminEmails);
+        $ebsrSubmissionEntity->shouldReceive('getEbsrSubmissionResult')->andReturn($submissionResult);
 
         $this->repoMap['EbsrSubmission']
             ->shouldReceive('fetchUsingId')
@@ -133,6 +136,7 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
                 'lineName' => $serviceNumbers,
                 'startDate' => $formattedEffectiveDate,
                 'localAuthoritys' => $laDescription1 . ', ' . $laDescription2,
+                'submissionErrors' => $submissionResultArray,
                 'publicationId' => null,
             ],
             null
