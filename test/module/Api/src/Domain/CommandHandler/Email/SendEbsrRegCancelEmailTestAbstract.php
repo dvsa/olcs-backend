@@ -69,6 +69,9 @@ abstract class SendEbsrRegCancelEmailTestAbstract extends CommandHandlerTestCase
         $serviceNumbers = '99999 (12345, 567910)';
         $orgEmail = 'foo@bar.com';
         $publicationInfo = 'publicationInfo';
+        $submissionResultArray = [];
+        $submissionResult = serialize($submissionResultArray);
+        $orgAdminEmails = [0 => 'terry.valtech@gmail.com'];
 
         $submittedDate = '2015-01-15';
         $formattedSubmittedDate = date(SendEbsrAbstract::DATE_FORMAT, strtotime($submittedDate));
@@ -83,12 +86,12 @@ abstract class SendEbsrRegCancelEmailTestAbstract extends CommandHandlerTestCase
 
         $busRegEntity = m::mock(BusRegEntity::class);
         $busRegEntity->shouldReceive('getId')->once()->andReturn($busRegId);
-        $busRegEntity->shouldReceive('getRegNo')->once()->andReturn($regNo);
+        $busRegEntity->shouldReceive('getRegNo')->times(2)->andReturn($regNo);
         $busRegEntity->shouldReceive('getStartPoint')->once()->andReturn($startPoint);
         $busRegEntity->shouldReceive('getFinishPoint')->once()->andReturn($endPoint);
         $busRegEntity->shouldReceive('getEffectiveDate')->once()->andReturn($effectiveDate);
         $busRegEntity->shouldReceive('getLicence->getTranslateToWelsh')->once()->andReturn(false);
-        $busRegEntity->shouldReceive('getLocalAuthoritys')->once()->andReturn(new ArrayCollection());
+        $busRegEntity->shouldReceive('getLocalAuthoritys')->times(2)->andReturn(new ArrayCollection());
         $busRegEntity->shouldReceive('getPublicationSectionForGrantEmail')->once()->andReturn(26);
         $busRegEntity->shouldReceive('getPublicationLinksForGrantEmail')->once()->andReturn($publicationInfo);
 
@@ -97,6 +100,8 @@ abstract class SendEbsrRegCancelEmailTestAbstract extends CommandHandlerTestCase
         $ebsrSubmissionEntity->shouldReceive('getSubmittedDate')->andReturn($submittedDate);
         $ebsrSubmissionEntity->shouldReceive('getOrganisationEmailAddress')->once()->andReturn($orgEmail);
         $ebsrSubmissionEntity->shouldReceive('getBusReg')->once()->andReturn($busRegEntity);
+        $ebsrSubmissionEntity->shouldReceive('getEbsrSubmissionResult')->andReturn($submissionResult);
+        $ebsrSubmissionEntity->shouldReceive('getOrganisation->getAdminEmailAddresses')->andReturn($orgAdminEmails);
 
         $this->repoMap['EbsrSubmission']
             ->shouldReceive('fetchUsingId')
@@ -121,10 +126,12 @@ abstract class SendEbsrRegCancelEmailTestAbstract extends CommandHandlerTestCase
                 'lineName' => $serviceNumbers,
                 'startDate' => $formattedEffectiveDate,
                 'localAuthoritys' => '',
+                'submissionErrors' => $submissionResultArray,
                 'publicationId' => $publicationInfo,
             ],
             null
         );
+
 
         $result = new Result();
         $data = [
