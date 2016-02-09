@@ -1,9 +1,9 @@
-<?php if (!empty($this->busRegInfo)) { ?>
+<?php if (!empty($this->registrationNumber)) { ?>
     <p>Thank you for your EBSR application received on <?php echo $this->submissionDate ?> for the
-        following local bus service - <?php echo $this->busRegInfo['registrationNumber']; ?> - between
-        <?php echo $this->busRegInfo['origin']; ?> and <?php echo $this->busRegInfo['destination']; ?> with service
-        number <?php echo $this->busRegInfo['lineName']; ?> to come into effect on
-        <?php echo $this->busRegInfo['startDate']; ?>.</p>
+        following local bus service - <?php echo $this->registrationNumber; ?> - between
+        <?php echo $this->origin; ?> and <?php echo $this->destination; ?> with service
+        number <?php echo $this->lineName; ?> to come into effect on
+        <?php echo $this->startDate; ?>.</p>
 <?php } else { ?>
     <p>Thank you for your EBSR application received on <?php echo $this->submissionDate ?>.</p>
 <?php } ?>
