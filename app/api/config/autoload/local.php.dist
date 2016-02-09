@@ -203,5 +203,28 @@ return [
     ],
     'print' => [
         'server' => 'print01.olcs.mgt.mtpdvsa:631'
+    ],
+    /**
+     * Configure the location of the application log
+     */
+    'log' => [
+        'Logger' => [
+            'writers' => [
+                'full' => [
+                    'options' => [
+                        'stream' => '/var/tmp/backend.log'
+                    ],
+                ]
+            ]
+        ],
+        'ExceptionLogger' => [
+            'writers' => [
+                'full' => [
+                    'options' => [
+                        'stream' => '/var/tmp/backend.log'
+                    ],
+                ]
+            ]
+        ]
     ]
 ];
