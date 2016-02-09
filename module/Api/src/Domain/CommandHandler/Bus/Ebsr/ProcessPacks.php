@@ -34,6 +34,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrReceived as SendEbsrReceivedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefreshed as SendEbsrRefreshedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrErrors as SendEbsrErrorsCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
@@ -42,6 +43,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Doctrine\ORM\Query;
 use Zend\Json\Json as ZendJson;
+use Doctrine\Common\Util\Debug as DoctrineDebug;
 
 /**
  * Process Ebsr packs
@@ -53,6 +55,13 @@ final class ProcessPacks extends AbstractCommandHandler implements
 {
     use AuthAwareTrait;
     use UploaderAwareTrait;
+
+    /**
+     * @var int
+     *
+     * how many levels of doctrine entities we recurse when saving debug info
+     */
+    const DOCTRINE_DEBUG_LEVEL = 2;
 
     protected $repoServiceName = 'Bus';
 
@@ -131,9 +140,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
             try {
                 $xmlName = $this->fileProcessor->fetchXmlFileNameFromDocumentStore($doc->getIdentifier());
             } catch (\RuntimeException $e) {
-                $this->invalidPacks++;
-                $this->addErrorMessages($doc, [$e->getMessage()], '');
-                $this->setEbsrSubmissionFailed($ebsrSub);
+                //process the validation failure information
+                $this->processValidationFailure($ebsrSub, $doc, ['upload-failure' => $e->getMessage()], '', []);
 
                 continue;
             }
@@ -191,6 +199,9 @@ final class ProcessPacks extends AbstractCommandHandler implements
             //update the ebsr submission to show a validated status
             $ebsrSub->updateStatus($this->getRepo()->getRefdataReference(EbsrSubmissionEntity::VALIDATED_STATUS));
 
+            //save submission result data, used for error messages in emails, and possible debugging later
+            $ebsrSub->setEbsrSubmissionResult($this->getSubmissionResultData([], $ebsrData));
+
             //save the submission and the bus reg
             $this->getRepo('EbsrSubmission')->save($ebsrSub);
             $busReg->setEbsrSubmissions(new ArrayCollection([$ebsrSub]));
@@ -205,6 +216,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
             $sideEffects = $this->getSideEffects($ebsrData, $busReg, dirname($xmlName));
             $this->handleSideEffects($sideEffects);
 
+            //if we've got this far then it was a valid pack, increment counter
             $this->validPacks++;
 
             $this->result->addMessage(
@@ -241,15 +253,63 @@ final class ProcessPacks extends AbstractCommandHandler implements
         $this->$inputFilter->setValue($value);
 
         if (!$this->$inputFilter->isValid($context)) {
-            $this->invalidPacks++;
+            //create error messages for use by the front end
             $messages = $this->$inputFilter->getMessages();
-            $this->addErrorMessages($doc, $messages, $xmlName);
-            $this->setEbsrSubmissionFailed($ebsrSub);
+
+            //get input values we can use for debug
+            $inputValue = $this->$inputFilter->getValue();
+
+            //process the validation failure information
+            $this->processValidationFailure($ebsrSub, $doc, $messages, $xmlName, $inputValue);
 
             return false;
         }
 
         return $this->$inputFilter->getValue();
+    }
+
+    /**
+     * @param EbsrSubmissionEntity $ebsrSub
+     * @param DocumentEntity $doc
+     * @param array $messages
+     * @param string $xmlName
+     * @param mixed $inputValue
+     */
+    private function processValidationFailure(
+        EbsrSubmissionEntity $ebsrSub,
+        DocumentEntity $doc,
+        $messages,
+        $xmlName,
+        $inputValue
+    ) {
+        //the pack isn't valid, so increment counter
+        $this->invalidPacks++;
+
+        $this->addErrorMessages($doc, $messages, $xmlName);
+
+        //save submission result data, used for error messages in emails, and possible debugging later
+        $resultData = $this->getSubmissionResultData($messages, $inputValue);
+        $this->setEbsrSubmissionFailed($ebsrSub, $resultData);
+
+        //trigger ebsr failure email for the user
+        $this->handleSideEffect($this->getEbsrErrorEmailCmd($ebsrSub->getId()));
+    }
+
+    /**
+     * Creates a serialized string consisting of error messages and input data, saved to ebsrSubmissionResult DB field
+     *
+     * @param array $errorMessages
+     * @param mixed $rawData
+     * @return string
+     */
+    private function getSubmissionResultData($errorMessages, $rawData)
+    {
+        $errorData = [
+            'errors' => $errorMessages,
+            'raw_data' => DoctrineDebug::export($rawData, self::DOCTRINE_DEBUG_LEVEL)
+        ];
+
+        return serialize($errorData);
     }
 
     /**
@@ -310,11 +370,13 @@ final class ProcessPacks extends AbstractCommandHandler implements
 
     /**
      * @param EbsrSubmissionEntity $ebsrSub
+     * @param string $ebsrResultData
      * @return EbsrSubmissionEntity
      */
-    private function setEbsrSubmissionFailed($ebsrSub)
+    private function setEbsrSubmissionFailed(EbsrSubmissionEntity $ebsrSub, $ebsrResultData)
     {
         $ebsrSub->updateStatus($this->getRepo()->getRefdataReference(EbsrSubmissionEntity::FAILED_STATUS));
+        $ebsrSub->setEbsrSubmissionResult($ebsrResultData);
         $this->getRepo('EbsrSubmission')->save($ebsrSub);
         return $ebsrSub;
     }
@@ -501,6 +563,15 @@ final class ProcessPacks extends AbstractCommandHandler implements
                 'options' => ZendJson::encode($options)
             ]
         );
+    }
+
+    /**
+     * @param int $ebsrId
+     * @return SendEbsrReceivedCmd
+     */
+    private function getEbsrErrorEmailCmd($ebsrId)
+    {
+        return SendEbsrErrorsCmd::create(['id' => $ebsrId]);
     }
 
     /**
