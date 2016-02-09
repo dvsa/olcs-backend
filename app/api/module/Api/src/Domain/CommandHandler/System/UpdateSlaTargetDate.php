@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\System\SlaTargetDate;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as SlaTargetDateEntity;
-use Dvsa\Olcs\Transfer\Command\Sla\UpdateSlaTargetDate as Cmd;
+use Dvsa\Olcs\Transfer\Command\System\UpdateSlaTargetDate as Cmd;
 
 /**
  * Update SlaTargetDate
