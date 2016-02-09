@@ -132,7 +132,6 @@ abstract class SendEbsrRegCancelEmailTestAbstract extends CommandHandlerTestCase
             null
         );
 
-
         $result = new Result();
         $data = [
             'to' => $orgEmail,

@@ -155,7 +155,7 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
     private function getSubjectVars($regNo)
     {
         if ($regNo) {
-            return $subjectVars = [$regNo, $this->ebsr->getId()];
+            return [$regNo, $this->ebsr->getId()];
         }
 
         return [$this->ebsr->getId()];
