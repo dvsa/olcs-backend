@@ -1,8 +1,8 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Sla;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\System;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\Sla\CreateSlaTargetDate as CommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\System\CreateSlaTargetDate as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\SlaTargetDate as Repo;
@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as Entity;
-use Dvsa\Olcs\Transfer\Command\Sla\CreateSlaTargetDate as Command;
+use Dvsa\Olcs\Transfer\Command\System\CreateSlaTargetDate as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
