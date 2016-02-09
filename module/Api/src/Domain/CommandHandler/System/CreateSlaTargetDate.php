@@ -8,12 +8,11 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\System;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as SlaTargetDateEntity;
-use Dvsa\Olcs\Transfer\Command\Sla\CreateSlaTargetDate as Cmd;
+use Dvsa\Olcs\Transfer\Command\System\CreateSlaTargetDate as Cmd;
 
 /**
  * Create SlaTargetDate
