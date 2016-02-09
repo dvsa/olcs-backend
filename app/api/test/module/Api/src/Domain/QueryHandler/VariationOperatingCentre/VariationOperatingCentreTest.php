@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\VariationOperatingCentre;
 
+use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\VariationOperatingCentre\VariationOperatingCentre;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Transfer\Query\VariationOperatingCentre\VariationOperatingCentre as Qry;
@@ -31,40 +32,50 @@ class VariationOperatingCentreTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 'A111']);
 
+        $response = m::mock();
+        $response->shouldReceive('setValue')
+            ->once()
+            ->with('canUpdateAddress', false);
+
         $this->queryHandler->shouldReceive('handleQuery')
             ->andReturnUsing(
-                function ($dto) {
+                function ($dto) use ($response) {
 
                     $this->assertInstanceOf(ApplicationOperatingCentre::class, $dto);
                     $data = $dto->getArrayCopy();
 
                     $this->assertEquals(111, $data['id']);
 
-                    return 'RESPONSE';
+                    return $response;
                 }
             );
 
-        $this->assertEquals('RESPONSE', $this->sut->handleQuery($query));
+        $this->assertEquals($response, $this->sut->handleQuery($query));
     }
 
     public function testHandleQueryLicence()
     {
         $query = Qry::create(['id' => 'L111']);
 
+        $response = m::mock();
+        $response->shouldReceive('setValue')
+            ->once()
+            ->with('canUpdateAddress', false);
+
         $this->queryHandler->shouldReceive('handleQuery')
             ->andReturnUsing(
-                function ($dto) {
+                function ($dto) use ($response) {
 
                     $this->assertInstanceOf(LicenceOperatingCentre::class, $dto);
                     $data = $dto->getArrayCopy();
 
                     $this->assertEquals(111, $data['id']);
 
-                    return 'RESPONSE';
+                    return $response;
                 }
             );
 
-        $this->assertEquals('RESPONSE', $this->sut->handleQuery($query));
+        $this->assertEquals($response, $this->sut->handleQuery($query));
     }
 
     public function testHandleQueryNeither()

@@ -31,6 +31,11 @@ class Result
         $this->values = $values;
     }
 
+    public function setValue($key, $value)
+    {
+        $this->values[$key] = $value;
+    }
+
     /**
      * Recursively serialize objects based on the bundle
      */
