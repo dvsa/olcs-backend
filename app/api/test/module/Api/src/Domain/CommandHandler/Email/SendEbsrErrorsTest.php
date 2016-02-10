@@ -217,5 +217,4 @@ class SendEbsrErrorsTest extends CommandHandlerTestCase
 
         return $data;
     }
-
 }
