@@ -452,4 +452,8 @@ return [
 
     TransferQuery\RefData\RefDataList::class => QueryHandler\RefData\RefDataList::class,
     TransferQuery\LocalAuthority\LocalAuthorityList::class => QueryHandler\LocalAuthority\LocalAuthorityList::class,
+
+    // Sla Target Dates
+    TransferQuery\System\SlaTargetDate::class => QueryHandler\System\SlaTargetDate::class,
+
 ];
