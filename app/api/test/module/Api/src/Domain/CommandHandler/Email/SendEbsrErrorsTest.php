@@ -57,10 +57,10 @@ class SendEbsrErrorsTest extends CommandHandlerTestCase
      * @param string $expectedToAddress
      * @param array $rawData
      * @param array $templateVars
-     * @param string $subject
      */
-    public function testHandleCommand($orgEmail, $adminEmail, $expectedToAddress, $rawData, $templateVars, $subject)
+    public function testHandleCommand($orgEmail, $adminEmail, $expectedToAddress, $rawData, $templateVars)
     {
+        $subject = 'email.ebsr-failed-no-bus-reg.subject';
         $ebsrSubmissionId = 1234;
         $orgAdminEmails = [0 => $adminEmail];
         $errors = ['errors'];
@@ -147,9 +147,6 @@ class SendEbsrErrorsTest extends CommandHandlerTestCase
         $formatStartDate = new \DateTime($startDate);
         $formattedStartDate = $formatStartDate->format(SendEbsrErrors::DATE_FORMAT);
 
-        $subjectNoBusReg = 'email.ebsr-failed-no-bus-reg.subject';
-        $subjectBusReg = 'email.ebsr-failed.subject';
-
         $rawData = [
             'licNo' => $licNo,
             'routeNo' => $routeNo,
@@ -184,15 +181,15 @@ class SendEbsrErrorsTest extends CommandHandlerTestCase
         $startDateEmailData = $this->expectedEmailData(['startDate' => $formattedStartDate], true);
 
         return [
-            ['test@test.com', 'foo@bar.com', 'test@test.com', [], $blankEmailData, $subjectNoBusReg],
-            ['',  'foo@bar.com', 'foo@bar.com', [], $blankEmailData, $subjectNoBusReg],
-            ['test@test.com', 'foo@bar.com', 'test@test.com', $rawData, $emailDataWithFullBusReg, $subjectBusReg],
-            ['',  'foo@bar.com', 'foo@bar.com', $rawData, $emailDataWithFullBusReg, $subjectBusReg],
-            ['',  'foo@bar.com', 'foo@bar.com', $rawDataRegNo, $regNoEmailData, $subjectBusReg],
-            ['',  'foo@bar.com', 'foo@bar.com', $rawDataStartPoint, $originEmailData, $subjectBusReg],
-            ['',  'foo@bar.com', 'foo@bar.com', $rawDataFinishPoint, $destinationEmailData, $subjectBusReg],
-            ['',  'foo@bar.com', 'foo@bar.com', $rawDataServiceNo, $lineNameEmailData, $subjectBusReg],
-            ['',  'foo@bar.com', 'foo@bar.com', $rawDataEffectiveDate, $startDateEmailData, $subjectBusReg],
+            ['test@test.com', 'foo@bar.com', 'test@test.com', [], $blankEmailData],
+            ['',  'foo@bar.com', 'foo@bar.com', [], $blankEmailData],
+            ['test@test.com', 'foo@bar.com', 'test@test.com', $rawData, $emailDataWithFullBusReg],
+            ['',  'foo@bar.com', 'foo@bar.com', $rawData, $emailDataWithFullBusReg],
+            ['',  'foo@bar.com', 'foo@bar.com', $rawDataRegNo, $regNoEmailData],
+            ['',  'foo@bar.com', 'foo@bar.com', $rawDataStartPoint, $originEmailData],
+            ['',  'foo@bar.com', 'foo@bar.com', $rawDataFinishPoint, $destinationEmailData],
+            ['',  'foo@bar.com', 'foo@bar.com', $rawDataServiceNo, $lineNameEmailData],
+            ['',  'foo@bar.com', 'foo@bar.com', $rawDataEffectiveDate, $startDateEmailData],
         ];
     }
 
