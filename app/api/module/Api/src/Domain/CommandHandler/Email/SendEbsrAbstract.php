@@ -171,7 +171,7 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
 
     /**
      * Decides on the subject line. If template is a string then it is easy to match it. Failure emails use an array
-     * of templates, so we do it based on whether we have a reg number
+     * of templates, so we do it based on whether we have a bus reg entity
      *
      * @return string
      */
