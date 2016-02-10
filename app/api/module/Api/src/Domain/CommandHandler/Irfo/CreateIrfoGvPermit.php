@@ -116,6 +116,8 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler implements Transac
             'feeType' => $irfoFeeType->getId(),
             'amount' => 0,
             'feeStatus' => Fee::STATUS_PAID,
+            'irfoFeeExempt' => 'Y',
+            'waiveReason' => $irfoGvPermit->getExemptionDetails(),
         ];
 
         return $this->handleSideEffect(FeeCreateFee::create($data));

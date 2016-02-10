@@ -10,12 +10,12 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\PsvDisc;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Discs\PrintDiscs as PrintDiscsCommand;
-use Dvsa\Olcs\Api\Domain\Command\Discs\CreatePsvVehicleListForDiscs as CreatePsvVehicleListForDiscsCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Licence\PsvDisc as PsvDiscEntity;
 use Dvsa\Olcs\Api\Entity\System\DiscSequence as DiscSequenceEntity;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreatQueue;
 
 /**
  * Print PSV discs
@@ -35,6 +35,7 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
         $discsToPrint = $this->getRepo()->fetchDiscsToPrint(
             $command->getLicenceType()
         );
+        $discIds = array_column($discsToPrint, 'id');
         $this->validateParameters(
             $command->getStartNumber(),
             $discsToPrint,
@@ -43,29 +44,30 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
         );
 
         $data = [
-            'discs' => $discsToPrint,
+            'discs' => $discIds,
             'type' => 'PSV',
             'startNumber' => $command->getStartNumber()
         ];
-        $printDiscs = PrintDiscsCommand::create($data);
-        $printDiscsResult = $this->handleSideEffect($printDiscs);
+        $params = [
+            'type' => Queue::TYPE_DISC_PRINTING,
+            'status' => Queue::STATUS_QUEUED,
+            'options' => json_encode($data)
+        ];
+        $printDiscsResult = $this->handleSideEffect(CreatQueue::create($params));
         $result->merge($printDiscsResult);
         $result->addMessage("PSV discs printed");
 
         $result->merge($this->createVehicleLists($discsToPrint));
-
-        $this->getRepo()->setIsPrintingOn($discsToPrint);
 
         return $result;
     }
 
     protected function createVehicleLists($discsToPrint)
     {
-        $result = new Result();
         $queries = [];
         $bookmarks = [];
         foreach ($discsToPrint as $disc) {
-            $licenceId = $disc->getLicence()->getId();
+            $licenceId = $disc['licence']['id'];
             if (!isset($bookmarks[$licenceId])) {
                 $bookmarks[$licenceId] = [
                     'NO_DISCS_PRINTED' => ['count' => 0]
@@ -76,13 +78,16 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
                 'id' => $licenceId
             ];
         }
-        foreach ($queries as $licenceId => $data) {
-            $data['knownValues'] = $bookmarks[$licenceId];
-            $generateVehicleList = CreatePsvVehicleListForDiscsCommand::create($data);
-            $this->handleSideEffect($generateVehicleList);
-            $result->addMessage('Vehicle list generated for licence ' . $licenceId);
-        }
-
+        $options = [
+            'bookmarks' => $bookmarks,
+            'queries' => $queries
+        ];
+        $params = [
+            'type' => Queue::TYPE_CREATE_PSV_VEHICLE_LIST,
+            'status' => Queue::STATUS_QUEUED,
+            'options' => json_encode($options)
+        ];
+        $result = $this->handleSideEffect(CreatQueue::create($params));
         return $result;
     }
 

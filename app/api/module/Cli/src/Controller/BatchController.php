@@ -107,7 +107,6 @@ class BatchController extends AbstractConsoleController
         // build array of commands (once per licence)
         $commands = [];
         foreach ($licences as $licence) {
-            $this->writeVerboseMessages("Queue Licence ID {$licence['id']}");
             $commands[] = Command\Licence\ProcessContinuationNotSought::create(
                 [
                     'id' => $licence['id'],
@@ -126,8 +125,18 @@ class BatchController extends AbstractConsoleController
 
         // execute commands
         if (!$dryRun) {
+
+            // @todo This process is memory intensive and slow, recommend to BJSS that cli jobs need min 512M
+            // Then remove this
+            $memoryLimit = ini_set('memory_limit', '512M');
+
             $this->writeVerboseMessages("Processing commands");
-            return $this->handleExitStatus($this->handleCommand($commands));
+            $result = $this->handleCommand($commands);
+
+            // restore memory limit to original value
+            ini_set('memory_limit', $memoryLimit);
+
+            return $this->handleExitStatus($result);
         }
 
         return $this->handleExitStatus(0);
@@ -251,8 +260,10 @@ class BatchController extends AbstractConsoleController
     protected function handleCommand(array $dto)
     {
         try {
+            $count = 0;
             foreach ($dto as $dtoCommand) {
-                $this->writeVerboseMessages("Handle command ". get_class($dtoCommand));
+                $count++;
+                $this->writeVerboseMessages("Handle command ". $count .' '. get_class($dtoCommand));
                 $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dtoCommand);
                 $this->writeVerboseMessages($result->getMessages());
             }
@@ -318,7 +329,7 @@ class BatchController extends AbstractConsoleController
             $messages = [$messages];
         }
         foreach ($messages as $message) {
-            $this->getConsole()->writeLine((new DateTime())->format(\DateTime::W3C) .' '. $message);
+            $this->getConsole()->writeLine((new \DateTime())->format(\DateTime::W3C) .' '. $message);
         }
     }
 }

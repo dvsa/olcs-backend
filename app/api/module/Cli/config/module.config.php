@@ -150,6 +150,12 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send::class,
             Queue::TYPE_PRINT
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob::class,
+            Queue::TYPE_DISC_PRINTING
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting\PrintDiscs::class,
+            Queue::TYPE_CREATE_GOODS_VEHICLE_LIST
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting\CreateGoodsVehicleList::class,
+            Queue::TYPE_CREATE_PSV_VEHICLE_LIST
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting\CreatePsvVehicleList::class,
         ],
         'factories' => [
             'que_typ_cpid_export_csv'

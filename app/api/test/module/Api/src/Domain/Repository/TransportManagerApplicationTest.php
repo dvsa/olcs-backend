@@ -176,7 +176,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $mockDqb->shouldReceive('join')->with('tma.transportManager', 'tm')->once();
         $mockDqb->shouldReceive('join')->with('tm.users', 'u')->once();
         $mockDqb->shouldReceive('expr->eq')->with('u.id', ':user')->once()->andReturn('EXPR');
-        $mockDqb->shouldReceive('where')->with('EXPR')->once()->andReturnSelf();
+        $mockDqb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
         $mockDqb->shouldReceive('setParameter')->with('user', 73)->once();
 
         $query = \Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetList::create(['user' => 73]);
@@ -192,7 +192,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
 
         $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $mockDqb->shouldReceive('expr->eq')->with('tma.application', ':application')->once()->andReturn('EXPR');
-        $mockDqb->shouldReceive('where')->with('EXPR')->once()->andReturnSelf();
+        $mockDqb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
         $mockDqb->shouldReceive('setParameter')->with('application', 73)->once();
 
         $query = \Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetList::create(['application' => 73]);
@@ -209,10 +209,28 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $mockDqb->shouldReceive('expr->eq')->with('tma.transportManager', ':transportManager')->once()
             ->andReturn('EXPR');
-        $mockDqb->shouldReceive('where')->with('EXPR')->once()->andReturnSelf();
+        $mockDqb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
         $mockDqb->shouldReceive('setParameter')->with('transportManager', 73)->once();
 
         $query = \Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetList::create(['transportManager' => 73]);
+        $sut->applyListFilters($mockDqb, $query);
+    }
+
+    /**
+     * Mock SUT so that can just test the protected method
+     */
+    public function testApplyListFiltersAppStatuses()
+    {
+        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $mockDqb->shouldReceive('expr->in')->with('a.status', ':appStatuses')->once()->andReturn('EXPR');
+        $mockDqb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
+        $mockDqb->shouldReceive('setParameter')->with('appStatuses', ['st1', 'st2'])->once();
+
+        $query = \Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetList::create(
+            ['appStatuses' => ['st1', 'st2']]
+        );
         $sut->applyListFilters($mockDqb, $query);
     }
 
