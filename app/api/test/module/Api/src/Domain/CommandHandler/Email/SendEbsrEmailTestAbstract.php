@@ -136,6 +136,7 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
                 'startDate' => $formattedEffectiveDate,
                 'localAuthoritys' => $laDescription1 . ', ' . $laDescription2,
                 'submissionErrors' => $submissionResultArray,
+                'hasBusData' => true,
                 'publicationId' => null,
             ],
             null

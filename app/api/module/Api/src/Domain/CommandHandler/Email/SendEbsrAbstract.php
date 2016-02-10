@@ -214,6 +214,7 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
             'startDate' => $this->formatDate($this->busReg->getEffectiveDate()),
             'localAuthoritys' => $this->getLocalAuthString($this->busReg->getLocalAuthoritys()),
             'submissionErrors' => isset($this->submissionResult['errors']) ? $this->submissionResult['errors'] : [],
+            'hasBusData' => true,
             'publicationId' => null
         ];
 
@@ -239,16 +240,23 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
     {
         $rawData = $this->submissionResult['raw_data'];
 
+        //set some defaults
+        $hasBusData = false;
         $regNo = self::UNKNOWN_REG_NO;
+        $serviceNo = self::UNKNOWN_SERVICE_NO;
+        $origin = self::UNKNOWN_START_POINT;
+        $destination = self::UNKNOWN_FINISH_POINT;
+        $startDate = self::UNKNOWN_START_DATE;
 
-        //we can never be sure if we'll have data, but check for at least a licence and route number
+        //check for a reg no
         if (isset($rawData['licNo']) && isset($rawData['routeNo'])) {
+            $hasBusData = true;
             $regNo = $rawData['licNo'] . '/' . $rawData['routeNo'];
         }
 
-        $serviceNo = self::UNKNOWN_SERVICE_NO;
-
+        //check service no
         if (isset($rawData['serviceNo'])) {
+            $hasBusData = true;
             $serviceNo = $rawData['serviceNo'];
 
             if (isset($rawData['otherServiceNumbers']) && is_array($rawData['otherServiceNumbers'])) {
@@ -256,10 +264,23 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
             }
         }
 
-        $origin = isset($rawData['startPoint']) ? $rawData['startPoint'] : self::UNKNOWN_START_POINT;
-        $destination = isset($rawData['finishPoint']) ? $rawData['finishPoint'] : self::UNKNOWN_FINISH_POINT;
-        $startDate = isset($rawData['effectiveDate']) ?
-            $this->formatDate($rawData['effectiveDate']) : self::UNKNOWN_START_DATE;
+        //check start point
+        if (isset($rawData['startPoint'])) {
+            $hasBusData = true;
+            $origin = $rawData['startPoint'];
+        }
+
+        //check finish point
+        if (isset($rawData['finishPoint'])) {
+            $hasBusData = true;
+            $destination = $rawData['finishPoint'];
+        }
+
+        //check effective date
+        if (isset($rawData['effectiveDate'])) {
+            $hasBusData = true;
+            $startDate = $this->formatDate($rawData['effectiveDate']);
+        }
 
         return [
             'submissionDate' => $this->formatDate($this->ebsr->getSubmittedDate()),
@@ -269,6 +290,7 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
             'destination' => $destination,
             'lineName' => $serviceNo,
             'startDate' => $startDate,
+            'hasBusData' => $hasBusData
         ];
     }
 

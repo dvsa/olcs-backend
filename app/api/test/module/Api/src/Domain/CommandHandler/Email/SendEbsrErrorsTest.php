@@ -147,6 +147,9 @@ class SendEbsrErrorsTest extends CommandHandlerTestCase
         $formatStartDate = new \DateTime($startDate);
         $formattedStartDate = $formatStartDate->format(SendEbsrErrors::DATE_FORMAT);
 
+        $subjectNoBusReg = 'email.ebsr-failed-no-bus-reg.subject';
+        $subjectBusReg = 'email.ebsr-failed.subject';
+
         $rawData = [
             'licNo' => $licNo,
             'routeNo' => $routeNo,
@@ -163,10 +166,8 @@ class SendEbsrErrorsTest extends CommandHandlerTestCase
             'destination' => $finishPoint,
             'lineName' => $formattedServiceNo,
             'startDate' => $formattedStartDate,
+            'hasBusData' => true
         ];
-
-        $subjectNoBusReg = 'email.ebsr-failed-no-bus-reg.subject';
-        $subjectBusReg = 'email.ebsr-failed.subject';
 
         //checks we have blank email data
         $blankEmailData = [
@@ -175,6 +176,7 @@ class SendEbsrErrorsTest extends CommandHandlerTestCase
             'destination' => SendEbsrErrors::UNKNOWN_FINISH_POINT,
             'lineName' => SendEbsrErrors::UNKNOWN_SERVICE_NO,
             'startDate' => SendEbsrErrors::UNKNOWN_START_DATE,
+            'hasBusData' => false
         ];
 
         return [

@@ -126,6 +126,7 @@ abstract class SendEbsrRegCancelEmailTestAbstract extends CommandHandlerTestCase
                 'startDate' => $formattedEffectiveDate,
                 'localAuthoritys' => '',
                 'submissionErrors' => $submissionResultArray,
+                'hasBusData' => true,
                 'publicationId' => $publicationInfo,
             ],
             null
