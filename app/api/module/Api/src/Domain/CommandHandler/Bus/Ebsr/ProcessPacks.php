@@ -59,7 +59,12 @@ final class ProcessPacks extends AbstractCommandHandler implements
     /**
      * @var int
      *
-     * how many levels of doctrine entities we recurse when saving debug info
+     * @note We save audit data to the ebsr_submission_result column in the DB. For convenience we've re-used a small
+     * amount of this data when creating our error emails. If it is ever decided that we no longer need to store the
+     * info, set this value to 1. This will reduce the data stored to a very small amount, without the need for extra
+     * work on the emails
+     *
+     * How many levels of doctrine entities we recurse when saving the audit info
      */
     const DOCTRINE_DEBUG_LEVEL = 2;
 
