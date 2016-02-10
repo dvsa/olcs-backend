@@ -160,30 +160,65 @@ class SendEbsrErrorsTest extends CommandHandlerTestCase
             'otherServiceNumbers' => $otherServiceNo
         ];
 
-        $emailDataWithBusReg = [
+        $rawDataRegNo = ['licNo' => $licNo, 'routeNo' => $routeNo];
+        $rawDataStartPoint = ['startPoint' => $startPoint];
+        $rawDataFinishPoint = ['finishPoint' => $finishPoint];
+        $rawDataEffectiveDate = ['effectiveDate' => $startDate];
+        $rawDataServiceNo = ['serviceNo' => $serviceNo, 'otherServiceNumbers' => $otherServiceNo];
+
+        $fullEmailData = [
             'registrationNumber' => $regNo,
             'origin' => $startPoint,
             'destination' => $finishPoint,
             'lineName' => $formattedServiceNo,
             'startDate' => $formattedStartDate,
-            'hasBusData' => true
         ];
 
-        //checks we have blank email data
-        $blankEmailData = [
+        //build expected email data
+        $emailDataWithFullBusReg = $this->expectedEmailData($fullEmailData, true);
+        $blankEmailData = $this->expectedEmailData([], false);
+        $regNoEmailData = $this->expectedEmailData(['registrationNumber' => $regNo], true);
+        $originEmailData = $this->expectedEmailData(['origin' => $startPoint], true);
+        $destinationEmailData = $this->expectedEmailData(['destination' => $finishPoint], true);
+        $lineNameEmailData = $this->expectedEmailData(['lineName' => $formattedServiceNo], true);
+        $startDateEmailData = $this->expectedEmailData(['startDate' => $formattedStartDate], true);
+
+        return [
+            ['test@test.com', 'foo@bar.com', 'test@test.com', [], $blankEmailData, $subjectNoBusReg],
+            ['',  'foo@bar.com', 'foo@bar.com', [], $blankEmailData, $subjectNoBusReg],
+            ['test@test.com', 'foo@bar.com', 'test@test.com', $rawData, $emailDataWithFullBusReg, $subjectBusReg],
+            ['',  'foo@bar.com', 'foo@bar.com', $rawData, $emailDataWithFullBusReg, $subjectBusReg],
+            ['',  'foo@bar.com', 'foo@bar.com', $rawDataRegNo, $regNoEmailData, $subjectBusReg],
+            ['',  'foo@bar.com', 'foo@bar.com', $rawDataStartPoint, $originEmailData, $subjectBusReg],
+            ['',  'foo@bar.com', 'foo@bar.com', $rawDataFinishPoint, $destinationEmailData, $subjectBusReg],
+            ['',  'foo@bar.com', 'foo@bar.com', $rawDataServiceNo, $lineNameEmailData, $subjectBusReg],
+            ['',  'foo@bar.com', 'foo@bar.com', $rawDataEffectiveDate, $startDateEmailData, $subjectBusReg],
+        ];
+    }
+
+    /**
+     * Builds an array of expected email data
+     *
+     * @param array $fields
+     * @param bool $hasBusData
+     * @return array
+     */
+    private function expectedEmailData($fields, $hasBusData)
+    {
+        $data = [
             'registrationNumber' => SendEbsrErrors::UNKNOWN_REG_NO,
             'origin' => SendEbsrErrors::UNKNOWN_START_POINT,
             'destination' => SendEbsrErrors::UNKNOWN_FINISH_POINT,
             'lineName' => SendEbsrErrors::UNKNOWN_SERVICE_NO,
             'startDate' => SendEbsrErrors::UNKNOWN_START_DATE,
-            'hasBusData' => false
+            'hasBusData' => $hasBusData
         ];
 
-        return [
-            ['test@test.com', 'foo@bar.com', 'test@test.com', [], $blankEmailData, $subjectNoBusReg],
-            ['',  'foo@bar.com', 'foo@bar.com', [], $blankEmailData, $subjectNoBusReg],
-            ['test@test.com', 'foo@bar.com', 'test@test.com', $rawData, $emailDataWithBusReg, $subjectBusReg],
-            ['',  'foo@bar.com', 'foo@bar.com', $rawData, $emailDataWithBusReg, $subjectBusReg]
-        ];
+        foreach ($fields as $key => $value) {
+            $data[$key] = $value;
+        }
+
+        return $data;
     }
+
 }
