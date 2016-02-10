@@ -1902,5 +1902,19 @@ return array(
         'seen_qualification' => array(
             'type' => 'yesno'
         )
-    )
+    ),
+    'sla_target_date' => array(
+        'document_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Document',
+                'property' => 'slaTargetDate',
+                'cascade' => array(
+                    'persist'
+                )
+            )
+        ),
+        'under_delegation' => array(
+            'type' => 'yesno'
+        ),
+    ),
 );

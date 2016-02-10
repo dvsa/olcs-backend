@@ -139,6 +139,7 @@ return [
     'PublicHoliday' => 'System',
     'RefData' => 'System',
     'Sla' => 'System',
+    'SlaTargetDate' => 'System',
     'SubCategory' => 'System',
     'SubCategoryDescription' => 'System',
     'SystemInfoMessage' => 'System',
