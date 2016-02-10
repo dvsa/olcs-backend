@@ -22,7 +22,6 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefused as RefusedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrReceived as ReceivedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefreshed as RefreshedCmd;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
-use Dvsa\Olcs\Api\Entity\View\BusRegSearchView as BusRegSearchViewEntity;
 use Dvsa\Olcs\Email\Data\Message;
 
 /**
@@ -202,15 +201,12 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
             return $this->getTemplateVariablesNoBusReg();
         }
 
-        /** @var BusRegSearchViewEntity $formattedServiceNumbers */
-        $formattedServiceNumbers = $this->getRepo('BusRegSearchView')->fetchById($this->busReg->getId());
-
         $emailData = [
             'submissionDate' => $this->formatDate($this->ebsr->getSubmittedDate()),
             'registrationNumber' => $this->busReg->getRegNo(),
             'origin' => $this->busReg->getStartPoint(),
             'destination' => $this->busReg->getFinishPoint(),
-            'lineName' => $formattedServiceNumbers->getServiceNo(),
+            'lineName' => $this->busReg->getFormattedServiceNumbers(),
             'startDate' => $this->formatDate($this->busReg->getEffectiveDate()),
             'localAuthoritys' => $this->getLocalAuthString($this->busReg->getLocalAuthoritys()),
             'submissionErrors' => isset($this->submissionResult['errors']) ? $this->submissionResult['errors'] : [],
@@ -248,38 +244,41 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
         $destination = self::UNKNOWN_FINISH_POINT;
         $startDate = self::UNKNOWN_START_DATE;
 
-        //check for a reg no
-        if (isset($rawData['licNo']) && isset($rawData['routeNo'])) {
-            $hasBusData = true;
-            $regNo = $rawData['licNo'] . '/' . $rawData['routeNo'];
-        }
-
-        //check service no
-        if (isset($rawData['serviceNo'])) {
-            $hasBusData = true;
-            $serviceNo = $rawData['serviceNo'];
-
-            if (isset($rawData['otherServiceNumbers']) && is_array($rawData['otherServiceNumbers'])) {
-                $serviceNo .= '(' . implode(',', $rawData['otherServiceNumbers']) .')';
+        //if the submission progressed far enough (i.e. beyond xml schema errors), then we will have a data array
+        if (is_array($rawData)) {
+            //check for a reg no
+            if (isset($rawData['licNo']) && isset($rawData['routeNo'])) {
+                $hasBusData = true;
+                $regNo = $rawData['licNo'] . '/' . $rawData['routeNo'];
             }
-        }
 
-        //check start point
-        if (isset($rawData['startPoint'])) {
-            $hasBusData = true;
-            $origin = $rawData['startPoint'];
-        }
+            //check service no
+            if (isset($rawData['serviceNo'])) {
+                $hasBusData = true;
+                $serviceNo = $rawData['serviceNo'];
 
-        //check finish point
-        if (isset($rawData['finishPoint'])) {
-            $hasBusData = true;
-            $destination = $rawData['finishPoint'];
-        }
+                if (isset($rawData['otherServiceNumbers']) && is_array($rawData['otherServiceNumbers'])) {
+                    $serviceNo .= '(' . implode(',', $rawData['otherServiceNumbers']) .')';
+                }
+            }
 
-        //check effective date
-        if (isset($rawData['effectiveDate'])) {
-            $hasBusData = true;
-            $startDate = $this->formatDate($rawData['effectiveDate']);
+            //check start point
+            if (isset($rawData['startPoint'])) {
+                $hasBusData = true;
+                $origin = $rawData['startPoint'];
+            }
+
+            //check finish point
+            if (isset($rawData['finishPoint'])) {
+                $hasBusData = true;
+                $destination = $rawData['finishPoint'];
+            }
+
+            //check effective date
+            if (isset($rawData['effectiveDate'])) {
+                $hasBusData = true;
+                $startDate = $this->formatDate($rawData['effectiveDate']);
+            }
         }
 
         return [
