@@ -17,5 +17,5 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TeamPrinter extends AbstractTeamPrinter
 {
-
+    const ERROR_PRINTER_EXCEPTION_EXISTS = 'err_printer_exception_exist';
 }

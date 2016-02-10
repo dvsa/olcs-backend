@@ -165,7 +165,8 @@ abstract class AbstractTeam implements BundleSerializableInterface, JsonSerializ
      * @ORM\OneToMany(
      *     targetEntity="Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter",
      *     mappedBy="team",
-     *     cascade={"persist"}
+     *     cascade={"persist","remove"},
+     *     orphanRemoval=true
      * )
      */
     protected $teamPrinters;
