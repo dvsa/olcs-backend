@@ -180,7 +180,7 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
 
         if (!is_array($this->template)) {
             $subject = 'email.' . $this->template . '.subject';
-        } elseif ($this->busReg instanceof BusRegEntity) {
+        } elseif ($this->regNo) {
             $subject = 'email.ebsr-failed.subject';
         }
 
