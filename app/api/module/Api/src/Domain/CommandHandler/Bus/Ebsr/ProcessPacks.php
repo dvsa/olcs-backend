@@ -545,6 +545,15 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * @param int $ebsrId
+     * @return SendEbsrErrorsCmd
+     */
+    private function getEbsrErrorEmailCmd($ebsrId)
+    {
+        return $this->ebsrEmailQueue(SendEbsrErrorsCmd::class, $ebsrId);
+    }
+
+    /**
      * Adds the ebsr email to the queue
      *
      * @param string $cmdClass
@@ -568,15 +577,6 @@ final class ProcessPacks extends AbstractCommandHandler implements
                 'options' => ZendJson::encode($options)
             ]
         );
-    }
-
-    /**
-     * @param int $ebsrId
-     * @return SendEbsrReceivedCmd
-     */
-    private function getEbsrErrorEmailCmd($ebsrId)
-    {
-        return SendEbsrErrorsCmd::create(['id' => $ebsrId]);
     }
 
     /**
