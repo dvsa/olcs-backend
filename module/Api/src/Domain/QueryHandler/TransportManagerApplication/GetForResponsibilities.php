@@ -8,7 +8,6 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -31,7 +30,11 @@ class GetForResponsibilities extends AbstractQueryHandler
         return $this->result(
             $transportManagerApplication,
             [
-                'application',
+                'application' => [
+                    'licence' => [
+                        'organisation'
+                    ]
+                ],
                 'operatingCentres',
                 'otherLicences'
             ]
