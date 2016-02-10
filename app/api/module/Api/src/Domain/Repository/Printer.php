@@ -8,6 +8,8 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\PrintScan\Printer as Entity;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Printer
@@ -22,8 +24,17 @@ class Printer extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
         $this->buildDefaultQuery($qb, $id)
-            ->with('teams');
+            ->with('teamPrinters');
 
         return $qb->getQuery()->getSingleResult();
+    }
+
+    /**
+     * @param \Dvsa\Olcs\Api\Domain\Repository\QueryBuilder $qb
+     * @param \Dvsa\Olcs\Api\Domain\Repository\QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        $qb->orderBy($this->alias . '.printerName', 'ASC');
     }
 }

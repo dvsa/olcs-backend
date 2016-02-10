@@ -331,9 +331,11 @@ return array(
                 'entity' => 'Team',
                 'property' => 'teamPrinter',
                 'cascade' => array(
-                    'persist'
+                    'persist',
+                    'remove'
                 ),
-            )
+                'orphanRemoval' => 'true'
+            ),
         ),
         'printer_id' => array(
             'inversedBy' => array(

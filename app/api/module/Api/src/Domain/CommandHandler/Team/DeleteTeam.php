@@ -7,13 +7,9 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Team;
 
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
@@ -23,20 +19,14 @@ use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class DeleteTeam extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class DeleteTeam extends AbstractCommandHandler implements TransactionedInterface
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'Team';
 
     protected $extraRepos = ['User', 'Task'];
 
     public function handleCommand(CommandInterface $command)
     {
-        if (!$this->isGranted(Permission::CAN_MANAGE_USER_INTERNAL)) {
-            throw new ForbiddenException('You do not have permission to manage the record');
-        }
-
         $team = $this->getRepo()->fetchUsingId($command);
         $this->validateTeam($team);
 
@@ -74,10 +64,6 @@ final class DeleteTeam extends AbstractCommandHandler implements AuthAwareInterf
         }
         if (count($team->getTaskAllocationRules())) {
             $errors[TeamEntity::ERROR_TEAM_LINKED_TO_TASK_ALLOCATION_RULES] = '- It is used to allocate tasks';
-        }
-        if (count($team->getTeamPrinters())) {
-            $errors[TeamEntity::ERROR_TEAM_LINKED_TO_PRINTER_SETTINGS] =
-                '- It is used by printing (see administration page)';
         }
 
         if ($errors) {

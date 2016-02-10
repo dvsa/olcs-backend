@@ -24,7 +24,7 @@ class PrinterEntityTest extends EntityTester
         $printer = new Entity();
         $this->assertTrue($printer->canDelete());
 
-        $printer->addTeams(new \Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter());
+        $printer->addTeamPrinters(new \Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter());
         $this->assertFalse($printer->canDelete());
     }
 }
