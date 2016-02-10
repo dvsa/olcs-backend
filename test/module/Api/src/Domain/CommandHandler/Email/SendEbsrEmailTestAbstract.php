@@ -100,7 +100,6 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
         $busRegEntity->shouldReceive('getStartPoint')->once()->andReturn($startPoint);
         $busRegEntity->shouldReceive('getFinishPoint')->once()->andReturn($endPoint);
         $busRegEntity->shouldReceive('getEffectiveDate')->once()->andReturn($effectiveDate);
-        $busRegEntity->shouldReceive('getLicence->getTranslateToWelsh')->once()->andReturn(false);
         $busRegEntity->shouldReceive('getLocalAuthoritys')->times(2)->andReturn($la);
         $busRegEntity->shouldReceive('getPublicationSectionForGrantEmail')->never(); //only for registered & cancelled
         $busRegEntity->shouldReceive('getPublicationLinksForGrantEmail')->never(); //only for registered & cancelled
