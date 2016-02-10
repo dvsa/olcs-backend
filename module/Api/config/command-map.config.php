@@ -772,6 +772,7 @@ return [
     TransferCommand\Tm\Merge::class => CommandHandler\Tm\Merge::class,
     TransferCommand\Tm\Unmerge::class => CommandHandler\Tm\Unmerge::class,
     TransferCommand\Tm\UndoDisqualification::class => CommandHandler\Tm\UndoDisqualification::class,
+    TransferCommand\Tm\NysiisUpdate::class => CommandHandler\Tm\NysiisUpdate::class,
 
     // Task
     TransferCommand\Task\CloseTasks::class => CommandHandler\Task\CloseTasks::class,
