@@ -37,6 +37,12 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
 
     const DATE_FORMAT = 'l F jS Y';
 
+    const UNKNOWN_REG_NO = 'unknown reg no';
+    const UNKNOWN_SERVICE_NO = 'unknown service no';
+    const UNKNOWN_START_POINT = 'unknown start point';
+    const UNKNOWN_FINISH_POINT = 'unknown finish point';
+    const UNKNOWN_START_DATE = 'unknown start date';
+
     protected $repoServiceName = 'EbsrSubmission';
 
     protected $extraRepos = ['BusRegSearchView'];
@@ -59,6 +65,16 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
     protected $submissionResult;
 
     /**
+     * @var array
+     */
+    protected $emailData;
+
+    /**
+     * @var
+     */
+    protected $regNo;
+
+    /**
      * @param CommandInterface|CancelCmd|RegCmd|WithdrawnCmd|RefusedCmd|ReceivedCmd|RefreshedCmd $command
      * @return Result
      */
@@ -71,14 +87,14 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
         $this->submissionResult = $this->decodeEbsrSubmissionResult($this->ebsr->getEbsrSubmissionResult());
 
         //get template variables
-        $emailData = $this->getTemplateVariables($command);
+        $this->emailData = $this->getTemplateVariables($command);
 
         //get the bus regNo (which could come from a number of sources)
-        $regNo = $this->getBusRegNo($emailData);
+        $this->regNo = $this->getBusRegNo();
 
-        $message = $this->getMessage($regNo);
+        $message = $this->getMessage();
 
-        $this->sendEmailTemplate($message, $this->template, $emailData);
+        $this->sendEmailTemplate($message, $this->template, $this->emailData);
 
         $result = new Result();
         $result->addId('ebsrSubmission', $this->ebsr->getId());
@@ -90,26 +106,24 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
     /**
      * Gets the bus registration number, works differently depending on where we get the data from
      *
-     * @param array $emailData
      * @return null|string
      */
-    private function getBusRegNo($emailData)
+    private function getBusRegNo()
     {
         //if the submission failed, we won't always have a bus reg
         if ($this->busReg instanceof BusRegEntity) {
             return $this->busReg->getRegNo();
-        } elseif (isset($emailData['busData']['registrationNumber'])) {
-            return $emailData['busData']['registrationNumber'];
+        } elseif ($this->emailData['registrationNumber'] !== self::UNKNOWN_REG_NO) {
+            return $this->emailData['registrationNumber'];
         }
 
         return null;
     }
 
     /**
-     * @param string|null $regNo
      * @return Message
      */
-    private function getMessage($regNo)
+    private function getMessage()
     {
         $localAuthoritiesCc = [];
         $translateToWelsh = false;
@@ -134,14 +148,14 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
         }
 
         //get the email message, and assign addresses
-        $message = new Message($orgAddress, $this->getSubject($regNo));
+        $message = new Message($orgAddress, $this->getSubject());
         $message->setCc(array_merge($localAuthoritiesCc, $administratorEmails));
 
         //based on the licence, decide whether to translate this to Welsh
         $message->setTranslateToWelsh($translateToWelsh);
 
         //email subject line
-        $message->setSubjectVariables($this->getSubjectVars($regNo));
+        $message->setSubjectVariables($this->getSubjectVars());
 
         return $message;
     }
@@ -149,13 +163,12 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
     /**
      * Gets subject line variables, depends on whether the bus reg is included or not
      *
-     * @param string|null $regNo
      * @return array
      */
-    private function getSubjectVars($regNo)
+    private function getSubjectVars()
     {
-        if ($regNo) {
-            return [$regNo, $this->ebsr->getId()];
+        if ($this->regNo) {
+            return [$this->regNo, $this->ebsr->getId()];
         }
 
         return [$this->ebsr->getId()];
@@ -167,13 +180,13 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
      *
      * @return string
      */
-    private function getSubject($regNo)
+    private function getSubject()
     {
         $subject = 'email.ebsr-failed-no-bus-reg.subject';
 
         if (!is_array($this->template)) {
             $subject = 'email.' . $this->template . '.subject';
-        } elseif ($regNo) {
+        } elseif ($this->regNo) {
             $subject = 'email.ebsr-failed.subject';
         }
 
@@ -231,14 +244,14 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
     {
         $rawData = $this->submissionResult['raw_data'];
 
-        $regNo = 'Unknown reg number';
+        $regNo = self::UNKNOWN_REG_NO;
 
         //we can never be sure if we'll have data, but check for at least a licence and route number
         if (isset($rawData['licNo']) && isset($rawData['routeNo'])) {
             $regNo = $rawData['licNo'] . '/' . $rawData['routeNo'];
         }
 
-        $serviceNo = 'Unknown service number';
+        $serviceNo = self::UNKNOWN_SERVICE_NO;
 
         if (isset($rawData['serviceNo'])) {
             $serviceNo = $rawData['serviceNo'];
@@ -248,9 +261,10 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
             }
         }
 
-        $origin = isset($rawData['startPoint']) ? $rawData['startPoint'] : 'Unknown start point';
-        $destination = isset($rawData['finishPoint']) ? $rawData['finishPoint'] : 'Unknown finish point';
-        $startDate = isset($rawData['effectiveDate']) ? $this->formatDate($rawData['effectiveDate']) : 'Unknown date';
+        $origin = isset($rawData['startPoint']) ? $rawData['startPoint'] : self::UNKNOWN_START_POINT;
+        $destination = isset($rawData['finishPoint']) ? $rawData['finishPoint'] : self::UNKNOWN_FINISH_POINT;
+        $startDate = isset($rawData['effectiveDate']) ?
+            $this->formatDate($rawData['effectiveDate']) : self::UNKNOWN_START_DATE;
 
         return [
             'submissionDate' => $this->formatDate($this->ebsr->getSubmittedDate()),
