@@ -2013,7 +2013,7 @@ class BusRegEntityTest extends EntityTester
         $serviceNo2 = '8910';
         $otherServiceNo1 = new BusRegOtherServiceEntity(new Entity(), $serviceNo1);
         $otherServiceNo2 = new BusRegOtherServiceEntity(new Entity(), $serviceNo2);
-        
+
         $serviceNo = '123';
 
         $otherServiceNumbers = new ArrayCollection([$otherServiceNo1, $otherServiceNo2]);
