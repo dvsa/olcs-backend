@@ -307,12 +307,18 @@ class RepositoryTestCase extends MockeryTestCase
         return $value;
     }
 
-    protected function expectQueryWithData($queryName, $data = [])
+    protected function expectQueryWithData($queryName, $data = [], $types = [])
     {
         $query = m::mock();
-        $query->shouldReceive('execute')
-            ->once()
-            ->with($data);
+        if (!$types) {
+            $query->shouldReceive('execute')
+                ->once()
+                ->with($data);
+        } else {
+            $query->shouldReceive('execute')
+                ->once()
+                ->with($data, $types);
+        }
 
         $this->dbQueryService->shouldReceive('get')
             ->with($queryName)

@@ -179,6 +179,8 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
             'feeType' => $irfoFeeType->getId(),
             'amount' => 0,
             'feeStatus' => Fee::STATUS_PAID,
+            'irfoFeeExempt' => 'Y',
+            'waiveReason' => $irfoPsvAuth->getExemptionDetails(),
         ];
 
         return $this->handleSideEffect(FeeCreateFee::create($data));

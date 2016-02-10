@@ -12,5 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Printer extends AbstractPrinter
 {
+    const ERROR_TEAMS_EXISTS = 'err_teams_exist';
 
+    public function canDelete()
+    {
+        if (count($this->getTeams())) {
+            return false;
+        }
+        return true;
+    }
 }

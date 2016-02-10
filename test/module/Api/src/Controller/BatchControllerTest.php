@@ -249,7 +249,7 @@ class BatchControllerTest extends TestCase
             );
 
         $mockConsole = m::mock(AdapterInterface::class);
-        $mockConsole->shouldReceive('writeLine')->times(11);
+        $mockConsole->shouldReceive('writeLine')->times(9);
         $this->sut->setConsole($mockConsole);
 
         $this->sut->continuationNotSoughtAction();

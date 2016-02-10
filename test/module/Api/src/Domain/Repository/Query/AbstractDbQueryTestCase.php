@@ -62,41 +62,6 @@ abstract class AbstractDbQueryTestCase extends MockeryTestCase
         $this->assertSame($sut, $this->sut);
     }
 
-    /**
-     * @dataProvider paramProvider
-     */
-    public function testExecuteWithException($inputParams, $expectedParams)
-    {
-        $this->setExpectedException(RuntimeException::class);
-
-        $this->connection->shouldReceive('prepare')
-            ->with($this->getExpectedQuery())
-            ->once()
-            ->andThrow(new \Exception());
-
-        $this->sut->execute($inputParams);
-    }
-
-    /**
-     * @dataProvider paramProvider
-     */
-    public function testExecute($inputParams, $expectedParams)
-    {
-        $statement = m::mock();
-
-        $this->connection->shouldReceive('prepare')
-            ->with($this->getExpectedQuery())
-            ->once()
-            ->andReturn($statement);
-
-        $statement->shouldReceive('execute')
-            ->with($expectedParams)
-            ->once()
-            ->andReturn('result');
-
-        $this->assertEquals('result', $this->sut->execute($inputParams));
-    }
-
     public function getClassMetadata($entity)
     {
         if (empty($this->metaMap[$entity])) {
@@ -125,5 +90,33 @@ abstract class AbstractDbQueryTestCase extends MockeryTestCase
         }
 
         return $this->metaMap[$entity];
+    }
+
+    /**
+     * @dataProvider paramProvider
+     */
+    public function testExecuteWithException($inputParams, $inputTypes, $expectedParams, $expectedTypes)
+    {
+        $this->setExpectedException(RuntimeException::class);
+
+        $this->connection->shouldReceive('executeQuery')
+            ->with($this->getExpectedQuery(), $expectedParams, $expectedTypes)
+            ->once()
+            ->andThrow(new \Exception());
+
+        $this->sut->execute($inputParams, $inputTypes);
+    }
+
+    /**
+     * @dataProvider paramProvider
+     */
+    public function testExecute($inputParams, $inputTypes, $expectedParams, $expectedTypes)
+    {
+        $this->connection->shouldReceive('executeQuery')
+            ->with($this->getExpectedQuery(), $expectedParams, $expectedTypes)
+            ->once()
+            ->andReturn('result');
+
+        $this->assertEquals('result', $this->sut->execute($inputParams, $inputTypes));
     }
 }

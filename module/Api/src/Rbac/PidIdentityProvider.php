@@ -16,6 +16,7 @@ class PidIdentityProvider implements IdentityProviderInterface
 {
     // @todo remove user from testdata when we find constant solution for CLI requests
     const SYSTEM_USER = 1;
+    const SYSTEM_TEAM = 1;
 
     /**
      * @var RepositoryInterface

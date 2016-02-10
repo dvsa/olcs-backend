@@ -28,7 +28,7 @@ return array(
             'adapter' => 'Zend\Http\Client\Adapter\Curl'
         ),
         'path' => 'documents/'
-            . '{Category}/{SubCategory}/{Date:Y}/{Date:m}/{Date:YmdHis}_{Context}_{Description}.{Extension}'
+            . '{Category}/{SubCategory}/{Date:Y}/{Date:m}/{Date:YmdHisu}_{Context}_{Description}.{Extension}'
     ),
     'email' => array(
         'http' => array(

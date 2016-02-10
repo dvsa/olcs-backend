@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\User;
 
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -16,8 +18,10 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class Pid extends AbstractQueryHandler
+class Pid extends AbstractQueryHandler implements OpenAmUserAwareInterface
 {
+    use OpenAmUserAwareTrait;
+
     protected $repoServiceName = 'User';
 
     public function handleQuery(QueryInterface $query)
@@ -25,8 +29,11 @@ class Pid extends AbstractQueryHandler
         /** @var UserEntity $user */
         $user = $this->getRepo()->fetchOneByLoginId($query->getId());
 
+        $pid = $user->getPid();
+
         return [
-            'pid' => $user->getPid()
+            'pid' => $pid,
+            'isActive' => $this->getOpenAmUser()->isActiveUser($pid),
         ];
     }
 }
