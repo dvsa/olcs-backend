@@ -55,7 +55,7 @@ class SendEbsrErrorsTest extends CommandHandlerTestCase
      * @param string $orgEmail
      * @param string $adminEmail
      * @param string $expectedToAddress
-     * @param array $rawData
+     * @param array|string $rawData
      * @param array $templateVars
      */
     public function testHandleCommand($orgEmail, $adminEmail, $expectedToAddress, $rawData, $templateVars)
@@ -182,6 +182,7 @@ class SendEbsrErrorsTest extends CommandHandlerTestCase
 
         return [
             ['test@test.com', 'foo@bar.com', 'test@test.com', [], $blankEmailData],
+            ['',  'foo@bar.com', 'foo@bar.com', 'not an array', $blankEmailData],
             ['',  'foo@bar.com', 'foo@bar.com', [], $blankEmailData],
             ['test@test.com', 'foo@bar.com', 'test@test.com', $rawData, $emailDataWithFullBusReg],
             ['',  'foo@bar.com', 'foo@bar.com', $rawData, $emailDataWithFullBusReg],

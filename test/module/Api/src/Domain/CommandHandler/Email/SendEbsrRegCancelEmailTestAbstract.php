@@ -8,14 +8,12 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
-use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as BusRegSearchViewRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
-use Dvsa\Olcs\Api\Entity\View\BusRegSearchView as BusRegSearchViewEntity;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -39,7 +37,6 @@ abstract class SendEbsrRegCancelEmailTestAbstract extends CommandHandlerTestCase
     {
         $this->sut = new $this->sutClass();
         $this->mockRepo('EbsrSubmission', EbsrSubmissionRepo::class);
-        $this->mockRepo('BusRegSearchView', BusRegSearchViewRepo::class);
 
         $this->mockedSmServices = [
             TemplateRenderer::class => m::mock(TemplateRenderer::class),
@@ -63,10 +60,9 @@ abstract class SendEbsrRegCancelEmailTestAbstract extends CommandHandlerTestCase
     {
         $ebsrSubmissionId = 1234;
         $regNo = 5678;
-        $busRegId = 12;
         $startPoint = 'start point';
         $endPoint = 'end point';
-        $serviceNumbers = '99999 (12345, 567910)';
+        $serviceNumbers = '99999 (12345,567910)';
         $orgEmail = 'foo@bar.com';
         $publicationInfo = 'publicationInfo';
         $submissionResultArray = [];
@@ -81,16 +77,13 @@ abstract class SendEbsrRegCancelEmailTestAbstract extends CommandHandlerTestCase
 
         $command = $cmdClass::create(['id' => $ebsrSubmissionId]);
 
-        $busRegSearchViewEntity = m::mock(BusRegSearchViewEntity::class);
-        $busRegSearchViewEntity->shouldReceive('getServiceNo')->once()->andReturn($serviceNumbers);
-
         $busRegEntity = m::mock(BusRegEntity::class);
-        $busRegEntity->shouldReceive('getId')->once()->andReturn($busRegId);
         $busRegEntity->shouldReceive('getRegNo')->times(2)->andReturn($regNo);
         $busRegEntity->shouldReceive('getStartPoint')->once()->andReturn($startPoint);
         $busRegEntity->shouldReceive('getFinishPoint')->once()->andReturn($endPoint);
         $busRegEntity->shouldReceive('getEffectiveDate')->once()->andReturn($effectiveDate);
         $busRegEntity->shouldReceive('getLocalAuthoritys')->times(2)->andReturn(new ArrayCollection());
+        $busRegEntity->shouldReceive('getFormattedServiceNumbers')->once()->andReturn($serviceNumbers);
         $busRegEntity->shouldReceive('getPublicationSectionForGrantEmail')->once()->andReturn(26);
         $busRegEntity->shouldReceive('getPublicationLinksForGrantEmail')->once()->andReturn($publicationInfo);
 
@@ -107,12 +100,6 @@ abstract class SendEbsrRegCancelEmailTestAbstract extends CommandHandlerTestCase
             ->with(m::type($cmdClass), Query::HYDRATE_OBJECT, null)
             ->once()
             ->andReturn($ebsrSubmissionEntity);
-
-        $this->repoMap['BusRegSearchView']
-            ->shouldReceive('fetchById')
-            ->with($busRegId)
-            ->once()
-            ->andReturn($busRegSearchViewEntity);
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->with(
             m::type(\Dvsa\Olcs\Email\Data\Message::class),
