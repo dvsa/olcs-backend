@@ -170,7 +170,7 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
     }
 
     /**
-     * Decides on the subject line. If template is a string then it is easy to match it, failure emails use an array
+     * Decides on the subject line. If template is a string then it is easy to match it. Failure emails use an array
      * of templates, so we do it based on whether we have a reg number
      *
      * @return string
@@ -181,7 +181,7 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
 
         if (!is_array($this->template)) {
             $subject = 'email.' . $this->template . '.subject';
-        } elseif ($this->regNo) {
+        } elseif ($this->busReg instanceof BusRegEntity) {
             $subject = 'email.ebsr-failed.subject';
         }
 
