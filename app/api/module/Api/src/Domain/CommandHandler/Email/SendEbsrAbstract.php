@@ -126,13 +126,11 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
     private function getMessage()
     {
         $localAuthoritiesCc = [];
-        $translateToWelsh = false;
 
         //if the submission failed, we won't always have a bus reg
         if ($this->busReg instanceof BusRegEntity) {
             //get local auth data (list of local auths copied, and their email addresses)
             $localAuthoritiesCc = $this->getLocalAuthEmails($this->busReg->getLocalAuthoritys());
-            $translateToWelsh = $this->busReg->getLicence()->getTranslateToWelsh();
         }
 
         //organisation address
@@ -150,9 +148,6 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
         //get the email message, and assign addresses
         $message = new Message($orgAddress, $this->getSubject());
         $message->setCc(array_merge($localAuthoritiesCc, $administratorEmails));
-
-        //based on the licence, decide whether to translate this to Welsh
-        $message->setTranslateToWelsh($translateToWelsh);
 
         //email subject line
         $message->setSubjectVariables($this->getSubjectVars());
