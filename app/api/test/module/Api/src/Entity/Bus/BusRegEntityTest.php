@@ -2010,13 +2010,10 @@ class BusRegEntityTest extends EntityTester
     public function getFormattedServiceNumbersProvider()
     {
         $serviceNo1 = '4567';
-        $otherServiceNo1 = m::mock(BusRegOtherServiceEntity::class);
-        $otherServiceNo1->shouldReceive('getServiceNo')->once()->andReturn($serviceNo1);
-
         $serviceNo2 = '8910';
-        $otherServiceNo2 = m::mock(BusRegOtherServiceEntity::class);
-        $otherServiceNo2->shouldReceive('getServiceNo')->once()->andReturn($serviceNo2);
-
+        $otherServiceNo1 = new BusRegOtherServiceEntity(new Entity(), $serviceNo1);
+        $otherServiceNo2 = new BusRegOtherServiceEntity(new Entity(), $serviceNo2);
+        
         $serviceNo = '123';
 
         $otherServiceNumbers = new ArrayCollection([$otherServiceNo1, $otherServiceNo2]);
