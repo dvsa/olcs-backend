@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\ApplicationOperatingCentre\ApplicationOperatingCentre;
 use Dvsa\Olcs\Transfer\Query\LicenceOperatingCentre\LicenceOperatingCentre;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 
 /**
  * Variation Operating Centre
@@ -25,8 +26,13 @@ class VariationOperatingCentre extends AbstractQueryHandler
 
         list($prefix, $id) = $this->splitTypeAndId($id);
 
+        if (!in_array($prefix, ['L', 'A'])) {
+            throw new \Exception('Couldn\'t determine identity');
+        }
+
         if ($prefix === 'L') {
-            return $this->getQueryHandler()->handleQuery(
+            /** @var Result $response */
+            $response = $this->getQueryHandler()->handleQuery(
                 LicenceOperatingCentre::create(
                     [
                         'id' => $id,
@@ -34,11 +40,14 @@ class VariationOperatingCentre extends AbstractQueryHandler
                     ]
                 )
             );
-        } elseif ($prefix === 'A') {
-            return $this->getQueryHandler()->handleQuery(ApplicationOperatingCentre::create(['id' => $id]));
+        } else {
+            /** @var Result $response */
+            $response = $this->getQueryHandler()->handleQuery(ApplicationOperatingCentre::create(['id' => $id]));
         }
 
-        throw new \Exception('Couldn\'t determine identity');
+        $response->setValue('canUpdateAddress', false);
+
+        return $response;
     }
 
     private function splitTypeAndId($ref)
