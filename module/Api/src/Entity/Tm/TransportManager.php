@@ -66,10 +66,10 @@ class TransportManager extends AbstractTransportManager implements ContextProvid
         $nysiisForename = null,
         $nysiisFamilyname = null
     ) {
-        if ($nysiisForename !== null) {
+        if (!empty($nysiisForename)) {
             $this->setNysiisForename($nysiisForename);
         }
-        if ($nysiisFamilyname !== null) {
+        if (!empty($nysiisFamilyname)) {
             $this->setNysiisFamilyname($nysiisFamilyname);
         }
     }
