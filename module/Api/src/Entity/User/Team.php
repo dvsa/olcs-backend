@@ -44,9 +44,7 @@ class Team extends AbstractTeam
         if ($currentDefaultTeamPrinter) {
             $currentDefaultTeamPrinter->setPrinter($newDefaultPrinter);
         } else {
-            $teamPrinter = new TeamPrinter();
-            $teamPrinter->setTeam($this);
-            $teamPrinter->setPrinter($newDefaultPrinter);
+            $teamPrinter = new TeamPrinter($this, $newDefaultPrinter);
             $this->addTeamPrinters($teamPrinter);
         }
     }

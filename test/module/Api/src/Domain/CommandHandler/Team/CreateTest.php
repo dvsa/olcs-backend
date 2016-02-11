@@ -80,7 +80,7 @@ class CreateTest extends CommandHandlerTestCase
         $this->repoMap['Printer']
             ->shouldReceive('fetchById')
             ->with(2)
-            ->andReturn('bar')
+            ->andReturn(m::mock(PrinterEntity::class))
             ->once()
             ->getMock();
 

@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\PrintScan;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\PrintScan\Printer as Entity;
+use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 
 /**
  * Printer Entity Unit Tests
@@ -24,7 +25,7 @@ class PrinterEntityTest extends EntityTester
         $printer = new Entity();
         $this->assertTrue($printer->canDelete());
 
-        $printer->addTeamPrinters(new \Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter());
+        $printer->addTeamPrinters(new \Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter(new TeamEntity(), $printer));
         $this->assertFalse($printer->canDelete());
     }
 }
