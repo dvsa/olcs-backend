@@ -227,9 +227,22 @@ class SendEmail extends AbstractCommandHandler
         $subject = $this->translate($command->getSubject(), $command->getLocale());
 
         $to = $command->getTo();
+        $cc = $command->getCc();
+        // @todo When bcc is implemented
+        //$bcc = $command->getBcc();
 
         if ($this->getSendAllMailTo()) {
             $to = $this->getSendAllMailTo();
+            /**
+             * IMPORTANT CC gets emptied when we have configured emails to be sent to 1 email address
+             */
+            $cc = [];
+
+            // @todo When bcc is implemented
+            /**
+             * IMPORTANT BCC gets emptied when we have configured emails to be sent to 1 email address
+             */
+            //$bcc = [];
 
             $originalTo = implode(', ', (array)$command->getTo());
 
@@ -240,7 +253,7 @@ class SendEmail extends AbstractCommandHandler
 
         $body = $this->replaceUris($this->translate($command->getBody(), $command->getLocale()));
 
-        $this->send($to, $subject, $body, $command->getHtml(), $fromEmail, $fromName, $command->getCc());
+        $this->send($to, $subject, $body, $command->getHtml(), $fromEmail, $fromName, $cc);
 
         $this->result->addMessage('Email sent');
         return $this->result;
