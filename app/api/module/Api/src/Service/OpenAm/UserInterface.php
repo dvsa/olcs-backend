@@ -56,6 +56,17 @@ interface UserInterface
     public function disableUser($pid);
 
     /**
+     * Resets user password
+     *
+     * @param string $pid
+     * @param callable $callback
+     *
+     * @return void
+     * @throws FailedRequestException
+     */
+    public function resetPassword($pid, $callback = null);
+
+    /**
      * Is active
      *
      * @param string $pid
