@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Ebsr\InputFilter;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Service\InputFilter\Input;
 
 /**
  * Class ProcessedDataInputFactory
