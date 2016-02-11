@@ -177,13 +177,14 @@ class TransactionEntityTest extends EntityTester
      * @param RefData $paymentMethod payment method
      * @dataProvider displayReversalOptionProvider
      */
-    public function testDisplayReversalOption($type, $paymentMethod, $status, $expected)
+    public function testDisplayReversalOption($type, $paymentMethod, $status, $legacyStatus, $expected)
     {
         $sut = $this->instantiate($this->entityClass);
 
         $sut->setType($type);
         $sut->setPaymentMethod($paymentMethod);
         $sut->setStatus($status);
+        $sut->setLegacyStatus($legacyStatus);
 
         $this->assertSame($expected, $sut->displayReversalOption());
     }
@@ -191,38 +192,58 @@ class TransactionEntityTest extends EntityTester
     public function displayReversalOptionProvider()
     {
         return [
+            'migrated' => [
+                new RefData(Entity::TYPE_PAYMENT),
+                new RefData(Fee::METHOD_MIGRATED),
+                new RefData(Entity::STATUS_COMPLETE),
+                null,
+                false,
+            ],
+            'legacy status' => [
+                new RefData(Entity::TYPE_PAYMENT),
+                new RefData(Fee::METHOD_CHEQUE),
+                new RefData(Entity::STATUS_COMPLETE),
+                1,
+                false,
+            ],
             'cheque payment' => [
                 new RefData(Entity::TYPE_PAYMENT),
                 new RefData(Fee::METHOD_CHEQUE),
                 new RefData(Entity::STATUS_COMPLETE),
+                null,
                 true,
             ],
             'digital card payment' => [
                 new RefData(Entity::TYPE_PAYMENT),
                 new RefData(Fee::METHOD_CARD_ONLINE),
                 new RefData(Entity::STATUS_COMPLETE),
+                null,
                 true,
             ],
             'assisted digital card payment' => [
                 new RefData(Entity::TYPE_PAYMENT),
                 new RefData(Fee::METHOD_CARD_OFFLINE),
                 new RefData(Entity::STATUS_COMPLETE),
+                null,
                 true,
             ],
             'cash payment' => [
                 new RefData(Entity::TYPE_PAYMENT),
                 new RefData(Fee::METHOD_CASH),
                 new RefData(Entity::STATUS_COMPLETE),
+                null,
                 true,
             ],
             'PO payment' => [
                 new RefData(Entity::TYPE_PAYMENT),
                 new RefData(Fee::METHOD_POSTAL_ORDER),
                 new RefData(Entity::STATUS_COMPLETE),
+                null,
                 true,
             ],
             'waive' => [
                 new RefData(Entity::TYPE_WAIVE),
+                null,
                 null,
                 null,
                 false,
@@ -231,10 +252,12 @@ class TransactionEntityTest extends EntityTester
                 new RefData(Entity::TYPE_REFUND),
                 null,
                 null,
+                null,
                 false,
             ],
             'reversal' => [
                 new RefData(Entity::TYPE_REVERSAL),
+                null,
                 null,
                 null,
                 false,
@@ -243,6 +266,7 @@ class TransactionEntityTest extends EntityTester
                 new RefData(Entity::TYPE_PAYMENT),
                 new RefData(Fee::METHOD_CARD_ONLINE),
                 new RefData(Entity::STATUS_FAILED),
+                null,
                 false,
             ],
         ];
