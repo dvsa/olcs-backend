@@ -30,11 +30,8 @@ final class CreateTeamPrinter extends AbstractCommandHandler
     {
         $this->checkIfPrinterExceptionExists($command);
 
-        $teamPrinter = new TeamPrinterEntity();
-        $teamPrinter->setTeam(
-            $this->getRepo()->getReference(TeamEntity::class, $command->getTeam())
-        );
-        $teamPrinter->setPrinter(
+        $teamPrinter = new TeamPrinterEntity(
+            $this->getRepo()->getReference(TeamEntity::class, $command->getTeam()),
             $this->getRepo()->getReference(PrinterEntity::class, $command->getPrinter())
         );
         if ($command->getSubCategory()) {
