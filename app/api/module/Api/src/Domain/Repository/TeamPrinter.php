@@ -53,6 +53,12 @@ class TeamPrinter extends AbstractRepository
             ->with('user', 'u');
     }
 
+    /**
+     * Fetch TeamPrinter by provided details
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\CommandInterface
+     * @return array
+     */
     public function fetchByDetails($command)
     {
         $qb = $this->createQueryBuilder();

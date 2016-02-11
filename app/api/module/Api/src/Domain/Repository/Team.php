@@ -35,6 +35,13 @@ class Team extends AbstractRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * Fetch team by Id with printers
+     *
+     * @param int ID
+     * @param int $type
+     * @return mixed
+     */
     public function fetchWithPrinters($id, $type)
     {
         $qb = $this->createQueryBuilder();

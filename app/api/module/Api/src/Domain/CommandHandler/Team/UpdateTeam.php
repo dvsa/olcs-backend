@@ -63,6 +63,12 @@ final class UpdateTeam extends AbstractCommandHandler implements TransactionedIn
         }
     }
 
+    /**
+     * Update default team printer if needed
+     *
+     * @param TeamEntity $team
+     * @param \Dvsa\Olcs\Transfer\Command\CommandInterface $command
+     */
     protected function processDefaultPrinter($team, $command)
     {
         $currentDefaultTeamPrinter = $team->getDefaultTeamPrinter();
