@@ -23,7 +23,7 @@ class CeaseDiscsForLicence extends AbstractRawQuery
     ];
 
     protected $queryTemplate = 'UPDATE {pd}
-      SET {pd.ceasedDate} = :ceasedDate
+      SET {pd.ceasedDate} = :ceasedDate, {pd.createdOn} = NOW()
       WHERE {pd.licence} = :licence AND {pd.ceasedDate} IS NULL';
 
     /**

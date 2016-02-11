@@ -132,4 +132,19 @@ class PsvDisc extends AbstractRepository
 
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
+
+    /**
+     * Create PSV discs
+     *
+     * @param int  $licenceId
+     * @param int  $howMany   How many to create
+     * @param bool $isCopy    Set created discs as copies
+     *
+     * @return int number of discs created
+     */
+    public function createPsvDiscs($licenceId, $howMany, $isCopy = false)
+    {
+        return $this->getDbQueryManager()->get('Discs\CreatePsvDiscs')
+            ->executeInsert($licenceId, $howMany, $isCopy);
+    }
 }

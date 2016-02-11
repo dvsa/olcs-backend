@@ -1,11 +1,6 @@
 <?php
 
-/**
- * Cease Discs For Licence
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
-namespace Dvsa\Olcs\Api\Domain\Repository\Query\LicenceVehicle;
+namespace Dvsa\Olcs\Api\Domain\Repository\Query\Discs;
 
 use Dvsa\Olcs\Api\Domain\Repository\Query\AbstractRawQuery;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -13,11 +8,11 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 
 /**
- * Cease Discs For Licence
+ * CeaseGoodsDiscsForApplication
  *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CeaseDiscsForLicence extends AbstractRawQuery
+class CeaseGoodsDiscsForApplication extends AbstractRawQuery
 {
     protected $templateMap = [
         'gd' => GoodsDisc::class,
@@ -26,8 +21,13 @@ class CeaseDiscsForLicence extends AbstractRawQuery
 
     protected $queryTemplate = 'UPDATE {gd}
       INNER JOIN {lv} ON {lv.id} = {gd.licenceVehicle}
-      SET {gd.ceasedDate} = :ceasedDate, {gd.isInterim} = 0, {gd.lastModifiedOn} = NOW()
-      WHERE {lv.licence} = :licence AND {gd.ceasedDate} IS NULL';
+      SET {gd.ceasedDate} = :ceasedDate, {gd.lastModifiedOn} = NOW()
+      WHERE {gd.ceasedDate} IS NULL
+      AND {lv.specifiedDate} IS NOT NULL
+      AND {lv.removalDate} IS NULL
+      AND {lv.interimApplication} IS NULL
+      AND ({lv.application} <> :application OR {lv.application} IS NULL)
+      AND {lv.licence} = :licence';
 
     /**
      * {@inheritdoc}
@@ -35,7 +35,6 @@ class CeaseDiscsForLicence extends AbstractRawQuery
     protected function getParams()
     {
         $today = new DateTime();
-
         return [
             'ceasedDate' => $today->format('Y-m-d H:i:s')
         ];
