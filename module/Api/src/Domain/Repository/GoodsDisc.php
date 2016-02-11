@@ -166,4 +166,29 @@ class GoodsDisc extends AbstractRepository
 
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
+
+    /**
+     * Update existing discs for an application
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
+     */
+    public function updateExistingGoodsDiscs(\Dvsa\Olcs\Api\Entity\Application\Application $application)
+    {
+        $this->getDbQueryManager()->get('Discs\CeaseGoodsDiscsForApplication')
+            ->execute(
+                [
+                    'application' => $application->getId(),
+                    'licence' => $application->getLicence()->getId(),
+                ]
+            );
+
+        $this->getDbQueryManager()->get('Discs\CreateGoodsDiscs')
+            ->execute(
+                [
+                    'application' => $application->getId(),
+                    'licence' => $application->getLicence()->getId(),
+                    'isCopy' => 0,
+                ]
+            );
+    }
 }

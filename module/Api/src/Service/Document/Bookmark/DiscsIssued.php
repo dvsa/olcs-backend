@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicencePsvDiscCountNotCeased as Qry;
 
 /**
  * Licence - count of discs
@@ -14,17 +14,11 @@ class DiscsIssued extends DynamicBookmark
 {
     public function getQuery(array $data)
     {
-        return Qry::create(['id' => $data['licence'], 'bundle' => ['psvDiscs']]);
+        return Qry::create(['id' => $data['licence']]);
     }
 
     public function render()
     {
-        $activeDiscs = array_filter(
-            $this->data['psvDiscs'],
-            function ($val) {
-                return $val['ceasedDate'] === null;
-            }
-        );
-        return count($activeDiscs);
+        return $this->data['notCeasedPsvDiscCount'];
     }
 }
