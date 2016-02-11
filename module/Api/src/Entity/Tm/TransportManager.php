@@ -62,6 +62,18 @@ class TransportManager extends AbstractTransportManager implements ContextProvid
         }
     }
 
+    public function updateNysiis(
+        $nysiisForename = null,
+        $nysiisFamilyname = null
+    ) {
+        if ($nysiisForename !== null) {
+            $this->setNysiisForename($nysiisForename);
+        }
+        if ($nysiisFamilyname !== null) {
+            $this->setNysiisFamilyname($nysiisFamilyname);
+        }
+    }
+
     /**
      * Get a list of Organisations that this TM is associated with
      *
