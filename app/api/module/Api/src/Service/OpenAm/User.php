@@ -145,6 +145,38 @@ class User implements UserInterface
     }
 
     /**
+     * Resets user password
+     *
+     * @param string $pid
+     * @param callable $callback
+     *
+     * @return void
+     * @throws FailedRequestException
+     */
+    public function resetPassword($pid, $callback = null)
+    {
+        // TODO - to be switched to generated password as part of OLCS-11894
+        // $password = $this->generatePassword();
+        $password = 'Password123';
+
+        $payload[] = [
+            'operation' => 'replace',
+            'field' => 'password',
+            'value' => $password
+        ];
+
+        $this->openAmClient->updateUser($pid, $payload);
+
+        if ($callback !== null) {
+            $params = [
+                'password' => $password
+            ];
+
+            $this->callCallbackIfExists($callback, $params);
+        }
+    }
+
+    /**
      * Is active
      *
      * @param string $pid
