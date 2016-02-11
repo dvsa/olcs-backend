@@ -86,7 +86,7 @@ class SendEmailTest extends CommandHandlerTestCase
                 'foo@bar.com : translated-Some subject',
                 'translated-This is the email',
                 false,
-                ['bar@foo.com']
+                []
             );
 
         $this->sut->handleCommand($command);
