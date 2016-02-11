@@ -691,6 +691,7 @@ return [
     Command\Email\SendEbsrRefreshed::class => CommandHandler\Email\SendEbsrRefreshed::class,
     Command\Email\SendEbsrCancelled::class => CommandHandler\Email\SendEbsrCancelled::class,
     Command\Email\SendEbsrRegistered::class => CommandHandler\Email\SendEbsrRegistered::class,
+    Command\Email\SendEbsrErrors::class => CommandHandler\Email\SendEbsrErrors::class,
 
     // Person
     Command\Person\Create::class => CommandHandler\Person\Create::class,

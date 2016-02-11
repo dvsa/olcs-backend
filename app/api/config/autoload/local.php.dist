@@ -179,6 +179,7 @@ return [
         'transexchange_publisher' => [
             'uri' => 'http://localhost:8080/txc/publisherService',
         ],
+        //debug only - validation must always be set to true in production
         'validate' => [
             'xml_structure' => true,
             'bus_registration' => true,
