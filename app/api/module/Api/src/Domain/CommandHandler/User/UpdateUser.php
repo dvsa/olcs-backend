@@ -93,6 +93,12 @@ final class UpdateUser extends AbstractUserCommandHandler implements
             ($command->getAccountDisabled() === 'Y') ? true : false
         );
 
+        if ($command->getResetPassword() === 'Y') {
+            $this->getOpenAmUser()->resetPassword(
+                $user->getPid()
+            );
+        }
+
         $result = new Result();
         $result->addId('user', $user->getId());
         $result->addMessage('User updated successfully');
