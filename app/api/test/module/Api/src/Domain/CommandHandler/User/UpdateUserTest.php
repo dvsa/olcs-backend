@@ -218,6 +218,7 @@ class UpdateUserTest extends CommandHandlerTestCase
                 ],
             ],
             'accountDisabled' => 'Y',
+            'resetPassword' => 'Y',
         ];
 
         $command = Cmd::create($data);
@@ -227,9 +228,13 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
 
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
+        $this->mockedSmServices[UserInterface::class]
+            ->shouldReceive('updateUser')
             ->once()
-            ->with('pid', 'login_id', 'test1@test.me', true);
+            ->with('pid', 'login_id', 'test1@test.me', true)
+            ->shouldReceive('resetPassword')
+            ->once()
+            ->with('pid');
 
         /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
@@ -354,9 +359,12 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
 
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
+        $this->mockedSmServices[UserInterface::class]
+            ->shouldReceive('updateUser')
             ->once()
-            ->with('pid', 'login_id', 'test1@test.me', false);
+            ->with('pid', 'login_id', 'test1@test.me', false)
+            ->shouldReceive('resetPassword')
+            ->never();
 
         /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
