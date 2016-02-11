@@ -60,13 +60,13 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
     protected $printerTray;
 
     /**
-     * Team
+     * Team printer
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter", mappedBy="printer")
      */
-    protected $teams;
+    protected $teamPrinters;
 
     /**
      * Initialise the collections
@@ -78,7 +78,7 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
 
     public function initCollections()
     {
-        $this->teams = new ArrayCollection();
+        $this->teamPrinters = new ArrayCollection();
     }
 
     /**
@@ -174,60 +174,60 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
     }
 
     /**
-     * Set the team
+     * Set the team printer
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $teams
+     * @param \Doctrine\Common\Collections\ArrayCollection $teamPrinters
      * @return Printer
      */
-    public function setTeams($teams)
+    public function setTeamPrinters($teamPrinters)
     {
-        $this->teams = $teams;
+        $this->teamPrinters = $teamPrinters;
 
         return $this;
     }
 
     /**
-     * Get the teams
+     * Get the team printers
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getTeams()
+    public function getTeamPrinters()
     {
-        return $this->teams;
+        return $this->teamPrinters;
     }
 
     /**
-     * Add a teams
+     * Add a team printers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $teams
+     * @param \Doctrine\Common\Collections\ArrayCollection $teamPrinters
      * @return Printer
      */
-    public function addTeams($teams)
+    public function addTeamPrinters($teamPrinters)
     {
-        if ($teams instanceof ArrayCollection) {
-            $this->teams = new ArrayCollection(
+        if ($teamPrinters instanceof ArrayCollection) {
+            $this->teamPrinters = new ArrayCollection(
                 array_merge(
-                    $this->teams->toArray(),
-                    $teams->toArray()
+                    $this->teamPrinters->toArray(),
+                    $teamPrinters->toArray()
                 )
             );
-        } elseif (!$this->teams->contains($teams)) {
-            $this->teams->add($teams);
+        } elseif (!$this->teamPrinters->contains($teamPrinters)) {
+            $this->teamPrinters->add($teamPrinters);
         }
 
         return $this;
     }
 
     /**
-     * Remove a teams
+     * Remove a team printers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $teams
+     * @param \Doctrine\Common\Collections\ArrayCollection $teamPrinters
      * @return Printer
      */
-    public function removeTeams($teams)
+    public function removeTeamPrinters($teamPrinters)
     {
-        if ($this->teams->contains($teams)) {
-            $this->teams->removeElement($teams);
+        if ($this->teamPrinters->contains($teamPrinters)) {
+            $this->teamPrinters->removeElement($teamPrinters);
         }
 
         return $this;

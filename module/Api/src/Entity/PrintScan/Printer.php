@@ -16,7 +16,7 @@ class Printer extends AbstractPrinter
 
     public function canDelete()
     {
-        if (count($this->getTeams())) {
+        if (count($this->getTeamPrinters())) {
             return false;
         }
         return true;

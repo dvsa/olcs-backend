@@ -1,31 +1,30 @@
 <?php
 
 /**
- * Team Test
+ * Team Printer Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Team;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TeamPrinter;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Team\Team as QueryHandler;
-use Dvsa\Olcs\Transfer\Query\Team\Team as Query;
+use Dvsa\Olcs\Api\Domain\QueryHandler\TeamPrinter\TeamPrinter as QueryHandler;
+use Dvsa\Olcs\Transfer\Query\TeamPrinter\TeamPrinter as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\Team as TeamRepo;
-use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\Repository\TeamPrinter as TeamPrinterRepo;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 
 /**
- * Team Test
+ * Team Printer Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class TeamTest extends QueryHandlerTestCase
+class TeamPrinterTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
         $this->sut = new QueryHandler();
-        $this->mockRepo('Team', TeamRepo::class);
+        $this->mockRepo('TeamPrinter', TeamPrinterRepo::class);
         parent::setUp();
     }
 
@@ -33,17 +32,24 @@ class TeamTest extends QueryHandlerTestCase
     {
         $query = Query::create(['id' => 1]);
 
-        $mockTeam = m::mock(BundleSerializableInterface::class)
-            ->shouldReceive('serialize')->with(['trafficArea', 'teamPrinters' => ['printer', 'user', 'subCategory']])
+        $mockTeamPrinter = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')->with(
+                [
+                    'user',
+                    'team',
+                    'printer',
+                    'subCategory' => ['category']
+                ]
+            )
             ->once()
             ->andReturn(['result' => ['foo'], 'count' => 1])
             ->getMock();
 
-        $this->repoMap['Team']
+        $this->repoMap['TeamPrinter']
             ->shouldReceive('fetchUsingId')
             ->with($query)
             ->once()
-            ->andReturn($mockTeam)
+            ->andReturn($mockTeamPrinter)
             ->getMock();
 
         $this->assertSame(

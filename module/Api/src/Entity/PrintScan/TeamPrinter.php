@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\PrintScan;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\PrintScan\Printer as PrinterEntity;
+use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 
 /**
  * TeamPrinter Entity
@@ -17,5 +19,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TeamPrinter extends AbstractTeamPrinter
 {
+    const ERROR_PRINTER_EXCEPTION_EXISTS = 'err_printer_exception_exist';
 
+    /**
+     * Constructor for TeamPrinter
+     * @param Team $team
+     * @param Printer $printer
+     */
+    public function __construct(TeamEntity $team, PrinterEntity $printer)
+    {
+        $this->setTeam($team);
+        $this->setPrinter($printer);
+    }
 }

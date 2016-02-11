@@ -342,6 +342,11 @@ return [
     TransferCommand\Printer\UpdatePrinter::class => CommandHandler\Printer\UpdatePrinter::class,
     TransferCommand\Printer\DeletePrinter::class => CommandHandler\Printer\DeletePrinter::class,
 
+    // Transfer - TeamPrinter
+    TransferCommand\TeamPrinter\CreateTeamPrinter::class => CommandHandler\TeamPrinter\CreateTeamPrinter::class,
+    TransferCommand\TeamPrinter\UpdateTeamPrinter::class => CommandHandler\TeamPrinter\UpdateTeamPrinter::class,
+    TransferCommand\TeamPrinter\DeleteTeamPrinter::class => CommandHandler\TeamPrinter\DeleteTeamPrinter::class,
+
     // Transfer - Cases
     TransferCommand\Cases\CreateCase::class => CommandHandler\Cases\CreateCase::class,
     TransferCommand\Cases\UpdateCase::class => CommandHandler\Cases\UpdateCase::class,

@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\PrintScan\Printer as PrinterEntity;
 use Dvsa\Olcs\Transfer\Query\Printer\PrinterList as PrinterListQry;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Printer as PrinterRepo;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Printer test
@@ -49,12 +50,23 @@ class PrinterTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf()
             ->shouldReceive('with')
-            ->with('teams')
+            ->with('teamPrinters')
             ->once()
             ->andReturnSelf();
 
         $mockQb->shouldReceive('getQuery->getSingleResult')->andReturn(['result']);
 
         $this->assertSame(['result'], $this->sut->fetchWithTeams($id));
+    }
+
+    public function testApplyListFilters()
+    {
+        $query = m::mock(QueryInterface::class);
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('orderBy')->with('m.printerName', 'ASC')->once()->andReturnSelf();
+
+        $this->assertNull($this->sut->applyListFilters($qb, $query));
     }
 }

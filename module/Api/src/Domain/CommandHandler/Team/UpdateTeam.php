@@ -12,33 +12,26 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * Update Team
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class UpdateTeam extends AbstractCommandHandler implements AuthAwareInterface
+final class UpdateTeam extends AbstractCommandHandler implements TransactionedInterface
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'Team';
+
+    protected $extraRepos = ['Printer'];
 
     public function handleCommand(CommandInterface $command)
     {
-        if (!$this->isGranted(Permission::CAN_MANAGE_USER_INTERNAL)) {
-            throw new ForbiddenException('You do not have permission to manage the record');
-        }
-
         $this->checkIfTeamAlreadyExists($command->getName(), $command->getId());
 
-        $team = $this->getRepo()
-            ->fetchById($command->getId(), \Doctrine\ORM\Query::HYDRATE_OBJECT, $command->getVersion());
+        $team = $this->getRepo()->fetchWithPrinters($command->getId(), \Doctrine\ORM\Query::HYDRATE_OBJECT);
+        $this->processDefaultPrinter($team, $command);
 
         $team->setName($command->getName());
         $team->setDescription($command->getDescription());
@@ -67,6 +60,22 @@ final class UpdateTeam extends AbstractCommandHandler implements AuthAwareInterf
         // found another team with the same name
         if (count($teams) && $teams[0]->getId() !== (int)$id) {
             throw new ValidationException([TeamEntity::ERROR_TEAM_EXISTS => 'Team with such a name already exists']);
+        }
+    }
+
+    /**
+     * Update default team printer if needed
+     *
+     * @param TeamEntity $team
+     * @param \Dvsa\Olcs\Transfer\Command\CommandInterface $command
+     */
+    protected function processDefaultPrinter($team, $command)
+    {
+        $currentDefaultTeamPrinter = $team->getDefaultTeamPrinter();
+        if (!$currentDefaultTeamPrinter ||
+            ($currentDefaultTeamPrinter->getPrinter()->getId() !== $command->getDefaultPrinter())) {
+            $newDefaultPrinter = $this->getRepo('Printer')->fetchById($command->getDefaultPrinter());
+            $team->updateDefaultPrinter($newDefaultPrinter);
         }
     }
 }
