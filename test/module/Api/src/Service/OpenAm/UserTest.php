@@ -179,6 +179,45 @@ class UserTest extends MockeryTestCase
         $sut->disableUser($pid);
     }
 
+    public function testResetPassword()
+    {
+        $password = 'Password123';
+
+        $pid = 'pid';
+        $expected = [
+            [
+                'operation' => 'replace',
+                'field' => 'password',
+                'value' => $password
+            ]
+        ];
+
+        $mockRandom = m::mock(\RandomLib\Generator::class);
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('updateUser')
+            ->once()
+            ->with($pid, $expected);
+
+        $sut = new User($mockClient, $mockRandom);
+
+        $callbackParams = null;
+
+        $sut->resetPassword(
+            $pid,
+            function ($params) use (&$callbackParams) {
+                $callbackParams = $params;
+            }
+        );
+
+        $this->assertEquals(
+            [
+                'password' => $password
+            ],
+            $callbackParams
+        );
+    }
+
     /**
      * @dataProvider provideIsActiveUser
      * @param $userData
