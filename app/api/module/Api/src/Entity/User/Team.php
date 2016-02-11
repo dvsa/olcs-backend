@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter;
 
 /**
  * Team Entity
@@ -25,4 +26,26 @@ class Team extends AbstractTeam
     const ERROR_TEAM_LINKED_TO_USERS = 'err_team_linked_to_users';
     const ERROR_TEAM_LINKED_TO_PRINTER_SETTINGS = 'err_team_linked_to_printer_settings';
     const ERROR_TEAM_LINKED_TO_TASK_ALLOCATION_RULES = 'err_team_linked_to_task_allocation_rules';
+
+    public function getDefaultTeamPrinter()
+    {
+        $printers = $this->getTeamPrinters();
+        $defaultTeamPrinter = $printers->filter(
+            function ($pr) {
+                return !$pr->getUser() && !$pr->getSubCategory();
+            }
+        )->first(); // should be only 1 default printer
+        return $defaultTeamPrinter ? $defaultTeamPrinter : null;
+    }
+
+    public function updateDefaultPrinter($newDefaultPrinter)
+    {
+        $currentDefaultTeamPrinter = $this->getDefaultTeamPrinter();
+        if ($currentDefaultTeamPrinter) {
+            $currentDefaultTeamPrinter->setPrinter($newDefaultPrinter);
+        } else {
+            $teamPrinter = new TeamPrinter($this, $newDefaultPrinter);
+            $this->addTeamPrinters($teamPrinter);
+        }
+    }
 }

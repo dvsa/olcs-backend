@@ -2445,8 +2445,8 @@ COMMIT;
 INSERT INTO `printer` (`id`, `printer_name`) VALUES (1, 'Test Default Printer');
 INSERT INTO `printer` (`id`, `printer_name`) VALUES (2, 'Test Printer');
 
-INSERT INTO `team_printer` (`id`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (1, 1, 1, NULL, NULL);
-INSERT INTO `team_printer` (`id`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (2, 2, 2, 1, 1);
+INSERT INTO `team_printer` (`id`, `version`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (1, 1, 1, 1, NULL, NULL);
+INSERT INTO `team_printer` (`id`, `version`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (2, 1, 2, 2, 1, 1);
 
 
 /* Test document sla target dates */
