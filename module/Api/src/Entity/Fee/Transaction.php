@@ -256,6 +256,10 @@ class Transaction extends AbstractTransaction
      */
     public function displayReversalOption()
     {
+        if ($this->isMigrated()) {
+            return false;
+        }
+
         return $this->isCompletePaymentOrAdjustment();
     }
 
@@ -421,5 +425,20 @@ class Transaction extends AbstractTransaction
         );
 
         return $amount;
+    }
+
+    public function isMigrated()
+    {
+        if ($this->getPaymentMethod() !== null
+            && in_array($this->getPaymentMethod()->getId(), [Fee::METHOD_RECEIPT, Fee::METHOD_MIGRATED])
+        ) {
+            return true;
+        }
+
+        if ($this->getLegacyStatus() !== null) {
+            return true;
+        }
+
+        return false;
     }
 }
