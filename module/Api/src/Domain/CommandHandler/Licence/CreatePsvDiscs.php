@@ -46,17 +46,8 @@ final class CreatePsvDiscs extends AbstractCommandHandler implements Transaction
             );
         }
 
-        $isCopy = $command->getIsCopy();
+        $this->getRepo()->createPsvDiscs($licence->getId(), $howMany, $command->getIsCopy() === 'Y');
 
-        $ids = [];
-        for ($i = 0; $i < $howMany; $i++) {
-            $psvDisc = new PsvDisc($licence);
-            $psvDisc->setIsCopy($isCopy);
-            $this->getRepo()->save($psvDisc);
-            $ids[] = $psvDisc->getId();
-        }
-
-        $result->addId('psvDiscs', $ids);
         $result->addMessage($howMany . ' PSV Disc(s) created');
 
         return $result;

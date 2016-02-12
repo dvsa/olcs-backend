@@ -11,9 +11,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Query\Discs\CeaseDiscsForLicence;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\PsvDisc;
 use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbQueryTestCase;
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceManager;
 
 /**
  * Cease Discs For Licence Test
@@ -34,6 +31,9 @@ class CeaseDiscsForLicenceTest extends AbstractDbQueryTestCase
             ],
             'ceasedDate' => [
                 'column' => 'ceased_date'
+            ],
+            'createdOn' => [
+                'column' => 'created_on'
             ],
         ],
     ];
@@ -62,7 +62,7 @@ class CeaseDiscsForLicenceTest extends AbstractDbQueryTestCase
     protected function getExpectedQuery()
     {
         return 'UPDATE psv_disc pd
-      SET pd.ceased_date = :ceasedDate
+      SET pd.ceased_date = :ceasedDate, pd.created_on = NOW()
       WHERE pd.licence_id = :licence AND pd.ceased_date IS NULL';
     }
 }

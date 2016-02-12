@@ -84,25 +84,12 @@ class CreatePsvDiscsTest extends CommandHandlerTestCase
         $licence->shouldReceive('getPsvDiscs->matching->count')
             ->andReturn(5);
 
-        $i = 0;
-
-        $this->repoMap['PsvDisc']->shouldReceive('save')
-            ->with(m::type(PsvDiscEntity::class))
-            ->andReturnUsing(
-                function (PsvDiscEntity $disc) use (&$i, $licence) {
-                    $disc->setId(++$i);
-
-                    $this->assertEquals('N', $disc->getIsCopy());
-                    $this->assertSame($licence, $disc->getLicence());
-                }
-            );
+        $this->repoMap['PsvDisc']->shouldReceive('createPsvDiscs')->with(111, 2, false);
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [
-                'psvDiscs' => [1, 2]
-            ],
+            'id' => [],
             'messages' => [
                 '2 PSV Disc(s) created'
             ]
