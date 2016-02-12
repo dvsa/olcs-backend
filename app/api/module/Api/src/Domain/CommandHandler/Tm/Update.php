@@ -118,6 +118,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
     protected function updateTransportManager($command, $workCdId = null)
     {
         $transportManager = $this->getRepo('TransportManager')->fetchById($command->getId());
+        $transportManager->updateNysiis($command->getNysiisForename(), $command->getNysiisFamilyname());
         $transportManager->updateTransportManager(
             $this->getRepo()->getRefdataReference($command->getType()),
             $this->getRepo()->getRefdataReference($command->getStatus()),
@@ -126,6 +127,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
             null,
             $this->getCurrentUser()
         );
+
         $this->getRepo('TransportManager')->save($transportManager);
         return $transportManager;
     }

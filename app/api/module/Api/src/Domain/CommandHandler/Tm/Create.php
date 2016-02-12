@@ -126,6 +126,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         $transportManager = new TransportManagerEntity();
         $status = $command->getStatus() ? $command->getStatus() :
             TransportManagerEntity::TRANSPORT_MANAGER_STATUS_CURRENT;
+        $transportManager->updateNysiis($command->getNysiisForename(), $command->getNysiisFamilyname());
         $transportManager->updateTransportManager(
             $this->getRepo()->getRefdataReference($command->getType()),
             $this->getRepo()->getRefdataReference($status),
