@@ -90,7 +90,9 @@ class UpdateTest extends CommandHandlerTestCase
             'workAddressLine4' => 'wal4',
             'workTown' => 'wt',
             'workPostcode' => 'wpc',
-            'workCountryCode' => 'wcc'
+            'workCountryCode' => 'wcc',
+            'nysiisForename' => 'fn',
+            'nysiisFamilyname' => 'ln',
         ];
 
         $command = Cmd::create($data);
@@ -183,6 +185,9 @@ class UpdateTest extends CommandHandlerTestCase
                 null,
                 m::type(User::class)
             )
+            ->once()
+            ->shouldReceive('updateNysiis')
+            ->with($command->getNysiisForename(), $command->getNysiisFamilyname())
             ->once()
             ->shouldReceive('getId')
             ->andReturn($id)
