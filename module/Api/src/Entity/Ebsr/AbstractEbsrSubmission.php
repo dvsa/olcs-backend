@@ -97,7 +97,7 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="ebsr_submission_result", length=64, nullable=true)
+     * @ORM\Column(type="string", name="ebsr_submission_result", length=10000, nullable=true)
      */
     protected $ebsrSubmissionResult;
 

@@ -45,7 +45,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="action", length=1, nullable=true)
+     * @ORM\Column(type="string", name="action", length=1, nullable=false)
      */
     protected $action;
 
