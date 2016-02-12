@@ -18,6 +18,7 @@ return [
     TransferQuery\Audit\ReadBusReg::class => QueryHandler\Audit\ReadBusReg::class,
 
     // Bookmarks
+    BookmarkQuery\LicencePsvDiscCountNotCeased::class => BookmarkQueryHandler\LicencePsvDiscCountNotCeased::class,
     BookmarkQuery\LicenceBundle::class => BookmarkQueryHandler\LicenceBundle::class,
     BookmarkQuery\TransportManagerBundle::class => BookmarkQueryHandler\TransportManagerBundle::class,
     BookmarkQuery\DocParagraphBundle::class => BookmarkQueryHandler\DocParagraphBundle::class,

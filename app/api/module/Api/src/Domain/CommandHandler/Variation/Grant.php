@@ -136,38 +136,9 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
 
     protected function updateExistingGoodsDiscs(ApplicationEntity $application, Licence $licence, Result $result)
     {
-        $criteria = Criteria::create();
-        $criteria->andWhere($criteria->expr()->neq('specifiedDate', null));
-        $criteria->andWhere($criteria->expr()->isNull('removalDate'));
-        $criteria->andWhere($criteria->expr()->isNull('interimApplication'));
-        $criteria->andWhere(
-            $criteria->expr()->orX(
-                $criteria->expr()->neq('application', $application),
-                $criteria->expr()->isNull('application')
-            )
-        );
+        $count = $this->getRepo('GoodsDisc')->updateExistingGoodsDiscs($application);
 
-        $vehicles = $licence->getLicenceVehicles()->matching($criteria);
-
-        $now = new DateTime();
-
-        /** @var LicenceVehicle $vehicle */
-        foreach ($vehicles as $vehicle) {
-            /** @var GoodsDisc $disc */
-            foreach ($vehicle->getGoodsDiscs() as $disc) {
-                if ($disc->getCeasedDate() === null) {
-                    $disc->setCeasedDate($now);
-                    $this->getRepo('GoodsDisc')->save($disc);
-                }
-            }
-
-            $newDisc = new GoodsDisc($vehicle);
-            $newDisc->setIsCopy('N');
-
-            $this->getRepo('GoodsDisc')->save($newDisc);
-        }
-
-        $result->addMessage($vehicles->count() . ' Goods Disc(s) replaced');
+        $result->addMessage($count . ' Goods Disc(s) replaced');
     }
 
     /**

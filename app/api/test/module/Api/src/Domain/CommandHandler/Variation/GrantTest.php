@@ -205,15 +205,8 @@ class GrantTest extends CommandHandlerTestCase
             ->once()
             ->with($application);
 
-        $this->repoMap['GoodsDisc']->shouldReceive('save')
-            ->andReturnUsing(
-                function (GoodsDisc $goodsDisc) use ($licenceVehicle, $goodsDisc2) {
-                    if ($goodsDisc !== $goodsDisc2) {
-                        $this->assertSame($licenceVehicle, $goodsDisc->getLicenceVehicle());
-                        $this->assertEquals('N', $goodsDisc->getIsCopy());
-                    }
-                }
-            );
+        $this->repoMap['GoodsDisc']->shouldReceive('updateExistingGoodsDiscs')->with($application)->once()
+            ->andReturn(41);
 
         $result1 = new Result();
         $result1->addMessage('CreateSnapshot');
@@ -239,7 +232,7 @@ class GrantTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'CreateSnapshot',
-                '1 Goods Disc(s) replaced',
+                '41 Goods Disc(s) replaced',
                 'CreateDiscRecords',
                 'ProcessApplicationOperatingCentres',
                 'CommonGrant'
@@ -249,8 +242,6 @@ class GrantTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertEquals(ApplicationEntity::APPLICATION_STATUS_VALID, $application->getStatus()->getId());
-
-        $this->assertEquals(date('Y-m-d'), $goodsDisc2->getCeasedDate()->format('Y-m-d'));
     }
 
     public function testHandleCommandUpgradePsv()

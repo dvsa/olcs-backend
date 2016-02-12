@@ -11,9 +11,12 @@ return [
         'LicenceVehicle\RemoveAllForLicence' => Query\LicenceVehicle\RemoveAllForLicence::class,
         'LicenceVehicle\MarkDuplicateVrmsForLicence' => Query\LicenceVehicle\MarkDuplicateVrmsForLicence::class,
         'Discs\CeaseDiscsForLicence' => Query\Discs\CeaseDiscsForLicence::class,
+        'Discs\CreatePsvDiscs' => Query\Discs\CreatePsvDiscs::class,
         'Discs\GoodsDiscsSetIsPrinting' => Query\Discs\GoodsDiscsSetIsPrinting::class,
         'Discs\GoodsDiscsSetIsPrintingOffAndDiscNo' => Query\Discs\GoodsDiscsSetIsPrintingOffAndDiscNo::class,
         'Discs\PsvDiscsSetIsPrinting' => Query\Discs\PsvDiscsSetIsPrinting::class,
         'Discs\PsvDiscsSetIsPrintingOffAndDiscNo' => Query\Discs\PsvDiscsSetIsPrintingOffAndDiscNo::class,
+        'Discs\CeaseGoodsDiscsForApplication' => Query\Discs\CeaseGoodsDiscsForApplication::class,
+        'Discs\CreateGoodsDiscs' => Query\Discs\CreateGoodsDiscs::class,
     ]
 ];
