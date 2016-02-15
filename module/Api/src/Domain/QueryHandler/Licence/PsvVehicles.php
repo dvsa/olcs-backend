@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\PsvVehicles\PsvVehiclesQueryHelper;
+use Doctrine\ORM\Query;
 
 /**
  * Psv Vehicles
@@ -21,6 +22,7 @@ use Dvsa\Olcs\Api\Domain\Service\PsvVehicles\PsvVehiclesQueryHelper;
 class PsvVehicles extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
+    protected $extraRepos = ['LicenceVehicle'];
 
     /**
      * @var PsvVehiclesQueryHelper
@@ -38,12 +40,30 @@ class PsvVehicles extends AbstractQueryHandler
     {
         /* @var $licence Entity\Licence\Licence */
         $licence = $this->getRepo()->fetchUsingId($query);
+        $lvQuery = $this->getRepo('LicenceVehicle')->createPaginatedVehiclesDataForLicenceQueryPsv(
+            $query,
+            $licence->getId()
+        );
 
         $flags = $this->helper->getCommonQueryFlags($licence, $query);
 
         $flags['canTransfer'] = !$licence->getOtherActiveLicences()->isEmpty();
         $flags['hasBreakdown'] = (int) $licence->getTotAuthVehicles() > 0;
 
+        $flags = array_merge(
+            $flags,
+            [
+                'licenceVehicles' => [
+                    'results' => $this->resultList(
+                        $this->getRepo('LicenceVehicle')->fetchPaginatedList($lvQuery, Query::HYDRATE_OBJECT),
+                        [
+                            'vehicle',
+                        ]
+                    ),
+                    'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery)
+                ],
+            ]
+        );
         return $this->result(
             $licence,
             [

@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query\Application\PsvVehicles as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
+use Doctrine\ORM\Query;
 
 /**
  * Psv Vehicles Test
@@ -27,6 +28,7 @@ class PsvVehiclesTest extends QueryHandlerTestCase
     {
         $this->sut = new PsvVehicles();
         $this->mockRepo('Application', Repository\Application::class);
+        $this->mockRepo('LicenceVehicle', Repository\LicenceVehicle::class);
         $this->mockedSmServices['PsvVehiclesQueryHelper'] = m::mock(PsvVehiclesQueryHelper::class)->makePartial();
 
         parent::setUp();
@@ -41,15 +43,39 @@ class PsvVehiclesTest extends QueryHandlerTestCase
             ]
         );
 
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         /** @var Entity\Application\Application|m\MockInterface $application */
         $application = m::mock(Entity\Application\Application::class)->makePartial();
         $application->shouldReceive('serialize')
             ->with([])
-            ->andReturn(['foo' => 'bar']);
+            ->andReturn(['foo' => 'bar'])
+            ->shouldReceive('getId')
+            ->andReturn(111)
+            ->once();
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($application);
+
+        $mockList = m::mock()
+            ->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar'])
+            ->once()
+            ->getMock();
+
+        $this->repoMap['LicenceVehicle']
+            ->shouldReceive('createPaginatedVehiclesDataForApplicationQueryPsv')
+            ->with($query, 111)
+            ->andReturn($mockQb)
+            ->once()
+            ->shouldReceive('fetchPaginatedList')
+            ->with($mockQb, Query::HYDRATE_OBJECT)
+            ->andReturn([$mockList])
+            ->once()
+            ->shouldReceive('fetchPaginatedCount')
+            ->andReturn(1)
+            ->with($mockQb)
+            ->once();
 
         $flags = [
             'showSmallTable' => true,
@@ -101,7 +127,8 @@ class PsvVehiclesTest extends QueryHandlerTestCase
                 ['type' => 'large']
             ],
             'canTransfer' => false,
-            'hasBreakdown' => false
+            'hasBreakdown' => false,
+            'licenceVehicles' => ['results' => [['foo' => 'bar']], 'count' => 1]
         ];
 
         $this->assertEquals($expected, $data);
