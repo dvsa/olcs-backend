@@ -4,6 +4,10 @@ namespace Dvsa\Olcs\Api\Entity\Si;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
+use Dvsa\Olcs\Api\Entity\Si\SiCategory as SiCategoryEntity;
+use Dvsa\Olcs\Api\Entity\Si\SiCategoryType as SiCategoryTypeEntity;
 
 /**
  * SeriousInfringement Entity
@@ -28,6 +32,28 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
  */
 class SeriousInfringement extends AbstractSeriousInfringement
 {
+    public function __construct(
+        CaseEntity $case,
+        \DateTime $checkDate,
+        \DateTime $infringementDate,
+        CountryEntity $memberStateCode,
+        SiCategoryEntity $siCategory,
+        SiCategoryTypeEntity $siCategoryType,
+        $notificationNumber,
+        $workflowId
+    ) {
+        parent::__construct();
+
+        $this->case = $case;
+        $this->checkDate = $checkDate;
+        $this->infringementDate = $infringementDate;
+        $this->memberStateCode = $memberStateCode;
+        $this->siCategory = $siCategory;
+        $this->siCategoryType = $siCategoryType;
+        $this->notificationNumber = $notificationNumber;
+        $this->workflowId = $workflowId;
+    }
+
     /**
      * Updates the serious infringement with an erru response
      *
