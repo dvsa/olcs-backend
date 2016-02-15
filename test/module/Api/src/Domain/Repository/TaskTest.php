@@ -109,7 +109,7 @@ class TaskTest extends RepositoryTestCase
         $expectedQuery =
             'BLAH AND m.transportManager = [[4]] AND m.case = [[3]] ' .
             'AND m.category = [[5]] AND m.subCategory = [[subcat]]';
-        
+
         $this->assertEquals($expectedQuery, $this->query);
     }
 }
