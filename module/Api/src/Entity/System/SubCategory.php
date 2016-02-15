@@ -29,5 +29,4 @@ class SubCategory extends AbstractSubCategory
     const DOC_SUB_CATEGORY_SCANNING_SEPARATOR = 168;
 
     const TM_SUB_CATEGORY_DECLARED_UNFIT = 105;
-
 }

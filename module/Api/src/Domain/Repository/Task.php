@@ -78,7 +78,7 @@ class Task extends AbstractRepository
 
         return $doctrineQb->getQuery()->getResult();
     }
-    
+
     /**
      * Fetch a single task record belonging to Case and Transport Manager, filtered by subcategory
      *
@@ -89,8 +89,8 @@ class Task extends AbstractRepository
      * @return mixed
      */
     public function fetchForTmCaseDecision(
-        CasesEntity $case,
-        TransportManager $transportManager,
+        $case,
+        $transportManager,
         $subCategory = ''
     ) {
         $category = CategoryEntity::CATEGORY_TRANSPORT_MANAGER;
