@@ -99,6 +99,7 @@ class Licence extends AbstractRepository
      * Get a Licence by the LicNo
      *
      * @param string $licNo
+     * @throws Exception\NotFoundException
      *
      * @return Entity
      */
