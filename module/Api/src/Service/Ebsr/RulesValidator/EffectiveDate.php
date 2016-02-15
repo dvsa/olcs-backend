@@ -11,7 +11,7 @@ use Zend\Validator\Exception;
  */
 class EffectiveDate extends AbstractValidator
 {
-    const RULES_ERROR = 'rules-error';
+    const RULES_ERROR = 'effective-date-error';
 
     /**
      * @var array

@@ -11,7 +11,7 @@ use Zend\Validator\Exception;
  */
 class ServiceClassification extends AbstractValidator
 {
-    const STRUCTURE_ERROR = 'structure-error';
+    const STRUCTURE_ERROR = 'classification-structure-error';
 
     /**
      * @var array

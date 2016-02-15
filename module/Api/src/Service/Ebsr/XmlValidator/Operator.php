@@ -11,7 +11,7 @@ use Zend\Validator\Exception;
  */
 class Operator extends AbstractValidator
 {
-    const STRUCTURE_ERROR = 'structure-error';
+    const STRUCTURE_ERROR = 'operator-structure-error';
 
     /**
      * @var array
