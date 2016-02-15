@@ -33,7 +33,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_document_opposition_id", columns={"opposition_id"}),
  *        @ORM\Index(name="ix_document_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_document_irfo_organisation_id", columns={"irfo_organisation_id"}),
- *        @ORM\Index(name="ix_document_submission_id", columns={"submission_id"})
+ *        @ORM\Index(name="ix_document_submission_id", columns={"submission_id"}),
+ *        @ORM\Index(name="fk_document_statement_id_statement_id", columns={"statement_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_document_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
@@ -304,6 +305,16 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      * @ORM\Column(type="integer", name="size", nullable=true)
      */
     protected $size;
+
+    /**
+     * Statement
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Cases\Statement
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Statement", fetch="LAZY")
+     * @ORM\JoinColumn(name="statement_id", referencedColumnName="id", nullable=true)
+     */
+    protected $statement;
 
     /**
      * Sub category
@@ -988,6 +999,29 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getSize()
     {
         return $this->size;
+    }
+
+    /**
+     * Set the statement
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Statement $statement
+     * @return Document
+     */
+    public function setStatement($statement)
+    {
+        $this->statement = $statement;
+
+        return $this;
+    }
+
+    /**
+     * Get the statement
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Cases\Statement
+     */
+    public function getStatement()
+    {
+        return $this->statement;
     }
 
     /**
