@@ -9,24 +9,50 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\Tm\TmCaseDecision as Entity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\TmCaseDecision\CreateDeclareUnfit as Cmd;
-
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 /**
  * Create DeclareUnfit
  */
-final class CreateDeclareUnfit extends AbstractCommandHandler implements TransactionedInterface
+final class CreateDeclareUnfit extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'TmCaseDecision';
+
+    protected $extraRepos = ['TransportManager'];
 
     public function handleCommand(CommandInterface $command)
     {
+        $result = new Result();
+
+        /** @var CasesEntity $case */
+        $case = $this->getCaseEntity($command);
+        $transportManager = $case->getTransportManager();
+
         // create and save a record
-        $entity = $this->createEntityObject($command);
+        $entity = $this->createEntityObject($command, $case);
         $this->getRepo()->save($entity);
 
-        $result = new Result();
+        // update the TM record
+        $transportManager->setDisqualificationTmCaseId($case->getId());
+        $transportManager->setTmStatus(
+            $this->getRepo()->getRefdataReference(ContactDetails::TRANSPORT_MANAGER_STATUS_DISQUALIFIED)
+        );
+
+        $this->getRepo('TransportManager')->save($transportManager);
+
+        // create a task
+        $taskResult = $this->getCommandHandler()->handleCommand($this->createCreateTaskCommand($command, $case));
+        $result->merge($taskResult);
+
         $result->addId('tmCaseDecision', $entity->getId());
         $result->addMessage('Decision created successfully');
 
@@ -34,10 +60,11 @@ final class CreateDeclareUnfit extends AbstractCommandHandler implements Transac
     }
 
     /**
+     * Create the
      * @param Cmd $command
      * @return Entity
      */
-    private function createEntityObject(Cmd $command)
+    private function createEntityObject(Cmd $command, CasesEntity $case)
     {
         $data = $command->getArrayCopy();
 
@@ -60,12 +87,49 @@ final class CreateDeclareUnfit extends AbstractCommandHandler implements Transac
         }
 
         return Entity::create(
-            $this->getRepo()->getReference(
-                CasesEntity::class,
-                $command->getCase()
-            ),
+            $case,
             $this->getRepo()->getRefdataReference(Entity::DECISION_DECLARE_UNFIT),
             $data
         );
+    }
+
+    /**
+     * Retrieves the case entity
+     *
+     * @param Cmd $command
+     * @return mixed
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function getCaseEntity(Cmd $command)
+    {
+        $case = $this->getRepo()->getReference(
+            CasesEntity::class,
+            $command->getCase()
+        );
+
+        return $case;
+    }
+
+    /**
+     * Create the task
+     *
+     * @param Cmd $command
+     * @return CreateTask
+     */
+    private function createCreateTaskCommand(Cmd $command, CasesEntity $case)
+    {
+        $currentUser = $this->getCurrentUser();
+
+        $data = [
+            'category' => Category::CATEGORY_TRANSPORT_MANAGER,
+            'subCategory' => SubCategory::TM_SUB_CATEGORY_DECLARED_UNFIT,
+            'description' => 'TM declared unfitness end date ' . $command->getUnfitnessEndDate(),
+            'actionDate' => $command->getUnfitnessEndDate(),
+            'assignedToUser' => $currentUser->getId(),
+            'assignedToTeam' => $currentUser->getTeam()->getId(),
+            'case' => $case->getId(),
+        ];
+
+        return CreateTask::create($data);
     }
 }
