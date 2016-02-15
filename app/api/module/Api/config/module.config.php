@@ -280,6 +280,8 @@ return [
             'Printer' => RepositoryFactory::class,
             'SeriousInfringement' => RepositoryFactory::class,
             'SiPenalty' => RepositoryFactory::class,
+            'SiCategory' => RepositoryFactory::class,
+            'SiCategoryType' => RepositoryFactory::class,
             'Country' => RepositoryFactory::class,
             'PresidingTc' => RepositoryFactory::class,
             'RefData' => RepositoryFactory::class,
