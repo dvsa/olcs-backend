@@ -310,4 +310,14 @@ class GoodsDiscTest extends RepositoryTestCase
 
         $this->sut->updateExistingGoodsDiscs($application);
     }
+
+    public function testCreateDiscsForLicence()
+    {
+        $stmt = m::mock();
+        $stmt->shouldReceive('rowCount')->with()->once()->andReturn(83);
+
+        $this->expectQueryWithData('LicenceVehicle\CreateDiscsForLicence', ['licence' => 1502], [], $stmt);
+
+        $this->assertSame(83, $this->sut->createDiscsForLicence(1502));
+    }
 }

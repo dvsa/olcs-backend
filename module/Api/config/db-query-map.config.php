@@ -5,6 +5,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Query;
 return [
     'factories' => [
         'LicenceVehicle\CeaseDiscsForLicence' => Query\LicenceVehicle\CeaseDiscsForLicence::class,
+        'LicenceVehicle\CreateDiscsForLicence' => Query\LicenceVehicle\CreateDiscsForLicence::class,
         'CommunityLicence\ExpireAllForLicence' => Query\CommunityLicence\ExpireAllForLicence::class,
         'LicenceVehicle\ClearSpecifiedDateAndInterimAppForLicence'
             => Query\LicenceVehicle\ClearSpecifiedDateAndInterimAppForLicence::class,
