@@ -44,7 +44,7 @@ class SlaTargetDateTest extends RepositoryTestCase
 
     public function testApplyListFilters()
     {
-        $this->setUpSut(Repository\SlaTargetDate::class);
+        $this->setUpSut(Repository\SlaTargetDate::class, true);
 
         $mockQb = m::mock(QueryBuilder::class);
         $mockQb->shouldReceive('expr')
@@ -54,7 +54,7 @@ class SlaTargetDateTest extends RepositoryTestCase
             ->shouldReceive('andWhere')
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with('document', 100)
+            ->with('byDocument', 100)
             ->andReturnSelf();
 
         $mockQ = m::mock(QueryInterface::class);
