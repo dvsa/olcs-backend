@@ -38,6 +38,8 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
     const IMPOUNDING_CASE_TYPE = 'case_t_imp';
     const APP_CASE_TYPE = 'case_t_app';
     const TM_CASE_TYPE = 'case_t_tm';
+    const ERRU_DEFAULT_CASE_TYPE = 'erru_case_t_msirnys'; //MSI with no response sent
+    const ERRU_DEFAULT_CASE_CATEGORY = 'case_cat_compl_erru_msi';
 
     /**
      * Creates a new case entity and sets the open date
