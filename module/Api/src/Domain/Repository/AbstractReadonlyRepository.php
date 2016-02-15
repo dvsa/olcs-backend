@@ -121,7 +121,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
             return $this->fetchOneByX(lcfirst($matches[1]), $args);
         }
 
-        return false;
+        throw new \RuntimeException("Method '{$name}' not found on the Repository.");
     }
 
     /**
