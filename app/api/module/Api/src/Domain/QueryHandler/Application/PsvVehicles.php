@@ -41,28 +41,25 @@ class PsvVehicles extends AbstractQueryHandler
         /* @var $application Entity\Application\Application */
         $application = $this->getRepo()->fetchUsingId($query);
 
-        $flags = $this->helper->getCommonQueryFlags($application, $query);
-
-        $flags['canTransfer'] = false;
-        $flags['hasBreakdown'] = (int) $application->getTotAuthVehicles() > 0;
-
         $lvQuery = $this->getRepo('LicenceVehicle')->createPaginatedVehiclesDataForApplicationQueryPsv(
             $query,
             $application->getId()
         );
 
-        $licenceVehicles = [
-            'licenceVehicles' => [
-                'results' => $this->resultList(
-                    $this->getRepo('LicenceVehicle')->fetchPaginatedList($lvQuery, Query::HYDRATE_OBJECT),
-                    [
-                        'vehicle'
-                    ]
-                ),
-                'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery)
-            ]
+        $flags = $this->helper->getCommonQueryFlags($application, $query);
+
+        $flags['canTransfer'] = false;
+        $flags['hasBreakdown'] = (int) $application->getTotAuthVehicles() > 0;
+        $flags['licenceVehicles'] = [
+            'results' => $this->resultList(
+                $this->getRepo('LicenceVehicle')->fetchPaginatedList($lvQuery, Query::HYDRATE_OBJECT),
+                [
+                    'vehicle'
+                ]
+            ),
+            'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery)
         ];
-        $flags = array_merge($flags, $licenceVehicles);
+
         return $this->result($application, [], $flags);
     }
 }

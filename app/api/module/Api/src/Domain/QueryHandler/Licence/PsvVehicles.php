@@ -49,21 +49,16 @@ class PsvVehicles extends AbstractQueryHandler
 
         $flags['canTransfer'] = !$licence->getOtherActiveLicences()->isEmpty();
         $flags['hasBreakdown'] = (int) $licence->getTotAuthVehicles() > 0;
+        $flags['licenceVehicles'] = [
+            'results' => $this->resultList(
+                $this->getRepo('LicenceVehicle')->fetchPaginatedList($lvQuery, Query::HYDRATE_OBJECT),
+                [
+                    'vehicle',
+                ]
+            ),
+            'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery)
+        ];
 
-        $flags = array_merge(
-            $flags,
-            [
-                'licenceVehicles' => [
-                    'results' => $this->resultList(
-                        $this->getRepo('LicenceVehicle')->fetchPaginatedList($lvQuery, Query::HYDRATE_OBJECT),
-                        [
-                            'vehicle',
-                        ]
-                    ),
-                    'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery)
-                ],
-            ]
-        );
         return $this->result(
             $licence,
             [
