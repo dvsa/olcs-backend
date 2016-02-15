@@ -110,7 +110,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         $lastName,
         $isIrfo,
         $natureOfBusiness,
-        $cpid
+        $cpid,
+        $allowEmail
     ) {
         $this->setCpid($cpid);
         $this->setNatureOfBusiness($natureOfBusiness);
@@ -127,6 +128,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         } else {
             $this->name = $name;
         }
+
+        $this->setAllowEmail($allowEmail);
     }
 
     /**
