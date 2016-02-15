@@ -8,6 +8,10 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Task\Task as Entity;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Doctrine\ORM\Query;
 
 /**
  * Task
@@ -73,5 +77,40 @@ class Task extends AbstractRepository
         }
 
         return $doctrineQb->getQuery()->getResult();
+    }
+    
+    /**
+     * Fetch a single task record belonging to Case and Transport Manager, filtered by subcategory
+     *
+     * @param int|\Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param int|\Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager
+     * @param string $subCategory
+     *
+     * @return mixed
+     */
+    public function fetchForTmCaseDecision(
+        CasesEntity $case,
+        TransportManager $transportManager,
+        $subCategory = ''
+    ) {
+        $category = CategoryEntity::CATEGORY_TRANSPORT_MANAGER;
+
+        $doctrineQb = $this->createQueryBuilder();
+
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.transportManager', ':transportManager'))
+            ->setParameter('transportManager', $transportManager);
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.case', ':case'))
+            ->setParameter('case', $case);
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.category', ':category'))
+            ->setParameter('category', $category);
+
+        if (!empty($subCategory)) {
+            $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.subCategory', ':subCategory'))
+                ->setParameter('subCategory', $subCategory);
+        }
+
+        $result = $doctrineQb->getQuery()->getSingleResult(Query::HYDRATE_OBJECT);
+
+        return $result;
     }
 }
