@@ -30,6 +30,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $this->sut = new CommandHandler();
         $this->mockRepo('Licence', LicenceEntity::class);
         $this->mockRepo('ContinuationDetail', \Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail::class);
+        $this->mockRepo('GoodsDisc', \Dvsa\Olcs\Api\Domain\Repository\GoodsDisc::class);
 
         parent::setUp();
     }
@@ -262,6 +263,8 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $continuationDetail = new ContinuationDetail();
         $continuationDetail->setTotCommunityLicences(34);
 
+        $this->repoMap['GoodsDisc']->shouldReceive('createDiscsForLicence')->with(717)->once()->andReturn(1502);
+
         $this->repoMap['Licence']->shouldReceive('fetchById')->with(717, Query::HYDRATE_OBJECT, 654)
             ->once()->andReturn($licence);
 
@@ -280,11 +283,6 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             ['licence' => 717],
             new Result()
         );
-        $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs::class,
-            ['ids' => [12, 254], 'isCopy' => 'N'],
-            new Result()
-        );
 
         $this->expectedSideEffect(\Dvsa\Olcs\Transfer\Command\Licence\PrintLicence::class, ['id' => 717], new Result());
 
@@ -296,7 +294,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['Licence 717 continued'], $result->getMessages());
+        $this->assertSame(['1502 goods discs created', 'Licence 717 continued'], $result->getMessages());
     }
 
     public function testHandleCommandGoodsStandardInternational()
@@ -317,6 +315,8 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $continuationDetail = new ContinuationDetail();
         $continuationDetail->setTotCommunityLicences(34);
 
+        $this->repoMap['GoodsDisc']->shouldReceive('createDiscsForLicence')->with(717)->once()->andReturn(1502);
+
         $this->repoMap['Licence']->shouldReceive('fetchById')->with(717, Query::HYDRATE_OBJECT, 654)
             ->once()->andReturn($licence);
 
@@ -335,12 +335,6 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             ['licence' => 717],
             new Result()
         );
-        $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs::class,
-            ['ids' => [12, 254], 'isCopy' => 'N'],
-            new Result()
-        );
-
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Licence\VoidAllCommunityLicences::class,
             ['id' => 717],
@@ -362,6 +356,6 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['Licence 717 continued'], $result->getMessages());
+        $this->assertSame(['1502 goods discs created', 'Licence 717 continued'], $result->getMessages());
     }
 }
