@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\Tm\TmCaseDecision as Entity;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\TmCaseDecision\CreateDeclareUnfit as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
@@ -50,7 +51,13 @@ final class CreateDeclareUnfit extends AbstractCommandHandler implements Transac
         $this->getRepo('TransportManager')->save($transportManager);
 
         // create a task
-        $taskResult = $this->getCommandHandler()->handleCommand($this->createCreateTaskCommand($command, $case));
+        $taskResult = $this->getCommandHandler()->handleCommand(
+            $this->createCreateTaskCommand(
+                $command,
+                $case,
+                $transportManager
+            )
+        );
         $result->merge($taskResult);
 
         $result->addId('tmCaseDecision', $entity->getId());
@@ -116,7 +123,7 @@ final class CreateDeclareUnfit extends AbstractCommandHandler implements Transac
      * @param Cmd $command
      * @return CreateTask
      */
-    private function createCreateTaskCommand(Cmd $command, CasesEntity $case)
+    private function createCreateTaskCommand(Cmd $command, CasesEntity $case, TransportManager $transportManager)
     {
         $currentUser = $this->getCurrentUser();
 
@@ -128,6 +135,7 @@ final class CreateDeclareUnfit extends AbstractCommandHandler implements Transac
             'assignedToUser' => $currentUser->getId(),
             'assignedToTeam' => $currentUser->getTeam()->getId(),
             'case' => $case->getId(),
+            'transportManager' => $transportManager->getId(),
         ];
 
         return CreateTask::create($data);
