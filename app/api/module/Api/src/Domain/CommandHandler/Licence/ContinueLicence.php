@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 final class ContinueLicence extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Licence';
-    protected $extraRepos = ['ContinuationDetail'];
+    protected $extraRepos = ['ContinuationDetail', 'GoodsDisc'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -142,18 +142,8 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
         //Void any discs
         $result->merge($this->handleSideEffect(CeaseGoodsDiscs::create(['licence' => $licence->getId()])));
 
-        //Create a new Goods disc for each vehicle that has a specified date (and is not ceased)
-        $licencedVehicleIds = [];
-        foreach ($licence->getLicenceVehicles() as $licencedVehicle) {
-            $licencedVehicleIds[] = $licencedVehicle->getId();
-        }
-        $result->merge(
-            $this->handleSideEffect(
-                \Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs::create(
-                    ['ids' => $licencedVehicleIds]
-                )
-            )
-        );
+        $count = $this->getRepo('GoodsDisc')->createDiscsForLicence($licence->getId());
+        $result->addMessage("{$count} goods discs created");
 
         //If licence type is Standard International
         if ($licence->isStandardInternational()) {

@@ -149,6 +149,20 @@ class GoodsDisc extends AbstractRepository
             ->execute(['licence' => $licenceId]);
     }
 
+    /**
+     * Create a goods disc for each active licence vehicle
+     *
+     * @param int $licenceId
+     *
+     * @return int Number of discs created
+     */
+    public function createDiscsForLicence($licenceId)
+    {
+        return $this->getDbQueryManager()->get('LicenceVehicle\CreateDiscsForLicence')
+            ->execute(['licence' => $licenceId])
+            ->rowCount();
+    }
+
     public function fetchDiscsToPrintMin($niFlag, $licenceType)
     {
         $qb = $this->createQueryBuilder();
