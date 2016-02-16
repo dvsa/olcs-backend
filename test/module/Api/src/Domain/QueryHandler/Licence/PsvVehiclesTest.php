@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query\Licence\PsvVehicles as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
+use Doctrine\ORM\Query;
 
 /**
  * Psv Vehicles Test
@@ -27,6 +28,7 @@ class PsvVehiclesTest extends QueryHandlerTestCase
     {
         $this->sut = new PsvVehicles();
         $this->mockRepo('Licence', Repository\Licence::class);
+        $this->mockRepo('LicenceVehicle', Repository\LicenceVehicle::class);
         $this->mockedSmServices['PsvVehiclesQueryHelper'] = m::mock(PsvVehiclesQueryHelper::class);
 
         parent::setUp();
@@ -47,11 +49,37 @@ class PsvVehiclesTest extends QueryHandlerTestCase
         $licence->shouldReceive('getOtherActiveLicences->isEmpty')->andReturn(true);
         $licence->shouldReceive('serialize')
             ->with(['organisation'])
-            ->andReturn(['foo' => 'bar']);
+            ->andReturn(['foo' => 'bar'])
+            ->shouldReceive('getId')
+            ->andReturn(111)
+            ->once()
+            ->getMock();
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($licence);
+
+        $mockList = m::mock()
+            ->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar'])
+            ->once()
+            ->getMock();
+
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+
+        $this->repoMap['LicenceVehicle']
+            ->shouldReceive('createPaginatedVehiclesDataForLicenceQueryPsv')
+            ->with($query, 111)
+            ->andReturn($mockQb)
+            ->once()
+            ->shouldReceive('fetchPaginatedList')
+            ->with($mockQb, Query::HYDRATE_OBJECT)
+            ->andReturn([$mockList])
+            ->once()
+            ->shouldReceive('fetchPaginatedCount')
+            ->andReturn(1)
+            ->with($mockQb)
+            ->once();
 
         $flags = [
             'showSmallTable' => true,
@@ -103,7 +131,8 @@ class PsvVehiclesTest extends QueryHandlerTestCase
                 ['type' => 'large']
             ],
             'canTransfer' => false,
-            'hasBreakdown' => false
+            'hasBreakdown' => false,
+            'licenceVehicles' => ['results' => [['foo' => 'bar']], 'count' => 1]
         ];
 
         $this->assertEquals($expected, $data);

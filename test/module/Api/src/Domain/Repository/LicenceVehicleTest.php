@@ -265,6 +265,61 @@ class LicenceVehicleTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
+    public function testCreatePaginatedVehiclesDataForLicenceQueryPsv()
+    {
+        $data = [
+            'includeRemoved' => false,
+            'page' => 3,
+            'limit' => 10
+        ];
+        $qry = LicGoodsVehicles::create($data);
+        $licId = 222;
+
+        $qb = $this->createMockQb('[QUERY]');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->shouldReceive('paginate')
+            ->with(3, 10);
+
+        $this->assertSame($qb, $this->sut->createPaginatedVehiclesDataForLicenceQueryPsv($qry, $licId));
+
+        $expectedQuery = '[QUERY] INNER JOIN m.vehicle v AND m.removalDate IS NULL AND m.licence = [[222]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testCreatePaginatedVehiclesDataForApplicationQueryPsv()
+    {
+        $data = [
+            'includeRemoved' => false,
+            'page' => 3,
+            'limit' => 10
+        ];
+        $qry = LicGoodsVehicles::create($data);
+        $appId = 222;
+
+        $qb = $this->createMockQb('[QUERY]');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->shouldReceive('paginate')
+            ->with(3, 10);
+
+        $this->assertSame($qb, $this->sut->createPaginatedVehiclesDataForApplicationQueryPsv($qry, $appId));
+
+        $expectedQuery = '[QUERY] INNER JOIN m.vehicle v AND m.removalDate IS NULL AND m.application = [[222]] '
+            . 'AND (m.application = [[222]] OR m.specifiedDate IS NOT NULL)';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
     public function testGetAllPsvVehiclesIncludeRemoved()
     {
         /** @var ApplicationEntity $entity */
