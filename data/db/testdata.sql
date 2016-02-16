@@ -52,7 +52,6 @@ TRUNCATE TABLE `pi_decision`;
 TRUNCATE TABLE `pi_type`;
 TRUNCATE TABLE `pi_hearing`;
 TRUNCATE TABLE `pi_reason`;
-TRUNCATE TABLE `pi_venue`;
 TRUNCATE TABLE `prohibition`;
 TRUNCATE TABLE `prohibition_defect`;
 TRUNCATE TABLE `presiding_tc`;
@@ -1146,51 +1145,6 @@ VALUES
    (2,2,'tc_r_dtc',NULL,2,'tc_r_dhtru','pi_s_reg',NULL,84,NULL,NULL,NULL,NULL,NULL,NULL,
    'S13 - Consideration of new application under Section 13',0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,'2014-11-24',NULL,
    'Test Pi','2014-11-24 10:06:49',NULL,NULL,0,'2014-12-11 10:49:57',2,0);
-
-INSERT INTO `pi_venue` (`id`, `traffic_area_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
-    `version`, `name`, `address_id`) VALUES
-    (1,'B',NULL,NULL,NULL,NULL,1,'venue_1',1021),
-    (2,'B',NULL,NULL,NULL,NULL,1,'venue_2',1025),
-    (3,'B',NULL,NULL,NULL,NULL,1,'venue_3',1026),
-    (4,'B',NULL,NULL,NULL,NULL,1,'venue_4',1027),
-    (5,'B',NULL,NULL,NULL,NULL,1,'venue_5',1029),
-    (6,'C',NULL,NULL,NULL,NULL,1,'venue_6',1030),
-    (7,'C',NULL,NULL,NULL,NULL,1,'venue_7',1031),
-    (8,'C',NULL,NULL,NULL,NULL,1,'venue_8',1037),
-    (9,'C',NULL,NULL,NULL,NULL,1,'venue_9',1039),
-    (10,'C',NULL,NULL,NULL,NULL,1,'venue_10',1041),
-    (11,'C',NULL,NULL,NULL,NULL,1,'venue_11',1042),
-    (12,'D',NULL,NULL,NULL,NULL,1,'venue_12',1054),
-    (13,'D',NULL,NULL,NULL,NULL,1,'venue_13',1055),
-    (14,'D',NULL,NULL,NULL,NULL,1,'venue_14',1063),
-    (15,'D',NULL,NULL,NULL,NULL,1,'venue_15',1064),
-    (16,'D',NULL,NULL,NULL,NULL,1,'venue_16',1067),
-    (17,'F',NULL,NULL,NULL,NULL,1,'venue_17',1072),
-    (18,'F',NULL,NULL,NULL,NULL,1,'venue_18',1075),
-    (19,'F',NULL,NULL,NULL,NULL,1,'venue_19',1076),
-    (20,'F',NULL,NULL,NULL,NULL,1,'venue_20',1100),
-    (21,'F',NULL,NULL,NULL,NULL,1,'venue_21',1104),
-    (22,'F',NULL,NULL,NULL,NULL,1,'venue_22',1105),
-    (23,'G',NULL,NULL,NULL,NULL,1,'venue_23',1106),
-    (24,'G',NULL,NULL,NULL,NULL,1,'venue_24',1107),
-    (25,'G',NULL,NULL,NULL,NULL,1,'venue_25',1108),
-    (26,'G',NULL,NULL,NULL,NULL,1,'venue_26',1109),
-    (27,'G',NULL,NULL,NULL,NULL,1,'venue_27',1110),
-    (28,'G',NULL,NULL,NULL,NULL,1,'venue_28',1111),
-    (29,'H',NULL,NULL,NULL,NULL,1,'venue_29',1112),
-    (32,'H',NULL,NULL,NULL,NULL,1,'venue_32',1113),
-    (33,'H',NULL,NULL,NULL,NULL,1,'venue_33',1114),
-    (34,'H',NULL,NULL,NULL,NULL,1,'venue_34',1115),
-    (35,'K',NULL,NULL,NULL,NULL,1,'venue_35',1007),
-    (36,'K',NULL,NULL,NULL,NULL,1,'venue_36',1008),
-    (37,'K',NULL,NULL,NULL,NULL,1,'venue_37',1021),
-    (38,'M',NULL,NULL,NULL,NULL,1,'venue_38',1025),
-    (39,'M',NULL,NULL,NULL,NULL,1,'venue_39',1026),
-    (40,'M',NULL,NULL,NULL,NULL,1,'venue_40',1027),
-    (41,'N',NULL,NULL,NULL,NULL,1,'venue_41',1029),
-    (42,'N',NULL,NULL,NULL,NULL,1,'venue_42',1030),
-    (43,'N',NULL,NULL,NULL,NULL,1,'venue_43',1031),
-    (44,'N',NULL,NULL,NULL,NULL,1,'venue_44',1032);
 
 INSERT INTO `pi_hearing` (`id`,`pi_id`,`presided_by_role`,`created_by`,`last_modified_by`,`pi_venue_id`,`presiding_tc_id`,`adjourned_date`,`adjourned_reason`,`cancelled_date`,`cancelled_reason`,`details`,`is_adjourned`,`presiding_tc_other`,`created_on`,`hearing_date`,`is_cancelled`,`last_modified_on`,`pi_venue_other`,`version`,`witnesses`)
   VALUES

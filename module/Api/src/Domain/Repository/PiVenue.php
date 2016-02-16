@@ -6,7 +6,6 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Pi\PiVenue as Entity;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -24,8 +23,22 @@ class PiVenue extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        $qb->andWhere($qb->expr()->eq($this->alias . '.trafficArea', ':trafficArea'))
-            ->setParameter('trafficArea', $query->getTrafficArea());
+        if ($query->getTrafficArea() !== null) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.trafficArea', ':trafficArea'))
+                ->setParameter('trafficArea', $query->getTrafficArea());
+        }
+
+        $qb->andWhere(
+            $qb->expr()->orX(
+                $qb->expr()->isNull($this->alias .'.endDate'),
+                $qb->expr()->gte($this->alias .'.endDate', ':today')
+            )
+        );
+
+        $today = new \DateTime();
+        $today->setTime(0, 0, 0);
+        $qb->setParameter('today', $today);
+
         $qb->orderBy($this->alias . '.name', 'ASC');
     }
 }
