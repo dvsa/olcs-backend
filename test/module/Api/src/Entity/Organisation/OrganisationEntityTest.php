@@ -55,7 +55,7 @@ class OrganisationEntityTest extends EntityTester
     /**
      * @dataProvider organisationDataProvider
      */
-    public function testUpdateOrganisation($isIrfo, $lastName, $expectedName)
+    public function testUpdateOrganisation($isIrfo, $lastName, $expectedName, $allowEmail)
     {
         $organisation = m::mock(Entity::class)->makePartial();
 
@@ -66,7 +66,8 @@ class OrganisationEntityTest extends EntityTester
             $lastName,
             $isIrfo,
             'nob',
-            ['cpid']
+            ['cpid'],
+            $allowEmail
         );
 
         $this->assertEquals($organisation->getCpid(), ['cpid']);
@@ -74,13 +75,14 @@ class OrganisationEntityTest extends EntityTester
         $this->assertEquals($organisation->getCompanyOrLlpNo(), '12345678');
         $this->assertEquals($organisation->getIsIrfo(), $isIrfo);
         $this->assertEquals($organisation->getNatureOfBusiness(), 'nob');
+        $this->assertEquals($organisation->getAllowEmail(), $allowEmail);
     }
 
     public function organisationDataProvider()
     {
         return [
-            ['Y', 'lname', 'fname lname'],
-            ['N', '', 'name']
+            ['Y', 'lname', 'fname lname', 'Y'],
+            ['N', '', 'name','N']
         ];
     }
 
