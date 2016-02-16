@@ -235,4 +235,14 @@ class PsvDiscTest extends RepositoryTestCase
 
         $this->sut->fetchDiscsToPrintMin($licenceType);
     }
+
+    public function testCreatePsvDiscs()
+    {
+        $query = m::mock();
+        $query->shouldReceive('executeInsert')->once()->with(321, 99, true);
+
+        $this->dbQueryService->shouldReceive('get')->with('Discs\CreatePsvDiscs')->andReturn($query);
+
+        $this->sut->createPsvDiscs(321, 99, true);
+    }
 }

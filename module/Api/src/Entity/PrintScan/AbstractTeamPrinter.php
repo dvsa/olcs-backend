@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * TeamPrinter Abstract Entity
@@ -13,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="team_printer",
  *    indexes={
  *        @ORM\Index(name="ix_team_printer_printer_id", columns={"printer_id"}),
@@ -25,6 +27,15 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
+
+    /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
 
     /**
      * Identifier - Id
@@ -45,7 +56,7 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
      * @ORM\ManyToOne(
      *     targetEntity="Dvsa\Olcs\Api\Entity\PrintScan\Printer",
      *     fetch="LAZY",
-     *     inversedBy="teams"
+     *     inversedBy="teamPrinters"
      * )
      * @ORM\JoinColumn(name="printer_id", referencedColumnName="id", nullable=false)
      */
@@ -69,7 +80,7 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
      * @ORM\ManyToOne(
      *     targetEntity="Dvsa\Olcs\Api\Entity\User\Team",
      *     fetch="LAZY",
-     *     inversedBy="printers"
+     *     inversedBy="teamPrinters"
      * )
      * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=false)
      */
@@ -84,6 +95,39 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
     protected $user;
+
+    /**
+     * Version
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
+     * @ORM\Version
+     */
+    protected $version = 1;
+
+    /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate
+     * @return TeamPrinter
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate()
+    {
+        return $this->deletedDate;
+    }
 
     /**
      * Set the id
@@ -198,6 +242,29 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set the version
+     *
+     * @param int $version
+     * @return TeamPrinter
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Get the version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
     }
 
 

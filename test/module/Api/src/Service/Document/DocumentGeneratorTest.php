@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Api\Service\Document;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
+use Dvsa\Olcs\Api\Service\File\File;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -273,7 +274,12 @@ class DocumentGeneratorTest extends MockeryTestCase
     public function testUploadGeneratedContent()
     {
         $this->fileUploader->shouldReceive('setFile')
-            ->with(['content' => 'foo'])
+            ->with(m::type(File::class))
+            ->andReturnUsing(
+                function (File $file) {
+                    $this->assertEquals('foo', $file->getContent());
+                }
+            )
             ->shouldReceive('upload')
             ->with('docs')
             ->andReturn('result');

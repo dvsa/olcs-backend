@@ -1125,4 +1125,25 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
 
         return implode(', ', $matchingPublications);
     }
+
+    /**
+     * Return a list of service numbers formatted with pattern: serviceNo(serviceNo2,serviceNo3,serviceNo4)
+     *
+     * @return string
+     */
+    public function getFormattedServiceNumbers()
+    {
+        $additional = [];
+
+        /** @var BusRegOtherServiceEntity $otherService */
+        foreach ($this->otherServices as $otherService) {
+            $additional[] = $otherService->getServiceNo();
+        }
+
+        if (!empty($additional)) {
+            return $this->serviceNo . '(' . implode(',', $additional) . ')';
+        }
+
+        return $this->serviceNo;
+    }
 }

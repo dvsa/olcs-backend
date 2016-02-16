@@ -48,7 +48,7 @@ trait EmailAwareTrait
      * Send an email in a HTML template
      *
      * @param Message $message
-     * @param string $template
+     * @param string|array $template
      * @param array $variables
      * @param string $layout
      *

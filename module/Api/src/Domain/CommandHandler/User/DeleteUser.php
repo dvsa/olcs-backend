@@ -42,7 +42,7 @@ final class DeleteUser extends AbstractCommandHandler implements
 
         if (!empty($this->getRepo('Task')->fetchByUser($user->getId(), true))) {
             // the user still has some open tasks
-            throw new BadRequestException('The user still has some open tasks');
+            throw new BadRequestException('ERR_USER_HAS_OPEN_TASK');
         }
 
         $this->getRepo()->delete($user);

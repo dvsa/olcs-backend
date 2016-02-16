@@ -45,4 +45,47 @@ class TeamTest extends RepositoryTestCase
 
         $this->assertSame(['result'], $this->sut->fetchByName($name));
     }
+
+    public function testFetchWithPrinters()
+    {
+        $id = 1;
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->once()
+            ->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($mockQb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('byId')
+            ->with($id)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('teamPrinters', 'tp')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('tp.printer', 'tpp')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('tp.user', 'pu')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('tp.subCategory', 'ps')
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getSingleResult')->andReturn('result');
+
+        $this->assertSame('result', $this->sut->fetchWithPrinters($id, 1));
+    }
 }

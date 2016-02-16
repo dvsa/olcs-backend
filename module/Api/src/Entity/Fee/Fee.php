@@ -47,6 +47,8 @@ class Fee extends AbstractFee
     const METHOD_WAIVE        = 'fpm_waive';
     const METHOD_REFUND       = 'fpm_refund';
     const METHOD_REVERSAL     = 'fpm_reversal';
+    const METHOD_RECEIPT      = 'fpm_rcpt';
+    const METHOD_MIGRATED     = 'fpm_migrated';
 
     const DEFAULT_INVOICE_CUSTOMER_NAME = 'Miscellaneous payment';
     const DEFAULT_INVOICE_ADDRESS_LINE = 'Miscellaneous payment';
@@ -462,11 +464,26 @@ class Fee extends AbstractFee
         return $this->getFeeStatus()->getId() === self::STATUS_PAID;
     }
 
+    public function isMigrated()
+    {
+        /** @var FeeTransaction $feeTransaction */
+        foreach ($this->getFeeTransactions() as $feeTransaction) {
+            if ($feeTransaction->getTransaction()->isMigrated()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @return bool
      */
     public function canRefund()
     {
+        if ($this->isMigrated()) {
+            return false;
+        }
 
         if ($this->getFeeType()->isMiscellaneous()) {
             // miscellaneous fees are not currently refundable

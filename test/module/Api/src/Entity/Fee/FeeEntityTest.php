@@ -1010,18 +1010,43 @@ class FeeEntityTest extends EntityTester
         $paid        = new RefData(Entity::STATUS_PAID);
         $cancelled   = new RefData(Entity::STATUS_CANCELLED);
 
+        // Not migrated
+        $txn1 = m::mock(Transaction::class);
+        // Migrated
+        $txn2 = m::mock(Transaction::class);
+        // Refunded
+        $txn3 = m::mock(Transaction::class);
+
         $nonRefundedFeeTransaction = m::mock(FeeTransaction::class);
-        $nonRefundedFeeTransaction
-            ->shouldReceive('getTransaction->isCompletePaymentOrAdjustment')
-            ->andReturn(true);
+        $nonRefundedFeeTransaction->shouldReceive('getTransaction')->andReturn($txn1);
+
+        $txn1->shouldReceive('isCompletePaymentOrAdjustment')
+            ->andReturn(true)
+            ->shouldReceive('isMigrated')
+            ->andReturn(false);
+
         $nonRefundedFeeTransaction
             ->shouldReceive('isRefundedOrReversed')
             ->andReturn(false);
 
-        $refundedFeeTransaction = m::mock(FeeTransaction::class);
-        $refundedFeeTransaction
-            ->shouldReceive('getTransaction->isCompletePaymentOrAdjustment')
+        $migratedTransaction = m::mock(FeeTransaction::class);
+        $migratedTransaction->shouldReceive('getTransaction')->andReturn($txn2);
+        $txn2->shouldReceive('isCompletePaymentOrAdjustment')
+            ->andReturn(true)
+            ->shouldReceive('isMigrated')
             ->andReturn(true);
+
+        $migratedTransaction
+            ->shouldReceive('isRefundedOrReversed')
+            ->andReturn(false);
+
+        $refundedFeeTransaction = m::mock(FeeTransaction::class);
+        $refundedFeeTransaction->shouldReceive('getTransaction')->andReturn($txn3);
+        $txn3->shouldReceive('isCompletePaymentOrAdjustment')
+            ->andReturn(true)
+            ->shouldReceive('isMigrated')
+            ->andReturn(false);
+
         $refundedFeeTransaction
             ->shouldReceive('isRefundedOrReversed')
             ->andReturn(true);
@@ -1034,6 +1059,7 @@ class FeeEntityTest extends EntityTester
             'misc paid'        => [$miscFeeType, $paid, [], false],
             'misc cancelled'   => [$miscFeeType, $cancelled, [], false],
             'std not refunded' => [$nonMiscFeeType, $paid, [$nonRefundedFeeTransaction], true],
+            'migrated'         => [$nonMiscFeeType, $paid, [$migratedTransaction], false],
             'std refunded'     => [$nonMiscFeeType, $paid, [$refundedFeeTransaction], false],
         ];
     }

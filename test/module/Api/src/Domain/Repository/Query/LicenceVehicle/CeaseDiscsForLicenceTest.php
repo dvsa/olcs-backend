@@ -40,6 +40,9 @@ class CeaseDiscsForLicenceTest extends AbstractDbQueryTestCase
             'isInterim' => [
                 'column' => 'is_interim'
             ],
+            'lastModifiedOn' => [
+                'column' => 'last_modified_on'
+            ],
         ],
         LicenceVehicle::class => [
             'id' => [
@@ -77,7 +80,7 @@ class CeaseDiscsForLicenceTest extends AbstractDbQueryTestCase
     {
         return 'UPDATE goods_disc gd
       INNER JOIN licence_vehicle lv ON lv.id = gd.licence_vehicle_id
-      SET gd.ceased_date = :ceasedDate, gd.is_interim = 0
+      SET gd.ceased_date = :ceasedDate, gd.is_interim = 0, gd.last_modified_on = NOW()
       WHERE lv.licence_id = :licence AND gd.ceased_date IS NULL';
     }
 }

@@ -16,11 +16,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Team\DeleteTeam as Cmd;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
-use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * Delete Team Test
@@ -35,11 +31,6 @@ class DeleteTest extends CommandHandlerTestCase
         $this->mockRepo('Team', TeamRepo::class);
         $this->mockRepo('User', UserRepo::class);
         $this->mockRepo('Task', TaskRepo::class);
-
-        $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
-        ];
-        $this->mockAuthService();
 
         parent::setUp();
     }
@@ -57,12 +48,6 @@ class DeleteTest extends CommandHandlerTestCase
 
     public function testHandleCommandNeedReassign()
     {
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('isGranted')
-            ->with(Permission::CAN_MANAGE_USER_INTERNAL, null)
-            ->once()
-            ->andReturn(true);
-
         $command = Cmd::create(['id' => 1]);
 
         $mockTeam = m::mock()
@@ -70,9 +55,6 @@ class DeleteTest extends CommandHandlerTestCase
             ->andReturn(1)
             ->once()
             ->shouldReceive('getTaskAllocationRules')
-            ->andReturn([])
-            ->once()
-            ->shouldReceive('getPrinters')
             ->andReturn([])
             ->once()
             ->shouldReceive('getTasks')
@@ -105,12 +87,6 @@ class DeleteTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithValidate()
     {
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('isGranted')
-            ->with(Permission::CAN_MANAGE_USER_INTERNAL, null)
-            ->once()
-            ->andReturn(true);
-
         $command = Cmd::create(['id' => 1, 'validate' => true]);
 
         $mockTeam = m::mock()
@@ -118,9 +94,6 @@ class DeleteTest extends CommandHandlerTestCase
             ->andReturn(1)
             ->once()
             ->shouldReceive('getTaskAllocationRules')
-            ->andReturn([])
-            ->once()
-            ->shouldReceive('getPrinters')
             ->andReturn([])
             ->once()
             ->shouldReceive('getTasks')
@@ -153,12 +126,6 @@ class DeleteTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithReassignTasks()
     {
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('isGranted')
-            ->with(Permission::CAN_MANAGE_USER_INTERNAL, null)
-            ->once()
-            ->andReturn(true);
-
         $command = Cmd::create(['id' => 1, 'validate' => false, 'newTeam' => 2]);
 
         $mockNewTeam = m::mock()
@@ -180,9 +147,6 @@ class DeleteTest extends CommandHandlerTestCase
             ->andReturn(1)
             ->twice()
             ->shouldReceive('getTaskAllocationRules')
-            ->andReturn([])
-            ->once()
-            ->shouldReceive('getPrinters')
             ->andReturn([])
             ->once()
             ->shouldReceive('getTasks')
@@ -226,26 +190,9 @@ class DeleteTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    protected function mockAuthService()
-    {
-        /** @var User $mockUser */
-        $mockUser = m::mock(User::class)->makePartial();
-        $mockUser->setId(1);
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('getIdentity->getUser')
-            ->andReturn($mockUser);
-    }
-
     public function testHandleCommandWithVaidationException()
     {
         $this->setExpectedException(ValidationException::class);
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('isGranted')
-            ->with(Permission::CAN_MANAGE_USER_INTERNAL, null)
-            ->once()
-            ->andReturn(true);
 
         $command = Cmd::create(['id' => 1]);
 
@@ -255,9 +202,6 @@ class DeleteTest extends CommandHandlerTestCase
             ->once()
             ->shouldReceive('getTaskAllocationRules')
             ->andReturn(['taskAllocationRules'])
-            ->once()
-            ->shouldReceive('getPrinters')
-            ->andReturn(['printers'])
             ->once()
             ->getMock();
 
@@ -274,21 +218,6 @@ class DeleteTest extends CommandHandlerTestCase
             ->andReturn(1)
             ->once()
             ->getMock();
-
-        $this->sut->handleCommand($command);
-    }
-
-    public function testHandleCommandWithForbiddenException()
-    {
-        $this->setExpectedException(ForbiddenException::class);
-
-        $command = Cmd::create(['id' => 1]);
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('isGranted')
-            ->with(Permission::CAN_MANAGE_USER_INTERNAL, null)
-            ->once()
-            ->andReturn(false);
 
         $this->sut->handleCommand($command);
     }

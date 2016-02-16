@@ -342,6 +342,11 @@ return [
     TransferCommand\Printer\UpdatePrinter::class => CommandHandler\Printer\UpdatePrinter::class,
     TransferCommand\Printer\DeletePrinter::class => CommandHandler\Printer\DeletePrinter::class,
 
+    // Transfer - TeamPrinter
+    TransferCommand\TeamPrinter\CreateTeamPrinter::class => CommandHandler\TeamPrinter\CreateTeamPrinter::class,
+    TransferCommand\TeamPrinter\UpdateTeamPrinter::class => CommandHandler\TeamPrinter\UpdateTeamPrinter::class,
+    TransferCommand\TeamPrinter\DeleteTeamPrinter::class => CommandHandler\TeamPrinter\DeleteTeamPrinter::class,
+
     // Transfer - Cases
     TransferCommand\Cases\CreateCase::class => CommandHandler\Cases\CreateCase::class,
     TransferCommand\Cases\UpdateCase::class => CommandHandler\Cases\UpdateCase::class,
@@ -691,6 +696,7 @@ return [
     Command\Email\SendEbsrRefreshed::class => CommandHandler\Email\SendEbsrRefreshed::class,
     Command\Email\SendEbsrCancelled::class => CommandHandler\Email\SendEbsrCancelled::class,
     Command\Email\SendEbsrRegistered::class => CommandHandler\Email\SendEbsrRegistered::class,
+    Command\Email\SendEbsrErrors::class => CommandHandler\Email\SendEbsrErrors::class,
 
     // Person
     Command\Person\Create::class => CommandHandler\Person\Create::class,
@@ -874,4 +880,8 @@ return [
     Command\SystemParameter\Update::class => CommandHandler\SystemParameter\Update::class,
 
     Command\PrintScheduler\PrintJob::class => CommandHandler\PrintScheduler\PrintJob::class,
+
+    // Sla Target Dates
+    TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
+    TransferCommand\System\UpdateSlaTargetDate::class => CommandHandler\System\UpdateSlaTargetDate::class,
 ];

@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository\Query;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
@@ -89,7 +89,8 @@ abstract class AbstractRawQuery implements QueryInterface, FactoryInterface
      *
      * @param array $params
      * @param array $paramTypes
-     * @return mixed
+     *
+     * @return \Doctrine\DBAL\Driver\Statement
      */
     public function execute(array $params = [], array $paramTypes = [])
     {
@@ -175,13 +176,16 @@ abstract class AbstractRawQuery implements QueryInterface, FactoryInterface
      * the output would be:
      *      UPDATE tbl_foo f INNER JOIN tbl_bar b ON b.id = f.b_id WHERE b.column_name = 1
      *
-     * @param $template
+     * @param string $template
+     * @param bool   $withAlias if true db fields will be prefixed with the table alias
      */
-    private function buildQueryFromTemplate($template)
+    protected function buildQueryFromTemplate($template, $withAlias = true)
     {
+        $method = ($withAlias) ? 'replaceTableOrField' : 'replaceTableOrFieldWithoutAlias';
+
         return preg_replace_callback(
             '/\{(?P<alias>[a-zA-Z]+)(?:\.(?P<field>[a-zA-Z]+))?\}/',
-            [$this, 'replaceTableOrField'],
+            [$this, $method],
             $template
         );
     }
@@ -201,5 +205,22 @@ abstract class AbstractRawQuery implements QueryInterface, FactoryInterface
         }
 
         return $matches['alias'] . '.' . $this->getColumnName($entity, $matches['field']);
+    }
+
+    /**
+     * Replace a table or field name
+     *
+     * @param array $matches
+     * @return string
+     */
+    private function replaceTableOrFieldWithoutAlias(array $matches = [])
+    {
+        $entity = $this->templateMap[$matches['alias']];
+
+        if (empty($matches['field'])) {
+            return $this->getTableName($entity);
+        }
+
+        return $this->getColumnName($entity, $matches['field']);
     }
 }

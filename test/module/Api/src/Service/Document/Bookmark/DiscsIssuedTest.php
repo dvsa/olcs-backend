@@ -24,18 +24,10 @@ class DiscsIssuedTest extends \PHPUnit_Framework_TestCase
         $bookmark = new DiscsIssued();
         $bookmark->setData(
             [
-                'psvDiscs' => [
-                    [
-                        'ceasedDate' => null,
-                    ], [
-                        'ceasedDate' => null,
-                    ], [
-                        'ceasedDate' => '2015-01-01',
-                    ]
-                ]
+                'notCeasedPsvDiscCount' => 76253,
             ]
         );
 
-        $this->assertEquals(2, $bookmark->render());
+        $this->assertEquals(76253, $bookmark->render());
     }
 }

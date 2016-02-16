@@ -10,15 +10,14 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Team;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Team\CreateTeam as CreateTeam;
 use Dvsa\Olcs\Api\Domain\Repository\Team as TeamRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Printer as PrinterRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Team\CreateTeam as Cmd;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\PrintScan\Printer as PrinterEntity;
 use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * Create Team Test
@@ -31,11 +30,7 @@ class CreateTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateTeam();
         $this->mockRepo('Team', TeamRepo::class);
-
-        $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
-        ];
-        $this->mockAuthService();
+        $this->mockRepo('Printer', PrinterRepo::class);
 
         parent::setUp();
     }
@@ -46,6 +41,9 @@ class CreateTest extends CommandHandlerTestCase
             TrafficAreaEntity::class => [
                 5 => m::mock(TrafficAreaEntity::class)
             ],
+            PrinterEntity::class => [
+                6 => m::mock(PrinterEntity::class)
+            ]
         ];
 
         parent::initReferences();
@@ -53,18 +51,12 @@ class CreateTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('isGranted')
-            ->with(Permission::CAN_MANAGE_USER_INTERNAL, null)
-            ->once()
-            ->andReturn(true);
-
         $command = Cmd::create(
             [
                 'name' => 'foo',
                 'description' => 'bar',
-                'trafficArea' => 5
+                'trafficArea' => 5,
+                'defaultPrinter' => 2
             ]
         );
 
@@ -85,38 +77,29 @@ class CreateTest extends CommandHandlerTestCase
             )
             ->getMock();
 
+        $this->repoMap['Printer']
+            ->shouldReceive('fetchById')
+            ->with(2)
+            ->andReturn(m::mock(PrinterEntity::class))
+            ->once()
+            ->getMock();
+
         $result = $this->sut->handleCommand($command);
 
         $res = $result->toArray();
         $this->assertEquals(111, $res['id']['team']);
     }
 
-    protected function mockAuthService()
-    {
-        /** @var User $mockUser */
-        $mockUser = m::mock(User::class)->makePartial();
-        $mockUser->setId(1);
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('getIdentity->getUser')
-            ->andReturn($mockUser);
-    }
-
     public function testHandleCommandWithVaidationException()
     {
         $this->setExpectedException(ValidationException::class);
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('isGranted')
-            ->with(Permission::CAN_MANAGE_USER_INTERNAL, null)
-            ->once()
-            ->andReturn(true);
 
         $command = Cmd::create(
             [
                 'name' => 'foo',
                 'description' => 'bar',
-                'trafficArea' => 5
+                'trafficArea' => 5,
+                'defaultPrinter' => 2
             ]
         );
 
@@ -126,27 +109,6 @@ class CreateTest extends CommandHandlerTestCase
             ->once()
             ->andReturn(['foo'])
             ->getMock();
-
-        $this->sut->handleCommand($command);
-    }
-
-    public function testHandleCommandWithForbiddenException()
-    {
-        $this->setExpectedException(ForbiddenException::class);
-
-        $command = Cmd::create(
-            [
-                'name' => 'foo',
-                'description' => 'bar',
-                'trafficArea' => 5
-            ]
-        );
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('isGranted')
-            ->with(Permission::CAN_MANAGE_USER_INTERNAL, null)
-            ->once()
-            ->andReturn(false);
 
         $this->sut->handleCommand($command);
     }
