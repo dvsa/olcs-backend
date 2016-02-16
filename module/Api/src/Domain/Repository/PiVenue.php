@@ -31,7 +31,7 @@ class PiVenue extends AbstractRepository
         $qb->andWhere(
             $qb->expr()->orX(
                 $qb->expr()->isNull($this->alias .'.endDate'),
-                $qb->expr()->gte($this->alias .'.endDate', ':today')
+                $qb->expr()->gt($this->alias .'.endDate', ':today')
             )
         );
 

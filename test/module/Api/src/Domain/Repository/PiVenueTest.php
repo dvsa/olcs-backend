@@ -36,7 +36,7 @@ class PiVenueTest extends RepositoryTestCase
         $mockQb->shouldReceive('setParameter')->with('trafficArea', 'B')->once();
 
         $mockQb->shouldReceive('expr->isNull')->with('m.endDate')->once()->andReturn('C1');
-        $mockQb->shouldReceive('expr->gte')->with('m.endDate', ':today')->once()->andReturn('C2');
+        $mockQb->shouldReceive('expr->gt')->with('m.endDate', ':today')->once()->andReturn('C2');
         $mockQb->shouldReceive('expr->orX')->with('C1', 'C2')->once()->andReturn('C1C2');
         $mockQb->shouldReceive('andWhere')->with('C1C2')->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('today', m::type(\DateTime::class))->once();
