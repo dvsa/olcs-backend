@@ -90,6 +90,10 @@ return [
             'EbsrShortNoticeInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory::class,
             'TrafficAreaValidator' => \Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator::class,
 
+            'ComplianceEpisodeInput' => \Dvsa\Olcs\Api\Service\Nr\InputFilter\ComplianceEpisodeInputFactory::class,
+            'ComplianceXmlStructure' => \Dvsa\Olcs\Api\Service\Nr\InputFilter\XmlStructureInputFactory::class,
+            'ComplianceEpisodeXmlMapping' => \Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXmlFactory::class,
+
             \Dvsa\Olcs\Api\Service\Nr\InrClientInterface::class => Dvsa\Olcs\Api\Service\Nr\InrClientFactory::class,
             \Dvsa\Olcs\Api\Service\Nr\MsiResponse::class => \Dvsa\Olcs\Api\Service\Nr\MsiResponseFactory::class
         ],
@@ -619,6 +623,9 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason::class
         ],
+        'factories' => [
+            \Dvsa\Olcs\Api\Service\Nr\Validator\Vrm::class => \Dvsa\Olcs\Api\Service\Nr\Validator\VrmFactory::class
+        ],
         'aliases' => [
             'Structure\Operator' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class,
             'Structure\Registration' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration::class,
@@ -662,7 +669,13 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class,
+            \Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted::class =>
+                \Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted::class
+
+        ],
+        'factories' => [
+            \Dvsa\Olcs\Api\Service\Nr\Filter\Vrm::class => \Dvsa\Olcs\Api\Service\Nr\Filter\VrmFactory::class
         ],
         'aliases' => [
             'IsScottishRules' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
@@ -671,7 +684,7 @@ return [
             'InjectNaptanCodes' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes::class,
             'Format\Subsidy' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class,
             'Format\Via' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class,
-            'Format\ExistingRegNo' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class,
+            'Format\ExistingRegNo' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class
         ]
     ],
 ];
