@@ -147,7 +147,8 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
             $command->getLastName(),
             $command->getIsIrfo(),
             $command->getNatureOfBusiness(),
-            $cpid
+            $cpid,
+            $command->getAllowEmail()
         );
         return $organisation;
     }
