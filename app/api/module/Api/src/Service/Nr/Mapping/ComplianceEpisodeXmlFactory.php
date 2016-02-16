@@ -38,24 +38,24 @@ class ComplianceEpisodeXmlFactory implements FactoryInterface
     {
         $seriousInfringement = [
             'Header' => [
-                new NodeAttribute(['seriousInfringements', 'workflowId'], 'workflowId'),
-                new NodeAttribute(['seriousInfringements', 'memberStateCode'], 'from')
+                new NodeAttribute('workflowId', 'workflowId'),
+                new NodeAttribute('memberStateCode', 'from')
             ],
             'Body' => [
-                new NodeAttribute(['seriousInfringements', 'notificationNumber'], 'businessCaseId'),
-                new NodeAttribute('erruOriginatingAuthority', 'originatingAuthority'),
+                new NodeAttribute('notificationNumber', 'businessCaseId'),
+                new NodeAttribute('originatingAuthority', 'originatingAuthority'),
                 new Recursion(
                     'TransportUndertaking',
                     [
-                        new NodeAttribute('LicenseNumber', 'communityLicenceNumber'),
-                        new NodeAttribute('erruVrm', 'vehicleRegNumber'),
-                        new NodeAttribute('erruTransportUndertakingName', 'name'),
+                        new NodeAttribute('licenceNumber', 'communityLicenceNumber'),
+                        new NodeAttribute('vrm', 'vehicleRegNumber'),
+                        new NodeAttribute('transportUndertakingName', 'name'),
                         new Recursion(
                             'SeriousInfringement',
                             [
-                                new NodeAttribute(['seriousInfringements', 'infringementDate'], 'dateOfInfringement'),
-                                new NodeAttribute(['seriousInfringements', 'siCategoryType'], 'infringementType'),
-                                new NodeAttribute(['seriousInfringements', 'checkDate'], 'dateOfCheck'),
+                                new NodeAttribute('infringementDate', 'dateOfInfringement'),
+                                new NodeAttribute('siCategoryType', 'infringementType'),
+                                new NodeAttribute('checkDate', 'dateOfCheck'),
                                 $this->getPenaltiesImposed(),
                                 $this->getPenaltiesRequested()
                             ]
@@ -63,7 +63,6 @@ class ComplianceEpisodeXmlFactory implements FactoryInterface
                     ]
                 )
             ],
-
         ];
 
         return $seriousInfringement;
