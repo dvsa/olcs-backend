@@ -27,8 +27,7 @@ final class PiVenueList extends AbstractQueryHandler
         $repo = $this->getRepo();
         return [
             'result' => $this->resultList(
-                $repo->fetchList($query, Query::HYDRATE_OBJECT),
-                ['address', 'trafficArea']
+                $repo->fetchList($query, Query::HYDRATE_OBJECT)
             ),
             'count' => $repo->fetchCount($query)
         ];
