@@ -2241,8 +2241,9 @@ INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `crea
   (9,NULL,NULL,NULL,NULL,1,82,130),
   (10,NULL,NULL,NULL,NULL,1,84,130);
 
-INSERT INTO `licence` (`id`,`correspondence_cd_id`,`organisation_id`,`goods_or_psv`,`licence_type`,`status`,`lic_no`) VALUES
-  (99,181,130,'lcat_gv','ltyp_r','lsts_consideration','OB111111');
+INSERT INTO `licence` (`id`,`correspondence_cd_id`,`organisation_id`,`goods_or_psv`,`licence_type`,`status`,`lic_no`,
+                       `traffic_area_id`) VALUES
+  (99,181,130,'lcat_gv','ltyp_r','lsts_consideration','OB111111', 'B');
 
 INSERT INTO `contact_details` (`id`,`address_id`,`contact_type`,`email_address`) VALUES
   (181,1283,'ct_corr','contact@bigtrucksltd.com');
