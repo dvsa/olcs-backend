@@ -389,6 +389,19 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     protected $templates;
 
     /**
+     * Sla target date
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\SlaTargetDate
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\SlaTargetDate",
+     *     mappedBy="document",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $slaTargetDate;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
@@ -1210,6 +1223,29 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
         }
 
         return $this;
+    }
+
+    /**
+     * Set the sla target date
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\SlaTargetDate $slaTargetDate
+     * @return Document
+     */
+    public function setSlaTargetDate($slaTargetDate)
+    {
+        $this->slaTargetDate = $slaTargetDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the sla target date
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\SlaTargetDate
+     */
+    public function getSlaTargetDate()
+    {
+        return $this->slaTargetDate;
     }
 
     /**

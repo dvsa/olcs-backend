@@ -329,13 +329,18 @@ return array(
         'team_id' => array(
             'inversedBy' => array(
                 'entity' => 'Team',
-                'property' => 'printer'
-            )
+                'property' => 'teamPrinter',
+                'cascade' => array(
+                    'persist',
+                    'remove'
+                ),
+                'orphanRemoval' => 'true'
+            ),
         ),
         'printer_id' => array(
             'inversedBy' => array(
                 'entity' => 'Printer',
-                'property' => 'team'
+                'property' => 'teamPrinter'
             )
         )
     ),
@@ -1902,5 +1907,19 @@ return array(
         'seen_qualification' => array(
             'type' => 'yesno'
         )
-    )
+    ),
+    'sla_target_date' => array(
+        'document_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Document',
+                'property' => 'slaTargetDate',
+                'cascade' => array(
+                    'persist'
+                )
+            )
+        ),
+        'under_delegation' => array(
+            'type' => 'yesno'
+        ),
+    ),
 );

@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity\PrintScan;
+namespace Dvsa\Olcs\Api\Entity\System;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -8,28 +8,35 @@ use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * VoidDisc Abstract Entity
+ * SlaTargetDate Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="void_disc",
+ * @ORM\Table(name="sla_target_date",
  *    indexes={
- *        @ORM\Index(name="ix_void_disc_goods_or_psv", columns={"goods_or_psv"}),
- *        @ORM\Index(name="ix_void_disc_licence_type", columns={"licence_type"}),
- *        @ORM\Index(name="ix_void_disc_traffic_area_id", columns={"traffic_area_id"}),
- *        @ORM\Index(name="ix_void_disc_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_void_disc_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_sla_target_date_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_sla_target_date_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_sla_target_date_document_id", columns={"document_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_void_disc_olbs_key", columns={"olbs_key"})
+ *        @ORM\UniqueConstraint(name="uk_sla_target_date_document_id", columns={"document_id"})
  *    }
  * )
  */
-abstract class AbstractVoidDisc implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractSlaTargetDate implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
+
+    /**
+     * Agreed date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="agreed_date", nullable=false)
+     */
+    protected $agreedDate;
 
     /**
      * Created by
@@ -51,14 +58,18 @@ abstract class AbstractVoidDisc implements BundleSerializableInterface, JsonSeri
     protected $createdOn;
 
     /**
-     * Goods or psv
+     * Document
      *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     * @var \Dvsa\Olcs\Api\Entity\Doc\Document
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="goods_or_psv", referencedColumnName="id", nullable=false)
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document",
+     *     fetch="LAZY",
+     *     inversedBy="slaTargetDate"
+     * )
+     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=false)
      */
-    protected $goodsOrPsv;
+    protected $document;
 
     /**
      * Identifier - Id
@@ -70,24 +81,6 @@ abstract class AbstractVoidDisc implements BundleSerializableInterface, JsonSeri
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
-
-    /**
-     * Is ni self serve
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_ni_self_serve", nullable=false, options={"default": 0})
-     */
-    protected $isNiSelfServe = 0;
-
-    /**
-     * Is self serve
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_self_serve", nullable=false, options={"default": 0})
-     */
-    protected $isSelfServe = 0;
 
     /**
      * Last modified by
@@ -109,51 +102,40 @@ abstract class AbstractVoidDisc implements BundleSerializableInterface, JsonSeri
     protected $lastModifiedOn;
 
     /**
-     * Licence type
+     * Notes
      *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="licence_type", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="string", name="notes", length=4000, nullable=true)
      */
-    protected $licenceType;
+    protected $notes;
 
     /**
-     * Olbs key
+     * Sent date
      *
-     * @var int
+     * @var \DateTime
      *
-     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
+     * @ORM\Column(type="datetime", name="sent_date", nullable=true)
      */
-    protected $olbsKey;
+    protected $sentDate;
 
     /**
-     * Serial end
+     * Target date
      *
-     * @var int
+     * @var \DateTime
      *
-     * @ORM\Column(type="integer", name="serial_end", nullable=true)
+     * @ORM\Column(type="datetime", name="target_date", nullable=true)
      */
-    protected $serialEnd;
+    protected $targetDate;
 
     /**
-     * Serial start
+     * Under delegation
      *
-     * @var int
+     * @var string
      *
-     * @ORM\Column(type="integer", name="serial_start", nullable=true)
+     * @ORM\Column(type="yesno", name="under_delegation", nullable=false, options={"default": 0})
      */
-    protected $serialStart;
-
-    /**
-     * Traffic area
-     *
-     * @var \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=true)
-     */
-    protected $trafficArea;
+    protected $underDelegation = 0;
 
     /**
      * Version
@@ -166,10 +148,33 @@ abstract class AbstractVoidDisc implements BundleSerializableInterface, JsonSeri
     protected $version = 1;
 
     /**
+     * Set the agreed date
+     *
+     * @param \DateTime $agreedDate
+     * @return SlaTargetDate
+     */
+    public function setAgreedDate($agreedDate)
+    {
+        $this->agreedDate = $agreedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the agreed date
+     *
+     * @return \DateTime
+     */
+    public function getAgreedDate()
+    {
+        return $this->agreedDate;
+    }
+
+    /**
      * Set the created by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
-     * @return VoidDisc
+     * @return SlaTargetDate
      */
     public function setCreatedBy($createdBy)
     {
@@ -192,7 +197,7 @@ abstract class AbstractVoidDisc implements BundleSerializableInterface, JsonSeri
      * Set the created on
      *
      * @param \DateTime $createdOn
-     * @return VoidDisc
+     * @return SlaTargetDate
      */
     public function setCreatedOn($createdOn)
     {
@@ -212,33 +217,33 @@ abstract class AbstractVoidDisc implements BundleSerializableInterface, JsonSeri
     }
 
     /**
-     * Set the goods or psv
+     * Set the document
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $goodsOrPsv
-     * @return VoidDisc
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $document
+     * @return SlaTargetDate
      */
-    public function setGoodsOrPsv($goodsOrPsv)
+    public function setDocument($document)
     {
-        $this->goodsOrPsv = $goodsOrPsv;
+        $this->document = $document;
 
         return $this;
     }
 
     /**
-     * Get the goods or psv
+     * Get the document
      *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     * @return \Dvsa\Olcs\Api\Entity\Doc\Document
      */
-    public function getGoodsOrPsv()
+    public function getDocument()
     {
-        return $this->goodsOrPsv;
+        return $this->document;
     }
 
     /**
      * Set the id
      *
      * @param int $id
-     * @return VoidDisc
+     * @return SlaTargetDate
      */
     public function setId($id)
     {
@@ -258,56 +263,10 @@ abstract class AbstractVoidDisc implements BundleSerializableInterface, JsonSeri
     }
 
     /**
-     * Set the is ni self serve
-     *
-     * @param boolean $isNiSelfServe
-     * @return VoidDisc
-     */
-    public function setIsNiSelfServe($isNiSelfServe)
-    {
-        $this->isNiSelfServe = $isNiSelfServe;
-
-        return $this;
-    }
-
-    /**
-     * Get the is ni self serve
-     *
-     * @return boolean
-     */
-    public function getIsNiSelfServe()
-    {
-        return $this->isNiSelfServe;
-    }
-
-    /**
-     * Set the is self serve
-     *
-     * @param boolean $isSelfServe
-     * @return VoidDisc
-     */
-    public function setIsSelfServe($isSelfServe)
-    {
-        $this->isSelfServe = $isSelfServe;
-
-        return $this;
-    }
-
-    /**
-     * Get the is self serve
-     *
-     * @return boolean
-     */
-    public function getIsSelfServe()
-    {
-        return $this->isSelfServe;
-    }
-
-    /**
      * Set the last modified by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
-     * @return VoidDisc
+     * @return SlaTargetDate
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -330,7 +289,7 @@ abstract class AbstractVoidDisc implements BundleSerializableInterface, JsonSeri
      * Set the last modified on
      *
      * @param \DateTime $lastModifiedOn
-     * @return VoidDisc
+     * @return SlaTargetDate
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -350,125 +309,102 @@ abstract class AbstractVoidDisc implements BundleSerializableInterface, JsonSeri
     }
 
     /**
-     * Set the licence type
+     * Set the notes
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $licenceType
-     * @return VoidDisc
+     * @param string $notes
+     * @return SlaTargetDate
      */
-    public function setLicenceType($licenceType)
+    public function setNotes($notes)
     {
-        $this->licenceType = $licenceType;
+        $this->notes = $notes;
 
         return $this;
     }
 
     /**
-     * Get the licence type
+     * Get the notes
      *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     * @return string
      */
-    public function getLicenceType()
+    public function getNotes()
     {
-        return $this->licenceType;
+        return $this->notes;
     }
 
     /**
-     * Set the olbs key
+     * Set the sent date
      *
-     * @param int $olbsKey
-     * @return VoidDisc
+     * @param \DateTime $sentDate
+     * @return SlaTargetDate
      */
-    public function setOlbsKey($olbsKey)
+    public function setSentDate($sentDate)
     {
-        $this->olbsKey = $olbsKey;
+        $this->sentDate = $sentDate;
 
         return $this;
     }
 
     /**
-     * Get the olbs key
+     * Get the sent date
      *
-     * @return int
+     * @return \DateTime
      */
-    public function getOlbsKey()
+    public function getSentDate()
     {
-        return $this->olbsKey;
+        return $this->sentDate;
     }
 
     /**
-     * Set the serial end
+     * Set the target date
      *
-     * @param int $serialEnd
-     * @return VoidDisc
+     * @param \DateTime $targetDate
+     * @return SlaTargetDate
      */
-    public function setSerialEnd($serialEnd)
+    public function setTargetDate($targetDate)
     {
-        $this->serialEnd = $serialEnd;
+        $this->targetDate = $targetDate;
 
         return $this;
     }
 
     /**
-     * Get the serial end
+     * Get the target date
      *
-     * @return int
+     * @return \DateTime
      */
-    public function getSerialEnd()
+    public function getTargetDate()
     {
-        return $this->serialEnd;
+        return $this->targetDate;
     }
 
     /**
-     * Set the serial start
+     * Set the under delegation
      *
-     * @param int $serialStart
-     * @return VoidDisc
+     * @param string $underDelegation
+     * @return SlaTargetDate
      */
-    public function setSerialStart($serialStart)
+    public function setUnderDelegation($underDelegation)
     {
-        $this->serialStart = $serialStart;
+        $this->underDelegation = $underDelegation;
 
         return $this;
     }
 
     /**
-     * Get the serial start
+     * Get the under delegation
      *
-     * @return int
+     * @return string
      */
-    public function getSerialStart()
+    public function getUnderDelegation()
     {
-        return $this->serialStart;
-    }
-
-    /**
-     * Set the traffic area
-     *
-     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $trafficArea
-     * @return VoidDisc
-     */
-    public function setTrafficArea($trafficArea)
-    {
-        $this->trafficArea = $trafficArea;
-
-        return $this;
-    }
-
-    /**
-     * Get the traffic area
-     *
-     * @return \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
-     */
-    public function getTrafficArea()
-    {
-        return $this->trafficArea;
+        return $this->underDelegation;
     }
 
     /**
      * Set the version
      *
      * @param int $version
-     * @return VoidDisc
+     * @return SlaTargetDate
      */
     public function setVersion($version)
     {

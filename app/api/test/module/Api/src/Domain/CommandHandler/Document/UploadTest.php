@@ -108,12 +108,13 @@ class UploadTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['FileUploader']->shouldReceive('setFile')
             ->once()
-            ->with(
-                [
-                    'name' => 'foo.pdf',
-                    'content' => '<foo>',
-                    'size' => 8
-                ]
+            ->with(m::type(File::class))
+            ->andReturnUsing(
+                function (File $file) {
+                    $this->assertEquals('foo.pdf', $file->getName());
+                    $this->assertEquals('<foo>', $file->getContent());
+                    $this->assertEquals(5, $file->getSize());
+                }
             )
             ->shouldReceive('upload')
             ->with('/some/identifier.pdf')
@@ -180,12 +181,13 @@ class UploadTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['FileUploader']->shouldReceive('setFile')
             ->once()
-            ->with(
-                [
-                    'name' => 'foo.pdf',
-                    'content' => '<foo>',
-                    'size' => 8
-                ]
+            ->with(m::type(File::class))
+            ->andReturnUsing(
+                function (File $file) {
+                    $this->assertEquals('foo.pdf', $file->getName());
+                    $this->assertEquals('<foo>', $file->getContent());
+                    $this->assertEquals(5, $file->getSize());
+                }
             )
             ->shouldReceive('upload')
             ->with('/some/identifier.pdf')
@@ -222,12 +224,13 @@ class UploadTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['FileUploader']->shouldReceive('setFile')
             ->once()
-            ->with(
-                [
-                    'name' => 'foo.pdf',
-                    'content' => '<foo>',
-                    'size' => 8
-                ]
+            ->with(m::type(File::class))
+            ->andReturnUsing(
+                function (File $file) {
+                    $this->assertEquals('foo.pdf', $file->getName());
+                    $this->assertEquals('<foo>', $file->getContent());
+                    $this->assertEquals(5, $file->getSize());
+                }
             )
             ->shouldReceive('upload')
             ->with('/some/identifier.pdf')

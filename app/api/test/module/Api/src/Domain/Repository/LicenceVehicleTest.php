@@ -474,4 +474,26 @@ class LicenceVehicleTest extends RepositoryTestCase
 
         $this->sut->removeAllForLicence($licenceId);
     }
+
+    public function testMarkDuplicateVehiclesForApplication()
+    {
+        $licenceVehicle = m::mock();
+        $licenceVehicle->shouldReceive('getVehicle->getVrm')->times(3)->andReturn('vrm1', 'vrm2', 'vrm3');
+
+        $application = m::mock(ApplicationEntity::class);
+        $application->shouldReceive('getLicenceVehicles')->with()->once()->andReturn(
+            new ArrayCollection([$licenceVehicle, $licenceVehicle, $licenceVehicle])
+        );
+        $application->shouldReceive('getLicence->getId')->with()->once()->andReturn(402);
+
+        $quesyResponse = m::mock()->shouldReceive('rowCount')->with()->once()->andReturn(22)->getMock();
+        $query = $this->expectQueryWithData(
+            'LicenceVehicle\MarkDuplicateVrmsForLicence',
+            ['vrms' => ['vrm1', 'vrm2', 'vrm3'], 'licence' => 402],
+            [],
+            $quesyResponse
+        );
+
+        $this->assertSame(22, $this->sut->markDuplicateVehiclesForApplication($application));
+    }
 }

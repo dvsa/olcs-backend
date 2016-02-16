@@ -298,4 +298,16 @@ class GoodsDiscTest extends RepositoryTestCase
 
         $this->sut->fetchDiscsToPrintMin('N', $licenceType);
     }
+
+    public function testUpdateExistingGoodsDiscs()
+    {
+        $application = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class);
+        $application->shouldReceive('getId')->andReturn(1102);
+        $application->shouldReceive('getLicence->getId')->andReturn(321);
+
+        $this->expectQueryWithData('Discs\CeaseGoodsDiscsForApplication', ['application' => 1102, 'licence' => 321]);
+        $this->expectQueryWithData('Discs\CreateGoodsDiscs', ['application' => 1102, 'licence' => 321, 'isCopy' => 0]);
+
+        $this->sut->updateExistingGoodsDiscs($application);
+    }
 }

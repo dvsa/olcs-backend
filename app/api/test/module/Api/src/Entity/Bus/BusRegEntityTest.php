@@ -1985,4 +1985,43 @@ class BusRegEntityTest extends EntityTester
 
         $this->assertEquals($expectedResult, $entity->getPublicationLinksForGrantEmail($matchPubSection));
     }
+
+    /**
+     * @dataProvider getFormattedServiceNumbersProvider
+     *
+     * @param string $serviceNo
+     * @param ArrayCollection $otherServiceNumbers
+     * @param string $expected
+     */
+    public function testGetFormattedServiceNumbers($serviceNo, $otherServiceNumbers, $expected)
+    {
+        $busReg = new Entity();
+        $busReg->setOtherServices($otherServiceNumbers);
+        $busReg->setServiceNo($serviceNo);
+
+        $this->assertEquals($expected, $busReg->getFormattedServiceNumbers());
+    }
+
+    /**
+     * data provider for testGetFormattedServiceNumbers
+     *
+     * @return array
+     */
+    public function getFormattedServiceNumbersProvider()
+    {
+        $serviceNo1 = '4567';
+        $serviceNo2 = '8910';
+        $otherServiceNo1 = new BusRegOtherServiceEntity(new Entity(), $serviceNo1);
+        $otherServiceNo2 = new BusRegOtherServiceEntity(new Entity(), $serviceNo2);
+
+        $serviceNo = '123';
+
+        $otherServiceNumbers = new ArrayCollection([$otherServiceNo1, $otherServiceNo2]);
+        $expectedFormatted = $serviceNo . '(' . $serviceNo1 . ',' . $serviceNo2 . ')';
+
+        return [
+            [$serviceNo, new ArrayCollection(), $serviceNo],
+            [$serviceNo, $otherServiceNumbers, $expectedFormatted]
+        ];
+    }
 }

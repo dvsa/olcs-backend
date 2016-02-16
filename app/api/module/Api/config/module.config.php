@@ -278,13 +278,15 @@ return [
             'TransportManagerReadAudit' => RepositoryFactory::class,
             'CasesReadAudit' => RepositoryFactory::class,
             'Team' => RepositoryFactory::class,
+            'TeamPrinter' => RepositoryFactory::class,
             'Printer' => RepositoryFactory::class,
             'SeriousInfringement' => RepositoryFactory::class,
             'SiPenalty' => RepositoryFactory::class,
             'Country' => RepositoryFactory::class,
             'PresidingTc' => RepositoryFactory::class,
             'RefData' => RepositoryFactory::class,
-            'HistoricTm' => RepositoryFactory::class
+            'HistoricTm' => RepositoryFactory::class,
+            'SlaTargetDate' => RepositoryFactory::class
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

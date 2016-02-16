@@ -10,15 +10,13 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Team;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Team\UpdateTeam as UpdateTeam;
 use Dvsa\Olcs\Api\Domain\Repository\Team as TeamRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Printer as PrinterRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Team\UpdateTeam as Cmd;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
-use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * Update Team Test
@@ -31,11 +29,7 @@ class UpdateTest extends CommandHandlerTestCase
     {
         $this->sut = new UpdateTeam();
         $this->mockRepo('Team', TeamRepo::class);
-
-        $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
-        ];
-        $this->mockAuthService();
+        $this->mockRepo('Printer', PrinterRepo::class);
 
         parent::setUp();
     }
@@ -53,22 +47,28 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('isGranted')
-            ->with(Permission::CAN_MANAGE_USER_INTERNAL, null)
-            ->once()
-            ->andReturn(true);
-
         $command = Cmd::create(
             [
                 'id' => 1,
                 'version' => 2,
                 'name' => 'foo',
                 'description' => 'bar',
-                'trafficArea' => 5
+                'trafficArea' => 5,
+                'defaultPrinter' => 3
             ]
         );
+
+        $mockDefaultPrinter = m::mock()
+            ->shouldReceive('getPrinter')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(99)
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
 
         $mockTeam = m::mock(TeamEntity::class)
             ->shouldReceive('getId')
@@ -81,6 +81,12 @@ class UpdateTest extends CommandHandlerTestCase
             ->once()
             ->shouldReceive('setTrafficArea')
             ->with($this->references[TrafficAreaEntity::class][5])
+            ->shouldReceive('getDefaultTeamPrinter')
+            ->andReturn($mockDefaultPrinter)
+            ->once()
+            ->shouldReceive('updateDefaultPrinter')
+            ->with('bar')
+            ->once()
             ->getMock();
 
         $this->repoMap['Team']
@@ -88,11 +94,18 @@ class UpdateTest extends CommandHandlerTestCase
             ->with('foo')
             ->once()
             ->andReturn([$mockTeam])
-            ->shouldReceive('fetchById')
-            ->with(1, \Doctrine\ORM\Query::HYDRATE_OBJECT, 2)
+            ->shouldReceive('fetchWithPrinters')
+            ->with(1, \Doctrine\ORM\Query::HYDRATE_OBJECT)
             ->andReturn($mockTeam)
             ->shouldReceive('save')
             ->with($mockTeam)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Printer']
+            ->shouldReceive('fetchById')
+            ->with(3)
+            ->andReturn('bar')
             ->once()
             ->getMock();
 
@@ -103,33 +116,17 @@ class UpdateTest extends CommandHandlerTestCase
         $this->assertEquals(['Team updated successfully'], $res['messages']);
     }
 
-    protected function mockAuthService()
-    {
-        /** @var User $mockUser */
-        $mockUser = m::mock(User::class)->makePartial();
-        $mockUser->setId(1);
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('getIdentity->getUser')
-            ->andReturn($mockUser);
-    }
-
     public function testHandleCommandWithVaidationException()
     {
         $this->setExpectedException(ValidationException::class);
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('isGranted')
-            ->with(Permission::CAN_MANAGE_USER_INTERNAL, null)
-            ->once()
-            ->andReturn(true);
 
         $command = Cmd::create(
             [
                 'id' => 1,
                 'name' => 'foo',
                 'description' => 'bar',
-                'trafficArea' => 5
+                'trafficArea' => 5,
+                'defaultPrinter' => 3
             ]
         );
 
@@ -144,28 +141,6 @@ class UpdateTest extends CommandHandlerTestCase
             ->once()
             ->andReturn([$mockTeam])
             ->getMock();
-
-        $this->sut->handleCommand($command);
-    }
-
-    public function testHandleCommandWithForbiddenException()
-    {
-        $this->setExpectedException(ForbiddenException::class);
-
-        $command = Cmd::create(
-            [
-                'id' => 1,
-                'name' => 'foo',
-                'description' => 'bar',
-                'trafficArea' => 5
-            ]
-        );
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('isGranted')
-            ->with(Permission::CAN_MANAGE_USER_INTERNAL, null)
-            ->once()
-            ->andReturn(false);
 
         $this->sut->handleCommand($command);
     }

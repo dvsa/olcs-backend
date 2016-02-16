@@ -18,6 +18,7 @@ return [
     TransferQuery\Audit\ReadBusReg::class => QueryHandler\Audit\ReadBusReg::class,
 
     // Bookmarks
+    BookmarkQuery\LicencePsvDiscCountNotCeased::class => BookmarkQueryHandler\LicencePsvDiscCountNotCeased::class,
     BookmarkQuery\LicenceBundle::class => BookmarkQueryHandler\LicenceBundle::class,
     BookmarkQuery\TransportManagerBundle::class => BookmarkQueryHandler\TransportManagerBundle::class,
     BookmarkQuery\DocParagraphBundle::class => BookmarkQueryHandler\DocParagraphBundle::class,
@@ -262,6 +263,11 @@ return [
     TransferQuery\Team\Team::class => QueryHandler\Team\Team::class,
     TransferQuery\Team\TeamList::class => QueryHandler\Team\TeamList::class,
 
+    // TeamPrinter
+    TransferQuery\TeamPrinter\TeamPrinterExceptionsList::class =>
+        QueryHandler\TeamPrinter\TeamPrinterExceptionsList::class,
+    TransferQuery\TeamPrinter\TeamPrinter::class => QueryHandler\TeamPrinter\TeamPrinter::class,
+
     // Printer
     TransferQuery\Printer\Printer::class => QueryHandler\Printer\Printer::class,
     TransferQuery\Printer\PrinterList::class => QueryHandler\Printer\PrinterList::class,
@@ -452,4 +458,8 @@ return [
 
     TransferQuery\RefData\RefDataList::class => QueryHandler\RefData\RefDataList::class,
     TransferQuery\LocalAuthority\LocalAuthorityList::class => QueryHandler\LocalAuthority\LocalAuthorityList::class,
+
+    // Sla Target Dates
+    TransferQuery\System\SlaTargetDate::class => QueryHandler\System\SlaTargetDate::class,
+
 ];

@@ -1,16 +1,16 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Entity\PrintScan;
+namespace Dvsa\OlcsTest\Api\Entity\System;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\PrintScan\VoidDisc as Entity;
+use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as Entity;
 
 /**
- * VoidDisc Entity Unit Tests
+ * SlaTargetDate Entity Unit Tests
  *
  * Initially auto-generated but won't be overridden
  */
-class VoidDiscEntityTest extends EntityTester
+class SlaTargetDateEntityTest extends EntityTester
 {
     /**
      * Define the entity to test
