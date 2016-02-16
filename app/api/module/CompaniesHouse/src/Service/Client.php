@@ -6,7 +6,6 @@ use Dvsa\Olcs\CompaniesHouse\Service\Exception as ServiceException;
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\RateLimitException;
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\NotFoundException;
 use Zend\Http\Client as HttpClient;
-use Olcs\Logging\Log\Logger;
 
 /**
  * Class Client
@@ -119,7 +118,6 @@ class Client
 
         /** @var $response Zend\Http\Response */
         $response = $this->getHttpClient()->send();
-        Logger::debug('HTTP client: ' . \Doctrine\Common\Util\Debug::dump($this->getHttpClient(), 3, true, false));
 
         if (!$response->isOk()) {
 
@@ -133,14 +131,10 @@ class Client
                 $reason = $response->getBody();
                 $exceptionClass = ServiceException::class;
             }
-            Logger::debug('Companies house response: ' . $response->getBody());
-            Logger::debug('Companies house status code: ' . $response->getStatusCode());
 
             $message = sprintf('Error response (%s) %s', $response->getStatusCode(), $reason);
 
             throw new $exceptionClass($message);
-        } else {
-            Logger::debug('Companies house response is OK');
         }
 
         return json_decode($response->getBody(), true);
