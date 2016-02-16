@@ -40,6 +40,8 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $this->mockRepo('Licence', \Dvsa\Olcs\Api\Domain\Repository\Licence::class);
         $this->mockRepo('TransportManagerLicence', \Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence::class);
         $this->mockRepo('ContactDetails', \Dvsa\Olcs\Api\Domain\Repository\ContactDetails::class);
+        $this->mockRepo('GoodsDisc', \Dvsa\Olcs\Api\Domain\Repository\GoodsDisc::class);
+        $this->mockRepo('PsvDisc', \Dvsa\Olcs\Api\Domain\Repository\PsvDisc::class);
 
         $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
 
@@ -195,8 +197,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                'CeaseActiveDiscs',
-                'CreateGoodsDiscs',
+                '33 goods discs ceased, 56 discs created',
                 'Licence saved successfully',
             ]
         ];
@@ -229,8 +230,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                'VoidPsvDiscs',
-                'CreatePsvDiscs',
+                '33 psv discs ceased, 56 discs created',
                 'Licence saved successfully',
             ]
         ];
@@ -265,8 +265,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'ReturnAllCommunityLicences',
-                'CeaseActiveDiscs',
-                'CreateGoodsDiscs',
+                '33 goods discs ceased, 56 discs created',
                 'Licence saved successfully',
             ]
         ];
@@ -299,8 +298,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                'VoidPsvDiscs',
-                'CreatePsvDiscs',
+                '33 psv discs ceased, 56 discs created',
                 'Licence saved successfully',
             ]
         ];
@@ -332,8 +330,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'ReturnAllCommunityLicences',
-                'CeaseActiveDiscs',
-                'CreateGoodsDiscs',
+                '33 goods discs ceased, 56 discs created',
                 'Licence saved successfully',
             ]
         ];
@@ -364,8 +361,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'ReturnAllCommunityLicences',
-                'VoidPsvDiscs',
-                'CreatePsvDiscs',
+                '33 psv discs ceased, 56 discs created',
                 'Licence saved successfully',
             ]
         ];
@@ -394,8 +390,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                'VoidPsvDiscs',
-                'CreatePsvDiscs',
+                '33 psv discs ceased, 56 discs created',
                 'Licence saved successfully',
             ]
         ];
@@ -480,35 +475,18 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             ->andReturn(true);
     }
 
-    private function expectReissueGoodsDiscs()
+    private function expectReissueGoodsDiscs($licence)
     {
-        $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Vehicle\CeaseActiveDiscs::class,
-            ['ids' => [143, 243, 343, 443, 543]],
-            (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('CeaseActiveDiscs')
-        );
-
-        $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs::class,
-            ['ids' => [343, 543], 'isCopy' => 'N'],
-            (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('CreateGoodsDiscs')
-        );
+        $licenceId = $licence->getId();
+        $this->repoMap['GoodsDisc']->shouldReceive('ceaseDiscsForLicence')->with($licenceId)->once()->andReturn(33);
+        $this->repoMap['GoodsDisc']->shouldReceive('createDiscsForLicence')->with($licenceId)->once()->andReturn(56);
     }
 
     private function expectReissuePsvDiscs($licence)
     {
-        $this->expectedSideEffect(
-            \Dvsa\Olcs\Transfer\Command\Licence\VoidPsvDiscs::class,
-            ['licence' => $licence->getId(), 'ids' => [185, 385]],
-            (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('VoidPsvDiscs')
-        );
-
-        $this->expectedSideEffect(
-            \Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs::class,
-            ['licence' => $licence->getId(), 'amount' => 2, 'isCopy' => 'N'],
-            (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('CreatePsvDiscs')
-        );
-
+        $licenceId = $licence->getId();
+        $this->repoMap['PsvDisc']->shouldReceive('ceaseDiscsForLicence')->with($licenceId)->once()->andReturn(33);
+        $this->repoMap['PsvDisc']->shouldReceive('createPsvDiscs')->with($licenceId, 2)->once()->andReturn(56);
     }
 
     private function expectCeaseCommunityLicences($licence)

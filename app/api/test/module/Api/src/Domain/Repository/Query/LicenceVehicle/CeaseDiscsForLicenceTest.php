@@ -51,7 +51,13 @@ class CeaseDiscsForLicenceTest extends AbstractDbQueryTestCase
             'licence' => [
                 'isAssocation' => true,
                 'column' => 'licence_id'
-            ]
+            ],
+            'removalDate' => [
+                'column' => 'removal_date'
+            ],
+            'specifiedDate' => [
+                'column' => 'specified_date'
+            ],
         ]
     ];
 
@@ -81,6 +87,9 @@ class CeaseDiscsForLicenceTest extends AbstractDbQueryTestCase
         return 'UPDATE goods_disc gd
       INNER JOIN licence_vehicle lv ON lv.id = gd.licence_vehicle_id
       SET gd.ceased_date = :ceasedDate, gd.is_interim = 0, gd.last_modified_on = NOW()
-      WHERE lv.licence_id = :licence AND gd.ceased_date IS NULL';
+      WHERE lv.licence_id = :licence
+      AND lv.removal_date IS NULL
+      AND lv.specified_date IS NOT NULL
+      AND gd.ceased_date IS NULL';
     }
 }
