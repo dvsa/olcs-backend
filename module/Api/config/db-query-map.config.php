@@ -11,6 +11,7 @@ return [
             => Query\LicenceVehicle\ClearSpecifiedDateAndInterimAppForLicence::class,
         'LicenceVehicle\RemoveAllForLicence' => Query\LicenceVehicle\RemoveAllForLicence::class,
         'LicenceVehicle\MarkDuplicateVrmsForLicence' => Query\LicenceVehicle\MarkDuplicateVrmsForLicence::class,
+        'LicenceVehicle\ClearVehicleSection26' => Query\LicenceVehicle\ClearVehicleSection26::class,
         'Discs\CeaseDiscsForLicence' => Query\Discs\CeaseDiscsForLicence::class,
         'Discs\CreatePsvDiscs' => Query\Discs\CreatePsvDiscs::class,
         'Discs\GoodsDiscsSetIsPrinting' => Query\Discs\GoodsDiscsSetIsPrinting::class,
