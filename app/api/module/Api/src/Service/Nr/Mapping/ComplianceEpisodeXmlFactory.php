@@ -50,22 +50,29 @@ class ComplianceEpisodeXmlFactory implements FactoryInterface
                         new NodeAttribute('licenceNumber', 'communityLicenceNumber'),
                         new NodeAttribute('vrm', 'vehicleRegNumber'),
                         new NodeAttribute('transportUndertakingName', 'name'),
-                        new Recursion(
-                            'SeriousInfringement',
-                            [
-                                new NodeAttribute('infringementDate', 'dateOfInfringement'),
-                                new NodeAttribute('siCategoryType', 'infringementType'),
-                                new NodeAttribute('checkDate', 'dateOfCheck'),
-                                $this->getPenaltiesImposed(),
-                                $this->getPenaltiesRequested()
-                            ]
-                        )
+                        $this->getSi()
                     ]
                 )
             ],
         ];
 
         return $seriousInfringement;
+    }
+
+    protected function getSi()
+    {
+        $spec = [
+            new NodeAttribute(['infringementDate'], 'dateOfInfringement'),
+            new NodeAttribute(['siCategoryType'], 'infringementType'),
+            new NodeAttribute(['checkDate'], 'dateOfCheck'),
+            $this->getPenaltiesImposed(),
+            $this->getPenaltiesRequested()
+        ];
+
+        return new RecursionValue(
+            'si',
+            new RecursionAttribute('SeriousInfringement', $spec)
+        );
     }
 
     /**
