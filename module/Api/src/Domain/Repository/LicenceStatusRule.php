@@ -58,9 +58,7 @@ class LicenceStatusRule extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($doctrineQb)->withRefdata()
             ->with('licenceStatus')
             ->with('licence', 'l')
-            ->with('l.status')
-            ->with('l.licenceVehicles', 'lv')
-            ->with('lv.vehicle');
+            ->with('l.status');
 
         $doctrineQb->andWhere($doctrineQb->expr()->isNull($this->alias .'.endProcessedDate'))
             ->andWhere($doctrineQb->expr()->isNotNull($this->alias .'.endDate'))
