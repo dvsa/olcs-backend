@@ -184,7 +184,7 @@ abstract class AbstractRawQuery implements QueryInterface, FactoryInterface
         $method = ($withAlias) ? 'replaceTableOrField' : 'replaceTableOrFieldWithoutAlias';
 
         return preg_replace_callback(
-            '/\{(?P<alias>[a-zA-Z]+)(?:\.(?P<field>[a-zA-Z]+))?\}/',
+            '/\{(?P<alias>[a-zA-Z]+)(?:\.(?P<field>[a-zA-Z0-9]+))?\}/',
             [$this, $method],
             $template
         );
