@@ -14,8 +14,12 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Venue;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Pi\PiVenue;
 use Dvsa\Olcs\Transfer\Command\Cases\Impounding\CreateImpounding as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Command\Publication\Impounding as PublishImpoundingCmd;
 
 /**
  * Create Impounding
@@ -26,6 +30,11 @@ final class CreateImpounding extends AbstractCommandHandler implements Transacti
 {
     protected $repoServiceName = 'Impounding';
 
+    /**
+     * @var CasesEntity $case
+     */
+    private $case;
+
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -33,11 +42,16 @@ final class CreateImpounding extends AbstractCommandHandler implements Transacti
         $impounding = $this->createImpoundingObject($command);
 
         $this->getRepo()->save($impounding);
+        $id = $impounding->getId();
         $result->addMessage('Impounding created');
-        $result->addId('impounding', $impounding->getId());
+        $result->addId('impounding', $id);
+
+        // handle publish
+        if ($command->getPublish() === 'Y') {
+            $result->merge($this->getCommandHandler()->handleCommand($this->createPublishCommand($id, $command)));
+        }
 
         return $result;
-
     }
 
     /**
@@ -47,7 +61,7 @@ final class CreateImpounding extends AbstractCommandHandler implements Transacti
     private function createImpoundingObject(Cmd $command)
     {
         $impounding = new Impounding(
-            $this->getRepo()->getReference(Cases::class, $command->getCase()),
+            $this->getRepo()->getReference(CasesEntity::class, $command->getCase()),
             $this->getRepo()->getRefdataReference($command->getImpoundingType())
         );
 
@@ -113,4 +127,89 @@ final class CreateImpounding extends AbstractCommandHandler implements Transacti
         }
         return $result;
     }
+
+    /**
+     * @param int $id
+     * @param Cmd $command
+     * @return PublishImpoundingCmd
+     */
+    private function createPublishCommand($id, $command)
+    {
+        /** @var CasesEntity $case */
+        $this->case = $this->getRepo()->getReference(CasesEntity::class, $command->getCase());
+
+        $caseType = $this->case->getCaseType()->getId();
+
+        if ($caseType === CasesEntity::APP_CASE_TYPE) {
+            $application = $this->case->getApplication();
+            $licType = $application->getGoodsOrPsv()->getId();
+
+            return PublishImpoundingCmd::create(
+                [
+                    'id' => $id,
+                    'pubType' => [$this->determinePubType($licType)],
+                    'trafficAreas' => $this->determinePubTrafficArea($command)->getId(),
+                    'applicationId' => $application->getId(),
+                    'publicInquiryId' => $this->determinePublicInquiryId()
+                ]
+            );
+
+        } else {
+            /** @var LicenceEntity $licence */
+            $licence = $this->case->getLicence();
+            $licType = $licence->getGoodsOrPsv()->getId();
+
+            return PublishImpoundingCmd::create(
+                [
+                    'id' => $id,
+                    'pubType' => [$this->determinePubType($licType)],
+                    'trafficAreas' => $this->determinePubTrafficArea($command),
+                    'licenceId' => $licence->getId(),
+                    'publicInquiryId' => $this->determinePublicInquiryId()
+                ]
+            );
+
+        }
+    }
+
+    /**
+     * Determine the publication type, IF Goods => 'A&D' else 'N&P'
+     *
+     * @param $licType
+     * @return string
+     */
+    private function determinePubType($licType)
+    {
+        return ($licType == LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE) ? 'A&D' : 'N&P';
+    }
+
+    /**
+     * Determine the publication traffic area, derived from the licence
+     *
+     * @param Cmd $command
+     * @return \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
+     */
+    private function determinePubTrafficArea(Cmd $command)
+    {
+        if ($this->case->getCaseType()->getId() === CasesEntity::APP_CASE_TYPE) {
+            return $this->case->getApplication()->getLicence()->getTrafficArea();
+        } else {
+            /** @var LicenceEntity $licence */
+            return $this->case->getLicence()->getTrafficArea();
+        }
+    }
+
+    /**
+     * Return Public Inquiry Id
+     * @return mixed
+     */
+    private function determinePublicInquiryId()
+    {
+        if (count($this->case->getPublicInquirys()) > 0) {
+            return $this->case->getPublicInquirys()[0]->getId();
+        }
+
+        return null;
+    }
+
 }
