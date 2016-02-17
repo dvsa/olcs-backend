@@ -574,6 +574,17 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\Police::class
             ],
         ),
+        'ImpoundingPublication' => array(
+            'context' => [
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PiVenue::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
+
+            ],
+            'process' => [
+                Dvsa\Olcs\Api\Service\Publication\Process\Impounding\ImpoundingText1::class,
+            ],
+        ),
     ],
     'submissions' => require(__DIR__ . '/submissions.config.php'),
     'ebsr' => [
