@@ -20,6 +20,8 @@ final class ProcessToValid extends AbstractCommandHandler implements Transaction
 {
     protected $repoServiceName = 'LicenceStatusRule';
 
+    protected $extraRepos = ['LicenceVehicle'];
+
     public function handleCommand(CommandInterface $command)
     {
         // command not required, unset to remove PMD error
@@ -45,10 +47,7 @@ final class ProcessToValid extends AbstractCommandHandler implements Transaction
             }
 
             // update section26 on licenced vehicles
-            /* @var $licenceVehicle \Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle */
-            foreach ($licenceStatusRule->getLicence()->getLicenceVehicles() as $licenceVehicle) {
-                $licenceVehicle->getVehicle()->setSection26(0);
-            }
+            $this->getRepo('LicenceVehicle')->clearVehicleSection26($licenceStatusRule->getLicence()->getId());
 
             $licenceStatusRule->getLicence()->setStatus(
                 $this->getRepo()->getRefdataReference(Licence::LICENCE_STATUS_VALID)

@@ -551,4 +551,15 @@ class LicenceVehicleTest extends RepositoryTestCase
 
         $this->assertSame(22, $this->sut->markDuplicateVehiclesForApplication($application));
     }
+
+    public function testClearVehicleSection26()
+    {
+        $licenceId = 123;
+        $stmt = m::mock();
+        $stmt->shouldReceive('rowCount')->with()->once()->andReturn(1702);
+
+        $this->expectQueryWithData('LicenceVehicle\ClearVehicleSection26', ['licence' => 123], [], $stmt);
+
+        $this->assertSame(1702, $this->sut->clearVehicleSection26($licenceId));
+    }
 }
