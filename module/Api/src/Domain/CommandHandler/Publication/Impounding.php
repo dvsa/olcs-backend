@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedPi as UnpublishedPiQry;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedImpounding as UnpublishedImpoundingQry;
 
 /**
  * Impounding publication command handler
@@ -48,15 +48,10 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
         $impounding = $this->getRepo('Impounding')->fetchUsingId($command, Query::HYDRATE_OBJECT);
         $case = $impounding->getCase();
 
-        $caseType = $case->getCaseType()->getId();
-        if ($caseType === CasesEntity::APP_CASE_TYPE) {
-            return $this->handleApplicationCaseImpounding($command, $impounding, $case);
-        }
-
-        return $this->handleLicenceCaseImpounding($command, $impounding, $case);
+        return $this->handleImpoundingPublication($command, $impounding, $case);
     }
 
-    public function handleApplicationCaseImpounding(
+    public function handleImpoundingPublication(
         CommandInterface $command,
         ImpoundingEntity $impounding,
         CasesEntity $case
@@ -94,7 +89,7 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
             $publishedAreas[$trafficArea->getId()][$pubType] = true;
 
             /**
-             * @var UnpublishedPiQry $unpublishedQuery
+             * @var UnpublishedImpoundingQry $unpublishedQuery
              * @var PublicationEntity $publication
              * @var PublicationLinkEntity $publicationLink
              */
@@ -108,25 +103,22 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
 
             if ($publicationLink->getId() === null) {
                 $publicationLink->createImpounding(
-                    $transportManager,
-                    $pi,
+                    $impounding,
                     $publication,
                     $publicationSection,
                     $trafficArea
                 );
             }
 
-                $publicationLink->setText2($command->getText2());
-
-                $result->merge(
-                    $this->createPublication(
-                        $handler,
-                        $publicationLink,
-                        $this->extractHearingData($hearing)
-                    )
-                );
-            }
+            $result = $this->createPublication(
+                $handler,
+                $publicationLink,
+                $this->extractImpoundingData($impounding)
+            );
         }
+
+        $allTrafficAreas = $this->getRepo('TrafficArea')->fetchAll();
+        $allPubTypes = ['A&D', 'N&P'];
 
         //if we haven't published to a traffic area, check whether there's an existing publication we need to delete
         foreach ($allTrafficAreas as $trafficArea) {
@@ -137,7 +129,11 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
 
                 //check for a previous publication
                 $publication = $this->getPublication($trafficArea->getId(), $pubType);
-                $unpublishedQuery = $this->getUnpublishedPiQuery($publication->getId(), $pi->getId(), $pubSection);
+                $unpublishedQuery = $this->getUnpublishedImpoundingQuery(
+                    $publication->getId(),
+                    $impounding->getId(),
+                    $pubSection
+                );
                 $publicationLink = $this->getPublicationLink($unpublishedQuery);
 
                 //if previous publication is found, remove it
@@ -153,110 +149,29 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
 
     /**
      * @param int $publication
-     * @param int $pi
+     * @param int $impoundingId
      * @param int $pubSection
-     * @return UnpublishedPiQry
+     * @return UnpublishedImpoundingQry
      */
-    private function getUnpublishedImpoundingQuery($publication, $pi, $pubSection)
+    private function getUnpublishedImpoundingQuery($publication, $impoundingId, $pubSection)
     {
         $data =  [
             'publication' => $publication,
-            'impounding' => $impounding,
+            'impounding' => $impoundingId,
             'publicationSection' => $pubSection
         ];
 
-        return UnpublishedPiQry::create($data);
+        return UnpublishedImpoundingQry::create($data);
     }
 
     /**
-     * @param PiHearingEntity $hearing
-     * @param PiEntity $pi
-     * @param CasesEntity $case
-     * @param CommandInterface $command
-     * @return Result
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
-    public function handleHearing(PiHearingEntity $hearing, PiEntity $pi, CasesEntity $case, CommandInterface $command)
-    {
-        /**
-         * @var LicenceEntity $licence
-         * @var PiHearingCmd|PiDecisionCmd $command
-         */
-        if ($command instanceof PiHearingCmd) {
-            $pubSection = PublicationSectionEntity::HEARING_SECTION;
-            $handler = 'HearingPublication';
-        } else {
-            $pubSection = PublicationSectionEntity::DECISION_SECTION;
-            $handler = 'HearingDecision';
-        }
-
-        $caseType = $case->getCaseType()->getId();
-        $licence = $case->getLicence();
-
-        if ($caseType === CasesEntity::APP_CASE_TYPE) {
-            $licType = $case->getApplication()->getGoodsOrPsv()->getId();
-        } else {
-            $licType = $licence->getGoodsOrPsv()->getId();
-        }
-
-        $pubType = ($licType == LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE ? 'A&D' : 'N&P');
-        $trafficArea = $licence->getTrafficArea();
-        $publicationSection = $this->getPublicationSection($pubSection);
-
-        /**
-         * @var UnpublishedPiQry $unpublishedQuery
-         * @var PublicationEntity $publication
-         * @var PublicationLinkEntity $publicationLink
-         */
-        $publication = $this->getPublication($trafficArea->getId(), $pubType);
-        $unpublishedQuery = $this->getUnpublishedPiQuery($publication->getId(), $pi->getId(), $pubSection);
-        $publicationLink = $this->getPublicationLink($unpublishedQuery);
-
-        if ($publicationLink->getId() === null) {
-            $publicationLink->createPiHearing($licence, $pi, $publication, $publicationSection, $trafficArea);
-        }
-
-        $publicationLink->setText2($command->getText2());
-
-        return $this->createPublication($handler, $publicationLink, $this->extractHearingData($hearing));
-    }
-
-    /**
-     * @param int $publication
-     * @param int $pi
-     * @param int $pubSection
-     * @return UnpublishedPiQry
-     */
-    private function getUnpublishedPiQuery($publication, $pi, $pubSection)
-    {
-        $data =  [
-            'publication' => $publication,
-            'pi' => $pi,
-            'publicationSection' => $pubSection
-        ];
-
-        return UnpublishedPiQry::create($data);
-    }
-
-    /**
-     * @param PiHearingEntity $hearing
+     * @param ImpoundingEntity $impounding
      * @return array
      */
-    private function extractHearingData($hearing)
+    private function extractImpoundingData($impounding)
     {
-        $piVenue = $hearing->getPiVenue();
-        $hearingDate = $hearing->getHearingDate();
-
-        //sometimes we have a datetime, and sometimes a string
-        if ($hearingDate instanceof \DateTime) {
-            $hearingDate = $hearingDate->format('Y-m-d H:i:s');
-        }
-
         return [
-            'piVenue' => ($piVenue === null ? $piVenue : $piVenue->getId()),
-            'piVenueOther' => $hearing->getPiVenueOther(),
-            'hearingDate' => $hearingDate,
-            'id' => $hearing->getId()
+            'id' => $impounding->getId()
         ];
     }
 }
