@@ -19,5 +19,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SiPenaltyErruRequested extends AbstractSiPenaltyErruRequested
 {
-
+    public function __construct(SiPenaltyRequestedType $siPenaltyRequestedType, $duration)
+    {
+        $this->siPenaltyRequestedType = $siPenaltyRequestedType;
+        $this->duration = $duration;
+    }
 }
