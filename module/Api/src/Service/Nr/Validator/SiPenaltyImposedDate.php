@@ -1,0 +1,64 @@
+<?php
+
+namespace Dvsa\Olcs\Api\Service\Nr\Validator;
+
+use Zend\Validator\Exception;
+use Zend\Validator\Date;
+use Zend\Validator\AbstractValidator as ZendAbstractValidator;
+
+/**
+ * Class SiPenaltyImposedDate
+ * @package Dvsa\Olcs\Api\Service\Nr\Validator
+ */
+class SiPenaltyImposedDate extends ZendAbstractValidator
+{
+    const IMPOSED_PENALTY_INCORRECT_DECISION_START_DATE = 'imposed-penalty-incorrect-decision-start-date';
+    const IMPOSED_PENALTY_INCORRECT_DECISION_END_DATE = 'imposed-penalty-incorrect-decision-end-date';
+    const IMPOSED_PENALTY_INCORRECT_START_DATE = 'imposed-penalty-incorrect-start-date';
+
+    /**
+     * @var array
+     */
+    protected $messageTemplates = [
+        self::IMPOSED_PENALTY_INCORRECT_DECISION_START_DATE => 'Imposed penalty decision date later than start date',
+        self::IMPOSED_PENALTY_INCORRECT_DECISION_END_DATE => 'Imposed penalty decision date later then end date',
+        self::IMPOSED_PENALTY_INCORRECT_START_DATE => 'Imposed penalty start date must be before end date',
+    ];
+
+    /**
+     * Checks the imposed penalty types exist and that dates are in the correct order
+     *
+     * @param  array $value
+     * @return bool
+     */
+    public function isValid($value)
+    {
+        if (isset($value['imposedErrus'])) {
+            foreach ($value['imposedErrus'] as $dates) {
+                $hasStartDate = $dates['startDate'] instanceof \DateTime;
+                $hasEndDate = $dates['endDate'] instanceof \DateTime;
+
+                if ($hasStartDate) {
+                    if ($dates['finalDecisionDate'] > $dates['startDate']) {
+                        $this->error(self::IMPOSED_PENALTY_INCORRECT_DECISION_START_DATE);
+                        return false;
+                    }
+                }
+
+                if ($hasEndDate) {
+                    if ($dates['finalDecisionDate'] > $dates['endDate']) {
+                        $this->error(self::IMPOSED_PENALTY_INCORRECT_DECISION_END_DATE);
+                        return false;
+                    }
+                }
+
+                if ($hasStartDate && $hasEndDate && ($dates['startDate'] > $dates['endDate'])) {
+                    $this->error(self::IMPOSED_PENALTY_INCORRECT_START_DATE);
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+}
