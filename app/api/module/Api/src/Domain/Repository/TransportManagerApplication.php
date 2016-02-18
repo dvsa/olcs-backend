@@ -8,7 +8,6 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as Entity;
-use Doctrine\ORM\Query;
 
 /**
  * Transport Manager Application Repository
@@ -157,7 +156,7 @@ class TransportManagerApplication extends AbstractRepository
             ->with('a.licence', 'l');
     }
 
-    public function fetchForTransportManager($tmId, $applicationStatuses, $includeDeleted = false)
+    public function fetchForTransportManager($tmId, array $applicationStatuses = null, $includeDeleted = false)
     {
         $qb = $this->createQueryBuilder();
 
@@ -181,18 +180,9 @@ class TransportManagerApplication extends AbstractRepository
         }
 
         if ($applicationStatuses !== null) {
-            $statuses = explode(',', $applicationStatuses);
-            $conditions = [];
-            for ($i = 0; $i < count($statuses); $i++) {
-                $conditions[] = 'a.status = :status' . $i;
-            }
-            $orX = $qb->expr()->orX();
-            $orX->addMultiple($conditions);
-            $qb->andWhere($orX);
-            for ($i = 0; $i < count($statuses); $i++) {
-                $qb->setParameter('status' . $i, $statuses[$i]);
-            }
+            $qb->andWhere($qb->expr()->in('a.status', $applicationStatuses));
         }
+
         return $qb->getQuery()->getResult();
     }
 
