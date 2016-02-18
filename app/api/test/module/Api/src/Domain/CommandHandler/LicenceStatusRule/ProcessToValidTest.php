@@ -26,6 +26,7 @@ class ProcessToValidTest extends CommandHandlerTestCase
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('LicenceStatusRule', Repo::class);
+        $this->mockRepo('LicenceVehicle', Repo::class);
 
         parent::setUp();
     }
@@ -112,12 +113,10 @@ class ProcessToValidTest extends CommandHandlerTestCase
 
         $this->repoMap['LicenceStatusRule']->shouldReceive('fetchToValid')->once()->andReturn($licenceStatueRules);
         $this->repoMap['LicenceStatusRule']->shouldReceive('save')->with(m::type(LicenceStatusRule::class))->once();
+        $this->repoMap['LicenceVehicle']->shouldReceive('clearVehicleSection26')->with(46)->once()->andReturn(23);
 
         $result = $this->sut->handleCommand($command);
 
-        foreach ($licenceStatueRules[0]->getLicence()->getLicenceVehicles() as $lv) {
-            $this->assertSame(0, $lv->getVehicle()->getSection26());
-        }
         $this->assertSame(
             $this->refData[Licence::LICENCE_STATUS_VALID],
             $licenceStatueRules[0]->getLicence()->getStatus()
