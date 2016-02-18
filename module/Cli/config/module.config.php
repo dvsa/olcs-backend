@@ -107,6 +107,17 @@ return [
                         ],
                     ],
                 ],
+                'create-vi-extract-files' => [
+                    'options' => [
+                        'route' =>
+                            'create-vi-extract-files [--verbose|-v] [--oc|-oc] ' .
+                            '[--op|-op] [--tnm|-tnm] [--vhl|-vhl] [--all|-all]',
+                        'defaults' => [
+                            'controller' => 'BatchController',
+                            'action' => 'createViExtractFiles',
+                        ],
+                    ],
+                ],
             ]
         ]
     ],
@@ -172,11 +183,15 @@ return [
     \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::CONFIG_KEY => [
         'factories' => [
             Command\RemoveReadAudit::class => CommandHandler\RemoveReadAudit::class,
+            Command\CreateViExtractFiles::class => CommandHandler\CreateViExtractFiles::class,
         ]
     ],
     'batch_config' => [
         'remove-read-audit' => [
             'max-age' => '1 year'
+        ],
+        'vi-extract-files' => [
+            'export-path' => '/tmp'
         ]
     ]
 ];

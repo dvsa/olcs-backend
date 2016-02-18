@@ -286,7 +286,11 @@ return [
             'PresidingTc' => RepositoryFactory::class,
             'RefData' => RepositoryFactory::class,
             'HistoricTm' => RepositoryFactory::class,
-            'SlaTargetDate' => RepositoryFactory::class
+            'SlaTargetDate' => RepositoryFactory::class,
+            'ViOcView' => RepositoryFactory::class,
+            'ViOpView' => RepositoryFactory::class,
+            'ViTnmView' => RepositoryFactory::class,
+            'ViVhlView' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

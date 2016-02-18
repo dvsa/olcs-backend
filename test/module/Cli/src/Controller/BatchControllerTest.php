@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Cli\Controller;
 
 use Dvsa\Olcs\Api\Domain\Command;
+use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Query;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -302,5 +303,25 @@ class BatchControllerTest extends TestCase
 
         $response = $this->sut->setSystemParameterAction();
         $this->assertSame(404, $response->getErrorLevel());
+    }
+
+    public function testCreateViExtractFilesAction()
+    {
+        $mockConsole = m::mock(AdapterInterface::class);
+        $mockConsole->shouldReceive('writeLine');
+        $this->sut->setConsole($mockConsole);
+
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn(true, true, true, true, true);
+
+        $mockCommandHandler = m::mock();
+        $this->sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($mockCommandHandler);
+
+        $mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(CliCommand\CreateViExtractFiles::class))
+            ->once()
+            ->andReturn(new Command\Result());
+
+        $this->sut->createViExtractFilesAction();
     }
 }
