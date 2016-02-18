@@ -257,18 +257,13 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $mockQb->shouldReceive('andWhere')->with('ac')->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('action', 'D')->once();
 
-        $conditions = [
-            'a.status = :status0',
-            'a.status = :status1'
-        ];
-        $mockQb->shouldReceive('expr->orX->addMultiple')->with($conditions)->once()->andReturnSelf();
-        $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('status0', 'a')->once()->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('status1', 'b')->once()->andReturnSelf();
+        $statuses = ['s0', 's1'];
+        $mockQb->shouldReceive('expr->in')->with('a.status', $statuses)->once()->andReturn('IN_STATUS');
+        $mockQb->shouldReceive('andWhere')->with('IN_STATUS')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
 
-        $this->assertEquals(['RESULT'], $this->sut->fetchForTransportManager(1, 'a,b'));
+        $this->assertEquals(['RESULT'], $this->sut->fetchForTransportManager(1, $statuses));
     }
 
     public function testFetchByTmAndApplication()
