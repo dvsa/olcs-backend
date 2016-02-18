@@ -41,6 +41,8 @@ class Module implements ConsoleUsageProviderInterface
             'remove-read-audit [--verbose|-v]' => 'Process deletion of old read audit records',
             'system-parameter name value [--verbose|-v]' => 'Set a system parameter',
             'resolve-payments [--verbose|-v]' => 'Resolve pending CPMS payments',
+            'create-vi-extract-files [--verbose|-v] [--oc|-oc] [--op|-op] [--tnm|-tnm] [--vhl|-vhl] [--all|-all]' =>
+                'Create mobile compliance VI extract files',
             // Describe parameters
             array( '--verbose|-v', '(optional) turn on verbose mode'),
             array( '--dryrun|-d', '(optional) dryrun, nothing is actually changed'),
