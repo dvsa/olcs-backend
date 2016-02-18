@@ -12,6 +12,8 @@ use Dvsa\Olcs\Transfer\Query\TmResponsibilities\TmResponsibilitiesList as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportMangerApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TransportMangerLicenceRepo;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
  * TmResponsibilitiesList Test
@@ -33,22 +35,35 @@ class TmResponsibilitiesListTest extends QueryHandlerTestCase
     {
         $query = Query::create(
             [
-                'transportManager' => 1,
-                'applicationStatuses' => 'a,b',
-                'licenceStatuses' => 'c,d'
+                'transportManager' => 1
             ]
         );
 
         $this->repoMap['TransportManagerLicence']
             ->shouldReceive('fetchForTransportManager')
-            ->with(1, 'c,d')
+            ->with(
+                1,
+                [
+                    Licence::LICENCE_STATUS_VALID,
+                    Licence::LICENCE_STATUS_SUSPENDED,
+                    Licence::LICENCE_STATUS_CURTAILED
+                ]
+            )
             ->once()
             ->andReturn(['licences'])
             ->getMock();
 
         $this->repoMap['TransportManagerApplication']
             ->shouldReceive('fetchForTransportManager')
-            ->with(1, 'a,b', true)
+            ->with(
+                1,
+                [
+                    Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                    Application::APPLICATION_STATUS_NOT_SUBMITTED,
+                    Application::APPLICATION_STATUS_GRANTED
+                ],
+                true
+            )
             ->once()
             ->andReturn(['applications'])
             ->getMock();
