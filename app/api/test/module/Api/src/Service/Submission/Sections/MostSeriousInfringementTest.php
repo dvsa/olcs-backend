@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement;
 use Dvsa\Olcs\Api\Entity\Si\SiCategoryType;
+use Mockery as m;
 
 /**
  * Class MostSeriousInfringementTest
@@ -47,7 +48,7 @@ class MostSeriousInfringementTest extends SubmissionSectionTest
 
         $seriousInfringements = new ArrayCollection();
 
-        $si = new SeriousInfringement();
+        $si = m::mock(SeriousInfringement::class)->makePartial();
         $si->setId(66);
         $si->setNotificationNumber('not no 123');
         $si->setCheckDate('2014-01-01');
