@@ -80,11 +80,17 @@ final class CreateViExtractFiles extends AbstractCommandHandler
                     continue;
                 }
                 $content = implode(PHP_EOL, array_column($results, 'line'));
-                file_put_contents(
+                $success = file_put_contents(
                     $this->exportPath . '/' . $type['prefix'] . ((new \DateTime())->format('Ymd')) . '.dat',
                     $content
                 );
-                $this->result->addMessage($total . ' record(s) saved for ' . $type['name']);
+                if ($success === false) {
+                    $this->result->addMessage(
+                        'Error writing record(s) for ' . $type['name'] . ', please check the target path'
+                    );
+                } else {
+                    $this->result->addMessage($total . ' record(s) saved for ' . $type['name']);
+                }
             }
         }
         return $this->result;

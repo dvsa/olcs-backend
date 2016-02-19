@@ -190,8 +190,8 @@ return [
         'remove-read-audit' => [
             'max-age' => '1 year'
         ],
-        //'vi-extract-files' => [
-        //    'export-path' => '/tmp'
-        //]
+        'vi-extract-files' => [
+            'export-path' => '/tmp'
+        ]
     ]
 ];
