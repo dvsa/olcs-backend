@@ -111,7 +111,7 @@ return [
                     'options' => [
                         'route' =>
                             'create-vi-extract-files [--verbose|-v] [--oc|-oc] ' .
-                            '[--op|-op] [--tnm|-tnm] [--vhl|-vhl] [--all|-all]',
+                            '[--op|-op] [--tnm|-tnm] [--vhl|-vhl] [--all|-all] [--path=]',
                         'defaults' => [
                             'controller' => 'BatchController',
                             'action' => 'createViExtractFiles',
@@ -190,8 +190,8 @@ return [
         'remove-read-audit' => [
             'max-age' => '1 year'
         ],
-        'vi-extract-files' => [
-            'export-path' => '/tmp'
-        ]
+        //'vi-extract-files' => [
+        //    'export-path' => '/tmp'
+        //]
     ]
 ];

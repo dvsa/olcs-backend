@@ -44,7 +44,8 @@ class CreateViExtractFilesTest extends CommandHandlerTestCase
             'oc' => true,
             'tnm' => true,
             'vhl' => true,
-            'all' => null
+            'all' => null,
+            'path' => '/tmp'
         ];
 
         $this->repoMap['ViOpView']->shouldReceive('fetchForExport')

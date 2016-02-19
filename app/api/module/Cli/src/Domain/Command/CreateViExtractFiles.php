@@ -27,6 +27,8 @@ final class CreateViExtractFiles extends AbstractCommand
 
     protected $all = null;
 
+    protected $path = null;
+
     /**
      * @return mixed
      */
@@ -65,5 +67,13 @@ final class CreateViExtractFiles extends AbstractCommand
     public function getAll()
     {
         return $this->all;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 }
