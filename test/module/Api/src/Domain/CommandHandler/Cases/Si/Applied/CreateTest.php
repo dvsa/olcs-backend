@@ -63,7 +63,7 @@ class CreateTest extends CommandHandlerTestCase
             ]
         );
 
-        $seriousInfringement = new SiEntity();
+        $seriousInfringement = m::mock(SiEntity::class)->makePartial();
         $seriousInfringement->setId($siId);
         $seriousInfringements = new ArrayCollection([$seriousInfringement]);
 
