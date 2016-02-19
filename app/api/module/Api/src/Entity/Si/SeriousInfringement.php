@@ -40,8 +40,6 @@ class SeriousInfringement extends AbstractSeriousInfringement
         CountryEntity $memberStateCode,
         SiCategoryEntity $siCategory,
         SiCategoryTypeEntity $siCategoryType,
-        ArrayCollection $imposedErrus,
-        ArrayCollection $requestedErrus,
         $notificationNumber,
         $workflowId
     ) {
@@ -53,8 +51,6 @@ class SeriousInfringement extends AbstractSeriousInfringement
         $this->memberStateCode = $memberStateCode;
         $this->siCategory = $siCategory;
         $this->siCategoryType = $siCategoryType;
-        $this->imposedErrus = $imposedErrus;
-        $this->requestedErrus = $requestedErrus;
         $this->notificationNumber = $notificationNumber;
         $this->workflowId = $workflowId;
     }

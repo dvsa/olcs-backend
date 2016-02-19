@@ -22,12 +22,14 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 class SiPenaltyErruImposed extends AbstractSiPenaltyErruImposed
 {
     public function __construct(
+        SeriousInfringement $seriousInfringement,
         SiPenaltyImposedType $siPenaltyImposedType,
         RefData $executed,
         \DateTime $startDate,
         \DateTime $endDate,
         \DateTime $finalDecisionDate
     ) {
+        $this->seriousInfringement = $seriousInfringement;
         $this->siPenaltyImposedType = $siPenaltyImposedType;
         $this->executed = $executed;
         $this->startDate = $startDate;
