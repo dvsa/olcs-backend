@@ -43,13 +43,13 @@ return [
     BookmarkQuery\FStandingAdditionalVeh::class => BookmarkQueryHandler\FStandingAdditionalVeh::class,
     BookmarkQuery\FStandingCapitalReserves::class => BookmarkQueryHandler\FStandingCapitalReserves::class,
     BookmarkQuery\PiHearingBundle::class => BookmarkQueryHandler\PiHearingBundle::class,
-    BookmarkQuery\PiVenueBundle::class => BookmarkQueryHandler\PiVenueBundle::class,
     BookmarkQuery\PreviousHearingBundle::class => BookmarkQueryHandler\PreviousHearing::class,
     BookmarkQuery\PreviousPublicationByPi::class => BookmarkQueryHandler\PreviousPublication::class,
     BookmarkQuery\PreviousPublicationByApplication::class => BookmarkQueryHandler\PreviousPublication::class,
     BookmarkQuery\PreviousPublicationByLicence::class => BookmarkQueryHandler\PreviousPublication::class,
     BookmarkQuery\TotalContFee::class => BookmarkQueryHandler\TotalContFee::class,
     BookmarkQuery\VehicleBundle::class => BookmarkQueryHandler\VehicleBundle::class,
+    BookmarkQuery\VenueBundle::class => BookmarkQueryHandler\VenueBundle::class,
 
     // Application
     TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
@@ -163,7 +163,8 @@ return [
     TransferQuery\Cases\Si\Applied\Penalty::class => QueryHandler\Cases\Si\Applied\Penalty::class,
     TransferQuery\Cases\Si\GetList::class => QueryHandler\Cases\Si\GetList::class,
     TransferQuery\Cases\PresidingTc\GetList::class => QueryHandler\Cases\PresidingTc\GetList::class,
-    TransferQuery\Cases\PiVenue\PiVenueList::class => QueryHandler\Cases\PiVenue\PiVenueList::class,
+
+    TransferQuery\Venue\VenueList::class => QueryHandler\Venue\VenueList::class,
 
     // Submission
     TransferQuery\Submission\SubmissionAction::class => QueryHandler\Submission\SubmissionAction::class,

@@ -1146,7 +1146,7 @@ VALUES
    'S13 - Consideration of new application under Section 13',0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,'2014-11-24',NULL,
    'Test Pi','2014-11-24 10:06:49',NULL,NULL,0,'2014-12-11 10:49:57',2,0);
 
-INSERT INTO `pi_hearing` (`id`,`pi_id`,`presided_by_role`,`created_by`,`last_modified_by`,`pi_venue_id`,`presiding_tc_id`,`adjourned_date`,`adjourned_reason`,`cancelled_date`,`cancelled_reason`,`details`,`is_adjourned`,`presiding_tc_other`,`created_on`,`hearing_date`,`is_cancelled`,`last_modified_on`,`pi_venue_other`,`version`,`witnesses`)
+INSERT INTO `pi_hearing` (`id`,`pi_id`,`presided_by_role`,`created_by`,`last_modified_by`,`venue_id`,`presiding_tc_id`,`adjourned_date`,`adjourned_reason`,`cancelled_date`,`cancelled_reason`,`details`,`is_adjourned`,`presiding_tc_other`,`created_on`,`hearing_date`,`is_cancelled`,`last_modified_on`,`venue_other`,`version`,`witnesses`)
   VALUES
     (1,1,'tc_r_htru',NULL,NULL,1,1,'2014-03-16 11:30:00','adjourned reason',NULL,NULL,'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',1,NULL,'2014-11-24 10:22:24','2014-03-16 14:30:00',0,NULL,NULL,1,9),
     (2,1,'tc_r_htru',NULL,NULL,1,1,NULL,NULL,NULL,NULL,'S23 - Consider attaching conditions under Section 23\r\nS23 - Consider attaching conditions under Section 23\r\nS24 - Consideration of interim licence under Section 24\r\nS25 - Consideration of interim variation under Section 25\r\nS26 - Consideration of disciplinary action under Section 26',0,NULL,'2014-11-24 10:22:24','2014-04-05 14:30:00',0,NULL,NULL,1,9),
@@ -1172,10 +1172,10 @@ VALUES
   (1, 1, 1, 1, 'defect type', 'defect description', '2014-06-09 12:06:41', '2014-06-09 12:06:41', 1);
 
 INSERT INTO `impounding`
-    (`id`, `pi_venue_id`, `impounding_type`, `case_id`,
+    (`id`, `venue_id`, `impounding_type`, `case_id`,
     `outcome`, `last_modified_by`, `presiding_tc_id`, `created_by`,
     `application_receipt_date`, `outcome_sent_date`, `close_date`,
-    `pi_venue_other`, `hearing_date`, `notes`, `created_on`, `last_modified_on`, `version`)
+    `venue_other`, `hearing_date`, `notes`, `created_on`, `last_modified_on`, `version`)
 VALUES
     (17, 3, 'impt_hearing', 24,
     'impo_returned', NULL, 1, NULL,

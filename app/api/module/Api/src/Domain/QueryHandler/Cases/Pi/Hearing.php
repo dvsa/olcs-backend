@@ -72,7 +72,7 @@ final class Hearing extends AbstractQueryHandler
         return $this->result(
             $hearing,
             [
-                'piVenue' => [],
+                'venue' => [],
                 'presidingTc' => [],
                 'presidedByRole' => [],
                 'pi' => [

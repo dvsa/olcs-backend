@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Pi Venue Bundle Bookmark
+ * Venue Bundle Bookmark
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark;
 
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * Pi Venue Bundle Bookmark
+ * Venue Bundle Bookmark
  */
-class PiVenueBundle extends AbstractBundle
+class VenueBundle extends AbstractBundle
 {
-    protected $repoServiceName = 'PiVenue';
+    protected $repoServiceName = 'Venue';
 
     public function handleQuery(QueryInterface $query)
     {

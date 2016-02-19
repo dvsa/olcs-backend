@@ -24,7 +24,6 @@ return [
     QueryHandler\Bookmark\LicencePsvDiscCountNotCeased::class       => NoValidationRequired::class,
     QueryHandler\Bookmark\OppositionBundle::class                   => NoValidationRequired::class,
     QueryHandler\Bookmark\PiHearingBundle::class                    => NoValidationRequired::class,
-    QueryHandler\Bookmark\PiVenueBundle::class                      => NoValidationRequired::class,
     QueryHandler\Bookmark\PreviousHearing::class                    => NoValidationRequired::class,
     QueryHandler\Bookmark\PreviousPublication::class                => NoValidationRequired::class,
     QueryHandler\Bookmark\PsvDiscBundle::class                      => NoValidationRequired::class,
@@ -36,4 +35,5 @@ return [
     QueryHandler\Bookmark\TransportManagerBundle::class             => NoValidationRequired::class,
     QueryHandler\Bookmark\UserBundle::class                         => NoValidationRequired::class,
     QueryHandler\Bookmark\VehicleBundle::class                      => NoValidationRequired::class,
+    QueryHandler\Bookmark\VenueBundle::class                        => NoValidationRequired::class,
 ];

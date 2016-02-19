@@ -70,7 +70,7 @@ class Text1 implements ProcessInterface
         return sprintf(
             $this->pi,
             $publication->getPi()->getId(),
-            $context->offsetGet('piVenueOther'),
+            $context->offsetGet('venueOther'),
             $context->offsetGet('formattedHearingDate'),
             $context->offsetGet('formattedHearingTime')
         );

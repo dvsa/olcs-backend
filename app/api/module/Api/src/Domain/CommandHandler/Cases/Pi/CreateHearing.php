@@ -12,7 +12,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
-use Dvsa\Olcs\Api\Entity\Pi\PiVenue as PiVenueEntity;
+use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\CreateHearing as CreateHearingCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Publication\PiHearing as PublishHearingCmd;
@@ -20,7 +20,6 @@ use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
-use Doctrine\ORM\Query;
 
 /**
  * Create pi hearing
@@ -53,10 +52,10 @@ final class CreateHearing extends AbstractCommandHandler implements AuthAwareInt
 
         $hearingDate = \DateTime::createFromFormat('Y-m-d H:i:s', $command->getHearingDate());
 
-        if ($command->getPiVenue() === null) {
-            $piVenue = null;
+        if ($command->getVenue() === null) {
+            $venue = null;
         } else {
-            $piVenue = $this->getRepo()->getReference(PiVenueEntity::class, $command->getPiVenue());
+            $venue = $this->getRepo()->getReference(VenueEntity::class, $command->getVenue());
         }
 
         $isAdjourned = $command->getIsAdjourned();
@@ -67,8 +66,8 @@ final class CreateHearing extends AbstractCommandHandler implements AuthAwareInt
             $presidingTc,
             $presidedByRole,
             $hearingDate,
-            $piVenue,
-            $command->getPiVenueOther(),
+            $venue,
+            $command->getVenueOther(),
             $command->getWitnesses(),
             $isCancelled,
             $command->getCancelledDate(),

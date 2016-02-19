@@ -24,7 +24,7 @@ class TmDecisionText1Test extends MockeryTestCase
         $sut = new TmDecisionText1();
 
         $pi = 99;
-        $piVenueOther = 'Pi Venue Information';
+        $venueOther = 'Pi Venue Information';
         $hearingDate = '12 May 2014';
         $hearingTime = '14:30';
         $caseId = 84;
@@ -32,7 +32,7 @@ class TmDecisionText1Test extends MockeryTestCase
 
         $input = [
             'id' => $pi,
-            'piVenueOther' => $piVenueOther,
+            'venueOther' => $venueOther,
             'formattedHearingDate' => $hearingDate,
             'formattedHearingTime' => $hearingTime,
             'transportManagerName' => $transportManagerName
@@ -47,7 +47,7 @@ class TmDecisionText1Test extends MockeryTestCase
             $caseId,
             $pi,
             $transportManagerName,
-            $piVenueOther,
+            $venueOther,
             $hearingDate,
             $hearingTime
         );

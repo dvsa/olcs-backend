@@ -27,7 +27,7 @@ final class Pi extends AbstractQueryHandler
         'piHearings' => [
             'presidingTc' => [],
             'presidedByRole' => [],
-            'piVenue' => []
+            'venue' => []
         ],
         'writtenOutcome' => [],
         'decidedByTc' => [],

@@ -39,7 +39,7 @@ class HearingText1Test extends MockeryTestCase
         $licenceAddress = 'line 1, line 2, line 3, line 4, town, postcode';
         $licNo = 'OB1234567';
         $licenceType = 'SN';
-        $piVenueOther = 'Pi Venue Information';
+        $venueOther = 'Pi Venue Information';
         $hearingDate = '12 May 2014';
         $previousHearingDate = '3 April 2014';
         $hearingTime = '14:30';
@@ -86,7 +86,7 @@ class HearingText1Test extends MockeryTestCase
             'previousPublication' => $previousPublication,
             'previousHearing' => $previousHearingDate,
             'licenceAddress' => $licenceAddress,
-            'piVenueOther' => $piVenueOther,
+            'venueOther' => $venueOther,
             'formattedHearingDate' => $hearingDate,
             'formattedHearingTime' => $hearingTime,
         ];
@@ -100,7 +100,7 @@ class HearingText1Test extends MockeryTestCase
             . "\n" . '%s '
             . "\n" . '%s',
             $pi,
-            $piVenueOther,
+            $venueOther,
             $hearingDate,
             $hearingTime,
             $previousPublication,
