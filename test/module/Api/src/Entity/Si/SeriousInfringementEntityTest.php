@@ -39,8 +39,6 @@ class SeriousInfringementEntityTest extends EntityTester
         $memberStateCode = m::mock(CountryEntity::class);
         $siCategory = m::mock(SiCategoryEntity::class);
         $siCategoryType = m::mock(SiCategoryTypeEntity::class);
-        $imposedErrus = new ArrayCollection();
-        $requestedErrus = new ArrayCollection();
         $notificationNumber = '0ffefb6b-6344-4a60-9a53-4381c32f98d9';
         $workflowId = '20776dc3-5fe7-42d5-b554-09ad12fa25c4';
 
@@ -51,8 +49,6 @@ class SeriousInfringementEntityTest extends EntityTester
             $memberStateCode,
             $siCategory,
             $siCategoryType,
-            $imposedErrus,
-            $requestedErrus,
             $notificationNumber,
             $workflowId
         );
@@ -63,8 +59,6 @@ class SeriousInfringementEntityTest extends EntityTester
         $this->assertEquals($memberStateCode, $entity->getMemberStateCode());
         $this->assertEquals($siCategory, $entity->getSiCategory());
         $this->assertEquals($siCategoryType, $entity->getSiCategoryType());
-        $this->assertEquals($imposedErrus, $entity->getImposedErrus());
-        $this->assertEquals($requestedErrus, $entity->getRequestedErrus());
         $this->assertEquals($notificationNumber, $entity->getNotificationNumber());
         $this->assertEquals($workflowId, $entity->getWorkflowId());
     }

@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Si;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruImposed as Entity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyImposedType;
+use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 
@@ -27,13 +28,14 @@ class SiPenaltyErruImposedEntityTest extends EntityTester
      */
     public function testCreate()
     {
+        $si = m::mock(SeriousInfringement::class);
         $siPenaltyImposedType = m::mock(SiPenaltyImposedType::class);
         $executed = m::mock(RefData::class);
         $startDate = new \DateTime('2015-12-24');
         $endDate = new \DateTime('2015-12-25');
         $finalDecisionDate = new \DateTime('2015-12-26');
 
-        $entity = new Entity($siPenaltyImposedType, $executed, $startDate, $endDate, $finalDecisionDate);
+        $entity = new Entity($si, $siPenaltyImposedType, $executed, $startDate, $endDate, $finalDecisionDate);
 
         $this->assertEquals($siPenaltyImposedType, $entity->getSiPenaltyImposedType());
         $this->assertEquals($executed, $entity->getExecuted());
