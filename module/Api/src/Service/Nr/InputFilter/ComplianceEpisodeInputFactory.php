@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Vrm as VrmFilter;
 use Dvsa\Olcs\Api\Service\Nr\Validator\Vrm as VrmValidator;
-use Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted;
 
 /**
  * Class ComplianceEpisodeInputFactory
@@ -32,7 +31,6 @@ class ComplianceEpisodeInputFactory implements FactoryInterface
 
         $filterChain = $service->getFilterChain();
         $filterChain->attach($mapXmlFile);
-        $filterChain->attach($serviceLocator->get('FilterManager')->get(IsExecuted::class));
         $filterChain->attach($serviceLocator->get('FilterManager')->get(VrmFilter::class));
 
         $validatorChain = $service->getValidatorChain();

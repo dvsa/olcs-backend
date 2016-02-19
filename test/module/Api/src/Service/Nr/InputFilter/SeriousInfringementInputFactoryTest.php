@@ -6,6 +6,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Service\Nr\InputFilter\SeriousInfringementInputFactory;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates as SiDatesFilter;
+use Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted;
 use Dvsa\Olcs\Api\Service\Nr\Validator\SiPenaltyImposedDate;
 
 /**
@@ -22,6 +23,7 @@ class SeriousInfringementInputFactoryTest extends TestCase
         $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
+        $mockSl->shouldReceive('get')->with(IsExecuted::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(SiDatesFilter::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(SiPenaltyImposedDate::class)->andReturn($mockValidator);
 
@@ -30,7 +32,7 @@ class SeriousInfringementInputFactoryTest extends TestCase
         $service = $sut->createService($mockSl);
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
-        $this->assertCount(1, $service->getFilterChain());
+        $this->assertCount(2, $service->getFilterChain());
         $this->assertCount(1, $service->getValidatorChain());
     }
 }
