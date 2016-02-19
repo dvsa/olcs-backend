@@ -24,7 +24,7 @@ class TmHearingText1Test extends MockeryTestCase
         $sut = new TmHearingText1();
 
         $pi = 99;
-        $piVenueOther = 'Pi Venue Information';
+        $venueOther = 'Pi Venue Information';
         $hearingDate = '12 May 2014';
         $previousHearingDate = '3 April 2014';
         $hearingTime = '14:30';
@@ -36,7 +36,7 @@ class TmHearingText1Test extends MockeryTestCase
             'id' => $pi,
             'previousPublication' => $previousPublication,
             'previousHearing' => $previousHearingDate,
-            'piVenueOther' => $piVenueOther,
+            'venueOther' => $venueOther,
             'formattedHearingDate' => $hearingDate,
             'formattedHearingTime' => $hearingTime,
             'transportManagerName' => $transportManagerName
@@ -52,7 +52,7 @@ class TmHearingText1Test extends MockeryTestCase
             $caseId,
             $pi,
             $transportManagerName,
-            $piVenueOther,
+            $venueOther,
             $hearingDate,
             $hearingTime,
             $previousPublication,

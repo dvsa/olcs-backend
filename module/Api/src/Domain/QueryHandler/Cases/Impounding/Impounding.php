@@ -2,10 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Impounding;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\Repository\Impounding as ImpoundingRepo;
 
 /**
  * Impounding
@@ -21,7 +19,7 @@ final class Impounding extends AbstractQueryHandler
             [
                 'presidingTc',
                 'impoundingLegislationTypes',
-                'piVenue'
+                'venue'
             ]
         );
     }

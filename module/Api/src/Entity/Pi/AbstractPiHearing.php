@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_pi_hearing_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_pi_hearing_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_pi_hearing_presided_by_role", columns={"presided_by_role"}),
- *        @ORM\Index(name="ix_pi_hearing_pi_venue_id", columns={"pi_venue_id"})
+ *        @ORM\Index(name="ix_pi_hearing_venue_id", columns={"venue_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_pi_hearing_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
@@ -182,25 +182,6 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
     protected $pi;
 
     /**
-     * Pi venue
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Pi\PiVenue
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PiVenue", fetch="LAZY")
-     * @ORM\JoinColumn(name="pi_venue_id", referencedColumnName="id", nullable=true)
-     */
-    protected $piVenue;
-
-    /**
-     * Pi venue other
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="pi_venue_other", length=255, nullable=true)
-     */
-    protected $piVenueOther;
-
-    /**
      * Presided by role
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
@@ -228,6 +209,25 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
      * @ORM\Column(type="string", name="presiding_tc_other", length=45, nullable=true)
      */
     protected $presidingTcOther;
+
+    /**
+     * Venue
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Venue
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Venue", fetch="LAZY")
+     * @ORM\JoinColumn(name="venue_id", referencedColumnName="id", nullable=true)
+     */
+    protected $venue;
+
+    /**
+     * Venue other
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="venue_other", length=255, nullable=true)
+     */
+    protected $venueOther;
 
     /**
      * Version
@@ -617,52 +617,6 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
     }
 
     /**
-     * Set the pi venue
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Pi\PiVenue $piVenue
-     * @return PiHearing
-     */
-    public function setPiVenue($piVenue)
-    {
-        $this->piVenue = $piVenue;
-
-        return $this;
-    }
-
-    /**
-     * Get the pi venue
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Pi\PiVenue
-     */
-    public function getPiVenue()
-    {
-        return $this->piVenue;
-    }
-
-    /**
-     * Set the pi venue other
-     *
-     * @param string $piVenueOther
-     * @return PiHearing
-     */
-    public function setPiVenueOther($piVenueOther)
-    {
-        $this->piVenueOther = $piVenueOther;
-
-        return $this;
-    }
-
-    /**
-     * Get the pi venue other
-     *
-     * @return string
-     */
-    public function getPiVenueOther()
-    {
-        return $this->piVenueOther;
-    }
-
-    /**
      * Set the presided by role
      *
      * @param \Dvsa\Olcs\Api\Entity\System\RefData $presidedByRole
@@ -729,6 +683,52 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
     public function getPresidingTcOther()
     {
         return $this->presidingTcOther;
+    }
+
+    /**
+     * Set the venue
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Venue $venue
+     * @return PiHearing
+     */
+    public function setVenue($venue)
+    {
+        $this->venue = $venue;
+
+        return $this;
+    }
+
+    /**
+     * Get the venue
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Venue
+     */
+    public function getVenue()
+    {
+        return $this->venue;
+    }
+
+    /**
+     * Set the venue other
+     *
+     * @param string $venueOther
+     * @return PiHearing
+     */
+    public function setVenueOther($venueOther)
+    {
+        $this->venueOther = $venueOther;
+
+        return $this;
+    }
+
+    /**
+     * Get the venue other
+     *
+     * @return string
+     */
+    public function getVenueOther()
+    {
+        return $this->venueOther;
     }
 
     /**

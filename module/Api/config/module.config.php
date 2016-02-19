@@ -3,8 +3,6 @@
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory;
 use Dvsa\Olcs\Api\Domain\QueryPartial;
 use Dvsa\Olcs\Api\Domain\Util;
-use Dvsa\Olcs\Api\Domain\Query\Bookmark as BookmarkQuery;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark as BookmarkQueryHandler;
 
 return [
     'router' => [
@@ -264,7 +262,7 @@ return [
             'Queue' => RepositoryFactory::class,
             'AdminAreaTrafficArea' => RepositoryFactory::class,
             'PostcodeEnforcementArea' => RepositoryFactory::class,
-            'PiVenue' => RepositoryFactory::class,
+            'Venue' => RepositoryFactory::class,
             'Disqualification' => RepositoryFactory::class,
             'DiscSequence' => RepositoryFactory::class,
             'EbsrSubmission' => RepositoryFactory::class,
@@ -357,7 +355,7 @@ return [
     'publication_context' => [
         Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PreviousHearingData::class =>
             Dvsa\Olcs\Api\Service\Publication\Context\AbstractFactory::class,
-        Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PiVenue::class =>
+        Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\Venue::class =>
             Dvsa\Olcs\Api\Service\Publication\Context\AbstractFactory::class,
         Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class =>
             Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
@@ -487,7 +485,7 @@ return [
         'HearingPublication' => array(
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PreviousHearingData::class,
-                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PiVenue::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\Venue::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousPublicationNo::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
@@ -500,7 +498,7 @@ return [
         'HearingDecision' => array(
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PreviousHearingData::class,
-                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PiVenue::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\Venue::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousPublicationNo::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
@@ -512,7 +510,7 @@ return [
         ),
         'TmHearingPublication' => array(
             'context' => [
-                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PiVenue::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\Venue::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousPublicationNo::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\TransportManager\TransportManagerName::class
@@ -523,7 +521,7 @@ return [
         ),
         'TmHearingDecision' => array(
             'context' => [
-                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PiVenue::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\Venue::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousPublicationNo::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\TransportManager\TransportManagerName::class

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\Pi\PiVenue as PiVenueEntity;
+use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 /**
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
  *        @ORM\Index(name="ix_pi_hearing_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_pi_hearing_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_pi_hearing_presided_by_role", columns={"presided_by_role"}),
- *        @ORM\Index(name="ix_pi_hearing_pi_venue_id", columns={"pi_venue_id"})
+ *        @ORM\Index(name="ix_pi_hearing_venue_id", columns={"venue_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_pi_hearing_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
@@ -34,8 +34,8 @@ class PiHearing extends AbstractPiHearing
      * @param PresidingTcEntity $presidingTc
      * @param RefData $presidedByRole
      * @param \DateTime $hearingDate
-     * @param PiVenueEntity|null $piVenue
-     * @param string $piVenueOther
+     * @param VenueEntity|null $venue
+     * @param string $venueOther
      * @param int $witnesses
      * @param string $isCancelled
      * @param string $cancelledDate
@@ -50,8 +50,8 @@ class PiHearing extends AbstractPiHearing
         PresidingTcEntity $presidingTc,
         RefData $presidedByRole,
         \DateTime $hearingDate,
-        $piVenue,
-        $piVenueOther,
+        $venue,
+        $venueOther,
         $witnesses,
         $isCancelled,
         $cancelledDate,
@@ -66,8 +66,8 @@ class PiHearing extends AbstractPiHearing
             $presidingTc,
             $presidedByRole,
             $hearingDate,
-            $piVenue,
-            $piVenueOther,
+            $venue,
+            $venueOther,
             $witnesses,
             $isCancelled,
             $cancelledDate,
@@ -84,8 +84,8 @@ class PiHearing extends AbstractPiHearing
      * @param PresidingTc $presidingTc
      * @param RefData $presidedByRole
      * @param \DateTime $hearingDate
-     * @param PiVenueEntity|null $piVenue
-     * @param string $piVenueOther
+     * @param VenueEntity|null $venue
+     * @param string $venueOther
      * @param int $witnesses
      * @param string $isCancelled
      * @param string $cancelledDate
@@ -101,8 +101,8 @@ class PiHearing extends AbstractPiHearing
         PresidingTcEntity $presidingTc,
         RefData $presidedByRole,
         \DateTime $hearingDate,
-        $piVenue,
-        $piVenueOther,
+        $venue,
+        $venueOther,
         $witnesses,
         $isCancelled,
         $cancelledDate,
@@ -119,8 +119,8 @@ class PiHearing extends AbstractPiHearing
         $this->pi = $pi;
         $this->presidingTc = $presidingTc;
         $this->presidedByRole = $presidedByRole;
-        $this->piVenue = $piVenue;
-        $this->piVenueOther = $piVenueOther;
+        $this->venue = $venue;
+        $this->venueOther = $venueOther;
         $this->hearingDate = $hearingDate;
         $this->witnesses = $witnesses;
         $this->details = $details;
@@ -141,8 +141,8 @@ class PiHearing extends AbstractPiHearing
      * @param PresidingTc $presidingTc
      * @param RefData $presidedByRole
      * @param \DateTime $hearingDate
-     * @param PiVenueEntity|null $piVenue
-     * @param string $piVenueOther
+     * @param VenueEntity|null $venue
+     * @param string $venueOther
      * @param int $witnesses
      * @param string $isCancelled
      * @param string $cancelledDate
@@ -157,8 +157,8 @@ class PiHearing extends AbstractPiHearing
         PresidingTcEntity $presidingTc,
         RefData $presidedByRole,
         \DateTime $hearingDate,
-        $piVenue,
-        $piVenueOther,
+        $venue,
+        $venueOther,
         $witnesses,
         $isCancelled,
         $cancelledDate,
@@ -174,8 +174,8 @@ class PiHearing extends AbstractPiHearing
 
         $this->presidingTc = $presidingTc;
         $this->presidedByRole = $presidedByRole;
-        $this->piVenue = $piVenue;
-        $this->piVenueOther = $piVenueOther;
+        $this->venue = $venue;
+        $this->venueOther = $venueOther;
         $this->hearingDate = $hearingDate;
         $this->witnesses = $witnesses;
         $this->details = $details;

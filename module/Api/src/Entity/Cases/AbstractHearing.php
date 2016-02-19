@@ -181,9 +181,9 @@ abstract class AbstractHearing implements BundleSerializableInterface, JsonSeria
     /**
      * Venue
      *
-     * @var \Dvsa\Olcs\Api\Entity\Pi\PiVenue
+     * @var \Dvsa\Olcs\Api\Entity\Venue
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PiVenue", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Venue", fetch="LAZY")
      * @ORM\JoinColumn(name="venue_id", referencedColumnName="id", nullable=true)
      */
     protected $venue;
@@ -564,7 +564,7 @@ abstract class AbstractHearing implements BundleSerializableInterface, JsonSeria
     /**
      * Set the venue
      *
-     * @param \Dvsa\Olcs\Api\Entity\Pi\PiVenue $venue
+     * @param \Dvsa\Olcs\Api\Entity\Venue $venue
      * @return Hearing
      */
     public function setVenue($venue)
@@ -577,7 +577,7 @@ abstract class AbstractHearing implements BundleSerializableInterface, JsonSeria
     /**
      * Get the venue
      *
-     * @return \Dvsa\Olcs\Api\Entity\Pi\PiVenue
+     * @return \Dvsa\Olcs\Api\Entity\Venue
      */
     public function getVenue()
     {

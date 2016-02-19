@@ -39,8 +39,8 @@ class PiHearingEntityTest extends EntityTester
         $presidingTc = m::mock(PresidingTcEntity::class);
         $presidedByRole = m::mock(RefData::class);
         $hearingDate = m::mock(\DateTime::class);
-        $piVenue = null;
-        $piVenueOther = 'other venue';
+        $venue = null;
+        $venueOther = 'other venue';
         $witnesses = 2;
         $isCancelled = 'N';
         $cancelledReason = 'cancelled reason';
@@ -55,8 +55,8 @@ class PiHearingEntityTest extends EntityTester
             $presidingTc,
             $presidedByRole,
             $hearingDate,
-            $piVenue,
-            $piVenueOther,
+            $venue,
+            $venueOther,
             $witnesses,
             $isCancelled,
             $cancelledDate,
@@ -71,8 +71,8 @@ class PiHearingEntityTest extends EntityTester
         $this->assertEquals($presidingTc, $hearing->getPresidingTc());
         $this->assertEquals($presidedByRole, $hearing->getPresidedByRole());
         $this->assertEquals($hearingDate, $hearing->getHearingDate());
-        $this->assertEquals($piVenue, $hearing->getPiVenue());
-        $this->assertEquals($piVenueOther, $hearing->getPiVenueOther());
+        $this->assertEquals($venue, $hearing->getVenue());
+        $this->assertEquals($venueOther, $hearing->getVenueOther());
         $this->assertEquals($witnesses, $hearing->getWitnesses());
         $this->assertEquals($isCancelled, $hearing->getIsCancelled());
         $this->assertEquals(null, $hearing->getCancelledDate());
@@ -97,8 +97,8 @@ class PiHearingEntityTest extends EntityTester
         $presidingTc = m::mock(PresidingTcEntity::class);
         $presidedByRole = m::mock(RefData::class);
         $hearingDate = m::mock(\DateTime::class);
-        $piVenue = null;
-        $piVenueOther = 'other venue';
+        $venue = null;
+        $venueOther = 'other venue';
         $witnesses = 2;
         $isCancelled = 'Y';
         $cancelledReason = 'cancelled reason';
@@ -113,8 +113,8 @@ class PiHearingEntityTest extends EntityTester
             $presidingTc,
             $presidedByRole,
             $hearingDate,
-            $piVenue,
-            $piVenueOther,
+            $venue,
+            $venueOther,
             $witnesses,
             $isCancelled,
             $cancelledDate,
@@ -128,8 +128,8 @@ class PiHearingEntityTest extends EntityTester
         $this->assertEquals($presidingTc, $this->entity->getPresidingTc());
         $this->assertEquals($presidedByRole, $this->entity->getPresidedByRole());
         $this->assertEquals($hearingDate, $this->entity->getHearingDate());
-        $this->assertEquals($piVenue, $this->entity->getPiVenue());
-        $this->assertEquals($piVenueOther, $this->entity->getPiVenueOther());
+        $this->assertEquals($venue, $this->entity->getVenue());
+        $this->assertEquals($venueOther, $this->entity->getVenueOther());
         $this->assertEquals($witnesses, $this->entity->getWitnesses());
         $this->assertEquals($isCancelled, $this->entity->getIsCancelled());
         $this->assertEquals($entityCancelledDate, $this->entity->getCancelledDate());

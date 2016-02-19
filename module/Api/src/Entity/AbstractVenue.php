@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity\Pi;
+namespace Dvsa\Olcs\Api\Entity;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -8,25 +8,25 @@ use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PiVenue Abstract Entity
+ * Venue Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="pi_venue",
+ * @ORM\Table(name="venue",
  *    indexes={
- *        @ORM\Index(name="ix_pi_venue_address_id", columns={"address_id"}),
- *        @ORM\Index(name="ix_pi_venue_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_pi_venue_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_pi_venue_traffic_area_id", columns={"traffic_area_id"})
+ *        @ORM\Index(name="ix_venue_address_id", columns={"address_id"}),
+ *        @ORM\Index(name="ix_venue_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_venue_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_venue_traffic_area_id", columns={"traffic_area_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_pi_venue_olbs_key", columns={"olbs_key"})
+ *        @ORM\UniqueConstraint(name="uk_venue_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
-abstract class AbstractPiVenue implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractVenue implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
 
@@ -149,7 +149,7 @@ abstract class AbstractPiVenue implements BundleSerializableInterface, JsonSeria
      * Set the address
      *
      * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Address $address
-     * @return PiVenue
+     * @return Venue
      */
     public function setAddress($address)
     {
@@ -172,7 +172,7 @@ abstract class AbstractPiVenue implements BundleSerializableInterface, JsonSeria
      * Set the created by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
-     * @return PiVenue
+     * @return Venue
      */
     public function setCreatedBy($createdBy)
     {
@@ -195,7 +195,7 @@ abstract class AbstractPiVenue implements BundleSerializableInterface, JsonSeria
      * Set the created on
      *
      * @param \DateTime $createdOn
-     * @return PiVenue
+     * @return Venue
      */
     public function setCreatedOn($createdOn)
     {
@@ -218,7 +218,7 @@ abstract class AbstractPiVenue implements BundleSerializableInterface, JsonSeria
      * Set the end date
      *
      * @param \DateTime $endDate
-     * @return PiVenue
+     * @return Venue
      */
     public function setEndDate($endDate)
     {
@@ -241,7 +241,7 @@ abstract class AbstractPiVenue implements BundleSerializableInterface, JsonSeria
      * Set the id
      *
      * @param int $id
-     * @return PiVenue
+     * @return Venue
      */
     public function setId($id)
     {
@@ -264,7 +264,7 @@ abstract class AbstractPiVenue implements BundleSerializableInterface, JsonSeria
      * Set the last modified by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
-     * @return PiVenue
+     * @return Venue
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -287,7 +287,7 @@ abstract class AbstractPiVenue implements BundleSerializableInterface, JsonSeria
      * Set the last modified on
      *
      * @param \DateTime $lastModifiedOn
-     * @return PiVenue
+     * @return Venue
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -310,7 +310,7 @@ abstract class AbstractPiVenue implements BundleSerializableInterface, JsonSeria
      * Set the name
      *
      * @param string $name
-     * @return PiVenue
+     * @return Venue
      */
     public function setName($name)
     {
@@ -333,7 +333,7 @@ abstract class AbstractPiVenue implements BundleSerializableInterface, JsonSeria
      * Set the olbs key
      *
      * @param int $olbsKey
-     * @return PiVenue
+     * @return Venue
      */
     public function setOlbsKey($olbsKey)
     {
@@ -356,7 +356,7 @@ abstract class AbstractPiVenue implements BundleSerializableInterface, JsonSeria
      * Set the start date
      *
      * @param \DateTime $startDate
-     * @return PiVenue
+     * @return Venue
      */
     public function setStartDate($startDate)
     {
@@ -379,7 +379,7 @@ abstract class AbstractPiVenue implements BundleSerializableInterface, JsonSeria
      * Set the traffic area
      *
      * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $trafficArea
-     * @return PiVenue
+     * @return Venue
      */
     public function setTrafficArea($trafficArea)
     {
@@ -402,7 +402,7 @@ abstract class AbstractPiVenue implements BundleSerializableInterface, JsonSeria
      * Set the version
      *
      * @param int $version
-     * @return PiVenue
+     * @return Venue
      */
     public function setVersion($version)
     {

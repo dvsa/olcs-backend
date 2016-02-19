@@ -23,7 +23,7 @@ final class HearingList extends AbstractQueryHandler
                 $repo->fetchList($query, Query::HYDRATE_OBJECT),
                 [
                     'pi',
-                    'piVenue'
+                    'venue'
                 ]
             ),
             'count' => $repo->fetchCount($query)

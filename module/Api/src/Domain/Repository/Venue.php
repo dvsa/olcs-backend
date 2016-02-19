@@ -1,18 +1,18 @@
 <?php
 
 /**
- * PiVenue Repository
+ * Venue Repository
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Pi\PiVenue as Entity;
+use Dvsa\Olcs\Api\Entity\Venue as Entity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * PiVenue Repository
+ * Venue Repository
  */
-class PiVenue extends AbstractRepository
+class Venue extends AbstractRepository
 {
     protected $entity = Entity::class;
 
