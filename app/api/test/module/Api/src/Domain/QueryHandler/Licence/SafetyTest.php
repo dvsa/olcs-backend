@@ -4,6 +4,7 @@
  * Safety Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
 
@@ -13,11 +14,13 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Transfer\Query\Licence\Safety as Qry;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 
 /**
  * Safety Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 class SafetyTest extends QueryHandlerTestCase
 {
@@ -26,19 +29,53 @@ class SafetyTest extends QueryHandlerTestCase
         $this->sut = new Safety();
         $this->mockRepo('Licence', LicenceRepo::class);
 
+        $this->repoMap['Licence']->shouldReceive('getCategoryReference')
+            ->andReturnUsing(
+                function ($category) {
+                    return $category;
+                }
+            )
+            ->shouldReceive('getSubCategoryReference')
+            ->andReturnUsing(
+                function ($category) {
+                    return $category;
+                }
+            );
+
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    /**
+     * @dataProvider trailersProvider
+     */
+    public function testHandleQuery($licenceType, $canHaveTrailers)
     {
-        /** @var Licence $licence */
-        $licence = m::mock(Licence::class)->makePartial();
+        $licence = m::mock(BundleSerializableInterface::class);
 
-        $licence->shouldReceive('jsonSerialize')
-            ->andReturn(['foo' => 'bar']);
+        $mockSafetyDocuments = m::mock()
+            ->shouldReceive('toArray')
+            ->andReturn(['DOCUMENTS'])
+            ->once()
+            ->getMock();
 
-        $licence->shouldReceive('getGoodsOrPsv->getId')
-            ->andReturn(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
+        $licence->shouldReceive('getGoodsOrPsv')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn($licenceType)
+                ->once()
+                ->getMock()
+            )
+            ->shouldReceive('getLicenceDocuments')
+            ->andReturn($mockSafetyDocuments)
+            ->once()
+            ->shouldReceive('getTotAuthTrailers')
+            ->andReturn(0)
+            ->once()
+            ->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar'])
+            ->once()
+            ->getMock();
 
         $query = Qry::create(['id' => 111]);
 
@@ -49,37 +86,25 @@ class SafetyTest extends QueryHandlerTestCase
         $this->assertEquals(
             [
                 'foo' => 'bar',
-                'canHaveTrailers' => true,
-                'hasTrailers' => false
+                'canHaveTrailers' => $canHaveTrailers,
+                'hasTrailers' => false,
+                'safetyDocuments' => ['DOCUMENTS']
             ],
-            $this->sut->handleQuery($query)
+            $this->sut->handleQuery($query)->serialize()
         );
     }
 
-    public function testHandleQueryPsv()
+    public function trailersProvider()
     {
-        /** @var Licence $licence */
-        $licence = m::mock(Licence::class)->makePartial();
-
-        $licence->shouldReceive('jsonSerialize')
-            ->andReturn(['foo' => 'bar']);
-
-        $licence->shouldReceive('getGoodsOrPsv->getId')
-            ->andReturn(Licence::LICENCE_CATEGORY_PSV);
-
-        $query = Qry::create(['id' => 111]);
-
-        $this->repoMap['Licence']->shouldReceive('fetchSafetyDetailsUsingId')
-            ->with($query)
-            ->andReturn($licence);
-
-        $this->assertEquals(
+        return [
             [
-                'foo' => 'bar',
-                'canHaveTrailers' => false,
-                'hasTrailers' => false
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                true
             ],
-            $this->sut->handleQuery($query)
-        );
+            [
+                Licence::LICENCE_CATEGORY_PSV,
+                false
+            ],
+        ];
     }
 }

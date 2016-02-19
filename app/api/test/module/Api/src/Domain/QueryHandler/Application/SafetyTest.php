@@ -4,22 +4,23 @@
  * Safety Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Application;
 
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Application\Safety;
-use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Transfer\Query\Application\Safety as Qry;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 
 /**
  * Safety Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 class SafetyTest extends QueryHandlerTestCase
 {
@@ -27,25 +28,54 @@ class SafetyTest extends QueryHandlerTestCase
     {
         $this->sut = new Safety();
         $this->mockRepo('Application', ApplicationRepo::class);
-        $this->mockRepo('Licence', LicenceRepo::class);
+
+        $this->repoMap['Application']->shouldReceive('getCategoryReference')
+            ->andReturnUsing(
+                function ($category) {
+                    return $category;
+                }
+            )
+            ->shouldReceive('getSubCategoryReference')
+            ->andReturnUsing(
+                function ($category) {
+                    return $category;
+                }
+            );
 
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    /**
+     * @dataProvider trailersProvider
+     */
+    public function testHandleQuery($licenceType, $canHaveTrailers)
     {
-        /** @var Licence $licence */
-        $licence = m::mock(Licence::class)->makePartial();
+        $application = m::mock(BundleSerializableInterface::class);
 
-        /** @var Application $application */
-        $application = m::mock(Application::class)->makePartial();
-        $application->setLicence($licence);
+        $mockSafetyDocuments = m::mock()
+            ->shouldReceive('toArray')
+            ->andReturn(['DOCUMENTS'])
+            ->once()
+            ->getMock();
 
-        $application->shouldReceive('jsonSerialize')
-            ->andReturn(['foo' => 'bar']);
-
-        $application->shouldReceive('getGoodsOrPsv->getId')
-            ->andReturn(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
+        $application->shouldReceive('getGoodsOrPsv')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn($licenceType)
+                    ->once()
+                    ->getMock()
+            )
+            ->shouldReceive('getApplicationDocuments')
+            ->andReturn($mockSafetyDocuments)
+            ->once()
+            ->shouldReceive('getTotAuthTrailers')
+            ->andReturn(0)
+            ->once()
+            ->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar'])
+            ->once()
+            ->getMock();
 
         $query = Qry::create(['id' => 111]);
 
@@ -53,52 +83,28 @@ class SafetyTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($application);
 
-        $this->repoMap['Licence']->shouldReceive('fetchSafetyDetailsUsingId')
-            ->with($licence)
-            ->andReturn($licence);
-
         $this->assertEquals(
             [
                 'foo' => 'bar',
-                'canHaveTrailers' => true,
-                'hasTrailers' => false
+                'canHaveTrailers' => $canHaveTrailers,
+                'hasTrailers' => false,
+                'safetyDocuments' => ['DOCUMENTS']
             ],
-            $this->sut->handleQuery($query)
+            $this->sut->handleQuery($query)->serialize()
         );
     }
 
-    public function testHandleQueryPsv()
+    public function trailersProvider()
     {
-        /** @var Licence $licence */
-        $licence = m::mock(Licence::class)->makePartial();
-
-        /** @var Application $application */
-        $application = m::mock(Application::class)->makePartial();
-        $application->setLicence($licence);
-
-        $application->shouldReceive('jsonSerialize')
-            ->andReturn(['foo' => 'bar']);
-
-        $application->shouldReceive('getGoodsOrPsv->getId')
-            ->andReturn(Licence::LICENCE_CATEGORY_PSV);
-
-        $query = Qry::create(['id' => 111]);
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->with($query)
-            ->andReturn($application);
-
-        $this->repoMap['Licence']->shouldReceive('fetchSafetyDetailsUsingId')
-            ->with($licence)
-            ->andReturn($licence);
-
-        $this->assertEquals(
+        return [
             [
-                'foo' => 'bar',
-                'canHaveTrailers' => false,
-                'hasTrailers' => false
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                true
             ],
-            $this->sut->handleQuery($query)
-        );
+            [
+                Licence::LICENCE_CATEGORY_PSV,
+                false
+            ],
+        ];
     }
 }

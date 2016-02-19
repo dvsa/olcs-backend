@@ -4,17 +4,21 @@
  * Safety
  *
  * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
 
 /**
  * Safety
  *
  * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 class Safety extends AbstractQueryHandler
 {
@@ -25,12 +29,27 @@ class Safety extends AbstractQueryHandler
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo()->fetchSafetyDetailsUsingId($query);
 
-        $data = $licence->jsonSerialize();
+        $safetyDocuments = $licence->getLicenceDocuments(
+            $this->getRepo()->getCategoryReference(Category::CATEGORY_APPLICATION),
+            $this->getRepo()->getSubCategoryReference(SubCategory::DOC_SUB_CATEGORY_MAINT_OTHER_DIGITAL)
+        );
 
         $goodsOrPsv = $licence->getGoodsOrPsv()->getId();
-        $data['canHaveTrailers'] = ($goodsOrPsv === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE);
-        $data['hasTrailers'] = $licence->getTotAuthTrailers() > 0;
 
-        return $data;
+        return $this->result(
+            $licence,
+            [
+                'workshops' => [
+                    'contactDetails' => [
+                        'address'
+                    ]
+                ],
+            ],
+            [
+                'safetyDocuments' => $safetyDocuments->toArray(),
+                'canHaveTrailers' => ($goodsOrPsv === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE),
+                'hasTrailers' => $licence->getTotAuthTrailers() > 0
+            ]
+        );
     }
 }
