@@ -6,6 +6,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates as SiDateFilter;
+use Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted;
 use Dvsa\Olcs\Api\Service\Nr\Validator\SiPenaltyImposedDate as ImposedDateValidator;
 
 /**
@@ -25,6 +26,7 @@ class SeriousInfringementInputFactory implements FactoryInterface
         $service = new Input('serious_infringement');
 
         $filterChain = $service->getFilterChain();
+        $filterChain->attach($serviceLocator->get('FilterManager')->get(IsExecuted::class));
         $filterChain->attach($serviceLocator->get('FilterManager')->get(SiDateFilter::class));
 
         $validatorChain = $service->getValidatorChain();

@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Service\Nr\InputFilter\ComplianceEpisodeInputFactory;
 use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Vrm as VrmFilter;
 use Dvsa\Olcs\Api\Service\Nr\Validator\Vrm as VrmValidator;
-use Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted;
 
 /**
  * Class ComplianceEpisodeInputFactoryTest
@@ -34,7 +33,6 @@ class ComplianceEpisodeInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with('ComplianceEpisodeXmlMapping')->andReturn($mockMappings);
 
         $mockSl->shouldReceive('get')->with(MapXmlFile::class)->andReturn($mockMapFilter);
-        $mockSl->shouldReceive('get')->with(IsExecuted::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(VrmFilter::class)->andReturn($mockFilter);
 
         $mockSl->shouldReceive('get')->with(VrmValidator::class)->andReturn($mockValidator);
@@ -44,7 +42,7 @@ class ComplianceEpisodeInputFactoryTest extends TestCase
         $service = $sut->createService($mockSl);
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
-        $this->assertCount(3, $service->getFilterChain());
+        $this->assertCount(2, $service->getFilterChain());
         $this->assertCount(1, $service->getValidatorChain());
     }
 }
