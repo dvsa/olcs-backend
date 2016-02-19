@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Cli\Controller;
 
 use Dvsa\Olcs\Cli\Domain\Command\RemoveReadAudit;
+use Dvsa\Olcs\Cli\Domain\Command\CreateViExtractFiles;
 use Zend\Mvc\Controller\AbstractConsoleController;
 use Zend\View\Model\ConsoleModel;
 use Dvsa\Olcs\Api\Domain\Exception;
@@ -218,6 +219,40 @@ class BatchController extends AbstractConsoleController
         $result = $this->handleCommand([$dto]);
 
         return $this->handleExitStatus($result);
+    }
+
+    /**
+     * Create mobile compliance VI extract files
+     *
+     * @return ConsoleModel
+     */
+    public function createViExtractFilesAction()
+    {
+        $params = [];
+        if ($this->params('vhl')) {
+            $params['vhl'] = true;
+        }
+        if ($this->params('tnm')) {
+            $params['tnm'] = true;
+        }
+        if ($this->params('op')) {
+            $params['op'] = true;
+        }
+        if ($this->params('oc')) {
+            $params['oc'] = true;
+        }
+        if ($this->params('all')) {
+            $params['all'] = true;
+        }
+        $params['path'] = $this->params('path');
+
+        return $this->handleExitStatus(
+            $this->handleCommand(
+                [
+                    CreateViExtractFiles::create($params),
+                ]
+            )
+        );
     }
 
     /**

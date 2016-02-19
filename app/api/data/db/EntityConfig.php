@@ -1900,6 +1900,26 @@ return array(
             'ignore' => true
         )
     ),
+    'vi_oc_view' => array(
+        '@settings' => array(
+            'ignore' => true
+        )
+    ),
+    'vi_op_view' => array(
+        '@settings' => array(
+            'ignore' => true
+        )
+    ),
+    'vi_tnm_view' => array(
+        '@settings' => array(
+            'ignore' => true
+        )
+    ),
+    'vi_vhl_view' => array(
+        '@settings' => array(
+            'ignore' => true
+        )
+    ),
     'historic_tm' => array(
         'seen_contract' => array(
             'type' => 'yesno'
