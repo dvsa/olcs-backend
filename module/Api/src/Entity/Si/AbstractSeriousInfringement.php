@@ -260,7 +260,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
      *
      * @ORM\OneToMany(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruImposed",
-     *     mappedBy="seriousInfringement"
+     *     mappedBy="seriousInfringement",
+     *     cascade={"persist"}
      * )
      */
     protected $imposedErrus;
@@ -272,7 +273,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
      *
      * @ORM\OneToMany(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruRequested",
-     *     mappedBy="seriousInfringement"
+     *     mappedBy="seriousInfringement",
+     *     cascade={"persist"}
      * )
      */
     protected $requestedErrus;
