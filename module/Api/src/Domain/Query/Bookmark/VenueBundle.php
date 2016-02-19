@@ -6,9 +6,9 @@ use Dvsa\Olcs\Transfer\FieldType\Traits\Identity;
 use Dvsa\Olcs\Transfer\Query\AbstractQuery;
 
 /**
- * PiVenue Bundle
+ * Venue Bundle
  */
-class PiVenueBundle extends AbstractQuery
+class VenueBundle extends AbstractQuery
 {
     use Identity;
 

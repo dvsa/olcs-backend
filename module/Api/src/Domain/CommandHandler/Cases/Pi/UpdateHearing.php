@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
-use Dvsa\Olcs\Api\Entity\Pi\PiVenue as PiVenueEntity;
+use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\CreateHearing as CreateHearingCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Publication\PiHearing as PublishHearingCmd;
@@ -52,11 +52,11 @@ final class UpdateHearing extends AbstractCommandHandler implements AuthAwareInt
 
         $hearingDate = \DateTime::createFromFormat('Y-m-d H:i:s', $command->getHearingDate());
 
-        if ($command->getPiVenue() === null) {
-            $piVenue = null;
+        if ($command->getVenue() === null) {
+            $venue = null;
         } else {
-            /** @var PiVenueEntity $piVenue */
-            $piVenue = $this->getRepo()->getReference(PiVenueEntity::class, $command->getPiVenue());
+            /** @var VenueEntity $venue */
+            $venue = $this->getRepo()->getReference(VenueEntity::class, $command->getVenue());
         }
 
         $isAdjourned = $command->getIsAdjourned();
@@ -66,8 +66,8 @@ final class UpdateHearing extends AbstractCommandHandler implements AuthAwareInt
             $presidingTc,
             $presidedByRole,
             $hearingDate,
-            $piVenue,
-            $command->getPiVenueOther(),
+            $venue,
+            $command->getVenueOther(),
             $command->getWitnesses(),
             $isCancelled,
             $command->getCancelledDate(),

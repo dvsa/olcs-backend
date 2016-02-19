@@ -1,29 +1,29 @@
 <?php
 
 /**
- * PiVenue
+ * Venue
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\PiVenue;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\Venue;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\Repository\PiVenue as PiVenueRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Venue as VenueRepo;
 
 /**
- * PiVenue
+ * Venue
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class PiVenueList extends AbstractQueryHandler
+final class VenueList extends AbstractQueryHandler
 {
-    protected $repoServiceName = 'PiVenue';
+    protected $repoServiceName = 'Venue';
 
     public function handleQuery(QueryInterface $query)
     {
-        /** @var PiVenueRepo $repo */
+        /** @var VenueRepo $repo */
         $repo = $this->getRepo();
         return [
             'result' => $this->resultList(

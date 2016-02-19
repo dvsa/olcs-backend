@@ -33,7 +33,7 @@ class PiHearingVenueTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 [
-                    'piVenue' => ['name' => 'pi venue'],
+                    'venue' => ['name' => 'pi venue'],
                     'venueOther' => 'other venue'
                 ],
                 'pi venue'

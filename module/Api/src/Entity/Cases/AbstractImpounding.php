@@ -24,7 +24,7 @@ use Doctrine\Common\Collections\Collection;
  *        @ORM\Index(name="ix_impounding_outcome", columns={"outcome"}),
  *        @ORM\Index(name="ix_impounding_impounding_type", columns={"impounding_type"}),
  *        @ORM\Index(name="ix_impounding_case_id", columns={"case_id"}),
- *        @ORM\Index(name="ix_impounding_pi_venue_id", columns={"pi_venue_id"})
+ *        @ORM\Index(name="ix_impounding_venue_id", columns={"venue_id"})
  *    }
  * )
  */
@@ -178,25 +178,6 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     protected $outcomeSentDate;
 
     /**
-     * Pi venue
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Pi\PiVenue
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PiVenue", fetch="LAZY")
-     * @ORM\JoinColumn(name="pi_venue_id", referencedColumnName="id", nullable=true)
-     */
-    protected $piVenue;
-
-    /**
-     * Pi venue other
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="pi_venue_other", length=255, nullable=true)
-     */
-    protected $piVenueOther;
-
-    /**
      * Presiding tc
      *
      * @var \Dvsa\Olcs\Api\Entity\Pi\PresidingTc
@@ -205,6 +186,25 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
      * @ORM\JoinColumn(name="presiding_tc_id", referencedColumnName="id", nullable=true)
      */
     protected $presidingTc;
+
+    /**
+     * Venue
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Venue
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Venue", fetch="LAZY")
+     * @ORM\JoinColumn(name="venue_id", referencedColumnName="id", nullable=true)
+     */
+    protected $venue;
+
+    /**
+     * Venue other
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="venue_other", length=255, nullable=true)
+     */
+    protected $venueOther;
 
     /**
      * Version
@@ -598,52 +598,6 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     }
 
     /**
-     * Set the pi venue
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Pi\PiVenue $piVenue
-     * @return Impounding
-     */
-    public function setPiVenue($piVenue)
-    {
-        $this->piVenue = $piVenue;
-
-        return $this;
-    }
-
-    /**
-     * Get the pi venue
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Pi\PiVenue
-     */
-    public function getPiVenue()
-    {
-        return $this->piVenue;
-    }
-
-    /**
-     * Set the pi venue other
-     *
-     * @param string $piVenueOther
-     * @return Impounding
-     */
-    public function setPiVenueOther($piVenueOther)
-    {
-        $this->piVenueOther = $piVenueOther;
-
-        return $this;
-    }
-
-    /**
-     * Get the pi venue other
-     *
-     * @return string
-     */
-    public function getPiVenueOther()
-    {
-        return $this->piVenueOther;
-    }
-
-    /**
      * Set the presiding tc
      *
      * @param \Dvsa\Olcs\Api\Entity\Pi\PresidingTc $presidingTc
@@ -664,6 +618,52 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     public function getPresidingTc()
     {
         return $this->presidingTc;
+    }
+
+    /**
+     * Set the venue
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Venue $venue
+     * @return Impounding
+     */
+    public function setVenue($venue)
+    {
+        $this->venue = $venue;
+
+        return $this;
+    }
+
+    /**
+     * Get the venue
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Venue
+     */
+    public function getVenue()
+    {
+        return $this->venue;
+    }
+
+    /**
+     * Set the venue other
+     *
+     * @param string $venueOther
+     * @return Impounding
+     */
+    public function setVenueOther($venueOther)
+    {
+        $this->venueOther = $venueOther;
+
+        return $this;
+    }
+
+    /**
+     * Get the venue other
+     *
+     * @return string
+     */
+    public function getVenueOther()
+    {
+        return $this->venueOther;
     }
 
     /**

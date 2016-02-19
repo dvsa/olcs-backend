@@ -5,8 +5,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\NonPi;
 
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\NonPi\Update as UpdateCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Update as UpdateCommand;
 use Dvsa\Olcs\Api\Domain\Repository\NonPi;
@@ -44,8 +42,8 @@ class UpdateTest extends CommandHandlerTestCase
             Entity\Cases\Cases::class => [
                 50 => m::mock(Entity\Cases\Cases::class)
             ],
-            Entity\Pi\PiVenue::class => [
-                2 => m::mock(Entity\Pi\PiVenue::class)
+            Entity\Venue::class => [
+                2 => m::mock(Entity\Venue::class)
             ]
         ];
 
@@ -81,7 +79,6 @@ class UpdateTest extends CommandHandlerTestCase
             ->with($id, \Doctrine\Orm\Query::HYDRATE_OBJECT, $version)
             ->andReturn(
                 m::mock(NonPiEntity::class)
-
                     ->shouldReceive('setHearingType')
                     ->andReturn(
                         m::mock(Entity\System\RefData::class)
@@ -89,32 +86,22 @@ class UpdateTest extends CommandHandlerTestCase
                             ->andReturn('non_pi_type_off_proc')
                             ->getMock()
                     )
-
-                    // Get ID
                     ->shouldreceive('getId')
                     ->andReturn($id)
-
                     ->shouldreceive('setCase')
                     ->with(m::type(Entity\Cases\Cases::class))
-
                     ->shouldreceive('setVenue')
-                    ->with(m::type(Entity\Pi\PiVenue::class))
-
+                    ->with(m::type(Entity\Venue::class))
                     ->shouldreceive('setVenueOther')
                     ->with(null)
-
                     ->shouldreceive('setPresidingStaffName')
                     ->with('Ed')
-
                     ->shouldreceive('setAgreedByTcDate')
                     ->with(m::type(\DateTime::class))
-
                     ->shouldreceive('setHearingDate')
                     ->with(m::type(\DateTime::class))
-
                     ->shouldreceive('setWitnessCount')
                     ->with("4")
-
                     ->shouldReceive('setOutcome')
                     ->andReturn(
                         m::mock(Entity\System\RefData::class)

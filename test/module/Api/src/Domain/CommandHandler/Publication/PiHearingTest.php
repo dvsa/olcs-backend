@@ -5,7 +5,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Publication;
 
-use Doctrine\ORM\Query;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Publication\PiHearing;
@@ -104,8 +103,8 @@ class PiHearingTest extends CommandHandlerTestCase
         $trafficArea = 'M';
         $publicationId = 33;
         $pi = 44;
-        $piVenueId = 55;
-        $piVenueOther = 'pi venue other';
+        $venueId = 55;
+        $venueOther = 'pi venue other';
         $hearingDate = \DateTime::createFromFormat('Y-m-d', '2014-03-05');
 
         $command = $cmdClass::Create(
@@ -143,8 +142,8 @@ class PiHearingTest extends CommandHandlerTestCase
 
         $piHearingMock = m::mock(PiHearingEntity::class);
         $piHearingMock->shouldReceive('getPi')->andReturn($piMock);
-        $piHearingMock->shouldReceive('getPiVenue->getId')->andReturn($piVenueId);
-        $piHearingMock->shouldReceive('getPiVenueOther')->andReturn($piVenueOther);
+        $piHearingMock->shouldReceive('getVenue->getId')->andReturn($venueId);
+        $piHearingMock->shouldReceive('getVenueOther')->andReturn($venueOther);
         $piHearingMock->shouldReceive('getHearingDate')->andReturn($hearingDate);
         $piHearingMock->shouldReceive('getId')->andReturn($id);
 
@@ -177,8 +176,8 @@ class PiHearingTest extends CommandHandlerTestCase
         $pubTypes = ['All'];
         $publicationId = 33;
         $pi = 44;
-        $piVenueId = 55;
-        $piVenueOther = 'pi venue other';
+        $venueId = 55;
+        $venueOther = 'pi venue other';
         $hearingDate = \DateTime::createFromFormat('Y-m-d', '2014-03-05');
 
         $allTrafficAreas = [
@@ -217,8 +216,8 @@ class PiHearingTest extends CommandHandlerTestCase
 
         $piHearingMock = m::mock(PiHearingEntity::class);
         $piHearingMock->shouldReceive('getPi')->andReturn($piMock);
-        $piHearingMock->shouldReceive('getPiVenue->getId')->andReturn($piVenueId);
-        $piHearingMock->shouldReceive('getPiVenueOther')->andReturn($piVenueOther);
+        $piHearingMock->shouldReceive('getVenue->getId')->andReturn($venueId);
+        $piHearingMock->shouldReceive('getVenueOther')->andReturn($venueOther);
         $piHearingMock->shouldReceive('getHearingDate')->andReturn($hearingDate);
         $piHearingMock->shouldReceive('getId')->andReturn($id);
 
@@ -275,8 +274,8 @@ class PiHearingTest extends CommandHandlerTestCase
         $pubTypes = ['N&P'];
         $publicationId = 33;
         $pi = 44;
-        $piVenueId = 55;
-        $piVenueOther = 'pi venue other';
+        $venueId = 55;
+        $venueOther = 'pi venue other';
         $hearingDate = \DateTime::createFromFormat('Y-m-d', '2014-03-05');
 
         $allTrafficAreas = [
@@ -319,8 +318,8 @@ class PiHearingTest extends CommandHandlerTestCase
 
         $piHearingMock = m::mock(PiHearingEntity::class);
         $piHearingMock->shouldReceive('getPi')->andReturn($piMock);
-        $piHearingMock->shouldReceive('getPiVenue->getId')->andReturn($piVenueId);
-        $piHearingMock->shouldReceive('getPiVenueOther')->andReturn($piVenueOther);
+        $piHearingMock->shouldReceive('getVenue->getId')->andReturn($venueId);
+        $piHearingMock->shouldReceive('getVenueOther')->andReturn($venueOther);
         $piHearingMock->shouldReceive('getHearingDate')->andReturn($hearingDate);
         $piHearingMock->shouldReceive('getId')->andReturn($id);
 

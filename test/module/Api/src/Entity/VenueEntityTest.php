@@ -1,16 +1,16 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Entity\Pi;
+namespace Dvsa\OlcsTest\Api\Entity;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\Pi\PiVenue as Entity;
+use Dvsa\Olcs\Api\Entity\Venue as Entity;
 
 /**
- * PiVenue Entity Unit Tests
+ * Venue Entity Unit Tests
  *
  * Initially auto-generated but won't be overridden
  */
-class PiVenueEntityTest extends EntityTester
+class VenueEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

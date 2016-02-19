@@ -2,10 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Entity\Cases;
 
-use Common\Filter\Publication\PiVenue;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\Pi\PiVenue as PiVenueEntity;
+use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
 
 /**
  * Impounding Entity
@@ -19,13 +18,13 @@ use Dvsa\Olcs\Api\Entity\Pi\PiVenue as PiVenueEntity;
  *        @ORM\Index(name="ix_impounding_outcome", columns={"outcome"}),
  *        @ORM\Index(name="ix_impounding_impounding_type", columns={"impounding_type"}),
  *        @ORM\Index(name="ix_impounding_case_id", columns={"case_id"}),
- *        @ORM\Index(name="ix_impounding_pi_venue_id", columns={"pi_venue_id"})
+ *        @ORM\Index(name="ix_impounding_venue_id", columns={"venue_id"})
  *    }
  * )
  */
 class Impounding extends AbstractImpounding
 {
-    const PI_VENUE_OTHER = 'other';
+    const VENUE_OTHER = 'other';
 
     public function __construct(Cases $case, RefData $impoundingType)
     {
@@ -36,25 +35,24 @@ class Impounding extends AbstractImpounding
     }
 
     /**
-     * Sets the piVenue and piVenueOther properties, since they are interdependent on each other.
-     * @to-do Check this logic is correct...
+     * Sets the venue and venueOther properties, since they are interdependent on each other.
      *
-     * @param PiVenueEntity $piVenue|string
-     * @param $piVenueOther
+     * @param VenueEntity $venue
+     * @param $venueOther
      * @return Impounding
      */
-    public function setPiVenueProperties($piVenue, $piVenueOther = null)
+    public function setVenueProperties($venue, $venueOther = null)
     {
-        if (empty($piVenue)) {
-            $this->piVenue = null;
-            $this->piVenueOther = null;
+        if (empty($venue)) {
+            $this->venue = null;
+            $this->venueOther = null;
         } else {
-            if ($piVenue === self::PI_VENUE_OTHER) {
-                $this->piVenue = null;
-                $this->piVenueOther = $piVenueOther;
+            if ($venue === self::VENUE_OTHER) {
+                $this->venue = null;
+                $this->venueOther = $venueOther;
             } else {
-                $this->piVenue = $piVenue;
-                $this->piVenueOther = null;
+                $this->venue = $venue;
+                $this->venueOther = null;
             }
         }
 
