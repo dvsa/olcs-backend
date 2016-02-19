@@ -244,6 +244,7 @@ class BatchController extends AbstractConsoleController
         if ($this->params('all')) {
             $params['all'] = true;
         }
+        $params['path'] = $this->params('path');
 
         return $this->handleExitStatus(
             $this->handleCommand(

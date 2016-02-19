@@ -23,7 +23,8 @@ class CreateViExtractFilesTest extends \PHPUnit_Framework_TestCase
             'oc' => true,
             'tnm' => true,
             'vhl' => true,
-            'all' => true
+            'all' => true,
+            'path' => '/tmp'
         ];
         $command = CreateViExtractFiles::create($params);
 

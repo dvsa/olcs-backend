@@ -26,7 +26,7 @@ final class CreateViExtractFiles extends AbstractCommandHandler
         'ViVhlView'
     ];
 
-    protected $exportPath = '/tmp';
+    protected $exportPath = null;//'/tmp';
 
     protected $paramMap = [
         'oc' => [
@@ -66,6 +66,9 @@ final class CreateViExtractFiles extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
+        if ($command->getPath()) {
+            $this->exportPath = $command->getPath();
+        }
         foreach ($this->paramMap as $key => $type) {
             $method = 'get' . ucfirst($key);
             $commandParam = $command->$method();
