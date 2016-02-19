@@ -46,7 +46,8 @@ class SiDates extends ZendAbstractFilter
      * @param string $date
      * @return \DateTime|null
      */
-    private function createDate($date) {
+    private function createDate($date)
+    {
         $dateTime = new \DateTime($date);
         $dateTime->setTime(0, 0, 0);
 
