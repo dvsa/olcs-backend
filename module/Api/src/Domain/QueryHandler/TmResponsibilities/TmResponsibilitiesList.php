@@ -8,8 +8,9 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\TmResponsibilities;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Doctrine\ORM\Query;
 
 /**
  * Get a list of Transport Manager Licences and Transport Manager Applications
@@ -24,11 +25,25 @@ class TmResponsibilitiesList extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        $repo = $this->getRepo();
+        $tmLicences = $this->getRepo()->fetchForTransportManager(
+            $query->getTransportManager(),
+            [
+                Licence::LICENCE_STATUS_VALID,
+                Licence::LICENCE_STATUS_SUSPENDED,
+                Licence::LICENCE_STATUS_CURTAILED
+            ]
+        );
 
-        $tmLicences = $repo->fetchForTransportManager($query->getTransportManager(), $query->getLicenceStatuses());
-        $tmApplications = $this->getRepo('TransportManagerApplication')
-            ->fetchForTransportManager($query->getTransportManager(), $query->getApplicationStatuses(), true);
+        $tmApplications = $this->getRepo('TransportManagerApplication')->fetchForTransportManager(
+            $query->getTransportManager(),
+            [
+                Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                Application::APPLICATION_STATUS_NOT_SUBMITTED,
+                Application::APPLICATION_STATUS_GRANTED
+            ],
+            true
+        );
+
         return [
             'result' => $tmLicences,
             'count' => count($tmLicences),

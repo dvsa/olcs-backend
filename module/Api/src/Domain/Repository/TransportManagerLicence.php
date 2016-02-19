@@ -57,7 +57,7 @@ class TransportManagerLicence extends AbstractRepository
         return $dqb->getQuery()->getResult();
     }
 
-    public function fetchForTransportManager($tmId, $licenceStatuses = null)
+    public function fetchForTransportManager($tmId, array $licenceStatuses = null)
     {
         $qb = $this->createQueryBuilder();
 
@@ -74,18 +74,9 @@ class TransportManagerLicence extends AbstractRepository
         $qb->setParameter('transportManager', $tmId);
 
         if ($licenceStatuses !== null) {
-            $statuses = explode(',', $licenceStatuses);
-            $conditions = [];
-            for ($i = 0; $i < count($statuses); $i++) {
-                $conditions[] = 'l.status = :status' . $i;
-            }
-            $orX = $qb->expr()->orX();
-            $orX->addMultiple($conditions);
-            $qb->andWhere($orX);
-            for ($i = 0; $i < count($statuses); $i++) {
-                $qb->setParameter('status' . $i, $statuses[$i]);
-            }
+            $qb->andWhere($qb->expr()->in('l.status', $licenceStatuses));
         }
+
         return $qb->getQuery()->getResult();
     }
 

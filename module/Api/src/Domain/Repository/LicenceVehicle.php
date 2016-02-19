@@ -408,4 +408,18 @@ class LicenceVehicle extends AbstractRepository
         return $this->getDbQueryManager()->get('LicenceVehicle\RemoveAllForLicence')
             ->execute(['licence' => $licenceId]);
     }
+
+    /**
+     * Clear the section26 flag on vehicles linked to a licence
+     *
+     * @param int $licenceId
+     *
+     * @return int Number of vehicles updated
+     */
+    public function clearVehicleSection26($licenceId)
+    {
+        return $this->getDbQueryManager()->get('LicenceVehicle\ClearVehicleSection26')
+            ->execute(['licence' => $licenceId])
+            ->rowCount();
+    }
 }
