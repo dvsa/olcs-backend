@@ -29,7 +29,11 @@ class CreateViExtractFilesTest extends \PHPUnit_Framework_TestCase
         $command = CreateViExtractFiles::create($params);
 
         foreach ($params as $key => $value) {
-            $this->assertTrue($command->{'get' . ucfirst($key)}());
+            if ($key !== 'path') {
+                $this->assertTrue($command->{'get' . ucfirst($key)}());
+            } else {
+                $this->assertEquals('/tmp', $command->{'get' . ucfirst($key)}());
+            }
         }
     }
 }
