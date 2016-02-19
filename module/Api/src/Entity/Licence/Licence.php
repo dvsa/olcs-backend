@@ -773,4 +773,17 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     {
         return $this->getOrganisation();
     }
+
+    public function getLicenceDocuments($category, $subCategory)
+    {
+        $expr = Criteria::expr();
+        $criteria = Criteria::create();
+
+        $criteria->where($expr->eq('category', $category));
+        $criteria->andWhere(
+            $expr->eq('subCategory', $subCategory)
+        );
+
+        return $this->documents->matching($criteria);
+    }
 }
