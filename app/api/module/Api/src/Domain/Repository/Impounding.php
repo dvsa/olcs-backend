@@ -28,7 +28,7 @@ class Impounding extends AbstractRepository
             ->withRefdata()
             ->with('presidingTc')
             ->with('impoundingLegislationTypes')
-            ->with('piVenue')
+            ->with('venue')
             ->byId($id);
     }
 

@@ -15,7 +15,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Impounding\UpdateImpounding as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding as ImpoundingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
-use Dvsa\Olcs\Api\Entity\Pi\PiVenue;
+use Dvsa\Olcs\Api\Entity\Venue;
 
 /**
  * Update Impounding Test
@@ -42,8 +42,8 @@ class UpdateImpoundingTest extends CommandHandlerTestCase
             Cases::class => [
                 24 => m::mock(Cases::class)
             ],
-            PiVenue::class => [
-                8 => m::mock(PiVenue::class)
+            Venue::class => [
+                8 => m::mock(Venue::class)
             ]
         ];
 
@@ -63,8 +63,8 @@ class UpdateImpoundingTest extends CommandHandlerTestCase
                 'lastModifiedOn' => '2015-05-28T10:53:34+0100',
                 'notes' => 'Some notes - db default',
                 'outcomeSentDate' => '2014-06-11',
-                'piVenueOther' => null,
-                'piVenue' => 8,
+                'venueOther' => null,
+                'venue' => 8,
                 'vrm' => 'vrm1',
                 'impoundingLegislationTypes' => [
                     'imlgis_type_goods_ni1',

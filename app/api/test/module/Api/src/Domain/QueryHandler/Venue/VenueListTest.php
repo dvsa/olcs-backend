@@ -1,29 +1,29 @@
 <?php
 
 /**
- * PiVenue List Test
+ * Venue List Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\PiVenue;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Venue;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\PiVenue\PiVenueList;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Venue\VenueList;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\PiVenue as PiVenueRepo;
-use Dvsa\Olcs\Transfer\Query\Cases\PiVenue\PiVenueList as Qry;
+use Dvsa\Olcs\Api\Domain\Repository\Venue as VenueRepo;
+use Dvsa\Olcs\Transfer\Query\Venue\VenueList as Qry;
 use Mockery as m;
 
 /**
- * PiVenue List Test
+ * Venue List Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class PiVenueListTest extends QueryHandlerTestCase
+class VenueListTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new PiVenueList();
-        $this->mockRepo('PiVenue', PiVenueRepo::class);
+        $this->sut = new VenueList();
+        $this->mockRepo('Venue', VenueRepo::class);
 
         parent::setUp();
     }
@@ -36,11 +36,11 @@ class PiVenueListTest extends QueryHandlerTestCase
         $mockResult = m::mock();
         $mockResult->shouldReceive('serialize')->once()->andReturn('foo');
 
-        $this->repoMap['PiVenue']->shouldReceive('fetchList')
+        $this->repoMap['Venue']->shouldReceive('fetchList')
             ->with($query, m::type('integer'))
             ->andReturn([$mockResult]);
 
-        $this->repoMap['PiVenue']->shouldReceive('fetchCount')
+        $this->repoMap['Venue']->shouldReceive('fetchCount')
             ->with($query)
             ->andReturn($count);
 

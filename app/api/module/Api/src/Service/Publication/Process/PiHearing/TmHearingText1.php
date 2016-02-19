@@ -56,7 +56,7 @@ final class TmHearingText1 extends AbstractText1
             $publication->getPi()->getCase()->getId(),
             $context->offsetGet('id'),
             $context->offsetGet('transportManagerName'),
-            $context->offsetGet('piVenueOther'),
+            $context->offsetGet('venueOther'),
             $context->offsetGet('formattedHearingDate'),
             $context->offsetGet('formattedHearingTime')
         );

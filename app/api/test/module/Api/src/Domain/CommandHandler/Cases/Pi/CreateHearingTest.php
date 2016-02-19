@@ -5,7 +5,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Pi;
 
-use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Pi\CreateHearing;
@@ -14,7 +13,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\CreateHearing as Cmd;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
-use Dvsa\Olcs\Api\Entity\Pi\PiVenue as PiVenueEntity;
+use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
@@ -60,8 +59,8 @@ class CreateHearingTest extends CommandHandlerTestCase
             PiEntity::class => [
                 55 => $piEntity
             ],
-            PiVenueEntity::class => [
-                66 => m::mock(PiVenueEntity::class)
+            VenueEntity::class => [
+                66 => m::mock(VenueEntity::class)
             ],
         ];
 
@@ -74,7 +73,7 @@ class CreateHearingTest extends CommandHandlerTestCase
      * @param $isTm
      * @param $extraTaskKey
      */
-    public function testHandleCommand($isTm, $extraTaskKey, $piVenue)
+    public function testHandleCommand($isTm, $extraTaskKey, $venue)
     {
         $extraTaskId = 22;
         $case = 24;
@@ -82,7 +81,7 @@ class CreateHearingTest extends CommandHandlerTestCase
         $pi = 55;
         $userId = 77;
         $teamId = 88;
-        $piVenueOther = 'venue other';
+        $venueOther = 'venue other';
         $presidedByRole = 'tc_r_dhtru';
         $witnesses = 5;
         $hearingDate = '2015-25-12 12:00:00';
@@ -100,8 +99,8 @@ class CreateHearingTest extends CommandHandlerTestCase
         $command = Cmd::Create(
             [
                 'pi' => $pi,
-                'piVenue' => $piVenue,
-                'piVenueOther' => $piVenueOther,
+                'venue' => $venue,
+                'venueOther' => $venueOther,
                 'presidingTc' => $presidingTc,
                 'presidedByRole' => $presidedByRole,
                 'witnesses' => $witnesses,

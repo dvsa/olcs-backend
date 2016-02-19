@@ -18,13 +18,13 @@ class PiHearingVenue extends DynamicBookmark
             return null;
         }
 
-        return Qry::create(['id' => $data['hearing'], 'bundle' => ['piVenue']]);
+        return Qry::create(['id' => $data['hearing'], 'bundle' => ['venue']]);
     }
 
     public function render()
     {
-        if (isset($this->data['piVenue']) && count($this->data['piVenue']) > 0) {
-            return $this->data['piVenue']['name'];
+        if (!empty($this->data['venue'])) {
+            return $this->data['venue']['name'];
         }
 
         return $this->data['venueOther'];

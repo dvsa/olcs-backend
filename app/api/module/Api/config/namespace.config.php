@@ -105,7 +105,6 @@ return [
     'Pi' => 'Pi',
     'PiDefinition' => 'Pi',
     'PiHearing' => 'Pi',
-    'PiVenue' => 'Pi',
     'PresidingTc' => 'Pi',
     'Reason' => 'Pi',
     'Printer' => 'PrintScan',

@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Repository\PiHearing as PiHearingRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\UpdateHearing as Cmd;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
-use Dvsa\Olcs\Api\Entity\Pi\PiVenue as PiVenueEntity;
+use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
@@ -49,8 +49,8 @@ class UpdateHearingTest extends CommandHandlerTestCase
             PresidingTcEntity::class => [
                 44 => m::mock(PresidingTcEntity::class)
             ],
-            PiVenueEntity::class => [
-                66 => m::mock(PiVenueEntity::class)
+            VenueEntity::class => [
+                66 => m::mock(VenueEntity::class)
             ],
         ];
 
@@ -62,9 +62,9 @@ class UpdateHearingTest extends CommandHandlerTestCase
      *
      * @param $isTm
      * @param $extraTaskKey
-     * @param $piVenue
+     * @param $venue
      */
-    public function testHandleCommand($isTm, $extraTaskKey, $piVenue)
+    public function testHandleCommand($isTm, $extraTaskKey, $venue)
     {
         $hearingId = 11;
         $version = 99;
@@ -73,7 +73,7 @@ class UpdateHearingTest extends CommandHandlerTestCase
         $presidingTc = 44;
         $userId = 77;
         $teamId = 88;
-        $piVenueOther = 'venue other';
+        $venueOther = 'venue other';
         $presidedByRole = 'tc_r_dhtru';
         $witnesses = 5;
         $hearingDate = '2015-25-12 12:00:00';
@@ -92,8 +92,8 @@ class UpdateHearingTest extends CommandHandlerTestCase
             [
                 'id' => $hearingId,
                 'version' => $version,
-                'piVenue' => $piVenue,
-                'piVenueOther' => $piVenueOther,
+                'venue' => $venue,
+                'venueOther' => $venueOther,
                 'presidingTc' => $presidingTc,
                 'presidedByRole' => $presidedByRole,
                 'witnesses' => $witnesses,

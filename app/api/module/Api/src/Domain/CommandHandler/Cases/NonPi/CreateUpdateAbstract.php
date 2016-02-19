@@ -7,10 +7,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\NonPi;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Cases\Hearing as Entity;
 use Dvsa\Olcs\Api\Domain\Repository\NonPi as Repository;
 use Dvsa\Olcs\Api\Entity as Entities;
-use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Create as CreateCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
@@ -33,7 +31,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Tr
 
         // Business logic?
         if ($command->getVenue() !== null) {
-            $venue = $this->getRepo()->getReference(Entities\Pi\PiVenue::class, $command->getVenue());
+            $venue = $this->getRepo()->getReference(Entities\Venue::class, $command->getVenue());
             $entity->setVenue($venue);
             $entity->setVenueOther(null);
         } else {

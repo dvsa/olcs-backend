@@ -5,8 +5,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\NonPi;
 
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\NonPi\Create as CreateCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Create as CreateCommand;
 use Dvsa\Olcs\Api\Domain\Repository\NonPi;
@@ -45,8 +43,8 @@ class CreateTest extends CommandHandlerTestCase
             Entity\Cases\Cases::class => [
                 50 => m::mock(Entity\Cases\Cases::class)
             ],
-            Entity\Pi\PiVenue::class => [
-                2 => m::mock(Entity\Pi\PiVenue::class)
+            Entity\Venue::class => [
+                2 => m::mock(Entity\Venue::class)
             ]
         ];
 

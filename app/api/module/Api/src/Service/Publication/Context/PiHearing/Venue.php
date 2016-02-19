@@ -2,19 +2,19 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication\Context\PiHearing;
 
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\PiVenueBundle;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\VenueBundle;
 use Dvsa\Olcs\Api\Service\Publication\Context\AbstractContext;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Entity\Pi\PiVenue as PiVenueEntity;
+use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
 use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareTrait;
 use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
 
 /**
- * Class PiVenue
+ * Class Venue
  * @package Dvsa\Olcs\Api\Service\Publication\Context\PiHearing
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-final class PiVenue extends AbstractContext implements AddressFormatterAwareInterface
+final class Venue extends AbstractContext implements AddressFormatterAwareInterface
 {
     private static $bundle = [];
 
@@ -22,17 +22,17 @@ final class PiVenue extends AbstractContext implements AddressFormatterAwareInte
 
     public function provide(PublicationLink $publication, \ArrayObject $context)
     {
-        if ($context->offsetGet('piVenue')) {
-            $query = PiVenueBundle::create(['id' => $context->offsetGet('piVenue'), 'bundle' => self::$bundle]);
+        if ($context->offsetGet('venue')) {
+            $query = VenueBundle::create(['id' => $context->offsetGet('venue'), 'bundle' => self::$bundle]);
 
             /**
-             * @var PiVenueEntity $piVenue
+             * @var VenueEntity $venue
              */
-            $piVenue = $this->handleQuery($query);
+            $venue = $this->handleQuery($query);
 
-            $venueDetails = $piVenue->getName() . ', ' . $this->getAddressFormatter()->format($piVenue->getAddress());
+            $venueDetails = $venue->getName() . ', ' . $this->getAddressFormatter()->format($venue->getAddress());
 
-            $context->offsetSet('piVenueOther', $venueDetails);
+            $context->offsetSet('venueOther', $venueDetails);
         }
 
         return $context;

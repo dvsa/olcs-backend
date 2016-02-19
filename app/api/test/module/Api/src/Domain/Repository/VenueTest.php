@@ -1,21 +1,21 @@
 <?php
 
 /**
- * PiVenueTest
+ * VenueTest
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Domain\Repository\PiVenue as Repo;
+use Dvsa\Olcs\Api\Domain\Repository\Venue as Repo;
 use Mockery as m;
 
 /**
- * PiVenue Test
+ * Venue Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class PiVenueTest extends RepositoryTestCase
+class VenueTest extends RepositoryTestCase
 {
     public function setUp()
     {
