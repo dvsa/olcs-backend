@@ -9,7 +9,7 @@ use Olcs\XmlTools\Filter\ParseXml;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
 
 /**
- * Class FileStructureInputFactory
+ * Class XmlStructureInputFactory
  * @package Dvsa\Olcs\Api\Service\Ebsr\InputFilter
  */
 class XmlStructureInputFactory implements FactoryInterface
