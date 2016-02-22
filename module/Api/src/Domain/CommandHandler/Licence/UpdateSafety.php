@@ -51,7 +51,7 @@ final class UpdateSafety extends AbstractCommandHandler implements Transactioned
         if ((int)$licence->getTotAuthTrailers() < 1) {
             $safetyInsTrailers = 0;
         } else {
-            $safetyInsTrailers = $command->getSafetyInsTrailers();
+            $safetyInsTrailers = (int) $command->getSafetyInsTrailers();
         }
 
         $licence->updateSafetyDetails(

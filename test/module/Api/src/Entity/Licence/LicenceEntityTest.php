@@ -890,4 +890,32 @@ class LicenceEntityTest extends EntityTester
 
         $this->assertSame($licence->getCalculatedBundleValues(), $licence->getCalculatedValues());
     }
+
+    public function testGetApplicationDocuments()
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $mockDocument1 = m::mock()
+            ->shouldReceive('getcategory')
+            ->andReturn('category')
+            ->once()
+            ->shouldReceive('getsubCategory')
+            ->andReturn('subCategory')
+            ->once()
+            ->getMock();
+
+        $mockDocument2 = m::mock()
+            ->shouldReceive('getcategory')
+            ->andReturn('category1')
+            ->once()
+            ->shouldReceive('getsubCategory')
+            ->andReturn('subCategory1')
+            ->never()
+            ->getMock();
+
+        $documentsCollection = new ArrayCollection([$mockDocument1, $mockDocument2]);
+        $expected = new ArrayCollection([$mockDocument1]);
+
+        $licence->setDocuments($documentsCollection);
+        $this->assertEquals($expected, $licence->getLicenceDocuments('category', 'subCategory'));
+    }
 }
