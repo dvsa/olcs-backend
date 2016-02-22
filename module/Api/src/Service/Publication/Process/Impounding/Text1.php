@@ -62,7 +62,7 @@ final class Text1 extends AbstractText
     {
         $this->addTextLine(Formatter\OrganisationName::format($publicationLink->getLicence()->getOrganisation()));
 
-        if ($context->offsetExists('licencePeople')&& is_array($context->offsetGet('licencePeople'))) {
+        if ($context->offsetExists('licencePeople') && is_array($context->offsetGet('licencePeople'))) {
             $text[] = Formatter\People::format(
                 $publicationLink->getLicence()->getOrganisation(),
                 $context->offsetGet('licencePeople')
