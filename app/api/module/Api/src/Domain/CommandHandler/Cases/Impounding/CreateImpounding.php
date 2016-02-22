@@ -219,5 +219,4 @@ final class CreateImpounding extends AbstractCommandHandler implements Transacti
 
         return null;
     }
-
 }
