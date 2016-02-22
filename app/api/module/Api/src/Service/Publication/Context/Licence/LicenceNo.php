@@ -29,7 +29,7 @@ final class LicenceNo extends AbstractContext
             }
         }
 
-        if (isset($licence) && $licence instanceof LicenceEntity) {
+        if (isset($licence)) {
             $licenceNo = $licence->getLicNo();
         }
 
