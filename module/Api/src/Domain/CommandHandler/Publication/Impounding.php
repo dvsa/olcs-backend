@@ -56,8 +56,7 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
         CommandInterface $command,
         ImpoundingEntity $impounding,
         CasesEntity $case
-    )
-    {
+    ) {
         $result = new Result();
 
         /**
