@@ -16,15 +16,20 @@ final class LicenceAddress extends AbstractContext implements AddressFormatterAw
 {
     use AddressFormatterAwareTrait;
 
-    public function provide(PublicationLink $publication, \ArrayObject $context)
+    public function provide(PublicationLink $publicationLink, \ArrayObject $context)
     {
-        $licenceAddress = $publication->getLicence()->getCorrespondenceCd();
+        $licence = $publicationLink->getLicence();
+        if (!empty($licence)) {
+            $licenceAddress = $publicationLink->getLicence()->getCorrespondenceCd();
 
-        if ($licenceAddress === null) {
-            return $context;
+            if ($licenceAddress === null) {
+                return $context;
+            }
+
+            $context->offsetSet('licenceAddress', $this->getAddressFormatter()->format($licenceAddress->getAddress()));
+        } else {
+            $context->offsetSet('licenceAddress', '');
         }
-
-        $context->offsetSet('licenceAddress', $this->getAddressFormatter()->format($licenceAddress->getAddress()));
 
         return $context;
     }

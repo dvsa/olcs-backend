@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Venue;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PiVenue;
 use Dvsa\Olcs\Transfer\Command\Cases\Impounding\CreateImpounding as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -140,35 +141,42 @@ final class CreateImpounding extends AbstractCommandHandler implements Transacti
 
         $caseType = $this->case->getCaseType()->getId();
 
+        $commandData =                 [
+            'id' => $id,
+            'trafficArea' => $this->determinePubTrafficArea($command)->getId(),
+            'pi' => $this->determinePublicInquiry()
+        ];
+
         if ($caseType === CasesEntity::APP_CASE_TYPE) {
+            /** @var ApplicationEntity $application */
             $application = $this->case->getApplication();
+
             $licType = $application->getGoodsOrPsv()->getId();
 
             return PublishImpoundingCmd::create(
-                [
-                    'id' => $id,
-                    'pubType' => [$this->determinePubType($licType)],
-                    'trafficAreas' => $this->determinePubTrafficArea($command)->getId(),
-                    'applicationId' => $application->getId(),
-                    'publicInquiryId' => $this->determinePublicInquiryId()
-                ]
+                array_merge(
+                    $commandData,
+                    [
+                        'pubType' => [$this->determinePubType($licType)],
+                        'application' => $application->getId()
+                    ]
+                )
             );
-
         } else {
             /** @var LicenceEntity $licence */
             $licence = $this->case->getLicence();
+
             $licType = $licence->getGoodsOrPsv()->getId();
 
             return PublishImpoundingCmd::create(
-                [
-                    'id' => $id,
-                    'pubType' => [$this->determinePubType($licType)],
-                    'trafficAreas' => $this->determinePubTrafficArea($command),
-                    'licenceId' => $licence->getId(),
-                    'publicInquiryId' => $this->determinePublicInquiryId()
-                ]
+                array_merge(
+                    $commandData,
+                    [
+                        'pubType' => [$this->determinePubType($licType)],
+                        'licence' => $licence->getId()
+                    ]
+                )
             );
-
         }
     }
 
@@ -203,10 +211,10 @@ final class CreateImpounding extends AbstractCommandHandler implements Transacti
      * Return Public Inquiry Id
      * @return mixed
      */
-    private function determinePublicInquiryId()
+    private function determinePublicInquiry()
     {
         if (count($this->case->getPublicInquirys()) > 0) {
-            return $this->case->getPublicInquirys()[0]->getId();
+            return $this->case->getPublicInquirys()[0];
         }
 
         return null;

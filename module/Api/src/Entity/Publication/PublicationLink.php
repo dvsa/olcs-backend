@@ -166,12 +166,16 @@ class PublicationLink extends AbstractPublicationLink
         ImpoundingEntity $impounding,
         PublicationEntity $publication,
         PublicationSectionEntity $publicationSection,
-        TrafficAreaEntity $trafficArea
+        TrafficAreaEntity $trafficArea,
+        LicenceEntity $licence = null,
+        ApplicationEntity $application = null
     ) {
         $this->impounding = $impounding;
         $this->publication = $publication;
         $this->publicationSection = $publicationSection;
         $this->trafficArea = $trafficArea;
+        $this->licence = $licence;
+        $this->application = $application;
     }
 
     /**
