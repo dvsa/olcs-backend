@@ -217,7 +217,6 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             ->shouldReceive('getValue')
             ->andReturn($filteredSi);
 
-
         $licenceEntity = m::mock(LicenceEntity::class);
         $licenceEntity->shouldReceive('getId')->once()->andReturn($licenceId);
 

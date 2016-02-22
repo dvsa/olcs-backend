@@ -124,7 +124,7 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
         try {
             //get the parts of the data we need doctrine for
             $this->commonData = $this->getCommonData($erruData);
-        } catch(NotFoundException $e){
+        } catch (NotFoundException $e) {
             //will result in GenericController returning a 400 response, which is what we're looking for
             throw new Exception('some data was not correct');
         };
