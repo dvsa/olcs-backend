@@ -37,7 +37,11 @@ class User extends AbstractQueryHandler implements AuthAwareInterface
             $user,
             [
                 'team',
-                'transportManager',
+                'transportManager' => [
+                    'homeCd' => [
+                        'person'
+                    ],
+                ],
                 'localAuthority',
                 'partnerContactDetails',
                 'roles',
