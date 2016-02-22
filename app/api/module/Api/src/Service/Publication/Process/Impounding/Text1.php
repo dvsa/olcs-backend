@@ -2,10 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication\Process\Impounding;
 
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
 use \Dvsa\Olcs\Api\Service\Publication\Process\AbstractText;
+use \Dvsa\Olcs\Api\Service\Publication\Formatter;
 
 /**
  * Class Impounding Text1
@@ -14,7 +14,7 @@ use \Dvsa\Olcs\Api\Service\Publication\Process\AbstractText;
  */
 final class Text1 extends AbstractText
 {
-    protected $impoundingDetailsText = 'Impounding hearing (%s) to be held at %s, on %s commencing at %s';
+    protected $text1 = 'Impounding hearing (%s) to be held at %s, on %s commencing at %s';
 
     /**
      * @param PublicationLink $publication
@@ -27,10 +27,7 @@ final class Text1 extends AbstractText
             $this->getImpoundingDetailsText($publicationLink, $context)
         );
         $this->addTextLine($context->offsetGet('licenceNo'));
-        $this->addTextLine($context->offsetGet('tradingAs'));
 
-
-        //$this->addTextLine($context->offsetGet('licenceOrganisationDetails'));
         $this->getOrganisationOfficersText($publicationLink, $context);
 
         $this->addTextLine($context->offsetGet('licenceAddress'));
@@ -48,14 +45,13 @@ final class Text1 extends AbstractText
     private function getImpoundingDetailsText(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {
         return sprintf(
-            $this->impoundingDetailsText,
+            $this->text1,
             $publicationLink->getImpounding()->getId(),
-            $context->offsetGet('piVenueOther'),
+            $context->offsetGet('venueOther'),
             $context->offsetGet('formattedHearingDate'),
             $context->offsetGet('formattedHearingTime')
         );
     }
-
 
     /**
      * @param PublicationLink $publication
@@ -64,30 +60,14 @@ final class Text1 extends AbstractText
      */
     private function getOrganisationOfficersText(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {
-        $organisationType = $context->offsetGet('organisationType');
-        $prefix = '';
-        if ($organisationType['id'] == Organisation::ORG_TYPE_PARTNERSHIP ||
-            $organisationType['id'] == Organisation::ORG_TYPE_LLP
-        ) {
-            $prefix = 'Partner(s)';
-        }
+        $this->addTextLine(Formatter\OrganisationName::format($publicationLink->getLicence()->getOrganisation()));
 
-        if ($organisationType['id'] == Organisation::ORG_TYPE_REGISTERED_COMPANY) {
-            $prefix = 'Director(s)';
-        }
-
-        $licencePeople = $context->offsetGet('licencePeople');
-
-        if (!empty($licencePeople)) {
-            for ($i = 0; $i < count($licencePeople); $i++) {
-                if ($i == 0) {
-                    $this->addTextLine($prefix . ' ' . $licencePeople->getFullName());
-                }
-                $this->addTextLine($licencePeople->getFullName());
-            }
+        if ($context->offsetExists('licencePeople')&& is_array($context->offsetGet('licencePeople'))) {
+            $text[] = Formatter\People::format(
+                $publicationLink->getLicence()->getOrganisation(),
+                $context->offsetGet('licencePeople')
+            );
+            $this->addTextLine(implode(', ', $text));
         }
     }
-
-
-
 }
