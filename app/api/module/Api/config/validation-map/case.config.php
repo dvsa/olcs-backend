@@ -58,6 +58,8 @@ return [
     CommandHandler\TmCaseDecision\UpdateNoFurtherAction::class              => IsInternalUser::class,
     CommandHandler\TmCaseDecision\UpdateReputeNotLost::class                => IsInternalUser::class,
     CommandHandler\Cases\Si\SendResponse::class                             => IsInternalUser::class,
+    CommandHandler\Cases\Si\ComplianceEpisode::class =>
+        IsInternalUser::class, //@todo need to find out what's needed for compliance episode, will come from INR service
     CommandHandler\Cases\Si\Applied\Delete::class                           => IsInternalUser::class,
     CommandHandler\Cases\Si\Applied\Create::class                           => IsInternalUser::class,
     CommandHandler\Cases\Si\Applied\Update::class                           => IsInternalUser::class,
