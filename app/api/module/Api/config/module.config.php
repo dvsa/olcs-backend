@@ -578,11 +578,14 @@ return [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PiVenue::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Organisation\TradingAs::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceNo::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\People::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Organisation\OrganisationType::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
-
             ],
             'process' => [
-                Dvsa\Olcs\Api\Service\Publication\Process\Impounding\ImpoundingText1::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Impounding\Text1::class,
             ],
         ),
     ],
