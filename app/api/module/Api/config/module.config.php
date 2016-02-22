@@ -92,6 +92,7 @@ return [
 
             'ComplianceEpisodeInput' => \Dvsa\Olcs\Api\Service\Nr\InputFilter\ComplianceEpisodeInputFactory::class,
             'ComplianceXmlStructure' => \Dvsa\Olcs\Api\Service\Nr\InputFilter\XmlStructureInputFactory::class,
+            'SeriousInfringementInput' => \Dvsa\Olcs\Api\Service\Nr\InputFilter\SeriousInfringementInputFactory::class,
             'ComplianceEpisodeXmlMapping' => \Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXmlFactory::class,
 
             \Dvsa\Olcs\Api\Service\Nr\InrClientInterface::class => Dvsa\Olcs\Api\Service\Nr\InrClientFactory::class,
@@ -623,7 +624,9 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingSection::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingSection::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason::class
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason::class,
+            \Dvsa\Olcs\Api\Service\Nr\Validator\SiPenaltyImposedDate::class =>
+                \Dvsa\Olcs\Api\Service\Nr\Validator\SiPenaltyImposedDate::class
         ],
         'factories' => [
             \Dvsa\Olcs\Api\Service\Nr\Validator\Vrm::class => \Dvsa\Olcs\Api\Service\Nr\Validator\VrmFactory::class
@@ -673,7 +676,9 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class,
             \Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted::class =>
-                \Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted::class
+                \Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted::class,
+            \Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates::class =>
+                \Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates::class
 
         ],
         'factories' => [
