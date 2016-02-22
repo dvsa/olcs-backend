@@ -177,7 +177,8 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
      */
     private function extractImpoundingData($impounding)
     {
-        $piVenue = $impounding->getPiVenue();
+        $venue = $impounding->getVenue();
+
         $hearingDate = $impounding->getHearingDate();
 
         //sometimes we have a datetime, and sometimes a string
@@ -186,28 +187,10 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
         }
 
         return [
-            'piVenue' => ($piVenue === null ? $piVenue : $piVenue->getId()),
-            'piVenueOther' => $impounding->getPiVenueOther(),
+            'venue' => ($venue === null ? $venue : $venue->getId()),
+            'venueOther' => $impounding->getVenueOther(),
             'hearingDate' => $hearingDate,
             'id' => $impounding->getId()
         ];
-    }
-
-    private function getLicenceObject($command)
-    {
-        if (!empty($command->getLicence())){
-            return $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence());
-        }
-
-        return null;
-    }
-
-    private function getApplicationObject($command)
-    {
-        if (!empty($command->getApplication())) {
-            return $this->getRepo()->getReference(Application::class, $command->getApplication());
-        }
-
-        return null;
     }
 }
