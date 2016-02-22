@@ -13,6 +13,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding as ImpoundingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
@@ -32,7 +33,7 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
 
     protected $repoServiceName = 'PublicationLink';
 
-    protected $extraRepos = ['Impounding', 'Publication', 'TrafficArea'];
+    protected $extraRepos = ['Impounding', 'Publication', 'TrafficArea', 'Licence', 'Application'];
 
     /**
      * @param CommandInterface $command
@@ -66,8 +67,10 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
         $pubSection = PublicationSectionEntity::HEARING_SECTION;
         $handler = 'ImpoundingPublication';
 
+
         $publicationSection = $this->getPublicationSection(PublicationSectionEntity::HEARING_SECTION);
         $trafficArea = $this->getRepo()->getReference(TrafficAreaEntity::class, $command->getTrafficArea());
+
         $pubType = $command->getPubType();
 
         //default Northern Ireland N&P to already published (as it doesn't exist)
@@ -94,6 +97,7 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
              * @var PublicationLinkEntity $publicationLink
              */
             $publication = $this->getPublication($trafficArea->getId(), $pubType);
+
             $unpublishedQuery = $this->getUnpublishedImpoundingQuery(
                 $publication->getId(),
                 $impounding->getId(),
@@ -106,7 +110,9 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
                     $impounding,
                     $publication,
                     $publicationSection,
-                    $trafficArea
+                    $trafficArea,
+                    $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence()),
+                    $this->getRepo()->getReference(ApplicationEntity::class, $command->getApplication())
                 );
             }
 
@@ -115,6 +121,7 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
                 $publicationLink,
                 $this->extractImpoundingData($impounding)
             );
+
         }
 
         $allTrafficAreas = $this->getRepo('TrafficArea')->fetchAll();
@@ -170,8 +177,37 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
      */
     private function extractImpoundingData($impounding)
     {
+        $piVenue = $impounding->getPiVenue();
+        $hearingDate = $impounding->getHearingDate();
+
+        //sometimes we have a datetime, and sometimes a string
+        if ($hearingDate instanceof \DateTime) {
+            $hearingDate = $hearingDate->format('Y-m-d H:i:s');
+        }
+
         return [
+            'piVenue' => ($piVenue === null ? $piVenue : $piVenue->getId()),
+            'piVenueOther' => $impounding->getPiVenueOther(),
+            'hearingDate' => $hearingDate,
             'id' => $impounding->getId()
         ];
+    }
+
+    private function getLicenceObject($command)
+    {
+        if (!empty($command->getLicence())){
+            return $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence());
+        }
+
+        return null;
+    }
+
+    private function getApplicationObject($command)
+    {
+        if (!empty($command->getApplication())) {
+            return $this->getRepo()->getReference(Application::class, $command->getApplication());
+        }
+
+        return null;
     }
 }

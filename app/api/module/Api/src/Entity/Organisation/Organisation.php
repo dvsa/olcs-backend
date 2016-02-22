@@ -335,4 +335,21 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         return $this->organisationUsers->matching($criteria);
     }
+
+    /**
+     * Returns the latest Trading Name that hasnt been deleted
+     */
+    public function getTradingAs()
+    {
+        $expr = Criteria::expr();
+        $criteria = Criteria::create()
+            ->andWhere($expr->isNull('deletedDate'))
+            ->orderBy(array('createdOn' => Criteria::DESC))
+            ->setMaxResults(1);
+        $matches = $this->tradingNames->matching($criteria);
+        if (!empty($matches)) {
+            return $matches[0]->getName();
+        }
+        return '';
+    }
 }
