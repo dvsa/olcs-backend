@@ -56,7 +56,8 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
         CommandInterface $command,
         ImpoundingEntity $impounding,
         CasesEntity $case
-    ) {
+    )
+    {
         $result = new Result();
 
         /**
@@ -65,8 +66,16 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
          * @var ImpoundingPublicationCmd $command
          */
         $pubSection = PublicationSectionEntity::HEARING_SECTION;
-        $handler = 'ImpoundingPublication';
+        $handler = 'ImpoundingLicencePublication';
 
+        if ($case->getCaseType() == CasesEntity::APP_CASE_TYPE) {
+            $handler = 'ImpoundingApplicationPublication';
+            $application = $this->getRepo()->getReference(ApplicationEntity::class, $command->getApplication());
+            $licence = $application->getLicence();
+        } else {
+            $licence = $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence());
+            $application = null;
+        }
 
         $publicationSection = $this->getPublicationSection(PublicationSectionEntity::HEARING_SECTION);
         $trafficArea = $this->getRepo()->getReference(TrafficAreaEntity::class, $command->getTrafficArea());
@@ -111,8 +120,8 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
                     $publication,
                     $publicationSection,
                     $trafficArea,
-                    $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence()),
-                    $this->getRepo()->getReference(ApplicationEntity::class, $command->getApplication())
+                    $licence,
+                    $application
                 );
             }
 

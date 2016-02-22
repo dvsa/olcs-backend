@@ -574,12 +574,25 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\Police::class
             ],
         ),
-        'ImpoundingPublication' => array(
+        'ImpoundingLicencePublication' => array(
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\Venue::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceNo::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\People::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
+            ],
+            'process' => [
+                Dvsa\Olcs\Api\Service\Publication\Process\Impounding\Text1::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Impounding\Text2::class,
+            ],
+        ),
+        'ImpoundingApplicationPublication' => array(
+            'context' => [
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\Venue::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceNo::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Application\People::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
             ],
             'process' => [
