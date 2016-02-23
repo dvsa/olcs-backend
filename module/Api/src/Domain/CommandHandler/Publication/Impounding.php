@@ -52,7 +52,7 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
         return $this->handleImpoundingPublication($command, $impounding, $case);
     }
 
-    public function handleImpoundingPublication(
+    private function handleImpoundingPublication(
         CommandInterface $command,
         ImpoundingEntity $impounding,
         CasesEntity $case
@@ -65,13 +65,13 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
          * @var ImpoundingPublicationCmd $command
          */
         $pubSection = PublicationSectionEntity::HEARING_SECTION;
-        $handler = 'ImpoundingLicencePublication';
 
         if ($case->getCaseType() == CasesEntity::APP_CASE_TYPE) {
             $handler = 'ImpoundingApplicationPublication';
             $application = $this->getRepo()->getReference(ApplicationEntity::class, $command->getApplication());
             $licence = $application->getLicence();
         } else {
+            $handler = 'ImpoundingLicencePublication';
             $licence = $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence());
             $application = null;
         }
@@ -134,7 +134,6 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
 
         $allTrafficAreas = $this->getRepo('TrafficArea')->fetchAll();
         $allPubTypes = ['A&D', 'N&P'];
-
         //if we haven't published to a traffic area, check whether there's an existing publication we need to delete
         foreach ($allTrafficAreas as $trafficArea) {
             foreach ($allPubTypes as $pubType) {

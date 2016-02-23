@@ -5,6 +5,11 @@ namespace Dvsa\OlcsTest\Api\Entity\Publication;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as Entity;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Impounding as ImpoundingEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Mockery as m;
 
 /**
@@ -53,5 +58,25 @@ class PublicationLinkEntityTest extends EntityTester
         $this->assertEquals($text1, $entity->getText1());
         $this->assertEquals($text2, $entity->getText2());
         $this->assertEquals($text3, $entity->getText3());
+    }
+
+    public function testCreateImpounding()
+    {
+        $impounding = m::mock(ImpoundingEntity::class);
+        $publication = m::mock(PublicationEntity::class);
+        $publicationSection = m::mock(PublicationSectionEntity::class);
+        $trafficArea = m::mock(TrafficAreaEntity::class);
+        $licence = m::mock(LicenceEntity::class);
+        $application = m::mock(ApplicationEntity::class);
+
+        $entity = new Entity();
+        $entity->createImpounding($impounding, $publication, $publicationSection, $trafficArea, $licence, $application);
+
+        $this->assertSame($impounding, $entity->getImpounding());
+        $this->assertSame($publication, $entity->getPublication());
+        $this->assertSame($publicationSection, $entity->getPublicationSection());
+        $this->assertSame($trafficArea, $entity->getTrafficArea());
+        $this->assertSame($licence, $entity->getLicence());
+        $this->assertSame($application, $entity->getApplication());
     }
 }
