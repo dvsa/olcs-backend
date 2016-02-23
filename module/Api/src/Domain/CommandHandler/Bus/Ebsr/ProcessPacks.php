@@ -612,7 +612,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
             'description' => $description . ': [' . $busReg->getRegNo() . ']',
             'actionDate' => date('Y-m-d H:i:s'),
             'assignedToUser' => $this->getCurrentUser()->getId(),
-            'assignedToTeam' => 6,
+            'assignedToTeam' => 6, // @todo this will need changing once we have the real life team data
             'busReg' => $busReg->getId(),
             'licence' => $busReg->getLicence()->getId(),
         ];
