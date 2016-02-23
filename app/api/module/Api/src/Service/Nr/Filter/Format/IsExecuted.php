@@ -27,11 +27,14 @@ class IsExecuted extends ZendAbstractFilter
         }
 
         foreach ($value['imposedErrus'] as $key => $erru) {
-            switch ($erru['executed']) {
-                case 'Yes':
+            //lowercase the value to make sure we always get a match
+            $executed = strtolower($erru['executed']);
+
+            switch ($executed) {
+                case 'yes':
                     $newValue = self::YES_EXECUTED_KEY;
                     break;
-                case 'No':
+                case 'no':
                     $newValue = self::NO_EXECUTED_KEY;
                     break;
                 default:
