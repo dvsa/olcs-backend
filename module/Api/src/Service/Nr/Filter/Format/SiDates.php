@@ -19,17 +19,11 @@ class SiDates extends ZendAbstractFilter
     public function filter($value)
     {
         foreach ($value['imposedErrus'] as $key => $dates) {
-            if (isset($dates['startDate'])) {
-                $value['imposedErrus'][$key]['startDate'] = $this->createDate($dates['startDate']);
-            } else {
-                $value['imposedErrus'][$key]['startDate'] = null;
-            }
+            $value['imposedErrus'][$key]['startDate'] =
+                isset($dates['startDate']) ? $this->createDate($dates['startDate']) : null;
 
-            if (isset($dates['endDate'])) {
-                $value['imposedErrus'][$key]['endDate'] = $this->createDate($dates['endDate']);
-            } else {
-                $value['imposedErrus'][$key]['endDate'] = null;
-            }
+            $value['imposedErrus'][$key]['endDate'] =
+                isset($dates['endDate']) ? $this->createDate($dates['endDate']) : null;
 
             $value['imposedErrus'][$key]['finalDecisionDate'] = $this->createDate($dates['finalDecisionDate']);
         }
