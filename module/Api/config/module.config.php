@@ -90,6 +90,11 @@ return [
             'EbsrShortNoticeInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory::class,
             'TrafficAreaValidator' => \Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator::class,
 
+            'ComplianceEpisodeInput' => \Dvsa\Olcs\Api\Service\Nr\InputFilter\ComplianceEpisodeInputFactory::class,
+            'ComplianceXmlStructure' => \Dvsa\Olcs\Api\Service\Nr\InputFilter\XmlStructureInputFactory::class,
+            'SeriousInfringementInput' => \Dvsa\Olcs\Api\Service\Nr\InputFilter\SeriousInfringementInputFactory::class,
+            'ComplianceEpisodeXmlMapping' => \Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXmlFactory::class,
+
             \Dvsa\Olcs\Api\Service\Nr\InrClientInterface::class => Dvsa\Olcs\Api\Service\Nr\InrClientFactory::class,
             \Dvsa\Olcs\Api\Service\Nr\MsiResponse::class => \Dvsa\Olcs\Api\Service\Nr\MsiResponseFactory::class
         ],
@@ -280,6 +285,10 @@ return [
             'Printer' => RepositoryFactory::class,
             'SeriousInfringement' => RepositoryFactory::class,
             'SiPenalty' => RepositoryFactory::class,
+            'SiCategory' => RepositoryFactory::class,
+            'SiCategoryType' => RepositoryFactory::class,
+            'SiPenaltyRequestedType' => RepositoryFactory::class,
+            'SiPenaltyImposedType' => RepositoryFactory::class,
             'Country' => RepositoryFactory::class,
             'PresidingTc' => RepositoryFactory::class,
             'RefData' => RepositoryFactory::class,
@@ -582,7 +591,8 @@ return [
     'xsd_mappings' =>[
         'http://www.w3.org/2001/xml.xsd' => __DIR__ . '/../data/ebsr/xsd/xml.xsd',
         'http://www.transxchange.org.uk/schema/2.1/TransXChange_registration.xsd' =>
-            __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.1/TransXChange_registration.xsd'
+            __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.1/TransXChange_registration.xsd',
+        'ERRU2MS_Infringement_Req.xsd' => __DIR__ . '/../data/nr/xsd/ERRU2MS_Infringement_Req.xsd'
     ],
     'validators' => [
         'invokables' => [
@@ -615,7 +625,12 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingSection::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingSection::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason::class
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason::class,
+            \Dvsa\Olcs\Api\Service\Nr\Validator\SiPenaltyImposedDate::class =>
+                \Dvsa\Olcs\Api\Service\Nr\Validator\SiPenaltyImposedDate::class
+        ],
+        'factories' => [
+            \Dvsa\Olcs\Api\Service\Nr\Validator\Vrm::class => \Dvsa\Olcs\Api\Service\Nr\Validator\VrmFactory::class
         ],
         'aliases' => [
             'Structure\Operator' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class,
@@ -660,7 +675,15 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class,
+            \Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted::class =>
+                \Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted::class,
+            \Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates::class =>
+                \Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates::class
+
+        ],
+        'factories' => [
+            \Dvsa\Olcs\Api\Service\Nr\Filter\Vrm::class => \Dvsa\Olcs\Api\Service\Nr\Filter\VrmFactory::class
         ],
         'aliases' => [
             'IsScottishRules' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
@@ -669,7 +692,7 @@ return [
             'InjectNaptanCodes' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes::class,
             'Format\Subsidy' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class,
             'Format\Via' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class,
-            'Format\ExistingRegNo' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class,
+            'Format\ExistingRegNo' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class
         ]
     ],
 ];

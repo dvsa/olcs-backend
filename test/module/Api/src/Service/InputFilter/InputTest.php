@@ -1,10 +1,10 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Ebsr\InputFilter;
+namespace Dvsa\OlcsTest\Api\Service\InputFilter;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\Input;
+use Dvsa\Olcs\Api\Service\InputFilter\Input;
 
 /**
  * Class InputTest

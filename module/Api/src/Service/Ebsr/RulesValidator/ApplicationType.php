@@ -11,7 +11,7 @@ use Zend\Validator\Exception;
  */
 class ApplicationType extends AbstractValidator
 {
-    const RULES_ERROR = 'rules-error';
+    const RULES_ERROR = 'app-type-error';
 
     /**
      * @var array

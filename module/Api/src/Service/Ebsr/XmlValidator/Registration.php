@@ -11,7 +11,7 @@ use Zend\Validator\Exception;
  */
 class Registration extends AbstractValidator
 {
-    const STRUCTURE_ERROR = 'structure-error';
+    const STRUCTURE_ERROR = 'registration-structure-error';
 
     /**
      * @var array

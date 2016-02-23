@@ -1276,7 +1276,10 @@ return array(
         'serious_infringement_id' => array(
             'inversedBy' => array(
                 'entity' => 'SeriousInfringement',
-                'property' => 'imposedErru'
+                'property' => 'imposedErru',
+                'cascade' => array(
+                    'persist'
+                )
             )
         )
     ),
@@ -1284,7 +1287,10 @@ return array(
         'serious_infringement_id' => array(
             'inversedBy' => array(
                 'entity' => 'SeriousInfringement',
-                'property' => 'requestedErru'
+                'property' => 'requestedErru',
+                'cascade' => array(
+                    'persist'
+                )
             )
         )
     ),
