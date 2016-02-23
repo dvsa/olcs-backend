@@ -66,6 +66,7 @@ class SeriousInfringementTest extends RepositoryTestCase
             ->andReturn($comparison);
         $qb->shouldReceive('where')->with($comparison)->once()->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('notificationNumber', $notificationNumber)->once()->andReturnSelf();
+        $qb->shouldReceive('setMaxResults')->with(1)->once()->andReturnSelf();
         $qb->shouldReceive('getQuery->getResult')->with()->once()->andReturn($results);
 
         $this->assertSame($expectedReturnValue, $this->sut->fetchByNotificationNumber($notificationNumber));
@@ -79,7 +80,7 @@ class SeriousInfringementTest extends RepositoryTestCase
     public function fetchByNotificationNumberProvider()
     {
         return [
-            [[], []],
+            [[], null],
             [[0 => 'result'], 'result']
         ];
     }

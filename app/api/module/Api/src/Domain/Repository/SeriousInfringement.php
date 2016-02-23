@@ -28,7 +28,7 @@ class SeriousInfringement extends AbstractRepository
      *
      * @param string $notificationNumber
      *
-     * @return Entity
+     * @return Entity|null
      */
     public function fetchByNotificationNumber($notificationNumber)
     {
@@ -37,7 +37,8 @@ class SeriousInfringement extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($dqb);
 
         $dqb->where($dqb->expr()->eq($this->alias .'.notificationNumber', ':notificationNumber'))
-            ->setParameter('notificationNumber', $notificationNumber);
+            ->setParameter('notificationNumber', $notificationNumber)
+            ->setMaxResults(1);
 
         $results = $dqb->getQuery()->getResult();
 
@@ -45,6 +46,6 @@ class SeriousInfringement extends AbstractRepository
             return $results[0];
         }
 
-        return $results;
+        return null;
     }
 }
