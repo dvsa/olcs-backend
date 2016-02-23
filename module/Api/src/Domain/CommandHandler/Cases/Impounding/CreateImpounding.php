@@ -214,9 +214,10 @@ final class CreateImpounding extends AbstractCommandHandler implements Transacti
     private function determinePublicInquiry()
     {
         if (count($this->case->getPublicInquirys()) > 0) {
-            return $this->case->getPublicInquirys()[0];
+            return $this->case->getPublicInquirys()[0]->getId();
         }
 
         return null;
     }
+
 }
