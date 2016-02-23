@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Ebsr\InputFilter;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Service\InputFilter\Input;
 
 /**
  * Class BusRegistrationInputFactory

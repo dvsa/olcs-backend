@@ -22,4 +22,30 @@ class SeriousInfringement extends AbstractRepository
 
         parent::applyListFilters($qb, $query);
     }
+
+    /**
+     * Get a serious infringement by the notification number
+     *
+     * @param string $notificationNumber
+     *
+     * @return Entity|null
+     */
+    public function fetchByNotificationNumber($notificationNumber)
+    {
+        $dqb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($dqb);
+
+        $dqb->where($dqb->expr()->eq($this->alias .'.notificationNumber', ':notificationNumber'))
+            ->setParameter('notificationNumber', $notificationNumber)
+            ->setMaxResults(1);
+
+        $results = $dqb->getQuery()->getResult();
+
+        if (!empty($results)) {
+            return $results[0];
+        }
+
+        return null;
+    }
 }

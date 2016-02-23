@@ -766,7 +766,7 @@ class SubmissionSectionTest extends MockeryTestCase
 
     protected function generateSeriousInfringement($id, CasesEntity $case)
     {
-        $entity = new SeriousInfringement();
+        $entity = m::mock(SeriousInfringement::class)->makePartial();
         $entity->setId($id);
         $entity->setVersion(($id+2));
         $entity->setSiCategory($this->generateSiCategory(274, 'sicatdesc'));
@@ -799,7 +799,7 @@ class SubmissionSectionTest extends MockeryTestCase
     protected function generateAppliedPenalty($id)
     {
         $entity = new SiPenalty(
-            new SeriousInfringement(),
+            m::mock(SeriousInfringement::class)->makePartial(),
             $this->generateSiPenaltyType(533),
             'imposed',
             new \DateTime('2013-06-31'),
@@ -814,7 +814,7 @@ class SubmissionSectionTest extends MockeryTestCase
 
     protected function generateImposedErru($id = 101)
     {
-        $entity = new SiPenaltyErruImposed();
+        $entity = m::mock(SiPenaltyErruImposed::class)->makePartial();
         $entity->setId($id);
         $entity->setVersion(23);
         $entity->setSiPenaltyImposedType($this->generateSiPenaltyImposedType(42));
@@ -828,7 +828,7 @@ class SubmissionSectionTest extends MockeryTestCase
 
     protected function generateRequestedErru($id = 101)
     {
-        $entity = new SiPenaltyErruRequested();
+        $entity = m::mock(SiPenaltyErruRequested::class)->makePartial();
         $entity->setId($id);
         $entity->setVersion(34);
         $entity->setSiPenaltyRequestedType($this->generateSiPenaltyRequestedType(952));

@@ -1,12 +1,12 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Ebsr\InputFilter;
+namespace Dvsa\Olcs\Api\Service\InputFilter;
 
 use Zend\InputFilter\Input as ZendInput;
 
 /**
  * Class Input
- * @package Olcs\Ebsr\InputFilter
+ * @package Dvsa\Olcs\Api\Service\InputFilter
  */
 class Input extends ZendInput
 {

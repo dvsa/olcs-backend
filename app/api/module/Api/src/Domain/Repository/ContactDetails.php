@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as Entity;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
 
@@ -29,7 +29,7 @@ class ContactDetails extends AbstractRepository
     {
         if (!empty($contactParams['address']['countryCode'])) {
             $contactParams['address']['countryCode'] = $this->getReference(
-                Country::class, $contactParams['address']['countryCode']
+                CountryEntity::class, $contactParams['address']['countryCode']
             );
         }
 
@@ -57,7 +57,7 @@ class ContactDetails extends AbstractRepository
     {
         if (!empty($contactParams['address']['countryCode'])) {
             $contactParams['address']['countryCode'] = $this->getReference(
-                Country::class, $contactParams['address']['countryCode']
+                CountryEntity::class, $contactParams['address']['countryCode']
             );
         }
 

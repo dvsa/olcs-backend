@@ -153,6 +153,7 @@ return [
     TransferCommand\Cases\Si\Applied\Create::class => CommandHandler\Cases\Si\Applied\Create::class,
     TransferCommand\Cases\Si\Applied\Update::class => CommandHandler\Cases\Si\Applied\Update::class,
     TransferCommand\Cases\Si\SendResponse::class => CommandHandler\Cases\Si\SendResponse::class,
+    TransferCommand\Cases\Si\ComplianceEpisode::class => CommandHandler\Cases\Si\ComplianceEpisode::class,
 
     // Transfer - Bus
     TransferCommand\Bus\CreateBus::class => CommandHandler\Bus\CreateBus::class,
