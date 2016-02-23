@@ -255,10 +255,10 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
      */
     private function addDoctrineCategoryTypeData($categoryType)
     {
-        /** @var SiCategoryTypeRepo $categoryTypeRepo */
-        $categoryTypeRepo = $this->getRepo('SiCategoryType');
-
         if (!isset($this->siCategoryType[$categoryType])) {
+            /** @var SiCategoryTypeRepo $categoryTypeRepo */
+            $categoryTypeRepo = $this->getRepo('SiCategoryType');
+
             $this->siCategoryType[$categoryType] = $categoryTypeRepo->fetchById($categoryType);
         }
     }
