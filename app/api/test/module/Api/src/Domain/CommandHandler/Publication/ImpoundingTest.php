@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationPoliceData as PoliceEntity;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Domain\Command\Result as ResultCmd;
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedImpounding as UnpublishedPiQry;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedImpounding as UnpublishedImpoundingQry;
 
 /**
  * Publish Impounding Test
@@ -152,7 +152,7 @@ class ImpoundingTest extends CommandHandlerTestCase
 
         $this->repoMap['PublicationLink']
             ->shouldReceive('fetchSingleUnpublished')
-            ->with(m::type(UnpublishedPiQry::class))
+            ->with(m::type(UnpublishedImpoundingQry::class))
             ->andReturn($publicationLinkMock)
             ->shouldReceive('save')
             ->with(m::type(PublicationLinkEntity::class))
@@ -234,7 +234,7 @@ class ImpoundingTest extends CommandHandlerTestCase
 
         $this->repoMap['PublicationLink']
             ->shouldReceive('fetchSingleUnpublished')
-            ->with(m::type(UnpublishedPiQry::class))
+            ->with(m::type(UnpublishedImpoundingQry::class))
             ->andReturn($publicationLinkMock)
             ->shouldReceive('save')
             ->with(m::type(PublicationLinkEntity::class))
