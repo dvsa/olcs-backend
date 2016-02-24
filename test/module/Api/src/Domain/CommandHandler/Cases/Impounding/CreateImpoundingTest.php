@@ -7,14 +7,22 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Impounding;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Transfer\FieldType\Traits\TrafficArea;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Impounding\CreateImpounding;
 use Dvsa\Olcs\Api\Domain\Repository\Impounding;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Impounding\CreateImpounding as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding as ImpoundingEntity;
-use Dvsa\Olcs\Api\Entity\Cases\Cases;
-use Dvsa\Olcs\Api\Entity\Venue;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
+use Dvsa\Olcs\Api\Domain\Command\Publication\Impounding as PublishImpoundingCmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * Create Impounding Test
@@ -34,22 +42,38 @@ class CreateImpoundingTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            'impt_hearing'
+            'impt_hearing',
+            CasesEntity::APP_CASE_TYPE,
+            CasesEntity::LICENCE_CASE_TYPE,
+            LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
+            LicenceEntity::LICENCE_CATEGORY_PSV,
         ];
 
         $this->references = [
-            Cases::class => [
-                24 => m::mock(Cases::class)
+            CasesEntity::class => [
+                24 => m::mock(CasesEntity::class)->makePartial()
             ],
-            Venue::class => [
-                8 => m::mock(Venue::class)
+            VenueEntity::class => [
+                8 => m::mock(VenueEntity::class)->makePartial()
+            ],
+            LicenceEntity::class => [
+                7 => m::mock(LicenceEntity::class)->makePartial()
+            ],
+            ApplicationEntity::class => [
+                1 => m::mock(ApplicationEntity::class)->makePartial()
+            ],
+            TrafficAreaEntity::class => [
+                'B' => m::mock(TrafficAreaEntity::class)->makePartial()
+            ],
+            PiEntity::class => [
+                77 => m::mock(PiEntity::class)->makePartial()
             ]
         ];
 
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    public function testHandleCommandWithoutPublish()
     {
         $command = Cmd::create(
             [
@@ -76,7 +100,7 @@ class CreateImpoundingTest extends CommandHandlerTestCase
             ]
         );
 
-        /** @var ImpoundingEntity $app */
+        /** @var ImpoundingEntity $imp */
         $imp = null;
 
         $this->repoMap['Impounding']
@@ -96,5 +120,192 @@ class CreateImpoundingTest extends CommandHandlerTestCase
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
         $this->assertContains('Impounding created', $result->getMessages());
+    }
+
+    /**
+     * @dataProvider provideImpoundingLicencePublishCommands
+     * @param $licType Goods or PSV
+     * @param $commandData Expected Command Data for publish
+     */
+    public function testHandleCommandWithPublishForLicenceCases($licType, $commandData)
+    {
+        $command = Cmd::create(
+            [
+                'id' => 5,
+                'version' => 4,
+                'case' => 24,
+                'impoundingType' => 'impt_hearing',
+                'publish' => 'Y'
+            ]
+        );
+
+        $this->references[CasesEntity::class][24]->shouldReceive('getCaseType')
+            ->andReturn($this->refData[CasesEntity::LICENCE_CASE_TYPE])
+            ->shouldReceive('getLicence')
+            ->andReturn($this->references[LicenceEntity::class][7]);
+
+        $this->references[TrafficAreaEntity::class]['B']->shouldReceive('getId')
+            ->andReturn('B');
+
+        $this->references[LicenceEntity::class][7]->shouldReceive('getTrafficArea')
+            ->andReturn($this->references[TrafficAreaEntity::class]['B']);
+
+        $this->references[LicenceEntity::class][7]->shouldReceive('getGoodsOrPsv->getId')
+            ->andReturn($licType);
+
+        /** @var ImpoundingEntity $imp */
+        $imp = null;
+
+        $this->repoMap['Impounding']
+            ->shouldReceive('save')
+            ->with(m::type(ImpoundingEntity::class))
+            ->andReturnUsing(
+                function (ImpoundingEntity $impounding) use (&$imp) {
+                    $imp = $impounding;
+                    $impounding->setId(99);
+                }
+            )
+            ->once();
+
+        $this->expectedSideEffect(
+            PublishImpoundingCmd::class,
+            $commandData,
+            (new Result())->addMessage('Impounding published')
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
+        $this->assertObjectHasAttribute('ids', $result);
+        $this->assertObjectHasAttribute('messages', $result);
+        $this->assertContains('Impounding created', $result->getMessages());
+        $this->assertContains('Impounding published', $result->getMessages());
+    }
+
+    /**
+     * @dataProvider provideImpoundingApplicationPublishCommands
+     * @param $licType Goods or PSV
+     * @param $commandData Expected Command Data for publish
+     */
+    public function testHandleCommandWithPublishForApplicationCases($licType, $commandData)
+    {
+        $command = Cmd::create(
+            [
+                'id' => 5,
+                'version' => 4,
+                'case' => 24,
+                'impoundingType' => 'impt_hearing',
+                'publish' => 'Y'
+            ]
+        );
+
+        $this->references[ApplicationEntity::class][1]->shouldReceive('getLicence')
+            ->andReturn($this->references[LicenceEntity::class][7]);
+
+        $this->references[CasesEntity::class][24]->shouldReceive('getCaseType')
+            ->andReturn($this->refData[CasesEntity::APP_CASE_TYPE])
+            ->shouldReceive('getApplication')
+            ->andReturn($this->references[ApplicationEntity::class][1])
+            ->shouldReceive('getPublicInquirys')
+            ->andReturn(new ArrayCollection([$this->references[PiEntity::class][77]]));
+
+        $this->references[TrafficAreaEntity::class]['B']->shouldReceive('getId')
+            ->andReturn('B');
+
+        $this->references[LicenceEntity::class][7]->shouldReceive('getTrafficArea')
+            ->andReturn($this->references[TrafficAreaEntity::class]['B']);
+
+        $this->references[ApplicationEntity::class][1]->shouldReceive('getGoodsOrPsv->getId')
+            ->andReturn($licType);
+
+        /** @var ImpoundingEntity $imp */
+        $imp = null;
+
+        $this->repoMap['Impounding']
+            ->shouldReceive('save')
+            ->with(m::type(ImpoundingEntity::class))
+            ->andReturnUsing(
+                function (ImpoundingEntity $impounding) use (&$imp) {
+                    $imp = $impounding;
+                    $impounding->setId(99);
+                }
+            )
+            ->once();
+
+        $this->expectedSideEffect(
+            PublishImpoundingCmd::class,
+            $commandData,
+            (new Result())->addMessage('Impounding published')
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
+        $this->assertObjectHasAttribute('ids', $result);
+        $this->assertObjectHasAttribute('messages', $result);
+        $this->assertContains('Impounding created', $result->getMessages());
+        $this->assertContains('Impounding published', $result->getMessages());
+    }
+
+    /**
+     * Provides licence type and expected publish command data for cases attached to licence
+     * @return array
+     */
+    public function provideImpoundingLicencePublishCommands()
+    {
+        return [
+            [
+                LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
+                [
+                    'id' => 99,
+                    'trafficArea' => 'B',
+                    'pi' => null,
+                    'pubType' => 'A&D',
+                    'licence' => 7
+                ]
+            ],
+            [
+                LicenceEntity::LICENCE_CATEGORY_PSV,
+                [
+                    'id' => 99,
+                    'trafficArea' => 'B',
+                    'pi' => null,
+                    'pubType' => 'N&P',
+                    'licence' => 7
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * Provides licence type and expected publish command data for cases attached to application
+     * @return array
+     */
+    public function provideImpoundingApplicationPublishCommands()
+    {
+        return [
+            [
+                LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
+                [
+                    'id' => 99,
+                    'trafficArea' => 'B',
+                    'pi' => 77,
+                    'pubType' => 'A&D',
+                    'application' => 1,
+                    'licence' => null
+                ]
+            ],
+            [
+                LicenceEntity::LICENCE_CATEGORY_PSV,
+                [
+                    'id' => 99,
+                    'trafficArea' => 'B',
+                    'pi' => 77,
+                    'pubType' => 'N&P',
+                    'application' => 1,
+                    'licence' => null
+                ]
+            ]
+        ];
     }
 }

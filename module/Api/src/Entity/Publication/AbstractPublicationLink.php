@@ -26,6 +26,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_publication_link_traffic_area_id", columns={"traffic_area_id"}),
  *        @ORM\Index(name="ix_publication_link_application_id", columns={"application_id"}),
  *        @ORM\Index(name="ix_publication_link_bus_reg_id", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="ix_publication_link_impounding_id", columns={"impounding_id"}),
  *        @ORM\Index(name="ix_publication_link_publication_section_id",
      *     columns={"publication_section_id"}),
  *        @ORM\Index(name="ix_publication_link_created_by", columns={"created_by"}),
@@ -108,6 +109,16 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * Impounding
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Cases\Impounding
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Impounding", fetch="LAZY")
+     * @ORM\JoinColumn(name="impounding_id", referencedColumnName="id", nullable=true)
+     */
+    protected $impounding;
 
     /**
      * Last modified by
@@ -427,6 +438,29 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the impounding
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Impounding $impounding
+     * @return PublicationLink
+     */
+    public function setImpounding($impounding)
+    {
+        $this->impounding = $impounding;
+
+        return $this;
+    }
+
+    /**
+     * Get the impounding
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Cases\Impounding
+     */
+    public function getImpounding()
+    {
+        return $this->impounding;
     }
 
     /**
