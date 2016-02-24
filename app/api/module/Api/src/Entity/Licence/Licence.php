@@ -504,7 +504,9 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     {
         $count = 0;
         foreach ($this->getCases() as $case) {
-            $count += count($case->getPublicInquirys());
+            if (!empty($case->getPublicInquiry())) {
+                $count++;
+            }
         }
         return $count;
     }
