@@ -57,7 +57,7 @@ class OperatingCentres extends AbstractQueryHandler implements AuthAwareInterfac
             ],
             [
                 'requiresVariation' => false,
-                'operatingCentres' => $this->getAocData($application),
+                'operatingCentres' => $this->getAocData($application, $query),
                 'totCommunityLicences' => $this->getTotCommunityLicences($application),
                 'isPsv' => $application->isPsv(),
                 'canHaveCommunityLicences' => $application->canHaveCommunityLicences(),
@@ -137,13 +137,13 @@ class OperatingCentres extends AbstractQueryHandler implements AuthAwareInterfac
         return $application->getTotCommunityLicences();
     }
 
-    protected function getAocData(ApplicationEntity $application)
+    protected function getAocData(ApplicationEntity $application, $query)
     {
         if (!$application->isVariation()) {
             return $this->getRepo('ApplicationOperatingCentre')
-                ->fetchByApplicationIdForOperatingCentres($application->getId());
+                ->fetchByApplicationIdForOperatingCentres($application->getId(), $query);
         }
 
-        return $this->variationHelper->getListDataForApplication($application);
+        return $this->variationHelper->getListDataForApplication($application, $query);
     }
 }

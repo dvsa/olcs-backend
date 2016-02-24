@@ -22,7 +22,7 @@ class SubCategoryTest extends RepositoryTestCase
 
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
-            ->shouldReceive('order')->with('id', 'ASC')->once()->andReturnSelf()
+            ->shouldReceive('order')->with('id', 'ASC', [])->once()->andReturnSelf()
             ->shouldReceive('withRefdata')->once()->andReturnSelf();
 
         $dto = \Dvsa\Olcs\Transfer\Query\SubCategory\GetList::create(
@@ -46,7 +46,7 @@ class SubCategoryTest extends RepositoryTestCase
 
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
-            ->shouldReceive('order')->with('id', 'ASC')->once()->andReturnSelf()
+            ->shouldReceive('order')->with('id', 'ASC', [])->once()->andReturnSelf()
             ->shouldReceive('withRefdata')->once()->andReturnSelf();
 
         $dto = \Dvsa\Olcs\Transfer\Query\SubCategory\GetList::create(
@@ -78,7 +78,7 @@ class SubCategoryTest extends RepositoryTestCase
 
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
-            ->shouldReceive('order')->with('id', 'ASC')->once()->andReturnSelf()
+            ->shouldReceive('order')->with('id', 'ASC', [])->once()->andReturnSelf()
             ->shouldReceive('withRefdata')->once()->andReturnSelf();
 
         $dto = \Dvsa\Olcs\Transfer\Query\SubCategory\GetList::create(
