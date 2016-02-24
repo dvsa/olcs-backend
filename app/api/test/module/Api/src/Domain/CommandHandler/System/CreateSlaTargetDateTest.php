@@ -27,7 +27,7 @@ class CreateSlaTargetDateTest extends CommandHandlerTestCase
         $this->sut = new CommandHandler();
         $this->mockRepo('SlaTargetDate', Repo::class);
         $this->mockRepo('User', UserRepo::class);
-        $this->mockRepo('document', DocumentRepo::class);
+        $this->mockRepo('Document', DocumentRepo::class);
 
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class)
@@ -84,7 +84,7 @@ class CreateSlaTargetDateTest extends CommandHandlerTestCase
 
         $mockEntity = $this->getMockEntity($command->getEntityType(), $command->getEntityId());
 
-        $this->repoMap['document']
+        $this->repoMap['Document']
             ->shouldReceive('fetchById')
             ->once()
             ->andReturn($mockEntity);
@@ -131,10 +131,7 @@ class CreateSlaTargetDateTest extends CommandHandlerTestCase
             ->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
 
-        /** @var Entity $savedSlaTargetDate */
-        $savedSlaTargetDate = null;
-
-        $this->repoMap['document']
+        $this->repoMap['Document']
             ->shouldReceive('fetchById')
             ->once()
             ->andReturnNull();
