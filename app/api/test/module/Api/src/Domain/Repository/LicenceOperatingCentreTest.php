@@ -9,6 +9,9 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Domain\Repository\LicenceOperatingCentre as Repo;
 use Mockery as m;
+use Dvsa\Olcs\Transfer\Query\Licence\OperatingCentres as Qry;
+use Doctrine\ORM\Query\Expr\Join;
+use Dvsa\Olcs\Api\Entity\Cases\Complaint;
 
 /**
  * LicenceOperatingCentreTest
@@ -48,9 +51,9 @@ class LicenceOperatingCentreTest extends RepositoryTestCase
         $this->mockCreateQueryBuilder($qb);
 
         $qb->shouldReceive('getQuery->getArrayResult')
-            ->andReturn(['foo' => 'bar']);
+            ->andReturn(['foo']);
 
-        $this->assertEquals(['foo' => 'bar'], $this->sut->fetchByLicenceIdForOperatingCentres(111));
+        $this->assertEquals(['foo'], $this->sut->fetchByLicenceIdForOperatingCentres(111));
 
         $expected = implode(
             ' ',
@@ -72,5 +75,82 @@ class LicenceOperatingCentreTest extends RepositoryTestCase
         );
 
         $this->assertEquals($expected, $this->query);
+    }
+
+    public function testFetchByLicenceIdForOperatingCentresWithQuery()
+    {
+        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $qb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $query = Qry::create(['sort' => 'adr', 'order' => 'ASC']);
+
+        $sut->shouldReceive('createQueryBuilder')->with()->once()->andReturn($qb);
+
+        $qb->shouldReceive('leftJoin')->with('loc.s4', 's4')->once();
+        $qb->shouldReceive('innerJoin')->with('loc.operatingCentre', 'oc')->once();
+        $qb->shouldReceive('innerJoin')->with('oc.address', 'oca')->once();
+        $qb->shouldReceive('leftJoin')->with('oca.countryCode', 'ocac')->once();
+        $qb->shouldReceive('expr->eq')->with('occ.status', ':complaintStatus')->andReturn('exp1')->once();
+        $qb->shouldReceive('leftJoin')->with('oc.complaints', 'occ', Join::WITH, 'exp1')->once();
+        $qb->shouldReceive('setParameter')->with('complaintStatus', Complaint::COMPLAIN_STATUS_OPEN)->once();
+        $qb->shouldReceive('expr->eq')->with('loc.licence', ':licence')->andReturn('exp2')->once();
+        $qb->shouldReceive('andWhere')->with('exp2')->once();
+        $qb->shouldReceive('setParameter')->with('licence', 1)->once();
+        $qb->shouldReceive('addSelect')->with('s4')->once();
+        $qb->shouldReceive('addSelect')->with('oc')->once();
+        $qb->shouldReceive('addSelect')->with('oca')->once();
+        $qb->shouldReceive('addSelect')->with('ocac')->once();
+        $qb->shouldReceive('addSelect')->with('occ')->once();
+        $qb->shouldReceive('addSelect')
+            ->with('concat(oca.addressLine1,oca.addressLine2,oca.addressLine3,oca.addressLine4,oca.town) as adr')
+            ->once();
+        $sut->shouldReceive('buildDefaultListQuery')
+            ->with($qb, $query, ['adr'])
+            ->once()
+            ->getMock();
+
+        $qb->shouldReceive('getQuery->getArrayResult')
+            ->andReturn(['foo' => 'bar']);
+
+        $sut->shouldReceive('maybeRemoveAdrColumn')
+            ->with(['foo' => 'bar'])
+            ->andReturn(['foo' => 'bar'])
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(['foo' => 'bar'], $sut->fetchByLicenceIdForOperatingCentres(1, $query));
+    }
+
+    public function testMaybeRemoveAdrColumn()
+    {
+        $data = [
+            [
+                0 => [
+                    'operatingCentre' => 'foo'
+                ],
+                'adr' => 'bar'
+            ],
+            [
+                0 => [
+                    'operatingCentre' => 'cake'
+                ],
+                'adr' => 'baz'
+            ],
+            [
+                'operatingCentre' => 'baz'
+            ]
+        ];
+        $expected = [
+            [
+                'operatingCentre' => 'foo'
+            ],
+            [
+                'operatingCentre' => 'cake'
+            ],
+            [
+                'operatingCentre' => 'baz'
+            ],
+        ];
+
+        $this->assertEquals($expected, $this->sut->maybeRemoveAdrColumn($data));
     }
 }

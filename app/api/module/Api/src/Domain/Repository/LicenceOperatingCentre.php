@@ -42,7 +42,7 @@ class LicenceOperatingCentre extends AbstractRepository
         return $dqb->getQuery()->getResult();
     }
 
-    public function fetchByLicenceIdForOperatingCentres($licenceId)
+    public function fetchByLicenceIdForOperatingCentres($licenceId, $query = null)
     {
         $qb = $this->createQueryBuilder();
 
@@ -64,8 +64,37 @@ class LicenceOperatingCentre extends AbstractRepository
         $qb->addSelect('ocac');
         $qb->addSelect('occ');
 
-        $qb->orderBy('oca.id', 'ASC');
+        if (method_exists($query, 'getSort') && $query->getSort()) {
+            $qb->addSelect(
+                'concat(oca.addressLine1,oca.addressLine2,oca.addressLine3,oca.addressLine4,oca.town) as adr'
+            );
+            $this->buildDefaultListQuery($qb, $query, ['adr']);
+        } else {
+            $qb->orderBy('oca.id', 'ASC');
+        }
+        return $this->maybeRemoveAdrColumn($qb->getQuery()->getArrayResult());
+    }
 
-        return $qb->getQuery()->getArrayResult();
+    /**
+     * Doctrine creates another one nested array level for O/C in case of composite expression usage.
+     * We needed this column just for sorting so removing it after getting result.
+     *
+     * @param $result
+     * @return array
+     */
+    public function maybeRemoveAdrColumn($result)
+    {
+        if (is_array($result)) {
+            $mergedOc = [];
+            foreach ($result as $oc) {
+                if (isset($oc['adr'])) {
+                    $mergedOc[] = $oc[0];
+                } else {
+                    $mergedOc[] = $oc;
+                }
+            }
+            $result = $mergedOc;
+        }
+        return $result;
     }
 }

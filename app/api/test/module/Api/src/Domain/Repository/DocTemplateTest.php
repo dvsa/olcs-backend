@@ -23,7 +23,7 @@ class DocTemplateTest extends RepositoryTestCase
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
             ->shouldReceive('withRefdata')->with()->once()->andReturnSelf()
-            ->shouldReceive('order')->with('id', 'ASC')->once()->andReturnSelf();
+            ->shouldReceive('order')->with('id', 'ASC', [])->once()->andReturnSelf();
 
         $dto = \Dvsa\Olcs\Transfer\Query\DocTemplate\GetList::create(
             []
@@ -47,7 +47,7 @@ class DocTemplateTest extends RepositoryTestCase
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
             ->shouldReceive('withRefdata')->with()->once()->andReturnSelf()
-            ->shouldReceive('order')->with('id', 'ASC')->once()->andReturnSelf();
+            ->shouldReceive('order')->with('id', 'ASC', [])->once()->andReturnSelf();
 
         $dto = \Dvsa\Olcs\Transfer\Query\DocTemplate\GetList::create(
             [

@@ -11,6 +11,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre as Repo;
 use Dvsa\Olcs\Api\Entity;
 use Mockery as m;
+use Dvsa\Olcs\Transfer\Query\Application\OperatingCentres as Qry;
+use Doctrine\ORM\Query\Expr\Join;
+use Dvsa\Olcs\Api\Entity\Cases\Complaint;
 
 /**
  * ApplicationOperatingCentreTest
@@ -64,6 +67,20 @@ class ApplicationOperatingCentreTest extends RepositoryTestCase
 
     public function testFetchByApplicationIdForOperatingCentres()
     {
+        $mockRepoServiceManager = m::mock(\Dvsa\Olcs\Api\Domain\RepositoryServiceManager::class)
+            ->shouldReceive('get')
+            ->with('LicenceOperatingCentre')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('maybeRemoveAdrColumn')
+                    ->andReturn(['foo' => 'bar'])
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->getMock();
+        $this->sut->initService($mockRepoServiceManager);
+
         $qb = $this->createMockQb('{QUERY}');
         $this->mockCreateQueryBuilder($qb);
 
@@ -92,6 +109,57 @@ class ApplicationOperatingCentreTest extends RepositoryTestCase
         );
 
         $this->assertEquals($expected, $this->query);
+    }
+
+    public function testFetchByApplicationIdForOperatingCentresWithQuery()
+    {
+        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $qb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $query = Qry::create(['sort' => 'adr', 'order' => 'ASC']);
+
+        $sut->shouldReceive('createQueryBuilder')->with()->once()->andReturn($qb);
+
+        $qb->shouldReceive('leftJoin')->with('aoc.s4', 's4')->once();
+        $qb->shouldReceive('innerJoin')->with('aoc.operatingCentre', 'oc')->once();
+        $qb->shouldReceive('innerJoin')->with('oc.address', 'oca')->once();
+        $qb->shouldReceive('leftJoin')->with('oca.countryCode', 'ocac')->once();
+        $qb->shouldReceive('expr->eq')->with('occ.status', ':complaintStatus')->andReturn('exp1')->once();
+        $qb->shouldReceive('leftJoin')->with('oc.complaints', 'occ', Join::WITH, 'exp1')->once();
+        $qb->shouldReceive('setParameter')->with('complaintStatus', Complaint::COMPLAIN_STATUS_OPEN)->once();
+        $qb->shouldReceive('expr->eq')->with('aoc.application', ':application')->andReturn('exp2')->once();
+        $qb->shouldReceive('andWhere')->with('exp2')->once();
+        $qb->shouldReceive('setParameter')->with('application', 1)->once();
+        $qb->shouldReceive('addSelect')->with('s4')->once();
+        $qb->shouldReceive('addSelect')->with('oc')->once();
+        $qb->shouldReceive('addSelect')->with('oca')->once();
+        $qb->shouldReceive('addSelect')->with('ocac')->once();
+        $qb->shouldReceive('addSelect')->with('occ')->once();
+        $qb->shouldReceive('addSelect')
+            ->with('concat(oca.addressLine1,oca.addressLine2,oca.addressLine3,oca.addressLine4,oca.town) as adr')
+            ->once();
+        $sut->shouldReceive('buildDefaultListQuery')
+            ->with($qb, $query, ['adr'])
+            ->once()
+            ->getMock();
+
+        $qb->shouldReceive('getQuery->getArrayResult')
+            ->andReturn(['foo' => 'bar']);
+
+        $mockRepoServiceManager = m::mock(\Dvsa\Olcs\Api\Domain\RepositoryServiceManager::class)
+            ->shouldReceive('get')
+            ->with('LicenceOperatingCentre')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('maybeRemoveAdrColumn')
+                    ->andReturn(['foo' => 'bar'])
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->getMock();
+        $sut->initService($mockRepoServiceManager);
+
+        $this->assertEquals(['foo' => 'bar'], $sut->fetchByApplicationIdForOperatingCentres(1, $query));
     }
 
     public function testFindCorrespondingLoc()
