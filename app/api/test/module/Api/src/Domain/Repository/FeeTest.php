@@ -322,7 +322,7 @@ class FeeTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('order')
             ->once()
-            ->with('id', 'ASC')
+            ->with('id', 'ASC', [])
             ->andReturnSelf()
             ->shouldReceive('withCreatedBy')
             ->once()

@@ -73,7 +73,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
             ->andReturn($application);
 
         $this->repoMap['ApplicationOperatingCentre']->shouldReceive('fetchByApplicationIdForOperatingCentres')
-            ->with(111)
+            ->with(111, $query)
             ->andReturn(['a', 'b']);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
@@ -157,7 +157,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
 
         $this->mockedSmServices['VariationOperatingCentreHelper']
             ->shouldReceive('getListDataForApplication')
-            ->with($application)
+            ->with($application, $query)
             ->andReturn(['a', 'b']);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
@@ -242,7 +242,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
 
         $this->mockedSmServices['VariationOperatingCentreHelper']
             ->shouldReceive('getListDataForApplication')
-            ->with($application)
+            ->with($application, $query)
             ->andReturn(['a', 'b']);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
@@ -328,7 +328,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
 
         $this->mockedSmServices['VariationOperatingCentreHelper']
             ->shouldReceive('getListDataForApplication')
-            ->with($application)
+            ->with($application, $query)
             ->andReturn(['a', 'b']);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
@@ -414,7 +414,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
 
         $this->mockedSmServices['VariationOperatingCentreHelper']
             ->shouldReceive('getListDataForApplication')
-            ->with($application)
+            ->with($application, $query)
             ->andReturn(['a', 'b']);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')

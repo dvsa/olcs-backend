@@ -63,10 +63,11 @@ class EbsrSubmission extends AbstractRepository
     /**
      * @param QueryBuilder $qb
      * @param QueryInterface $query
+     * @param array $compositeFields
      */
-    protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query)
+    protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query, $compositeFields = [])
     {
-        parent::buildDefaultListQuery($qb, $query);
+        parent::buildDefaultListQuery($qb, $query, $compositeFields);
 
         // join in person details
         $this->getQueryBuilder()->with($this->alias . '.busReg', 'b')
