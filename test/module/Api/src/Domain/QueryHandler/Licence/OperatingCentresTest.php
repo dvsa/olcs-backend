@@ -60,7 +60,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
             ->andReturn($licence);
 
         $this->repoMap['LicenceOperatingCentre']->shouldReceive('fetchByLicenceIdForOperatingCentres')
-            ->with(111)
+            ->with(111, $query)
             ->andReturn(['a', 'b']);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
@@ -133,7 +133,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
             ->andReturn($licence);
 
         $this->repoMap['LicenceOperatingCentre']->shouldReceive('fetchByLicenceIdForOperatingCentres')
-            ->with(111)
+            ->with(111, $query)
             ->andReturn(['a', 'b']);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')

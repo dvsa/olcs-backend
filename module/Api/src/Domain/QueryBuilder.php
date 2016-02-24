@@ -24,7 +24,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @method QueryBuilder withCreatedBy()
  * @method QueryBuilder withUser()
  * @method QueryBuilder paginate($page, $limit)
- * @method QueryBuilder order($sort, $order)
+ * @method QueryBuilder order($sort, $order, $compositeFields)
  */
 class QueryBuilder implements QueryBuilderInterface
 {

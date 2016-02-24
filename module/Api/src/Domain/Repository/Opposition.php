@@ -51,10 +51,11 @@ class Opposition extends AbstractRepository
     /**
      * @param QueryBuilder $qb
      * @param QueryInterface $query
+     * @param array $compositeFields
      */
-    protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query)
+    protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query, $compositeFields = [])
     {
-        parent::buildDefaultListQuery($qb, $query);
+        parent::buildDefaultListQuery($qb, $query, $compositeFields);
 
         $this->getQueryBuilder()
             ->with('case', 'ca')

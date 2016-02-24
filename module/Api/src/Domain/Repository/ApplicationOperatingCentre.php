@@ -12,6 +12,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre as Entity;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 
 /**
  * ApplicationOperatingCentre
@@ -22,6 +23,12 @@ class ApplicationOperatingCentre extends AbstractRepository
 {
     protected $entity = Entity::class;
     protected $alias = 'aoc';
+    protected $locRepo;
+
+    public function initService(RepositoryServiceManager $serviceManager)
+    {
+        $this->locRepo = $serviceManager->get('LicenceOperatingCentre');
+    }
 
     /**
      * Fetch a list Application Operating Centres for an Application
@@ -63,7 +70,7 @@ class ApplicationOperatingCentre extends AbstractRepository
         return $dqb->getQuery()->getResult();
     }
 
-    public function fetchByApplicationIdForOperatingCentres($applicationId)
+    public function fetchByApplicationIdForOperatingCentres($applicationId, $query = null)
     {
         $qb = $this->createQueryBuilder();
 
@@ -85,9 +92,15 @@ class ApplicationOperatingCentre extends AbstractRepository
         $qb->addSelect('ocac');
         $qb->addSelect('occ');
 
-        $qb->orderBy('oca.id', 'ASC');
-
-        return $qb->getQuery()->getArrayResult();
+        if (method_exists($query, 'getSort') && $query->getSort()) {
+            $qb->addSelect(
+                'concat(oca.addressLine1,oca.addressLine2,oca.addressLine3,oca.addressLine4,oca.town) as adr'
+            );
+            $this->buildDefaultListQuery($qb, $query, ['adr']);
+        } else {
+            $qb->orderBy('oca.id', 'ASC');
+        }
+        return $this->locRepo->maybeRemoveAdrColumn($qb->getQuery()->getArrayResult());
     }
 
     public function findCorrespondingLoc(Entity $aoc, LicenceEntity $licence)

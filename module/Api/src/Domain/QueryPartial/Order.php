@@ -20,10 +20,18 @@ final class Order implements QueryPartialInterface
      */
     public function modifyQuery(QueryBuilder $qb, array $arguments = [])
     {
-        list($sort, $order) = $arguments;
+        // if we do not pass compositeFields array it should be defined anyway
+        if (count($arguments) == 2) {
+            $arguments[] = [];
+        }
+        list($sort, $order, $compositeFields) = $arguments;
 
         list($alias) = $qb->getRootAliases();
 
-        $qb->addOrderBy($alias . '.' . $sort, $order);
+        if (strpos($sort, '.') !== false || in_array($sort, $compositeFields)) {
+            $qb->addOrderBy($sort, $order);
+        } else {
+            $qb->addOrderBy($alias . '.' . $sort, $order);
+        }
     }
 }

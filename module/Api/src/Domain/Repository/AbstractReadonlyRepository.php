@@ -472,8 +472,9 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     /**
      * @param QueryBuilder $qb
      * @param QueryInterface $query
+     * @param array $compositeFields
      */
-    protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query)
+    protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query, $compositeFields = [])
     {
         $queryBuilderHelper = $this->getQueryBuilder()->modifyQuery($qb);
         $queryBuilderHelper->withRefdata();
@@ -490,7 +491,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
                 for ($i = 0; $i < count($sortColumns); $i++) {
                     // if multiple order value doesn't exist then use the first one
                     $order = isset($orderColumns[$i]) ? $orderColumns[$i] : $orderColumns[0];
-                    $queryBuilderHelper->order($sortColumns[$i], $order);
+                    $queryBuilderHelper->order($sortColumns[$i], $order, $compositeFields);
                 }
             }
         }
