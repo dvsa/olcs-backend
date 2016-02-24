@@ -2,8 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as Entity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -26,9 +24,7 @@ class SlaTargetDate extends AbstractRepository
      */
     public function fetchUsingEntityIdAndType(
         $entityType,
-        $entityId,
-        $version = null,
-        $hydrateMode = Query::HYDRATE_OBJECT
+        $entityId
     ) {
         $qb = $this->createQueryBuilder();
 
