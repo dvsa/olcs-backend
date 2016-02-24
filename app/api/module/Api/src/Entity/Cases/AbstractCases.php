@@ -408,11 +408,11 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Public inquiry
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var \Dvsa\Olcs\Api\Entity\Pi\Pi
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Pi", mappedBy="case")
+     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Pi", mappedBy="case")
      */
-    protected $publicInquirys;
+    protected $publicInquiry;
 
     /**
      * Prohibition
@@ -482,7 +482,6 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
         $this->documents = new ArrayCollection();
         $this->legacyOffences = new ArrayCollection();
         $this->oppositions = new ArrayCollection();
-        $this->publicInquirys = new ArrayCollection();
         $this->prohibitions = new ArrayCollection();
         $this->seriousInfringements = new ArrayCollection();
         $this->statements = new ArrayCollection();
@@ -1654,61 +1653,24 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the public inquiry
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicInquirys
+     * @param \Dvsa\Olcs\Api\Entity\Pi\Pi $publicInquiry
      * @return Cases
      */
-    public function setPublicInquirys($publicInquirys)
+    public function setPublicInquiry($publicInquiry)
     {
-        $this->publicInquirys = $publicInquirys;
+        $this->publicInquiry = $publicInquiry;
 
         return $this;
     }
 
     /**
-     * Get the public inquirys
+     * Get the public inquiry
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return \Dvsa\Olcs\Api\Entity\Pi\Pi
      */
-    public function getPublicInquirys()
+    public function getPublicInquiry()
     {
-        return $this->publicInquirys;
-    }
-
-    /**
-     * Add a public inquirys
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicInquirys
-     * @return Cases
-     */
-    public function addPublicInquirys($publicInquirys)
-    {
-        if ($publicInquirys instanceof ArrayCollection) {
-            $this->publicInquirys = new ArrayCollection(
-                array_merge(
-                    $this->publicInquirys->toArray(),
-                    $publicInquirys->toArray()
-                )
-            );
-        } elseif (!$this->publicInquirys->contains($publicInquirys)) {
-            $this->publicInquirys->add($publicInquirys);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a public inquirys
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicInquirys
-     * @return Cases
-     */
-    public function removePublicInquirys($publicInquirys)
-    {
-        if ($this->publicInquirys->contains($publicInquirys)) {
-            $this->publicInquirys->removeElement($publicInquirys);
-        }
-
-        return $this;
+        return $this->publicInquiry;
     }
 
     /**
