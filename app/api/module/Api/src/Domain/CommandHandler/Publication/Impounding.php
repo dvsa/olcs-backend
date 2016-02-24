@@ -95,10 +95,8 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
             ($trafficArea->getId() !== TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE) &&
             ($pubType !== 'N&P')
         ) {
-
             //record that we've dealt with this traffic area and pub type combination
             $publishedAreas[$trafficArea->getId()][$pubType] = true;
-
             /**
              * @var UnpublishedImpoundingQry $unpublishedQuery
              * @var PublicationEntity $publication
@@ -111,6 +109,7 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
                 $impounding->getId(),
                 $pubSection
             );
+
             $publicationLink = $this->getPublicationLink($unpublishedQuery);
 
             if ($publicationLink->getId() === null) {
