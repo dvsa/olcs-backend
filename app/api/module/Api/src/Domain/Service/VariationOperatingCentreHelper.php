@@ -121,8 +121,7 @@ class VariationOperatingCentreHelper implements FactoryInterface
         switch ($sort) {
             case 'noOfVehiclesRequired':
             case 'noOfTrailersRequired':
-                // to sort the numbers correctly
-                $value = str_pad($oc[$sort], 4, '0', STR_PAD_LEFT);
+                $value = (int) $oc[$sort];
                 break;
             case 'createdOn':
                 $value = $oc[$sort];
