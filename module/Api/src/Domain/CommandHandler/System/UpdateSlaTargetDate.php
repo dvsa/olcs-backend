@@ -14,7 +14,6 @@ use Dvsa\Olcs\Api\Entity\System\SlaTargetDate;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as SlaTargetDateEntity;
-use Dvsa\Olcs\Transfer\Command\System\UpdateSlaTargetDate as Cmd;
 
 /**
  * Update SlaTargetDate
@@ -25,7 +24,7 @@ final class UpdateSlaTargetDate extends AbstractCommandHandler implements AuthAw
 
     protected $repoServiceName = 'SlaTargetDate';
 
-    protected $extraRepos = ['document'];
+    protected $extraRepos = ['Document'];
 
     /**
      * @param CommandInterface $command
@@ -34,7 +33,7 @@ final class UpdateSlaTargetDate extends AbstractCommandHandler implements AuthAw
     public function handleCommand(CommandInterface $command)
     {
         /** @var SlaTargetDateEntity $slaTargetDateEntity */
-        $slaTargetDateEntity = $this->UpdateSlaTargetDate($command);
+        $slaTargetDateEntity = $this->updateSlaTargetDate($command);
 
         $this->getRepo()->save($slaTargetDateEntity);
 
@@ -52,21 +51,23 @@ final class UpdateSlaTargetDate extends AbstractCommandHandler implements AuthAw
      * @throws ValidationException
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
-    private function UpdateSlaTargetDate(CommandInterface $command)
+    private function updateSlaTargetDate(CommandInterface $command)
     {
-        if (!in_array($command->getEntityType(), $this->extraRepos)) {
+        $repoName = ucfirst($command->getEntityType());
+
+        if (!in_array($repoName, $this->extraRepos)) {
             throw new ValidationException(['Cannot add SLA target date for unsupported entity type']);
         }
 
         $slaTargetDateEntity = $this->getRepo()->fetchUsingEntityIdAndType(
             $command->getEntityType(),
-            $command->getEntityId(),
-            $command->getVersion()
+            $command->getEntityId()
         );
 
         if (!$slaTargetDateEntity instanceof SlaTargetDate) {
             throw new NotFoundException();
         }
+
         $slaTargetDateEntity->setAgreedDate($command->getAgreedDate());
         $slaTargetDateEntity->setTargetDate($command->getTargetDate());
         $slaTargetDateEntity->setSentDate($command->getSentDate());
