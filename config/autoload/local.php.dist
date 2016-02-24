@@ -192,7 +192,10 @@ return [
         // @to-do currently waiting on the actual nr address
         'inr_service' => [
             'uri' => 'http://testServiceAddress',
-            'options' => ['timeout' => 30]
+            'options' => [
+                'timeout' => 30,
+                'adapter'   => 'Zend\Http\Client\Adapter\Curl'
+            ]
         ],
         'repute_url' => [
             'uri' => 'https://r-inr-01.corp.vosa.gov.uk:444/INR.BackofficeWeb/Repute/SubmitCheck.aspx?'
