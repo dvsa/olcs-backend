@@ -84,17 +84,15 @@ class LicenceOperatingCentre extends AbstractRepository
      */
     public function maybeRemoveAdrColumn($result)
     {
-        if (is_array($result)) {
-            $mergedOc = [];
-            foreach ($result as $oc) {
-                if (isset($oc['adr'])) {
-                    $mergedOc[] = $oc[0];
-                } else {
-                    $mergedOc[] = $oc;
-                }
+        $mergedOc = [];
+        foreach ($result as $oc) {
+            if (isset($oc['adr'])) {
+                $mergedOc[] = $oc[0];
+            } else {
+                $mergedOc[] = $oc;
             }
-            $result = $mergedOc;
         }
+        $result = $mergedOc;
         return $result;
     }
 }
