@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\CreateHearing as CreateHearingCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Publication\PiHearing as PublishHearingCmd;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
@@ -90,6 +91,17 @@ final class CreateHearing extends AbstractCommandHandler implements AuthAwareInt
         if ($isAdjourned === 'Y') {
             $result->merge($this->getCommandHandler()->handleCommand($this->createTaskCommand($piHearing)));
         }
+
+        // generate all related SLA Target Dates
+        $result->merge(
+            $this->getCommandHandler()->handleCommand(
+                GenerateSlaTargetDateCmd::create(
+                    [
+                        'pi' => $pi->getId()
+                    ]
+                )
+            )
+        );
 
         return $result;
     }

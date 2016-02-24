@@ -14,6 +14,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\UpdateHearing as Cmd;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
 use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
+use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
@@ -21,6 +22,7 @@ use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Publication\PiHearing as PublishHearingCmd;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 
 /**
  * Update Hearing Test
@@ -66,6 +68,7 @@ class UpdateHearingTest extends CommandHandlerTestCase
      */
     public function testHandleCommand($isTm, $extraTaskKey, $venue)
     {
+        $piId = 99;
         $hearingId = 11;
         $version = 99;
         $extraTaskId = 22;
@@ -124,10 +127,14 @@ class UpdateHearingTest extends CommandHandlerTestCase
         $cases->shouldReceive('getLicence->getId')->andReturn($extraTaskId);
         $cases->shouldReceive('isTm')->andReturn($isTm);
 
+        $pi = m::mock(PiEntity::class);
+        $pi->shouldReceive('getId')->andReturn($piId);
+        $pi->shouldReceive('getCase')->andReturn($cases);
+        $pi->shouldReceive('isClosed')->once()->andReturn(false);
+
         $piHearing = m::mock(PiHearingEntity::class)->makePartial();
-        $piHearing->shouldReceive('getPi->getCase')->andReturn($cases);
         $piHearing->shouldReceive('getId')->andReturn($hearingId);
-        $piHearing->shouldReceive('getPi->isClosed')->once()->andReturn(false);
+        $piHearing->shouldReceive('getPi')->andReturn($pi);
 
         $this->repoMap['PiHearing']
             ->shouldReceive('fetchUsingId')
@@ -164,6 +171,14 @@ class UpdateHearingTest extends CommandHandlerTestCase
             CreateTaskCmd::class,
             $taskData,
             $result2
+        );
+
+        $this->expectedSideEffect(
+            GenerateSlaTargetDateCmd::class,
+            [
+                'pi' => $piId
+            ],
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);
