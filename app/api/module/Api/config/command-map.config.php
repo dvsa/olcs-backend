@@ -559,6 +559,7 @@ return [
     Command\Publication\PiDecision::class => CommandHandler\Publication\PiHearing::class,
     Command\Publication\CreateNextPublication::class => CommandHandler\Publication\CreateNextPublication::class,
     Command\Publication\Licence::class => CommandHandler\Publication\Licence::class,
+    Command\Publication\Impounding::class => CommandHandler\Publication\Impounding::class,
 
     // Domain - Discs
     Command\Discs\CeaseGoodsDiscs::class => CommandHandler\Discs\CeaseGoodsDiscs::class,

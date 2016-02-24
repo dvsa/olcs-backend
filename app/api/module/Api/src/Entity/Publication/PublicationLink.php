@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Impounding as ImpoundingEntity;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
@@ -151,6 +152,30 @@ class PublicationLink extends AbstractPublicationLink
         $this->publication = $publication;
         $this->publicationSection = $publicationSection;
         $this->trafficArea = $trafficArea;
+    }
+
+    /**
+     * Create a publicaction link for an Impounding
+     *
+     * @param ImpoundingEntity $impounding
+     * @param PublicationEntity $publication
+     * @param PublicationSectionEntity $publicationSection
+     * @param TrafficAreaEntity $trafficArea
+     */
+    public function createImpounding(
+        ImpoundingEntity $impounding,
+        PublicationEntity $publication,
+        PublicationSectionEntity $publicationSection,
+        TrafficAreaEntity $trafficArea,
+        LicenceEntity $licence = null,
+        ApplicationEntity $application = null
+    ) {
+        $this->impounding = $impounding;
+        $this->publication = $publication;
+        $this->publicationSection = $publicationSection;
+        $this->trafficArea = $trafficArea;
+        $this->licence = $licence;
+        $this->application = $application;
     }
 
     /**

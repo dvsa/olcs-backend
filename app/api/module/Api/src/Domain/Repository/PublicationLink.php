@@ -98,6 +98,11 @@ class PublicationLink extends AbstractRepository
                 ->setParameter('byLicence', $query->getLicence());
         }
 
+        if (method_exists($query, 'getImpounding')) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.impounding', ':byImpounding'))
+                ->setParameter('byImpounding', $query->getImpounding());
+        }
+
         $this->getQueryBuilder()->modifyQuery($qb);
 
         $result = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);

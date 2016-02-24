@@ -10,22 +10,26 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Impounding;
 use Doctrine\ORM\Query;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Cases\Impounding;
-use Dvsa\Olcs\Api\Entity\Venue;
+use Dvsa\Olcs\Api\Entity\Cases\Impounding as ImpoundingEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Impounding\UpdateImpounding as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
 
 /**
  * Update Impounding
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-final class UpdateImpounding extends AbstractCommandHandler implements TransactionedInterface
+class UpdateImpounding extends AbstractImpounding implements TransactionedInterface
 {
-    protected $repoServiceName = 'Impounding';
-
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -36,22 +40,29 @@ final class UpdateImpounding extends AbstractCommandHandler implements Transacti
 
         $result->addMessage('Impounding updated');
 
+        // handle publish
+        if ($command->getPublish() === 'Y') {
+            $result->merge($this->getCommandHandler()->handleCommand($this->createPublishCommand($impounding)));
+        }
+
         return $result;
     }
 
     /**
      * @param Cmd $command
-     * @return Impounding
+     * @return mixed
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     private function createImpoundingObject(Cmd $command)
     {
+        /** @var ImpoundingEntity $impounding */
         $impounding = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $impounding->setImpoundingType($this->getRepo()->getRefdataReference($command->getImpoundingType()));
 
         $venue = $command->getVenue();
-        if (!empty($venue) && $venue !== Impounding::VENUE_OTHER) {
-            $venue = $this->getRepo()->getReference(Venue::class, $command->getVenue());
+        if (!empty($venue) && $venue !== ImpoundingEntity::VENUE_OTHER) {
+            $venue = $this->getRepo()->getReference(VenueEntity::class, $command->getVenue());
         }
         $impounding->setVenueProperties(
             $venue,
@@ -93,22 +104,5 @@ final class UpdateImpounding extends AbstractCommandHandler implements Transacti
         }
 
         return $impounding;
-    }
-
-    /**
-     * Returns collection of legislation types.
-     *
-     * @param null $impoundingLegislationTypes
-     * @return ArrayCollection
-     */
-    private function generateImpoundingLegislationTypes($impoundingLegislationTypes = null)
-    {
-        $result = new ArrayCollection();
-        if (!empty($impoundingLegislationTypes)) {
-            foreach ($impoundingLegislationTypes as $legislationType) {
-                $result->add($this->getRepo()->getRefdataReference($legislationType));
-            }
-        }
-        return $result;
     }
 }
