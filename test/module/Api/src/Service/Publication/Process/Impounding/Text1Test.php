@@ -123,9 +123,7 @@ class Text1Test extends MockeryTestCase
     public function processTestProvider()
     {
         return [
-            [OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY, 'Director(s): '],
-            //[OrganisationEntity::ORG_TYPE_LLP, 'Partner(s): '],
-            //['', '']
+            [OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY, 'Director(s): ']
         ];
     }
 }
