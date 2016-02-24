@@ -78,7 +78,7 @@ class Overview extends AbstractQueryHandler
             [
                 'busCount' => $this->getBusRegCount($licence),
                 'currentApplications' => $this->resultList($applications),
-                'openCases' => $this->resultList($licence->getOpenCases(), ['publicInquirys']),
+                'openCases' => $this->resultList($licence->getOpenCases(), ['publicInquiry']),
                 'tradingName' => $licence->getTradingName(),
                 'complaintsCount' => $licence->getOpenComplaintsCount(),
                 // extra data needed to populate select boxes
