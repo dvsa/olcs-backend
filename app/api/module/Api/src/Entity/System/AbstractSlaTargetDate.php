@@ -18,7 +18,8 @@ use Doctrine\ORM\Mapping as ORM;
  *    indexes={
  *        @ORM\Index(name="ix_sla_target_date_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_sla_target_date_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_sla_target_date_document_id", columns={"document_id"})
+ *        @ORM\Index(name="ix_sla_target_date_pi_id", columns={"pi_id"}),
+ *        @ORM\Index(name="ix_sla_target_date_sla_id", columns={"sla_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_sla_target_date_document_id", columns={"document_id"})
@@ -34,7 +35,7 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="agreed_date", nullable=false)
+     * @ORM\Column(type="date", name="agreed_date", nullable=false)
      */
     protected $agreedDate;
 
@@ -67,7 +68,7 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
      *     fetch="LAZY",
      *     inversedBy="slaTargetDate"
      * )
-     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
      */
     protected $document;
 
@@ -111,20 +112,44 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     protected $notes;
 
     /**
+     * Pi
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Pi\Pi
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Pi\Pi",
+     *     fetch="LAZY",
+     *     inversedBy="slaTargetDates"
+     * )
+     * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=true)
+     */
+    protected $pi;
+
+    /**
      * Sent date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="sent_date", nullable=true)
+     * @ORM\Column(type="date", name="sent_date", nullable=true)
      */
     protected $sentDate;
+
+    /**
+     * Sla
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\Sla
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\Sla", fetch="LAZY")
+     * @ORM\JoinColumn(name="sla_id", referencedColumnName="id", nullable=true)
+     */
+    protected $sla;
 
     /**
      * Target date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="target_date", nullable=true)
+     * @ORM\Column(type="date", name="target_date", nullable=true)
      */
     protected $targetDate;
 
@@ -332,6 +357,29 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     }
 
     /**
+     * Set the pi
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Pi\Pi $pi
+     * @return SlaTargetDate
+     */
+    public function setPi($pi)
+    {
+        $this->pi = $pi;
+
+        return $this;
+    }
+
+    /**
+     * Get the pi
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Pi\Pi
+     */
+    public function getPi()
+    {
+        return $this->pi;
+    }
+
+    /**
      * Set the sent date
      *
      * @param \DateTime $sentDate
@@ -352,6 +400,29 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     public function getSentDate()
     {
         return $this->sentDate;
+    }
+
+    /**
+     * Set the sla
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\Sla $sla
+     * @return SlaTargetDate
+     */
+    public function setSla($sla)
+    {
+        $this->sla = $sla;
+
+        return $this;
+    }
+
+    /**
+     * Get the sla
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\Sla
+     */
+    public function getSla()
+    {
+        return $this->sla;
     }
 
     /**
