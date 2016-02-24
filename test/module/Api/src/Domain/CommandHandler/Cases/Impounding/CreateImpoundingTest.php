@@ -167,7 +167,6 @@ class CreateImpoundingTest extends CommandHandlerTestCase
             )
             ->once();
 
-
         $this->expectedSideEffect(
             PublishImpoundingCmd::class,
             $commandData,
@@ -233,7 +232,6 @@ class CreateImpoundingTest extends CommandHandlerTestCase
             )
             ->once();
 
-
         $this->expectedSideEffect(
             PublishImpoundingCmd::class,
             $commandData,
@@ -262,7 +260,7 @@ class CreateImpoundingTest extends CommandHandlerTestCase
                     'id' => 99,
                     'trafficArea' => 'B',
                     'pi' => null,
-                    'pubType' => ['A&D'],
+                    'pubType' => 'A&D',
                     'licence' => 7
                 ]
             ],
@@ -272,7 +270,7 @@ class CreateImpoundingTest extends CommandHandlerTestCase
                     'id' => 99,
                     'trafficArea' => 'B',
                     'pi' => null,
-                    'pubType' => ['N&P'],
+                    'pubType' => 'N&P',
                     'licence' => 7
                 ]
             ]
@@ -292,7 +290,7 @@ class CreateImpoundingTest extends CommandHandlerTestCase
                     'id' => 99,
                     'trafficArea' => 'B',
                     'pi' => 77,
-                    'pubType' => ['A&D'],
+                    'pubType' => 'A&D',
                     'application' => 1,
                     'licence' => null
                 ]
@@ -303,7 +301,7 @@ class CreateImpoundingTest extends CommandHandlerTestCase
                     'id' => 99,
                     'trafficArea' => 'B',
                     'pi' => 77,
-                    'pubType' => ['N&P'],
+                    'pubType' => 'N&P',
                     'application' => 1,
                     'licence' => null
                 ]
