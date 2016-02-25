@@ -69,7 +69,9 @@ class UpdateAppealTest extends CommandHandlerTestCase
                 "isWithdrawn" => "Y",
                 "hearingDate" => "2015-05-01",
                 "decisionDate" => "2015-05-05",
+                "papersDueTcDate" => "2015-05-05",
                 "papersDueDate" => "2015-05-05",
+                "papersSentTcDate" => "2015-05-05",
                 "papersSentDate" => "2015-05-05",
                 "withdrawnDate" => "2015-05-05"
             ]
