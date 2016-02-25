@@ -113,10 +113,18 @@ class PsvDisc extends AbstractRepository
             ->orderBy('intDiscNo', 'ASC');
     }
 
+    /**
+     * Cease all PSV discs attached to a licence
+     *
+     * @param int $licenceId
+     *
+     * @return int number of discs ceased
+     */
     public function ceaseDiscsForLicence($licenceId)
     {
         return $this->getDbQueryManager()->get('Discs\CeaseDiscsForLicence')
-            ->execute(['licence' => $licenceId]);
+            ->execute(['licence' => $licenceId])
+            ->rowCount();
     }
 
     public function fetchDiscsToPrintMin($licenceType)

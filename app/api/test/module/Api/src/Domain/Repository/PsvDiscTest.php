@@ -179,10 +179,12 @@ class PsvDiscTest extends RepositoryTestCase
     public function testCeaseDiscsForLicence()
     {
         $licenceId = 123;
+        $stmt = m::mock();
+        $stmt->shouldReceive('rowCount')->with()->once()->andReturn(652);
 
-        $this->expectQueryWithData('Discs\CeaseDiscsForLicence', ['licence' => 123]);
+        $this->expectQueryWithData('Discs\CeaseDiscsForLicence', ['licence' => 123], [], $stmt);
 
-        $this->sut->ceaseDiscsForLicence($licenceId);
+        $this->assertSame(652, $this->sut->ceaseDiscsForLicence($licenceId));
     }
 
     public function testFetchDiscsToPrintMin()

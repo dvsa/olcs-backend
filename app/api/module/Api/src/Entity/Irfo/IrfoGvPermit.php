@@ -30,7 +30,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  */
 class IrfoGvPermit extends AbstractIrfoGvPermit
 {
-    const STATUS_APPROVED = 'irfo_perm_s_appreoved';
+    const STATUS_APPROVED = 'irfo_perm_s_approved';
     const STATUS_PENDING = 'irfo_perm_s_pending';
     const STATUS_REFUSED = 'irfo_perm_s_refused';
     const STATUS_WITHDRAWN = 'irfo_perm_s_withdrawn';

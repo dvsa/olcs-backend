@@ -7,8 +7,13 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TmCaseDecision;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TmCaseDecision\UpdateDeclareUnfit;
 use Dvsa\Olcs\Api\Domain\Repository\TmCaseDecision;
+use Dvsa\Olcs\Api\Entity\Cases\Cases;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\Tm\TmCaseDecision as TmCaseDecisionEntity;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Transfer\Command\TmCaseDecision\UpdateDeclareUnfit as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Doctrine\ORM\Query;
@@ -23,6 +28,7 @@ class UpdateDeclareUnfitTest extends CommandHandlerTestCase
     {
         $this->sut = new UpdateDeclareUnfit();
         $this->mockRepo('TmCaseDecision', TmCaseDecision::class);
+        $this->mockRepo('Task', Task::class);
 
         parent::setUp();
     }
@@ -51,10 +57,29 @@ class UpdateDeclareUnfitTest extends CommandHandlerTestCase
             'rehabMeasures' => ['rehabMeasure'],
         ];
 
+        $taskId = 99;
+        $transportManagerId = 44;
+
         $command = Cmd::create($data);
 
         $decision = new RefData();
         $decision->setId(TmCaseDecisionEntity::DECISION_DECLARE_UNFIT);
+
+        $task = m::mock(Task::class);
+        $task->shouldReceive('getActionDate')
+            ->andReturn('01-05-2005')
+            ->shouldReceive('setActionDate')
+            ->with($data['unfitnessStartDate'])
+            ->shouldReceive('getId')
+            ->andReturn($taskId);
+
+        $transportManager = m::mock(TransportManager::class)->makePartial();
+        $transportManager->setId($transportManagerId);
+
+        $case = m::mock(Cases::class);
+        $case->shouldReceive('getTransportManager')
+            ->once()
+            ->andReturn($transportManager);
 
         /** @var TmCaseDecisionEntity $tmCaseDecision */
         $tmCaseDecision = m::mock(TmCaseDecisionEntity::class)->makePartial();
@@ -63,11 +88,21 @@ class UpdateDeclareUnfitTest extends CommandHandlerTestCase
         $tmCaseDecision->shouldReceive('update')
             ->once()
             ->andReturnSelf();
+        $tmCaseDecision->shouldReceive('getCase')
+            ->once()
+            ->andReturn($case);
 
         $this->repoMap['TmCaseDecision']->shouldReceive('fetchUsingId')
             ->once()
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($tmCaseDecision);
+
+        $this->repoMap['Task']->shouldReceive('fetchForTmCaseDecision')
+            ->once()
+            ->with($case, $transportManager, SubCategory::TM_SUB_CATEGORY_DECLARED_UNFIT)
+            ->andReturn($task)
+            ->shouldReceive('save')
+            ->with($task);
 
         $this->repoMap['TmCaseDecision']->shouldReceive('save')
             ->once()
@@ -78,9 +113,11 @@ class UpdateDeclareUnfitTest extends CommandHandlerTestCase
         $expected = [
             'id' => [
                 'tmCaseDecision' => 111,
+                'task' => $taskId,
             ],
             'messages' => [
-                'Decision updated successfully'
+                'Decision updated successfully',
+                'Task action date updated successfully'
             ]
         ];
 
@@ -104,15 +141,28 @@ class UpdateDeclareUnfitTest extends CommandHandlerTestCase
             'rehabMeasures' => ['rehabMeasure'],
         ];
 
+        $transportManagerId = 44;
+
         $command = Cmd::create($data);
 
         $decision = new RefData();
         $decision->setId(TmCaseDecisionEntity::DECISION_REPUTE_NOT_LOST);
 
+        $transportManager = m::mock(TransportManager::class)->makePartial();
+        $transportManager->setId($transportManagerId);
+
+        $case = m::mock(Cases::class);
+        $case->shouldReceive('getTransportManager')
+            ->once()
+            ->andReturn($transportManager);
+
         /** @var TmCaseDecisionEntity $tmCaseDecision */
         $tmCaseDecision = m::mock(TmCaseDecisionEntity::class)->makePartial();
         $tmCaseDecision->setId(111);
         $tmCaseDecision->setDecision($decision);
+        $tmCaseDecision->shouldReceive('getCase')
+            ->once()
+            ->andReturn($case);
 
         $this->repoMap['TmCaseDecision']->shouldReceive('fetchUsingId')
             ->once()

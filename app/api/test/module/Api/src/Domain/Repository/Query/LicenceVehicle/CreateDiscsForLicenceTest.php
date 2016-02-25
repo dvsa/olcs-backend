@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Cease Discs For Licence Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository\Query\LicenceVehicle;
 
 use Dvsa\Olcs\Api\Domain\Repository\Query\LicenceVehicle\CeaseDiscsForLicence;
@@ -17,11 +12,11 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Cease Discs For Licence Test
+ * Create Discs For Licence Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CeaseDiscsForLicenceTest extends AbstractDbQueryTestCase
+class CreateDiscsForLicenceTest extends AbstractDbQueryTestCase
 {
     protected $tableNameMap = [
         GoodsDisc::class => 'goods_disc',
@@ -34,43 +29,37 @@ class CeaseDiscsForLicenceTest extends AbstractDbQueryTestCase
                 'isAssociation' => true,
                 'column' => 'licence_vehicle_id'
             ],
-            'ceasedDate' => [
-                'column' => 'ceased_date'
-            ],
-            'isInterim' => [
-                'column' => 'is_interim'
-            ],
-            'lastModifiedOn' => [
-                'column' => 'last_modified_on'
+            'createdOn' => [
+                'column' => 'created_on'
             ],
         ],
         LicenceVehicle::class => [
             'id' => [
                 'column' => 'id'
             ],
-            'licence' => [
-                'isAssocation' => true,
-                'column' => 'licence_id'
+            'specifiedDate' => [
+                'column' => 'specified_date'
             ],
             'removalDate' => [
                 'column' => 'removal_date'
             ],
-            'specifiedDate' => [
-                'column' => 'specified_date'
-            ],
+            'licence' => [
+                'isAssocation' => true,
+                'column' => 'licence_id'
+            ]
         ]
     ];
 
     public function paramProvider()
     {
-        $today = new DateTime();
-
         return [
             [
-                [],
+                [
+                    'licence' => 654,
+                ],
                 [],
                 [
-                    'ceasedDate' => $today->format('Y-m-d H:i:s')
+                    'licence' => 654,
                 ],
                 []
             ]
@@ -79,17 +68,14 @@ class CeaseDiscsForLicenceTest extends AbstractDbQueryTestCase
 
     protected function getSut()
     {
-        return new CeaseDiscsForLicence();
+        return new \Dvsa\Olcs\Api\Domain\Repository\Query\LicenceVehicle\CreateDiscsForLicence();
     }
 
     protected function getExpectedQuery()
     {
-        return 'UPDATE goods_disc gd
-      INNER JOIN licence_vehicle lv ON lv.id = gd.licence_vehicle_id
-      SET gd.ceased_date = :ceasedDate, gd.is_interim = 0, gd.last_modified_on = NOW()
-      WHERE lv.licence_id = :licence
-      AND lv.removal_date IS NULL
-      AND lv.specified_date IS NOT NULL
-      AND gd.ceased_date IS NULL';
+        return 'INSERT INTO goods_disc (licence_vehicle_id, created_on) SELECT lv.id, NOW() FROM licence_vehicle lv
+        WHERE lv.specified_date IS NOT NULL
+        AND lv.removal_date IS NULL
+        AND lv.licence_id = :licence';
     }
 }

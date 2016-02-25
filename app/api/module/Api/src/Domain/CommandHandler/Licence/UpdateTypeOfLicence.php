@@ -31,7 +31,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
 
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['TransportManagerLicence', 'ContactDetails'];
+    protected $extraRepos = ['TransportManagerLicence', 'ContactDetails', 'GoodsDisc', 'PsvDisc'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -177,26 +177,11 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
      */
     private function reissueGoodsDiscs(Licence $licence)
     {
-        $licenceVehicleIds = [];
-        $licenceVehicleIdsToCreate = [];
+        $ceaseCount = $this->getRepo('GoodsDisc')->ceaseDiscsForLicence($licence->getId());
+        $createCount = $this->getRepo('GoodsDisc')->createDiscsForLicence($licence->getId());
 
-        /* @var $licenceVehicle \Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle */
-        foreach ($licence->getLicenceVehicles() as $licenceVehicle) {
-            $licenceVehicleIds[] = $licenceVehicle->getId();
-            if ($licenceVehicle->getSpecifiedDate() !== null && $licenceVehicle->getRemovalDate() === null) {
-                $licenceVehicleIdsToCreate[] = $licenceVehicle->getId();
-            }
-        }
-
-        $result = $this->handleSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Vehicle\CeaseActiveDiscs::create(['ids' => $licenceVehicleIds])
-        );
-
-        $result->merge(
-            $this->handleSideEffect(
-                \Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs::create(['ids' => $licenceVehicleIdsToCreate])
-            )
-        );
+        $result = new Result();
+        $result->addMessage("{$ceaseCount} goods discs ceased, {$createCount} discs created");
 
         return $result;
     }
@@ -211,25 +196,12 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
     private function reissuePsvDiscs(Licence $licence)
     {
         $amount = $licence->getPsvDiscsNotCeased()->count();
-        $psvDiscIds = [];
 
-        foreach ($licence->getPsvDiscsNotCeased() as $psvDisc) {
-            $psvDiscIds[] = $psvDisc->getId();
-        }
+        $ceaseCount = $this->getRepo('PsvDisc')->ceaseDiscsForLicence($licence->getId());
+        $createCount = $this->getRepo('PsvDisc')->createPsvDiscs($licence->getId(), $amount);
 
-        $result = $this->handleSideEffect(
-            \Dvsa\Olcs\Transfer\Command\Licence\VoidPsvDiscs::create(
-                ['licence' => $licence->getId(), 'ids' => $psvDiscIds]
-            )
-        );
-
-        $result->merge(
-            $this->handleSideEffect(
-                \Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs::create(
-                    ['licence' => $licence->getId(), 'amount' => $amount]
-                )
-            )
-        );
+        $result = new Result();
+        $result->addMessage("{$ceaseCount} psv discs ceased, {$createCount} discs created");
 
         return $result;
     }
