@@ -35,7 +35,7 @@ class InrClientFactoryTest extends TestCase
             'nr' => [
                 'inr_service' => [
                     'uri' => 'http://testServiceAddress',
-                    'options' => ['timeout' => 30]
+                    'options' => []
                 ]
             ]
         ];
