@@ -15,11 +15,12 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Service\Nr\MsiResponse as MsiResponseService;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\SendResponse as SendErruResponseCmd;
+use Zend\Http\Response;
+use Dvsa\Olcs\Api\Domain\Exception\RestResponseException;
+use Zend\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeException;
 
 /**
  * SendResponse
- *
- * @todo We don't yet have anywhere to send our responses, once we do we'll need to amend this code to suit
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
@@ -61,6 +62,7 @@ final class SendResponse extends AbstractCommandHandler implements AuthAwareInte
      * SendResponse
      *
      * @param CommandInterface $command
+     * @throws RestResponseException
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -74,9 +76,16 @@ final class SendResponse extends AbstractCommandHandler implements AuthAwareInte
         //generate the xml to send to national register
         $xml = $this->msiResponseService->create($case);
 
-        //here is where we would expect the response from national register. For now we assume success,
-        //we'll need to deal with this properly once we have the integration point and know what to expect
-        $this->inrClient->makeRequest($xml);
+        //here is where we would expect the response from national register.
+        try {
+            $responseCode = $this->inrClient->makeRequest($xml);
+        } catch (AdapterRuntimeException $e) {
+            throw new RestResponseException('The was an error sending the INR response');
+        }
+
+        if ($responseCode !== Response::STATUS_CODE_202) {
+            throw new RestResponseException('INR Http response code was ' . $responseCode);
+        }
 
         /** @var SiEntity $si */
         $si = $case->getSeriousInfringements()->first();
