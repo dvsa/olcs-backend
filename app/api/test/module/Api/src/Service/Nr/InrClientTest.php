@@ -21,12 +21,12 @@ class InrClientTest extends MockeryTestCase
      */
     public function testMakeRequest()
     {
-
         $statusCode = 202;
         $requestBody = 'xml';
 
         $mockRequest = m::mock(Request::class);
         $mockRequest->shouldReceive('setContent')->with($requestBody);
+        $mockRequest->shouldReceive('setMethod')->with(Request::METHOD_POST);
 
         $mockResponse = m::mock(Response::class);
         $mockResponse->shouldReceive('getStatusCode')->andReturn($statusCode);
