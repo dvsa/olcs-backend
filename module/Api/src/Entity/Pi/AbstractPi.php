@@ -20,7 +20,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="pi",
  *    indexes={
- *        @ORM\Index(name="ix_pi_case_id", columns={"case_id"}),
  *        @ORM\Index(name="ix_pi_pi_status", columns={"pi_status"}),
  *        @ORM\Index(name="ix_pi_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_pi_last_modified_by", columns={"last_modified_by"}),
@@ -32,6 +31,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_pi_written_outcome", columns={"written_outcome"})
  *    },
  *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="ix_pi_case_id", columns={"case_id"}),
  *        @ORM\UniqueConstraint(name="uk_pi_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
  * )
@@ -102,10 +102,10 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
      *
-     * @ORM\ManyToOne(
+     * @ORM\OneToOne(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases",
      *     fetch="LAZY",
-     *     inversedBy="publicInquirys"
+     *     inversedBy="publicInquiry"
      * )
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
