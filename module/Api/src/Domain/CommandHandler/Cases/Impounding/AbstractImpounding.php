@@ -127,8 +127,8 @@ abstract class AbstractImpounding extends AbstractCommandHandler implements Tran
      */
     protected function determinePublicInquiry(CasesEntity $case)
     {
-        if (count($case->getPublicInquirys()) > 0) {
-            return $case->getPublicInquirys()[0]->getId();
+        if (!empty($case->getPublicInquiry())) {
+            return $case->getPublicInquiry()->getId();
         }
 
         return null;

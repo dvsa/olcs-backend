@@ -206,8 +206,8 @@ class CreateImpoundingTest extends CommandHandlerTestCase
             ->andReturn($this->refData[CasesEntity::APP_CASE_TYPE])
             ->shouldReceive('getApplication')
             ->andReturn($this->references[ApplicationEntity::class][1])
-            ->shouldReceive('getPublicInquirys')
-            ->andReturn(new ArrayCollection([$this->references[PiEntity::class][77]]));
+            ->shouldReceive('getPublicInquiry')
+            ->andReturn($this->references[PiEntity::class][77]);
 
         $this->references[TrafficAreaEntity::class]['B']->shouldReceive('getId')
             ->andReturn('B');
