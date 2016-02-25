@@ -208,7 +208,7 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="papers_due_tc_date", nullable=true)
+     * @ORM\Column(type="date", name="papers_due_tc_date", nullable=true)
      */
     protected $papersDueTcDate;
 
@@ -226,7 +226,7 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="papers_sent_tc_date", nullable=true)
+     * @ORM\Column(type="date", name="papers_sent_tc_date", nullable=true)
      */
     protected $papersSentTcDate;
 
