@@ -35,7 +35,10 @@ class InrClientFactoryTest extends TestCase
             'nr' => [
                 'inr_service' => [
                     'uri' => 'http://testServiceAddress',
-                    'options' => ['timeout' => 30]
+                    'options' => [
+                        'timeout' => 30,
+                        'adapter'   => 'Zend\Http\Client\Adapter\Curl'
+                    ]
                 ]
             ]
         ];
