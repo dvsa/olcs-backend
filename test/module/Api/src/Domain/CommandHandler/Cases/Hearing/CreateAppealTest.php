@@ -67,7 +67,9 @@ class CreateAppealTest extends CommandHandlerTestCase
                 "hearingDate" => "2015-05-05",
                 "decisionDate" => "2015-05-05",
                 "papersDueDate" => "2015-05-05",
-                "papersSentDate" => "2015-05-05"
+                "papersDueTcDate" => "2015-05-06",
+                "papersSentDate" => "2015-05-05",
+                "papersSentTcDate" => "2015-07-07",
             ]
         );
 
@@ -128,7 +130,9 @@ class CreateAppealTest extends CommandHandlerTestCase
                 "hearingDate" => "2015-05-01",
                 "decisionDate" => "2015-05-05",
                 "papersDueDate" => "2015-05-05",
+                "papersDueTcDate" => "2015-05-05",
                 "papersSentDate" => "2015-05-05",
+                "papersSentTcDate" => "2015-05-05",
                 "withdrawnDate" => "2015-05-05"
             ]
         );

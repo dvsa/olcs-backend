@@ -204,6 +204,15 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     protected $papersDueDate;
 
     /**
+     * Papers due tc date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="papers_due_tc_date", nullable=true)
+     */
+    protected $papersDueTcDate;
+
+    /**
      * Papers sent date
      *
      * @var \DateTime
@@ -211,6 +220,15 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
      * @ORM\Column(type="date", name="papers_sent_date", nullable=true)
      */
     protected $papersSentDate;
+
+    /**
+     * Papers sent tc date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="papers_sent_tc_date", nullable=true)
+     */
+    protected $papersSentTcDate;
 
     /**
      * Reason
@@ -656,6 +674,29 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     }
 
     /**
+     * Set the papers due tc date
+     *
+     * @param \DateTime $papersDueTcDate
+     * @return Appeal
+     */
+    public function setPapersDueTcDate($papersDueTcDate)
+    {
+        $this->papersDueTcDate = $papersDueTcDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the papers due tc date
+     *
+     * @return \DateTime
+     */
+    public function getPapersDueTcDate()
+    {
+        return $this->papersDueTcDate;
+    }
+
+    /**
      * Set the papers sent date
      *
      * @param \DateTime $papersSentDate
@@ -676,6 +717,29 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     public function getPapersSentDate()
     {
         return $this->papersSentDate;
+    }
+
+    /**
+     * Set the papers sent tc date
+     *
+     * @param \DateTime $papersSentTcDate
+     * @return Appeal
+     */
+    public function setPapersSentTcDate($papersSentTcDate)
+    {
+        $this->papersSentTcDate = $papersSentTcDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the papers sent tc date
+     *
+     * @return \DateTime
+     */
+    public function getPapersSentTcDate()
+    {
+        return $this->papersSentTcDate;
     }
 
     /**
