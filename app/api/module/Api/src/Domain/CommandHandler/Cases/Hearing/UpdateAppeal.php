@@ -79,8 +79,16 @@ final class UpdateAppeal extends AbstractCommandHandler implements Transactioned
             $appeal->setPapersDueDate(new \DateTime($command->getPapersDueDate()));
         }
 
+        if ($command->getPapersDueTcDate() !== null) {
+            $appeal->setPapersDueTcDate(new \DateTime($command->getPapersDueTcDate()));
+        }
+
         if ($command->getPapersSentDate() !== null) {
             $appeal->setPapersSentDate(new \DateTime($command->getPapersSentDate()));
+        }
+
+        if ($command->getPapersSentTcDate() !== null) {
+            $appeal->setPapersSentTcDate(new \DateTime($command->getPapersSentTcDate()));
         }
 
         if ($command->getComment() !== null) {
