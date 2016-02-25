@@ -143,10 +143,32 @@ class GoodsDisc extends AbstractRepository
             );
     }
 
+    /**
+     * Cease all goods discs linked to active licence vehicles
+     *
+     * @param int $licenceId
+     *
+     * @return int Number of discs ceased
+     */
     public function ceaseDiscsForLicence($licenceId)
     {
         return $this->getDbQueryManager()->get('LicenceVehicle\CeaseDiscsForLicence')
-            ->execute(['licence' => $licenceId]);
+            ->execute(['licence' => $licenceId])
+            ->rowCount();
+    }
+
+    /**
+     * Create a goods disc for each active licence vehicle
+     *
+     * @param int $licenceId
+     *
+     * @return int Number of discs created
+     */
+    public function createDiscsForLicence($licenceId)
+    {
+        return $this->getDbQueryManager()->get('LicenceVehicle\CreateDiscsForLicence')
+            ->execute(['licence' => $licenceId])
+            ->rowCount();
     }
 
     public function fetchDiscsToPrintMin($niFlag, $licenceType)

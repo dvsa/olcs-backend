@@ -23,7 +23,7 @@ final class CreateSlaTargetDate extends AbstractCommandHandler implements AuthAw
 
     protected $repoServiceName = 'SlaTargetDate';
 
-    protected $extraRepos = ['document'];
+    protected $extraRepos = ['Document'];
 
     /**
      * @param CommandInterface $command
@@ -86,10 +86,12 @@ final class CreateSlaTargetDate extends AbstractCommandHandler implements AuthAw
      */
     private function fetchEntity(Cmd $command)
     {
-        if (!in_array($command->getEntityType(), $this->extraRepos)) {
+        $repoName = ucfirst($command->getEntityType());
+
+        if (!in_array($repoName, $this->extraRepos)) {
             throw new ValidationException(['Cannot add SLA target date for unsupported entity type']);
         }
 
-        return $this->getRepo($command->getEntityType())->fetchById($command->getEntityId());
+        return $this->getRepo($repoName)->fetchById($command->getEntityId());
     }
 }

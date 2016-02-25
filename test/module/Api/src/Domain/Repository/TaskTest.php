@@ -88,4 +88,28 @@ class TaskTest extends RepositoryTestCase
         $expectedQuery = 'BLAH AND m.assignedToUser = [[U1]] AND m.isClosed = [[N]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
+
+    public function testFetchForTmCaseDecision()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getSingleResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $case = 3;
+        $transportManager = 4;
+
+        $this->assertEquals(['RESULTS'], $this->sut->fetchForTmCaseDecision($case, $transportManager, 'subcat'));
+
+        $expectedQuery =
+            'BLAH AND m.transportManager = [[4]] AND m.case = [[3]] ' .
+            'AND m.category = [[5]] AND m.subCategory = [[subcat]]';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }

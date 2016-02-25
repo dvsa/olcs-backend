@@ -220,9 +220,12 @@ class GoodsDiscTest extends RepositoryTestCase
     {
         $licenceId = 123;
 
-        $this->expectQueryWithData('LicenceVehicle\CeaseDiscsForLicence', ['licence' => 123]);
+        $stmt = m::mock();
+        $stmt->shouldReceive('rowCount')->with()->once()->andReturn(564);
 
-        $this->sut->ceaseDiscsForLicence($licenceId);
+        $this->expectQueryWithData('LicenceVehicle\CeaseDiscsForLicence', ['licence' => 123], [], $stmt);
+
+        $this->assertSame(564, $this->sut->ceaseDiscsForLicence($licenceId));
     }
 
     public function testFetchDiscsToPrintMin()
@@ -309,5 +312,15 @@ class GoodsDiscTest extends RepositoryTestCase
         $this->expectQueryWithData('Discs\CreateGoodsDiscs', ['application' => 1102, 'licence' => 321, 'isCopy' => 0]);
 
         $this->sut->updateExistingGoodsDiscs($application);
+    }
+
+    public function testCreateDiscsForLicence()
+    {
+        $stmt = m::mock();
+        $stmt->shouldReceive('rowCount')->with()->once()->andReturn(83);
+
+        $this->expectQueryWithData('LicenceVehicle\CreateDiscsForLicence', ['licence' => 1502], [], $stmt);
+
+        $this->assertSame(83, $this->sut->createDiscsForLicence(1502));
     }
 }

@@ -61,6 +61,47 @@ class LicenceVehicle extends AbstractRepository
         return $qb;
     }
 
+    /**
+     * Create paginated query - vehicles data for PSV licence
+     *
+     * @param QueryInterface $query
+     * @param $licenceId
+     * @return QueryBuilder
+     */
+    public function createPaginatedVehiclesDataForLicenceQueryPsv(QueryInterface $query, $licenceId)
+    {
+        $qb = $this->createFilteredQueryForLvaPsv($query);
+
+        $qb->andWhere($qb->expr()->eq('m.licence', ':licence'));
+        $qb->setParameter('licence', $licenceId);
+
+        return $qb;
+    }
+
+    /**
+     * Create paginated query - vehicles data for PSV application
+     *
+     * @param QueryInterface $query
+     * @param $applicationId
+     * @return QueryBuilder
+     */
+    public function createPaginatedVehiclesDataForApplicationQueryPsv(QueryInterface $query, $applicationId)
+    {
+        $qb = $this->createFilteredQueryForLvaPsv($query);
+        $qb->andWhere($qb->expr()->eq('m.application', ':application'));
+
+        $qb->andWhere(
+            $qb->expr()->orX(
+                $qb->expr()->eq('m.application', ':application'),
+                $qb->expr()->isNotNull('m.specifiedDate')
+            )
+        );
+
+        $qb->setParameter('application', $applicationId);
+
+        return $qb;
+    }
+
     public function createPaginatedVehiclesDataForUnlicensedOperatorQuery(QueryInterface $query, $licenceId)
     {
         $qb = $this->createDefaultListQuery($query);
@@ -217,6 +258,21 @@ class LicenceVehicle extends AbstractRepository
             $this->filterSpecifiedOnly($qb);
         }
 
+        return $qb;
+    }
+
+    /**
+     * Create filtered query for LVA, PSV version
+     *
+     * @param QueryInterface $query
+     * @return QueryBuilder
+     */
+    private function createFilteredQueryForLvaPsv(QueryInterface $query)
+    {
+        $qb = $this->createDefaultListQuery($query);
+
+        $qb->innerJoin('m.vehicle', 'v');
+        $this->filterByRemovalDate($qb, $query);
         return $qb;
     }
 
