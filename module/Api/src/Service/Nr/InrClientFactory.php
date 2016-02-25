@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr;
 
+use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Http\Client as RestClient;
@@ -27,6 +28,9 @@ class InrClientFactory implements FactoryInterface
         }
 
         $httpClient = new RestClient($config['nr']['inr_service']['uri'], $config['nr']['inr_service']['options']);
+
+        $wrapper = new ClientAdapterLoggingWrapper();
+        $wrapper->wrapAdapter($httpClient);
 
         return new InrClient($httpClient);
     }
