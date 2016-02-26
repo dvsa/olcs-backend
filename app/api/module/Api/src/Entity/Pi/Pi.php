@@ -463,4 +463,20 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
             'isTm' => $this->isTm()
         ];
     }
+
+    /**
+     * Get a flattened array of SLA Target Dates
+     *
+     * @return array
+     */
+    public function flattenSlaTargetDates()
+    {
+        $slaValues = [];
+
+        foreach ($this->getSlaTargetDates() as $slaTargetDate) {
+            $slaValues[$slaTargetDate->getSla()->getField() . 'Target'] = $slaTargetDate->getTargetDate();
+        }
+
+        return $slaValues;
+    }
 }
