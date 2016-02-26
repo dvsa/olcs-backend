@@ -6,6 +6,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Submission;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
@@ -20,6 +21,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
+use Mockery\CountValidator\Exception;
 
 /**
  * Assign Submission
@@ -36,6 +38,12 @@ final class AssignSubmission extends AbstractCommandHandler implements
 
     protected $extraRepos = ['User'];
 
+    /**
+     * @param CommandInterface $command
+     * @return Result
+     * @throws ValidationException
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         $submissionEntity = $this->updateSubmission($command);
@@ -54,11 +62,20 @@ final class AssignSubmission extends AbstractCommandHandler implements
     /**
      * @param Cmd $command
      * @return Submission
+     * @throws ValidationException
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     private function updateSubmission(Cmd $command)
     {
+        /** @var Submission $submission */
         $submission = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
-
+        if (empty($submission->getInformationCompleteDate())) {
+            throw new ValidationException(
+                [
+                    'NOT_COMPLETE' => 'Cannot assign submission until information complete date is set'
+                ]
+            );
+        }
         $submission->setRecipientUser(
             $this->getRepo()->getReference(UserEntity::class, $command->getRecipientUser())
         );
@@ -78,7 +95,8 @@ final class AssignSubmission extends AbstractCommandHandler implements
 
     /**
      * @param Cmd $command
-     * @return CreateTask
+     * @return static
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     private function createCreateTaskCommand(Cmd $command)
     {
