@@ -84,7 +84,7 @@ class PiEntityTest extends EntityTester
         $agreedDate = m::mock(\DateTime::class);
         $piStatus = m::mock(RefData::class);
 
-        $pi = new Entity(
+        new Entity(
             $caseEntity,
             $agreedByTc,
             $agreedByTcRole,
@@ -620,5 +620,39 @@ class PiEntityTest extends EntityTester
             ['invalid date', null],
             [$date, \DateTime::createFromFormat('Y-m-d', $date)->setTime(0, 0, 0)]
         ];
+    }
+
+    /**
+     * Tests flattenSlaTargetDates
+     */
+    public function testFlattenSlaTargetDates()
+    {
+        $date1 = new \DateTime('2015-03-14');
+
+        $sla1 = m::mock(SlaTargetDateEntity::class);
+        $sla1->shouldReceive('getField')->andReturn('field1');
+
+        $slaTargetDate1 = m::mock(SlaTargetDateEntity::class);
+        $slaTargetDate1->shouldReceive('getSla')->andReturn($sla1);
+        $slaTargetDate1->shouldReceive('getTargetDate')->andReturn($date1);
+
+        $date2 = new \DateTime('2015-03-14');
+
+        $sla2 = m::mock(SlaTargetDateEntity::class);
+        $sla2->shouldReceive('getField')->andReturn('field2');
+
+        $slaTargetDate2 = m::mock(SlaTargetDateEntity::class);
+        $slaTargetDate2->shouldReceive('getSla')->andReturn($sla2);
+        $slaTargetDate2->shouldReceive('getTargetDate')->andReturn($date2);
+
+        $this->entity->addSlaTargetDates($slaTargetDate1);
+        $this->entity->addSlaTargetDates($slaTargetDate2);
+
+        $expected = [
+            'field1Target' => $date1,
+            'field2Target' => $date2,
+        ];
+
+        $this->assertEquals($expected, $this->entity->flattenSlaTargetDates());
     }
 }
