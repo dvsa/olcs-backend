@@ -23,9 +23,6 @@ use Doctrine\ORM\Mapping as ORM;
      *     columns={"irfo_gv_permit_type_id"}),
  *        @ORM\Index(name="ix_irfo_gv_permit_irfo_permit_status", columns={"irfo_permit_status"}),
  *        @ORM\Index(name="ix_irfo_gv_permit_withdrawn_reason", columns={"withdrawn_reason"})
- *    },
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_irfo_gv_permit_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -164,15 +161,6 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
      * @ORM\Column(type="string", name="note", length=2000, nullable=true)
      */
     protected $note;
-
-    /**
-     * Olbs key
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
-     */
-    protected $olbsKey;
 
     /**
      * Organisation
@@ -542,29 +530,6 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     public function getNote()
     {
         return $this->note;
-    }
-
-    /**
-     * Set the olbs key
-     *
-     * @param int $olbsKey
-     * @return IrfoGvPermit
-     */
-    public function setOlbsKey($olbsKey)
-    {
-        $this->olbsKey = $olbsKey;
-
-        return $this;
-    }
-
-    /**
-     * Get the olbs key
-     *
-     * @return int
-     */
-    public function getOlbsKey()
-    {
-        return $this->olbsKey;
     }
 
     /**
