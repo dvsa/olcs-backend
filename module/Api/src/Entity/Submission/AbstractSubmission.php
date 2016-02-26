@@ -114,7 +114,7 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="information_complete_date", nullable=true)
+     * @ORM\Column(type="date", name="information_complete_date", nullable=true)
      */
     protected $informationCompleteDate;
 

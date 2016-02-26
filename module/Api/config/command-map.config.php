@@ -410,6 +410,8 @@ return [
         CommandHandler\Submission\RefreshSubmissionSections::class,
 
     TransferCommand\Submission\AssignSubmission::class => CommandHandler\Submission\AssignSubmission::class,
+    TransferCommand\Submission\InformationCompleteSubmission::class =>
+        CommandHandler\Submission\InformationComplete::class,
 
     // Transfer - Document
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
