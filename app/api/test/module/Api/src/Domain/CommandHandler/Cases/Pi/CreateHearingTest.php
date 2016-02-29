@@ -21,6 +21,7 @@ use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Publication\PiHearing as PublishHearingCmd;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 
 /**
  * Create Hearing Test
@@ -161,6 +162,14 @@ class CreateHearingTest extends CommandHandlerTestCase
             CreateTaskCmd::class,
             $taskData,
             $result2
+        );
+
+        $this->expectedSideEffect(
+            GenerateSlaTargetDateCmd::class,
+            [
+                'pi' => $pi
+            ],
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);

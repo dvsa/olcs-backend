@@ -13,6 +13,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Reason as ReasonEntity;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\UpdateAgreedAndLegislation as UpdateCmd;
 use Doctrine\ORM\Query;
@@ -61,6 +62,17 @@ final class AgreedAndLegislationUpdate extends AbstractCommandHandler implements
         $this->getRepo()->save($pi);
         $result->addMessage('Pi updated');
         $result->addId('Pi', $pi->getId());
+
+        // generate all related SLA Target Dates
+        $result->merge(
+            $this->getCommandHandler()->handleCommand(
+                GenerateSlaTargetDateCmd::create(
+                    [
+                        'pi' => $pi->getId()
+                    ]
+                )
+            )
+        );
 
         return $result;
     }

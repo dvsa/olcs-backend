@@ -11,6 +11,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\UpdateSla as UpdateSlaCmd;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Doctrine\ORM\Query;
 
@@ -75,6 +76,17 @@ final class UpdateSla extends AbstractCommandHandler implements TransactionedInt
         $this->getRepo()->save($pi);
         $result->addMessage('Sla updated');
         $result->addId('Pi', $pi->getId());
+
+        // generate all related SLA Target Dates
+        $result->merge(
+            $this->getCommandHandler()->handleCommand(
+                GenerateSlaTargetDateCmd::create(
+                    [
+                        'pi' => $pi->getId()
+                    ]
+                )
+            )
+        );
 
         return $result;
     }
