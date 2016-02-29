@@ -125,9 +125,9 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
             //get the parts of the data we need doctrine for
             $this->commonData = $this->getCommonData($erruData);
         } catch (NotFoundException $e) {
-            //will result in GenericController returning a 400 response, which is what we're looking for
+            //will result in a 400 response from XML controller, which is what we're looking for
             throw new Exception('some data was not correct');
-        };
+        }
 
         //there can be more than one serious infringement per request, in theory
         foreach ($erruData['si'] as $si) {
