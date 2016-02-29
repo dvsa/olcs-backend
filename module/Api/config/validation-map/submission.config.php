@@ -16,6 +16,7 @@ return [
     CommandHandler\Submission\CloseSubmission::class                => Handler\Misc\IsInternalUser::class,
     CommandHandler\Submission\ReopenSubmission::class               => Handler\Misc\IsInternalUser::class,
     CommandHandler\Submission\AssignSubmission::class               => Handler\Misc\IsInternalUser::class,
+    CommandHandler\Submission\InformationComplete::class            => Handler\Misc\IsInternalUser::class,
     CommandHandler\Submission\CreateSubmission::class               => Handler\Misc\IsInternalUser::class,
     CommandHandler\Submission\CreateSubmissionAction::class         => Handler\Misc\IsInternalUser::class,
     CommandHandler\Submission\CreateSubmissionSectionComment::class => Handler\Misc\IsInternalUser::class,

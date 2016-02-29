@@ -110,6 +110,15 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     protected $id;
 
     /**
+     * Information complete date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="information_complete_date", nullable=true)
+     */
+    protected $informationCompleteDate;
+
+    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -407,6 +416,29 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the information complete date
+     *
+     * @param \DateTime $informationCompleteDate
+     * @return Submission
+     */
+    public function setInformationCompleteDate($informationCompleteDate)
+    {
+        $this->informationCompleteDate = $informationCompleteDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the information complete date
+     *
+     * @return \DateTime
+     */
+    public function getInformationCompleteDate()
+    {
+        return $this->informationCompleteDate;
     }
 
     /**
