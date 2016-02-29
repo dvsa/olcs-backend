@@ -137,9 +137,9 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
     /**
      * Is full day
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="is_full_day", nullable=true)
+     * @ORM\Column(type="yesnonull", name="is_full_day", nullable=true)
      */
     protected $isFullDay;
 
@@ -513,7 +513,7 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
     /**
      * Set the is full day
      *
-     * @param boolean $isFullDay
+     * @param string $isFullDay
      * @return PiHearing
      */
     public function setIsFullDay($isFullDay)
@@ -526,7 +526,7 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
     /**
      * Get the is full day
      *
-     * @return boolean
+     * @return string
      */
     public function getIsFullDay()
     {
