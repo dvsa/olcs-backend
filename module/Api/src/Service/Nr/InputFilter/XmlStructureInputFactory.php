@@ -30,7 +30,7 @@ class XmlStructureInputFactory implements FactoryInterface
         $validatorChain = $service->getValidatorChain();
 
         $xsdValidator = $serviceLocator->get('ValidatorManager')->get(Xsd::class);
-        $xsdValidator->setXsd('ERRU2MS_Infringement_Req.xsd');
+        $xsdValidator->setXsd('https://webgate.ec.testa.eu/erru/1.0');
         $validatorChain->attach($xsdValidator);
 
         return $service;
