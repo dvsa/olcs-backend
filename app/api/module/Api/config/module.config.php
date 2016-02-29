@@ -119,6 +119,7 @@ return [
     'controllers' => [
         'invokables' => [
             'Api\Generic' => \Dvsa\Olcs\Api\Controller\GenericController::class,
+            'Api\Xml' => \Dvsa\Olcs\Api\Controller\XmlController::class
         ]
     ],
     \Dvsa\Olcs\Api\Domain\DbQueryServiceManagerFactory::CONFIG_KEY => include(__DIR__ . '/db-query-map.config.php'),
