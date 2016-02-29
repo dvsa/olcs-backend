@@ -21,7 +21,6 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
-use Mockery\CountValidator\Exception;
 
 /**
  * Assign Submission
