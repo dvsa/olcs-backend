@@ -14,6 +14,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\UpdateSla as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 
 /**
  * Update Sla Test
@@ -59,6 +60,7 @@ class UpdateSlaTest extends CommandHandlerTestCase
 
         /** @var PiEntity $pi */
         $pi = m::mock(PiEntity::class)->makePartial();
+        $pi->setId($id);
         $pi->shouldReceive('isClosed')->once()->andReturn(false);
 
         $this->repoMap['Pi']->shouldReceive('fetchUsingId')
@@ -67,6 +69,14 @@ class UpdateSlaTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with(m::type(PiEntity::class))
             ->once();
+
+        $this->expectedSideEffect(
+            GenerateSlaTargetDateCmd::class,
+            [
+                'pi' => $id
+            ],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 

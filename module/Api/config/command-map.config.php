@@ -888,4 +888,5 @@ return [
     // Sla Target Dates
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
     TransferCommand\System\UpdateSlaTargetDate::class => CommandHandler\System\UpdateSlaTargetDate::class,
+    Command\System\GenerateSlaTargetDate::class => CommandHandler\System\GenerateSlaTargetDate::class,
 ];
