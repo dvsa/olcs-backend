@@ -132,6 +132,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
 
         $submission->shouldReceive('getCase->getId')->andReturn(12)->getMock();
         $submission->shouldReceive('getCase->getLicence->getId')->andReturn(121)->getMock();
+        $submission->shouldReceive('getInformationCompleteDate')->andReturn('2015-01-01')->getMock();
 
         $this->repoMap['Submission']->shouldReceive('fetchUsingId')
             ->once()
@@ -233,6 +234,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
 
         $submission->shouldReceive('getCase->getId')->andReturn(12)->getMock();
         $submission->shouldReceive('getCase->getLicence->getId')->andReturn(121)->getMock();
+        $submission->shouldReceive('getInformationCompleteDate')->andReturn('2015-01-01')->getMock();
 
         $this->repoMap['Submission']->shouldReceive('fetchUsingId')
             ->once()
@@ -307,5 +309,31 @@ class AssignSubmissionTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testHandleCommandInformationIncomplete()
+    {
+        $data = [
+            'id' => 1,
+            'version' => 1,
+            'recipientUser' => 4,
+            'urgent' => 'Y',
+        ];
+
+        $command = Cmd::create($data);
+
+        /** @var SubmissionEntity $savedSubmission */
+        $submission = m::mock(SubmissionEntity::class)->makePartial();
+        $submission->setId(1);
+
+        $this->repoMap['Submission']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($submission);
+
+        $this->sut->handleCommand($command);
     }
 }
