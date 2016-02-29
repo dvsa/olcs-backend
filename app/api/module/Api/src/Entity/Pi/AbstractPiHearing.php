@@ -135,6 +135,15 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
     protected $isCancelled = 0;
 
     /**
+     * Is full day
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_full_day", nullable=true)
+     */
+    protected $isFullDay;
+
+    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -499,6 +508,29 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
     public function getIsCancelled()
     {
         return $this->isCancelled;
+    }
+
+    /**
+     * Set the is full day
+     *
+     * @param boolean $isFullDay
+     * @return PiHearing
+     */
+    public function setIsFullDay($isFullDay)
+    {
+        $this->isFullDay = $isFullDay;
+
+        return $this;
+    }
+
+    /**
+     * Get the is full day
+     *
+     * @return boolean
+     */
+    public function getIsFullDay()
+    {
+        return $this->isFullDay;
     }
 
     /**
