@@ -56,7 +56,6 @@ class InformationCompleteSubmissionTest extends CommandHandlerTestCase
             ->with(m::type(SubmissionEntity::class))
             ->andReturnUsing(
                 function (SubmissionEntity $submission) use (&$savedSubmission) {
-                    $submission->setInformationCompleteDate('2015-01-05');
                     $savedSubmission = $submission;
                 }
             );
