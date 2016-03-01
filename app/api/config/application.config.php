@@ -17,6 +17,7 @@ return array(
         'Olcs\Db',
         'Dvsa\Olcs\Api',
         'Dvsa\Olcs\Cli',
+        'Dvsa\Olcs\Scanning',
         'Soflomo\Purifier',
         'Olcs\XmlTools'
     ],
