@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 use Dvsa\Olcs\Transfer\Command\Submission\InformationCompleteSubmission as Cmd;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
@@ -29,6 +30,17 @@ final class InformationComplete extends AbstractCommandHandler implements Transa
         $result = new Result();
         $result->addId('submission', $submissionEntity->getId());
         $result->addMessage('Submission updated successfully');
+
+        // generate all related SLA Target Dates
+        $result->merge(
+            $this->getCommandHandler()->handleCommand(
+                GenerateSlaTargetDateCmd::create(
+                    [
+                        'submission' => $submissionEntity->getId()
+                    ]
+                )
+            )
+        );
 
         return $result;
     }
