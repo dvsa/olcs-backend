@@ -153,7 +153,8 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         $witnesses,
         $decisionDate,
         $notificationDate,
-        $decisionNotes
+        $decisionNotes,
+        ArrayCollection $tmDecisions
     ) {
         if ($this->isClosed()) {
             throw new ForbiddenException(self::MSG_UPDATE_CLOSED);
@@ -169,6 +170,10 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         $this->decisionNotes = $decisionNotes;
         $this->decisionDate = $this->processDate($decisionDate);
         $this->notificationDate = $this->processDate($notificationDate);
+
+        if (!empty($tmDecisions)) {
+            $this->tmDecisions = $tmDecisions;
+        }
     }
 
     /**
