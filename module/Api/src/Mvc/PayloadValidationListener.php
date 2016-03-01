@@ -19,6 +19,13 @@ class PayloadValidationListener implements ListenerAggregateInterface
 {
     use ListenerAggregateTrait;
 
+    const JSON_NOT_VALID_CODE = Response::STATUS_CODE_422;
+    const XML_NOT_VALID_CODE = Response::STATUS_CODE_400;
+
+    const JSON_MEDIA_TYPE = 'application/json';
+
+    protected $xmlMediaTypes = ['text/xml', 'application/xml'];
+
     protected $annotationBuilder;
 
     public function __construct(AnnotationBuilder $annotationBuilder)
@@ -85,11 +92,18 @@ class PayloadValidationListener implements ListenerAggregateInterface
             }
         } else {
 
-            /** @var ContentType $contentType */
+            /**
+             * @var ContentType $contentType
+             * @var string $mediaType
+             */
             $contentType = $request->getHeader('contenttype');
+            $mediaType = $contentType->getMediaType();
+            $isXml = in_array($mediaType, $this->xmlMediaTypes);
 
-            if ($contentType->getMediaType() == 'application/json') {
+            if ($mediaType === self::JSON_MEDIA_TYPE) {
                 $data = json_decode($request->getContent(), true);
+            } elseif ($isXml) {
+                $data = ['xml' => $request->getContent()];
             } else {
                 $data = (array)$request->getPost();
 
@@ -101,14 +115,20 @@ class PayloadValidationListener implements ListenerAggregateInterface
             }
 
             $dto->exchangeArray($data);
-
             $command = $this->annotationBuilder->createCommand($dto);
 
             if (!$command->isValid()) {
                 $response = new Response();
-                $response->setStatusCode(Response::STATUS_CODE_422);
-                $response->getHeaders()->addHeaders(['Content-Type' => 'application/json']);
-                $response->setContent(json_encode($command->getMessages(), true));
+
+                if ($isXml) {
+                    //we don't have xml responses which need to return anything other than a status code
+                    $response->setStatusCode(self::XML_NOT_VALID_CODE);
+                } else {
+                    $response->setStatusCode(self::JSON_NOT_VALID_CODE);
+                    $response->getHeaders()->addHeaders(['Content-Type' => self::JSON_MEDIA_TYPE]);
+                    $response->setContent(json_encode($command->getMessages(), true));
+                }
+
                 return $response;
             }
         }

@@ -20,7 +20,7 @@ class XmlStructureInputFactoryTest extends TestCase
     public function testCreateService()
     {
         $mockXsdValidator = m::mock('Zend\Validator\AbstractValidator');
-        $mockXsdValidator->shouldReceive('setXsd')->once() ->with('ERRU2MS_Infringement_Req.xsd');
+        $mockXsdValidator->shouldReceive('setXsd')->once()->with('https://webgate.ec.testa.eu/erru/1.0');
 
         $mockFilter = m::mock('Zend\Filter\AbstractFilter');
 
