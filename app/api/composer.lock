@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1b28c088b674ab6bd23d8fbccd551465",
-    "content-hash": "49ab892a2ffb577620b5230bd125e3e2",
+    "hash": "2683622f8f85e499718cfdd41e6cf9f0",
+    "content-hash": "8eac7dc7d94e31eee014eb1f6c85628a",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1125,11 +1125,11 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-release/3.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-transfer.git",
-                "reference": "d93616a30081e00ddaf181163e9bd9e88c115b72"
+                "reference": "7f90823ef047a663f24da92af46c8c690d1cbd0c"
             },
             "require": {
                 "php": ">=5.4",
@@ -1147,7 +1147,7 @@
                 }
             },
             "description": "OLCS Transfer",
-            "time": "2016-02-16 16:12:28"
+            "time": "2016-03-01 10:17:09"
         },
         {
             "name": "olcs/olcs-utils",
