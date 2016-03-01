@@ -298,4 +298,33 @@ EOT;
             ['result']
         );
     }
+
+    public function testFetchForContinuationAndLicence()
+    {
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('m.licence', ':licence')->once()->andReturn('licence');
+        $mockQb->shouldReceive('andWhere')->with('licence')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('licence', 222)->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('m.continuation', ':continuation')->once()->andReturn('continuation');
+        $mockQb->shouldReceive('andWhere')->with('continuation')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('continuation', 111)->once()->andReturnSelf();
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('m')
+            ->once()
+            ->andReturn($mockQb);
+
+        $mockQb->shouldReceive('getQuery->getResult')->with()->once()->andReturn(['result']);
+
+        $this->assertEquals(
+            $this->sut->fetchForContinuationAndLicence(111, 222),
+            ['result']
+        );
+    }
 }
