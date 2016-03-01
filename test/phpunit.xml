@@ -38,6 +38,9 @@
         <testsuite name="OLD Olcs">
             <directory>./module/Olcs</directory>
         </testsuite>
+        <testsuite name="OLD Scanning">
+            <directory>./module/Scanning</directory>./Re
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
