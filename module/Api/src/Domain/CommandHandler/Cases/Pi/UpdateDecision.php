@@ -61,6 +61,7 @@ final class UpdateDecision extends AbstractCommandHandler implements Transaction
             $command->getDecisionDate(),
             $command->getNotificationDate(),
             $command->getDecisionNotes(),
+            $command->getTmCalledWithOperator(),
             $tmDecisions
         );
 
