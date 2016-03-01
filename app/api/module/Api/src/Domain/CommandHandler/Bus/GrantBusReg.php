@@ -62,10 +62,9 @@ final class GrantBusReg extends AbstractCommandHandler
         $sideEffects[] = $this->getPublishCmd($busReg->getId());
 
         $status = $busReg->getStatus()->getId();
-        $ebsrSubmissions = $busReg->getEbsrSubmissions();
 
         //if this is an ebsr record, send email confirmation
-        if (!$ebsrSubmissions->isEmpty()) {
+        if ($busReg->isFromEbsr()) {
             $ebsrId = $busReg->getEbsrSubmissions()->first()->getId();
 
             if ($status === BusRegEntity::STATUS_REGISTERED) {
