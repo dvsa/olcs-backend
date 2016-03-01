@@ -14,14 +14,15 @@ use Dvsa\Olcs\Api\Domain\Repository\Submission as SubmissionRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Submission\InformationCompleteSubmission as Cmd;
 use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  *  Submission InformationComplete Test
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class InformationCompleteSubmissionTest extends CommandHandlerTestCase
+class InformationCompleteTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
@@ -33,10 +34,11 @@ class InformationCompleteSubmissionTest extends CommandHandlerTestCase
 
     public function testHandleCommandUnassignedSubmission()
     {
+        $id = 2;
         $infoCompleteDate = '2015-01-05';
         $command = Cmd::create(
             [
-                'id' => 2,
+                'id' => $id,
                 'version' => 1,
                 'informationCompleteDate' => $infoCompleteDate
             ]
@@ -44,7 +46,7 @@ class InformationCompleteSubmissionTest extends CommandHandlerTestCase
 
         /** @var SubmissionEntity $savedSubmission */
         $submission = m::mock(SubmissionEntity::class)->makePartial();
-        $submission->setId(2);
+        $submission->setId($id);
 
         $this->repoMap['Submission']->shouldReceive('fetchUsingId')
             ->once()
@@ -60,6 +62,14 @@ class InformationCompleteSubmissionTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectedSideEffect(
+            GenerateSlaTargetDateCmd::class,
+            [
+                'submission' => $id
+            ],
+            new Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
@@ -68,6 +78,4 @@ class InformationCompleteSubmissionTest extends CommandHandlerTestCase
         $this->assertContains('Submission updated successfully', $result->getMessages());
         $this->assertEquals($infoCompleteDate, $savedSubmission->getInformationCompleteDate());
     }
-
-
 }

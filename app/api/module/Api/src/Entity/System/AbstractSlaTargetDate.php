@@ -19,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_sla_target_date_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_sla_target_date_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_sla_target_date_pi_id", columns={"pi_id"}),
+ *        @ORM\Index(name="ix_sla_target_date_submission_id", columns={"submission_id"}),
  *        @ORM\Index(name="ix_sla_target_date_sla_id", columns={"sla_id"})
  *    },
  *    uniqueConstraints={
@@ -143,6 +144,20 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
      * @ORM\JoinColumn(name="sla_id", referencedColumnName="id", nullable=true)
      */
     protected $sla;
+
+    /**
+     * Submission
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Submission\Submission
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Submission\Submission",
+     *     fetch="LAZY",
+     *     inversedBy="slaTargetDates"
+     * )
+     * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=true)
+     */
+    protected $submission;
 
     /**
      * Target date
@@ -423,6 +438,29 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     public function getSla()
     {
         return $this->sla;
+    }
+
+    /**
+     * Set the submission
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Submission\Submission $submission
+     * @return SlaTargetDate
+     */
+    public function setSubmission($submission)
+    {
+        $this->submission = $submission;
+
+        return $this;
+    }
+
+    /**
+     * Get the submission
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Submission\Submission
+     */
+    public function getSubmission()
+    {
+        return $this->submission;
     }
 
     /**

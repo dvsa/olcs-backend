@@ -18,10 +18,23 @@ final class GenerateSlaTargetDate extends AbstractCommand
     protected $pi;
 
     /**
+     * @var int
+     */
+    protected $submission;
+
+    /**
      * @return int
      */
     public function getPi()
     {
         return $this->pi;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSubmission()
+    {
+        return $this->submission;
     }
 }

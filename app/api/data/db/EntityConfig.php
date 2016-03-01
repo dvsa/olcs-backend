@@ -1958,6 +1958,17 @@ return array(
                 'orphanRemoval' => 'true'
             )
         ),
+        'submission_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Submission',
+                'property' => 'slaTargetDate',
+                'cascade' => array(
+                    'persist'
+                ),
+                'indexBy' => 'sla_id',
+                'orphanRemoval' => 'true'
+            )
+        ),
         'under_delegation' => array(
             'type' => 'yesno'
         ),

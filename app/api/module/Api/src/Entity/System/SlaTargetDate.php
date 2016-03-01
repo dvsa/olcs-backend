@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Pi\Pi;
+use Dvsa\Olcs\Api\Entity\Submission\Submission;
 
 /**
  * SlaTargetDate Entity
@@ -41,6 +42,8 @@ class SlaTargetDate extends AbstractSlaTargetDate
             $this->setDocument($entity);
         } elseif ($entity instanceof Pi) {
             $this->setPi($entity);
+        } elseif ($entity instanceof Submission) {
+            $this->setSubmission($entity);
         } else {
             throw new NotFoundException('Entity not found');
         }

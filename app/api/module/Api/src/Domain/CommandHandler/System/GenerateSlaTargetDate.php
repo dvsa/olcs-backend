@@ -11,6 +11,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
+use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as SlaTargetDateEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -22,7 +23,7 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
 {
     protected $repoServiceName = 'SlaTargetDate';
 
-    protected $extraRepos = ['Pi', 'Sla'];
+    protected $extraRepos = ['Pi', 'Submission', 'Sla'];
 
     /**
      * @var SlaCalculatorInterface
@@ -39,7 +40,11 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
 
         if ($command->getPi() !== null) {
             $result->merge(
-                $this->generateForPi($command->getPi())
+                $this->generateForEntity('Pi', $command->getPi(), ['pi', 'pi_hearing'])
+            );
+        } elseif ($command->getSubmission() !== null) {
+            $result->merge(
+                $this->generateForEntity('Submission', $command->getSubmission(), ['submission'])
             );
         }
 
@@ -47,42 +52,44 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
     }
 
     /**
-     * Generates and saves PI SLA
+     * Generates and saves SLA for given entity
      *
+     * @param string $repoName
      * @param int $id
+     * @param array $categories
      *
      * @return Result
      */
-    private function generateForPi($id)
+    private function generateForEntity($repoName, $id, array $categories)
     {
         $result = new Result();
 
-        $pi = $this->getRepo('Pi')->fetchById($id);
+        $entity = $this->getRepo($repoName)->fetchById($id);
 
         // we need a traffic area so we can calculate SLAs
-        if ($pi->getCase()->isTm()) {
+        if ($entity->getCase()->isTm()) {
             // no licence for TM cases so using English TA
             $trafficArea = $this->getRepo()->getReference(
                 TrafficAreaEntity::class,
                 TrafficAreaEntity::SE_MET_TRAFFIC_AREA_CODE
             );
         } else {
-            $trafficArea = $pi->getCase()->getLicence()->getTrafficArea();
+            $trafficArea = $entity->getCase()->getLicence()->getTrafficArea();
         }
 
-        $this->processSlaTargetDates($pi, $trafficArea, ['pi', 'pi_hearing']);
+        $this->processSlaTargetDates($entity, $trafficArea, $categories);
 
-        $this->getRepo('Pi')->save($pi);
+        $this->getRepo($repoName)->save($entity);
 
-        $result->addMessage('PI SLA Target Date successfully saved');
+        $result->addMessage('SLA Target Dates successfully saved');
 
         return $result;
     }
 
     /**
-     * Process SLA Target Dates for given entity
+     * Process SLA Target Dates for given entity (updates SlaTargetDates collection)
      *
-     * @param PiEntity $entity
+     * @param PiEntity|SubmissionEntity $entity
      * @param TrafficAreaEntity $trafficArea
      * @param array $categories
      *
