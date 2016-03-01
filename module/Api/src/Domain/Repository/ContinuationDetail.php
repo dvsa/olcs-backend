@@ -261,4 +261,31 @@ class ContinuationDetail extends AbstractRepository
 
         return $qb->getQuery()->getSingleResult();
     }
+
+    /**
+     * Fetch continuation details for a licence and continuation
+     *
+     * @param int $continuationId
+     * @param int $licenceId
+     *
+     * @return array
+     */
+    public function fetchForContinuationAndLicence($continuationId, $licenceId)
+    {
+        /* @var $qb \Doctrine\Orm\QueryBuilder */
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->withRefdata();
+
+        // where licence is
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
+            ->setParameter('licence', $licenceId);
+        // and contunation is
+        $qb->andWhere($qb->expr()->eq($this->alias . '.continuation', ':continuation'))
+            ->setParameter('continuation', $continuationId);
+
+        return $qb->getQuery()->getResult();
+    }
 }
