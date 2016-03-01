@@ -79,6 +79,11 @@ final class CreateHearing extends AbstractCommandHandler implements AuthAwareInt
             $command->getDetails()
         );
 
+        $piHearing->setIsFullDay($command->getIsFullDay());
+        if ($command->getIsFullDay() !== 'N' && $command->getIsFullDay() !== 'Y') {
+            $piHearing->setIsFullDay(null);
+        }
+
         $this->getRepo()->save($piHearing);
         $id = $piHearing->getId();
         $result->addMessage('Pi Hearing created');
