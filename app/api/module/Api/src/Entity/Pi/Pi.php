@@ -154,6 +154,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         $decisionDate,
         $notificationDate,
         $decisionNotes,
+        $tmCalledWithOperator,
         ArrayCollection $tmDecisions
     ) {
         if ($this->isClosed()) {
@@ -170,6 +171,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         $this->decisionNotes = $decisionNotes;
         $this->decisionDate = $this->processDate($decisionDate);
         $this->notificationDate = $this->processDate($notificationDate);
+        $this->tmCalledWithOperator = $tmCalledWithOperator;
 
         if (!empty($tmDecisions)) {
             $this->tmDecisions = $tmDecisions;
