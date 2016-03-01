@@ -401,9 +401,9 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Tm called with operator
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean",
+     * @ORM\Column(type="yesno",
      *     name="tm_called_with_operator",
      *     nullable=false,
      *     options={"default": 0})
@@ -1435,7 +1435,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the tm called with operator
      *
-     * @param boolean $tmCalledWithOperator
+     * @param string $tmCalledWithOperator
      * @return Pi
      */
     public function setTmCalledWithOperator($tmCalledWithOperator)
@@ -1448,7 +1448,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the tm called with operator
      *
-     * @return boolean
+     * @return string
      */
     public function getTmCalledWithOperator()
     {
