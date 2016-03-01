@@ -1445,7 +1445,10 @@ return array(
         ),
         'is_adjourned' => array(
             'type' => 'yesno'
-        )
+        ),
+        'is_full_day' => array(
+            'type' => 'yesnonull'
+        ),
     ),
     'pi_reason' => array(
         'pi_id' => array(
