@@ -33,22 +33,16 @@ class SeriousInfringement extends AbstractSeriousInfringement
         CaseEntity $case,
         \DateTime $checkDate,
         \DateTime $infringementDate,
-        CountryEntity $memberStateCode,
         SiCategoryEntity $siCategory,
-        SiCategoryTypeEntity $siCategoryType,
-        $notificationNumber,
-        $workflowId
+        SiCategoryTypeEntity $siCategoryType
     ) {
         parent::__construct();
 
         $this->case = $case;
         $this->checkDate = $checkDate;
         $this->infringementDate = $infringementDate;
-        $this->memberStateCode = $memberStateCode;
         $this->siCategory = $siCategory;
         $this->siCategoryType = $siCategoryType;
-        $this->notificationNumber = $notificationNumber;
-        $this->workflowId = $workflowId;
     }
 
     /**
@@ -69,18 +63,5 @@ class SeriousInfringement extends AbstractSeriousInfringement
     public function getCalculatedBundleValues()
     {
         return ['responseSet' => $this->responseSet()];
-    }
-
-    /**
-     * Updates the serious infringement with an erru response
-     *
-     * @param UserEntity $user
-     * @param \DateTime $responseDateTime
-     */
-    public function updateErruResponse(UserEntity $user, \DateTime $responseDateTime)
-    {
-        $this->setErruResponseUser($user);
-        $this->setErruResponseTime($responseDateTime);
-        $this->setErruResponseSent('Y');
     }
 }

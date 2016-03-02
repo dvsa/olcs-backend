@@ -3,6 +3,10 @@
 namespace Dvsa\Olcs\Api\Entity\Si;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * ErruRequest Entity
@@ -26,5 +30,38 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ErruRequest extends AbstractErruRequest
 {
+    const DEFAULT_CASE_TYPE = 'erru_case_t_msirnys'; //MSI with no response sent
 
+    public function __construct(
+        CaseEntity $case,
+        RefData $caseType,
+        CountryEntity $memberStateCode,
+        $originatingAuthority,
+        $transportUndertakingName,
+        $vrm,
+        $notificationNumber,
+        $workflowId
+    ) {
+        $this->case = $case;
+        $this->caseType = $caseType;
+        $this->memberStateCode = $memberStateCode;
+        $this->originatingAuthority = $originatingAuthority;
+        $this->transportUndertakingName = $transportUndertakingName;
+        $this->vrm = $vrm;
+        $this->notificationNumber = $notificationNumber;
+        $this->workflowId = $workflowId;
+    }
+
+    /**
+     * Updates the serious infringement with an erru response
+     *
+     * @param UserEntity $user
+     * @param \DateTime $responseDateTime
+     */
+    public function updateErruResponse(UserEntity $user, \DateTime $responseDateTime)
+    {
+        $this->setResponseUser($user);
+        $this->setResponseTime($responseDateTime);
+        $this->setResponseSent('Y');
+    }
 }
