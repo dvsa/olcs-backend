@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
@@ -60,6 +61,12 @@ final class CreateUser extends AbstractUserCommandHandler implements
 
             // link with the organisation
             $data['organisations'] = [$application->getLicence()->getOrganisation()];
+        }
+
+        if (in_array($command->getUserType(), [User::USER_TYPE_OPERATOR, User::USER_TYPE_TRANSPORT_MANAGER])
+            && (empty($data['organisations']))
+        ) {
+            throw new ValidationException(['New user must belong to an organisation']);
         }
 
         $user = User::create(
