@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Cases;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement;
+use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -260,15 +261,15 @@ class CasesEntityTest extends EntityTester
     /**
      * @dataProvider canSendMsiResponseProvider
      *
-     * @param RefData|null $erruCaseType
+     * @param ErruRequestEntity|null $erruRequest
      * @param ArrayCollection $si
      * @param bool $expectedResult
      */
-    public function testCanSendMsiResponse($erruCaseType, $si, $expectedResult)
+    public function testCanSendMsiResponse($erruRequest, $si, $expectedResult)
     {
         $sut = $this->instantiate($this->entityClass);
         $sut->setSeriousInfringements($si);
-        $sut->setErruCaseType($erruCaseType);
+        $sut->setErruRequest($erruRequest);
 
         $this->assertEquals($expectedResult, $sut->canSendMsiResponse());
     }
@@ -280,30 +281,23 @@ class CasesEntityTest extends EntityTester
      */
     public function canSendMsiResponseProvider()
     {
-        $siNotValid1 = m::mock(SeriousInfringement::class);
-        $siNotValid1->shouldReceive('getErruResponseSent')->andReturn('Y');
-        $siNotValid1->shouldReceive('getAppliedPenalties->isEmpty')->andReturn(true);
-
-        $siNotValid2 = m::mock(SeriousInfringement::class);
-        $siNotValid2->shouldReceive('getErruResponseSent')->andReturn('N');
-        $siNotValid2->shouldReceive('getAppliedPenalties->isEmpty')->andReturn(true);
-
-        $siNotValid3 = m::mock(SeriousInfringement::class);
-        $siNotValid3->shouldReceive('getErruResponseSent')->andReturn('Y');
-        $siNotValid3->shouldReceive('getAppliedPenalties->isEmpty')->andReturn(false);
+        $siNotValid = m::mock(SeriousInfringement::class);
+        $siNotValid->shouldReceive('getAppliedPenalties->isEmpty')->andReturn(true);
 
         $siValid = m::mock(SeriousInfringement::class);
-        $siValid->shouldReceive('getErruResponseSent')->andReturn('N');
         $siValid->shouldReceive('getAppliedPenalties->isEmpty')->andReturn(false);
 
-        $erruCaseType = new RefData('erru_case_t_msi');
+        $erruRequestWithResponse = m::mock(ErruRequestEntity::class);
+        $erruRequestWithResponse->shouldReceive('getResponseSent')->andReturn('Y');
+
+        $erruRequestNoResponse = m::mock(ErruRequestEntity::class);
+        $erruRequestNoResponse->shouldReceive('getResponseSent')->andReturn('N');
 
         return [
             [null, new ArrayCollection([$siValid]), false],
-            [$erruCaseType, new ArrayCollection(), false],
-            [$erruCaseType, new ArrayCollection([$siNotValid1]), false],
-            [$erruCaseType, new ArrayCollection([$siNotValid2]), false],
-            [$erruCaseType, new ArrayCollection([$siValid]), true]
+            [$erruRequestWithResponse, new ArrayCollection([$siValid]), false],
+            [$erruRequestNoResponse, new ArrayCollection([$siValid, $siNotValid]), false],
+            [$erruRequestNoResponse, new ArrayCollection([$siValid]), true]
         ];
     }
 
