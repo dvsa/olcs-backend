@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 use Doctrine\ORM\Query;
 
 /**
@@ -78,6 +79,11 @@ final class UpdateHearing extends AbstractCommandHandler implements AuthAwareInt
             $command->getDetails()
         );
 
+        $piHearing->setIsFullDay($command->getIsFullDay());
+        if ($command->getIsFullDay() !== 'N' && $command->getIsFullDay() !== 'Y') {
+            $piHearing->setIsFullDay(null);
+        }
+
         $this->getRepo()->save($piHearing);
         $id = $piHearing->getId();
         $result->addMessage('Pi Hearing updated');
@@ -90,6 +96,17 @@ final class UpdateHearing extends AbstractCommandHandler implements AuthAwareInt
         if ($isAdjourned === 'Y') {
             $result->merge($this->getCommandHandler()->handleCommand($this->createTaskCommand($piHearing)));
         }
+
+        // generate all related SLA Target Dates
+        $result->merge(
+            $this->getCommandHandler()->handleCommand(
+                GenerateSlaTargetDateCmd::create(
+                    [
+                        'pi' => $piHearing->getPi()->getId()
+                    ]
+                )
+            )
+        );
 
         return $result;
     }

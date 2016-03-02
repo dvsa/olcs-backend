@@ -192,7 +192,15 @@ return [
         // @to-do currently waiting on the actual nr address
         'inr_service' => [
             'uri' => 'http://testServiceAddress',
-            'options' => ['timeout' => 30]
+            'options' => [
+                'timeout' => 30,
+                'adapter'   => 'Zend\Http\Client\Adapter\Curl',
+                'curloptions' => [
+                    CURLOPT_SSL_VERIFYPEER => 1, //debug only, must be set to 1 in production
+                    CURLOPT_SSL_VERIFYHOST => 2, //debug only, must be set to 2 in production
+                    CURLOPT_CAINFO => 'inrcert.pem'
+                ]
+            ]
         ],
         'repute_url' => [
             'uri' => 'https://r-inr-01.corp.vosa.gov.uk:444/INR.BackofficeWeb/Repute/SubmitCheck.aspx?'

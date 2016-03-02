@@ -100,4 +100,30 @@ class Response extends AbstractPlugin
 
         return new JsonModel($result->toArray());
     }
+
+    /**
+     * We want to answer with accepted code but not to provide other information, as this is going externally
+     *
+     * @return HttpResponse
+     */
+    public function xmlAccepted()
+    {
+        $response = new HttpResponse();
+        $response->setStatusCode(HttpResponse::STATUS_CODE_202);
+
+        return $response;
+    }
+
+    /**
+     * We want to answer with a bad request code but not provide error messages, as this is going externally
+     *
+     * @return HttpResponse
+     */
+    public function xmlBadRequest()
+    {
+        $response = new HttpResponse();
+        $response->setStatusCode(HttpResponse::STATUS_CODE_400);
+
+        return $response;
+    }
 }

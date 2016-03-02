@@ -10,6 +10,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Pi\AgreedAndLegislationUpdate;
 use Dvsa\Olcs\Api\Domain\Repository\Pi as PiRepo;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\UpdateAgreedAndLegislation as Cmd;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
@@ -89,7 +90,20 @@ class AgreedAndLegislationUpdateTest extends CommandHandlerTestCase
             ->andReturn($pi)
             ->shouldReceive('save')
             ->with(m::type(PiEntity::class))
-            ->once();
+            ->once()
+            ->andReturnUsing(
+                function (PiEntity $pi) use ($id) {
+                    $pi->setId($id);
+                }
+            );
+
+        $this->expectedSideEffect(
+            GenerateSlaTargetDateCmd::class,
+            [
+                'pi' => $id
+            ],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 

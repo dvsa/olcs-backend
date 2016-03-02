@@ -1078,6 +1078,9 @@ return array(
                 'property' => 'publicInquiry'
             )
         ),
+        'tm_called_with_operator' => array(
+            'type' => 'yesno'
+        ),
     ),
     'legacy_case_action' => array(
         'is_driver' => array(
@@ -1445,7 +1448,10 @@ return array(
         ),
         'is_adjourned' => array(
             'type' => 'yesno'
-        )
+        ),
+        'is_full_day' => array(
+            'type' => 'yesnonull'
+        ),
     ),
     'pi_reason' => array(
         'pi_id' => array(
@@ -1942,6 +1948,28 @@ return array(
                 'cascade' => array(
                     'persist'
                 )
+            )
+        ),
+        'pi_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Pi',
+                'property' => 'slaTargetDate',
+                'cascade' => array(
+                    'persist'
+                ),
+                'indexBy' => 'sla_id',
+                'orphanRemoval' => 'true'
+            )
+        ),
+        'submission_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Submission',
+                'property' => 'slaTargetDate',
+                'cascade' => array(
+                    'persist'
+                ),
+                'indexBy' => 'sla_id',
+                'orphanRemoval' => 'true'
             )
         ),
         'under_delegation' => array(

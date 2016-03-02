@@ -5,9 +5,9 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Pi;
 
-use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Pi\CreateAgreedAndLegislation;
 use Dvsa\Olcs\Api\Domain\Repository\Pi as PiRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -59,6 +59,7 @@ class CreateAgreedAndLegislationTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
+        $id = 22;
         $agreedByTc = 44;
         $agreedByTcRole = 'tc_r_dhtru';
         $agreedDate = '2015-06-12';
@@ -81,7 +82,20 @@ class CreateAgreedAndLegislationTest extends CommandHandlerTestCase
 
         $this->repoMap['Pi']->shouldReceive('save')
             ->with(m::type(PiEntity::class))
-            ->once();
+            ->once()
+            ->andReturnUsing(
+                function (PiEntity $pi) use ($id) {
+                    $pi->setId($id);
+                }
+            );
+
+        $this->expectedSideEffect(
+            GenerateSlaTargetDateCmd::class,
+            [
+                'pi' => $id
+            ],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 

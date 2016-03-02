@@ -58,7 +58,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         $application = $aoc->getApplication();
 
         // if only one OC on licence then allow reseting of TA
-        if ($application->getOperatingCentres()->count() === 1) {
+        if ($application->isNew() && $application->getOperatingCentres()->count() === 1) {
             // if postcode has changed
             if ($command->getAddress()['postcode'] !== $aoc->getOperatingCentre()->getAddress()->getPostcode()) {
                 $application->getLicence()->setTrafficArea(null);
