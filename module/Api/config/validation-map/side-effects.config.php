@@ -157,4 +157,5 @@ return [
     CommandHandler\MyAccount\UpdateMyAccount::class                                   => NoValidationRequired::class,
     CommandHandler\Licence\BatchVehicleListGeneratorForGoodsDiscs::class              => NoValidationRequired::class,
     CommandHandler\Discs\BatchVehicleListGeneratorForPsvDiscs::class                  => NoValidationRequired::class,
+    CommandHandler\System\GenerateSlaTargetDate::class                                => NoValidationRequired::class,
 ];

@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Service\Nr\InrClient;
 use Dvsa\Olcs\Api\Service\Nr\InrClientInterface;
 use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Identity\IdentityInterface;
+use Zend\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeException;
 
 /**
  * SendResponseTest
@@ -87,7 +88,8 @@ class SendResponseTest extends CommandHandlerTestCase
         $this->mockedSmServices[InrClientInterface::class]
             ->shouldReceive('makeRequest')
             ->once()
-            ->with($xml);
+            ->with($xml)
+            ->andReturn(202);
 
         $result = $this->sut->handleCommand($command);
 
@@ -103,5 +105,83 @@ class SendResponseTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
         $this->assertInstanceOf(Result::class, $result);
+    }
+
+    /**
+     * Tests sending the Msi response
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RestResponseException
+     */
+    public function testHandleCommandBadInrResponse()
+    {
+        $xml = 'xml string';
+        $userId = 111;
+        $caseId = 333;
+        $case = m::mock(CasesEntity::class);
+        $command = SendErruResponseCmd::create(['case' => $caseId]);
+
+        $user = m::mock(UserEntity::class);
+        $user->shouldReceive('getId')->andReturn($userId);
+
+        $this->repoMap['Cases']->shouldReceive('fetchById')->once()->with($caseId)->andReturn($case);
+
+        $rbacIdentity = m::mock(IdentityInterface::class);
+        $rbacIdentity->shouldReceive('getUser')->andReturn($user);
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('getIdentity->getUser')
+            ->andReturn($user);
+
+        $this->mockedSmServices[MsiResponseService::class]
+            ->shouldReceive('create')
+            ->once()
+            ->with($case)
+            ->andReturn($xml);
+
+        $this->mockedSmServices[InrClientInterface::class]
+            ->shouldReceive('makeRequest')
+            ->once()
+            ->with($xml)
+            ->andReturn(400);
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * Tests sending the Msi response
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RestResponseException
+     */
+    public function testHandleCommandCurlException()
+    {
+        $xml = 'xml string';
+        $userId = 111;
+        $caseId = 333;
+        $case = m::mock(CasesEntity::class);
+        $command = SendErruResponseCmd::create(['case' => $caseId]);
+
+        $user = m::mock(UserEntity::class);
+        $user->shouldReceive('getId')->andReturn($userId);
+
+        $this->repoMap['Cases']->shouldReceive('fetchById')->once()->with($caseId)->andReturn($case);
+
+        $rbacIdentity = m::mock(IdentityInterface::class);
+        $rbacIdentity->shouldReceive('getUser')->andReturn($user);
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('getIdentity->getUser')
+            ->andReturn($user);
+
+        $this->mockedSmServices[MsiResponseService::class]
+            ->shouldReceive('create')
+            ->once()
+            ->with($case)
+            ->andReturn($xml);
+
+        $this->mockedSmServices[InrClientInterface::class]
+            ->shouldReceive('makeRequest')
+            ->once()
+            ->with($xml)
+            ->andThrow(AdapterRuntimeException::class);
+
+        $this->sut->handleCommand($command);
     }
 }

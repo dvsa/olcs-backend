@@ -560,4 +560,46 @@ class CreateUserTest extends CommandHandlerTestCase
 
         $this->sut->handleCommand($command);
     }
+
+    /**
+     * @dataProvider handleCommandThrowsNoOrgExceptionProvider
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testHandleCommandThrowsNoOrgException($userType)
+    {
+        $data = [
+            'userType' => $userType,
+            'loginId' => 'login_id',
+        ];
+
+        $command = Cmd::create($data);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(true);
+
+        $this->repoMap['User']
+            ->shouldReceive('disableSoftDeleteable')
+            ->once()
+            ->shouldReceive('fetchByLoginId')
+            ->once()
+            ->with($data['loginId'])
+            ->andReturn([])
+            ->shouldReceive('enableSoftDeleteable')
+            ->once();
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @return array
+     */
+    public function handleCommandThrowsNoOrgExceptionProvider()
+    {
+        return [
+            [UserEntity::USER_TYPE_OPERATOR],
+            [UserEntity::USER_TYPE_TRANSPORT_MANAGER]
+        ];
+    }
 }

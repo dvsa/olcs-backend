@@ -5,7 +5,8 @@ namespace Dvsa\Olcs\Api\Entity\System;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
-use Zend\Loader\Exception\BadMethodCallException;
+use Dvsa\Olcs\Api\Entity\Pi\Pi;
+use Dvsa\Olcs\Api\Entity\Submission\Submission;
 
 /**
  * SlaTargetDate Entity
@@ -35,10 +36,14 @@ class SlaTargetDate extends AbstractSlaTargetDate
      * @param $agreedDate
      * @param $underDelegation
      */
-    public function __construct($entity, $agreedDate, $underDelegation)
+    public function __construct($entity, $agreedDate, $underDelegation = null)
     {
         if ($entity instanceof Document) {
             $this->setDocument($entity);
+        } elseif ($entity instanceof Pi) {
+            $this->setPi($entity);
+        } elseif ($entity instanceof Submission) {
+            $this->setSubmission($entity);
         } else {
             throw new NotFoundException('Entity not found');
         }

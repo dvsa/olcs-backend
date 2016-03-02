@@ -74,6 +74,7 @@
             "Dvsa\\Olcs\\Api\\": "module/Api/src",
             "Dvsa\\Olcs\\DocumentShare\\": "module/DocumentShare/src",
             "Dvsa\\Olcs\\Cli\\": "module/Cli/src",
+            "Dvsa\\Olcs\\Scanning\\": "module/Scanning/src",
             "Dvsa\\Olcs\\Email\\": "module/Email/src",
             "Dvsa\\Olcs\\CompaniesHouse\\": "module/CompaniesHouse/src",
             "Dvsa\\Olcs\\Address\\": "module/Address/src",

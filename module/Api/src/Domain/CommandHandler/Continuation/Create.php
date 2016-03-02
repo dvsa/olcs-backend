@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Continuation;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Licence\Continuation as ContinuationEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
@@ -23,18 +22,22 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
-        $continuation = $this->getRepo()->fetchContinuation(
+        $continuations = $this->getRepo()->fetchContinuation(
             $command->getMonth(),
             $command->getYear(),
             $command->getTrafficArea()
         );
-        if (count($continuation)) {
-            $result->addId('continuation', $continuation[0]->getId());
-            $result->addMessage('Continuation exists');
-            return $result;
+        if (count($continuations) === 0) {
+            $continuation = $this->createContinuation(
+                $command->getYear(),
+                $command->getMonth(),
+                $command->getTrafficArea()
+            );
+        } else {
+            // assume the first one?
+            $continuation = $continuations[0];
         }
+        $this->result->addId('continuation', $continuation->getId());
 
         $licences = $this->getRepo('Licence')->fetchForContinuation(
             $command->getYear(),
@@ -42,26 +45,27 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
             $command->getTrafficArea()
         );
         if (!count($licences)) {
-            $result->addId('continuation', 0);
-            $result->addMessage('No licences found');
-            return $result;
+            $this->result->addId('continuation', 0);
+            $this->result->addMessage('No licences found');
+            return $this->result;
         }
-        $id = $this->createContinuation(
-            $command->getYear(),
-            $command->getMonth(),
-            $command->getTrafficArea()
-        );
-        $this->createContinuationDetails(
-            $id,
-            $licences
-        );
 
-        $result->addId('continuation', $id);
-        $result->addMessage('Continuation created');
+        $this->createContinuationDetails($continuation, $licences);
 
-        return $result;
+        $this->result->addMessage('Continuation created');
+
+        return $this->result;
     }
 
+    /**
+     * Create the continuation
+     *
+     * @param int    $year
+     * @param int    $month
+     * @param string $trafficArea
+     *
+     * @return ContinuationEntity
+     */
     protected function createContinuation($year, $month, $trafficArea)
     {
         $continuation = new ContinuationEntity();
@@ -69,22 +73,36 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         $continuation->setMonth($month);
         $continuation->setTrafficArea($this->getRepo()->getReference(TrafficAreaEntity::class, $trafficArea));
         $this->getRepo()->save($continuation);
-        return $continuation->getId();
+
+        return $continuation;
     }
 
-    protected function createContinuationDetails($id, $licences)
+    /**
+     * Create continuation details for licences
+     *
+     * @param ContinuationEntity $continuation
+     * @param array              $licences
+     */
+    protected function createContinuationDetails(ContinuationEntity $continuation, $licences)
     {
         foreach ($licences as $licence) {
-            $continuationDetail = new ContinuationDetailEntity();
-            $continuationDetail->setLicence($licence);
-            $continuationDetail->setReceived('N');
-            $continuationDetail->setStatus(
-                $this->getRepo()->getRefdataReference(ContinuationDetailEntity::STATUS_PREPARED)
+            // check if continuation details already exists for the licence
+            $existingContinuationDetails = $this->getRepo('ContinuationDetail')->fetchForContinuationAndLicence(
+                $continuation->getId(),
+                $licence->getId()
             );
-            $continuationDetail->setContinuation(
-                $this->getRepo()->getReference(ContinuationEntity::class, $id)
-            );
-            $this->getRepo('ContinuationDetail')->save($continuationDetail);
+            // if not exists then create it
+            if (count($existingContinuationDetails) === 0) {
+                $continuationDetail = new ContinuationDetailEntity();
+                $continuationDetail->setLicence($licence);
+                $continuationDetail->setReceived('N');
+                $continuationDetail->setStatus(
+                    $this->getRepo()->getRefdataReference(ContinuationDetailEntity::STATUS_PREPARED)
+                );
+                $continuationDetail->setContinuation($continuation);
+
+                $this->getRepo('ContinuationDetail')->save($continuationDetail);
+            }
         }
     }
 }

@@ -110,6 +110,15 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     protected $id;
 
     /**
+     * Information complete date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="information_complete_date", nullable=true)
+     */
+    protected $informationCompleteDate;
+
+    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -187,6 +196,21 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     protected $documents;
 
     /**
+     * Sla target date
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\SlaTargetDate",
+     *     mappedBy="submission",
+     *     cascade={"persist"},
+     *     indexBy="sla_id",
+     *     orphanRemoval=true
+     * )
+     */
+    protected $slaTargetDates;
+
+    /**
      * Submission action
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -221,6 +245,7 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     public function initCollections()
     {
         $this->documents = new ArrayCollection();
+        $this->slaTargetDates = new ArrayCollection();
         $this->submissionActions = new ArrayCollection();
         $this->submissionSectionComments = new ArrayCollection();
     }
@@ -407,6 +432,29 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the information complete date
+     *
+     * @param \DateTime $informationCompleteDate
+     * @return Submission
+     */
+    public function setInformationCompleteDate($informationCompleteDate)
+    {
+        $this->informationCompleteDate = $informationCompleteDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the information complete date
+     *
+     * @return \DateTime
+     */
+    public function getInformationCompleteDate()
+    {
+        return $this->informationCompleteDate;
     }
 
     /**
@@ -625,6 +673,66 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the sla target date
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates
+     * @return Submission
+     */
+    public function setSlaTargetDates($slaTargetDates)
+    {
+        $this->slaTargetDates = $slaTargetDates;
+
+        return $this;
+    }
+
+    /**
+     * Get the sla target dates
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getSlaTargetDates()
+    {
+        return $this->slaTargetDates;
+    }
+
+    /**
+     * Add a sla target dates
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates
+     * @return Submission
+     */
+    public function addSlaTargetDates($slaTargetDates)
+    {
+        if ($slaTargetDates instanceof ArrayCollection) {
+            $this->slaTargetDates = new ArrayCollection(
+                array_merge(
+                    $this->slaTargetDates->toArray(),
+                    $slaTargetDates->toArray()
+                )
+            );
+        } elseif (!$this->slaTargetDates->contains($slaTargetDates)) {
+            $this->slaTargetDates->add($slaTargetDates);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a sla target dates
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates
+     * @return Submission
+     */
+    public function removeSlaTargetDates($slaTargetDates)
+    {
+        if ($this->slaTargetDates->contains($slaTargetDates)) {
+            $this->slaTargetDates->removeElement($slaTargetDates);
         }
 
         return $this;

@@ -192,6 +192,7 @@ class GrantBusRegTest extends CommandHandlerTestCase
         $busReg->shouldReceive('canMakeDecision')->once()->andReturn(true);
         $busReg->shouldReceive('isGrantable')->once()->andReturn(true);
         $busReg->shouldReceive('getEbsrSubmissions')->andReturn($ebsrSubmissions);
+        $busReg->shouldReceive('isFromEbsr')->andReturn(true);
         $busReg->setId($id);
         $busReg->setStatus($status);
 

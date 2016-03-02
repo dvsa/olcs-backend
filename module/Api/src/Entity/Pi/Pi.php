@@ -20,7 +20,6 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
  * @ORM\Entity
  * @ORM\Table(name="pi",
  *    indexes={
- *        @ORM\Index(name="ix_pi_case_id", columns={"case_id"}),
  *        @ORM\Index(name="ix_pi_pi_status", columns={"pi_status"}),
  *        @ORM\Index(name="ix_pi_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_pi_last_modified_by", columns={"last_modified_by"}),
@@ -32,6 +31,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
  *        @ORM\Index(name="ix_pi_written_outcome", columns={"written_outcome"})
  *    },
  *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="ix_pi_case_id", columns={"case_id"}),
  *        @ORM\UniqueConstraint(name="uk_pi_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
  * )
@@ -153,7 +153,9 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         $witnesses,
         $decisionDate,
         $notificationDate,
-        $decisionNotes
+        $decisionNotes,
+        $tmCalledWithOperator,
+        ArrayCollection $tmDecisions
     ) {
         if ($this->isClosed()) {
             throw new ForbiddenException(self::MSG_UPDATE_CLOSED);
@@ -169,6 +171,8 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         $this->decisionNotes = $decisionNotes;
         $this->decisionDate = $this->processDate($decisionDate);
         $this->notificationDate = $this->processDate($notificationDate);
+        $this->tmCalledWithOperator = $tmCalledWithOperator;
+        $this->tmDecisions = $tmDecisions;
     }
 
     /**
@@ -462,5 +466,21 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
             'hearingDate' => $this->getHearingDate(),
             'isTm' => $this->isTm()
         ];
+    }
+
+    /**
+     * Get a flattened array of SLA Target Dates
+     *
+     * @return array
+     */
+    public function flattenSlaTargetDates()
+    {
+        $slaValues = [];
+
+        foreach ($this->getSlaTargetDates() as $slaTargetDate) {
+            $slaValues[$slaTargetDate->getSla()->getField() . 'Target'] = $slaTargetDate->getTargetDate();
+        }
+
+        return $slaValues;
     }
 }

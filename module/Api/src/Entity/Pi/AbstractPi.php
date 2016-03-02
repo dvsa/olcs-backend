@@ -399,6 +399,39 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     protected $tcWrittenReasonDate;
 
     /**
+     * Tm called with operator
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno",
+     *     name="tm_called_with_operator",
+     *     nullable=false,
+     *     options={"default": 0})
+     */
+    protected $tmCalledWithOperator = 0;
+
+    /**
+     * Tm decision
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
+     *     inversedBy="pis",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="pi_tm_decision",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="pi_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="tm_decision_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $tmDecisions;
+
+    /**
      * Version
      *
      * @var int
@@ -473,6 +506,21 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     protected $publicationLinks;
 
     /**
+     * Sla target date
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\SlaTargetDate",
+     *     mappedBy="pi",
+     *     cascade={"persist"},
+     *     indexBy="sla_id",
+     *     orphanRemoval=true
+     * )
+     */
+    protected $slaTargetDates;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
@@ -483,10 +531,12 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     public function initCollections()
     {
         $this->piTypes = new ArrayCollection();
-        $this->decisions = new ArrayCollection();
+        $this->tmDecisions = new ArrayCollection();
         $this->reasons = new ArrayCollection();
+        $this->decisions = new ArrayCollection();
         $this->piHearings = new ArrayCollection();
         $this->publicationLinks = new ArrayCollection();
+        $this->slaTargetDates = new ArrayCollection();
     }
 
     /**
@@ -1383,6 +1433,89 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     }
 
     /**
+     * Set the tm called with operator
+     *
+     * @param string $tmCalledWithOperator
+     * @return Pi
+     */
+    public function setTmCalledWithOperator($tmCalledWithOperator)
+    {
+        $this->tmCalledWithOperator = $tmCalledWithOperator;
+
+        return $this;
+    }
+
+    /**
+     * Get the tm called with operator
+     *
+     * @return string
+     */
+    public function getTmCalledWithOperator()
+    {
+        return $this->tmCalledWithOperator;
+    }
+
+    /**
+     * Set the tm decision
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions
+     * @return Pi
+     */
+    public function setTmDecisions($tmDecisions)
+    {
+        $this->tmDecisions = $tmDecisions;
+
+        return $this;
+    }
+
+    /**
+     * Get the tm decisions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTmDecisions()
+    {
+        return $this->tmDecisions;
+    }
+
+    /**
+     * Add a tm decisions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions
+     * @return Pi
+     */
+    public function addTmDecisions($tmDecisions)
+    {
+        if ($tmDecisions instanceof ArrayCollection) {
+            $this->tmDecisions = new ArrayCollection(
+                array_merge(
+                    $this->tmDecisions->toArray(),
+                    $tmDecisions->toArray()
+                )
+            );
+        } elseif (!$this->tmDecisions->contains($tmDecisions)) {
+            $this->tmDecisions->add($tmDecisions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a tm decisions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions
+     * @return Pi
+     */
+    public function removeTmDecisions($tmDecisions)
+    {
+        if ($this->tmDecisions->contains($tmDecisions)) {
+            $this->tmDecisions->removeElement($tmDecisions);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the version
      *
      * @param int $version
@@ -1635,6 +1768,66 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     {
         if ($this->publicationLinks->contains($publicationLinks)) {
             $this->publicationLinks->removeElement($publicationLinks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the sla target date
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates
+     * @return Pi
+     */
+    public function setSlaTargetDates($slaTargetDates)
+    {
+        $this->slaTargetDates = $slaTargetDates;
+
+        return $this;
+    }
+
+    /**
+     * Get the sla target dates
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getSlaTargetDates()
+    {
+        return $this->slaTargetDates;
+    }
+
+    /**
+     * Add a sla target dates
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates
+     * @return Pi
+     */
+    public function addSlaTargetDates($slaTargetDates)
+    {
+        if ($slaTargetDates instanceof ArrayCollection) {
+            $this->slaTargetDates = new ArrayCollection(
+                array_merge(
+                    $this->slaTargetDates->toArray(),
+                    $slaTargetDates->toArray()
+                )
+            );
+        } elseif (!$this->slaTargetDates->contains($slaTargetDates)) {
+            $this->slaTargetDates->add($slaTargetDates);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a sla target dates
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates
+     * @return Pi
+     */
+    public function removeSlaTargetDates($slaTargetDates)
+    {
+        if ($this->slaTargetDates->contains($slaTargetDates)) {
+            $this->slaTargetDates->removeElement($slaTargetDates);
         }
 
         return $this;
