@@ -1250,10 +1250,21 @@ return array(
             'type' => 'yesnonull'
         )
     ),
-    'serious_infringement' => array(
+    'erru_request' => array(
         'erru_response_sent' => array(
             'type' => 'yesno'
         ),
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'erruRequest',
+                'cascade' => array(
+                    'persist'
+                )
+            )
+        )
+    ),
+    'serious_infringement' => array(
         'case_id' => array(
             'inversedBy' => array(
                 'entity' => 'Cases',
