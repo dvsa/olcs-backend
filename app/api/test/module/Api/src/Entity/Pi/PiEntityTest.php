@@ -167,6 +167,8 @@ class PiEntityTest extends EntityTester
         $decisionDate = $inputDate;
         $notificationDate = $inputDate;
         $decisionNotes = 'decision notes';
+        $tmCalledWithOperator = 'Y';
+        $tmDecisions = new ArrayCollection(['tmDdecision1', 'tmDecision2']);
 
         $this->entity->updatePiWithDecision(
             $decidedByTc,
@@ -178,7 +180,9 @@ class PiEntityTest extends EntityTester
             $witnesses,
             $decisionDate,
             $notificationDate,
-            $decisionNotes
+            $decisionNotes,
+            $tmCalledWithOperator,
+            $tmDecisions
         );
 
         $this->assertEquals($decidedByTc, $this->entity->getDecidedByTc());
@@ -191,6 +195,8 @@ class PiEntityTest extends EntityTester
         $this->assertEquals($entityDate, $this->entity->getDecisionDate());
         $this->assertEquals($entityDate, $this->entity->getNotificationDate());
         $this->assertEquals($decisionNotes, $this->entity->getDecisionNotes());
+        $this->assertEquals($tmDecisions, $this->entity->getTmDecisions());
+        $this->assertEquals($tmCalledWithOperator, $this->entity->getTmCalledWithOperator());
     }
 
     /**
@@ -213,7 +219,9 @@ class PiEntityTest extends EntityTester
             null,
             null,
             null,
-            null
+            null,
+            null,
+            new ArrayCollection()
         );
     }
 
