@@ -330,7 +330,7 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
      */
     public function isErru()
     {
-        return (bool) $this->erruCaseType != null;
+        return (bool) $this->erruRequest != null;
     }
 
     /**
@@ -340,17 +340,22 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
      */
     public function canSendMsiResponse()
     {
-        if ($this->isErru() && !$this->seriousInfringements->isEmpty()) {
-            /** @var SeriousInfringementEntity $si */
-            $si = $this->seriousInfringements->first();
+        //check this is an erru case, and if so that the response isn't already sent
+        if (!$this->isErru() || $this->erruRequest->getResponseSent() === 'Y') {
+            return false;
+        }
 
-            //we need to have applied penalties and to have not already sent our response
-            if ($si->getErruResponseSent() === 'N' && !$si->getAppliedPenalties()->isEmpty()) {
-                return true;
+        /**
+         * @var SeriousInfringementEntity $si
+         */
+        foreach ($this->seriousInfringements as $si) {
+            //each serious infringement must have at least one applied penalty
+            if ($si->getAppliedPenalties()->isEmpty()) {
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     /**
