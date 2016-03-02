@@ -281,11 +281,11 @@ class CasesEntityTest extends EntityTester
      */
     public function canSendMsiResponseProvider()
     {
-        $siNotValid = m::mock(SeriousInfringement::class);
-        $siNotValid->shouldReceive('getAppliedPenalties->isEmpty')->andReturn(true);
+        $siResponseSet = m::mock(SeriousInfringement::class);
+        $siResponseSet->shouldReceive('responseSet')->andReturn(true);
 
-        $siValid = m::mock(SeriousInfringement::class);
-        $siValid->shouldReceive('getAppliedPenalties->isEmpty')->andReturn(false);
+        $siNoResponseSet = m::mock(SeriousInfringement::class);
+        $siNoResponseSet->shouldReceive('responseSet')->andReturn(false);
 
         $erruRequestWithResponse = m::mock(ErruRequestEntity::class);
         $erruRequestWithResponse->shouldReceive('getResponseSent')->andReturn('Y');
@@ -294,10 +294,10 @@ class CasesEntityTest extends EntityTester
         $erruRequestNoResponse->shouldReceive('getResponseSent')->andReturn('N');
 
         return [
-            [null, new ArrayCollection([$siValid]), false],
-            [$erruRequestWithResponse, new ArrayCollection([$siValid]), false],
-            [$erruRequestNoResponse, new ArrayCollection([$siValid, $siNotValid]), false],
-            [$erruRequestNoResponse, new ArrayCollection([$siValid]), true]
+            [null, new ArrayCollection([$siResponseSet]), false],
+            [$erruRequestWithResponse, new ArrayCollection([$siResponseSet]), false],
+            [$erruRequestNoResponse, new ArrayCollection([$siNoResponseSet, $siResponseSet]), false],
+            [$erruRequestNoResponse, new ArrayCollection([$siResponseSet]), true]
         ];
     }
 

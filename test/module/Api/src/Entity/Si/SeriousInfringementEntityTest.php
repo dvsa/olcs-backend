@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as Entity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
 use Mockery as m;
 
 /**
@@ -78,5 +78,43 @@ class SeriousInfringementEntityTest extends EntityTester
         $this->assertEquals($user, $entity->getErruResponseUser());
         $this->assertEquals($date, $entity->getErruResponseTime());
         $this->assertEquals('Y', $entity->getErruResponseSent());
+    }
+
+    /**
+     * tests responseSet function
+     *
+     * @param ArrayCollection $appliedPenalties
+     * @param bool $expectedResult
+     *
+     * @dataProvider responseSetProvider
+     */
+    public function testResponseSet($appliedPenalties, $expectedResult)
+    {
+        $entity = m::mock(SeriousInfringement::class)->makePartial();
+        $entity->setAppliedPenalties($appliedPenalties);
+        $this->assertEquals($expectedResult, $entity->responseSet());
+    }
+
+    /**
+     * data provide for testResponseSet()
+     *
+     * @return array
+     */
+    public function responseSetProvider()
+    {
+        return [
+            [new ArrayCollection(), false],
+            [new ArrayCollection([m::mock(SiPenaltyEntity::class)]), true]
+        ];
+    }
+
+    /**
+     * Tests getCalculatedBundleValues
+     */
+    public function testGetCalculatedBundleValues()
+    {
+        $entity = m::mock(SeriousInfringement::class)->makePartial();
+        $entity->setAppliedPenalties(new ArrayCollection());
+        $this->assertEquals(['responseSet' => false], $entity->getCalculatedBundleValues());
     }
 }

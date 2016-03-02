@@ -345,12 +345,10 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
             return false;
         }
 
-        /**
-         * @var SeriousInfringementEntity $si
-         */
+        /** @var SeriousInfringementEntity $si */
         foreach ($this->seriousInfringements as $si) {
             //each serious infringement must have at least one applied penalty
-            if ($si->getAppliedPenalties()->isEmpty()) {
+            if (!$si->responseSet()) {
                 return false;
             }
         }

@@ -52,6 +52,26 @@ class SeriousInfringement extends AbstractSeriousInfringement
     }
 
     /**
+     * Whether there is a response set for the serious infringement
+     *
+     * @return bool
+     */
+    public function responseSet()
+    {
+        return (bool)!$this->appliedPenalties->isEmpty();
+    }
+
+    /**
+     * Calculated values to be added to a bundle
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return ['responseSet' => $this->responseSet()];
+    }
+
+    /**
      * Updates the serious infringement with an erru response
      *
      * @param UserEntity $user
