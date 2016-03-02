@@ -1078,6 +1078,9 @@ return array(
                 'property' => 'publicInquiry'
             )
         ),
+        'tm_called_with_operator' => array(
+            'type' => 'yesno'
+        ),
     ),
     'legacy_case_action' => array(
         'is_driver' => array(

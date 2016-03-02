@@ -38,7 +38,8 @@ final class UpdateDecision extends AbstractCommandHandler implements Transaction
         /** @var UpdateDecisionCmd $command */
         $result = new Result();
 
-        $decisions = $this->processDecisions($command->getDecisions());
+        $decisions = $this->buildArrayCollection(PiDecisionEntity::class, $command->getDecisions());
+        $tmDecisions = $this->buildArrayCollection(RefData::class, $command->getTmDecisions());
 
         /** @var PiEntity $pi */
         $pi = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
@@ -59,7 +60,9 @@ final class UpdateDecision extends AbstractCommandHandler implements Transaction
             $command->getWitnesses(),
             $command->getDecisionDate(),
             $command->getNotificationDate(),
-            $command->getDecisionNotes()
+            $command->getDecisionNotes(),
+            $command->getTmCalledWithOperator(),
+            $tmDecisions
         );
 
         $this->getRepo()->save($pi);
@@ -68,25 +71,6 @@ final class UpdateDecision extends AbstractCommandHandler implements Transaction
 
         if ($command->getPublish() === 'Y') {
             $result->merge($this->getCommandHandler()->handleCommand($this->createPublishCommand($pi, $command)));
-        }
-
-        return $result;
-    }
-
-    /**
-     * Returns collection of decisions.
-     *
-     * @param array $decisions
-     * @return ArrayCollection
-     */
-    private function processDecisions($decisions)
-    {
-        $result = new ArrayCollection();
-
-        if (!empty($decisions)) {
-            foreach ($decisions as $decision) {
-                $result->add($this->getRepo()->getReference(PiDecisionEntity::class, $decision));
-            }
         }
 
         return $result;

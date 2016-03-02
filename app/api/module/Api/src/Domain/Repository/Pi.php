@@ -38,6 +38,7 @@ class Pi extends AbstractRepository
             ->with('decidedByTc')
             ->with('reasons')
             ->with('decisions')
+            ->with('tmDecisions')
             ->with('piHearings')
             ->with('case', 'c')
             ->with('c.transportManager');
