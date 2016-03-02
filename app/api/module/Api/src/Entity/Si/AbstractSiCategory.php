@@ -70,7 +70,7 @@ abstract class AbstractSiCategory implements BundleSerializableInterface, JsonSe
      * @var string
      *
      * @ORM\Id
-     * @ORM\Column(type="string", name="id", length=8)
+     * @ORM\Column(type="string", name="id", length=3)
      */
     protected $id;
 
