@@ -30,6 +30,7 @@ use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Abstract Command Handler
@@ -253,5 +254,26 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     {
         $dtoData = $originalCommand->getArrayCopy();
         return $this->handleSideEffect($proxyCommandClassName::create($dtoData));
+    }
+
+    /**
+     * Returns collection of entityClass objects.
+     *
+     * @param array $referenceIds
+     * @param $entityClass
+     *
+     * @return ArrayCollection
+     */
+    protected function buildArrayCollection($entityClass, $referenceIds)
+    {
+        $collection = new ArrayCollection();
+
+        if (!empty($referenceIds)) {
+            foreach ($referenceIds as $referenceId) {
+                $collection->add($this->getRepo()->getReference($entityClass, $referenceId));
+            }
+        }
+
+        return $collection;
     }
 }
