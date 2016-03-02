@@ -34,11 +34,6 @@ class Overview extends AbstractQueryHandler
         $discCriteria
             ->where($discCriteria->expr()->isNull('ceasedDate'));
 
-        $vehicleCriteria = Criteria::create();
-        $vehicleCriteria
-            ->where($vehicleCriteria->expr()->isNull('removalDate'))
-            ->andWhere($vehicleCriteria->expr()->neq('specifiedDate', null));
-
         $statusCriteria = Criteria::create();
         $statusCriteria->where(
             $statusCriteria->expr()->in(
@@ -67,9 +62,6 @@ class Overview extends AbstractQueryHandler
                 'psvDiscs' => [
                     'criteria' => $discCriteria,
                 ],
-                'licenceVehicles' => [
-                    'criteria' => $vehicleCriteria,
-                ],
                 'operatingCentres',
                 'changeOfEntitys',
                 'trafficArea',
@@ -86,6 +78,7 @@ class Overview extends AbstractQueryHandler
                     'trafficAreas' => $trafficAreas,
                 ],
                 'organisationLicenceCount' => $licence->getOrganisation()->getActiveLicences()->count(),
+                'numberOfVehicles' => $licence->getActiveVehicles()->count()
             ]
         );
     }
