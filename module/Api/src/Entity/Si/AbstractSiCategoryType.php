@@ -68,10 +68,10 @@ abstract class AbstractSiCategoryType implements BundleSerializableInterface, Js
     /**
      * Identifier - Id
      *
-     * @var string
+     * @var int
      *
      * @ORM\Id
-     * @ORM\Column(type="string", name="id", length=8)
+     * @ORM\Column(type="smallint", name="id")
      */
     protected $id;
 
@@ -209,7 +209,7 @@ abstract class AbstractSiCategoryType implements BundleSerializableInterface, Js
     /**
      * Set the id
      *
-     * @param string $id
+     * @param int $id
      * @return SiCategoryType
      */
     public function setId($id)
@@ -222,7 +222,7 @@ abstract class AbstractSiCategoryType implements BundleSerializableInterface, Js
     /**
      * Get the id
      *
-     * @return string
+     * @return int
      */
     public function getId()
     {
