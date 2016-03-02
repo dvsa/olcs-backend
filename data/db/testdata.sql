@@ -1538,34 +1538,39 @@ INSERT INTO `serious_infringement`
  `infringement_date`, `reason`, `deleted_date`,`created_on`, `last_modified_on`, `version`)
 VALUES
   (1, '101', 1,1, 'MSI', 29, '2014-04-04', '2014-04-05', null, null,'2014-05-04 17:50:06', '2014-05-04 17:50:06', 1),
-  (2, '101', 1,1, 'MSI', 24, '2014-04-04', '2014-04-05', null, null,'2014-05-04 17:50:06', '2014-05-04 17:50:06', 1);
+  (2, '202', 1,1, 'MSI', 29, '2014-04-04', '2014-04-05', null, null,'2014-05-04 17:50:06', '2014-05-04 17:50:06', 1),
+  (3, '401', 1,1, 'MSI', 29, '2014-04-04', '2014-04-05', null, null,'2014-05-04 17:50:06', '2014-05-04 17:50:06', 1),
+  (4, '603', 1,1, 'MSI', 29, '2014-04-04', '2014-04-05', null, null,'2014-05-04 17:50:06', '2014-05-04 17:50:06', 1);
 
-INSERT INTO `si_penalty`
-(`id`, `si_penalty_type_id`, `last_modified_by`, `created_by`, `serious_infringement_id`, `imposed`,
- `reason_not_imposed`, `start_date`, `end_date`, `deleted_date`, `created_on`, `last_modified_on`, `version`)
+INSERT INTO `erru_request` (`id`, `case_id`, `originating_authority`, `member_state_code`, `transport_undertaking_name`,
+    `vrm`, `case_type`, `notification_number`, `workflow_id`, `response_sent`, `response_user_id`, `response_time`,
+    `deleted_date`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `olbs_key`,
+    `olbs_type`)
 VALUES
-  (1, '101', 1, 1, 1, 1, null, '2014-06-01', '2015-01-31', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (2, '306', 1, 1, 1, 0, 'Reason the penalty was not imposed', null, null, null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (3, '306', 1, 1, 2, 0, 'Reason the penalty was not imposed', null, null, null,
-  '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (4, '101', 1, 1, 2, 1, '', '2014-05-01', '2015-01-31', null,
-  '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (5, '102', 1, 1, 2, 1, '', '2014-04-01', '2015-04-30', null,
-  '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (6, '301', 1, 1, 2, 1, '', '2014-03-01', '2015-03-31', null,
-  '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (7, '302', 1, 1, 2, 1, '', '2014-02-01', '2015-02-28', null,
-  '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (8, '303', 1, 1, 2, 1, '', '2014-01-01', '2015-01-31', null,
-  '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (9, '304', 1, 1, 2, 1, '', '2013-12-01', '2014-12-31', null,
-  '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (10, '305', 1, 1, 2, 1, '', '2013-11-01', '2014-11-30', null,
-  '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (11, '306', 1, 1, 2, 1, '', '2013-10-01', '2014-10-31', null,
-  '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (12, '307', 1, 1, 2, 1, '', '2013-09-01', '2014-09-30', null,
-  '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1);
+  (1, 29, 'Polish Transport Authority', 'PL', 'transport undertaking name', 'ABCD 123', 'erru_case_t_msi',
+      '12345', 'A3CCBDB1-6C8B-4741-847B-4C6B80AA8608', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL);
+
+INSERT INTO `si_penalty` (`id`, `serious_infringement_id`, `imposed`, `start_date`, `end_date`, `reason_not_imposed`,
+   `deleted_date`, `si_penalty_type_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
+   `olbs_key`)
+VALUES
+  (1, 1, 1, '2014-06-01', '2015-01-31', NULL, NULL, 101, 1, 1, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL),
+  (2, 1, 0, NULL, NULL, 'Reason the penalty was not imposed', NULL, 306, 1, 1, '2014-05-21 12:22:09',
+   '2014-05-21 12:22:09', 1, NULL),
+  (3, 2, 0, NULL, NULL, 'Reason the penalty was not imposed', NULL, 306, 1, 1, '2014-05-21 12:22:09',
+   '2014-05-21 12:22:09', 1, NULL),
+  (4, 2, 1, '2014-05-01', '2015-01-31', '', NULL, 101, 1, 1, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL),
+  (5, 2, 1, '2014-04-01', '2015-04-30', '', NULL, 102, 1, 1, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL),
+  (6, 2, 1, '2014-03-01', '2015-03-31', '', NULL, 301, 1, 1, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1,
+   NULL),
+  (7, 3, 1, '2014-02-01', '2015-02-28', '', NULL, 302, 1, 1, '2014-05-21 12:22:09', '2014-05-21 12:22:09',
+   1, NULL),
+  (8, 3, 1, '2014-01-01', '2015-01-31', '', NULL, 303, 1, 1, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL),
+  (9, 3, 1, '2013-12-01', '2014-12-31', '', NULL, 304, 1, 1, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL),
+  (10, 3, 1, '2013-11-01', '2014-11-30', '', NULL, 305, 1, 1, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL),
+  (11, 3, 1, '2013-10-01', '2014-10-31', '', NULL, 306, 1, 1, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL),
+  (12, 3, 1, '2013-09-01', '2014-09-30', '', NULL, 307, 1, 1, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL);
+
 
 -- si_category
 INSERT INTO `si_category` (`id`,`description`,`deleted_date`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`)
@@ -1629,21 +1634,30 @@ VALUES
   ('306','Withdrawal of driver attestations ',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1),
   ('307','Issue of driver attestations subject to additional conditions in order to prevent misuse',NULL,1,1,'2013-03-22 17:30:05','2013-03-22 17:30:05',1);
 
-INSERT INTO `si_penalty_erru_imposed`
-(`id`, `si_penalty_imposed_type_id`, `serious_infringement_id`, `last_modified_by`, `created_by`, `final_decision_date`,
- `executed`, `start_date`, `end_date`, `deleted_date`, `created_on`, `last_modified_on`, `version`)
+INSERT INTO `si_penalty_erru_imposed` (`id`, `final_decision_date`, `start_date`, `end_date`, `deleted_date`,
+  `serious_infringement_id`, `si_penalty_imposed_type_id`, `executed`, `created_by`, `last_modified_by`, `created_on`,
+  `last_modified_on`, `version`, `olbs_key`)
 VALUES
-  (1, '204', 1, 1, 1, '2014-10-02', 'pen_erru_imposed_executed_yes', '2014-11-01', '2015-12-01', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (2, '202', 1, 1, 1, '2014-10-02', 'pen_erru_imposed_executed_no', '2014-11-01', '2015-12-01', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (3, '201', 1, 1, 1, '2014-10-02', 'pen_erru_imposed_executed_un', '2014-11-01', '2015-12-01', null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1);
+  (1, '2014-08-02', '2014-11-01', '2015-12-01', NULL, 1, 204, 'pen_erru_imposed_executed_yes', 1, 1,
+      '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL),
+  (2, '2014-09-12', '2014-11-01', '2015-12-01', NULL, 2, 202, 'pen_erru_imposed_executed_no', 1, 1,
+      '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL),
+  (3, '2014-10-14', '2014-11-01', '2015-12-01', NULL, 3, 102, 'pen_erru_imposed_executed_un', 1, 1,
+      '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL),
+  (4, '2014-11-22', '2014-11-01', '2015-12-01', NULL, 3, 201, 'pen_erru_imposed_executed_un', 1, 1,
+      '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL);
 
-INSERT INTO `si_penalty_erru_requested`
-(`id`, `si_penalty_requested_type_id`, `serious_infringement_id`, `last_modified_by`, `created_by`, `duration`,
- `deleted_date`, `created_on`, `last_modified_on`, `version`)
+
+INSERT INTO `si_penalty_erru_requested` (`id`, `duration`, `deleted_date`, `serious_infringement_id`,
+  `si_penalty_requested_type_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
+  `olbs_key`)
 VALUES
-  (1, '305', 1, 1, 1, 12, null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (2, '302', 1, 1, 1, 36, null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
-  (3, '303', 1, 1, 1, 60, null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1);
+  (1, 12, NULL, 1, 305, 1, 1, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL),
+  (2, 36, NULL, 2, 302, 1, 1, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL),
+  (3, 60, NULL, 3, 303, 1, 1, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL),
+  (4, 24, NULL, 4, 306, 1, 1, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL),
+  (5, 24, NULL, 4, 307, 1, 1, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1, NULL);
+
 
 INSERT INTO `public_holiday`(`id`,`public_holiday_date`,`is_england`,`is_wales`,`is_scotland`,`is_ni`)
 VALUES
