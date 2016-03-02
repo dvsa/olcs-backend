@@ -120,6 +120,7 @@ return [
     'PublicationSection' => 'Publication',
     'Recipient' => 'Publication',
     'Queue' => 'Queue',
+    'ErruRequest' => 'Si',
     'SeriousInfringement' => 'Si',
     'SiCategory' => 'Si',
     'SiCategoryType' => 'Si',
