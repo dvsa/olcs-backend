@@ -21,6 +21,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
+use Dvsa\Olcs\Transfer\Command\Task\UpdateTask as UpdateTaskDto;
 
 /**
  * Assign Submission
@@ -35,7 +36,7 @@ final class AssignSubmission extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'Submission';
 
-    protected $extraRepos = ['User'];
+    protected $extraRepos = ['User', 'Task'];
 
     /**
      * @param CommandInterface $command
@@ -53,7 +54,7 @@ final class AssignSubmission extends AbstractCommandHandler implements
         $result->addId('submission', $submissionEntity->getId());
         $result->addMessage('Submission updated successfully');
 
-        $result->merge($this->handleSideEffect($this->createCreateTaskCommand($command)));
+        $result->merge($this->handleSideEffect($this->upsertTaskCommand($command)));
 
         return $result;
     }
@@ -97,36 +98,64 @@ final class AssignSubmission extends AbstractCommandHandler implements
      * @return static
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
-    private function createCreateTaskCommand(Cmd $command)
+    private function upsertTaskCommand(Cmd $command)
     {
         $submission = $this->getRepo()->fetchWithCaseAndLicenceById($command->getId());
 
+        /** @var TaskEntity $task */
+        $task = $this->getRepo('Task')->fetchAssignedToSubmission($submission);
+
         /** @var UserEntity $recipientUser */
         $recipientUser = $this->getRepo('User')->fetchById($command->getRecipientUser());
-
-        $description = 'Licence ' . $submission->getCase()->getLicence()->getId() .
-            ' Case ' . $submission->getCase()->getId() .
-            ' Submission ' . $submission->getId();
 
         $teamId = null;
         if ($recipientUser->getTeam() instanceof TeamEntity) {
             $teamId = $recipientUser->getTeam()->getId();
         }
-        $data = [
-            'category' => TaskEntity::CATEGORY_SUBMISSION,
-            'subCategory' => TaskEntity::SUBCATEGORY_SUBMISSION_ASSIGNMENT,
-            'description' => $description,
-            'actionDate' => date('Y-m-d'),
-            'assignedToUser' => $recipientUser->getId(),
-            'assignedToTeam' => $teamId,
-            'assignedByUser' => $this->getCurrentUser()->getId(),
-            'case' => $submission->getCase()->getId(),
-            'submission' => $submission->getId(),
-            'licence' => $submission->getCase()->getLicence()->getId(),
-            'urgent' => $command->getUrgent(),
-            'isClosed' => 0
-        ];
 
-        return CreateTaskCmd::create($data);
+        // if task exists, reassign it, otherwise create
+        if (!empty($task)) {
+            $task->setAssignedToUser($recipientUser->getId());
+            $task->setAssignedToTeam($teamId);
+            $task->setUrgent($command->getUrgent());
+
+            // reassign existing task. Existing transfer command validates that all mandatory fields. Hence passing
+            // existing data back through despite only changing assigned_to and urgency fields
+            return UpdateTaskDto::create(
+                [
+                    'id' => $task->getId(),
+                    'version' => $task->getVersion(),
+                    'description' => $task->getDescription(),
+                    'actionDate' => $task->getActionDate(),
+                    'urgent' => $command->getUrgent(),
+                    'category' => $task->getCategory()->getId(),
+                    'subCategory' => $task->getSubCategory()->getId(),
+                    'assignedToUser' => $recipientUser->getId(),
+                    'assignedToTeam' => $teamId
+                ]
+            );
+        } else {
+            // create new task
+            $description = 'Licence ' . $submission->getCase()->getLicence()->getId() .
+                ' Case ' . $submission->getCase()->getId() .
+                ' Submission ' . $submission->getId();
+
+            $data = [
+                'category' => TaskEntity::CATEGORY_SUBMISSION,
+                'subCategory' => TaskEntity::SUBCATEGORY_SUBMISSION_ASSIGNMENT,
+                'description' => $description,
+                'actionDate' => date('Y-m-d'),
+                'assignedToUser' => $recipientUser->getId(),
+                'assignedToTeam' => $teamId,
+                'assignedByUser' => $this->getCurrentUser()->getId(),
+                'case' => $submission->getCase()->getId(),
+                'submission' => $submission->getId(),
+                'licence' => $submission->getCase()->getLicence()->getId(),
+                'urgent' => $command->getUrgent(),
+                'isClosed' => 0
+            ];
+
+            return CreateTaskCmd::create($data);
+        }
     }
 }
