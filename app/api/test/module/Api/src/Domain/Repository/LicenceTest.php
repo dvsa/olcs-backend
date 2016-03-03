@@ -23,6 +23,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Expr\Comparison;
 
 /**
  * Licence test
@@ -126,6 +127,42 @@ class LicenceTest extends RepositoryTestCase
             ->with($result, LockMode::OPTIMISTIC, 1);
 
         $this->sut->fetchSafetyDetailsUsingId($command, Query::HYDRATE_OBJECT, 1);
+    }
+
+    /**
+     * Test existsByLicNo method
+     *
+     * @param array $result
+     * @param bool $licenceFound
+     *
+     * @dataProvider existsByLicNoProvider
+     */
+    public function testExistsByLicNo($result, $licenceFound)
+    {
+        $licNo = 'OB1234567';
+        $qb = m::mock(QueryBuilder::class);
+        $repo = m::mock(EntityRepository::class);
+        $doctrineComparison = m::mock(Comparison::class);
+
+        $this->em->shouldReceive('getRepository')->with(Licence::class)->andReturn($repo);
+
+        $repo->shouldReceive('createQueryBuilder')->with('m')->once()->andReturn($qb);
+
+        $qb->shouldReceive('expr->eq')->with('m.licNo', ':licNo')->once()->andReturn($doctrineComparison);
+        $qb->shouldReceive('where')->with($doctrineComparison)->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('licNo', $licNo)->once()->andReturnSelf();
+        $qb->shouldReceive('setMaxResults')->with(1)->once()->andReturnSelf();
+        $qb->shouldReceive('getQuery->getResult')->with()->once()->andReturn($result);
+
+        $this->assertSame($licenceFound, $this->sut->existsByLicNo($licNo));
+    }
+
+    public function existsByLicNoProvider()
+    {
+        return [
+            [[0 => 'Result'], true],
+            [[], false]
+        ];
     }
 
     public function testFetchByLicNo()
