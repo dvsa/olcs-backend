@@ -155,9 +155,7 @@ class User implements UserInterface
      */
     public function resetPassword($pid, $callback = null)
     {
-        // TODO - to be switched to generated password as part of OLCS-11894
-        // $password = $this->generatePassword();
-        $password = 'Password123';
+        $password = $this->generatePassword();
 
         $payload[] = [
             'operation' => 'replace',
