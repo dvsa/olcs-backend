@@ -60,7 +60,7 @@ class CpidOrganisationExportTest extends MockeryTestCase
             $commandHandlerManager->shouldReceive('handleCommand')
                 ->once()
                 ->with(m::type(Upload::class))
-                ->andThrow('\Exception');
+                ->andThrow(new \Exception('AN EXCEPTION'));
 
             $commandHandlerManager->shouldReceive('handleCommand')
                 ->once()
@@ -95,7 +95,7 @@ class CpidOrganisationExportTest extends MockeryTestCase
             ],
             [
                 true,
-                'Failed to process message:  {"status":null} Unable to export list.'
+                'Failed to process message:  {"status":null} Unable to export list. AN EXCEPTION'
             ]
         ];
     }

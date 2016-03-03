@@ -67,8 +67,7 @@ class CpidOrganisationExport implements MessageConsumerInterface
 
             return $this->success($item, 'Organisation list exported.');
         } catch (\Exception $ex) {
-
-            return $this->failed($item, 'Unable to export list.');
+            return $this->failed($item, 'Unable to export list. '. $ex->getMessage());
         }
     }
 

@@ -169,7 +169,7 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting\CreatePsvVehicleList::class,
         ],
         'factories' => [
-            'que_typ_cpid_export_csv'
+            Queue::TYPE_CPID_EXPORT_CSV
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,
         ]
     ],
