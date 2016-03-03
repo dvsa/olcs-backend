@@ -139,13 +139,14 @@ abstract class AbstractSiPenalty implements BundleSerializableInterface, JsonSer
     protected $seriousInfringement;
 
     /**
-     * Si penalty type id
+     * Si penalty type
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\Si\SiPenaltyType
      *
-     * @ORM\Column(type="smallint", name="si_penalty_type_id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Si\SiPenaltyType", fetch="LAZY")
+     * @ORM\JoinColumn(name="si_penalty_type_id", referencedColumnName="id", nullable=false)
      */
-    protected $siPenaltyTypeId;
+    protected $siPenaltyType;
 
     /**
      * Start date
@@ -420,26 +421,26 @@ abstract class AbstractSiPenalty implements BundleSerializableInterface, JsonSer
     }
 
     /**
-     * Set the si penalty type id
+     * Set the si penalty type
      *
-     * @param int $siPenaltyTypeId
+     * @param \Dvsa\Olcs\Api\Entity\Si\SiPenaltyType $siPenaltyType
      * @return SiPenalty
      */
-    public function setSiPenaltyTypeId($siPenaltyTypeId)
+    public function setSiPenaltyType($siPenaltyType)
     {
-        $this->siPenaltyTypeId = $siPenaltyTypeId;
+        $this->siPenaltyType = $siPenaltyType;
 
         return $this;
     }
 
     /**
-     * Get the si penalty type id
+     * Get the si penalty type
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\Si\SiPenaltyType
      */
-    public function getSiPenaltyTypeId()
+    public function getSiPenaltyType()
     {
-        return $this->siPenaltyTypeId;
+        return $this->siPenaltyType;
     }
 
     /**
