@@ -157,6 +157,11 @@ class LicenceTest extends RepositoryTestCase
         $this->assertSame($licenceFound, $this->sut->existsByLicNo($licNo));
     }
 
+    /**
+     * Data provider for testExistsByLicNo
+     *
+     * @return array
+     */
     public function existsByLicNoProvider()
     {
         return [
