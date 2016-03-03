@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Task\Task as Entity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Doctrine\ORM\Query;
 
 /**
@@ -108,6 +109,32 @@ class Task extends AbstractRepository
         }
 
         $result = $doctrineQb->getQuery()->getSingleResult(Query::HYDRATE_OBJECT);
+
+        return $result;
+    }
+
+    /**
+     * Fetch a single task record belonging to Submission
+     *
+     * @param int|\Dvsa\Olcs\Api\Entity\Submission\Submission $submission
+     *
+     * @return mixed
+     */
+    public function fetchAssignedToSubmission($submission)
+    {
+        $category = CategoryEntity::CATEGORY_SUBMISSION;
+        $subCategory = Entity::SUBCATEGORY_SUBMISSION_ASSIGNMENT;
+
+        $doctrineQb = $this->createQueryBuilder();
+
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.submission', ':submission'))
+            ->setParameter('submission', $submission);
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.category', ':category'))
+            ->setParameter('category', $category);
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.subCategory', ':subCategory'))
+            ->setParameter('subCategory', $subCategory);
+
+        $result = $doctrineQb->getQuery()->getOneOrNullResult(Query::HYDRATE_OBJECT);
 
         return $result;
     }
