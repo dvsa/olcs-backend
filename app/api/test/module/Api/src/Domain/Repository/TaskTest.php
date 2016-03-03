@@ -112,4 +112,27 @@ class TaskTest extends RepositoryTestCase
 
         $this->assertEquals($expectedQuery, $this->query);
     }
+
+    public function testFetchForAssignedToSubmission()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getOneOrNullResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $submission = 3;
+
+        $this->assertEquals(['RESULTS'], $this->sut->fetchAssignedToSubmission($submission));
+
+        $expectedQuery =
+            'BLAH AND m.submission = [[3]] ' .
+            'AND m.category = [[10]] AND m.subCategory = [[114]]';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }

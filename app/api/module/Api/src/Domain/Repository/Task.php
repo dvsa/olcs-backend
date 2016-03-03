@@ -120,7 +120,8 @@ class Task extends AbstractRepository
      *
      * @return mixed
      */
-    public function fetchAssignedToSubmission($submission) {
+    public function fetchAssignedToSubmission($submission)
+    {
         $category = CategoryEntity::CATEGORY_SUBMISSION;
         $subCategory = Entity::SUBCATEGORY_SUBMISSION_ASSIGNMENT;
 
