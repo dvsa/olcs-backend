@@ -78,6 +78,7 @@ return [
     TransferQuery\Application\Schedule41Approve::class => QueryHandler\Application\Schedule41Approve::class,
     TransferQuery\Application\Summary::class => QueryHandler\Application\Summary::class,
     Query\Application\NotTakenUpList::class => QueryHandler\Application\NotTakenUpList::class,
+    TransferQuery\Application\OutstandingFees::class => QueryHandler\Application\OutstandingFees::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
