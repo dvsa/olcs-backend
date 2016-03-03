@@ -2,11 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Entity\Si;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiCategory as SiCategoryEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiCategoryType as SiCategoryTypeEntity;
 
