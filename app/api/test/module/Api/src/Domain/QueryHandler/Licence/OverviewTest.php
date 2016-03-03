@@ -20,6 +20,7 @@ use Dvsa\Olcs\Transfer\Query\Licence\Overview as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as BusRegSearchViewRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Overview Test
@@ -61,13 +62,22 @@ class OverviewTest extends QueryHandlerTestCase
             ->shouldReceive('getTradingName')
             ->andReturn('Foo plc')
             ->shouldReceive('getOpenComplaintsCount')
-            ->andReturn(5);
-        $mockLicence
-            ->shouldReceive('getOrganisation->getId')
-            ->andReturn($organisationId);
-        $mockLicence
-            ->shouldReceive('getOrganisation->getActiveLicences->count')
-            ->andReturn(65);
+            ->andReturn(5)
+            ->shouldReceive('getActiveVehicles')
+            ->andReturn(new ArrayCollection([1, 2]))
+            ->once()
+            ->shouldReceive('getOrganisation')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getActiveLicences')
+                ->andReturn(new ArrayCollection([1, 2, 3]))
+                ->once()
+                ->shouldReceive('getId')
+                ->andReturn($organisationId)
+                ->once()
+                ->getMock()
+            )
+            ->getMock();
 
         $this->repoMap['Licence']
             ->shouldReceive('fetchUsingId')
@@ -126,7 +136,8 @@ class OverviewTest extends QueryHandlerTestCase
                 'tradingName' => 'Foo plc',
                 'complaintsCount' => 5,
                 'busCount' => '4',
-                'organisationLicenceCount' => 65,
+                'organisationLicenceCount' => 3,
+                'numberOfVehicles' => 2
             ],
             $result->serialize()
         );
