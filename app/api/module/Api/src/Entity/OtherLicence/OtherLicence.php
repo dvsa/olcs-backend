@@ -228,7 +228,7 @@ class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity
     /**
      * Get related organisation
      *
-     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation|null
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation|null|array
      */
     public function getRelatedOrganisation()
     {
