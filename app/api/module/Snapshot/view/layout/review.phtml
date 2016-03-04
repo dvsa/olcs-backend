@@ -5,6 +5,7 @@
         <div class="review-header">
             <p><?php echo $this->translate($reviewTitle, 'snapshot'); ?></p>
             <h1><?php echo $subTitle; ?></h1>
+            <a class="hide-print" href="javascript:window.print()">Print this page</a>
         </div>
         <?php
         $count = 0;
@@ -39,5 +40,8 @@
             ?>
         </div>
         <?php endforeach; ?>
+        <p>
+            <a class="hide-print" href="javascript:window.print()">Print this page</a>
+        </p>
     </body>
 </html>
