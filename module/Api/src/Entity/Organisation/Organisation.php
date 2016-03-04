@@ -183,6 +183,31 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     }
 
     /**
+     * Get related licences
+     *
+     * @return ArrayCollection
+     */
+    public function getRelatedLicences()
+    {
+        $criteria = Criteria::create();
+        $criteria->where(
+            $criteria->expr()->in(
+                'status',
+                [
+                    LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED,
+                    LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+                    LicenceEntity::LICENCE_STATUS_GRANTED,
+                    LicenceEntity::LICENCE_STATUS_VALID,
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                    LicenceEntity::LICENCE_STATUS_CURTAILED,
+                ]
+            )
+        );
+
+        return $this->getLicences()->matching($criteria);
+    }
+
+    /**
      * Gets a licence from the organisation licences. Used by EBSR to check the licence is related to the organisation,
      * we return more than just a true/false, as the status is checked afterwards
      *

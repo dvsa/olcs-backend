@@ -8,14 +8,22 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
+use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 
@@ -29,6 +37,9 @@ final class UpdateUser extends AbstractUserCommandHandler implements
 {
     use AuthAwareTrait,
         OpenAmUserAwareTrait;
+
+    const RESET_PASSWORD_BY_POST = 'post';
+    const RESET_PASSWORD_BY_EMAIL = 'email';
 
     protected $repoServiceName = 'User';
 
@@ -93,16 +104,139 @@ final class UpdateUser extends AbstractUserCommandHandler implements
             ($command->getAccountDisabled() === 'Y') ? true : false
         );
 
-        if ($command->getResetPassword() === 'Y') {
-            $this->getOpenAmUser()->resetPassword(
-                $user->getPid()
-            );
-        }
-
         $result = new Result();
         $result->addId('user', $user->getId());
         $result->addMessage('User updated successfully');
 
+        if ($command->getResetPassword() !== null) {
+            $result->merge(
+                $this->resetPassword($user, $command->getResetPassword())
+            );
+        }
+
         return $result;
+    }
+
+    /**
+     * Generates a new temp password and sends letter or email
+     *
+     * @param User $user
+     * @param string $mode
+     *
+     * @return Result
+     */
+    private function resetPassword($user, $mode)
+    {
+        $licence = null;
+
+        if ($mode === self::RESET_PASSWORD_BY_POST) {
+            $org = $user->getRelatedOrganisation();
+
+            if (!($org instanceof Organisation)) {
+                throw new ValidationException(['Failed to reset password by post']);
+            }
+
+            // find a licence related to an organisation the user belongs to
+            $licence = $org->getRelatedLicences()->first();
+
+            if (!($licence instanceof Licence)) {
+                throw new ValidationException(['Failed to reset password by post']);
+            }
+        }
+
+        $password = null;
+
+        $this->getOpenAmUser()->resetPassword(
+            $user->getPid(),
+            function ($params) use (&$password) {
+                $password = $params['password'];
+            }
+        );
+
+        $result = new Result();
+        $result->addMessage('Temporary password successfully generated and saved');
+
+        switch ($mode) {
+            case self::RESET_PASSWORD_BY_POST:
+                // send a letter with the temp password
+                $result->merge(
+                    $this->sendLetter($licence, $password)
+                );
+                break;
+            case self::RESET_PASSWORD_BY_EMAIL:
+                // send temporary password email
+                $result->merge(
+                    $this->handleSideEffect(
+                        SendUserTemporaryPasswordDto::create(
+                            [
+                                'user' => $user,
+                                'password' => $password,
+                            ]
+                        )
+                    )
+                );
+                break;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Sends letter with a temporary password
+     *
+     * @param Licence $licence
+     * @param string $password
+     *
+     * @return Result
+     */
+    private function sendLetter(Licence $licence, $password)
+    {
+        $template = 'SELF_SERVICE_NEW_PASSWORD';
+
+        $queryData = [
+            'licence' => $licence->getId()
+        ];
+
+        $knownValues = [
+            'SELF_SERVICE_PASSWORD' => $password,
+        ];
+
+        $documentId = $this->generateDocument($template, $queryData, $knownValues);
+
+        $printQueue = EnqueueFileCommand::create(
+            [
+                'documentId' => $documentId,
+                'jobName' => 'New temporary password'
+            ]
+        );
+
+        return $this->handleSideEffect($printQueue);
+    }
+
+    /**
+     * Generates a reset password document and returns its id
+     *
+     * @param string $template
+     * @param array $queryData
+     * @param array $knownValues
+     *
+     * @return int
+     */
+    private function generateDocument($template, $queryData, $knownValues)
+    {
+        $dtoData = [
+            'template' => $template,
+            'query' => $queryData,
+            'knownValues' => $knownValues,
+            'description' => 'Reset password letter',
+            'category' => CategoryEntity::CATEGORY_APPLICATION,
+            'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_APPLICATION_OTHER_DOCUMENTS,
+            'isExternal' => false,
+            'isScan' => false
+        ];
+
+        $result = $this->handleSideEffect(GenerateAndStore::create($dtoData));
+
+        return $result->getId('document');
     }
 }

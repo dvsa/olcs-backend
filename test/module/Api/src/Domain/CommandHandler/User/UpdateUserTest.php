@@ -7,7 +7,12 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Mockery as m;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
+use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUser as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
@@ -17,10 +22,14 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUser as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use ZfcRbac\Service\AuthorizationService;
@@ -218,7 +227,6 @@ class UpdateUserTest extends CommandHandlerTestCase
                 ],
             ],
             'accountDisabled' => 'Y',
-            'resetPassword' => 'Y',
         ];
 
         $command = Cmd::create($data);
@@ -233,8 +241,7 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->once()
             ->with('pid', 'login_id', 'test1@test.me', true)
             ->shouldReceive('resetPassword')
-            ->once()
-            ->with('pid');
+            ->never();
 
         /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
@@ -307,6 +314,232 @@ class UpdateUserTest extends CommandHandlerTestCase
             $contactDetails,
             $savedUser->getContactDetails()
         );
+    }
+
+    public function testHandleCommandWithPasswordResetByEmail()
+    {
+        $userId = 111;
+
+        $data = [
+            'id' => 111,
+            'version' => 1,
+            'userType' => UserEntity::USER_TYPE_OPERATOR,
+            'loginId' => 'login_id',
+            'contactDetails' => [
+                'emailAddress' => 'test1@test.me',
+            ],
+            'resetPassword' => Sut::RESET_PASSWORD_BY_EMAIL,
+        ];
+
+        $command = Cmd::create($data);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(true);
+
+        $this->mockedSmServices[UserInterface::class]
+            ->shouldReceive('updateUser')
+            ->once()
+            ->with('pid', 'login_id', 'test1@test.me', false)
+            ->shouldReceive('resetPassword')
+            ->once()
+            ->with('pid', m::type('callable'))
+            ->andReturnUsing(
+                function ($pid, $callback) {
+                    $params = [
+                        'password' => 'GENERATED_PASSWORD'
+                    ];
+                    $callback($params);
+                }
+            );
+
+        /** @var ContactDetailsEntity $contactDetails */
+        $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
+        $contactDetails->shouldReceive('update')
+            ->once()
+            ->with($data['contactDetails'])
+            ->andReturnSelf();
+
+        /** @var UserEntity $user */
+        $user = m::mock(UserEntity::class)->makePartial();
+        $user->setId($userId);
+        $user->setPid('pid');
+        $user->setLoginId($data['loginId']);
+        $user->setContactDetails($contactDetails);
+        $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
+
+        $this->repoMap['User']->shouldReceive('fetchById')
+            ->once()
+            ->with($userId, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($user)
+            ->shouldReceive('populateRefDataReference')
+            ->once()
+            ->andReturn($data);
+
+        $this->repoMap['ContactDetails']->shouldReceive('populateRefDataReference')
+            ->once()
+            ->with($data['contactDetails'])
+            ->andReturn($data['contactDetails']);
+
+        $this->repoMap['User']->shouldReceive('save')
+            ->once()
+            ->with(m::type(UserEntity::class));
+
+        $this->expectedSideEffect(
+            SendUserTemporaryPasswordDto::class,
+            [
+                'user' => $user,
+                'password' => 'GENERATED_PASSWORD',
+            ],
+            new Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'user' => $userId,
+            ],
+            'messages' => [
+                'User updated successfully',
+                'Temporary password successfully generated and saved'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandWithPasswordResetByPost()
+    {
+        $userId = 111;
+
+        $data = [
+            'id' => 111,
+            'version' => 1,
+            'userType' => UserEntity::USER_TYPE_OPERATOR,
+            'loginId' => 'login_id',
+            'contactDetails' => [
+                'emailAddress' => 'test1@test.me',
+            ],
+            'resetPassword' => Sut::RESET_PASSWORD_BY_POST,
+        ];
+
+        $command = Cmd::create($data);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(true);
+
+        $this->mockedSmServices[UserInterface::class]
+            ->shouldReceive('updateUser')
+            ->once()
+            ->with('pid', 'login_id', 'test1@test.me', false)
+            ->shouldReceive('resetPassword')
+            ->once()
+            ->with('pid', m::type('callable'))
+            ->andReturnUsing(
+                function ($pid, $callback) {
+                    $params = [
+                        'password' => 'GENERATED_PASSWORD'
+                    ];
+                    $callback($params);
+                }
+            );
+
+        /** @var ContactDetailsEntity $contactDetails */
+        $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
+        $contactDetails->shouldReceive('update')
+            ->once()
+            ->with($data['contactDetails'])
+            ->andReturnSelf();
+
+        $licId = 123;
+        /** @var LicenceEntity $licence */
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setId($licId);
+        $licence->setStatus(new RefData(LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED));
+
+        /** @var OrganisationEntity $org */
+        $org = m::mock(OrganisationEntity::class)->makePartial();
+        $org->setLicences(new ArrayCollection([$licence]));
+
+        /** @var OrganisationEntity $org */
+        $orgUser = m::mock(OrganisationUserEntity::class)->makePartial();
+        $orgUser->setOrganisation($org);
+
+        /** @var UserEntity $user */
+        $user = m::mock(UserEntity::class)->makePartial();
+        $user->setId($userId);
+        $user->setPid('pid');
+        $user->setLoginId($data['loginId']);
+        $user->setContactDetails($contactDetails);
+        $user->setOrganisationUsers(new ArrayCollection([$orgUser]));
+        $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
+
+        $this->repoMap['User']->shouldReceive('fetchById')
+            ->once()
+            ->with($userId, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($user)
+            ->shouldReceive('populateRefDataReference')
+            ->once()
+            ->andReturn($data);
+
+        $this->repoMap['ContactDetails']->shouldReceive('populateRefDataReference')
+            ->once()
+            ->with($data['contactDetails'])
+            ->andReturn($data['contactDetails']);
+
+        $this->repoMap['User']->shouldReceive('save')
+            ->once()
+            ->with(m::type(UserEntity::class));
+
+        $documentId = 333;
+        $generateAndStoreResult = new Result();
+        $generateAndStoreResult->addId('document', $documentId);
+
+        $this->expectedSideEffect(
+            GenerateAndStore::class,
+            [
+                'template' => 'SELF_SERVICE_NEW_PASSWORD',
+                'query' => [
+                    'licence' => $licId
+                ],
+                'knownValues' => [
+                    'SELF_SERVICE_PASSWORD' => 'GENERATED_PASSWORD'
+                ],
+                'description' => 'Reset password letter',
+                'category' => CategoryEntity::CATEGORY_APPLICATION,
+                'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_APPLICATION_OTHER_DOCUMENTS,
+                'isExternal' => false,
+                'isScan' => false
+            ],
+            $generateAndStoreResult
+        );
+
+        $this->expectedSideEffect(
+            EnqueueFileCommand::class,
+            [
+                'documentId' => $documentId,
+                'jobName' => 'New temporary password'
+            ],
+            new Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'user' => $userId,
+            ],
+            'messages' => [
+                'User updated successfully',
+                'Temporary password successfully generated and saved'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
     }
 
     public function testHandleCommandForTm()

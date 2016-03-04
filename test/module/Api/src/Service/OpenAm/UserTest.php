@@ -181,7 +181,7 @@ class UserTest extends MockeryTestCase
 
     public function testResetPassword()
     {
-        $password = 'Password123';
+        $password = 'Ab1password1';
 
         $pid = 'pid';
         $expected = [
@@ -192,7 +192,12 @@ class UserTest extends MockeryTestCase
             ]
         ];
 
-        $mockRandom = m::mock(\RandomLib\Generator::class);
+        $mockRandom = m::mock(Generator::class);
+        $mockRandom
+            ->shouldReceive('generateString')->with(1, Generator::CHAR_UPPER)->andReturn('A')
+            ->shouldReceive('generateString')->with(1, Generator::CHAR_LOWER)->andReturn('b')
+            ->shouldReceive('generateString')->with(1, Generator::CHAR_DIGITS)->andReturn('1')
+            ->shouldReceive('generateString')->with(9, Generator::EASY_TO_READ)->andReturn('password1');
 
         $mockClient = m::mock(Client::class);
         $mockClient->shouldReceive('updateUser')
