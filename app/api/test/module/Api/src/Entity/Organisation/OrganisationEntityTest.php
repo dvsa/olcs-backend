@@ -266,6 +266,46 @@ class OrganisationEntityTest extends EntityTester
         $this->assertEquals(true, $organisation->hasActiveLicences(LicenceEntity::LICENCE_CATEGORY_PSV));
     }
 
+    public function testGetRelatedLicences()
+    {
+        /** @var Entity $organisation */
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getLicences->matching')
+            ->with(m::type(Criteria::class))
+            ->andReturnUsing(
+                function (Criteria $criteria) {
+
+                    /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
+                    $expr = $criteria->getWhereExpression();
+
+                    $this->assertEquals('status', $expr->getField());
+                    $this->assertEquals('IN', $expr->getOperator());
+                    $this->assertEquals(
+                        [
+                            LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED,
+                            LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+                            LicenceEntity::LICENCE_STATUS_GRANTED,
+                            LicenceEntity::LICENCE_STATUS_VALID,
+                            LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                            LicenceEntity::LICENCE_STATUS_CURTAILED,
+                        ],
+                        $expr->getValue()->getValue()
+                    );
+
+                    $collection = m::mock();
+                    $collection->shouldReceive('toArray')
+                        ->andReturn(['related licences']);
+
+                    return $collection;
+                }
+            );
+
+        $this->assertEquals(
+            ['related licences'],
+            $organisation->getRelatedLicences()->toArray()
+        );
+    }
+
     public function testGetDisqualificationNull()
     {
         /* @var $organisation Entity */
