@@ -124,6 +124,23 @@ class Licence extends AbstractRepository
         return $results[0];
     }
 
+    /**
+     * Returns whether or not the licence number exists in the database
+     *
+     * @param string $licNo
+     * @return bool
+     */
+    public function existsByLicNo($licNo)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->where($qb->expr()->eq($this->alias .'.licNo', ':licNo'));
+        $qb->setParameter('licNo', $licNo);
+        $qb->setMaxResults(1);
+
+        return count($qb->getQuery()->getResult()) === 1;
+    }
+
     public function fetchForUserRegistration($licNo)
     {
         $licence = $this->fetchByLicNo($licNo);
