@@ -228,7 +228,7 @@ class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity
     /**
      * Get related organisation
      *
-     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation|null
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation|null|array
      */
     public function getRelatedOrganisation()
     {
@@ -237,6 +237,17 @@ class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity
         }
         if ($this->getTransportManagerLicence()) {
             return $this->getTransportManagerLicence()->getLicence()->getOrganisation();
+        }
+        if ($this->getTransportManagerApplication()) {
+            return $this->getTransportManagerApplication()->getApplication()->getLicence()->getOrganisation();
+        }
+        if ($this->getTransportManager()) {
+            $relatedOrganisations = [];
+            $tmApplications = $this->getTransportManager()->getTmApplications();
+            foreach ($tmApplications as $tmApplication) {
+                $relatedOrganisations[] = $tmApplication->getApplication()->getLicence()->getOrganisation();
+            }
+            return $relatedOrganisations;
         }
 
         return null;
