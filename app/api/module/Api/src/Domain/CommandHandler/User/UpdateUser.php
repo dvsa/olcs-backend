@@ -133,14 +133,14 @@ final class UpdateUser extends AbstractUserCommandHandler implements
             $org = $user->getRelatedOrganisation();
 
             if (!($org instanceof Organisation)) {
-                throw new ValidationException(['Failed to reset password by post']);
+                throw new ValidationException(['ERR_RESET_PASS_BY_POST_NO_ADDRESS']);
             }
 
             // find a licence related to an organisation the user belongs to
             $licence = $org->getRelatedLicences()->first();
 
             if (!($licence instanceof Licence)) {
-                throw new ValidationException(['Failed to reset password by post']);
+                throw new ValidationException(['ERR_RESET_PASS_BY_POST_NO_ADDRESS']);
             }
         }
 
