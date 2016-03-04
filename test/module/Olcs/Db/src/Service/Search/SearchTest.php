@@ -190,14 +190,12 @@ class SearchTest extends TestCase
         $expectedQuery = [
             'query' => [
                 'bool' => [
-                    'must' => [
+                    'should' => [
                         [
                             'match' => [
                                 '_all' => 'SMITH'
                             ]
-                        ]
-                    ],
-                    'should' => [
+                        ],
                         [
                             'match' => [
                                 'vrm' => 'SMITH'
@@ -266,14 +264,12 @@ class SearchTest extends TestCase
         $expectedQuery = [
             'query' => [
                 'bool' => [
-                    'must' => [
+                    'should' => [
                         [
                             'match' => [
                                 '_all' => 'SMITH'
                             ]
-                        ]
-                    ],
-                    'should' => [
+                        ],
                         [
                             'match' => [
                                 'vrm' => 'SMITH'
