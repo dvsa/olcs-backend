@@ -174,4 +174,81 @@ class OtherLicenceEntityTest extends EntityTester
 
         $this->assertSame('ORG1', $sut->getRelatedOrganisation());
     }
+
+    public function testGetRelatedOrganisationWithTmApplication()
+    {
+        $sut = new Entity();
+
+        $mockTmApplication = m::mock()
+            ->shouldReceive('getApplication')
+            ->once()
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getLicence')
+                ->once()
+                ->andReturn(
+                    m::mock()
+                        ->shouldReceive('getOrganisation')
+                        ->once()
+                        ->andReturn('ORG1')
+                        ->getMock()
+                )
+                ->getMock()
+            )
+            ->getMock();
+        $sut->setTransportManagerApplication($mockTmApplication);
+
+        $this->assertSame('ORG1', $sut->getRelatedOrganisation());
+    }
+
+    public function testGetRelatedOrganisationWithTransportManager()
+    {
+        $sut = new Entity();
+
+        $mockTma1 = m::mock()
+            ->shouldReceive('getApplication')
+            ->once()
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getLicence')
+                    ->once()
+                    ->andReturn(
+                        m::mock()
+                            ->shouldReceive('getOrganisation')
+                            ->once()
+                            ->andReturn('ORG1')
+                            ->getMock()
+                    )
+                    ->getMock()
+            )
+            ->getMock();
+
+        $mockTma2 = m::mock()
+            ->shouldReceive('getApplication')
+            ->once()
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getLicence')
+                    ->once()
+                    ->andReturn(
+                        m::mock()
+                            ->shouldReceive('getOrganisation')
+                            ->once()
+                            ->andReturn('ORG2')
+                            ->getMock()
+                    )
+                    ->getMock()
+            )
+            ->getMock();
+
+        $mockTransportManager = m::mock()
+            ->shouldReceive('getTmApplications')
+            ->once()
+            ->andReturn([$mockTma1, $mockTma2])
+            ->getMock();
+
+        $sut->setTransportManager($mockTransportManager);
+
+        $this->assertSame(['ORG1', 'ORG2'], $sut->getRelatedOrganisation());
+    }
 }
