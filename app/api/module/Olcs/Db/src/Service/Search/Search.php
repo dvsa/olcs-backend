@@ -67,7 +67,7 @@ class Search
         } else {
             $elasticaQueryString  = new Query\Match();
             $elasticaQueryString->setField('_all', $query);
-            $elasticaQueryBool->addMust($elasticaQueryString);
+            $elasticaQueryBool->addShould($elasticaQueryString);
 
             $elasticaQueryBool = $this->processDateRanges($elasticaQueryBool);
 
