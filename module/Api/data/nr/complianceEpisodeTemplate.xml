@@ -13,6 +13,12 @@
                 <PenaltyRequested penaltyTypeRequested="301" duration="12" />
                 <PenaltyRequested penaltyTypeRequested="302" duration="30" />
             </SeriousInfringement>
+            <SeriousInfringement dateOfInfringement="2014-03-21" category="MSI" infringementType="201" dateOfCheck="2014-03-21">
+                <PenaltyImposed finalDecisionDate="2014-03-21" penaltyTypeImposed="202" startDate="2014-04-15" endDate="2014-10-18" isExecuted="No" />
+                <PenaltyImposed finalDecisionDate="2014-07-26" penaltyTypeImposed="203" isExecuted="Yes" />
+                <PenaltyRequested penaltyTypeRequested="305" duration="18" />
+                <PenaltyRequested penaltyTypeRequested="306" duration="24" />
+            </SeriousInfringement>
         </TransportUndertaking>
     </Body>
 </ERRU2MS_Infringement_Req>
