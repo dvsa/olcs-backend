@@ -64,11 +64,6 @@ class TrafficAreaValidator implements \Zend\ServiceManager\FactoryInterface
      */
     public function validateForSameTrafficAreas(Application $application, $trafficAreaId)
     {
-        // @todo Temporarily disable the the validation as it is causing issues with the automated tests
-        // There is a story https://jira.i-env.net/browse/OLCS-11275 to re-enable this
-        return true;
-        // Remove the line above, also re-enabled tests
-
         $validLicenceStatuses = [
             Licence::LICENCE_STATUS_VALID,
             Licence::LICENCE_STATUS_SUSPENDED,
