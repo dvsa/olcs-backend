@@ -284,6 +284,7 @@ return [
             'Team' => RepositoryFactory::class,
             'TeamPrinter' => RepositoryFactory::class,
             'Printer' => RepositoryFactory::class,
+            'ErruRequest' => RepositoryFactory::class,
             'SeriousInfringement' => RepositoryFactory::class,
             'SiPenalty' => RepositoryFactory::class,
             'SiCategory' => RepositoryFactory::class,
