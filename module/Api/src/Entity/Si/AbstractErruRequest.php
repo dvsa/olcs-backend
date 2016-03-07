@@ -18,7 +18,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="erru_request",
  *    indexes={
- *        @ORM\Index(name="ix_erru_request_case_id", columns={"case_id"}),
  *        @ORM\Index(name="ix_erru_request_response_user_id", columns={"response_user_id"}),
  *        @ORM\Index(name="ix_erru_request_member_state_code", columns={"member_state_code"}),
  *        @ORM\Index(name="ix_erru_request_created_by", columns={"created_by"}),
@@ -63,9 +62,10 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
     protected $createdBy;
 
@@ -101,9 +101,10 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
 
@@ -276,7 +277,7 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the created by
      *
-     * @param int $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
      * @return ErruRequest
      */
     public function setCreatedBy($createdBy)
@@ -289,7 +290,7 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -368,7 +369,7 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
      * @return ErruRequest
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -381,7 +382,7 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {
