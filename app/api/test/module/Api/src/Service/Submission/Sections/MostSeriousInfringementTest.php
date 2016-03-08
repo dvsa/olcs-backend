@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\Si\ErruRequest;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement;
 use Dvsa\Olcs\Api\Entity\Si\SiCategoryType;
 use Mockery as m;
@@ -18,12 +18,12 @@ class MostSeriousInfringementTest extends SubmissionSectionTest
 
     protected $expectedResult = [
         'id' => 66,
-        'notificationNumber' => 'not no 123',
+        'notificationNumber' => 'notificationNo',
         'siCategory' => 'si_cat-desc',
         'siCategoryType' => 'si_cat_type-desc',
         'infringementDate' => '2014-05-05',
         'checkDate' => '2014-01-01',
-        'isMemberState' => true
+        'isMemberState' => true,
     ];
 
     /**
@@ -48,9 +48,11 @@ class MostSeriousInfringementTest extends SubmissionSectionTest
 
         $seriousInfringements = new ArrayCollection();
 
+        $erruRequest = m::mock(ErruRequest::class)->makePartial();
+        $erruRequest->setNotificationNumber('notificationNo');
+
         $si = m::mock(SeriousInfringement::class)->makePartial();
         $si->setId(66);
-        $si->setNotificationNumber('not no 123');
         $si->setCheckDate('2014-01-01');
         $si->setSiCategory($this->generateRefDataEntity('si_cat'));
         $si->setInfringementDate('2014-05-05');
@@ -59,13 +61,10 @@ class MostSeriousInfringementTest extends SubmissionSectionTest
         $siCategoryType->setDescription('si_cat_type-desc');
         $si->setSiCategoryType($siCategoryType);
 
-        $country = new Country();
-        $country->setIsMemberState(true);
-        $si->setMemberStateCode($country);
-
         $seriousInfringements->add($si);
 
         $case->setSeriousInfringements($seriousInfringements);
+        $case->setErruRequest($erruRequest);
 
         return $case;
     }

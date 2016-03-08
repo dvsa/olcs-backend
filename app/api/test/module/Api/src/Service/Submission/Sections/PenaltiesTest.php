@@ -28,7 +28,7 @@ class PenaltiesTest extends SubmissionSectionTest
                     'transportUndertakingName' => 'tun',
                     'originatingAuthority' => 'erru_oa',
                     'infringementId' => 734,
-                    'notificationNumber' => 'notificationNo734',
+                    'notificationNumber' => 'notificationNo',
                     'infringementDate' => '30/11/2009',
                     'checkDate' => '20/07/2010',
                     'category' => 'sicatdesc',
