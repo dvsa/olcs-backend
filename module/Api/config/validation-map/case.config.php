@@ -57,7 +57,6 @@ return [
     CommandHandler\TmCaseDecision\UpdateDeclareUnfit::class                 => IsInternalUser::class,
     CommandHandler\TmCaseDecision\UpdateNoFurtherAction::class              => IsInternalUser::class,
     CommandHandler\TmCaseDecision\UpdateReputeNotLost::class                => IsInternalUser::class,
-    CommandHandler\Cases\Si\SendResponse::class                             => IsInternalUser::class,
     CommandHandler\Cases\Si\Applied\Delete::class                           => IsInternalUser::class,
     CommandHandler\Cases\Si\Applied\Create::class                           => IsInternalUser::class,
     CommandHandler\Cases\Si\Applied\Update::class                           => IsInternalUser::class,
