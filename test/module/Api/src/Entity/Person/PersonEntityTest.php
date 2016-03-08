@@ -2,6 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Person;
 
+use Common\Data\Object\Bundle\Application;
+use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Person\Person as Entity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -105,5 +108,30 @@ class PersonEntityTest extends EntityTester
         $person->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection([$disqualification]));
 
         $this->assertSame(Disqualification::STATUS_ACTIVE, $person->getDisqualificationStatus());
+    }
+
+    public function testGetRelatedOrganisation()
+    {
+        $person = $this->instantiate($this->entityClass);
+        $op = new OrganisationPerson();
+        $org1 = m::mock(Organisation::class)->makePartial()->setId(1);
+        $org2 = m::mock(Organisation::class)->makePartial()->setId(2);
+        $app = m::mock(Application::class);
+        $op->setOrganisation($org1);
+        $op->setPerson($person);
+        $aop = m::mock(ApplicationOrganisationPerson::class)->makePartial();
+        $aop->setApplication($app);
+        $aop->setOrganisation($org2);
+        $aop->setPerson($person);
+
+        $person->setOrganisationPersons([$op]);
+        $person->setApplicationOrganisationPersons([$aop]);
+
+        $expected = [
+            1 => $org1,
+            2 => $org2
+        ];
+
+        $this->assertEquals($expected, $person->getRelatedOrganisation());
     }
 }
