@@ -273,6 +273,7 @@ class LicenceVehicle extends AbstractRepository
 
         $qb->innerJoin('m.vehicle', 'v');
         $this->filterByRemovalDate($qb, $query);
+        $this->filterByVrm($qb, $query);
         return $qb;
     }
 
@@ -367,7 +368,7 @@ class LicenceVehicle extends AbstractRepository
     }
 
     /**
-     * Filter a query to show only VRMs starting with the $vrm string
+     * Filter a query to show only VRMs contains the $vrm string
      *
      * @param QueryBuilder $qb
      * @param QueryInterface $query
@@ -378,7 +379,7 @@ class LicenceVehicle extends AbstractRepository
 
         if (isset($vrm)) {
             $qb->andWhere($qb->expr()->like('v.vrm', ':vrm'));
-            $qb->setParameter('vrm', $vrm . '%');
+            $qb->setParameter('vrm', '%' . $vrm . '%');
         }
     }
 
