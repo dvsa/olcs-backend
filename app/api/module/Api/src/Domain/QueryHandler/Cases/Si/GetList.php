@@ -22,15 +22,7 @@ final class GetList extends AbstractQueryHandler
         return [
             'results' => $this->resultList(
                 $sis,
-                [
-                    'siCategory',
-                    'siCategoryType',
-                    'appliedPenalties' => ['siPenaltyType', 'seriousInfringement'],
-                    'imposedErrus' => ['executed', 'siPenaltyImposedType'],
-                    'requestedErrus' => ['siPenaltyRequestedType'],
-                    'case',
-                    'memberStateCode'
-                ]
+                ['siCategoryType']
             ),
             'count' => count($sis)
         ];
