@@ -645,6 +645,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return $this->getLicence()->getLicenceVehicles()->matching($criteria);
     }
 
+    public function getAllVehiclesCount()
+    {
+        return $this->getLicence()->getLicenceVehicles()->count();
+    }
+
     public function isRealUpgrade()
     {
         if (!$this->isVariation()) {

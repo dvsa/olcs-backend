@@ -2799,4 +2799,11 @@ class ApplicationEntityTest extends EntityTester
 
         $this->assertTrue($sut->validateTol('Y', $mockGoodsOrPsv, $mockLicenceType));
     }
+
+    public function testGetAllVehiclesCount()
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('getLicence->getLicenceVehicles->count')->once()->andReturn(23);
+        $this->assertEquals(23, $sut->getAllVehiclesCount());
+    }
 }

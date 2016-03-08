@@ -79,6 +79,10 @@ class GoodsVehiclesTest extends QueryHandlerTestCase
         $licence->shouldReceive('getOtherActiveLicences->count')
             ->andReturn(5);
 
+        $licence->shouldReceive('getLicenceVehicles->count')
+            ->andReturn(3)
+            ->once();
+
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($licence);
@@ -114,7 +118,8 @@ class GoodsVehiclesTest extends QueryHandlerTestCase
                 'count' => 10
             ],
             'spacesRemaining' => 3,
-            'activeVehicleCount' => 2
+            'activeVehicleCount' => 2,
+            'allVehicleCount' => 3
         ];
 
         $this->assertEquals($expected, $result->serialize());
