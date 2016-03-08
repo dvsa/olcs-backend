@@ -94,6 +94,7 @@ return [
     QueryHandler\Organisation\UnlicensedCases::class                        => IsInternalUser::class,
     QueryHandler\Cases\Si\Applied\Penalty::class                            => IsInternalUser::class,
     QueryHandler\Cases\Si\GetList::class                                    => IsInternalUser::class,
+    QueryHandler\Cases\Si\Si::class                                         => IsInternalUser::class,
     QueryHandler\Cases\PresidingTc\GetList::class                           => IsInternalUser::class,
     QueryHandler\Venue\VenueList::class                                     => IsInternalUser::class,
 ];
