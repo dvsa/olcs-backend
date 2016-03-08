@@ -56,7 +56,10 @@ class SendResponseTest extends CommandHandlerTestCase
         $user->shouldReceive('getId')->andReturn($userId);
 
         $erruRequest = m::mock(ErruRequestEntity::class)->makePartial();
-        $erruRequest->shouldReceive('updateErruResponse')->once()->with(m::type(UserEntity::class), m::type(\DateTime::class));
+        $erruRequest
+            ->shouldReceive('updateErruResponse')
+            ->once()
+            ->with(m::type(UserEntity::class), m::type(\DateTime::class));
 
         $case = m::mock(CasesEntity::class);
         $case->shouldReceive('getId')->once()->andReturn($caseId);
