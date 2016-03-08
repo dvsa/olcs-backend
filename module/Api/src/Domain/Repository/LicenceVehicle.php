@@ -368,7 +368,7 @@ class LicenceVehicle extends AbstractRepository
     }
 
     /**
-     * Filter a query to show only VRMs contains the $vrm string
+     * Filter a query to show only VRMs containing the $vrm string
      *
      * @param QueryBuilder $qb
      * @param QueryInterface $query
