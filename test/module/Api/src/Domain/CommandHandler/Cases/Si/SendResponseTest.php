@@ -8,10 +8,10 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\SendResponse;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\SendResponse as SendErruResponseCmd;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
-use Dvsa\Olcs\Api\Domain\Repository\SeriousInfringement as SiRepo;
+use Dvsa\Olcs\Api\Domain\Repository\ErruRequest as ErruRequestRepo;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
-use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
+use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Service\Nr\MsiResponse as MsiResponseService;
 use Dvsa\Olcs\Api\Service\Nr\InrClient;
 use Dvsa\Olcs\Api\Service\Nr\InrClientInterface;
@@ -30,7 +30,7 @@ class SendResponseTest extends CommandHandlerTestCase
     {
         $this->sut = new SendResponse();
         $this->mockRepo('Cases', CasesRepo::class);
-        $this->mockRepo('SeriousInfringement', SiRepo::class);
+        $this->mockRepo('ErruRequest', ErruRequestRepo::class);
 
         $this->mockedSmServices = [
             MsiResponseService::class => m::mock(MsiResponseService::class),
@@ -49,23 +49,21 @@ class SendResponseTest extends CommandHandlerTestCase
         $responseDate = '2015-12-25 00:00:00';
         $xml = 'xml string';
         $userId = 111;
-        $siId = 222;
         $caseId = 333;
         $command = SendErruResponseCmd::create(['case' => $caseId]);
 
         $user = m::mock(UserEntity::class);
         $user->shouldReceive('getId')->andReturn($userId);
 
-        $si = m::mock(SiEntity::class)->makePartial();
-        $si->shouldReceive('getId')->once()->andReturn($siId);
-        $si->shouldReceive('updateErruResponse')->once()->with(m::type(UserEntity::class), m::type(\DateTime::class));
+        $erruRequest = m::mock(ErruRequestEntity::class)->makePartial();
+        $erruRequest->shouldReceive('updateErruResponse')->once()->with(m::type(UserEntity::class), m::type(\DateTime::class));
 
         $case = m::mock(CasesEntity::class);
         $case->shouldReceive('getId')->once()->andReturn($caseId);
-        $case->shouldReceive('getSeriousInfringements->first')->once()->andReturn($si);
+        $case->shouldReceive('getErruRequest')->once()->andReturn($erruRequest);
 
         $this->repoMap['Cases']->shouldReceive('fetchById')->once()->with($caseId)->andReturn($case);
-        $this->repoMap['SeriousInfringement']->shouldReceive('save')->once()->with(m::type(SiEntity::class));
+        $this->repoMap['ErruRequest']->shouldReceive('save')->once()->with(m::type(ErruRequestEntity::class));
 
         $rbacIdentity = m::mock(IdentityInterface::class);
         $rbacIdentity->shouldReceive('getUser')->andReturn($user);
@@ -95,8 +93,7 @@ class SendResponseTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'case' => $caseId,
-                'serious_infringement' => $siId
+                'case' => $caseId
             ],
             'messages' => [
                 'Msi Response sent'
