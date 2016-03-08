@@ -36,6 +36,33 @@ class VariationOperatingCentreTest extends QueryHandlerTestCase
         $response->shouldReceive('setValue')
             ->once()
             ->with('canUpdateAddress', false);
+        $response->shouldReceive('serialize')->with()->once()->andReturn(['action' => 'U']);
+
+        $this->queryHandler->shouldReceive('handleQuery')
+            ->andReturnUsing(
+                function ($dto) use ($response) {
+
+                    $this->assertInstanceOf(ApplicationOperatingCentre::class, $dto);
+                    $data = $dto->getArrayCopy();
+
+                    $this->assertEquals(111, $data['id']);
+
+                    return $response;
+                }
+            );
+
+        $this->assertEquals($response, $this->sut->handleQuery($query));
+    }
+
+    public function testHandleQueryAddedOperatingCentre()
+    {
+        $query = Qry::create(['id' => 'A111']);
+
+        $response = m::mock();
+        $response->shouldReceive('setValue')
+            ->once()
+            ->with('canUpdateAddress', true);
+        $response->shouldReceive('serialize')->with()->once()->andReturn(['action' => 'A']);
 
         $this->queryHandler->shouldReceive('handleQuery')
             ->andReturnUsing(
