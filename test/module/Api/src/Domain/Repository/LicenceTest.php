@@ -170,6 +170,54 @@ class LicenceTest extends RepositoryTestCase
         ];
     }
 
+    /**
+     * Tests finding a licence by licNo without retreiving the additional data
+     */
+    public function testFetchByLicNoWithoutAdditionalData()
+    {
+        $licNo = 'OB1234567';
+        $qb = m::mock(QueryBuilder::class);
+        $repo = m::mock(EntityRepository::class);
+        $doctrineComparison = m::mock(Comparison::class);
+
+        $this->em->shouldReceive('getRepository')->with(Licence::class)->andReturn($repo);
+
+        $repo->shouldReceive('createQueryBuilder')->with('m')->once()->andReturn($qb);
+
+        $qb->shouldReceive('expr->eq')->with('m.licNo', ':licNo')->once()->andReturn($doctrineComparison);
+        $qb->shouldReceive('where')->with($doctrineComparison)->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('licNo', $licNo)->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getOneOrNullResult')->with()->once()->andReturn('RESULT');
+
+        $this->assertSame('RESULT', $this->sut->fetchByLicNoWithoutAdditionalData($licNo));
+    }
+
+    /**
+     * Tests exception thrown when returned licence record is null
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
+     */
+    public function testFetchByLicNoWithoutAdditionalDataNotFound()
+    {
+        $licNo = 'OB1234567';
+        $qb = m::mock(QueryBuilder::class);
+        $repo = m::mock(EntityRepository::class);
+        $doctrineComparison = m::mock(Comparison::class);
+
+        $this->em->shouldReceive('getRepository')->with(Licence::class)->andReturn($repo);
+
+        $repo->shouldReceive('createQueryBuilder')->with('m')->once()->andReturn($qb);
+
+        $qb->shouldReceive('expr->eq')->with('m.licNo', ':licNo')->once()->andReturn($doctrineComparison);
+        $qb->shouldReceive('where')->with($doctrineComparison)->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('licNo', $licNo)->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getOneOrNullResult')->with()->once()->andReturn(null);
+
+        $this->sut->fetchByLicNoWithoutAdditionalData($licNo);
+    }
+
     public function testFetchByLicNo()
     {
         $qb = m::mock(QueryBuilder::class);
