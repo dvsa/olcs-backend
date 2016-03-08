@@ -15,11 +15,12 @@ use Dvsa\Olcs\Api\Domain\Repository\SiCategory as SiCategoryRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SiCategoryType as SiCategoryTypeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SiPenaltyImposedType as SiPenaltyImposedTypeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SiPenaltyRequestedType as SiPenaltyRequestedTypeRepo;
+use Dvsa\Olcs\Api\Domain\Repository\ErruRequest as ErruRequestRepo;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
-use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiCategoryType as SiCategoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyImposedType as SiPenaltyImposedTypeEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyRequestedType as SiPenaltyRequestedTypeEntity;
@@ -48,6 +49,7 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
         $this->mockRepo('SiCategoryType', SiCategoryTypeRepo::class);
         $this->mockRepo('SiPenaltyImposedType', SiPenaltyImposedTypeRepo::class);
         $this->mockRepo('SiPenaltyRequestedType', SiPenaltyRequestedTypeRepo::class);
+        $this->mockRepo('ErruRequest', ErruRequestRepo::class);
 
         $this->mockedSmServices = [
             'ComplianceXmlStructure' => m::mock(XmlStructureInputFactory::class),
@@ -62,10 +64,9 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
     {
         $this->refData = [
             CasesEntity::LICENCE_CASE_TYPE,
-            CasesEntity::ERRU_DEFAULT_CASE_TYPE,
+            ErruRequestEntity::DEFAULT_CASE_TYPE,
             CasesEntity::ERRU_DEFAULT_CASE_CATEGORY,
             'pen_erru_imposed_executed_yes'
-
         ];
 
         $this->references = [
@@ -221,7 +222,7 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
         $licenceEntity->shouldReceive('getId')->once()->andReturn($licenceId);
 
         $this->repoMap['Licence']
-            ->shouldReceive('fetchByLicNo')
+            ->shouldReceive('fetchByLicNoWithoutAdditionalData')
             ->once()
             ->with($licenceNumber)
             ->andReturn($licenceEntity);
@@ -266,11 +267,11 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             ->with($siPenaltyRequestedType)
             ->andReturn($siPenaltyRequestedTypeEntity);
 
-        $this->repoMap['SeriousInfringement']
-            ->shouldReceive('fetchByNotificationNumber')
+        $this->repoMap['ErruRequest']
+            ->shouldReceive('existsByWorkflowId')
             ->once()
-            ->with($notificationNumber)
-            ->andReturn(null);
+            ->with($workflowId)
+            ->andReturn(false);
 
         $this->repoMap['Cases']->shouldReceive('save')->once()->with(m::type(CasesEntity::class));
 
@@ -301,13 +302,13 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
         $command = ComplianceEpisodeCmd::create(['xml' => $xmlString]);
 
         $licenceNumber = 'OB1234567';
-        $notificationNumber = '0ffefb6b-6344-4a60-9a53-4381c32f98d9';
+        $workflowId = '0ffefb6b-6344-4a60-9a53-4381c32f98d9';
 
         $xmlDomDocument = new \DomDocument();
 
         $erruData = [
             'licenceNumber' => $licenceNumber,
-            'notificationNumber' => $notificationNumber
+            'workflowId' => $workflowId
         ];
 
         $this->mockedSmServices['ComplianceXmlStructure']
@@ -339,16 +340,16 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             ->andReturn($erruData);
 
         $this->repoMap['Licence']
-            ->shouldReceive('fetchByLicNo')
+            ->shouldReceive('fetchByLicNoWithoutAdditionalData')
             ->once()
             ->with($licenceNumber)
             ->andThrowExceptions([new NotFoundException()]);
 
-        $this->repoMap['SeriousInfringement']
-            ->shouldReceive('fetchByNotificationNumber')
+        $this->repoMap['ErruRequest']
+            ->shouldReceive('existsByWorkflowId')
             ->once()
-            ->with($notificationNumber)
-            ->andReturn(null);
+            ->with($workflowId)
+            ->andReturn(false);
 
         $this->sut->handleCommand($command);
     }
@@ -356,19 +357,19 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
     /**
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\Exception
      */
-    public function testExceptionThrownForExistingSi()
+    public function testExceptionThrownForExistingErruRequest()
     {
         $xmlString = 'xml string';
         $command = ComplianceEpisodeCmd::create(['xml' => $xmlString]);
 
         $licenceNumber = 'OB1234567';
-        $notificationNumber = '0ffefb6b-6344-4a60-9a53-4381c32f98d9';
+        $workflowId = '0ffefb6b-6344-4a60-9a53-4381c32f98d9';
 
         $xmlDomDocument = new \DomDocument();
 
         $erruData = [
             'licenceNumber' => $licenceNumber,
-            'notificationNumber' => $notificationNumber
+            'workflowId' => $workflowId
         ];
 
         $this->mockedSmServices['ComplianceXmlStructure']
@@ -399,13 +400,11 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             ->shouldReceive('getValue')
             ->andReturn($erruData);
 
-        $siEntity = m::mock(SiEntity::class);
-
-        $this->repoMap['SeriousInfringement']
-            ->shouldReceive('fetchByNotificationNumber')
+        $this->repoMap['ErruRequest']
+            ->shouldReceive('existsByWorkflowId')
             ->once()
-            ->with($notificationNumber)
-            ->andReturn($siEntity);
+            ->with($workflowId)
+            ->andReturn(true);
 
         $this->sut->handleCommand($command);
     }
