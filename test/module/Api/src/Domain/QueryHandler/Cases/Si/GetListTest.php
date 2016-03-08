@@ -27,15 +27,7 @@ class GetListTest extends QueryHandlerTestCase
         $query = m::mock(\Dvsa\Olcs\Transfer\Query\QueryInterface::class);
         $mockResult = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
         $mockResult->shouldReceive('serialize')->with(
-            [
-                'siCategory',
-                'siCategoryType',
-                'appliedPenalties' => ['siPenaltyType', 'seriousInfringement'],
-                'imposedErrus' => ['executed', 'siPenaltyImposedType'],
-                'requestedErrus' => ['siPenaltyRequestedType'],
-                'case',
-                'memberStateCode'
-            ]
+            ['siCategoryType']
         )->once()->andReturn(['foo' => 'bar']);
 
         $this->repoMap['SeriousInfringement']
