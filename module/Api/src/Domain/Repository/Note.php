@@ -109,7 +109,7 @@ class Note extends AbstractRepository
     }
 
     /**
-     * Fetch the latest note for application / licence with given not type
+     * Fetch the latest note for application / licence with given note type
      *
      * @param int $licence
      * @param int $application

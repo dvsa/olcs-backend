@@ -2,9 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases;
 
+use Common\RefData;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -14,9 +17,14 @@ final class Cases extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Cases';
 
+    protected $extraRepos = ['Note'];
+
     public function handleQuery(QueryInterface $query)
     {
+        /** @var CasesEntity $case */
         $case = $this->getRepo()->fetchUsingId($query);
+
+        $latestNote = $this->getLatestNoteByCase($case);
 
         $criteria = Criteria::create();
         $criteria->where(
@@ -67,7 +75,33 @@ final class Cases extends AbstractQueryHandler
                 ),
                 'tmDecisions',
                 'erruRequest'
+            ],
+            [
+                'latestNote' => $latestNote
             ]
         );
+    }
+
+    /**
+     * @param CasesEntity $case
+     * @return string
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function getLatestNoteByCase(CasesEntity $case)
+    {
+        $noteType = $case->getNoteType();
+        $latestNote = '';
+
+        if (!empty($noteType)) {
+            $licenceId = null;
+            $licence = $case->getLicence();
+            if (!empty($licence)) {
+                $licenceId = $licence->getId();
+            }
+
+            $latestNote = $this->getRepo('Note')->fetchForOverview($licenceId, null, $noteType);
+        }
+
+        return $latestNote;
     }
 }

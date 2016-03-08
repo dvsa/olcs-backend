@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Cases;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Entity\Note\Note;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -393,5 +394,23 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
     public function getContextValue()
     {
         return $this->getId();
+    }
+
+    /**
+     * Return the Note type for this case, based on case type
+     *
+     * @return string
+     */
+    public function getNoteType()
+    {
+        switch ($this->getCaseType()) {
+            case self::LICENCE_CASE_TYPE:
+                return Note::NOTE_TYPE_LICENCE;
+            case self::APP_CASE_TYPE:
+                return Note::NOTE_TYPE_APPLICATION;
+            case self::TM_CASE_TYPE:
+                return Note::NOTE_TYPE_TRANSPORT_MANAGER;
+        }
+        return null;
     }
 }
