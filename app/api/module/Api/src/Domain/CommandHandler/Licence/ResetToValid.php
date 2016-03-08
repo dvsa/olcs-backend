@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -33,6 +34,9 @@ final class ResetToValid extends AbstractCommandHandler implements Transactioned
         $licence->setCurtailedDate(null);
         $licence->setSuspendedDate(null);
         $licence->setCnsDate(null);
+
+        // remove reasons
+        $licence->setReasons(new ArrayCollection());
 
         $result = $this->handleSideEffect(
             RemoveLicenceStatusRulesForLicence::create(

@@ -274,6 +274,27 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     protected $psvDiscsToBePrintedNo;
 
     /**
+     * Reason
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Pi\Reason",
+     *     inversedBy="licences",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="licence_status_reason",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="reason_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $reasons;
+
+    /**
      * Review date
      *
      * @var \DateTime
@@ -681,6 +702,7 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
 
     public function initCollections()
     {
+        $this->reasons = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->busRegs = new ArrayCollection();
         $this->cases = new ArrayCollection();
@@ -1230,6 +1252,66 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     public function getPsvDiscsToBePrintedNo()
     {
         return $this->psvDiscsToBePrintedNo;
+    }
+
+    /**
+     * Set the reason
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return Licence
+     */
+    public function setReasons($reasons)
+    {
+        $this->reasons = $reasons;
+
+        return $this;
+    }
+
+    /**
+     * Get the reasons
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getReasons()
+    {
+        return $this->reasons;
+    }
+
+    /**
+     * Add a reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return Licence
+     */
+    public function addReasons($reasons)
+    {
+        if ($reasons instanceof ArrayCollection) {
+            $this->reasons = new ArrayCollection(
+                array_merge(
+                    $this->reasons->toArray(),
+                    $reasons->toArray()
+                )
+            );
+        } elseif (!$this->reasons->contains($reasons)) {
+            $this->reasons->add($reasons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @return Licence
+     */
+    public function removeReasons($reasons)
+    {
+        if ($this->reasons->contains($reasons)) {
+            $this->reasons->removeElement($reasons);
+        }
+
+        return $this;
     }
 
     /**
