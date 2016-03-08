@@ -37,6 +37,8 @@ final class Create extends AbstractCommandHandler
          * @var SiEntity $si
          * @var SiPenaltyTypeEntity $siPenaltyType
          * @var CreatePenaltyCmd $command
+         * @to-do ideally we should stop a penalty from being created if the msi response has already been sent,
+         * case is closed, case has the wrong status etc.
          */
         $si = $this->getRepo('SeriousInfringement')->fetchById($command->getSi());
         $siPenaltyType = $this->getRepo()->getReference(SiPenaltyTypeEntity::class, $command->getSiPenaltyType());
