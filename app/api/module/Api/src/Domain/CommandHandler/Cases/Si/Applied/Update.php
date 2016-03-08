@@ -33,6 +33,8 @@ final class Update extends AbstractCommandHandler
          * @var SiPenaltyEntity $penalty
          * @var SiPenaltyTypeEntity $siPenaltyType
          * @var UpdatePenaltyCmd $command
+         * @to-do we should stop a penalty from being deletable based on criteria such as the msi response
+         * already being sent, case being closed etc.
          */
         $penalty = $this->getRepo()->fetchUsingId($command);
         $siPenaltyType = $this->getRepo()->getReference(SiPenaltyTypeEntity::class, $command->getSiPenaltyType());
