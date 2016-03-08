@@ -5,13 +5,12 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Si\Applied;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\Applied\Create as CreatePenalty;
-use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
+use Dvsa\Olcs\Api\Domain\Repository\SeriousInfringement as SiRepo;
+use Dvsa\Olcs\Api\Domain\Repository\SiPenalty as SiPenaltyRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\Applied\Create as Cmd;
-use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyType as SiPenaltyTypeEntity;
@@ -24,8 +23,8 @@ class CreateTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new CreatePenalty();
-        $this->mockRepo('Cases', CasesRepo::class);
-        $this->mockRepo('SiPenalty', CasesRepo::class);
+        $this->mockRepo('SeriousInfringement', SiRepo::class);
+        $this->mockRepo('SiPenalty', SiPenaltyRepo::class);
 
         parent::setUp();
     }
@@ -46,7 +45,6 @@ class CreateTest extends CommandHandlerTestCase
         $siPenaltyType = 999;
         $siId = 333;
         $penaltyId = 111;
-        $caseId = 24;
         $startDate = '2015-12-25';
         $endDate = '2015-12-26';
         $imposed = 'Y';
@@ -54,7 +52,7 @@ class CreateTest extends CommandHandlerTestCase
 
         $command = Cmd::Create(
             [
-                'case' => $caseId,
+                'si' => $siId,
                 'siPenaltyType' => $siPenaltyType,
                 'imposed' => $imposed,
                 'startDate' => $startDate,
@@ -63,15 +61,10 @@ class CreateTest extends CommandHandlerTestCase
             ]
         );
 
-        $seriousInfringement = m::mock(SiEntity::class)->makePartial();
-        $seriousInfringement->setId($siId);
-        $seriousInfringements = new ArrayCollection([$seriousInfringement]);
+        $siEntity = m::mock(SiEntity::class)->makePartial();
+        $siEntity->setId($siId);
 
-        $caseEntity = m::mock(CasesEntity::class)->makePartial();
-        $caseEntity->shouldReceive('getSeriousInfringements')->once()->andReturn($seriousInfringements);
-        $caseEntity->shouldReceive('getId')->once()->andReturn($caseId);
-
-        $this->repoMap['Cases']->shouldReceive('fetchById')->with($caseId)->once()->andReturn($caseEntity);
+        $this->repoMap['SeriousInfringement']->shouldReceive('fetchById')->with($siId)->once()->andReturn($siEntity);
 
         $this->repoMap['SiPenalty']->shouldReceive('save')
             ->with(m::type(SiPenaltyEntity::class))
@@ -84,7 +77,6 @@ class CreateTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'case' => $caseId,
                 'si' => $siId,
                 'penalty' => $penaltyId
             ],

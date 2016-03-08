@@ -22,7 +22,7 @@ final class Create extends AbstractCommandHandler
     const DATE_FORMAT = 'Y-m-d';
 
     protected $repoServiceName = 'SiPenalty';
-    protected $extraRepos = ['Cases'];
+    protected $extraRepos = ['SeriousInfringement'];
 
     /**
      * Create Erru applied penalty
@@ -38,8 +38,7 @@ final class Create extends AbstractCommandHandler
          * @var SiPenaltyTypeEntity $siPenaltyType
          * @var CreatePenaltyCmd $command
          */
-        $case = $this->getRepo('Cases')->fetchById($command->getCase());
-        $si = $case->getSeriousInfringements()->first(); //there will only ever be one si
+        $si = $this->getRepo('SeriousInfringement')->fetchById($command->getSi());
         $siPenaltyType = $this->getRepo()->getReference(SiPenaltyTypeEntity::class, $command->getSiPenaltyType());
         $startDate
             = ($command->getStartDate() !== null)
@@ -61,7 +60,6 @@ final class Create extends AbstractCommandHandler
 
         $result = new Result();
         $result->addMessage('Applied penalty created');
-        $result->addId('case', $case->getId());
         $result->addId('si', $si->getId());
         $result->addId('penalty', $penalty->getId());
 
