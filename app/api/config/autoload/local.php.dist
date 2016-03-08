@@ -204,10 +204,6 @@ return [
         ],
         'repute_url' => [
             'uri' => 'https://r-inr-01.corp.vosa.gov.uk:444/INR.BackofficeWeb/Repute/SubmitCheck.aspx?'
-        ],
-        'msi_response' => [
-            'parent_node' => 'MS2ERRU_Infringement_Res',
-            'ns' => 'https://webgate.ec.testa.eu/erru/1.0'
         ]
     ],
     'print' => [
