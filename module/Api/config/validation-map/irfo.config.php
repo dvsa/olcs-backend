@@ -11,6 +11,7 @@ return [
     QueryHandler\Irfo\IrfoGvPermitTypeList::class                                 => IsInternalUser::class,
     QueryHandler\Irfo\IrfoPermitStockList::class                                  => IsInternalUser::class,
     QueryHandler\Irfo\IrfoPsvAuth::class                                          => IsInternalUser::class,
+    QueryHandler\Irfo\IrfoPsvAuthContinuationList::class                          => IsInternalUser::class,
     QueryHandler\Irfo\IrfoPsvAuthList::class                                      => IsInternalUser::class,
     QueryHandler\Irfo\IrfoPsvAuthTypeList::class                                  => IsInternalUser::class,
     QueryHandler\Irfo\IrfoCountryList::class                                      => IsInternalUser::class,
