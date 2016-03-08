@@ -7,6 +7,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\Pi\Reason as ReasonEntity;
 
 /**
  * Class CreateLicenceStatusRule
@@ -19,10 +20,14 @@ final class CreateLicenceStatusRule extends AbstractCommandHandler
 {
     protected $repoServiceName = 'LicenceStatusRule';
 
+    protected $extraRepos = ['Licence'];
+
     public function handleCommand(CommandInterface $command)
     {
         $licence = $this->getRepo()
             ->getReference(Licence::class, $command->getLicence());
+
+        $licence->setReasons($this->buildArrayCollection(ReasonEntity::class, $command->getReasons()));
 
         $status = $this->getRepo()->getRefdataReference($command->getStatus());
 
@@ -37,6 +42,7 @@ final class CreateLicenceStatusRule extends AbstractCommandHandler
         }
 
         $this->getRepo()->save($statusRule);
+        $this->getRepo('Licence')->save($licence);
 
         $result = new Result();
         $result->addId('licence-status-rule', $statusRule->getId());
