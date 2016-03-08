@@ -17,10 +17,12 @@ use Dvsa\Olcs\Api\Entity\Si\SiCategory as SiCategoryEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruRequested as PenaltyRequestedEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruImposed as PenaltyImposedEntity;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
+use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Domain\Repository\SiCategoryType as SiCategoryTypeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SiPenaltyImposedType as SiPenaltyImposedTypeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SiPenaltyRequestedType as SiPenaltyRequestedTypeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SeriousInfringement as SiRepo;
+use Dvsa\Olcs\Api\Domain\Repository\ErruRequest as ErruRequestRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepo;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\ComplianceEpisode as ComplianceEpisodeCmd;
@@ -30,6 +32,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Process Si Compliance Episode
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
 final class ComplianceEpisode extends AbstractCommandHandler implements TransactionedInterface
 {
@@ -42,7 +45,8 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
         'SiCategory',
         'SiCategoryType',
         'SiPenaltyRequestedType',
-        'SiPenaltyImposedType'
+        'SiPenaltyImposedType',
+        'ErruRequest'
     ];
 
     protected $xmlStructureInput;
@@ -129,7 +133,9 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
             throw new Exception('some data was not correct');
         }
 
-        //there can be more than one serious infringement per request, in theory
+        $case = $this->getCase($erruData);
+
+        //there can be more than one serious infringement per request
         foreach ($erruData['si'] as $si) {
             //format/validate si data
             $si = $this->validateInput('seriousInfringement', $si, []);
@@ -138,17 +144,18 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
             $this->addDoctrinePenaltyData($si['imposedErrus'], $si['requestedErrus']);
             $this->addDoctrineCategoryTypeData($si['siCategoryType']);
 
-            $case = $this->getNewCase($si);
-            $this->getRepo()->save($case);
-            $this->result->addId('case', $case->getId());
-
-            $this->result->merge($this->handleSideEffect($this->createTaskCmd($case)));
+            $case->getSeriousInfringements()->add($this->getSi($case, $si));
         }
+
+        $this->getRepo()->save($case);
+        $this->result->merge($this->handleSideEffect($this->createTaskCmd($case)));
+        $this->result->addId('case', $case->getId());
 
         return $this->result;
     }
 
     /**
+     * @param CaseEntity $case
      * @param array $si
      *
      * @return SiEntity
@@ -159,11 +166,8 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
             $case,
             $si['checkDate'],
             $si['infringementDate'],
-            $this->commonData['memberState'],
             $this->getRepo('SiCategory')->fetchById(SiCategoryEntity::ERRU_DEFAULT_CATEGORY),
-            $this->siCategoryType[$si['siCategoryType']],
-            $this->commonData['notificationNumber'],
-            $this->commonData['workflowId']
+            $this->siCategoryType[$si['siCategoryType']]
         );
 
         $siEntity->addImposedErrus($this->getImposedErruCollection($siEntity, $si['imposedErrus']));
@@ -215,9 +219,12 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     }
 
     /**
+     * Builds the case entity
+     *
+     * @param array $erruData
      * @return CaseEntity
      */
-    private function getNewCase($si)
+    private function getCase($erruData)
     {
         $case = new CaseEntity(
             new \DateTime(),
@@ -228,13 +235,44 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
             $this->commonData['licence'],
             null,
             null,
-            ''
+            'ERRU case automatically created'
         );
 
-        $case->setErruCaseType($this->getRepo()->getRefdataReference(CaseEntity::ERRU_DEFAULT_CASE_TYPE));
-        $case->setSeriousInfringements(new ArrayCollection([$this->getSi($case, $si)]));
+        $erruRequest = $this->getErruRequest(
+            $case,
+            $erruData['originatingAuthority'],
+            $erruData['transportUndertakingName'],
+            $erruData['vrm']
+        );
+
+        $case->setErruRequest($erruRequest);
 
         return $case;
+    }
+
+    /**
+     * Builds the ErruRequest entity
+     *
+     * @param CaseEntity $case
+     * @param $originatingAuthority
+     * @param $transportUndertakingName
+     * @param $vrm
+     *
+     * @return ErruRequestEntity
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function getErruRequest(CaseEntity $case, $originatingAuthority, $transportUndertakingName, $vrm)
+    {
+        return new ErruRequestEntity(
+            $case,
+            $this->getRepo()->getRefdataReference(ErruRequestEntity::DEFAULT_CASE_TYPE),
+            $this->commonData['memberState'],
+            $originatingAuthority,
+            $transportUndertakingName,
+            $vrm,
+            $this->commonData['notificationNumber'],
+            $this->commonData['workflowId']
+        );
     }
 
     /**
@@ -321,22 +359,23 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     private function getCommonData(array $erruData)
     {
         /**
-         * @var SiRepo $siRepo
+         * @var ErruRequestRepo $erruRequestRepo
          * @var LicenceRepo $licenceRepo
          * @var CountryRepo $countryRepo
          */
-        $siRepo = $this->getRepo('SeriousInfringement');
 
-        //this is currently the best check we are able to do, as to whether an Si has been submitted more than once!
-        if ($siRepo->fetchByNotificationNumber($erruData['notificationNumber']) instanceof SiEntity) {
-            throw new Exception('there are already serious infringements with this business case id');
+        $erruRequestRepo = $this->getRepo('ErruRequest');
+
+        //check we don't already have an erru request with this workflow id
+        if ($erruRequestRepo->existsByWorkflowId($erruData['workflowId'])) {
+            throw new Exception('erru request with this workflow id already exists');
         }
 
         $licenceRepo = $this->getRepo('Licence');
         $countryRepo = $this->getRepo('Country');
 
         $this->commonData = [
-            'licence' => $licenceRepo->fetchByLicNo($erruData['licenceNumber']),
+            'licence' => $licenceRepo->fetchByLicNoWithoutAdditionalData($erruData['licenceNumber']),
             'memberState' => $countryRepo->fetchById($erruData['memberStateCode']),
             'notificationNumber' => $erruData['notificationNumber'],
             'workflowId' => $erruData['workflowId']
