@@ -311,6 +311,7 @@ class CasesEntityTest extends EntityTester
             'canReopen' => false,
             'canClose' => false,
             'canSendMsiResponse' => false,
+            'isErru' => false,
         ];
 
         $this->assertEquals($expected, $this->entity->getCalculatedBundleValues());
