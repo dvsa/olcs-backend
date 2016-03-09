@@ -177,6 +177,18 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     protected $version = 1;
 
     /**
+     * Application organisation person
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson",
+     *     mappedBy="person"
+     * )
+     */
+    protected $applicationOrganisationPersons;
+
+    /**
      * Contact detail
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -222,6 +234,7 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
 
     public function initCollections()
     {
+        $this->applicationOrganisationPersons = new ArrayCollection();
         $this->contactDetails = new ArrayCollection();
         $this->disqualifications = new ArrayCollection();
         $this->organisationPersons = new ArrayCollection();
@@ -570,6 +583,66 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the application organisation person
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons
+     * @return Person
+     */
+    public function setApplicationOrganisationPersons($applicationOrganisationPersons)
+    {
+        $this->applicationOrganisationPersons = $applicationOrganisationPersons;
+
+        return $this;
+    }
+
+    /**
+     * Get the application organisation persons
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getApplicationOrganisationPersons()
+    {
+        return $this->applicationOrganisationPersons;
+    }
+
+    /**
+     * Add a application organisation persons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons
+     * @return Person
+     */
+    public function addApplicationOrganisationPersons($applicationOrganisationPersons)
+    {
+        if ($applicationOrganisationPersons instanceof ArrayCollection) {
+            $this->applicationOrganisationPersons = new ArrayCollection(
+                array_merge(
+                    $this->applicationOrganisationPersons->toArray(),
+                    $applicationOrganisationPersons->toArray()
+                )
+            );
+        } elseif (!$this->applicationOrganisationPersons->contains($applicationOrganisationPersons)) {
+            $this->applicationOrganisationPersons->add($applicationOrganisationPersons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a application organisation persons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons
+     * @return Person
+     */
+    public function removeApplicationOrganisationPersons($applicationOrganisationPersons)
+    {
+        if ($this->applicationOrganisationPersons->contains($applicationOrganisationPersons)) {
+            $this->applicationOrganisationPersons->removeElement($applicationOrganisationPersons);
+        }
+
+        return $this;
     }
 
     /**

@@ -1764,6 +1764,12 @@ return array(
                 'entity' => 'Application',
                 'property' => 'applicationOrganisationPerson'
             )
+        ),
+        'person_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Person',
+                'property' => 'applicationOrganisationPerson'
+            )
         )
     ),
     'continuation_detail' => array(

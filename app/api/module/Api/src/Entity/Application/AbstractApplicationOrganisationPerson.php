@@ -130,7 +130,11 @@ abstract class AbstractApplicationOrganisationPerson implements BundleSerializab
      *
      * @var \Dvsa\Olcs\Api\Entity\Person\Person
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Person\Person", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Person\Person",
+     *     fetch="LAZY",
+     *     inversedBy="applicationOrganisationPersons"
+     * )
      * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
      */
     protected $person;
