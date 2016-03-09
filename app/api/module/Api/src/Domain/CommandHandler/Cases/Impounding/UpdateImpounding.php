@@ -8,7 +8,6 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Impounding;
 
 use Doctrine\ORM\Query;
-use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding as ImpoundingEntity;
@@ -79,8 +78,10 @@ class UpdateImpounding extends AbstractImpounding implements TransactionedInterf
             $impounding->setApplicationReceiptDate(new \DateTime($command->getApplicationReceiptDate()));
         }
 
-        if ($command->getVrm() !== null) {
-            $impounding->setVrm($command->getVrm());
+        $impounding->setVrm($command->getVrm());
+
+        if ($command->getBirthDate() !== null) {
+            $impounding->setBirthDate(new \DateTime($command->getBirthDate()));
         }
 
         if ($command->getHearingDate() !== null) {

@@ -7,8 +7,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Impounding;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Transfer\FieldType\Traits\TrafficArea;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Impounding\CreateImpounding;
 use Dvsa\Olcs\Api\Domain\Repository\Impounding;
@@ -90,6 +88,7 @@ class CreateImpoundingTest extends CommandHandlerTestCase
             'venueOther' => null,
             'venue' => 8,
             'vrm' => 'vrm1',
+            'birthDate' => '2010-02-19',
             'impoundingLegislationTypes' => [
                 'imlgis_type_goods_ni1',
                 'imlgis_type_goods_ni2'
@@ -120,6 +119,9 @@ class CreateImpoundingTest extends CommandHandlerTestCase
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
         $this->assertContains('Impounding created', $result->getMessages());
+
+        $this->assertInstanceOf(\DateTime::class, $imp->getBirthDate());
+        $this->assertEquals('2010-02-19', $imp->getBirthDate()->format('Y-m-d'));
     }
 
     /**
