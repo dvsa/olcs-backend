@@ -831,4 +831,21 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
         $this->assertEquals($errors, $this->sut->getMessages());
     }
+
+    public function testValidateTrafficAreaWithAddressServiceNotWorking()
+    {
+        $commandData = [
+            'address' => [
+                'postcode' => 'SW1A 1AA'
+            ]
+        ];
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('SW1A 1AA', $this->adminAreaTrafficAreaRepo)
+            ->andThrow(new \Exception());
+
+        $entity = m::mock();
+        $command = CreateOperatingCentre::create($commandData);
+
+        $this->assertNull($this->sut->validateTrafficArea($entity, $command));
+    }
 }

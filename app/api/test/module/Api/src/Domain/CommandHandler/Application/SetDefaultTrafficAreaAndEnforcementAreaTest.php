@@ -240,4 +240,88 @@ class SetDefaultTrafficAreaAndEnforcementAreaTest extends CommandHandlerTestCase
             $licence->getEnforcementArea()
         );
     }
+
+    public function testHandleCommandWithNoAddressServiceWorkingSetEa()
+    {
+        $command = Cmd::create(['id' => 111, 'operatingCentre' => 222]);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setTrafficArea($this->references[TrafficArea::class][TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE]);
+        $licence->setEnforcementArea(null);
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setLicence($licence);
+        $application->setNiFlag('N');
+        $application->shouldReceive('getOperatingCentres->count')->andReturn(1)->once();
+
+        /** @var OperatingCentre $operatingCentre */
+        $operatingCentre = m::mock(OperatingCentre::class)->makePartial();
+        $operatingCentre->shouldReceive('getAddress->getPostcode')
+            ->andReturn('SW1A 1AA');
+
+        $this->repoMap['OperatingCentre']->shouldReceive('fetchById')
+            ->with(222)
+            ->andReturn($operatingCentre);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application);
+
+        $this->mockedSmServices['AddressService']
+            ->shouldReceive('fetchEnforcementAreaByPostcode')
+            ->with('SW1A 1AA', $this->repoMap['PostcodeEnforcementArea'])
+            ->once()
+            ->andThrow(new \Exception);
+        $result = $this->sut->handleCommand($command);
+        $expected = [
+            'id' => [],
+            'messages' => [],
+        ];
+        $this->assertEquals($result->toArray(), $expected);
+    }
+
+    public function testHandleCommandWithNoAddressServiceWorkingSetTa()
+    {
+        $command = Cmd::create(['id' => 111, 'operatingCentre' => 222]);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setTrafficArea(null);
+        $licence->setEnforcementArea(
+            $this->references[EnforcementArea::class][EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE]
+        );
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setLicence($licence);
+        $application->setNiFlag('N');
+        $application->shouldReceive('getOperatingCentres->count')->andReturn(1)->once();
+
+        /** @var OperatingCentre $operatingCentre */
+        $operatingCentre = m::mock(OperatingCentre::class)->makePartial();
+        $operatingCentre->shouldReceive('getAddress->getPostcode')
+            ->andReturn('SW1A 1AA');
+
+        $this->repoMap['OperatingCentre']->shouldReceive('fetchById')
+            ->with(222)
+            ->andReturn($operatingCentre);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application);
+
+        $this->mockedSmServices['AddressService']
+            ->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('SW1A 1AA', $this->repoMap['AdminAreaTrafficArea'])
+            ->once()
+            ->andThrow(new \Exception);
+        $result = $this->sut->handleCommand($command);
+        $expected = [
+            'id' => [],
+            'messages' => [],
+        ];
+        $this->assertEquals($result->toArray(), $expected);
+    }
 }
