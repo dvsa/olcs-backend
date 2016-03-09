@@ -86,8 +86,14 @@ final class SetDefaultTrafficAreaAndEnforcementArea extends AbstractCommandHandl
         if (!empty($postcode)) {
 
             if ($setTa) {
-                $trafficArea = $this->getAddressService()
-                    ->fetchTrafficAreaByPostcode($postcode, $this->getRepo('AdminAreaTrafficArea'));
+
+                try {
+                    $trafficArea = $this->getAddressService()
+                        ->fetchTrafficAreaByPostcode($postcode, $this->getRepo('AdminAreaTrafficArea'));
+                } catch (\Exception $e) {
+                    // Address service is down, just continue without saving
+                    return $this->result;
+                }
 
                 if ($trafficArea !== null) {
                     $this->updateTrafficArea($application, $trafficArea->getId());
@@ -95,9 +101,14 @@ final class SetDefaultTrafficAreaAndEnforcementArea extends AbstractCommandHandl
             }
 
             if ($setEa) {
-                $enforcementArea = $this->getAddressService()
-                    ->fetchEnforcementAreaByPostcode($postcode, $this->getRepo('PostcodeEnforcementArea'));
+                try {
+                    $enforcementArea = $this->getAddressService()
+                        ->fetchEnforcementAreaByPostcode($postcode, $this->getRepo('PostcodeEnforcementArea'));
 
+                } catch (\Exception $e) {
+                    // Address service is down, just continue without saving
+                    return $this->result;
+                }
                 $application->getLicence()->setEnforcementArea($enforcementArea);
 
                 $this->result->addMessage('Enforcement area updated');
