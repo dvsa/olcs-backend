@@ -366,7 +366,8 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
             'isClosed' => $this->isClosed(),
             'canReopen' => $this->canReopen(),
             'canClose' => $this->canClose(),
-            'canSendMsiResponse' => $this->canSendMsiResponse()
+            'canSendMsiResponse' => $this->canSendMsiResponse(),
+            'isErru' => $this->isErru()
         ];
     }
 
