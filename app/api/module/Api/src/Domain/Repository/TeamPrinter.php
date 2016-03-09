@@ -39,6 +39,12 @@ class TeamPrinter extends AbstractRepository
                 )
             )
         );
+
+        $qb->addSelect('CONCAT(ucdp.forename, ucdp.familyName) as HIDDEN userSort');
+        $qb->addSelect('CONCAT(scc.description, sc.subCategoryName) as HIDDEN catSort');
+        $qb->addOrderBy('t.name', 'ASC');
+        $qb->addOrderBy('userSort', 'ASC');
+        $qb->addOrderBy('catSort', 'ASC');
     }
 
     /**
@@ -50,7 +56,11 @@ class TeamPrinter extends AbstractRepository
     {
         $this->getQueryBuilder()->modifyQuery($qb)
             ->with('subCategory', 'sc')
-            ->with('user', 'u');
+            ->with('sc.category', 'scc')
+            ->with('user', 'u')
+            ->with('team', 't')
+            ->with('u.contactDetails', 'ucd')
+            ->with('ucd.person', 'ucdp');
     }
 
     /**
