@@ -158,7 +158,12 @@ class OperatingCentreHelper implements FactoryInterface
             return;
         }
 
-        $trafficArea = $this->fetchTrafficAreaByPostcode($address['postcode']);
+        try {
+            $trafficArea = $this->fetchTrafficAreaByPostcode($address['postcode']);
+        } catch (\Exception $e) {
+            // If address service is not available then we can skip validation
+            return;
+        }
 
         // If we can't match the postcode to a TA, then we can skip
         if ($trafficArea === null) {
