@@ -1543,7 +1543,7 @@ VALUES
   (4, '603', 1,1, 'MSI', 29, '2014-04-04', '2014-04-05', null, null,'2014-05-04 17:50:06', '2014-05-04 17:50:06', 1);
 
 INSERT INTO `erru_request` (`id`, `case_id`, `originating_authority`, `member_state_code`, `transport_undertaking_name`,
-    `vrm`, `case_type`, `notification_number`, `workflow_id`, `response_sent`, `response_user_id`, `response_time`,
+    `vrm`, `msi_type`, `notification_number`, `workflow_id`, `response_sent`, `response_user_id`, `response_time`,
     `deleted_date`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `olbs_key`,
     `olbs_type`)
 VALUES
