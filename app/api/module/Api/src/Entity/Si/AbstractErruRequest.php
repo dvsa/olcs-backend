@@ -22,7 +22,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_erru_request_member_state_code", columns={"member_state_code"}),
  *        @ORM\Index(name="ix_erru_request_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_erru_request_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_erru_request_case_type", columns={"case_type"}),
+ *        @ORM\Index(name="ix_erru_request_msi_type", columns={"msi_type"}),
  *        @ORM\Index(name="ix_erru_request_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    },
  *    uniqueConstraints={
@@ -48,16 +48,6 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
-
-    /**
-     * Case type
-     *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="case_type", referencedColumnName="id", nullable=true)
-     */
-    protected $caseType;
 
     /**
      * Created by
@@ -123,9 +113,19 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
      * @var \Dvsa\Olcs\Api\Entity\ContactDetails\Country
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country", fetch="LAZY")
-     * @ORM\JoinColumn(name="member_state_code", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="member_state_code", referencedColumnName="id", nullable=false)
      */
     protected $memberStateCode;
+
+    /**
+     * Msi type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="msi_type", referencedColumnName="id", nullable=false)
+     */
+    protected $msiType;
 
     /**
      * Notification number
@@ -159,7 +159,7 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="originating_authority", length=50, nullable=true)
+     * @ORM\Column(type="string", name="originating_authority", length=50, nullable=false)
      */
     protected $originatingAuthority;
 
@@ -196,7 +196,7 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="transport_undertaking_name", length=100, nullable=true)
+     * @ORM\Column(type="string", name="transport_undertaking_name", length=100, nullable=false)
      */
     protected $transportUndertakingName;
 
@@ -215,7 +215,7 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="vrm", length=15, nullable=true)
+     * @ORM\Column(type="string", name="vrm", length=15, nullable=false)
      */
     protected $vrm;
 
@@ -249,29 +249,6 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     public function getCase()
     {
         return $this->case;
-    }
-
-    /**
-     * Set the case type
-     *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $caseType
-     * @return ErruRequest
-     */
-    public function setCaseType($caseType)
-    {
-        $this->caseType = $caseType;
-
-        return $this;
-    }
-
-    /**
-     * Get the case type
-     *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
-     */
-    public function getCaseType()
-    {
-        return $this->caseType;
     }
 
     /**
@@ -433,6 +410,29 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     public function getMemberStateCode()
     {
         return $this->memberStateCode;
+    }
+
+    /**
+     * Set the msi type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $msiType
+     * @return ErruRequest
+     */
+    public function setMsiType($msiType)
+    {
+        $this->msiType = $msiType;
+
+        return $this;
+    }
+
+    /**
+     * Get the msi type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getMsiType()
+    {
+        return $this->msiType;
     }
 
     /**

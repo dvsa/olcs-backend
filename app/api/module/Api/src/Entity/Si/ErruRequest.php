@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
  *        @ORM\Index(name="ix_erru_request_member_state_code", columns={"member_state_code"}),
  *        @ORM\Index(name="ix_erru_request_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_erru_request_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_erru_request_case_type", columns={"case_type"}),
+ *        @ORM\Index(name="ix_erru_request_msi_type", columns={"msi_type"}),
  *        @ORM\Index(name="ix_erru_request_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    },
  *    uniqueConstraints={
@@ -34,7 +34,7 @@ class ErruRequest extends AbstractErruRequest
 
     public function __construct(
         CaseEntity $case,
-        RefData $caseType,
+        RefData $msiType,
         CountryEntity $memberStateCode,
         $originatingAuthority,
         $transportUndertakingName,
@@ -43,7 +43,7 @@ class ErruRequest extends AbstractErruRequest
         $workflowId
     ) {
         $this->case = $case;
-        $this->caseType = $caseType;
+        $this->msiType = $msiType;
         $this->memberStateCode = $memberStateCode;
         $this->originatingAuthority = $originatingAuthority;
         $this->transportUndertakingName = $transportUndertakingName;
