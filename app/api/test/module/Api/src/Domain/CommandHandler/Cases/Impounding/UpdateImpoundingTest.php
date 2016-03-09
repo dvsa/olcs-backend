@@ -66,6 +66,7 @@ class UpdateImpoundingTest extends CommandHandlerTestCase
                 'venueOther' => null,
                 'venue' => 8,
                 'vrm' => 'vrm1',
+                'birthDate' => '2010-02-19',
                 'impoundingLegislationTypes' => [
                     'imlgis_type_goods_ni1',
                     'imlgis_type_goods_ni2'
@@ -79,6 +80,9 @@ class UpdateImpoundingTest extends CommandHandlerTestCase
         /** @var ImpoundingEntity $impounding */
         $impounding = m::mock(ImpoundingEntity::class)->makePartial();
         $impounding->setId($command->getId());
+
+        /** @var ImpoundingEntity $imp */
+        $imp = null;
 
         $this->repoMap['Impounding']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
@@ -100,5 +104,8 @@ class UpdateImpoundingTest extends CommandHandlerTestCase
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
         $this->assertContains('Impounding updated', $result->getMessages());
+
+        $this->assertInstanceOf(\DateTime::class, $imp->getBirthDate());
+        $this->assertEquals('2010-02-19', $imp->getBirthDate()->format('Y-m-d'));
     }
 }
