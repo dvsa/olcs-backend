@@ -32,6 +32,17 @@ class ErruRequest extends AbstractErruRequest
 {
     const DEFAULT_CASE_TYPE = 'erru_case_t_msirnys'; //MSI with no response sent
 
+    /**
+     * ErruRequest constructor.
+     * @param CaseEntity $case
+     * @param RefData $msiType
+     * @param CountryEntity $memberStateCode
+     * @param string $originatingAuthority
+     * @param string $transportUndertakingName
+     * @param string $vrm
+     * @param string $notificationNumber
+     * @param string $workflowId
+     */
     public function __construct(
         CaseEntity $case,
         RefData $msiType,
