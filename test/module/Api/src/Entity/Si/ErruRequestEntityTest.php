@@ -30,7 +30,7 @@ class ErruRequestEntityTest extends EntityTester
     public function testCreate()
     {
         $case = m::mock(CaseEntity::class);
-        $caseType = m::mock(RefData::class);
+        $msiType = m::mock(RefData::class);
         $memberStateCode = m::mock(CountryEntity::class);
         $originatingAuthority = 'originating authority';
         $transportUndertakingName = 'transport undertaking';
@@ -40,7 +40,7 @@ class ErruRequestEntityTest extends EntityTester
 
         $entity = new Entity(
             $case,
-            $caseType,
+            $msiType,
             $memberStateCode,
             $originatingAuthority,
             $transportUndertakingName,
@@ -50,7 +50,7 @@ class ErruRequestEntityTest extends EntityTester
         );
 
         $this->assertEquals($case, $entity->getCase());
-        $this->assertEquals($caseType, $entity->getCaseType());
+        $this->assertEquals($msiType, $entity->getMsiType());
         $this->assertEquals($memberStateCode, $entity->getMemberStateCode());
         $this->assertEquals($originatingAuthority, $entity->getOriginatingAuthority());
         $this->assertEquals($transportUndertakingName, $entity->getTransportUndertakingName());
