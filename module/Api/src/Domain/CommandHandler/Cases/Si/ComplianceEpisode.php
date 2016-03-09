@@ -133,7 +133,7 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
             throw new Exception('some data was not correct');
         }
 
-        $case = $this->getCase($erruData);
+        $case = $this->generateCase($erruData);
 
         //there can be more than one serious infringement per request
         foreach ($erruData['si'] as $si) {
@@ -224,7 +224,7 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
      * @param array $erruData
      * @return CaseEntity
      */
-    private function getCase($erruData)
+    private function generateCase($erruData)
     {
         $case = new CaseEntity(
             new \DateTime(),
