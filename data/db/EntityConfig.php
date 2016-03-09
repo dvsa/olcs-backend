@@ -1251,7 +1251,7 @@ return array(
         )
     ),
     'erru_request' => array(
-        'erru_response_sent' => array(
+        'response_sent' => array(
             'type' => 'yesno'
         ),
         'case_id' => array(
