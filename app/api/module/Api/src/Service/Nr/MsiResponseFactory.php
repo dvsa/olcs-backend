@@ -20,15 +20,7 @@ class MsiResponseFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
-
-        if (!isset($config['nr']['msi_response'])) {
-            throw new \RuntimeException('Missing MSI response config');
-        }
-
-        $config = $config['nr']['msi_response'];
-
-        $xmlBuilder = new XmlNodeBuilder($config['parent_node'], $config['ns'], []);
+        $xmlBuilder = new XmlNodeBuilder('MS2ERRU_Infringement_Res', 'https://webgate.ec.testa.eu/erru/1.0', []);
 
         return new MsiResponse($xmlBuilder);
     }

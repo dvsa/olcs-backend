@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Service\Nr\InrClientInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
-use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
+use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Service\Nr\MsiResponse as MsiResponseService;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\SendResponse as SendErruResponseCmd;
 use Zend\Http\Response;
@@ -30,7 +30,7 @@ final class SendResponse extends AbstractCommandHandler implements AuthAwareInte
 
     protected $repoServiceName = 'Cases';
 
-    protected $extraRepos = ['SeriousInfringement'];
+    protected $extraRepos = ['ErruRequest'];
 
     /**
      * @var InrClient
@@ -87,20 +87,19 @@ final class SendResponse extends AbstractCommandHandler implements AuthAwareInte
             throw new RestResponseException('INR Http response code was ' . $responseCode);
         }
 
-        /** @var SiEntity $si */
-        $si = $case->getSeriousInfringements()->first();
+        /** @var ErruRequestEntity $erruRequest */
+        $erruRequest = $case->getErruRequest();
 
-        $si->updateErruResponse(
+        $erruRequest->updateErruResponse(
             $this->getCurrentUser(),
             new \DateTime($this->msiResponseService->getResponseDateTime())
         );
 
-        $this->getRepo('SeriousInfringement')->save($si);
+        $this->getRepo('ErruRequest')->save($erruRequest);
 
         $result = new Result();
         $result->addMessage('Msi Response sent');
         $result->addId('case', $case->getId());
-        $result->addId('serious_infringement', $si->getId());
 
         return $result;
     }

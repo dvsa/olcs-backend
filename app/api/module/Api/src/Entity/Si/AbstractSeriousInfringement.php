@@ -21,9 +21,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="serious_infringement",
  *    indexes={
  *        @ORM\Index(name="ix_serious_infringement_case_id", columns={"case_id"}),
- *        @ORM\Index(name="ix_serious_infringement_erru_response_user_id",
-     *     columns={"erru_response_user_id"}),
- *        @ORM\Index(name="ix_serious_infringement_member_state_code", columns={"member_state_code"}),
  *        @ORM\Index(name="ix_serious_infringement_si_category_id", columns={"si_category_id"}),
  *        @ORM\Index(name="ix_serious_infringement_si_category_type_id",
      *     columns={"si_category_type_id"}),
@@ -32,8 +29,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_serious_infringement_olbs_key_olbs_type",
-     *     columns={"olbs_key","olbs_type"}),
- *        @ORM\UniqueConstraint(name="uk_serious_infringement_workflow_id", columns={"workflow_id"})
+     *     columns={"olbs_key","olbs_type"})
  *    }
  * )
  */
@@ -93,34 +89,6 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     protected $deletedDate;
 
     /**
-     * Erru response sent
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="erru_response_sent", nullable=false, options={"default": 0})
-     */
-    protected $erruResponseSent = 0;
-
-    /**
-     * Erru response time
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="erru_response_time", nullable=true)
-     */
-    protected $erruResponseTime;
-
-    /**
-     * Erru response user
-     *
-     * @var \Dvsa\Olcs\Api\Entity\User\User
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="erru_response_user_id", referencedColumnName="id", nullable=true)
-     */
-    protected $erruResponseUser;
-
-    /**
      * Identifier - Id
      *
      * @var int
@@ -158,25 +126,6 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
      * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
      */
     protected $lastModifiedOn;
-
-    /**
-     * Member state code
-     *
-     * @var \Dvsa\Olcs\Api\Entity\ContactDetails\Country
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country", fetch="LAZY")
-     * @ORM\JoinColumn(name="member_state_code", referencedColumnName="id", nullable=true)
-     */
-    protected $memberStateCode;
-
-    /**
-     * Notification number
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="notification_number", length=36, nullable=true)
-     */
-    protected $notificationNumber;
 
     /**
      * Olbs key
@@ -234,15 +183,6 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
      * @ORM\Version
      */
     protected $version = 1;
-
-    /**
-     * Workflow id
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="workflow_id", length=36, nullable=true)
-     */
-    protected $workflowId;
 
     /**
      * Applied penaltie
@@ -410,75 +350,6 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     }
 
     /**
-     * Set the erru response sent
-     *
-     * @param string $erruResponseSent
-     * @return SeriousInfringement
-     */
-    public function setErruResponseSent($erruResponseSent)
-    {
-        $this->erruResponseSent = $erruResponseSent;
-
-        return $this;
-    }
-
-    /**
-     * Get the erru response sent
-     *
-     * @return string
-     */
-    public function getErruResponseSent()
-    {
-        return $this->erruResponseSent;
-    }
-
-    /**
-     * Set the erru response time
-     *
-     * @param \DateTime $erruResponseTime
-     * @return SeriousInfringement
-     */
-    public function setErruResponseTime($erruResponseTime)
-    {
-        $this->erruResponseTime = $erruResponseTime;
-
-        return $this;
-    }
-
-    /**
-     * Get the erru response time
-     *
-     * @return \DateTime
-     */
-    public function getErruResponseTime()
-    {
-        return $this->erruResponseTime;
-    }
-
-    /**
-     * Set the erru response user
-     *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $erruResponseUser
-     * @return SeriousInfringement
-     */
-    public function setErruResponseUser($erruResponseUser)
-    {
-        $this->erruResponseUser = $erruResponseUser;
-
-        return $this;
-    }
-
-    /**
-     * Get the erru response user
-     *
-     * @return \Dvsa\Olcs\Api\Entity\User\User
-     */
-    public function getErruResponseUser()
-    {
-        return $this->erruResponseUser;
-    }
-
-    /**
      * Set the id
      *
      * @param int $id
@@ -568,52 +439,6 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     public function getLastModifiedOn()
     {
         return $this->lastModifiedOn;
-    }
-
-    /**
-     * Set the member state code
-     *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $memberStateCode
-     * @return SeriousInfringement
-     */
-    public function setMemberStateCode($memberStateCode)
-    {
-        $this->memberStateCode = $memberStateCode;
-
-        return $this;
-    }
-
-    /**
-     * Get the member state code
-     *
-     * @return \Dvsa\Olcs\Api\Entity\ContactDetails\Country
-     */
-    public function getMemberStateCode()
-    {
-        return $this->memberStateCode;
-    }
-
-    /**
-     * Set the notification number
-     *
-     * @param string $notificationNumber
-     * @return SeriousInfringement
-     */
-    public function setNotificationNumber($notificationNumber)
-    {
-        $this->notificationNumber = $notificationNumber;
-
-        return $this;
-    }
-
-    /**
-     * Get the notification number
-     *
-     * @return string
-     */
-    public function getNotificationNumber()
-    {
-        return $this->notificationNumber;
     }
 
     /**
@@ -752,29 +577,6 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     public function getVersion()
     {
         return $this->version;
-    }
-
-    /**
-     * Set the workflow id
-     *
-     * @param string $workflowId
-     * @return SeriousInfringement
-     */
-    public function setWorkflowId($workflowId)
-    {
-        $this->workflowId = $workflowId;
-
-        return $this;
-    }
-
-    /**
-     * Get the workflow id
-     *
-     * @return string
-     */
-    public function getWorkflowId()
-    {
-        return $this->workflowId;
     }
 
     /**

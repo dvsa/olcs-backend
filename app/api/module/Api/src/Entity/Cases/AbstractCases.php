@@ -25,7 +25,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_cases_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_cases_transport_manager_id", columns={"transport_manager_id"}),
  *        @ORM\Index(name="ix_cases_case_type", columns={"case_type"}),
- *        @ORM\Index(name="ix_cases_erru_case_type", columns={"erru_case_type"}),
  *        @ORM\Index(name="ix_cases_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_cases_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
@@ -152,43 +151,6 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
      * @ORM\Column(type="string", name="ecms_no", length=45, nullable=true)
      */
     protected $ecmsNo;
-
-    /**
-     * Erru case type
-     *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="erru_case_type", referencedColumnName="id", nullable=true)
-     */
-    protected $erruCaseType;
-
-    /**
-     * Erru originating authority
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="erru_originating_authority", length=50, nullable=true)
-     */
-    protected $erruOriginatingAuthority;
-
-    /**
-     * Erru transport undertaking name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="erru_transport_undertaking_name", length=100, nullable=true)
-     */
-    protected $erruTransportUndertakingName;
-
-    /**
-     * Erru vrm
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="erru_vrm", length=15, nullable=true)
-     */
-    protected $erruVrm;
 
     /**
      * Identifier - Id
@@ -386,6 +348,19 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
      * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", mappedBy="case")
      */
     protected $documents;
+
+    /**
+     * Erru request
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Si\ErruRequest
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Si\ErruRequest",
+     *     mappedBy="case",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $erruRequest;
 
     /**
      * Legacy offence
@@ -777,98 +752,6 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     public function getEcmsNo()
     {
         return $this->ecmsNo;
-    }
-
-    /**
-     * Set the erru case type
-     *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $erruCaseType
-     * @return Cases
-     */
-    public function setErruCaseType($erruCaseType)
-    {
-        $this->erruCaseType = $erruCaseType;
-
-        return $this;
-    }
-
-    /**
-     * Get the erru case type
-     *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
-     */
-    public function getErruCaseType()
-    {
-        return $this->erruCaseType;
-    }
-
-    /**
-     * Set the erru originating authority
-     *
-     * @param string $erruOriginatingAuthority
-     * @return Cases
-     */
-    public function setErruOriginatingAuthority($erruOriginatingAuthority)
-    {
-        $this->erruOriginatingAuthority = $erruOriginatingAuthority;
-
-        return $this;
-    }
-
-    /**
-     * Get the erru originating authority
-     *
-     * @return string
-     */
-    public function getErruOriginatingAuthority()
-    {
-        return $this->erruOriginatingAuthority;
-    }
-
-    /**
-     * Set the erru transport undertaking name
-     *
-     * @param string $erruTransportUndertakingName
-     * @return Cases
-     */
-    public function setErruTransportUndertakingName($erruTransportUndertakingName)
-    {
-        $this->erruTransportUndertakingName = $erruTransportUndertakingName;
-
-        return $this;
-    }
-
-    /**
-     * Get the erru transport undertaking name
-     *
-     * @return string
-     */
-    public function getErruTransportUndertakingName()
-    {
-        return $this->erruTransportUndertakingName;
-    }
-
-    /**
-     * Set the erru vrm
-     *
-     * @param string $erruVrm
-     * @return Cases
-     */
-    public function setErruVrm($erruVrm)
-    {
-        $this->erruVrm = $erruVrm;
-
-        return $this;
-    }
-
-    /**
-     * Get the erru vrm
-     *
-     * @return string
-     */
-    public function getErruVrm()
-    {
-        return $this->erruVrm;
     }
 
     /**
@@ -1528,6 +1411,29 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
         }
 
         return $this;
+    }
+
+    /**
+     * Set the erru request
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Si\ErruRequest $erruRequest
+     * @return Cases
+     */
+    public function setErruRequest($erruRequest)
+    {
+        $this->erruRequest = $erruRequest;
+
+        return $this;
+    }
+
+    /**
+     * Get the erru request
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Si\ErruRequest
+     */
+    public function getErruRequest()
+    {
+        return $this->erruRequest;
     }
 
     /**

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\PersistentCollection;
 use Dvsa\Olcs\Api\Service\Nr\MsiResponse;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
+use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
 use Olcs\XmlTools\Xml\XmlNodeBuilder;
@@ -20,7 +21,6 @@ use Mockery as m;
  */
 class MsiResponseTest extends MockeryTestCase
 {
-
     /**
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
@@ -76,18 +76,21 @@ class MsiResponseTest extends MockeryTestCase
 
         $seriousInfringement = m::mock(SiEntity::class);
         $seriousInfringement->shouldReceive('getAppliedPenalties')->once()->andReturn($appliedPenalties);
-        $seriousInfringement->shouldReceive('getNotificationNumber')->once()->andReturn($notificationNumber);
-        $seriousInfringement->shouldReceive('getWorkflowId')->once()->andReturn($workflowId);
-        $seriousInfringement->shouldReceive('getMemberStateCode->getId')->once()->andReturn($memberStateCode);
 
         $seriousInfringements = new ArrayCollection([$seriousInfringement]);
+
+        $erruRequest = m::mock(ErruRequestEntity::class);
+        $erruRequest->shouldReceive('getNotificationNumber')->once()->andReturn($notificationNumber);
+        $erruRequest->shouldReceive('getWorkflowId')->once()->andReturn($workflowId);
+        $erruRequest->shouldReceive('getMemberStateCode->getId')->once()->andReturn($memberStateCode);
+        $erruRequest->shouldReceive('getTransportUndertakingName')->once()->andReturn($erruTransportUndertaking);
+        $erruRequest->shouldReceive('getOriginatingAuthority')->once()->andReturn($erruOriginatingAuthority);
 
         $cases = m::mock(CasesEntity::class);
         $cases->shouldReceive('canSendMsiResponse')->once()->andReturn(true);
         $cases->shouldReceive('getSeriousInfringements')->once()->andReturn($seriousInfringements);
-        $cases->shouldReceive('getErruTransportUndertakingName')->once()->andReturn($erruTransportUndertaking);
-        $cases->shouldReceive('getErruOriginatingAuthority')->once()->andReturn($erruOriginatingAuthority);
         $cases->shouldReceive('getLicence')->once()->andReturn($licence);
+        $cases->shouldReceive('getErruRequest')->once()->andReturn($erruRequest);
 
         $expectedXmlResponse = 'xml';
         $xmlNodeBuilder = m::mock(XmlNodeBuilder::class)->makePartial();

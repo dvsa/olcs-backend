@@ -19,31 +19,9 @@ use Olcs\XmlTools\Xml\XmlNodeBuilder;
  */
 class MsiResponseFactoryTest extends TestCase
 {
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testCreateServiceNoConfig()
-    {
-        $mockSl = m::mock(ServiceLocatorInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
-
-        $sut = new MsiResponseFactory();
-        $sut->createService($mockSl);
-    }
-
     public function testCreateService()
     {
-        $config = [
-            'nr' => [
-                'msi_response' => [
-                    'parent_node' => 'node',
-                    'ns' => 'ns'
-                ]
-            ]
-        ];
-
         $mockSl = m::mock(ServiceLocatorInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
 
         $sut = new MsiResponseFactory();
         $service = $sut->createService($mockSl);
