@@ -166,9 +166,9 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Response sent
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="response_sent", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno", name="response_sent", nullable=false, options={"default": 0})
      */
     protected $responseSent = 0;
 
@@ -530,7 +530,7 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the response sent
      *
-     * @param boolean $responseSent
+     * @param string $responseSent
      * @return ErruRequest
      */
     public function setResponseSent($responseSent)
@@ -543,7 +543,7 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Get the response sent
      *
-     * @return boolean
+     * @return string
      */
     public function getResponseSent()
     {
