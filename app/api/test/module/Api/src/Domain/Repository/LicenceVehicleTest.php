@@ -67,7 +67,7 @@ class LicenceVehicleTest extends RepositoryTestCase
             // Disc = Y
             . ' INNER JOIN m.goodsDiscs gd AND gd.ceasedDate IS NULL AND gd.issuedDate IS NOT NULL'
             // VRM ~ A
-            . ' AND v.vrm LIKE [[A%]]'
+            . ' AND v.vrm LIKE [[%A%]]'
             // Include Removed = false
             . ' AND m.removalDate IS NULL'
             // Specified = Y
@@ -144,7 +144,7 @@ class LicenceVehicleTest extends RepositoryTestCase
             // Disc = Y
             . ' INNER JOIN m.goodsDiscs gd AND gd.ceasedDate IS NULL AND gd.issuedDate IS NOT NULL'
             // VRM ~ A
-            . ' AND v.vrm LIKE [[A%]]'
+            . ' AND v.vrm LIKE [[%A%]]'
             // Include Removed = false
             . ' AND m.removalDate IS NULL'
             // Specified = Y
@@ -220,7 +220,7 @@ class LicenceVehicleTest extends RepositoryTestCase
             // Disc = Y
             . ' INNER JOIN m.goodsDiscs gd AND gd.ceasedDate IS NULL AND gd.issuedDate IS NOT NULL'
             // VRM ~ A
-            . ' AND v.vrm LIKE [[A%]]'
+            . ' AND v.vrm LIKE [[%A%]]'
             // Include Removed = false
             . ' AND m.removalDate IS NULL'
             // Specified = Y
@@ -270,7 +270,8 @@ class LicenceVehicleTest extends RepositoryTestCase
         $data = [
             'includeRemoved' => false,
             'page' => 3,
-            'limit' => 10
+            'limit' => 10,
+            'vrm' => 'VRM123'
         ];
         $qry = LicGoodsVehicles::create($data);
         $licId = 222;
@@ -288,7 +289,8 @@ class LicenceVehicleTest extends RepositoryTestCase
 
         $this->assertSame($qb, $this->sut->createPaginatedVehiclesDataForLicenceQueryPsv($qry, $licId));
 
-        $expectedQuery = '[QUERY] INNER JOIN m.vehicle v AND m.removalDate IS NULL AND m.licence = [[222]]';
+        $expectedQuery = '[QUERY] INNER JOIN m.vehicle v AND m.removalDate IS NULL ' .
+            'AND v.vrm LIKE [[%VRM123%]] AND m.licence = [[222]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
