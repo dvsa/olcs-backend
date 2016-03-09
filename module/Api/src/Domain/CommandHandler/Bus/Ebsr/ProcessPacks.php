@@ -630,7 +630,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
     private function createNew(array $ebsrData)
     {
         /** @var LicenceEntity $licence */
-        $licence = $this->getRepo('Licence')->fetchByLicNo($ebsrData['licNo']);
+        $licence = $this->getRepo('Licence')->fetchByLicNoWithoutAdditionalData($ebsrData['licNo']);
         $refDataStatus = $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_NEW);
 
         $newBusReg = BusRegEntity::createNew(

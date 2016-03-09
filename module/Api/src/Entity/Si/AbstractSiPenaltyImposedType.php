@@ -67,10 +67,10 @@ abstract class AbstractSiPenaltyImposedType implements BundleSerializableInterfa
     /**
      * Identifier - Id
      *
-     * @var string
+     * @var int
      *
      * @ORM\Id
-     * @ORM\Column(type="string", name="id", length=8)
+     * @ORM\Column(type="smallint", name="id")
      */
     protected $id;
 
@@ -198,7 +198,7 @@ abstract class AbstractSiPenaltyImposedType implements BundleSerializableInterfa
     /**
      * Set the id
      *
-     * @param string $id
+     * @param int $id
      * @return SiPenaltyImposedType
      */
     public function setId($id)
@@ -211,7 +211,7 @@ abstract class AbstractSiPenaltyImposedType implements BundleSerializableInterfa
     /**
      * Get the id
      *
-     * @return string
+     * @return int
      */
     public function getId()
     {

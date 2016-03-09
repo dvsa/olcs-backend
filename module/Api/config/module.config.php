@@ -284,6 +284,7 @@ return [
             'Team' => RepositoryFactory::class,
             'TeamPrinter' => RepositoryFactory::class,
             'Printer' => RepositoryFactory::class,
+            'ErruRequest' => RepositoryFactory::class,
             'SeriousInfringement' => RepositoryFactory::class,
             'SiPenalty' => RepositoryFactory::class,
             'SiCategory' => RepositoryFactory::class,
@@ -706,7 +707,9 @@ return [
             \Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted::class =>
                 \Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted::class,
             \Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates::class =>
-                \Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates::class
+                \Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates::class,
+            \Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber::class =>
+                \Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber::class,
 
         ],
         'factories' => [

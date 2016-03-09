@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Api\Entity\Prohibition\Prohibition;
+use Dvsa\Olcs\Api\Entity\Si\ErruRequest;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement;
 use Dvsa\Olcs\Api\Entity\Si\SiCategory;
 use Dvsa\Olcs\Api\Entity\Si\SiCategoryType;
@@ -136,9 +137,7 @@ class SubmissionSectionTest extends MockeryTestCase
         $case->setConvictionNote('conv_note1');
 
         $case->setSeriousInfringements($this->generateSeriousInfringements($case));
-        $case->setErruVrm('erruVrm1');
-        $case->setErruTransportUndertakingName('tun');
-        $case->setErruOriginatingAuthority('erru_oa');
+        $case->setErruRequest($this->generateErruRequest());
         $case->setPenaltiesNote('pen-notes1');
 
         $case->setProhibitionNote('prohibition-note');
@@ -753,6 +752,18 @@ class SubmissionSectionTest extends MockeryTestCase
         return $entity;
     }
 
+    protected function generateErruRequest()
+    {
+        $entity = m::mock(ErruRequest::class)->makePartial();
+        $entity->setNotificationNumber('notificationNo');
+        $entity->setMemberStateCode($this->generateCountry('GB'));
+        $entity->setVrm('erruVrm1');
+        $entity->setTransportUndertakingName('tun');
+        $entity->setOriginatingAuthority('erru_oa');
+
+        return $entity;
+    }
+
     protected function generateSeriousInfringements(CasesEntity $case)
     {
         $sis = new ArrayCollection();
@@ -771,10 +782,8 @@ class SubmissionSectionTest extends MockeryTestCase
         $entity->setVersion(($id+2));
         $entity->setSiCategory($this->generateSiCategory(274, 'sicatdesc'));
         $entity->setSiCategoryType($this->generateSiCategoryType(274, 'sicattypedesc'));
-        $entity->setNotificationNumber('notificationNo' . $id);
         $entity->setInfringementDate(new \DateTime('2009-11-30'));
         $entity->setCheckDate(new \DateTime('2010-07-20'));
-        $entity->setMemberStateCode($this->generateCountry('GB'));
 
         $entity->setAppliedPenalties($this->generateArrayCollection('appliedPenalty'));
         $entity->setImposedErrus($this->generateArrayCollection('imposedErru'));

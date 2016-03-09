@@ -26,7 +26,6 @@ use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SeriousInfringementEntity;
  *        @ORM\Index(name="ix_cases_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_cases_transport_manager_id", columns={"transport_manager_id"}),
  *        @ORM\Index(name="ix_cases_case_type", columns={"case_type"}),
- *        @ORM\Index(name="ix_cases_erru_case_type", columns={"erru_case_type"}),
  *        @ORM\Index(name="ix_cases_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_cases_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
@@ -38,7 +37,6 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
     const IMPOUNDING_CASE_TYPE = 'case_t_imp';
     const APP_CASE_TYPE = 'case_t_app';
     const TM_CASE_TYPE = 'case_t_tm';
-    const ERRU_DEFAULT_CASE_TYPE = 'erru_case_t_msirnys'; //MSI with no response sent
     const ERRU_DEFAULT_CASE_CATEGORY = 'case_cat_compl_erru_msi';
 
     /**
@@ -331,7 +329,7 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
      */
     public function isErru()
     {
-        return (bool) $this->erruCaseType != null;
+        return (bool) $this->erruRequest != null;
     }
 
     /**
@@ -341,17 +339,20 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
      */
     public function canSendMsiResponse()
     {
-        if ($this->isErru() && !$this->seriousInfringements->isEmpty()) {
-            /** @var SeriousInfringementEntity $si */
-            $si = $this->seriousInfringements->first();
+        //check this is an erru case, and if so that the response isn't already sent
+        if (!$this->isErru() || $this->erruRequest->getResponseSent() === 'Y') {
+            return false;
+        }
 
-            //we need to have applied penalties and to have not already sent our response
-            if ($si->getErruResponseSent() === 'N' && !$si->getAppliedPenalties()->isEmpty()) {
-                return true;
+        /** @var SeriousInfringementEntity $si */
+        foreach ($this->seriousInfringements as $si) {
+            //each serious infringement must have at least one applied penalty
+            if (!$si->responseSet()) {
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     /**

@@ -163,6 +163,7 @@ return [
     TransferQuery\Cases\ByLicence::class => QueryHandler\Cases\ByLicence::class,
 
     TransferQuery\Cases\Si\Applied\Penalty::class => QueryHandler\Cases\Si\Applied\Penalty::class,
+    TransferQuery\Cases\Si\Si::class => QueryHandler\Cases\Si\Si::class,
     TransferQuery\Cases\Si\GetList::class => QueryHandler\Cases\Si\GetList::class,
     TransferQuery\Cases\PresidingTc\GetList::class => QueryHandler\Cases\PresidingTc\GetList::class,
 

@@ -85,16 +85,16 @@ final class Penalties extends AbstractSection
     private function extractOverview(CasesEntity $case)
     {
         $siData = [
-            'vrm' => $case->getErruVrm(),
-            'transportUndertakingName' => $case->getErruTransportUndertakingName(),
-            'originatingAuthority' => $case->getErruOriginatingAuthority(),
+            'vrm' => $case->getErruRequest()->getVrm(),
+            'transportUndertakingName' => $case->getErruRequest()->getTransportUndertakingName(),
+            'originatingAuthority' => $case->getErruRequest()->getOriginatingAuthority(),
             'infringementId' => '',
-            'notificationNumber' => '',
+            'notificationNumber' => $case->getErruRequest()->getNotificationNumber(),
             'infringementDate' => '',
             'checkDate' => '',
             'category' => '',
             'categoryType' => '',
-            'memberState' => ''
+            'memberState' => $case->getErruRequest()->getMemberStateCode()->getCountryDesc()
         ];
 
         if (isset($case->getSeriousInfringements()[0]) &&
@@ -103,13 +103,10 @@ final class Penalties extends AbstractSection
             $si = $case->getSeriousInfringements()[0];
 
             $siData['infringementId'] = $si->getId();
-            $siData['notificationNumber'] = $si->getNotificationNumber();
             $siData['infringementDate'] = $this->formatDate($si->getInfringementDate());
             $siData['checkDate'] = $this->formatDate($si->getCheckDate());
             $siData['category'] = $si->getSiCategory()->getDescription();
             $siData['categoryType'] = $si->getSiCategoryType()->getDescription();
-            $siData['memberState'] =
-                !empty($si->getMemberStateCode()) ? $si->getMemberStateCode()->getCountryDesc() : '';
         }
 
         return $siData;

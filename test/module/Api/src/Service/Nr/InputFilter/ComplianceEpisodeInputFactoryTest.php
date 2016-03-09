@@ -7,12 +7,14 @@ use Mockery as m;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Dvsa\Olcs\Api\Service\Nr\InputFilter\ComplianceEpisodeInputFactory;
 use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
+use Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Vrm as VrmFilter;
 use Dvsa\Olcs\Api\Service\Nr\Validator\Vrm as VrmValidator;
 
 /**
  * Class ComplianceEpisodeInputFactoryTest
  * @package Dvsa\OlcsTest\Api\Service\Nr\InputFilter
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
 class ComplianceEpisodeInputFactoryTest extends TestCase
 {
@@ -34,6 +36,7 @@ class ComplianceEpisodeInputFactoryTest extends TestCase
 
         $mockSl->shouldReceive('get')->with(MapXmlFile::class)->andReturn($mockMapFilter);
         $mockSl->shouldReceive('get')->with(VrmFilter::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(LicenceNumber::class)->andReturn($mockFilter);
 
         $mockSl->shouldReceive('get')->with(VrmValidator::class)->andReturn($mockValidator);
 
@@ -42,7 +45,7 @@ class ComplianceEpisodeInputFactoryTest extends TestCase
         $service = $sut->createService($mockSl);
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
-        $this->assertCount(2, $service->getFilterChain());
+        $this->assertCount(3, $service->getFilterChain());
         $this->assertCount(1, $service->getValidatorChain());
     }
 }

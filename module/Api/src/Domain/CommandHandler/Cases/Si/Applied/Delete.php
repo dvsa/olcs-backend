@@ -11,6 +11,8 @@ use Doctrine\ORM\Query;
 
 /**
  * Delete SiPenalty ("applied penalty" on the internal side)
+ * @to-do we should stop a penalty from being deletable based on criteria such as the msi response already being sent,
+ * case being closed etc.
  */
 final class Delete extends AbstractDeleteCommandHandler
 {

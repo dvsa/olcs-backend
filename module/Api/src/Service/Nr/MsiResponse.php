@@ -6,7 +6,8 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime as DateTimeExtended;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
-use Doctrine\ORM\PersistentCollection;
+use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Olcs\XmlTools\Xml\XmlNodeBuilder;
 
@@ -125,11 +126,11 @@ class MsiResponse
             $this->setAuthority(self::AUTHORITY_TC);
         }
 
-        $si = $case->getSeriousInfringements()->first();
+        $erruRequest = $case->getErruRequest();
 
         $xmlData = [
-            'Header' => $this->getHeader($si),
-            'Body' => $this->getBody($case, $si)
+            'Header' => $this->getHeader($erruRequest),
+            'Body' => $this->getBody($case, $erruRequest)
         ];
 
         $this->xmlBuilder->setData($xmlData);
@@ -137,16 +138,16 @@ class MsiResponse
     }
 
     /**
-     * @param SiEntity $si
+     * @param ErruRequestEntity $erruRequest
      * @return array
      */
-    private function getHeader(SiEntity $si)
+    private function getHeader(ErruRequestEntity $erruRequest)
     {
         return [
             'name' => 'Header',
             'attributes' => [
                 'technicalId' => $this->getTechnicalId(),
-                'workflowId' => $si->getWorkflowId(),
+                'workflowId' => $erruRequest->getWorkflowId(),
                 'sentAt' => $this->getResponseDateTime(),
                 'from' => 'UK'
             ],
@@ -157,7 +158,7 @@ class MsiResponse
                         0 => [
                             'name' => 'MemberState',
                             'attributes' => [
-                                'code' => $si->getMemberStateCode()->getId()
+                                'code' => $erruRequest->getMemberStateCode()->getId()
                             ]
                         ]
                     ]
@@ -168,16 +169,16 @@ class MsiResponse
 
     /**
      * @param CasesEntity $cases
-     * @param SiEntity $si
+     * @param ErruRequestEntity $erruRequest
      * @return array
      */
-    private function getBody(CasesEntity $cases, SiEntity $si)
+    private function getBody(CasesEntity $cases, ErruRequestEntity $erruRequest)
     {
         return [
             'name' => 'Body',
             'attributes' => [
-                'businessCaseId' => $si->getNotificationNumber(),
-                'originatingAuthority' => $cases->getErruOriginatingAuthority(),
+                'businessCaseId' => $erruRequest->getNotificationNumber(),
+                'originatingAuthority' => $erruRequest->getOriginatingAuthority(),
                 'licensingAuthority' => $this->getAuthority(),
                 'responseDateTime' => $this->getResponseDateTime()
             ],
@@ -185,9 +186,9 @@ class MsiResponse
                 0 => [
                     'name' => 'TransportUndertaking',
                     'attributes' => [
-                        'name' => $cases->getErruTransportUndertakingName()
+                        'name' => $erruRequest->getTransportUndertakingName()
                     ],
-                    'nodes' => $this->formatPenalties($si->getAppliedPenalties())
+                    'nodes' => $this->formatPenalties($cases->getSeriousInfringements())
                 ]
             ]
         ];
@@ -196,41 +197,48 @@ class MsiResponse
     /**
      * Formats penalty information into something usable by xml node builder
      *
-     * @param PersistentCollection $penalties
+     * @param ArrayCollection $seriousInfringements
      * @return array
      */
-    private function formatPenalties(PersistentCollection $penalties)
+    private function formatPenalties(ArrayCollection $seriousInfringements)
     {
         $formattedPenalties = [];
 
-        /** @var SiPenaltyEntity $penalty */
-        foreach ($penalties as $penalty) {
-            $newPenalty = [];
-            $newPenalty['authorityImposingPenalty'] = $this->getAuthority();
-            $newPenalty['penaltyTypeImposed'] = $penalty->getSiPenaltyType()->getId();
+        /**
+         * @var SiPenaltyEntity $penalty
+         * @var SiEntity $si
+         */
+        foreach ($seriousInfringements as $si) {
+            $penalties = $si->getAppliedPenalties();
 
-            if ($penalty->getImposed() === 'N') {
-                $newPenalty['isImposed'] = 'No';
-                $newPenalty['reasonNotImposed'] = $penalty->getReasonNotImposed();
-            } else {
-                $newPenalty['isImposed'] = 'Yes';
+            foreach ($penalties as $penalty) {
+                $newPenalty = [];
+                $newPenalty['authorityImposingPenalty'] = $this->getAuthority();
+                $newPenalty['penaltyTypeImposed'] = $penalty->getSiPenaltyType()->getId();
+
+                if ($penalty->getImposed() === 'N') {
+                    $newPenalty['isImposed'] = 'No';
+                    $newPenalty['reasonNotImposed'] = $penalty->getReasonNotImposed();
+                } else {
+                    $newPenalty['isImposed'] = 'Yes';
+                }
+
+                $startDate = $penalty->getStartDate();
+                $endDate = $penalty->getEndDate();
+
+                if ($startDate) {
+                    $newPenalty['startDate'] = $startDate;
+                }
+
+                if ($endDate) {
+                    $newPenalty['endDate'] = $endDate;
+                }
+
+                $formattedPenalties[] = [
+                    'name' => 'PenaltyImposed',
+                    'attributes' => $newPenalty
+                ];
             }
-
-            $startDate = $penalty->getStartDate();
-            $endDate = $penalty->getEndDate();
-
-            if ($startDate) {
-                $newPenalty['startDate'] = $startDate;
-            }
-
-            if ($endDate) {
-                $newPenalty['endDate'] = $endDate;
-            }
-
-            $formattedPenalties[] = [
-                'name' => 'PenaltyImposed',
-                'attributes' => $newPenalty
-            ];
         }
 
         return $formattedPenalties;

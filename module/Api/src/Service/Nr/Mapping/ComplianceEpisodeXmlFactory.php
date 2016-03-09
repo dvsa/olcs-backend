@@ -13,6 +13,7 @@ use Olcs\XmlTools\Xml\Specification\RecursionValue;
 /**
  * Class ComplianceEpisodeXmlFactory
  * @package Dvsa\Olcs\Api\Service\Nr\Mapping
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
 class ComplianceEpisodeXmlFactory implements FactoryInterface
 {
@@ -47,7 +48,7 @@ class ComplianceEpisodeXmlFactory implements FactoryInterface
                 new Recursion(
                     'TransportUndertaking',
                     [
-                        new NodeAttribute('licenceNumber', 'communityLicenceNumber'),
+                        new NodeAttribute('communityLicenceNumber', 'communityLicenceNumber'),
                         new NodeAttribute('vrm', 'vehicleRegNumber'),
                         new NodeAttribute('transportUndertakingName', 'name'),
                         $this->getSi()

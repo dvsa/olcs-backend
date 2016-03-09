@@ -6,12 +6,14 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Olcs\XmlTools\Filter\MapXmlFile;
+use Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Vrm as VrmFilter;
 use Dvsa\Olcs\Api\Service\Nr\Validator\Vrm as VrmValidator;
 
 /**
  * Class ComplianceEpisodeInputFactory
  * @package Dvsa\Olcs\Api\Service\Nr\InputFilter
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
 class ComplianceEpisodeInputFactory implements FactoryInterface
 {
@@ -32,6 +34,7 @@ class ComplianceEpisodeInputFactory implements FactoryInterface
         $filterChain = $service->getFilterChain();
         $filterChain->attach($mapXmlFile);
         $filterChain->attach($serviceLocator->get('FilterManager')->get(VrmFilter::class));
+        $filterChain->attach($serviceLocator->get('FilterManager')->get(LicenceNumber::class));
 
         $validatorChain = $service->getValidatorChain();
         $validatorChain->attach($serviceLocator->get('ValidatorManager')->get(VrmValidator::class));
