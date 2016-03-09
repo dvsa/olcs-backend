@@ -98,6 +98,11 @@ class Person extends AbstractPerson implements OrganisationProviderInterface
             $list[$org->getId()] = $org;
         }
 
+        /** @var $appOrgPerson \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson */
+        foreach ($this->getApplicationOrganisationPersons() as $appOrgPerson) {
+            $org = $appOrgPerson->getOrganisation();
+            $list[$org->getId()] = $org;
+        }
         return $list;
     }
 
