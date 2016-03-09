@@ -110,6 +110,10 @@ class TeamPrinterTest extends RepositoryTestCase
         $mockQb->shouldReceive('modifyQuery')->once()->andReturnSelf();
         $mockQb->shouldReceive('with')->with('subCategory', 'sc')->once()->andReturnSelf();
         $mockQb->shouldReceive('with')->with('user', 'u')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('sc.category', 'scc')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('team', 't')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('u.contactDetails', 'ucd')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('ucd.person', 'ucdp')->once()->andReturnSelf();
 
         $this->sut->applyListJoins($mockQb);
     }
@@ -135,6 +139,14 @@ class TeamPrinterTest extends RepositoryTestCase
         $qb->shouldReceive('expr->andX')->with('andX1', 'andX2')->once()->andReturn('andExpr');
         $qb->shouldReceive('expr->not')->with('andExpr')->once()->andReturn('notExpr');
         $qb->shouldReceive('andWhere')->with('notExpr')->once()->andReturnSelf();
+
+        $qb->shouldReceive('addSelect')->with('CONCAT(ucdp.forename, ucdp.familyName) as HIDDEN userSort')
+            ->once()->andReturnSelf();
+        $qb->shouldReceive('addSelect')->with('CONCAT(scc.description, sc.subCategoryName) as HIDDEN catSort')
+            ->once()->andReturnSelf();
+        $qb->shouldReceive('addOrderBy')->with('t.name', 'ASC')->once()->andReturnSelf();
+        $qb->shouldReceive('addOrderBy')->with('userSort', 'ASC')->once()->andReturnSelf();
+        $qb->shouldReceive('addOrderBy')->with('catSort', 'ASC')->once()->andReturnSelf();
 
         $this->assertNull($this->sut->applyListFilters($qb, $query));
     }
