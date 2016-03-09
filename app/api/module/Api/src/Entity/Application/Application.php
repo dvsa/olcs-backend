@@ -645,6 +645,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return $this->getLicence()->getLicenceVehicles()->matching($criteria);
     }
 
+    /**
+     * Get all vehicles count
+     *
+     * @return int
+     */
     public function getAllVehiclesCount()
     {
         return $this->getLicence()->getLicenceVehicles()->count();
