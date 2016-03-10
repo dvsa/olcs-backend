@@ -83,25 +83,28 @@ final class Cases extends AbstractQueryHandler
     }
 
     /**
+     * Logic is to query the notes table by the foreign key determined by the case type and not use the note
+     * type except in the event of no foreign key's present.
+     *
      * @param CasesEntity $case
      * @return string
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     private function getLatestNoteByCase(CasesEntity $case)
     {
-        $noteType = $case->getNoteType();
-        $latestNote = '';
-
-        if (!empty($noteType)) {
-            $licenceId = null;
-            $licence = $case->getLicence();
-            if (!empty($licence)) {
-                $licenceId = $licence->getId();
-            }
-
-            $latestNote = $this->getRepo('Note')->fetchForOverview($licenceId, null, $noteType);
+        switch ($case->getCaseType()) {
+            case $case::LICENCE_CASE_TYPE:
+            case $case::IMPOUNDING_CASE_TYPE:
+                $licenceId = $case->getLicence()->getId();
+                return $this->getRepo('Note')->fetchForOverview($licenceId);
+            case $case::APP_CASE_TYPE:
+                $licenceId = $case->getApplication()->getLicence()->getId();
+                return $this->getRepo('Note')->fetchForOverview($licenceId);
+            case $case::TM_CASE_TYPE:
+                $tmId = $case->getTransportManager()->getId();
+                return $this->getRepo('Note')->fetchForOverview(null, null, $tmId);
+            default:
+                return $this->getRepo('Note')->fetchForOverview(null, null, null, NoteEntity::NOTE_TYPE_CASE);
         }
-
-        return $latestNote;
     }
 }
