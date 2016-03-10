@@ -2,9 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases;
 
+use Common\RefData;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -14,9 +17,14 @@ final class Cases extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Cases';
 
+    protected $extraRepos = ['Note'];
+
     public function handleQuery(QueryInterface $query)
     {
+        /** @var CasesEntity $case */
         $case = $this->getRepo()->fetchUsingId($query);
+
+        $latestNote = $this->getLatestNoteByCase($case);
 
         $criteria = Criteria::create();
         $criteria->where(
@@ -67,7 +75,36 @@ final class Cases extends AbstractQueryHandler
                 ),
                 'tmDecisions',
                 'erruRequest'
+            ],
+            [
+                'latestNote' => $latestNote
             ]
         );
+    }
+
+    /**
+     * Logic is to query the notes table by the foreign key determined by the case type and not use the note
+     * type except in the event of no foreign key's present.
+     *
+     * @param CasesEntity $case
+     * @return string
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function getLatestNoteByCase(CasesEntity $case)
+    {
+        switch ($case->getCaseType()) {
+            case $case::LICENCE_CASE_TYPE:
+            case $case::IMPOUNDING_CASE_TYPE:
+                $licenceId = $case->getLicence()->getId();
+                return $this->getRepo('Note')->fetchForOverview($licenceId);
+            case $case::APP_CASE_TYPE:
+                $licenceId = $case->getApplication()->getLicence()->getId();
+                return $this->getRepo('Note')->fetchForOverview($licenceId);
+            case $case::TM_CASE_TYPE:
+                $tmId = $case->getTransportManager()->getId();
+                return $this->getRepo('Note')->fetchForOverview(null, null, $tmId);
+            default:
+                return $this->getRepo('Note')->fetchForOverview(null, null, null, NoteEntity::NOTE_TYPE_CASE);
+        }
     }
 }
