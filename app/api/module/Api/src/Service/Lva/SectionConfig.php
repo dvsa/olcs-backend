@@ -136,7 +136,6 @@ class SectionConfig
         'trailers' => [
             'restricted' => [
                 [
-                    'external',
                     'licence',
                     Licence::LICENCE_CATEGORY_GOODS_VEHICLE
                 ]
