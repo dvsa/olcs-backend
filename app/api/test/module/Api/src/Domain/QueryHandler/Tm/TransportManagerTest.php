@@ -13,6 +13,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Note as NoteRepo;
 
 /**
  * Transport Manager Test
@@ -25,12 +26,15 @@ class TransportManagerTest extends QueryHandlerTestCase
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('TransportManager', TransportManagerRepo::class);
+        $this->mockRepo('Note', NoteRepo::class);
 
         parent::setUp();
     }
 
     public function testHandleQuery()
     {
+        $latestNote = 'test note';
+        $tmId = 1;
         $bundle = [
             'tmType',
             'tmStatus',
@@ -52,7 +56,7 @@ class TransportManagerTest extends QueryHandlerTestCase
                 'homeCd' => ['person']
             ]
         ];
-        $query = Query::create(['id' => 1]);
+        $query = Query::create(['id' => $tmId]);
 
         $mock = m::mock(BundleSerializableInterface::class)
             ->shouldReceive('getUsers')
@@ -62,6 +66,8 @@ class TransportManagerTest extends QueryHandlerTestCase
             ->shouldReceive('serialize')->with($bundle)
             ->once()
             ->andReturn(['foo'])
+            ->shouldReceive('getId')
+            ->andReturn($tmId)
             ->getMock();
 
         $this->repoMap['TransportManager']
@@ -69,9 +75,11 @@ class TransportManagerTest extends QueryHandlerTestCase
             ->with($query)
             ->once()
             ->andReturn($mock);
+        $this->repoMap['Note']->shouldReceive('fetchForOverview')
+            ->with(null, null, $tmId)->andReturn($latestNote);
 
         $this->assertSame(
-            ['foo', 'hasUsers' => [1,2,3], 'hasBeenMerged' => false],
+            ['foo', 'hasUsers' => [1,2,3], 'hasBeenMerged' => false, 'latestNote' => 'test note'],
             $this->sut->handleQuery($query)->serialize()
         );
     }
