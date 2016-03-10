@@ -113,11 +113,12 @@ class Note extends AbstractRepository
      *
      * @param int $licence
      * @param int $application
+     * @param int $tm
      * @param string $noteType
      *
      * @return array
      */
-    public function fetchForOverview($licence = null, $application = null, $tmId = null, $noteType = null)
+    public function fetchForOverview($licence = null, $application = null, $tm = null, $noteType = null)
     {
         $qb = $this->createQueryBuilder();
 
@@ -129,6 +130,11 @@ class Note extends AbstractRepository
         if ($licence !== null) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licenceId'));
             $qb->setParameter('licenceId', $licence);
+        }
+
+        if ($tm !== null) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.transportManager', ':tmId'));
+            $qb->setParameter('tmId', $tm);
         }
 
         if ($noteType !== null) {

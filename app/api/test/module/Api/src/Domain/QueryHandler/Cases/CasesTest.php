@@ -108,7 +108,6 @@ class CasesTest extends QueryHandlerTestCase
     public function testHandleQueryTmCaseType()
     {
         $query = Qry::create(['id' => 24]);
-        $licenceId = 77;
         $tmId = 2;
         $latestNote = 'test note';
         $caseType = CasesEntity::TM_CASE_TYPE;
@@ -140,7 +139,6 @@ class CasesTest extends QueryHandlerTestCase
     public function testHandleQueryOtherCaseType()
     {
         $query = Qry::create(['id' => 24]);
-        $licenceId = 77;
         $tmId = 2;
         $latestNote = 'test note';
         $caseType = 'some-other';
