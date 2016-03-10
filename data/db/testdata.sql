@@ -1172,12 +1172,12 @@ VALUES
   (1, 1, 1, 1, 'defect type', 'defect description', '2014-06-09 12:06:41', '2014-06-09 12:06:41', 1);
 
 INSERT INTO `impounding`
-    (`id`, `venue_id`, `impounding_type`, `case_id`,
+    (`id`, `venue_id`, `impounding_type`, `case_id`, `vrm`,
     `outcome`, `last_modified_by`, `presiding_tc_id`, `created_by`,
     `application_receipt_date`, `outcome_sent_date`, `close_date`,
     `venue_other`, `hearing_date`, `notes`, `created_on`, `last_modified_on`, `version`)
 VALUES
-    (17, 3, 'impt_hearing', 24,
+    (17, 3, 'impt_hearing', 24, 'AB23 CDE',
     'impo_returned', NULL, 1, NULL,
     '2014-06-09 11:15:00', '2014-06-11 14:30:00', NOW(),
     NULL, '2014-06-10 15:45:00', 'Some notes - db default', NOW(), NOW(), 1);

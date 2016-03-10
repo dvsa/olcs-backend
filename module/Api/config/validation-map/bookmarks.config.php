@@ -17,6 +17,7 @@ return [
     QueryHandler\Bookmark\FStandingCapitalReserves::class           => NoValidationRequired::class,
     QueryHandler\Bookmark\FeeBundle::class                          => NoValidationRequired::class,
     QueryHandler\Bookmark\GoodsDiscBundle::class                    => NoValidationRequired::class,
+    QueryHandler\Bookmark\ImpoundingBundle::class                   => NoValidationRequired::class,
     QueryHandler\Bookmark\InterimConditionsUndertakings::class      => NoValidationRequired::class,
     QueryHandler\Bookmark\InterimOperatingCentres::class            => NoValidationRequired::class,
     QueryHandler\Bookmark\InterimUnlinkedTm::class                  => NoValidationRequired::class,
