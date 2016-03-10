@@ -25,7 +25,8 @@ use Doctrine\ORM\Mapping as ORM;
      *     columns={"checklist_document_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_continuation_detail_olbs_key", columns={"olbs_key"})
+ *        @ORM\UniqueConstraint(name="uk_continuation_detail_continuation_id_licence_id",
+     *     columns={"licence_id","continuation_id"})
  *    }
  * )
  */
@@ -115,15 +116,6 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
-
-    /**
-     * Olbs key
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
-     */
-    protected $olbsKey;
 
     /**
      * Received
@@ -363,29 +355,6 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     public function getLicence()
     {
         return $this->licence;
-    }
-
-    /**
-     * Set the olbs key
-     *
-     * @param int $olbsKey
-     * @return ContinuationDetail
-     */
-    public function setOlbsKey($olbsKey)
-    {
-        $this->olbsKey = $olbsKey;
-
-        return $this;
-    }
-
-    /**
-     * Get the olbs key
-     *
-     * @return int
-     */
-    public function getOlbsKey()
-    {
-        return $this->olbsKey;
     }
 
     /**
