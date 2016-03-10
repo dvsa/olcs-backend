@@ -20,7 +20,8 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_continuation_detail_received", columns={"received"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="olbs_key_UNIQUE", columns={"olbs_key"})
+ *        @ORM\UniqueConstraint(name="uk_continuation_detail_continuation_id_licence_id",
+ *         columns={"licence_id","continuation_id"})
  *    }
  * )
  */
