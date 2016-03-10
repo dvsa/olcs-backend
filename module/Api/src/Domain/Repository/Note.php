@@ -117,7 +117,7 @@ class Note extends AbstractRepository
      *
      * @return array
      */
-    public function fetchForOverview($licence = null, $application = null, $noteType = null)
+    public function fetchForOverview($licence = null, $application = null, $tmId = null, $noteType = null)
     {
         $qb = $this->createQueryBuilder();
 

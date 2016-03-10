@@ -410,7 +410,8 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
                 return Note::NOTE_TYPE_APPLICATION;
             case self::TM_CASE_TYPE:
                 return Note::NOTE_TYPE_TRANSPORT_MANAGER;
+            default:
+                return Note::NOTE_TYPE_CASE;
         }
-        return null;
     }
 }
