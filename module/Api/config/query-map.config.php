@@ -27,6 +27,7 @@ return [
     BookmarkQuery\CommunityLicBundle::class => BookmarkQueryHandler\CommunityLicBundle::class,
     BookmarkQuery\FeeBundle::class => BookmarkQueryHandler\FeeBundle::class,
     BookmarkQuery\ApplicationBundle::class => BookmarkQueryHandler\ApplicationBundle::class,
+    BookmarkQuery\ImpoundingBundle::class => BookmarkQueryHandler\ImpoundingBundle::class,
     BookmarkQuery\InterimUnlinkedTm::class => BookmarkQueryHandler\InterimUnlinkedTm::class,
     BookmarkQuery\InterimOperatingCentres::class => BookmarkQueryHandler\InterimOperatingCentres::class,
     BookmarkQuery\UserBundle::class => BookmarkQueryHandler\UserBundle::class,
