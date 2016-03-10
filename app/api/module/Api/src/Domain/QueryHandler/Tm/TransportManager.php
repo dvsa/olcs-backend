@@ -19,12 +19,16 @@ class TransportManager extends AbstractQueryHandler
 {
     protected $repoServiceName = 'TransportManager';
 
+    protected $extraRepos = ['Note'];
+
     public function handleQuery(QueryInterface $query)
     {
         /* @var $repo Dvsa\Olcs\Api\Domain\Repository\TransportManager */
         $repo = $this->getRepo();
         /* @var $transportManager \Dvsa\Olcs\Api\Entity\Tm\TransportManager */
         $transportManager = $repo->fetchUsingId($query);
+
+        $latestNote = $this->getRepo('Note')->fetchForOverview(null, null, $transportManager->getId());
 
         return $this->result(
             $transportManager,
@@ -51,7 +55,8 @@ class TransportManager extends AbstractQueryHandler
             ],
             [
                 'hasUsers' => (count($transportManager->getUsers()) > 0 ? $transportManager->getUsers() : false),
-                'hasBeenMerged' => !empty($transportManager->getMergeToTransportManager())
+                'hasBeenMerged' => !empty($transportManager->getMergeToTransportManager()),
+                'latestNote' => $latestNote
             ]
         );
     }
