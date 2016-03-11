@@ -18,16 +18,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="erru_request",
  *    indexes={
- *        @ORM\Index(name="ix_erru_request_response_user_id", columns={"response_user_id"}),
  *        @ORM\Index(name="ix_erru_request_member_state_code", columns={"member_state_code"}),
- *        @ORM\Index(name="ix_erru_request_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_erru_request_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_erru_request_msi_type", columns={"msi_type"}),
- *        @ORM\Index(name="ix_erru_request_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
+ *        @ORM\Index(name="ix_erru_request_response_user_id", columns={"response_user_id"}),
+ *        @ORM\Index(name="ix_erru_request_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_erru_request_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_erru_request_workflow_id", columns={"workflow_id"}),
- *        @ORM\UniqueConstraint(name="uk_erru_request_case_id", columns={"case_id"})
+ *        @ORM\UniqueConstraint(name="uk_erru_request_case_id", columns={"case_id"}),
+ *        @ORM\UniqueConstraint(name="uk_erru_request_workflow_id", columns={"workflow_id"})
  *    }
  * )
  */
@@ -135,24 +134,6 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
      * @ORM\Column(type="string", name="notification_number", length=36, nullable=true)
      */
     protected $notificationNumber;
-
-    /**
-     * Olbs key
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
-     */
-    protected $olbsKey;
-
-    /**
-     * Olbs type
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="olbs_type", length=32, nullable=true)
-     */
-    protected $olbsType;
 
     /**
      * Originating authority
@@ -456,52 +437,6 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     public function getNotificationNumber()
     {
         return $this->notificationNumber;
-    }
-
-    /**
-     * Set the olbs key
-     *
-     * @param int $olbsKey
-     * @return ErruRequest
-     */
-    public function setOlbsKey($olbsKey)
-    {
-        $this->olbsKey = $olbsKey;
-
-        return $this;
-    }
-
-    /**
-     * Get the olbs key
-     *
-     * @return int
-     */
-    public function getOlbsKey()
-    {
-        return $this->olbsKey;
-    }
-
-    /**
-     * Set the olbs type
-     *
-     * @param string $olbsType
-     * @return ErruRequest
-     */
-    public function setOlbsType($olbsType)
-    {
-        $this->olbsType = $olbsType;
-
-        return $this;
-    }
-
-    /**
-     * Get the olbs type
-     *
-     * @return string
-     */
-    public function getOlbsType()
-    {
-        return $this->olbsType;
     }
 
     /**

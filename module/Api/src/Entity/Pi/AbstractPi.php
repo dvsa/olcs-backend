@@ -31,7 +31,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_pi_written_outcome", columns={"written_outcome"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="ix_pi_case_id", columns={"case_id"}),
+ *        @ORM\UniqueConstraint(name="uk_pi_case_id", columns={"case_id"}),
  *        @ORM\UniqueConstraint(name="uk_pi_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
  * )

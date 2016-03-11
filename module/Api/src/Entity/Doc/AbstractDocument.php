@@ -34,7 +34,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_document_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_document_irfo_organisation_id", columns={"irfo_organisation_id"}),
  *        @ORM\Index(name="ix_document_submission_id", columns={"submission_id"}),
- *        @ORM\Index(name="fk_document_statement_id_statement_id", columns={"statement_id"})
+ *        @ORM\Index(name="ix_document_statement_id", columns={"statement_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_document_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})

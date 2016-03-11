@@ -49,7 +49,7 @@ abstract class AbstractCasesReadAudit implements BundleSerializableInterface, Js
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="created_on", nullable=false)
+     * @ORM\Column(type="datetime", name="created_on", nullable=false)
      */
     protected $createdOn;
 

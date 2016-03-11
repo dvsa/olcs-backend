@@ -16,11 +16,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="sla_target_date",
  *    indexes={
- *        @ORM\Index(name="ix_sla_target_date_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_sla_target_date_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_sla_target_date_pi_id", columns={"pi_id"}),
  *        @ORM\Index(name="ix_sla_target_date_submission_id", columns={"submission_id"}),
- *        @ORM\Index(name="ix_sla_target_date_sla_id", columns={"sla_id"})
+ *        @ORM\Index(name="ix_sla_target_date_sla_id", columns={"sla_id"}),
+ *        @ORM\Index(name="ix_sla_target_date_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_sla_target_date_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_sla_target_date_document_id", columns={"document_id"})
