@@ -22,7 +22,7 @@ final class TransportManagerName extends AbstractContext
         $title = $tm->getTitle();
         // title may not be set so only prepend if set
         if ($title instanceof RefDataEntity) {
-            $tmName = $tm->getTitle()->getDescription() . ' ' . $tmName;
+            $tmName = $title->getDescription() . ' ' . $tmName;
         }
 
         $context->offsetSet('transportManagerName', $tmName);
