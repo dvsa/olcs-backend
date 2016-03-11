@@ -405,7 +405,7 @@ INSERT INTO `bus_notice_period`
 (`id`, `notice_area`, `standard_period`, `cancellation_period`, `created_by`, `last_modified_by`, `created_on`,
  `last_modified_on`,`version`)
 VALUES
-  (1,'Scotland',56,90,NULL,NULL,NULL,NULL,1),
+  (1,'Scotland',42,90,NULL,NULL,NULL,NULL,1),
   (2,'Other',56,0,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `complaint` (`complainant_contact_details_id`, `status`, `complaint_type`, `is_compliance`, `created_by`,
