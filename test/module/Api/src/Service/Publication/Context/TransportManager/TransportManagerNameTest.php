@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Context\TransportManager;
 
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Publication\Context\TransportManager\TransportManagerName;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
@@ -20,7 +21,7 @@ class TransportManagerNameTest extends MockeryTestCase
      *
      * Test the transport manager name filter
      */
-    public function testProvide()
+    public function testProvideWithTitle()
     {
         $title = 'title';
         $forename = 'forename';
@@ -32,8 +33,39 @@ class TransportManagerNameTest extends MockeryTestCase
 
         $expectedOutput = new \ArrayObject($output);
 
+        $mockTitle = m::mock(RefData::class)->makePartial();
+        $mockTitle->shouldReceive('getDescription')->andReturn($title);
+
         $mockPerson = m::mock(PersonEntity::class);
-        $mockPerson->shouldReceive('getTitle->getDescription')->once()->andReturn($title);
+        $mockPerson->shouldReceive('getTitle')->once()->andReturn($mockTitle);
+        $mockPerson->shouldReceive('getForename')->once()->andReturn($forename);
+        $mockPerson->shouldReceive('getFamilyName')->once()->andReturn($familyName);
+
+        $publication = m::mock(PublicationLink::class);
+        $publication->shouldReceive('getTransportManager->getHomeCd->getPerson')->andReturn($mockPerson);
+
+        $sut = new TransportManagerName(m::mock(QueryHandlerInterface::class));
+        $this->assertEquals($expectedOutput, $sut->provide($publication, new \ArrayObject()));
+    }
+
+    /**
+     * @group publicationFilter
+     *
+     * Test the transport manager name filter
+     */
+    public function testProvideNoTitle()
+    {
+        $forename = 'forename';
+        $familyName = 'family name';
+
+        $output = [
+            'transportManagerName' => $forename . ' ' . $familyName
+        ];
+
+        $expectedOutput = new \ArrayObject($output);
+
+        $mockPerson = m::mock(PersonEntity::class);
+        $mockPerson->shouldReceive('getTitle')->once()->andReturnNull();
         $mockPerson->shouldReceive('getForename')->once()->andReturn($forename);
         $mockPerson->shouldReceive('getFamilyName')->once()->andReturn($familyName);
 
