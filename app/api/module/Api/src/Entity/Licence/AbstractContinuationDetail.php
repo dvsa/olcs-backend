@@ -25,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
      *     columns={"checklist_document_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_continuation_detail_continuation_id_licence_id",
+ *        @ORM\UniqueConstraint(name="uk_continuation_detail_licence_id_continuation_id",
      *     columns={"licence_id","continuation_id"})
  *    }
  * )

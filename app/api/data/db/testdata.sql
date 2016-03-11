@@ -1544,11 +1544,10 @@ VALUES
 
 INSERT INTO `erru_request` (`id`, `case_id`, `originating_authority`, `member_state_code`, `transport_undertaking_name`,
     `vrm`, `msi_type`, `notification_number`, `workflow_id`, `response_sent`, `response_user_id`, `response_time`,
-    `deleted_date`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `olbs_key`,
-    `olbs_type`)
+    `deleted_date`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
   (1, 29, 'Polish Transport Authority', 'PL', 'transport undertaking name', 'ABCD 123', 'erru_case_t_msi',
-      '12345', 'A3CCBDB1-6C8B-4741-847B-4C6B80AA8608', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL);
+      '12345', 'A3CCBDB1-6C8B-4741-847B-4C6B80AA8608', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
 INSERT INTO `si_penalty` (`id`, `serious_infringement_id`, `imposed`, `start_date`, `end_date`, `reason_not_imposed`,
    `deleted_date`, `si_penalty_type_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
