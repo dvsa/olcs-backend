@@ -20,16 +20,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="serious_infringement",
  *    indexes={
- *        @ORM\Index(name="ix_serious_infringement_case_id", columns={"case_id"}),
  *        @ORM\Index(name="ix_serious_infringement_si_category_id", columns={"si_category_id"}),
  *        @ORM\Index(name="ix_serious_infringement_si_category_type_id",
      *     columns={"si_category_type_id"}),
  *        @ORM\Index(name="ix_serious_infringement_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_serious_infringement_last_modified_by", columns={"last_modified_by"})
- *    },
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_serious_infringement_olbs_key_olbs_type",
-     *     columns={"olbs_key","olbs_type"})
+ *        @ORM\Index(name="ix_serious_infringement_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_serious_infringement_case_id", columns={"case_id"})
  *    }
  * )
  */
@@ -126,24 +122,6 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
      * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
      */
     protected $lastModifiedOn;
-
-    /**
-     * Olbs key
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
-     */
-    protected $olbsKey;
-
-    /**
-     * Olbs type
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="olbs_type", length=50, nullable=true)
-     */
-    protected $olbsType;
 
     /**
      * Reason
@@ -439,52 +417,6 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     public function getLastModifiedOn()
     {
         return $this->lastModifiedOn;
-    }
-
-    /**
-     * Set the olbs key
-     *
-     * @param int $olbsKey
-     * @return SeriousInfringement
-     */
-    public function setOlbsKey($olbsKey)
-    {
-        $this->olbsKey = $olbsKey;
-
-        return $this;
-    }
-
-    /**
-     * Get the olbs key
-     *
-     * @return int
-     */
-    public function getOlbsKey()
-    {
-        return $this->olbsKey;
-    }
-
-    /**
-     * Set the olbs type
-     *
-     * @param string $olbsType
-     * @return SeriousInfringement
-     */
-    public function setOlbsType($olbsType)
-    {
-        $this->olbsType = $olbsType;
-
-        return $this;
-    }
-
-    /**
-     * Get the olbs type
-     *
-     * @return string
-     */
-    public function getOlbsType()
-    {
-        return $this->olbsType;
     }
 
     /**
