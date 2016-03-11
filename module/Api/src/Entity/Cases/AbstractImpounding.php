@@ -42,15 +42,6 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     protected $applicationReceiptDate;
 
     /**
-     * Birth date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="birth_date", nullable=true)
-     */
-    protected $birthDate;
-
-    /**
      * Case
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
@@ -268,29 +259,6 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     public function getApplicationReceiptDate()
     {
         return $this->applicationReceiptDate;
-    }
-
-    /**
-     * Set the birth date
-     *
-     * @param \DateTime $birthDate
-     * @return Impounding
-     */
-    public function setBirthDate($birthDate)
-    {
-        $this->birthDate = $birthDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the birth date
-     *
-     * @return \DateTime
-     */
-    public function getBirthDate()
-    {
-        return $this->birthDate;
     }
 
     /**

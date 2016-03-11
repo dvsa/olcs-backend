@@ -80,10 +80,6 @@ class UpdateImpounding extends AbstractImpounding implements TransactionedInterf
 
         $impounding->setVrm($command->getVrm());
 
-        if ($command->getBirthDate() !== null) {
-            $impounding->setBirthDate(new \DateTime($command->getBirthDate()));
-        }
-
         if ($command->getHearingDate() !== null) {
             $impounding->setHearingDate(new \DateTime($command->getHearingDate()));
         }
