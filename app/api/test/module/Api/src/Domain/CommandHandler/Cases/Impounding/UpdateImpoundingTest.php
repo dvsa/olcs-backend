@@ -66,7 +66,6 @@ class UpdateImpoundingTest extends CommandHandlerTestCase
                 'venueOther' => null,
                 'venue' => 8,
                 'vrm' => 'vrm1',
-                'birthDate' => '2010-02-19',
                 'impoundingLegislationTypes' => [
                     'imlgis_type_goods_ni1',
                     'imlgis_type_goods_ni2'
@@ -105,7 +104,6 @@ class UpdateImpoundingTest extends CommandHandlerTestCase
         $this->assertObjectHasAttribute('messages', $result);
         $this->assertContains('Impounding updated', $result->getMessages());
 
-        $this->assertInstanceOf(\DateTime::class, $imp->getBirthDate());
-        $this->assertEquals('2010-02-19', $imp->getBirthDate()->format('Y-m-d'));
+        $this->assertEquals('vrm1', $imp->getVrm());
     }
 }
