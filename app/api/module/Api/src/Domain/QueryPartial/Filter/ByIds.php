@@ -27,9 +27,9 @@ final class ByIds implements QueryPartialInterface
     {
         list($ids) = $arguments;
 
-        list($alias) = $qb->getRootAliases();
+        if ($ids !== null) {
+            list($alias) = $qb->getRootAliases();
 
-        if (!empty($ids)) {
             $qb->andWhere($qb->expr()->in($alias . '.id', ':byIds'))
                 ->setParameter('byIds', $ids);
         }
