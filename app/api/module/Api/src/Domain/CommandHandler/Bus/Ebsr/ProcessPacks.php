@@ -10,8 +10,6 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\RequestMap as RequestMapQueueCmd;
-use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
-use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
 use Zend\Filter\Decompress;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -40,6 +38,8 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
 use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
+use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
+use Dvsa\Olcs\Api\Domain\FileProcessorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Doctrine\ORM\Query;
 use Doctrine\Common\Util\Debug as DoctrineDebug;
@@ -51,11 +51,13 @@ final class ProcessPacks extends AbstractCommandHandler implements
     AuthAwareInterface,
     TransactionedInterface,
     UploaderAwareInterface,
-    EmailAwareInterface
+    EmailAwareInterface,
+    FileProcessorAwareInterface
 {
     use AuthAwareTrait;
     use UploaderAwareTrait;
     use EmailAwareTrait;
+    use FileProcessorAwareTrait;
 
     /**
      * @var int
@@ -95,11 +97,6 @@ final class ProcessPacks extends AbstractCommandHandler implements
     protected $result;
 
     /**
-     * @var FileProcessor
-     */
-    protected $fileProcessor;
-
-    /**
      * @var int
      */
     protected $validPacks = 0;
@@ -117,7 +114,6 @@ final class ProcessPacks extends AbstractCommandHandler implements
         $this->busRegInput = $mainServiceLocator->get('EbsrBusRegInput');
         $this->processedDataInput = $mainServiceLocator->get('EbsrProcessedDataInput');
         $this->shortNoticeInput = $mainServiceLocator->get('EbsrShortNoticeInput');
-        $this->fileProcessor = $mainServiceLocator->get(FileProcessorInterface::class);
         $this->result = new Result();
 
         return parent::createService($serviceLocator);
@@ -144,7 +140,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
             $this->result->addId('ebsrSubmission_' . $ebsrSub->getId(), $ebsrSub->getId());
 
             try {
-                $xmlName = $this->fileProcessor->fetchXmlFileNameFromDocumentStore($doc->getIdentifier());
+                $xmlName = $this->getFileProcessor()->fetchXmlFileNameFromDocumentStore($doc->getIdentifier());
             } catch (\RuntimeException $e) {
                 //process the validation failure information
                 $this->processValidationFailure($ebsrSub, $doc, ['upload-failure' => $e->getMessage()], '', []);
