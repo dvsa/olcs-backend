@@ -24,6 +24,8 @@ use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
+use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
+use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
@@ -183,6 +185,10 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
         if ($this instanceof ConfigAwareInterface) {
             $this->setConfig($mainServiceLocator->get('Config'));
+        }
+
+        if ($this instanceof FileProcessorAwareInterface) {
+            $this->setFileProcessor($mainServiceLocator->get(FileProcessorInterface::class));
         }
     }
 
