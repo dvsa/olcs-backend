@@ -130,6 +130,7 @@ return [
     CommandHandler\Email\SendEbsrReceived::class                                      => NoValidationRequired::class,
     CommandHandler\Email\SendEbsrRefreshed::class                                     => NoValidationRequired::class,
     CommandHandler\Email\SendEbsrErrors::class                                        => NoValidationRequired::class,
+    CommandHandler\Email\SendEbsrRequestMap::class                                    => NoValidationRequired::class,
     CommandHandler\Person\Create::class                                               => NoValidationRequired::class,
     CommandHandler\Person\UpdateFull::class                                           => NoValidationRequired::class,
     CommandHandler\TransportManagerApplication\Snapshot::class                        => NoValidationRequired::class,

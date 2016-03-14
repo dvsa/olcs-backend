@@ -10,8 +10,6 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\RequestMap as RequestMapQueueCmd;
-use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
-use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
 use Zend\Filter\Decompress;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -32,17 +30,18 @@ use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateBusFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateTxcInbox as CreateTxcInboxCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrReceived as SendEbsrReceivedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefreshed as SendEbsrRefreshedCmd;
-use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
-use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrErrors as SendEbsrErrorsCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
+use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
+use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
+use Dvsa\Olcs\Api\Domain\FileProcessorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Doctrine\ORM\Query;
-use Zend\Json\Json as ZendJson;
 use Doctrine\Common\Util\Debug as DoctrineDebug;
 
 /**
@@ -51,10 +50,14 @@ use Doctrine\Common\Util\Debug as DoctrineDebug;
 final class ProcessPacks extends AbstractCommandHandler implements
     AuthAwareInterface,
     TransactionedInterface,
-    UploaderAwareInterface
+    UploaderAwareInterface,
+    EmailAwareInterface,
+    FileProcessorAwareInterface
 {
     use AuthAwareTrait;
     use UploaderAwareTrait;
+    use EmailAwareTrait;
+    use FileProcessorAwareTrait;
 
     /**
      * @var int
@@ -94,11 +97,6 @@ final class ProcessPacks extends AbstractCommandHandler implements
     protected $result;
 
     /**
-     * @var FileProcessor
-     */
-    protected $fileProcessor;
-
-    /**
      * @var int
      */
     protected $validPacks = 0;
@@ -116,7 +114,6 @@ final class ProcessPacks extends AbstractCommandHandler implements
         $this->busRegInput = $mainServiceLocator->get('EbsrBusRegInput');
         $this->processedDataInput = $mainServiceLocator->get('EbsrProcessedDataInput');
         $this->shortNoticeInput = $mainServiceLocator->get('EbsrShortNoticeInput');
-        $this->fileProcessor = $mainServiceLocator->get(FileProcessorInterface::class);
         $this->result = new Result();
 
         return parent::createService($serviceLocator);
@@ -143,7 +140,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
             $this->result->addId('ebsrSubmission_' . $ebsrSub->getId(), $ebsrSub->getId());
 
             try {
-                $xmlName = $this->fileProcessor->fetchXmlFileNameFromDocumentStore($doc->getIdentifier());
+                $xmlName = $this->getFileProcessor()->fetchXmlFileNameFromDocumentStore($doc->getIdentifier());
             } catch (\RuntimeException $e) {
                 //process the validation failure information
                 $this->processValidationFailure($ebsrSub, $doc, ['upload-failure' => $e->getMessage()], '', []);
@@ -532,7 +529,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
      */
     private function getEbsrRefreshedEmailCmd($ebsrId)
     {
-        return $this->ebsrEmailQueue(SendEbsrRefreshedCmd::class, $ebsrId);
+        return $this->emailQueue(SendEbsrRefreshedCmd::class, ['id' => $ebsrId], $ebsrId);
     }
 
     /**
@@ -541,7 +538,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
      */
     private function getEbsrReceivedEmailCmd($ebsrId)
     {
-        return $this->ebsrEmailQueue(SendEbsrReceivedCmd::class, $ebsrId);
+        return $this->emailQueue(SendEbsrReceivedCmd::class, ['id' => $ebsrId], $ebsrId);
     }
 
     /**
@@ -550,33 +547,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
      */
     private function getEbsrErrorEmailCmd($ebsrId)
     {
-        return $this->ebsrEmailQueue(SendEbsrErrorsCmd::class, $ebsrId);
-    }
-
-    /**
-     * Adds the ebsr email to the queue
-     *
-     * @param string $cmdClass
-     * @param int $ebsrId
-     * @return CreateQueue
-     */
-    private function ebsrEmailQueue($cmdClass, $ebsrId)
-    {
-        $options =                     [
-            'commandClass' => $cmdClass,
-            'commandData' => [
-                'id' => $ebsrId
-            ],
-        ];
-
-        return CreateQueue::create(
-            [
-                'entityId' => $ebsrId,
-                'type' => Queue::TYPE_EMAIL,
-                'status' => Queue::STATUS_QUEUED,
-                'options' => ZendJson::encode($options)
-            ]
-        );
+        return $this->emailQueue(SendEbsrErrorsCmd::class, ['id' => $ebsrId], $ebsrId);
     }
 
     /**
@@ -609,10 +580,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
         $data = [
             'category' => TaskEntity::CATEGORY_BUS,
             'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
-            'description' => $description . ': [' . $busReg->getRegNo() . ']',
+            'description' => $description . ': ' . $busReg->getRegNo(),
             'actionDate' => date('Y-m-d H:i:s'),
-            'assignedToUser' => $this->getCurrentUser()->getId(),
-            'assignedToTeam' => 6, // @todo this will need changing once we have the real life team data
             'busReg' => $busReg->getId(),
             'licence' => $busReg->getLicence()->getId(),
         ];
