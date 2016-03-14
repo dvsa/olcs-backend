@@ -15,11 +15,15 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Json\Json as ZendJson;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 
 /**
  * Command Handler Test Case
@@ -168,6 +172,31 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         unset($this->subCategoryReferences);
         unset($this->initRefdata);
         unset($this->mockedSmServices);
+    }
+
+    /**
+     * Shortcut for email queue side effects
+     *
+     * @param string $emailCmdClass
+     * @param array $cmdData
+     * @param int $entityId
+     * @param Result $result
+     */
+    public function expectedEmailQueueSideEffect($emailCmdClass, array $cmdData, $entityId, $result)
+    {
+        $emailOptions = [
+            'commandClass' => $emailCmdClass,
+            'commandData' => $cmdData
+        ];
+
+        $emailData = [
+            'entityId' => $entityId,
+            'type' => QueueEntity::TYPE_EMAIL,
+            'status' => QueueEntity::STATUS_QUEUED,
+            'options' => ZendJson::encode($emailOptions)
+        ];
+
+        $this->expectedSideEffect(CreateQueueCmd::class, $emailData, $result);
     }
 
     public function expectedSideEffect($class, $data, $result)
