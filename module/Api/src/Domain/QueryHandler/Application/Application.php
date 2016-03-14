@@ -58,7 +58,7 @@ class Application extends AbstractQueryHandler
                         'disqualifications',
                         'organisationPersons' => [
                             'person' => ['disqualifications']
-                        ]
+                        ],
                     ],
                 ],
                 'applicationCompletion',
@@ -77,6 +77,7 @@ class Application extends AbstractQueryHandler
                 'isPublishable' => $application->isPublishable(),
                 'latestNote' => $latestNote,
                 'disableCardPayments' => $this->getRepo('SystemParameter')->getDisableSelfServeCardPayments(),
+                'isMlh' => $application->getLicence()->getOrganisation()->isMlh()
             ]
         );
     }

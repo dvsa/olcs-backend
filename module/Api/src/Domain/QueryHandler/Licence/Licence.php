@@ -65,12 +65,13 @@ class Licence extends AbstractQueryHandler
                     'organisationPersons' => [
                         'person'
                     ],
-                    'tradingNames',
+                    'tradingNames'
                 ],
             ],
             [
                 'sections' => $this->sectionAccessService->getAccessibleSectionsForLicence($licence),
-                'niFlag' => $licence->getNiFlag()
+                'niFlag' => $licence->getNiFlag(),
+                'isMlh' => $licence->getOrganisation()->isMlh()
             ]
         );
     }
