@@ -529,7 +529,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
      */
     private function getEbsrRefreshedEmailCmd($ebsrId)
     {
-        return $this->emailQueue(SendEbsrRefreshedCmd::class, $ebsrId);
+        return $this->emailQueue(SendEbsrRefreshedCmd::class, ['id' => $ebsrId], $ebsrId);
     }
 
     /**
@@ -538,7 +538,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
      */
     private function getEbsrReceivedEmailCmd($ebsrId)
     {
-        return $this->emailQueue(SendEbsrReceivedCmd::class, $ebsrId);
+        return $this->emailQueue(SendEbsrReceivedCmd::class, ['id' => $ebsrId], $ebsrId);
     }
 
     /**
@@ -547,7 +547,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
      */
     private function getEbsrErrorEmailCmd($ebsrId)
     {
-        return $this->emailQueue(SendEbsrErrorsCmd::class, $ebsrId);
+        return $this->emailQueue(SendEbsrErrorsCmd::class, ['id' => $ebsrId], $ebsrId);
     }
 
     /**

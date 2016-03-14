@@ -68,17 +68,15 @@ trait EmailAwareTrait
      * Adds an email to the queue
      *
      * @param string $cmdClass
+     * @param array $cmdData
      * @param int $entityId
-     * @param int|null $userId
      * @return CreateQueue
      */
-    public function emailQueue($cmdClass, $entityId, $userId = null)
+    public function emailQueue($cmdClass, array $cmdData, $entityId)
     {
         $options =                     [
             'commandClass' => $cmdClass,
-            'commandData' => [
-                'id' => $entityId
-            ],
+            'commandData' => $cmdData,
         ];
 
         return CreateQueue::create(
@@ -86,8 +84,7 @@ trait EmailAwareTrait
                 'entityId' => $entityId,
                 'type' => Queue::TYPE_EMAIL,
                 'status' => Queue::STATUS_QUEUED,
-                'options' => ZendJson::encode($options),
-                'user' => $userId
+                'options' => ZendJson::encode($options)
             ]
         );
     }

@@ -107,13 +107,15 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
                 );
             }
 
-            //update txc inbox records with the new document id and create a task
+            $ebsrId = $submission->getId();
+
+            //update txc inbox records with the new document id, create a task and send confirmation email
             $result->merge(
                 $this->handleSideEffects(
                     [
                         $this->createUpdateTxcInboxPdfCmd($busReg->getId(), $result->getId('document')),
                         $this->createTaskCmd($busReg, self::TASK_SUCCESS_DESC),
-                        $this->emailQueue(SendEbsrRequestMapCmd::class, $submission->getId())
+                        $this->emailQueue(SendEbsrRequestMapCmd::class, ['id' => $ebsrId], $ebsrId)
                     ]
                 )
             );
