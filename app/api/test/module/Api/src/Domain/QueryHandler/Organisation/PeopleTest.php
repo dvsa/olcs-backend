@@ -44,6 +44,7 @@ class PeopleTest extends QueryHandlerTestCase
             ]
         )->once()->andReturn(['SERIALIZED']);
         $mockOrganisation->shouldReceive('isUnlicensed')->andReturn(false);
+        $mockOrganisation->shouldReceive('isMlh')->andReturn(true);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($query)->once()
             ->andReturn($mockOrganisation);
@@ -54,7 +55,8 @@ class PeopleTest extends QueryHandlerTestCase
             'SERIALIZED',
             'isSoleTrader' => 'IS_SOLE_TRADER',
             'isDisqualified' => true,
-            'licence' => null
+            'licence' => null,
+            'organisationIsMlh' => true
         ];
 
         $this->assertSame($expected, $result->serialize());
@@ -87,6 +89,7 @@ class PeopleTest extends QueryHandlerTestCase
         $mockOrganisation->shouldReceive('isUnlicensed')->andReturn(true);
         $mockOrganisation->shouldReceive('getLicences->first')
             ->andReturn($licence);
+        $mockOrganisation->shouldReceive('isMlh')->andReturn(true);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($query)->once()
             ->andReturn($mockOrganisation);
@@ -97,7 +100,8 @@ class PeopleTest extends QueryHandlerTestCase
             'SERIALIZED',
             'isSoleTrader' => 'IS_SOLE_TRADER',
             'isDisqualified' => true,
-            'licence' => ['licence' => 'foo']
+            'licence' => ['licence' => 'foo'],
+            'organisationIsMlh' => true
         ];
 
         $this->assertSame($expected, $result->serialize());
