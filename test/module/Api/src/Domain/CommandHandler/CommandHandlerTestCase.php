@@ -178,25 +178,22 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
      * Shortcut for email queue side effects
      *
      * @param string $emailCmdClass
+     * @param array $cmdData
      * @param int $entityId
      * @param Result $result
-     * @param int|null $user
      */
-    public function expectedEmailQueueSideEffect($emailCmdClass, $entityId, $result, $user = null)
+    public function expectedEmailQueueSideEffect($emailCmdClass, array $cmdData, $entityId, $result)
     {
         $emailOptions = [
             'commandClass' => $emailCmdClass,
-            'commandData' => [
-                'id' => $entityId
-            ],
+            'commandData' => $cmdData
         ];
 
         $emailData = [
             'entityId' => $entityId,
             'type' => QueueEntity::TYPE_EMAIL,
             'status' => QueueEntity::STATUS_QUEUED,
-            'options' => ZendJson::encode($emailOptions),
-            'user' => $user
+            'options' => ZendJson::encode($emailOptions)
         ];
 
         $this->expectedSideEffect(CreateQueueCmd::class, $emailData, $result);

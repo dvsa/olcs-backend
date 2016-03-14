@@ -76,6 +76,7 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
         $id = 99;
         $licenceId = 77;
         $submissionId = 55;
+        $emailParams = ['id' => $submissionId];
         $scale = 'small';
         $xmlFilename = 'filename.xml';
         $documentIdentifier = 'identifier';
@@ -169,7 +170,7 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(CreateTaskCmd::class, $taskData, new Result());
 
-        $this->expectedEmailQueueSideEffect(SendEbsrRequestMapCmd::class, $submissionId, new Result());
+        $this->expectedEmailQueueSideEffect(SendEbsrRequestMapCmd::class, $emailParams, $submissionId, new Result());
 
         $result = $this->sut->handleCommand($command);
 
