@@ -46,9 +46,9 @@ class LicenceTest extends QueryHandlerTestCase
             ->once()
             ->getMock()
             ->shouldReceive('getOrganisation')->andReturn(
-            m::mock(Organisation::class)->shouldReceive('isMlh')->once()
-                ->andReturn(true)
-                ->getMock()
+                m::mock(Organisation::class)->shouldReceive('isMlh')->once()
+                    ->andReturn(true)
+                    ->getMock()
             );
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')

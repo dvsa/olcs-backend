@@ -64,7 +64,6 @@ class VariationTest extends QueryHandlerTestCase
                             ->getMock()
                     )
                     ->getMock()
-
             )
             ->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $application->setStatus((new \Dvsa\Olcs\Api\Entity\System\RefData())->setId('apsts_not_submitted'));
