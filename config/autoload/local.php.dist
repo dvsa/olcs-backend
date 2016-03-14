@@ -231,5 +231,8 @@ return [
                 ]
             ]
         ]
+    ],
+    'vi_extract_files' => [
+        'export_path' => '/tmp/ViExtract'
     ]
 ];
