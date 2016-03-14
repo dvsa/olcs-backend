@@ -434,4 +434,58 @@ class IrfoPsvAuthEntityTest extends EntityTester
 
         $this->entity->approve($newStatus, ['FEE']);
     }
+
+    /**
+     * @dataProvider isRenewableStates
+     */
+    public function testIsRenewable($input, $expected)
+    {
+        $status = new RefData();
+        $status->setId($input);
+        $this->entity->setStatus($status);
+
+        $this->assertEquals($expected, $this->entity->isRenewable());
+    }
+
+    public function isRenewableStates()
+    {
+        return [
+            [Entity::STATUS_PENDING, true],
+            [Entity::STATUS_CNS, false],
+            [Entity::STATUS_RENEW, true],
+            [Entity::STATUS_APPROVED, true],
+            [Entity::STATUS_WITHDRAWN, false],
+            [Entity::STATUS_GRANTED, true],
+            [Entity::STATUS_REFUSED, false]
+        ];
+    }
+
+    public function testRenew()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_PENDING);
+        $this->entity->setStatus($status);
+
+        $newStatus = new RefData();
+        $newStatus->setId(Entity::STATUS_RENEW);
+
+        $this->entity->renew($newStatus);
+
+        $this->assertEquals($newStatus, $this->entity->getStatus());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testRenewThrowsException()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_WITHDRAWN);
+        $this->entity->setStatus($status);
+
+        $newStatus = new RefData();
+        $newStatus->setId(Entity::STATUS_RENEW);
+
+        $this->entity->renew($newStatus);
+    }
 }

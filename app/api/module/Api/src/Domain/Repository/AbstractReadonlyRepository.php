@@ -258,6 +258,10 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
      */
     public function fetchByIds(array $ids, $hydrateMode = Query::HYDRATE_OBJECT)
     {
+        if (empty($ids)) {
+            return [];
+        }
+
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()

@@ -419,4 +419,56 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
 
         return $this;
     }
+
+    /**
+     * Is renewable?
+     *
+     * @return bool
+     */
+    public function isRenewable()
+    {
+        return $this->isRenewableState();
+    }
+
+    /**
+     * Is in a renewable state
+     *
+     * @return bool
+     */
+    private function isRenewableState()
+    {
+        if (in_array(
+            $this->getStatus()->getId(),
+            [
+                self::STATUS_APPROVED,
+                self::STATUS_GRANTED,
+                self::STATUS_PENDING,
+                self::STATUS_RENEW,
+            ]
+        )) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Renew
+     *
+     * @param RefData $status
+     * @return $this
+     * @throws BadRequestException
+     */
+    public function renew(RefData $status)
+    {
+        if (!$this->isRenewable()) {
+            throw new BadRequestException(
+                'Irfo Psv Auth cannot be renewed'
+            );
+        }
+
+        $this->setStatus($status);
+
+        return $this;
+    }
 }
