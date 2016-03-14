@@ -31,5 +31,6 @@ return [
     CommandHandler\Irfo\UpdateIrfoPsvAuth::class                                  => IsInternalUser::class,
     CommandHandler\Irfo\WithdrawIrfoGvPermit::class                               => IsInternalUser::class,
     CommandHandler\Irfo\WithdrawIrfoPsvAuth::class                                => IsInternalUser::class,
+    CommandHandler\Irfo\RenewIrfoPsvAuth::class                                   => IsInternalUser::class,
     CommandHandler\Irfo\ResetIrfoPsvAuth::class                                   => IsInternalUser::class,
 ];
