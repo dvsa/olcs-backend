@@ -29,7 +29,6 @@ use Zend\Http\Header\ContentSecurityPolicy;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
-use Dvsa\Olcs\Api\Service\File\File;
 use org\bovigo\vfs\vfsStream;
 
 /**
