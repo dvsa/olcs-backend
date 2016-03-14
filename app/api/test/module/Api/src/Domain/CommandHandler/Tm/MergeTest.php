@@ -42,6 +42,7 @@ class MergeTest extends CommandHandlerTestCase
         $data = [
             'id' => 3,
             'recipientTransportManager' => 3,
+            'confirm' => false
         ];
 
         $mockDonorTm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
@@ -63,6 +64,7 @@ class MergeTest extends CommandHandlerTestCase
         $data = [
             'id' => 3,
             'recipientTransportManager' => 9,
+            'confirm' => false
         ];
 
         $mockDonorTm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
@@ -90,6 +92,7 @@ class MergeTest extends CommandHandlerTestCase
         $data = [
             'id' => 3,
             'recipientTransportManager' => 9,
+            'confirm' => true
         ];
 
         $mockDonorTm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
@@ -115,6 +118,7 @@ class MergeTest extends CommandHandlerTestCase
         $data = [
             'id' => 3,
             'recipientTransportManager' => 9,
+            'confirm' => false
         ];
 
         $stubLicence = m::mock(\Dvsa\Olcs\Api\Entity\Licence\Licence::class);
@@ -179,6 +183,7 @@ class MergeTest extends CommandHandlerTestCase
         $data = [
             'id' => 3,
             'recipientTransportManager' => 9,
+            'confirm' => false
         ];
 
         $mockDonorTm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
@@ -247,6 +252,7 @@ class MergeTest extends CommandHandlerTestCase
         $data = [
             'id' => 3,
             'recipientTransportManager' => 9,
+            'confirm' => false
         ];
 
         $mockDonorTm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
@@ -295,6 +301,7 @@ class MergeTest extends CommandHandlerTestCase
         $data = [
             'id' => 3,
             'recipientTransportManager' => 9,
+            'confirm' => false
         ];
 
         $mockDonorTm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
@@ -348,6 +355,7 @@ class MergeTest extends CommandHandlerTestCase
         $data = [
             'id' => 3,
             'recipientTransportManager' => 9,
+            'confirm' => false
         ];
 
         $mockDonorTm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
@@ -396,6 +404,7 @@ class MergeTest extends CommandHandlerTestCase
         $data = [
             'id' => 3,
             'recipientTransportManager' => 9,
+            'confirm' => false
         ];
 
         $mockDonorTm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
@@ -444,6 +453,7 @@ class MergeTest extends CommandHandlerTestCase
         $data = [
             'id' => 3,
             'recipientTransportManager' => 9,
+            'confirm' => false
         ];
 
         $mockDonorTm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
