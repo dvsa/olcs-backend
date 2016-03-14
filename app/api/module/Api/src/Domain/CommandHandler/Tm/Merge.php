@@ -31,8 +31,9 @@ final class Merge extends AbstractCommandHandler implements TransactionedInterfa
         $donorTm = $this->getRepo()->fetchById($command->getId());
         /* @var $recipientTm TransportManager */
         $recipientTm = $this->getRepo()->fetchById($command->getRecipientTransportManager());
+        $confirm = $command->getConfirm();
 
-        $this->validate($donorTm, $recipientTm);
+        $this->validate($donorTm, $recipientTm, $confirm);
 
         $this->transferLva($donorTm, $recipientTm);
         $this->transferCases($donorTm, $recipientTm);
@@ -72,10 +73,11 @@ final class Merge extends AbstractCommandHandler implements TransactionedInterfa
      *
      * @param TransportManager $donorTm
      * @param TransportManager $recipientTm
+     * @param bool $confirm
      *
      * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
-    protected function validate(TransportManager $donorTm, TransportManager $recipientTm)
+    protected function validate(TransportManager $donorTm, TransportManager $recipientTm, $confirm)
     {
         $messages = [];
         if ($donorTm === $recipientTm) {
@@ -84,8 +86,9 @@ final class Merge extends AbstractCommandHandler implements TransactionedInterfa
             );
         }
 
-        // If both the losing and winning transport manager has a linked user account, an error is raised
-        if (!$donorTm->getUsers()->isEmpty() && !$recipientTm->getUsers()->isEmpty()) {
+        // If both the losing and winning transport manager has a linked user account and there is no confirmation,
+        // an error is raised
+        if (!$donorTm->getUsers()->isEmpty() && !$recipientTm->getUsers()->isEmpty() && !$confirm) {
             $messages['TM_MERGE_BOTH_HAVE_USER_ACCOUNTS'] = 'Both transport managers have linked user accounts. You '
                 . 'must remove one of the user accounts prior to merge.';
         }
