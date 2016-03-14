@@ -60,6 +60,9 @@ class Publication extends AbstractRepository
 
         $this->getQueryBuilder()->modifyQuery($qb);
 
-        return $qb->getQuery()->getResult();
+        return [
+            'results' => $qb->getQuery()->getResult(),
+            'count' => $this->fetchPaginatedCount($qb)
+        ];
     }
 }
