@@ -253,7 +253,14 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     }
 
     /**
-     * Determine is an organisation isMlh (has at least one valid licence)
+     * Determine is an organisation isMlh (Multiple Licence Holder has at least two valid licences)
+     * Note: Licences are considered valid if in one of the following states:
+     *
+     *  Under consideration
+     *  Granted
+     *  Valid
+     *  Curtailed
+     *  Suspended
      *
      * @param $id
      * @return bool
@@ -265,12 +272,18 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
             $criteria->expr()->in(
                 'status',
                 [
-                    LicenceEntity::LICENCE_STATUS_VALID
+                    LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+                    LicenceEntity::LICENCE_STATUS_GRANTED,
+                    LicenceEntity::LICENCE_STATUS_VALID,
+                    LicenceEntity::LICENCE_STATUS_CURTAILED,
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED
                 ]
             )
         );
 
-        return (bool) count($this->getLicences()->matching($criteria));
+        $totalLicences = $this->getLicences()->matching($criteria)->count();
+
+        return (bool) ($totalLicences > 1);
     }
 
     /**

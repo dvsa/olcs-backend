@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Note as NoteRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Query\Application\Application as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -57,6 +58,11 @@ class VariationTest extends QueryHandlerTestCase
                     ->shouldReceive('getId')
                     ->andReturn(222)
                     ->once()
+                    ->shouldReceive('getOrganisation')->andReturn(
+                        m::mock(OrganisationEntity::class)->shouldReceive('isMlh')->once()
+                            ->andReturn(true)
+                            ->getMock()
+                    )
                     ->getMock()
             )
             ->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
@@ -100,6 +106,7 @@ class VariationTest extends QueryHandlerTestCase
             'isPublishable' => true,
             'latestNote' => 'latest note',
             'disableCardPayments' => false,
+            'isMlh' => true
         ];
 
         $this->assertEquals($expected, $result->serialize());

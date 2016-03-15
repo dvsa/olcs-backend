@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Licence\Licence;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -43,7 +44,12 @@ class LicenceTest extends QueryHandlerTestCase
             ->shouldReceive('getNiFlag')
             ->andReturn('N')
             ->once()
-            ->getMock();
+            ->getMock()
+            ->shouldReceive('getOrganisation')->andReturn(
+                m::mock(Organisation::class)->shouldReceive('isMlh')->once()
+                    ->andReturn(true)
+                    ->getMock()
+            );
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($query)
@@ -61,7 +67,8 @@ class LicenceTest extends QueryHandlerTestCase
         $expected = [
             'foo' => 'bar',
             'sections' => ['bar', 'cake'],
-            'niFlag' => 'N'
+            'niFlag' => 'N',
+            'isMlh' => true
         ];
 
         $this->assertEquals($expected, $result->serialize());
