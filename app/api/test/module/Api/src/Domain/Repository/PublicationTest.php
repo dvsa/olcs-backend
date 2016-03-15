@@ -115,11 +115,19 @@ class PublicationTest extends RepositoryTestCase
         return $mockQb;
     }
 
+    /**
+     * tests fetchPendingList
+     */
     public function testFetchPendingList()
     {
         $query = m::mock(PendingList::class);
 
+        $count = 1;
         $results = [0 => m::mock(PublicationEntity::class)];
+        $resultArray = [
+            'results' => $results,
+            'count' => $count
+        ];
 
         $mockQb = m::mock(QueryBuilder::class);
         $mockQb->shouldReceive('expr->in')->with('m.pubStatus', ':pubStatus')->once()->andReturnSelf();
@@ -141,10 +149,15 @@ class PublicationTest extends RepositoryTestCase
 
         $this->sut->shouldReceive('buildDefaultListQuery')->once()->with($mockQb, $query)->andReturnSelf();
 
+        $this->sut->shouldReceive('fetchPaginatedCount')
+            ->once()
+            ->with($mockQb)
+            ->andReturn($count);
+
         $this->em->shouldReceive('getRepository')
             ->with(PublicationEntity::class)
             ->andReturn($repo);
 
-        $this->sut->fetchPendingList($query);
+        $this->assertEquals($resultArray, $this->sut->fetchPendingList($query));
     }
 }
