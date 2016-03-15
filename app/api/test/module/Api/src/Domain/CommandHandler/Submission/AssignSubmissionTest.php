@@ -387,9 +387,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
                     ->setLicence(
                         m::mock(LicenceEntity::class)->makePartial()
                             ->setId($licenceId)
-
                     )
-
             );
 
         $task = $this->getMockTask();
