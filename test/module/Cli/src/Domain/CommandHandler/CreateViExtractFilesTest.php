@@ -27,10 +27,8 @@ class CreateViExtractFilesTest extends CommandHandlerTestCase
         $this->mockRepo('ViVhlView', Repository\ViVhlView::class);
 
         $this->mockedSmServices['Config'] = [
-            'batch_config' => [
-                'vi-extract-files' => [
-                    'export-path' => '/tmp'
-                ]
+            'vi_extract_files' => [
+                'export_path' => '/tmp/ViExtract'
             ]
         ];
 
