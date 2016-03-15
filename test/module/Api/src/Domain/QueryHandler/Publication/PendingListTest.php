@@ -28,23 +28,28 @@ class PendingListTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
+    /**
+     * tests retrieving a list of pending publications (status new or generated)
+     */
     public function testHandleQuery()
     {
         $count = 25;
         $query = Qry::create([]);
+        $serializedResult = 'foo';
 
         $mockResult = m::mock();
-        $mockResult->shouldReceive('serialize')->once()->andReturn('foo');
+        $mockResult->shouldReceive('serialize')->once()->andReturn($serializedResult);
+
+        $queryResult = [
+            'results' => [0 =>$mockResult],
+            'count' => $count
+        ];
 
         $this->repoMap['Publication']->shouldReceive('fetchPendingList')
-            ->andReturn([$mockResult]);
-
-        $this->repoMap['Publication']->shouldReceive('fetchCount')
-            ->with($query)
-            ->andReturn($count);
+            ->andReturn($queryResult);
 
         $result = $this->sut->handleQuery($query);
         $this->assertEquals($result['count'], $count);
-        $this->assertEquals($result['result'], ['foo']);
+        $this->assertEquals($result['result'], [$serializedResult]);
     }
 }
