@@ -189,9 +189,6 @@ return [
     'batch_config' => [
         'remove-read-audit' => [
             'max-age' => '1 year'
-        ],
-        'vi-extract-files' => [
-            'export-path' => '/tmp'
         ]
     ]
 ];
