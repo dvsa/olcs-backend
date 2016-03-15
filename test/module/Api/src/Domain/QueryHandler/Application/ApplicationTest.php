@@ -58,9 +58,13 @@ class ApplicationTest extends QueryHandlerTestCase
                 ->shouldReceive('getId')
                 ->andReturn(222)
                 ->once()
+                ->shouldReceive('getOrganisation')->andReturn(
+                    m::mock(Organisation::class)->shouldReceive('isMlh')->once()
+                        ->andReturn(true)
+                        ->getMock()
+                )
                 ->getMock()
             )
-            ->once()
             ->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $application->setStatus((new \Dvsa\Olcs\Api\Entity\System\RefData())->setId('apsts_not_submitted'));
 
@@ -103,6 +107,7 @@ class ApplicationTest extends QueryHandlerTestCase
             'isPublishable' => true,
             'latestNote' => 'latest note',
             'disableCardPayments' => false,
+            'isMlh' => true
         ];
 
         $this->assertEquals($expected, $result->serialize());

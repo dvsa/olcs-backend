@@ -38,7 +38,8 @@ class People extends AbstractQueryHandler
             [
                 'isSoleTrader' => $organisation->isSoleTrader(),
                 'isDisqualified' => $organisation->getDisqualifications()->count() > 0,
-                'licence' => $licence
+                'licence' => $licence,
+                'organisationIsMlh' => $organisation->isMlh()
             ]
         );
     }
