@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication\Context\Licence;
 
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Service\Publication\Context\AbstractContext;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareTrait;
@@ -19,17 +21,19 @@ final class LicenceAddress extends AbstractContext implements AddressFormatterAw
     public function provide(PublicationLink $publicationLink, \ArrayObject $context)
     {
         $licence = $publicationLink->getLicence();
-        if (!empty($licence)) {
-            $licenceAddress = $publicationLink->getLicence()->getCorrespondenceCd();
+        $licenceAddress = '';
 
-            if ($licenceAddress === null) {
-                return $context;
+        //make sure we have a licence
+        if ($licence instanceof LicenceEntity) {
+            $contactDetails = $licence->getCorrespondenceCd();
+
+            //make sure the licence has contact details
+            if ($contactDetails instanceof ContactDetailsEntity) {
+                $licenceAddress = $this->getAddressFormatter()->format($contactDetails->getAddress());
             }
-
-            $context->offsetSet('licenceAddress', $this->getAddressFormatter()->format($licenceAddress->getAddress()));
-        } else {
-            $context->offsetSet('licenceAddress', '');
         }
+
+        $context->offsetSet('licenceAddress', $licenceAddress);
 
         return $context;
     }
