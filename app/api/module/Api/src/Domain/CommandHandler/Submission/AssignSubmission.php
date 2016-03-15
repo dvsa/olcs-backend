@@ -54,7 +54,7 @@ final class AssignSubmission extends AbstractCommandHandler implements
         $result->addId('submission', $submissionEntity->getId());
         $result->addMessage('Submission updated successfully');
 
-        $result->merge($this->handleSideEffect($this->upsertTaskCommand($command)));
+        $result->merge($this->handleSideEffect($this->createTaskCommand($command)));
 
         return $result;
     }
@@ -94,11 +94,13 @@ final class AssignSubmission extends AbstractCommandHandler implements
     }
 
     /**
+     * This method fetches an existing task for the submission, if it exists, close it and create a new one.
+     *
      * @param Cmd $command
      * @return static
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
-    private function upsertTaskCommand(Cmd $command)
+    private function createTaskCommand(Cmd $command)
     {
         $submission = $this->getRepo()->fetchWithCaseAndLicenceById($command->getId());
 
@@ -113,49 +115,33 @@ final class AssignSubmission extends AbstractCommandHandler implements
             $teamId = $recipientUser->getTeam()->getId();
         }
 
-        // if task exists, reassign it, otherwise create
+        // if task exists, mark complete, and create another
         if (!empty($task)) {
-            $task->setAssignedToUser($recipientUser->getId());
-            $task->setAssignedToTeam($teamId);
-            $task->setUrgent($command->getUrgent());
-
-            // reassign existing task. Existing transfer command validates that all mandatory fields. Hence passing
-            // existing data back through despite only changing assigned_to and urgency fields
-            return UpdateTaskDto::create(
-                [
-                    'id' => $task->getId(),
-                    'version' => $task->getVersion(),
-                    'description' => $task->getDescription(),
-                    'actionDate' => $task->getActionDate(),
-                    'urgent' => $command->getUrgent(),
-                    'category' => $task->getCategory()->getId(),
-                    'subCategory' => $task->getSubCategory()->getId(),
-                    'assignedToUser' => $recipientUser->getId(),
-                    'assignedToTeam' => $teamId
-                ]
-            );
-        } else {
-            // create new task
-            $description = 'Licence ' . $submission->getCase()->getLicence()->getId() .
-                ' Case ' . $submission->getCase()->getId() .
-                ' Submission ' . $submission->getId();
-
-            $data = [
-                'category' => TaskEntity::CATEGORY_SUBMISSION,
-                'subCategory' => TaskEntity::SUBCATEGORY_SUBMISSION_ASSIGNMENT,
-                'description' => $description,
-                'actionDate' => date('Y-m-d'),
-                'assignedToUser' => $recipientUser->getId(),
-                'assignedToTeam' => $teamId,
-                'assignedByUser' => $this->getCurrentUser()->getId(),
-                'case' => $submission->getCase()->getId(),
-                'submission' => $submission->getId(),
-                'licence' => $submission->getCase()->getLicence()->getId(),
-                'urgent' => $command->getUrgent(),
-                'isClosed' => 0
-            ];
-
-            return CreateTaskCmd::create($data);
+            $task->setIsClosed('Y');
+            $this->getRepo('Task')->save($task);
+            $this->result->addMessage($task->getId() . ' Task closed');
         }
+
+        // create new task
+        $description = 'Licence ' . $submission->getCase()->getLicence()->getId() .
+            ' Case ' . $submission->getCase()->getId() .
+            ' Submission ' . $submission->getId();
+
+        $data = [
+            'category' => TaskEntity::CATEGORY_SUBMISSION,
+            'subCategory' => TaskEntity::SUBCATEGORY_SUBMISSION_ASSIGNMENT,
+            'description' => $description,
+            'actionDate' => date('Y-m-d'),
+            'assignedToUser' => $recipientUser->getId(),
+            'assignedToTeam' => $teamId,
+            'assignedByUser' => $this->getCurrentUser()->getId(),
+            'case' => $submission->getCase()->getId(),
+            'submission' => $submission->getId(),
+            'licence' => $submission->getCase()->getLicence()->getId(),
+            'urgent' => $command->getUrgent(),
+            'isClosed' => 0
+        ];
+
+        return CreateTaskCmd::create($data);
     }
 }
