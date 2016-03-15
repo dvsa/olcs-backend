@@ -47,7 +47,7 @@ final class PreviousApplicationPublicationNo extends AbstractContext
         /** @var PublicationLink $previousPublication */
         $previousPublication = $this->handleQuery($query);
 
-        if (!empty($previousPublication)) {
+        if ($previousPublication instanceof PublicationLink) {
             $context->offsetSet('previousPublication', $previousPublication->getPublication()->getPublicationNo());
         }
 
