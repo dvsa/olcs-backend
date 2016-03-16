@@ -12,6 +12,7 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 
 /**
  * Traffic Area
@@ -57,5 +58,24 @@ class TrafficArea extends AbstractRepository
         $qb->andWhere($qb->expr()->in($this->alias . '.txcName', $txcNames));
 
         return $qb->getQuery()->execute();
+    }
+
+    /**
+     * Apply list filters
+     *
+     * @param string $allowedOperatorLocation
+     * @return array
+     */
+    public function fetchListForNewApplication($allowedOperatorLocation)
+    {
+        $qb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->modifyQuery($qb);
+        if ($allowedOperatorLocation !== null) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.isNi', ':isNi'))
+                ->setParameter(
+                    'isNi', $allowedOperatorLocation === OrganisationEntity::ALLOWED_OPERATOR_LOCATION_NI ? '1' : '0'
+                );
+        }
+        return $qb->getQuery()->getResult();
     }
 }

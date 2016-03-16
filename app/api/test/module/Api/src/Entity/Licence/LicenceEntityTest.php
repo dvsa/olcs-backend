@@ -918,4 +918,21 @@ class LicenceEntityTest extends EntityTester
         $licence->setDocuments($documentsCollection);
         $this->assertEquals($expected, $licence->getLicenceDocuments('category', 'subCategory'));
     }
+
+    public function testGetOutstandingOrganisations()
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+
+        $allApplications = m::mock(ArrayCollection::class);
+        $outstandingApplications = m::mock(ArrayCollection::class);
+        $licence->setApplications($allApplications);
+
+        $allApplications->shouldReceive('matching')
+            ->once()
+            ->with(m::type(Criteria::class))
+            ->andReturn($outstandingApplications);
+
+        $this->assertEquals($outstandingApplications, $licence->getOutstandingApplications(true));
+
+    }
 }

@@ -59,8 +59,13 @@ class VariationTest extends QueryHandlerTestCase
                     ->andReturn(222)
                     ->once()
                     ->shouldReceive('getOrganisation')->andReturn(
-                        m::mock(OrganisationEntity::class)->shouldReceive('isMlh')->once()
+                        m::mock(OrganisationEntity::class)
+                            ->shouldReceive('isMlh')
+                            ->once()
                             ->andReturn(true)
+                            ->shouldReceive('getAllowedOperatorLocation')
+                            ->once()
+                            ->andReturn('GB')
                             ->getMock()
                     )
                     ->getMock()
@@ -106,7 +111,8 @@ class VariationTest extends QueryHandlerTestCase
             'isPublishable' => true,
             'latestNote' => 'latest note',
             'disableCardPayments' => false,
-            'isMlh' => true
+            'isMlh' => true,
+            'allowedOperatorLocation' => 'GB'
         ];
 
         $this->assertEquals($expected, $result->serialize());
