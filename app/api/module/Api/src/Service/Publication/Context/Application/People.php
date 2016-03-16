@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Publication\Context\Application;
 
 use Dvsa\Olcs\Api\Service\Publication\Context\AbstractContext;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
  * People
@@ -21,11 +22,17 @@ final class People extends AbstractContext
     public function provide(PublicationLink $publicationLink, \ArrayObject $context)
     {
         $people = [];
-        // populate with all people from licence
-        foreach ($publicationLink->getLicence()->getOrganisation()->getOrganisationPersons() as $op) {
-            /* @var $op \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson */
-            $people[$op->getPerson()->getId()] = $op->getPerson();
+
+        // if we have a licence, populate with all people from that licence
+        $licence = $publicationLink->getLicence();
+
+        if ($licence instanceof LicenceEntity) {
+            foreach ($licence->getOrganisation()->getOrganisationPersons() as $op) {
+                /* @var $op \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson */
+                $people[$op->getPerson()->getId()] = $op->getPerson();
+            }
         }
+
         // iterate application people
         foreach ($publicationLink->getApplication()->getApplicationOrganisationPersons() as $aop) {
             /* @var $aop \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson */

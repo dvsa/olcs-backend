@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
 
 /**
@@ -30,8 +31,11 @@ class LicenceAddressTest extends MockeryTestCase
         $contactDetailsEntityMock = m::mock(ContactDetailsEntity::class);
         $contactDetailsEntityMock->shouldReceive('getAddress')->once()->andReturn($addressEntityMock);
 
-        $publication = m::mock(PublicationLink::class);
-        $publication->shouldReceive('getLicence->getCorrespondenceCd')->once()->andReturn($contactDetailsEntityMock);
+        $licenceEntityMock = m::mock(LicenceEntity::class);
+        $licenceEntityMock->shouldReceive('getCorrespondenceCd')->once()->andReturn($contactDetailsEntityMock);
+
+        $publicationLink = m::mock(PublicationLink::class);
+        $publicationLink->shouldReceive('getLicence')->once()->andReturn($licenceEntityMock);
 
         $mockAddressFormatter = m::mock(FormatAddress::class);
         $mockAddressFormatter->shouldReceive('format')->once()->andReturn($licenceAddress);
@@ -45,7 +49,7 @@ class LicenceAddressTest extends MockeryTestCase
 
         $expectedOutput = new \ArrayObject($output);
 
-        $this->assertEquals($expectedOutput, $sut->provide($publication, new \ArrayObject()));
+        $this->assertEquals($expectedOutput, $sut->provide($publicationLink, new \ArrayObject()));
     }
 
     /**
@@ -55,13 +59,41 @@ class LicenceAddressTest extends MockeryTestCase
      */
     public function testProvideWithNoAddress()
     {
-        $publication = m::mock(PublicationLink::class);
-        $publication->shouldReceive('getLicence->getCorrespondenceCd')->andReturn(null);
+        $licenceEntityMock = m::mock(LicenceEntity::class);
+        $licenceEntityMock->shouldReceive('getCorrespondenceCd')->once()->andReturn(null);
+
+        $publicationLink = m::mock(PublicationLink::class);
+        $publicationLink->shouldReceive('getLicence')->andReturn($licenceEntityMock);
 
         $sut = new LicenceAddress(m::mock(QueryHandlerInterface::class));
 
-        $expectedOutput = new \ArrayObject();
+        $output = [
+            'licenceAddress' => ''
+        ];
 
-        $this->assertEquals($expectedOutput, $sut->provide($publication, new \ArrayObject()));
+        $expectedOutput = new \ArrayObject($output);
+
+        $this->assertEquals($expectedOutput, $sut->provide($publicationLink, new \ArrayObject()));
+    }
+
+    /**
+     * @group publicationFilter
+     *
+     * Test the licence address filter
+     */
+    public function testProvideWithNoLicence()
+    {
+        $publicationLink = m::mock(PublicationLink::class);
+        $publicationLink->shouldReceive('getLicence')->andReturn(null);
+
+        $sut = new LicenceAddress(m::mock(QueryHandlerInterface::class));
+
+        $output = [
+            'licenceAddress' => ''
+        ];
+
+        $expectedOutput = new \ArrayObject($output);
+
+        $this->assertEquals($expectedOutput, $sut->provide($publicationLink, new \ArrayObject()));
     }
 }

@@ -47,7 +47,7 @@ final class ConditionUndertaking extends AbstractContext implements AddressForma
     /**
      * Get the ConditionUndertaking text
      *
-     * @param ConditionUndertaking $conditionUndertaking
+     * @param ConditionUndertakingEntity $conditionUndertaking
      *
      * @return string
      */

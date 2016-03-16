@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Publication\Context\Licence;
 use Dvsa\Olcs\Api\Service\Publication\Context\AbstractContext;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 
 /**
  * Licence No
@@ -22,14 +23,14 @@ final class LicenceNo extends AbstractContext
         $licenceNo = '';
         $licence = $publicationLink->getLicence();
 
-        if (empty($licence)) {
+        if (!$licence instanceof LicenceEntity) {
             $application = $publicationLink->getApplication();
-            if (!empty($application)) {
+            if ($application instanceof ApplicationEntity) {
                 $licence = $application->getLicence();
             }
         }
 
-        if (isset($licence)) {
+        if ($licence instanceof LicenceEntity) {
             $licenceNo = $licence->getLicNo();
         }
 
