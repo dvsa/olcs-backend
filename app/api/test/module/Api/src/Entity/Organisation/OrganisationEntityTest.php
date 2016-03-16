@@ -413,4 +413,115 @@ class OrganisationEntityTest extends EntityTester
 
         $this->assertEquals($expectedEmails, $entity->getAdminEmailAddresses());
     }
+
+    /**
+     * Test get allowed operator location from applications
+     *
+     * @param int $niFlag
+     * @param string $allowedOperatorLocation
+     * @dataProvider allowedOperatorLocationProviderApplications
+     */
+    public function testGetAllowedOperatorLocationFromApplications($niFlag, $allowedOperatorLocation)
+    {
+        $mockOutstandingApplications = new ArrayCollection();
+        $mockOutstandingApplications->add(
+            m::mock()
+            ->shouldReceive('getNiFlag')
+            ->andReturn($niFlag)
+            ->twice()
+            ->getMock()
+        );
+        /** @var Entity $organisation */
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getOutstandingApplications')
+            ->with(true)
+            ->andReturn($mockOutstandingApplications)
+            ->once()
+            ->getMock();
+
+        $this->assertEquals($allowedOperatorLocation, $organisation->getAllowedOperatorLocation());
+    }
+
+    /**
+     * Allowed operator location provider (applications)
+     */
+    public function allowedOperatorLocationProviderApplications()
+    {
+        return [
+            ['N', 'GB'],
+            ['Y', 'NI'],
+        ];
+    }
+
+    /**
+     * Test get allowed operator location from licences
+     *
+     * @param string $trafficArea
+     * @param string $allowedOperatorLocation
+     * @dataProvider allowedOperatorLocationProviderLicences
+     */
+    public function testGetAllowedOperatorLocationFromLicences($trafficArea, $allowedOperatorLocation)
+    {
+        $mockTrafficArea = m::mock()
+            ->shouldReceive('getId')
+            ->once()
+            ->andReturn($trafficArea)
+            ->getMock();
+
+        $mockOutstandingApplications = new ArrayCollection();
+        $mockLicences = new ArrayCollection();
+        $mockLicences->add(
+            m::mock()
+            ->shouldReceive('getTrafficArea')
+            ->andReturn($mockTrafficArea)
+            ->twice()
+            ->getMock()
+        );
+
+        /** @var Entity $organisation */
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getOutstandingApplications')
+            ->with(true)
+            ->andReturn($mockOutstandingApplications)
+            ->once()
+            ->shouldReceive('getLicences')
+            ->andReturn($mockLicences)
+            ->once()
+            ->getMock();
+
+        $this->assertEquals($allowedOperatorLocation, $organisation->getAllowedOperatorLocation());
+    }
+
+    /**
+     * Allowed operator location provider (licences)
+     */
+    public function allowedOperatorLocationProviderLicences()
+    {
+        return [
+            ['N', 'NI'],
+            ['B', 'GB'],
+        ];
+    }
+
+    /**
+     * Test get allowed operator location with no licences and no outstanding applications
+     */
+    public function testGetAllowedOperatorLocationDefault()
+    {
+        $mockOutstandingApplications = new ArrayCollection();
+        $mockLicences = new ArrayCollection();
+
+        /** @var Entity $organisation */
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getOutstandingApplications')
+            ->with(true)
+            ->andReturn($mockOutstandingApplications)
+            ->once()
+            ->shouldReceive('getLicences')
+            ->andReturn($mockLicences)
+            ->once()
+            ->getMock();
+
+        $this->assertNull($organisation->getAllowedOperatorLocation());
+    }
 }

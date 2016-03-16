@@ -602,21 +602,23 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
-     * Get Outstanding applications of status "under consideration" or "granted"
+     * Get Outstanding applications of status "under consideration" or "granted" and optionally "not submitted"
      *
+     * @param bool $includeNotSubmitted
      * @return \Doctrine\Common\Collections\Collection|static
      */
-    public function getOutstandingApplications()
+    public function getOutstandingApplications($includeNotSubmitted = false)
     {
+        $status = [
+            Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+            Application::APPLICATION_STATUS_GRANTED
+        ];
+        if ($includeNotSubmitted) {
+            $status[] = Application::APPLICATION_STATUS_NOT_SUBMITTED;
+        }
         $criteria = Criteria::create()
             ->where(
-                Criteria::expr()->in(
-                    'status',
-                    [
-                        Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
-                        Application::APPLICATION_STATUS_GRANTED
-                    ]
-                )
+                Criteria::expr()->in('status', $status)
             );
         return $this->getApplications()->matching($criteria);
     }

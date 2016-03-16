@@ -59,8 +59,13 @@ class ApplicationTest extends QueryHandlerTestCase
                 ->andReturn(222)
                 ->once()
                 ->shouldReceive('getOrganisation')->andReturn(
-                    m::mock(Organisation::class)->shouldReceive('isMlh')->once()
+                    m::mock(Organisation::class)
+                        ->shouldReceive('isMlh')
+                        ->once()
                         ->andReturn(true)
+                        ->shouldReceive('getAllowedOperatorLocation')
+                        ->once()
+                        ->andReturn('GB')
                         ->getMock()
                 )
                 ->getMock()
@@ -107,7 +112,8 @@ class ApplicationTest extends QueryHandlerTestCase
             'isPublishable' => true,
             'latestNote' => 'latest note',
             'disableCardPayments' => false,
-            'isMlh' => true
+            'isMlh' => true,
+            'allowedOperatorLocation' => 'GB'
         ];
 
         $this->assertEquals($expected, $result->serialize());
