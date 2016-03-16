@@ -452,7 +452,7 @@ class Fee extends AbstractRepository
         $this->getQueryBuilder()
             ->filterByLicence($query->getLicence())
             ->filterByApplication($query->getApplication())
-            ->filterByIds($query->getIds());
+            ->filterByIds(!empty($query->getIds()) ? $query->getIds() : null);
 
         if ($query->getOrganisation() !== null) {
             // all fees linked to the organisation by irfo_gv_permit_id or irfo_psv_auth_id
