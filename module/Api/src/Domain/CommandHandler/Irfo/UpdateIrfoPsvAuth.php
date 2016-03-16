@@ -20,9 +20,11 @@ use Doctrine\ORM\Query;
  */
 final class UpdateIrfoPsvAuth extends AbstractCommandHandler implements TransactionedInterface
 {
+    use IrfoPsvAuthFeeTrait;
+
     protected $repoServiceName = 'IrfoPsvAuth';
 
-    protected $extraRepos = ['IrfoPsvAuthNumber'];
+    protected $extraRepos = ['IrfoPsvAuthNumber', 'FeeType'];
 
     /**
      * Handle command
@@ -33,6 +35,8 @@ final class UpdateIrfoPsvAuth extends AbstractCommandHandler implements Transact
      */
     public function handleCommand(CommandInterface $command)
     {
+        $result = new Result();
+
         $irfoPsvAuth = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $irfoPsvAuth->update(
@@ -76,12 +80,21 @@ final class UpdateIrfoPsvAuth extends AbstractCommandHandler implements Transact
             $irfoPsvAuth->setExemptionDetails($command->getExemptionDetails());
         }
 
+        if ($irfoPsvAuth->getStatus()->getId() === IrfoPsvAuth::STATUS_RENEW) {
+            // change status to pending
+            $irfoPsvAuth->setStatus(
+                $this->getRepo()->getRefdataReference(IrfoPsvAuth::STATUS_PENDING)
+            );
+
+            // generate application fee
+            $result->merge($this->generateApplicationFee($irfoPsvAuth));
+        }
+
         $this->getRepo()->save($irfoPsvAuth);
 
         // deal with IrfoPsvAuthNumbers
         $this->processIrfoPsvAuthNumbers($irfoPsvAuth, $command->getIrfoPsvAuthNumbers());
 
-        $result = new Result();
         $result->addId('irfoPsvAuth', $irfoPsvAuth->getId());
         $result->addMessage('IRFO PSV Auth updated successfully');
 
