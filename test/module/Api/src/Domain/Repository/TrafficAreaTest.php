@@ -61,4 +61,25 @@ class TrafficAreaTest extends RepositoryTestCase
             $valueOptions
         );
     }
+
+    public function testFetchListForNewApplication()
+    {
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->once()
+            ->andReturn($mockQb);
+
+        $mockQb->shouldReceive('expr->eq')->with('m.isNi', ':isNi')->andReturn('expr')->once();
+        $mockQb->shouldReceive('andWhere')->with('expr')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('isNi', 0)->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('results')->getMock();
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once();
+
+        $this->assertEquals('results', $this->sut->fetchListForNewApplication('GB'));
+    }
 }

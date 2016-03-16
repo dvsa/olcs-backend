@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 
 /**
@@ -36,6 +37,9 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     const ORG_TYPE_IRFO = 'org_t_ir';
 
     const OPERATOR_CPID_ALL = 'op_cpid_all';
+
+    const ALLOWED_OPERATOR_LOCATION_NI = 'NI';
+    const ALLOWED_OPERATOR_LOCATION_GB = 'GB';
 
     protected $hasInforceLicences;
 
@@ -288,11 +292,12 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
     /**
      * Get All Outstanding applications for all licences
-     * Status "under consideration" or "granted"
+     * Status "under consideration" or "granted" and optionally "not submitted"
      *
+     * @param bool $includeNotSubmitted
      * @return \Doctrine\Common\Collections\Collection|static
      */
-    public function getOutstandingApplications()
+    public function getOutstandingApplications($includeNotSubmitted = false)
     {
         $applications = [];
 
@@ -300,7 +305,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         /** @var LicenceEntity $licence */
         foreach ($licences as $licence) {
-            $outstandingApplications = $licence->getOutstandingApplications()->toArray();
+            $outstandingApplications = $licence->getOutstandingApplications($includeNotSubmitted)->toArray();
             $applications = array_merge($applications, $outstandingApplications);
         }
         return new ArrayCollection($applications);
@@ -389,5 +394,34 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
             return $matches[0]->getName();
         }
         return '';
+    }
+
+    /**
+     * Get allowed operator location
+     *
+     * @return string|null
+     */
+    public function getAllowedOperatorLocation()
+    {
+        $allowedOperatorLocation = null;
+        $outstandingApplications = $this->getOutstandingApplications(true);
+        if ($outstandingApplications->count() && $outstandingApplications[0]->getNiFlag() !== null) {
+            $allowedOperatorLocation = $outstandingApplications[0]->getNiFlag() === 'Y' ?
+                self::ALLOWED_OPERATOR_LOCATION_NI : self::ALLOWED_OPERATOR_LOCATION_GB;
+        } else {
+            $licences = $this->getLicences();
+            $trafficAreaCode = null;
+            foreach ($licences as $licence) {
+                if ($licence->getTrafficArea() !== null) {
+                    $allowedOperatorLocation =
+                        $licence->getTrafficArea()->getId() ===
+                            TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE ?
+                            self::ALLOWED_OPERATOR_LOCATION_NI : self::ALLOWED_OPERATOR_LOCATION_GB;
+                    break;
+                }
+            }
+        }
+
+        return $allowedOperatorLocation;
     }
 }
