@@ -10,8 +10,8 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 /**
  * Takes an address entity and produces a formatted address
  *
- * Class FormatAddress
- * @package Dvsa\Olcs\Api\Service\Helper
+ * Class Address
+ * @package Dvsa\Olcs\Api\Service\Publication\Formatter
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
 class Address

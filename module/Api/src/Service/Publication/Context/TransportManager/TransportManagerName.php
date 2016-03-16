@@ -13,6 +13,11 @@ use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
  */
 final class TransportManagerName extends AbstractContext
 {
+    /**
+     * @param PublicationLink $publication
+     * @param \ArrayObject $context
+     * @return \ArrayObject
+     */
     public function provide(PublicationLink $publication, \ArrayObject $context)
     {
         $tm = $publication->getTransportManager()->getHomeCd()->getPerson();

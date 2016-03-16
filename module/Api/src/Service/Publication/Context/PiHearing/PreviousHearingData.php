@@ -28,7 +28,7 @@ final class PreviousHearingData extends AbstractContext
         $query = PreviousHearingBundle::create($params);
         $previousHearing = $this->handleQuery($query);
 
-        if (!empty($previousHearing)) {
+        if ($previousHearing instanceof PiHearing) {
             $date = new \DateTime($previousHearing->getAdjournedDate());
             $context->offsetSet('previousHearing', $date->format('d F Y'));
         }

@@ -37,6 +37,9 @@ class PublicationPoliceData extends AbstractPublicationPoliceData
     /**
      * Creates a new entity
      *
+     * @note we appear to duplicate data already held in the person entity, however this is intended behaviour since
+     * we're storing a snapshot of a fixed point in time
+     *
      * @param PublicationLink $publicationLink
      * @param PersonEntity $person
      */
