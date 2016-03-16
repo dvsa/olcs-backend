@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\Person\Person;
 /**
  * Class PoliceTest
  *
- * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
 class PoliceTest extends MockeryTestCase
 {
