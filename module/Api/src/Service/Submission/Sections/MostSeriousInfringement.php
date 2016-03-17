@@ -23,7 +23,7 @@ final class MostSeriousInfringement extends AbstractSection
         $data['siCategoryType'] = '';
         $data['infringementDate'] = '';
         $data['checkDate'] = '';
-        $data['isMemberState'] = true; /**  @todo do we need this? It will always be true */
+        $data['isMemberState'] = true;
 
         if (isset($seriousInfringements[0]) && $seriousInfringements[0] instanceof SeriousInfringmentEntity) {
             /** @var SeriousInfringmentEntity $mostSeriousInfringement */
