@@ -17,12 +17,13 @@ final class MostSeriousInfringement extends AbstractSection
         $seriousInfringements = $case->getSeriousInfringements();
         $data = [];
         $data['id'] = '';
-        $data['notificationNumber'] = $case->getErruRequest()->getNotificationNumber();
+        $erruRequest = $case->getErruRequest();
+        $data['notificationNumber'] = !empty($erruRequest) ? $erruRequest->getNotificationNumber() : '';
         $data['siCategory'] = '';
         $data['siCategoryType'] = '';
         $data['infringementDate'] = '';
         $data['checkDate'] = '';
-        $data['isMemberState'] = true; /**  @todo do we need this? It will always be true */
+        $data['isMemberState'] = true;
 
         if (isset($seriousInfringements[0]) && $seriousInfringements[0] instanceof SeriousInfringmentEntity) {
             /** @var SeriousInfringmentEntity $mostSeriousInfringement */
