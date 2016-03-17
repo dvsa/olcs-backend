@@ -21,7 +21,7 @@ class CaseSummaryTest extends SubmissionSectionTest
         'organisationType' => 'org_type-desc',
         'businessType' => 'nob1',
         'licNo' => 'OB12345',
-        'licenceStartDate' => '2012-01-01 15:00:00',
+        'licenceStartDate' => '01/01/2012',
         'licenceType' => 'lic_type-desc',
         'goodsOrPsv' => 'goods-desc',
         'licenceStatus' => 'lic_status-desc',

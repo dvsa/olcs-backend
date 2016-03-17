@@ -63,14 +63,20 @@ abstract class AbstractSection implements SectionGeneratorInterface
         return $personData;
     }
 
+    /**
+     * Format a date
+     *
+     * @param null|mixed $datetime
+     * @return string
+     */
     protected function formatDate($datetime = null)
     {
         if (!empty($datetime)) {
             if (is_string($datetime)) {
-                return $datetime;
-            } elseif ($datetime instanceof \DateTime) {
-                return $datetime->format('d/m/Y');
+                $datetime = new \DateTime($datetime);
             }
+
+            return $datetime->format('d/m/Y');
         }
 
         return '';
