@@ -21,8 +21,8 @@ class MostSeriousInfringementTest extends SubmissionSectionTest
         'notificationNumber' => 'notificationNo',
         'siCategory' => 'si_cat-desc',
         'siCategoryType' => 'si_cat_type-desc',
-        'infringementDate' => '2014-05-05',
-        'checkDate' => '2014-01-01',
+        'infringementDate' => '05/05/2014',
+        'checkDate' => '01/01/2014',
         'isMemberState' => true,
     ];
 
