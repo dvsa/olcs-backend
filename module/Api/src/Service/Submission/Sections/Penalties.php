@@ -84,18 +84,28 @@ final class Penalties extends AbstractSection
      */
     private function extractOverview(CasesEntity $case)
     {
+        $erruRequest = $case->getErruRequest();
         $siData = [
-            'vrm' => $case->getErruRequest()->getVrm(),
-            'transportUndertakingName' => $case->getErruRequest()->getTransportUndertakingName(),
-            'originatingAuthority' => $case->getErruRequest()->getOriginatingAuthority(),
+            'vrm' => '',
+            'transportUndertakingName' => '',
+            'originatingAuthority' => '',
             'infringementId' => '',
-            'notificationNumber' => $case->getErruRequest()->getNotificationNumber(),
+            'notificationNumber' => '',
             'infringementDate' => '',
             'checkDate' => '',
             'category' => '',
             'categoryType' => '',
-            'memberState' => $case->getErruRequest()->getMemberStateCode()->getCountryDesc()
+            'memberState' => ''
         ];
+
+        if (!empty($erruRequest)) {
+            $siData['vrm'] = $erruRequest->getVrm();
+            $siData['transportUndertakingName'] = $erruRequest->getTransportUndertakingName();
+            $siData['originatingAuthority'] = $erruRequest->getOriginatingAuthority();
+            $siData['notificationNumber'] = $erruRequest->getNotificationNumber();
+            $siData['memberState'] = !empty($erruRequest->getMemberStateCode()) ? $erruRequest->getMemberStateCode()
+                ->getCountryDesc() : '';
+        }
 
         if (isset($case->getSeriousInfringements()[0]) &&
             ($case->getSeriousInfringements()[0] instanceof SeriousInfringement)) {
