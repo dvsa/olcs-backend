@@ -17,7 +17,8 @@ final class MostSeriousInfringement extends AbstractSection
         $seriousInfringements = $case->getSeriousInfringements();
         $data = [];
         $data['id'] = '';
-        $data['notificationNumber'] = $case->getErruRequest()->getNotificationNumber();
+        $erruRequest = $case->getErruRequest();
+        $data['notificationNumber'] = !empty($erruRequest) ? $erruRequest->getNotificationNumber() : '';
         $data['siCategory'] = '';
         $data['siCategoryType'] = '';
         $data['infringementDate'] = '';
