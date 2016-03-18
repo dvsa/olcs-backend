@@ -46,14 +46,32 @@ class CreateViExtractFilesTest extends CommandHandlerTestCase
             'path' => '/tmp'
         ];
 
-        $this->repoMap['ViOpView']->shouldReceive('fetchForExport')
-            ->once()->andReturn(['line' => 'foo']);
+        $this->repoMap['ViOpView']
+            ->shouldReceive('fetchForExport')
+            ->once()
+            ->andReturn([['line' => 'foo', 'licId' => 3]])
+            ->shouldReceive('clearLicencesViIndicators')
+            ->with([['licId' => 3]])
+            ->once()
+            ->getMock();
 
-        $this->repoMap['ViOcView']->shouldReceive('fetchForExport')
-            ->once()->andReturn(['line' => 'bar']);
+        $this->repoMap['ViOcView']
+            ->shouldReceive('fetchForExport')
+            ->once()
+            ->andReturn([['line' => 'bar', 'ocId' => 1]])
+            ->shouldReceive('clearOcViIndicators')
+            ->with([['ocId' => 1]])
+            ->once()
+            ->getMock();
 
-        $this->repoMap['ViTnmView']->shouldReceive('fetchForExport')
-            ->once()->andReturn(['line' => 'cake']);
+        $this->repoMap['ViTnmView']
+            ->shouldReceive('fetchForExport')
+            ->once()
+            ->andReturn([['line' => 'cake', 'tradingNameId' => 2]])
+            ->shouldReceive('clearTradingNamesViIndicators')
+            ->with([['tradingNameId' => 2]])
+            ->once()
+            ->getMock();
 
         $this->repoMap['ViVhlView']->shouldReceive('fetchForExport')
             ->once()->andReturn([]);
@@ -65,12 +83,14 @@ class CreateViExtractFilesTest extends CommandHandlerTestCase
             'messages' => [
                 'Found 1 record(s) for Operating Centres',
                 '1 record(s) saved for Operating Centres',
+                'VI flags cleared',
                 'Found 1 record(s) for Operators',
                 '1 record(s) saved for Operators',
+                'VI flags cleared',
                 'Found 1 record(s) for Trading Names',
                 '1 record(s) saved for Trading Names',
-                'Found 0 record(s) for Vehicles',
-            ]
+                'VI flags cleared',
+                'Found 0 record(s) for Vehicles'            ]
         ];
         $this->assertEquals($expected, $response->toArray());
     }
