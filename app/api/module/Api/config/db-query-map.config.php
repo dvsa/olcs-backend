@@ -20,5 +20,9 @@ return [
         'Discs\PsvDiscsSetIsPrintingOffAndDiscNo' => Query\Discs\PsvDiscsSetIsPrintingOffAndDiscNo::class,
         'Discs\CeaseGoodsDiscsForApplication' => Query\Discs\CeaseGoodsDiscsForApplication::class,
         'Discs\CreateGoodsDiscs' => Query\Discs\CreateGoodsDiscs::class,
+        'ViStoredProcedures\ViOcComplete' => Query\ViStoredProcedures\ViOcComplete::class,
+        'ViStoredProcedures\ViOpComplete' => Query\ViStoredProcedures\ViOpComplete::class,
+        'ViStoredProcedures\ViTnmComplete' => Query\ViStoredProcedures\ViTnmComplete::class,
+        'ViStoredProcedures\ViVhlComplete' => Query\ViStoredProcedures\ViVhlComplete::class,
     ]
 ];
