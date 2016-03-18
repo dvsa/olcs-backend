@@ -13,6 +13,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 
 /**
  * VI Vehicle view test
@@ -33,6 +34,14 @@ class ViVhlViewTest extends RepositoryTestCase
             ->with('m.viLine as line')
             ->andReturnSelf()
             ->once()
+            ->shouldReceive('addSelect')
+            ->with('m.licId')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('addSelect')
+            ->with('m.vhlId')
+            ->once()
+            ->andReturnSelf()
             ->shouldReceive('getQuery')
             ->andReturn(
                 m::mock()
@@ -50,5 +59,37 @@ class ViVhlViewTest extends RepositoryTestCase
             ->andReturn($mockQb);
 
         $this->assertEquals(['result'], $this->sut->fetchForExport());
+    }
+
+    public function testClearLicenceVehiclesViIndicators()
+    {
+        $params = [
+            [
+                'licId' => 1,
+                'vhlId' => 2
+            ]
+        ];
+
+        $this->expectQueryWithData('ViStoredProcedures\ViVhlComplete', ['licenceId' => 1, 'vehicleId' => '2']);
+        $this->sut->clearLicenceVehiclesViIndicators($params);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    public function testClearLicenceVehiclesViIndicatorsException()
+    {
+        $params = [
+            [
+                'licId' => 1,
+                'vhlId' => 2
+            ]
+        ];
+
+        $this->dbQueryService->shouldReceive('get')
+            ->with('ViStoredProcedures\ViVhlComplete')
+            ->andThrow(new RuntimeException('foo'));
+
+        $this->sut->clearLicenceVehiclesViIndicators($params);
     }
 }
