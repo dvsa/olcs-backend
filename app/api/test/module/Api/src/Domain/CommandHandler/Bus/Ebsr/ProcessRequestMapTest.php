@@ -179,6 +179,7 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
 
     /**
      * test handleCommand creates failure task when exception thrown
+     * @expectedException \Exception
      */
     public function testHandleCommandFail()
     {
