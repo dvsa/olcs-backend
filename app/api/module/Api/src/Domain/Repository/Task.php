@@ -128,7 +128,7 @@ class Task extends AbstractRepository
         $doctrineQb = $this->createQueryBuilder();
 
         $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.submission', ':submission'))
-            ->setParameter('submission', $submission->getId());
+            ->setParameter('submission', $submission);
         $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.category', ':category'))
             ->setParameter('category', $category);
         $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.subCategory', ':subCategory'))
