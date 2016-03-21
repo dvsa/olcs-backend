@@ -34,25 +34,48 @@ final class CreateViExtractFiles extends AbstractCommandHandler
         'oc' => [
             'repo'   => 'ViOcView',
             'name'   => 'Operating Centres',
-            'prefix' => 'tanopc'
+            'prefix' => 'tanopc',
+            'params' => [
+                'ocId'
+            ],
+            'method' => 'clearOcViIndicators'
         ],
         'op' => [
             'repo'   => 'ViOpView',
             'name'   => 'Operators',
-            'prefix' => 'tanopo'
+            'prefix' => 'tanopo',
+            'params' => [
+                'licId'
+            ],
+            'method' => 'clearLicencesViIndicators'
         ],
         'tnm' => [
             'repo'   => 'ViTnmView',
             'name'   => 'Trading Names',
-            'prefix' => 'tantnm'
+            'prefix' => 'tantnm',
+            'params' => [
+                'tradingNameId'
+            ],
+            'method' => 'clearTradingNamesViIndicators'
         ],
         'vhl' => [
             'repo'   => 'ViVhlView',
             'name'   => 'Vehicles',
-            'prefix' => 'tanveh'
+            'prefix' => 'tanveh',
+            'params' => [
+                'vhlId',
+                'licId'
+            ],
+            'method' => 'clearLicenceVehiclesViIndicators'
         ],
     ];
 
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param CreateViExtractFiles
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
@@ -66,35 +89,63 @@ final class CreateViExtractFiles extends AbstractCommandHandler
         return parent::createService($serviceLocator);
     }
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command
+     * @param Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         if ($command->getPath()) {
             $this->exportPath = $command->getPath();
         }
-        foreach ($this->paramMap as $key => $type) {
+        foreach ($this->paramMap as $key => $settings) {
             $method = 'get' . ucfirst($key);
             $commandParam = $command->$method();
+            $repo = $this->getRepo($settings['repo']);
             if ($commandParam || $command->getAll()) {
-                $results = $this->getRepo($type['repo'])->fetchForExport();
+                $results = $repo->fetchForExport();
                 $total = count($results);
-                $this->result->addMessage('Found ' . $total . ' record(s) for ' . $type['name']);
+                $this->result->addMessage('Found ' . $total . ' record(s) for ' . $settings['name']);
                 if (!$total) {
                     continue;
                 }
                 $content = implode(self::PHP_EOL_WIN, array_column($results, 'line'));
                 $success = file_put_contents(
-                    $this->exportPath . '/' . $type['prefix'] . ((new \DateTime())->format('Ymd')) . '.dat',
+                    $this->exportPath . '/' . $settings['prefix'] . ((new \DateTime())->format('Ymd')) . '.dat',
                     $content
                 );
                 if ($success === false) {
                     throw new \Exception(
-                        'Error writing record(s) for ' . $type['name'] . ', please check the target path'
+                        'Error writing record(s) for ' . $settings['name'] . ', please check the target path'
                     );
-                } else {
-                    $this->result->addMessage($total . ' record(s) saved for ' . $type['name']);
                 }
+                $this->clearViFlags($repo, $results, $key);
+                $this->result->addMessage($total . ' record(s) saved for ' . $settings['name']);
+                $this->result->addMessage('VI flags cleared');
             }
         }
         return $this->result;
+    }
+
+    /**
+     * Clear VI flags
+     *
+     * @param mixed $repo
+     * @param array $results
+     * @param string $key
+     */
+    protected function clearViFlags($repo, $results, $key)
+    {
+        $params = [];
+        foreach ($results as $result) {
+            $elements = [];
+            foreach ($this->paramMap[$key]['params'] as $paramName) {
+                $elements[$paramName] = $result[$paramName];
+            }
+            $params[] = $elements;
+        }
+        $repo->{$this->paramMap[$key]['method']}($params);
     }
 }

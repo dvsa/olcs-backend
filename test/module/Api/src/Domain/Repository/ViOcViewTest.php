@@ -13,6 +13,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 
 /**
  * VI O/C view test
@@ -33,6 +34,10 @@ class ViOcViewTest extends RepositoryTestCase
             ->with('m.placeholder as line')
             ->andReturnSelf()
             ->once()
+            ->shouldReceive('addSelect')
+            ->with('m.ocId')
+            ->andReturnSelf()
+            ->once()
             ->shouldReceive('getQuery')
             ->andReturn(
                 m::mock()
@@ -50,5 +55,27 @@ class ViOcViewTest extends RepositoryTestCase
             ->andReturn($mockQb);
 
         $this->assertEquals(['result'], $this->sut->fetchForExport());
+    }
+
+    public function testClearOcViIndicators()
+    {
+        $params = [['ocId' => 1]];
+
+        $this->expectQueryWithData('ViStoredProcedures\ViOcComplete', ['operatingCentreId' => 1]);
+        $this->sut->clearOcViIndicators($params);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    public function testClearOcViIndicatorsException()
+    {
+        $params = [['ocId' => 1]];
+
+        $this->dbQueryService->shouldReceive('get')
+            ->with('ViStoredProcedures\ViOcComplete')
+            ->andThrow(new RuntimeException('foo'));
+
+        $this->sut->clearOcViIndicators($params);
     }
 }
