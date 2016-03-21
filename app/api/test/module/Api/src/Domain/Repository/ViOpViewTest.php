@@ -13,6 +13,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 
 /**
  * VI Operator view test
@@ -33,6 +34,10 @@ class ViOpViewTest extends RepositoryTestCase
             ->with('m.viLine as line')
             ->andReturnSelf()
             ->once()
+            ->shouldReceive('addSelect')
+            ->with('m.licId')
+            ->andReturnSelf()
+            ->once()
             ->shouldReceive('getQuery')
             ->andReturn(
                 m::mock()
@@ -50,5 +55,27 @@ class ViOpViewTest extends RepositoryTestCase
             ->andReturn($mockQb);
 
         $this->assertEquals(['result'], $this->sut->fetchForExport());
+    }
+
+    public function testClearLicencesViIndicators()
+    {
+        $params = [['licId' => 1]];
+
+        $this->expectQueryWithData('ViStoredProcedures\ViOpComplete', ['licenceId' => 1]);
+        $this->sut->clearLicencesViIndicators($params);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    public function testClearLicencesViIndicatorsException()
+    {
+        $params = [['licId' => 1]];
+
+        $this->dbQueryService->shouldReceive('get')
+            ->with('ViStoredProcedures\ViOpComplete')
+            ->andThrow(new RuntimeException('foo'));
+
+        $this->sut->clearLicencesViIndicators($params);
     }
 }
