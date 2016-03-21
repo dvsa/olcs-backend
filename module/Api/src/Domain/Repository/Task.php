@@ -128,12 +128,12 @@ class Task extends AbstractRepository
         $doctrineQb = $this->createQueryBuilder();
 
         $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.submission', ':submission'))
-            ->setParameter('submission', $submission);
+            ->setParameter('submission', $submission->getId());
         $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.category', ':category'))
             ->setParameter('category', $category);
         $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.subCategory', ':subCategory'))
             ->setParameter('subCategory', $subCategory);
-
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.isClosed', 0));
         $result = $doctrineQb->getQuery()->getOneOrNullResult(Query::HYDRATE_OBJECT);
 
         return $result;
