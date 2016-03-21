@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
  * @author Mat Evans <mat.evans@valtech.co.uk>
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class UserList extends AbstractQueryHandler implements AuthAwareInterface
+class UserListInternal extends AbstractQueryHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
@@ -37,7 +37,16 @@ class UserList extends AbstractQueryHandler implements AuthAwareInterface
 
         return [
             'result' => $this->resultList(
-                $repo->fetchList($query, Query::HYDRATE_OBJECT), ['contactDetails' => ['person']]
+                $repo->fetchList(
+                    $query,
+                    Query::HYDRATE_OBJECT
+                ),
+                [
+                    'team',
+                    'contactDetails' => [
+                        'person'
+                    ]
+                ]
             ),
             'count' => $repo->fetchCount($query)
         ];
