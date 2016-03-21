@@ -22,7 +22,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="ix_vehicle_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_vehicle_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_vehicle_vrm", columns={"vrm"})
+ *        @ORM\Index(name="ix_vehicle_vrm", columns={"vrm"}),
+ *        @ORM\Index(name="ix_vehicle_vi_action", columns={"vi_action"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_vehicle_olbs_key", columns={"olbs_key"})
