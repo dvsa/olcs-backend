@@ -52,7 +52,9 @@ class User extends AbstractRepository
         parent::buildDefaultQuery($qb, $id);
 
         // join in person details
-        $this->getQueryBuilder()->with('contactDetails', 'cd')->with('cd.person');
+        $this->getQueryBuilder()
+            ->with('contactDetails', 'cd')
+            ->with('cd.person');
     }
 
     /**
@@ -65,7 +67,10 @@ class User extends AbstractRepository
         parent::buildDefaultListQuery($qb, $query, $compositeFields);
 
         // join in person details
-        $this->getQueryBuilder()->with('contactDetails', 'cd')->with('cd.person');
+        $this->getQueryBuilder()
+            ->with('team', 't')
+            ->with('contactDetails', 'cd')
+            ->with('cd.person', 'p');
     }
 
     /**
