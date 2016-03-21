@@ -70,6 +70,12 @@ final class CreateViExtractFiles extends AbstractCommandHandler
         ],
     ];
 
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param CreateViExtractFiles
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
@@ -83,6 +89,12 @@ final class CreateViExtractFiles extends AbstractCommandHandler
         return parent::createService($serviceLocator);
     }
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command
+     * @param Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         if ($command->getPath()) {
