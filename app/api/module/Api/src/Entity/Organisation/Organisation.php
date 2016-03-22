@@ -257,7 +257,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     }
 
     /**
-     * Determine is an organisation isMlh (Multiple Licence Holder has at least two valid licences)
+     * Determine is an organisation isMlh (Multiple Licence Holder has at least two valid Goods licences)
      * Note: Licences are considered valid if in one of the following states:
      *
      *  Under consideration
@@ -284,6 +284,9 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                 ]
             )
         );
+
+        // And the licence must be for goods vehicles
+        $criteria->andWhere($criteria->expr()->in('goodsOrPsv', [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]));
 
         $totalLicences = $this->getLicences()->matching($criteria)->count();
 
