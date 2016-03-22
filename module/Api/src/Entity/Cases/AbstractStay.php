@@ -114,7 +114,7 @@ abstract class AbstractStay implements BundleSerializableInterface, JsonSerializ
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="notes", length=1024, nullable=true)
+     * @ORM\Column(type="string", name="notes", length=1100, nullable=true)
      */
     protected $notes;
 
