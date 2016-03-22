@@ -5,10 +5,12 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Irfo;
 
+use Doctrine\ORM\Query as DoctrineQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Irfo\IrfoPermitStockList;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\IrfoPermitStock as IrfoPermitStockRepo;
 use Dvsa\Olcs\Transfer\Query\Irfo\IrfoPermitStockList as Qry;
+use Mockery as m;
 
 /**
  * IrfoPermitStockList Test
@@ -27,16 +29,26 @@ class IrfoPermitStockListTest extends QueryHandlerTestCase
     {
         $query = Qry::create([]);
 
-        $this->repoMap['IrfoPermitStock']->shouldReceive('fetchList')
-            ->with($query)
-            ->andReturn(['foo']);
+        $mockEntity = m::mock();
+        $mockEntity->shouldReceive('serialize')->once()->andReturn('foo');
 
-        $this->repoMap['IrfoPermitStock']->shouldReceive('fetchCount')
+        $this->repoMap['IrfoPermitStock']
+            ->shouldReceive('fetchList')
+            ->with($query, DoctrineQuery::HYDRATE_OBJECT)
+            ->once()
+            ->andReturn([$mockEntity])
+            ->shouldReceive('fetchCount')
             ->with($query)
-            ->andReturn(2);
+            ->once()
+            ->andReturn(1)
+            ->getMock();
 
-        $result = $this->sut->handleQuery($query);
-        $this->assertEquals($result['count'], 2);
-        $this->assertEquals($result['result'], ['foo']);
+        $this->assertSame(
+            [
+                'result'    => ['foo'],
+                'count'     => 1,
+            ],
+            $this->sut->handleQuery($query)
+        );
     }
 }
