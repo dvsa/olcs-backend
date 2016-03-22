@@ -229,6 +229,6 @@ class User extends AbstractRepository
             $qb->andWhere($qb->expr()->isNotNull($this->alias . '.team'));
         }
 
-        return $this->fetchPaginatedList($qb, $hydrateMode);
+        return $qb->getQuery()->getResult($hydrateMode);
     }
 }
