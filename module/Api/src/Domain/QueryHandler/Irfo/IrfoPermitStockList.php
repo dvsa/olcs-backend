@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Irfo;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -17,7 +18,14 @@ final class IrfoPermitStockList extends AbstractQueryHandler
         $repo = $this->getRepo();
 
         return [
-            'result' => $repo->fetchList($query),
+            'result' => $this->resultList(
+                $repo->fetchList($query, Query::HYDRATE_OBJECT),
+                [
+                    'irfoGvPermit' => [
+                        'organisation'
+                    ]
+                ]
+            ),
             'count' => $repo->fetchCount($query)
         ];
     }
