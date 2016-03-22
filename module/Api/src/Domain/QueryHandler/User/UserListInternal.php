@@ -37,7 +37,7 @@ class UserListInternal extends AbstractQueryHandler implements AuthAwareInterfac
 
         return [
             'result' => $this->resultList(
-                $repo->fetchList(
+                $repo->fetchInternalList(
                     $query,
                     Query::HYDRATE_OBJECT
                 ),
