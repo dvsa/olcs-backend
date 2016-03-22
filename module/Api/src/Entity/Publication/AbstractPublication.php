@@ -23,6 +23,7 @@ use Doctrine\Common\Collections\Collection;
  *        @ORM\Index(name="ix_publication_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_publication_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_publication_document_id", columns={"document_id"}),
+ *        @ORM\Index(name="ix_publication_police_document_id", columns={"police_document_id"}),
  *        @ORM\Index(name="ix_publication_doc_template_id", columns={"doc_template_id"})
  *    }
  * )
@@ -108,6 +109,16 @@ abstract class AbstractPublication implements BundleSerializableInterface, JsonS
      * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
      */
     protected $lastModifiedOn;
+
+    /**
+     * Police document
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Doc\Document
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", fetch="LAZY")
+     * @ORM\JoinColumn(name="police_document_id", referencedColumnName="id", nullable=true)
+     */
+    protected $policeDocument;
 
     /**
      * Pub date
@@ -373,6 +384,29 @@ abstract class AbstractPublication implements BundleSerializableInterface, JsonS
     public function getLastModifiedOn()
     {
         return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the police document
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $policeDocument
+     * @return Publication
+     */
+    public function setPoliceDocument($policeDocument)
+    {
+        $this->policeDocument = $policeDocument;
+
+        return $this;
+    }
+
+    /**
+     * Get the police document
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Doc\Document
+     */
+    public function getPoliceDocument()
+    {
+        return $this->policeDocument;
     }
 
     /**
