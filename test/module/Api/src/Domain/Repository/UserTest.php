@@ -269,4 +269,50 @@ class UserTest extends RepositoryTestCase
 
         $this->assertSame('result', $this->sut->fetchUsersCountByTeam(1));
     }
+
+    public function testFetchInternalListForTeam()
+    {
+        $teamId = 234;
+
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+
+        $query = \Dvsa\Olcs\Transfer\Query\User\UserListInternal::create(['team' => $teamId]);
+
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('u')->once()->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('u.contactDetails', 'cd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('cd.person', 'p')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('u.team', 't')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('u.team', ':team')->once()->andReturn('expr');
+        $mockQb->shouldReceive('andWhere')->with('expr')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('team', $teamId)->once()->andReturnSelf();
+        $mockQb->shouldReceive('getQuery')->once()->andReturnSelf();
+        $mockQb->shouldReceive('getResult')->once()->andReturn('RESULTS');
+
+        $this->assertSame('RESULTS', $this->sut->fetchInternalList($query));
+    }
+
+    public function testFetchInternalListForAllTeam()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+
+        $query = \Dvsa\Olcs\Transfer\Query\User\UserListInternal::create([]);
+
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('u')->once()->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('u.contactDetails', 'cd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('cd.person', 'p')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('u.team', 't')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->isNotNull')->with('u.team')->once()->andReturn('expr');
+        $mockQb->shouldReceive('andWhere')->with('expr')->once()->andReturnSelf();
+        //$mockQb->shouldReceive('setParameter')->with('team', $teamId)->once()->andReturnSelf();
+        $mockQb->shouldReceive('getQuery')->once()->andReturnSelf();
+        $mockQb->shouldReceive('getResult')->once()->andReturn('RESULTS');
+
+        $this->assertSame('RESULTS', $this->sut->fetchInternalList($query));
+    }
 }

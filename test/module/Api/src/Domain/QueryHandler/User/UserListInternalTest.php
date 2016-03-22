@@ -46,7 +46,7 @@ class UserListInternalTest extends QueryHandlerTestCase
             ->with(PermissionEntity::INTERNAL_USER, null)
             ->andReturn(true);
 
-        $this->repoMap['User']->shouldReceive('fetchList')->andReturn([$user]);
+        $this->repoMap['User']->shouldReceive('fetchInternalList')->andReturn([$user]);
         $this->repoMap['User']->shouldReceive('fetchCount')->andReturn('COUNT');
 
         $query = Query::create(['QUERY']);
