@@ -178,6 +178,9 @@ return [
     'ebsr' => [
         'transexchange_publisher' => [
             'uri' => 'http://localhost:8080/txc/publisherService',
+            'options' => [
+                'timeout' => 30
+            ]
         ],
         //debug only - validation must always be set to true in production
         'validate' => [
