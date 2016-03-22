@@ -121,7 +121,6 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
             );
         } catch (\Exception $e) {
             $failedTaskCmd = $this->createTaskCmd($busReg, self::TASK_FAIL_DESC);
-            $result->addMessage('Unable to create transXchange PDF: ' . $e->getMessage());
             $this->handleSideEffect($failedTaskCmd);
 
             throw ($e);
