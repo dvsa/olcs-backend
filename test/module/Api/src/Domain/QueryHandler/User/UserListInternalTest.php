@@ -7,14 +7,8 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\User;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\User\UserListInternal as QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\User as Repo;
-use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
-use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
-use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
-use Dvsa\Olcs\Transfer\Query\User\UserList as Query;
+use Dvsa\Olcs\Transfer\Query\User\UserListInternal as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
