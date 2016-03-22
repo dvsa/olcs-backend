@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\User\User as Entity;
-use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Doctrine\ORM\QueryBuilder;
