@@ -1790,10 +1790,10 @@ INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`person_id`,`c
     (5,3,77,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:03:15','Jones','Tom',NULL,1),
     (6,3,78,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:03:16','Winnard','Keith',NULL,1);
 
-INSERT INTO `irfo_gv_permit` (`organisation_id`, `irfo_gv_permit_type_id`, `irfo_permit_status`, `year_required`,
+INSERT INTO `irfo_gv_permit` (`id`, `organisation_id`, `irfo_gv_permit_type_id`, `irfo_permit_status`, `year_required`,
                               `in_force_date`, `expiry_date`, `created_on`)
 VALUES
-    (101, 1, 'irfo_perm_s_approved', 2014, '2015-03-10', '2016-03-09', NOW());
+    (1, 101, 1, 'irfo_perm_s_approved', 2014, '2015-03-10', '2016-03-09', NOW());
 
 INSERT INTO `irfo_psv_auth` (`organisation_id`, `irfo_psv_auth_type_id`, `status`, `journey_frequency`,
                              `irfo_file_no`, `service_route_from`, `service_route_to`, `validity_period`,
@@ -1806,14 +1806,14 @@ VALUES
     (101, 1, 'irfo_auth_s_cns', 'psv_freq_daily', '17/5', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-01', '2016-10-19', 'FeeId'),
     (101, 1, 'irfo_auth_s_pending', 'psv_freq_daily', '17/6', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-01', '2016-10-19', 'FeeId');
 
-INSERT INTO `irfo_permit_stock` (`serial_no`, `irfo_country_id`, `status`, `valid_for_year`, `created_on`)
+INSERT INTO `irfo_permit_stock` (`serial_no`, `irfo_country_id`, `status`, `valid_for_year`, `irfo_gv_permit_id`, `created_on`)
 VALUES
-    (1, 1, 'irfo_perm_s_s_in_stock', 2015, NOW()),
-    (2, 1, 'irfo_perm_s_s_in_stock', 2015, NOW()),
-    (3, 2, 'irfo_perm_s_s_in_stock', 2015, NOW()),
-    (4, 2, 'irfo_perm_s_s_in_stock', 2016, NOW()),
-    (5, 1, 'irfo_perm_s_s_in_stock', 2016, NOW()),
-    (6, 1, 'irfo_perm_s_s_ret', 2016, NOW());
+    (1, 1, 'irfo_perm_s_s_in_stock', 2015, NULL, NOW()),
+    (2, 1, 'irfo_perm_s_s_in_stock', 2015, NULL, NOW()),
+    (3, 2, 'irfo_perm_s_s_in_stock', 2015, NULL, NOW()),
+    (4, 2, 'irfo_perm_s_s_in_stock', 2016, NULL, NOW()),
+    (5, 1, 'irfo_perm_s_s_in_stock', 2016, 1, NOW()),
+    (6, 1, 'irfo_perm_s_s_ret', 2016, NULL, NOW());
 
 INSERT INTO `community_lic` (
     `id`, `status`, `licence_id`, `expired_date`, `issue_no`, `serial_no`,
