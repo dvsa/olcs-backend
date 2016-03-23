@@ -46,8 +46,9 @@ class UserTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('byId')->with(834)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('team', 't')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('contactDetails', 'cd')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('cd.person')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('cd.person', 'p')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
 
@@ -133,8 +134,9 @@ class UserTest extends RepositoryTestCase
 
         $mockQb->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
         $mockQb->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('team', 't')->once()->andReturnSelf();
         $mockQb->shouldReceive('with')->with('contactDetails', 'cd')->once()->andReturnSelf();
-        $mockQb->shouldReceive('with')->with('cd.person')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('cd.person', 'p')->once()->andReturnSelf();
 
         $sut->buildDefaultListQuery($mockQb, $mockQi);
     }

@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\User\User as Entity;
-use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Doctrine\ORM\QueryBuilder;
@@ -51,8 +51,11 @@ class User extends AbstractRepository
     {
         parent::buildDefaultQuery($qb, $id);
 
-        // join in person details
-        $this->getQueryBuilder()->with('contactDetails', 'cd')->with('cd.person');
+        // join in person and team details
+        $this->getQueryBuilder()
+            ->with('team', 't')
+            ->with('contactDetails', 'cd')
+            ->with('cd.person', 'p');
     }
 
     /**
@@ -64,8 +67,11 @@ class User extends AbstractRepository
     {
         parent::buildDefaultListQuery($qb, $query, $compositeFields);
 
-        // join in person details
-        $this->getQueryBuilder()->with('contactDetails', 'cd')->with('cd.person');
+        // join in person and team details
+        $this->getQueryBuilder()
+            ->with('team', 't')
+            ->with('contactDetails', 'cd')
+            ->with('cd.person', 'p');
     }
 
     /**
