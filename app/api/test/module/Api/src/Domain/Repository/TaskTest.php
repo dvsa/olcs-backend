@@ -131,7 +131,7 @@ class TaskTest extends RepositoryTestCase
 
         $expectedQuery =
             'BLAH AND m.submission = [[3]] ' .
-            'AND m.category = [[10]] AND m.subCategory = [[114]]';
+            'AND m.category = [[10]] AND m.subCategory = [[114]] AND m.isClosed = 0';
 
         $this->assertEquals($expectedQuery, $this->query);
     }

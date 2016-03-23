@@ -264,6 +264,7 @@ return [
     TransferQuery\User\UserSelfserve::class => QueryHandler\User\UserSelfserve::class,
     TransferQuery\User\UserListSelfserve::class => QueryHandler\User\UserListSelfserve::class,
     TransferQuery\User\RoleList::class => QueryHandler\User\RoleList::class,
+    TransferQuery\User\UserListInternal::class => QueryHandler\User\UserListInternal::class,
 
     // User
     TransferQuery\Team\Team::class => QueryHandler\Team\Team::class,

@@ -133,7 +133,7 @@ class Task extends AbstractRepository
             ->setParameter('category', $category);
         $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.subCategory', ':subCategory'))
             ->setParameter('subCategory', $subCategory);
-
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.isClosed', 0));
         $result = $doctrineQb->getQuery()->getOneOrNullResult(Query::HYDRATE_OBJECT);
 
         return $result;
