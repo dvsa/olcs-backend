@@ -10,10 +10,6 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\User;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Entity\User\Permission;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Get a list of Users
@@ -21,10 +17,8 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
  * @author Mat Evans <mat.evans@valtech.co.uk>
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class UserListInternal extends AbstractQueryHandler implements AuthAwareInterface
+class UserListInternal extends AbstractQueryHandler
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'User';
 
     public function handleQuery(QueryInterface $query)
