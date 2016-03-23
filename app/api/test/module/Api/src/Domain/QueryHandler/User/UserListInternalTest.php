@@ -35,12 +35,7 @@ class UserListInternalTest extends QueryHandlerTestCase
         $user = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $user->setId(74);
 
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(PermissionEntity::INTERNAL_USER, null)
-            ->andReturn(true);
-
-        $this->repoMap['User']->shouldReceive('fetchInternalList')->andReturn([$user]);
+        $this->repoMap['User']->shouldReceive('fetchList')->andReturn([$user]);
         $this->repoMap['User']->shouldReceive('fetchCount')->andReturn('COUNT');
 
         $query = Query::create(['QUERY']);
@@ -49,20 +44,5 @@ class UserListInternalTest extends QueryHandlerTestCase
 
         $this->assertSame(74, $result['result'][0]['id']);
         $this->assertSame('COUNT', $result['count']);
-    }
-
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
-    public function testHandleQueryThrowsIncorrectPermissionException()
-    {
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(PermissionEntity::INTERNAL_USER, null)
-            ->andReturn(false);
-
-        $query = Query::create(['QUERY']);
-
-        $this->sut->handleQuery($query);
     }
 }
