@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity
 use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
-use Dvsa\Olcs\Transfer\Query\User\UserListSelfServe as Query;
+use Dvsa\Olcs\Transfer\Query\User\UserListSelfserve as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
