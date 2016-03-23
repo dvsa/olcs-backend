@@ -29,15 +29,11 @@ class UserListInternal extends AbstractQueryHandler implements AuthAwareInterfac
 
     public function handleQuery(QueryInterface $query)
     {
-        if (!$this->isGranted(Permission::INTERNAL_USER)) {
-            throw new ForbiddenException('You do not have permission access this data');
-        }
-
         $repo = $this->getRepo();
 
         return [
             'result' => $this->resultList(
-                $repo->fetchInternalList(
+                $repo->fetchList(
                     $query,
                     Query::HYDRATE_OBJECT
                 ),

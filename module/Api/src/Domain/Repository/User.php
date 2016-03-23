@@ -51,8 +51,11 @@ class User extends AbstractRepository
     {
         parent::buildDefaultQuery($qb, $id);
 
-        // join in person details
-        $this->getQueryBuilder()->with('contactDetails', 'cd')->with('cd.person');
+        // join in person and team details
+        $this->getQueryBuilder()
+            ->with('team', 't')
+            ->with('contactDetails', 'cd')
+            ->with('cd.person', 'p');
     }
 
     /**
@@ -64,8 +67,11 @@ class User extends AbstractRepository
     {
         parent::buildDefaultListQuery($qb, $query, $compositeFields);
 
-        // join in person details
-        $this->getQueryBuilder()->with('contactDetails', 'cd')->with('cd.person');
+        // join in person and team details
+        $this->getQueryBuilder()
+            ->with('team', 't')
+            ->with('contactDetails', 'cd')
+            ->with('cd.person', 'p');
     }
 
     /**
@@ -201,34 +207,5 @@ class User extends AbstractRepository
         $qb->where($this->alias . '.pid = :pid')->setParameter('pid', $pid);
 
         return $qb->getQuery()->getSingleResult();
-    }
-
-    /**
-     * Forces a fetch of internal users by examining the team passed. If not passed, all users with a team are returned.
-     * Otherwise only users for a given team are passed.
-     *
-     * @param QueryInterface $query
-     * @param $hydrateMode
-     * @return \ArrayIterator
-     */
-    public function fetchInternalList(QueryInterface $query, $hydrateMode = Query::HYDRATE_ARRAY)
-    {
-        $qb = $this->createQueryBuilder();
-
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefdata()
-            ->with($this->alias .'.contactDetails', 'cd')
-            ->with('cd.person', 'p')
-            ->with($this->alias .'.team', 't');
-
-        // filter by team if it has been specified
-        if (method_exists($query, 'getTeam') && !empty($query->getTeam())) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.team', ':team'))
-                ->setParameter('team', (int) $query->getTeam());
-        } else {
-            $qb->andWhere($qb->expr()->isNotNull($this->alias . '.team'));
-        }
-
-        return $qb->getQuery()->getResult($hydrateMode);
     }
 }
