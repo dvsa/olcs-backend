@@ -2,8 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\SystemParameter;
 
-use Dvsa\Olcs\Api\Domain\Command\SystemParameter\Update as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Transfer\Command\SystemParameter\UpdateSystemParameter as Cmd;
 
 /**
  * Update SystemParameter
@@ -24,7 +24,8 @@ class UpdateTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 'NAME',
-            'value' => 'Foo',
+            'paramValue' => 'Foo',
+            'description' => 'Bar'
         ];
         $command = Cmd::create($data);
 

@@ -887,6 +887,14 @@ return [
 
     Command\PrintScheduler\PrintJob::class => CommandHandler\PrintScheduler\PrintJob::class,
 
+    // Transfer - SystemParameter
+    TransferCommand\SystemParameter\CreateSystemParameter::class =>
+        CommandHandler\SystemParameter\Create::class,
+    TransferCommand\SystemParameter\UpdateSystemParameter::class =>
+        CommandHandler\SystemParameter\Update::class,
+    TransferCommand\SystemParameter\DeleteSystemParameter::class =>
+        CommandHandler\SystemParameter\Delete::class,
+
     // Sla Target Dates
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
     TransferCommand\System\UpdateSlaTargetDate::class => CommandHandler\System\UpdateSlaTargetDate::class,
