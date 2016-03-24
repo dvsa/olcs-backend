@@ -20,78 +20,77 @@ class OutstandingApplicationsTest extends SubmissionSectionTest
             'tables' => [
                 'outstanding-applications' => [
                     0 => [
-
                         'id' => 1,
                         'version' => 2,
-                        'applicationType' => 'TBC',
+                        'applicationType' => 'New',
                         'receivedDate' => '05/05/2014',
                         'oor' => 'Unknown',
-                        'ooo' => 'Unknown'
+                        'ooo' => 'Unknown',
+                        'licNo' => 'OB12345'
                     ],
                     1 => [
-
                         'id' => 101,
                         'version' => 202,
-                        'applicationType' => 'TBC',
+                        'applicationType' => 'New',
                         'receivedDate' => '05/05/2014',
                         'oor' => 'Unknown',
-                        'ooo' => 'Unknown'
+                        'ooo' => 'Unknown',
+                        'licNo' => 'OB12345'
                     ],
                     2 => [
-
                         'id' => 2,
                         'version' => 4,
-                        'applicationType' => 'TBC',
+                        'applicationType' => 'New',
                         'receivedDate' => '05/05/2014',
                         'oor' => 'Unknown',
-                        'ooo' => 'Unknown'
+                        'ooo' => 'Unknown',
+                        'licNo' => 'OB12345'
                     ],
                     3 => [
-
                         'id' => 102,
                         'version' => 204,
-                        'applicationType' => 'TBC',
+                        'applicationType' => 'New',
                         'receivedDate' => '05/05/2014',
                         'oor' => 'Unknown',
-                        'ooo' => 'Unknown'
+                        'ooo' => 'Unknown',
+                        'licNo' => 'OB12345'
                     ],
                     4 => [
-
                         'id' => 1,
                         'version' => 2,
-                        'applicationType' => 'TBC',
+                        'applicationType' => 'New',
                         'receivedDate' => '05/05/2014',
                         'oor' => 'Unknown',
-                        'ooo' => 'Unknown'
+                        'ooo' => 'Unknown',
+                        'licNo' => 'OB12345'
                     ],
                     5 => [
-
                         'id' => 101,
                         'version' => 202,
-                        'applicationType' => 'TBC',
+                        'applicationType' => 'New',
                         'receivedDate' => '05/05/2014',
                         'oor' => 'Unknown',
-                        'ooo' => 'Unknown'
+                        'ooo' => 'Unknown',
+                        'licNo' => 'OB12345'
                     ],
                     6 => [
-
                         'id' => 2,
                         'version' => 4,
-                        'applicationType' => 'TBC',
+                        'applicationType' => 'New',
                         'receivedDate' => '05/05/2014',
                         'oor' => 'Unknown',
-                        'ooo' => 'Unknown'
+                        'ooo' => 'Unknown',
+                        'licNo' => 'OB12345'
                     ],
                     7 => [
-
                         'id' => 102,
                         'version' => 204,
-                        'applicationType' => 'TBC',
+                        'applicationType' => 'New',
                         'receivedDate' => '05/05/2014',
                         'oor' => 'Unknown',
-                        'ooo' => 'Unknown'
+                        'ooo' => 'Unknown',
+                        'licNo' => 'OB12345'
                     ]
-
                 ]
             ]
         ]
