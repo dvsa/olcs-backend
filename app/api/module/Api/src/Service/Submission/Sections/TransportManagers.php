@@ -86,34 +86,13 @@ final class TransportManagers extends AbstractSection
         $thisRow['tmType'] = !empty($transportManager->getTmType()) ?
             $transportManager->getTmType()->getDescription() : '';
 
-        $thisRow += $this->extractPersonData($transportManager);
+        $thisRow += $this->extractPerson($transportManager->getHomeCd());
 
         $thisRow['qualifications'] = $this->extractQualificationsData($transportManager);
 
         $thisRow['otherLicences'] = $this->extractOtherLicenceData($transportManager);
 
         $this->dataToReturnArray[] = $thisRow;
-    }
-
-    /**
-     * Extract person details as array
-     * @param TransportManager $transportManager
-     * @return array
-     */
-    private function extractPersonData(TransportManager $transportManager)
-    {
-        $personData = [];
-        $homeCd = $transportManager->getHomeCd();
-        $person = !empty($homeCd) ? $homeCd->getPerson() : null;
-
-        if ($person instanceof Person) {
-            $personData['title'] = (null !== $person->getTitle()) ? $person->getTitle()->getDescription() : '';
-            $personData['forename'] = $person->getForename();
-            $personData['familyName'] = $person->getFamilyName();
-            $personData['dob'] = $person->getBirthDate();
-        }
-
-        return $personData;
     }
 
     /**
