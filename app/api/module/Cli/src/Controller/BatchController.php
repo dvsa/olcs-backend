@@ -194,7 +194,7 @@ class BatchController extends AbstractConsoleController
         $dto = Command\SystemParameter\Update::create(
             [
                 'id' => $name,
-                'value' => $value,
+                'paramValue' => $value,
             ]
         );
 
