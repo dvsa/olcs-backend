@@ -495,4 +495,32 @@ class MergeTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
     }
+
+
+    public function testHandleCommandRecipientAlreadyRemoved()
+    {
+        $data = [
+            'id' => 3,
+            'recipientTransportManager' => 9,
+            'confirm' => true
+        ];
+
+        $mockDonorTm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
+        $mockRecipientTm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
+        $mockRecipientTm->setRemovedDate('2015-01-01');
+
+        $mockDonorTm->setMergeToTransportManager(new \Dvsa\Olcs\Api\Entity\Tm\TransportManager());
+
+        $command = Cmd::create($data);
+
+        $this->repoMap['TransportManager']->shouldReceive('fetchById')->with(3)->once()->andReturn($mockDonorTm);
+        $this->repoMap['TransportManager']->shouldReceive('fetchById')->with(9)->once()->andReturn($mockRecipientTm);
+
+        try {
+            $this->sut->handleCommand($command);
+            $this->fail('ValidationException should have been thrown');
+        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
+            $this->assertArrayHasKey('TM_MERGE_RECIPIENT_REMOVED', $e->getMessages());
+        }
+    }
 }
