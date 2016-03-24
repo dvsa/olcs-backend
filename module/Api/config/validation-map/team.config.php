@@ -11,4 +11,5 @@ return [
     CommandHandler\Team\DeleteTeam::class                                   => CanManageUserInternal::class,
     QueryHandler\Team\Team::class                                           => IsInternalUser::class,
     QueryHandler\Team\TeamList::class                                       => IsInternalUser::class,
+    QueryHandler\Team\TeamListData::class                                   => IsInternalUser::class,
 ];
