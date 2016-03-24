@@ -1,34 +1,20 @@
 <?php
 
 /**
- * Team
+ * Team List
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Team;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractListQueryHandler;
 
 /**
- * Team
+ * Team List
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class TeamList extends AbstractQueryHandler
+class TeamList extends AbstractListQueryHandler
 {
     protected $repoServiceName = 'Team';
-
-    public function handleQuery(QueryInterface $query)
-    {
-        $repo = $this->getRepo();
-
-        return [
-            'result' => $this->resultList(
-                $repo->fetchList($query, Query::HYDRATE_OBJECT)
-            ),
-            'count' => $repo->fetchCount($query)
-        ];
-    }
 }
