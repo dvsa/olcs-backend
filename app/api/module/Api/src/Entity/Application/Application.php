@@ -74,6 +74,10 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     const APPLICATION_TYPE_NEW = 0;
     const APPLICATION_TYPE_VARIATION = 1;
 
+    // @to-do this needs moving to ref data
+    const APPLICATION_TYPE_NEW_DESCRIPTION = 'New';
+    const APPLICATION_TYPE_VARIATION_DESCRIPTION = 'Variation';
+
     const CODE_GV_APP = 'GV79';
     const CODE_GV_VAR_UPGRADE = 'GV80A';
     const CODE_GV_VAR_NO_UPGRADE = 'GV81';
@@ -479,6 +483,24 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         return self::APPLICATION_TYPE_NEW;
+    }
+
+    /**
+     * Until the application type is moved to ref data, this method aids the return of a sensible description for
+     * display. Eventually there will be lots more logic around this, hence it lives here within the entity itself
+     * and not tucked inside a table formatter.
+     *
+     * @to-do Replaced constants with ref data
+     *
+     * @return string
+     */
+    public function getApplicationTypeDescription()
+    {
+        if ($this->getApplicationType() === self::APPLICATION_TYPE_VARIATION) {
+            return self::APPLICATION_TYPE_VARIATION_DESCRIPTION;
+        }
+
+        return self::APPLICATION_TYPE_NEW_DESCRIPTION;
     }
 
     public function getApplicationDate()

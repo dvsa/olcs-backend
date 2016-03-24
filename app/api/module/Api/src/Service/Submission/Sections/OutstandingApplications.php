@@ -25,8 +25,9 @@ final class OutstandingApplications extends AbstractSection
             $applicationEntity = $outstandingApplications->current();
 
             $data[$i]['id'] = $applicationEntity->getId();
+            $data[$i]['licNo'] = $applicationEntity->getLicence()->getLicNo();
             $data[$i]['version'] = $applicationEntity->getVersion();
-            $data[$i]['applicationType'] = 'TBC';
+            $data[$i]['applicationType'] = $applicationEntity->getApplicationTypeDescription();
             $data[$i]['receivedDate'] = $this->formatDate($applicationEntity->getReceivedDate());
             $data[$i]['oor'] = $applicationEntity->getOutOfRepresentationDateAsString();
             $data[$i]['ooo'] = $applicationEntity->getOutOfOppositionDateAsString();
