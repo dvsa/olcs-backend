@@ -31,6 +31,7 @@ final class Merge extends AbstractCommandHandler implements TransactionedInterfa
         $donorTm = $this->getRepo()->fetchById($command->getId());
         /* @var $recipientTm TransportManager */
         $recipientTm = $this->getRepo()->fetchById($command->getRecipientTransportManager());
+
         $confirm = $command->getConfirm();
 
         $this->validate($donorTm, $recipientTm, $confirm);
@@ -95,7 +96,12 @@ final class Merge extends AbstractCommandHandler implements TransactionedInterfa
 
         // check if already merged, dont allow
         if ($donorTm->getMergeToTransportManager()) {
-            $messages['TM_MERGE_ALREADY_MERGED'] = 'Transport Manager has aleady been merged';
+            $messages['TM_MERGE_ALREADY_MERGED'] = 'Transport Manager has already been merged';
+        }
+
+        // check if recipientTm is not already removed
+        if (!empty($recipientTm->getRemovedDate())) {
+            $messages['TM_MERGE_RECIPIENT_REMOVED'] = 'Recipient Transport Manager has already been removed';
         }
 
         if (!empty($messages)) {
