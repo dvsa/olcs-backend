@@ -306,6 +306,7 @@ return [
     TransferCommand\Irfo\CnsIrfoPsvAuth::class => CommandHandler\Irfo\CnsIrfoPsvAuth::class,
     TransferCommand\Irfo\RenewIrfoPsvAuth::class => CommandHandler\Irfo\RenewIrfoPsvAuth::class,
     TransferCommand\Irfo\ResetIrfoPsvAuth::class => CommandHandler\Irfo\ResetIrfoPsvAuth::class,
+    TransferCommand\Irfo\PrintIrfoPsvAuthChecklist::class => CommandHandler\Irfo\PrintIrfoPsvAuthChecklist::class,
 
     // Transfer - Publication
     TransferCommand\Publication\CreateRecipient::class => CommandHandler\Publication\CreateRecipient::class,

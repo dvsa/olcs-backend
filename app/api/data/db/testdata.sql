@@ -1801,10 +1801,10 @@ INSERT INTO `irfo_psv_auth` (`organisation_id`, `irfo_psv_auth_type_id`, `status
 VALUES
     (101, 1, 'irfo_auth_s_approved', 'psv_freq_daily', '17/1', 'From', 'To', 3, '2015-03-10',  NOW(), '2016-10-31', '2018-03-09', 'FeeId'),
     (101, 1, 'irfo_auth_s_renew', 'psv_freq_daily', '17/2', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-29', '2016-10-19', 'FeeId'),
-    (101, 1, 'irfo_auth_s_pending', 'psv_freq_daily', '17/3', 'From', 'To', 1, '2015-10-30',  NOW(), '2016-10-19', '2016-10-19', 'FeeId'),
-    (101, 1, 'irfo_auth_s_granted', 'psv_freq_daily', '17/4', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-01', '2016-10-19', 'FeeId'),
-    (101, 1, 'irfo_auth_s_cns', 'psv_freq_daily', '17/5', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-01', '2016-10-19', 'FeeId'),
-    (101, 1, 'irfo_auth_s_pending', 'psv_freq_daily', '17/6', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-01', '2016-10-19', 'FeeId');
+    (101, 2, 'irfo_auth_s_pending', 'psv_freq_daily', '19A/3', 'From', 'To', 1, '2015-10-30',  NOW(), '2016-10-19', '2016-10-19', 'FeeId'),
+    (101, 3, 'irfo_auth_s_granted', 'psv_freq_daily', '18/4', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-01', '2016-10-19', 'FeeId'),
+    (101, 4, 'irfo_auth_s_cns', 'psv_freq_daily', '19/5', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-01', '2016-10-19', 'FeeId'),
+    (101, 7, 'irfo_auth_s_pending', 'psv_freq_daily', '21/6', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-01', '2016-10-19', 'FeeId');
 
 INSERT INTO `irfo_permit_stock` (`serial_no`, `irfo_country_id`, `status`, `valid_for_year`, `irfo_gv_permit_id`, `created_on`)
 VALUES
