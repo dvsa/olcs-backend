@@ -23,7 +23,15 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
     {
         /* @var $systemParameter \Dvsa\Olcs\Api\Entity\System\SystemParameter */
         $systemParameter = $this->getRepo()->fetchUsingId($command);
-        $systemParameter->setParamValue($command->getValue());
+        $systemParameter->setParamValue($command->getParamValue());
+        /*
+         * this CommandHandler could be called from 2 different places, one command (Command/SystremParameter/Update)
+         * doesn't pass the description field, another one (TransferCommand/SystemParameter/Update) pass the description
+         * field so we need to check if we have such a method in command before updating
+         */
+        if (method_exists($command, 'getDescription')) {
+            $systemParameter->setDescription($command->getDescription());
+        }
         $this->getRepo()->save($systemParameter);
 
         $this->result->addMessage("SystemParameter '{$command->getId()}' updated");

@@ -467,6 +467,10 @@ return [
     TransferQuery\RefData\RefDataList::class => QueryHandler\RefData\RefDataList::class,
     TransferQuery\LocalAuthority\LocalAuthorityList::class => QueryHandler\LocalAuthority\LocalAuthorityList::class,
 
+    // SystemParameter
+    TransferQuery\SystemParameter\SystemParameter::class => QueryHandler\SystemParameter\SystemParameter::class,
+    TransferQuery\SystemParameter\SystemParameterList::class => QueryHandler\SystemParameter\SystemParameterList::class,
+
     // Sla Target Dates
     TransferQuery\System\SlaTargetDate::class => QueryHandler\System\SlaTargetDate::class,
 
