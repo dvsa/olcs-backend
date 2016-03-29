@@ -10,6 +10,9 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Queue;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Domain\Repository\Queue as QueueRepo;
+use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+use Dvsa\Olcs\Api\Domain\Query\Queue\NextItem as NextItemQuery;
 
 /**
  * Next Item Queue Query Handler
@@ -20,10 +23,21 @@ class NextItem extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Queue';
 
+    /**
+     * @param QueryInterface $query
+     * @return QueueEntity|null
+     */
     public function handleQuery(QueryInterface $query)
     {
+        /**
+         * @var QueueRepo $repo
+         * @var QueueEntity $entity
+         * @var NextItemQuery $query
+         */
+        $repo = $this->getRepo();
+
         try {
-            $entity = $this->getRepo()->getNextItem($query->getType());
+            $entity = $repo->getNextItem($query->getType());
         } catch (NotFoundException $ex) {
             return null;
         }
