@@ -274,7 +274,7 @@ class BatchControllerTest extends TestCase
             ->andReturnUsing(
                 function ($dto) {
                     $this->assertSame('NAME', $dto->getId());
-                    $this->assertSame('VALUE', $dto->getValue());
+                    $this->assertSame('VALUE', $dto->getParamValue());
 
                     return new Command\Result();
                 }

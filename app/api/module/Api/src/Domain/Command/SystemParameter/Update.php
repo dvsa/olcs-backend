@@ -11,13 +11,13 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class Update extends AbstractIdOnlyCommand
 {
-    protected $value;
+    protected $paramValue;
 
     /**
      * @return mixed
      */
-    public function getValue()
+    public function getParamValue()
     {
-        return $this->value;
+        return $this->paramValue;
     }
 }
