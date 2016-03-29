@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * Create Queue item
@@ -37,10 +36,6 @@ final class Create extends AbstractCommandHandler
         );
 
         $queue->setEntityId($command->getEntityId());
-
-        if ($command->getUser()) {
-            $queue->setCreatedBy($this->getRepo()->getReference(UserEntity::class, $command->getUser()));
-        }
 
         if ($command->getOptions()) {
             $queue->setOptions($command->getOptions());

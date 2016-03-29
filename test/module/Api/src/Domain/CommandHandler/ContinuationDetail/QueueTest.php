@@ -24,17 +24,12 @@ class QueueTest extends CommandHandlerTestCase
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('ContinuationDetail', \Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail::class);
-        $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
-        ];
 
         parent::setUp();
     }
 
     public function testHandleCommand()
     {
-        $this->mockAuthService();
-
         $data = [
             'ids' => [1],
             'type' => QueueEntity::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER
@@ -48,8 +43,7 @@ class QueueTest extends CommandHandlerTestCase
         $params = [
             'entityId' => 1,
             'type' => QueueEntity::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER,
-            'status' => QueueEntity::STATUS_QUEUED,
-            'user' => 1
+            'status' => QueueEntity::STATUS_QUEUED
         ];
         $this->expectedSideEffect(CreateQueueCmd::class, $params, $queueLettersResult);
 
@@ -60,15 +54,5 @@ class QueueTest extends CommandHandlerTestCase
         ];
         $this->assertEquals($messages, $result->getMessages());
         $this->assertEquals(['queue' => 1], $result->getIds());
-    }
-
-    protected function mockAuthService()
-    {
-        /** @var User $mockUser */
-        $mockUser = m::mock(User::class)->makePartial();
-        $mockUser->setId(1);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($mockUser);
     }
 }
