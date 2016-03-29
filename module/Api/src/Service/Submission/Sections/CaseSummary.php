@@ -33,7 +33,8 @@ final class CaseSummary extends AbstractSection
         $data += $this->extractLicenceData($licence);
 
         // application data
-        $data['serviceStandardDate'] = !empty($application) ? $application->getTargetCompletionDate() : '';
+        $data['serviceStandardDate'] = !empty($application) ?
+            $this->formatDate($application->getTargetCompletionDate()) : '';
 
         return ['data' => ['overview' => $data]];
     }
