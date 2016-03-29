@@ -33,9 +33,10 @@ class TransportManagersTest extends SubmissionSectionTest
                             'title' => 'title-desc',
                             'forename' => 'fn22',
                             'familyName' => 'sn22',
-                            'dob' => new \DateTime('1977-01-22'),
                             'qualifications' => [],
-                            'otherLicences' => []
+                            'otherLicences' => [],
+                            'birthDate' => '22/01/1977',
+                            'birthPlace' => 'bp'
                         ],
                         1 => [
                             'id' => 153,
@@ -45,7 +46,6 @@ class TransportManagersTest extends SubmissionSectionTest
                             'title' => 'title-desc',
                             'forename' => 'fn22',
                             'familyName' => 'sn22',
-                            'dob' => new \DateTime('1977-01-22'),
                             'qualifications' => [
                                 0 => 'tm-qual-desc'
                             ],
@@ -54,7 +54,9 @@ class TransportManagersTest extends SubmissionSectionTest
                                     'licNo' => '1-licNo',
                                     'applicationId' => 2255
                                 ]
-                            ]
+                            ],
+                            'birthDate' => '22/01/1977',
+                            'birthPlace' => 'bp'
                         ],
                         2 => [
                             'id' => 153,
@@ -64,7 +66,6 @@ class TransportManagersTest extends SubmissionSectionTest
                             'title' => 'title-desc',
                             'forename' => 'fn22',
                             'familyName' => 'sn22',
-                            'dob' => new \DateTime('1977-01-22'),
                             'qualifications' => [
                                 0 => 'tm-qual-desc'
                             ],
@@ -73,7 +74,9 @@ class TransportManagersTest extends SubmissionSectionTest
                                     'licNo' => '1-licNo',
                                     'applicationId' => 2255
                                 ]
-                            ]
+                            ],
+                            'birthDate' => '22/01/1977',
+                            'birthPlace' => 'bp'
                         ]
                     ]
                 ]
