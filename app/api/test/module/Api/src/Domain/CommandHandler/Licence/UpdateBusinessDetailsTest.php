@@ -323,9 +323,6 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    /**
-     * @group test123
-     */
     public function testHandleCommandWithPermissionWithChangeSelfserve()
     {
         $data = [
