@@ -70,9 +70,10 @@ trait EmailAwareTrait
      * @param string $cmdClass
      * @param array $cmdData
      * @param int $entityId
+     * @param string|null $processAfterDate
      * @return CreateQueue
      */
-    public function emailQueue($cmdClass, array $cmdData, $entityId)
+    public function emailQueue($cmdClass, array $cmdData, $entityId, $processAfterDate = null)
     {
         $options =                     [
             'commandClass' => $cmdClass,
@@ -84,7 +85,8 @@ trait EmailAwareTrait
                 'entityId' => $entityId,
                 'type' => Queue::TYPE_EMAIL,
                 'status' => Queue::STATUS_QUEUED,
-                'options' => ZendJson::encode($options)
+                'options' => ZendJson::encode($options),
+                'processAfterDate' => $processAfterDate
             ]
         );
     }
