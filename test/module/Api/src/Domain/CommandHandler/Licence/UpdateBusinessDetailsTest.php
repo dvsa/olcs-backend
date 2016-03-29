@@ -323,6 +323,9 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
+    /**
+     * @group test123
+     */
     public function testHandleCommandWithPermissionWithChangeSelfserve()
     {
         $data = [
@@ -339,6 +342,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
                 'postcode' => 'AB1 1AB'
             ],
             'natureOfBusiness' => 'Stuff',
+            'allowEmail' => 'Y'
         ];
         $command = Cmd::create($data);
 
@@ -353,6 +357,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
         $organisation->setNatureOfBusiness('Stuff');
         $organisation->shouldReceive('hasInforceLicences')
             ->andReturn(false);
+        $organisation->setAllowEmail('N');
 
         /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();

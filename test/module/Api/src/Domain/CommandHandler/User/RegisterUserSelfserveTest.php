@@ -165,6 +165,7 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
 
         $this->assertEquals(OrganisationEntity::ORG_TYPE_SOLE_TRADER, $savedOrg->getType()->getId());
         $this->assertEquals($data['organisationName'], $savedOrg->getName());
+        $this->assertEquals('Y', $savedOrg->getAllowEmail());
 
         $this->assertInstanceOf(ContactDetailsEntity::class, $savedUser->getContactDetails());
         $this->assertEquals(

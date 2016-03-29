@@ -175,5 +175,10 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
                 $organisation->setCompanyOrLlpNo($command->getCompanyOrLlpNo());
             }
         }
+        // update allowEmail flag regardless of all conditions
+        if (!empty($command->getAllowEmail()) && $organisation->getAllowEmail() != $command->getAllowEmail()) {
+            $this->hasChangedOrg = true;
+            $organisation->setAllowEmail($command->getAllowEmail());
+        }
     }
 }
