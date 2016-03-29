@@ -31,11 +31,6 @@ class CreateTest extends CommandHandlerTestCase
             QueueEntity::STATUS_QUEUED,
             QueueEntity::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER
         ];
-        $this->references = [
-            UserEntity::class => [
-                2 => m::mock(UserEntity::class)
-            ]
-        ];
 
         parent::setUp();
     }
@@ -50,7 +45,6 @@ class CreateTest extends CommandHandlerTestCase
                 'status' => QueueEntity::STATUS_QUEUED,
                 'type' => QueueEntity::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER,
                 'entityId' => 1,
-                'user' => 2,
                 'options' => '{"foo":"bar"}',
             ]
         );
@@ -80,10 +74,7 @@ class CreateTest extends CommandHandlerTestCase
             $savedQueue->getStatus(),
             $this->refData[QueueEntity::STATUS_QUEUED]
         );
-        $this->assertEquals(
-            $savedQueue->getCreatedBy(),
-            $this->references[UserEntity::class][2]
-        );
+
         $this->assertEquals(
             $savedQueue->getOptions(),
             '{"foo":"bar"}'

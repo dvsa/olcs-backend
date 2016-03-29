@@ -38,12 +38,6 @@ class RequestReportTest extends CommandHandlerTestCase
 
         $this->sut = new RequestReport();
 
-        /** @var UserEntity $mockUser */
-        $mockUser = m::mock(UserEntity::class)
-            ->shouldReceive('getId')
-            ->andReturn(123)
-            ->getMock();
-
         $this->mockedSmServices[AuthorizationService::class]
             ->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
