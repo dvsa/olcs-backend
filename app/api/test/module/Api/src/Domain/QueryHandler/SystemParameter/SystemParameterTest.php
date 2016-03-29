@@ -15,11 +15,11 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 
 /**
- * Team Test
+ * SystemParameter Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class TeamTest extends QueryHandlerTestCase
+class SystemParameterTest extends QueryHandlerTestCase
 {
     public function setUp()
     {

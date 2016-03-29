@@ -7,25 +7,15 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\SystemParameter;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractDeleteCommandHandler;
 
 /**
  * Delete a SystemParameter
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class Delete extends AbstractCommandHandler
+final class Delete extends AbstractDeleteCommandHandler
 {
     protected $repoServiceName = 'SystemParameter';
-
-    public function handleCommand(CommandInterface $command)
-    {
-        $systemParameter = $this->getRepo()->fetchUsingId($command);
-        $this->getRepo()->delete($systemParameter);
-
-        $this->result->addId('systemParameter', $systemParameter->getId());
-        $this->result->addMessage('System Parameter deleted successfully');
-        return $this->result;
-    }
 }
