@@ -46,7 +46,8 @@ class QueueEntityTest extends EntityTester
         $this->assertNull(
             $sut->validateQueue(
                 Entity::TYPE_CPID_EXPORT_CSV,
-                Entity::STATUS_QUEUED
+                Entity::STATUS_QUEUED,
+                '2015-12-25 04:30:00'
             )
         );
     }
@@ -54,18 +55,19 @@ class QueueEntityTest extends EntityTester
     /**
      * @dataProvider queueDataProvider
      */
-    public function testValidateQueueWithException($type, $status)
+    public function testValidateQueueWithException($type, $status, $date)
     {
         $this->setExpectedException(ValidationException::class);
         $sut = new $this->entityClass();
-        $sut->validateQueue($type, $status);
+        $sut->validateQueue($type, $status, $date);
     }
 
     public function queueDataProvider()
     {
         return [
-            [Entity::TYPE_COMPANIES_HOUSE_INITIAL, 'foo'],
-            ['bar', Entity::STATUS_QUEUED]
+            [Entity::TYPE_COMPANIES_HOUSE_INITIAL, 'foo', null],
+            ['bar', Entity::STATUS_QUEUED, ''],
+            [Entity::TYPE_COMPANIES_HOUSE_INITIAL, Entity::STATUS_QUEUED, 'date not valid']
         ];
     }
 }
