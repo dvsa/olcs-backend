@@ -11,12 +11,10 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cpms\RequestReport;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
 use Dvsa\Olcs\Transfer\Command\Cpms\RequestReport as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
  *  Cpms Request Report Command Handler Test
@@ -32,15 +30,10 @@ class RequestReportTest extends CommandHandlerTestCase
         $this->mockCpmsService = m::mock(CpmsHelper::class);
 
         $this->mockedSmServices = [
-            'CpmsHelperService' => $this->mockCpmsService,
-            AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
+            'CpmsHelperService' => $this->mockCpmsService
         ];
 
         $this->sut = new RequestReport();
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('getIdentity->getUser')
-            ->andReturn($mockUser);
 
         parent::setUp();
     }
@@ -77,7 +70,6 @@ class RequestReportTest extends CommandHandlerTestCase
             [
                 'type' => Queue::TYPE_CPMS_REPORT_DOWNLOAD,
                 'status' => Queue::STATUS_QUEUED,
-                'user' => 123,
                 'options' => '{"reference":"OLCS-1234-FOO","name":"FILENAME"}',
             ],
             $queueResult
