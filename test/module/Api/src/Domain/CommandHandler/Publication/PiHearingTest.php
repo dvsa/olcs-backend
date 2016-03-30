@@ -292,12 +292,12 @@ class PiHearingTest extends CommandHandlerTestCase
         );
 
         $policeDataMock = m::mock(PoliceEntity::class);
-        $policeDataMock->shouldReceive('setPublicationLink')->once()->with(null)->andReturnSelf();
+        //$policeDataMock->shouldReceive('setPublicationLink')->once()->with(null)->andReturnSelf();
         $policeArrayCollection = new ArrayCollection([$policeDataMock]);
 
         $publicationLinkMock = m::mock(PublicationLinkEntity::class)->makePartial();
         $publicationLinkMock->shouldReceive('getId')->andReturn(1);
-        $publicationLinkMock->shouldReceive('getPoliceDatas')->once()->andReturn($policeArrayCollection);
+        //$publicationLinkMock->shouldReceive('getPoliceDatas')->once()->andReturn($policeArrayCollection);
 
         $this->mockedSmServices[PublicationGenerator::class]
             ->shouldReceive('createPublication')
