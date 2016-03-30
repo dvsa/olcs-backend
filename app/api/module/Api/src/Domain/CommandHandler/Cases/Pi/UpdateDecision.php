@@ -39,7 +39,12 @@ final class UpdateDecision extends AbstractCommandHandler implements Transaction
         $result = new Result();
 
         $decisions = $this->buildArrayCollection(PiDecisionEntity::class, $command->getDecisions());
-        $tmDecisions = $this->buildArrayCollection(RefData::class, $command->getTmDecisions());
+
+        // default to empty ArrayCollection
+        $tmDecisions = $this->buildArrayCollection('', []);
+        if (method_exists($command, 'getTmDecisions')) {
+            $tmDecisions = $this->buildArrayCollection(RefData::class, $command->getTmDecisions());
+        }
 
         /** @var PiEntity $pi */
         $pi = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
@@ -50,18 +55,23 @@ final class UpdateDecision extends AbstractCommandHandler implements Transaction
         /** @var RefData $presidingTcRole */
         $presidingTcRole = $this->getRepo()->getRefdataReference($command->getDecidedByTcRole());
 
+        $tmCalledWithOperator = $this->extractCommandVariable($command, 'tmCalledWithOperator');
+        $licenceRevokedAtPi = $this->extractCommandVariable($command, 'licenceRevokedAtPi');
+        $licenceSuspendedAtPi = $this->extractCommandVariable($command, 'licenceSuspendedAtPi');
+        $licenceCurtailedAtPi = $this->extractCommandVariable($command, 'licenceCurtailedAtPi');
+
         $pi->updatePiWithDecision(
             $presidingTc,
             $presidingTcRole,
             $decisions,
-            $command->getLicenceRevokedAtPi(),
-            $command->getLicenceSuspendedAtPi(),
-            $command->getLicenceCurtailedAtPi(),
+            $licenceRevokedAtPi,
+            $licenceSuspendedAtPi,
+            $licenceCurtailedAtPi,
             $command->getWitnesses(),
             $command->getDecisionDate(),
             $command->getNotificationDate(),
             $command->getDecisionNotes(),
-            $command->getTmCalledWithOperator(),
+            $tmCalledWithOperator,
             $tmDecisions
         );
 
