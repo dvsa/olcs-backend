@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateCmd;
 
 /**
  * Create Queue item
@@ -24,9 +24,12 @@ final class Create extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
+        /**
+         * @var CreateCmd $command
+         */
         $queue = new QueueEntity();
 
-        $queue->validateQueue($command->getType(), $command->getStatus());
+        $queue->validateQueue($command->getType(), $command->getStatus(), $command->getProcessAfterDate());
 
         $queue->setType(
             $this->getRepo()->getRefdataReference($command->getType())
@@ -38,12 +41,15 @@ final class Create extends AbstractCommandHandler
 
         $queue->setEntityId($command->getEntityId());
 
-        if ($command->getUser()) {
-            $queue->setCreatedBy($this->getRepo()->getReference(UserEntity::class, $command->getUser()));
-        }
-
         if ($command->getOptions()) {
             $queue->setOptions($command->getOptions());
+        }
+
+        //using not empty as potentially we could end up with empty string instead of null
+        //date has been validated using validateQueue above
+        if (!empty($command->getProcessAfterDate())) {
+            $processAfterDate = new \DateTime($command->getProcessAfterDate());
+            $queue->setProcessAfterDate($processAfterDate);
         }
 
         $this->getRepo()->save($queue);

@@ -79,7 +79,13 @@ class Queue extends AbstractQueue
         }
     }
 
-    public function validateQueue($type, $status)
+    /**
+     * @param string $type
+     * @param string $status
+     * @param string $processAfterDate
+     * @throws ValidationException
+     */
+    public function validateQueue($type, $status, $processAfterDate)
     {
         if (!in_array($type, $this->types)) {
             throw new ValidationException(['error' => 'Unknown queue type']);
@@ -87,6 +93,15 @@ class Queue extends AbstractQueue
 
         if (!in_array($status, $this->statuses)) {
             throw new ValidationException(['error' => 'Unknown queue status']);
+        }
+
+        //using not empty as potentially we could end up with empty string instead of null
+        if (!empty($processAfterDate)) {
+            $processAfterDateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $processAfterDate);
+
+            if (!$processAfterDateTime instanceof \DateTime) {
+                throw new ValidationException(['error' => 'Queue process after date is not valid']);
+            }
         }
     }
 }
