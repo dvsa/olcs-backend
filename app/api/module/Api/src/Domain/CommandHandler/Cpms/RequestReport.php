@@ -12,22 +12,18 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Cpms\RequestReport as Cmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Request Cpms Report
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class RequestReport extends AbstractCommandHandler implements AuthAwareInterface, CpmsAwareInterface
+final class RequestReport extends AbstractCommandHandler implements CpmsAwareInterface
 {
-    use CpmsAwareTrait,
-        AuthAwareTrait;
+    use CpmsAwareTrait;
 
     /**
      * @param Cmd $command
@@ -51,7 +47,6 @@ final class RequestReport extends AbstractCommandHandler implements AuthAwareInt
             [
                 'type' => Queue::TYPE_CPMS_REPORT_DOWNLOAD,
                 'status' => Queue::STATUS_QUEUED,
-                'user' => $this->getCurrentUser()->getId(),
                 'options' => json_encode(
                     [
                         'reference' => $data['reference'],

@@ -13,7 +13,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Queue as Repo;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * Queue Create Command Handler Test
@@ -31,11 +30,6 @@ class CreateTest extends CommandHandlerTestCase
             QueueEntity::STATUS_QUEUED,
             QueueEntity::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER
         ];
-        $this->references = [
-            UserEntity::class => [
-                2 => m::mock(UserEntity::class)
-            ]
-        ];
 
         parent::setUp();
     }
@@ -45,16 +39,20 @@ class CreateTest extends CommandHandlerTestCase
      */
     public function testHandleCommand()
     {
+        $processAfterDate = '2015-12-25 04:30:00';
+        $processAfterDateTime = new \DateTime($processAfterDate);
+
         $command = Cmd::create(
             [
                 'status' => QueueEntity::STATUS_QUEUED,
                 'type' => QueueEntity::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER,
                 'entityId' => 1,
-                'user' => 2,
                 'options' => '{"foo":"bar"}',
+                'processAfterDate' => $processAfterDate,
             ]
         );
 
+        /** @var QueueEntity $savedQueue */
         $savedQueue = null;
         $this->repoMap['Queue']
             ->shouldReceive('save')
@@ -81,12 +79,12 @@ class CreateTest extends CommandHandlerTestCase
             $this->refData[QueueEntity::STATUS_QUEUED]
         );
         $this->assertEquals(
-            $savedQueue->getCreatedBy(),
-            $this->references[UserEntity::class][2]
-        );
-        $this->assertEquals(
             $savedQueue->getOptions(),
             '{"foo":"bar"}'
+        );
+        $this->assertEquals(
+            $savedQueue->getProcessAfterDate(),
+            $processAfterDateTime
         );
     }
 }

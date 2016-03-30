@@ -22,9 +22,9 @@ final class Create extends AbstractCommand
 
     protected $status;
 
-    protected $user;
-
     protected $options;
+
+    protected $processAfterDate;
 
     /**
      * @return mixed
@@ -51,14 +51,6 @@ final class Create extends AbstractCommand
     }
 
     /**
-     * @return mixed
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
      * Gets the value of options.
      *
      * @return mixed
@@ -66,5 +58,15 @@ final class Create extends AbstractCommand
     public function getOptions()
     {
         return $this->options;
+    }
+
+    /**
+     * Gets process after date
+     *
+     * @return string
+     */
+    public function getProcessAfterDate()
+    {
+        return $this->processAfterDate;
     }
 }

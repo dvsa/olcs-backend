@@ -22,12 +22,10 @@ class CreateTest extends PHPUnit_Framework_TestCase
         $params = [
             'type' => 'foo',
             'status' => 'bar',
-            'entityId' => 1,
-            'user' => 2
+            'entityId' => 1
         ];
         $command = Create::create($params);
 
-        $this->assertEquals(2, $command->getUser());
         $this->assertEquals('foo', $command->getType());
         $this->assertEquals('bar', $command->getStatus());
         $this->assertEquals(1, $command->getEntityId());
