@@ -21,7 +21,7 @@ use Doctrine\ORM\Query;
 /**
  * Update pi decision
  */
-final class UpdateDecision extends AbstractCommandHandler implements TransactionedInterface
+final class UpdateTmDecision extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Pi';
 
@@ -39,7 +39,9 @@ final class UpdateDecision extends AbstractCommandHandler implements Transaction
         $result = new Result();
 
         $decisions = $this->buildArrayCollection(PiDecisionEntity::class, $command->getDecisions());
-        $tmDecisions = $this->buildArrayCollection(RefData::class, $command->getTmDecisions());
+
+        // default to empty ArrayCollection
+        $tmDecisions = $this->buildArrayCollection('', []);
 
         /** @var PiEntity $pi */
         $pi = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
@@ -54,14 +56,14 @@ final class UpdateDecision extends AbstractCommandHandler implements Transaction
             $presidingTc,
             $presidingTcRole,
             $decisions,
-            $command->getLicenceRevokedAtPi(),
-            $command->getLicenceSuspendedAtPi(),
-            $command->getLicenceCurtailedAtPi(),
+            null,
+            null,
+            null,
             $command->getWitnesses(),
             $command->getDecisionDate(),
             $command->getNotificationDate(),
             $command->getDecisionNotes(),
-            $command->getTmCalledWithOperator(),
+            null,
             $tmDecisions
         );
 
