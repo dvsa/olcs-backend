@@ -31,6 +31,7 @@ return [
     CommandHandler\Cases\Pi\CreateHearing::class                            => IsInternalUser::class,
     CommandHandler\Cases\Pi\Reopen::class                                   => IsInternalUser::class,
     CommandHandler\Cases\Pi\UpdateDecision::class                           => IsInternalUser::class,
+    CommandHandler\Cases\Pi\UpdateTmDecision::class                         => IsInternalUser::class,
     CommandHandler\Cases\Pi\UpdateHearing::class                            => IsInternalUser::class,
     CommandHandler\Cases\Pi\UpdateSla::class                                => IsInternalUser::class,
     CommandHandler\Cases\Prohibition\Create::class                          => IsInternalUser::class,
