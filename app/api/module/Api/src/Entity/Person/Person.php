@@ -44,7 +44,11 @@ class Person extends AbstractPerson implements OrganisationProviderInterface
         $this->setTitle($title);
 
         if ($birthDate !== null) {
-            $this->setBirthDate(new \DateTime($birthDate));
+            if ($birthDate === '') {
+                $this->setBirthDate(null);
+            } else {
+                $this->setBirthDate(new \DateTime($birthDate));
+            }
         }
 
         if ($birthPlace !== null) {
