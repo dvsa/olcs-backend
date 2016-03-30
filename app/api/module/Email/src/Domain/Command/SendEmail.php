@@ -24,6 +24,10 @@ class SendEmail extends AbstractCommand
 
     protected $cc = [];
 
+    protected $bcc = [];
+
+    protected $docs = [];
+
     protected $subject;
 
     protected $subjectVariables;
@@ -52,6 +56,16 @@ class SendEmail extends AbstractCommand
     public function getCc()
     {
         return $this->cc;
+    }
+
+    public function getBcc()
+    {
+        return $this->bcc;
+    }
+
+    public function getDocs()
+    {
+        return $this->docs;
     }
 
     public function getSubject()
