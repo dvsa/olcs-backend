@@ -138,6 +138,7 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
             $this->getRepo()->getRefdataReference($data['businessType'])
         );
         $organisation->setName($data['organisationName']);
+        $organisation->setAllowEmail('Y');
 
         // save
         $this->getRepo('Organisation')->save($organisation);
