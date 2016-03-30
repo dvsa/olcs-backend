@@ -372,15 +372,6 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     protected $reasons;
 
     /**
-     * Section code text
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="section_code_text", length=1024, nullable=true)
-     */
-    protected $sectionCodeText;
-
-    /**
      * Tc written decision date
      *
      * @var \DateTime
@@ -1361,29 +1352,6 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
         }
 
         return $this;
-    }
-
-    /**
-     * Set the section code text
-     *
-     * @param string $sectionCodeText
-     * @return Pi
-     */
-    public function setSectionCodeText($sectionCodeText)
-    {
-        $this->sectionCodeText = $sectionCodeText;
-
-        return $this;
-    }
-
-    /**
-     * Get the section code text
-     *
-     * @return string
-     */
-    public function getSectionCodeText()
-    {
-        return $this->sectionCodeText;
     }
 
     /**

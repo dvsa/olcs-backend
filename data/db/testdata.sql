@@ -1135,15 +1135,15 @@ INSERT INTO `disqualification` (
 INSERT INTO `pi` (`id`,`agreed_by_tc_id`,`agreed_by_tc_role`,`assigned_to`,`decided_by_tc_id`,`decided_by_tc_role`,
   `pi_status`,`written_outcome`,`case_id`,`created_by`,`last_modified_by`,`brief_to_tc_date`,`call_up_letter_date`,
   `written_decision_letter_date`,`decision_letter_sent_date`,`decision_notes`,`licence_curtailed_at_pi`,
-  `licence_revoked_at_pi`,`licence_suspended_at_pi`,`notification_date`,`section_code_text`,`tc_written_decision_date`,
+  `licence_revoked_at_pi`,`licence_suspended_at_pi`,`notification_date`,`tc_written_decision_date`,
   `tc_written_reason_date`,`written_reason_date`,`written_reason_letter_date`,`agreed_date`,`closed_date`,`comment`,
   `created_on`,`decision_date`,`deleted_date`,`is_cancelled`,`last_modified_on`,`version`,`witnesses`)
 VALUES
   (1,2,'tc_r_dtc',NULL,2,'tc_r_dhtru','pi_s_reg',NULL,24,NULL,NULL,NULL,NULL,NULL,NULL,
-   'S13 - Consideration of new application under Section 13',0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,'2014-11-24',NULL,
+   'S13 - Consideration of new application under Section 13',0,0,0,NULL,NULL,NULL,NULL,NULL,'2014-11-24',NULL,
    'Test Pi','2014-11-24 10:06:49',NULL,NULL,0,'2014-12-11 10:49:57',2,0),
    (2,2,'tc_r_dtc',NULL,2,'tc_r_dhtru','pi_s_reg',NULL,84,NULL,NULL,NULL,NULL,NULL,NULL,
-   'S13 - Consideration of new application under Section 13',0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,'2014-11-24',NULL,
+   'S13 - Consideration of new application under Section 13',0,0,0,NULL,NULL,NULL,NULL,NULL,'2014-11-24',NULL,
    'Test Pi','2014-11-24 10:06:49',NULL,NULL,0,'2014-12-11 10:49:57',2,0);
 
 INSERT INTO `pi_hearing` (`id`,`pi_id`,`presided_by_role`,`created_by`,`last_modified_by`,`venue_id`,`presiding_tc_id`,`adjourned_date`,`adjourned_reason`,`cancelled_date`,`cancelled_reason`,`details`,`is_adjourned`,`presiding_tc_other`,`created_on`,`hearing_date`,`is_cancelled`,`last_modified_on`,`venue_other`,`version`,`witnesses`)
