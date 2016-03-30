@@ -26,18 +26,29 @@ class PersonEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
-    public function testUpdatePerson()
+    /**
+     * @dataProvider birthDateProvider
+     */
+    public function testUpdatePerson($birthDate, $expected)
     {
         $entity = new Entity();
         $title = m::mock(RefData::class);
 
-        $entity->updatePerson('forename', 'familyname', $title, '2015-01-01', 'bplace');
+        $entity->updatePerson('forename', 'familyname', $title, $birthDate, 'bplace');
 
         $this->assertSame($title, $entity->getTitle());
         $this->assertEquals('forename', $entity->getForename());
         $this->assertEquals('familyname', $entity->getFamilyName());
-        $this->assertEquals(new \DateTime('2015-01-01'), $entity->getBirthDate());
+        $this->assertEquals($expected, $entity->getBirthDate());
         $this->assertEquals('bplace', $entity->getBirthPlace());
+    }
+
+    public function birthDateProvider()
+    {
+        return [
+            ['2015-01-01', new \DateTime('2015-01-01')],
+            [null, null]
+        ];
     }
 
     public function testGetContactDetail()
