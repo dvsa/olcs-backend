@@ -21,9 +21,13 @@ class Message
 
     protected $cc = [];
 
+    protected $bcc = [];
+
     protected $subject;
 
     protected $subjectVariables = [];
+
+    protected $docs = [];
 
     protected $body;
 
@@ -44,8 +48,10 @@ class Message
             'fromEmail' => $this->getFromEmail(),
             'to' => $this->getTo(),
             'cc' => $this->getCc(),
+            'bcc' => $this->getBcc(),
             'subject' => $this->getSubject(),
             'subjectVariables' => $this->getSubjectVariables(),
+            'docs' => $this->getDocs(),
             'body' => $this->getBody(),
             'html' => $this->getHtml(),
             'locale' => $this->getLocale()
@@ -229,6 +235,48 @@ class Message
     public function setCc(array $cc)
     {
         $this->cc = $cc;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBcc()
+    {
+        return $this->bcc;
+    }
+
+    /**
+     * Set bcc email addresses
+     *
+     * @param array $bcc [addr1, addr2, etc]
+     *
+     * @return \Dvsa\Olcs\Email\Data\Message
+     */
+    public function setBcc(array $bcc)
+    {
+        $this->bcc = $bcc;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDocs()
+    {
+        return $this->docs;
+    }
+
+    /**
+     * Set the document ids to attach to the email
+     *
+     * @param array $docs [doc1, doc2, etc]
+     *
+     * @return \Dvsa\Olcs\Email\Data\Message
+     */
+    public function setDocs(array $docs)
+    {
+        $this->docs = $docs;
         return $this;
     }
 
