@@ -84,6 +84,15 @@ final class CreateForResponsibilities extends AbstractCommandHandler implements
                 ]
             );
         }
+        if ($application->getStatus()->getId() !== ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED  &&
+            $application->getStatus()->getId() !== ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION) {
+            throw new ValidationException(
+                [
+                    'application' =>
+                        'You can add a transport manager to a not submitted or under consideration application only'
+                ]
+            );
+        }
         return $application;
     }
 

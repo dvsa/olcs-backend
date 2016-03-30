@@ -94,6 +94,14 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
                 ->getMock()
             )
             ->once()
+            ->shouldReceive('getStatus')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION)
+                    ->twice()
+                    ->getMock()
+            )
             ->getMock();
 
         $this->repoMap['Application']
@@ -253,6 +261,60 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
             ->shouldReceive('fetchByTmAndApplication')
             ->with(2, 1)
             ->andReturn(['tma'])
+            ->once()
+            ->getMock();
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testCommandHandlerWrongStatus()
+    {
+        $this->mockAuthService();
+
+        $expectedErrors = [
+            'application' =>
+                'You can add a transport manager to a not submitted or under consideration application only'
+        ];
+        $this->setExpectedException(ValidationException::class, $expectedErrors);
+
+        $command = Cmd::create(
+            [
+                'application' => 1,
+                'transportManager' => 2
+            ]
+        );
+
+        $mockApplication = m::mock()
+            ->shouldReceive('getLicenceType')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getStatus')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(ApplicationEntity::APPLICATION_STATUS_GRANTED)
+                ->twice()
+                ->getMock()
+            )
+            ->getMock();
+
+        $this->repoMap['Application']
+            ->shouldReceive('fetchWithLicence')
+            ->with(1)
+            ->andReturn($mockApplication)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['TransportManagerApplication']
+            ->shouldReceive('fetchByTmAndApplication')
+            ->with(2, 1)
+            ->andReturn([])
             ->once()
             ->getMock();
 
