@@ -47,7 +47,7 @@ class PersonEntityTest extends EntityTester
     {
         return [
             ['2015-01-01', new \DateTime('2015-01-01')],
-            [null, null]
+            ['', null]
         ];
     }
 
