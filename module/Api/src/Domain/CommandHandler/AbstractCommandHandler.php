@@ -265,12 +265,12 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     /**
      * Returns collection of entityClass objects.
      *
-     * @param $entityClass
+     * @param string $entityClass
      * @param array $referenceIds
      *
      * @return ArrayCollection
      */
-    protected function buildArrayCollection($entityClass, $referenceIds = [])
+    protected function buildArrayCollection($entityClass = '', $referenceIds = [])
     {
         $collection = new ArrayCollection();
 

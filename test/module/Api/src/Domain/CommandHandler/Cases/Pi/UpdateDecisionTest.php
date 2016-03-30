@@ -121,4 +121,61 @@ class UpdateDecisionTest extends CommandHandlerTestCase
 
         $this->assertInstanceOf(Result::class, $result);
     }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testHandleCommandNoHearings()
+    {
+        $licenceRevokedAtPi = 'Y';
+        $licenceSuspendedAtPi = 'N';
+        $licenceCurtailedAtPi = 'Y';
+        $id = 11;
+        $version = 22;
+        $witnesses = 33;
+        $decidedByTc = 44;
+        $decidedByTcRole = 'tc_r_dhtru';
+        $decisionDate = null;
+        $notificationDate = null;
+        $decisionNotes = 'decision notes';
+        $publish = 'Y';
+        $pubType = 'A&D';
+        $trafficAreas = ['M'];
+        $decisions = [66];
+
+        $command = Cmd::Create(
+            [
+                'id' => $id,
+                'version' => $version,
+                'decidedByTc' => $decidedByTc,
+                'decidedByTcRole' => $decidedByTcRole,
+                'decisionDate' => $decisionDate,
+                'notificationDate' => $notificationDate,
+                'witnesses' => $witnesses,
+                'decisions' => $decisions,
+                'licenceRevokedAtPi' => $licenceRevokedAtPi,
+                'licenceCurtailedAtPi' => $licenceCurtailedAtPi,
+                'licenceSuspendedAtPi' => $licenceSuspendedAtPi,
+                'decisionNotes' => $decisionNotes,
+                'publish' => $publish,
+                'pubType' => $pubType,
+                'trafficAreas' => $trafficAreas
+            ]
+        );
+
+        /** @var PiEntity $pi */
+        $pi = m::mock(PiEntity::class)->makePartial();
+        $pi->shouldReceive('getPiHearings')->andReturn([]);
+
+        $this->repoMap['Pi']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, $version)
+            ->andReturn($pi)
+            ->shouldReceive('save')
+            ->with(m::type(PiEntity::class))
+            ->once();
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertInstanceOf(Result::class, $result);
+    }
 }

@@ -8,6 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Pi;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
@@ -83,6 +84,10 @@ final class UpdateDecision extends AbstractCommandHandler implements Transaction
      */
     private function createPublishCommand($pi, $command)
     {
+        if (empty($pi->getPiHearings())) {
+            throw new ValidationException(['This Public Inquiry does not have any hearings to publish']);
+        }
+
         /**
          * @var PiEntity $pi
          * @var UpdateDecisionCmd $command
