@@ -9,19 +9,28 @@ namespace Dvsa\Olcs\Email\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Email\Domain\Command\SendEmail as Cmd;
+use Dvsa\Olcs\Email\Domain\Command\SendEmail as SendEmailCmd;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
 use Zend\I18n\Translator\TranslatorInterface;
 use Dvsa\Olcs\Email\Service\Email as EmailService;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
+use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
+use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
+use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 
 /**
  * Send Email
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class SendEmail extends AbstractCommandHandler
+class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
 {
+    use UploaderAwareTrait;
+
+    protected $repoServiceName = 'Document';
+
     /**
      * @var string
      */
@@ -203,12 +212,15 @@ class SendEmail extends AbstractCommandHandler
     }
 
     /**
-     * @param Cmd $command
-     * @return bool
+     * @param CommandInterface $command
+     * @return Result
      * @throws EmailNotSentException
      */
     public function handleCommand(CommandInterface $command)
     {
+        /**
+         * @var SendEmailCmd $command
+         */
         if (empty($command->getBody())) {
             throw new \RuntimeException('No message body has been set');
         }
@@ -228,8 +240,8 @@ class SendEmail extends AbstractCommandHandler
 
         $to = $command->getTo();
         $cc = $command->getCc();
-        // @todo When bcc is implemented
-        //$bcc = $command->getBcc();
+        $bcc = $command->getBcc();
+        $docs = $command->getDocs();
 
         if ($this->getSendAllMailTo()) {
             $to = $this->getSendAllMailTo();
@@ -238,11 +250,10 @@ class SendEmail extends AbstractCommandHandler
              */
             $cc = [];
 
-            // @todo When bcc is implemented
             /**
              * IMPORTANT BCC gets emptied when we have configured emails to be sent to 1 email address
              */
-            //$bcc = [];
+            $bcc = [];
 
             $originalTo = implode(', ', (array)$command->getTo());
 
@@ -253,15 +264,44 @@ class SendEmail extends AbstractCommandHandler
 
         $body = $this->replaceUris($this->translate($command->getBody(), $command->getLocale()));
 
-        $this->send($to, $subject, $body, $command->getHtml(), $fromEmail, $fromName, $cc);
+        /**
+         * @var DocumentRepo $docRepo
+         * @var DocumentEntity $doc
+         * @var array $fetchedDocs
+         */
+        $docRepo = $this->getRepo();
+        $fetchedDocs = $docRepo->fetchByIds($docs);
+        $downloadedDocs = [];
+
+        foreach ($fetchedDocs as $doc) {
+            $file = $this->getUploader()->download($doc->getIdentifier());
+
+            $downloadedDocs[] = [
+                'fileName' => basename($doc->getFilename()),
+                'content' => $file->getContent()
+            ];
+        }
+
+        $this->send($to, $subject, $body, $command->getHtml(), $fromEmail, $fromName, $cc, $bcc, $downloadedDocs);
 
         $this->result->addMessage('Email sent');
         return $this->result;
     }
 
-    protected function send($to, $subject, $body, $isHtml, $fromEmail, $fromName, $cc)
+    /**
+     * @param string $to
+     * @param string $subject
+     * @param string $body
+     * @param bool $isHtml
+     * @param string $fromEmail
+     * @param string $fromName
+     * @param array $cc
+     * @param array $bcc
+     * @param array $docs
+     */
+    protected function send($to, $subject, $body, $isHtml, $fromEmail, $fromName, array $cc, array $bcc, array $docs)
     {
-        $this->getEmailService()->send($fromEmail, $fromName, $to, $subject, $body, $isHtml, $cc);
+        $this->getEmailService()->send($fromEmail, $fromName, $to, $subject, $body, $isHtml, $cc, $bcc, $docs);
     }
 
     /**
