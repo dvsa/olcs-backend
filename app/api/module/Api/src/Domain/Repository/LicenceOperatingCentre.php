@@ -86,7 +86,8 @@ class LicenceOperatingCentre extends AbstractRepository
     {
         $mergedOc = [];
         foreach ($result as $oc) {
-            if (isset($oc['adr'])) {
+            // check key exists rather than "isset" as it could be null
+            if (array_key_exists('adr', $oc)) {
                 $mergedOc[] = $oc[0];
             } else {
                 $mergedOc[] = $oc;
