@@ -43,7 +43,6 @@ class Licence extends AbstractQueryHandler
         return $this->result(
             $licence,
             [
-                'organisation',
                 'cases' => [
                     'appeal' => [
                         'outcome',
@@ -65,7 +64,8 @@ class Licence extends AbstractQueryHandler
                     'organisationPersons' => [
                         'person'
                     ],
-                    'tradingNames'
+                    'tradingNames',
+                    'type'
                 ],
             ],
             [
