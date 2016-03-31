@@ -51,9 +51,9 @@ class LicenceOperatingCentreTest extends RepositoryTestCase
         $this->mockCreateQueryBuilder($qb);
 
         $qb->shouldReceive('getQuery->getArrayResult')
-            ->andReturn(['foo']);
+            ->andReturn([['foo']]);
 
-        $this->assertEquals(['foo'], $this->sut->fetchByLicenceIdForOperatingCentres(111));
+        $this->assertEquals([['foo']], $this->sut->fetchByLicenceIdForOperatingCentres(111));
 
         $expected = implode(
             ' ',
