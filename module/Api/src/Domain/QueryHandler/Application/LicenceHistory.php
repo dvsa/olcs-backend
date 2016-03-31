@@ -26,8 +26,6 @@ class LicenceHistory extends AbstractQueryHandler
     {
         $application = $this->getRepo()->fetchUsingId($query, Query::HYDRATE_OBJECT);
 
-        $data = $application->jsonSerialize();
-
         $types = [
             OtherLicence::TYPE_CURRENT,
             OtherLicence::TYPE_APPLIED,
@@ -40,14 +38,18 @@ class LicenceHistory extends AbstractQueryHandler
 
         $filter = new UnderscoreToCamelCase();
 
+        $data = [];
         foreach ($types as $type) {
-
             $formattedType = lcfirst($filter->filter($type));
 
             $otherLicences = $application->getOtherLicencesByType($this->getRepo()->getRefdataReference($type));
-            $data['otherLicences'][$formattedType] = $otherLicences->toArray();
+            $data['otherLicences'][$formattedType] = $this->resultList($otherLicences);
         }
 
-        return $data;
+        return $this->result(
+            $application,
+            [],
+            $data
+        );
     }
 }

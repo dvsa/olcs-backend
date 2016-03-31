@@ -35,42 +35,42 @@ class LicenceHistoryTest extends QueryHandlerTestCase
         $query = Qry::create(['id' => 111]);
 
         $mockLicence = m::mock()
-            ->shouldReceive('toArray')
-            ->andReturn('licences')
-            ->times(7)
+            ->shouldReceive('serialize')
+            ->andReturn('licence')
             ->getMock();
 
-        $mockApplication = m::mock()
-            ->shouldReceive('jsonSerialize')
-            ->andReturn(['application' => 'application'])
+        $mockApplication = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class)
+            ->shouldReceive('serialize')
+            ->with([])
+            ->andReturn(['id' => 111])
             ->once()
             ->shouldReceive('getOtherLicencesByType')
             ->with('current')
-            ->andReturn($mockLicence)
+            ->andReturn([$mockLicence])
             ->once()
             ->shouldReceive('getOtherLicencesByType')
             ->with('applied')
-            ->andReturn($mockLicence)
+            ->andReturn([$mockLicence])
             ->once()
             ->shouldReceive('getOtherLicencesByType')
             ->with('refused')
-            ->andReturn($mockLicence)
+            ->andReturn([$mockLicence])
             ->once()
             ->shouldReceive('getOtherLicencesByType')
             ->with('revoked')
-            ->andReturn($mockLicence)
+            ->andReturn([$mockLicence])
             ->once()
             ->shouldReceive('getOtherLicencesByType')
             ->with('public-inquiry')
-            ->andReturn($mockLicence)
+            ->andReturn([$mockLicence])
             ->once()
             ->shouldReceive('getOtherLicencesByType')
             ->with('disqualified')
-            ->andReturn($mockLicence)
+            ->andReturn([$mockLicence])
             ->once()
             ->shouldReceive('getOtherLicencesByType')
             ->with('held')
-            ->andReturn($mockLicence)
+            ->andReturn([$mockLicence])
             ->once()
             ->getMock();
 
@@ -108,18 +108,19 @@ class LicenceHistoryTest extends QueryHandlerTestCase
             ->once();
 
         $expected = [
-            'application' => 'application',
+            'id' => 111,
             'otherLicences' => [
-                'prevHasLicence' => 'licences',
-                'prevHadLicence' => 'licences',
-                'prevBeenRefused' => 'licences',
-                'prevBeenRevoked' => 'licences',
-                'prevBeenAtPi' => 'licences',
-                'prevBeenDisqualifiedTc' => 'licences',
-                'prevPurchasedAssets' => 'licences'
+                'prevHasLicence' => ['licence'],
+                'prevHadLicence' => ['licence'],
+                'prevBeenRefused' => ['licence'],
+                'prevBeenRevoked' => ['licence'],
+                'prevBeenAtPi' => ['licence'],
+                'prevBeenDisqualifiedTc' => ['licence'],
+                'prevPurchasedAssets' => ['licence']
             ]
         ];
         $result = $this->sut->handleQuery($query);
-        $this->assertEquals($result, $expected);
+
+        $this->assertEquals($result->serialize(), $expected);
     }
 }
