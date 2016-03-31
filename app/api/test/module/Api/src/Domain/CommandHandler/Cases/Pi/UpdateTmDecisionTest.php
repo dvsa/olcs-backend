@@ -8,10 +8,10 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Pi;
 use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Pi\UpdateDecision;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Pi\UpdateTmDecision;
 use Dvsa\Olcs\Api\Domain\Repository\Pi as PiRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Cases\Pi\UpdateDecision as Cmd;
+use Dvsa\Olcs\Transfer\Command\Cases\Pi\UpdateTmDecision as Cmd;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Decision as PiDecisionEntity;
@@ -20,13 +20,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Publication\PiDecision as PublishDecisionCmd;
 
 /**
- * Update Decision Test
+ * Update TM Decision Test
  */
-class UpdateDecisionTest extends CommandHandlerTestCase
+class UpdateTmDecisionTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new UpdateDecision();
+        $this->sut = new UpdateTmDecision();
         $this->mockRepo('Pi', PiRepo::class);
 
         parent::setUp();
@@ -52,9 +52,6 @@ class UpdateDecisionTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $licenceRevokedAtPi = 'Y';
-        $licenceSuspendedAtPi = 'N';
-        $licenceCurtailedAtPi = 'Y';
         $id = 11;
         $version = 22;
         $witnesses = 33;
@@ -66,7 +63,6 @@ class UpdateDecisionTest extends CommandHandlerTestCase
         $publish = 'Y';
         $pubType = 'A&D';
         $trafficAreas = ['M'];
-        $decisions = [66];
         $hearingId = 77;
 
         $command = Cmd::Create(
@@ -78,10 +74,6 @@ class UpdateDecisionTest extends CommandHandlerTestCase
                 'decisionDate' => $decisionDate,
                 'notificationDate' => $notificationDate,
                 'witnesses' => $witnesses,
-                'decisions' => $decisions,
-                'licenceRevokedAtPi' => $licenceRevokedAtPi,
-                'licenceCurtailedAtPi' => $licenceCurtailedAtPi,
-                'licenceSuspendedAtPi' => $licenceSuspendedAtPi,
                 'decisionNotes' => $decisionNotes,
                 'publish' => $publish,
                 'pubType' => $pubType,
@@ -127,9 +119,6 @@ class UpdateDecisionTest extends CommandHandlerTestCase
      */
     public function testHandleCommandNoHearings()
     {
-        $licenceRevokedAtPi = 'Y';
-        $licenceSuspendedAtPi = 'N';
-        $licenceCurtailedAtPi = 'Y';
         $id = 11;
         $version = 22;
         $witnesses = 33;
@@ -141,7 +130,7 @@ class UpdateDecisionTest extends CommandHandlerTestCase
         $publish = 'Y';
         $pubType = 'A&D';
         $trafficAreas = ['M'];
-        $decisions = [66];
+        $hearingId = 77;
 
         $command = Cmd::Create(
             [
@@ -152,10 +141,6 @@ class UpdateDecisionTest extends CommandHandlerTestCase
                 'decisionDate' => $decisionDate,
                 'notificationDate' => $notificationDate,
                 'witnesses' => $witnesses,
-                'decisions' => $decisions,
-                'licenceRevokedAtPi' => $licenceRevokedAtPi,
-                'licenceCurtailedAtPi' => $licenceCurtailedAtPi,
-                'licenceSuspendedAtPi' => $licenceSuspendedAtPi,
                 'decisionNotes' => $decisionNotes,
                 'publish' => $publish,
                 'pubType' => $pubType,
@@ -174,8 +159,6 @@ class UpdateDecisionTest extends CommandHandlerTestCase
             ->with(m::type(PiEntity::class))
             ->once();
 
-        $result = $this->sut->handleCommand($command);
-
-        $this->assertInstanceOf(Result::class, $result);
+        $this->sut->handleCommand($command);
     }
 }

@@ -265,12 +265,12 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     /**
      * Returns collection of entityClass objects.
      *
+     * @param string $entityClass
      * @param array $referenceIds
-     * @param $entityClass
      *
      * @return ArrayCollection
      */
-    protected function buildArrayCollection($entityClass, $referenceIds)
+    protected function buildArrayCollection($entityClass = '', $referenceIds = [])
     {
         $collection = new ArrayCollection();
 
@@ -281,5 +281,25 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         }
 
         return $collection;
+    }
+
+    /**
+     * Generates a variable from a given command, or if not present in the command, returns a default value.
+     *
+     * @param $command
+     * @param $variableName
+     * @param null $defaultValue
+     * @return null
+     */
+    protected function extractCommandVariable($command, $variableName, $defaultValue = null)
+    {
+        $commandVariable = $defaultValue;
+
+        $methodName = 'get' . ucfirst($variableName);
+        if (method_exists($command, $methodName)) {
+            $commandVariable = $command->$methodName();
+        }
+
+        return $commandVariable;
     }
 }

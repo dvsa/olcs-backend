@@ -170,7 +170,11 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
 
                 //if previous publication is found, remove it
                 if ($publicationLink->getId() !== null) {
-                    $this->clearPoliceData($publicationLink);
+                    /*
+                     * Removed this call to clearPoliceData as it was setting publicationLink to null which the schema
+                     * doesnt support
+                     */
+                    //$this->clearPoliceData($publicationLink);
                     $this->getRepo()->delete($publicationLink);
                 }
             }

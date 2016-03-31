@@ -142,6 +142,7 @@ return [
     TransferCommand\Cases\Pi\UpdateAgreedAndLegislation::class =>
         CommandHandler\Cases\Pi\AgreedAndLegislationUpdate::class,
     TransferCommand\Cases\Pi\UpdateDecision::class => CommandHandler\Cases\Pi\UpdateDecision::class,
+    TransferCommand\Cases\Pi\UpdateTmDecision::class => CommandHandler\Cases\Pi\UpdateTmDecision::class,
     TransferCommand\Cases\Pi\UpdateSla::class => CommandHandler\Cases\Pi\UpdateSla::class,
     TransferCommand\Cases\Pi\CreateHearing::class => CommandHandler\Cases\Pi\CreateHearing::class,
     TransferCommand\Cases\Pi\UpdateHearing::class => CommandHandler\Cases\Pi\UpdateHearing::class,
