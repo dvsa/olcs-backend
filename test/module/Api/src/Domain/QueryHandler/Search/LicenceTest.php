@@ -115,6 +115,8 @@ class LicenceTest extends QueryHandlerTestCase
 
         $licence->shouldReceive('getActiveVehiclesCount')
             ->andReturn(count($licenceVehicles));
+        $licence->shouldReceive('getActiveVehicles')
+            ->andReturn($licenceVehicles);
         $licence->shouldReceive('getPiRecordCount')
             ->andReturn(2);
         $licence->shouldReceive('getActiveCommunityLicences')
