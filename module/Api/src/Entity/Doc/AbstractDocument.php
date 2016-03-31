@@ -30,7 +30,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_document_operating_centre_id", columns={"operating_centre_id"}),
  *        @ORM\Index(name="ix_document_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_document_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_document_opposition_id", columns={"opposition_id"}),
  *        @ORM\Index(name="ix_document_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_document_irfo_organisation_id", columns={"irfo_organisation_id"}),
  *        @ORM\Index(name="ix_document_submission_id", columns={"submission_id"}),
@@ -282,20 +281,6 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
      */
     protected $operatingCentre;
-
-    /**
-     * Opposition
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Opposition\Opposition
-     *
-     * @ORM\ManyToOne(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Opposition\Opposition",
-     *     fetch="LAZY",
-     *     inversedBy="documents"
-     * )
-     * @ORM\JoinColumn(name="opposition_id", referencedColumnName="id", nullable=true)
-     */
-    protected $opposition;
 
     /**
      * Size
@@ -953,29 +938,6 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getOperatingCentre()
     {
         return $this->operatingCentre;
-    }
-
-    /**
-     * Set the opposition
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Opposition\Opposition $opposition
-     * @return Document
-     */
-    public function setOpposition($opposition)
-    {
-        $this->opposition = $opposition;
-
-        return $this;
-    }
-
-    /**
-     * Get the opposition
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Opposition\Opposition
-     */
-    public function getOpposition()
-    {
-        return $this->opposition;
     }
 
     /**
