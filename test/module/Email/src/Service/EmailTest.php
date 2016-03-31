@@ -106,7 +106,17 @@ class EmailTest extends MockeryTestCase
                 }
             );
 
-        $this->sut->send('foo@bar.com', 'foo', 'bar@foo.com', 'Subject', 'This is the content', true, ['cc@foo.com'], ['bcc@foo.com'], []);
+        $this->sut->send(
+            'foo@bar.com',
+            'foo',
+            'bar@foo.com',
+            'Subject',
+            'This is the content',
+            true,
+            ['cc@foo.com'],
+            ['bcc@foo.com'],
+            []
+        );
     }
 
     /**
@@ -147,7 +157,16 @@ class EmailTest extends MockeryTestCase
                 }
             );
 
-        $this->sut->send('foo@bar.com', 'foo', 'bar@foo.com', 'Subject', 'This is the content', false, ['cc@foo.com'], ['bcc@foo.com']);
+        $this->sut->send(
+            'foo@bar.com',
+            'foo',
+            'bar@foo.com',
+            'Subject',
+            'This is the content',
+            false,
+            ['cc@foo.com'],
+            ['bcc@foo.com']
+        );
     }
 
     /**
