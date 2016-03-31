@@ -17,8 +17,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="irfo_psv_auth_type",
  *    indexes={
  *        @ORM\Index(name="ix_irfo_psv_auth_type_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_irfo_psv_auth_type_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_irfo_psv_auth_type_irfo_fee_type", columns={"irfo_fee_type"})
+ *        @ORM\Index(name="ix_irfo_psv_auth_type_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_irfo_psv_auth_type_irfo_fee_type", columns={"irfo_fee_type"})
  *    }
  * )
  */
@@ -70,7 +72,7 @@ abstract class AbstractIrfoPsvAuthType implements BundleSerializableInterface, J
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="irfo_fee_type", referencedColumnName="id", nullable=false)
      */
     protected $irfoFeeType;
