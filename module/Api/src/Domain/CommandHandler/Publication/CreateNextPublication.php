@@ -29,7 +29,7 @@ final class CreateNextPublication extends AbstractCommandHandler implements Tran
 
         $newPublication = new PublicationEntity(
             $publication->getTrafficArea(),
-            $this->getRepo()->getRefDataReference(PublicationEntity::PUB_NEW_STATUS),
+            $this->getRepo()->getRefdataReference(PublicationEntity::PUB_NEW_STATUS),
             $publication->getDocTemplate(),
             $publication->getNextPublicationDate(),
             $publication->getPubType(),

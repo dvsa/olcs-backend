@@ -123,24 +123,32 @@ final class AssignSubmission extends AbstractCommandHandler implements
         }
 
         // create new task
-        $description = 'Licence ' . $submission->getCase()->getLicence()->getId() .
-            ' Case ' . $submission->getCase()->getId() .
-            ' Submission ' . $submission->getId();
 
         $data = [
             'category' => TaskEntity::CATEGORY_SUBMISSION,
             'subCategory' => TaskEntity::SUBCATEGORY_SUBMISSION_ASSIGNMENT,
-            'description' => $description,
             'actionDate' => date('Y-m-d'),
             'assignedToUser' => $recipientUser->getId(),
             'assignedToTeam' => $teamId,
             'assignedByUser' => $this->getCurrentUser()->getId(),
             'case' => $submission->getCase()->getId(),
             'submission' => $submission->getId(),
-            'licence' => $submission->getCase()->getLicence()->getId(),
             'urgent' => $command->getUrgent(),
             'isClosed' => 0
         ];
+
+        // generate description and licence OR TM data
+        if ($submission->getCase()->isTm()) {
+            $tmId = $submission->getCase()->getTransportManager()->getId();
+            $data['description'] = 'Transport Manager ' . $tmId . ' Case ' . $submission->getCase()->getId() .
+                ' Submission ' . $submission->getId();
+            $data['transportManager'] = $tmId;
+        } else {
+            $licenceId = $submission->getCase()->getLicence()->getId();
+            $data['description'] = 'Licence ' . $licenceId . ' Case ' . $submission->getCase()->getId() .
+                ' Submission ' . $submission->getId();
+            $data['licence'] = $licenceId;
+        }
 
         return CreateTaskCmd::create($data);
     }
