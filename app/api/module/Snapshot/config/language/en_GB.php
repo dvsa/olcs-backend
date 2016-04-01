@@ -313,4 +313,5 @@ return [
     'partners-signature' => 'Partner\'s signature',
     'owners-signature' => 'Owner\'s signature',
     'responsible-person-signature' => 'A responsible person\'s signature',
+    'application-review-safety-additional-information' => 'Additional information (optional)'
 ];
