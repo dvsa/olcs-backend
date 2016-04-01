@@ -7,6 +7,9 @@
  */
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
+
 /**
  * Application Safety Review Service
  *
@@ -43,6 +46,13 @@ class ApplicationSafetyReviewService extends AbstractReviewService
                 [
                     'label' => 'application-review-safety-tachographInsName',
                     'value' => $data['licence']['tachographInsName']
+                ]
+            ],
+            [
+                [
+                    'label' => 'application-review-safety-additional-information',
+                    'noEscape' => true,
+                    'value' => $this->getSafetyDocuments($data)
                 ]
             ],
             [
@@ -126,5 +136,27 @@ class ApplicationSafetyReviewService extends AbstractReviewService
         }
 
         return $this->translateReplace('no.of.weeks', [$value]);
+    }
+
+    private function getSafetyDocuments($data)
+    {
+        $files = $this->findFiles(
+            $data['documents'],
+            Category::CATEGORY_APPLICATION,
+            SubCategory::DOC_SUB_CATEGORY_MAINT_OTHER_DIGITAL
+        );
+        $documents = is_array($files) ? $files : [];
+        return $this->formatDocumentList($documents);
+    }
+
+    private function formatDocumentList($documents)
+    {
+        $files = [];
+
+        foreach ($documents as $document) {
+            $files[] = $document['filename'];
+        }
+
+        return implode('<br>', $files);
     }
 }
