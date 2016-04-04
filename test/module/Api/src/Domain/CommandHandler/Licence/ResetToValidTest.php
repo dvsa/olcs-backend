@@ -66,6 +66,7 @@ class ResetToValidTest extends CommandHandlerTestCase
                     $this->assertEquals(null, $licence->getCurtailedDate());
                     $this->assertEquals(null, $licence->getSuspendedDate());
                     $this->assertEquals(null, $licence->getRevokedDate());
+                    $this->assertEquals(null, $licence->getCnsDate());
                 }
             );
 
