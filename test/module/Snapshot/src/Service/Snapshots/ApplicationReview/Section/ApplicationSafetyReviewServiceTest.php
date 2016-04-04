@@ -12,6 +12,8 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationSafetyReviewService;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
 
 /**
  * Application Safety Review Service Test
@@ -80,6 +82,17 @@ class ApplicationSafetyReviewServiceTest extends MockeryTestCase
                                 ]
                             ]
                         ]
+                    ],
+                    'documents' => [
+                        [
+                            'filename' => 'file',
+                            'category' => [
+                                'id' => Category::CATEGORY_APPLICATION,
+                            ],
+                            'subCategory' => [
+                                'id' => SubCategory::DOC_SUB_CATEGORY_MAINT_OTHER_DIGITAL
+                            ]
+                        ]
                     ]
                 ],
                 [
@@ -108,6 +121,13 @@ class ApplicationSafetyReviewServiceTest extends MockeryTestCase
                                             [
                                                 'label' => 'application-review-safety-tachographInsName',
                                                 'value' => 'Bob'
+                                            ]
+                                        ],
+                                        [
+                                            [
+                                                'label' => 'application-review-safety-additional-information',
+                                                'noEscape' => true,
+                                                'value' => 'file'
                                             ]
                                         ],
                                         [
@@ -175,6 +195,17 @@ class ApplicationSafetyReviewServiceTest extends MockeryTestCase
                                 ]
                             ]
                         ]
+                    ],
+                    'documents' => [
+                        [
+                            'filename' => 'file',
+                            'category' => [
+                                'id' => Category::CATEGORY_APPLICATION,
+                            ],
+                            'subCategory' => [
+                                'id' => SubCategory::DOC_SUB_CATEGORY_MAINT_OTHER_DIGITAL
+                            ]
+                        ]
                     ]
                 ],
                 [
@@ -207,6 +238,13 @@ class ApplicationSafetyReviewServiceTest extends MockeryTestCase
                                             [
                                                 'label' => 'application-review-safety-tachographInsName',
                                                 'value' => 'Bob'
+                                            ]
+                                        ],
+                                        [
+                                            [
+                                                'label' => 'application-review-safety-additional-information',
+                                                'noEscape' => true,
+                                                'value' => 'file'
                                             ]
                                         ],
                                         [
