@@ -32,6 +32,7 @@ final class ResetToValid extends AbstractCommandHandler implements Transactioned
         $licence->setRevokedDate(null);
         $licence->setCurtailedDate(null);
         $licence->setSuspendedDate(null);
+        $licence->setCnsDate(null);
 
         $result = $this->handleSideEffect(
             RemoveLicenceStatusRulesForLicence::create(
