@@ -52,7 +52,7 @@ class ApplicationSafetyReviewService extends AbstractReviewService
                 [
                     'label' => 'application-review-safety-additional-information',
                     'noEscape' => true,
-                    'value' => $this->getSafetyDocuments($data)
+                    'value' => $this->getSafetyDocuments($data['documents'])
                 ]
             ],
             [
@@ -138,10 +138,16 @@ class ApplicationSafetyReviewService extends AbstractReviewService
         return $this->translateReplace('no.of.weeks', [$value]);
     }
 
-    private function getSafetyDocuments($data)
+    /**
+     * Get safety documents
+     *
+     * @param array $docs
+     * @return string
+     */
+    private function getSafetyDocuments($docs)
     {
         $files = $this->findFiles(
-            $data['documents'],
+            $docs,
             Category::CATEGORY_APPLICATION,
             SubCategory::DOC_SUB_CATEGORY_MAINT_OTHER_DIGITAL
         );
@@ -149,6 +155,12 @@ class ApplicationSafetyReviewService extends AbstractReviewService
         return $this->formatDocumentList($documents);
     }
 
+    /**
+     * Format document list
+     *
+     * @param array $documents
+     * @return string
+     */
     private function formatDocumentList($documents)
     {
         $files = [];
