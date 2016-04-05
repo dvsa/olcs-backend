@@ -64,7 +64,7 @@ final class Generate extends AbstractCommandHandler implements TransactionedInte
      * @param PublicationEntity $publication
      * @return GenerateDocCommand
      */
-    private function getGenerateDocCommand($publication)
+    private function getGenerateDocCommand(PublicationEntity $publication)
     {
         $data = [
             'template' => $publication->getDocTemplate()->getDocument()->getIdentifier(),
@@ -76,7 +76,7 @@ final class Generate extends AbstractCommandHandler implements TransactionedInte
             'category'      => $publication->getDocTemplate()->getCategory()->getId(),
             'subCategory'   => $publication->getDocTemplate()->getSubCategory()->getId(),
             'isExternal'    => true,
-            'isReadOnly'    => true
+            'isReadOnly'    => false
         ];
 
         return GenerateDocCommand::create($data);
