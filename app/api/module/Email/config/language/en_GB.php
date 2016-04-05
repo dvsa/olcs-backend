@@ -11,6 +11,7 @@ return array(
     'email.ebsr-withdrawn.subject' => 'EBSR Application Withdrawn - %s - EBSR ID: %s',
     'email.ebsr-failed.subject' => 'EBSR Application Failed - %s - EBSR ID: %s',
     'email.ebsr-failed-no-bus-reg.subject' => 'EBSR Application Failed - EBSR ID: %s',
+    'email.send-publication' => '%s issue number %s for the %s traffic area',
     'email.inbox-reminder.continuation.subject' => 'Operator licence continuation/expiry - Reminder',
     'email.inbox-reminder.standard.subject' => 'Operator licensing information - Reminder',
     'email.licensing-information.continuation.subject' => 'Operator licence continuation/expiry',
