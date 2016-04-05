@@ -86,10 +86,10 @@ class NamingServiceTest extends MockeryTestCase
     {
         $date = new DateTime();
 
-        $name = $this->sut->generateName('Some Desc', 'rtf');
+        $name = $this->sut->generateName('Some :/] Desc', 'rtf');
 
         $expected = sprintf(
-            'documents/Unknown/Unknown/%s/%s/%s__Some_Desc.rtf',
+            'documents/Unknown/Unknown/%s/%s/%s__Some___Desc.rtf',
             $date->format('Y'),
             $date->format('m'),
             $date->format('YmdHis')
@@ -114,10 +114,10 @@ class NamingServiceTest extends MockeryTestCase
         $entity->shouldReceive('getContextValue')
             ->andReturn('12345');
 
-        $name = $this->sut->generateName('Some Desc', 'rtf', $category, $subCategory, $entity);
+        $name = $this->sut->generateName('[Some :Desc\/]', 'rtf', $category, $subCategory, $entity);
 
         $expected = sprintf(
-            'documents/Cat/Sub_Cat/%s/%s/%s_12345_Some_Desc.rtf',
+            'documents/Cat/Sub_Cat/%s/%s/%s_12345_Some_Desc_.rtf',
             $date->format('Y'),
             $date->format('m'),
             $date->format('YmdHis')
