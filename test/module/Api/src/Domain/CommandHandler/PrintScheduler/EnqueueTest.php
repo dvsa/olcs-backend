@@ -10,7 +10,7 @@ use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 
 /**
- * CreateSeparatorSheetTest
+ * EnqueueTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
@@ -50,59 +50,71 @@ class EnqueueTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    public function testHandleCommandUserWithNoTeam()
+    public function testHandleCommandUserWithNoTeamPrinter()
     {
-        $this->markTestIncomplete('This is a temporary stub. Final implemention todo');
-
-        $user = new \Dvsa\Olcs\Api\Entity\User\User('PID', 'TYPE');
-        $user->setId(10);
-
         $command = Cmd::create(['documentId' => 200116]);
 
         $user = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
+        $team = new \Dvsa\Olcs\Api\Entity\User\Team();
+        $user->setTeam($team);
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')->andReturn($user);
 
+        $this->setExpectedException(
+            \Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class,
+            'Failed to generate document as there are no printer settings for the current user'
+        );
         $this->sut->handleCommand($command);
     }
 
-    public function testHandleCommandUserNoPrinters()
+    public function testHandleCommandUserWithNoTeam()
     {
-        $this->markTestSkipped('Temporarily disabled');
+        $command = Cmd::create(['documentId' => 200116, 'jobName' => 'JOBNAME']);
 
-        $command = Cmd::create(['documentId' => 200116]);
-
-        $team = new \Dvsa\Olcs\Api\Entity\User\Team();
         $user = new \Dvsa\Olcs\Api\Entity\User\User('PID', 'TYPE');
-        $user->setTeam($team);
         $user->setId(10);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')->andReturn($user);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
-        $this->sut->handleCommand($command);
+        $this->expectCreateQueue();
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(
+            ["Document id '200116', 'JOBNAME' queued for print"],
+            $result->getMessages()
+        );
     }
 
     public function testHandleCommand()
     {
-        $this->markTestSkipped('Temporarily disabled');
-
         $command = Cmd::create(['documentId' => 200116, 'jobName' => 'JOBNAME']);
 
         $team = new \Dvsa\Olcs\Api\Entity\User\Team();
-        $team->addPrinters('PRINTER 1');
+        $team->addTeamPrinters('PRINTER 1');
         $user = new \Dvsa\Olcs\Api\Entity\User\User('PID', 'TYPE');
         $user->setTeam($team);
         $user->setId(10);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')->andReturn($user);
 
+        $this->expectCreateQueue();
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(
+            ["Document id '200116', 'JOBNAME' queued for print"],
+            $result->getMessages()
+        );
+    }
+
+    private function expectCreateQueue()
+    {
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Create::class,
             [
                 'entityId' => 200116,
                 'type' => Queue::TYPE_PRINT,
                 'status' => Queue::STATUS_QUEUED,
-                'user' => 10,
                 'options' => json_encode(
                     [
                         'userId' => 10,
@@ -111,13 +123,6 @@ class EnqueueTest extends CommandHandlerTestCase
                 ),
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
-        );
-
-        $result = $this->sut->handleCommand($command);
-
-        $this->assertSame(
-            ["Document id '200116', 'JOBNAME' queued for print"],
-            $result->getMessages()
         );
     }
 }

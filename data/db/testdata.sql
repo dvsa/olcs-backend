@@ -2408,7 +2408,7 @@ INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, 
 COMMIT;
 -- End: Application 9
 
-INSERT INTO `printer` (`id`, `printer_name`) VALUES (1, 'Test Default Printer');
+INSERT INTO `printer` (`id`, `printer_name`, `description`) VALUES (1, 'TESTING-STUB-LICENCE:7','Test Default Printer');
 INSERT INTO `printer` (`id`, `printer_name`) VALUES (2, 'Test Printer');
 
 INSERT INTO `team_printer` (`id`, `version`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (1, 1, 1, 1, NULL, NULL);
