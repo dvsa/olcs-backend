@@ -30,6 +30,7 @@ return [
     BookmarkQuery\ImpoundingBundle::class => BookmarkQueryHandler\ImpoundingBundle::class,
     BookmarkQuery\InterimUnlinkedTm::class => BookmarkQueryHandler\InterimUnlinkedTm::class,
     BookmarkQuery\InterimOperatingCentres::class => BookmarkQueryHandler\InterimOperatingCentres::class,
+    BookmarkQuery\IrfoPsvAuthBundle::class => BookmarkQueryHandler\IrfoPsvAuthBundle::class,
     BookmarkQuery\UserBundle::class => BookmarkQueryHandler\UserBundle::class,
     BookmarkQuery\BusRegBundle::class => BookmarkQueryHandler\BusRegBundle::class,
     BookmarkQuery\PublicationLinkBundle::class => BookmarkQueryHandler\PublicationLinkBundle::class,

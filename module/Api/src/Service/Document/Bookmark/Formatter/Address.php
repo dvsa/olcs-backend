@@ -30,6 +30,11 @@ class Address implements FormatterInterface
             }
         }
 
+        if (!empty($data['countryCode']['countryDesc'])) {
+            // if provided, include country as well
+            $address[] = $data['countryCode']['countryDesc'];
+        }
+
         return implode(static::getSeparator(), $address);
     }
 
