@@ -46,6 +46,14 @@ class NamingService implements FactoryInterface
         return $this;
     }
 
+    /**
+     * @param string $description
+     * @param string $extension
+     * @param Category|null $category
+     * @param SubCategory|null $subCategory
+     * @param ContextProviderInterface|null $entity
+     * @return string
+     */
     public function generateName(
         $description,
         $extension,
@@ -53,6 +61,7 @@ class NamingService implements FactoryInterface
         SubCategory $subCategory = null,
         ContextProviderInterface $entity = null
     ) {
+        $description = $this->formatDescription($description);
         $model = new NamingModel(new DateTime(), $description, $extension, $category, $subCategory, $entity);
 
         $name = preg_replace_callback(
@@ -73,5 +82,19 @@ class NamingService implements FactoryInterface
     protected function valueOrAlt($value = null, $alt = 'Unknown')
     {
         return $value !== null ? $value : $alt;
+    }
+
+    /**
+     * Formats a description so that illegal characters don't make it into the file paths
+     *
+     * @param $input
+     * @return mixed
+     */
+    private function formatDescription($input)
+    {
+        $input = str_replace([' ', '/'], '_', $input);
+
+        // Only allow alpha-num plus "_()"
+        return preg_replace('/[^a-zA-Z0-9_\(\)\-\&]/', '', $input);
     }
 }
