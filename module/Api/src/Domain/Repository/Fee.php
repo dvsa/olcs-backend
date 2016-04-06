@@ -52,11 +52,11 @@ class Fee extends AbstractRepository
      *
      * @param int  $applicationId Application ID
      * @param bool $outstanding Include fees that are outstanding
-     * @param bool $payed Include fees that are payed
+     * @param bool $paid Include fees that are paid
      *
      * @return array
      */
-    public function fetchInterimFeesByApplicationId($applicationId, $outstanding = false, $payed = false)
+    public function fetchInterimFeesByApplicationId($applicationId, $outstanding = false, $paid = false)
     {
         $doctrineQb = $this->getQueryByApplicationFeeTypeFeeType(
             $applicationId,
@@ -66,8 +66,8 @@ class Fee extends AbstractRepository
         if ($outstanding) {
             $this->whereOutstandingFee($doctrineQb);
         }
-        if ($payed) {
-            $this->wherePayedFee($doctrineQb);
+        if ($paid) {
+            $this->wherePaidFee($doctrineQb);
         }
 
         return $doctrineQb->getQuery()->getResult();
@@ -395,11 +395,11 @@ class Fee extends AbstractRepository
     }
 
     /**
-     * Add conditions to the query builder to only select fees that are payed
+     * Add conditions to the query builder to only select fees that are paid
      *
      * @param \Doctrine\ORM\QueryBuilder $doctrineQb
      */
-    private function wherePayedFee($doctrineQb)
+    private function wherePaidFee($doctrineQb)
     {
         $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias.'.feeStatus', ':feeStatus'));
 
