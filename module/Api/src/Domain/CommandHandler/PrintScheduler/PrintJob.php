@@ -28,14 +28,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface, ConfigAwareInterface
+class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface, ConfigAwareInterface
 {
     use UploaderAwareTrait,
         ConfigAwareTrait;
 
     protected $repoServiceName = 'Document';
 
-    protected $extraRepos = ['User'];
+    protected $extraRepos = ['User', 'SystemParameter', 'Printer'];
 
     /**
      * @param Cmd $command
@@ -45,40 +45,73 @@ final class PrintJob extends AbstractCommandHandler implements UploaderAwareInte
         /** @var User $user */
         $user = $this->getRepo('User')->fetchById($command->getUser());
 
-        /** @var Document $document */
+        /* @var $document Document */
         $document = $this->getRepo('Document')->fetchById($command->getDocument());
 
-        $printer = $this->findPrinterForUserAndDocument($user, $document);
+        // get destination ie the CUPS print queue name
+        if ($user->getTeam()) {
+            $printer = $this->findPrinterForUserAndDocument($user, $document);
+            $destination = $printer->getPrinterName();
+        } else {
+            // If user does NOT have a team, they must be selfserve. Therefore get Printer from system parameter
+            $destination = $this->getSelfserveUserPrinter();
+        }
+
+        // get the name of the person who has sent the print job
+        $username = $user->getContactDetails()->getPerson()->getFullName();
+        // This config allows us to override the username on the environments that use the CUPS PDF print driver
+        // This is needed as the username has to exist on the CUPS box so that the PDF file can be created
+        if ($this->getConfigUser() !== false) {
+            $username = $this->getConfigUser();
+        }
+
+        // if the destination (queue name) is TESTING-STUB-LICENCE:n then attach it to a licence
+        // This allows testing without have to actually connect to multiple printers/queues
+        if (strpos($destination, 'TESTING-STUB-LICENCE:') === 0) {
+            $licenceId = (int) substr($destination, strlen('TESTING-STUB-LICENCE:'));
+
+            $this->stubPrint($document, $licenceId);
+
+            $this->result->addMessage('Printed successfully (stub to licence '. $licenceId .')');
+
+            return $this->result;
+        }
 
         $file = $this->getUploader()->download($document->getIdentifier());
-
         if ($file === null) {
             throw new Exception('Can\'t find document');
         }
 
-        $fileName = $this->createTmpFile($file, $command->getId(), basename($document->getFilename()));
+        try {
+            $fileName = $this->createTmpFile($file, $command->getId(), basename($document->getFilename()));
 
-        // @todo Get the destination from the printer
-        //$destination = $printer->getPrinterName();
-        $destination = 'OLCS';
-
-        // @todo Print server doesn't have perm to gen PDF unless the user exists on the box :(
-        $username = $user->getContactDetails()->getPerson()->getFullName();
-        // Hardcoded to my username for now, as this places the PDFs in my home dir, so I can check the output
-        $username = 'caigerr';
-
-        $this->printFile(
-            $fileName,
-            basename($fileName),
-            $destination,
-            $username
-        );
+            $this->printFile(
+                $fileName,
+                basename($fileName),
+                $destination,
+                $username
+            );
+        } finally {
+            // if something goes wrong, still delete temp files
+            $this->deleteTempFiles($fileName);
+        }
 
         $this->result->addMessage('Printed successfully');
 
         return $this->result;
     }
 
+    /**
+     * Create a temporary file
+     *
+     * @param File   $file
+     * @param string $prefix
+     * @param string $fileSuffix
+     *
+     * @return string path of temporary file
+     *
+     * @throws Exception
+     */
     protected function createTmpFile(File $file, $prefix = '', $fileSuffix = '')
     {
         $tmpFile = str_replace(' ', '_', '/tmp/' . $prefix . '-' . uniqid() . '-' . $fileSuffix);
@@ -90,42 +123,82 @@ final class PrintJob extends AbstractCommandHandler implements UploaderAwareInte
         throw new Exception('Can\'t create tmp file');
     }
 
+    /**
+     * Execute a system command
+     *
+     * @param string $command
+     * @param array  $output
+     * @param int    $result
+     */
+    protected function executeCommand($command, &$output, &$result)
+    {
+        exec($command, $output, $result);
+    }
+
+    /**
+     * Delete any temp files
+     *
+     * @param string $fileName
+     */
+    protected function deleteTempFiles($fileName)
+    {
+        // remove temporary rtf file
+        if (file_exists($fileName)) {
+            unlink($fileName);
+        }
+        // remove temporary pdf file
+        $pdfFilename = str_replace('.rtf', '.pdf', $fileName);
+        if (file_exists($pdfFilename)) {
+            unlink($pdfFilename);
+        }
+    }
+
     protected function printFile($fileName, $jobTitle, $destination, $username)
     {
-        $config = $this->getConfig();
-
-        if (empty($config['print']['server'])) {
+        $printServer = $this->getConfigPrintServer();
+        if ($printServer === false) {
             throw new RuntimeException('print.server is not set in config');
         }
 
-        $printServer = $config['print']['server'];
-        $command = sprintf(
-            'lpr "%s" -H %s -C "%s" -h -P %s -U "%s"',
-            $fileName,
-            $printServer,
-            $jobTitle,
-            $destination,
-            $username
+        // convert to PDF using open office
+        $commandPdf = sprintf(
+            'soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp %s',
+            escapeshellarg($fileName)
         );
+        $this->executeCommand($commandPdf, $outputPdf, $resultPdf);
+        if ($resultPdf !== 0) {
+            $exception = new NotReadyException('Print service not available: ' . implode("\n", $outputPdf));
+            $exception->setRetryAfter(60);
+            throw $exception;
+        }
 
-        exec($command, $output, $result);
-
-        if ($result !== 0) {
-            $exception = new NotReadyException('Print service not available: ' . implode("\n", $output));
+        // send to CUPS server
+        $commandPrint = sprintf(
+            'lpr %s -H %s -C %s -h -P %s -U %s',
+            escapeshellarg(str_replace('.rtf', '.pdf', $fileName)),
+            escapeshellarg($printServer),
+            escapeshellarg($jobTitle),
+            escapeshellarg($destination),
+            escapeshellarg($username)
+        );
+        $this->executeCommand($commandPrint, $outputPrint, $resultPrint);
+        if ($resultPrint !== 0) {
+            $exception = new NotReadyException('Print service not available: ' . implode("\n", $outputPrint));
             $exception->setRetryAfter(60);
             throw $exception;
         }
     }
 
     /**
+     * Find the printer to be used for a user
+     *
      * @param User $user
      * @param Document $document
+     *
      * @return Printer
      */
     protected function findPrinterForUserAndDocument(User $user, Document $document)
     {
-        $teamPrinters = $user->getTeam()->getPrinters();
-
         $criteria = [
             // First check for user + sub cat
             Criteria::create()
@@ -145,6 +218,7 @@ final class PrintJob extends AbstractCommandHandler implements UploaderAwareInte
                 ->andWhere(Criteria::expr()->isNull('subCategory'))
         ];
 
+        $teamPrinters = $user->getTeam()->getTeamPrinters();
         foreach ($criteria as $criterion) {
             $filteredPrinters = $teamPrinters->matching($criterion);
 
@@ -153,6 +227,85 @@ final class PrintJob extends AbstractCommandHandler implements UploaderAwareInte
             }
         }
 
-        throw new Exception('Can\'t find printer');
+        throw new Exception('Cannot find printer for User '. $user->getLoginId());
+    }
+
+    /**
+     * Get the printer queue for selfserve users
+     *
+     * @return string
+     */
+    private function getSelfserveUserPrinter()
+    {
+        $printerQueue = $this->getRepo('SystemParameter')
+            ->fetchValue(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER);
+
+        return $printerQueue;
+    }
+
+    /**
+     * Get print server address from config
+     *
+     * @return boolean|string
+     */
+    private function getConfigPrintServer()
+    {
+        $config = $this->getConfig();
+
+        if (isset($config['print']['server'])) {
+            return $config['print']['server'];
+        }
+
+        return false;
+    }
+
+    /**
+     * Get username from config
+     *
+     * @return boolean|string
+     */
+    private function getConfigUser()
+    {
+        $config = $this->getConfig();
+
+        if (isset($config['print']['options']['user'])) {
+            return $config['print']['options']['user'];
+        }
+
+        return false;
+    }
+
+    /**
+     * Stub printing by add a document to licence 7
+     *
+     * @todo remove this method when stubbing no longer required
+     * @codeCoverageIgnore
+     *
+     * @param Document $document  Document to be printed
+     * @param int      $licenceId Licence to attach to
+     */
+    private function stubPrint(Document $document, $licenceId = 7)
+    {
+        $printDocument = new \Dvsa\Olcs\Api\Entity\Doc\Document($document->getIdentifier());
+
+        $printDocument->setDescription("PRINT ". $document->getDescription());
+        $printDocument->setFilename(str_replace(' ', '_', $document->getDescription()) . '.rtf');
+        // hard coded simply so we can demo against *something*
+        $printDocument->setLicence(
+            $this->getRepo()->getReference(\Dvsa\Olcs\Api\Entity\Licence\Licence::class, $licenceId)
+        );
+        $printDocument->setCategory(
+            $this->getRepo()->getCategoryReference(\Dvsa\Olcs\Api\Entity\System\Category::CATEGORY_LICENSING)
+        );
+        $printDocument->setSubCategory(
+            $this->getRepo()->getSubCategoryReference(
+                \Dvsa\Olcs\Api\Entity\System\Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST
+            )
+        );
+        $printDocument->setIsExternal(false);
+        $printDocument->setIsReadOnly('Y');
+        $printDocument->setIssuedDate(new \Datetime());
+
+        $this->getRepo()->save($printDocument);
     }
 }
