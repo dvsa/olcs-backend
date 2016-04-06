@@ -7,14 +7,16 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\LicenceStatusRule;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
 use Dvsa\Olcs\Api\Domain\Repository\LicenceStatusRule as LicenceStatusRuleRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule\DeleteLicenceStatusRule;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
 use Dvsa\Olcs\Transfer\Command\LicenceStatusRule\DeleteLicenceStatusRule as Cmd;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
  * Class DeleteGracePeriodTest
@@ -29,6 +31,7 @@ class DeleteLicenceStatusRuleTest extends CommandHandlerTestCase
     {
         $this->sut = new DeleteLicenceStatusRule();
         $this->mockRepo('LicenceStatusRule', LicenceStatusRuleRepo::class);
+        $this->mockRepo('Licence', LicenceRepo::class);
 
         parent::setUp();
     }
@@ -41,10 +44,25 @@ class DeleteLicenceStatusRuleTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $this->repoMap['Licence']
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(LicenceEntity::class));
+
         $this->repoMap['LicenceStatusRule']
             ->shouldReceive('fetchById')
             ->once()
-            ->andReturn(m::mock(LicenceStatusRule::class))
+            ->andReturn(
+                m::mock(LicenceStatusRule::class)
+                    ->shouldReceive('getLicence')
+                    ->once()
+                    ->andReturn(
+                        m::mock(LicenceEntity::class)
+                            ->shouldReceive('setReasons')
+                            ->once()
+                            ->with(m::type(ArrayCollection::class))->getMock()
+                    )->getMock()
+            )
             ->shouldReceive('delete')
             ->once()
             ->with(m::type(LicenceStatusRule::class));

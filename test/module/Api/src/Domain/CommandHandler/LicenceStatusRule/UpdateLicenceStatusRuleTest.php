@@ -17,6 +17,9 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule\UpdateLicenceStatusRul
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
 
 use Dvsa\Olcs\Transfer\Command\LicenceStatusRule\UpdateLicenceStatusRule as Cmd;
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
  * Class UpdateLicenceStatusRuleTest
@@ -31,6 +34,7 @@ class UpdateLicenceStatusRuleTest extends CommandHandlerTestCase
     {
         $this->sut = new UpdateLicenceStatusRule();
         $this->mockRepo('LicenceStatusRule', StatusRuleRepo::class);
+        $this->mockRepo('Licence', LicenceRepo::class);
 
         parent::setUp();
     }
@@ -46,6 +50,11 @@ class UpdateLicenceStatusRuleTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $this->repoMap['Licence']
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(LicenceEntity::class));
+
         $this->repoMap['LicenceStatusRule']
             ->shouldReceive('fetchById')
             ->once()
@@ -57,6 +66,14 @@ class UpdateLicenceStatusRuleTest extends CommandHandlerTestCase
                     ->once()
                     ->shouldReceive('getId')
                     ->once()
+                    ->shouldReceive('getLicence')
+                    ->once()
+                    ->andReturn(
+                        m::mock(LicenceEntity::class)
+                            ->shouldReceive('setReasons')
+                            ->once()
+                            ->with(m::type(ArrayCollection::class))->getMock()
+                    )
                     ->getMock()
             )
             ->shouldReceive('save')

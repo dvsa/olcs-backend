@@ -8,7 +8,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule as LicenceStatusRuleEntity;
 
-
 /**
  * Class DeleteLicenceStatusRule
  *
