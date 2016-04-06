@@ -7,13 +7,13 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
-use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences as ReturnComLics;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
+use Dvsa\Olcs\Api\Entity\Pi\Reason as ReasonEntity;
 
 /**
  * Suspend a licence
@@ -30,6 +30,8 @@ final class Suspend extends AbstractCommandHandler implements TransactionedInter
         $licence = $this->getRepo()->fetchUsingId($command);
         $licence->setStatus($this->getRepo()->getRefdataReference(Licence::LICENCE_STATUS_SUSPENDED));
         $licence->setSuspendedDate(new \DateTime());
+
+        $licence->setReasons($this->buildArrayCollection(ReasonEntity::class, $command->getReasons()));
 
         $this->getRepo()->save($licence);
 
