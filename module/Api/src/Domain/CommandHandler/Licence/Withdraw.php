@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Pi\Reason as ReasonEntity;
 
 /**
  * Withdraw a licence
@@ -33,7 +32,6 @@ final class Withdraw extends AbstractCommandHandler implements TransactionedInte
                 Licence::LICENCE_STATUS_WITHDRAWN
             )
         );
-        $licence->setReasons($this->buildArrayCollection(ReasonEntity::class, $command->getReasons()));
 
         $this->getRepo()->save($licence);
 
