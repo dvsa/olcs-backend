@@ -77,6 +77,24 @@ class FeeTest extends RepositoryTestCase
         $this->assertSame('result', $this->sut->fetchInterimFeesByApplicationId(12, true));
     }
 
+    public function testFetchInterimFeesByApplicationIdPayed()
+    {
+        $mockQb = m::mock();
+
+        $this->setupFetchInterimFeesByApplicationId($mockQb, 12);
+
+        $this->em->shouldReceive('getReference')->with(
+            \Dvsa\Olcs\Api\Entity\System\RefData::class,
+            \Dvsa\Olcs\Api\Entity\Fee\Fee::STATUS_PAID
+        )->once()->andReturn('ot');
+
+        $mockQb->shouldReceive('expr->eq')->with('f.feeStatus', ':feeStatus')->once()->andReturn('expr-eq');
+        $mockQb->shouldReceive('andWhere')->with('expr-eq')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('feeStatus', 'ot')->once();
+
+        $this->assertSame('result', $this->sut->fetchInterimFeesByApplicationId(12, false, true));
+    }
+
     public function testFetchOutstandingFeesByOrganisationId()
     {
         $organisationId = 123;
