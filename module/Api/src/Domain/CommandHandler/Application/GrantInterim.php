@@ -16,6 +16,8 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Application\GrantInterim as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateApplicationFeeCmd;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 
 /**
  * Grant Interim
@@ -37,24 +39,36 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
         $application = $this->getRepo()->fetchUsingId($command);
 
         $existingFees = $this->getExistingFees($application);
+        $paidFees = $this->getPaidFees($application);
 
-        if (count($existingFees)) {
-
-            $this->generateInterimFeeRequestDocument($application, $existingFees[0]);
-
-            $application->setInterimStatus(
-                $this->getRepo()->getRefdataReference(ApplicationEntity::INTERIM_STATUS_GRANTED)
-            );
-
-            $this->result->addMessage('Interim status updated');
-
-            $this->getRepo()->save($application);
-
-            $this->result->addId('action', 'fee_request');
-        } else {
+        // if we had paid fees before interim status can be set to in-force
+        if (count($paidFees)) {
             $this->result->merge($this->handleSideEffect(InForceInterimCmd::create(['id' => $application->getId()])));
             $this->result->addId('action', 'in_force');
+            return $this->result;
         }
+
+        // if there is no fees - we need to create one
+        if (!count($existingFees)) {
+            $data = [
+                'id' => $application->getId(),
+                'feeTypeFeeType' => FeeType::FEE_TYPE_GRANTINT
+            ];
+            $feeResult = $this->handleSideEffect(CreateApplicationFeeCmd::create($data));
+            $this->result->merge($feeResult);
+            $latestFee = $this->getRepo('Fee')->fetchById($feeResult->getId('fee'));
+        } else {
+            $latestFee = $existingFees[0];
+        }
+
+        // prepare fee request document and change status to granted
+        $this->generateInterimFeeRequestDocument($application, $latestFee);
+        $application->setInterimStatus(
+            $this->getRepo()->getRefdataReference(ApplicationEntity::INTERIM_STATUS_GRANTED)
+        );
+        $this->result->addMessage('Interim status updated');
+        $this->getRepo()->save($application);
+        $this->result->addId('action', 'fee_request');
 
         return $this->result;
     }
@@ -68,6 +82,17 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
     private function getExistingFees(ApplicationEntity $application)
     {
         return $this->getRepo('Fee')->fetchInterimFeesByApplicationId($application->getId(), true);
+    }
+
+    /**
+     * Get paid grant fees
+     *
+     * @param ApplicationEntity $application
+     * @return array
+     */
+    private function getPaidFees(ApplicationEntity $application)
+    {
+        return $this->getRepo('Fee')->fetchInterimFeesByApplicationId($application->getId(), false, true);
     }
 
     private function generateInterimFeeRequestDocument(ApplicationEntity $application, Fee $fee)

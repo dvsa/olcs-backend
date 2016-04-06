@@ -20,6 +20,8 @@ use Dvsa\Olcs\Api\Entity\User\User;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\GrantInterim as Cmd;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateApplicationFeeCmd;
 
 /**
  * Grant Interim Test
@@ -53,7 +55,12 @@ class GrantInterimTest extends CommandHandlerTestCase
 
         $this->repoMap['Fee']->shouldReceive('fetchInterimFeesByApplicationId')
             ->with(111, true)
-            ->andReturn($fees);
+            ->andReturn($fees)
+            ->once()
+            ->shouldReceive('fetchInterimFeesByApplicationId')
+            ->with(111, false, true)
+            ->andReturn(['fees'])
+            ->once();
 
         $result1 = new Result();
         $result1->addMessage('InForceInterim');
@@ -107,7 +114,12 @@ class GrantInterimTest extends CommandHandlerTestCase
 
         $this->repoMap['Fee']->shouldReceive('fetchInterimFeesByApplicationId')
             ->with(111, true)
-            ->andReturn($fees);
+            ->andReturn($fees)
+            ->once()
+            ->shouldReceive('fetchInterimFeesByApplicationId')
+            ->with(111, false, true)
+            ->andReturn([])
+            ->once();
 
         $expectedData = [
             'template' => 'FEE_REQ_INT_APP',
@@ -185,7 +197,11 @@ class GrantInterimTest extends CommandHandlerTestCase
 
         $this->repoMap['Fee']->shouldReceive('fetchInterimFeesByApplicationId')
             ->with(111, true)
-            ->andReturn($fees);
+            ->andReturn($fees)
+            ->shouldReceive('fetchInterimFeesByApplicationId')
+            ->with(111, false, true)
+            ->andReturn([])
+            ->once();
 
         $expectedData = [
             'template' => 'FEE_REQ_INT_APP',
@@ -225,6 +241,92 @@ class GrantInterimTest extends CommandHandlerTestCase
                 'Interim status updated'
             ]
         ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandNoFees()
+    {
+        $command = Cmd::create(['id' => 111]);
+
+        $expectedQuery = [
+            'application' => 111,
+            'licence' => 222,
+            'fee' => 444
+        ];
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setId(222);
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setId(111);
+        $application->setLicence($licence);
+
+        /** @var Fee $fee */
+        $fee = m::mock(Fee::class)->makePartial();
+        $fee->setId(444);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application)
+            ->once()
+            ->shouldReceive('save')
+            ->with($application)
+            ->once();
+
+        $this->repoMap['Fee']->shouldReceive('fetchInterimFeesByApplicationId')
+            ->with(111, true)
+            ->andReturn([])
+            ->once()
+            ->shouldReceive('fetchInterimFeesByApplicationId')
+            ->with(111, false, true)
+            ->andReturn([])
+            ->once()
+            ->shouldReceive('fetchById')
+            ->with(444)
+            ->once()
+            ->andReturn($fee);
+
+        $result1 = new Result();
+        $result1->addId('fee', 444);
+        $this->expectedSideEffect(
+            CreateApplicationFeeCmd::class, ['id' => 111, 'feeTypeFeeType' => FeeType::FEE_TYPE_GRANTINT], $result1
+        );
+
+        $expectedGenerate = [
+            'template' => 'FEE_REQ_INT_APP',
+            'query' => $expectedQuery,
+            'description' => 'GV Interim licence fee request',
+            'application' => 111,
+            'licence' => 222,
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
+            'isExternal' => false,
+            'isScan' => false,
+            'busReg' => null,
+            'case' => null,
+            'irfoOrganisation' => null,
+            'submission' => null,
+            'trafficArea' => null,
+            'transportManager' => null,
+            'operatingCentre' => null,
+            'opposition' => null,
+            'isReadOnly' => null,
+            'issuedDate' => null,
+            'dispatch' => true
+        ];
+
+        $result2 = new Result();
+        $result2->addMessage('GenerateAndStore');
+        $this->expectedSideEffect(GenerateAndStore::class, $expectedGenerate, $result2);
+
+        $expected = [
+            'id' => ['fee' => 444, 'action' => 'fee_request'],
+            'messages' => ['GenerateAndStore', 'Interim status updated']
+        ];
+        $result = $this->sut->handleCommand($command);
 
         $this->assertEquals($expected, $result->toArray());
     }
