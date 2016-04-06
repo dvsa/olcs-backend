@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule as Entity;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * LicenceStatusRule Repo
@@ -84,5 +85,18 @@ class LicenceStatusRule extends AbstractRepository
         $qb->setParameter('licenceId', $licence->getId());
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Override to add additional data to the default fetchById() method
+     * @param QueryBuilder $qb
+     * @inheritdoc
+     */
+    protected function applyFetchJoins(QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with($this->alias . '.licence', 'l')
+            ->with('l.reasons', 'r');
+        ;
     }
 }
