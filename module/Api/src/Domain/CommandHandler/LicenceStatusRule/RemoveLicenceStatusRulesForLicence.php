@@ -22,6 +22,8 @@ final class RemoveLicenceStatusRulesForLicence extends AbstractCommandHandler im
 {
     protected $repoServiceName = 'LicenceStatusRule';
 
+    protected $extraRepos = ['Licence'];
+
     public function handleCommand(CommandInterface $command)
     {
         $rules = $this->getRepo()->fetchForLicence($command->getLicence());
@@ -37,6 +39,15 @@ final class RemoveLicenceStatusRulesForLicence extends AbstractCommandHandler im
                     )
                 )
             );
+        }
+
+        if (!empty($rules)) {
+            $licence = $statusRule->getLicence();
+
+            // remove reasons
+            $licence->setReasons($this->buildArrayCollection('', []));
+
+            $this->getRepo('Licence')->save($licence);
         }
 
         return $result;
