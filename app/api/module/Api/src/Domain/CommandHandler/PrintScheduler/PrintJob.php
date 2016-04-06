@@ -57,12 +57,13 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
             $destination = $this->getSelfserveUserPrinter();
         }
 
-        // Print server doesn't have perm to gen PDF unless the user exists on the box :(
-        // $username = $user->getContactDetails()->getPerson()->getFullName();
-        // Allow override the username from config
-        //if ($this->getConfigUser() !== false) {
-        $username = $this->getConfigUser();
-        //}
+        // get the name of the person who has sent the print job
+        $username = $user->getContactDetails()->getPerson()->getFullName();
+        // This config allows us to override the username on the environments that use the CUPS PDF print driver
+        // This is needed as the username has to exist on the CUPS box so that the PDF file can be created
+        if ($this->getConfigUser() !== false) {
+            $username = $this->getConfigUser();
+        }
 
         // if the destination (queue name) is TESTING-STUB-LICENCE:n then attach it to a licence
         // This allows testing without have to actually connect to multiple printers/queues
@@ -159,9 +160,10 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
             throw new RuntimeException('print.server is not set in config');
         }
 
+        // convert to PDF using open office
         $commandPdf = sprintf(
-            'soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp "%s"',
-            $fileName
+            'soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp %s',
+            escapeshellarg($fileName)
         );
         $this->executeCommand($commandPdf, $outputPdf, $resultPdf);
         if ($resultPdf !== 0) {
@@ -170,13 +172,14 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
             throw $exception;
         }
 
+        // send to CUPS server
         $commandPrint = sprintf(
-            'lpr "%s" -H %s -C "%s" -h -P %s -U "%s"',
-            str_replace('.rtf', '.pdf', $fileName),
-            $printServer,
-            $jobTitle,
-            $destination,
-            $username
+            'lpr %s -H %s -C %s -h -P %s -U %s',
+            escapeshellarg(str_replace('.rtf', '.pdf', $fileName)),
+            escapeshellarg($printServer),
+            escapeshellarg($jobTitle),
+            escapeshellarg($destination),
+            escapeshellarg($username)
         );
         $this->executeCommand($commandPrint, $outputPrint, $resultPrint);
         if ($resultPrint !== 0) {
@@ -228,9 +231,9 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
     }
 
     /**
-     * Get the printer for selfserve users
+     * Get the printer queue for selfserve users
      *
-     * @return Printer
+     * @return string
      */
     private function getSelfserveUserPrinter()
     {
