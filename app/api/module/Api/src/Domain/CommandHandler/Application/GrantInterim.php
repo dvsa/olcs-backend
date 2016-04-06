@@ -39,10 +39,10 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
         $application = $this->getRepo()->fetchUsingId($command);
 
         $existingFees = $this->getExistingFees($application);
-        $payedFees = $this->getPayedFees($application);
+        $paidFees = $this->getPaidFees($application);
 
-        // if we had payed fees before interim status can be set to in-force
-        if (count($payedFees)) {
+        // if we had paid fees before interim status can be set to in-force
+        if (count($paidFees)) {
             $this->result->merge($this->handleSideEffect(InForceInterimCmd::create(['id' => $application->getId()])));
             $this->result->addId('action', 'in_force');
             return $this->result;
@@ -85,12 +85,12 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
     }
 
     /**
-     * Get payed grant fees
+     * Get paid grant fees
      *
      * @param ApplicationEntity $application
      * @return array
      */
-    private function getPayedFees(ApplicationEntity $application)
+    private function getPaidFees(ApplicationEntity $application)
     {
         return $this->getRepo('Fee')->fetchInterimFeesByApplicationId($application->getId(), false, true);
     }

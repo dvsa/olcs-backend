@@ -77,7 +77,7 @@ class FeeTest extends RepositoryTestCase
         $this->assertSame('result', $this->sut->fetchInterimFeesByApplicationId(12, true));
     }
 
-    public function testFetchInterimFeesByApplicationIdPayed()
+    public function testFetchInterimFeesByApplicationIdPaid()
     {
         $mockQb = m::mock();
 
