@@ -555,12 +555,6 @@ return array(
                 'property' => 'adDocument'
             )
         ),
-        'opposition_id' => array(
-            'inversedBy' => array(
-                'entity' => 'Opposition',
-                'property' => 'document'
-            )
-        ),
         'bus_reg_id' => array(
             'inversedBy' => array(
                 'entity' => 'BusReg',

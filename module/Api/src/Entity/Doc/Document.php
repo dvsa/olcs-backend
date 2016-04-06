@@ -20,7 +20,6 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_document_operating_centre_id", columns={"operating_centre_id"}),
  *        @ORM\Index(name="ix_document_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_document_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_document_opposition_id", columns={"opposition_id"}),
  *        @ORM\Index(name="ix_document_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_document_irfo_organisation_id", columns={"irfo_organisation_id"})
  *    },
