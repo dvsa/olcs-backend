@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\TrafficArea;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Publication\Recipient as RecipientEntity;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * TrafficArea Entity
@@ -27,4 +29,38 @@ class TrafficArea extends AbstractTrafficArea
     const SE_MET_TRAFFIC_AREA_CODE           = 'K';
     const SCOTTISH_TRAFFIC_AREA_CODE         = 'M';
     const NORTHERN_IRELAND_TRAFFIC_AREA_CODE = 'N';
+
+    /**
+     * Gets the recipients for a publication, formatted ready for zend mail
+     *
+     * @return array
+     */
+    public function getPublicationRecipients($isPolice)
+    {
+        /* @todo the commented code can't currently be used due to a bug with Doctrine Criteria when used with
+         * many-to-many collections. The links below describe the issue. Once this has been fixed in our version of
+         * Doctrine, uncommenting this code and removing the if ($recipient->getIsPolice() === $isPolice) check found
+         * below, should improve performance on lists with a large number of recipients
+         *
+         * @link https://github.com/doctrine/doctrine2/issues/5644
+         * @link https://github.com/doctrine/doctrine2/pull/5669/files
+         **/
+        //$expr = Criteria::expr();
+        //$criteria = Criteria::create();
+        //$criteria->where($expr->eq('isPolice', $isPolice));
+        //$matchedRecipients = $this->recipients->matching($criteria);
+        $matchedRecipients = $this->getRecipients(); //remove when code above is uncommented
+
+        $recipients = [];
+
+        /** @var RecipientEntity $recipient */
+        foreach ($matchedRecipients as $recipient) {
+            //remove this if statement once the doctrine criteria code is uncommented
+            if ($recipient->getIsPolice() === $isPolice) {
+                $recipients[$recipient->getEmailAddress()] = $recipient->getContactName();
+            }
+        }
+
+        return $recipients;
+    }
 }
