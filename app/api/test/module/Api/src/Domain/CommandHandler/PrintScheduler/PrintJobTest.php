@@ -27,11 +27,10 @@ class PrintJobTest extends CommandHandlerTestCase
         $mockFileUploader = m::mock(\Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class);
         $this->mockedSmServices['FileUploader'] = $mockFileUploader;
 
-        $this->mockedSmServices['Config'] = ['print' => ['server' => 'PRINT_SERVER', 'options' => ['user' => 'USER']]];
+        $this->mockedSmServices['Config'] = ['print' => ['server' => 'PRINT_SERVER']];
 
         $this->mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $this->mockUser->setLoginId('LOGIN_ID');
-        $this->mockUser->shouldReceive('getContactDetails->getPerson->getFullName')->with()->andReturn('FULL_NAME');
         $this->repoMap['User']->shouldReceive('fetchById')->with('USER_ID')->once()->andReturn($this->mockUser);
 
         $mockDocument = m::mock(\Dvsa\Olcs\Api\Entity\Doc\Document::class)->makePartial();
@@ -229,7 +228,7 @@ class PrintJobTest extends CommandHandlerTestCase
         }
 
         $this->sut->shouldReceive('executeCommand')
-            ->with("lpr 'TEMP_FILE.pdf' -H 'PRINT_SERVER' -C 'TEMP_FILE.rtf' -h -P 'QUEUE1' -U 'USER'", [], null)
+            ->with("lpr 'TEMP_FILE.pdf' -H 'PRINT_SERVER' -C 'TEMP_FILE.rtf' -h -P 'QUEUE1' -U 'LOGIN_ID'", [], null)
             ->once()
             ->andReturnUsing(
                 function ($command, &$output, &$result) use ($commandLprResult) {
