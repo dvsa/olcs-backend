@@ -28,6 +28,7 @@ use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareTrait;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Olcs\XmlTools\Xml\TemplateBuilder;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Doctrine\ORM\Query;
@@ -49,6 +50,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     use EmailAwareTrait;
     use ConfigAwareTrait;
     use FileProcessorAwareTrait;
+    use QueueAwareTrait;
 
     const TASK_SUCCESS_DESC = 'New route map available: %s';
     const TASK_FAIL_DESC = 'Route map generation for: %s failed';
