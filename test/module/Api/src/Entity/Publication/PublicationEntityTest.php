@@ -47,6 +47,26 @@ class PublicationEntityTest extends EntityTester
     }
 
     /**
+     * Test updating published documents. Checks police document has been set, and that main document has been set as
+     * read only
+     */
+    public function testUpdatePublishedDocuments()
+    {
+        $document = m::mock(DocumentEntity::class)->makePartial();
+        $document->setIsReadOnly('N');
+
+        $policeDocument = m::mock(DocumentEntity::class);
+
+        $entity = $this->instantiate(Entity::class);
+        $entity->setDocument($document);
+
+        $entity->updatePublishedDocuments($policeDocument);
+
+        $this->assertEquals($policeDocument, $entity->getPoliceDocument());
+        $this->assertEquals('Y', $entity->getDocument()->getIsReadOnly());
+    }
+    
+    /**
      * Tests getting the next publication date
      */
     public function testGetNextPublicationDate()
