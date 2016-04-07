@@ -89,7 +89,7 @@ class LicenceStatusRuleTest extends RepositoryTestCase
         $this->sut->shouldReceive('getQueryBuilder')->with()->andReturn($mockQb);
 
         $mockQb->shouldReceive('with')->with('lsr.licence', 'l')->once()->andReturnSelf();
-        $mockQb->shouldReceive('with')->with('l.reasons', 'r')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('l.decisions', 'd')->once()->andReturnSelf();
 
         $this->sut->applyFetchJoins($mockQb);
     }
