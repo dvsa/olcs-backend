@@ -70,7 +70,7 @@ class UpdateLicenceStatusRuleTest extends CommandHandlerTestCase
                     ->once()
                     ->andReturn(
                         m::mock(LicenceEntity::class)
-                            ->shouldReceive('setReasons')
+                            ->shouldReceive('setDecisions')
                             ->once()
                             ->with(m::type(ArrayCollection::class))->getMock()
                     )

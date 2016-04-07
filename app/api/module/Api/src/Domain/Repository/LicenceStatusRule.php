@@ -96,6 +96,6 @@ class LicenceStatusRule extends AbstractRepository
     {
         $this->getQueryBuilder()->modifyQuery($qb)
             ->with($this->alias . '.licence', 'l')
-            ->with('l.decisions', 'r');
+            ->with('l.decisions', 'd');
     }
 }
