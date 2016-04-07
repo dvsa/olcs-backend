@@ -10,7 +10,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\Pi\Reason as ReasonEntity;
+use Dvsa\Olcs\Api\Entity\Pi\Decision as DecisionEntity;
 
 /**
  * Class UpdateLicenceStatusRule
@@ -45,8 +45,8 @@ final class UpdateLicenceStatusRule extends AbstractCommandHandler
 
         $licence = $statusRule->getLicence();
 
-        // remove reasons
-        $licence->setReasons($this->buildArrayCollection(ReasonEntity::class, $command->getReasons()));
+        // update decisions
+        $licence->setDecisions($this->buildArrayCollection(DecisionEntity::class, $command->getDecisions()));
 
         $this->getRepo('Licence')->save($licence);
         return $result;

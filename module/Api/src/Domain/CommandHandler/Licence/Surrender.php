@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
 use Dvsa\Olcs\Api\Domain\Command\Variation\EndInterim;
-use Dvsa\Olcs\Api\Entity\Pi\Reason as ReasonEntity;
+use Dvsa\Olcs\Api\Entity\Pi\Decision as DecisionEntity;
 
 /**
  * Surrender a licence
@@ -49,7 +49,7 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
 
         $licence->setStatus($this->getRepo()->getRefdataReference($status));
         $licence->setSurrenderedDate(new \DateTime($command->getSurrenderDate()));
-        $licence->setReasons($this->buildArrayCollection(ReasonEntity::class, $command->getReasons()));
+        $licence->setDecisions($this->buildArrayCollection(DecisionEntity::class, $command->getDecisions()));
 
         $result = new Result();
 

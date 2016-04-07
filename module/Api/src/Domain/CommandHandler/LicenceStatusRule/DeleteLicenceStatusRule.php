@@ -37,8 +37,8 @@ final class DeleteLicenceStatusRule extends AbstractCommandHandler
         $result->addId('licence-status-rule', $command->getId());
         $result->addMessage('Licence status rule deleted.');
 
-        // remove reasons
-        $licence->setReasons(new ArrayCollection());
+        // remove decisions
+        $licence->setDecisions(new ArrayCollection());
 
         $this->getRepo('Licence')->save($licence);
 

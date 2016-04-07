@@ -44,8 +44,8 @@ final class RemoveLicenceStatusRulesForLicence extends AbstractCommandHandler im
         if (!empty($rules)) {
             $licence = $statusRule->getLicence();
 
-            // remove reasons
-            $licence->setReasons($this->buildArrayCollection('', []));
+            // remove decisions
+            $licence->setDecisions($this->buildArrayCollection('', []));
 
             $this->getRepo('Licence')->save($licence);
         }

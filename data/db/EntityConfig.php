@@ -667,11 +667,11 @@ return array(
             )
         ),
     ),
-    'licence_status_reason' => array(
+    'licence_status_decision' => array(
         'licence_id' => array(
             'inversedBy' => array(
                 'entity' => 'Licence',
-                'property' => 'licenceStatusReason'
+                'property' => 'licenceStatusDecision'
             )
         ),
     ),
