@@ -181,9 +181,15 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
      * @param array $cmdData
      * @param int $entityId
      * @param Result $result
+     * @param string|null $processAfterDate
      */
-    public function expectedEmailQueueSideEffect($emailCmdClass, array $cmdData, $entityId, $result)
-    {
+    public function expectedEmailQueueSideEffect(
+        $emailCmdClass,
+        array $cmdData,
+        $entityId,
+        $result,
+        $processAfterDate = null
+    ) {
         $emailOptions = [
             'commandClass' => $emailCmdClass,
             'commandData' => $cmdData
@@ -193,7 +199,8 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             'entityId' => $entityId,
             'type' => QueueEntity::TYPE_EMAIL,
             'status' => QueueEntity::STATUS_QUEUED,
-            'options' => ZendJson::encode($emailOptions)
+            'options' => ZendJson::encode($emailOptions),
+            'processAfterDate' => $processAfterDate
         ];
 
         $this->expectedSideEffect(CreateQueueCmd::class, $emailData, $result);
