@@ -475,4 +475,7 @@ return [
     // Sla Target Dates
     TransferQuery\System\SlaTargetDate::class => QueryHandler\System\SlaTargetDate::class,
 
+    // Decisions
+    TransferQuery\Decision\DecisionList::class => QueryHandler\Decision\DecisionList::class,
+
 ];
