@@ -65,7 +65,7 @@ class PublicationEntityTest extends EntityTester
         $this->assertEquals($policeDocument, $entity->getPoliceDocument());
         $this->assertEquals('Y', $entity->getDocument()->getIsReadOnly());
     }
-    
+
     /**
      * Tests getting the next publication date
      */

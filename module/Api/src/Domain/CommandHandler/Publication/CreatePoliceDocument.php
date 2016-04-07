@@ -19,12 +19,12 @@ use Dvsa\Olcs\DocumentShare\Data\Object\File;
 /**
  * Creates the police version of a publication
  */
-final class CreatePoliceDocument extends AbstractCommandHandler implements 
+final class CreatePoliceDocument extends AbstractCommandHandler implements
     TransactionedInterface,
     UploaderAwareInterface
 {
     use UploaderAwareTrait;
-    
+
     protected $repoServiceName = 'Publication';
 
     /**

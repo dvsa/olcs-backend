@@ -55,8 +55,6 @@ class SendPublicationTest extends CommandHandlerTestCase
      */
     public function testHandleCommand($isPolice, $policeTimes, $nonPoliceTimes)
     {
-
-
         $publicationId = 1234;
         $filename = 'filename.rtf';
         $documentFilename = '/path/to/' . $filename;
@@ -90,7 +88,6 @@ class SendPublicationTest extends CommandHandlerTestCase
         $publication->shouldReceive('getPublicationNo')->once()->andReturn($publicationNo);
         $publication->shouldReceive('getPoliceDocument')->times($policeTimes)->andReturn($document);
         $publication->shouldReceive('getDocument')->times($nonPoliceTimes)->andReturn($document);
-
 
         $this->repoMap['Publication']
             ->shouldReceive('fetchUsingId')
