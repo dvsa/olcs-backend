@@ -45,8 +45,6 @@ class TrafficAreaEntityTest extends MockeryTestCase
      */
     public function testGetPublicationRecipients($isPolice, $policeTimes, $nonPoliceTimes, $expectedRecipients)
     {
-        //$entity = $this->instantiate(Entity::class);
-
         $entity = new Entity();
 
         $recipient1 = m::mock(RecipientEntity::class);
