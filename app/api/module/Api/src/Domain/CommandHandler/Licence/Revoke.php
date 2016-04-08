@@ -22,6 +22,7 @@ use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
 use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
 use Dvsa\Olcs\Api\Domain\Command\Variation\EndInterim;
+use Dvsa\Olcs\Api\Entity\Pi\Decision as DecisionEntity;
 
 /**
  * Revoke a licence
@@ -45,6 +46,8 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
         } else {
             $commandCeaseDiscs = CeasePsvDiscs::create(['licence' => $licence->getId()]);
         }
+
+        $licence->setDecisions($this->buildArrayCollection(DecisionEntity::class, $command->getDecisions()));
 
         $result = new Result();
         $result->merge($this->handleSideEffect($commandCeaseDiscs));

@@ -13,8 +13,6 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceStatusRule as Repo;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityRepository;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Doctrine\DBAL\LockMode;
 
 /**
@@ -79,5 +77,20 @@ class LicenceStatusRuleTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getResult')->with()->once()->andReturn('RESULT');
 
         $this->assertSame('RESULT', $this->sut->fetchToValid('DATE'));
+    }
+
+    public function testApplyListJoins()
+    {
+        $this->setUpSut(Repo::class, true);
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('modifyQuery')->once()->andReturnSelf();
+
+        $this->sut->shouldReceive('getQueryBuilder')->with()->andReturn($mockQb);
+
+        $mockQb->shouldReceive('with')->with('lsr.licence', 'l')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('l.decisions', 'd')->once()->andReturnSelf();
+
+        $this->sut->applyFetchJoins($mockQb);
     }
 }

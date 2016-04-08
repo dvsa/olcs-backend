@@ -11,13 +11,15 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\LicenceStatusRule\DeleteLicenceStatusRule;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceStatusRule as LicenceStatusRuleRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
 use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence as Cmd;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
  * Class RemoveLicenceStatusRulesForLicenceTest
@@ -32,6 +34,7 @@ class RemoveLicenceStatusRulesForLicenceTest extends CommandHandlerTestCase
     {
         $this->sut = new RemoveLicenceStatusRulesForLicence();
         $this->mockRepo('LicenceStatusRule', LicenceStatusRuleRepo::class);
+        $this->mockRepo('Licence', LicenceRepo::class);
 
         parent::setUp();
     }
@@ -44,6 +47,11 @@ class RemoveLicenceStatusRulesForLicenceTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $this->repoMap['Licence']
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(LicenceEntity::class));
+
         $this->repoMap['LicenceStatusRule']
             ->shouldReceive('fetchForLicence')
             ->once()
@@ -53,7 +61,14 @@ class RemoveLicenceStatusRulesForLicenceTest extends CommandHandlerTestCase
                         ->shouldReceive('getId')
                         ->once()
                         ->andReturn(1)
-                        ->getMock()
+                        ->shouldReceive('getLicence')
+                        ->once()
+                        ->andReturn(
+                            m::mock(LicenceEntity::class)
+                                ->shouldReceive('setDecisions')
+                                ->once()
+                                ->with(m::type(ArrayCollection::class))->getMock()
+                        )->getMock()
                 ]
             );
 

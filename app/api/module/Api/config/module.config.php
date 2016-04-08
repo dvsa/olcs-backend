@@ -163,6 +163,7 @@ return [
             'ContactDetails' => RepositoryFactory::class,
             'CompanySubsidiary' => RepositoryFactory::class,
             'Conviction' => RepositoryFactory::class,
+            'Decision' => RepositoryFactory::class,
             'Organisation' => RepositoryFactory::class,
             'Licence' => RepositoryFactory::class,
             'Bus' => RepositoryFactory::class,

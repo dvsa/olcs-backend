@@ -96,6 +96,27 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     protected $curtailedDate;
 
     /**
+     * Decision
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Pi\Decision",
+     *     inversedBy="licences",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="licence_status_decision",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="licence_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="decision_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $decisions;
+
+    /**
      * Deleted date
      *
      * @var \DateTime
@@ -681,6 +702,7 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
 
     public function initCollections()
     {
+        $this->decisions = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->busRegs = new ArrayCollection();
         $this->cases = new ArrayCollection();
@@ -816,6 +838,66 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     public function getCurtailedDate()
     {
         return $this->curtailedDate;
+    }
+
+    /**
+     * Set the decision
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $decisions
+     * @return Licence
+     */
+    public function setDecisions($decisions)
+    {
+        $this->decisions = $decisions;
+
+        return $this;
+    }
+
+    /**
+     * Get the decisions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getDecisions()
+    {
+        return $this->decisions;
+    }
+
+    /**
+     * Add a decisions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $decisions
+     * @return Licence
+     */
+    public function addDecisions($decisions)
+    {
+        if ($decisions instanceof ArrayCollection) {
+            $this->decisions = new ArrayCollection(
+                array_merge(
+                    $this->decisions->toArray(),
+                    $decisions->toArray()
+                )
+            );
+        } elseif (!$this->decisions->contains($decisions)) {
+            $this->decisions->add($decisions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a decisions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $decisions
+     * @return Licence
+     */
+    public function removeDecisions($decisions)
+    {
+        if ($this->decisions->contains($decisions)) {
+            $this->decisions->removeElement($decisions);
+        }
+
+        return $this;
     }
 
     /**
