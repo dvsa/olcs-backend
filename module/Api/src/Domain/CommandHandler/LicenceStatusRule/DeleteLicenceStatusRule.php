@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule as LicenceStatusRuleEntity;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * Class DeleteLicenceStatusRule
@@ -15,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule as LicenceStatusRuleEntity;
  *
  * @package Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule
  */
-final class DeleteLicenceStatusRule extends AbstractCommandHandler
+final class DeleteLicenceStatusRule extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'LicenceStatusRule';
 
