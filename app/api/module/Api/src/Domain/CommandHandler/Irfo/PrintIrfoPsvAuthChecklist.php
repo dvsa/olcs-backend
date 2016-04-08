@@ -83,6 +83,11 @@ final class PrintIrfoPsvAuthChecklist extends AbstractCommandHandler implements 
      */
     private function printRenewalLetter(IrfoPsvAuth $irfoPsvAuth)
     {
+        $description = sprintf(
+            'IRFO PSV Auth %d Checklist Renewal letter',
+            $irfoPsvAuth->getId()
+        );
+
         // generate document
         $result = $this->handleSideEffect(
             GenerateAndStore::create(
@@ -92,7 +97,8 @@ final class PrintIrfoPsvAuthChecklist extends AbstractCommandHandler implements 
                         'irfoPsvAuth' => $irfoPsvAuth->getId()
                     ],
                     'knownValues' => [],
-                    'description' => 'IRFO PSV Auth Checklist Renewal letter',
+                    'description' => $description,
+                    'irfoOrganisation' => $irfoPsvAuth->getOrganisation()->getId(),
                     'category' => CategoryEntity::CATEGORY_IRFO,
                     'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_IRFO_CONTINUATIONS_AND_RENEWALS,
                     'isExternal' => false,
@@ -106,7 +112,7 @@ final class PrintIrfoPsvAuthChecklist extends AbstractCommandHandler implements 
             EnqueueFileCommand::create(
                 [
                     'documentId' => $result->getId('document'),
-                    'jobName' => 'IRFO PSV Auth Checklist Renewal letter'
+                    'jobName' => $description
                 ]
             )
         );
@@ -134,6 +140,11 @@ final class PrintIrfoPsvAuthChecklist extends AbstractCommandHandler implements 
                 break;
         }
 
+        $description = sprintf(
+            'IRFO PSV Auth %d Checklist Service letter',
+            $irfoPsvAuth->getId()
+        );
+
         // generate document
         $result = $this->handleSideEffect(
             GenerateAndStore::create(
@@ -143,7 +154,8 @@ final class PrintIrfoPsvAuthChecklist extends AbstractCommandHandler implements 
                         'irfoPsvAuth' => $irfoPsvAuth->getId()
                     ],
                     'knownValues' => [],
-                    'description' => 'IRFO PSV Auth Checklist Service letter',
+                    'description' => $description,
+                    'irfoOrganisation' => $irfoPsvAuth->getOrganisation()->getId(),
                     'category' => CategoryEntity::CATEGORY_IRFO,
                     'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_IRFO_CONTINUATIONS_AND_RENEWALS,
                     'isExternal' => false,
@@ -157,7 +169,7 @@ final class PrintIrfoPsvAuthChecklist extends AbstractCommandHandler implements 
             EnqueueFileCommand::create(
                 [
                     'documentId' => $result->getId('document'),
-                    'jobName' => 'IRFO PSV Auth Checklist Service letter'
+                    'jobName' => $description
                 ]
             )
         );
