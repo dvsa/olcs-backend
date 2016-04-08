@@ -7,8 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Command\Document;
 
-use Dvsa\Olcs\Transfer\Command\AbstractCommand;
-
 /**
  * Create Document
  *

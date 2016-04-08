@@ -48,8 +48,6 @@ final class GenerateAndStore extends AbstractCommandHandler implements
             $queryData['user'] = $this->getCurrentUser()->getId();
         }
 
-        $description = $this->formatDescription($command->getDescription());
-
         $document = $this->getDocumentGenerator()->generateFromTemplate(
             $command->getTemplate(),
             $queryData,
@@ -57,7 +55,7 @@ final class GenerateAndStore extends AbstractCommandHandler implements
         );
 
         $fileName = $this->getNamingService()->generateName(
-            $description,
+            $command->getDescription(),
             // @todo If we ever stop using just RTFs during doc generation, sort this out
             'rtf',
             $this->getRepo()->getCategoryReference($command->getCategory()),
@@ -87,13 +85,5 @@ final class GenerateAndStore extends AbstractCommandHandler implements
         $this->result->addMessage($fileName . ' Document created');
 
         return $this->result;
-    }
-
-    private function formatDescription($input)
-    {
-        $input = str_replace([' ', '/'], '_', $input);
-
-        // Only allow alpha-num plus "_()"
-        return preg_replace('/[^a-zA-Z0-9_\(\)\-\&]/', '', $input);
     }
 }

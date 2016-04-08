@@ -565,6 +565,7 @@ return [
     Command\Publication\CreateNextPublication::class => CommandHandler\Publication\CreateNextPublication::class,
     Command\Publication\Licence::class => CommandHandler\Publication\Licence::class,
     Command\Publication\Impounding::class => CommandHandler\Publication\Impounding::class,
+    Command\Publication\CreatePoliceDocument::class => CommandHandler\Publication\CreatePoliceDocument::class,
 
     // Domain - Discs
     Command\Discs\CeaseGoodsDiscs::class => CommandHandler\Discs\CeaseGoodsDiscs::class,
@@ -705,6 +706,7 @@ return [
     Command\Email\SendEbsrRegistered::class => CommandHandler\Email\SendEbsrRegistered::class,
     Command\Email\SendEbsrErrors::class => CommandHandler\Email\SendEbsrErrors::class,
     Command\Email\SendEbsrRequestMap::class => CommandHandler\Email\SendEbsrRequestMap::class,
+    Command\Email\SendPublication::class => CommandHandler\Email\SendPublication::class,
 
     // Person
     Command\Person\Create::class => CommandHandler\Person\Create::class,

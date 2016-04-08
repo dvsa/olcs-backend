@@ -14,6 +14,9 @@ use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as CreateDocume
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
+use Dvsa\Olcs\Transfer\Command\Document\CopyDocument as CopyDocumentCmd;
 
 /**
  * Copy document
@@ -28,6 +31,7 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
     const CASES = 'case';
     const IRFO = 'irfoOrganisation';
     const TM = 'transportManager';
+    const PUBLICATION = 'publication';
 
     protected $repoServiceName = 'Document';
 
@@ -37,11 +41,16 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
         'BusRegSearchView',
         'Cases',
         'Organisation',
-        'TransportManager'
+        'TransportManager',
+        'Publication'
     ];
 
     public function handleCommand(CommandInterface $command)
     {
+        /**
+         * @var CopyDocumentCmd $command
+         * @var DocumentEntity $document
+         */
         $entity = $this->validateTargetEntity($command->getTargetId(), $command->getType());
 
         $result = new Result();
@@ -58,6 +67,13 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
                 'isExternal' => $document->getIsExternal(),
                 'isReadOnly' => $document->getIsReadOnly()
             ];
+
+            $trafficArea = $document->getTrafficArea();
+
+            if ($trafficArea instanceof TrafficAreaEntity) {
+                $params['trafficArea'] = $trafficArea->getId();
+            }
+
             switch ($command->getType()) {
                 case self::APP:
                     $params['application'] = $command->getTargetId();
@@ -87,6 +103,9 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
                     break;
                 case self::TM:
                     $params['transportManager'] = $command->getTargetId();
+                    break;
+                case self::PUBLICATION:
+                    /* @todo publication doesn't currently have a foreign key in document table - it should */
             }
             $res = $this->handleSideEffect(CreateDocumentSpecific::create($params));
             $result->addId('document' . $res->getId('document'), $res->getId('document'));
@@ -104,7 +123,8 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
             self::BUSREG => 'Bus registration No',
             self::CASES => 'Case ID',
             self::IRFO => 'IRFO ID',
-            self::TM => 'Transport manager ID'
+            self::TM => 'Transport manager ID',
+            self::PUBLICATION => 'Publication ID'
         ];
         try {
             switch ($type) {
@@ -125,6 +145,9 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
                     break;
                 case self::TM:
                     $entity = $this->getRepo('TransportManager')->fetchById($entityId);
+                    break;
+                case self::PUBLICATION:
+                    $entity = $this->getRepo('Publication')->fetchById($entityId);
                     break;
                 default:
                     throw new ValidationException(['type' => 'Unknown entity']);

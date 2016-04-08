@@ -17,6 +17,10 @@ use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as BusRegSearchViewRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
+use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\View\BusRegSearchView as BusRegSearchViewEntity;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as CreateDocumentSpecificCmd;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
@@ -40,6 +44,7 @@ class CopyDocumentTest extends CommandHandlerTestCase
         $this->mockRepo('Cases', CasesRepo::class);
         $this->mockRepo('Organisation', OrganisationRepo::class);
         $this->mockRepo('TransportManager', TransportManagerRepo::class);
+        $this->mockRepo('Publication', PublicationRepo::class);
 
         parent::setUp();
     }
@@ -189,7 +194,7 @@ class CopyDocumentTest extends CommandHandlerTestCase
         ];
         $command = Cmd::create($data);
 
-        $mockEntity = m::mock()
+        $mockEntity = m::mock(BusRegSearchViewEntity::class)
             ->shouldReceive('getLicId')
             ->andReturn(3)
             ->once()
@@ -459,6 +464,73 @@ class CopyDocumentTest extends CommandHandlerTestCase
         $this->assertEquals('Document(s) copied', $res['messages'][0]);
     }
 
+    /**
+     * Tests copying a publication document
+     */
+    public function testHandleCommandWithPublication()
+    {
+        $data = [
+            'targetId' => 1,
+            'type'     => CommandHandler::PUBLICATION,
+            'ids'      => [2]
+        ];
+        $command = Cmd::create($data);
+
+        $mockEntity = m::mock(PublicationEntity::class);
+
+        $mockTa = m::mock(TrafficAreaEntity::class);
+        $mockTa->shouldReceive('getId')->once()->andReturn(6);
+
+        $this->repoMap['Publication']
+            ->shouldReceive('fetchById')
+            ->with(1)
+            ->andReturn($mockEntity)
+            ->once()
+            ->getMock();
+
+        $mockDocument = $this->getMockDocument($mockTa);
+
+        $this->repoMap['Document']
+            ->shouldReceive('fetchById')
+            ->with(2)
+            ->andReturn($mockDocument)
+            ->once()
+            ->getMock();
+
+        $createResult = new Result();
+        $createResult->addId('document', 111);
+        $createResult->addMessage('Document(s) copied');
+
+        $params = [
+            'identifier' => 'identifier',
+            'description' => 'description',
+            'category' => 4,
+            'subCategory' => 5,
+            'issuedDate' => '2015-01-01',
+            'filename' => 'filename',
+            'isScan' => 'Y',
+            'isExternal' => 'Y',
+            'isReadOnly' => 'Y',
+            'application' => null,
+            'licence' => null,
+            'size' => null,
+            'busReg' => null,
+            'case' => null,
+            'irfoOrganisation' => null,
+            'submission' => null,
+            'trafficArea' => 6,
+            'transportManager' => null,
+            'operatingCentre' => null,
+            'opposition' => null
+        ];
+        $this->expectedSideEffect(CreateDocumentSpecificCmd::class, $params, $createResult);
+
+        $result = $this->sut->handleCommand($command);
+        $res = $result->toArray();
+        $this->assertEquals(111, $res['id']['document111']);
+        $this->assertEquals('Document(s) copied', $res['messages'][0]);
+    }
+
     public function testHandleCommandWithWrrongType()
     {
         $this->setExpectedException(ValidationException::class);
@@ -494,11 +566,15 @@ class CopyDocumentTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    protected function getMockDocument()
+    protected function getMockDocument($trafficArea = null)
     {
         return m::mock()
             ->shouldReceive('getIdentifier')
             ->andReturn('identifier')
+            ->once()
+            ->getMock()
+            ->shouldReceive('getTrafficArea')
+            ->andReturn($trafficArea)
             ->once()
             ->getMock()
             ->shouldReceive('getDescription')

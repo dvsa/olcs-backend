@@ -36,8 +36,7 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
-use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -51,12 +50,11 @@ final class ProcessPacks extends AbstractCommandHandler implements
     AuthAwareInterface,
     TransactionedInterface,
     UploaderAwareInterface,
-    EmailAwareInterface,
     FileProcessorAwareInterface
 {
     use AuthAwareTrait;
     use UploaderAwareTrait;
-    use EmailAwareTrait;
+    use QueueAwareTrait;
     use FileProcessorAwareTrait;
 
     /**
