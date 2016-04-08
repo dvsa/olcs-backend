@@ -115,6 +115,19 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
     protected $lastModifiedOn;
 
     /**
+     * Licence
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence",
+     *     mappedBy="decisions",
+     *     fetch="LAZY"
+     * )
+     */
+    protected $licences;
+
+    /**
      * Pi
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -153,6 +166,7 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
     public function initCollections()
     {
         $this->pis = new ArrayCollection();
+        $this->licences = new ArrayCollection();
     }
 
     /**
@@ -360,6 +374,66 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
     public function getLastModifiedOn()
     {
         return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the licence
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licences
+     * @return Decision
+     */
+    public function setLicences($licences)
+    {
+        $this->licences = $licences;
+
+        return $this;
+    }
+
+    /**
+     * Get the licences
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getLicences()
+    {
+        return $this->licences;
+    }
+
+    /**
+     * Add a licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licences
+     * @return Decision
+     */
+    public function addLicences($licences)
+    {
+        if ($licences instanceof ArrayCollection) {
+            $this->licences = new ArrayCollection(
+                array_merge(
+                    $this->licences->toArray(),
+                    $licences->toArray()
+                )
+            );
+        } elseif (!$this->licences->contains($licences)) {
+            $this->licences->add($licences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a licences
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $licences
+     * @return Decision
+     */
+    public function removeLicences($licences)
+    {
+        if ($this->licences->contains($licences)) {
+            $this->licences->removeElement($licences);
+        }
+
+        return $this;
     }
 
     /**

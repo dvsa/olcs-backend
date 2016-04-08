@@ -14,6 +14,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceStatusRule as LicenceStatusRuleRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule\CreateLicenceStatusRule;
 use Dvsa\Olcs\Transfer\Command\LicenceStatusRule\CreateLicenceStatusRule as Cmd;
 
@@ -30,6 +31,7 @@ class CreateLicenceStatusRuleTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateLicenceStatusRule();
         $this->mockRepo('LicenceStatusRule', LicenceStatusRuleRepo::class);
+        $this->mockRepo('Licence', LicenceRepo::class);
 
         parent::setUp();
     }
@@ -57,6 +59,11 @@ class CreateLicenceStatusRuleTest extends CommandHandlerTestCase
         ];
 
         $command = Cmd::create($data);
+
+        $this->repoMap['Licence']
+            ->shouldReceive('save')
+            ->once()
+            ->with($this->references[Licence::class][1]);
 
         $this->repoMap['LicenceStatusRule']
             ->shouldReceive('save')

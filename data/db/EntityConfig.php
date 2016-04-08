@@ -667,6 +667,14 @@ return array(
             )
         ),
     ),
+    'licence_status_decision' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'licenceStatusDecision'
+            )
+        ),
+    ),
     'change_of_entity' => array(
         'licence_id' => array(
             'inversedBy' => array(
