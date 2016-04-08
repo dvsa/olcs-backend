@@ -85,7 +85,7 @@ class ApplicationSafetyReviewServiceTest extends MockeryTestCase
                     ],
                     'documents' => [
                         [
-                            'filename' => 'file',
+                            'description' => 'file',
                             'category' => [
                                 'id' => Category::CATEGORY_APPLICATION,
                             ],
@@ -198,7 +198,7 @@ class ApplicationSafetyReviewServiceTest extends MockeryTestCase
                     ],
                     'documents' => [
                         [
-                            'filename' => 'file',
+                            'description' => 'file',
                             'category' => [
                                 'id' => Category::CATEGORY_APPLICATION,
                             ],

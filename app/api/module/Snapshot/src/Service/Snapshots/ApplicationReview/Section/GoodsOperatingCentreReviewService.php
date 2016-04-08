@@ -61,13 +61,19 @@ class GoodsOperatingCentreReviewService extends AbstractReviewService
         return $config;
     }
 
+    /**
+     * Format ad document list
+     *
+     * @param array $data
+     * @return string
+     */
     private function formatAdDocumentList($data)
     {
         $files = [];
 
         foreach ($data['operatingCentre']['adDocuments'] as $document) {
             if ($document['application']['id'] == $data['application']['id']) {
-                $files[] = $document['filename'];
+                $files[] = $document['description'];
             }
         }
 
