@@ -32,7 +32,7 @@ class Publication extends AbstractPublication
     const PUB_PRINTED_STATUS = 'pub_s_printed';
     const PUB_TYPE_N_P = 'N&P';
     const PUB_TYPE_A_D = 'A&D';
-    
+
     public function __construct(
         TrafficAreaEntity $trafficArea,
         RefData $pubStatus,
@@ -50,6 +50,26 @@ class Publication extends AbstractPublication
     }
 
     /**
+     * Whether a document can be published
+     *
+     * @return bool
+     */
+    public function canPublish()
+    {
+        return $this->getPubStatus()->getId() === self::PUB_GENERATED_STATUS;
+    }
+
+    /**
+     * Whether a document can be generated
+     *
+     * @return bool
+     */
+    public function canGenerate()
+    {
+        return $this->getPubStatus()->getId() === self::PUB_NEW_STATUS;
+    }
+
+    /**
      * Publish a publication providing the current status is correct
      *
      * @param RefData $newPubStatus
@@ -57,11 +77,23 @@ class Publication extends AbstractPublication
      */
     public function publish(RefData $newPubStatus)
     {
-        if ($this->getPubStatus()->getId() !== self::PUB_GENERATED_STATUS) {
+        if (!$this->canPublish()) {
             throw new ForbiddenException('Only publications with status of Generated may be published');
         }
 
         $this->pubStatus = $newPubStatus;
+    }
+
+    /**
+     * Update published documents. This is done separately from changing the publication status, as the police document
+     * itself is created afterwards
+     *
+     * @param DocumentEntity $policeDocument
+     */
+    public function updatePublishedDocuments(DocumentEntity $policeDocument)
+    {
+        $this->document->setIsReadOnly('Y');
+        $this->policeDocument = $policeDocument;
     }
 
     /**
@@ -73,7 +105,7 @@ class Publication extends AbstractPublication
      */
     public function generate(DocumentEntity $document, RefData $newPubStatus)
     {
-        if ($this->getPubStatus()->getId() !== self::PUB_NEW_STATUS) {
+        if (!$this->canGenerate()) {
             throw new ForbiddenException('Only publications with status of New may be generated');
         }
 

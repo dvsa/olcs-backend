@@ -67,7 +67,7 @@ class GenerateTest extends CommandHandlerTestCase
             'category'      => $docCategory,
             'subCategory'   => $docSubCategory,
             'isExternal'    => true,
-            'isReadOnly'    => true
+            'isReadOnly'    => 'N'
         ];
 
         $command = GenerateCommand::create(['id' => $id]);

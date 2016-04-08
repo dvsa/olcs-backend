@@ -104,7 +104,7 @@ class GenerateAndStoreTest extends CommandHandlerTestCase
         $this->mockedSmServices['DocumentNamingService']->shouldReceive('generateName')
             ->once()
             ->with(
-                'Foo_bar__cake',
+                'Foo bar/ [cake]',
                 'rtf',
                 $this->categoryReferences[11],
                 $this->subCategoryReferences[22],
@@ -180,7 +180,7 @@ class GenerateAndStoreTest extends CommandHandlerTestCase
         $this->mockedSmServices['DocumentNamingService']->shouldReceive('generateName')
             ->once()
             ->with(
-                'Foo_bar__cake',
+                'Foo bar/ [cake]',
                 'rtf',
                 $this->categoryReferences[11],
                 $this->subCategoryReferences[22],

@@ -57,6 +57,8 @@ TRUNCATE TABLE `prohibition_defect`;
 TRUNCATE TABLE `presiding_tc`;
 TRUNCATE TABLE `previous_conviction`;
 TRUNCATE TABLE `psv_disc`;
+TRUNCATE TABLE `recipient`;
+TRUNCATE TABLE `recipient_traffic_area`;
 TRUNCATE TABLE `tm_qualification`;
 TRUNCATE TABLE `transport_manager_application`;
 TRUNCATE TABLE `transport_manager_licence`;
@@ -1789,6 +1791,36 @@ INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`person_id`,`c
     (4,2,78,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:02:19','Winnard','Keith',NULL,1),
     (5,3,77,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:03:15','Jones','Tom',NULL,1),
     (6,3,78,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:03:16','Winnard','Keith',NULL,1);
+
+INSERT INTO `recipient` (`id`, `send_app_decision`, `send_notices_procs`, `is_police`, `is_objector`, `contact_name`, `email_address`, `deleted_date`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`, `olbs_key`)
+VALUES
+  (1,0,0,1,0,'Police Recipient 1','terry.valtech+police-recipient1@gmail.com',NULL,NULL,NULL,NULL,NULL,1,NULL),
+  (2,0,0,1,0,'Police Recipient 2','terry.valtech+police-recipient2@gmail.com',NULL,NULL,NULL,NULL,NULL,1,NULL),
+  (3,0,0,0,0,'Non Police Recipient 1','terry.valtech+non-police-recipient1@gmail.com',NULL,NULL,NULL,NULL,NULL,1,NULL),
+  (4,0,0,0,0,'Non Police Recipient 2','terry.valtech+non-police-recipient2@gmail.com',NULL,NULL,NULL,NULL,NULL,1,NULL);
+
+INSERT INTO `recipient_traffic_area` (`recipient_id`, `traffic_area_id`)
+VALUES
+  (1,'B'),
+  (1,'D'),
+  (1,'G'),
+  (1,'K'),
+  (1,'N'),
+  (2,'B'),
+  (2,'C'),
+  (2,'F'),
+  (2,'H'),
+  (2,'M'),
+  (3,'B'),
+  (3,'C'),
+  (3,'D'),
+  (3,'F'),
+  (3,'G'),
+  (3,'H'),
+  (4,'C'),
+  (4,'K'),
+  (4,'M'),
+  (4,'N');
 
 INSERT INTO `irfo_gv_permit` (`id`, `organisation_id`, `irfo_gv_permit_type_id`, `irfo_permit_status`, `year_required`,
                               `in_force_date`, `expiry_date`, `created_on`)
