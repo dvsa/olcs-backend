@@ -1,8 +1,8 @@
 <?php
 
 use Dvsa\Olcs\Api\Domain\QueryHandler;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 
 return [
-    QueryHandler\Decision\DecisionList::class               => NoValidationRequired::class
+    QueryHandler\Decision\DecisionList::class               => IsInternalUser::class
 ];

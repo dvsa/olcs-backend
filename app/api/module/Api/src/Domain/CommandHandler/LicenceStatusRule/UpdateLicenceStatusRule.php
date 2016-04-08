@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Pi\Decision as DecisionEntity;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * Class UpdateLicenceStatusRule
@@ -19,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\Pi\Decision as DecisionEntity;
  *
  * @package Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule
  */
-final class UpdateLicenceStatusRule extends AbstractCommandHandler
+final class UpdateLicenceStatusRule extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'LicenceStatusRule';
 
