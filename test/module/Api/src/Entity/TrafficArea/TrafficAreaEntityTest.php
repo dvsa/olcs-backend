@@ -7,6 +7,7 @@ use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as Entity;
 use Dvsa\Olcs\Api\Entity\Publication\Recipient as RecipientEntity;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * TrafficArea Entity Unit Tests
@@ -14,7 +15,7 @@ use Mockery as m;
  * Initially auto-generated but won't be overridden
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class TrafficAreaEntityTest extends EntityTester
+class TrafficAreaEntityTest extends MockeryTestCase
 {
     /**
      * Define the entity to test
@@ -44,26 +45,28 @@ class TrafficAreaEntityTest extends EntityTester
      */
     public function testGetPublicationRecipients($isPolice, $policeTimes, $nonPoliceTimes, $expectedRecipients)
     {
-        $entity = $this->instantiate(Entity::class);
+        //$entity = $this->instantiate(Entity::class);
+
+        $entity = new Entity();
 
         $recipient1 = m::mock(RecipientEntity::class);
-        $recipient1->shouldReceive('getEmailAddress')->times($policeTimes)->andReturn(self::PUB_RECIPIENT_EMAIL1);
-        $recipient1->shouldReceive('getContactName')->times($policeTimes)->andReturn(self::PUB_RECIPIENT_NAME1);
+        $recipient1->shouldReceive('getEmailAddress')->times($nonPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL1);
+        $recipient1->shouldReceive('getContactName')->times($nonPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME1);
         $recipient1->shouldReceive('getIsPolice')->once()->andReturn('N');
 
         $recipient2 = m::mock(RecipientEntity::class);
-        $recipient2->shouldReceive('getEmailAddress')->times($nonPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL2);
-        $recipient2->shouldReceive('getContactName')->times($nonPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME2);
+        $recipient2->shouldReceive('getEmailAddress')->times($policeTimes)->andReturn(self::PUB_RECIPIENT_EMAIL2);
+        $recipient2->shouldReceive('getContactName')->times($policeTimes)->andReturn(self::PUB_RECIPIENT_NAME2);
         $recipient2->shouldReceive('getIsPolice')->once()->andReturn('Y');
 
         $recipient3 = m::mock(RecipientEntity::class);
-        $recipient3->shouldReceive('getEmailAddress')->times($policeTimes)->andReturn(self::PUB_RECIPIENT_EMAIL3);
-        $recipient3->shouldReceive('getContactName')->times($policeTimes)->andReturn(self::PUB_RECIPIENT_NAME3);
+        $recipient3->shouldReceive('getEmailAddress')->times($nonPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL3);
+        $recipient3->shouldReceive('getContactName')->times($nonPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME3);
         $recipient3->shouldReceive('getIsPolice')->once()->andReturn('N');
 
         $recipient4 = m::mock(RecipientEntity::class);
-        $recipient4->shouldReceive('getEmailAddress')->times($nonPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL4);
-        $recipient4->shouldReceive('getContactName')->times($nonPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME4);
+        $recipient4->shouldReceive('getEmailAddress')->times($policeTimes)->andReturn(self::PUB_RECIPIENT_EMAIL4);
+        $recipient4->shouldReceive('getContactName')->times($policeTimes)->andReturn(self::PUB_RECIPIENT_NAME4);
         $recipient4->shouldReceive('getIsPolice')->once()->andReturn('Y');
 
         $recipientCollection = new ArrayCollection([$recipient1, $recipient2, $recipient3, $recipient4]);
