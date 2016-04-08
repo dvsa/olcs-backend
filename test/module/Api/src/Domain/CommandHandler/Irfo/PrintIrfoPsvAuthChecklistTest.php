@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\PrintIrfoPsvAuthChecklist as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\IrfoPsvAuth;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType as IrfoPsvAuthTypeEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Transfer\Command\Irfo\PrintIrfoPsvAuthChecklist as Cmd;
@@ -45,9 +46,14 @@ class PrintIrfoPsvAuthChecklistTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $orgId = 101;
+        $org = m::mock(OrganisationEntity::class)->makePartial();
+        $org->setId($orgId);
+
         /** @var IrfoPsvAuthEntity $irfoPsvAuth */
         $irfoPsvAuth1 = m::mock(IrfoPsvAuthEntity::class)->makePartial();
         $irfoPsvAuth1->setId(1001);
+        $irfoPsvAuth1->setOrganisation($org);
         $irfoPsvAuth1
             ->shouldReceive('getIrfoPsvAuthType->getIrfoFeeType->getId')
             ->once()
@@ -70,7 +76,8 @@ class PrintIrfoPsvAuthChecklistTest extends CommandHandlerTestCase
                     'irfoPsvAuth' => 1001
                 ],
                 'knownValues' => [],
-                'description' => 'IRFO PSV Auth Checklist Renewal letter',
+                'description' => 'IRFO PSV Auth 1001 Checklist Renewal letter',
+                'irfoOrganisation' => $orgId,
                 'category' => CategoryEntity::CATEGORY_IRFO,
                 'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_IRFO_CONTINUATIONS_AND_RENEWALS,
                 'isExternal' => false,
@@ -85,7 +92,7 @@ class PrintIrfoPsvAuthChecklistTest extends CommandHandlerTestCase
             EnqueueFileCommand::class,
             [
                 'documentId' => $docId1,
-                'jobName' => 'IRFO PSV Auth Checklist Renewal letter'
+                'jobName' => 'IRFO PSV Auth 1001 Checklist Renewal letter'
             ],
             $docQueueResult1
         );
@@ -102,7 +109,8 @@ class PrintIrfoPsvAuthChecklistTest extends CommandHandlerTestCase
                     'irfoPsvAuth' => 1001
                 ],
                 'knownValues' => [],
-                'description' => 'IRFO PSV Auth Checklist Service letter',
+                'description' => 'IRFO PSV Auth 1001 Checklist Service letter',
+                'irfoOrganisation' => $orgId,
                 'category' => CategoryEntity::CATEGORY_IRFO,
                 'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_IRFO_CONTINUATIONS_AND_RENEWALS,
                 'isExternal' => false,
@@ -117,7 +125,7 @@ class PrintIrfoPsvAuthChecklistTest extends CommandHandlerTestCase
             EnqueueFileCommand::class,
             [
                 'documentId' => $docId2,
-                'jobName' => 'IRFO PSV Auth Checklist Service letter'
+                'jobName' => 'IRFO PSV Auth 1001 Checklist Service letter'
             ],
             $docQueueResult2
         );
