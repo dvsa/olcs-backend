@@ -97,6 +97,12 @@ class ApplicationFinancialHistoryReviewService extends AbstractReviewService
         return $config;
     }
 
+    /**
+     * Format evidence details
+     *
+     * @param array $data
+     * @return string
+     */
     private function formatEvidence($data)
     {
         $files = $this->findFiles(
@@ -112,7 +118,7 @@ class ApplicationFinancialHistoryReviewService extends AbstractReviewService
         $fileNames = [];
 
         foreach ($files as $file) {
-            $fileNames[] = $file['filename'];
+            $fileNames[] = $file['description'];
         }
 
         return implode('<br>', $fileNames);

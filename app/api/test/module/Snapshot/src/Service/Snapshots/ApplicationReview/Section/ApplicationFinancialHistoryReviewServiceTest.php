@@ -179,7 +179,7 @@ class ApplicationFinancialHistoryReviewServiceTest extends MockeryTestCase
                     'insolvencyConfirmation' => 'Y',
                     'documents' => [
                         [
-                            'filename' => 'evidence1',
+                            'description' => 'evidence1',
                             'category' => [
                                 'id' => Category::CATEGORY_LICENSING
                             ],
@@ -188,7 +188,7 @@ class ApplicationFinancialHistoryReviewServiceTest extends MockeryTestCase
                             ]
                         ],
                         [
-                            'filename' => 'evidence2',
+                            'description' => 'evidence2',
                             'category' => [
                                 'id' => Category::CATEGORY_LICENSING
                             ],
@@ -197,7 +197,7 @@ class ApplicationFinancialHistoryReviewServiceTest extends MockeryTestCase
                             ]
                         ],
                         [
-                            'filename' => 'ignore1',
+                            'description' => 'ignore1',
                             'category' => [
                                 'id' => 'foo'
                             ],
@@ -206,7 +206,7 @@ class ApplicationFinancialHistoryReviewServiceTest extends MockeryTestCase
                             ]
                         ],
                         [
-                            'filename' => 'ignore2',
+                            'description' => 'ignore2',
                             'category' => [
                                 'id' => Category::CATEGORY_LICENSING
                             ],
