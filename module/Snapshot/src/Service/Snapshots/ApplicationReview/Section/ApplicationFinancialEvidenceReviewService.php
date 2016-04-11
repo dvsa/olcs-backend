@@ -73,12 +73,18 @@ class ApplicationFinancialEvidenceReviewService extends AbstractReviewService
         return $this->formatDocumentList($documents);
     }
 
+    /**
+     * Format document list
+     *
+     * @param array $documents
+     * @return string
+     */
     private function formatDocumentList($documents)
     {
         $files = [];
 
         foreach ($documents as $document) {
-            $files[] = $document->getFilename();
+            $files[] = $document->getDescription();
         }
 
         return implode('<br>', $files);

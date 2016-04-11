@@ -166,7 +166,7 @@ class ApplicationSafetyReviewService extends AbstractReviewService
         $files = [];
 
         foreach ($documents as $document) {
-            $files[] = $document['filename'];
+            $files[] = $document['description'];
         }
 
         return implode('<br>', $files);

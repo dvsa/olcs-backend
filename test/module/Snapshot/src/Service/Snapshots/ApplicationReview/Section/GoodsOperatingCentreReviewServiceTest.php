@@ -163,20 +163,20 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                 [
                     // This file should be ignored, as the app id doesn't match
                     [
-                        'filename' => 'somefile.pdf',
+                        'description' => 'somefile.pdf',
                         'application' => [
                             'id' => 321
                         ]
                     ],
                     // These 2 should be included
                     [
-                        'filename' => 'file1.pdf',
+                        'description' => 'file1.pdf',
                         'application' => [
                             'id' => 123
                         ]
                     ],
                     [
-                        'filename' => 'file2.pdf',
+                        'description' => 'file2.pdf',
                         'application' => [
                             'id' => 123
                         ]
