@@ -1,12 +1,9 @@
-<?php
-
-foreach ($subSections as $subSection) {
-    if (isset($subSection['title'])) {
-        ?>
+<?php foreach ($subSections as $subSection) {
+    
+    if (isset($subSection['title'])) { ?>
         <h3><?php echo $this->translate($subSection['title'], 'snapshot'); ?></h3>
         <hr>
-        <?php
-    }
+    <?php }
 
     if (isset($subSection['mainItems'])) {
         foreach ($subSection['mainItems'] as $mainItem) {
@@ -15,4 +12,5 @@ foreach ($subSections as $subSection) {
     } else {
         echo $this->render('partials/read-only/main', $subSection['config']);
     }
+        
 }
