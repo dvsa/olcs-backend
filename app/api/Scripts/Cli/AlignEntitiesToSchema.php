@@ -448,6 +448,7 @@ class AlignEntitiesToSchema
             $this->entities[$camelCaseName] = array(
                 'name' => $camelCaseName,
                 'softDeletable' => $this->hasSoftDeleteField($fields),
+                'blameable' => $this->hasBlameableFields($fields),
                 'translatable' => $this->hasTranslatableField($fields),
                 'className' => $namespace . '\\' . $camelCaseName,
                 'table' => $config['entity']['@attributes']['table'],
@@ -654,6 +655,45 @@ class AlignEntitiesToSchema
         }
 
         return false;
+    }
+
+    /**
+     * Check if there is a blameable fields
+     *
+     * @param array $fields
+     * @return bool
+     */
+    private function hasBlameableFields($fields)
+    {
+        foreach ($fields as $field) {
+            if ($this->isCreatedByField($field) || $this->isLastModifiedByField($field)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if it is a createdBy field
+     *
+     * @param array $field
+     * @return bool
+     */
+    private function isCreatedByField($field)
+    {
+        return ($this->formatPropertyName($field) === 'createdBy');
+    }
+
+    /**
+     * Check if it is a lastModifiedBy field
+     *
+     * @param array $field
+     * @return bool
+     */
+    private function isLastModifiedByField($field)
+    {
+        return ($this->formatPropertyName($field) === 'lastModifiedBy');
     }
 
     /**
