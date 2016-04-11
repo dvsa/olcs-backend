@@ -84,7 +84,7 @@ final class PrintIrfoPsvAuthChecklist extends AbstractCommandHandler implements 
     private function printRenewalLetter(IrfoPsvAuth $irfoPsvAuth)
     {
         $description = sprintf(
-            'IRFO PSV Auth %d Checklist Renewal letter',
+            'IRFO PSV Auth Checklist Renewal letter (%d)',
             $irfoPsvAuth->getId()
         );
 
@@ -127,51 +127,93 @@ final class PrintIrfoPsvAuthChecklist extends AbstractCommandHandler implements 
      */
     private function printServiceLetter(IrfoPsvAuth $irfoPsvAuth)
     {
+        $templates = $this->getServiceLetterTemplates($irfoPsvAuth);
+
+        if (empty($templates)) {
+            throw new Exception\BadRequestException(
+                'No template found for given IRFO PSV Auth Type: '
+                .$irfoPsvAuth->getIrfoPsvAuthType()->getIrfoFeeType()->getId()
+            );
+        }
+
+        $printResult = new Result();
+
+        foreach ($templates as $template) {
+            $description = sprintf(
+                '%s (%d)',
+                str_replace('_', ' ', $template),
+                $irfoPsvAuth->getId()
+            );
+
+            // generate document
+            $result = $this->handleSideEffect(
+                GenerateAndStore::create(
+                    [
+                        'template' => $template,
+                        'query' => [
+                            'irfoPsvAuth' => $irfoPsvAuth->getId()
+                        ],
+                        'knownValues' => [],
+                        'description' => $description,
+                        'irfoOrganisation' => $irfoPsvAuth->getOrganisation()->getId(),
+                        'category' => CategoryEntity::CATEGORY_IRFO,
+                        'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_IRFO_CONTINUATIONS_AND_RENEWALS,
+                        'isExternal' => false,
+                        'isScan' => false
+                    ]
+                )
+            );
+
+            // add to the print queue
+            $printResult->merge(
+                $this->handleSideEffect(
+                    EnqueueFileCommand::create(
+                        [
+                            'documentId' => $result->getId('document'),
+                            'jobName' => $description
+                        ]
+                    )
+                )
+            );
+        }
+
+        return $printResult;
+    }
+
+    /**
+     * Get Service Letter Templates
+     *
+     * @param IrfoPsvAuth $irfoPsvAuth
+     *
+     * @return array
+     */
+    private function getServiceLetterTemplates(IrfoPsvAuth $irfoPsvAuth)
+    {
+        $templates = [];
+
         switch ($irfoPsvAuth->getIrfoPsvAuthType()->getIrfoFeeType()->getId()) {
             case IrfoPsvAuthType::IRFO_FEE_TYPE_EU_REG_17:
             case IrfoPsvAuthType::IRFO_FEE_TYPE_EU_REG_19A:
-                $template = 'IRFO_app_eu_regular_service';
+                $templates = ['IRFO_eu_auth_pink_GV280'];
+                break;
+            case IrfoPsvAuthType::IRFO_FEE_TYPE_NON_EU_REG_18:
+                $templates = [
+                    'IRFO_uk_green_authorisation_INT_P17',
+                    'IRFO_non_eu_blue_authorisation_to_foreign_partner_INT_P18'
+                ];
+                break;
+            case IrfoPsvAuthType::IRFO_FEE_TYPE_NON_EU_REG_19:
+                $templates = ['IRFO_non_eu_blue_authorisation_foreign_operator_no_partner_INT_P18A'];
+                break;
+            case IrfoPsvAuthType::IRFO_FEE_TYPE_NON_EU_OCCASIONAL_19:
+            case IrfoPsvAuthType::IRFO_FEE_TYPE_SHUTTLE_OPERATOR_20:
+                $templates = ['IRFO_eu_auth_pink_special_regular_GV280'];
                 break;
             case IrfoPsvAuthType::IRFO_FEE_TYPE_OWN_AC_21:
-                $template = 'IRFO_own_acc';
-                break;
-            default:
-                $template = 'IRFO_app_non_eu_service';
+                $templates = ['IRFO_own_acc'];
                 break;
         }
 
-        $description = sprintf(
-            'IRFO PSV Auth %d Checklist Service letter',
-            $irfoPsvAuth->getId()
-        );
-
-        // generate document
-        $result = $this->handleSideEffect(
-            GenerateAndStore::create(
-                [
-                    'template' => $template,
-                    'query' => [
-                        'irfoPsvAuth' => $irfoPsvAuth->getId()
-                    ],
-                    'knownValues' => [],
-                    'description' => $description,
-                    'irfoOrganisation' => $irfoPsvAuth->getOrganisation()->getId(),
-                    'category' => CategoryEntity::CATEGORY_IRFO,
-                    'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_IRFO_CONTINUATIONS_AND_RENEWALS,
-                    'isExternal' => false,
-                    'isScan' => false
-                ]
-            )
-        );
-
-        // add to the print queue
-        return $this->handleSideEffect(
-            EnqueueFileCommand::create(
-                [
-                    'documentId' => $result->getId('document'),
-                    'jobName' => $description
-                ]
-            )
-        );
+        return $templates;
     }
 }
