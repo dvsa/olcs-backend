@@ -43,10 +43,6 @@ class FeeTypeTest extends RepositoryTestCase
 
         $this->mockCreateQueryBuilder($qb);
 
-        $qb->shouldReceive('setMaxResults')
-            ->with(1)
-            ->andReturnSelf();
-
         $qb->shouldReceive('getQuery')
             ->andReturn(
                 m::mock()
@@ -57,7 +53,7 @@ class FeeTypeTest extends RepositoryTestCase
 
         $this->assertEquals('RESULTS', $this->sut->fetchLatestForOverpayment());
 
-        $expectedQuery = 'QUERY AND ft.feeType = [[ADJUSTMENT]] ORDER BY ft.effectiveFrom DESC';
+        $expectedQuery = 'QUERY AND ft.feeType = [[ADJUSTMENT]] ORDER BY ft.effectiveFrom DESC LIMIT 1';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
