@@ -118,8 +118,7 @@ class ImpoundingTest extends CommandHandlerTestCase
         $impoundingMock->shouldReceive('getCase')->andReturn($caseMock);
         $impoundingMock->shouldReceive('getId')->andReturn($impoundingId);
 
-        $publicationMock = m::mock(PublicationEntity::class);
-        $publicationMock->shouldReceive('getId')->andReturn($publicationId);
+        $publicationMock = $this->getPublicationMock($publicationId);
 
         $publicationLinkMock = m::mock(PublicationLinkEntity::class)->makePartial();
 
@@ -198,8 +197,7 @@ class ImpoundingTest extends CommandHandlerTestCase
         $impoundingMock->shouldReceive('getCase')->andReturn($caseMock);
         $impoundingMock->shouldReceive('getId')->andReturn($impoundingId);
 
-        $publicationMock = m::mock(PublicationEntity::class);
-        $publicationMock->shouldReceive('getId')->andReturn($publicationId);
+        $publicationMock = $this->getPublicationMock($publicationId);
 
         $publicationLinkMock = m::mock(PublicationLinkEntity::class)->makePartial();
 
@@ -279,8 +277,7 @@ class ImpoundingTest extends CommandHandlerTestCase
         $impoundingMock->shouldReceive('getCase')->andReturn($caseMock);
         $impoundingMock->shouldReceive('getId')->andReturn($impoundingId);
 
-        $publicationMock = m::mock(PublicationEntity::class);
-        $publicationMock->shouldReceive('getId')->andReturn($publicationId);
+        $publicationMock = $this->getPublicationMock($publicationId);
 
         $publicationLinkMock = m::mock(PublicationLinkEntity::class)->makePartial();
         $publicationLinkMock->shouldReceive('getId')->andReturn(1);
@@ -322,6 +319,22 @@ class ImpoundingTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf(ResultCmd::class, $result);
+    }
+
+    /**
+     * Gets a mock publication entity. Assumes canGenerate is always true, as this part is tested on the
+     * entity itself
+     *
+     * @param $publicationId
+     * @return m\MockInterface
+     */
+    private function getPublicationMock($publicationId)
+    {
+        $publicationMock = m::mock(PublicationEntity::class);
+        $publicationMock->shouldReceive('getId')->andReturn($publicationId);
+        $publicationMock->shouldReceive('canGenerate')->andReturn(true);
+
+        return $publicationMock;
     }
 
     /**

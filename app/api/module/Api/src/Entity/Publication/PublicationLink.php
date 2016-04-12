@@ -39,6 +39,8 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
  */
 class PublicationLink extends AbstractPublicationLink
 {
+    const ADD_ENTRY_ERROR = 'Can only create publication entries for publications with status new';
+
     /**
      * Creates Application publication entry
      *
@@ -47,6 +49,8 @@ class PublicationLink extends AbstractPublicationLink
      * @param PublicationEntity $publication
      * @param PublicationSectionEntity $publicationSection
      * @param TrafficAreaEntity $trafficArea
+     *
+     * @throws ForbiddenException
      */
     public function createApplication(
         ApplicationEntity $application,
@@ -55,6 +59,10 @@ class PublicationLink extends AbstractPublicationLink
         PublicationSectionEntity $publicationSection,
         TrafficAreaEntity $trafficArea
     ) {
+        if (!$publication->canGenerate()) {
+            throw new ForbiddenException(self::ADD_ENTRY_ERROR);
+        }
+
         $this->application = $application;
         $this->licence = $licence;
         $this->publication = $publication;
@@ -71,6 +79,8 @@ class PublicationLink extends AbstractPublicationLink
      * @param PublicationSectionEntity $publicationSection
      * @param TrafficAreaEntity $trafficArea
      * @param string $text1
+     *
+     * @throws ForbiddenException
      */
     public function createBusReg(
         BusRegEntity $busReg,
@@ -80,6 +90,10 @@ class PublicationLink extends AbstractPublicationLink
         TrafficAreaEntity $trafficArea,
         $text1
     ) {
+        if (!$publication->canGenerate()) {
+            throw new ForbiddenException(self::ADD_ENTRY_ERROR);
+        }
+
         $this->busReg = $busReg;
         $this->licence = $licence;
         $this->publication = $publication;
@@ -96,6 +110,8 @@ class PublicationLink extends AbstractPublicationLink
      * @param PublicationEntity $publication
      * @param PublicationSectionEntity $publicationSection
      * @param TrafficAreaEntity $trafficArea
+     *
+     * @throws ForbiddenException
      */
     public function createPiHearing(
         LicenceEntity $licence,
@@ -104,6 +120,10 @@ class PublicationLink extends AbstractPublicationLink
         PublicationSectionEntity $publicationSection,
         TrafficAreaEntity $trafficArea
     ) {
+        if (!$publication->canGenerate()) {
+            throw new ForbiddenException(self::ADD_ENTRY_ERROR);
+        }
+
         $this->licence = $licence;
         $this->pi = $pi;
         $this->publication = $publication;
@@ -119,6 +139,8 @@ class PublicationLink extends AbstractPublicationLink
      * @param PublicationEntity $publication
      * @param PublicationSectionEntity $publicationSection
      * @param TrafficAreaEntity $trafficArea
+     *
+     * @throws ForbiddenException
      */
     public function createTmPiHearing(
         TransportManagerEntity $transportManager,
@@ -127,6 +149,10 @@ class PublicationLink extends AbstractPublicationLink
         PublicationSectionEntity $publicationSection,
         TrafficAreaEntity $trafficArea
     ) {
+        if (!$publication->canGenerate()) {
+            throw new ForbiddenException(self::ADD_ENTRY_ERROR);
+        }
+
         $this->transportManager = $transportManager;
         $this->pi = $pi;
         $this->publication = $publication;
@@ -135,12 +161,14 @@ class PublicationLink extends AbstractPublicationLink
     }
 
     /**
-     * Create a publicaction link for a licence
+     * Create a publication link for a licence
      *
      * @param LicenceEntity $licence
      * @param PublicationEntity $publication
      * @param PublicationSectionEntity $publicationSection
      * @param TrafficAreaEntity $trafficArea
+     *
+     * @throws ForbiddenException
      */
     public function createLicence(
         LicenceEntity $licence,
@@ -148,6 +176,10 @@ class PublicationLink extends AbstractPublicationLink
         PublicationSectionEntity $publicationSection,
         TrafficAreaEntity $trafficArea
     ) {
+        if (!$publication->canGenerate()) {
+            throw new ForbiddenException(self::ADD_ENTRY_ERROR);
+        }
+
         $this->licence = $licence;
         $this->publication = $publication;
         $this->publicationSection = $publicationSection;
@@ -155,12 +187,14 @@ class PublicationLink extends AbstractPublicationLink
     }
 
     /**
-     * Create a publicaction link for an Impounding
+     * Create a publication link for an Impounding
      *
      * @param ImpoundingEntity $impounding
      * @param PublicationEntity $publication
      * @param PublicationSectionEntity $publicationSection
      * @param TrafficAreaEntity $trafficArea
+     *
+     * @throws ForbiddenException
      */
     public function createImpounding(
         ImpoundingEntity $impounding,
@@ -170,6 +204,10 @@ class PublicationLink extends AbstractPublicationLink
         LicenceEntity $licence = null,
         ApplicationEntity $application = null
     ) {
+        if (!$publication->canGenerate()) {
+            throw new ForbiddenException(self::ADD_ENTRY_ERROR);
+        }
+
         $this->impounding = $impounding;
         $this->publication = $publication;
         $this->publicationSection = $publicationSection;
@@ -189,7 +227,7 @@ class PublicationLink extends AbstractPublicationLink
      */
     public function updateText($text1, $text2, $text3)
     {
-        if (!$this->publication->isNew()) {
+        if (!$this->publication->canGenerate()) {
             throw new ForbiddenException('Only publications with status of New may be edited');
         }
 

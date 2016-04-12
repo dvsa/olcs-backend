@@ -31,7 +31,7 @@ class ApplicationTest extends CommandHandlerTestCase
     {
         $this->sut = new Application();
         $this->mockRepo('Publication', PublicationRepo::class);
-        $this->mockRepo('PublicationLink', PuConditionsAndUndertakingsblicationLinkRepo::class);
+        $this->mockRepo('PublicationLink', PublicationLinkRepo::class);
         $this->mockRepo('Application', ApplicationRepo::class);
         $this->mockRepo('TrafficArea', TrafficAreaRepo::class);
 
@@ -89,8 +89,7 @@ class ApplicationTest extends CommandHandlerTestCase
             ->shouldReceive('createPublication')->with('ApplicationPublication', $publicationLink, [])->once()
             ->andReturn($publicationLink);
 
-        $publicationMock = m::mock(PublicationEntity::class);
-        $publicationMock->shouldReceive('getId')->andReturn($publicationId);
+        $publicationMock = $this->getPublicationMock($publicationId);
 
         $mockTa = m::mock(TrafficAreaEntity::class);
         $mockTa->shouldReceive('getId')->andReturn($trafficArea);
@@ -143,8 +142,7 @@ class ApplicationTest extends CommandHandlerTestCase
             ->shouldReceive('createPublication')->with('VariationPublication', $publicationLink, [])->once()
             ->andReturn($publicationLink);
 
-        $publicationMock = m::mock(PublicationEntity::class);
-        $publicationMock->shouldReceive('getId')->andReturn($publicationId);
+        $publicationMock = $this->getPublicationMock($publicationId);
 
         $mockTa = m::mock(TrafficAreaEntity::class);
         $mockTa->shouldReceive('getId')->andReturn($trafficArea);
@@ -197,8 +195,7 @@ class ApplicationTest extends CommandHandlerTestCase
             ->shouldReceive('createPublication')->with('Schedule41TruePublication', $publicationLink, [])->once()
             ->andReturn($publicationLink);
 
-        $publicationMock = m::mock(PublicationEntity::class);
-        $publicationMock->shouldReceive('getId')->andReturn($publicationId);
+        $publicationMock = $this->getPublicationMock($publicationId);
 
         $mockTa = m::mock(TrafficAreaEntity::class);
         $mockTa->shouldReceive('getId')->andReturn($trafficArea);
@@ -255,8 +252,7 @@ class ApplicationTest extends CommandHandlerTestCase
             ->shouldReceive('createPublication')->with('Schedule41UntruePublication', $publicationLink, [])->once()
             ->andReturn($publicationLink);
 
-        $publicationMock = m::mock(PublicationEntity::class);
-        $publicationMock->shouldReceive('getId')->andReturn($publicationId);
+        $publicationMock = $this->getPublicationMock($publicationId);
 
         $mockTa = m::mock(TrafficAreaEntity::class);
         $mockTa->shouldReceive('getId')->andReturn($trafficArea);
@@ -289,6 +285,22 @@ class ApplicationTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf(ResultCmd::class, $result);
+    }
+
+    /**
+     * Gets a mock publication entity. Assumes canGenerate is always true, as this part is tested on the
+     * entity itself
+     *
+     * @param $publicationId
+     * @return m\MockInterface
+     */
+    private function getPublicationMock($publicationId)
+    {
+        $publicationMock = m::mock(PublicationEntity::class);
+        $publicationMock->shouldReceive('getId')->andReturn($publicationId);
+        $publicationMock->shouldReceive('canGenerate')->andReturn(true);
+
+        return $publicationMock;
     }
 
     /**

@@ -145,8 +145,7 @@ class BusTest extends CommandHandlerTestCase
             ->shouldReceive('createPublication')
             ->andReturn($publicationLinkMock);
 
-        $publicationMock = m::mock(PublicationEntity::class);
-        $publicationMock->shouldReceive('getId')->andReturn($publicationId);
+        $publicationMock = $this->getPublicationMock($publicationId);
 
         $mockTa = m::mock(TrafficAreaEntity::class);
         $mockTa->shouldReceive('getId')->andReturn('N');
@@ -211,8 +210,7 @@ class BusTest extends CommandHandlerTestCase
             ->shouldReceive('createPublication')
             ->andReturn($publicationLinkMock);
 
-        $publicationMock = m::mock(PublicationEntity::class);
-        $publicationMock->shouldReceive('getId')->andReturn($publicationId);
+        $publicationMock = $this->getPublicationMock($publicationId);
 
         $mockTa = m::mock(TrafficAreaEntity::class);
         $mockTa->shouldReceive('getId')->andReturn('M');
@@ -250,6 +248,22 @@ class BusTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf(ResultCmd::class, $result);
+    }
+
+    /**
+     * Gets a mock publication entity. Assumes canGenerate is always true, as this part is tested on the
+     * entity itself
+     *
+     * @param $publicationId
+     * @return m\MockInterface
+     */
+    private function getPublicationMock($publicationId)
+    {
+        $publicationMock = m::mock(PublicationEntity::class);
+        $publicationMock->shouldReceive('getId')->andReturn($publicationId);
+        $publicationMock->shouldReceive('canGenerate')->andReturn(true);
+
+        return $publicationMock;
     }
 
     /**
