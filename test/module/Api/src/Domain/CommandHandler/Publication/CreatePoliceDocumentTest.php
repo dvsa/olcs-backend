@@ -7,11 +7,9 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Publication\CreatePoliceDocument;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
-use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
-use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore as GenerateAndStoreCmd;
 use Dvsa\Olcs\Api\Domain\Command\Publication\CreatePoliceDocument as CreatePoliceDocumentCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\DocumentShare\Data\Object\File;
 
 /**
  * Class CreatePoliceDocumentTest
@@ -25,34 +23,29 @@ class CreatePoliceDocumentTest extends CommandHandlerTestCase
         $this->sut = new CreatePoliceDocument();
         $this->mockRepo('Publication', PublicationRepo::class);
 
-        $this->mockedSmServices = [
-            'FileUploader' => m::mock(ContentStoreFileUploader::class)
-        ];
-
         parent::setUp();
     }
 
     public function testHandleCommand()
     {
         $id = 11;
-        $docCategory = 11;
+        $docCategory = 22;
         $docSubCategory = 113;
         $docDescription = 'doc description';
         $docDescriptionPolice = $docDescription . ' police version';
         $generatedDocId = 2345;
-        $filename = 'filename.rtf';
-        $docFilename = '/path/to/' . $filename;
-        $previousDocContent = 'previous doc content';
-        $docIdentifier = 'identifier';
+        $previousDocId = 33;
 
-        $docUploadCmdData = [
-            'content'       => base64_encode($previousDocContent),
+        $docGenerateCmdData = [
+            'template' => $previousDocId,
+            'query' => [
+                'id' => $id
+            ],
             'description'   => $docDescriptionPolice,
             'category'      => $docCategory,
             'subCategory'   => $docSubCategory,
             'isExternal'    => true,
-            'isReadOnly'    => 'Y',
-            'filename'      => $filename
+            'isReadOnly'    => 'Y'
         ];
 
         $command = CreatePoliceDocumentCmd::create(['id' => $id]);
@@ -61,22 +54,13 @@ class CreatePoliceDocumentTest extends CommandHandlerTestCase
         $publicationEntity->shouldReceive('getDocTemplate->getDescription')->once()->andReturn($docDescription);
         $publicationEntity->shouldReceive('getDocTemplate->getCategory->getId')->once()->andReturn($docCategory);
         $publicationEntity->shouldReceive('getDocTemplate->getSubCategory->getId')->once()->andReturn($docSubCategory);
-        $publicationEntity->shouldReceive('getDocument->getFilename')->once()->andReturn($docFilename);
-        $publicationEntity->shouldReceive('getDocument->getIdentifier')->once()->andReturn($docIdentifier);
+        $publicationEntity->shouldReceive('getDocument->getId')->once()->andReturn($previousDocId);
+        $publicationEntity->shouldReceive('getId')->once()->andReturn($id);
 
-        $previousDoc = m::mock(File::class);
-        $previousDoc->shouldReceive('getContent')->once()->andReturn($previousDocContent);
+        $generatedDocResult = new Result();
+        $generatedDocResult->addId('document', $generatedDocId);
 
-        $this->mockedSmServices['FileUploader']
-            ->shouldReceive('download')
-            ->with($docIdentifier)
-            ->once()
-            ->andReturn($previousDoc);
-
-        $uploadResult = new Result();
-        $uploadResult->addId('document', $generatedDocId);
-
-        $this->expectedSideEffect(UploadCmd::class, $docUploadCmdData, $uploadResult);
+        $this->expectedSideEffect(GenerateAndStoreCmd::class, $docGenerateCmdData, $generatedDocResult);
 
         $this->repoMap['Publication']
             ->shouldReceive('fetchUsingId')
