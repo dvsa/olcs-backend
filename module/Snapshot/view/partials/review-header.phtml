@@ -8,7 +8,7 @@
             ->appendName('viewport', 'width=device-width, initial-scale=1.0')
             ->appendHttpEquiv('X-UA-Compatible', 'IE=edge');
         echo $this->headScript();
-        echo $this->headLink()->appendStylesheet('/styles/print.css', ['media' => 'screen, print']);
+        echo $this->headLink()->appendStylesheet($this->assetPath('/styles/print.css'), ['media' => 'screen, print']);
     ?>
     
 </head>
