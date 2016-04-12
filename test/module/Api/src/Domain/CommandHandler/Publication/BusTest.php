@@ -21,7 +21,6 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationPoliceData as PoliceEntity;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Domain\Command\Result as ResultCmd;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedBusReg as UnpublishedBusRegQry;
@@ -134,17 +133,13 @@ class BusTest extends CommandHandlerTestCase
             1 => $this->ta3
         ];
 
-        $policeDataMock = m::mock(PoliceEntity::class);
-        $policeDataMock->shouldReceive('setPublicationLink')->once()->with(null)->andReturnSelf();
-        $policeArrayCollection = new ArrayCollection([$policeDataMock]);
-
         $command = Cmd::Create(['id' => $id]);
 
         $this->repoMap['TrafficArea']->shouldReceive('fetchAll')->andReturn($allTrafficAreas);
 
         $publicationLinkMock = m::mock(PublicationLinkEntity::class)->makePartial();
         $publicationLinkMock->shouldReceive('getId')->andReturn($publicationLinkId);
-        $publicationLinkMock->shouldReceive('getPoliceDatas')->once()->andReturn($policeArrayCollection);
+        $publicationLinkMock->shouldReceive('getPoliceDatas->clear')->once()->andReturnSelf();
 
         $this->mockedSmServices[PublicationGenerator::class]
             ->shouldReceive('createPublication')

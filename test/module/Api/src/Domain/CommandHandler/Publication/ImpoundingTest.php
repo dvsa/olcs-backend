@@ -85,7 +85,6 @@ class ImpoundingTest extends CommandHandlerTestCase
 
     /**
      * Test handle Impounding publication command for case attached to application
-     * @param $cmdClass
      */
     public function testHandleCommandForApplicationCases()
     {
@@ -164,10 +163,8 @@ class ImpoundingTest extends CommandHandlerTestCase
         $this->assertInstanceOf(ResultCmd::class, $result);
     }
 
-
     /**
      * Test handle Impounding publication command for case attached to licence
-     * @param $cmdClass
      */
     public function testHandleCommandForLicenceCases()
     {
@@ -238,6 +235,87 @@ class ImpoundingTest extends CommandHandlerTestCase
             ->andReturn($publicationLinkMock)
             ->shouldReceive('save')
             ->with(m::type(PublicationLinkEntity::class))
+            ->shouldReceive('delete')
+            ->with(m::type(PublicationLinkEntity::class));
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertInstanceOf(ResultCmd::class, $result);
+    }
+
+    /**
+     * Test handle Impounding publication when publication traffic areas have changed
+     * @param $cmdClass
+     */
+    public function testHandleCommandWithDelete()
+    {
+        $publicationId = 33;
+        $impoundingId = 17;
+
+        $trafficAreaId = 'B';
+        $pubTypeId = 'N&P';
+        $piId = 44;
+        $applicationId = null;
+        $licenceId = 7;
+
+        $allTrafficAreas = $this->getAllTrafficAreas();
+
+        $caseType = CasesEntity::LICENCE_CASE_TYPE;
+
+        $command = ImpoundingCmd::Create(
+            [
+                'trafficArea' => $trafficAreaId,
+                'pubType' => $pubTypeId,
+                'pi' => $piId,
+                'application' => $applicationId,
+                'licence' => $licenceId
+            ]
+        );
+
+        $caseMock = m::mock(CasesEntity::class);
+        $caseMock->shouldReceive('getCaseType')->andReturn($this->refData[$caseType]);
+
+        $impoundingMock = m::mock(ImpoundingEntity::class);
+        $impoundingMock->shouldReceive('getCase')->andReturn($caseMock);
+        $impoundingMock->shouldReceive('getId')->andReturn($impoundingId);
+
+        $publicationMock = m::mock(PublicationEntity::class);
+        $publicationMock->shouldReceive('getId')->andReturn($publicationId);
+
+        $publicationLinkMock = m::mock(PublicationLinkEntity::class)->makePartial();
+        $publicationLinkMock->shouldReceive('getId')->andReturn(1);
+        $publicationLinkMock->shouldReceive('getPoliceDatas->clear')->times(5)->andReturnSelf();
+
+        $this->references[ApplicationEntity::class][1]->shouldReceive('getLicence')
+            ->andReturn($this->references[LicenceEntity::class][7]);
+
+        $this->repoMap['Impounding']->shouldReceive('fetchUsingId')->andReturn($impoundingMock);
+        $this->repoMap['TrafficArea']->shouldReceive('fetchAll')->andReturn($allTrafficAreas);
+        $this->repoMap['Publication']->shouldReceive('fetchLatestForTrafficAreaAndType')
+            ->with('B', 'A&D')
+            ->once()
+            ->andReturn($publicationMock)
+            ->shouldReceive('fetchLatestForTrafficAreaAndType')
+            ->with('B', 'N&P')
+            ->once()
+            ->andReturn($publicationMock)
+            ->shouldReceive('fetchLatestForTrafficAreaAndType')
+            ->with('N', 'A&D')
+            ->once()
+            ->andReturn($publicationMock)
+            ->shouldReceive('fetchLatestForTrafficAreaAndType')
+            ->with('D', 'A&D')
+            ->once()
+            ->andReturn($publicationMock)
+            ->shouldReceive('fetchLatestForTrafficAreaAndType')
+            ->with('D', 'N&P')
+            ->once()
+            ->andReturn($publicationMock);
+
+        $this->repoMap['PublicationLink']
+            ->shouldReceive('fetchSingleUnpublished')
+            ->with(m::type(UnpublishedImpoundingQry::class))
+            ->andReturn($publicationLinkMock)
             ->shouldReceive('delete')
             ->with(m::type(PublicationLinkEntity::class));
 

@@ -5,7 +5,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Publication;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Publication\PiHearing;
 use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
@@ -24,7 +23,6 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationPoliceData as PoliceEntity;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Domain\Command\Result as ResultCmd;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedPi as UnpublishedPiQry;
@@ -291,13 +289,9 @@ class PiHearingTest extends CommandHandlerTestCase
             ]
         );
 
-        $policeDataMock = m::mock(PoliceEntity::class);
-        //$policeDataMock->shouldReceive('setPublicationLink')->once()->with(null)->andReturnSelf();
-        $policeArrayCollection = new ArrayCollection([$policeDataMock]);
-
         $publicationLinkMock = m::mock(PublicationLinkEntity::class)->makePartial();
         $publicationLinkMock->shouldReceive('getId')->andReturn(1);
-        //$publicationLinkMock->shouldReceive('getPoliceDatas')->once()->andReturn($policeArrayCollection);
+        $publicationLinkMock->shouldReceive('getPoliceDatas->clear')->once()->andReturnSelf();
 
         $this->mockedSmServices[PublicationGenerator::class]
             ->shouldReceive('createPublication')
