@@ -10,6 +10,9 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEnt
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
+use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TmEntity;
 use Mockery as m;
 
 /**
@@ -33,18 +36,19 @@ class PublicationLinkEntityTest extends EntityTester
      */
     public function testUpdateTextThrowsException()
     {
-        $publicationMock = m::mock(PublicationEntity::class);
-        $publicationMock->shouldReceive('isNew')->andReturn(false);
+        $publicationMock = $this->getPublicationMock(false);
 
         $entity = new Entity();
         $entity->setPublication($publicationMock);
         $entity->updateText('', '', '');
     }
 
+    /**
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
     public function testUpdateText()
     {
-        $publicationMock = m::mock(PublicationEntity::class);
-        $publicationMock->shouldReceive('isNew')->andReturn(true);
+        $publicationMock = $this->getPublicationMock(true);
 
         $entity = new Entity();
         $entity->setPublication($publicationMock);
@@ -60,14 +64,207 @@ class PublicationLinkEntityTest extends EntityTester
         $this->assertEquals($text3, $entity->getText3());
     }
 
-    public function testCreateImpounding()
+    /**
+     * Tests createBusReg
+     */
+    public function testCreateBusReg()
     {
-        $impounding = m::mock(ImpoundingEntity::class);
-        $publication = m::mock(PublicationEntity::class);
+        $publicationSection = m::mock(PublicationSectionEntity::class);
+        $trafficArea = m::mock(TrafficAreaEntity::class);
+        $licence = m::mock(LicenceEntity::class);
+        $busReg = m::mock(BusRegEntity::class);
+        $publication = $this->getPublicationMock(true);
+        $text1 = 'text1';
+
+        $entity = new Entity();
+        $entity->createBusReg($busReg, $licence, $publication, $publicationSection, $trafficArea, $text1);
+
+        $this->assertSame($publication, $entity->getPublication());
+        $this->assertSame($publicationSection, $entity->getPublicationSection());
+        $this->assertSame($trafficArea, $entity->getTrafficArea());
+        $this->assertSame($licence, $entity->getLicence());
+        $this->assertSame($busReg, $entity->getBusReg());
+        $this->assertSame($text1, $entity->getText1());
+    }
+
+    /**
+     * Tests creating bus reg throws ForbiddenException when necessary
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testCreateBusRegThrowsException()
+    {
+        $publicationSection = m::mock(PublicationSectionEntity::class);
+        $trafficArea = m::mock(TrafficAreaEntity::class);
+        $licence = m::mock(LicenceEntity::class);
+        $busReg = m::mock(BusRegEntity::class);
+        $publication = $this->getPublicationMock(false);
+        $text1 = 'text1';
+
+        $entity = new Entity();
+        $entity->createBusReg($busReg, $licence, $publication, $publicationSection, $trafficArea, $text1);
+    }
+
+    /**
+     * Tests createTmPiHearing
+     */
+    public function testCreateTmPiHearing()
+    {
+        $publicationSection = m::mock(PublicationSectionEntity::class);
+        $trafficArea = m::mock(TrafficAreaEntity::class);
+        $tm = m::mock(TmEntity::class);
+        $pi = m::mock(PiEntity::class);
+        $publication = $this->getPublicationMock(true);
+
+        $entity = new Entity();
+        $entity->createTmPiHearing($tm, $pi, $publication, $publicationSection, $trafficArea);
+
+        $this->assertSame($publication, $entity->getPublication());
+        $this->assertSame($publicationSection, $entity->getPublicationSection());
+        $this->assertSame($trafficArea, $entity->getTrafficArea());
+        $this->assertSame($tm, $entity->getTransportManager());
+        $this->assertSame($pi, $entity->getPi());
+    }
+
+    /**
+     * Tests creating tm pi hearing throws ForbiddenException when necessary
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testCreateTmPiHearingThrowsException()
+    {
+        $publicationSection = m::mock(PublicationSectionEntity::class);
+        $trafficArea = m::mock(TrafficAreaEntity::class);
+        $tm = m::mock(TmEntity::class);
+        $pi = m::mock(PiEntity::class);
+        $publication = $this->getPublicationMock(false);
+
+        $entity = new Entity();
+        $entity->createTmPiHearing($tm, $pi, $publication, $publicationSection, $trafficArea);
+    }
+
+    /**
+     * Tests createPiHearing
+     */
+    public function testCreatePiHearing()
+    {
+        $publicationSection = m::mock(PublicationSectionEntity::class);
+        $trafficArea = m::mock(TrafficAreaEntity::class);
+        $licence = m::mock(LicenceEntity::class);
+        $pi = m::mock(PiEntity::class);
+        $publication = $this->getPublicationMock(true);
+
+        $entity = new Entity();
+        $entity->createPiHearing($licence, $pi, $publication, $publicationSection, $trafficArea);
+
+        $this->assertSame($publication, $entity->getPublication());
+        $this->assertSame($publicationSection, $entity->getPublicationSection());
+        $this->assertSame($trafficArea, $entity->getTrafficArea());
+        $this->assertSame($licence, $entity->getLicence());
+        $this->assertSame($pi, $entity->getPi());
+    }
+
+    /**
+     * Tests creating pi hearing throws ForbiddenException when necessary
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testCreatePiHearingThrowsException()
+    {
+        $publicationSection = m::mock(PublicationSectionEntity::class);
+        $trafficArea = m::mock(TrafficAreaEntity::class);
+        $licence = m::mock(LicenceEntity::class);
+        $pi = m::mock(PiEntity::class);
+        $publication = $this->getPublicationMock(false);
+
+        $entity = new Entity();
+        $entity->createPiHearing($licence, $pi, $publication, $publicationSection, $trafficArea);
+    }
+
+    /**
+     * Tests createLicence
+     */
+    public function testCreateLicence()
+    {
+        $publicationSection = m::mock(PublicationSectionEntity::class);
+        $trafficArea = m::mock(TrafficAreaEntity::class);
+        $licence = m::mock(LicenceEntity::class);
+        $publication = $this->getPublicationMock(true);
+
+        $entity = new Entity();
+        $entity->createLicence($licence, $publication, $publicationSection, $trafficArea);
+
+        $this->assertSame($publication, $entity->getPublication());
+        $this->assertSame($publicationSection, $entity->getPublicationSection());
+        $this->assertSame($trafficArea, $entity->getTrafficArea());
+        $this->assertSame($licence, $entity->getLicence());
+    }
+
+    /**
+     * Tests creating licence throws ForbiddenException when necessary
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testCreateLicenceThrowsException()
+    {
+        $publicationSection = m::mock(PublicationSectionEntity::class);
+        $trafficArea = m::mock(TrafficAreaEntity::class);
+        $licence = m::mock(LicenceEntity::class);
+        $publication = $this->getPublicationMock(false);
+
+        $entity = new Entity();
+        $entity->createLicence($licence, $publication, $publicationSection, $trafficArea);
+    }
+
+    /**
+     * Tests createApplication
+     */
+    public function testCreateApplication()
+    {
         $publicationSection = m::mock(PublicationSectionEntity::class);
         $trafficArea = m::mock(TrafficAreaEntity::class);
         $licence = m::mock(LicenceEntity::class);
         $application = m::mock(ApplicationEntity::class);
+        $publication = $this->getPublicationMock(true);
+
+        $entity = new Entity();
+        $entity->createApplication($application, $licence, $publication, $publicationSection, $trafficArea);
+
+        $this->assertSame($publication, $entity->getPublication());
+        $this->assertSame($publicationSection, $entity->getPublicationSection());
+        $this->assertSame($trafficArea, $entity->getTrafficArea());
+        $this->assertSame($licence, $entity->getLicence());
+        $this->assertSame($application, $entity->getApplication());
+    }
+
+    /**
+     * Tests creating application throws ForbiddenException when necessary
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testCreateApplicationThrowsException()
+    {
+        $publicationSection = m::mock(PublicationSectionEntity::class);
+        $trafficArea = m::mock(TrafficAreaEntity::class);
+        $licence = m::mock(LicenceEntity::class);
+        $application = m::mock(ApplicationEntity::class);
+        $publication = $this->getPublicationMock(false);
+
+        $entity = new Entity();
+        $entity->createApplication($application, $licence, $publication, $publicationSection, $trafficArea);
+    }
+
+    /**
+     * Tests createImpounding
+     */
+    public function testCreateImpounding()
+    {
+        $impounding = m::mock(ImpoundingEntity::class);
+        $publicationSection = m::mock(PublicationSectionEntity::class);
+        $trafficArea = m::mock(TrafficAreaEntity::class);
+        $licence = m::mock(LicenceEntity::class);
+        $application = m::mock(ApplicationEntity::class);
+        $publication = $this->getPublicationMock(true);
 
         $entity = new Entity();
         $entity->createImpounding($impounding, $publication, $publicationSection, $trafficArea, $licence, $application);
@@ -78,5 +275,37 @@ class PublicationLinkEntityTest extends EntityTester
         $this->assertSame($trafficArea, $entity->getTrafficArea());
         $this->assertSame($licence, $entity->getLicence());
         $this->assertSame($application, $entity->getApplication());
+    }
+
+    /**
+     * Tests creating impounding throws ForbiddenException when necessary
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testCreateImpoundingThrowsException()
+    {
+        $impounding = m::mock(ImpoundingEntity::class);
+        $publicationSection = m::mock(PublicationSectionEntity::class);
+        $trafficArea = m::mock(TrafficAreaEntity::class);
+        $licence = m::mock(LicenceEntity::class);
+        $application = m::mock(ApplicationEntity::class);
+        $publication = $this->getPublicationMock(false);
+
+        $entity = new Entity();
+        $entity->createImpounding($impounding, $publication, $publicationSection, $trafficArea, $licence, $application);
+    }
+
+    /**
+     * Gets a publication entity mock with a true/false for whether it can be generated
+     *
+     * @param bool $canGenerate
+     * @return m\MockInterface
+     */
+    private function getPublicationMock($canGenerate)
+    {
+        $publicationMock = m::mock(PublicationEntity::class);
+        $publicationMock->shouldReceive('canGenerate')->once()->andReturn($canGenerate);
+
+        return $publicationMock;
     }
 }
