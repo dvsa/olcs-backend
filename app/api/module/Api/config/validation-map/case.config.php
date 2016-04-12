@@ -84,6 +84,7 @@ return [
     QueryHandler\Cases\Pi::class                                            => IsInternalUser::class,
     QueryHandler\Cases\Pi\Hearing::class                                    => IsInternalUser::class,
     QueryHandler\Cases\Pi\HearingList::class                                => IsInternalUser::class,
+    QueryHandler\Cases\Pi\ReportList::class                                 => IsInternalUser::class,
     QueryHandler\Cases\Prohibition\Defect::class                            => IsInternalUser::class,
     QueryHandler\Cases\Prohibition\DefectList::class                        => IsInternalUser::class,
     QueryHandler\Cases\Prohibition\Prohibition::class                       => IsInternalUser::class,
