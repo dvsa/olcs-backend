@@ -28,6 +28,7 @@ final class DeletePublicationLink extends AbstractCommandHandler implements Tran
             throw new ForbiddenException('Only unpublished entries may be deleted');
         }
 
+        $publicationLink->getPoliceDatas()->clear();
         $this->getRepo()->delete($publicationLink);
 
         $result = new Result();
