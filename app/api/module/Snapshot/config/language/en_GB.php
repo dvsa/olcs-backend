@@ -9,15 +9,15 @@ return [
     'no.of.weeks' => '%s Weeks',
     'application-review-addresses-contact-details-title' => 'Contact details',
     'application-review-addresses-correspondence-address' => 'Correspondence Address',
-    'application-review-addresses-correspondence-business' => 'Business telephone No.',
-    'application-review-addresses-correspondence-email' => 'E-mail address',
-    'application-review-addresses-correspondence-fax' => 'Fax telephone No.',
-    'application-review-addresses-correspondence-home' => 'Home telephone No.',
-    'application-review-addresses-correspondence-mobile' => 'Mobile telephone No.',
+    'application-review-addresses-correspondence-business' => 'Business phone number',
+    'application-review-addresses-correspondence-email' => 'Email address',
+    'application-review-addresses-correspondence-fax' => 'Fax phone number',
+    'application-review-addresses-correspondence-home' => 'Home phone number',
+    'application-review-addresses-correspondence-mobile' => 'Mobile phone number',
     'application-review-addresses-correspondence-title' => 'Correspondence',
     'application-review-addresses-establishment-address' => 'Establishment address',
     'application-review-addresses-establishment-title' => 'Establishment',
-    'application-review-addresses-fao' => 'For attention of',
+    'application-review-addresses-fao' => 'For the attention of',
     'application-review-business-details-company-name' => 'Company name',
     'application-review-business-details-company-no' => 'Registered company number',
     'application-review-business-details-nature-of-business' => 'Nature of business',
@@ -53,34 +53,19 @@ return [
         Licensing Office',
     'application-review-financial-evidence-no-of-vehicles' => 'Number of vehicles',
     'application-review-financial-evidence-required-finance' => 'Required finance',
-    'application-review-financial-history-administration' => 'Has any person named in this application (including
-        partners, directors or transport managers) ever been involved with a company, or business, that has gone into
-        (or is going into) administration?',
-    'application-review-financial-history-bankrupt' => 'Has any person named in this application (including partners,
-        directors or transport managers) ever been declared bankrupt or had their estate seized or confiscated?',
-    'application-review-financial-history-disqualified' => 'Have you, or have any of your partners, directors, majority
-        shareholders or your transport manager ever been disqualified from acting as a director of a company or from
-        taking part in the management of a company?',
+    'application-review-financial-history-administration' => 'Has anyone you’ve named in this application (including partners, directors and Transport Managers) ever been involved with a company or business that has gone (or is going into) administration?',
+    'application-review-financial-history-bankrupt' => 'Has anyone you’ve named in this application (including partners, directors and Transport Managers) ever been declared bankrupt or had their estate seized or confiscated?',
+    'application-review-financial-history-disqualified' => 'Have you or any of your partners, directors, majority shareholders or Transport Managers ever been disqualified from acting as the director of a company, or from taking part in the management of a company?',
     'application-review-financial-history-evidence' => 'Evidence',
     'application-review-financial-history-evidence-send' => 'Operator to send original evidence to the Central Licensing
         Office',
-    'application-review-financial-history-insolvencyConfirmation' => 'Confirm that you are aware that you must tell the
-        traffic commissioner immediately of any insolvency proceedings that occur between the submission of your
-        application and a decision being made on the application',
+    'application-review-financial-history-insolvencyConfirmation' => 'Confirm that you are aware that you must tell the Traffic Commissioner immediately of any insolvency proceedings that occur between the submission of your application and a decision being made on the application.',
     'application-review-financial-history-insolvencyDetails' => 'Additional information',
-    'application-review-financial-history-liquidation' => 'Has any person named in this application (including partners,
-        directors or transport managers) ever been involved with a company, or business, that has gone into (or is going
-        into) liquidation, owing money?',
-    'application-review-financial-history-receivership' => 'Has any person named in this application (including
-        partners, directors or transport managers) ever been involved with a company, or business, that has gone into
-        (or is going into) receivership?',
-    'application-review-licence-history-applied-question' => 'Has any person named in the application (including
-        partners, directors or transport managers) previously held or applied for a goods or public service vehicle
-        operator\'s licence in any traffic area?',
+    'application-review-financial-history-liquidation' => 'Has anyone you’ve named in this application (including partners, directors and Transport Managers) ever been involved with a company or business that has gone (or is going into) liquidation, owing money?',
+    'application-review-financial-history-receivership' => 'Has anyone you’ve named in this application (including partners, directors and Transport Managers) ever been involved with a company or business that has gone (or is going into) receivership?',
+    'application-review-licence-history-applied-question' => 'Has anyone you’ve named in this application (including partners, directors and Transport Managers) previously held or applied for a goods or PSV operator’s licence in any traffic area?',
     'application-review-licence-history-applied-title' => 'Previous licences',
-    'application-review-licence-history-current-question' => 'Does any person named in this application (including
-        partners, directors and transport managers) currently hold a goods or public service vehicle operator\'s licence
-        in any traffic area?',
+    'application-review-licence-history-current-question' => 'Does anyone you’ve named in this application (including partners, directors and Transport Managers) currently hold a goods or PSV operator’s licence in any traffic area?',
     'application-review-licence-history-current-title' => 'Current licences',
     'application-review-licence-history-disqualification-date' => 'Date of disqualification',
     'application-review-licence-history-disqualification-length' => 'Length of disqualification',
@@ -88,9 +73,7 @@ return [
         partners, directors or transport managers) been disqualified from holding or obtaining an operator\'s licence by
         any traffic commissioner?',
     'application-review-licence-history-disqualified-title' => 'Disqualifications',
-    'application-review-licence-history-held-question' => 'Within the last twelve months, have you, your company or
-        organisation or your partners or directors purchased the assets or shareholding of any company that, to you
-        knowledge, currently holds or has previously held an operator\'s licence in any traffic area?',
+    'application-review-licence-history-held-question' => 'Within the last 12 months, have you, your company or organisation, or your partners or directors purchased assets or shareholdings in any company that, to your knowledge, currently holds or has previously held an operator’s licence in any traffic area?',
     'application-review-licence-history-held-title' => 'Previously purchased assets',
     'application-review-licence-history-licence-holder' => 'Licence holder name',
     'application-review-licence-history-licence-no' => 'Licence number',
@@ -98,13 +81,9 @@ return [
         partners, directors or transport managers) ever attended a Public Inquiry before a traffic commissioner?',
     'application-review-licence-history-public-inquiry-title' => 'Public Inquiries',
     'application-review-licence-history-purchase-date' => 'Date of purchase',
-    'application-review-licence-history-refused-question' => 'Has any person named in the application (including
-        partners, directors or transport managers) ever had an application for a goods or a public service vehicle
-        operator\'s licence refused by any EU licensing authority?',
+    'application-review-licence-history-refused-question' => 'Has anyone you’ve named in this application (including partners, directors and Transport Managers) ever had an application for a goods or PSV operator’s licence refused by any EU authority?',
     'application-review-licence-history-refused-title' => 'Refused licences',
-    'application-review-licence-history-revoked-question' => 'Has any person named in the application (including
-        partners, directors or transport managers) ever had a goods or public service vehicle operator\'s licence
-        revoked, suspended or curtailed by any EU licensing authority?',
+    'application-review-licence-history-revoked-question' => 'Has anyone you’ve named in this application (including partners, directors and Transport Managers) ever had a goods or PSV operator’s licence revoked, suspended or curtailed by any EU licensing authority?',
     'application-review-licence-history-revoked-title' => 'Revoked, suspended or curtailed licences',
     'application-review-licence-history-will-surrender' => 'Will this licence be surrendered if this application is
         granted?',
@@ -217,16 +196,16 @@ return [
     'review-none-added' => 'None added',
     'review-operating-centre-address' => 'Address',
     'review-operating-centre-advertisement-ad-placed' => 'Have you advertised your application for this operating centre
-        in you local newspaper?',
+        in a local newspaper?',
     'review-operating-centre-advertisement-date' => 'Date advertisement was placed',
     'review-operating-centre-advertisement-file' => 'Advertisement file',
     'review-operating-centre-advertisement-newspaper' => 'Newspaper name',
     'review-operating-centre-permission' => 'I am either the site owner or I have permission from the site owner to use
         the premises to park the number of vehicles and trailers stated.',
     'review-operating-centre-sufficient-parking' => 'I confirm that I have enough parking spaces available for the total
-        number of vehicles and trailers that I want to keep at this address.',
-    'review-operating-centre-total-trailers' => 'Total No. of trailers',
-    'review-operating-centre-total-vehicles' => 'Total No. of vehicles',
+        combined number of vehicles and trailers that I want to keep at this address.',
+    'review-operating-centre-total-trailers' => 'Total number of trailers',
+    'review-operating-centre-total-vehicles' => 'Total number of vehicles',
     'review-operating-centres-authorisation-community-licences' => 'Total number of community licences',
     'review-operating-centres-authorisation-title' => 'Authorisation',
     'review-operating-centres-authorisation-trailers' => 'Total number of trailers',
@@ -238,7 +217,7 @@ return [
     'review-operating-centres-traffic-area-title' => 'Traffic area',
     'review-operating_centres' => 'Operating centres',
     'review-people' => 'People',
-    'review-safety' => 'Safety',
+    'review-safety' => 'Safety and compliance',
     'review-taxi_phv' => 'Taxi PHV',
     'review-transport-manager-added-title' => 'Transport managers added',
     'review-transport-manager-deleted-title' => 'Transport managers removed',
