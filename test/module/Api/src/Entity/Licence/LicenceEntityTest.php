@@ -942,15 +942,21 @@ class LicenceEntityTest extends EntityTester
     public function testGetFirstApplicationId($status, $firstApplicationId)
     {
         $licence = m::mock(Entity::class)->makePartial();
-        $licence->shouldReceive('getStatus->getId')
-            ->andReturn($status)
+        $licence->shouldReceive('getStatus')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->once()
+                ->andReturn($status)
+                ->getMock()
+            )
             ->once()
             ->getMock();
         $application = m::mock(Entity::class)->makePartial();
         $application->shouldReceive('getId')
-            ->once()
-            ->andReturn(1)
+            ->andReturn($firstApplicationId)
             ->getMock();
+
         $applications = new ArrayCollection();
         $applications->add($application);
         $licence->setApplications($applications);
