@@ -129,13 +129,11 @@ return [
         the Transport Act 2000)?',
     'application-review-vehicles-declarations-15b2' => 'Give details of how you will comply with the \'small part of the
         business\' requirements',
-    'application-review-vehicles-declarations-15cd' => 'Confirm that you agree to the below conditions and undertakings
-        being specified on your licence (if granted) ',
+    'application-review-vehicles-declarations-15cd' => 'Confirm that you agree to the below conditions and undertakings being specified on your licence, if it is granted.',
     'application-review-vehicles-declarations-15e' => 'Vehicles with eight passenger seats or less will not be operated
         under the licence without the prior written agreement of the traffic commissioner who may require you to agree
         to certain undertakings',
-    'application-review-vehicles-declarations-15f1' => 'Are the vehicles you are applying for to be used as Limousines
-        or novelty type vehicles?',
+    'application-review-vehicles-declarations-15f1' => 'Are the vehicles you’re applying for to be used as limousines or novelty type vehicles?',
     'application-review-vehicles-declarations-15f2' => 'Limousines and novelty type vehicles are not to be operated
         under this operator\'s licence',
     'application-review-vehicles-declarations-15g' => 'Only limousines and novelty type vehicles with nine passenger
@@ -218,7 +216,7 @@ return [
     'review-operating_centres' => 'Operating centres',
     'review-people' => 'People',
     'review-safety' => 'Safety and compliance',
-    'review-taxi_phv' => 'Taxi PHV',
+    'review-taxi_phv' => 'Taxi / PHV',
     'review-transport-manager-added-title' => 'Transport Managers added',
     'review-transport-manager-deleted-title' => 'Transport Managers removed',
     'review-transport-manager-dob' => 'Date of birth',
