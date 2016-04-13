@@ -96,6 +96,7 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
+     * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
@@ -173,6 +174,7 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
 

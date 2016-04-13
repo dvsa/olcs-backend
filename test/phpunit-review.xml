@@ -33,6 +33,7 @@
             <directory>./module/Api/src/Assertion</directory>
             <directory>./module/Api/src/Controller</directory>
             <directory>./module/Api/src/Filesystem</directory>
+            <directory>./module/Api/src/Mvc</directory>
             <directory>./module/Api/src/Rbac</directory>
         </testsuite>
         <testsuite name="OLDOlcs">
