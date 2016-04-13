@@ -77,6 +77,9 @@ class OverviewTest extends QueryHandlerTestCase
                 ->once()
                 ->getMock()
             )
+            ->shouldReceive('getFirstApplicationId')
+            ->andReturn(1)
+            ->once()
             ->getMock();
 
         $this->repoMap['Licence']
@@ -137,7 +140,8 @@ class OverviewTest extends QueryHandlerTestCase
                 'complaintsCount' => 5,
                 'busCount' => '4',
                 'organisationLicenceCount' => 3,
-                'numberOfVehicles' => 2
+                'numberOfVehicles' => 2,
+                'firstApplicationId' => 1
             ],
             $result->serialize()
         );
