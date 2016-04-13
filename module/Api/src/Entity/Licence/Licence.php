@@ -790,4 +790,30 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
 
         return $this->documents->matching($criteria);
     }
+
+    /**
+     * Get first application id for the new licence
+     *
+     * @return int|null
+     */
+    public function getFirstApplicationId()
+    {
+        $firstApplicationId = null;
+        $statuses = [
+            self::LICENCE_STATUS_NOT_SUBMITTED,
+            self::LICENCE_STATUS_UNDER_CONSIDERATION,
+            self::LICENCE_STATUS_GRANTED,
+            self::LICENCE_STATUS_NOT_TAKEN_UP,
+            self::LICENCE_STATUS_WITHDRAWN,
+            self::LICENCE_STATUS_REFUSED
+        ];
+        if (in_array($this->getStatus()->getId(), $statuses)) {
+            $applications = $this->getApplications();
+            if ($applications->count()) {
+                $firstApplicationId = $applications[0]->getId();
+            }
+        }
+
+        return $firstApplicationId;
+    }
 }
