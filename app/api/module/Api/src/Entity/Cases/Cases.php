@@ -285,7 +285,7 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
      * 1 Can close (is not already closed)
      * 2 Case has no outcome
      * 3 Has no outstanding appeals or stays
-     * 
+     *
      * @return array
      */
     private function generateCloseableValidationErrors()
@@ -297,13 +297,16 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
         if ($this->getOutcomes()->isEmpty()) {
             $errors[] = 'close-case.validation.error.requires-outcome';
         }
-        if (!$this->getAppeal()->isOutstanding()) {
+        if (!empty($this->getAppeal()) && !$this->getAppeal()->isOutstanding()) {
             $errors[] = 'close-case.validation.error.outstanding-appeal';
         }
-        foreach ($this->getStays() as $stay) {
-            if (!$stay->isOutstanding()) {
-                $errors[] = 'close-case.validation.error.outstanding-stay';
-                break;
+        $stays = $this->getStays();
+        if (!empty($stays)) {
+            foreach ($stays as $stay) {
+                if (!$stay->isOutstanding()) {
+                    $errors[] = 'close-case.validation.error.outstanding-stay';
+                    break;
+                }
             }
         }
 
