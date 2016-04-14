@@ -26,4 +26,16 @@ class Stay extends AbstractStay
         $this->setCase($case);
         $this->setStayType($stayType);
     }
+
+    /**
+     * Is the stay outstanding. Dealt with if outcome or decision date set. Or if its been withdrawn.
+     *
+     * @return bool
+     */
+    public function isOutstanding()
+    {
+        // Stay is considered completed if it is withdrawn or if it has a decision date and outcome set
+        return !empty($this->getWithdrawnDate()) ||
+        (!empty($this->getDecisionDate()) && !empty($this->getOutcome()));
+    }
 }

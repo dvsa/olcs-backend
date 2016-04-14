@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Cases;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Note\Note;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -270,11 +271,43 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
      */
     public function close()
     {
-        if (!$this->canClose()) {
-            throw new ForbiddenException('Case is not allowed to be closed');
+        $errors = $this->generateCloseableValidationErrors();
+
+        if (!empty($errors)) {
+            throw new ValidationException($errors);
         }
 
         $this->closedDate = new \DateTime();
+    }
+
+    /**
+     * Generate backend validation errors. Checks the following:
+     * 1 Can close (is not already closed)
+     * 2 Case has no outcome
+     * 3 Has no outstanding appeals or stays
+     * 
+     * @return array
+     */
+    private function generateCloseableValidationErrors()
+    {
+        $errors = [];
+        if (!$this->canClose()) {
+            $errors[] = 'close-case.validation.error.cannot-be-closed';
+        }
+        if ($this->getOutcomes()->isEmpty()) {
+            $errors[] = 'close-case.validation.error.requires-outcome';
+        }
+        if (!$this->getAppeal()->isOutstanding()) {
+            $errors[] = 'close-case.validation.error.outstanding-appeal';
+        }
+        foreach ($this->getStays() as $stay) {
+            if (!$stay->isOutstanding()) {
+                $errors[] = 'close-case.validation.error.outstanding-stay';
+                break;
+            }
+        }
+
+        return $errors;
     }
 
     /**
