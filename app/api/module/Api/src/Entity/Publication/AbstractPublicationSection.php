@@ -26,6 +26,15 @@ abstract class AbstractPublicationSection implements BundleSerializableInterface
     use BundleSerializableTrait;
 
     /**
+     * Ad section
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="ad_section", length=10, nullable=true)
+     */
+    protected $adSection;
+
+    /**
      * Created by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -84,6 +93,15 @@ abstract class AbstractPublicationSection implements BundleSerializableInterface
     protected $lastModifiedOn;
 
     /**
+     * Np section
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="np_section", length=10, nullable=true)
+     */
+    protected $npSection;
+
+    /**
      * Version
      *
      * @var int
@@ -92,6 +110,29 @@ abstract class AbstractPublicationSection implements BundleSerializableInterface
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Set the ad section
+     *
+     * @param string $adSection
+     * @return PublicationSection
+     */
+    public function setAdSection($adSection)
+    {
+        $this->adSection = $adSection;
+
+        return $this;
+    }
+
+    /**
+     * Get the ad section
+     *
+     * @return string
+     */
+    public function getAdSection()
+    {
+        return $this->adSection;
+    }
 
     /**
      * Set the created by
@@ -229,6 +270,29 @@ abstract class AbstractPublicationSection implements BundleSerializableInterface
     public function getLastModifiedOn()
     {
         return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the np section
+     *
+     * @param string $npSection
+     * @return PublicationSection
+     */
+    public function setNpSection($npSection)
+    {
+        $this->npSection = $npSection;
+
+        return $this;
+    }
+
+    /**
+     * Get the np section
+     *
+     * @return string
+     */
+    public function getNpSection()
+    {
+        return $this->npSection;
     }
 
     /**
