@@ -352,6 +352,14 @@ return array(
             )
         ),
     ),
+    'task_alpha_split' => array(
+        'task_allocation_rule_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TaskAllocationRule',
+                'property' => 'taskAlphaSplit'
+            )
+        ),
+    ),
     'document_sub_category' => array(
         'is_scanned' => array(
             'type' => 'yesno'
