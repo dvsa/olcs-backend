@@ -212,6 +212,7 @@ return [
             'Stay' => RepositoryFactory::class,
             'Submission ' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
+            'TaskAlphaSplit' => RepositoryFactory::class,
             'IrfoPartner' => RepositoryFactory::class,
             'Transaction' => RepositoryFactory::class,
             'TransportManager' => RepositoryFactory::class,
