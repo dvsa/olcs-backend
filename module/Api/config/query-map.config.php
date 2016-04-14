@@ -478,4 +478,9 @@ return [
     // Decisions
     TransferQuery\Decision\DecisionList::class => QueryHandler\Decision\DecisionList::class,
 
+    TransferQuery\TaskAllocationRule\GetList::class => QueryHandler\TaskAllocationRule\GetList::class,
+    TransferQuery\TaskAllocationRule\Get::class => QueryHandler\TaskAllocationRule\Get::class,
+
+    TransferQuery\TaskAlphaSplit\Get::class => QueryHandler\TaskAlphaSplit\Get::class,
+    TransferQuery\TaskAlphaSplit\GetList::class => QueryHandler\TaskAlphaSplit\GetList::class,
 ];

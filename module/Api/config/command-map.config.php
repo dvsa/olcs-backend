@@ -903,4 +903,15 @@ return [
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
     TransferCommand\System\UpdateSlaTargetDate::class => CommandHandler\System\UpdateSlaTargetDate::class,
     Command\System\GenerateSlaTargetDate::class => CommandHandler\System\GenerateSlaTargetDate::class,
+
+    // Task Allocation
+    TransferCommand\TaskAllocationRule\DeleteList::class => CommandHandler\TaskAllocationRule\DeleteList::class,
+    TransferCommand\TaskAllocationRule\Create::class => CommandHandler\TaskAllocationRule\Create::class,
+    TransferCommand\TaskAllocationRule\Update::class => CommandHandler\TaskAllocationRule\Update::class,
+
+    // Task Alpha Split
+    TransferCommand\TaskAlphaSplit\DeleteList::class => CommandHandler\TaskAlphaSplit\DeleteList::class,
+    TransferCommand\TaskAlphaSplit\Delete::class => CommandHandler\TaskAlphaSplit\Delete::class,
+    TransferCommand\TaskAlphaSplit\Create::class => CommandHandler\TaskAlphaSplit\Create::class,
+    TransferCommand\TaskAlphaSplit\Update::class => CommandHandler\TaskAlphaSplit\Update::class,
 ];
