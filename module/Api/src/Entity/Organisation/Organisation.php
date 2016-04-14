@@ -415,6 +415,12 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
             $licences = $this->getLicences();
             $trafficAreaCode = null;
             foreach ($licences as $licence) {
+                if ($licence->getStatus() &&
+                    ($licence->getStatus()->getId() === LicenceEntity::LICENCE_STATUS_CANCELLED ||
+                    $licence->getStatus()->getId() === LicenceEntity::LICENCE_STATUS_WITHDRAWN)
+                ) {
+                    continue;
+                }
                 if ($licence->getTrafficArea() !== null) {
                     $allowedOperatorLocation =
                         $licence->getTrafficArea()->getId() ===

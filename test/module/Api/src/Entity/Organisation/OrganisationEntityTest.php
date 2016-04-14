@@ -460,12 +460,16 @@ class OrganisationEntityTest extends EntityTester
      * @param string $allowedOperatorLocation
      * @dataProvider allowedOperatorLocationProviderLicences
      */
-    public function testGetAllowedOperatorLocationFromLicences($trafficArea, $allowedOperatorLocation)
+    public function testGetAllowedOperatorLocationFromLicences($trafficArea, $allowedOperatorLocation, $licenceStatus)
     {
         $mockTrafficArea = m::mock()
             ->shouldReceive('getId')
-            ->once()
             ->andReturn($trafficArea)
+            ->getMock();
+
+        $mockStatus = m::mock()
+            ->shouldReceive('getId')
+            ->andReturn($licenceStatus)
             ->getMock();
 
         $mockOutstandingApplications = new ArrayCollection();
@@ -474,7 +478,8 @@ class OrganisationEntityTest extends EntityTester
             m::mock()
             ->shouldReceive('getTrafficArea')
             ->andReturn($mockTrafficArea)
-            ->twice()
+            ->shouldReceive('getStatus')
+            ->andReturn($mockStatus)
             ->getMock()
         );
 
@@ -498,8 +503,9 @@ class OrganisationEntityTest extends EntityTester
     public function allowedOperatorLocationProviderLicences()
     {
         return [
-            ['N', 'NI'],
-            ['B', 'GB'],
+            ['N', 'NI', LicenceEntity::LICENCE_STATUS_GRANTED],
+            ['B', 'GB', LicenceEntity::LICENCE_STATUS_GRANTED],
+            ['B', null, LicenceEntity::LICENCE_STATUS_WITHDRAWN],
         ];
     }
 
