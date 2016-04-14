@@ -54,4 +54,25 @@ class TaskAllocationRuleTest extends RepositoryTestCase
             $this->query
         );
     }
+
+
+    public function testBuildDefaultListQuery()
+    {
+        $qb = $this->createMockQb('[QUERY]');
+        $query = m::mock(QueryInterface::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('category', 'cat')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('goodsOrPsv', 'gop')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('trafficArea', 'ta')->once()->andReturnSelf();
+
+        $this->sut->buildDefaultListQuery($qb, $query);
+
+        $this->assertSame(
+            '[QUERY] SELECT cat.description as HIDDEN categoryDescription SELECT gop.id as HIDDEN criteria SELECT '
+            . 'ta.name as HIDDEN trafficAreaName',
+            $this->query
+        );
+    }
 }

@@ -34,4 +34,21 @@ class TaskAllocationRule extends AbstractRepository
 
         return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
     }
+
+    public function buildDefaultListQuery(
+        \Doctrine\ORM\QueryBuilder $qb,
+        \Dvsa\Olcs\Transfer\Query\QueryInterface $query,
+        $compositeFields = array()
+    ) {
+        // add calculated columns to allow ordering by them
+        parent::buildDefaultListQuery($qb, $query, ['categoryDescription', 'criteria', 'trafficAreaName']);
+
+        $queryBuilderHelper = $this->getQueryBuilder();
+        $queryBuilderHelper->with('category', 'cat');
+        $queryBuilderHelper->with('goodsOrPsv', 'gop');
+        $queryBuilderHelper->with('trafficArea', 'ta');
+        $qb->addSelect('cat.description as HIDDEN categoryDescription');
+        $qb->addSelect('gop.id as HIDDEN criteria');
+        $qb->addSelect('ta.name as HIDDEN trafficAreaName');
+    }
 }
