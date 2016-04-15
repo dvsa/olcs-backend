@@ -135,12 +135,22 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('setParameter')
             ->andReturnUsing([$this, 'mockSetParameter']);
 
+        $this->qb->shouldReceive('setMaxResults')
+            ->andReturnUsing([$this, 'mockSetMaxResults']);
+
         return $this->qb;
     }
 
     public function mockOrderBy($sort, $order)
     {
         $this->query .= ' ORDER BY ' . $sort . ' ' . $order;
+
+        return $this->qb;
+    }
+
+    public function mockSetMaxResults($maxResults)
+    {
+        $this->query .= ' LIMIT ' . $maxResults;
 
         return $this->qb;
     }
