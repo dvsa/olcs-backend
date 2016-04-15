@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Publication\Bus as PublishDto;
@@ -22,6 +23,8 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRegistered;
  */
 final class GrantBusReg extends AbstractCommandHandler
 {
+    use QueueAwareTrait;
+
     protected $repoServiceName = 'Bus';
 
     public function handleCommand(CommandInterface $command)
@@ -97,7 +100,7 @@ final class GrantBusReg extends AbstractCommandHandler
      */
     private function getCancelledEmailCmd($ebsrId)
     {
-        return SendEbsrCancelled::create(['id' => $ebsrId]);
+        return $this->emailQueue(SendEbsrCancelled::class, ['id' => $ebsrId], $ebsrId);
     }
 
     /**
@@ -106,6 +109,6 @@ final class GrantBusReg extends AbstractCommandHandler
      */
     private function getRegisteredEmailCmd($ebsrId)
     {
-        return SendEbsrRegistered::create(['id' => $ebsrId]);
+        return $this->emailQueue(SendEbsrRegistered::class, ['id' => $ebsrId], $ebsrId);
     }
 }
