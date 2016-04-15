@@ -36,6 +36,10 @@ class Module implements BootstrapListenerInterface
                     $content = substr($content, 0, 1000) . '...';
                 }
 
+                if (empty($content)) {
+                    // Response should never be empty, this is a symptom that the backend has gone wrong
+                    Logger::err('API Response is empty');
+                }
                 Logger::debug('API Response Sent', ['data' => ['response' => $content]]);
             }
         );
