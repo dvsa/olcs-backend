@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
-use Dvsa\Olcs\Transfer\Command\Bus\CreateCancellation as Cmd;
+use Dvsa\Olcs\Transfer\Command\Bus\CreateCancellation as CreateCancellationCmd;
 
 /**
  * Create Cancellation
@@ -21,6 +21,7 @@ final class CreateCancellation extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
+        /** @var CreateCancellationCmd $command */
         $bus = $this->createBusRegObject($command);
 
         $this->getRepo()->save($bus);
@@ -33,11 +34,12 @@ final class CreateCancellation extends AbstractCommandHandler
     }
 
     /**
-     * @param Cmd $command
-     * @return Bus
+     * @param CreateCancellationCmd $command
+     * @return BusReg
      */
-    private function createBusRegObject(Cmd $command)
+    private function createBusRegObject(CreateCancellationCmd $command)
     {
+        /** @var BusReg $busReg */
         $busReg = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
         return $busReg->createVariation(
