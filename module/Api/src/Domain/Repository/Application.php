@@ -26,15 +26,6 @@ class Application extends AbstractRepository
 
     protected $alias = 'a';
 
-    public function fetchWithPreviousConvictionsUsingId($query)
-    {
-        $qb = $this->createQueryBuilder();
-        $this->buildDefaultQuery($qb, $query->getId())
-            ->with('previousConvictions');
-
-        return $qb->getQuery()->getSingleResult();
-    }
-
     /**
      * @param int $organisationId
      */
