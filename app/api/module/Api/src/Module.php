@@ -28,7 +28,7 @@ class Module implements BootstrapListenerInterface
         $eventManager->getSharedManager()->attach(
             'Zend\Mvc\SendResponseListener',
             SendResponseEvent::EVENT_SEND_RESPONSE,
-            function(SendResponseEvent $e) {
+            function (SendResponseEvent $e) {
                 $response = $e->getResponse();
 
                 $content = $response->getContent();
@@ -39,10 +39,24 @@ class Module implements BootstrapListenerInterface
                 Logger::debug('API Response Sent', ['data' => ['response' => $content]]);
             }
         );
+
+        $this->setLoggerUser($e->getApplication()->getServiceManager());
     }
 
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
+    }
+
+    /**
+     * Set the user ID in the log processor so that it can be included in the log files
+     *
+     * @param type $serviceManager
+     */
+    private function setLoggerUser(\Zend\ServiceManager\ServiceManager $serviceManager)
+    {
+        $authService = $serviceManager->get(\ZfcRbac\Service\AuthorizationService::class);
+        $serviceManager->get('LogProcessorManager')->get(\Olcs\Logging\Log\Processor\UserId::class)
+            ->setUserId($authService->getIdentity()->getUser()->getLoginId());
     }
 }
