@@ -46,10 +46,10 @@ class UpdatePublicationLinkTest extends CommandHandlerTestCase
         $command = UpdatePublicationLinkCmd::create($data);
 
         $publication = m::mock(PublicationEntity::class);
-        $publication->shouldReceive('isNew')->andReturn(true);
+        $publication->shouldReceive('canGenerate')->andReturn(true);
 
         /** @var PublicationLinkEntity $publicationLink */
-        $publicationLink =new PublicationLinkEntity();
+        $publicationLink = new PublicationLinkEntity();
         $publicationLink->setId($id);
         $publicationLink->setPublication($publication);
 

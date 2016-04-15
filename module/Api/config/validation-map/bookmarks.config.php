@@ -32,6 +32,7 @@ return [
     QueryHandler\Bookmark\PublicationBundle::class                  => NoValidationRequired::class,
     QueryHandler\Bookmark\PublicationLatestByTaAndTypeBundle::class => NoValidationRequired::class,
     QueryHandler\Bookmark\PublicationLinkBundle::class              => NoValidationRequired::class,
+    QueryHandler\Bookmark\PolicePeople::class                       => NoValidationRequired::class,
     QueryHandler\Bookmark\StatementBundle::class                    => NoValidationRequired::class,
     QueryHandler\Bookmark\TotalContFee::class                       => NoValidationRequired::class,
     QueryHandler\Bookmark\TransportManagerBundle::class             => NoValidationRequired::class,
