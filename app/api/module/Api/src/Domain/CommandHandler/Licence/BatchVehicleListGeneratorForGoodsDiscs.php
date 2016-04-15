@@ -36,10 +36,12 @@ final class BatchVehicleListGeneratorForGoodsDiscs extends AbstractCommandHandle
             $queuedLicences = array_slice($licences, self::BATCH_SIZE);
             $licences = array_slice($licences, 0, self::BATCH_SIZE);
             $options = [
-                'licences' => $queuedLicences
+                'licences' => $queuedLicences,
+                'user' => $command->getUser()
             ];
         }
         foreach ($licences as $data) {
+            $data['user'] = $command->getUser();
             $generateVehicleList = CreateVehicleListDocumentCommand::create($data);
             $this->handleSideEffect($generateVehicleList);
             $result->addMessage('Vehicle list generated for licence ' . $data['id']);

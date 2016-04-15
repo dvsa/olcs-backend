@@ -18,10 +18,12 @@ class EnqueueTest extends PHPUnit_Framework_TestCase
             [
                 'documentId' => 12,
                 'jobName' => 'JOB_NAME',
+                'user' => 1
             ]
         );
 
         $this->assertEquals(12, $command->getDocumentId());
         $this->assertEquals('JOB_NAME', $command->getJobName());
+        $this->assertEquals(1, $command->getUser());
     }
 }

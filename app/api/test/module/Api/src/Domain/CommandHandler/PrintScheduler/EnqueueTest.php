@@ -8,6 +8,7 @@ use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * EnqueueTest
@@ -20,6 +21,7 @@ class EnqueueTest extends CommandHandlerTestCase
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Document', \Dvsa\Olcs\Api\Domain\Repository\Document::class);
+        $this->mockRepo('User', \Dvsa\Olcs\Api\Domain\Repository\User::class);
 
         $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class)->makePartial();
 
@@ -87,15 +89,17 @@ class EnqueueTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $command = Cmd::create(['documentId' => 200116, 'jobName' => 'JOBNAME']);
+        $command = Cmd::create(['documentId' => 200116, 'jobName' => 'JOBNAME', 'user' => 10]);
 
         $team = new \Dvsa\Olcs\Api\Entity\User\Team();
         $team->addTeamPrinters('PRINTER 1');
         $user = new \Dvsa\Olcs\Api\Entity\User\User('PID', 'TYPE');
         $user->setTeam($team);
         $user->setId(10);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')->andReturn($user);
+        $this->repoMap['User']->shouldReceive('fetchById')
+            ->with(10)
+            ->andReturn($user)
+            ->getMock();
 
         $this->expectCreateQueue();
 

@@ -77,6 +77,7 @@ class ProcessTest extends CommandHandlerTestCase
 
         $data = [
             'id' => $id,
+            'user' => 1
         ];
 
         $command = Command::create($data);
@@ -107,9 +108,11 @@ class ProcessTest extends CommandHandlerTestCase
         $licNo = 'OB1234567';
         $feeId = 102;
         $feeTypeId = 999;
+        $userId = 1;
 
         $data = [
             'id' => $id,
+            'user' => $userId
         ];
 
         $command = Command::create($data);
@@ -145,6 +148,7 @@ class ProcessTest extends CommandHandlerTestCase
                 'licenceType' => Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
                 'niFlag' => 'N',
                 'organisation' => $organisationId,
+                'user' => $userId
             ],
             'description' => 'Continuation checklist',
             'licence' => $licenceId,
@@ -256,9 +260,11 @@ class ProcessTest extends CommandHandlerTestCase
         $licNo = 'ON1234567';
         $feeId = 102;
         $feeTypeId = 999;
+        $userId = 1;
 
         $data = [
             'id' => $id,
+            'user' => $userId
         ];
 
         $command = Command::create($data);
@@ -297,6 +303,7 @@ class ProcessTest extends CommandHandlerTestCase
                 'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
                 'niFlag' => 'Y',
                 'organisation' => $organisationId,
+                'user' => $userId
             ],
             'description' => 'Continuation checklist',
             'licence' => $licenceId,

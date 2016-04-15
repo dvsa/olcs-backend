@@ -20,6 +20,8 @@ final class BatchVehicleListGeneratorForPsvDiscs extends AbstractCommand
 
     protected $queries = [];
 
+    protected $user;
+
     /**
      * @return mixed
      */
@@ -34,5 +36,13 @@ final class BatchVehicleListGeneratorForPsvDiscs extends AbstractCommand
     public function getQueries()
     {
         return $this->queries;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

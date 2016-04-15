@@ -13,6 +13,8 @@ use Dvsa\Olcs\Api\Domain\Repository\Queue as Repo;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * Queue Create Command Handler Test
@@ -30,7 +32,14 @@ class CreateTest extends CommandHandlerTestCase
             QueueEntity::STATUS_QUEUED,
             QueueEntity::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER
         ];
-
+        $this->references = [
+            UserEntity::class => [
+                1 => m::mock(UserEntity::class)
+            ]
+        ];
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
         parent::setUp();
     }
 
@@ -39,6 +48,8 @@ class CreateTest extends CommandHandlerTestCase
      */
     public function testHandleCommand()
     {
+        $this->mockAuthService();
+
         $processAfterDate = '2015-12-25 04:30:00';
         $processAfterDateTime = new \DateTime($processAfterDate);
 
@@ -86,5 +97,15 @@ class CreateTest extends CommandHandlerTestCase
             $savedQueue->getProcessAfterDate(),
             $processAfterDateTime
         );
+    }
+
+    protected function mockAuthService()
+    {
+        /** @var User $mockUser */
+        $mockUser = m::mock(UserEntity::class)->makePartial();
+        $mockUser->setId(1);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
     }
 }

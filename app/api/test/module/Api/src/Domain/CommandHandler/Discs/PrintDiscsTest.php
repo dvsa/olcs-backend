@@ -39,11 +39,13 @@ class PrintDiscsTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $startNumber = 1;
+        $userId = 2;
         $discs = $this->getDiscs();
         $data = [
             'type' => 'Goods',
             'discs' => $discs,
-            'startNumber' => $startNumber
+            'startNumber' => $startNumber,
+            'user' => $userId
         ];
         $command = Cmd::create($data);
 
@@ -53,12 +55,13 @@ class PrintDiscsTest extends CommandHandlerTestCase
         $options = [
             'discs' => $queuedDiscs,
             'startNumber' => $queuedStartNumber,
-            'type' => 'Goods'
+            'type' => 'Goods',
+            'user' => $userId
         ];
 
         $generateAndStoreData = [
             'template' => 'GVDiscTemplate',
-            'query' => $discs,
+            'query' => array_merge($discs, ['user' => $userId]),
             'knownValues' => $this->getKnownValues($startNumber),
             'description' => 'Vehicle discs',
             'category' => CategoryEntity::CATEGORY_LICENSING,
@@ -72,7 +75,8 @@ class PrintDiscsTest extends CommandHandlerTestCase
 
         $printQueueData = [
             'documentId' => 12,
-            'jobName' => 'Goods Disc List'
+            'jobName' => 'Goods Disc List',
+            'user' => $userId
         ];
         $this->expectedSideEffect(EnqueueFileCommand::class, $printQueueData, new Result());
 

@@ -22,9 +22,11 @@ class BatchVehicleListGeneratorForGoodsDiscsTest extends PHPUnit_Framework_TestC
         $command = BatchVehicleListGeneratorForGoodsDiscs::create(
             [
                 'licences' => [1, 2],
+                'user' => 1
             ]
         );
 
         $this->assertEquals([1, 2], $command->getLicences());
+        $this->assertEquals(1, $command->getUser());
     }
 }

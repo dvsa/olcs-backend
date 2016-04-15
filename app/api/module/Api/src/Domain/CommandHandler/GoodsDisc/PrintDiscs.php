@@ -16,14 +16,18 @@ use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc as GoodsDiscEntity;
 use Dvsa\Olcs\Api\Entity\System\DiscSequence as DiscSequenceEntity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreatQueue;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Print goods discs
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class PrintDiscs extends AbstractCommandHandler implements TransactionedInterface
+final class PrintDiscs extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'GoodsDisc';
 
     protected $extraRepos = ['DiscSequence'];
@@ -46,7 +50,8 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
         $data = [
             'discs' => array_column($discsToPrint, 'id'),
             'type' => 'Goods',
-            'startNumber' => $command->getStartNumber()
+            'startNumber' => $command->getStartNumber(),
+            'user' => $this->getCurrentUser()->getId()
         ];
         $params = [
             'type' => Queue::TYPE_DISC_PRINTING,
@@ -73,7 +78,8 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
             ];
         }
         $options = [
-            'licences' => $licences
+            'licences' => $licences,
+            'user' => $this->getCurrentUser()->getId()
         ];
         $params = [
             'type' => Queue::TYPE_CREATE_GOODS_VEHICLE_LIST,
