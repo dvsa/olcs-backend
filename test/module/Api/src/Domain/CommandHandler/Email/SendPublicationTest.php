@@ -53,7 +53,7 @@ class SendPublicationTest extends CommandHandlerTestCase
      * @param int $policeTimes
      * @param int $nonPoliceTimes
      */
-    public function testHandleCommand($isPolice, $policeTimes, $nonPoliceTimes)
+    public function testHandleCommand($isPolice, $policeTimes, $nonPoliceTimes, $subject)
     {
         $publicationId = 1234;
         $filename = 'filename.rtf';
@@ -106,7 +106,7 @@ class SendPublicationTest extends CommandHandlerTestCase
         $data = [
             'to' => SendPublication::TO_EMAIL,
             'locale' => 'en_GB',
-            'subject' => SendPublication::EMAIL_SUBJECT
+            'subject' => $subject
         ];
 
         $this->expectedSideEffect(SendEmail::class, $data, $result);
@@ -122,8 +122,8 @@ class SendPublicationTest extends CommandHandlerTestCase
     public function handleCommandProvider()
     {
         return [
-            ['Y', 1, 0],
-            ['N', 0, 1]
+            ['Y', 1, 0, SendPublication::EMAIL_POLICE_SUBJECT],
+            ['N', 0, 1, SendPublication::EMAIL_SUBJECT]
         ];
     }
 }
