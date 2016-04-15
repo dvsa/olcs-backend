@@ -37,6 +37,7 @@ final class SendPublication extends AbstractCommandHandler implements EmailAware
     const TO_EMAIL = 'terry.valtech+publication@gmail.com';
     const EMAIL_TEMPLATE = 'publication-published';
     const EMAIL_SUBJECT = 'email.send-publication';
+    const EMAIL_POLICE_SUBJECT = 'email.send-publication-police';
 
     /**
      * @param CommandInterface|SendPublicationEmailCmd $command
@@ -57,12 +58,18 @@ final class SendPublication extends AbstractCommandHandler implements EmailAware
         $isPolice = $command->getIsPolice();
         $recipients = $trafficArea->getPublicationRecipients($isPolice);
 
-        //get the correct document, depending on whether the email is police
-        $document = ($isPolice === 'Y' ? $publication->getPoliceDocument() : $publication->getDocument());
+        //get the correct document and email subject line, depending on whether the email is police
+        if ($isPolice === 'Y') {
+            $document = $publication->getPoliceDocument();
+            $subject = self::EMAIL_POLICE_SUBJECT;
+        } else {
+            $document = $publication->getDocument();
+            $subject = self::EMAIL_SUBJECT;
+        }
 
         $templateData = ['filename' => basename($document->getFilename())];
 
-        $message = new Message(self::TO_EMAIL, self::EMAIL_SUBJECT);
+        $message = new Message(self::TO_EMAIL, $subject);
         $message->setBcc($recipients);
         $message->setDocs([$document->getId()]);
 

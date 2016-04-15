@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
-
 use Dvsa\Olcs\Api\Domain\Command\Publication\PiDecision as PiDecisionCmd;
 use Dvsa\Olcs\Api\Domain\Command\Publication\PiHearing as PiHearingCmd;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
@@ -170,11 +169,7 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
 
                 //if previous publication is found, remove it
                 if ($publicationLink->getId() !== null) {
-                    /*
-                     * Removed this call to clearPoliceData as it was setting publicationLink to null which the schema
-                     * doesnt support
-                     */
-                    //$this->clearPoliceData($publicationLink);
+                    $publicationLink->getPoliceDatas()->clear();
                     $this->getRepo()->delete($publicationLink);
                 }
             }
