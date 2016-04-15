@@ -40,6 +40,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 class PublicationLink extends AbstractPublicationLink
 {
     const ADD_ENTRY_ERROR = 'Can only create publication entries for publications with status new';
+    const EDIT_ENTRY_ERROR = 'Only publications with status of New may be edited';
 
     /**
      * Creates Application publication entry
@@ -228,7 +229,7 @@ class PublicationLink extends AbstractPublicationLink
     public function updateText($text1, $text2, $text3)
     {
         if (!$this->publication->canGenerate()) {
-            throw new ForbiddenException('Only publications with status of New may be edited');
+            throw new ForbiddenException(self::EDIT_ENTRY_ERROR);
         }
 
         $this->text1 = $text1;
