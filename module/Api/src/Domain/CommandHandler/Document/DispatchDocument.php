@@ -50,10 +50,12 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
         $documentResult = $this->proxyCommand($command, CreateDocumentSpecificCmd::class);
         $result->merge($documentResult);
 
+        $user = $command->getUser() ? $command->getUser() : $this->getCurrentUser();
+
         if ($licence->getOrganisation()->getAllowEmail() === 'N'
             || !$this->hasAdminEmailAddresses($licence->getOrganisation())
         ) {
-            return $this->attemptPrint($documentResult->getId('document'), $command->getDescription(), $result);
+            return $this->attemptPrint($documentResult->getId('document'), $command->getDescription(), $result, $user);
         }
 
         $result->merge(
@@ -113,9 +115,9 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
         return false;
     }
 
-    protected function attemptPrint($documentId, $description, Result $result)
+    protected function attemptPrint($documentId, $description, Result $result, $user)
     {
-        $dtoData = ['documentId' => $documentId, 'jobName' => $description];
+        $dtoData = ['documentId' => $documentId, 'jobName' => $description, 'user' => $user];
 
         $result->merge($this->handleSideEffect(Enqueue::create($dtoData)));
 

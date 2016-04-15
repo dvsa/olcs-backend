@@ -16,5 +16,13 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class Process extends AbstractIdOnlyCommand
 {
+    protected $user;
 
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
 }

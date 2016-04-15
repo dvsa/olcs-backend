@@ -24,11 +24,11 @@ class CreatePsvVehicleListTest extends AbstractConsumerTestCase
     {
         $item = new QueueEntity();
         $item->setOptions(
-            json_encode(['bookmarks' => ['b1', 'b2'], 'queries' => ['q1', 'q2']])
+            json_encode(['bookmarks' => ['b1', 'b2'], 'queries' => ['q1', 'q2'], 'user' => 1])
         );
 
         $result = $this->sut->getCommandData($item);
 
-        $this->assertEquals(['bookmarks' => ['b1', 'b2'], 'queries' => ['q1', 'q2']], $result);
+        $this->assertEquals(['bookmarks' => ['b1', 'b2'], 'queries' => ['q1', 'q2'], 'user' => 1], $result);
     }
 }

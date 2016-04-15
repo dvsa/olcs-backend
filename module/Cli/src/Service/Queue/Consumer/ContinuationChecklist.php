@@ -28,7 +28,7 @@ class ContinuationChecklist extends AbstractCommandConsumer
      */
     public function getCommandData(QueueEntity $item)
     {
-        return ['id' => $item->getEntityId()];
+        return ['id' => $item->getEntityId(), 'user' => $item->getCreatedBy()->getId()];
     }
 
     /**
