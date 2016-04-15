@@ -3,7 +3,7 @@
 /**
  * PolicePeople bookmark
  *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark;
 
