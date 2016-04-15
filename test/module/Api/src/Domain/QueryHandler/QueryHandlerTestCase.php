@@ -70,11 +70,13 @@ class QueryHandlerTestCase extends MockeryTestCase
     {
         parent::tearDown();
 
-        unset($this->sut);
-        unset($this->queryHandler);
-        unset($this->repoManager);
-        unset($this->repoMap);
-        unset($this->mockedSmServices);
+        unset(
+            $this->sut,
+            $this->queryHandler,
+            $this->repoManager,
+            $this->repoMap,
+            $this->mockedSmServices
+        );
     }
 
     protected function mockRepo($name, $class)
