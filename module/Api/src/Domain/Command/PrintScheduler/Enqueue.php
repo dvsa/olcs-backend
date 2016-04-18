@@ -18,6 +18,8 @@ final class Enqueue extends AbstractCommand
 
     protected $jobName;
 
+    protected $user;
+
     /**
      * Get the document ID
      *
@@ -36,5 +38,15 @@ final class Enqueue extends AbstractCommand
     public function getJobName()
     {
         return $this->jobName;
+    }
+
+    /**
+     * Get user id
+     *
+     * @return int
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

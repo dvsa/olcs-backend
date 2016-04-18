@@ -38,12 +38,14 @@ final class BatchVehicleListGeneratorForPsvDiscs extends AbstractCommandHandler 
             $queries = array_slice($queries, 0, self::BATCH_SIZE);
             $options = [
                 'queries' => $queuedQueries,
-                'bookmarks' => $bookmarks
+                'bookmarks' => $bookmarks,
+                'user' => $command->getUser()
             ];
         }
 
         foreach ($queries as $licenceId => $data) {
             $data['knownValues'] = $bookmarks[$licenceId];
+            $data['user'] = $command->getUser();
             $generateVehicleList = CreatePsvVehicleListForDiscsCommand::create($data);
             $this->handleSideEffect($generateVehicleList);
             $result->addMessage('Vehicle list generated for licence ' . $licenceId);

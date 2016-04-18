@@ -72,6 +72,7 @@ final class GenerateAndStore extends AbstractCommandHandler implements
         $documentData['identifier'] = $file->getIdentifier();
         $documentData['filename'] = $fileName;
         $documentData['size'] = $file->getSize();
+        $documentData['user'] = $queryData['user'];
 
         if ($command->getDispatch()) {
             $documentDto = DispatchDocumentCmd::create($documentData);

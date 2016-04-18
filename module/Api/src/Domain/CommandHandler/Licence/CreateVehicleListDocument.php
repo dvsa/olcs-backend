@@ -13,14 +13,20 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Create Vehicle List Document
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateVehicleListDocument extends AbstractCommandHandler implements TransactionedInterface
+final class CreateVehicleListDocument extends AbstractCommandHandler implements
+    TransactionedInterface,
+    AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'Licence';
 
     public function handleCommand(CommandInterface $command)
@@ -33,20 +39,22 @@ final class CreateVehicleListDocument extends AbstractCommandHandler implements 
             $description = 'Goods Vehicle List';
         }
 
-        $documentId = $this->generateDocument($template, $command, $description);
+        $user = $command->getUser() ? $command->getUser() : $this->getCurrentUser()->getId();
+        $documentId = $this->generateDocument($template, $command, $description, $user);
 
-        $printData = ['documentId' => $documentId, 'jobName' => $description];
+        $printData = ['documentId' => $documentId, 'jobName' => $description, 'user' => $user];
         $this->result->merge($this->handleSideEffect(Enqueue::create($printData)));
 
         return $this->result;
     }
 
-    protected function generateDocument($template, $command, $description)
+    protected function generateDocument($template, $command, $description, $user)
     {
         $dtoData = [
             'template' => $template,
             'query' => [
-                'licence' => $command->getId()
+                'licence' => $command->getId(),
+                'user' => $user
             ],
             'licence'       => $command->getId(),
             'description'   => $description,

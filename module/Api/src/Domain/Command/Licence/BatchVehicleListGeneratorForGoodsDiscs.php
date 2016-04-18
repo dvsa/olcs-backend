@@ -18,11 +18,21 @@ final class BatchVehicleListGeneratorForGoodsDiscs extends AbstractCommand
 {
     protected $licences = [];
 
+    protected $user;
+
     /**
      * @return mixed
      */
     public function getLicences()
     {
         return $this->licences;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

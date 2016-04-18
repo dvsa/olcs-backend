@@ -37,14 +37,16 @@ class CreatePsvVehicleListForDiscsTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 1,
-            'knownValues' => 'knownValues'
+            'knownValues' => 'knownValues',
+            'user' => 2
         ];
 
         $command = Cmd::create($data);
 
         $printData = [
             'documentId' => 'id1',
-            'jobName' => 'New disc notification'
+            'jobName' => 'New disc notification',
+            'user' => 2
         ];
 
         $this->expectedSideEffect(Enqueue::class, $printData, new Result());
@@ -52,7 +54,8 @@ class CreatePsvVehicleListForDiscsTest extends CommandHandlerTestCase
         $createDocData = [
             'template' => 'PSVVehiclesList',
             'query' => [
-                'licence' => 1
+                'licence' => 1,
+                'user' => 2
             ],
             'irfoOrganisation' => null,
             'submission' => null,
