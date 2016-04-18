@@ -23,12 +23,14 @@ class PrintDiscsTest extends PHPUnit_Framework_TestCase
             [
                 'discs' => ['d1', 'd2'],
                 'type' => 'gv',
-                'startNumber' => 1
+                'startNumber' => 1,
+                'user' => 2
             ]
         );
 
         $this->assertEquals(['d1', 'd2'], $command->getDiscs());
         $this->assertEquals('gv', $command->getType());
         $this->assertEquals(1, $command->getStartNumber());
+        $this->assertEquals(2, $command->getUser());
     }
 }

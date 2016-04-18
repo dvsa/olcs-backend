@@ -22,11 +22,13 @@ class CreatePsvVehicleListForDiscsTest extends PHPUnit_Framework_TestCase
         $command = CreatePsvVehicleListForDiscs::create(
             [
                 'knownValues' => ['d1', 'd2'],
-                'id' => 1
+                'id' => 1,
+                'user' => 1
             ]
         );
 
         $this->assertEquals(['d1', 'd2'], $command->getKnownValues());
         $this->assertEquals(1, $command->getId());
+        $this->assertEquals(1, $command->getUser());
     }
 }

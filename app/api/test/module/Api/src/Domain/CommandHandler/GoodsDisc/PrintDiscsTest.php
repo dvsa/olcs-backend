@@ -18,6 +18,8 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as CreateVehicleListDocumentCommand;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreatQueue;
+use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Entity\User\User;
 
 /**
  * Print goods discs
@@ -31,6 +33,9 @@ class PrintDiscsTest extends CommandHandlerTestCase
         $this->sut = new PrintDiscs();
         $this->mockRepo('DiscSequence', DiscSequenceRepo::class);
         $this->mockRepo('GoodsDisc', GoodsDiscRepo::class);
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
 
         parent::setUp();
     }
@@ -38,6 +43,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
     public function testHandleCommandNoDiscsToPrint()
     {
         $this->setExpectedException(ValidationException::class);
+        $this->mockAuthService();
 
         $niFlag = 'N';
         $licenceType = 'ltyp_r';
@@ -47,7 +53,8 @@ class PrintDiscsTest extends CommandHandlerTestCase
             'niFlag' => $niFlag,
             'licenceType' => $licenceType,
             'startNumber' => $startNumber,
-            'discSequence' => $discSequence
+            'discSequence' => $discSequence,
+            'user' => 1
         ];
         $command = Cmd::create($data);
 
@@ -64,6 +71,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
     public function testHandleCommandDecreasing()
     {
         $this->setExpectedException(ValidationException::class);
+        $this->mockAuthService();
 
         $niFlag = 'N';
         $licenceType = 'ltyp_r';
@@ -73,7 +81,8 @@ class PrintDiscsTest extends CommandHandlerTestCase
             'niFlag' => $niFlag,
             'licenceType' => $licenceType,
             'startNumber' => $startNumber,
-            'discSequence' => $discSequence
+            'discSequence' => $discSequence,
+            'user' => 1
         ];
         $command = Cmd::create($data);
 
@@ -103,6 +112,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
+        $this->mockAuthService();
         $niFlag = 'N';
         $licenceType = 'ltyp_r';
         $startNumber = 1;
@@ -111,7 +121,8 @@ class PrintDiscsTest extends CommandHandlerTestCase
             'niFlag' => $niFlag,
             'licenceType' => $licenceType,
             'startNumber' => $startNumber,
-            'discSequence' => $discSequence
+            'discSequence' => $discSequence,
+            'user' => 1
         ];
         $command = Cmd::create($data);
 
@@ -141,7 +152,8 @@ class PrintDiscsTest extends CommandHandlerTestCase
         $options = [
             'discs' => [12],
             'type' => 'Goods',
-            'startNumber' => $startNumber
+            'startNumber' => $startNumber,
+            'user' => 1
         ];
         $params = [
             'type' => Queue::TYPE_DISC_PRINTING,
@@ -157,7 +169,8 @@ class PrintDiscsTest extends CommandHandlerTestCase
             ]
         ];
         $options = [
-            'licences' => $licences
+            'licences' => $licences,
+            'user' => 1
         ];
         $params = [
             'type' => Queue::TYPE_CREATE_GOODS_VEHICLE_LIST,
@@ -174,5 +187,15 @@ class PrintDiscsTest extends CommandHandlerTestCase
         ];
         $result = $this->sut->handleCommand($command);
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    protected function mockAuthService()
+    {
+        /** @var User $mockUser */
+        $mockUser = m::mock(User::class)->makePartial();
+        $mockUser->setId(1);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
     }
 }

@@ -28,7 +28,8 @@ class CreateGoodsVehicleList extends AbstractCommandConsumer
     {
         $options = json_decode($item->getOptions(), true);
         return [
-            'licences' => $options['licences']
+            'licences' => $options['licences'],
+            'user' => isset($options['user']) ? $options['user'] : $item->getCreatedBy()->getId()
         ];
     }
 }

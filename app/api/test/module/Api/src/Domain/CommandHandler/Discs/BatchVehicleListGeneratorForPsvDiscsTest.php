@@ -37,11 +37,13 @@ class BatchVehicleListGeneratorForPsvDiscsTest extends CommandHandlerTestCase
         $data = [
             'queries' => $queries,
             'bookmarks' => $bookmarks,
+            'user' => 1
         ];
         $queuedQueries = array_slice($queries, Batch::BATCH_SIZE);
         $options = [
             'queries' => $queuedQueries,
-            'bookmarks' => $bookmarks
+            'bookmarks' => $bookmarks,
+            'user' => 1
         ];
 
         $command = Cmd::create($data);
@@ -50,7 +52,8 @@ class BatchVehicleListGeneratorForPsvDiscsTest extends CommandHandlerTestCase
         for ($i = 0; $i < Batch::BATCH_SIZE; $i++) {
             $data = [
                 'id' =>  $i + 1,
-                'knownValues' => ['foo' => 'bar' . $i]
+                'knownValues' => ['foo' => 'bar' . $i],
+                'user' => 1
             ];
             $this->expectedSideEffect(CreatePsvVehicleListForDiscsCommand::class, $data, new Result());
             $expected['messages'][] = 'Vehicle list generated for licence ' . $i;

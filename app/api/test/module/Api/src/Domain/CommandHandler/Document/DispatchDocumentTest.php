@@ -70,7 +70,8 @@ class DispatchDocumentTest extends CommandHandlerTestCase
     {
         $data = [
             'licence' => 111,
-            'description' => 'foo'
+            'description' => 'foo',
+            'user' => 1
         ];
         $command = Cmd::create($data);
 
@@ -102,7 +103,12 @@ class DispatchDocumentTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addId('document', 123);
-        $this->expectedSideEffect(CreateDocumentSpecific::class, $command->getArrayCopy(), $result1);
+        $dataForCreateDocSpecific = [
+            'licence' => 111,
+            'description' => 'foo'
+        ];
+        $commandCreateDocSpecific = Cmd::create($dataForCreateDocSpecific);
+        $this->expectedSideEffect(CreateDocumentSpecific::class, $commandCreateDocSpecific->getArrayCopy(), $result1);
 
         $data = [
             'licence' => 111,
@@ -133,7 +139,8 @@ class DispatchDocumentTest extends CommandHandlerTestCase
         $data = [
             'licence' => 111,
             'identifier' => 'ABC123',
-            'description' => 'foo'
+            'description' => 'foo',
+            'user' => 1
         ];
         $command = Cmd::create($data);
 
@@ -153,11 +160,18 @@ class DispatchDocumentTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addId('document', 123);
-        $this->expectedSideEffect(CreateDocumentSpecific::class, $command->getArrayCopy(), $result1);
+        $dataForCreateDocSpecific = [
+            'licence' => 111,
+            'identifier' => 'ABC123',
+            'description' => 'foo',
+        ];
+        $commandCreateDocSpecific = Cmd::create($dataForCreateDocSpecific);
+        $this->expectedSideEffect(CreateDocumentSpecific::class, $commandCreateDocSpecific->getArrayCopy(), $result1);
 
         $data = [
             'documentId' => 123,
-            'jobName' => 'foo'
+            'jobName' => 'foo',
+            'user' => 1
         ];
         $result2 = new Result();
         $result2->addMessage('Printed');
@@ -182,7 +196,8 @@ class DispatchDocumentTest extends CommandHandlerTestCase
         $data = [
             'licence' => 111,
             'identifier' => 'ABC123',
-            'description' => 'foo'
+            'description' => 'foo',
+            'user' => 1
         ];
         $command = Cmd::create($data);
 
@@ -213,11 +228,18 @@ class DispatchDocumentTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addId('document', 123);
-        $this->expectedSideEffect(CreateDocumentSpecific::class, $command->getArrayCopy(), $result1);
+        $dataForCreateDocSpecific = [
+            'licence' => 111,
+            'identifier' => 'ABC123',
+            'description' => 'foo',
+        ];
+        $commandCreateDocSpecific = Cmd::create($dataForCreateDocSpecific);
+        $this->expectedSideEffect(CreateDocumentSpecific::class, $commandCreateDocSpecific->getArrayCopy(), $result1);
 
         $data = [
             'documentId' => 123,
-            'jobName' => 'foo'
+            'jobName' => 'foo',
+            'user' => 1
         ];
         $result2 = new Result();
         $result2->addMessage('Printed');

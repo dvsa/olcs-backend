@@ -16,14 +16,18 @@ use Dvsa\Olcs\Api\Entity\System\DiscSequence as DiscSequenceEntity;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreatQueue;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Print PSV discs
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class PrintDiscs extends AbstractCommandHandler implements TransactionedInterface
+final class PrintDiscs extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'PsvDisc';
 
     protected $extraRepos = ['DiscSequence'];
@@ -46,7 +50,8 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
         $data = [
             'discs' => $discIds,
             'type' => 'PSV',
-            'startNumber' => $command->getStartNumber()
+            'startNumber' => $command->getStartNumber(),
+            'user' => $this->getCurrentUser()->getId()
         ];
         $params = [
             'type' => Queue::TYPE_DISC_PRINTING,
@@ -80,7 +85,8 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
         }
         $options = [
             'bookmarks' => $bookmarks,
-            'queries' => $queries
+            'queries' => $queries,
+            'user' => $this->getCurrentUser()->getId()
         ];
         $params = [
             'type' => Queue::TYPE_CREATE_PSV_VEHICLE_LIST,

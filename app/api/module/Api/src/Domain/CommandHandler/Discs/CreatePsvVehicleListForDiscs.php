@@ -28,7 +28,8 @@ final class CreatePsvVehicleListForDiscs extends AbstractCommandHandler implemen
         $dtoData = [
             'template' => 'PSVVehiclesList',
             'query' => [
-                'licence' => $command->getId()
+                'licence' => $command->getId(),
+                'user' => $command->getUser()
             ],
             'knownValues' => $command->getKnownValues(),
             'description'   => 'New disc notification',
@@ -41,7 +42,11 @@ final class CreatePsvVehicleListForDiscs extends AbstractCommandHandler implemen
 
         $result = $this->handleSideEffect(GenerateAndStore::create($dtoData));
 
-        $printData = ['documentId' => $result->getId('document'), 'jobName' => 'New disc notification'];
+        $printData = [
+            'documentId' => $result->getId('document'),
+            'jobName' => 'New disc notification',
+            'user' => $command->getUser()
+        ];
 
         $this->handleSideEffect(Enqueue::create($printData));
 

@@ -16,5 +16,15 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  */
 final class DispatchDocument extends CreateDocumentSpecific
 {
+    protected $user;
 
+    /**
+     * Get user id
+     *
+     * @return int
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
 }
