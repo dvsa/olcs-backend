@@ -101,7 +101,8 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
             [
                 'id' => $id,
                 'template' => $this->template,
-                'scale' => $scale
+                'scale' => $scale,
+                'user' => 1
             ]
         );
 
@@ -147,7 +148,8 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
             'category' => CategoryEntity::CATEGORY_BUS_REGISTRATION,
             'subCategory' => CategoryEntity::BUS_SUB_CATEGORY_OTHER_DOCUMENTS,
             'filename' => basename($transxchangeFilename),
-            'description' => 'TransXchange file'
+            'description' => 'TransXchange file',
+            'user' => 1
         ];
 
         $this->expectedSideEffect(UploadCmd::class, $documentData, $docUploadResult);
@@ -196,7 +198,8 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
             [
                 'id' => $id,
                 'template' => $this->template,
-                'scale' => $scale
+                'scale' => $scale,
+                'user' => 1
             ]
         );
 

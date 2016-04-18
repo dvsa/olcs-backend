@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms\ReportDownload as Sut;
 use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
+use Dvsa\Olcs\Api\Entity\User\User;
 
 /**
  * Cpms Report Download Queue Consumer Test
@@ -23,10 +24,13 @@ class ReportDownloadTest extends AbstractConsumerTestCase
 
     public function testProcessMessageSuccess()
     {
+        $user = new User('pid', 'type');
+        $user->setId(1);
         $item = new QueueEntity();
         $item->setId(99);
         $item->setAttempts(1);
         $item->setOptions('{"reference":"OLCS-1234-ABCD", "name": "FILENAME"}');
+        $item->setCreatedBy($user);
 
         $expectedQryData = ['reference' => 'OLCS-1234-ABCD'];
         $qryResult = [
@@ -44,6 +48,7 @@ class ReportDownloadTest extends AbstractConsumerTestCase
             'reference' => 'OLCS-1234-ABCD',
             'token'     => 'secrettoken',
             'filename'  => 'FILENAME.csv',
+            'user'      => 1
         ];
         $cmdResult = new Result();
         $cmdResult
@@ -80,10 +85,13 @@ class ReportDownloadTest extends AbstractConsumerTestCase
 
     public function testProcessMessageMaxAttemptsExceeded()
     {
+        $user = new User('pid', 'type');
+        $user->setId(1);
         $item = new QueueEntity();
         $item->setId(99);
         $item->setAttempts(11);
         $item->setOptions('{"reference":"OLCS-1234-ABCD"}');
+        $item->setCreatedBy($user);
 
         $this->expectCommand(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
@@ -101,9 +109,12 @@ class ReportDownloadTest extends AbstractConsumerTestCase
 
     public function testProcessMessageReportNotReady()
     {
+        $user = new User('pid', 'type');
+        $user->setId(1);
         $item = new QueueEntity();
         $item->setId(99);
         $item->setOptions('{"reference":"OLCS-1234-ABCD"}');
+        $item->setCreatedBy($user);
 
         $expectedQryData = ['reference' => 'OLCS-1234-ABCD'];
         $expectedException = new \Dvsa\Olcs\Api\Domain\Exception\NotReadyException('try again later');
@@ -130,9 +141,12 @@ class ReportDownloadTest extends AbstractConsumerTestCase
 
     public function testProcessMessageFailureFromStatusCheck()
     {
+        $user = new User('pid', 'type');
+        $user->setId(1);
         $item = new QueueEntity();
         $item->setId(99);
         $item->setOptions('{"reference":"OLCS-1234-ABCD"}');
+        $item->setCreatedBy($user);
 
         $expectedQryData = ['reference' => 'OLCS-1234-ABCD'];
         $this->expectQueryException(
@@ -158,9 +172,12 @@ class ReportDownloadTest extends AbstractConsumerTestCase
 
     public function testProcessMessageFailureFromDownload()
     {
+        $user = new User('pid', 'type');
+        $user->setId(1);
         $item = new QueueEntity();
         $item->setId(99);
         $item->setOptions('{"reference":"OLCS-1234-ABCD", "name": "FILENAME"}');
+        $item->setCreatedBy($user);
 
         $expectedQryData = ['reference' => 'OLCS-1234-ABCD'];
         $qryResult = [
@@ -178,6 +195,7 @@ class ReportDownloadTest extends AbstractConsumerTestCase
             'reference' => 'OLCS-1234-ABCD',
             'token'     => 'secrettoken',
             'filename'  => 'FILENAME.csv',
+            'user'      => 1
         ];
         $this->expectCommandException(
             \Dvsa\Olcs\Transfer\Command\Cpms\DownloadReport::class,
