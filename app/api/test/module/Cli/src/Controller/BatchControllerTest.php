@@ -318,6 +318,11 @@ class BatchControllerTest extends TestCase
 
         $mockCommandHandler
             ->shouldReceive('handleCommand')
+            ->with(m::type(CliCommand\SetViFlags::class))
+            ->once()
+            ->andReturn(new Command\Result());
+        $mockCommandHandler
+            ->shouldReceive('handleCommand')
             ->with(m::type(CliCommand\CreateViExtractFiles::class))
             ->once()
             ->andReturn(new Command\Result());
