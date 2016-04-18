@@ -103,6 +103,7 @@ final class Upload extends AbstractCommandHandler implements
         $data['size'] = $file->getSize();
         $data['filename'] = $identifier;
         $data['description'] = $this->getDescriptionFromCommand($command);
+        $data['user'] = $command->getUser();
 
         if ($data['isExternal'] === null) {
             return $this->handleSideEffect(CreateDocumentCmd::create($data));

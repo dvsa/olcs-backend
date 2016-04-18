@@ -30,7 +30,8 @@ class CreateDocumentTest extends PHPUnit_Framework_TestCase
                 'isExternal' => 1,
                 'isReadOnly' => 1,
                 'issuedDate' => '2015-01-01',
-                'size' => 100
+                'size' => 100,
+                'user' => 1
             ]
         );
 
@@ -44,5 +45,6 @@ class CreateDocumentTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $command->getIsReadOnly());
         $this->assertEquals('2015-01-01', $command->getIssuedDate());
         $this->assertEquals(100, $command->getSize());
+        $this->assertEquals(1, $command->getUser());
     }
 }

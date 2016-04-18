@@ -105,7 +105,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
 
             foreach ($documents['files'] as $document) {
                 $result->merge(
-                    $this->handleSideEffect($this->generateDocumentCmd($document, $busReg))
+                    $this->handleSideEffect($this->generateDocumentCmd($document, $busReg, $command->getUser()))
                 );
             }
 
@@ -161,9 +161,10 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     /**
      * @param string $document
      * @param BusRegEntity $busReg
+     * @param int $userId
      * @return UploadCmd
      */
-    private function generateDocumentCmd($document, BusRegEntity $busReg)
+    private function generateDocumentCmd($document, BusRegEntity $busReg, $user)
     {
         $data = [
             'content' => base64_encode(file_get_contents($document)),
@@ -172,7 +173,8 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
             'category' => CategoryEntity::CATEGORY_BUS_REGISTRATION,
             'subCategory' => CategoryEntity::BUS_SUB_CATEGORY_OTHER_DOCUMENTS,
             'filename' => basename($document),
-            'description' => 'TransXchange file'
+            'description' => 'TransXchange file',
+            'user' => $user
         ];
 
         return UploadCmd::create($data);

@@ -39,7 +39,7 @@ class SnapshotTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $command = Command::create(['id' => 111]);
+        $command = Command::create(['id' => 111, 'user' => 1]);
 
         $tma = m::mock(TransportManagerApplication::class);
 
@@ -73,6 +73,7 @@ class SnapshotTest extends CommandHandlerTestCase
             'transportManager' => 222,
             'application' => 333,
             'licence' => 444,
+            'user' => 1
         ];
         $this->expectedSideEffect(Upload::class, $data, $result);
 

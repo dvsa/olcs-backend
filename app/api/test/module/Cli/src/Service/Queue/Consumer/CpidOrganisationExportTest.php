@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\User\User;
 
 /**
  * Class CpidOrganisationExportTest
@@ -30,8 +31,11 @@ class CpidOrganisationExportTest extends MockeryTestCase
 
     public function setUp()
     {
+        $user = new User('pid', 'type');
+        $user->setId(1);
         $queueEntity = new Queue(new RefData(Queue::TYPE_CPID_EXPORT_CSV));
         $queueEntity->setStatus(Queue::STATUS_QUEUED);
+        $queueEntity->setCreatedBy($user);
 
         $this->queueEntity = $queueEntity;
     }
