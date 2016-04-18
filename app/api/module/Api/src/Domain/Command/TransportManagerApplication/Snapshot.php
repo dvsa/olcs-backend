@@ -16,4 +16,10 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class Snapshot extends AbstractIdOnlyCommand
 {
+    protected $user;
+
+    public function getUser()
+    {
+        return $this->user;
+    }
 }

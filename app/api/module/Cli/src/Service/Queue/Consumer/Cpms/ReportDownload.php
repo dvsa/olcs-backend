@@ -58,6 +58,7 @@ class ReportDownload extends AbstractConsumer
                 'reference' => $reference,
                 'token'     => $result['token'],
                 'filename'  => $filename,
+                'user'      => $item->getCreatedBy()->getId()
             ]
         );
         try {

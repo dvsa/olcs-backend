@@ -4,18 +4,20 @@
  * CpidOrganisationExport.php
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 
 /**
  * Class CpidOrganisationExport
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 class CpidOrganisationExport extends AbstractCommandHandler
 {
@@ -23,15 +25,12 @@ class CpidOrganisationExport extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
-        $queueItem = new Queue($this->getRepo()->getRefdataReference(Queue::TYPE_CPID_EXPORT_CSV));
-        $queueItem->setStatus($this->getRepo()->getRefdataReference(Queue::STATUS_QUEUED));
-        $queueItem->setOptions(json_encode(['status' => $command->getCpid()]));
-
-        $this->getRepo()->save($queueItem);
-
-        $result = new Result();
-        $result->addMessage('Cpid Export Queued.');
-
-        return $result;
+        $dtoData = [
+            'options' => json_encode(['status' => $command->getCpid()]),
+            'type' => Queue::TYPE_CPID_EXPORT_CSV,
+            'status' => Queue::STATUS_QUEUED
+        ];
+        $this->result->merge($this->handleSideEffect(Create::create($dtoData)));
+        return $this->result;
     }
 }

@@ -53,6 +53,8 @@ class CreateDocumentSpecific extends AbstractCommand
 
     protected $metadata;
 
+    protected $user;
+
     /**
      * @return mixed
      */
@@ -219,5 +221,13 @@ class CreateDocumentSpecific extends AbstractCommand
     public function getMetadata()
     {
         return $this->metadata;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }
