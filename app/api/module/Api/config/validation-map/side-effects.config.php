@@ -151,6 +151,7 @@ return [
     QueueCommandHandler\Failed::class                                                 => NoValidationRequired::class,
     QueueCommandHandler\Retry::class                                                  => NoValidationRequired::class,
     QueueCommandHandler\Create::class                                                 => NoValidationRequired::class,
+    QueueCommandHandler\Delete::class                                                 => NoValidationRequired::class,
     CommandHandler\Discs\PrintDiscs::class                                            => NoValidationRequired::class,
     CommandHandler\Discs\CreatePsvVehicleListForDiscs::class                          => NoValidationRequired::class,
     CommandHandler\Licence\ProcessContinuationNotSought::class                        => NoValidationRequired::class,

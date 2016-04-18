@@ -823,6 +823,7 @@ return [
     QueueCommand\Failed::class => QueueCommandHandler\Failed::class,
     QueueCommand\Retry::class => QueueCommandHandler\Retry::class,
     QueueCommand\Create::class => QueueCommandHandler\Create::class,
+    QueueCommand\Delete::class => QueueCommandHandler\Delete::class,
 
     // Transfer - TmCaseDecision
     TransferCommand\TmCaseDecision\CreateReputeNotLost::class
