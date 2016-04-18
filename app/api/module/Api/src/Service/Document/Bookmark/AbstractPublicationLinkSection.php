@@ -42,7 +42,7 @@ abstract class AbstractPublicationLinkSection extends DynamicBookmark
         'Section29' => [self::TABLE_ROW_1],
         'Section31' => [self::TABLE_ROW_1],
         'Section32' => [self::TABLE_ROW_1],
-        'Section33' => [self::TABLE_ROW_1, self::TABLE_ROW_3],
+        'Section33' => [self::TABLE_ROW_1],
         'Section34' => [self::TABLE_ROW_1],
         'Section35' => [self::TABLE_ROW_1],
         'Section36' => [self::TABLE_ROW_1],
@@ -138,6 +138,17 @@ abstract class AbstractPublicationLinkSection extends DynamicBookmark
 
         foreach ($this->data['publicationLinks'] as $key => $entry) {
             if (in_array($entry['publicationSection']['id'], $sectionId)) {
+                /**
+                 * @todo special case for section id 18, fixes the problem in olcs-11399, but a bit untidy.
+                 *
+                 * Fixing properly requires ETL changes and the text for schedule 4/1 true (pub section 18) to go into
+                 * text3 instead of text1. This will be done in olcs-12569
+                 */
+                if ($entry['publicationSection']['id'] === 18) {
+                    $entry['text3'] = $entry['text1'];
+                    $entry['text1'] = null;
+                }
+
                 $entries[] = [
                     'ITEM1' => $entry['text1'],
                     'ITEM2' => $entry['text2'],
