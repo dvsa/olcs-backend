@@ -59,7 +59,8 @@ class CpidOrganisationExport implements MessageConsumerInterface
             'subCategory' => Category::DOC_SUB_CATEGORY_CPID,
             'description' => 'CPID Classifications',
             'isExternal' => false,
-            'isScan' => false
+            'isScan' => false,
+            'user' => $item->getCreatedBy()->getId()
         ];
 
         try {
