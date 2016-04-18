@@ -17,9 +17,6 @@ use PHPUnit_Framework_TestCase;
  */
 class SnapshotTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @group test123
-     */
     public function testStructure()
     {
         $command = Snapshot::create(
