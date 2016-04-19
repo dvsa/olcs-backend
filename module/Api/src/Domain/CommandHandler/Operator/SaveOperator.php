@@ -97,7 +97,7 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
     /**
      * Create person object
      * @param $command
-     * @return Person
+     * @return PersonEntity
      */
     private function createPersonObject($command)
     {
@@ -212,7 +212,7 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
             $errors['name'][] = 'Operator Name is required';
         }
         if (!$command->getNatureOfBusiness()) {
-            $errors['natureOfBusiness'] = 'Nature of Business is required';
+            $errors['natureOfBusiness'][] = 'Nature of Business is required';
         }
         if (count($errors)) {
             throw new ValidationException($errors);

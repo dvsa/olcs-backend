@@ -1,16 +1,11 @@
 <?php
 
-/**
- * Grace Period Test
- *
- * @author Joshua Curtis <josh.curtis@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\GracePeriod;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\GracePeriod\GracePeriod;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\GracePeriod as GracePeriodRepo;
-use Dvsa\Olcs\Transfer\Query\GracePeriod\GracePeriod as Qry;
+use Dvsa\Olcs\Transfer\Query\GracePeriod\GracePeriod as GracePeriodsQuery;
+use Mockery as m;
 
 /**
  * Grace Periods Test
@@ -22,26 +17,30 @@ class GracePeriodTest extends QueryHandlerTestCase
     public function setUp()
     {
         $this->sut = new GracePeriod();
-        $this->mockRepo('GracePeriod', GracePeriodRepo::class);
+        $this->mockRepo('GracePeriod', \Dvsa\Olcs\Api\Domain\Repository\GracePeriod::class);
 
         parent::setUp();
     }
 
     public function testHandleQuery()
     {
-        $query = Qry::create(['id' => 1]);
+        $query = GracePeriodsQuery::create(['id' => 1]);
 
-        $this->repoMap['GracePeriod']
-            ->shouldReceive('fetchUsingId')
+        $mockEntity = m::mock(\Dvsa\Olcs\Api\Entity\Licence\GracePeriod::class);
+        $mockEntity->shouldReceive('serialize')->once()->andReturn(['unitKey' => 'unitVal']);
+
+        $this->repoMap['GracePeriod']->shouldReceive('fetchUsingId')
             ->with($query)
-            ->andReturn(
-                [
-                    [
-                        'id' => 1
-                    ],
-                ]
-            );
+            ->andReturn($mockEntity);
 
-        $this->sut->handleQuery($query);
+        /** @var \Dvsa\Olcs\Api\Domain\QueryHandler\Result $actual */
+        $actual = $this->sut->handleQuery($query);
+
+        static::assertEquals(
+            [
+                'unitKey' => 'unitVal',
+            ],
+            $actual->serialize()
+        );
     }
 }

@@ -7,11 +7,11 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler;
 
+use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -22,7 +22,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class QueryHandlerTestCase extends MockeryTestCase
 {
     /**
-     * @var QueryHandlerInterface
+     * @var AbstractQueryHandler
      */
     protected $sut;
 
@@ -32,10 +32,11 @@ class QueryHandlerTestCase extends MockeryTestCase
     protected $queryHandler;
 
     /**
-     * @var ServiceLocatorInterface
+     * @var m\MockInterface|ServiceLocatorInterface
      */
     protected $repoManager;
 
+    /** @var m\MockInterface[]  */
     protected $repoMap = [];
 
     protected $mockedSmServices = [];
