@@ -56,18 +56,15 @@ class TransportManagerApplication extends AbstractTransportManagerApplication im
         $application,
         $transportManager,
         $action,
-        $tmApplicationStatus,
-        $createdBy = null
+        $tmApplicationStatus
     ) {
         $this->setApplication($application);
         $this->setTransportManager($transportManager);
         $this->setAction($action);
         $this->setTmApplicationStatus($tmApplicationStatus);
-        $this->setCreatedBy($createdBy);
     }
 
     public function updateTransportManagerApplicationFull(
-        $lastModifiedBy = null,
         $tmType = null,
         $isOwner = null,
         $hoursMon = null,
@@ -89,7 +86,6 @@ class TransportManagerApplication extends AbstractTransportManagerApplication im
             $hoursSat,
             $hoursSun
         );
-        $this->setLastModifiedBy($lastModifiedBy);
         $this->setTmType($tmType);
         $this->setIsOwner($isOwner);
         $this->setHoursMon($hoursMon);

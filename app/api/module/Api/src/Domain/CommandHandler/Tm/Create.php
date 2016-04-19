@@ -17,18 +17,14 @@ use Dvsa\Olcs\Transfer\Command\Tm\Create as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as SaveAddressCmd;
 use Dvsa\Olcs\Api\Domain\Command\Person\Create as CreatePersonCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Transport Manager / Create
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class Create extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
+final class Create extends AbstractCommandHandler implements TransactionedInterface
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'TransportManager';
 
     protected $extraRepos = ['ContactDetails'];
@@ -131,8 +127,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
             $this->getRepo()->getRefdataReference($command->getType()),
             $this->getRepo()->getRefdataReference($status),
             $this->getRepo()->getReference(ContactDetailsEntity::class, $workCdId),
-            $this->getRepo()->getReference(ContactDetailsEntity::class, $homeCdId),
-            $this->getCurrentUser()
+            $this->getRepo()->getReference(ContactDetailsEntity::class, $homeCdId)
         );
         return $transportManager;
     }

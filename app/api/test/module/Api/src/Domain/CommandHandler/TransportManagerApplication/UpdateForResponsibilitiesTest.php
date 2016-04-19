@@ -12,9 +12,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\UpdateForRes
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateForResponsibilities as Cmd;
-use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Entity\User\Team;
-use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntity;
 use Doctrine\ORM\Query;
 
@@ -29,10 +26,6 @@ class UpdateForResponsibilitiesTest extends CommandHandlerTestCase
     {
         $this->sut = new UpdateForResp();
         $this->mockRepo('TransportManagerApplication', TransportManagerApplicationRepo::class);
-
-        $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
-        ];
 
         parent::setUp();
     }
@@ -54,8 +47,6 @@ class UpdateForResponsibilitiesTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $this->mockAuthService();
-
         $id = 1;
         $data = [
             'id' => $id,
@@ -90,7 +81,6 @@ class UpdateForResponsibilitiesTest extends CommandHandlerTestCase
             ->twice()
             ->shouldReceive('updateTransportManagerApplicationFull')
             ->with(
-                m::type(User::class),
                 $this->refData['tmType'],
                 1,
                 1,
@@ -131,20 +121,5 @@ class UpdateForResponsibilitiesTest extends CommandHandlerTestCase
                 ]
             ]
         );
-    }
-
-    protected function mockAuthService()
-    {
-        /** @var Team $mockTeam */
-        $mockTeam = m::mock(Team::class)->makePartial();
-        $mockTeam->setId(2);
-
-        /** @var User $mockUser */
-        $mockUser = m::mock(User::class)->makePartial();
-        $mockUser->setId(1);
-        $mockUser->setTeam($mockTeam);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($mockUser);
     }
 }
