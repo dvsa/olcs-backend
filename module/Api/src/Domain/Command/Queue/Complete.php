@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Command\Queue;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
+use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 
 /**
  * Complete queue item
@@ -17,12 +18,12 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 final class Complete extends AbstractCommand
 {
     /**
-     * @var Dvsa\Olcs\Api\Entity\Queue
+     * @var QueueEntity
      */
     protected $item;
 
     /**
-     * @return Dvsa\Olcs\Api\Entity\Queue
+     * @return QueueEntity
      */
     public function getItem()
     {

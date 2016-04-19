@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Delete as DeleteQueueCmd;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Failed as FailedQueueCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -22,6 +24,7 @@ final class Failed extends AbstractCommandHandler implements TransactionedInterf
     protected $repoServiceName = 'Queue';
 
     /**
+     * @param CommandInterface|FailedQueueCmd $command
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -34,6 +37,8 @@ final class Failed extends AbstractCommandHandler implements TransactionedInterf
         $result
             ->addId('queue', $item->getId())
             ->addMessage('Queue item marked failed');
+
+        $result->merge($this->handleSideEffect(DeleteQueueCmd::create(['id' => $item->getId()])));
 
         return $result;
     }
