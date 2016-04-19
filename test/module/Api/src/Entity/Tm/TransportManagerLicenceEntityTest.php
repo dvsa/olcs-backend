@@ -34,7 +34,6 @@ class TransportManagerLicenceEntityTest extends EntityTester
             6,
             7,
             'ai',
-            '2015-01-01',
             1
         );
         $this->assertEquals($sut->getTmType(), 'tmt');
@@ -46,7 +45,6 @@ class TransportManagerLicenceEntityTest extends EntityTester
         $this->assertEquals($sut->getHoursSat(), 6);
         $this->assertEquals($sut->getHoursSun(), 7);
         $this->assertEquals($sut->getAdditionalInformation(), 'ai');
-        $this->assertEquals($sut->getLastModifiedBy(), '2015-01-01');
         $this->assertEquals($sut->getIsOwner(), 1);
     }
 
@@ -75,7 +73,6 @@ class TransportManagerLicenceEntityTest extends EntityTester
             25,
             25,
             'ai',
-            '2015-01-01',
             1
         );
     }
@@ -93,7 +90,6 @@ class TransportManagerLicenceEntityTest extends EntityTester
             6,
             7,
             'ai',
-            '2015-01-01',
             1
         );
         $this->assertEquals($sut->getTotalWeeklyHours(), 28);

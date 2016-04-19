@@ -43,14 +43,12 @@ class TransportManagerEntityTest extends EntityTester
     {
         $entity = new Entity();
 
-        $entity->updateTransportManager('tmtype', 'tmstatus', 1, 2, 3, 4);
+        $entity->updateTransportManager('tmtype', 'tmstatus', 1, 2);
 
         $this->assertEquals('tmtype', $entity->getTmType());
         $this->assertEquals('tmstatus', $entity->getTmStatus());
         $this->assertEquals(1, $entity->getWorkCd());
         $this->assertEquals(2, $entity->getHomeCd());
-        $this->assertEquals(3, $entity->getCreatedBy());
-        $this->assertEquals(4, $entity->getLastModifiedBy());
     }
 
     public function testGetAssociatedOrganisationsRemoveDuplicates()

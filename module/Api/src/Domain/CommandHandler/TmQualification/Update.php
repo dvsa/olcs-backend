@@ -11,8 +11,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 
 /**
@@ -20,10 +18,8 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class Update extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
+final class Update extends AbstractCommandHandler implements TransactionedInterface
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'TmQualification';
 
     public function handleCommand(CommandInterface $command)
@@ -35,10 +31,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
             $this->getRepo()->getRefdataReference($command->getQualificationType()),
             $command->getSerialNo(),
             $command->getIssuedDate(),
-            $this->getRepo()->getReference(Country::class, $command->getCountryCode()),
-            null,
-            null,
-            $this->getCurrentUser()
+            $this->getRepo()->getReference(Country::class, $command->getCountryCode())
         );
         $this->getRepo()->save($tmQualification);
 

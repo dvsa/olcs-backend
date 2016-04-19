@@ -16,8 +16,6 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\CreateForResponsibilities as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
@@ -26,12 +24,8 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class CreateForResponsibilities extends AbstractCommandHandler implements
-    TransactionedInterface,
-    AuthAwareInterface
+final class CreateForResponsibilities extends AbstractCommandHandler implements TransactionedInterface
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'TransportManagerApplication';
 
     protected $extraRepos = ['Application', 'TransportManagerLicence'];
@@ -112,8 +106,7 @@ final class CreateForResponsibilities extends AbstractCommandHandler implements
             $this->getRepo()->getReference(ApplicationEntity::class, $command->getApplication()),
             $this->getRepo()->getReference(TransportManagerEntity::class, $command->getTransportManager()),
             count($tmLicences) ? 'U' : 'A',
-            $this->getRepo()->getRefdataReference(TransportManagerApplicationEntity::STATUS_POSTAL_APPLICATION),
-            $this->getCurrentUser()
+            $this->getRepo()->getRefdataReference(TransportManagerApplicationEntity::STATUS_POSTAL_APPLICATION)
         );
         return $tmApplication;
     }

@@ -5,16 +5,12 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Note;
 
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Processing\Note\Update as UpdateCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Processing\Note\Update as UpdateCommand;
 use Dvsa\Olcs\Api\Domain\Repository\Note;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use ZfcRbac\Service\AuthorizationService;
 
 use Dvsa\Olcs\Api\Entity;
 
@@ -30,17 +26,6 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function setUp()
     {
-        $user = m::mock(UserEntity::class)->makePartial();
-        $user->setId(1);
-
-        $as = m::mock(AuthorizationService::class);
-        $as->shouldReceive('getIdentity')->once()->andReturnSelf();
-        $as->shouldReceive('getUser')->once()->andReturn($user);
-
-        $this->mockedSmServices = [
-            AuthorizationService::class => $as
-        ];
-
         $this->sut = new UpdateCommandHandler();
         $this->mockRepo('Note', Note::class);
 
@@ -97,8 +82,6 @@ class UpdateTest extends CommandHandlerTestCase
                     ->with(1)
                     ->shouldreceive('getId')
                     ->andReturn($id)
-                    ->shouldReceive('setCreatedBy')
-                    ->with(m::type(Entity\User\User::class))
                     ->getMock()
             )
             ->shouldReceive('save')
