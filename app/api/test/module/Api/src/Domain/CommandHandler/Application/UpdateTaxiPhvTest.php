@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateTaxiPhv as CommandHand
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTaxiPhv as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
+use Dvsa\Olcs\Api\Entity\Application\Application as EntityApplication;
 
 /**
  * UpdateTaxiPhvTest
@@ -39,10 +40,12 @@ class UpdateTaxiPhvTest extends CommandHandlerTestCase
         ];
         $command = Command::create($params);
 
+        /** @var m\MockInterface|\Dvsa\Olcs\Api\Entity\Licence\Licence $mockLicence */
         $mockLicence = m::mock(\Dvsa\Olcs\Api\Entity\Licence\Licence::class)->makePartial();
         $mockLicence->setId(210);
 
-        $mockApplication = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class)->makePartial();
+        /** @var m\MockInterface|EntityApplication $mockApplication */
+        $mockApplication = m::mock(EntityApplication::class)->makePartial();
         $mockApplication->setId(323);
         $mockApplication->setIsVariation(false);
         $mockApplication->setLicence($mockLicence);
@@ -73,8 +76,8 @@ class UpdateTaxiPhvTest extends CommandHandlerTestCase
 
         $response = $this->sut->handleCommand($command);
 
-        $this->assertSame([], $response->getIds());
-        $this->assertSame(['UPDATE', 'UPDATE_COMPLETION'], $response->getMessages());
+        static::assertSame([], $response->getIds());
+        static::assertSame(['UPDATE', 'UPDATE_COMPLETION'], $response->getMessages());
     }
 
     public function testHandleCommandValidationError()
@@ -85,7 +88,8 @@ class UpdateTaxiPhvTest extends CommandHandlerTestCase
         ];
         $command = Command::create($params);
 
-        $mockApplication = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class)->makePartial();
+        /** @var m\MockInterface|EntityApplication $mockApplication */
+        $mockApplication = m::mock(EntityApplication::class)->makePartial();
         $mockApplication->setId(323);
         $mockApplication->setIsVariation(false);
 
@@ -95,7 +99,8 @@ class UpdateTaxiPhvTest extends CommandHandlerTestCase
         $this->mockedSmServices['TrafficAreaValidator']->shouldReceive('validateForSameTrafficAreas')
             ->with($mockApplication, 'TA')->once()->andReturn(['KEY' => 'MESSAGE']);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class, ['KEY' => 'MESSAGE']);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $this->sut->handleCommand($command);
     }
 
@@ -106,7 +111,8 @@ class UpdateTaxiPhvTest extends CommandHandlerTestCase
         ];
         $command = Command::create($params);
 
-        $mockApplication = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class)->makePartial();
+        /** @var m\MockInterface|EntityApplication $mockApplication */
+        $mockApplication = m::mock(EntityApplication::class)->makePartial();
         $mockApplication->setId(323);
         $mockApplication->setIsVariation(false);
         $mockApplication->shouldReceive('getTrafficArea->getId')->with()->once()->andReturn('TA2');
@@ -117,7 +123,8 @@ class UpdateTaxiPhvTest extends CommandHandlerTestCase
         $this->mockedSmServices['TrafficAreaValidator']->shouldReceive('validateForSameTrafficAreas')
             ->with($mockApplication, 'TA2')->once()->andReturn(['KEY' => 'MESSAGE']);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class, ['KEY' => 'MESSAGE']);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $this->sut->handleCommand($command);
     }
 }
