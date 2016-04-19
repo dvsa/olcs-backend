@@ -59,7 +59,7 @@ class WithdrawBusRegTest extends CommandHandlerTestCase
         $busReg->shouldReceive('getId')->andReturn($id);
         $busReg->shouldReceive('isFromEbsr')->once()->andReturn(true);
         $busReg->shouldReceive('getEbsrSubmissions->first->getId')->once()->andReturn($ebsrId);
-        $this->expectedSideEffect(SendEbsrWithdrawn::class, ['id' => $ebsrId], new Result());
+        $this->expectedEmailQueueSideEffect(SendEbsrWithdrawn::class, ['id' => $ebsrId], $ebsrId, new Result());
 
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT)

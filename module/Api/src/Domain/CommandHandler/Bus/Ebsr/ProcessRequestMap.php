@@ -22,8 +22,6 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Domain\TransExchangeAwareInterface;
 use Dvsa\Olcs\Api\Domain\TransExchangeAwareTrait;
-use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
-use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
@@ -41,13 +39,11 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     TransactionedInterface,
     UploaderAwareInterface,
     TransExchangeAwareInterface,
-    EmailAwareInterface,
     ConfigAwareInterface,
     FileProcessorAwareInterface
 {
     use UploaderAwareTrait;
     use TransExchangeAwareTrait;
-    use EmailAwareTrait;
     use ConfigAwareTrait;
     use FileProcessorAwareTrait;
     use QueueAwareTrait;
@@ -161,7 +157,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     /**
      * @param string $document
      * @param BusRegEntity $busReg
-     * @param int $userId
+     * @param int $user
      * @return UploadCmd
      */
     private function generateDocumentCmd($document, BusRegEntity $busReg, $user)
