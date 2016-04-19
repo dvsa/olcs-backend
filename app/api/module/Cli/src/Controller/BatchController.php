@@ -249,6 +249,7 @@ class BatchController extends AbstractConsoleController
         return $this->handleExitStatus(
             $this->handleCommand(
                 [
+                    \Dvsa\Olcs\Cli\Domain\Command\SetViFlags::create([]),
                     CreateViExtractFiles::create($params),
                 ]
             )
