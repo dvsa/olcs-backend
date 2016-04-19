@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * CompaniesHouseAlert Abstract Entity
@@ -44,6 +45,7 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
 
@@ -83,6 +85,7 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
 
