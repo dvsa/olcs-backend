@@ -86,7 +86,7 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
         }
 
         if ($command->getSubCategory() != null) {
-            $document->setSubCategory($this->getRepo()->getCategoryReference($command->getSubCategory()));
+            $document->setSubCategory($this->getRepo()->getSubCategoryReference($command->getSubCategory()));
         }
     }
 }
