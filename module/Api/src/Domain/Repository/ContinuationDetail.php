@@ -263,29 +263,53 @@ class ContinuationDetail extends AbstractRepository
     }
 
     /**
-     * Fetch continuation details for a licence and continuation
+     * Fetch licence ids where continuation details exists for given continuation
      *
      * @param int $continuationId
-     * @param int $licenceId
+     * @param array $licenceIds
      *
      * @return array
      */
-    public function fetchForContinuationAndLicence($continuationId, $licenceId)
+    public function fetchLicenceIdsForContinuationAndLicences($continuationId, $licenceIds)
     {
         /* @var $qb \Doctrine\Orm\QueryBuilder */
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()
             ->modifyQuery($qb)
+            ->with('licence', 'l')
             ->withRefdata();
 
         // where licence is
-        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
-            ->setParameter('licence', $licenceId);
-        // and contunation is
+        $qb->andWhere($qb->expr()->in($this->alias . '.licence', ':licences'))
+            ->setParameter('licences', $licenceIds);
+        // and continunation is
         $qb->andWhere($qb->expr()->eq($this->alias . '.continuation', ':continuation'))
             ->setParameter('continuation', $continuationId);
 
-        return $qb->getQuery()->getResult();
+        $result = $qb->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        $licenceIds = [];
+
+        foreach ($result as $res) {
+            $licenceIds[] = $res['licence']['id'];
+        }
+
+        return $licenceIds;
+    }
+
+    /**
+     * Create continuation details
+     *
+     * @param array $licenceIds
+     * @param bool $received
+     * @param string $status
+     * @param int $continuationId
+     *
+     * @return int
+     */
+    public function createContinuationDetails($licenceIds, $received, $status, $continuationId)
+    {
+        return $this->getDbQueryManager()->get('Continuations\CreateContinuationDetails')
+            ->executeInsert($licenceIds, $received, $status, $continuationId);
     }
 }
