@@ -24,5 +24,6 @@ return [
         'ViStoredProcedures\ViOpComplete' => Query\ViStoredProcedures\ViOpComplete::class,
         'ViStoredProcedures\ViTnmComplete' => Query\ViStoredProcedures\ViTnmComplete::class,
         'ViStoredProcedures\ViVhlComplete' => Query\ViStoredProcedures\ViVhlComplete::class,
+        'Continuations\CreateContinuationDetails' => Query\Continuations\CreateContinuationDetails::class,
     ]
 ];
