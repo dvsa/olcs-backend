@@ -274,7 +274,8 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     /**
      * @param QueryInterface $query
      * @param int $hydrateMode
-     * @return array
+     *
+     * @return \ArrayIterator|\Traversable
      */
     public function fetchList(QueryInterface $query, $hydrateMode = Query::HYDRATE_ARRAY)
     {
@@ -289,6 +290,11 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
 
     /**
      * Abstracted paginator logic so it can be re-used with alternative queries
+     *
+     * @param QueryBuilder $qb
+     * @param int          $hydrateMode
+     *
+     * @return \ArrayIterator|\Traversable
      */
     public function fetchPaginatedList(QueryBuilder $qb, $hydrateMode = Query::HYDRATE_ARRAY)
     {
@@ -492,10 +498,12 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
                 // allow ordering by multiple columns
                 $sortColumns = explode(',', $query->getSort());
                 $orderColumns = explode(',', $query->getOrder());
-                for ($i = 0; $i < count($sortColumns); $i++) {
+
+                foreach ($sortColumns as $i => $column) {
                     // if multiple order value doesn't exist then use the first one
                     $order = isset($orderColumns[$i]) ? $orderColumns[$i] : $orderColumns[0];
-                    $queryBuilderHelper->order($sortColumns[$i], $order, $compositeFields);
+
+                    $queryBuilderHelper->order($column, $order, $compositeFields);
                 }
             }
         }
