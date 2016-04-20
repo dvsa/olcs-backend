@@ -370,7 +370,7 @@ class Licence extends AbstractRepository
         $qb->andWhere($qb->expr()->eq('ta.id', ':trafficArea'))
             ->setParameter('trafficArea', $trafficArea);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
     public function fetchWithVariationsAndInterimInforce($licenceId)
