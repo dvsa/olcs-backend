@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Document;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\CreateDocumentSpecific;
@@ -42,7 +43,10 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
 
         $this->categoryReferences = [
             1 => m::mock(Category::class),
-            2 => m::mock(Category::class)
+        ];
+
+        $this->subCategoryReferences = [
+            2 => m::mock(SubCategory::class),
         ];
 
         parent::initReferences();
@@ -74,7 +78,7 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                     $this->assertEquals('foo.pdf', $document->getFilename());
                     $this->assertEquals(1024, $document->getSize());
                     $this->assertSame($this->categoryReferences[1], $document->getCategory());
-                    $this->assertSame($this->categoryReferences[2], $document->getSubCategory());
+                    $this->assertSame($this->subCategoryReferences[2], $document->getSubCategory());
                     $this->assertNull($document->getLicence());
                     $this->assertInstanceOf('\DateTime', $document->getIssuedDate());
                     $this->assertEquals('2015-01-01', $document->getIssuedDate()->format('Y-m-d'));
@@ -123,7 +127,7 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                     $this->assertEquals('foo.pdf', $document->getFilename());
                     $this->assertEquals(1024, $document->getSize());
                     $this->assertSame($this->categoryReferences[1], $document->getCategory());
-                    $this->assertSame($this->categoryReferences[2], $document->getSubCategory());
+                    $this->assertSame($this->subCategoryReferences[2], $document->getSubCategory());
                     $this->assertNull($document->getLicence());
                 }
             );
@@ -170,7 +174,7 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                     $this->assertEquals('foo.pdf', $document->getFilename());
                     $this->assertEquals(1024, $document->getSize());
                     $this->assertSame($this->categoryReferences[1], $document->getCategory());
-                    $this->assertSame($this->categoryReferences[2], $document->getSubCategory());
+                    $this->assertSame($this->subCategoryReferences[2], $document->getSubCategory());
                     $this->assertNull($document->getLicence());
                 }
             );
