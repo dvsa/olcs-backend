@@ -299,16 +299,17 @@ EOT;
         );
     }
 
-    public function testFetchForContinuationAndLicence()
+    public function testFetchLicenceIdsForContinuationAndLicences()
     {
         $mockQb = m::mock(QueryBuilder::class);
 
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('withRefdata')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
 
-        $mockQb->shouldReceive('expr->eq')->with('m.licence', ':licence')->once()->andReturn('licence');
-        $mockQb->shouldReceive('andWhere')->with('licence')->once()->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('licence', 222)->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->in')->with('m.licence', ':licences')->once()->andReturn('licences');
+        $mockQb->shouldReceive('andWhere')->with('licences')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('licences', [222, 333])->once()->andReturnSelf();
 
         $mockQb->shouldReceive('expr->eq')->with('m.continuation', ':continuation')->once()->andReturn('continuation');
         $mockQb->shouldReceive('andWhere')->with('continuation')->once()->andReturnSelf();
@@ -320,11 +321,24 @@ EOT;
             ->once()
             ->andReturn($mockQb);
 
-        $mockQb->shouldReceive('getQuery->getResult')->with()->once()->andReturn(['result']);
+        $mockQb->shouldReceive('getQuery->getResult')
+            ->with(\Doctrine\ORM\Query::HYDRATE_ARRAY)
+            ->once()
+            ->andReturn([['licence' => ['id' => 123]]]);
 
         $this->assertEquals(
-            $this->sut->fetchForContinuationAndLicence(111, 222),
-            ['result']
+            $this->sut->fetchLicenceIdsForContinuationAndLicences(111, [222, 333]),
+            [123]
         );
+    }
+
+    public function testCreateContinuationDetails()
+    {
+        $query = m::mock();
+        $query->shouldReceive('executeInsert')->once()->with([1], false, 'status', 2);
+
+        $this->dbQueryService->shouldReceive('get')->with('Continuations\CreateContinuationDetails')->andReturn($query);
+
+        $this->sut->createContinuationDetails([1], false, 'status', 2);
     }
 }

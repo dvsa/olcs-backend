@@ -85,9 +85,9 @@ class CreateTest extends CommandHandlerTestCase
                 }
             );
 
-        $lic1 = m::mock(LicenceEntity::class)->makePartial()->setId(111);
-        $lic2 = m::mock(LicenceEntity::class)->makePartial()->setId(222);
-        $lic3 = $this->mapReference(LicenceEntity::class, 333);
+        $lic1 = ['id' => 111];
+        $lic2 = ['id' => 222];
+        $lic3 = ['id' => 333];
         $this->repoMap['Licence']
             ->shouldReceive('fetchForContinuation')
             ->with($year, $month, $trafficArea)
@@ -96,28 +96,15 @@ class CreateTest extends CommandHandlerTestCase
             ->getMock();
 
         $this->repoMap['ContinuationDetail']
-            ->shouldReceive('fetchForContinuationAndLicence')->with(11, 111)->once()->andReturn(['EXISTS'])
-            ->shouldReceive('fetchForContinuationAndLicence')->with(11, 222)->once()->andReturn(['EXISTS'])
-            ->shouldReceive('fetchForContinuationAndLicence')->with(11, 333)->once()->andReturn([]);
-
-        $this->repoMap['ContinuationDetail']->shouldReceive('save')
-            ->with(m::type(ContinuationDetailEntity::class))
+            ->shouldReceive('fetchLicenceIdsForContinuationAndLicences')
+            ->with(11, [111, 222, 333])
             ->once()
-            ->andReturnUsing(
-                function (ContinuationDetailEntity $continuationDetail) {
-                    $continuationDetail->setId(22);
-                    $this->assertEquals(
-                        $this->mapReference(LicenceEntity::class, 333),
-                        $continuationDetail->getLicence()
-                    );
-                    $this->assertSame('N', $continuationDetail->getReceived());
-                    $this->assertSame(
-                        $this->mapRefData(ContinuationDetailEntity::STATUS_PREPARED),
-                        $continuationDetail->getStatus()
-                    );
-                    $this->assertEquals(11, $continuationDetail->getContinuation()->getId());
-                }
-            );
+            ->andReturn([111, 222]);
+
+        $this->repoMap['ContinuationDetail']
+            ->shouldReceive('createContinuationDetails')
+            ->with([2 => 333], false, ContinuationDetailEntity::STATUS_PREPARED, 11)
+            ->once();
 
         $expected = [
             'id' => [
@@ -149,9 +136,9 @@ class CreateTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $lic1 = m::mock(LicenceEntity::class)->makePartial()->setId(111);
-        $lic2 = m::mock(LicenceEntity::class)->makePartial()->setId(222);
-        $lic3 = $this->mapReference(LicenceEntity::class, 333);
+        $lic1 = ['id' => 111];
+        $lic2 = ['id' => 222];
+        $lic3 = ['id' => 333];
         $this->repoMap['Licence']
             ->shouldReceive('fetchForContinuation')
             ->with($year, $month, $trafficArea)
@@ -160,28 +147,10 @@ class CreateTest extends CommandHandlerTestCase
             ->getMock();
 
         $this->repoMap['ContinuationDetail']
-            ->shouldReceive('fetchForContinuationAndLicence')->with(11, 111)->once()->andReturn(['EXISTS'])
-            ->shouldReceive('fetchForContinuationAndLicence')->with(11, 222)->once()->andReturn(['EXISTS'])
-            ->shouldReceive('fetchForContinuationAndLicence')->with(11, 333)->once()->andReturn([]);
-
-        $this->repoMap['ContinuationDetail']->shouldReceive('save')
-            ->with(m::type(ContinuationDetailEntity::class))
+            ->shouldReceive('fetchLicenceIdsForContinuationAndLicences')
+            ->with(11, [111, 222, 333])
             ->once()
-            ->andReturnUsing(
-                function (ContinuationDetailEntity $continuationDetail) {
-                    $continuationDetail->setId(22);
-                    $this->assertEquals(
-                        $this->mapReference(LicenceEntity::class, 333),
-                        $continuationDetail->getLicence()
-                    );
-                    $this->assertSame('N', $continuationDetail->getReceived());
-                    $this->assertSame(
-                        $this->mapRefData(ContinuationDetailEntity::STATUS_PREPARED),
-                        $continuationDetail->getStatus()
-                    );
-                    $this->assertEquals(11, $continuationDetail->getContinuation()->getId());
-                }
-            );
+            ->andReturn([111, 222, 333]);
 
         $expected = [
             'id' => [
