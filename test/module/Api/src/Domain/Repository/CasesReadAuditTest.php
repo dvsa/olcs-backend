@@ -1,14 +1,10 @@
 <?php
 
-/**
- * Cases Read Audit Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Repository\CasesReadAudit;
+use Dvsa\Olcs\Api\Entity\Cases\CasesReadAudit as CasesReadAuditEntity;
 use Dvsa\Olcs\Transfer\Query\Audit\ReadCase;
 use Mockery as m;
 
@@ -19,6 +15,9 @@ use Mockery as m;
  */
 class CasesReadAuditTest extends RepositoryTestCase
 {
+    /** @var CasesReadAudit|m\MockInterface */
+    protected $sut;
+
     public function setUp()
     {
         $this->setUpSut(CasesReadAudit::class, true);
@@ -28,18 +27,17 @@ class CasesReadAuditTest extends RepositoryTestCase
     {
         $userId = 111;
         $entityId = 222;
-        $date = '2015-01-05';
 
         $qb = $this->createMockQb('{{QUERY}}');
         $this->mockCreateQueryBuilder($qb);
 
         $qb->shouldReceive('getQuery->getOneOrNullResult')->andReturn(['foo']);
 
-        $this->assertEquals(['foo'], $this->sut->fetchOne($userId, $entityId, $date));
+        static::assertEquals(['foo'], $this->sut->fetchOne($userId, $entityId));
 
-        $expected = '{{QUERY}} AND m.user = [[111]] AND m.case = [[222]] AND m.createdOn = [[2015-01-05]]';
+        $expected = '{{QUERY}} AND m.user = [[111]] AND m.case = [[222]] AND m.createdOn >= CURRENT_DATE()';
 
-        $this->assertEquals($expected, $this->query);
+        static::assertEquals($expected, $this->query);
     }
 
     public function testFetchList()
@@ -58,12 +56,12 @@ class CasesReadAuditTest extends RepositoryTestCase
 
         $this->queryBuilder->shouldReceive('modifyQuery')->andReturn($qbh);
 
-        $this->assertEquals(['result'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
+        static::assertEquals(['result'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
 
         $expected = '{{QUERY}} INNER JOIN m.user u INNER JOIN u.contactDetails cd '
             . 'INNER JOIN cd.person p AND m.case = [[111]] ORDER BY m.createdOn DESC';
 
-        $this->assertEquals($expected, $this->query);
+        static::assertEquals($expected, $this->query);
     }
 
     public function testDeleteOlderThan()
@@ -74,13 +72,11 @@ class CasesReadAuditTest extends RepositoryTestCase
 
         $this->em->shouldReceive('createQuery')
             ->once()
-            ->with(
-                'DELETE FROM Dvsa\Olcs\Api\Entity\Cases\CasesReadAudit e WHERE e.createdOn <= :oldestDate'
-            )
+            ->with('DELETE FROM ' . CasesReadAuditEntity::class . ' e WHERE e.createdOn <= :oldestDate')
             ->andReturn($query);
 
         $result = $this->sut->deleteOlderThan('2015-01-01');
 
-        $this->assertEquals(10, $result);
+        static::assertEquals(10, $result);
     }
 }
