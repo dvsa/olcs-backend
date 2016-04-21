@@ -11,9 +11,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Query\CommunityLicence\ExpireAllForLicence;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbQueryTestCase;
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceManager;
 
 /**
  * Expire All For Licence Test
@@ -38,7 +35,13 @@ class ExpireAllForLicenceTest extends AbstractDbQueryTestCase
             'licence' => [
                 'isAssociation' => true,
                 'column' => 'licence_id'
-            ]
+            ],
+            'lastModifiedOn' => [
+                'column' => 'last_modified_on'
+            ],
+            'lastModifiedBy' => [
+                'column' => 'last_modified_by'
+            ],
         ]
     ];
 
@@ -67,7 +70,8 @@ class ExpireAllForLicenceTest extends AbstractDbQueryTestCase
     protected function getExpectedQuery()
     {
         return 'UPDATE com_lic cl
-      SET cl.status_id = :status, cl.expired_date = :expiredDate
+      SET cl.status_id = :status, cl.expired_date = :expiredDate,
+        cl.last_modified_on = NOW(), cl.last_modified_by = :currentUserId
       WHERE cl.expired_date IS NULL AND cl.licence_id = :licence';
     }
 }

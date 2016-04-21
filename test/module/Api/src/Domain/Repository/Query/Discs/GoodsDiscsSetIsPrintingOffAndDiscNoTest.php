@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Query\Discs\GoodsDiscsSetIsPrintingOffAndDis
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbQueryTestCase;
 use Doctrine\DBAL\Connection;
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
@@ -38,6 +37,12 @@ class GoodsDiscsSetIsPrintingOffAndDiscNoTest extends AbstractDbQueryTestCase
             ],
             'issuedDate' => [
                 'column' => 'issued_date'
+            ],
+            'lastModifiedOn' => [
+                'column' => 'last_modified_on'
+            ],
+            'lastModifiedBy' => [
+                'column' => 'last_modified_by'
             ],
         ],
     ];
@@ -71,7 +76,8 @@ class GoodsDiscsSetIsPrintingOffAndDiscNoTest extends AbstractDbQueryTestCase
     {
         return 'UPDATE goods_disc gd,
        (SELECT @n := :startNumber - 1) m
-          SET gd.is_printing = 0, gd.disc_no = @n := @n + 1, gd.issued_date = :issuedDate
+          SET gd.is_printing = 0, gd.disc_no = @n := @n + 1, gd.issued_date = :issuedDate,
+            gd.last_modified_on = NOW(), gd.last_modified_by = :currentUserId
           WHERE gd.id IN (:ids)';
     }
 }

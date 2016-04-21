@@ -17,8 +17,8 @@ class CreateContinuationDetails extends AbstractRawQuery
         'cd' => ContinuationDetail::class
     ];
 
-    protected $queryTemplate =
-        'INSERT INTO {cd} ({cd.licence}, {cd.received}, {cd.status}, {cd.continuation}, {cd.createdOn}) VALUES ';
+    protected $queryTemplate = 'INSERT INTO {cd}
+        ({cd.licence}, {cd.received}, {cd.status}, {cd.continuation}, {cd.createdOn}, {cd.createdBy}) VALUES ';
 
     /**
      * Create continuation details rows
@@ -41,7 +41,7 @@ class CreateContinuationDetails extends AbstractRawQuery
                 $query .= ', ';
             }
             $query .= sprintf(
-                '(%s, %s, %s, %s, NOW())',
+                '(%s, %s, %s, %s, NOW(), :currentUserId)',
                 $this->connection->quote($licenceIds[$i]),
                 $this->connection->quote($received ? 1 : 0),
                 $this->connection->quote($status),

@@ -31,6 +31,9 @@ class CeaseGoodsDiscsForApplicationTest extends AbstractDbQueryTestCase
             'lastModifiedOn' => [
                 'column' => 'last_modified_on'
             ],
+            'lastModifiedBy' => [
+                'column' => 'last_modified_by'
+            ],
         ],
         LicenceVehicle::class => [
             'id' => [
@@ -81,7 +84,7 @@ class CeaseGoodsDiscsForApplicationTest extends AbstractDbQueryTestCase
     {
         return 'UPDATE goods_disc gd
       INNER JOIN licence_vehicle lv ON lv.id = gd.licence_vehicle
-      SET gd.ceased_date = :ceasedDate, gd.last_modified_on = NOW()
+      SET gd.ceased_date = :ceasedDate, gd.last_modified_on = NOW(), gd.last_modified_by = :currentUserId
       WHERE gd.ceased_date IS NULL
       AND lv.specified_date IS NOT NULL
       AND lv.removal_date IS NULL
