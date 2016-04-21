@@ -126,7 +126,8 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
      */
     protected function getQueryTemplate()
     {
-        return $this->queryTemplate;
+        // strips excess whitespace from the query template
+        return preg_replace('/\s\s+/', ' ', $this->queryTemplate);
     }
 
     /**

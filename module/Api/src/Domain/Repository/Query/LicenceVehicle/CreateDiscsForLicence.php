@@ -30,6 +30,6 @@ class CreateDiscsForLicence extends AbstractRawQuery
         // build query in two parts, as Insert part cannot use aliases
         return $this->buildQueryFromTemplate(
             'INSERT INTO {gd} ({gd.licenceVehicle}, {gd.createdOn}, {gd.createdBy}) ', false
-        ) .$this->queryTemplate;
+        ) .parent::getQueryTemplate();
     }
 }

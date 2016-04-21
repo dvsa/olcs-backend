@@ -64,10 +64,10 @@ class RemoveAllForLicenceTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'UPDATE licence_vehicle lv
-      SET lv.removal_date = :removalDate,
-        lv.last_modified_on = NOW(),
-        lv.last_modified_by = :currentUserId
-      WHERE lv.licence_id = :licence';
+        return 'UPDATE licence_vehicle lv '
+        . 'SET lv.removal_date = :removalDate, '
+            . 'lv.last_modified_on = NOW(), '
+            . 'lv.last_modified_by = :currentUserId '
+        . 'WHERE lv.licence_id = :licence';
     }
 }

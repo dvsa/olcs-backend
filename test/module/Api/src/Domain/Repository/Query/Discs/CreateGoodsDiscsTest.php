@@ -86,12 +86,13 @@ class CreateGoodsDiscsTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'INSERT INTO goods_disc (licence_vehicle_id, is_copy, created_on, created_by) '.
-        'SELECT lv.id, :isCopy, NOW(), :currentUserId FROM licence_vehicle lv
-        WHERE lv.specified_date IS NOT NULL
-        AND lv.removal_date IS NULL
-        AND lv.interim_application IS NULL
-        AND (lv.application_id <> :application OR lv.application_id IS NULL)
-        AND lv.licence_id = :licence';
+        return 'INSERT INTO goods_disc (licence_vehicle_id, is_copy, created_on, created_by) '
+        . 'SELECT lv.id, :isCopy, NOW(), :currentUserId '
+        . 'FROM licence_vehicle lv '
+        . 'WHERE lv.specified_date IS NOT NULL '
+            . 'AND lv.removal_date IS NULL '
+            . 'AND lv.interim_application IS NULL '
+            . 'AND (lv.application_id <> :application OR lv.application_id IS NULL) '
+            . 'AND lv.licence_id = :licence';
     }
 }

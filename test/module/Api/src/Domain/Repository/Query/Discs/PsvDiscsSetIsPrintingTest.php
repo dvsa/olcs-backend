@@ -59,9 +59,10 @@ class PsvDiscsSetIsPrintingTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'UPDATE psv_disc pd
-      SET pd.is_printing = :isPrinting,
-        pd.last_modified_on = NOW(), pd.last_modified_by = :currentUserId
-      WHERE pd.id IN (:ids)';
+        return 'UPDATE psv_disc pd '
+        . 'SET pd.is_printing = :isPrinting, '
+            . 'pd.last_modified_on = NOW(), '
+            . 'pd.last_modified_by = :currentUserId '
+        . 'WHERE pd.id IN (:ids)';
     }
 }

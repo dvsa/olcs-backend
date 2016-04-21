@@ -72,10 +72,11 @@ class CreateDiscsForLicenceTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'INSERT INTO goods_disc (licence_vehicle_id, created_on, created_by) ' .
-        'SELECT lv.id, NOW(), :currentUserId FROM licence_vehicle lv
-        WHERE lv.specified_date IS NOT NULL
-        AND lv.removal_date IS NULL
-        AND lv.licence_id = :licence';
+        return 'INSERT INTO goods_disc (licence_vehicle_id, created_on, created_by) '
+        . 'SELECT lv.id, NOW(), :currentUserId '
+        . 'FROM licence_vehicle lv '
+        . 'WHERE lv.specified_date IS NOT NULL '
+            . 'AND lv.removal_date IS NULL '
+            . 'AND lv.licence_id = :licence';
     }
 }
