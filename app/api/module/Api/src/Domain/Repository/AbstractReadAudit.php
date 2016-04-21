@@ -19,7 +19,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  */
 abstract class AbstractReadAudit extends AbstractRepository implements ReadAuditRepositoryInterface
 {
-    protected $entityProperty = null;
+    protected $entityProperty;
 
     /**
      * @inheritdoc
@@ -38,17 +38,16 @@ abstract class AbstractReadAudit extends AbstractRepository implements ReadAudit
     /**
      * @inheritdoc
      */
-    public function fetchOne($userId, $entityId, $date)
+    public function fetchOne($userId, $entityId)
     {
         $qb = $this->createQueryBuilder();
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.user', ':user'));
         $qb->andWhere($qb->expr()->eq($this->alias . '.' . $this->entityProperty, ':entityId'));
-        $qb->andWhere($qb->expr()->eq($this->alias . '.createdOn', ':date'));
+        $qb->andWhere($qb->expr()->gte($this->alias . '.createdOn', 'CURRENT_DATE()'));
 
         $qb->setParameter('user', $userId);
         $qb->setParameter('entityId', $entityId);
-        $qb->setParameter('date', $date);
 
         return $qb->getQuery()->getOneOrNullResult();
     }

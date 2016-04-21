@@ -1,19 +1,14 @@
 <?php
 
-/**
- * Read Case Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Audit;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Audit\ReadCase;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Cases\CasesReadAudit;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
@@ -23,72 +18,68 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class ReadCaseTest extends CommandHandlerTestCase
 {
+    const USER_ID = 9999;
+
+    /** @var m\MockInterface|User */
+    private $mockUser;
+    /** @var \Dvsa\Olcs\Transfer\Command\Audit\ReadCase */
+    private $command;
+
     public function setUp()
     {
         $this->sut = new ReadCase();
         $this->mockRepo('CasesReadAudit', Repository\CasesReadAudit::class);
         $this->mockRepo('Cases', Repository\Bus::class);
 
-        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
+        $this->mockUser = m::mock(User::class)->makePartial();
+        $this->mockUser->setId(self::USER_ID);
+
+        $mockAuthSrv = m::mock(AuthorizationService::class);
+        $mockAuthSrv->shouldReceive('getIdentity->getUser')->andReturn($this->mockUser);
+        $this->mockedSmServices[AuthorizationService::class] = $mockAuthSrv;
+
+        //  command
+        $data = [
+            'id' => '111',
+        ];
+        $this->command = \Dvsa\Olcs\Transfer\Command\Audit\ReadCase::create($data);
 
         parent::setUp();
     }
 
     public function testHandleCommandWhenExists()
     {
-        $data = [
-            'id' => '111'
-        ];
-
-        $command = \Dvsa\Olcs\Transfer\Command\Audit\ReadCase::create($data);
-
-        $user = m::mock(User::class)->makePartial();
-        $user->setId(222);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')->andReturn($user);
-
         $this->repoMap['CasesReadAudit']->shouldReceive('fetchOne')
             ->once()
-            ->with(222, 111, date('Y-m-d'))
+            ->with(self::USER_ID, 111)
             ->andReturn(['foo']);
 
-        $result = $this->sut->handleCommand($command);
+        $result = $this->sut->handleCommand($this->command);
 
         $expected = [
             'id' => [],
             'messages' => [
-                'Audit record exists'
-            ]
+                'Audit record exists',
+            ],
         ];
 
-        $this->assertEquals($expected, $result->toArray());
+        static::assertEquals($expected, $result->toArray());
     }
 
     public function testHandleCommand()
     {
-        $data = [
-            'id' => '111'
-        ];
-
-        $command = \Dvsa\Olcs\Transfer\Command\Audit\ReadCase::create($data);
-
-        $user = m::mock(User::class)->makePartial();
-        $user->setId(222);
-
         $entity = m::mock(Cases::class);
 
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')->andReturn($user);
-
         $this->repoMap['CasesReadAudit']->shouldReceive('fetchOne')->once()
-            ->with(222, 111, date('Y-m-d'))
+            ->with(self::USER_ID, 111)
             ->andReturn(null)
             ->shouldReceive('save')
             ->once()
             ->with(m::type(CasesReadAudit::class))
             ->andReturnUsing(
-                function (CasesReadAudit $record) use ($user, $entity) {
-                    $this->assertSame($user, $record->getUser());
-                    $this->assertSame($entity, $record->getCase());
+                function (CasesReadAudit $record) use ($entity) {
+                    static::assertSame($this->mockUser, $record->getUser());
+                    static::assertSame($entity, $record->getCase());
                 }
             );
 
@@ -96,15 +87,15 @@ class ReadCaseTest extends CommandHandlerTestCase
             ->with(111)
             ->andReturn($entity);
 
-        $result = $this->sut->handleCommand($command);
+        $result = $this->sut->handleCommand($this->command);
 
         $expected = [
             'id' => [],
             'messages' => [
-                'Audit record created'
-            ]
+                'Audit record created',
+            ],
         ];
 
-        $this->assertEquals($expected, $result->toArray());
+        static::assertEquals($expected, $result->toArray());
     }
 }
