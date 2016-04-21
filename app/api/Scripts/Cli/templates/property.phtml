@@ -58,5 +58,10 @@ foreach ($columns as $key => $joinColumn): ?>
 <?php if (isset($item['translatable']) && $item['translatable']):?>
      * @Gedmo\Translatable
 <?php endif; ?>
+<?php if ($this->isCreatedByField($item)):?>
+     * @Gedmo\Blameable(on="create")
+<?php elseif ($this->isLastModifiedByField($item)):?>
+     * @Gedmo\Blameable(on="update")
+<?php endif; ?>
      */
     protected $<?php echo $this->formatPropertyName($item); ?><?php if ($item['default'] !== null): ?> = <?php echo (!is_numeric($item['default']) ? '\'' . $item['default'] . '\'' : $item['default']); ?><?php endif; ?>;

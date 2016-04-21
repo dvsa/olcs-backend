@@ -13,20 +13,14 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntity;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * UpdateForResponsibilities Transport Manager Application
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class UpdateForResponsibilities extends AbstractCommandHandler implements
-    TransactionedInterface,
-    AuthAwareInterface
+final class UpdateForResponsibilities extends AbstractCommandHandler implements TransactionedInterface
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'TransportManagerApplication';
 
     public function handleCommand(CommandInterface $command)
@@ -54,7 +48,6 @@ final class UpdateForResponsibilities extends AbstractCommandHandler implements
             );
         }
         $transportManagerApplication->updateTransportManagerApplicationFull(
-            $this->getCurrentUser(),
             $this->getRepo()->getRefdataReference($command->getTmType()),
             $command->getIsOwner(),
             $command->getHoursMon(),

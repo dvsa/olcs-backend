@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
-use Dvsa\Olcs\Transfer\Query\InspectionRequest\ApplicationInspectionRequestList;
 use Doctrine\Common\Collections\Criteria;
 
 /**
@@ -42,9 +41,7 @@ class TransportManager extends AbstractTransportManager implements ContextProvid
         $type,
         $status,
         $workCd = null,
-        $homeCd = null,
-        $createdBy = null,
-        $modifiedBy = null
+        $homeCd = null
     ) {
         $this->setTmType($type);
         $this->setTmStatus($status);
@@ -53,12 +50,6 @@ class TransportManager extends AbstractTransportManager implements ContextProvid
         }
         if ($homeCd !== null) {
             $this->setHomeCd($homeCd);
-        }
-        if ($createdBy !== null) {
-            $this->setCreatedBy($createdBy);
-        }
-        if ($modifiedBy !== null) {
-            $this->setLastModifiedBy($modifiedBy);
         }
     }
 

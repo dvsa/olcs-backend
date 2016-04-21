@@ -4,13 +4,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Processing\Note;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Repository\Note as NoteRepository;
-use Dvsa\Olcs\Transfer\Command\Processing\Note\Create as CreateCommand;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Exception;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -18,10 +11,8 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 /**
  * Create Update Abstract a Note
  */
-abstract class CreateUpdateAbstract extends AbstractCommandHandler implements AuthAwareInterface
+abstract class CreateUpdateAbstract extends AbstractCommandHandler
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'Note';
 
     /**
@@ -129,10 +120,6 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Au
                 )
             );
         }
-
-        $entity->setCreatedBy(
-            $this->getCurrentUser()
-        );
 
         return $entity;
     }
