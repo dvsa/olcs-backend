@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Query\Discs\PsvDiscsSetIsPrinting;
 use Dvsa\Olcs\Api\Entity\Licence\PsvDisc;
 use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbQueryTestCase;
 use Doctrine\DBAL\Connection;
-use Mockery as m;
 
 /**
  * Psv Discs Set Is Printing Test
@@ -31,6 +30,12 @@ class PsvDiscsSetIsPrintingTest extends AbstractDbQueryTestCase
             ],
             'id' => [
                 'column' => 'id'
+            ],
+            'lastModifiedOn' => [
+                'column' => 'last_modified_on'
+            ],
+            'lastModifiedBy' => [
+                'column' => 'last_modified_by'
             ],
         ],
     ];
@@ -55,7 +60,8 @@ class PsvDiscsSetIsPrintingTest extends AbstractDbQueryTestCase
     protected function getExpectedQuery()
     {
         return 'UPDATE psv_disc pd
-      SET pd.is_printing = :isPrinting
+      SET pd.is_printing = :isPrinting,
+        pd.last_modified_on = NOW(), pd.last_modified_by = :currentUserId
       WHERE pd.id IN (:ids)';
     }
 }

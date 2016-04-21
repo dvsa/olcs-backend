@@ -32,8 +32,11 @@ class CeaseDiscsForLicenceTest extends AbstractDbQueryTestCase
             'ceasedDate' => [
                 'column' => 'ceased_date'
             ],
-            'createdOn' => [
-                'column' => 'created_on'
+            'lastModifiedOn' => [
+                'column' => 'last_modified_on'
+            ],
+            'lastModifiedBy' => [
+                'column' => 'last_modified_by'
             ],
         ],
     ];
@@ -62,7 +65,7 @@ class CeaseDiscsForLicenceTest extends AbstractDbQueryTestCase
     protected function getExpectedQuery()
     {
         return 'UPDATE psv_disc pd
-      SET pd.ceased_date = :ceasedDate, pd.created_on = NOW()
+      SET pd.ceased_date = :ceasedDate, pd.last_modified_on = NOW(), pd.last_modified_by = :currentUserId
       WHERE pd.licence_id = :licence AND pd.ceased_date IS NULL';
     }
 }

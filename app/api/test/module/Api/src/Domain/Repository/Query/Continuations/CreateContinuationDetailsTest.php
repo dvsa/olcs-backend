@@ -5,16 +5,13 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository\Query\Continuations;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Continuations\CreateContinuationDetails;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbQueryTestCase;
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceManager;
 
 /**
- * Create continuation detail test
+ * Create continuation details test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateContinuationDetailTest extends AbstractDbQueryTestCase
+class CreateContinuationDetailsTest extends AbstractDbQueryTestCase
 {
     protected $tableNameMap = [
         ContinuationDetail::class => 'continuation_detail'
@@ -38,6 +35,9 @@ class CreateContinuationDetailTest extends AbstractDbQueryTestCase
             ],
             'createdOn' => [
                 'column' => 'created_on'
+            ],
+            'createdBy' => [
+                'column' => 'created_by'
             ],
         ],
     ];
@@ -93,8 +93,10 @@ class CreateContinuationDetailTest extends AbstractDbQueryTestCase
 
         $this->connection->shouldReceive('executeUpdate')
             ->with(
-                'INSERT INTO continuation_detail (licence_id, received, status, continuation_id, created_on) ' .
-                'VALUES (\'1\', \'0\', \'status\', \'2\', NOW()), (\'1\', \'0\', \'status\', \'2\', NOW())'
+                'INSERT INTO continuation_detail
+        (licence_id, received, status, continuation_id, created_on, created_by) '
+                . 'VALUES (\'1\', \'0\', \'status\', \'2\', NOW(), :currentUserId), '
+                . '(\'1\', \'0\', \'status\', \'2\', NOW(), :currentUserId)'
             )->once()
             ->andReturn('result');
         $this->assertEquals('result', $this->sut->executeInsert([1, 1], false, 'status', 2));
@@ -120,8 +122,9 @@ class CreateContinuationDetailTest extends AbstractDbQueryTestCase
 
         $this->connection->shouldReceive('executeUpdate')
             ->with(
-                'INSERT INTO continuation_detail (licence_id, received, status, continuation_id, created_on) ' .
-                'VALUES (\'1\', \'0\', \'status\', \'2\', NOW())'
+                'INSERT INTO continuation_detail
+        (licence_id, received, status, continuation_id, created_on, created_by) '
+                . 'VALUES (\'1\', \'0\', \'status\', \'2\', NOW(), :currentUserId)'
             )->once()
             ->andThrow(new \Exception());
 

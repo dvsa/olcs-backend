@@ -22,6 +22,7 @@ class GoodsDiscsSetIsPrinting extends AbstractRawQuery
     ];
 
     protected $queryTemplate = 'UPDATE {gd}
-      SET {gd.isPrinting} = :isPrinting
+      SET {gd.isPrinting} = :isPrinting,
+        {gd.lastModifiedOn} = NOW(), {gd.lastModifiedBy} = :currentUserId
       WHERE {gd.id} IN (:ids)';
 }

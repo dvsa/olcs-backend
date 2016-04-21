@@ -31,6 +31,9 @@ class CreateGoodsDiscsTest extends AbstractDbQueryTestCase
             'createdOn' => [
                 'column' => 'created_on'
             ],
+            'createdBy' => [
+                'column' => 'created_by'
+            ],
         ],
         LicenceVehicle::class => [
             'id' => [
@@ -83,8 +86,8 @@ class CreateGoodsDiscsTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'INSERT INTO goods_disc (licence_vehicle_id, is_copy, created_on) '.
-        'SELECT lv.id, :isCopy, NOW() FROM licence_vehicle lv
+        return 'INSERT INTO goods_disc (licence_vehicle_id, is_copy, created_on, created_by) '.
+        'SELECT lv.id, :isCopy, NOW(), :currentUserId FROM licence_vehicle lv
         WHERE lv.specified_date IS NOT NULL
         AND lv.removal_date IS NULL
         AND lv.interim_application IS NULL

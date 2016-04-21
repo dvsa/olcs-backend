@@ -10,9 +10,11 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository\Query;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\ServiceManager\ServiceManager;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Abstract Db Query Test Case
@@ -52,9 +54,16 @@ abstract class AbstractDbQueryTestCase extends MockeryTestCase
         $this->em->shouldReceive('getClassMetadata')
             ->andReturnUsing([$this, 'getClassMetadata']);
 
+        $user = m::mock(UserEntity::class)->makePartial();
+        $user->setId(1);
+
+        $auth = m::mock(AuthorizationService::class);
+        $auth->shouldReceive('getIdentity->getUser')->andReturn($user);
+
         $sm = m::mock(ServiceManager::class)->makePartial();
         $sm->shouldReceive('getServiceLocator')->andReturnSelf();
         $sm->setService('doctrine.entitymanager.orm_default', $this->em);
+        $sm->setService(AuthorizationService::class, $auth);
 
         $sut = $this->getSut();
         $this->sut = $sut->createService($sm);
@@ -97,6 +106,9 @@ abstract class AbstractDbQueryTestCase extends MockeryTestCase
      */
     public function testExecuteWithException($inputParams, $inputTypes, $expectedParams, $expectedTypes)
     {
+        // add generic params
+        $expectedParams['currentUserId'] = 1;
+
         $this->setExpectedException(RuntimeException::class);
 
         $this->connection->shouldReceive('executeQuery')
@@ -112,6 +124,9 @@ abstract class AbstractDbQueryTestCase extends MockeryTestCase
      */
     public function testExecute($inputParams, $inputTypes, $expectedParams, $expectedTypes)
     {
+        // add generic params
+        $expectedParams['currentUserId'] = 1;
+
         $this->connection->shouldReceive('executeQuery')
             ->with($this->getExpectedQuery(), $expectedParams, $expectedTypes)
             ->once()

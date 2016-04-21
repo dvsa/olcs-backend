@@ -22,7 +22,9 @@ class MarkDuplicateVrmsForLicence extends AbstractRawQuery
     JOIN {l} ON {lv.licence} = {l.id}
         SET
             {lv.warningLetterSeedDate} = NOW(),
-            {lv.warningLetterSentDate} = NULL
+            {lv.warningLetterSentDate} = NULL,
+            {lv.lastModifiedOn} = NOW(),
+            {lv.lastModifiedBy} = :currentUserId
     WHERE
         {v.vrm} IN (:vrms)
         AND {lv.specifiedDate} IS NOT NULL
