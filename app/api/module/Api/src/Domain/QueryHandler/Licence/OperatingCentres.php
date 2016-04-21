@@ -59,10 +59,6 @@ class OperatingCentres extends AbstractQueryHandler implements AuthAwareInterfac
 
     private function getPossibleTrafficAreas(LicenceEntity $licence)
     {
-        if ($licence->getTrafficArea() !== null) {
-            return [];
-        }
-
         return $this->getRepo('TrafficArea')->getValueOptions();
     }
 
