@@ -72,10 +72,13 @@ class ClearVehicleSection26Test extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'UPDATE vehicle v
-      INNER JOIN licence_vehicle lv ON lv.vehicle_id = v.id
-      SET v.section_26 = 0, v.last_modified_on = NOW(), v.last_modified_by = :currentUserId
-      WHERE lv.licence_id = :licence
-      AND v.section_26 <> 0';
+        return 'UPDATE vehicle v '
+        . 'INNER JOIN licence_vehicle lv '
+            . 'ON lv.vehicle_id = v.id '
+        . 'SET v.section_26 = 0, '
+            . 'v.last_modified_on = NOW(), '
+            . 'v.last_modified_by = :currentUserId '
+        . 'WHERE lv.licence_id = :licence '
+            . 'AND v.section_26 <> 0';
     }
 }

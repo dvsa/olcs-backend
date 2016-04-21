@@ -84,13 +84,16 @@ class CeaseDiscsForLicenceTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'UPDATE goods_disc gd
-      INNER JOIN licence_vehicle lv ON lv.id = gd.licence_vehicle_id
-      SET gd.ceased_date = :ceasedDate, gd.is_interim = 0,
-        gd.last_modified_on = NOW(), gd.last_modified_by = :currentUserId
-      WHERE lv.licence_id = :licence
-      AND lv.removal_date IS NULL
-      AND lv.specified_date IS NOT NULL
-      AND gd.ceased_date IS NULL';
+        return 'UPDATE goods_disc gd '
+        . 'INNER JOIN licence_vehicle lv '
+            . 'ON lv.id = gd.licence_vehicle_id '
+        . 'SET gd.ceased_date = :ceasedDate, '
+            . 'gd.is_interim = 0, '
+            . 'gd.last_modified_on = NOW(), '
+            . 'gd.last_modified_by = :currentUserId '
+        . 'WHERE lv.licence_id = :licence '
+            . 'AND lv.removal_date IS NULL '
+            . 'AND lv.specified_date IS NOT NULL '
+            . 'AND gd.ceased_date IS NULL';
     }
 }

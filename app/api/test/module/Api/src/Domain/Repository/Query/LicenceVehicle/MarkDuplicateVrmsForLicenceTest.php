@@ -105,20 +105,20 @@ class MarkDuplicateVrmsForLicenceTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'UPDATE licence_vehicle lv
-    JOIN vehicle v ON lv.vehicle_id = v.id
-    JOIN licence l ON lv.licence_id = l.id
-        SET
-            lv.warning_letter_seed_date = NOW(),
-            lv.warning_letter_sent_date = NULL,
-            lv.last_modified_on = NOW(),
-            lv.last_modified_by = :currentUserId
-    WHERE
-        v.vrm IN (:vrms)
-        AND lv.specified_date IS NOT NULL
-        AND lv.removal_date IS NULL
-        AND lv.licence_id <> :licence
-        AND l.goods_or_psv = :goodsOrPsv
-        AND l.status IN (:licenceStatuses)';
+        return 'UPDATE licence_vehicle lv '
+        . 'JOIN vehicle v '
+            . 'ON lv.vehicle_id = v.id '
+        . 'JOIN licence l '
+            . 'ON lv.licence_id = l.id '
+        . 'SET lv.warning_letter_seed_date = NOW(), '
+            . 'lv.warning_letter_sent_date = NULL, '
+            . 'lv.last_modified_on = NOW(), '
+            . 'lv.last_modified_by = :currentUserId '
+        . 'WHERE v.vrm IN (:vrms) '
+            . 'AND lv.specified_date IS NOT NULL '
+            . 'AND lv.removal_date IS NULL '
+            . 'AND lv.licence_id <> :licence '
+            . 'AND l.goods_or_psv = :goodsOrPsv '
+            . 'AND l.status IN (:licenceStatuses)';
     }
 }

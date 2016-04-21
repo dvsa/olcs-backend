@@ -93,8 +93,8 @@ class CreateContinuationDetailsTest extends AbstractDbQueryTestCase
 
         $this->connection->shouldReceive('executeUpdate')
             ->with(
-                'INSERT INTO continuation_detail
-        (licence_id, received, status, continuation_id, created_on, created_by) '
+                'INSERT INTO continuation_detail '
+                . '(licence_id, received, status, continuation_id, created_on, created_by) '
                 . 'VALUES (\'1\', \'0\', \'status\', \'2\', NOW(), :currentUserId), '
                 . '(\'1\', \'0\', \'status\', \'2\', NOW(), :currentUserId)'
             )->once()
@@ -122,8 +122,8 @@ class CreateContinuationDetailsTest extends AbstractDbQueryTestCase
 
         $this->connection->shouldReceive('executeUpdate')
             ->with(
-                'INSERT INTO continuation_detail
-        (licence_id, received, status, continuation_id, created_on, created_by) '
+                'INSERT INTO continuation_detail '
+                . '(licence_id, received, status, continuation_id, created_on, created_by) '
                 . 'VALUES (\'1\', \'0\', \'status\', \'2\', NOW(), :currentUserId)'
             )->once()
             ->andThrow(new \Exception());

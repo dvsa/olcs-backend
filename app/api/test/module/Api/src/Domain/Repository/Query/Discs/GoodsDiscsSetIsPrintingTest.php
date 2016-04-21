@@ -59,9 +59,10 @@ class GoodsDiscsSetIsPrintingTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'UPDATE goods_disc gd
-      SET gd.is_printing = :isPrinting,
-        gd.last_modified_on = NOW(), gd.last_modified_by = :currentUserId
-      WHERE gd.id IN (:ids)';
+        return 'UPDATE goods_disc gd '
+        . 'SET gd.is_printing = :isPrinting, '
+            . 'gd.last_modified_on = NOW(), '
+            . 'gd.last_modified_by = :currentUserId '
+        . 'WHERE gd.id IN (:ids)';
     }
 }

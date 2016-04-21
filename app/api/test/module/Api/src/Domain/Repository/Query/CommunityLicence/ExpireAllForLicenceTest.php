@@ -69,9 +69,12 @@ class ExpireAllForLicenceTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'UPDATE com_lic cl
-      SET cl.status_id = :status, cl.expired_date = :expiredDate,
-        cl.last_modified_on = NOW(), cl.last_modified_by = :currentUserId
-      WHERE cl.expired_date IS NULL AND cl.licence_id = :licence';
+        return 'UPDATE com_lic cl '
+        . 'SET cl.status_id = :status, '
+            . 'cl.expired_date = :expiredDate, '
+            . 'cl.last_modified_on = NOW(), '
+            . 'cl.last_modified_by = :currentUserId '
+        . 'WHERE cl.expired_date IS NULL '
+            . 'AND cl.licence_id = :licence';
     }
 }
