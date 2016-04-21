@@ -28,9 +28,7 @@ class TmQualificationEntityTest extends EntityTester
             '123',
             '2015-01-01',
             'GB',
-            1,
-            2,
-            3
+            1
         );
 
         $this->assertEquals('qtype', $entity->getQualificationType());
@@ -38,8 +36,6 @@ class TmQualificationEntityTest extends EntityTester
         $this->assertEquals(new \DateTime('2015-01-01'), $entity->getIssuedDate());
         $this->assertEquals('GB', $entity->getCountryCode());
         $this->assertEquals(1, $entity->getTransportManager());
-        $this->assertEquals(2, $entity->getCreatedBy());
-        $this->assertEquals(3, $entity->getLastModifiedBy());
     }
 
     /**
@@ -53,10 +49,7 @@ class TmQualificationEntityTest extends EntityTester
             'qtype',
             '123',
             '2222-01-01',
-            'GB',
-            1,
-            2,
-            3
+            'GB'
         );
     }
 }

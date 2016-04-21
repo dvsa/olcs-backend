@@ -94,6 +94,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
 
@@ -285,6 +286,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
 
@@ -538,6 +540,33 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      * @ORM\Column(type="datetime", name="refused_date", nullable=true)
      */
     protected $refusedDate;
+
+    /**
+     * Request inspection
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="request_inspection", nullable=true)
+     */
+    protected $requestInspection;
+
+    /**
+     * Request inspection comment
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="request_inspection_comment", length=300, nullable=true)
+     */
+    protected $requestInspectionComment;
+
+    /**
+     * Request inspection delay
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="request_inspection_delay", nullable=true)
+     */
+    protected $requestInspectionDelay;
 
     /**
      * Safety confirmation
@@ -2050,6 +2079,75 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     public function getRefusedDate()
     {
         return $this->refusedDate;
+    }
+
+    /**
+     * Set the request inspection
+     *
+     * @param int $requestInspection
+     * @return Application
+     */
+    public function setRequestInspection($requestInspection)
+    {
+        $this->requestInspection = $requestInspection;
+
+        return $this;
+    }
+
+    /**
+     * Get the request inspection
+     *
+     * @return int
+     */
+    public function getRequestInspection()
+    {
+        return $this->requestInspection;
+    }
+
+    /**
+     * Set the request inspection comment
+     *
+     * @param string $requestInspectionComment
+     * @return Application
+     */
+    public function setRequestInspectionComment($requestInspectionComment)
+    {
+        $this->requestInspectionComment = $requestInspectionComment;
+
+        return $this;
+    }
+
+    /**
+     * Get the request inspection comment
+     *
+     * @return string
+     */
+    public function getRequestInspectionComment()
+    {
+        return $this->requestInspectionComment;
+    }
+
+    /**
+     * Set the request inspection delay
+     *
+     * @param int $requestInspectionDelay
+     * @return Application
+     */
+    public function setRequestInspectionDelay($requestInspectionDelay)
+    {
+        $this->requestInspectionDelay = $requestInspectionDelay;
+
+        return $this;
+    }
+
+    /**
+     * Get the request inspection delay
+     *
+     * @return int
+     */
+    public function getRequestInspectionDelay()
+    {
+        return $this->requestInspectionDelay;
     }
 
     /**

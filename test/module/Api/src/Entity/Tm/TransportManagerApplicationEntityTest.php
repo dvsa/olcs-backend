@@ -25,19 +25,17 @@ class TransportManagerApplicationEntityTest extends EntityTester
     {
         $sut = m::mock(Entity::class)->makePartial();
 
-        $sut->updateTransportManagerApplication(1, 2, 'A', 'st', '2015-01-01');
+        $sut->updateTransportManagerApplication(1, 2, 'A', 'st');
         $this->assertEquals($sut->getApplication(), 1);
         $this->assertEquals($sut->getTransportManager(), 2);
         $this->assertEquals($sut->getAction(), 'A');
         $this->assertEquals($sut->getTmApplicationStatus(), 'st');
-        $this->assertEquals($sut->getCreatedBy(), '2015-01-01');
     }
 
     public function testUpdateTransportManagerApplicationFull()
     {
         $sut = m::mock(Entity::class)->makePartial();
         $sut->updateTransportManagerApplicationFull(
-            '2015-01-01',
             'tmt',
             1,
             1,
@@ -50,7 +48,6 @@ class TransportManagerApplicationEntityTest extends EntityTester
             'ai',
             'tmas'
         );
-        $this->assertEquals($sut->getLastModifiedBy(), '2015-01-01');
         $this->assertEquals($sut->getTmType(), 'tmt');
         $this->assertEquals($sut->getIsOwner(), 1);
         $this->assertEquals($sut->getHoursMon(), 1);
@@ -80,7 +77,6 @@ class TransportManagerApplicationEntityTest extends EntityTester
         );
         $sut = m::mock(Entity::class)->makePartial();
         $sut->updateTransportManagerApplicationFull(
-            '2015-01-01',
             'tmt',
             1,
             25,
@@ -99,7 +95,6 @@ class TransportManagerApplicationEntityTest extends EntityTester
     {
         $sut = m::mock(Entity::class)->makePartial();
         $sut->updateTransportManagerApplicationFull(
-            '2015-01-01',
             'tmt',
             1,
             1,

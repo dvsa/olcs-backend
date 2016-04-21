@@ -12,19 +12,14 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateCmd;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Create Queue item
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class Create extends AbstractCommandHandler implements AuthAwareInterface
+final class Create extends AbstractCommandHandler
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'Queue';
 
     public function handleCommand(CommandInterface $command)
@@ -45,9 +40,6 @@ final class Create extends AbstractCommandHandler implements AuthAwareInterface
         );
 
         $queue->setEntityId($command->getEntityId());
-
-        // @TODO: should be removed after OLCS-12253 will be done, createdBy will be populating automatically
-        $queue->setCreatedBy($this->getRepo()->getReference(UserEntity::class, $this->getCurrentUser()->getId()));
 
         if ($command->getOptions()) {
             $queue->setOptions($command->getOptions());

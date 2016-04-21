@@ -7,8 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Tm;
 
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as SaveAddressCmd;
 use Dvsa\Olcs\Api\Domain\Command\Person\UpdateFull as UpdatePersonCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -22,10 +20,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class Update extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
+final class Update extends AbstractCommandHandler implements TransactionedInterface
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'TransportManager';
 
     protected $extraRepos = ['ContactDetails'];
@@ -122,10 +118,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         $transportManager->updateTransportManager(
             $this->getRepo()->getRefdataReference($command->getType()),
             $this->getRepo()->getRefdataReference($command->getStatus()),
-            $workCdId ? $this->getRepo()->getReference(ContactDetails::class, $workCdId) : null,
-            null,
-            null,
-            $this->getCurrentUser()
+            $workCdId ? $this->getRepo()->getReference(ContactDetails::class, $workCdId) : null
         );
 
         $this->getRepo('TransportManager')->save($transportManager);

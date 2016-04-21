@@ -5,8 +5,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\System;
 
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -18,10 +16,8 @@ use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as SlaTargetDateEntity;
 /**
  * Update SlaTargetDate
  */
-final class UpdateSlaTargetDate extends AbstractCommandHandler implements AuthAwareInterface
+final class UpdateSlaTargetDate extends AbstractCommandHandler
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'SlaTargetDate';
 
     protected $extraRepos = ['Document'];
@@ -73,10 +69,6 @@ final class UpdateSlaTargetDate extends AbstractCommandHandler implements AuthAw
         $slaTargetDateEntity->setSentDate($command->getSentDate());
         $slaTargetDateEntity->setUnderDelegation($command->getUnderDelegation());
         $slaTargetDateEntity->setNotes($command->getNotes());
-
-        $currentUser = $this->getCurrentUser();
-        $slaTargetDateEntity->setLastModifiedOn(new \DateTime('now'));
-        $slaTargetDateEntity->setLastModifiedBy($currentUser);
 
         return $slaTargetDateEntity;
     }
