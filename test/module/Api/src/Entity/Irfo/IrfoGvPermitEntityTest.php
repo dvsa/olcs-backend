@@ -304,4 +304,26 @@ class IrfoGvPermitEntityTest extends EntityTester
 
         $this->assertEquals(false, $this->entity->isApprovable($fees));
     }
+
+    /**
+     * @dataProvider isGeneratableStates
+     */
+    public function testIsGeneratable($input, $expected)
+    {
+        $status = new RefData();
+        $status->setId($input);
+        $this->entity->setIrfoPermitStatus($status);
+
+        $this->assertEquals($expected, $this->entity->isGeneratable());
+    }
+
+    public function isGeneratableStates()
+    {
+        return [
+            [Entity::STATUS_APPROVED, true],
+            [Entity::STATUS_PENDING, false],
+            [Entity::STATUS_REFUSED, false],
+            [Entity::STATUS_WITHDRAWN, false],
+        ];
+    }
 }

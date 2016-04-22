@@ -39,7 +39,9 @@ class IrfoGvPermitTest extends QueryHandlerTestCase
             ->andReturn(['foo'])
             ->shouldReceive('isApprovable')
             ->with($fees)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('isGeneratable')
+            ->andReturn(false);
 
         $this->repoMap['IrfoGvPermit']->shouldReceive('fetchUsingId')
             ->with($query)
@@ -51,6 +53,6 @@ class IrfoGvPermitTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertEquals(['foo', 'isApprovable' => true], $result->serialize());
+        $this->assertEquals(['foo', 'isApprovable' => true, 'isGeneratable' => false], $result->serialize());
     }
 }
