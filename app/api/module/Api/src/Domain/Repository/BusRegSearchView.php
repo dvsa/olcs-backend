@@ -52,15 +52,9 @@ class BusRegSearchView extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         /** @var ListQueryObject $query */
-
         if (method_exists($query, 'getLicId') && !empty($query->getLicId())) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.licId', ':licence'))
                 ->setParameter('licence', $query->getLicId());
-        }
-
-        if (method_exists($query, 'getOrganisationId') && !empty($query->getOrganisationId())) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.organisationId', ':organisationId'))
-                ->setParameter('organisationId', $query->getOrganisationId());
         }
 
         if (method_exists($query, 'getStatus') && !empty($query->getStatus())) {
@@ -68,9 +62,15 @@ class BusRegSearchView extends AbstractRepository
                 ->setParameter('status', $query->getStatus());
         }
 
-        if (method_exists($query, 'getBusRegStatusId') && !empty($query->getBusRegStatusId())) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.busRegStatusId', ':busRegstatusId'))
-                ->setParameter('busRegStatusId', $query->getBusRegStatusId());
+        // Additional filters for busreg registrations filter form on SS
+        if (method_exists($query, 'getLicNo') && !empty($query->getLicNo())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.licNo', ':licNo'))
+                ->setParameter('licNo', $query->getLicNo());
+        }
+
+        if (method_exists($query, 'getOrganisationName') && !empty($query->getOrganisationName())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.organisationName', ':organisationName'))
+                ->setParameter('organisationName', $query->getOrganisationName());
         }
     }
 
