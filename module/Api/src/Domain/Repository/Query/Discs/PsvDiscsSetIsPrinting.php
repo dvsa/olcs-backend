@@ -22,6 +22,7 @@ class PsvDiscsSetIsPrinting extends AbstractRawQuery
     ];
 
     protected $queryTemplate = 'UPDATE {pd}
-      SET {pd.isPrinting} = :isPrinting
+      SET {pd.isPrinting} = :isPrinting,
+        {pd.lastModifiedOn} = NOW(), {pd.lastModifiedBy} = :currentUserId
       WHERE {pd.id} IN (:ids)';
 }

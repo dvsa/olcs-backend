@@ -24,7 +24,8 @@ class PsvDiscsSetIsPrintingOffAndDiscNo extends AbstractRawQuery
 
     protected $queryTemplate = 'UPDATE {pd},
        (SELECT @n := :startNumber - 1) m
-          SET {pd.isPrinting} = 0, {pd.discNo} = @n := @n + 1, {pd.issuedDate} = :issuedDate
+          SET {pd.isPrinting} = 0, {pd.discNo} = @n := @n + 1, {pd.issuedDate} = :issuedDate,
+            {pd.lastModifiedOn} = NOW(), {pd.lastModifiedBy} = :currentUserId
           WHERE {pd.id} IN (:ids)';
 
     /**

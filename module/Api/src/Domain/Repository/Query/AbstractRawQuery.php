@@ -9,9 +9,12 @@ namespace Dvsa\Olcs\Api\Domain\Repository\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Abstract Raw Query
@@ -21,8 +24,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractRawQuery implements QueryInterface, FactoryInterface
+abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, FactoryInterface
 {
+    use AuthAwareTrait;
+
     /**
      * @var Connection
      */
@@ -81,6 +86,8 @@ abstract class AbstractRawQuery implements QueryInterface, FactoryInterface
         $this->em = $sm->get('doctrine.entitymanager.orm_default');
         $this->connection = $this->em->getConnection();
 
+        $this->setAuthService($sm->get(AuthorizationService::class));
+
         return $this;
     }
 
@@ -94,7 +101,13 @@ abstract class AbstractRawQuery implements QueryInterface, FactoryInterface
      */
     public function execute(array $params = [], array $paramTypes = [])
     {
-        $params = array_merge($this->getParams(), $params);
+        $params = array_merge(
+            $this->getParams(),
+            $params,
+            [
+                'currentUserId' => $this->getCurrentUser()->getId()
+            ]
+        );
         $query = $this->buildQueryFromTemplate($this->getQueryTemplate());
 
         try {
@@ -113,7 +126,8 @@ abstract class AbstractRawQuery implements QueryInterface, FactoryInterface
      */
     protected function getQueryTemplate()
     {
-        return $this->queryTemplate;
+        // strips excess whitespace from the query template
+        return preg_replace('/\s\s+/', ' ', $this->queryTemplate);
     }
 
     /**
