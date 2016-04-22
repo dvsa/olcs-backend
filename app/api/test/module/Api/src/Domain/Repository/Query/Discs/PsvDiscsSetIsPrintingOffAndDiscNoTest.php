@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Query\Discs\PsvDiscsSetIsPrintingOffAndDiscN
 use Dvsa\Olcs\Api\Entity\Licence\PsvDisc;
 use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbQueryTestCase;
 use Doctrine\DBAL\Connection;
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
@@ -38,6 +37,12 @@ class PsvDiscsSetIsPrintingOffAndDiscNoTest extends AbstractDbQueryTestCase
             ],
             'issuedDate' => [
                 'column' => 'issued_date'
+            ],
+            'lastModifiedOn' => [
+                'column' => 'last_modified_on'
+            ],
+            'lastModifiedBy' => [
+                'column' => 'last_modified_by'
             ],
         ],
     ];
@@ -69,9 +74,12 @@ class PsvDiscsSetIsPrintingOffAndDiscNoTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'UPDATE psv_disc pd,
-       (SELECT @n := :startNumber - 1) m
-          SET pd.is_printing = 0, pd.disc_no = @n := @n + 1, pd.issued_date = :issuedDate
-          WHERE pd.id IN (:ids)';
+        return 'UPDATE psv_disc pd, (SELECT @n := :startNumber - 1) m '
+        . 'SET pd.is_printing = 0, '
+            . 'pd.disc_no = @n := @n + 1, '
+            . 'pd.issued_date = :issuedDate, '
+            . 'pd.last_modified_on = NOW(), '
+            . 'pd.last_modified_by = :currentUserId '
+        . 'WHERE pd.id IN (:ids)';
     }
 }

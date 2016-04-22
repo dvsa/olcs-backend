@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Query\Discs\GoodsDiscsSetIsPrinting;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbQueryTestCase;
 use Doctrine\DBAL\Connection;
-use Mockery as m;
 
 /**
  * Goods Discs Set Is Printing Test
@@ -31,6 +30,12 @@ class GoodsDiscsSetIsPrintingTest extends AbstractDbQueryTestCase
             ],
             'id' => [
                 'column' => 'id'
+            ],
+            'lastModifiedOn' => [
+                'column' => 'last_modified_on'
+            ],
+            'lastModifiedBy' => [
+                'column' => 'last_modified_by'
             ],
         ],
     ];
@@ -54,8 +59,10 @@ class GoodsDiscsSetIsPrintingTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'UPDATE goods_disc gd
-      SET gd.is_printing = :isPrinting
-      WHERE gd.id IN (:ids)';
+        return 'UPDATE goods_disc gd '
+        . 'SET gd.is_printing = :isPrinting, '
+            . 'gd.last_modified_on = NOW(), '
+            . 'gd.last_modified_by = :currentUserId '
+        . 'WHERE gd.id IN (:ids)';
     }
 }
