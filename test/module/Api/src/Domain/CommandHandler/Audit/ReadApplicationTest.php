@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Read Application Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Audit;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Audit\ReadApplication;
@@ -23,36 +18,43 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class ReadApplicationTest extends CommandHandlerTestCase
 {
+    const USER_ID = 9999;
+
+    /** @var m\MockInterface|User */
+    private $mockUser;
+    /** @var  \Dvsa\Olcs\Transfer\Command\Audit\ReadApplication  */
+    private $command;
+
     public function setUp()
     {
         $this->sut = new ReadApplication();
         $this->mockRepo('ApplicationReadAudit', Repository\ApplicationReadAudit::class);
         $this->mockRepo('Application', Repository\Application::class);
 
-        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
+        $this->mockUser = m::mock(User::class)->makePartial();
+        $this->mockUser->setId(self::USER_ID);
+
+        $mockAuthSrv = m::mock(AuthorizationService::class);
+        $mockAuthSrv->shouldReceive('getIdentity->getUser')->andReturn($this->mockUser);
+        $this->mockedSmServices[AuthorizationService::class] = $mockAuthSrv;
+
+        //  command
+        $data = [
+            'id' => '111'
+        ];
+        $this->command = \Dvsa\Olcs\Transfer\Command\Audit\ReadApplication::create($data);
 
         parent::setUp();
     }
 
     public function testHandleCommandWhenExists()
     {
-        $data = [
-            'id' => '111'
-        ];
-
-        $command = \Dvsa\Olcs\Transfer\Command\Audit\ReadApplication::create($data);
-
-        $user = m::mock(User::class)->makePartial();
-        $user->setId(222);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')->andReturn($user);
-
         $this->repoMap['ApplicationReadAudit']->shouldReceive('fetchOne')
             ->once()
-            ->with(222, 111, date('Y-m-d'))
+            ->with(self::USER_ID, 111, \DateTime::class)
             ->andReturn(['foo']);
 
-        $result = $this->sut->handleCommand($command);
+        $result = $this->sut->handleCommand($this->command);
 
         $expected = [
             'id' => [],
@@ -61,34 +63,23 @@ class ReadApplicationTest extends CommandHandlerTestCase
             ]
         ];
 
-        $this->assertEquals($expected, $result->toArray());
+        static::assertEquals($expected, $result->toArray());
     }
 
     public function testHandleCommand()
     {
-        $data = [
-            'id' => '111'
-        ];
-
-        $command = \Dvsa\Olcs\Transfer\Command\Audit\ReadApplication::create($data);
-
-        $user = m::mock(User::class)->makePartial();
-        $user->setId(222);
-
         $entity = m::mock(Application::class);
 
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')->andReturn($user);
-
         $this->repoMap['ApplicationReadAudit']->shouldReceive('fetchOne')->once()
-            ->with(222, 111, date('Y-m-d'))
+            ->with(self::USER_ID, 111, \DateTime::class)
             ->andReturn(null)
             ->shouldReceive('save')
             ->once()
             ->with(m::type(ApplicationReadAudit::class))
             ->andReturnUsing(
-                function (ApplicationReadAudit $record) use ($user, $entity) {
-                    $this->assertSame($user, $record->getUser());
-                    $this->assertSame($entity, $record->getApplication());
+                function (ApplicationReadAudit $record) use ($entity) {
+                    static::assertSame($this->mockUser, $record->getUser());
+                    static::assertSame($entity, $record->getApplication());
                 }
             );
 
@@ -96,7 +87,7 @@ class ReadApplicationTest extends CommandHandlerTestCase
             ->with(111)
             ->andReturn($entity);
 
-        $result = $this->sut->handleCommand($command);
+        $result = $this->sut->handleCommand($this->command);
 
         $expected = [
             'id' => [],
@@ -105,6 +96,6 @@ class ReadApplicationTest extends CommandHandlerTestCase
             ]
         ];
 
-        $this->assertEquals($expected, $result->toArray());
+        static::assertEquals($expected, $result->toArray());
     }
 }

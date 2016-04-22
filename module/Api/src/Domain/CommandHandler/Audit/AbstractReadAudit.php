@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Abstract Read Audit
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Audit;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -22,9 +17,9 @@ abstract class AbstractReadAudit extends AbstractCommandHandler implements Trans
 {
     use AuthAwareTrait;
 
-    protected $recordClass = null;
+    protected $recordClass;
 
-    protected $entityRepo = null;
+    protected $entityRepo;
 
     public function handleCommand(CommandInterface $command)
     {
@@ -55,11 +50,11 @@ abstract class AbstractReadAudit extends AbstractCommandHandler implements Trans
     protected function doesRecordExist($command)
     {
         $userId = $this->getCurrentUser()->getId();
-        $date = date('Y-m-d');
 
-        $existingRecord = $this->getRepo()->fetchOne($userId, $command->getId(), $date);
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\AbstractReadAudit $repo */
+        $repo = $this->getRepo();
 
-        return $existingRecord !== null;
+        return (null !== $repo->fetchOne($userId, $command->getId(), new \DateTime));
     }
 
     protected function createRecord($command)
