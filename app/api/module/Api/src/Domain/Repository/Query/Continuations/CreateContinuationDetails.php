@@ -41,11 +41,12 @@ class CreateContinuationDetails extends AbstractRawQuery
                 $query .= ', ';
             }
             $query .= sprintf(
-                '(%s, %s, %s, %s, NOW(), :currentUserId)',
+                '(%s, %s, %s, %s, NOW(), %s)',
                 $this->connection->quote($licenceIds[$i]),
                 $this->connection->quote($received ? 1 : 0),
                 $this->connection->quote($status),
-                $this->connection->quote($continuationId)
+                $this->connection->quote($continuationId),
+                $this->getCurrentUser()->getId()
             );
         }
 
