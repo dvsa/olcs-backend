@@ -51,7 +51,7 @@ class ReadTransportManagerTest extends CommandHandlerTestCase
     {
         $this->repoMap['TransportManagerReadAudit']->shouldReceive('fetchOne')
             ->once()
-            ->with(self::USER_ID, 111)
+            ->with(self::USER_ID, 111, \DateTime::class)
             ->andReturn(['foo']);
 
         $result = $this->sut->handleCommand($this->command);
@@ -71,7 +71,7 @@ class ReadTransportManagerTest extends CommandHandlerTestCase
         $entity = m::mock(TransportManager::class);
 
         $this->repoMap['TransportManagerReadAudit']->shouldReceive('fetchOne')->once()
-            ->with(self::USER_ID, 111)
+            ->with(self::USER_ID, 111, \DateTime::class)
             ->andReturn(null)
             ->shouldReceive('save')
             ->once()

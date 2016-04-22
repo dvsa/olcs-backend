@@ -36,18 +36,21 @@ abstract class AbstractReadAudit extends AbstractRepository implements ReadAudit
     }
 
     /**
-     * @inheritdoc
+     * Returns one record for specified user, object and date
      */
-    public function fetchOne($userId, $entityId)
+    public function fetchOne($userId, $entityId, \DateTime $date)
     {
         $qb = $this->createQueryBuilder();
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.user', ':user'));
         $qb->andWhere($qb->expr()->eq($this->alias . '.' . $this->entityProperty, ':entityId'));
-        $qb->andWhere($qb->expr()->gte($this->alias . '.createdOn', 'CURRENT_DATE()'));
+        $qb->andWhere($qb->expr()->gte($this->alias . '.createdOn', ':dateFrom'));
+        $qb->andWhere($qb->expr()->lte($this->alias . '.createdOn', ':dateTo'));
 
         $qb->setParameter('user', $userId);
         $qb->setParameter('entityId', $entityId);
+        $qb->setParameter('dateFrom', $date->setTime(0, 0, 0)->format(DATE_ISO8601));
+        $qb->setParameter('dateTo', $date->setTime(23, 59, 59)->format(DATE_ISO8601));
 
         return $qb->getQuery()->getOneOrNullResult();
     }

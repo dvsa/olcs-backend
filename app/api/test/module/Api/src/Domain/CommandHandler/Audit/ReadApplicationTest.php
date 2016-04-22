@@ -51,7 +51,7 @@ class ReadApplicationTest extends CommandHandlerTestCase
     {
         $this->repoMap['ApplicationReadAudit']->shouldReceive('fetchOne')
             ->once()
-            ->with(self::USER_ID, 111)
+            ->with(self::USER_ID, 111, \DateTime::class)
             ->andReturn(['foo']);
 
         $result = $this->sut->handleCommand($this->command);
@@ -71,7 +71,7 @@ class ReadApplicationTest extends CommandHandlerTestCase
         $entity = m::mock(Application::class);
 
         $this->repoMap['ApplicationReadAudit']->shouldReceive('fetchOne')->once()
-            ->with(self::USER_ID, 111)
+            ->with(self::USER_ID, 111, \DateTime::class)
             ->andReturn(null)
             ->shouldReceive('save')
             ->once()
