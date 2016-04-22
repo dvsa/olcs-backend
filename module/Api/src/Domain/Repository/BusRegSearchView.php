@@ -9,6 +9,7 @@ use Dvsa\Olcs\Transfer\Query\Bus\SearchViewList as ListQueryObject;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Doctrine\ORM\Query;
 
 /**
  * BusRegSearchView
@@ -97,5 +98,22 @@ class BusRegSearchView extends AbstractRepository
             ->setParameter('activeStatuses', $activeStatuses);
 
         return $dqb->getQuery()->getResult();
+    }
+
+    /**
+     * @param QueryInterface $query
+     * @param int $hydrateMode
+     *
+     * @return \ArrayIterator|\Traversable
+     */
+    public function fetchDistinctList(QueryInterface $query, $hydrateMode = Query::HYDRATE_ARRAY)
+    {
+        $qb = $this->createQueryBuilder()
+            ->select($this->alias . '.' . $query->getContext())
+            ->distinct();
+
+        $result = $qb->getQuery()->getResult($hydrateMode);
+
+        return $result;
     }
 }
