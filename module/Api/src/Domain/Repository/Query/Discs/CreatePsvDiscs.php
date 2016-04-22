@@ -38,9 +38,10 @@ class CreatePsvDiscs extends AbstractRawQuery
                 $query .= ', ';
             }
             $query .= sprintf(
-                '(%s, %s, NOW(), :currentUserId)',
+                '(%s, %s, NOW(), %s)',
                 $this->connection->quote($licenceId),
-                $this->connection->quote($isCopy ? 1 : 0)
+                $this->connection->quote($isCopy ? 1 : 0),
+                $this->getCurrentUser()->getId()
             );
         }
 
