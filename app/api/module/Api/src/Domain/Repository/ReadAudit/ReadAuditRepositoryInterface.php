@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Read Audit Repository Interface
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository\ReadAudit;
 
 /**
@@ -27,8 +22,9 @@ interface ReadAuditRepositoryInterface
      *
      * @param $userId
      * @param $entityId
-     * @param $date
+     * @param \DateTime $date
+     * 
      * @return mixed
      */
-    public function fetchOne($userId, $entityId, $date);
+    public function fetchOne($userId, $entityId, \DateTime $date);
 }
