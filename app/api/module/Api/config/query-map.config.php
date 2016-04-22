@@ -338,6 +338,8 @@ return [
 
     // Bus Reg Filtered List
     TransferQuery\Bus\BusRegList::class => QueryHandler\Bus\SearchViewList::class,
+    TransferQuery\BusRegSearchView\BusRegSearchViewList::class =>
+        QueryHandler\BusRegSearchView\BusRegSearchViewList::class,
 
     // Fee
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
