@@ -1823,9 +1823,28 @@ VALUES
   (4,'N');
 
 INSERT INTO `irfo_gv_permit` (`id`, `organisation_id`, `irfo_gv_permit_type_id`, `irfo_permit_status`, `year_required`,
-                              `in_force_date`, `expiry_date`, `created_on`)
+                              `in_force_date`, `expiry_date`, `no_of_copies`, `created_on`)
 VALUES
-    (1, 101, 1, 'irfo_perm_s_approved', 2014, '2015-03-10', '2016-03-09', NOW());
+    (1, 101, 17, 'irfo_perm_s_pending', 2015, '2015-03-10', '2016-03-09', 1, NOW()),
+    (2, 101, 1, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 2, NOW()),
+    (3, 101, 2, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 3, NOW()),
+    (4, 101, 3, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 4, NOW()),
+    (5, 101, 4, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 5, NOW()),
+    (6, 101, 5, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 6, NOW()),
+    (7, 101, 6, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 7, NOW()),
+    (8, 101, 7, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 8, NOW()),
+    (9, 101, 8, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 9, NOW()),
+    (10, 101, 9, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 10, NOW()),
+    (11, 101, 10, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 1, NOW()),
+    (12, 101, 11, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 2, NOW()),
+    (13, 101, 12, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 3, NOW()),
+    (14, 101, 13, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 4, NOW()),
+    (15, 101, 14, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 5, NOW()),
+    (16, 101, 15, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 6, NOW()),
+    (17, 101, 16, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 7, NOW()),
+    (18, 101, 17, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 8, NOW()),
+    (19, 101, 18, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 9, NOW()),
+    (20, 101, 19, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 10, NOW());
 
 INSERT INTO `irfo_psv_auth` (`organisation_id`, `irfo_psv_auth_type_id`, `status`, `journey_frequency`,
                              `irfo_file_no`, `service_route_from`, `service_route_to`, `validity_period`,
