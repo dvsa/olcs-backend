@@ -1,12 +1,8 @@
 <?php
 
-/**
- * IrfoGvPermitType list
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Irfo;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -24,8 +20,10 @@ final class IrfoGvPermitTypeList extends AbstractQueryHandler
         $repo = $this->getRepo();
 
         return [
-            'result' => $repo->fetchList($query),
-            'count' => $repo->fetchCount($query)
+            'result' => $this->resultList(
+                $repo->fetchList($query, Query::HYDRATE_OBJECT)
+            ),
+            'count' => $repo->fetchCount($query),
         ];
     }
 }
