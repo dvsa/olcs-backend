@@ -86,8 +86,8 @@ class CreatePsvDiscsTest extends AbstractDbQueryTestCase
         $this->connection->shouldReceive('executeUpdate')
             ->with(
                 'INSERT INTO psv_disc (licence_id, is_copy, created_on, created_by) '.
-                'VALUES (\'1102\', \'0\', NOW(), :currentUserId), (\'1102\', \'0\', NOW(), :currentUserId), '.
-                '(\'1102\', \'0\', NOW(), :currentUserId), (\'1102\', \'0\', NOW(), :currentUserId)'
+                'VALUES (\'1102\', \'0\', NOW(), 1), (\'1102\', \'0\', NOW(), 1), '.
+                '(\'1102\', \'0\', NOW(), 1), (\'1102\', \'0\', NOW(), 1)'
             )->once()
             ->andReturn('result');
 
@@ -104,8 +104,8 @@ class CreatePsvDiscsTest extends AbstractDbQueryTestCase
         $this->connection->shouldReceive('executeUpdate')
             ->with(
                 'INSERT INTO psv_disc (licence_id, is_copy, created_on, created_by) '.
-                'VALUES (\'1102\', \'0\', NOW(), :currentUserId), (\'1102\', \'0\', NOW(), :currentUserId), '.
-                '(\'1102\', \'0\', NOW(), :currentUserId), (\'1102\', \'0\', NOW(), :currentUserId)'
+                'VALUES (\'1102\', \'0\', NOW(), 1), (\'1102\', \'0\', NOW(), 1), '.
+                '(\'1102\', \'0\', NOW(), 1), (\'1102\', \'0\', NOW(), 1)'
             )->once()
             ->andThrow(new \Exception());
 
