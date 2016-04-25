@@ -16,7 +16,8 @@ use Doctrine\ORM\Query as DoctrineQuery;
 /**
  * BusReg Search View List
  *
- * @author Craig R <uk@valtech.co.uk>, Shaun Lizzio <shaun@lizzio.co.uk>
+ * @author Craig R <uk@valtech.co.uk>
+ * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
 class BusRegSearchViewList extends AbstractQueryHandler
 {
@@ -37,4 +38,3 @@ class BusRegSearchViewList extends AbstractQueryHandler
         ];
     }
 }
-
