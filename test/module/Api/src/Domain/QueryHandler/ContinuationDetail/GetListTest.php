@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Continuation as ContinuationRepo;
 use Dvsa\Olcs\Transfer\Query\ContinuationDetail\GetList as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\QueryHandler\ResultList;
 
 /**
  * Continuation details - get list test
@@ -47,21 +48,60 @@ class DiscPrefixesTest extends QueryHandlerTestCase
                 'status'         => $status
             ]
         );
+        $entity = m::mock(BundleSerializableInterface::class);
+        $entity->shouldReceive('serialize')
+            ->once()
+            ->with(
+                [
+                    'continuation',
+                    'status',
+                    'licence' => [
+                        'status',
+                        'organisation',
+                        'licenceType',
+                        'goodsOrPsv'
+                    ]
+                ]
+            )
+            ->andReturn('details');
 
         $this->repoMap['ContinuationDetail']
             ->shouldReceive('fetchDetails')
             ->with($continuationId, $licenceStatus, $licenceNo, $method, $status)
             ->once()
-            ->andReturn(['details']);
+            ->andReturn([$entity]);
 
         $this->repoMap['Continuation']
             ->shouldReceive('fetchWithTa')
             ->with($continuationId)
             ->once()
-            ->andReturn(['header']);
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getYear')
+                ->andReturn('2017')
+                ->once()
+                ->shouldReceive('getMonth')
+                ->andReturn('1')
+                ->once()
+                ->shouldReceive('getTrafficArea')
+                ->andReturn(
+                    m::mock()
+                    ->shouldReceive('getName')
+                    ->andReturn('East of England')
+                    ->once()
+                    ->getMock()
+                )
+                ->once()
+                ->getMock()
+            );
 
+        $header = [
+            'year' => '2017',
+            'month' => '1',
+            'name' => 'East of England'
+        ];
         $this->assertEquals(
-            ['result' => ['details'], 'count' => 1, 'header' => ['header']],
+            ['results' => ['details'], 'count' => 1, 'header' => $header],
             $this->sut->handleQuery($query)
         );
     }
