@@ -5,7 +5,7 @@ $gb = include(__DIR__ . '/en_GB.php');
 $ni = array_merge(
     $gb,
     [
-        'application-review-financial-history-insolvencyConfirmation' => 'Confirm that you are aware that you must tell
+        'application-review-financial-history-insolvencyConfirmation' => 'Confirm you are aware that you must tell
             the DOE immediately of any insolvency proceedings that occur between the submission of your application and
             a decision being made on the application',
         'application-review-licence-history-public-inquiry-question' => 'Has anyone you’ve named in this application (including partners, directors and Transport Managers) ever attended a Public Inquiry before a Traffic Commissioner?',
