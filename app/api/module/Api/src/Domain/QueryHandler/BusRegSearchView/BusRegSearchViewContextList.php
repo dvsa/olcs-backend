@@ -1,9 +1,9 @@
 <?php
 
 /**
- * BusReg Search View List
+ * BusRegSearchView List
  *
- * @author Craig R <uk@valtech.co.uk>, Shaun Lizzio <shaun@lizzio.co.uk>
+ * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\BusRegSearchView;
 
@@ -14,15 +14,18 @@ use Dvsa\Olcs\Transfer\Query\Bus\SearchViewList as ListQueryObject;
 use Doctrine\ORM\Query as DoctrineQuery;
 
 /**
- * BusReg Search View List
+ * BusRegSearchView List
  *
- * @author Craig R <uk@valtech.co.uk>, Shaun Lizzio <shaun@lizzio.co.uk>
+ * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class BusRegSearchViewList extends AbstractQueryHandler
+class BusRegSearchViewContextList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'BusRegSearchView';
 
     /**
+     * Returns a distinct list of column entries identified by query->getContext().
+     * Used to populate filter form drop down lists.
+     *
      * @return array
      */
     public function handleQuery(QueryInterface $query)
@@ -30,11 +33,10 @@ class BusRegSearchViewList extends AbstractQueryHandler
         /** @var Repository $repo */
         $repo = $this->getRepo();
 
+        $results = $repo->fetchDistinctList($query);
         return [
-            'result' => $this->resultList(
-                $repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT)),
-            'count' => $repo->fetchCount($query)
+            'results' => array_column($results, $query->getContext()),
+            'count' => count($results)
         ];
     }
 }
-

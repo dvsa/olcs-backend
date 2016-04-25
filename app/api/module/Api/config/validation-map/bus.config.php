@@ -8,5 +8,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
 return [
     QueryHandler\Bus\BusNoticePeriodList::class                                         => IsInternalUser::class,
     QueryHandler\Bus\BusServiceTypeList::class                                          => IsInternalUser::class,
-    QueryHandler\BusRegSearchView\BusRegSearchViewList::class                           => NoValidationRequired::class
+    QueryHandler\BusRegSearchView\BusRegSearchViewList::class                           => NoValidationRequired::class,
+    QueryHandler\BusRegSearchView\BusRegSearchViewContextList::class                    => NoValidationRequired::class
 ];
