@@ -35,7 +35,7 @@ class BusRegSearchViewContextList extends AbstractQueryHandler
 
         $results = $repo->fetchDistinctList($query);
         return [
-            'results' => array_column($results, $query->getContext()),
+            'result' => array_column($results, $query->getContext()),
             'count' => count($results)
         ];
     }
