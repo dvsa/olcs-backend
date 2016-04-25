@@ -123,7 +123,7 @@ return [
     'application-review-type-of-licence-licence-type' => 'What type of licence do you want to apply for?',
     'application-review-type-of-licence-operator-location' => 'Where do you operate from?',
     'application-review-type-of-licence-operator-type' => 'What type of operator are you?',
-    'application-review-vehicles-declarations-vs' => 'Which sizes of vehicles do you intend to operate',
+    'application-review-vehicles-declarations-vs' => 'Which sizes of vehicles do you intend to operate?',
     'application-review-vehicles-declarations-15b1' => 'Do you intend to operate small vehicles as a small part of a
         large bus business as detailed by Section 79A of the Public Passenger Vehicles Act (as amended by Section 265 of
         the Transport Act 2000)?',
@@ -136,13 +136,12 @@ return [
     'application-review-vehicles-declarations-15f1' => 'Are the vehicles you’re applying for to be used as limousines or novelty type vehicles?',
     'application-review-vehicles-declarations-15f2' => 'Limousines and novelty type vehicles are not to be operated
         under this operator\'s licence',
-    'application-review-vehicles-declarations-15g' => 'Only limousines and novelty type vehicles with nine passenger
+    'application-review-vehicles-declarations-15g' => 'Only limousines and novelty type vehicles with 9 passenger
         seats or more and issued with a valid Certificate will be used under the licence',
     'application-review-vehicles-declarations-8b1' => 'You are fully aware of, and will comply with, the restrictions
-        under the terms of the restricted licence for the use of vehicles with between nine and sixteen passenger
+        under the terms of the restricted licence for the use of vehicles with between 9 and 16 passenger
         seats',
-    'application-review-vehicles-declarations-8b2' => 'Details below of your business or main occupation and how you
-        will comply with these restrictions',
+    'application-review-vehicles-declarations-8b2' => 'Details of your business or main occupation and how you will comply with restrictions',
     'application-review-vehicles-declarations-business-title' => 'Business or main occupation',
     'application-review-vehicles-declarations-medium-title' => 'Vehicles with nine or more passengers',
     'application-review-vehicles-declarations-novelty-title' => 'Limousines and novelty vehicles',
