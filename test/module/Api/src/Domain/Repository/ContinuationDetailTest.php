@@ -253,7 +253,7 @@ EOT;
             ->andReturn($mockQb);
 
         $mockQb->shouldReceive('getQuery->getResult')
-            ->with(\Doctrine\ORM\Query::HYDRATE_ARRAY)
+            ->with(\Doctrine\ORM\Query::HYDRATE_OBJECT)
             ->once()
             ->andReturn(['result']);
 

@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Query;
 
 /**
  * ContinuationDetail
@@ -243,7 +244,7 @@ class ContinuationDetail extends AbstractRepository
                 ->setParameter('status', $status);
         }
 
-        return $qb->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
     }
 
     public function fetchWithLicence($id)
