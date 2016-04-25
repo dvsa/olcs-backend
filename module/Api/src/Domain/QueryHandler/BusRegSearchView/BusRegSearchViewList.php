@@ -33,7 +33,8 @@ class BusRegSearchViewList extends AbstractQueryHandler
 
         return [
             'result' => $this->resultList(
-                $repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT)),
+                $repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT)
+            ),
             'count' => $repo->fetchCount($query)
         ];
     }

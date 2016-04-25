@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Dvsa\Olcs\Transfer\Query\BusRegSearchView\BusRegSearchViewList;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as Repo;
 use Doctrine\ORM\QueryBuilder;
@@ -9,6 +10,7 @@ use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Api\Entity\View\BusRegSearchView as Entity;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * BusRegSearchViewTest
@@ -93,5 +95,76 @@ class BusRegSearchViewTest extends RepositoryTestCase
         $qb->shouldReceive('getQuery->getResult')->with()->once()->andReturn(['RESULTS']);
 
         $this->assertSame(['RESULTS'], $this->sut->fetchActiveByLicence(611));
+    }
+
+    public function testFetchDistinctList()
+    {
+        $qb = m::mock(QueryBuilder::class);
+        $repo = m::mock(EntityRepository::class);
+
+        $this->em->shouldReceive('getRepository')->with(Entity::class)->andReturn($repo);
+
+        $repo->shouldReceive('createQueryBuilder')->with('m')->once()->andReturn($qb);
+
+        $context = 'foo';
+        $qb->shouldReceive('select')->with('m.' . $context)->once()->andReturnSelf();
+        $qb->shouldReceive('distinct')->andReturnSelf();
+        $qb->shouldReceive('getQuery->getResult')->with(m::type('integer'))->once()->andReturn(['RESULTS']);
+
+        $mockQuery = m::mock(QueryInterface::class);
+        $mockQuery->shouldReceive('getContext')->andReturn($context);
+
+        $this->assertSame(['RESULTS'], $this->sut->fetchDistinctList($mockQuery));
+    }
+
+    public function testApplyListFilters()
+    {
+        $this->setUpSut(Repo::class, true);
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr')
+            ->andReturnSelf()
+            ->shouldReceive('eq')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('licence', 'UB12345')
+            ->andReturnSelf()
+
+            ->shouldReceive('eq')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('status', 'foo')
+            ->andReturnSelf()
+
+            ->shouldReceive('eq')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('licNo', 'UB1234')
+            ->andReturnSelf()
+
+            ->shouldReceive('eq')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('organisationName', 'bar')
+            ->andReturnSelf();
+
+        $mockQ = BusRegSearchViewList::create(
+            [
+                'licId' => '1234',
+                'licNo' => 'UB1234',
+                'status' => 'foo',
+                'organisationName' => 'bar'
+            ]
+        );
+
+        $this->sut->applyListFilters($mockQb, $mockQ);
     }
 }
