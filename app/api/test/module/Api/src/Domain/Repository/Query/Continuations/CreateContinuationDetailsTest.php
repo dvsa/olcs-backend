@@ -95,8 +95,8 @@ class CreateContinuationDetailsTest extends AbstractDbQueryTestCase
             ->with(
                 'INSERT INTO continuation_detail '
                 . '(licence_id, received, status, continuation_id, created_on, created_by) '
-                . 'VALUES (\'1\', \'0\', \'status\', \'2\', NOW(), :currentUserId), '
-                . '(\'1\', \'0\', \'status\', \'2\', NOW(), :currentUserId)'
+                . 'VALUES (\'1\', \'0\', \'status\', \'2\', NOW(), 1), '
+                . '(\'1\', \'0\', \'status\', \'2\', NOW(), 1)'
             )->once()
             ->andReturn('result');
         $this->assertEquals('result', $this->sut->executeInsert([1, 1], false, 'status', 2));
@@ -124,7 +124,7 @@ class CreateContinuationDetailsTest extends AbstractDbQueryTestCase
             ->with(
                 'INSERT INTO continuation_detail '
                 . '(licence_id, received, status, continuation_id, created_on, created_by) '
-                . 'VALUES (\'1\', \'0\', \'status\', \'2\', NOW(), :currentUserId)'
+                . 'VALUES (\'1\', \'0\', \'status\', \'2\', NOW(), 1)'
             )->once()
             ->andThrow(new \Exception());
 
