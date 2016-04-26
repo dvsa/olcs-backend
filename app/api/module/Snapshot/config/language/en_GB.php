@@ -45,7 +45,7 @@ return [
     'application-review-convictions-penalties-conviction-offence-penalty' => 'Penalty',
     'application-review-convictions-penalties-conviction-title' => 'Title',
     'application-review-convictions-penalties-question' => 'Has any person named in this application, (including
-        partners, directors and transport managers); any company of which a person named on this application is or has
+        partners, directors and Transport Managers); any company of which a person named on this application is or has
         been a director; any parent company if you are a limited company; or any of your employees or agents been
         convicted of any relevant offence which must be declared to the Traffic Commissioner?',
     'application-review-financial-evidence-evidence' => 'Evidence',
@@ -70,15 +70,15 @@ return [
     'application-review-licence-history-disqualification-date' => 'Date of disqualification',
     'application-review-licence-history-disqualification-length' => 'Length of disqualification',
     'application-review-licence-history-disqualified-question' => 'Has any person named in the application (including
-        partners, directors or transport managers) been disqualified from holding or obtaining an operator\'s licence by
-        any Traffic Commissioner?',
+        partners, directors or Transport Managers) been disqualified from holding or obtaining an operator\'s licence by
+        any traffic commissioner?',
     'application-review-licence-history-disqualified-title' => 'Disqualifications',
     'application-review-licence-history-held-question' => 'Within the last 12 months, have you, your company or organisation, or your partners or directors purchased assets or shareholdings in any company that, to your knowledge, currently holds or has previously held an operator’s licence in any traffic area?',
     'application-review-licence-history-held-title' => 'Previously purchased assets',
     'application-review-licence-history-licence-holder' => 'Licence holder name',
     'application-review-licence-history-licence-no' => 'Licence number',
     'application-review-licence-history-public-inquiry-question' => 'Has any person named in the application (including
-        partners, directors or transport managers) ever attended a Public Inquiry before a Traffic Commissioner?',
+        partners, directors or Transport Managers) ever attended a Public Inquiry before a traffic commissioner?',
     'application-review-licence-history-public-inquiry-title' => 'Public Inquiries',
     'application-review-licence-history-purchase-date' => 'Date of purchase',
     'application-review-licence-history-refused-question' => 'Has anyone you’ve named in this application (including partners, directors and Transport Managers) ever had an application for a goods or PSV operator’s licence refused by any EU authority?',
