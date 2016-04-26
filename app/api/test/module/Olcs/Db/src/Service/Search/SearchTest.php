@@ -197,24 +197,6 @@ class SearchTest extends TestCase
                             ]
                         ],
                         [
-                            'match' => [
-                                'vrm' => 'SMITH'
-                            ]
-                        ],
-                        [
-                            'match' => [
-                                'correspondence_postcode' => 'SMITH'
-                            ]
-                        ],
-                        [
-                            'wildcard' => [
-                                'org_name_wildcard' => [
-                                    'value' => 'smith*',
-                                    'boost' => 2.0,
-                                ]
-                            ]
-                        ],
-                        [
                             'wildcard' => [
                                 'person_family_name_wildcard' => [
                                     'value' => '*smith*',
@@ -226,6 +208,14 @@ class SearchTest extends TestCase
                             'wildcard' => [
                                 'person_forename_wildcard' => [
                                     'value' => '*smith*',
+                                    'boost' => 2.0,
+                                ]
+                            ]
+                        ],
+                        [
+                            'wildcard' => [
+                                'org_name_wildcard' => [
+                                    'value' => 'smith*',
                                     'boost' => 2.0,
                                 ]
                             ]
@@ -272,12 +262,10 @@ class SearchTest extends TestCase
                         ],
                         [
                             'match' => [
-                                'vrm' => 'SMITH'
-                            ]
-                        ],
-                        [
-                            'match' => [
-                                'correspondence_postcode' => 'SMITH'
+                                'reg_no' => [
+                                    'query' => 'SMITH',
+                                    'boost' => 2.0,
+                                ]
                             ]
                         ],
                         [
@@ -288,14 +276,7 @@ class SearchTest extends TestCase
                                 ]
                             ]
                         ],
-                        [
-                            'match' => [
-                                'reg_no' => [
-                                    'query' => 'SMITH',
-                                    'boost' => 2.0,
-                                ]
-                            ]
-                        ],
+
                     ]
                 ]
             ],
