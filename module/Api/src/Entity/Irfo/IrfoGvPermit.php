@@ -205,4 +205,19 @@ class IrfoGvPermit extends AbstractIrfoGvPermit
 
         return true;
     }
+
+    /**
+     * Returns whether a record is generatable
+     *
+     * @return bool
+     */
+    public function isGeneratable()
+    {
+        if ($this->irfoPermitStatus->getId() === self::STATUS_APPROVED) {
+            // only record in approved state can be generated
+            return true;
+        }
+
+        return false;
+    }
 }
