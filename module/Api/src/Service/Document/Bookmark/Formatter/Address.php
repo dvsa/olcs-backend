@@ -11,20 +11,26 @@ class Address implements FormatterInterface
 {
     protected static $separator = "\n";
 
+    protected static $fields = [
+        'addressLine1',
+        'addressLine2',
+        'addressLine3',
+        'addressLine4',
+        'town',
+        'postcode'
+    ];
+
+    /**
+     * Formats the data
+     *
+     * @param array $data
+     * @return string
+     */
     public static function format(array $data)
     {
-        $keys = [
-            'addressLine1',
-            'addressLine2',
-            'addressLine3',
-            'addressLine4',
-            'town',
-            'postcode'
-        ];
-
         $address = [];
 
-        foreach ($keys as $key) {
+        foreach (static::getFields() as $key) {
             if (!empty($data[$key])) {
                 $address[] = $data[$key];
             }
@@ -39,8 +45,25 @@ class Address implements FormatterInterface
     }
 
     /**
-     * @param $separator
-     * @return $this
+     * @param array $fields
+     * @return void
+     */
+    public static function setFields(array $fields)
+    {
+        static::$fields = $fields;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getFields()
+    {
+        return static::$fields;
+    }
+
+    /**
+     * @param string $separator
+     * @return void
      */
     public static function setSeparator($separator)
     {
