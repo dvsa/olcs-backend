@@ -79,14 +79,14 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
             $translateToWelsh = $inspectionRequest['licence']['translateToWelsh'];
         }
         $message->setTranslateToWelsh($translateToWelsh);
-        $message->setHtml(false);
+        $message->setHasHtml(false);
 
         $variables = $this->populateInspectionRequestVariables($inspectionRequest, $message->getLocale());
         $this->sendEmailTemplate(
             $message,
             'inspection-request',
             $variables,
-            false
+            'blank'
         );
 
         $result = new Result();
