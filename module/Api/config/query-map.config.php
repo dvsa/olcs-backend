@@ -486,4 +486,7 @@ return [
 
     TransferQuery\TaskAlphaSplit\Get::class => QueryHandler\TaskAlphaSplit\Get::class,
     TransferQuery\TaskAlphaSplit\GetList::class => QueryHandler\TaskAlphaSplit\GetList::class,
+
+    // EventHistory
+    TransferQuery\EventHistory\EventHistory::class => QueryHandler\EventHistory\EventHistory::class,
 ];
