@@ -21,6 +21,25 @@ class Address implements FormatterInterface
     ];
 
     /**
+     * Needs to reset static properties to default
+     *
+     * @return void
+     */
+    public static function resetToDefault()
+    {
+        static::$separator = "\n";
+
+        static::$fields = [
+            'addressLine1',
+            'addressLine2',
+            'addressLine3',
+            'addressLine4',
+            'town',
+            'postcode'
+        ];
+    }
+
+    /**
      * Formats the data
      *
      * @param array $data
@@ -41,7 +60,12 @@ class Address implements FormatterInterface
             $address[] = $data['countryCode']['countryDesc'];
         }
 
-        return implode(static::getSeparator(), $address);
+        $result = implode(static::getSeparator(), $address);
+
+        // need to reset static properties to default
+        static::resetToDefault();
+
+        return $result;
     }
 
     /**
