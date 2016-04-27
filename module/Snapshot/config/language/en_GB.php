@@ -143,7 +143,7 @@ return [
         seats',
     'application-review-vehicles-declarations-8b2' => 'Details of your business or main occupation and how you will comply with restrictions',
     'application-review-vehicles-declarations-business-title' => 'Business or main occupation',
-    'application-review-vehicles-declarations-medium-title' => 'Vehicles with nine or more passengers',
+    'application-review-vehicles-declarations-medium-title' => 'Vehicles with 9 or more passengers',
     'application-review-vehicles-declarations-novelty-title' => 'Limousines and novelty vehicles',
     'application-review-vehicles-declarations-small-title' => 'Small vehicle undertakings',
     'application-review-vehicles-hasEnteredReg' => 'Vehicle details submitted?',
