@@ -64,7 +64,7 @@ class SendEmailTest extends CommandHandlerTestCase
         $this->setExpectedException(\RuntimeException::class);
 
         $data = [
-            'body' => ''
+            'plainBody' => ''
         ];
 
         $command = Cmd::create($data);
@@ -80,8 +80,8 @@ class SendEmailTest extends CommandHandlerTestCase
             'bcc' => ['bcc@foobar.com'],
             'docs' => [],
             'subject' => 'Some subject',
-            'html' => false,
-            'body' => 'This is the email'
+            'plainBody' => 'This is the email',
+            'htmlBody' => null
         ];
 
         $command = Cmd::create($data);
@@ -100,7 +100,7 @@ class SendEmailTest extends CommandHandlerTestCase
                 'terry.valtech@gmail.com',
                 'foo@bar.com : translated-Some subject',
                 'translated-This is the email',
-                false,
+                null,
                 [],
                 [],
                 []
@@ -133,8 +133,8 @@ class SendEmailTest extends CommandHandlerTestCase
             'bcc' => ['bcc@foobar.com'],
             'docs' => $docIds,
             'subject' => 'Some subject',
-            'html' => false,
-            'body' => 'This is the email http://selfserve/ http://internal/'
+            'plainBody' => 'This is the email http://selfserve/ http://internal/',
+            'htmlBody' => 'This is the html email http://selfserve/ http://internal/'
         ];
 
         $command = Cmd::create($data);
@@ -191,7 +191,7 @@ class SendEmailTest extends CommandHandlerTestCase
                 'foo@bar.com',
                 'translated-Some subject',
                 'translated-This is the email http://olcs-selfserve/ http://olcs-internal/',
-                false,
+                'translated-This is the html email http://olcs-selfserve/ http://olcs-internal/',
                 ['bar@foo.com'],
                 ['bcc@foobar.com'],
                 $expectedDocs
