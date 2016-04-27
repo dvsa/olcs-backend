@@ -1,14 +1,10 @@
 <?php
 
-/**
- * Checklist reminders
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\ContinuationDetail;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail;
+use Dvsa\Olcs\Transfer\Query;
 
 /**
  * Checklist reminders
@@ -19,16 +15,26 @@ class ChecklistReminders extends AbstractQueryHandler
 {
     protected $repoServiceName = 'ContinuationDetail';
 
-    public function handleQuery(QueryInterface $query)
+    /**
+     * @param Query\ContinuationDetail\ChecklistReminders $query
+     *
+     * @return array
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    public function handleQuery(Query\QueryInterface $query)
     {
-        $reminders = $this->getRepo()->fetchChecklistReminders(
+        /** @var ContinuationDetail $repo */
+        $repo = $this->getRepo();
+        
+        $reminders = $repo->fetchChecklistReminders(
             $query->getMonth(),
             $query->getYear(),
             $query->getIds()
         );
+        
         return [
             'result' => $reminders,
-            'count' => count($reminders)
+            'count' => count($reminders),
         ];
     }
 }
