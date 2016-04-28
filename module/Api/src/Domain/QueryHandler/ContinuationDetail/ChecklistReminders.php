@@ -25,14 +25,15 @@ class ChecklistReminders extends AbstractQueryHandler
     {
         /** @var ContinuationDetail $repo */
         $repo = $this->getRepo();
-        
+
         $reminders = $repo->fetchChecklistReminders(
             $query->getMonth(),
             $query->getYear(),
             $query->getIds()
         );
-        
+
         return [
+            //  result already serialized
             'result' => $reminders,
             'count' => count($reminders),
         ];

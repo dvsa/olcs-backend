@@ -1,10 +1,5 @@
 <?php
 
-/**
- * ContinuationDetailTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Mockery as m;
@@ -22,6 +17,9 @@ use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as Entity;
  */
 class ContinuationDetailTest extends RepositoryTestCase
 {
+    /** @var m\MockInterface|Repo */
+    protected $sut;
+
     public function setUp()
     {
         $this->setUpSut(Repo::class);
@@ -45,13 +43,13 @@ class ContinuationDetailTest extends RepositoryTestCase
                 ->andReturn(['RESULTS'])
                 ->getMock()
         );
-        $this->assertEquals(['RESULTS'], $this->sut->fetchForLicence(95));
+        static::assertEquals(['RESULTS'], $this->sut->fetchForLicence(95));
 
         $dateTime = new \Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime();
         $year = $dateTime->format('Y');
-        $futureYear = $year + 4;
+        $futureYear = (int) $year + 4;
         $month = $dateTime->format('n');
-        $pastYear = $year - 4;
+        $pastYear = (int) $year - 4;
 
         $expectedQuery = <<<EOT
 BLAH AND m.licence = [[95]]
@@ -71,7 +69,7 @@ EOT;
         // remove indentation
         $expectedQuery = str_replace("  ", '', $expectedQuery);
 
-        $this->assertEquals($expectedQuery, $this->query);
+        static::assertEquals($expectedQuery, $this->query);
     }
 
     public function testFetchOngoingForLicence()
@@ -91,11 +89,11 @@ EOT;
                 ->andReturn('RESULT')
                 ->getMock()
         );
-        $this->assertEquals('RESULT', $this->sut->fetchOngoingForLicence(95));
+        static::assertEquals('RESULT', $this->sut->fetchOngoingForLicence(95));
 
         $expectedQuery = 'BLAH AND m.licence = [[95]] AND m.status = [[con_det_sts_acceptable]]';
 
-        $this->assertEquals($expectedQuery, $this->query);
+        static::assertEquals($expectedQuery, $this->query);
     }
 
     public function testFetchChecklistReminders()
@@ -104,16 +102,18 @@ EOT;
 
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->twice()->andReturnSelf();
         $this->queryBuilder->shouldReceive('withRefdata')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('continuation', 'c')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('l.status', 'ls')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('l.licenceType', 'lt')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('l.goodsOrPsv', 'lgp')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('l.organisation', 'lo')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('l.fees', 'lf')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('lf.feeType', 'lfft')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('lfft.feeType', 'lfftft')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('lf.feeStatus', 'lffs')->once()->andReturnSelf();
+
+        $mockQb
+            ->shouldReceive('select')->once()->andReturnSelf()
+            ->shouldReceive('innerJoin')->with('m.continuation', 'c')->once()->andReturnSelf()
+            ->shouldReceive('innerJoin')->with('m.licence', 'l')->once()->andReturnSelf()
+            ->shouldReceive('leftJoin')->with('l.status', 'ls')->once()->andReturnSelf()
+            ->shouldReceive('leftJoin')->with('l.goodsOrPsv', 'lgp')->once()->andReturnSelf()
+            ->shouldReceive('leftJoin')->with('l.organisation', 'lo')->once()->andReturnSelf()
+            ->shouldReceive('leftJoin')->with('l.fees', 'lf')->once()->andReturnSelf()
+            ->shouldReceive('leftJoin')->with('lf.feeType', 'lfft')->once()->andReturnSelf()
+            ->shouldReceive('leftJoin')->with('lfft.feeType', 'lfftft')->once()->andReturnSelf()
+            ->shouldReceive('leftJoin')->with('lf.feeStatus', 'lffs')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('expr->in')->with('l.status', ':licenceStatuses')->once()->andReturn('conditionLic');
         $mockQb->shouldReceive('andWhere')->with('conditionLic')->once()->andReturnSelf();
@@ -128,6 +128,10 @@ EOT;
             )
             ->once()
             ->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->neq')->with('m.status', ':status')->once()->andReturn('unit_CondStatus');
+        $mockQb->shouldReceive('andWhere')->with('unit_CondStatus')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('status', Entity::STATUS_PREPARED);
 
         $mockQb->shouldReceive('expr->eq')->with('m.received', 0)->once()->andReturn('conditionReceived');
         $mockQb->shouldReceive('andWhere')->with('conditionReceived')->once()->andReturnSelf();
@@ -205,7 +209,7 @@ EOT;
             ->once()
             ->andReturn($result);
 
-        $this->assertEquals($expected, $this->sut->fetchChecklistReminders(1, 2016, [1]));
+        static::assertEquals($expected, $this->sut->fetchChecklistReminders(1, 2016, [1]));
     }
 
     /**
@@ -257,7 +261,7 @@ EOT;
             ->once()
             ->andReturn(['result']);
 
-        $this->assertEquals(
+        static::assertEquals(
             $this->sut->fetchDetails(1, ['st'], 'ln', $method, 'st'),
             ['result']
         );
@@ -293,7 +297,7 @@ EOT;
             ->once()
             ->andReturn(['result']);
 
-        $this->assertEquals(
+        static::assertEquals(
             $this->sut->fetchWithLicence(1),
             ['result']
         );
@@ -326,7 +330,7 @@ EOT;
             ->once()
             ->andReturn([['licence' => ['id' => 123]]]);
 
-        $this->assertEquals(
+        static::assertEquals(
             $this->sut->fetchLicenceIdsForContinuationAndLicences(111, [222, 333]),
             [123]
         );
