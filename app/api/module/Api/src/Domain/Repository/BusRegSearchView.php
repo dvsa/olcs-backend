@@ -57,16 +57,16 @@ class BusRegSearchView extends AbstractRepository
                 ->setParameter('licId', $query->getLicId());
         }
 
-        if (method_exists($query, 'getStatus') && !empty($query->getStatus())) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.busRegStatus', ':status'))
-                ->setParameter('status', $query->getStatus());
+        if (method_exists($query, 'getBusRegStatus') && !empty($query->getBusRegStatus())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.busRegStatus', ':busRegStatus'))
+                ->setParameter('busRegStatus', $query->getBusRegStatus());
         }
 
-        if (method_exists($query, 'getOrganisation') && !empty($query->getOrganisation())) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.organisation', ':organisation'))
-                ->setParameter('organisation', $query->getOrganisation());
+        if (method_exists($query, 'getOrganisationId') && !empty($query->getOrganisationId())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.organisationId', ':organisationId'))
+                ->setParameter('organisationId', $query->getOrganisationId());
         }
-        echo $qb->getQuery()->getDQL();exit;
+        //echo $qb->getQuery()->getDQL();exit;
     }
 
     /**
@@ -103,8 +103,18 @@ class BusRegSearchView extends AbstractRepository
      */
     public function fetchDistinctList(QueryInterface $query, $hydrateMode = Query::HYDRATE_OBJECT)
     {
-        $qb = $this->createQueryBuilder()
-            ->addGroupBy($this->alias . '.' . $query->getContext());
+        switch ($query->getContext())
+        {
+            case 'licence':
+                $qb = $this->createQueryBuilder()->addGroupBy($this->alias . '.licId');
+                break;
+            case 'organisation':
+                $qb = $this->createQueryBuilder()->addGroupBy($this->alias . '.organisationId');
+                break;
+            case 'busRegStatus':
+                $qb = $this->createQueryBuilder()->addGroupBy($this->alias . '.busRegStatus');
+                break;
+        }
 
         $result = $qb->getQuery()->getResult($hydrateMode);
 

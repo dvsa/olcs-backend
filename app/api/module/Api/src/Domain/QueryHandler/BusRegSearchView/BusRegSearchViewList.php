@@ -12,6 +12,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as Repository;
 use Dvsa\Olcs\Transfer\Query\Bus\SearchViewList as ListQueryObject;
 use Doctrine\ORM\Query as DoctrineQuery;
+use Olcs\Logging\Log\Logger;
 
 /**
  * BusReg Search View List
@@ -19,8 +20,10 @@ use Doctrine\ORM\Query as DoctrineQuery;
  * @author Craig R <uk@valtech.co.uk>
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class BusRegSearchViewList extends AbstractQueryHandler
+class BusRegSearchViewList extends AbstractQueryHandler implements \Dvsa\Olcs\Api\Domain\AuthAwareInterface
 {
+    use \Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+
     protected $repoServiceName = 'BusRegSearchView';
 
     /**
@@ -30,6 +33,10 @@ class BusRegSearchViewList extends AbstractQueryHandler
     {
         /** @var Repository $repo */
         $repo = $this->getRepo();
+
+        if ($this->isOperator()) {
+            $query->setOrganisationId($this->getCurrentOrganisation()->getId());
+        }
 
         return [
             'result' => $this->resultList(
