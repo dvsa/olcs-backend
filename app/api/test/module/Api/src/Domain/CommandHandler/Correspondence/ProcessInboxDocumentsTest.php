@@ -121,7 +121,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
                 m::type(Message::class),
                 'email-inbox-reminder-continuation',
                 ['licNo' => 'licNo', 'url' => 'http://selfserve/correspondence'],
-                null
+                'default'
             );
 
         $result = new Result();
