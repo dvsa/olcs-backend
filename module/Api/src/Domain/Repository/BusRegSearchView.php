@@ -53,8 +53,8 @@ class BusRegSearchView extends AbstractRepository
     {
         /** @var ListQueryObject $query */
         if (method_exists($query, 'getLicId') && !empty($query->getLicId())) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.licId', ':licence'))
-                ->setParameter('licence', $query->getLicId());
+            $qb->andWhere($qb->expr()->eq($this->alias . '.licId', ':licId'))
+                ->setParameter('licId', $query->getLicId());
         }
 
         if (method_exists($query, 'getStatus') && !empty($query->getStatus())) {
@@ -62,16 +62,11 @@ class BusRegSearchView extends AbstractRepository
                 ->setParameter('status', $query->getStatus());
         }
 
-        // Additional filters for busreg registrations filter form on SS
-        if (method_exists($query, 'getLicNo') && !empty($query->getLicNo())) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.licNo', ':licNo'))
-                ->setParameter('licNo', $query->getLicNo());
+        if (method_exists($query, 'getOrganisation') && !empty($query->getOrganisation())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.organisation', ':organisation'))
+                ->setParameter('organisation', $query->getOrganisation());
         }
-
-        if (method_exists($query, 'getOrganisationName') && !empty($query->getOrganisationName())) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.organisationName', ':organisationName'))
-                ->setParameter('organisationName', $query->getOrganisationName());
-        }
+        echo $qb->getQuery()->getDQL();exit;
     }
 
     /**
@@ -106,11 +101,10 @@ class BusRegSearchView extends AbstractRepository
      *
      * @return \ArrayIterator|\Traversable
      */
-    public function fetchDistinctList(QueryInterface $query, $hydrateMode = Query::HYDRATE_ARRAY)
+    public function fetchDistinctList(QueryInterface $query, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         $qb = $this->createQueryBuilder()
-            ->select($this->alias . '.' . $query->getContext())
-            ->distinct();
+            ->addGroupBy($this->alias . '.' . $query->getContext());
 
         $result = $qb->getQuery()->getResult($hydrateMode);
 
