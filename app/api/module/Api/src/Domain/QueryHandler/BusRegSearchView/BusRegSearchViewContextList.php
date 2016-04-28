@@ -33,10 +33,13 @@ class BusRegSearchViewContextList extends AbstractQueryHandler
         /** @var Repository $repo */
         $repo = $this->getRepo();
 
-        $results = $repo->fetchDistinctList($query);
+        $results = $repo->fetchDistinctList($query, DoctrineQuery::HYDRATE_OBJECT);
+
         return [
-            'result' => array_column($results, $query->getContext()),
-            'count' => count($results)
+            'result' => $this->resultList(
+                $results
+            ),
+            'count' => $repo->fetchCount($query)
         ];
     }
 }
