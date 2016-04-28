@@ -67,7 +67,7 @@ class SendContinuationNotSoughtTest extends CommandHandlerTestCase
                     'startDate' => '10/08/2015', // 1 month prior to endDate
                     'endDate' => '10/09/2015',
                 ],
-                null // layout
+                'default' // layout
             )
             ->once();
 

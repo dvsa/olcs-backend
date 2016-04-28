@@ -73,7 +73,7 @@ class SendUserTemporaryPasswordTest extends CommandHandlerTestCase
                     'password' => 'GENERATED_PASSWORD',
                     'url' => $expectedUrl
                 ],
-                null
+                'default'
             );
 
         $this->expectedSideEffect(
