@@ -128,7 +128,10 @@ class ContinuationDetail extends AbstractRepository
         return $qb->getQuery()->getSingleResult();
     }
 
-    public function fetchChecklistReminders($month, $year, $ids = [])
+    /**
+     * @return array
+     */
+    public function fetchChecklistReminders($month, $year, array $ids = [])
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb */
         $qb = $this->createQueryBuilder();
@@ -198,6 +201,9 @@ class ContinuationDetail extends AbstractRepository
         );
     }
 
+    /**
+     * @return array
+     */
     protected function filterByFee($entities, $feeType, $feeStatuses)
     {
         $filtered = [];
