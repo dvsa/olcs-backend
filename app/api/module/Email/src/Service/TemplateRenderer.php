@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Email\Service;
 
 use Zend\View\Model\ViewModel;
 use Dvsa\Olcs\Email\Data\Message;
+use Zend\View\Renderer\RendererInterface;
 
 /**
  * Class Client
@@ -11,17 +12,12 @@ use Dvsa\Olcs\Email\Data\Message;
 class TemplateRenderer
 {
     /**
-     * \Zend\View\Renderer\RendererInterface
+     * RendererInterface
      */
     protected $viewRenderer;
 
     /**
-     * string
-     */
-    protected $defaultLayout;
-
-    /**
-     * @return \Zend\View\Renderer\RendererInterface
+     * @return RendererInterface
      */
     public function getViewRenderer()
     {
@@ -29,33 +25,14 @@ class TemplateRenderer
     }
 
     /**
-     * @param \Zend\View\Renderer\RendererInterface $viewRenderer
+     * @param RendererInterface $viewRenderer
      *
      * @return \Dvsa\Olcs\Email\Service\TemplateRenderer
      */
-    public function setViewRenderer(\Zend\View\Renderer\RendererInterface $viewRenderer)
+    public function setViewRenderer(RendererInterface $viewRenderer)
     {
         $this->viewRenderer = $viewRenderer;
         return $this;
-    }
-
-    /**
-     * @param string $defaultLayout
-     *
-     * @return \Dvsa\Olcs\Email\Service\TemplateRenderer
-     */
-    public function setDefaultLayout($defaultLayout)
-    {
-        $this->defaultLayout = $defaultLayout;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultLayout()
-    {
-        return $this->defaultLayout;
     }
 
     /**
@@ -66,30 +43,45 @@ class TemplateRenderer
      * @param array $variables
      * @param string|bool $layout
      */
-    public function renderBody(Message $message, $templates, $variables = [], $layout = null)
+    public function renderBody(Message $message, $templates, $variables = [], $layout = 'default')
     {
-        $content = $this->getEmailContent($message->getLocale(), $templates, $variables);
+        $locale = $message->getLocale();
 
-        if ($layout !== false) {
-            if ($layout === null) {
-                $layout = $this->getDefaultLayout();
-            }
-            $layoutView = new ViewModel();
-            $layoutView->setTemplate($layout);
-            $layoutView->setVariable('content', $content);
-            $message->setBody($this->getViewRenderer()->render($layoutView));
-        } else {
-            $message->setBody($content);
+        $plainContent = $this->getEmailContent($locale, $templates, 'plain', $variables);
+        $message->setPlainBody($this->getLayoutView($locale, $layout, 'plain', $plainContent));
+
+        //works around inspection request email which doesn't have a HTML version, and sets the HTML variable to false
+        if ($message->getHasHtml()) {
+            $htmlContent = $this->getEmailContent($locale, $templates, 'html', $variables);
+            $message->setHtmlBody($this->getLayoutView($locale, $layout, 'html', $htmlContent));
         }
     }
 
     /**
      * @param string $locale
+     * @param string $layout
+     * @param string $format
+     * @param string $content
+     *
+     * @return string
+     */
+    private function getLayoutView($locale, $layout, $format, $content)
+    {
+        $layoutView = new ViewModel();
+        $layoutView->setTemplate($locale .'/'. $format .'/'. $layout);
+        $layoutView->setVariable('content', $content);
+
+        return $this->getViewRenderer()->render($layoutView);
+    }
+
+    /**
+     * @param string $locale
      * @param string|array $templates
+     * @param string $format
      * @param array $variables
      * @return string
      */
-    private function getEmailContent($locale, $templates, array $variables = [])
+    private function getEmailContent($locale, $templates, $format, array $variables = [])
     {
         $templateViews = [];
 
@@ -98,7 +90,7 @@ class TemplateRenderer
         }
 
         foreach ($templates as $template) {
-            $templateViews[] = $this->getTemplateView($locale, $template, $variables);
+            $templateViews[] = $this->getTemplateView($locale, $template, $format, $variables);
         }
 
         return implode($templateViews);
@@ -107,13 +99,14 @@ class TemplateRenderer
     /**
      * @param string $locale
      * @param string $template
+     * @param string $format
      * @param array $variables
      * @return string
      */
-    private function getTemplateView($locale, $template, array $variables = [])
+    private function getTemplateView($locale, $template, $format, array $variables = [])
     {
         $templateView = new ViewModel();
-        $templateView->setTemplate($locale .'/'. $template);
+        $templateView->setTemplate($locale .'/'. $format .'/'. $template);
         $templateView->setVariables($variables);
 
         return $this->getViewRenderer()->render($templateView);
