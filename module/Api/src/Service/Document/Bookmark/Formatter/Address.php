@@ -11,9 +11,25 @@ class Address implements FormatterInterface
 {
     protected static $separator = "\n";
 
-    public static function format(array $data)
+    protected static $fields = [
+        'addressLine1',
+        'addressLine2',
+        'addressLine3',
+        'addressLine4',
+        'town',
+        'postcode'
+    ];
+
+    /**
+     * Needs to reset static properties to default
+     *
+     * @return void
+     */
+    public static function resetToDefault()
     {
-        $keys = [
+        static::$separator = "\n";
+
+        static::$fields = [
             'addressLine1',
             'addressLine2',
             'addressLine3',
@@ -21,10 +37,19 @@ class Address implements FormatterInterface
             'town',
             'postcode'
         ];
+    }
 
+    /**
+     * Formats the data
+     *
+     * @param array $data
+     * @return string
+     */
+    public static function format(array $data)
+    {
         $address = [];
 
-        foreach ($keys as $key) {
+        foreach (static::getFields() as $key) {
             if (!empty($data[$key])) {
                 $address[] = $data[$key];
             }
@@ -35,12 +60,34 @@ class Address implements FormatterInterface
             $address[] = $data['countryCode']['countryDesc'];
         }
 
-        return implode(static::getSeparator(), $address);
+        $result = implode(static::getSeparator(), $address);
+
+        // need to reset static properties to default
+        static::resetToDefault();
+
+        return $result;
     }
 
     /**
-     * @param $separator
-     * @return $this
+     * @param array $fields
+     * @return void
+     */
+    public static function setFields(array $fields)
+    {
+        static::$fields = $fields;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getFields()
+    {
+        return static::$fields;
+    }
+
+    /**
+     * @param string $separator
+     * @return void
      */
     public static function setSeparator($separator)
     {

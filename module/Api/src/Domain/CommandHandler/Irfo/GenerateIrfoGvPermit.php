@@ -44,7 +44,8 @@ final class GenerateIrfoGvPermit extends AbstractCommandHandler
                 [
                     'template' => $template,
                     'query' => [
-                        'irfoGvPermit' => $irfoGvPermit->getId()
+                        'irfoGvPermit' => $irfoGvPermit->getId(),
+                        'organisation' => $irfoGvPermit->getOrganisation()->getId(),
                     ],
                     'knownValues' => [],
                     'description' => $description,
