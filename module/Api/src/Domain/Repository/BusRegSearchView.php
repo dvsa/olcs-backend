@@ -66,7 +66,6 @@ class BusRegSearchView extends AbstractRepository
             $qb->andWhere($qb->expr()->eq($this->alias . '.organisationId', ':organisationId'))
                 ->setParameter('organisationId', $query->getOrganisationId());
         }
-        //echo $qb->getQuery()->getDQL();exit;
     }
 
     /**
