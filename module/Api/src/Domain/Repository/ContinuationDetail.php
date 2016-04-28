@@ -1,11 +1,5 @@
 <?php
 
-/**
- * ContinuationDetail
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -35,7 +29,7 @@ class ContinuationDetail extends AbstractRepository
      */
     public function fetchForLicence($licenceId)
     {
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        /* @var \Doctrine\Orm\QueryBuilder $qb */
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()
@@ -55,7 +49,7 @@ class ContinuationDetail extends AbstractRepository
                 [
                     LicenceEntity::LICENCE_STATUS_VALID,
                     LicenceEntity::LICENCE_STATUS_CURTAILED,
-                    LicenceEntity::LICENCE_STATUS_SUSPENDED
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
                 ]
             );
 
@@ -116,7 +110,7 @@ class ContinuationDetail extends AbstractRepository
      */
     public function fetchOngoingForLicence($licenceId)
     {
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        /* @var \Doctrine\Orm\QueryBuilder $qb */
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()
@@ -134,24 +128,39 @@ class ContinuationDetail extends AbstractRepository
         return $qb->getQuery()->getSingleResult();
     }
 
-    public function fetchChecklistReminders($month, $year, $ids = [])
+    /**
+     * @return array
+     */
+    public function fetchChecklistReminders($month, $year, array $ids = [])
     {
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        /* @var \Doctrine\Orm\QueryBuilder $qb */
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()
             ->modifyQuery($qb)
-            ->withRefdata()
-            ->with('continuation', 'c')
-            ->with('licence', 'l')
-            ->with('l.status', 'ls')
-            ->with('l.licenceType', 'lt')
-            ->with('l.goodsOrPsv', 'lgp')
-            ->with('l.organisation', 'lo')
-            ->with('l.fees', 'lf')
-            ->with('lf.feeType', 'lfft')
-            ->with('lfft.feeType', 'lfftft')
-            ->with('lf.feeStatus', 'lffs');
+            ->withRefdata();
+
+        $qb
+            ->select(
+                $this->alias .
+                ', partial l.{id, licNo}' .
+                ', partial lgp.{id}' .
+                ', partial lo.{id, name, allowEmail}' .
+                ', partial ls.{id, description}' .
+                ', partial lf.{id, feeType, feeStatus}' .
+                ', partial lfft.{id}' .
+                ', partial lfftft.{id}' .
+                ', partial lffs.{id}'
+            )
+            ->innerJoin($this->alias . '.continuation', 'c')
+            ->innerJoin($this->alias . '.licence', 'l')
+            ->leftJoin('l.status', 'ls')
+            ->leftJoin('l.goodsOrPsv', 'lgp')
+            ->leftJoin('l.organisation', 'lo')
+            ->leftJoin('l.fees', 'lf')
+            ->leftJoin('lf.feeType', 'lfft')
+            ->leftJoin('lfft.feeType', 'lfftft')
+            ->leftJoin('lf.feeStatus', 'lffs');
 
         $qb->andWhere($qb->expr()->in('l.status', ':licenceStatuses'))
             ->setParameter(
@@ -159,7 +168,7 @@ class ContinuationDetail extends AbstractRepository
                 [
                     LicenceEntity::LICENCE_STATUS_VALID,
                     LicenceEntity::LICENCE_STATUS_CURTAILED,
-                    LicenceEntity::LICENCE_STATUS_SUSPENDED
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
                 ]
             );
 
@@ -179,6 +188,12 @@ class ContinuationDetail extends AbstractRepository
                 ->setParameter('year', $year);
         }
 
+        //  check continuation details status
+        $qb->andWhere(
+            $qb->expr()->neq($this->alias . '.status', ':status')
+        )
+        ->setParameter('status', Entity::STATUS_PREPARED);
+
         return $this->filterByFee(
             $qb->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY),
             FeeTypeEntity::FEE_TYPE_CONT,
@@ -186,20 +201,25 @@ class ContinuationDetail extends AbstractRepository
         );
     }
 
+    /**
+     * @return array
+     */
     protected function filterByFee($entities, $feeType, $feeStatuses)
     {
         $filtered = [];
         foreach ($entities as $entity) {
             if (isset($entity['licence']['fees'])) {
                 foreach ($entity['licence']['fees'] as $fee) {
-                    if ($fee['feeType']['feeType']['id'] === $feeType &&
-                        array_search($fee['feeStatus']['id'], $feeStatuses) !== false) {
+                    if ($fee['feeType']['feeType']['id'] === $feeType
+                        && in_array($fee['feeStatus']['id'], $feeStatuses, true) !== false
+                    ) {
                         continue 2;
                     }
                 }
             }
             $filtered[] = $entity;
         }
+
         return $filtered;
     }
 
