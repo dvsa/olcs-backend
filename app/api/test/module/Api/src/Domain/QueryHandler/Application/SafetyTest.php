@@ -52,12 +52,6 @@ class SafetyTest extends QueryHandlerTestCase
     {
         $application = m::mock(BundleSerializableInterface::class);
 
-        $mockSafetyDocuments = m::mock()
-            ->shouldReceive('toArray')
-            ->andReturn(['DOCUMENTS'])
-            ->once()
-            ->getMock();
-
         $application->shouldReceive('getGoodsOrPsv')
             ->andReturn(
                 m::mock()
@@ -67,7 +61,12 @@ class SafetyTest extends QueryHandlerTestCase
                     ->getMock()
             )
             ->shouldReceive('getApplicationDocuments')
-            ->andReturn($mockSafetyDocuments)
+            ->andReturn(
+                [
+                    m::mock(BundleSerializableInterface::class)->shouldReceive('serialize')->andReturn(['foo' => 'bar'])
+                        ->getMock()
+                ]
+            )
             ->once()
             ->shouldReceive('getTotAuthTrailers')
             ->andReturn(0)
@@ -88,7 +87,7 @@ class SafetyTest extends QueryHandlerTestCase
                 'foo' => 'bar',
                 'canHaveTrailers' => $canHaveTrailers,
                 'hasTrailers' => false,
-                'safetyDocuments' => ['DOCUMENTS']
+                'safetyDocuments' => [['foo' => 'bar']]
             ],
             $this->sut->handleQuery($query)->serialize()
         );

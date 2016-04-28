@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Application;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -205,6 +206,12 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         throw new ValidationException($errors);
     }
 
+    /**
+     * @param \Dvsa\Olcs\Api\Entity\System\Category $category
+     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory
+     * 
+     * @return Collection
+     */
     public function getApplicationDocuments($category, $subCategory)
     {
         $expr = Criteria::expr();
