@@ -62,7 +62,8 @@ class GenerateIrfoGvPermitTest extends CommandHandlerTestCase
             [
                 'template' => 'IRFO_GV_irfo_country',
                 'query' => [
-                    'irfoGvPermit' => $id
+                    'irfoGvPermit' => $id,
+                    'organisation' => $orgId
                 ],
                 'knownValues' => [],
                 'description' => 'IRFO GV Permit (99) x 5',
