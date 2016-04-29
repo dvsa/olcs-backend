@@ -33,17 +33,23 @@ class BusRegSearchViewContextListTest extends QueryHandlerTestCase
             ]
         );
 
-        $mockRecord = ['foo' => 'bar'];
+        $mockRecord = m::mock(\Dvsa\Olcs\Api\Entity\View\BusRegSearchView::class)->makePartial();
+        $mockRecord->shouldReceive('serialize')
+            ->with([])
+            ->andReturn(['foo' => 'bar']);
 
         $this->repoMap['BusRegSearchView']
             ->shouldReceive('fetchDistinctList')
             ->once()
-            ->with($query)
-            ->andReturn([$mockRecord]);
+            ->with($query, m::type('integer'))
+            ->andReturn([$mockRecord])
+            ->shouldReceive('fetchCount')
+            ->once()
+            ->andReturn(1);
 
         $expected = [
             'result' => [
-                0 => 'bar'
+               ['foo' => 'bar']
             ],
             'count' => 1
         ];

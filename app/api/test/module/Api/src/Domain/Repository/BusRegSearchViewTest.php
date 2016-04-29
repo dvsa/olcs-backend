@@ -97,7 +97,11 @@ class BusRegSearchViewTest extends RepositoryTestCase
         $this->assertSame(['RESULTS'], $this->sut->fetchActiveByLicence(611));
     }
 
-    public function testFetchDistinctList()
+    /**
+     * @dataProvider provideContextGroupBys
+     * @param $context
+     */
+    public function testFetchDistinctList($context, $expected)
     {
         $qb = m::mock(QueryBuilder::class);
         $repo = m::mock(EntityRepository::class);
@@ -106,15 +110,33 @@ class BusRegSearchViewTest extends RepositoryTestCase
 
         $repo->shouldReceive('createQueryBuilder')->with('m')->once()->andReturn($qb);
 
-        $context = 'foo';
-        $qb->shouldReceive('select')->with('m.' . $context)->once()->andReturnSelf();
-        $qb->shouldReceive('distinct')->andReturnSelf();
+        $qb->shouldReceive('addGroupBy')->with($expected)->andReturnSelf();
         $qb->shouldReceive('getQuery->getResult')->with(m::type('integer'))->once()->andReturn(['RESULTS']);
 
         $mockQuery = m::mock(QueryInterface::class);
         $mockQuery->shouldReceive('getContext')->andReturn($context);
 
         $this->assertSame(['RESULTS'], $this->sut->fetchDistinctList($mockQuery));
+    }
+
+    /**
+     * Data provider maps the relevent group by clauses that should be applied to the query given a certain context
+     *
+     * @return array
+     */
+    public function provideContextGroupBys()
+    {
+        return [
+            [
+                'licence', 'm.licId',
+            ],
+            [
+                'organisation', 'm.organisationId',
+            ],
+            [
+                'busRegStatus', 'm.busRegStatus',
+            ],
+        ];
     }
 
     public function testApplyListFilters()
@@ -129,7 +151,7 @@ class BusRegSearchViewTest extends RepositoryTestCase
             ->shouldReceive('andWhere')
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with('licence', 'UB12345')
+            ->with('licId', '1234')
             ->andReturnSelf()
 
             ->shouldReceive('eq')
@@ -137,7 +159,7 @@ class BusRegSearchViewTest extends RepositoryTestCase
             ->shouldReceive('andWhere')
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with('status', 'foo')
+            ->with('busRegStatus', 'foo')
             ->andReturnSelf()
 
             ->shouldReceive('eq')
@@ -145,23 +167,14 @@ class BusRegSearchViewTest extends RepositoryTestCase
             ->shouldReceive('andWhere')
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with('licNo', 'UB1234')
-            ->andReturnSelf()
-
-            ->shouldReceive('eq')
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->with('organisationName', 'bar')
+            ->with('organisationId', 342)
             ->andReturnSelf();
 
         $mockQ = BusRegSearchViewList::create(
             [
                 'licId' => '1234',
-                'licNo' => 'UB1234',
-                'status' => 'foo',
-                'organisationName' => 'bar'
+                'busRegStatus' => 'foo',
+                'organisationId' => 342
             ]
         );
 
