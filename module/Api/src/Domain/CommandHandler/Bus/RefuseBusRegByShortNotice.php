@@ -8,6 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefused;
@@ -17,6 +18,8 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefused;
  */
 final class RefuseBusRegByShortNotice extends AbstractCommandHandler
 {
+    use QueueAwareTrait;
+
     protected $repoServiceName = 'Bus';
 
     public function handleCommand(CommandInterface $command)
@@ -47,6 +50,6 @@ final class RefuseBusRegByShortNotice extends AbstractCommandHandler
      */
     private function createEbsrRefusedCmd($ebsrId)
     {
-        return SendEbsrRefused::create(['id' => $ebsrId]);
+        return $this->emailQueue(SendEbsrRefused::class, ['id' => $ebsrId], $ebsrId);
     }
 }

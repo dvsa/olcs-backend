@@ -8,6 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrWithdrawn;
@@ -17,6 +18,8 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrWithdrawn;
  */
 final class WithdrawBusReg extends AbstractCommandHandler
 {
+    use QueueAwareTrait;
+
     protected $repoServiceName = 'Bus';
 
     public function handleCommand(CommandInterface $command)
@@ -48,6 +51,6 @@ final class WithdrawBusReg extends AbstractCommandHandler
      */
     private function createEbsrWithdrawnCmd($ebsrId)
     {
-        return SendEbsrWithdrawn::create(['id' => $ebsrId]);
+        return $this->emailQueue(SendEbsrWithdrawn::class, ['id' => $ebsrId], $ebsrId);
     }
 }
