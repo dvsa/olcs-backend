@@ -1,27 +1,26 @@
 <?php
 
-/**
- * Update IrfoPermitStock Test
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Irfo;
 
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoPermitStock as Sut;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoPermitStockIssued as Sut;
+use Dvsa\Olcs\Api\Domain\Repository\IrfoGvPermit;
 use Dvsa\Olcs\Api\Domain\Repository\IrfoPermitStock;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as IrfoGvPermitEntity;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPermitStock as IrfoPermitStockEntity;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPermitStock as Cmd;
+use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPermitStockIssued as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
- * Update IrfoPermitStock Test
+ * Update Irfo Permit Stock Issued Test
  */
-class UpdateIrfoPermitStockTest extends CommandHandlerTestCase
+class UpdateIrfoPermitStockIssuedTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
         $this->sut = new Sut();
+        $this->mockRepo('IrfoGvPermit', IrfoGvPermit::class);
         $this->mockRepo('IrfoPermitStock', IrfoPermitStock::class);
 
         parent::setUp();
@@ -30,7 +29,13 @@ class UpdateIrfoPermitStockTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            IrfoPermitStockEntity::STATUS_IN_STOCK
+            IrfoPermitStockEntity::STATUS_ISSUED
+        ];
+
+        $this->references = [
+            IrfoGvPermitEntity::class => [
+                23 => m::mock(IrfoGvPermitEntity::class),
+            ]
         ];
 
         parent::initReferences();
@@ -40,7 +45,7 @@ class UpdateIrfoPermitStockTest extends CommandHandlerTestCase
     {
         $data = [
             'ids' => array_fill(0, Sut::MAX_IDS_COUNT, 'id'),
-            'status' => IrfoPermitStockEntity::STATUS_IN_STOCK
+            'irfoGvPermit' => 23
         ];
 
         $command = Cmd::create($data);
@@ -55,7 +60,6 @@ class UpdateIrfoPermitStockTest extends CommandHandlerTestCase
         $irfoPermitStock2->setId(1002);
         $irfoPermitStock2->setSerialNo(103);
         $irfoPermitStock2->setStatus(IrfoPermitStockEntity::STATUS_VOID);
-        $irfoPermitStock2->setIrfoGvPermit(m::mock(IrfoGvPermitEntity::class));
 
         $this->repoMap['IrfoPermitStock']->shouldReceive('fetchByIds')
             ->once()
@@ -93,10 +97,11 @@ class UpdateIrfoPermitStockTest extends CommandHandlerTestCase
 
         foreach ($savedIrfoPermitStocks as $savedIrfoPermitStock) {
             $this->assertSame(
-                $this->refData[IrfoPermitStockEntity::STATUS_IN_STOCK],
+                $this->refData[IrfoPermitStockEntity::STATUS_ISSUED],
                 $savedIrfoPermitStock->getStatus()
             );
-            $this->assertNull(
+            $this->assertSame(
+                $this->references[IrfoGvPermitEntity::class][23],
                 $savedIrfoPermitStock->getIrfoGvPermit()
             );
         }
@@ -108,7 +113,7 @@ class UpdateIrfoPermitStockTest extends CommandHandlerTestCase
 
         $data = [
             'ids' => array_fill(0, Sut::MAX_IDS_COUNT + 1, 'id'),
-            'status' => IrfoPermitStockEntity::STATUS_IN_STOCK
+            'irfoGvPermit' => 23
         ];
 
         $command = Cmd::create($data);
