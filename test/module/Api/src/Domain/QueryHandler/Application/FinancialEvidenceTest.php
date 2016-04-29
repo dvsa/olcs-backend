@@ -75,12 +75,17 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             ->andReturn($applicationLicenceId)
             ->getMock();
 
+        $mockDocument = m::mock()
+            ->shouldReceive('serialize')
+            ->with([])
+            ->once()
+            ->andReturn(['doc' => 'bar'])
+            ->getMock();
+
         $mockApplication = m::mock(BundleSerializableInterface::class)
             ->shouldReceive('getApplicationDocuments')
             ->with('category', 'subCategory')
-            ->andReturn(
-                [m::mock()->shouldReceive('serialize')->with([])->once()->andReturn(['doc' => 'bar'])->getMock()]
-            )
+            ->andReturn([$mockDocument])
             ->once()
             ->shouldReceive('serialize')
             ->andReturn(['id' => $applicationId])
