@@ -51,12 +51,6 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
 
         $query = Qry::create(['id' => $applicationId]);
 
-        $mockFinancialDocuments = m::mock()
-            ->shouldReceive('toArray')
-            ->andReturn(['DOCUMENTS'])
-            ->once()
-            ->getMock();
-
         $mockLicenceType = m::mock()
             ->shouldReceive('getId')
             ->andReturn($licenceType)
@@ -84,7 +78,9 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
         $mockApplication = m::mock(BundleSerializableInterface::class)
             ->shouldReceive('getApplicationDocuments')
             ->with('category', 'subCategory')
-            ->andReturn($mockFinancialDocuments)
+            ->andReturn(
+                [m::mock()->shouldReceive('serialize')->with([])->once()->andReturn(['doc' => 'bar'])->getMock()]
+            )
             ->once()
             ->shouldReceive('serialize')
             ->andReturn(['id' => $applicationId])
@@ -144,7 +140,7 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
 
         $expectedResult = [
             'id' => $applicationId,
-            'documents' => ['DOCUMENTS'],
+            'documents' => [['doc' => 'bar']],
             'financialEvidence' => [
                 'requiredFinance' => $totalRequired,
                 'standardFirst' => 7000,
