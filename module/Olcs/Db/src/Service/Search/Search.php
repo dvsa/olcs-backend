@@ -209,17 +209,19 @@ class Search
                 );
 
                 $parts = explode(' ', $search);
-                // apply wildcard to each search term
-                foreach ($parts as $part_search) {
-                    $wildcardQuery = '*'. strtolower(trim($part_search, '*')). '*';
-                    $queryBool->addShould(
-                        new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
-                    );
-                    $queryBool->addShould(
-                        new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
-                    );
+                if (count($parts) > 1) {
+                    // apply wildcard to each search term
+                    foreach ($parts as $part_search) {
+                        $wildcardQuery = '*' . strtolower(trim($part_search, '*')) . '*';
+                        $queryBool->addShould(
+                            new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
+                        );
+                        $queryBool->addShould(
+                            new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
+                        );
+                    }
                 }
-
+                
                 break;
             case 'busreg':
                 $queryMatch = new Query\Match();
