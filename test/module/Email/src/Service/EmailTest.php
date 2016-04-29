@@ -145,8 +145,8 @@ class EmailTest extends MockeryTestCase
                     $attachmentPart2 = $parts[2];
 
                     $expectedPlainText = "Content-Type: " . ZendMime::TYPE_TEXT . "\n" .
-                    "Content-Transfer-Encoding: " . ZendMime::ENCODING_QUOTEDPRINTABLE . "\n\n" .
-                    "plain content";
+                        "Content-Transfer-Encoding: " . ZendMime::ENCODING_QUOTEDPRINTABLE . "\n\n" .
+                        "plain content";
 
                     $expectedHtml = "Content-Type: " . ZendMime::TYPE_HTML . "\n" .
                         "Content-Transfer-Encoding: " . ZendMime::ENCODING_QUOTEDPRINTABLE . "\n\n" .
