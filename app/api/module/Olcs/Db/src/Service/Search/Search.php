@@ -195,6 +195,11 @@ class Search
 
                 break;
             case 'person':
+                $wildcardQuery = strtolower(rtrim($search, '*') . '*');
+                $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
+                $queryBool->addShould($elasticaQueryWildcard);
+
+                // apply search term to forename and family name wildcards
                 $wildcardQuery = '*'. strtolower(trim($search, '*')). '*';
                 $queryBool->addShould(
                     new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
@@ -203,9 +208,17 @@ class Search
                     new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
                 );
 
-                $wildcardQuery = strtolower(rtrim($search, '*') . '*');
-                $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
-                $queryBool->addShould($elasticaQueryWildcard);
+                $parts = explode(' ', $search);
+                // apply wildcard to each search term
+                foreach ($parts as $part_search) {
+                    $wildcardQuery = '*'. strtolower(trim($part_search, '*')). '*';
+                    $queryBool->addShould(
+                        new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
+                    );
+                    $queryBool->addShould(
+                        new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
+                    );
+                }
 
                 break;
             case 'busreg':
