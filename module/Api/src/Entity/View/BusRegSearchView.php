@@ -85,6 +85,15 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     protected $licStatus;
 
     /**
+     * Organisation ID
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="organisation_id")
+     */
+    protected $organisationId;
+
+    /**
      * Organisation name
      *
      * @var string

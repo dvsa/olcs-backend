@@ -9,6 +9,7 @@ use Dvsa\Olcs\Transfer\Query\Bus\SearchViewList as ListQueryObject;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Doctrine\ORM\Query;
 
 /**
  * BusRegSearchView
@@ -51,19 +52,20 @@ class BusRegSearchView extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         /** @var ListQueryObject $query */
-
-        if (!empty($query->getLicId())) {
-
-            $qb->andWhere($qb->expr()->eq($this->alias . '.licId', ':licence'))
-                ->setParameter('licence', $query->getLicId());
+        if (method_exists($query, 'getLicId') && !empty($query->getLicId())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.licId', ':licId'))
+                ->setParameter('licId', $query->getLicId());
         }
 
-        if (!empty($query->getStatus())) {
-
-            $qb->andWhere($qb->expr()->eq($this->alias . '.busRegStatus', ':status'))
-                ->setParameter('status', $query->getStatus());
+        if (method_exists($query, 'getBusRegStatus') && !empty($query->getBusRegStatus())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.busRegStatus', ':busRegStatus'))
+                ->setParameter('busRegStatus', $query->getBusRegStatus());
         }
 
+        if (method_exists($query, 'getOrganisationId') && !empty($query->getOrganisationId())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.organisationId', ':organisationId'))
+                ->setParameter('organisationId', $query->getOrganisationId());
+        }
     }
 
     /**
@@ -90,5 +92,31 @@ class BusRegSearchView extends AbstractRepository
             ->setParameter('activeStatuses', $activeStatuses);
 
         return $dqb->getQuery()->getResult();
+    }
+
+    /**
+     * @param QueryInterface $query
+     * @param int $hydrateMode
+     *
+     * @return \ArrayIterator|\Traversable
+     */
+    public function fetchDistinctList(QueryInterface $query, $hydrateMode = Query::HYDRATE_OBJECT)
+    {
+        switch ($query->getContext())
+        {
+            case 'licence':
+                $qb = $this->createQueryBuilder()->addGroupBy($this->alias . '.licId');
+                break;
+            case 'organisation':
+                $qb = $this->createQueryBuilder()->addGroupBy($this->alias . '.organisationId');
+                break;
+            case 'busRegStatus':
+                $qb = $this->createQueryBuilder()->addGroupBy($this->alias . '.busRegStatus');
+                break;
+        }
+
+        $result = $qb->getQuery()->getResult($hydrateMode);
+
+        return $result;
     }
 }

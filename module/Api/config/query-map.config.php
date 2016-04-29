@@ -336,6 +336,12 @@ return [
     // Bus Reg Search View
     TransferQuery\Bus\SearchViewList::class => QueryHandler\Bus\SearchViewList::class,
 
+    // Bus Reg Filtered List
+    TransferQuery\BusRegSearchView\BusRegSearchViewList::class =>
+        QueryHandler\BusRegSearchView\BusRegSearchViewList::class,
+    TransferQuery\BusRegSearchView\BusRegSearchViewContextList::class =>
+        QueryHandler\BusRegSearchView\BusRegSearchViewContextList::class,
+
     // Fee
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
     TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,

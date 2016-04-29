@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Dvsa\Olcs\Transfer\Query\BusRegSearchView\BusRegSearchViewList;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as Repo;
 use Doctrine\ORM\QueryBuilder;
@@ -9,6 +10,7 @@ use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Api\Entity\View\BusRegSearchView as Entity;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * BusRegSearchViewTest
@@ -93,5 +95,89 @@ class BusRegSearchViewTest extends RepositoryTestCase
         $qb->shouldReceive('getQuery->getResult')->with()->once()->andReturn(['RESULTS']);
 
         $this->assertSame(['RESULTS'], $this->sut->fetchActiveByLicence(611));
+    }
+
+    /**
+     * @dataProvider provideContextGroupBys
+     * @param $context
+     */
+    public function testFetchDistinctList($context, $expected)
+    {
+        $qb = m::mock(QueryBuilder::class);
+        $repo = m::mock(EntityRepository::class);
+
+        $this->em->shouldReceive('getRepository')->with(Entity::class)->andReturn($repo);
+
+        $repo->shouldReceive('createQueryBuilder')->with('m')->once()->andReturn($qb);
+
+        $qb->shouldReceive('addGroupBy')->with($expected)->andReturnSelf();
+        $qb->shouldReceive('getQuery->getResult')->with(m::type('integer'))->once()->andReturn(['RESULTS']);
+
+        $mockQuery = m::mock(QueryInterface::class);
+        $mockQuery->shouldReceive('getContext')->andReturn($context);
+
+        $this->assertSame(['RESULTS'], $this->sut->fetchDistinctList($mockQuery));
+    }
+
+    /**
+     * Data provider maps the relevent group by clauses that should be applied to the query given a certain context
+     *
+     * @return array
+     */
+    public function provideContextGroupBys()
+    {
+        return [
+            [
+                'licence', 'm.licId',
+            ],
+            [
+                'organisation', 'm.organisationId',
+            ],
+            [
+                'busRegStatus', 'm.busRegStatus',
+            ],
+        ];
+    }
+
+    public function testApplyListFilters()
+    {
+        $this->setUpSut(Repo::class, true);
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr')
+            ->andReturnSelf()
+            ->shouldReceive('eq')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('licId', '1234')
+            ->andReturnSelf()
+
+            ->shouldReceive('eq')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('busRegStatus', 'foo')
+            ->andReturnSelf()
+
+            ->shouldReceive('eq')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('organisationId', 342)
+            ->andReturnSelf();
+
+        $mockQ = BusRegSearchViewList::create(
+            [
+                'licId' => '1234',
+                'busRegStatus' => 'foo',
+                'organisationId' => 342
+            ]
+        );
+
+        $this->sut->applyListFilters($mockQb, $mockQ);
     }
 }
