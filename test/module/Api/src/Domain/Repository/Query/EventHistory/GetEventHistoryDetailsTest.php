@@ -15,6 +15,11 @@ class GetEventHistoryDetailsTest extends AbstractDbQueryTestCase
     protected $tableNameMap = [];
     protected $columnNameMap = [];
 
+    /**
+     * Param provider
+     *
+     * @return array
+     */
     public function paramProvider()
     {
         return [
@@ -27,6 +32,11 @@ class GetEventHistoryDetailsTest extends AbstractDbQueryTestCase
         ];
     }
 
+    /**
+     * Get sut
+     *
+     * @return mixed
+     */
     protected function getSut()
     {
         $sut = new GetEventHistoryDetails();
@@ -34,6 +44,11 @@ class GetEventHistoryDetailsTest extends AbstractDbQueryTestCase
         return $sut;
     }
 
+    /**
+     * Get expected query
+     *
+     * @return string
+     */
     protected function getExpectedQuery()
     {
         return 'SELECT * FROM application_hist WHERE id = :id AND version IN (:version) ORDER BY version
@@ -41,11 +56,12 @@ DESC LIMIT 2';
     }
 
     /**
+     * Test execute with exception
+     *
      * @dataProvider paramProvider
      */
     public function testExecuteWithException($inputParams, $inputTypes, $expectedParams, $expectedTypes)
     {
         $this->markTestSkipped('Not required for this test');
     }
-
 }
