@@ -209,7 +209,7 @@ class SearchTest extends TestCase
 
         $sut->setClient($mockClient);
 
-        $sut->search('SMITH', [$index]);
+        $sut->search('FOO BAR', [$index]);
     }
 
     public function searchIndexProvider()
@@ -239,9 +239,9 @@ class SearchTest extends TestCase
                 'query' => [
                     'bool' => [
                         'should' => [
-                            $this->generateMatch('_all', 'SMITH'),
-                            $this->generateMatch('postcode', 'SMITH'),
-                            $this->generateWildcard('org_name_wildcard', 'smith*', '2.0')
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateMatch('postcode', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
                 ],
@@ -259,9 +259,9 @@ class SearchTest extends TestCase
                 'query' => [
                     'bool' => [
                         'should' => [
-                            $this->generateMatch('_all', 'SMITH'),
-                            $this->generateMatch('correspondence_postcode', 'SMITH'),
-                            $this->generateWildcard('org_name_wildcard', 'smith*', 2.0)
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateMatch('correspondence_postcode', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', 2.0)
                         ]
                     ]
                 ],
@@ -279,9 +279,9 @@ class SearchTest extends TestCase
                 'query' => [
                     'bool' => [
                         'should' => [
-                            $this->generateMatch('_all', 'SMITH'),
-                            $this->generateMatch('correspondence_postcode', 'SMITH'),
-                            $this->generateWildcard('org_name_wildcard', 'smith*', '2.0')
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateMatch('correspondence_postcode', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
                 ],
@@ -299,9 +299,9 @@ class SearchTest extends TestCase
                 'query' => [
                     'bool' => [
                         'should' => [
-                            $this->generateMatch('_all', 'SMITH'),
-                            $this->generateMatch('postcode', 'SMITH'),
-                            $this->generateWildcard('org_name_wildcard', 'smith*', '2.0')
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateMatch('postcode', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
                 ],
@@ -319,8 +319,8 @@ class SearchTest extends TestCase
                 'query' => [
                     'bool' => [
                         'should' => [
-                            $this->generateMatch('_all', 'SMITH'),
-                            $this->generateWildcard('org_name_wildcard', 'smith*', '2.0')
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
                 ],
@@ -338,8 +338,8 @@ class SearchTest extends TestCase
                 'query' => [
                     'bool' => [
                         'should' => [
-                            $this->generateMatch('_all', 'SMITH'),
-                            $this->generateWildcard('org_name_wildcard', 'smith*', '2.0')
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
                 ],
@@ -357,8 +357,8 @@ class SearchTest extends TestCase
                 'query' => [
                     'bool' => [
                         'should' => [
-                            $this->generateMatch('_all', 'SMITH'),
-                            $this->generateWildcard('org_name_wildcard', 'smith*', '2.0')
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
                 ],
@@ -376,8 +376,8 @@ class SearchTest extends TestCase
                 'query' => [
                     'bool' => [
                         'should' => [
-                            $this->generateMatch('_all', 'SMITH'),
-                            $this->generateWildcard('org_name_wildcard', 'smith*', '2.0')
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
                 ],
@@ -395,8 +395,8 @@ class SearchTest extends TestCase
                 'query' => [
                     'bool' => [
                         'should' => [
-                            $this->generateMatch('_all', 'SMITH'),
-                            $this->generateWildcard('org_name_wildcard', 'smith*', '2.0')
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
                 ],
@@ -414,9 +414,9 @@ class SearchTest extends TestCase
                 'query' => [
                     'bool' => [
                         'should' => [
-                            $this->generateMatch('_all', 'SMITH'),
-                            $this->generateMatch('vrm', 'SMITH'),
-                            $this->generateWildcard('org_name_wildcard', 'smith*', '2.0')
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateMatch('vrm', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
                 ],
@@ -434,9 +434,9 @@ class SearchTest extends TestCase
                 'query' => [
                     'bool' => [
                         'should' => [
-                            $this->generateMatch('_all', 'SMITH'),
-                            $this->generateMatch('vrm', 'SMITH'),
-                            $this->generateWildcard('org_name_wildcard', 'smith*', '2.0')
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateMatch('vrm', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
                 ],
@@ -454,10 +454,14 @@ class SearchTest extends TestCase
                 'query' => [
                     'bool' => [
                         'should' => [
-                            $this->generateMatch('_all', 'SMITH'),
-                            $this->generateWildcard('person_family_name_wildcard', '*smith*', '2.0'),
-                            $this->generateWildcard('person_forename_wildcard', '*smith*', '2.0'),
-                            $this->generateWildcard('org_name_wildcard', 'smith*', '2.0'),
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0'),
+                            $this->generateWildcard('person_family_name_wildcard', '*foo bar*', '2.0'),
+                            $this->generateWildcard('person_forename_wildcard', '*foo bar*', '2.0'),
+                            $this->generateWildcard('person_family_name_wildcard', '*foo*', '2.0'),
+                            $this->generateWildcard('person_forename_wildcard', '*foo*', '2.0'),
+                            $this->generateWildcard('person_family_name_wildcard', '*bar*', '2.0'),
+                            $this->generateWildcard('person_forename_wildcard', '*bar*', '2.0'),
                         ],
                     ]
                 ],
@@ -476,15 +480,15 @@ class SearchTest extends TestCase
                     'bool' => [
                         'should' => [
 
-                            $this->generateMatch('_all', 'SMITH'),
+                            $this->generateMatch('_all', 'FOO BAR'),
                             $this->generateMatch(
                                 'reg_no',
                                 [
-                                    'query' => 'SMITH',
+                                    'query' => 'FOO BAR',
                                     'boost' => 2.0,
                                 ]
                             ),
-                            $this->generateWildcard('org_name_wildcard', 'smith*', '2.0')
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
                 ],
