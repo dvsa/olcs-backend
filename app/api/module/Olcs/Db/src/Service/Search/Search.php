@@ -185,8 +185,6 @@ class Search
 
                 break;
             case 'person':
-                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
-
                 // apply search term to forename and family name wildcards
                 $wildcardQuery = '*'. strtolower(trim($search, '*')). '*';
                 $queryBool->addShould(
