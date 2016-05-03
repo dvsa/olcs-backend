@@ -298,6 +298,7 @@ return [
     TransferCommand\Irfo\RefuseIrfoGvPermit::class => CommandHandler\Irfo\RefuseIrfoGvPermit::class,
     TransferCommand\Irfo\CreateIrfoPermitStock::class => CommandHandler\Irfo\CreateIrfoPermitStock::class,
     TransferCommand\Irfo\UpdateIrfoPermitStock::class => CommandHandler\Irfo\UpdateIrfoPermitStock::class,
+    TransferCommand\Irfo\UpdateIrfoPermitStockIssued::class => CommandHandler\Irfo\UpdateIrfoPermitStockIssued::class,
     TransferCommand\Irfo\CreateIrfoPsvAuth::class => CommandHandler\Irfo\CreateIrfoPsvAuth::class,
     TransferCommand\Irfo\UpdateIrfoPsvAuth::class => CommandHandler\Irfo\UpdateIrfoPsvAuth::class,
     TransferCommand\Irfo\GrantIrfoPsvAuth::class => CommandHandler\Irfo\GrantIrfoPsvAuth::class,
