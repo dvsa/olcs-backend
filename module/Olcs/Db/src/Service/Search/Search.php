@@ -148,9 +148,7 @@ class Search
                 $postcodeQuery->setField('postcode', $search);
                 $queryBool->addShould($postcodeQuery);
 
-                $wildcardQuery = strtolower(rtrim($search, '*') . '*');
-                $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
-                $queryBool->addShould($elasticaQueryWildcard);
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
 
                 break;
             case 'application':
@@ -159,18 +157,14 @@ class Search
                 $correspondencePostcodeQuery->setField('correspondence_postcode', $search);
                 $queryBool->addShould($correspondencePostcodeQuery);
 
-                $wildcardQuery = strtolower(rtrim($search, '*') . '*');
-                $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
-                $queryBool->addShould($elasticaQueryWildcard);
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
                 break;
             case 'operator':
                 $postcodeQuery = new Query\Match();
                 $postcodeQuery->setField('postcode', $search);
                 $queryBool->addShould($postcodeQuery);
 
-                $wildcardQuery = strtolower(rtrim($search, '*') . '*');
-                $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
-                $queryBool->addShould($elasticaQueryWildcard);
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
 
                 break;
             case 'irfo':
@@ -178,9 +172,7 @@ class Search
             case 'psv_disc':
             case 'publication':
             case 'user':
-                $wildcardQuery = strtolower(rtrim($search, '*') . '*');
-                $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
-                $queryBool->addShould($elasticaQueryWildcard);
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
 
                 break;
             case 'vehicle_current':
@@ -189,12 +181,13 @@ class Search
                 $vrmQuery->setField('vrm', $search);
                 $queryBool->addShould($vrmQuery);
 
-                $wildcardQuery = strtolower(rtrim($search, '*') . '*');
-                $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
-                $queryBool->addShould($elasticaQueryWildcard);
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
 
                 break;
             case 'person':
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
+
+                // apply search term to forename and family name wildcards
                 $wildcardQuery = '*'. strtolower(trim($search, '*')). '*';
                 $queryBool->addShould(
                     new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
@@ -203,9 +196,25 @@ class Search
                     new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
                 );
 
-                $wildcardQuery = strtolower(rtrim($search, '*') . '*');
-                $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
-                $queryBool->addShould($elasticaQueryWildcard);
+                // separate search into words
+                $search = preg_replace('/\s{2,}/', ' ', $search);
+                $parts = explode(' ', $search);
+
+                if (count($parts) > 1) {
+                    // apply wildcard to each search term
+                    foreach ($parts as $part_search) {
+                        // only search if valid
+                        if (!empty($part_search)) {
+                            $wildcardQuery = '*' . strtolower(trim($part_search, '*')) . '*';
+                            $queryBool->addShould(
+                                new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
+                            );
+                            $queryBool->addShould(
+                                new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
+                            );
+                        }
+                    }
+                }
 
                 break;
             case 'busreg':
@@ -214,12 +223,24 @@ class Search
                 $queryMatch->setFieldBoost('reg_no', 2);
                 $queryBool->addShould($queryMatch);
 
-                $wildcardQuery = strtolower(rtrim($search, '*') . '*');
-                $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
-                $queryBool->addShould($elasticaQueryWildcard);
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
 
                 break;
         }
+    }
+
+    /**
+     * Generates and returns the wildcard query for Org Name
+     *
+     * @param $search
+     * @return Query\Wildcard
+     */
+    private function generateOrgNameWildcardQuery($search)
+    {
+        $wildcardQuery = strtolower(rtrim($search, '*') . '*');
+        $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
+
+        return $elasticaQueryWildcard;
     }
 
     public function processDateRanges(Query\Bool $bool)
