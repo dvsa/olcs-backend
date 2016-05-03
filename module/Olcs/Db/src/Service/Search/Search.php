@@ -197,6 +197,7 @@ class Search
                 );
 
                 // separate search into words
+                $search = preg_replace('/\s{2,}/', ' ', $search);
                 $parts = explode(' ', $search);
 
                 if (count($parts) > 1) {
