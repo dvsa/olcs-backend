@@ -30,11 +30,7 @@
             <directory>./module/Api/src/Service</directory>
         </testsuite>
         <testsuite name="ApiMisc">
-            <directory>./module/Api/src/Assertion</directory>
-            <directory>./module/Api/src/Controller</directory>
-            <directory>./module/Api/src/Filesystem</directory>
-            <directory>./module/Api/src/Mvc</directory>
-            <directory>./module/Api/src/Rbac</directory>
+            <directory>./module/Api/src</directory>
         </testsuite>
         <testsuite name="OLDOlcs">
             <directory>./module/Olcs</directory>

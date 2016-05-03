@@ -30,11 +30,7 @@
             <directory>./module/Api/src/Service</directory>
         </testsuite>
         <testsuite name="Api Misc">
-            <directory>./module/Api/src/Assertion</directory>
-            <directory>./module/Api/src/Controller</directory>
-            <directory>./module/Api/src/Filesystem</directory>
-            <directory>./module/Api/src/Mvc</directory>
-            <directory>./module/Api/src/Rbac</directory>
+            <directory>./module/Api/src</directory>
         </testsuite>
         <testsuite name="OLD Olcs">
             <directory>./module/Olcs</directory>
@@ -48,7 +44,6 @@
             <directory suffix=".php">../module</directory>
             <exclude>
                 <file>../module/Olcs/Db/Module.php</file>
-                <file>../module/Api/src/Module.php</file>
                 <file>../module/Cli/src/Module.php</file>
                 <file>../module/DocumentShare/src/Module.php</file>
                 <file>../module/Email/src/Module.php</file>
