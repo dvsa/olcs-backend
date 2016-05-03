@@ -36,18 +36,20 @@ class CreateContinuationDetails extends AbstractRawQuery
     {
         $query = $this->buildQueryFromTemplate($this->getQueryTemplate(), false);
 
-        for ($i = 0; $i < count($licenceIds); $i++) {
-            if ($i !== 0) {
+        $first = true;
+        foreach ($licenceIds as $licenceId) {
+            if (!$first) {
                 $query .= ', ';
             }
             $query .= sprintf(
                 '(%s, %s, %s, %s, NOW(), %s)',
-                $this->connection->quote($licenceIds[$i]),
+                $this->connection->quote($licenceId),
                 $this->connection->quote($received ? 1 : 0),
                 $this->connection->quote($status),
                 $this->connection->quote($continuationId),
                 $this->getCurrentUser()->getId()
             );
+            $first = false;
         }
 
         try {

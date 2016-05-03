@@ -30,7 +30,9 @@ return [
     BookmarkQuery\ImpoundingBundle::class => BookmarkQueryHandler\ImpoundingBundle::class,
     BookmarkQuery\InterimUnlinkedTm::class => BookmarkQueryHandler\InterimUnlinkedTm::class,
     BookmarkQuery\InterimOperatingCentres::class => BookmarkQueryHandler\InterimOperatingCentres::class,
+    BookmarkQuery\IrfoGvPermitBundle::class => BookmarkQueryHandler\IrfoGvPermitBundle::class,
     BookmarkQuery\IrfoPsvAuthBundle::class => BookmarkQueryHandler\IrfoPsvAuthBundle::class,
+    BookmarkQuery\OrganisationBundle::class => BookmarkQueryHandler\OrganisationBundle::class,
     BookmarkQuery\UserBundle::class => BookmarkQueryHandler\UserBundle::class,
     BookmarkQuery\BusRegBundle::class => BookmarkQueryHandler\BusRegBundle::class,
     BookmarkQuery\PublicationLinkBundle::class => BookmarkQueryHandler\PublicationLinkBundle::class,
@@ -333,6 +335,12 @@ return [
 
     // Bus Reg Search View
     TransferQuery\Bus\SearchViewList::class => QueryHandler\Bus\SearchViewList::class,
+
+    // Bus Reg Filtered List
+    TransferQuery\BusRegSearchView\BusRegSearchViewList::class =>
+        QueryHandler\BusRegSearchView\BusRegSearchViewList::class,
+    TransferQuery\BusRegSearchView\BusRegSearchViewContextList::class =>
+        QueryHandler\BusRegSearchView\BusRegSearchViewContextList::class,
 
     // Fee
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
