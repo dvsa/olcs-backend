@@ -1,21 +1,22 @@
 <?php
 
 /**
- * Update IrfoPermitStock
+ * Update IRFO Permit Stock Issued
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Irfo;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as IrfoGvPermitEntity;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPermitStock as IrfoPermitStockEntity;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
- * Update IrfoPermitStock
+ * Update IRFO Permit Stock Issued
  */
-final class UpdateIrfoPermitStock extends AbstractCommandHandler implements TransactionedInterface
+final class UpdateIrfoPermitStockIssued extends AbstractCommandHandler implements TransactionedInterface
 {
     const MAX_IDS_COUNT = 100;
 
@@ -37,19 +38,21 @@ final class UpdateIrfoPermitStock extends AbstractCommandHandler implements Tran
             );
         }
 
-        $status = $this->getRepo()->getRefdataReference($command->getStatus());
+        $status = $this->getRepo()->getRefdataReference(IrfoPermitStockEntity::STATUS_ISSUED);
 
-        // if updating to In Stock - unassign the permit
-        $unassignIrfoGvPermit = ($status->getId() === IrfoPermitStockEntity::STATUS_IN_STOCK);
+        $irfoGvPermit = $this->getRepo()->getReference(
+            IrfoGvPermitEntity::class,
+            $command->getIrfoGvPermit()
+        );
 
         $irfoPermitStockList = $this->getRepo()->fetchByIds($ids);
 
         foreach ($irfoPermitStockList as $irfoPermitStock) {
+            // set status
             $irfoPermitStock->setStatus($status);
 
-            if ($unassignIrfoGvPermit) {
-                $irfoPermitStock->setIrfoGvPermit(null);
-            }
+            // link with IRFO GV Permit
+            $irfoPermitStock->setIrfoGvPermit($irfoGvPermit);
 
             $this->getRepo()->save($irfoPermitStock);
         }
