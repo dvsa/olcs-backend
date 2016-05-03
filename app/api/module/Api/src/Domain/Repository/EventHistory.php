@@ -133,7 +133,7 @@ class EventHistory extends AbstractRepository
     {
         $eventDetailsQuery = $this->getDbQueryManager()->get('EventHistory\GetEventHistoryDetails');
         $eventDetailsQuery->setHistoryTable($table);
-        $stmt = $eventDetailsQuery->execute(['id' => $id, 'version' => [$version]]);
+        $stmt = $eventDetailsQuery->execute(['id' => $id, 'version' => [$version, $version - 1]]);
         $eventHistory = $stmt->fetchAll();
         $returnValues = [];
 

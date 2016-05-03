@@ -120,4 +120,84 @@ class EventHistoryTest extends RepositoryTestCase
 
         $this->sut->applyListFilters($qb, $query);
     }
+
+    public function testFetchEventHistoryDetails()
+    {
+
+        $table = 'application_hist';
+        $id = 1;
+        $version = 2;
+        $results = [
+            [
+                'foo' => 'bar2',
+                'cake' => 'baz2',
+                'same' => 'value',
+                'version' => 2
+            ],
+            [
+                'foo' => 'bar1',
+                'cake' => 'baz1',
+                'same' => 'value',
+                'version' => 1
+            ]
+        ];
+
+        $this->dbQueryService
+            ->shouldReceive('get')
+            ->with('EventHistory\GetEventHistoryDetails')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('execute')
+                ->with(
+                    ['id' => $id, 'version' => [$version, $version - 1]]
+                )
+                ->andReturn(
+                    m::mock()
+                    ->shouldReceive('fetchAll')
+                    ->andReturn($results)
+                    ->once()
+                    ->getMock()
+                )
+                ->once()
+                ->shouldReceive('setHistoryTable')
+                ->with($table)
+                ->once()
+                ->getMock()
+            );
+
+        $expected = [
+            [
+                'name' => 'foo',
+                'oldValue' => 'bar1',
+                'newValue' => 'bar2'
+            ],
+            [
+                'name' => 'cake',
+                'oldValue' => 'baz1',
+                'newValue' => 'baz2'
+            ]
+        ];
+
+        $this->assertEquals($expected, $this->sut->fetchEventHistoryDetails($id, $version, $table));
+    }
+
+    public function testApplyListJoins()
+    {
+        $this->setUpSut(Repo::class, true);
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->once()->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefData')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('case')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('licence')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('application')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('organisation')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('transportManager')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('busReg')->once()->andReturnSelf();
+
+        $this->assertNull($this->sut->applyListJoins($qb));
+    }
 }

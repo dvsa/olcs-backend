@@ -21,6 +21,7 @@ class EventHistory extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
+        $this->getRepo()->disableSoftDeleteable();
         $eventHistory = $this->getRepo()->fetchUsingId($query);
         return $this->result(
             $eventHistory,
@@ -48,13 +49,15 @@ class EventHistory extends AbstractQueryHandler
      * @param string $entityType
      * @return array
      */
-    public function getEventHistoryDetails($entityPk, $entityVersion, $entityType)
+    public function getEventHistoryDetails($entityPk = null, $entityVersion = null, $entityType = null)
     {
+        if (!$entityType || !$entityPk || !$entityVersion) {
+            return [];
+        }
         try {
             $eventHistoryDetails = $this->getRepo()
                 ->fetchEventHistoryDetails($entityPk, $entityVersion, $entityType . '_hist');
         } catch (\Exception $e) {
-            echo $e->getMessage();
             $eventHistoryDetails = [];
         }
         return $eventHistoryDetails;
