@@ -221,7 +221,7 @@ class Search
                         );
                     }
                 }
-                
+
                 break;
             case 'busreg':
                 $queryMatch = new Query\Match();
