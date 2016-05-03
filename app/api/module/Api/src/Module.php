@@ -29,22 +29,7 @@ class Module implements BootstrapListenerInterface
             'Zend\Mvc\SendResponseListener',
             SendResponseEvent::EVENT_SEND_RESPONSE,
             function (SendResponseEvent $e) {
-                /* @var \Zend\Http\PhpEnvironment\Response $response */
-                $response = $e->getResponse();
-                $content = $response->getContent();
-                if (strlen($content) > 1000) {
-                    $content = substr($content, 0, 1000) . '...';
-                }
-
-                if (empty($content)) {
-                    // Response should never be empty, this is a symptom that the backend has gone wrong
-                    Logger::err('API Response is empty');
-                }
-                Logger::logResponse(
-                    $response->getStatusCode(),
-                    'API Response Sent',
-                    ['status' => $response->getStatusCode(), 'content' => $content]
-                );
+                $this->logResponse($e->getResponse());
             }
         );
 
@@ -66,5 +51,38 @@ class Module implements BootstrapListenerInterface
         $authService = $serviceManager->get(\ZfcRbac\Service\AuthorizationService::class);
         $serviceManager->get('LogProcessorManager')->get(\Olcs\Logging\Log\Processor\UserId::class)
             ->setUserId($authService->getIdentity()->getUser()->getLoginId());
+    }
+
+    /**
+     * Add details of the response to the log
+     *
+     * @param \Zend\Stdlib\ResponseInterface $response
+     */
+    protected function logResponse(\Zend\Stdlib\ResponseInterface $response)
+    {
+        $content = $response->getContent();
+        if (strlen($content) > 1000) {
+            $content = substr($content, 0, 1000) . '...';
+        }
+
+        if ($response instanceof \Zend\Console\Response) {
+            $priority = $response->getErrorLevel() === 0 ? \Zend\Log\Logger::DEBUG : \Zend\Log\Logger::ERR;
+            Logger::log(
+                $priority,
+                'CLI Response Sent',
+                ['errorLevel' => $response->getErrorLevel(), 'content' => $content]
+            );
+        }
+        if ($response instanceof \Zend\Http\PhpEnvironment\Response) {
+            if (empty($content)) {
+                // Response should never be empty, this is a symptom that the backend has gone wrong
+                Logger::err('API Response is empty');
+            }
+            Logger::logResponse(
+                $response->getStatusCode(),
+                'API Response Sent',
+                ['status' => $response->getStatusCode(), 'content' => $content]
+            );
+        }
     }
 }
