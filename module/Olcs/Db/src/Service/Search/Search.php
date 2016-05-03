@@ -196,20 +196,22 @@ class Search
                     new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
                 );
 
-                // remove excess whitespace
-                $search = preg_replace('/\s{2,}/', '', $search);
-
+                // separate search into words
                 $parts = explode(' ', $search);
+
                 if (count($parts) > 1) {
                     // apply wildcard to each search term
                     foreach ($parts as $part_search) {
-                        $wildcardQuery = '*' . strtolower(trim($part_search, '*')) . '*';
-                        $queryBool->addShould(
-                            new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
-                        );
-                        $queryBool->addShould(
-                            new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
-                        );
+                        // only search if valid
+                        if (!empty($part_search)) {
+                            $wildcardQuery = '*' . strtolower(trim($part_search, '*')) . '*';
+                            $queryBool->addShould(
+                                new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
+                            );
+                            $queryBool->addShould(
+                                new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
+                            );
+                        }
                     }
                 }
 
