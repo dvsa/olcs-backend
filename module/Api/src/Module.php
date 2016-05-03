@@ -25,6 +25,29 @@ class Module implements BootstrapListenerInterface
         $payloadValidationListener = $sm->get('PayloadValidationListener');
         $payloadValidationListener->attach($eventManager, 1);
 
+        $eventManager->getSharedManager()->attach(
+            'Zend\Mvc\SendResponseListener',
+            SendResponseEvent::EVENT_SEND_RESPONSE,
+            function (SendResponseEvent $e) {
+                /* @var \Zend\Http\PhpEnvironment\Response $response */
+                $response = $e->getResponse();
+                $content = $response->getContent();
+                if (strlen($content) > 1000) {
+                    $content = substr($content, 0, 1000) . '...';
+                }
+
+                if (empty($content)) {
+                    // Response should never be empty, this is a symptom that the backend has gone wrong
+                    Logger::err('API Response is empty');
+                }
+                Logger::logResponse(
+                    $response->getStatusCode(),
+                    'API Response Sent',
+                    ['status' => $response->getStatusCode(), 'content' => $content]
+                );
+            }
+        );
+
         $this->setLoggerUser($e->getApplication()->getServiceManager());
     }
 

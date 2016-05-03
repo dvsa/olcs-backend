@@ -33,8 +33,8 @@ class SafetyAddresses extends DynamicBookmark
 
         $rows = [];
         $addressFormatter = new Formatter\Address();
-        $addressFormatter->setSeparator(', ');
         foreach ($this->data['workshops'] as $workshop) {
+            $addressFormatter->setSeparator(', ');
             $address = $workshop['contactDetails']['address'];
             $rows[] = [
                 'Address' => trim(
@@ -45,8 +45,6 @@ class SafetyAddresses extends DynamicBookmark
                 'checkbox2' => $workshop['isExternal'] === 'Y' ? 'X' : ''
             ];
         }
-        // need to reset static property to the original value
-        $addressFormatter->setSeparator("\n");
 
         $sortedRows = $this->sortSafetyAddresses($rows);
         $snippet = $this->getSnippet('SafetyAddresses');

@@ -8,7 +8,7 @@ return [
     '1 Week' => '1 Week',
     'no.of.weeks' => '%s Weeks',
     'application-review-addresses-contact-details-title' => 'Contact details',
-    'application-review-addresses-correspondence-address' => 'Correspondence Address',
+    'application-review-addresses-correspondence-address' => 'Correspondence address',
     'application-review-addresses-correspondence-business' => 'Business phone number',
     'application-review-addresses-correspondence-email' => 'Email address',
     'application-review-addresses-correspondence-fax' => 'Fax phone number',
@@ -33,8 +33,8 @@ return [
     'application-review-conditions-undertakings-licence-undertakings-added' => 'Licence undertakings',
     'application-review-conditions-undertakings-oc-conditions-added' => 'Operating centre conditions',
     'application-review-conditions-undertakings-oc-undertakings-added' => 'Operating centre undertakings',
-    'application-review-convictions-penalties-confirmation' => 'Confirm that you are aware that you must tell the
-        traffic commissioner immediately of any relevant convictions that occur between the submission of your
+    'application-review-convictions-penalties-confirmation' => 'Confirm you are aware that you must tell the
+        Traffic Commissioner immediately of any relevant convictions that occur between the submission of your
         application and a decision being made on this application',
     'application-review-convictions-penalties-conviction-convictionDate' => 'Date of conviction',
     'application-review-convictions-penalties-conviction-familyName' => 'Last name',
@@ -45,9 +45,9 @@ return [
     'application-review-convictions-penalties-conviction-offence-penalty' => 'Penalty',
     'application-review-convictions-penalties-conviction-title' => 'Title',
     'application-review-convictions-penalties-question' => 'Has any person named in this application, (including
-        partners, directors and transport managers); any company of which a person named on this application is or has
+        partners, directors and Transport Managers); any company of which a person named on this application is or has
         been a director; any parent company if you are a limited company; or any of your employees or agents been
-        convicted of any relevant offence which must be declared to the traffic commissioner?',
+        convicted of any relevant offence which must be declared to the Traffic Commissioner?',
     'application-review-financial-evidence-evidence' => 'Evidence',
     'application-review-financial-evidence-evidence-post' => 'Operator to send original evidence to the Central
         Licensing Office',
@@ -59,7 +59,7 @@ return [
     'application-review-financial-history-evidence' => 'Evidence',
     'application-review-financial-history-evidence-send' => 'Operator to send original evidence to the Central Licensing
         Office',
-    'application-review-financial-history-insolvencyConfirmation' => 'Confirm that you are aware that you must tell the Traffic Commissioner immediately of any insolvency proceedings that occur between the submission of your application and a decision being made on the application.',
+    'application-review-financial-history-insolvencyConfirmation' => 'Confirm you are aware that you must tell the Traffic Commissioner immediately of any insolvency proceedings that occur between the submission of your application and a decision being made on the application.',
     'application-review-financial-history-insolvencyDetails' => 'Additional information',
     'application-review-financial-history-liquidation' => 'Has anyone you’ve named in this application (including partners, directors and Transport Managers) ever been involved with a company or business that has gone (or is going into) liquidation, owing money?',
     'application-review-financial-history-receivership' => 'Has anyone you’ve named in this application (including partners, directors and Transport Managers) ever been involved with a company or business that has gone (or is going into) receivership?',
@@ -70,7 +70,7 @@ return [
     'application-review-licence-history-disqualification-date' => 'Date of disqualification',
     'application-review-licence-history-disqualification-length' => 'Length of disqualification',
     'application-review-licence-history-disqualified-question' => 'Has any person named in the application (including
-        partners, directors or transport managers) been disqualified from holding or obtaining an operator\'s licence by
+        partners, directors or Transport Managers) been disqualified from holding or obtaining an operator\'s licence by
         any traffic commissioner?',
     'application-review-licence-history-disqualified-title' => 'Disqualifications',
     'application-review-licence-history-held-question' => 'Within the last 12 months, have you, your company or organisation, or your partners or directors purchased assets or shareholdings in any company that, to your knowledge, currently holds or has previously held an operator’s licence in any traffic area?',
@@ -78,7 +78,7 @@ return [
     'application-review-licence-history-licence-holder' => 'Licence holder name',
     'application-review-licence-history-licence-no' => 'Licence number',
     'application-review-licence-history-public-inquiry-question' => 'Has any person named in the application (including
-        partners, directors or transport managers) ever attended a Public Inquiry before a traffic commissioner?',
+        partners, directors or Transport Managers) ever attended a Public Inquiry before a traffic commissioner?',
     'application-review-licence-history-public-inquiry-title' => 'Public Inquiries',
     'application-review-licence-history-purchase-date' => 'Date of purchase',
     'application-review-licence-history-refused-question' => 'Has anyone you’ve named in this application (including partners, directors and Transport Managers) ever had an application for a goods or PSV operator’s licence refused by any EU authority?',
@@ -123,7 +123,7 @@ return [
     'application-review-type-of-licence-licence-type' => 'What type of licence do you want to apply for?',
     'application-review-type-of-licence-operator-location' => 'Where do you operate from?',
     'application-review-type-of-licence-operator-type' => 'What type of operator are you?',
-    'application-review-vehicles-declarations-vs' => 'Which sizes of vehicles do you intend to operate',
+    'application-review-vehicles-declarations-vs' => 'Which sizes of vehicles do you intend to operate?',
     'application-review-vehicles-declarations-15b1' => 'Do you intend to operate small vehicles as a small part of a
         large bus business as detailed by Section 79A of the Public Passenger Vehicles Act (as amended by Section 265 of
         the Transport Act 2000)?',
@@ -131,20 +131,19 @@ return [
         business\' requirements',
     'application-review-vehicles-declarations-15cd' => 'Confirm that you agree to the below conditions and undertakings being specified on your licence, if it is granted.',
     'application-review-vehicles-declarations-15e' => 'Vehicles with eight passenger seats or less will not be operated
-        under the licence without the prior written agreement of the traffic commissioner who may require you to agree
+        under the licence without the prior written agreement of the Traffic Commissioner who may require you to agree
         to certain undertakings',
     'application-review-vehicles-declarations-15f1' => 'Are the vehicles you’re applying for to be used as limousines or novelty type vehicles?',
     'application-review-vehicles-declarations-15f2' => 'Limousines and novelty type vehicles are not to be operated
         under this operator\'s licence',
-    'application-review-vehicles-declarations-15g' => 'Only limousines and novelty type vehicles with nine passenger
+    'application-review-vehicles-declarations-15g' => 'Only limousines and novelty type vehicles with 9 passenger
         seats or more and issued with a valid Certificate will be used under the licence',
     'application-review-vehicles-declarations-8b1' => 'You are fully aware of, and will comply with, the restrictions
-        under the terms of the restricted licence for the use of vehicles with between nine and sixteen passenger
+        under the terms of the restricted licence for the use of vehicles with between 9 and 16 passenger
         seats',
-    'application-review-vehicles-declarations-8b2' => 'Details below of your business or main occupation and how you
-        will comply with these restrictions',
+    'application-review-vehicles-declarations-8b2' => 'Details of your business or main occupation and how you will comply with restrictions',
     'application-review-vehicles-declarations-business-title' => 'Business or main occupation',
-    'application-review-vehicles-declarations-medium-title' => 'Vehicles with nine or more passengers',
+    'application-review-vehicles-declarations-medium-title' => 'Vehicles with 9 or more passengers',
     'application-review-vehicles-declarations-novelty-title' => 'Limousines and novelty vehicles',
     'application-review-vehicles-declarations-small-title' => 'Small vehicle undertakings',
     'application-review-vehicles-hasEnteredReg' => 'Vehicle details submitted?',

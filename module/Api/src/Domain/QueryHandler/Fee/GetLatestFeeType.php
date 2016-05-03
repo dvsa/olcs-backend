@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Get latest fee type
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Fee;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -19,19 +14,28 @@ class GetLatestFeeType extends AbstractQueryHandler
 {
     protected $repoServiceName = 'FeeType';
 
+    /**
+     * @param \Dvsa\Olcs\Transfer\Query\Fee\GetLatestFeeType $query
+     *
+     * @return array
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
-        $feeType = $this->getRepo('FeeType')->fetchLatest(
-            $this->getRepo()->getRefdataReference($query->getFeeType()),
-            $this->getRepo()->getRefdataReference($query->getOperatorType()),
-            $this->getRepo()->getRefdataReference($query->getLicenceType()),
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $repo */
+        $repo = $this->getRepo('FeeType');
+
+        $feeType = $repo->fetchLatest(
+            $repo->getRefdataReference($query->getFeeType()),
+            $repo->getRefdataReference($query->getOperatorType()),
+            $repo->getRefdataReference($query->getLicenceType()),
             new \DateTime($query->getDate()),
             $query->getTrafficArea()
         );
 
         return [
             'result' => [$feeType],
-            'count' => 1
+            'count' => 1,
         ];
     }
 }

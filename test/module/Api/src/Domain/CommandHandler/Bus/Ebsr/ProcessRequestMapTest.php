@@ -27,7 +27,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Doctrine\Common\Collections\ArrayCollection;
 use Zend\Http\Header\ContentSecurityPolicy;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use org\bovigo\vfs\vfsStream;
 
@@ -61,7 +60,6 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
             FileProcessorInterface::class => m::mock(FileProcessorInterface::class),
             TransExchangeClient::class => m::mock(TransExchangeClient::class),
             'Config' => $config,
-            TemplateRenderer::class => m::mock(TemplateRenderer::class),
             'FileUploader' => m::mock(ContentStoreFileUploader::class)
         ];
 

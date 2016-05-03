@@ -85,18 +85,6 @@ class Search
                 }
             }
 
-            $vrmQuery = new Query\Match();
-            $vrmQuery->setField('vrm', $query);
-            $elasticaQueryBool->addShould($vrmQuery);
-
-            $postcodeQuery = new Query\Match();
-            $postcodeQuery->setField('correspondence_postcode', $query);
-            $elasticaQueryBool->addShould($postcodeQuery);
-
-            $wildcardQuery = strtolower(rtrim($query, '*') . '*');
-            $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
-            $elasticaQueryBool->addShould($elasticaQueryWildcard);
-
             foreach ($indexes as $index) {
                 $this->modifyQueryForIndex($index, $query, $elasticaQueryBool);
             }
@@ -155,6 +143,57 @@ class Search
     private function modifyQueryForIndex($index, $search, Query\Bool $queryBool)
     {
         switch ($index) {
+            case 'address':
+                $postcodeQuery = new Query\Match();
+                $postcodeQuery->setField('postcode', $search);
+                $queryBool->addShould($postcodeQuery);
+
+                $wildcardQuery = strtolower(rtrim($search, '*') . '*');
+                $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
+                $queryBool->addShould($elasticaQueryWildcard);
+
+                break;
+            case 'application':
+            case 'case':
+                $correspondencePostcodeQuery = new Query\Match();
+                $correspondencePostcodeQuery->setField('correspondence_postcode', $search);
+                $queryBool->addShould($correspondencePostcodeQuery);
+
+                $wildcardQuery = strtolower(rtrim($search, '*') . '*');
+                $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
+                $queryBool->addShould($elasticaQueryWildcard);
+                break;
+            case 'operator':
+                $postcodeQuery = new Query\Match();
+                $postcodeQuery->setField('postcode', $search);
+                $queryBool->addShould($postcodeQuery);
+
+                $wildcardQuery = strtolower(rtrim($search, '*') . '*');
+                $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
+                $queryBool->addShould($elasticaQueryWildcard);
+
+                break;
+            case 'irfo':
+            case 'licence':
+            case 'psv_disc':
+            case 'publication':
+            case 'user':
+                $wildcardQuery = strtolower(rtrim($search, '*') . '*');
+                $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
+                $queryBool->addShould($elasticaQueryWildcard);
+
+                break;
+            case 'vehicle_current':
+            case 'vehicle_removed':
+                $vrmQuery = new Query\Match();
+                $vrmQuery->setField('vrm', $search);
+                $queryBool->addShould($vrmQuery);
+
+                $wildcardQuery = strtolower(rtrim($search, '*') . '*');
+                $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
+                $queryBool->addShould($elasticaQueryWildcard);
+
+                break;
             case 'person':
                 $wildcardQuery = '*'. strtolower(trim($search, '*')). '*';
                 $queryBool->addShould(
@@ -164,12 +203,21 @@ class Search
                     new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
                 );
 
+                $wildcardQuery = strtolower(rtrim($search, '*') . '*');
+                $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
+                $queryBool->addShould($elasticaQueryWildcard);
+
                 break;
             case 'busreg':
                 $queryMatch = new Query\Match();
                 $queryMatch->setFieldQuery('reg_no', $search);
                 $queryMatch->setFieldBoost('reg_no', 2);
                 $queryBool->addShould($queryMatch);
+
+                $wildcardQuery = strtolower(rtrim($search, '*') . '*');
+                $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
+                $queryBool->addShould($elasticaQueryWildcard);
+
                 break;
         }
     }

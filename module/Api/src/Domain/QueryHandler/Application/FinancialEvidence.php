@@ -55,7 +55,7 @@ class FinancialEvidence extends AbstractQueryHandler
                 'licence',
             ],
             [
-                'documents' => $financialDocuments->toArray(),
+                'documents' => $this->resultList($financialDocuments),
                 'financialEvidence' => $financialEvidence
             ]
         );

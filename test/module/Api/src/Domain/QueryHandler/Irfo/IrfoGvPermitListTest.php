@@ -1,14 +1,12 @@
 <?php
 
-/**
- * IrfoGvPermitList Test
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Irfo;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Irfo\IrfoGvPermitList;
+use Dvsa\Olcs\Api\Domain\QueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Transfer\Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\IrfoGvPermit as IrfoGvPermitRepo;
-use Dvsa\Olcs\Transfer\Query\Irfo\IrfoGvPermitList as Qry;
+use Mockery as m;
 
 /**
  * IrfoGvPermitList Test
@@ -17,26 +15,40 @@ class IrfoGvPermitListTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new IrfoGvPermitList();
-        $this->mockRepo('IrfoGvPermit', IrfoGvPermitRepo::class);
+        $this->sut = new QueryHandler\Irfo\IrfoGvPermitList();
+        $this->mockRepo('IrfoGvPermit', Repository\IrfoGvPermit::class);
 
         parent::setUp();
     }
 
     public function testHandleQuery()
     {
-        $query = Qry::create([]);
+        $query = Query\Irfo\IrfoGvPermitList::create([]);
 
-        $this->repoMap['IrfoGvPermit']->shouldReceive('fetchList')
-            ->with($query)
-            ->andReturn(['foo']);
+        $entity = m::mock(\Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit::class)
+            ->shouldReceive('serialize')
+            ->with(
+                [
+                    'irfoGvPermitType',
+                    'irfoPermitStatus',
+                ]
+            )
+            ->once()
+            ->andReturn('SERIALIZED')
+            ->getMock();
 
-        $this->repoMap['IrfoGvPermit']->shouldReceive('fetchCount')
+        $this->repoMap['IrfoGvPermit']
+            ->shouldReceive('fetchList')
+            ->with($query, \Doctrine\ORM\Query::HYDRATE_OBJECT)
+            ->andReturn([$entity])
+            //
+            ->shouldReceive('fetchCount')
             ->with($query)
             ->andReturn(2);
 
-        $result = $this->sut->handleQuery($query);
-        $this->assertEquals($result['count'], 2);
-        $this->assertEquals($result['result'], ['foo']);
+        $actual = $this->sut->handleQuery($query);
+
+        static::assertEquals(2, $actual['count']);
+        static::assertEquals(['SERIALIZED'], $actual['result']);
     }
 }
