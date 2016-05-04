@@ -183,8 +183,7 @@ class BusRegSearchViewTest extends RepositoryTestCase
             [
                 'licId' => '1234',
                 'busRegStatus' => 'foo',
-                'organisationId' => 342,
-                'status' => 'bar'
+                'organisationId' => 342
             ]
         );
 
