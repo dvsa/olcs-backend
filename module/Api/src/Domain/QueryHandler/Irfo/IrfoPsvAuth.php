@@ -38,6 +38,9 @@ class IrfoPsvAuth extends AbstractQueryHandler
                 'countrys'
             ],
             [
+                'isGeneratable' => $irfoPsvAuth->isGeneratable(
+                    $this->getRepo('Fee')->fetchFeesByIrfoPsvAuthId($irfoPsvAuth->getId(), true)
+                ),
                 'isGrantable' => $irfoPsvAuth->isGrantable(
                     $this->getRepo('Fee')->fetchApplicationFeeByPsvAuthId($irfoPsvAuth->getId())
                 ),
