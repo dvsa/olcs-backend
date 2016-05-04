@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Dvsa\Olcs\Transfer\Query\BusRegSearchView\BusRegSearchViewList;
+use Dvsa\Olcs\Transfer\Query\Bus\SearchViewList;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as Repo;
 use Doctrine\ORM\QueryBuilder;
@@ -177,6 +178,27 @@ class BusRegSearchViewTest extends RepositoryTestCase
                 'organisationId' => 342
             ]
         );
+
+        $this->sut->applyListFilters($mockQb, $mockQ);
+    }
+
+    public function testApplyListFiltersAlternative()
+    {
+        $this->setUpSut(Repo::class, true);
+
+        $mockQb = m::mock(QueryBuilder::class)
+            ->shouldReceive('expr')
+            ->andReturnSelf()
+            ->shouldReceive('eq')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('status', 'bar')
+            ->andReturnSelf()
+            ->getMock();
+
+        $mockQ = SearchViewList::create(['status' => 'bar']);
 
         $this->sut->applyListFilters($mockQb, $mockQ);
     }
