@@ -66,6 +66,12 @@ class BusRegSearchView extends AbstractRepository
             $qb->andWhere($qb->expr()->eq($this->alias . '.organisationId', ':organisationId'))
                 ->setParameter('organisationId', $query->getOrganisationId());
         }
+
+        // this is required for filtering from BusReg home page
+        if (method_exists($query, 'getStatus') && !empty($query->getStatus())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.busRegStatus', ':status'))
+                ->setParameter('status', $query->getStatus());
+        }
     }
 
     /**
