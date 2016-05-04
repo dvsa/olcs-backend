@@ -108,8 +108,11 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
                 'currentUserId' => $this->getCurrentUser()->getId()
             ]
         );
-        $query = $this->buildQueryFromTemplate($this->getQueryTemplate());
-
+        if ($this->templateMap) {
+            $query = $this->buildQueryFromTemplate($this->getQueryTemplate());
+        } else {
+            $query = $this->getQueryTemplate();
+        }
         try {
             $paramTypes = array_merge($this->getParamTypes(), $paramTypes);
             return $this->connection->executeQuery($query, $params, $paramTypes);
