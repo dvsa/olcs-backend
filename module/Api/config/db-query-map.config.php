@@ -25,5 +25,6 @@ return [
         'ViStoredProcedures\ViTnmComplete' => Query\ViStoredProcedures\ViTnmComplete::class,
         'ViStoredProcedures\ViVhlComplete' => Query\ViStoredProcedures\ViVhlComplete::class,
         'Continuations\CreateContinuationDetails' => Query\Continuations\CreateContinuationDetails::class,
+        'EventHistory\GetEventHistoryDetails' => Query\EventHistory\GetEventHistoryDetails::class,
     ]
 ];

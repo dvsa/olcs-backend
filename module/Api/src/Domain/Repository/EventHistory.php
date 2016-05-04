@@ -16,6 +16,20 @@ class EventHistory extends AbstractRepository
 {
     protected $entity = EventHistoryEntity::class;
 
+    protected $fieldsToExclude = [
+        'hist_id',
+        'hist_timestamp',
+        'hist_transaction_type',
+        'hist_db_user',
+        'created_by',
+        'last_modified_by',
+        'created_on',
+        'last_modified_on',
+        'version',
+        'olbs_key',
+        'olbs_type'
+    ];
+
     /**
      * @param QueryBuilder $qb
      * @param HistoryDTO $query
@@ -56,6 +70,23 @@ class EventHistory extends AbstractRepository
     }
 
     /**
+     * Apply list join
+     *
+     * @param QueryBuilder $qb
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefData()
+            ->with('case')
+            ->with('licence')
+            ->with('application')
+            ->with('organisation')
+            ->with('transportManager')
+            ->with('busReg');
+    }
+
+    /**
      * Fetch a list for an organisation
      *
      * @param int|\Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
@@ -88,5 +119,46 @@ class EventHistory extends AbstractRepository
             ->setParameter('transportManager', $transportManager);
 
         return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch event history details
+     *
+     * @param int $id
+     * @param int $version
+     * @param string $table
+     * @return array
+     */
+    public function fetchEventHistoryDetails($id, $version, $table)
+    {
+        $eventDetailsQuery = $this->getDbQueryManager()->get('EventHistory\GetEventHistoryDetails');
+        $eventDetailsQuery->setHistoryTable($table);
+        $stmt = $eventDetailsQuery->execute(['id' => $id, 'version' => [$version, $version - 1]]);
+        $eventHistory = $stmt->fetchAll();
+        $returnValues = [];
+
+        if (count($eventHistory)) {
+            $cleanValues = [];
+            foreach ($eventHistory as $hist) {
+                foreach ($this->fieldsToExclude as $field) {
+                    if (array_key_exists($field, $hist)) {
+                        unset($hist[$field]);
+                    }
+                }
+                $cleanValues[] = $hist;
+            }
+            $keys = array_keys($cleanValues[0]);
+            for ($i = 0; $i < count($keys); $i++) {
+                if (isset($cleanValues[1]) && $cleanValues[0][$keys[$i]] === $cleanValues[1][$keys[$i]]) {
+                    continue;
+                }
+                $element['newValue'] = $cleanValues[0][$keys[$i]];
+                $element['oldValue'] = isset($cleanValues[1][$keys[$i]]) ? $cleanValues[1][$keys[$i]] : '';
+                $element['name'] = $keys[$i];
+                $returnValues[] = $element;
+            }
+        }
+
+        return $returnValues;
     }
 }
