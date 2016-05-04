@@ -25,14 +25,17 @@ class FinancialHistory extends AbstractQueryHandler
     public function handleQuery(QueryInterface $query)
     {
         $applicationRepo = $this->getRepo();
+        /* @var \Dvsa\Olcs\Api\Entity\Application\Application $application */
         $application = $applicationRepo->fetchUsingId($query, Query::HYDRATE_OBJECT);
         $financialDocuments = $application->getApplicationDocuments(
             $applicationRepo->getCategoryReference(Category::CATEGORY_LICENSING),
             $applicationRepo->getSubCategoryReference(SubCategory::DOC_SUB_CATEGORY_LICENCE_INSOLVENCY_DOCUMENT_DIGITAL)
         );
-        $data = $application->jsonSerialize();
-        $data['documents'] = $financialDocuments->toArray();
 
-        return $data;
+        return $this->result(
+            $application,
+            [],
+            ['documents' => $this->resultList($financialDocuments)]
+        );
     }
 }
