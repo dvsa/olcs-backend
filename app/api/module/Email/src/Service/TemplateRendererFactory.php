@@ -22,8 +22,6 @@ class TemplateRendererFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $templateRenderer = new TemplateRenderer();
-
-        $templateRenderer->setDefaultLayout('layout/email');
         $templateRenderer->setViewRenderer($serviceLocator->get('ViewRenderer'));
 
         return $templateRenderer;

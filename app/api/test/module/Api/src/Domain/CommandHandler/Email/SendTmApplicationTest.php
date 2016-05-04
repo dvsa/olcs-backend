@@ -91,7 +91,7 @@ class SendTmApplicationTest extends CommandHandlerTestCase
                 'isNi' => false,
                 'signInLink' => 'http://selfserve/'. $uriPart .'/442/transport-managers/details/75/edit-details/'
             ],
-            null
+            'default'
         );
 
         $result = new Result();
@@ -150,7 +150,7 @@ class SendTmApplicationTest extends CommandHandlerTestCase
                 'isNi' => false,
                 'signInLink' => 'http://selfserve/'. $uriPart .'/442/transport-managers/details/75/edit-details/'
             ],
-            null
+            'default'
         );
 
         $result = new Result();

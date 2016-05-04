@@ -155,7 +155,7 @@ class SubmitTest extends CommandHandlerTestCase
                     ],
                     $vars
                 );
-                $this->assertNull($layout);
+                $this->assertSame('default', $layout);
             },
             function (\Dvsa\Olcs\Email\Data\Message $message, $template, $vars, $layout) {
 
@@ -172,7 +172,7 @@ class SubmitTest extends CommandHandlerTestCase
                     ],
                     $vars
                 );
-                $this->assertNull($layout);
+                $this->assertSame('default', $layout);
             }
         );
 
@@ -249,7 +249,7 @@ class SubmitTest extends CommandHandlerTestCase
                     ],
                     $vars
                 );
-                $this->assertNull($layout);
+                $this->assertSame('default', $layout);
             },
             function (\Dvsa\Olcs\Email\Data\Message $message, $template, $vars, $layout) {
 
@@ -266,7 +266,7 @@ class SubmitTest extends CommandHandlerTestCase
                     ],
                     $vars
                 );
-                $this->assertNull($layout);
+                $this->assertSame('default', $layout);
             }
         );
 

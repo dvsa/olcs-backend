@@ -116,7 +116,7 @@ abstract class SendEbsrRegCancelEmailTestAbstract extends CommandHandlerTestCase
                 'hasBusData' => true,
                 'publicationId' => $publicationInfo,
             ],
-            null
+            'default'
         );
 
         $result = new Result();

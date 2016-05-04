@@ -103,7 +103,7 @@ class SendEbsrErrorsTest extends CommandHandlerTestCase
             m::type(\Dvsa\Olcs\Email\Data\Message::class),
             $this->template,
             $expectedTemplateVars,
-            null
+            'default'
         );
 
         $result = new Result();

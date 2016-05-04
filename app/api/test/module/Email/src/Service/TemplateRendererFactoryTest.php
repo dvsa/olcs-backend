@@ -27,7 +27,6 @@ class TemplateRendererFactoryTest extends MockeryTestCase
         $sl->shouldReceive('get')->with('ViewRenderer')->once()->andReturn($mockViewRenderer);
         $service = $this->sut->createService($sl);
 
-        $this->assertSame('layout/email', $service->getDefaultLayout());
         $this->assertSame($mockViewRenderer, $service->getViewRenderer());
     }
 }
