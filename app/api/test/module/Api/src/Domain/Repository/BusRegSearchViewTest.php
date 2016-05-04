@@ -169,14 +169,6 @@ class BusRegSearchViewTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('setParameter')
             ->with('organisationId', 342)
-            ->andReturnSelf()
-
-            ->shouldReceive('eq')
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->with('status', 'bar')
             ->andReturnSelf();
 
         $mockQ = BusRegSearchViewList::create(
