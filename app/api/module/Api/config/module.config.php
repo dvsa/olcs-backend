@@ -35,7 +35,6 @@ return [
             'ApplicationPublishValidationService' =>
                 \Dvsa\Olcs\Api\Service\Lva\Application\PublishValidationService::class,
             'ContentStore' => \Dvsa\Olcs\DocumentShare\Service\ClientFactory::class,
-            \Dvsa\Olcs\Api\Rbac\IdentityProvider::class => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
             'PayloadValidationListener' => \Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory::class,
             'CommandHandlerManager' => \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::class,
             'QueryHandlerManager' => \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::class,
@@ -304,6 +303,7 @@ return [
             'ViOpView' => RepositoryFactory::class,
             'ViTnmView' => RepositoryFactory::class,
             'ViVhlView' => RepositoryFactory::class,
+            'SystemInfoMessage' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
@@ -393,8 +393,6 @@ return [
             Dvsa\Olcs\Api\Service\Publication\Context\Application\BusNote::class,
         Dvsa\Olcs\Api\Service\Publication\Context\Application\ConditionUndertaking::class =>
             Dvsa\Olcs\Api\Service\Publication\Context\Application\ConditionUndertaking::class,
-        Dvsa\Olcs\Api\Service\Publication\Context\Application\LicenceCancelled::class =>
-            Dvsa\Olcs\Api\Service\Publication\Context\Application\LicenceCancelled::class,
         Dvsa\Olcs\Api\Service\Publication\Context\Application\OperatingCentres::class =>
             Dvsa\Olcs\Api\Service\Publication\Context\Application\OperatingCentres::class,
         Dvsa\Olcs\Api\Service\Publication\Context\Application\TransportManagers::class =>
@@ -423,8 +421,6 @@ return [
             Dvsa\Olcs\Api\Service\Publication\Process\Application\Text2::class,
         Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class =>
             Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class,
-        Dvsa\Olcs\Api\Service\Publication\Process\Police::class =>
-            Dvsa\Olcs\Api\Service\Publication\Process\Police::class,
         Dvsa\Olcs\Api\Service\Publication\Process\Application\Police::class =>
             Dvsa\Olcs\Api\Service\Publication\Process\Application\Police::class,
         Dvsa\Olcs\Api\Service\Publication\Process\Licence\Text1::class =>

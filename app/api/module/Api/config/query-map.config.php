@@ -497,4 +497,8 @@ return [
 
     // EventHistory
     TransferQuery\EventHistory\EventHistory::class => QueryHandler\EventHistory\EventHistory::class,
+
+    // System Messages
+    TransferQuery\System\InfoMessage\Get::class => QueryHandler\System\InfoMessage\Get::class,
+    TransferQuery\System\InfoMessage\GetList::class => QueryHandler\System\InfoMessage\GetList::class,
 ];
