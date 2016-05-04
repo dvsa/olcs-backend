@@ -72,18 +72,25 @@ class MessageTest extends MockeryTestCase
         $this->assertSame($value, $this->sut->getFromName());
     }
 
-    public function testBody()
+    public function testPlainBody()
     {
         $value = 'ABCDEFG';
-        $this->sut->setBody($value);
-        $this->assertSame($value, $this->sut->getBody());
+        $this->sut->setPlainBody($value);
+        $this->assertSame($value, $this->sut->getPlainBody());
     }
 
-    public function testHtml()
+    public function testHtmlBody()
     {
         $value = 'ABCDEFG';
-        $this->sut->setHtml($value);
-        $this->assertSame($value, $this->sut->getHtml());
+        $this->sut->setHtmlBody($value);
+        $this->assertSame($value, $this->sut->getHtmlBody());
+    }
+
+    public function testHasHtml()
+    {
+        $value = 'ABCDEFG';
+        $this->sut->setHasHtml($value);
+        $this->assertSame($value, $this->sut->getHasHtml());
     }
 
     public function testLocale()

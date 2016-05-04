@@ -21,10 +21,8 @@ return [
         ],
     ],
     'view_manager' => [
-        'template_map' => [
-            'layout/email' => __DIR__ . '/../view/layout/email.phtml',
-        ],
         'template_path_stack' => [
+            'layout' => __DIR__ . '/../view/layout',
             'email' => __DIR__ . '/../view/email',
         ]
     ],

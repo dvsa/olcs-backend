@@ -55,7 +55,7 @@ trait EmailAwareTrait
      * @return true
      * @throws \Dvsa\Olcs\Email\Exception\EmailNotSentException
      */
-    public function sendEmailTemplate(Message $message, $template, array $variables = [], $layout = null)
+    public function sendEmailTemplate(Message $message, $template, array $variables = [], $layout = 'default')
     {
         $this->getTemplateRendererService()->renderBody($message, $template, $variables, $layout);
         return $this->sendEmail($message);

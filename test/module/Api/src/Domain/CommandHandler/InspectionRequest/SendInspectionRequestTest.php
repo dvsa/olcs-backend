@@ -349,7 +349,7 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             m::type(\Dvsa\Olcs\Email\Data\Message::class),
             'inspection-request',
             $expected,
-            null
+            'blank'
         );
 
         $result = new Result();
@@ -540,7 +540,7 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             m::type(\Dvsa\Olcs\Email\Data\Message::class),
             'inspection-request',
             $expected,
-            null
+            'blank'
         );
 
         $result = new Result();

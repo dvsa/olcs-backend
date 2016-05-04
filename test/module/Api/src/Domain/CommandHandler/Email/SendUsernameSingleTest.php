@@ -80,7 +80,7 @@ class SendUsernameSingleTest extends CommandHandlerTestCase
                     'loginId' => $loginId,
                     'url' => 'http://selfserve/'
                 ],
-                null
+                'default'
             );
 
         $result = new Result();

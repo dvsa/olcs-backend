@@ -99,7 +99,7 @@ class SendPublicationTest extends CommandHandlerTestCase
             m::type(\Dvsa\Olcs\Email\Data\Message::class),
             SendPublication::EMAIL_TEMPLATE,
             ['filename' => $filename],
-            null
+            'default'
         );
 
         $result = new Result();

@@ -111,7 +111,7 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
                 m::type(Message::class),
                 'licensing-information-standard',
                 ['licNo' => 'AB12345678', 'url' => 'http://selfserve/correspondence'],
-                null
+                'default'
             );
 
         $result = new Result();

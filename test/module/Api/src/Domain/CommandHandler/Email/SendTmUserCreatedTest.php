@@ -108,7 +108,7 @@ class SendTmUserCreatedTest extends CommandHandlerTestCase
                     'loginId' => $loginId,
                     'url' => 'http://selfserve/'. $uriPart .'/442/transport-managers/details/'.$tmaId.'/edit-details/'
                 ],
-                null
+                'default'
             );
 
         $this->expectedSideEffect(
