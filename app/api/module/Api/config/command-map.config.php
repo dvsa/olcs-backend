@@ -303,6 +303,7 @@ return [
     TransferCommand\Irfo\UpdateIrfoPsvAuth::class => CommandHandler\Irfo\UpdateIrfoPsvAuth::class,
     TransferCommand\Irfo\GrantIrfoPsvAuth::class => CommandHandler\Irfo\GrantIrfoPsvAuth::class,
     TransferCommand\Irfo\ApproveIrfoPsvAuth::class => CommandHandler\Irfo\ApproveIrfoPsvAuth::class,
+    TransferCommand\Irfo\GenerateIrfoPsvAuth::class => CommandHandler\Irfo\GenerateIrfoPsvAuth::class,
     TransferCommand\Irfo\RefuseIrfoPsvAuth::class => CommandHandler\Irfo\RefuseIrfoPsvAuth::class,
     TransferCommand\Irfo\WithdrawIrfoPsvAuth::class => CommandHandler\Irfo\WithdrawIrfoPsvAuth::class,
     TransferCommand\Irfo\CnsIrfoPsvAuth::class => CommandHandler\Irfo\CnsIrfoPsvAuth::class,
