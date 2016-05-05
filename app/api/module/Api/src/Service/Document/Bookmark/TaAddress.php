@@ -42,8 +42,8 @@ class TaAddress extends DynamicBookmark
         $user = $this->data[0];
         $licence = $this->data[1];
 
-        if (isset($user['team']['trafficArea']) && isset($user['contactDetails']['address'])) {
-            $trafficArea = $user['team']['trafficArea']['name'];
+        if (isset($user['contactDetails']['address'])) {
+            $trafficArea = isset($licence['trafficArea']['name']) ? $licence['trafficArea']['name'] : '';
             $address = $user['contactDetails']['address'];
         } elseif (isset($licence['trafficArea']['contactDetails']['address'])) {
             $trafficArea = $licence['trafficArea']['name'];
