@@ -650,6 +650,12 @@ return array(
                 'property' => 'licenceVehicle'
             )
         ),
+        'interim_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'interimLicenceVehicle'
+            )
+        ),
         'vehicle_id' => array(
             'inversedBy' => array(
                 'entity' => 'Vehicle',
