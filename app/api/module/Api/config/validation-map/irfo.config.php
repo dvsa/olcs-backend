@@ -22,6 +22,7 @@ return [
     CommandHandler\Irfo\CreateIrfoPermitStock::class                              => IsInternalUser::class,
     CommandHandler\Irfo\CreateIrfoPsvAuth::class                                  => IsInternalUser::class,
     CommandHandler\Irfo\GenerateIrfoGvPermit::class                               => IsInternalUser::class,
+    CommandHandler\Irfo\GenerateIrfoPsvAuth::class                                => IsInternalUser::class,
     CommandHandler\Irfo\GrantIrfoPsvAuth::class                                   => IsInternalUser::class,
     CommandHandler\Irfo\RefuseIrfoGvPermit::class                                 => IsInternalUser::class,
     CommandHandler\Irfo\RefuseIrfoPsvAuth::class                                  => IsInternalUser::class,
