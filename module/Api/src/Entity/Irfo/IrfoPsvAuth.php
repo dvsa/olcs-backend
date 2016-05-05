@@ -184,6 +184,53 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
     }
 
     /**
+     * Is generatable?
+     *
+     * @param array $outstandingFees
+     * @return bool
+     */
+    public function isGeneratable($outstandingFees)
+    {
+        return ($this->isGeneratableState() && empty($outstandingFees));
+    }
+
+    /**
+     * Is in a generatable state
+     *
+     * @return bool
+     */
+    private function isGeneratableState()
+    {
+        return ($this->getStatus()->getId() === self::STATUS_APPROVED);
+    }
+
+    /**
+     * Generate
+     *
+     * @param array $outstandingFees
+     * @return $this
+     * @throws BadRequestException
+     */
+    public function generate($outstandingFees)
+    {
+        if (!$this->isGeneratable($outstandingFees)) {
+            throw new BadRequestException(
+                'Irfo Psv Auth is not generatable'
+            );
+        }
+
+        // update copies issued
+        $this->copiesIssued += (int)$this->copiesRequired;
+        $this->copiesIssuedTotal += (int)$this->copiesRequiredTotal;
+
+        // reset copies required
+        $this->copiesRequired = 0;
+        $this->copiesRequiredTotal = 0;
+
+        return $this;
+    }
+
+    /**
      * Is in an approvable state
      *
      * @return bool

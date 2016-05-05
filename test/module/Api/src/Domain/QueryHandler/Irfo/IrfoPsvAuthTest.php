@@ -65,6 +65,7 @@ class IrfoPsvAuthTest extends QueryHandlerTestCase
         $this->assertContains('isWithdrawable', $results);
         $this->assertContains('isCnsable', $results);
         $this->assertContains('isResetable', $results);
+        $this->assertContains('isGeneratable', $results);
     }
 
     public function testHandleQueryNotGrantable()
