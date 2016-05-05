@@ -455,7 +455,6 @@ class SearchTest extends TestCase
                     'bool' => [
                         'should' => [
                             $this->generateMatch('_all', 'FOO BAR'),
-                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0'),
                             $this->generateWildcard('person_family_name_wildcard', '*foo bar*', '2.0'),
                             $this->generateWildcard('person_forename_wildcard', '*foo bar*', '2.0'),
                             $this->generateWildcard('person_family_name_wildcard', '*foo*', '2.0'),
