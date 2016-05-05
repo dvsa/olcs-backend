@@ -97,7 +97,11 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\Application
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\Application",
+     *     fetch="LAZY",
+     *     inversedBy="interimLicenceVehicles"
+     * )
      * @ORM\JoinColumn(name="interim_application_id", referencedColumnName="id", nullable=true)
      */
     protected $interimApplication;
