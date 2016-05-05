@@ -917,4 +917,9 @@ return [
     TransferCommand\TaskAlphaSplit\Delete::class => CommandHandler\TaskAlphaSplit\Delete::class,
     TransferCommand\TaskAlphaSplit\Create::class => CommandHandler\TaskAlphaSplit\Create::class,
     TransferCommand\TaskAlphaSplit\Update::class => CommandHandler\TaskAlphaSplit\Update::class,
+
+    // System Messages
+    TransferCommand\System\InfoMessage\Create::class => CommandHandler\System\InfoMessage\Create::class,
+    TransferCommand\System\InfoMessage\Update::class => CommandHandler\System\InfoMessage\Update::class,
+    TransferCommand\System\InfoMessage\Delete::class => CommandHandler\System\InfoMessage\Delete::class,
 ];
