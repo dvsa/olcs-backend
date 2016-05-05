@@ -68,9 +68,13 @@ class TaAddressTest extends \PHPUnit_Framework_TestCase
                             ]
                         ]
                     ],
-                    []
+                    [
+                        'trafficArea' => [
+                            'name' => 'TA Address 25'
+                        ]
+                    ]
                 ],
-                "TA Address 2\nLine 5\nLine 6\nLine 7\nLine 8\nLS1 4ES"
+                "TA Address 25\nLine 5\nLine 6\nLine 7\nLine 8\nLS1 4ES"
             ],
             'licence' => [
                 [
