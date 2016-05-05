@@ -22,6 +22,8 @@ use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateInterim as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Grant Interim Test
@@ -36,6 +38,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
         $this->mockRepo('GoodsDisc', \Dvsa\Olcs\Api\Domain\Repository\GoodsDisc::class);
         $this->mockRepo('Fee', \Dvsa\Olcs\Api\Domain\Repository\Fee::class);
+        $this->mockRepo('LicenceVehicle', \Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle::class);
 
         parent::setUp();
     }
@@ -346,6 +349,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
 
         /** @var GoodsDisc $gd */
         $gd = m::mock(GoodsDisc::class)->makePartial();
+        $gd->setId(96);
 
         $gds = [
             $gd
@@ -365,9 +369,18 @@ class UpdateInterimTest extends CommandHandlerTestCase
             $lv2
         ];
 
+        /** @var GoodsDisc $gd */
+        $gdInterim = m::mock(GoodsDisc::class)->makePartial();
+        $gdInterim->setId(69);
+        $gdsInterim = new ArrayCollection();
+        $gdsInterim->add($gdInterim);
+        $lv3 = m::mock(LicenceVehicle::class)->makePartial();
+        $lv3->setGoodsDiscs($gdsInterim);
+
         $application->setOperatingCentres($ocs);
         $application->setLicenceVehicles($lvs);
         $application->setInterimStatus($this->refData[ApplicationEntity::INTERIM_STATUS_INFORCE]);
+        $application->setInterimLicenceVehicles([$lv3]);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
@@ -378,10 +391,14 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $this->repoMap['GoodsDisc']->shouldReceive('save')
             ->andReturnUsing(
                 function (GoodsDisc $gd1) use ($lv2) {
-                    $this->assertEquals('Y', $gd1->getIsInterim());
-                    $this->assertSame($lv2, $gd1->getLicenceVehicle());
+                    if ($gd1->getId() === 96) {
+                        $this->assertEquals('Y', $gd1->getIsInterim());
+                        $this->assertSame($lv2, $gd1->getLicenceVehicle());
+                    }
                 }
             );
+
+        $this->repoMap['LicenceVehicle']->shouldReceive('save')->once();
 
         $result = $this->sut->handleCommand($command);
 
@@ -509,5 +526,120 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $this->assertNull($application->getInterimEnd());
         $this->assertNull($application->getInterimAuthVehicles());
         $this->assertNull($application->getInterimAuthTrailers());
+    }
+
+    /**
+     * @dataProvider statusProvider
+     */
+    public function testHandleCommandRequestedYesInforceNoInterimVehicles($status)
+    {
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+
+        $data = [
+            'id' => 111,
+            'version' => 1,
+            'requested' => 'Y',
+            'reason' => 'Foo',
+            'startDate' => '2015-01-01',
+            'endDate' => '2015-01-01',
+            'authVehicles' => 10,
+            'authTrailers' => 12,
+            'operatingCentres' => [11],
+            'vehicles' => [22],
+            'status' => $status
+        ];
+        $command = Cmd::create($data);
+
+        /** @var ApplicationEntity $application */
+        $application->setId(111);
+
+        /** @var ApplicationOperatingCentre $oc1 */
+        $oc1 = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $oc1->setIsInterim('Y');
+        $oc1->setId(99);
+        /** @var ApplicationOperatingCentre $oc2 */
+        $oc2 = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $oc2->setIsInterim('N');
+        $oc2->setId(11);
+
+        $ocs = [
+            $oc1,
+            $oc2
+        ];
+
+        /** @var GoodsDisc $gd */
+        $gd = m::mock(GoodsDisc::class)->makePartial();
+        $gd->setId(96);
+
+        $gds = [
+            $gd
+        ];
+
+        /** @var LicenceVehicle $lv1 */
+        $lv1 = m::mock(LicenceVehicle::class)->makePartial();
+        $lv1->setInterimApplication($application);
+        $lv1->setId(88);
+        $lv1->setGoodsDiscs($gds);
+        /** @var LicenceVehicle $lv2 */
+        $lv2 = m::mock(LicenceVehicle::class)->makePartial();
+        $lv2->setId(22);
+
+        $lvs = [
+            $lv1,
+            $lv2
+        ];
+
+        $application->setOperatingCentres($ocs);
+        $application->setLicenceVehicles($lvs);
+        $application->setInterimStatus($this->refData[ApplicationEntity::INTERIM_STATUS_INFORCE]);
+        $application->setInterimLicenceVehicles([]);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->with($application);
+
+        $this->repoMap['GoodsDisc']->shouldReceive('save')
+            ->andReturnUsing(
+                function (GoodsDisc $gd1) use ($lv2) {
+                    $this->assertEquals('Y', $gd1->getIsInterim());
+                    $this->assertSame($lv2, $gd1->getLicenceVehicle());
+                }
+            );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Interim data updated'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals('N', $oc1->getIsInterim());
+        $this->assertEquals('Y', $oc2->getIsInterim());
+        $this->assertNull($lv1->getInterimApplication());
+        $this->assertSame($application, $lv2->getInterimApplication());
+
+        $this->assertNull($lv1->getSpecifiedDate());
+        $this->assertNotNull($gd->getCeasedDate());
+
+        $this->assertNotNull($lv2->getSpecifiedDate());
+    }
+
+    /**
+     * Status provider
+     *
+     * @return array
+     */
+    public function statusProvider()
+    {
+        return [
+            [ApplicationEntity::INTERIM_STATUS_REQUESTED],
+            [ApplicationEntity::INTERIM_STATUS_INFORCE]
+        ];
     }
 }
