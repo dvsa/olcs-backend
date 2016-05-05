@@ -29,6 +29,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
         $this->sut = new CommandHandler();
         $this->mockRepo('TransportManagerApplication', TransportManagerApplication::class);
         $this->mockRepo('ContactDetails', ContactDetails::class);
+        $this->mockRepo('Address', \Dvsa\Olcs\Api\Domain\Repository\Address::class);
 
         parent::setUp();
     }
@@ -107,6 +108,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 234)->andReturn($tma);
 
+        $this->repoMap['Address']->shouldReceive('save')->once();
         $this->repoMap['ContactDetails']->shouldReceive('save')->once();
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
@@ -175,6 +177,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
             ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 234)->andReturn($tma);
 
         $this->repoMap['ContactDetails']->shouldReceive('save')->once();
+        $this->repoMap['Address']->shouldReceive('save')->once();
 
         $this->sut->handleCommand($command);
     }
