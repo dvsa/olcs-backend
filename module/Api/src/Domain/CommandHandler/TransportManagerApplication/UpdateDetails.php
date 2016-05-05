@@ -29,7 +29,7 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
 {
     protected $repoServiceName = 'TransportManagerApplication';
 
-    protected $extraRepos = ['ContactDetails'];
+    protected $extraRepos = ['ContactDetails', 'Address'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -97,15 +97,18 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
      * Update home address
      *
      * @param TransportManagerApplication $tma
-     * @param array                       $address
+     * @param array                       $addressData
      */
-    protected function updateHomeAddress(TransportManagerApplication $tma, array $address)
+    protected function updateHomeAddress(TransportManagerApplication $tma, array $addressData)
     {
-        if (!$tma->getTransportManager()->getHomeCd()->getAddress()) {
-            $tma->getTransportManager()->getHomeCd()->setAddress(new Address());
+        $address = $tma->getTransportManager()->getHomeCd()->getAddress();
+        if (!$address instanceof Address) {
+            $address = new Address();
         }
+        $this->populateAddress($address, $addressData);
+        $this->getRepo('Address')->save($address);
 
-        $this->populateAddress($tma->getTransportManager()->getHomeCd()->getAddress(), $address);
+        $tma->getTransportManager()->getHomeCd()->setAddress($address);
     }
 
     /**
