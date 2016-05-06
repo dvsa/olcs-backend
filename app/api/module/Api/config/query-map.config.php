@@ -489,6 +489,9 @@ return [
     // Decisions
     TransferQuery\Decision\DecisionList::class => QueryHandler\Decision\DecisionList::class,
 
+    // Reasons
+    TransferQuery\Reason\ReasonList::class => QueryHandler\Reason\ReasonList::class,
+
     TransferQuery\TaskAllocationRule\GetList::class => QueryHandler\TaskAllocationRule\GetList::class,
     TransferQuery\TaskAllocationRule\Get::class => QueryHandler\TaskAllocationRule\Get::class,
 
