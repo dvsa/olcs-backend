@@ -1326,16 +1326,16 @@ return array(
     ),
     'correspondence_inbox' => array(
         'archived' => array(
-            'type' => 'yesnonull'
+            'type' => 'yesno'
         ),
         'accessed' => array(
-            'type' => 'yesnonull'
+            'type' => 'yesno'
         ),
         'email_reminder_sent' => array(
-            'type' => 'yesnonull'
+            'type' => 'yesno'
         ),
         'printed' => array(
-            'type' => 'yesnonull'
+            'type' => 'yesno'
         )
     ),
     'disc_sequence' => array(
