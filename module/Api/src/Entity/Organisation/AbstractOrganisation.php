@@ -164,15 +164,6 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     protected $irfoContactDetails;
 
     /**
-     * Irfo name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="irfo_name", length=160, nullable=true)
-     */
-    protected $irfoName;
-
-    /**
      * Irfo nationality
      *
      * @var \Dvsa\Olcs\Api\Entity\ContactDetails\Country
@@ -643,29 +634,6 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     public function getIrfoContactDetails()
     {
         return $this->irfoContactDetails;
-    }
-
-    /**
-     * Set the irfo name
-     *
-     * @param string $irfoName
-     * @return Organisation
-     */
-    public function setIrfoName($irfoName)
-    {
-        $this->irfoName = $irfoName;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo name
-     *
-     * @return string
-     */
-    public function getIrfoName()
-    {
-        return $this->irfoName;
     }
 
     /**
