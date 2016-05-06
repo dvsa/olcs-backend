@@ -7,9 +7,7 @@ use Dvsa\Olcs\Api\Entity\System\SystemInfoMessage as Entity;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 
 /**
- * SystemInfoMessage Entity Unit Tests
- *
- * Initially auto-generated but won't be overridden
+ * @covers Dvsa\Olcs\Api\Entity\System\SystemInfoMessage
  */
 class SystemInfoMessageEntityTest extends EntityTester
 {
@@ -39,33 +37,27 @@ class SystemInfoMessageEntityTest extends EntityTester
             [
                 'entity' => (new Entity())
                     ->setStartDate(date('Y-m-d H:i:s', $now - 300))
-                    ->setEndDate(date('Y-m-d H:i:s', $now + 300))
-                    ->setIsInternal('Y'),
+                    ->setEndDate(date('Y-m-d H:i:s', $now + 300)),
                 'expect' => [
                     'isActive' => true,
-                    'isInternal' => true,
                 ],
             ],
             //  interval in past, internal false
             [
                 'entity' => (new Entity())
                     ->setStartDate(date('Y-m-d H:i:s', $now - 2 * 300))
-                    ->setEndDate(date('Y-m-d H:i:s', $now - 300))
-                    ->setIsInternal('anyNotY'),
+                    ->setEndDate(date('Y-m-d H:i:s', $now - 300)),
                 'expect' => [
                     'isActive' => false,
-                    'isInternal' => false,
                 ],
             ],
             //  interval in future, internal false
             [
                 'entity' => (new Entity())
                     ->setStartDate(date('Y-m-d H:i:s', $now + 300))
-                    ->setEndDate(date('Y-m-d H:i:s', $now + 2 * 300))
-                    ->setIsInternal('y'),
+                    ->setEndDate(date('Y-m-d H:i:s', $now + 2 * 300)),
                 'expect' => [
                     'isActive' => false,
-                    'isInternal' => false,
                 ],
             ],
         ];
