@@ -36,7 +36,7 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="accessed", nullable=true, options={"default": 0})
+     * @ORM\Column(type="yesno", name="accessed", nullable=false, options={"default": 0})
      */
     protected $accessed = 0;
 
@@ -45,9 +45,9 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="archived", nullable=true)
+     * @ORM\Column(type="yesno", name="archived", nullable=false, options={"default": 0})
      */
-    protected $archived;
+    protected $archived = 0;
 
     /**
      * Created by
@@ -84,9 +84,9 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="email_reminder_sent", nullable=true)
+     * @ORM\Column(type="yesno", name="email_reminder_sent", nullable=false, options={"default": 0})
      */
-    protected $emailReminderSent;
+    protected $emailReminderSent = 0;
 
     /**
      * Identifier - Id
@@ -143,9 +143,9 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="printed", nullable=true)
+     * @ORM\Column(type="yesno", name="printed", nullable=false, options={"default": 0})
      */
-    protected $printed;
+    protected $printed = 0;
 
     /**
      * Version
