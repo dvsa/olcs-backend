@@ -1,17 +1,17 @@
 <?php
 /**
- * BkmFrequency
+ * IrfoPsvRouteFrom
  */
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\IrfoPsvAuthBundle as Qry;
 
 /**
- * BkmFrequency
+ * IrfoPsvRouteFrom
  */
-class BkmFrequency extends SingleValueAbstract
+class IrfoPsvRouteFrom extends SingleValueAbstract
 {
-    const FIELD  = 'journeyFrequency';
+    const FIELD  = 'serviceRouteFrom';
     const SRCH_FLD_KEY = 'id';
     const SRCH_VAL_KEY = 'irfoPsvAuth';
     const QUERY_CLASS = Qry::class;
