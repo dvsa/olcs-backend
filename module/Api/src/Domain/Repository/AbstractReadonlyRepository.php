@@ -304,7 +304,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
 
         return $qb->getQuery()->getResult($hydrateMode);
     }
-    
+
     /**
      * Abstracted paginator logic so it can be re-used with alternative queries
      *
