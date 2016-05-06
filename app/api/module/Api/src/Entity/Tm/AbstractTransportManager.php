@@ -28,9 +28,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_transport_manager_work_cd_id", columns={"work_cd_id"}),
  *        @ORM\Index(name="ix_transport_manager_merge_to_transport_manager_id",
      *     columns={"merge_to_transport_manager_id"})
- *    },
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_transport_manager_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -137,15 +134,6 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
     protected $mergeToTransportManager;
 
     /**
-     * Notes
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="notes", length=4000, nullable=true)
-     */
-    protected $notes;
-
-    /**
      * Nysiis family name
      *
      * @var string
@@ -162,15 +150,6 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
      * @ORM\Column(type="string", name="nysiis_forename", length=100, nullable=true)
      */
     protected $nysiisForename;
-
-    /**
-     * Olbs key
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
-     */
-    protected $olbsKey;
 
     /**
      * Removed date
@@ -582,29 +561,6 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
     }
 
     /**
-     * Set the notes
-     *
-     * @param string $notes
-     * @return TransportManager
-     */
-    public function setNotes($notes)
-    {
-        $this->notes = $notes;
-
-        return $this;
-    }
-
-    /**
-     * Get the notes
-     *
-     * @return string
-     */
-    public function getNotes()
-    {
-        return $this->notes;
-    }
-
-    /**
      * Set the nysiis family name
      *
      * @param string $nysiisFamilyName
@@ -648,29 +604,6 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
     public function getNysiisForename()
     {
         return $this->nysiisForename;
-    }
-
-    /**
-     * Set the olbs key
-     *
-     * @param int $olbsKey
-     * @return TransportManager
-     */
-    public function setOlbsKey($olbsKey)
-    {
-        $this->olbsKey = $olbsKey;
-
-        return $this;
-    }
-
-    /**
-     * Get the olbs key
-     *
-     * @return int
-     */
-    public function getOlbsKey()
-    {
-        return $this->olbsKey;
     }
 
     /**
