@@ -19,9 +19,16 @@ class Reason extends AbstractRepository
             $qb->andWhere($qb->expr()->eq('m.isNi', ':isNi'))
                 ->setParameter('isNi', $query->getIsNi() === 'Y');
         }
+
         if (method_exists($query, 'getGoodsOrPsv') && !empty($query->getGoodsOrPsv())) {
-            $qb->andWhere($qb->expr()->eq('m.goodsOrPsv', ':goodsOrPsv'))
-                ->setParameter('goodsOrPsv', $query->getGoodsOrPsv());
+            // goodsOrPsv has the string value NULL to ensure the filter is applied (and not considered empty)
+            // This is for TM reasons where we wish to remove all reasons that apply to goods and psv licences
+            if ($query->getGoodsOrPsv() === 'NULL') {
+                $qb->andWhere($qb->expr()->isNull('m.goodsOrPsv'));
+            } else {
+                $qb->andWhere($qb->expr()->eq('m.goodsOrPsv', ':goodsOrPsv'))
+                    ->setParameter('goodsOrPsv', $query->getGoodsOrPsv());
+            }
         }
     }
 }
