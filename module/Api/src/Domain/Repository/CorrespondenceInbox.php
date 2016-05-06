@@ -41,7 +41,7 @@ class CorrespondenceInbox extends AbstractRepository
         // print queries don't care about the emailReminderSent flag;
         // whether a reminder has or hasn't been sent doesn't affect
         // whether it needs printing or not
-        $qb->andWhere($qb->expr()->isNull($this->alias . '.printed'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.printed', 0));
         $qb->andWhere($qb->expr()->isNotNull('l.id'));
 
         $qb->setParameter('minDate', $minDate);
@@ -69,13 +69,13 @@ class CorrespondenceInbox extends AbstractRepository
         $qb->andWhere($qb->expr()->gte($this->alias . '.createdOn', ':minDate'));
         $qb->andWhere($qb->expr()->lte($this->alias . '.createdOn', ':maxDate'));
         // don't fetch ones we've already sent...
-        $qb->andWhere($qb->expr()->isNull($this->alias . '.emailReminderSent'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.emailReminderSent', 0));
         // ... but also ignore ones we may have printed but
         // *not* sent reminders for - e.g. if org has no email
         // addresses (somehow) - without this check we'd continually
         // try and email the reminder long after the print threshold
         // had been reached
-        $qb->andWhere($qb->expr()->isNull($this->alias . '.printed'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.printed', 0));
         $qb->andWhere($qb->expr()->isNotNull('l.id'));
         $qb->andWhere($qb->expr()->eq('l.translateToWelsh', 0));
 
