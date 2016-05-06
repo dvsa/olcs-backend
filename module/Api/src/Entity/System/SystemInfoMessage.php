@@ -28,7 +28,6 @@ class SystemInfoMessage extends AbstractSystemInfoMessage
     {
         return [
             'isActive' => $this->isActive(),
-            'isInternal' => $this->isInternal(),
         ];
     }
 
@@ -43,13 +42,5 @@ class SystemInfoMessage extends AbstractSystemInfoMessage
             strtotime($this->getStartDate()) <= $now
             && $now <= strtotime($this->getEndDate())
         );
-    }
-
-    /**
-     * @return bool
-     */
-    private function isInternal()
-    {
-        return (bool) ($this->getIsInternal() === 'Y');
     }
 }

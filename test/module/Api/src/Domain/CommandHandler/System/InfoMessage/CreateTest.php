@@ -44,7 +44,7 @@ class CreateTest extends CommandHandlerTestCase
                     static::assertEquals($entity->getDescription(), 'unit_Desc');
                     static::assertEquals($entity->getStartDate(), $startDate);
                     static::assertEquals($entity->getEndDate(), $endDate);
-                    static::assertEquals($entity->getIsInternal(), true);
+                    static::assertEquals($entity->getIsInternal(), 'Y');
 
                     $entity->setId($id);
                 }
