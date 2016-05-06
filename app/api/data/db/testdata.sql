@@ -82,7 +82,6 @@ TRUNCATE TABLE `impounding`;
 TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
-TRUNCATE TABLE `task_allocation_rule`;
 TRUNCATE TABLE `txc_inbox`;
 TRUNCATE TABLE `scan`;
 TRUNCATE TABLE `serious_infringement`;
@@ -1122,7 +1121,19 @@ INSERT INTO `person` (`id`, `created_by`, `last_modified_by`, `birth_place`, `ti
     (85,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Kevin','Rooney',NULL,NULL,NULL,1,NULL),
     (86,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Sarah','Thompson',NULL,NULL,NULL,1,NULL),
     (87,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Tom','Smith',NULL,NULL,NULL,1,NULL),
-    (90,1,1,'Aldershot','title_mr','1960-02-01 00:00:00','ABDOU','BONOMI',NULL,NULL,NULL,1,NULL);
+    (90,1,1,'Aldershot','title_mr','1960-02-01 00:00:00','ABDOU','BONOMI',NULL,NULL,NULL,1,NULL),
+
+    (91,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Kirstie','Brown',NULL,NULL,NULL,1,NULL),
+    (92,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Dianne','Craven',NULL,NULL,NULL,1,NULL),
+    (93,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Neil','Chivers',NULL,NULL,NULL,1,NULL),
+    (94,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Shakil','Ahmed',NULL,NULL,NULL,1,NULL),
+    (95,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Rachael','Evans',NULL,NULL,NULL,1,NULL),
+    (96,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Nicola','Field',NULL,NULL,NULL,1,NULL),
+    (97,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Julie','Goward',NULL,NULL,NULL,1,NULL),
+    (98,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Catherine','Tobin',NULL,NULL,NULL,1,NULL),
+    (99,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Philip','Stagg',NULL,NULL,NULL,1,NULL),
+    (100,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Carole','Ryalls',NULL,NULL,NULL,1,NULL),
+    (101,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Steven','Jones',NULL,NULL,NULL,1,NULL);
 
 INSERT INTO `disqualification` (
     `id`, `created_by`, `last_modified_by`, `is_disqualified`, `period`,
@@ -1311,14 +1322,14 @@ INSERT INTO `tm_case_decision_unfitness` (`tm_case_decision_id`,`unfitness_reaso
   (1,'tm_unfit_inn');
 
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `login_id`,`contact_details_id`, `local_authority_id`,`transport_manager_id`,`partner_contact_details_id`, `pid`) VALUES
-  (273, 1, 2, 2, now(), now(), 'usr273', 105, null, NULL, NULL, '0a041b9462caa4a31bac3567e0b6e6fd9100787db2ab433d96f6d178cabfce90'),
-  (291, 1, 2, 2, now(), now(), 'usr291', 106, null, NULL, NULL, '6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3'), -- ADMIN, System	Internal
-  (20, 1, 2, 2, now(), now(), 'usr20', 130, null, NULL, NULL,'5860faf02b6bc6222ba5aca523560f0e364ccd8b67bee486fe8bf7c01d492ccb'), -- CW, Case Worker	Internal
-  (21, 1, 2, 2, now(), now(), 'usr21', 131, null, NULL, NULL, '5269ef980de47819ba3d14340f4665262c41e933dc92c1a27dd5d01b047ac80e'), -- CW, Case Worker	Internal
-  (528, 1, 2, 2, now(), now(), 'usr528', 132, null, NULL, NULL, '5a39bead318f306939acb1d016647be2e38c6501c58367fdb3e9f52542aa2442'),-- CWRO, Case Worker Read Only	Internal
-  (529, 1, 2, 2, now(), now(), 'usr529', 133, null, NULL, NULL, 'ecb48a1cc94f951252ec462fe9ecc55c3ef123fadfe935661396c26a45a5809d'),-- CWRO, Case Worker Read Only	Internal
-  (331, 1, 2, 2, now(), now(), 'usr331', 114, null, NULL, NULL,'9400f1b21cb527d7fa3d3eabba93557a18ebe7a2ca4e471cfe5e4c5b4ca7f767'),	-- CWRON, Case Worker Read Only No Documents	Internal
-  (342, 1, 2, 2, now(), now(), 'usr342', 101, null, NULL, NULL, 'f5ca38f748a1d6eaf726b8a42fb575c3c71f1864a8143301782de13da2d9202b'),	-- CWRON, Case Worker Read Only No Documents	Internal
+  (273, 13, 2, 2, now(), now(), 'usr273', 105, null, NULL, NULL, '0a041b9462caa4a31bac3567e0b6e6fd9100787db2ab433d96f6d178cabfce90'),
+  (291, 14, 2, 2, now(), now(), 'usr291', 106, null, NULL, NULL, '6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3'), -- ADMIN, System	Internal
+  (20, 13, 2, 2, now(), now(), 'usr20', 130, null, NULL, NULL,'5860faf02b6bc6222ba5aca523560f0e364ccd8b67bee486fe8bf7c01d492ccb'), -- CW, Case Worker	Internal
+  (21, 13, 2, 2, now(), now(), 'usr21', 131, null, NULL, NULL, '5269ef980de47819ba3d14340f4665262c41e933dc92c1a27dd5d01b047ac80e'), -- CW, Case Worker	Internal
+  (528, 13, 2, 2, now(), now(), 'usr528', 132, null, NULL, NULL, '5a39bead318f306939acb1d016647be2e38c6501c58367fdb3e9f52542aa2442'),-- CWRO, Case Worker Read Only	Internal
+  (529, 13, 2, 2, now(), now(), 'usr529', 133, null, NULL, NULL, 'ecb48a1cc94f951252ec462fe9ecc55c3ef123fadfe935661396c26a45a5809d'),-- CWRO, Case Worker Read Only	Internal
+  (331, 13, 2, 2, now(), now(), 'usr331', 114, null, NULL, NULL,'9400f1b21cb527d7fa3d3eabba93557a18ebe7a2ca4e471cfe5e4c5b4ca7f767'),	-- CWRON, Case Worker Read Only No Documents	Internal
+  (342, 13, 2, 2, now(), now(), 'usr342', 101, null, NULL, NULL, 'f5ca38f748a1d6eaf726b8a42fb575c3c71f1864a8143301782de13da2d9202b'),	-- CWRON, Case Worker Read Only No Documents	Internal
   (20131, NULL, 2, 2, now(), now(), 'usr20131', 169, 1, NULL, NULL, '3268151e52d97b4cacf97f5b46a5c76c8416e928e137e3b3dc447696a29afbaa'),-- LA, Local Authority, LA dashboard application	SelfServe
   (20132, NULL, 2, 2, now(), now(), 'usr20132', 170, 1, NULL, NULL, 'f60afa4989a7db13314a2ab9881372634b5402c30ba7257448b13fa388de1b78'),-- LA, Local Authority, LA dashboard application	SelfServe
   (1964, NULL, 2, 2, now(), now(), 'usr1964', 101, null, NULL, 140, '19581e27de7ced00ff1ce50b2047e7a567c76b1cbaebabe5ef03f7c3017bb5b7'),-- PART, Partner, HMRC	Partner
@@ -1329,7 +1340,29 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
   (543, NULL, 2, 2, now(), now(), 'usr543', 101, null, 1, NULL, '8527a891e224136950ff32ca212b45bc93f69fbb801c3b1ebedac52775f99e61'),-- SS, Self Serve    SelfServe
   (611, NULL, 2, 2, now(), now(), 'usr611', 165, null, NULL, NULL,'8fab3a60577befd765cde83f2737cd1a9f25a72356c94052c2194e816829b331'),-- SSADMIN, Self Service Administrators NB Does not use a role. Instead see organisation_user link table where is_administrator=1 for users with the self service role	SelfServe
   (612, NULL, 2, 2, now(), now(), 'usr612', 101, null, NULL, NULL, 'b999205cdacd2c4516598d99b420d29786443e9908556a65f583a6fd4765ee4a'), -- SSADMIN, Self Service Administrators NB Does not use a role. Instead see organisation_user link table where is_administrator=1 for users with the self service role	SelfServe
-  (1, NULL, 2, 2, now(), now(), 'system', null, null, NULL, NULL, '10236fc8becc3b78f6956e26de661d57bc67d9424424fbdbe584d9736ba6aa38') -- System User
+  (1, NULL, 2, 2, now(), now(), 'system', null, null, NULL, NULL, '10236fc8becc3b78f6956e26de661d57bc67d9424424fbdbe584d9736ba6aa38'), -- System User
+  /* Kirstie Brown */
+  (36047, 17, 2, 2, now(), now(), 'usr36047', 230, NULL, NULL, NULL, NULL),
+  /* Dianne Craven */
+  (29431, 17, 2, 2, now(), now(), 'usr29431', 231, NULL, NULL, NULL, NULL),
+  /* Neil Chivers */
+  (76754, 17, 2, 2, now(), now(), 'usr76754', 232, NULL, NULL, NULL, NULL),
+  /* Shakil Ahmed */
+  (322, 17, 2, 2, now(), now(), 'usr322', 233, NULL, NULL, NULL, NULL),
+  /* 	Rachael Evans */
+  (73852, 17, 2, 2, now(), now(), 'usr73852', 234, NULL, NULL, NULL, NULL),
+  /* 	Nicola Field */
+  (68648, 17, 2, 2, now(), now(), 'usr68648', 235, NULL, NULL, NULL, NULL),
+  /* 	Julie Goward */
+  (1071, 99, 2, 2, now(), now(), 'usr1071', 236, NULL, NULL, NULL, NULL),
+  /* 	Catherine Tobin */
+  (39158, 99, 2, 2, now(), now(), 'usr39158', 237, NULL, NULL, NULL, NULL),
+  /* 	Philip Stagg */
+  (455, 99, 2, 2, now(), now(), 'usr455', 238, NULL, NULL, NULL, NULL),
+  /* 	Carole Ryalls */
+  (76189, 99, 2, 2, now(), now(), 'usr76189', 239, NULL, NULL, NULL, NULL),
+  /* 	Steven Jones */
+  (59, 21, 2, 2, now(), now(), 'usr59', 240, NULL, NULL, NULL, NULL)
 ;
 
 UPDATE `user` SET pid = SHA2(login_id, 256);
@@ -1359,7 +1392,19 @@ INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
   (543, 27),
   (611, 25),
   (612, 25),
-  (1, 24)
+  (1, 24),
+
+  (36047, 24),
+  (29431, 24),
+  (76754, 24),
+  (322, 24),
+  (73852, 24),
+  (68648, 24),
+  (1071, 24),
+  (39158, 24),
+  (455, 24),
+  (76189, 24),
+  (59, 24)
   ;
 
 INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_weight`,
@@ -1440,17 +1485,25 @@ VALUES
   (83,'case_t_tm',NULL,NULL,3,NULL,NULL,'','2014-02-11',NULL,'Case linked to an external Transport manager',0,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
   (84,'case_t_tm',NULL,NULL,3,NULL,NULL,'','2014-02-11',NULL,'Case linked to an external Transport manager',0,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1);
 
-INSERT INTO team(id,version,name,traffic_area_id) VALUES
-    (1,1,'Marketing','B'),
-    (2,1,'Development','B'),
-    (3,1,'Infrastructure','B'),
-    (4,1,'Support','B'),
-    (5,1,'Assisted Digital FEP','B'),
-    (6,1,'Bus Reg Team','B'),
-    (7,1,'Compliance Team','B'),
-    (8,1,'Environmental Team',NULL),
-    (9,1,'IRFO Team',NULL),
-    (32,1,'Self service Operators',NULL);
+INSERT INTO `team` (`id`, `version`, `name`, `traffic_area_id`) VALUES
+    (4,1,'SEMTA','B'),
+    (6,1,'ETA','B'),
+    (12,1,'WMTA','B'),
+    (13,1,'Leeds Licensing Team 1','B'),
+    (14,1,'Leeds Licensing Team 2','B'),
+    (15,1,'Leeds Licensing Team 3','B'),
+    (16,1,'Leeds Licensing Team 4','B'),
+    (17,1,'Leeds Licensing Team 5','B'),
+    (21,1,'STA Compliance Team 1','B'),
+    (23,1,'Leeds Compliance Team 1','B'),
+    (30,1,'WTA Compliance Team','B'),
+    (34,1,'Welsh Compliance Team','B'),
+    (44,1,'Leeds Licensing Team 7','B'),
+    (71,1,'Leeds Licensing MLH','B'),
+    (99,1,'Leeds Licensing Team 5-3','B'),
+    (103,1,'Golborne OTC Team','B'),
+    (115,1,'NI Licensing Caseworker','B'),
+    (118,1,'TRU Team','B');
 
 INSERT INTO `case_category` (`case_id`, `category_id`)
 VALUES
@@ -1461,42 +1514,34 @@ VALUES
  */
 /* Application task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (1,1,7,9,8,1,2,'A test task','2014-08-12',1);
+    (1,1,7,9,8,1,13,'A test task','2014-08-12',1);
     /* Licence task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (2,null,110,1,74,1,2,'Another test task','2013-02-11',1);
+    (2,null,110,1,74,1,13,'Another test task','2013-02-11',1);
 /* IRFO task */
 INSERT INTO task(id,irfo_organisation_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (3,1,8,70,1,2,'An organisation task','2014-05-01',1);
+    (3,1,8,70,1,13,'An organisation task','2014-05-01',1);
 /* Transport Manager task */
 INSERT INTO task(id,transport_manager_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (4,2,5,105,6,3,'A transport task','2010-01-01',1);
+    (4,2,5,105,6,13,'A transport task','2010-01-01',1);
 /* Case task */
 INSERT INTO task(id,case_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (5,24,2,44,null,4,'A case task','2010-02-01',1);
+    (5,24,2,44,null,13,'A case task','2010-02-01',1);
 /* Unlinked task */
 INSERT INTO task(id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (6,7,67,null,4,'Unassigned task','2010-07-03',1);
+    (6,7,67,null,13,'Unassigned task','2010-07-03',1);
 /* Application, future, urgent task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
-    (7,2,7,9,33,1,2,'A test task','2018-09-27',1,1);
+    (7,2,7,9,33,1,13,'A test task','2018-09-27',1,1);
 /* Licence, single licence holder */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
-    (8,null,63,1,110,1,2,'Single licence','2012-09-27',0,1);
+    (8,null,63,1,110,1,13,'Single licence','2012-09-27',0,1);
 /* Transport Manager task */
 INSERT INTO task(id,transport_manager_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (9,3,5,103,1,2,'A test task for TM 3','2014-12-15',1);
+    (9,3,5,103,1,13,'A test task for TM 3','2014-12-15',1);
 /* Bus Registration task */
 INSERT INTO task(id,bus_reg_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (10,1,110,3,39,1,2,'A test Bus Reg task','2014-12-15',1);
-
-INSERT INTO `task_allocation_rule` (`id`, `category_id`, `team_id`, `user_id`, `goods_or_psv`, `is_mlh`, `traffic_area_id`) VALUES
-    (1,9,5,291,NULL,NULL,NULL),
-    (2,3,6,291,NULL,NULL,NULL),
-    (3,2,7,291,NULL,NULL,NULL),
-    (4,7,8,291,NULL,NULL,NULL),
-    (5,8,9,291,NULL,NULL,NULL),
-    (6,1,5,291,NULL,NULL,NULL);
+    (10,1,110,3,39,1,13,'A test Bus Reg task','2014-12-15',1);
 
 /* Disc sequence dummy data */
 INSERT INTO `disc_sequence` (
@@ -2470,8 +2515,8 @@ COMMIT;
 INSERT INTO `printer` (`id`, `printer_name`, `description`) VALUES (1, 'TESTING-STUB-LICENCE:7','Test Default Printer');
 INSERT INTO `printer` (`id`, `printer_name`) VALUES (2, 'Test Printer');
 
-INSERT INTO `team_printer` (`id`, `version`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (1, 1, 1, 1, NULL, NULL);
-INSERT INTO `team_printer` (`id`, `version`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (2, 1, 2, 2, 1, 1);
+INSERT INTO `team_printer` (`id`, `version`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (1, 1, 13, 1, NULL, NULL);
+INSERT INTO `team_printer` (`id`, `version`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (2, 1, 13, 2, 1, 1);
 
 
 /* Test document sla target dates */
@@ -2485,5 +2530,21 @@ INSERT IGNORE INTO sla_target_date(id,document_id,agreed_date, target_date, sent
      '2014-08-25 12:04:35', 1),
   (4,674,'2014-08-25 12:04:35','2014-08-30 12:04:35','2014-08-27 12:04:35', 1,'Passed SLA target',273, 273,
      '2014-08-25 12:04:35', 1);
+
+INSERT INTO `contact_details` (`id`,`contact_type`,`address_id`,`person_id`,
+   `last_modified_by`,`created_by`,`fao`,`written_permission_to_engage`,`email_address`,
+   `description`,`deleted_date`,`created_on`,`last_modified_on`,`version`)
+VALUES
+    (230,'ct_user',1,91,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (231,'ct_user',1,92,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (232,'ct_user',1,93,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (233,'ct_user',1,94,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (234,'ct_user',1,95,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (235,'ct_user',1,96,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (236,'ct_user',1,97,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (237,'ct_user',1,98,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (238,'ct_user',1,99,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (239,'ct_user',1,100,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (240,'ct_user',1,101,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
 
 SET foreign_key_checks = 1;
