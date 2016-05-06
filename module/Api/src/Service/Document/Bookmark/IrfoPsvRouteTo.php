@@ -1,15 +1,15 @@
 <?php
 /**
- * BkmRouteEnd
+ * IrfoPsvRouteTo
  */
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\IrfoPsvAuthBundle as Qry;
 
 /**
- * BkmRouteEnd
+ * IrfoPsvRouteTo
  */
-class BkmRouteEnd extends SingleValueAbstract
+class IrfoPsvRouteTo extends SingleValueAbstract
 {
     const FIELD  = 'serviceRouteTo';
     const SRCH_FLD_KEY = 'id';
