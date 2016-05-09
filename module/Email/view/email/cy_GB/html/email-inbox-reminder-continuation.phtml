@@ -1,7 +1,8 @@
 <p><b>Translated to Welsh</b></p><p>Dear operator,</p>
 
 <p>We have sent an e-mail to you recently advising that a document relating to your Operator&rsquo;s
-Licence continuation for <?php echo $this->licNo; ?> has been placed in your Operator Self Service inbox.</p>
+Licence continuation for <?php echo $this->escapeHtml($this->licNo); ?> has been placed in your Operator Self Service 
+inbox.</p>
 
 <p>We note that this has not yet been read. Please log on to view the correspondence as soon as possible.</p>
 
@@ -11,5 +12,5 @@ soon as possible, highlighting any changes to the details on the document.</p>
 <p><b>Failure to return the document will result in the termination of your operator licence.</b></p>
 
 <p>
-    <a href="<?php echo $this->url; ?>">Sign in to your account</a>
+    <a href="<?php echo $this->escapeHtml($this->url); ?>">Sign in to your account</a>
 </p>
