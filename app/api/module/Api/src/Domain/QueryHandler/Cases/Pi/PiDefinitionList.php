@@ -18,13 +18,10 @@ final class PiDefinitionList extends AbstractQueryHandler
     {
         /** @var PiDefinitionRepo $repo */
         $repo = $this->getRepo();
-        $results = $repo->fetchUnpaginatedList($query, Query::HYDRATE_OBJECT);
 
         return [
-            'result' => $this->resultList(
-                $results
-            ),
-            'count' => count($results)
+            'result' => $this->resultList($repo->fetchList($query, Query::HYDRATE_OBJECT)),
+            'count' => $repo->fetchCount($query)
         ];
     }
 }

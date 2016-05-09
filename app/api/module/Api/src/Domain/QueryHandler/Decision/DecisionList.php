@@ -18,13 +18,11 @@ final class DecisionList extends AbstractQueryHandler
     {
         /** @var DecisionRepo $repo */
         $repo = $this->getRepo();
-        $results = $repo->fetchUnpaginatedList($query, Query::HYDRATE_OBJECT);
-
         return [
             'result' => $this->resultList(
-                $results
+                $repo->fetchList($query, Query::HYDRATE_OBJECT)
             ),
-            'count' => count($results)
+            'count' => $repo->fetchCount($query)
         ];
     }
 }
