@@ -53,4 +53,36 @@ class ReasonTest extends RepositoryTestCase
 
         $this->sut->applyListFilters($mockQb, $query);
     }
+
+    /**
+     * Branch tests where goodsOrPsv contains the string 'NULL'
+     */
+    public function testApplyListFiltersNullGoodsOrPsv()
+    {
+        $this->setUpSut(Repo::class, true);
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr')
+            ->andReturnSelf()
+            ->shouldReceive('eq')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('isNi', 'Y')
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('isProposeToRevoke', 'Y')
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('goodsOrPsv', 'NULL')
+            ->shouldReceive('isNull')
+            ->andReturnSelf();
+
+        $query = ReasonList::create(['isProposeToRevoke' => 'Y', 'isNi' => 'Y', 'goodsOrPsv' => 'NULL']);
+
+        $this->sut->applyListFilters($mockQb, $query);
+    }
 }
