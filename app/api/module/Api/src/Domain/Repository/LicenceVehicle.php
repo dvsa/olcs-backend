@@ -423,4 +423,20 @@ class LicenceVehicle extends AbstractRepository
             ->execute(['licence' => $licenceId])
             ->rowCount();
     }
+
+    /**
+     * Fetch all vehicles count for a licence
+     *
+     * @param $licenceId
+     * @return int
+     */
+    public function fetchAllVehiclesCount($licenceId)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->select('count(' . $this->alias . '.id)')
+            ->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
+            ->setParameter('licence', $licenceId);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }
