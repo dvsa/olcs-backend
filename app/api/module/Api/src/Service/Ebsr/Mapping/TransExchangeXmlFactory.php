@@ -189,7 +189,7 @@ class TransExchangeXmlFactory implements FactoryInterface
         $changeImpact = [
             'ChangeDoesNotExceedLimit' => [
                 new FixedValue(['busShortNotice', 'timetableChange'], 'Y'),
-                new Recursion('MinorChangeDescription', new NodeValue('timetable_detail'))
+                new Recursion('MinorChangeDescription', new NodeValue(['busShortNotice', 'timetableDetail']))
             ],
             'ChangeExceedsLimit' => new FixedValue(['busShortNotice', 'timetableChange'], 'N'),
         ];
@@ -238,7 +238,7 @@ class TransExchangeXmlFactory implements FactoryInterface
         ];
 
         $replacedService = [
-            'AlteredServiceRequiringConnection' =>
+            'DiscontinuedService' =>
                 new Recursion('Description', new NodeValue(['busShortNotice', 'replacementDetail']))
         ];
 
