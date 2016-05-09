@@ -289,23 +289,6 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
-     * @param QueryInterface $query
-     * @param int $hydrateMode
-     *
-     * @return \ArrayIterator|\Traversable
-     */
-    public function fetchUnpaginatedList(QueryInterface $query, $hydrateMode = Query::HYDRATE_ARRAY)
-    {
-        $qb = $this->createQueryBuilder();
-
-        $this->buildDefaultListQuery($qb, $query);
-        $this->applyListJoins($qb);
-        $this->applyListFilters($qb, $query);
-
-        return $qb->getQuery()->getResult($hydrateMode);
-    }
-
-    /**
      * Abstracted paginator logic so it can be re-used with alternative queries
      *
      * @param QueryBuilder $qb
