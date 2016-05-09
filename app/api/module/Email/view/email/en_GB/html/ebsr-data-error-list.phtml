@@ -1,5 +1,5 @@
 <ul>
     <?php foreach ($this->submissionErrors as $error) { ?>
-        <li><?php echo $error; ?></li>
+        <li><?php echo $this->escapeHtml($error); ?></li>
     <?php } ?>
 </ul>
