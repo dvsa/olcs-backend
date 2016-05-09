@@ -30,5 +30,10 @@ class Reason extends AbstractRepository
                     ->setParameter('goodsOrPsv', $query->getGoodsOrPsv());
             }
         }
+
+        if (method_exists($query, 'getIsProposeToRevoke') && !empty($query->getIsProposeToRevoke())) {
+            $qb->andWhere($qb->expr()->eq('m.isProposeToRevoke', ':isProposeToRevoke'))
+                ->setParameter('isProposeToRevoke', $query->getIsProposeToRevoke() === 'Y');
+        }
     }
 }
