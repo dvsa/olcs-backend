@@ -427,7 +427,7 @@ class LicenceVehicle extends AbstractRepository
     /**
      * Fetch all vehicles count for a licence
      *
-     * @param $licenceId
+     * @param int $licenceId
      * @return int
      */
     public function fetchAllVehiclesCount($licenceId)
