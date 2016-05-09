@@ -27,7 +27,7 @@ class Create extends AbstractCommandHandler
             ->setDescription($command->getDescription())
             ->setStartDate(new DateTime($command->getStartDate()))
             ->setEndDate(new DateTime($command->getEndDate()))
-            ->setIsInternal($command->isInternal());
+            ->setIsInternal($command->getIsInternal());
 
         $this->getRepo()->save($entity);
 
