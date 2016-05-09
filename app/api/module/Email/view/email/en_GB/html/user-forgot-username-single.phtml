@@ -2,8 +2,8 @@
 
 <p>You asked for a reminder of your Vehicle Operator Licensing account username.</p>
 
-<p>It’s: <strong><?php echo $this->loginId ?></strong></p>
+<p>It’s: <strong><?php echo $this->escapeHtml($this->loginId); ?></strong></p>
 
 <p>
-    <a href="<?php echo $this->url; ?>">Sign in</a>
+    <a href="<?php echo $this->escapeHtml($this->url); ?>">Sign in</a>
 </p>
