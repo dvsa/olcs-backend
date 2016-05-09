@@ -564,4 +564,19 @@ class LicenceVehicleTest extends RepositoryTestCase
 
         $this->assertSame(1702, $this->sut->clearVehicleSection26($licenceId));
     }
+
+    public function testFetchAllVehiclesCount()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
+
+        $mockQb->shouldReceive('select')->with('count(m.id)')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('m.licence', ':licence')->once()->andReturn('expr');
+        $mockQb->shouldReceive('andWhere')->with('expr')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('licence', 1)->once()->andReturnSelf();
+        $mockQb->shouldReceive('getQuery->getSingleScalarResult')->once()->andReturn('result');
+
+        $this->assertSame('result', $this->sut->fetchAllVehiclesCount(1));
+
+    }
 }
