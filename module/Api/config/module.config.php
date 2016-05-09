@@ -304,6 +304,8 @@ return [
             'ViTnmView' => RepositoryFactory::class,
             'ViVhlView' => RepositoryFactory::class,
             'SystemInfoMessage' => RepositoryFactory::class,
+            'Reason' => RepositoryFactory::class,
+            'PiDefinition' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
