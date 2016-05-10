@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\IrfoPsvRouteTo;
 /**
  * Alias of IrfoPsvRouteTo
  */
-class BkmDestination extends IrfoPsvRouteTo
+class BkmRouteEnd extends IrfoPsvRouteTo
 {
     //
 }
