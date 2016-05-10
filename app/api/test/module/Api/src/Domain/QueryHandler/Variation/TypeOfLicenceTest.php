@@ -46,7 +46,12 @@ class TypeOfLicenceTest extends QueryHandlerTestCase
             ->andReturn('curLicType');
 
         /** @var Application $application */
-        $application = m::mock(Application::class)->makePartial();
+        $application = m::mock(Application::class)->makePartial()
+            ->shouldReceive('serialize')
+            ->once()
+            ->andReturn(['foo' => 'bar'])
+            ->getMock();
+
         $application->setLicence($licence);
 
         $query = Qry::create(['id' => 111]);
@@ -62,12 +67,13 @@ class TypeOfLicenceTest extends QueryHandlerTestCase
             ->andReturn(true);
 
         $expected = [
+            'foo' => 'bar',
             'canBecomeSpecialRestricted' => true,
             'canUpdateLicenceType' => true,
             'currentLicenceType' => 'curLicType'
         ];
 
         $result = $this->sut->handleQuery($query);
-        $this->assertArraySubset($expected, $result->serialize());
+        $this->assertEquals($expected, $result->serialize());
     }
 }
