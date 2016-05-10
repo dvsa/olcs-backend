@@ -7,6 +7,7 @@ use Zend\Filter\AbstractFilter;
 /**
  * Class MiscSnJustification
  * @package Dvsa\Olcs\Api\Service\Ebsr\Filter\Format
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
 class MiscSnJustification extends AbstractFilter
 {
@@ -15,8 +16,8 @@ class MiscSnJustification extends AbstractFilter
     /**
      * Appends the miscellaneous justification field to the unforseen detail field
      *
-     * @param  mixed $value
-     * @return mixed
+     * @param array $value
+     * @return array
      */
     public function filter($value)
     {

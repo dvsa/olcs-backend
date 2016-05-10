@@ -3,18 +3,19 @@
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\Filter\Format;
 
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification;
-use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class MiscSnJustificationTest
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\Filter\Format
+ * @covers Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class MiscSnJustificationTest extends TestCase
+class MiscSnJustificationTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider provideFilter
-     * @param $expected
-     * @param $value
+     * @param array $expected
+     * @param array $value
      */
     public function testFilter($expected, $value)
     {
