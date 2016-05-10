@@ -1,4 +1,5 @@
 <?php
+$startTime = microtime(true);
 
 // Ensures at the very least we send a 500 response on fatal
 register_shutdown_function('handleFatal');
@@ -79,3 +80,5 @@ if ($profile) {
     fwrite($fp, $content);
     fclose($fp);
 }
+$time = round(microtime(true) - $startTime, 5);
+\Olcs\Logging\Log\Logger::debug('Backend complete', ['time' => $time, 'url' => $_SERVER['REQUEST_URI']]);
