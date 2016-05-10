@@ -726,7 +726,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates::class,
             \Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber::class =>
                 \Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber::class,
-
+            \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification::class
         ],
         'factories' => [
             \Dvsa\Olcs\Api\Service\Nr\Filter\Vrm::class => \Dvsa\Olcs\Api\Service\Nr\Filter\VrmFactory::class

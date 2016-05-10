@@ -255,7 +255,7 @@ class TransExchangeXmlFactory implements FactoryInterface
             'ChangeToConnectAlteredService' => $changeToConnectAlteredService,
             'ExceptionalRequirement' => $exceptionalRequirement,
             'LocalHolidayChange' => $localHolidayChange,
-            'MiscellaneousJustification' => new FixedValue(['busShortNotice', 'miscellaneousJustification'], 'Y'),
+            'MiscellaneousJustification' => new NodeValue(['busShortNotice', 'miscJustification']),
             'RegulationOrderCompliance' => $regulationOrderCompliance,
             'ReplaceDiscontinuedService' => $replaceDiscontinuedService,
             'SpecialOccasion' => $specialOccasion
