@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\IrfoPsvRouteFrom;
 /**
  * Alias of IrfoPsvRouteFrom
  */
-class BkmRouteStartLc extends IrfoPsvRouteFrom
+class IrfoPsvRouteFromPage2 extends IrfoPsvRouteFrom
 {
     //
 }
