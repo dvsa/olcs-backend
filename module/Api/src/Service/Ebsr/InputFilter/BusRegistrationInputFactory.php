@@ -6,6 +6,7 @@ use Olcs\XmlTools\Filter\MapXmlFile;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification;
 
 /**
  * Class BusRegistrationInputFactory
@@ -38,6 +39,7 @@ class BusRegistrationInputFactory implements FactoryInterface
         $filterChain->attach($serviceLocator->get('FilterManager')->get('Format\Subsidy'));
         $filterChain->attach($serviceLocator->get('FilterManager')->get('Format\Via'));
         $filterChain->attach($serviceLocator->get('FilterManager')->get('Format\ExistingRegNo'));
+        $filterChain->attach($serviceLocator->get('FilterManager')->get(MiscSnJustification::class));
 
         $validatorChain = $service->getValidatorChain();
 
