@@ -75,7 +75,7 @@ class CommunityLicTest extends QueryHandlerTestCase
             'count-unfiltered' => 1,
             'totCommunityLicences' => 2
         ];
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result', $result['officeCopy']);
+        $this->assertInstanceOf(\Dvsa\Olcs\Api\Domain\QueryHandler\Result::class, $result['officeCopy']);
 
         unset($result['officeCopy']);
         $this->assertEquals($result, $expected);
