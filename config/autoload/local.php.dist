@@ -59,6 +59,10 @@ return [
         'configuration' => [
             'orm_default' => [
                 'metadata_cache' => 'apc'
+
+                // Disable these in Development environment
+                'query_cache' => 'apc',
+                'result_cache' => 'apc',
             ]
         ],
     ],
