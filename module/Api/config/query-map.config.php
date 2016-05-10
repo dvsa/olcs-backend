@@ -143,6 +143,7 @@ return [
     TransferQuery\Cases\Pi\Hearing::class => QueryHandler\Cases\Pi\Hearing::class,
     TransferQuery\Cases\Pi\HearingList::class => QueryHandler\Cases\Pi\HearingList::class,
     TransferQuery\Cases\Pi\ReportList::class => QueryHandler\Cases\Pi\ReportList::class,
+    TransferQuery\Cases\Pi\PiDefinitionList::class => QueryHandler\Cases\Pi\PiDefinitionList::class,
     TransferQuery\Cases\AnnualTestHistory::class => QueryHandler\Cases\AnnualTestHistory::class,
     TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
     TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
@@ -488,6 +489,9 @@ return [
 
     // Decisions
     TransferQuery\Decision\DecisionList::class => QueryHandler\Decision\DecisionList::class,
+
+    // Reasons
+    TransferQuery\Reason\ReasonList::class => QueryHandler\Reason\ReasonList::class,
 
     TransferQuery\TaskAllocationRule\GetList::class => QueryHandler\TaskAllocationRule\GetList::class,
     TransferQuery\TaskAllocationRule\Get::class => QueryHandler\TaskAllocationRule\Get::class,
