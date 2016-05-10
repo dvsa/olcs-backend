@@ -28,11 +28,11 @@ class TypeOfLicence extends AbstractQueryHandler implements AuthAwareInterface
     public function handleQuery(QueryInterface $query)
     {
         /** @var Entity $entity */
-        $entity = $this->getRepo()->fetchUsingId($query);
-        $licence = $entity->getLicence();
+        $application = $this->getRepo()->fetchUsingId($query);
+        $licence = $application->getLicence();
 
         return $this->result(
-            $licence,
+            $application,
             [],
             [
                 'canBecomeSpecialRestricted' => $licence->canBecomeSpecialRestricted(),
