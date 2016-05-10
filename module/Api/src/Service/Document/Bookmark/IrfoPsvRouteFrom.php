@@ -1,7 +1,5 @@
 <?php
-/**
- * IrfoPsvRouteFrom
- */
+
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\IrfoPsvAuthBundle as Qry;
