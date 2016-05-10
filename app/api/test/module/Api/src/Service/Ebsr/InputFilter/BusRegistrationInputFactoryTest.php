@@ -7,6 +7,7 @@ use Mockery as m;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory;
 use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification;
 
 /**
  * Class BusRegistrationInputFactoryTest
@@ -43,6 +44,7 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with('Format\Subsidy')->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with('Format\Via')->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with('Format\ExistingRegNo')->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(MiscSnJustification::class)->andReturn($mockFilter);
 
         $mockSl->shouldReceive('get')->with('Rules\EffectiveDate')->andReturn($mockValidator);
         $mockSl->shouldReceive('get')->with('Rules\ApplicationType')->andReturn($mockValidator);
@@ -53,7 +55,7 @@ class BusRegistrationInputFactoryTest extends TestCase
         $service = $sut->createService($mockSl);
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
-        $this->assertCount(8, $service->getFilterChain());
+        $this->assertCount(9, $service->getFilterChain());
         $this->assertCount(3, $service->getValidatorChain());
 
         foreach ($service->getValidatorChain()->getValidators() as $validator) {
@@ -98,13 +100,14 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with('Format\Subsidy')->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with('Format\Via')->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with('Format\ExistingRegNo')->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(MiscSnJustification::class)->andReturn($mockFilter);
 
         $sut = new BusRegistrationInputFactory();
         /** @var \Zend\InputFilter\Input $service */
         $service = $sut->createService($mockSl);
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
-        $this->assertCount(8, $service->getFilterChain());
+        $this->assertCount(9, $service->getFilterChain());
         $this->assertCount(0, $service->getValidatorChain());
     }
 }
