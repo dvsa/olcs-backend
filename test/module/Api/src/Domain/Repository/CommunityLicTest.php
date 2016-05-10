@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
 
 /**
  * Community Lic test
@@ -64,7 +65,10 @@ class CommunityLicTest extends RepositoryTestCase
         $mockQb->shouldReceive('andWhere')->with('statuses')->once()->andReturnSelf();
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
-        $mockQb->shouldReceive('getQuery->execute')->once()->andReturn(['result']);
+        $mockQb->shouldReceive('getQuery->getResult')
+            ->with(Query::HYDRATE_ARRAY)
+            ->once()
+            ->andReturn(['result']);
 
         $this->assertEquals('result', $this->sut->fetchOfficeCopy($licenceId));
     }

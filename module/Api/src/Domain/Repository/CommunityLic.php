@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLic as CommunityLicDTO;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
 
 /**
  * Community Licence
@@ -60,7 +61,7 @@ class CommunityLic extends AbstractRepository
             ->setParameter('active', CommunityLicEntity::STATUS_ACTIVE)
             ->setParameter('withdrawn', CommunityLicEntity::STATUS_WITHDRAWN)
             ->setParameter('suspended', CommunityLicEntity::STATUS_SUSPENDED);
-        $results = $qb->getQuery()->execute();
+        $results = $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
         $retv = null;
         if (count($results)) {
             $retv = $results[0];
