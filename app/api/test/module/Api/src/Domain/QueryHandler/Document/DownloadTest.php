@@ -27,54 +27,21 @@ class DownloadTest extends QueryHandlerTestCase
     public function setUp()
     {
         $this->sut = new Download();
-        $this->mockRepo('Document', DocumentRepo::class);
-
         $this->mockedSmServices['FileUploader'] = m::mock(ContentStoreFileUploader::class);
 
         parent::setUp();
-    }
-
-    public function testHandleQueryNotFoundInDb()
-    {
-        $this->setExpectedException(NotFoundException::class);
-
-        $query = \Dvsa\Olcs\Transfer\Query\Document\Download::create(['identifier' => '12345']);
-
-        $documents = [];
-
-        $this->repoMap['Document']->shouldReceive('fetchByIdentifier')
-            ->once()
-            ->with('12345')
-            ->andReturn($documents);
-
-        $this->sut->handleQuery($query);
     }
 
     public function testHandleQueryNotFoundInStore()
     {
         $this->setExpectedException(NotFoundException::class);
 
-        $query = \Dvsa\Olcs\Transfer\Query\Document\Download::create(['identifier' => '12345']);
-
-        /** @var Document $document */
-        $document = m::mock(Document::class)->makePartial();
-        $document->setFilename('foo.pdf');
-        $document->setIdentifier('12345');
-
-        $documents = [
-            $document
-        ];
-
-        $this->repoMap['Document']->shouldReceive('fetchByIdentifier')
-            ->once()
-            ->with('12345')
-            ->andReturn($documents);
+        $query = \Dvsa\Olcs\Transfer\Query\Document\Download::create(['identifier' => 'foo/bar/12345.pdf']);
 
         $file = null;
-
         $this->mockedSmServices['FileUploader']->shouldReceive('download')
             ->once()
-            ->with('12345')
+            ->with('foo/bar/12345.pdf')
             ->andReturn($file);
 
         $this->sut->handleQuery($query);
@@ -82,24 +49,7 @@ class DownloadTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
-        $query = \Dvsa\Olcs\Transfer\Query\Document\Download::create(['identifier' => '12345']);
-
-        /** @var Document $document */
-        $document = m::mock(Document::class)->makePartial();
-        $document->setFilename('/bar/foo.pdf');
-        $document->setIdentifier('12345');
-        $document->shouldReceive('serialize')
-            ->with([])
-            ->andReturn(['foo' => 'bar']);
-
-        $documents = [
-            $document
-        ];
-
-        $this->repoMap['Document']->shouldReceive('fetchByIdentifier')
-            ->once()
-            ->with('12345')
-            ->andReturn($documents);
+        $query = \Dvsa\Olcs\Transfer\Query\Document\Download::create(['identifier' => 'foo/bar/12345.pdf']);
 
         $file = m::mock();
         $file->shouldReceive('getContent')
@@ -107,19 +57,16 @@ class DownloadTest extends QueryHandlerTestCase
 
         $this->mockedSmServices['FileUploader']->shouldReceive('download')
             ->once()
-            ->with('12345')
+            ->with('foo/bar/12345.pdf')
             ->andReturn($file);
 
         $result = $this->sut->handleQuery($query);
 
-        $data = $result->serialize();
-
         $expected = [
-            'foo' => 'bar',
-            'fileName' => 'foo.pdf',
+            'fileName' => '12345.pdf',
             'content' => base64_encode('<foo>')
         ];
 
-        $this->assertEquals($expected, $data);
+        $this->assertEquals($expected, $result);
     }
 }
