@@ -4,8 +4,8 @@
 
 <p>As the administrator, you’ll need to give them this information yourself. You can find it in the manage users area of your account.</p>
 
-<p>Your username is: <strong><?php echo $this->loginId ?></strong></p>
+<p>Your username is: <strong><?php echo $this->escapeHtml($this->loginId); ?></strong></p>
 
 <p>
-    <a href="<?php echo $this->url; ?>">Sign in</a>
+    <a href="<?php echo $this->escapeHtml($this->url); ?>">Sign in</a>
 </p>

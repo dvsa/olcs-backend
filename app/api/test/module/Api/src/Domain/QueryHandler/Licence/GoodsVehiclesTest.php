@@ -79,10 +79,6 @@ class GoodsVehiclesTest extends QueryHandlerTestCase
         $licence->shouldReceive('getOtherActiveLicences->count')
             ->andReturn(5);
 
-        $licence->shouldReceive('getLicenceVehicles->count')
-            ->andReturn(3)
-            ->once();
-
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($licence);
@@ -95,7 +91,11 @@ class GoodsVehiclesTest extends QueryHandlerTestCase
             ->andReturn($licenceVehicles)
             ->shouldReceive('fetchPaginatedCount')
             ->with($qb)
-            ->andReturn(10);
+            ->andReturn(10)
+            ->shouldReceive('fetchAllVehiclesCount')
+            ->with(111)
+            ->andReturn(3)
+            ->once();
 
         $result = $this->sut->handleQuery($query);
 

@@ -1,8 +1,8 @@
-<p>Thank you for your EBSR application received on <?php echo $this->submissionDate ?> for the
-    following local bus service - <?php echo $this->registrationNumber; ?> - between
-    <?php echo $this->origin; ?> and <?php echo $this->destination; ?> with service number
-    <?php echo $this->lineName; ?> to come
-    into effect on <?php echo $this->startDate; ?>.</p>
+<p>Thank you for your EBSR application received on <?php echo $this->escapeHtml($this->submissionDate); ?> for the
+    following local bus service - <?php echo $this->escapeHtml($this->registrationNumber); ?> - between
+    <?php echo $this->escapeHtml($this->origin); ?> and <?php echo $this->escapeHtml($this->destination); ?> with
+    service number <?php echo $this->escapeHtml($this->lineName); ?> to come into effect on
+    <?php echo $this->escapeHtml($this->startDate); ?>.</p>
 
 <p>A new version of the Route Map PDF is now available for this registration in an alternative map scale. Please log
     on to view this alternative scale of the map if required.</p>

@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * PresidingTc Abstract Entity
@@ -13,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="presiding_tc")
  */
 abstract class AbstractPresidingTc implements BundleSerializableInterface, JsonSerializable
@@ -20,13 +22,13 @@ abstract class AbstractPresidingTc implements BundleSerializableInterface, JsonS
     use BundleSerializableTrait;
 
     /**
-     * Deleted
+     * Deleted date
      *
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(type="yesnonull", name="deleted", nullable=true, options={"default": 0})
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
      */
-    protected $deleted = 0;
+    protected $deletedDate;
 
     /**
      * Identifier - Id
@@ -49,26 +51,26 @@ abstract class AbstractPresidingTc implements BundleSerializableInterface, JsonS
     protected $name;
 
     /**
-     * Set the deleted
+     * Set the deleted date
      *
-     * @param string $deleted
+     * @param \DateTime $deletedDate
      * @return PresidingTc
      */
-    public function setDeleted($deleted)
+    public function setDeletedDate($deletedDate)
     {
-        $this->deleted = $deleted;
+        $this->deletedDate = $deletedDate;
 
         return $this;
     }
 
     /**
-     * Get the deleted
+     * Get the deleted date
      *
-     * @return string
+     * @return \DateTime
      */
-    public function getDeleted()
+    public function getDeletedDate()
     {
-        return $this->deleted;
+        return $this->deletedDate;
     }
 
     /**
