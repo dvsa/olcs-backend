@@ -60,12 +60,7 @@ class CommunityLic extends AbstractRepository
             ->setParameter('active', CommunityLicEntity::STATUS_ACTIVE)
             ->setParameter('withdrawn', CommunityLicEntity::STATUS_WITHDRAWN)
             ->setParameter('suspended', CommunityLicEntity::STATUS_SUSPENDED);
-        $results = $qb->getQuery()->execute();
-        $retv = null;
-        if (count($results)) {
-            $retv = $results[0];
-        }
-        return $retv;
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     public function fetchValidLicences($licence)
