@@ -48,9 +48,11 @@ class CommunityLicTest extends QueryHandlerTestCase
             ->once()
             ->getMock();
 
+        $mockOfficeCopy = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
+
         $this->repoMap['CommunityLic']->shouldReceive('fetchOfficeCopy')
             ->with($licenceId)
-            ->andReturn('officeCopy')
+            ->andReturn($mockOfficeCopy)
             ->once()
             ->shouldReceive('fetchList')
             ->with($query)
@@ -71,10 +73,11 @@ class CommunityLicTest extends QueryHandlerTestCase
             'result' => 'result',
             'count' =>  15,
             'count-unfiltered' => 1,
-            'totCommunityLicences' => 2,
-            'officeCopy' => 'officeCopy'
+            'totCommunityLicences' => 2
         ];
+        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result', $result['officeCopy']);
 
+        unset($result['officeCopy']);
         $this->assertEquals($result, $expected);
     }
 }
