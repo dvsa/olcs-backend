@@ -29,15 +29,16 @@ class TypeOfLicence extends AbstractQueryHandler implements AuthAwareInterface
     {
         /** @var Entity $entity */
         $entity = $this->getRepo()->fetchUsingId($query);
-
         $licence = $entity->getLicence();
 
-        $data = $entity->jsonSerialize();
-
-        $data['canBecomeSpecialRestricted'] = $licence->canBecomeSpecialRestricted();
-        $data['canUpdateLicenceType'] = $this->isGranted(Permission::CAN_UPDATE_LICENCE_LICENCE_TYPE, $licence);
-        $data['currentLicenceType'] = $licence->getLicenceType()->getId();
-
-        return $data;
+        return $this->result(
+            $licence,
+            [],
+            [
+                'canBecomeSpecialRestricted' => $licence->canBecomeSpecialRestricted(),
+                'canUpdateLicenceType' => $this->isGranted(Permission::CAN_UPDATE_LICENCE_LICENCE_TYPE, $licence),
+                'currentLicenceType' => $licence->getLicenceType()->getId()
+            ]
+        );
     }
 }

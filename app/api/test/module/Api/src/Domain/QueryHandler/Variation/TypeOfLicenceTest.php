@@ -49,10 +49,6 @@ class TypeOfLicenceTest extends QueryHandlerTestCase
         $application = m::mock(Application::class)->makePartial();
         $application->setLicence($licence);
 
-        $application->shouldReceive('jsonSerialize')
-            ->once()
-            ->andReturn(['foo' => 'bar']);
-
         $query = Qry::create(['id' => 111]);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
@@ -66,12 +62,12 @@ class TypeOfLicenceTest extends QueryHandlerTestCase
             ->andReturn(true);
 
         $expected = [
-            'foo' => 'bar',
             'canBecomeSpecialRestricted' => true,
             'canUpdateLicenceType' => true,
             'currentLicenceType' => 'curLicType'
         ];
 
-        $this->assertEquals($expected, $this->sut->handleQuery($query));
+        $result = $this->sut->handleQuery($query);
+        $this->assertArraySubset($expected, $result->serialize());
     }
 }
