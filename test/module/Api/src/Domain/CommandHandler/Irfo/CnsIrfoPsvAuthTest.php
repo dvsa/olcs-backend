@@ -8,10 +8,10 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Irfo;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CnsIrfoPsvAuth as Sut;
-use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPsvAuth as UpdateIrfoPsvAuthCmd;
 use Dvsa\Olcs\Api\Domain\Repository\IrfoPsvAuth as IrfoPsvAuthRepo;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
-use Dvsa\Olcs\Transfer\Command\Irfo\ResetIrfoPsvAuth as Cmd;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType;
+use Dvsa\Olcs\Transfer\Command\Irfo\CnsIrfoPsvAuth as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
@@ -31,7 +31,14 @@ class CnsIrfoPsvAuthTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
+            IrfoPsvAuthEntity::JOURNEY_FREQ_DAILY,
             IrfoPsvAuthEntity::STATUS_CNS,
+        ];
+
+        $this->references = [
+            IrfoPsvAuthType::class => [
+                22 => m::mock(IrfoPsvAuthType::class)
+            ],
         ];
 
         parent::initReferences();
@@ -47,27 +54,27 @@ class CnsIrfoPsvAuthTest extends CommandHandlerTestCase
         $data = [
             'id' => $id,
             'version' => 2,
+            'irfoPsvAuthType' => 22,
+            'journeyFrequency' => IrfoPsvAuthEntity::JOURNEY_FREQ_DAILY,
+            'irfoPsvAuthNumbers' => [],
         ];
 
         $command = Cmd::create($data);
 
-        // handle update
-        $this->expectedSideEffect(
-            UpdateIrfoPsvAuthCmd::class, $command->getArrayCopy(),
-            (new Result())->addMessage('IRFO PSV Auth updated successfully')
-                ->addId('irfoPsvAuth', $data['id'])
-        );
-
         /** @var IrfoPsvAuthEntity $irfoPsvAuth */
-        $irfoPsvAuth = m::mock(IrfoPsvAuthEntity::class);
-        $irfoPsvAuth->shouldReceive('continuationNotSought')
+        $irfoPsvAuth = m::mock(IrfoPsvAuthEntity::class)->makePartial();
+        $irfoPsvAuth->setIrfoPsvAuthNumbers([]);
+        $irfoPsvAuth
+            ->shouldReceive('update')
+            ->once()
+            ->shouldReceive('continuationNotSought')
             ->once()
             ->with($this->refData[IrfoPsvAuthEntity::STATUS_CNS])
             ->shouldReceive('getId')
             ->andReturn($id);
 
         $this->repoMap['IrfoPsvAuth']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT)
+            ->with($command, Query::HYDRATE_OBJECT, 2)
             ->andReturn($irfoPsvAuth)
             ->shouldReceive('save')
             ->with(m::type(IrfoPsvAuthEntity::class))

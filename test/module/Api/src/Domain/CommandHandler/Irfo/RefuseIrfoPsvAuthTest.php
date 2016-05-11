@@ -9,9 +9,9 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelIrfoPsvAuthFees as CancelFeesDto;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\RefuseIrfoPsvAuth as Sut;
-use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPsvAuth as UpdateIrfoPsvAuthCmd;
 use Dvsa\Olcs\Api\Domain\Repository\IrfoPsvAuth as IrfoPsvAuthRepo;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType;
 use Dvsa\Olcs\Transfer\Command\Irfo\RefuseIrfoPsvAuth as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -32,7 +32,14 @@ class RefuseIrfoPsvAuthTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
+            IrfoPsvAuthEntity::JOURNEY_FREQ_DAILY,
             IrfoPsvAuthEntity::STATUS_REFUSED,
+        ];
+
+        $this->references = [
+            IrfoPsvAuthType::class => [
+                22 => m::mock(IrfoPsvAuthType::class)
+            ],
         ];
 
         parent::initReferences();
@@ -64,31 +71,26 @@ class RefuseIrfoPsvAuthTest extends CommandHandlerTestCase
             'copiesRequired' => 1,
             'copiesRequiredTotal' => 1,
             'countrys' => ['GB'],
-            'irfoPsvAuthNumbers' => [
-                ['name' => 'test 1'],
-                ['name' => ''],
-            ],
+            'irfoPsvAuthNumbers' => [],
         ];
 
         $command = Cmd::create($data);
 
-        // handle update
-        $this->expectedSideEffect(
-            UpdateIrfoPsvAuthCmd::class, $command->getArrayCopy(),
-            (new Result())->addMessage('IRFO PSV Auth updated successfully')
-                ->addId('irfoPsvAuth', $data['id'])
-        );
-
         /** @var IrfoPsvAuthEntity $irfoPsvAuth */
-        $irfoPsvAuth = m::mock(IrfoPsvAuthEntity::class);
-        $irfoPsvAuth->shouldReceive('refuse')
+        $irfoPsvAuth = m::mock(IrfoPsvAuthEntity::class)->makePartial();
+        $irfoPsvAuth->setIrfoPsvAuthNumbers([]);
+        $irfoPsvAuth
+            ->shouldReceive('update')
+            ->once()
+            ->shouldReceive('refuse')
             ->once()
             ->with($this->refData[IrfoPsvAuthEntity::STATUS_REFUSED])
             ->shouldReceive('getId')
             ->andReturn($id);
 
-        $this->repoMap['IrfoPsvAuth']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT)
+        $this->repoMap['IrfoPsvAuth']
+            ->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, 2)
             ->andReturn($irfoPsvAuth)
             ->shouldReceive('save')
             ->with(m::type(IrfoPsvAuthEntity::class))

@@ -1,46 +1,37 @@
 <?php
 
-/**
- * Generate IrfoPsvAuth
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Irfo;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPsvAuth as UpdateDto;
 
 /**
  * Generate IrfoPsvAuth
  */
 final class GenerateIrfoPsvAuth extends AbstractCommandHandler implements TransactionedInterface
 {
+    use IrfoPsvAuthUpdateTrait;
+
     protected $repoServiceName = 'IrfoPsvAuth';
 
     protected $extraRepos = ['Fee'];
 
     /**
-     * Generates Irfo Psv Auth
+     * Handle Generate command
      *
      * @param CommandInterface $command
      * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
-        /** @var IrfoPsvAuth $irfoPsvAuth */
-        $irfoPsvAuth = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
-
-        $this->handleSideEffect(
-            UpdateDto::create(
-                $command->getArrayCopy()
-            )
-        );
+        // common IRFO PSV Auth update
+        $irfoPsvAuth = $this->updateIrfoPsvAuth($command);
 
         $irfoPsvAuth->generate(
             $this->getRepo('Fee')->fetchFeesByIrfoPsvAuthId($irfoPsvAuth->getId(), true)

@@ -268,5 +268,7 @@ class UpdateIrfoPsvAuthTest extends CommandHandlerTestCase
             $this->refData[IrfoPsvAuthEntity::STATUS_PENDING],
             $savedIrfoPsvAuth->getStatus()
         );
+
+        $this->assertInstanceOf(\DateTime::class, $savedIrfoPsvAuth->getRenewalDate());
     }
 }

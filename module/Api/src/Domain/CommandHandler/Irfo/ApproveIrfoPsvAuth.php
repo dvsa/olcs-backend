@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Approve IrfoPsvAuth
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -10,28 +7,29 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPsvAuth as UpdateDto;
-use Doctrine\ORM\Query;
 
 /**
  * Approve IrfoPsvAuth
  */
 final class ApproveIrfoPsvAuth extends AbstractCommandHandler implements TransactionedInterface
 {
+    use IrfoPsvAuthUpdateTrait;
+
     protected $repoServiceName = 'IrfoPsvAuth';
 
     protected $extraRepos = ['Fee'];
 
+    /**
+     * Handle Approve command
+     *
+     * @param CommandInterface $command
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
-        /** @var IrfoPsvAuth $irfoPsvAuth */
-        $irfoPsvAuth = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
-
-        $this->handleSideEffect(
-            UpdateDto::create(
-                $command->getArrayCopy()
-            )
-        );
+        // common IRFO PSV Auth update
+        $irfoPsvAuth = $this->updateIrfoPsvAuth($command);
 
         $irfoPsvAuth->approve(
             $this->getRepo()->getRefdataReference(IrfoPsvAuth::STATUS_APPROVED),
