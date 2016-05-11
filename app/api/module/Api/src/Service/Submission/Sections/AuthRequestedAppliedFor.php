@@ -21,7 +21,6 @@ final class AuthRequestedAppliedFor extends AbstractSection
         $currentActiveVehicles = $licence->getActiveVehiclesCount();
         $currentTrailersInPossession = $licence->getTotAuthTrailers();
         $currentTotAuthVehicles = $licence->getTotAuthVehicles();
-        $currentTotAuthTrailers = $licence->getTotAuthTrailers();
 
         /** @var Application $application */
         foreach ($applications as $application) {
@@ -41,7 +40,7 @@ final class AuthRequestedAppliedFor extends AbstractSection
                 $thisData['currentVehicleAuthorisation'] =
                     !empty($currentTotAuthVehicles) ? $currentTotAuthVehicles : '0';
                 $thisData['currentTrailerAuthorisation'] =
-                    !empty($currentTotAuthTrailers) ? $currentTotAuthTrailers : '0';
+                    !empty($currentTrailersInPossession) ? $currentTrailersInPossession : '0';
             }
 
             $thisData['requestedVehicleAuthorisation'] =
