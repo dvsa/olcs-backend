@@ -18,6 +18,11 @@ final class AuthRequestedAppliedFor extends AbstractSection
         $licence = $case->getLicence();
         $applications = !empty($licence) ? $licence->getApplications() : [];
 
+        $currentActiveVehicles = $licence->getActiveVehiclesCount();
+        $currentTrailersInPossession = $licence->getTotAuthTrailers();
+        $currentTotAuthVehicles = $licence->getTotAuthVehicles();
+        $currentTotAuthTrailers = $licence->getTotAuthTrailers();
+
         /** @var Application $application */
         foreach ($applications as $application) {
             $thisData = array();
@@ -30,13 +35,13 @@ final class AuthRequestedAppliedFor extends AbstractSection
             $thisData['currentTrailerAuthorisation'] = '0';
 
             if ($application->isVariation()) {
-                $thisData['currentVehiclesInPossession'] = $licence->getActiveVehiclesCount();
-                $thisData['currentTrailersInPossession'] = $licence->getTotAuthTrailers();
+                $thisData['currentVehiclesInPossession'] = $currentActiveVehicles;
+                $thisData['currentTrailersInPossession'] = $currentTrailersInPossession;
 
                 $thisData['currentVehicleAuthorisation'] =
-                    !empty($licence->getTotAuthVehicles()) ? $licence->getTotAuthVehicles() : '0';
+                    !empty($currentTotAuthVehicles) ? $currentTotAuthVehicles : '0';
                 $thisData['currentTrailerAuthorisation'] =
-                    !empty($licence->getTotAuthTrailers()) ? $licence->getTotAuthTrailers() : '0';
+                    !empty($currentTotAuthTrailers) ? $currentTotAuthTrailers : '0';
             }
 
             $thisData['requestedVehicleAuthorisation'] =
