@@ -417,7 +417,6 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
             'description' => 'ERRU case has been automatically created',
             'actionDate' => date('Y-m-d', strtotime('+7 days')),
             'urgent' => 'Y',
-            'assignedToTeam' => 2, // @todo this will need changing once we have the real life team data
             'case' => $case->getId(),
             'licence' => $case->getLicence()->getId(),
         ];
