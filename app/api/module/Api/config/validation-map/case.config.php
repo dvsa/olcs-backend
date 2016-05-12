@@ -63,6 +63,7 @@ return [
     CommandHandler\Cases\Si\Applied\Update::class                           => IsInternalUser::class,
     QueryHandler\Cases\AnnualTestHistory::class                             => IsInternalUser::class,
     QueryHandler\Cases\ByLicence::class                                     => IsInternalUser::class,
+    QueryHandler\Cases\ByApplication::class                                 => IsInternalUser::class,
     QueryHandler\Cases\ByTransportManager::class                            => IsInternalUser::class,
     QueryHandler\Cases\Cases::class                                         => IsInternalUser::class,
     QueryHandler\Cases\CasesWithLicence::class                              => IsInternalUser::class,
