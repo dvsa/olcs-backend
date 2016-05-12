@@ -28,7 +28,7 @@ class RepositoryTestCase extends MockeryTestCase
     protected $em;
 
     /**
-     * @var m\MockInterface|QueryBuilderInterface
+     * @var m\MockInterface
      */
     protected $queryBuilder;
 
@@ -64,6 +64,9 @@ class RepositoryTestCase extends MockeryTestCase
             ->andReturn($mock);
     }
 
+    /**
+     * @return m\MockInterface
+     */
     protected function createMockQb($query = '')
     {
         $this->query = $query;
