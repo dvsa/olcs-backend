@@ -131,7 +131,6 @@ class BusRegSearchView extends AbstractRepository
                 $qb->addGroupBy($this->alias . '.busRegStatus');
                 break;
         }
-        $qb->addGroupBy($this->alias . '.licId');
 
         $result = $qb->getQuery()->getResult($hydrateMode);
 
