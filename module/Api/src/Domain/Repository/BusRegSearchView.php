@@ -111,7 +111,7 @@ class BusRegSearchView extends AbstractRepository
         $organisationId = null,
         $hydrateMode = Query::HYDRATE_OBJECT
     ) {
-        $qb = $this->createQueryBuilder() ;
+        $qb = $this->createQueryBuilder();
 
         // organisationId is determined by the logged in user and sent from the query handler and not from the query
         if (!empty($organisationId)) {
