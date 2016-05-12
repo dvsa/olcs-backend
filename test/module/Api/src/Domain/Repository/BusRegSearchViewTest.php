@@ -121,6 +121,33 @@ class BusRegSearchViewTest extends RepositoryTestCase
     }
 
     /**
+     * @dataProvider provideContextGroupBys
+     * @param $context
+     */
+    public function testFetchDistinctListWithOrganisationId($context, $expected)
+    {
+        $organisationId = 1;
+
+        $qb = m::mock(QueryBuilder::class);
+        $repo = m::mock(EntityRepository::class);
+
+        $this->em->shouldReceive('getRepository')->with(Entity::class)->andReturn($repo);
+
+        $repo->shouldReceive('createQueryBuilder')->with('m')->once()->andReturn($qb);
+        $qb->shouldReceive('expr->eq')->with('m.organisationId', ':organisationId')->once()->andReturn('S_EXPR');
+        $qb->shouldReceive('andWhere')->with('S_EXPR')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('organisationId', $organisationId)->once()->andReturnSelf();
+
+        $qb->shouldReceive('addGroupBy')->with($expected)->andReturnSelf();
+        $qb->shouldReceive('getQuery->getResult')->with(m::type('integer'))->once()->andReturn(['RESULTS']);
+
+        $mockQuery = m::mock(QueryInterface::class);
+        $mockQuery->shouldReceive('getContext')->andReturn($context);
+
+        $this->assertSame(['RESULTS'], $this->sut->fetchDistinctList($mockQuery, $organisationId));
+    }
+
+    /**
      * Data provider maps the relevent group by clauses that should be applied to the query given a certain context
      *
      * @return array
