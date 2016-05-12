@@ -1,8 +1,5 @@
 <?php
 
-/**
- * CNS IrfoPsvAuth
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -10,14 +7,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPsvAuth as UpdateDto;
 
 /**
  * CNS IrfoPsvAuth
  */
 final class CnsIrfoPsvAuth extends AbstractCommandHandler implements TransactionedInterface
 {
+    use IrfoPsvAuthUpdateTrait;
+
     protected $repoServiceName = 'IrfoPsvAuth';
 
     /**
@@ -25,19 +22,12 @@ final class CnsIrfoPsvAuth extends AbstractCommandHandler implements Transaction
      *
      * @param CommandInterface $command
      * @return Result
-     * @throws Exception\BadRequestException
-     * @throws Exception\RuntimeException
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
-        /** @var IrfoPsvAuth $irfoPsvAuth */
-        $irfoPsvAuth = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
-
-        $this->handleSideEffect(
-            UpdateDto::create(
-                $command->getArrayCopy()
-            )
-        );
+        // common IRFO PSV Auth update
+        $irfoPsvAuth = $this->updateIrfoPsvAuth($command);
 
         $irfoPsvAuth->continuationNotSought(
             $this->getRepo()->getRefdataReference(IrfoPsvAuth::STATUS_CNS)
