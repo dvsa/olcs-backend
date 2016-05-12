@@ -40,18 +40,30 @@ class MissingReasonTest extends \PHPUnit_Framework_TestCase
      */
     public function isValidProvider()
     {
-        //some of these examples are valid only because the fields aren't set
-        $validSn1 = ['notAvailableChange' => 'Y', 'timetableChange' => 'Y', 'someElement' => 'someValue'];
-        $validSn2 = ['notAvailableChange' => 'N', 'timetableChange' => 'Y', 'someElement' => 'someValue'];
-        $validSn3 = ['notAvailableChange' => 'Y', 'timetableChange' => 'N', 'someElement' => 'someValue'];
-        $validSn4 = ['notAvailableChange' => 'N', 'timetableChange' => 'N', 'someElement' => 'someValue'];
-        $validSn5 = ['timetableChange' => 'Y', 'someElement' => 'someValue'];
-        $validSn6 = ['notAvailableChange' => 'Y', 'someElement' => 'someValue'];
-        $validSn7 = ['timetableChange' => 'N', 'someElement' => 'someValue'];
-        $validSn8 = ['notAvailableChange' => 'N', 'someElement' => 'someValue'];
-        $validSn9 = ['notAvailableChange' => 'Y', 'timetableChange' => 'Y'];
+        $invalidSn = [
+            'bankHolidayChange' => 'N',
+            'unforseenChange' => 'N',
+            'timetableChange' => 'N',
+            'replacementChange' => 'N',
+            'holidayChange' => 'N',
+            'trcChange' => 'N',
+            'policeChange' => 'N',
+            'specialOccasionChange' => 'N',
+            'connectionChange' => 'N',
+            'notAvailableChange' => 'N'
+        ];
 
-        $invalidSn1 = ['notAvailableChange' => 'N', 'timetableChange' => 'N'];
+        //creates a version of the the array with one sn reason set
+        $validSn1 = array_merge($invalidSn, ['bankHolidayChange' => 'Y']);
+        $validSn2 = array_merge($invalidSn, ['unforseenChange' => 'Y']);
+        $validSn3 = array_merge($invalidSn, ['timetableChange' => 'Y']);
+        $validSn4 = array_merge($invalidSn, ['replacementChange' => 'Y']);
+        $validSn5 = array_merge($invalidSn, ['holidayChange' => 'Y']);
+        $validSn6 = array_merge($invalidSn, ['trcChange' => 'Y']);
+        $validSn7 = array_merge($invalidSn, ['policeChange' => 'Y']);
+        $validSn8 = array_merge($invalidSn, ['specialOccasionChange' => 'Y']);
+        $validSn9 = array_merge($invalidSn, ['connectionChange' => 'Y']);
+        $validSn10 = array_merge($invalidSn, ['notAvailableChange' => 'Y']);
 
         return [
             ['Y', $validSn1, true],
@@ -63,8 +75,9 @@ class MissingReasonTest extends \PHPUnit_Framework_TestCase
             ['Y', $validSn7, true],
             ['Y', $validSn8, true],
             ['Y', $validSn9, true],
-            ['N', $invalidSn1, true], //record not short notice
-            ['Y', $invalidSn1, false]
+            ['Y', $validSn10, true],
+            ['N', $invalidSn, true], //record not short notice
+            ['Y', $invalidSn, false]
         ];
     }
 }
