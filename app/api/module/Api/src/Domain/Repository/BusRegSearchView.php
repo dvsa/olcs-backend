@@ -106,20 +106,32 @@ class BusRegSearchView extends AbstractRepository
      *
      * @return \ArrayIterator|\Traversable
      */
-    public function fetchDistinctList(QueryInterface $query, $hydrateMode = Query::HYDRATE_OBJECT)
-    {
+    public function fetchDistinctList(
+        QueryInterface $query,
+        $organisationId = null,
+        $hydrateMode = Query::HYDRATE_OBJECT
+    ) {
+        $qb = $this->createQueryBuilder() ;
+
+        // organisationId is determined by the logged in user and sent from the query handler and not from the query
+        if (!empty($organisationId)) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.organisationId', ':organisationId'))
+                ->setParameter('organisationId', $organisationId);
+        }
+
         switch ($query->getContext())
         {
             case 'licence':
-                $qb = $this->createQueryBuilder()->addGroupBy($this->alias . '.licId');
+                $qb->addGroupBy($this->alias . '.licId');
                 break;
             case 'organisation':
-                $qb = $this->createQueryBuilder()->addGroupBy($this->alias . '.organisationId');
+                $qb->addGroupBy($this->alias . '.organisationId');
                 break;
             case 'busRegStatus':
-                $qb = $this->createQueryBuilder()->addGroupBy($this->alias . '.busRegStatus');
+                $qb->addGroupBy($this->alias . '.busRegStatus');
                 break;
         }
+        $qb->addGroupBy($this->alias . '.licId');
 
         $result = $qb->getQuery()->getResult($hydrateMode);
 

@@ -12,14 +12,18 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as Repository;
 use Dvsa\Olcs\Transfer\Query\Bus\SearchViewList as ListQueryObject;
 use Doctrine\ORM\Query as DoctrineQuery;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * BusRegSearchView List
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class BusRegSearchViewContextList extends AbstractQueryHandler
+class BusRegSearchViewContextList extends AbstractQueryHandler implements AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'BusRegSearchView';
 
     /**
@@ -33,7 +37,14 @@ class BusRegSearchViewContextList extends AbstractQueryHandler
         /** @var Repository $repo */
         $repo = $this->getRepo();
 
-        $results = $repo->fetchDistinctList($query, DoctrineQuery::HYDRATE_OBJECT);
+        $organisationId = null;
+
+        if ($this->isOperator() ) {
+            // fetch for Organisation
+            $organisationId = $this->getCurrentOrganisation()->getId();
+        }
+
+        $results = $repo->fetchDistinctList($query, $organisationId, DoctrineQuery::HYDRATE_OBJECT);
 
         return [
             'result' => $this->resultList(
