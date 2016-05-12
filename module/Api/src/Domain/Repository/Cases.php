@@ -88,4 +88,24 @@ class Cases extends AbstractRepository
         }
         return $res[0];
     }
+
+    /**
+     * Define composite columns as HIDDEN to enable ordering by case type
+     *
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     * @param array $compositeFields
+     */
+    public function buildDefaultListQuery(
+        \Doctrine\ORM\QueryBuilder $qb,
+        \Dvsa\Olcs\Transfer\Query\QueryInterface $query,
+        $compositeFields = array()
+    ) {
+        // add calculated columns to allow ordering by them
+        parent::buildDefaultListQuery($qb, $query, ['caseType']);
+
+        $queryBuilderHelper = $this->getQueryBuilder();
+        $queryBuilderHelper->with('caseType', 'ct');
+        $qb->addSelect('CONCAT(ct.description, ' . $this->alias . '.id) as HIDDEN caseType');
+    }
 }
