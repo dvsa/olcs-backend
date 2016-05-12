@@ -208,4 +208,22 @@ class CasesTest extends RepositoryTestCase
 
         $this->sut->fetchExtended($caseId);
     }
+
+    public function testBuildDefaultListQuery()
+    {
+        $sut = m::mock(CasesRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $mockQi = m::mock(\Dvsa\Olcs\Transfer\Query\QueryInterface::class);
+
+        $sut->shouldReceive('getQueryBuilder')->with()->andReturn($mockQb);
+
+        $mockQb->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $mockQb->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('caseType', 'ct')->once()->andReturnSelf();
+        $mockQb->shouldReceive('addSelect')->with('CONCAT(ct.description, m.id) as HIDDEN caseType')->once()
+            ->andReturnSelf();
+
+        $sut->buildDefaultListQuery($mockQb, $mockQi);
+    }
 }
