@@ -60,7 +60,6 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
     private function setDocumentFlags(Document $document, Cmd $command)
     {
         $document->setIsExternal($command->getIsExternal());
-        $document->setIsReadOnly($command->getIsReadOnly());
         $document->setIsScan($command->getIsScan());
     }
 

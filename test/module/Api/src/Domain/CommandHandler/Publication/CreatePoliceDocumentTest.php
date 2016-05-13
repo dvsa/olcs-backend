@@ -45,7 +45,6 @@ class CreatePoliceDocumentTest extends CommandHandlerTestCase
             'category'      => $docCategory,
             'subCategory'   => $docSubCategory,
             'isExternal'    => true,
-            'isReadOnly'    => 'Y'
         ];
 
         $command = CreatePoliceDocumentCmd::create(['id' => $id]);

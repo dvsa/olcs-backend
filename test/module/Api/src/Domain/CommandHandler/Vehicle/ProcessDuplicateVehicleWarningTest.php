@@ -7,7 +7,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Vehicle;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -73,7 +72,6 @@ class ProcessDuplicateVehicleWarningTest extends CommandHandlerTestCase
             'licence'     => 222,
             'category'    => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
-            'isReadOnly'  => true,
             'isExternal'  => false
         ];
         $this->expectedSideEffect(GenerateAndStore::class, $data, $result1);
