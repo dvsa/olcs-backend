@@ -420,10 +420,7 @@ class PiEntityTest extends EntityTester
 
     public function testCanCloseNoHearingNoOutcome()
     {
-        $writtenOutcome = m::mock(RefData::class);
-        $writtenOutcome->shouldReceive('getId')->andReturn(null);
         $this->entity->setPiHearings(new ArrayCollection());
-        $this->entity->setWrittenOutcome($writtenOutcome);
         $this->entity->setCallUpLetterDate(new \DateTime());
         $this->entity->setBriefToTcDate(new \DateTime());
 
@@ -432,20 +429,13 @@ class PiEntityTest extends EntityTester
 
     /**
      * @dataProvider canCloseWithOutcomeProvider
-     *
-     * @param $writtenOutcomeId
-     * @param $tcWrittenReasonDate
-     * @param $writtenReasonLetterDate
-     * @param $tcWrittenDecisionDate
-     * @param $decisionLetterSentDate
-     * @param $closedDate
-     * @param $returnValue
      */
     public function testCanCloseWithOutcome(
         $writtenOutcomeId,
         $tcWrittenReasonDate,
         $writtenReasonLetterDate,
         $tcWrittenDecisionDate,
+        $writtenDecisionLetterDate,
         $decisionLetterSentDate,
         $closedDate,
         $returnValue
@@ -460,6 +450,7 @@ class PiEntityTest extends EntityTester
         $this->entity->setTcWrittenReasonDate($tcWrittenReasonDate);
         $this->entity->setWrittenReasonLetterDate($writtenReasonLetterDate);
         $this->entity->setTcWrittenDecisionDate($tcWrittenDecisionDate);
+        $this->entity->setWrittenDecisionLetterDate($writtenDecisionLetterDate);
         $this->entity->setDecisionLetterSentDate($decisionLetterSentDate);
 
         $this->assertEquals($returnValue, $this->entity->canClose());
@@ -470,16 +461,19 @@ class PiEntityTest extends EntityTester
         $date = '2015-12-25';
 
         return [
-            [SlaEntity::WRITTEN_OUTCOME_NONE, null, null, null, null, null, true],
-            [SlaEntity::WRITTEN_OUTCOME_NONE, null, null, null, null, $date, false],
-            [SlaEntity::WRITTEN_OUTCOME_DECISION, null, null, $date, $date, $date, false],
-            [SlaEntity::WRITTEN_OUTCOME_DECISION, null, null, $date, $date, null, true],
-            [SlaEntity::WRITTEN_OUTCOME_DECISION, null, null, $date, null, null, false],
-            [SlaEntity::WRITTEN_OUTCOME_DECISION, null, null, null, $date, $date, false],
-            [SlaEntity::WRITTEN_OUTCOME_REASON, $date, $date, null, null, $date, false],
-            [SlaEntity::WRITTEN_OUTCOME_REASON, $date, $date, null, null, null, true],
-            [SlaEntity::WRITTEN_OUTCOME_REASON, $date, null, null, null, null, false],
-            [SlaEntity::WRITTEN_OUTCOME_REASON, null, $date, null, null, $date, false]
+            [SlaEntity::VERBAL_DECISION_ONLY, null, null, null, null, null, null, false],
+            [SlaEntity::VERBAL_DECISION_ONLY, null, null, null, null, $date, null, true],
+            [SlaEntity::VERBAL_DECISION_ONLY, null, null, null, null, $date, $date, false],
+            [SlaEntity::WRITTEN_OUTCOME_DECISION, null, null, null, null, null, null, false],
+            [SlaEntity::WRITTEN_OUTCOME_DECISION, null, null, $date, $date, null, null, true],
+            [SlaEntity::WRITTEN_OUTCOME_DECISION, null, null, $date, $date, null, $date, false],
+            [SlaEntity::WRITTEN_OUTCOME_DECISION, null, null, $date, null, null, null, false],
+            [SlaEntity::WRITTEN_OUTCOME_DECISION, null, null, null, $date, null, null, false],
+            [SlaEntity::WRITTEN_OUTCOME_REASON, null, null, null, null, null, null, false],
+            [SlaEntity::WRITTEN_OUTCOME_REASON, $date, $date, null, null, null, null, true],
+            [SlaEntity::WRITTEN_OUTCOME_REASON, $date, $date, null, null, null, $date, false],
+            [SlaEntity::WRITTEN_OUTCOME_REASON, $date, null, null, null, null, null, false],
+            [SlaEntity::WRITTEN_OUTCOME_REASON, null, $date, null, null, null, null, false]
         ];
     }
 
