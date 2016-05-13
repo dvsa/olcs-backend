@@ -87,7 +87,6 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
             'licence' => $continuationDetail->getLicence()->getId(),
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
-            'isReadOnly'  => 'Y',
             'isExternal'  => false,
             'isScan' => false,
             'dispatch' => true

@@ -47,7 +47,6 @@ class CreateDocumentTest extends CommandHandlerTestCase
             'subCategory' => 'o',
             'description' => 'p',
             'isExternal' => 'q',
-            'isReadOnly' => 'r',
             'isScan' => 's',
             'issuedDate' => 't',
         ];
@@ -73,7 +72,6 @@ class CreateDocumentTest extends CommandHandlerTestCase
                 'subCategory' => 'o',
                 'description' => 'p',
                 'isExternal' => 'q',
-                'isReadOnly' => 'r',
                 'isScan' => 's',
                 'issuedDate' => 't',
             ],
@@ -102,7 +100,6 @@ class CreateDocumentTest extends CommandHandlerTestCase
             'category' => 'n',
             'subCategory' => 'o',
             'description' => 'p',
-            'isReadOnly' => 'r',
             'isScan' => 's',
             'issuedDate' => 't',
         ];
@@ -132,7 +129,6 @@ class CreateDocumentTest extends CommandHandlerTestCase
                 'subCategory' => 'o',
                 'description' => 'p',
                 'isExternal' => true,
-                'isReadOnly' => 'r',
                 'isScan' => 's',
                 'issuedDate' => 't',
             ],

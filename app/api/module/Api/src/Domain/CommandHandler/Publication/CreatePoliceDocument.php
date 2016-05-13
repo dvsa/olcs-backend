@@ -53,7 +53,6 @@ final class CreatePoliceDocument extends AbstractCommandHandler implements Trans
             'category'      => $publication->getDocTemplate()->getCategory()->getId(),
             'subCategory'   => $publication->getDocTemplate()->getSubCategory()->getId(),
             'isExternal'    => true,
-            'isReadOnly'    => 'Y'
         ];
 
         return GenerateDocCommand::create($data);

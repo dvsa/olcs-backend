@@ -98,7 +98,6 @@ final class CreateDocument extends AbstractCommandHandler implements Transaction
             'filename'      => $command->getFilename(),
             'description'   => $scan->getDescription(),
             'isExternal'    => false,
-            'isReadOnly'    => true,
             'isScan'        => true
         ];
 

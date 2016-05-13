@@ -61,7 +61,6 @@ final class CreateVehicleListDocument extends AbstractCommandHandler implements
             'category'      => Category::CATEGORY_LICENSING,
             'subCategory'   => Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST,
             'isExternal'    => false,
-            'isReadOnly'    => true
         ];
 
         $result = $this->handleSideEffect(GenerateAndStore::create($dtoData));

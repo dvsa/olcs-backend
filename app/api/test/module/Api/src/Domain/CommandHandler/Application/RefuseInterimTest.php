@@ -84,7 +84,6 @@ class RefuseInterimTest extends CommandHandlerTestCase
             'transportManager' => null,
             'operatingCentre' => null,
             'opposition' => null,
-            'isReadOnly' => null,
             'issuedDate' => null,
             'dispatch' => true
         ];
