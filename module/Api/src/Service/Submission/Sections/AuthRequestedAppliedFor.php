@@ -16,33 +16,23 @@ final class AuthRequestedAppliedFor extends AbstractSection
     {
         $data = [];
         $licence = $case->getLicence();
-        $applications = !empty($licence) ? $licence->getApplications() : [];
+        $applications = !empty($licence) ?
+            $licence->getApplicationsByStatus([Application::APPLICATION_STATUS_UNDER_CONSIDERATION]) : [];
 
-        $currentActiveVehicles = $licence->getActiveVehiclesCount();
-        $currentTrailersInPossession = $licence->getTotAuthTrailers();
-        $currentTotAuthVehicles = $licence->getTotAuthVehicles();
+        $activeVehiclesCount = $licence->getActiveVehiclesCount();
+        $trailersInPossession = $licence->getTrailersInPossession();
+        $totAuthVehicles = $licence->getTotAuthVehicles();
+        $totAuthTrailers = $licence->getTotAuthTrailers();
 
         /** @var Application $application */
         foreach ($applications as $application) {
             $thisData = array();
             $thisData['id'] = $application->getId();
             $thisData['version'] = $application->getVersion();
-
-            $thisData['currentVehiclesInPossession'] = '0';
-            $thisData['currentTrailersInPossession'] = '0';
-            $thisData['currentVehicleAuthorisation'] = '0';
-            $thisData['currentTrailerAuthorisation'] = '0';
-
-            if ($application->isVariation()) {
-                $thisData['currentVehiclesInPossession'] = $currentActiveVehicles;
-                $thisData['currentTrailersInPossession'] = $currentTrailersInPossession;
-
-                $thisData['currentVehicleAuthorisation'] =
-                    !empty($currentTotAuthVehicles) ? $currentTotAuthVehicles : '0';
-                $thisData['currentTrailerAuthorisation'] =
-                    !empty($currentTrailersInPossession) ? $currentTrailersInPossession : '0';
-            }
-
+            $thisData['currentVehiclesInPossession'] = !empty($activeVehiclesCount) ? $activeVehiclesCount : '0';
+            $thisData['currentTrailersInPossession'] = !empty($trailersInPossession) ? $trailersInPossession : '0';
+            $thisData['currentVehicleAuthorisation'] = !empty($totAuthVehicles) ? $totAuthVehicles : '0';
+            $thisData['currentTrailerAuthorisation'] = !empty($totAuthTrailers) ? $totAuthTrailers : '0';
             $thisData['requestedVehicleAuthorisation'] =
                 !empty($application->getTotAuthVehicles()) ? $application->getTotAuthVehicles() : '0';
             $thisData['requestedTrailerAuthorisation'] =
