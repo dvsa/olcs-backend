@@ -2523,15 +2523,15 @@ VALUES
 
 -- OLCS-10506 submission section files
 INSERT INTO `document` (`id`, `application_id`, `bus_reg_id`, `case_id`, `category_id`, `created_by`,
-                        `irfo_organisation_id`, `last_modified_by`, `licence_id`, `operating_centre_id`, `sub_category_id`, `submission_id`, `traffic_area_id`, `transport_manager_id`, `created_on`, `deleted_date`, `description`, `filename`, `document_store_id`, `is_external`, `is_read_only`, `is_scan`, `issued_date`, `last_modified_on`, `metadata`, `olbs_key`, `olbs_type`, `size`, `version`) VALUES
-  (809,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,148,1,NULL,NULL,'2015-10-06 08:43:20',NULL, 'site-plan-parking-area.png','documents/Submission/Site_plans/2015/10/20151006084312__site-plan-parking-area.png','documents/Submission/Site_plans/2015/10/20151006084312__site-plan-parking-area.png',0,NULL,0,'2015-10-06 08:43:20','2015-10-06 08:43:20',NULL,NULL,NULL,388800,2),
+                        `irfo_organisation_id`, `last_modified_by`, `licence_id`, `operating_centre_id`, `sub_category_id`, `submission_id`, `traffic_area_id`, `transport_manager_id`, `created_on`, `deleted_date`, `description`, `filename`, `document_store_id`, `is_external`, `is_scan`, `issued_date`, `last_modified_on`, `metadata`, `olbs_key`, `olbs_type`, `size`, `version`) VALUES
+  (809,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,148,1,NULL,NULL,'2015-10-06 08:43:20',NULL, 'site-plan-parking-area.png','documents/Submission/Site_plans/2015/10/20151006084312__site-plan-parking-area.png','documents/Submission/Site_plans/2015/10/20151006084312__site-plan-parking-area.png',0,0,'2015-10-06 08:43:20','2015-10-06 08:43:20',NULL,NULL,NULL,388800,2),
   (810,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,122,1,NULL,NULL,'2015-10-06 09:00:15',NULL,
    'John-Smith-Transport-Ltd-parking-area.png',
-   'documents/Submission/Conditions_and_undertakings/2015/10/20151006090008__parking-area-undertaking.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090008__parking-area-undertaking.png',0,NULL,0,'2015-10-06 09:00:15','2015-10-06 09:00:15',NULL,NULL,NULL,112024,2),
+   'documents/Submission/Conditions_and_undertakings/2015/10/20151006090008__parking-area-undertaking.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090008__parking-area-undertaking.png',0,0,'2015-10-06 09:00:15','2015-10-06 09:00:15',NULL,NULL,NULL,112024,2),
   (811,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,122,1,NULL,NULL,'2015-10-06 09:01:41',NULL,
    'Little-Trucks-Ltd-parking-area.png','documents/Submission/Conditions_and_undertakings/2015/10
-   /20151006090135__parking-area-undertaking2.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090135__parking-area-undertaking2.png',0,NULL,0,'2015-10-06 09:01:41','2015-10-06 09:01:41',NULL,NULL,NULL,64316,2),
-  (812,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,156,1,NULL,NULL,'2015-10-06 09:01:41',NULL,'ariel-view-operating-centre.png','documents/Submission/Maps/2015/10/20151006142959__ariel-view-operating-centre.png','documents/Submission/Maps/2015/10/20151006142959__ariel-view-operating-centre.png',0,NULL,0,'2015-10-06 09:01:41','2015-10-06 09:01:41',NULL,NULL,NULL,342832,2);
+   /20151006090135__parking-area-undertaking2.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090135__parking-area-undertaking2.png',0,0,'2015-10-06 09:01:41','2015-10-06 09:01:41',NULL,NULL,NULL,64316,2),
+  (812,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,156,1,NULL,NULL,'2015-10-06 09:01:41',NULL,'ariel-view-operating-centre.png','documents/Submission/Maps/2015/10/20151006142959__ariel-view-operating-centre.png','documents/Submission/Maps/2015/10/20151006142959__ariel-view-operating-centre.png',0,0,'2015-10-06 09:01:41','2015-10-06 09:01:41',NULL,NULL,NULL,342832,2);
 
 -- OLCS-10506 recommendation / decision
 INSERT INTO `submission_action` (`id`, `created_by`, `last_modified_by`, `submission_id`, `comment`, `created_on`, `is_decision`, `last_modified_on`, `version`) VALUES
