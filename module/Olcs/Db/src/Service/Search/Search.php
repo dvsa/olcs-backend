@@ -157,6 +157,10 @@ class Search
                 $correspondencePostcodeQuery->setField('correspondence_postcode', $search);
                 $queryBool->addShould($correspondencePostcodeQuery);
 
+                $caseIdQuery = new Query\Match();
+                $caseIdQuery->setField('case_id', $search);
+                $queryBool->addShould($caseIdQuery);
+
                 $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
                 break;
             case 'operator':
