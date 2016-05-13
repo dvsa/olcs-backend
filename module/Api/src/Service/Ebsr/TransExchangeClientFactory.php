@@ -2,10 +2,14 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr;
 
+use Zend\Filter\FilterPluginManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Filter\MapXmlFile;
+use Olcs\XmlTools\Validator\Xsd;
 use Zend\Http\Client as RestClient;
+use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 
 /**
  * Class TransExchangeClientFactory
@@ -31,12 +35,27 @@ class TransExchangeClientFactory implements FactoryInterface
 
         $httpClient = new RestClient($config['uri'], $config['options']);
 
-        /**
-         * @var MapXmlFile $filter
-         */
-        $filter = $serviceLocator->get('FilterManager')->get(MapXmlFile::class);
-        $filter->setMapping($serviceLocator->get('TransExchangePublisherXmlMapping'));
+        $wrapper = new ClientAdapterLoggingWrapper();
+        $wrapper->wrapAdapter($httpClient);
 
-        return new TransExchangeClient($httpClient, $filter);
+        /**
+         * @var FilterPluginManager $filterManager
+         * @var MapXmlFile $xmlFilter
+         * @var ParseXmlString $xmlParser
+         * @var Xsd $xsdValidator
+         */
+        $filterManager = $serviceLocator->get('FilterManager');
+
+        $xmlParser = $filterManager->get(ParseXmlString::class);
+
+        $xmlFilter = $filterManager->get(MapXmlFile::class);
+        $xmlFilter->setMapping($serviceLocator->get('TransExchangePublisherXmlMapping'));
+
+        $xsdValidator = $serviceLocator->get('ValidatorManager')->get(Xsd::class);
+        $xsdValidator->setXsd(
+            'http://www.transxchange.org.uk/schema/2.1/publisher/3.1.2/TransXChangePublisherService.xsd'
+        );
+
+        return new TransExchangeClient($httpClient, $xmlFilter, $xmlParser, $xsdValidator);
     }
 }
