@@ -352,10 +352,8 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
     public function canClose()
     {
         //if latest pi hearing is cancelled
-        if ($this->piHearings->count() > 0) {
-            if ($this->piHearings->last()->getIsCancelled() === 'Y') {
-                return !$this->isClosed();
-            }
+        if (($this->piHearings->count() > 0) && ($this->piHearings->last()->getIsCancelled() === 'Y')) {
+            return !$this->isClosed();
         }
 
         //sla fields not specific to the decision
@@ -363,24 +361,40 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
             return false;
         }
 
-        //sla fields specific to the decision
-        if ($this->writtenOutcome !== null) {
-            $writtenOutcomeId = $this->writtenOutcome->getId();
+        return $this->isClosableWrittenOutcome() ? !$this->isClosed() : false;
+    }
 
-            switch($writtenOutcomeId) {
-                case SlaEntity::WRITTEN_OUTCOME_NONE:
-                    return !$this->isClosed();
-                case SlaEntity::WRITTEN_OUTCOME_REASON:
-                    if ($this->tcWrittenReasonDate === null || $this->writtenReasonLetterDate === null) {
-                        return false;
-                    }
-                    return !$this->isClosed();
-                case SlaEntity::WRITTEN_OUTCOME_DECISION:
-                    if ($this->tcWrittenDecisionDate === null || $this->decisionLetterSentDate === null) {
-                        return false;
-                    }
-                    return !$this->isClosed();
-            }
+    /**
+     * Is closable Written Outcome
+     *
+     * @return bool
+     */
+    private function isClosableWrittenOutcome()
+    {
+        if ($this->writtenOutcome === null) {
+            return false;
+        }
+
+        // sla fields specific to the decision
+        $writtenOutcomeId = $this->writtenOutcome->getId();
+
+        if (
+            (
+                ($writtenOutcomeId === SlaEntity::VERBAL_DECISION_ONLY)
+                && ($this->decisionLetterSentDate !== null)
+            )
+            || (
+                ($writtenOutcomeId === SlaEntity::WRITTEN_OUTCOME_REASON)
+                && ($this->tcWrittenReasonDate !== null)
+                && ($this->writtenReasonLetterDate !== null)
+            )
+            || (
+                ($writtenOutcomeId === SlaEntity::WRITTEN_OUTCOME_DECISION)
+                && ($this->tcWrittenDecisionDate !== null)
+                && ($this->writtenDecisionLetterDate !== null)
+            )
+        ) {
+            return true;
         }
 
         return false;
