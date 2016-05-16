@@ -152,6 +152,16 @@ class Search
 
                 break;
             case 'application':
+                $correspondencePostcodeQuery = new Query\Match();
+                $correspondencePostcodeQuery->setField('correspondence_postcode', $search);
+                $queryBool->addShould($correspondencePostcodeQuery);
+
+                $applicationIdQuery = new Query\Match();
+                $applicationIdQuery->setField('application_id', $search);
+                $queryBool->addShould($applicationIdQuery);
+
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
+                break;
             case 'case':
                 $correspondencePostcodeQuery = new Query\Match();
                 $correspondencePostcodeQuery->setField('correspondence_postcode', $search);
@@ -220,6 +230,7 @@ class Search
 
                 break;
             case 'busreg':
+
                 $queryMatch = new Query\Match();
                 $queryMatch->setFieldQuery('reg_no', $search);
                 $queryMatch->setFieldBoost('reg_no', 2);
