@@ -109,15 +109,6 @@ abstract class AbstractEventHistory implements BundleSerializableInterface, Json
     protected $eventDatetime;
 
     /**
-     * Event description
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="event_description", length=255, nullable=true)
-     */
-    protected $eventDescription;
-
-    /**
      * Event history type
      *
      * @var \Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType
@@ -378,29 +369,6 @@ abstract class AbstractEventHistory implements BundleSerializableInterface, Json
     public function getEventDatetime()
     {
         return $this->eventDatetime;
-    }
-
-    /**
-     * Set the event description
-     *
-     * @param string $eventDescription
-     * @return EventHistory
-     */
-    public function setEventDescription($eventDescription)
-    {
-        $this->eventDescription = $eventDescription;
-
-        return $this;
-    }
-
-    /**
-     * Get the event description
-     *
-     * @return string
-     */
-    public function getEventDescription()
-    {
-        return $this->eventDescription;
     }
 
     /**
