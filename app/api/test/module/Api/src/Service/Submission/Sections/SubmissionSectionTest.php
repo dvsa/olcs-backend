@@ -494,6 +494,10 @@ class SubmissionSectionTest extends MockeryTestCase
             $this->generateApplication(75, $licence, Application::APPLICATION_STATUS_GRANTED, true)
         );
 
+        $applications->add(
+            $this->generateApplication(777, $licence, Application::APPLICATION_STATUS_UNDER_CONSIDERATION, true)
+        );
+
         return $applications;
     }
 

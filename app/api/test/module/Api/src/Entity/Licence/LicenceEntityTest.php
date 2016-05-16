@@ -970,4 +970,20 @@ class LicenceEntityTest extends EntityTester
             [Entity::LICENCE_STATUS_VALID, null],
         ];
     }
+
+    public function testGetApplicationsByStatus()
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+
+        $allApplications = m::mock(ArrayCollection::class);
+        $outstandingApplications = m::mock(ArrayCollection::class);
+        $licence->setApplications($allApplications);
+
+        $allApplications->shouldReceive('matching')
+            ->once()
+            ->with(m::type(Criteria::class))
+            ->andReturn($outstandingApplications);
+
+        $this->assertEquals($outstandingApplications, $licence->getApplicationsByStatus(['foo']));
+    }
 }
