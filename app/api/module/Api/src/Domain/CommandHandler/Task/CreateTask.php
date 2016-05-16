@@ -186,8 +186,9 @@ final class CreateTask extends AbstractCommandHandler
         // Goods Licence
         if ($operatorType === Licence::LICENCE_CATEGORY_GOODS_VEHICLE) {
 
-            $rules = $this->getRulesForGoodsLicence(
+            $rules = $this->getRepo('TaskAllocationRule')->fetchByParameters(
                 $categoryId,
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 $trafficArea,
                 $task->getLicence()->getOrganisation()->isMlh()
             );
@@ -224,24 +225,6 @@ final class CreateTask extends AbstractCommandHandler
         }
         // search rules by category only
         return $repo->fetchByParameters($categoryId);
-    }
-
-    /**
-     * Get rules for Goods licence
-     *
-     * @param int $categoryId
-     * @param string $trafficArea
-     * @param bool $isMlh
-     * @return array
-     */
-    protected function getRulesForGoodsLicence($categoryId, $trafficArea, $isMlh)
-    {
-        return $this->getRepo('TaskAllocationRule')->fetchByParameters(
-            $categoryId,
-            Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
-            $trafficArea,
-            $isMlh
-        );
     }
 
     /**
