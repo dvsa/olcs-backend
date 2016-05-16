@@ -50,7 +50,7 @@ class BusRegSearchViewContextList extends AbstractQueryHandler implements AuthAw
             'result' => $this->resultList(
                 $results
             ),
-            'count' => $repo->fetchCount($query)
+            'count' => count($results)
         ];
     }
 }
