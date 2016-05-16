@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Licence
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
@@ -236,6 +231,9 @@ class Licence extends AbstractRepository
         return $qb->getQuery()->getSingleResult();
     }
 
+    /**
+     * @return \Dvsa\Olcs\Api\Entity\Licence\Licence
+     */
     public function fetchWithOperatingCentres($licenceId)
     {
         $qb = $this->createQueryBuilder();
