@@ -236,7 +236,6 @@ final class CreateTask extends AbstractCommandHandler
     protected function getLetterForAlphaSplit(Task $task)
     {
         $organisation = $task->getLicence()->getOrganisation();
-        $letter = '';
         switch ($organisation->getType()) {
             case Organisation::ORG_TYPE_REGISTERED_COMPANY:
             case Organisation::ORG_TYPE_LLP:
@@ -259,6 +258,7 @@ final class CreateTask extends AbstractCommandHandler
                 $letter = strtoupper(substr($person->getFamilyName(), 0, 1));
                 break;
             default:
+                $letter = '';
         }
         return $letter;
     }
