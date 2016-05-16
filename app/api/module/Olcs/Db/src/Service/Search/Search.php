@@ -157,7 +157,7 @@ class Search
                 $queryBool->addShould($correspondencePostcodeQuery);
 
                 $applicationIdQuery = new Query\Match();
-                $applicationIdQuery->setField('application_id', $search);
+                $applicationIdQuery->setField('app_id', $search);
                 $queryBool->addShould($applicationIdQuery);
 
                 $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
