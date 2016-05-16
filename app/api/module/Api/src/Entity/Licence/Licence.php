@@ -631,16 +631,12 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      */
     public function getApplicationsByStatus($status)
     {
-        if (!empty($status)) {
-            $criteria = Criteria::create()
-                ->where(
-                    Criteria::expr()->in('status', $status)
-                );
+        $criteria = Criteria::create()
+            ->where(
+                Criteria::expr()->in('status', $status)
+            );
 
-            return $this->getApplications()->matching($criteria);
-        }
-
-        return $this->getApplications();
+        return $this->getApplications()->matching($criteria);
     }
 
     /**
