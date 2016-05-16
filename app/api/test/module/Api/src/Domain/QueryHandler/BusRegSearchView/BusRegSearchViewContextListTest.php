@@ -96,10 +96,7 @@ class BusRegSearchViewContextListTest extends QueryHandlerTestCase
             ->shouldReceive('fetchDistinctList')
             ->once()
             ->with($query, $organisationId, m::type('integer'))
-            ->andReturn([$mockRecord])
-            ->shouldReceive('fetchCount')
-            ->once()
-            ->andReturn(1);
+            ->andReturn([$mockRecord]);
 
         $expected = [
             'result' => [
@@ -140,10 +137,7 @@ class BusRegSearchViewContextListTest extends QueryHandlerTestCase
             ->shouldReceive('fetchDistinctList')
             ->once()
             ->with($query, null, m::type('integer'))
-            ->andReturn([$mockRecord])
-            ->shouldReceive('fetchCount')
-            ->once()
-            ->andReturn(1);
+            ->andReturn([$mockRecord]);
 
         $expected = [
             'result' => [
