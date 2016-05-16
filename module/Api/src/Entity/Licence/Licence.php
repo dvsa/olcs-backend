@@ -629,7 +629,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      * @param array $status
      * @return ArrayCollection|static
      */
-    public function getApplicationsByStatus($status = [])
+    public function getApplicationsByStatus($status)
     {
         if (!empty($status)) {
             $criteria = Criteria::create()
