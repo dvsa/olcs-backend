@@ -7,6 +7,8 @@ use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClientFactory;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Olcs\XmlTools\Filter\MapXmlFile;
+use Olcs\XmlTools\Filter\ParseXmlString;
+use Olcs\XmlTools\Validator\Xsd;
 use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
 use Zend\Http\Client as RestClient;
 use Zend\Http\Request;
@@ -43,13 +45,25 @@ class TransExchangeClientFactoryTest extends TestCase
 
         $mockSpec = m::mock(SpecificationInterface::class);
         $mockFilter = m::mock(MapXmlFile::class);
-        $mockFilter->shouldReceive('setMapping')->with($mockSpec);
+        $mockFilter->shouldReceive('setMapping')
+            ->once()
+            ->with($mockSpec);
+
+        $mockParser = m::mock(ParseXmlString::class);
+
+        $mockXsdValidator = m::mock(Xsd::class);
+        $mockXsdValidator->shouldReceive('setXsd')
+            ->once()
+            ->with('http://www.transxchange.org.uk/schema/2.1/publisher/3.1.2/TransXChangePublisherService.xsd');
 
         $mockSl = m::mock(ServiceLocatorInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn(['ebsr'=>$config]);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
+        $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('TransExchangePublisherXmlMapping')->andReturn($mockSpec);
         $mockSl->shouldReceive('get')->with(MapXmlFile::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(ParseXmlString::class)->andReturn($mockParser);
+        $mockSl->shouldReceive('get')->with(Xsd::class)->andReturn($mockXsdValidator);
 
         $sut = new TransExchangeClientFactory();
         $service = $sut->createService($mockSl);
