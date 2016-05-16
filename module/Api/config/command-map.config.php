@@ -120,6 +120,8 @@ return [
     Command\Task\CreateTranslateToWelshTask::class => CommandHandler\Task\CreateTranslateToWelshTask::class,
     TransferCommand\Application\UpdatePsvVehicles::class => CommandHandler\Application\UpdatePsvVehicles::class,
     TransferCommand\Application\CreatePsvVehicle::class => CommandHandler\Application\CreatePsvVehicle::class,
+    // * @todo remove after task allocation rules will be tested (OLCS-6844 & OLCS-12638)
+    TransferCommand\Task\CreateTaskTemp::class => CommandHandler\Task\CreateTask::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
