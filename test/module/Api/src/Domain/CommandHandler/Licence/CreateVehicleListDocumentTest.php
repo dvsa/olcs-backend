@@ -15,7 +15,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreateVehicleListDocument;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as Cmd;
-use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as LicenceCmd;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use ZfcRbac\Service\AuthorizationService;
 
@@ -61,7 +60,6 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST,
             'isExternal' => false,
-            'isReadOnly' => true,
             'application' => null,
             'busReg' => null,
             'case' => null,
@@ -115,7 +113,6 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST,
             'isExternal' => false,
-            'isReadOnly' => true,
             'application' => null,
             'busReg' => null,
             'case' => null,

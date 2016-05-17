@@ -76,7 +76,6 @@ final class Generate extends AbstractCommandHandler implements TransactionedInte
             'category'      => $publication->getDocTemplate()->getCategory()->getId(),
             'subCategory'   => $publication->getDocTemplate()->getSubCategory()->getId(),
             'isExternal'    => true,
-            'isReadOnly'    => 'N'
         ];
 
         return GenerateDocCommand::create($data);

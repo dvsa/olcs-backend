@@ -7,7 +7,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -93,7 +92,6 @@ class CreateSnapshotTest extends CommandHandlerTestCase
             'subCategory' => $subCategory,
             'description' => $description,
             'isExternal' => $isExternal,
-            'isReadOnly' => null,
             'isScan' => false,
             'issuedDate' => null,
             'metadata' => null

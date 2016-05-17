@@ -92,7 +92,6 @@ class Publication extends AbstractPublication
      */
     public function updatePublishedDocuments(DocumentEntity $policeDocument)
     {
-        $this->document->setIsReadOnly('Y');
         $this->policeDocument = $policeDocument;
     }
 

@@ -529,9 +529,6 @@ return array(
                 'property' => 'document'
             )
         ),
-        'is_read_only' => array(
-            'type' => 'yesnonull'
-        ),
         'licence_id' => array(
             'inversedBy' => array(
                 'entity' => 'Licence',

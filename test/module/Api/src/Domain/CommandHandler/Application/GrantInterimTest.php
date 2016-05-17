@@ -8,7 +8,6 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim;
-use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\GrantInterim;
@@ -16,7 +15,6 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Entity\User\User;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\GrantInterim as Cmd;
@@ -139,7 +137,6 @@ class GrantInterimTest extends CommandHandlerTestCase
             'transportManager' => null,
             'operatingCentre' => null,
             'opposition' => null,
-            'isReadOnly' => null,
             'issuedDate' => null,
             'dispatch' => true
         ];
@@ -221,7 +218,6 @@ class GrantInterimTest extends CommandHandlerTestCase
             'transportManager' => null,
             'operatingCentre' => null,
             'opposition' => null,
-            'isReadOnly' => null,
             'issuedDate' => null,
             'dispatch' => true
         ];
@@ -313,7 +309,6 @@ class GrantInterimTest extends CommandHandlerTestCase
             'transportManager' => null,
             'operatingCentre' => null,
             'opposition' => null,
-            'isReadOnly' => null,
             'issuedDate' => null,
             'dispatch' => true
         ];

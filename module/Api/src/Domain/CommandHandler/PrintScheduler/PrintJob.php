@@ -308,7 +308,6 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
             )
         );
         $printDocument->setIsExternal(false);
-        $printDocument->setIsReadOnly('Y');
         $printDocument->setIssuedDate(new \Datetime());
 
         $this->getRepo()->save($printDocument);
