@@ -59,7 +59,6 @@ final class ProcessDuplicateVehicleWarning extends AbstractCommandHandler implem
             'licence'     => $licenceVehicle->getLicence()->getId(),
             'category'    => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
-            'isReadOnly'  => true,
             'isExternal'  => false
         ];
 

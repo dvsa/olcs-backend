@@ -97,9 +97,8 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'subCategory' => 5,
             'issuedDate' => '2015-01-01',
             'filename' => 'filename',
-            'isScan' => 'Y',
-            'isExternal' => 'Y',
-            'isReadOnly' => 'Y',
+            'isScan' => true,
+            'isExternal' => true,
             'application' => 1,
             'licence' => 3,
             'size' => null,
@@ -162,9 +161,8 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'subCategory' => 5,
             'issuedDate' => '2015-01-01',
             'filename' => 'filename',
-            'isScan' => 'Y',
-            'isExternal' => 'Y',
-            'isReadOnly' => 'Y',
+            'isScan' => true,
+            'isExternal' => true,
             'application' => null,
             'licence' => 3,
             'size' => null,
@@ -230,9 +228,8 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'subCategory' => 5,
             'issuedDate' => '2015-01-01',
             'filename' => 'filename',
-            'isScan' => 'Y',
-            'isExternal' => 'Y',
-            'isReadOnly' => 'Y',
+            'isScan' => true,
+            'isExternal' => true,
             'application' => null,
             'licence' => 3,
             'size' => null,
@@ -319,9 +316,8 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'subCategory' => 5,
             'issuedDate' => '2015-01-01',
             'filename' => 'filename',
-            'isScan' => 'Y',
-            'isExternal' => 'Y',
-            'isReadOnly' => 'Y',
+            'isScan' => true,
+            'isExternal' => true,
             'application' => 44,
             'licence' => 33,
             'size' => null,
@@ -380,9 +376,8 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'subCategory' => 5,
             'issuedDate' => '2015-01-01',
             'filename' => 'filename',
-            'isScan' => 'Y',
-            'isExternal' => 'Y',
-            'isReadOnly' => 'Y',
+            'isScan' => true,
+            'isExternal' => true,
             'application' => null,
             'licence' => null,
             'size' => null,
@@ -441,9 +436,8 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'subCategory' => 5,
             'issuedDate' => '2015-01-01',
             'filename' => 'filename',
-            'isScan' => 'Y',
-            'isExternal' => 'Y',
-            'isReadOnly' => 'Y',
+            'isScan' => true,
+            'isExternal' => true,
             'application' => null,
             'licence' => null,
             'size' => null,
@@ -508,9 +502,8 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'subCategory' => 5,
             'issuedDate' => '2015-01-01',
             'filename' => 'filename',
-            'isScan' => 'Y',
-            'isExternal' => 'Y',
-            'isReadOnly' => 'Y',
+            'isScan' => true,
+            'isExternal' => true,
             'application' => null,
             'licence' => null,
             'size' => null,
@@ -610,15 +603,11 @@ class CopyDocumentTest extends CommandHandlerTestCase
             ->once()
             ->getMock()
             ->shouldReceive('getIsScan')
-            ->andReturn('Y')
+            ->andReturn(true)
             ->once()
             ->getMock()
             ->shouldReceive('getIsExternal')
-            ->andReturn('Y')
-            ->once()
-            ->getMock()
-            ->shouldReceive('getIsReadOnly')
-            ->andReturn('Y')
+            ->andReturn(true)
             ->once()
             ->getMock();
     }

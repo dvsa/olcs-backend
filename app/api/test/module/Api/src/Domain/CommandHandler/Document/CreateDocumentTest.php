@@ -46,9 +46,8 @@ class CreateDocumentTest extends CommandHandlerTestCase
             'category' => 'n',
             'subCategory' => 'o',
             'description' => 'p',
-            'isExternal' => 'q',
-            'isReadOnly' => 'r',
-            'isScan' => 's',
+            'isExternal' => true,
+            'isScan' => false,
             'issuedDate' => 't',
         ];
         $command = Cmd::create($data);
@@ -72,9 +71,8 @@ class CreateDocumentTest extends CommandHandlerTestCase
                 'category' => 'n',
                 'subCategory' => 'o',
                 'description' => 'p',
-                'isExternal' => 'q',
-                'isReadOnly' => 'r',
-                'isScan' => 's',
+                'isExternal' => true,
+                'isScan' => false,
                 'issuedDate' => 't',
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
@@ -102,8 +100,7 @@ class CreateDocumentTest extends CommandHandlerTestCase
             'category' => 'n',
             'subCategory' => 'o',
             'description' => 'p',
-            'isReadOnly' => 'r',
-            'isScan' => 's',
+            'isScan' => false,
             'issuedDate' => 't',
         ];
         $command = Cmd::create($data);
@@ -132,8 +129,7 @@ class CreateDocumentTest extends CommandHandlerTestCase
                 'subCategory' => 'o',
                 'description' => 'p',
                 'isExternal' => true,
-                'isReadOnly' => 'r',
-                'isScan' => 's',
+                'isScan' => false,
                 'issuedDate' => 't',
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()

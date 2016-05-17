@@ -52,18 +52,12 @@ class PublicationEntityTest extends EntityTester
      */
     public function testUpdatePublishedDocuments()
     {
-        $document = m::mock(DocumentEntity::class)->makePartial();
-        $document->setIsReadOnly('N');
-
         $policeDocument = m::mock(DocumentEntity::class);
 
         $entity = $this->instantiate(Entity::class);
-        $entity->setDocument($document);
-
         $entity->updatePublishedDocuments($policeDocument);
 
         $this->assertEquals($policeDocument, $entity->getPoliceDocument());
-        $this->assertEquals('Y', $entity->getDocument()->getIsReadOnly());
     }
 
     /**

@@ -45,8 +45,6 @@ class GenerateAndStore extends AbstractCommand
 
     protected $isExternal;
 
-    protected $isReadOnly;
-
     protected $isScan = 0;
 
     protected $metadata;
@@ -115,14 +113,6 @@ class GenerateAndStore extends AbstractCommand
     public function getIsExternal()
     {
         return $this->isExternal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIsReadOnly()
-    {
-        return $this->isReadOnly;
     }
 
     /**

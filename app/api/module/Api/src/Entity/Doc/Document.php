@@ -35,30 +35,6 @@ class Document extends AbstractDocument
     const PSV_CONTINUATION_CHECKLIST = 1302;
     const PSV_CONTINUATION_CHECKLIST_SR = 1303;
 
-    public function updateDocument(
-        $identifier,
-        $description,
-        $filename,
-        $licence,
-        $category,
-        $subCategory,
-        $isExternal,
-        $isReadOnly,
-        $issuedDate,
-        $size
-    ) {
-        $this->identifier = $identifier;
-        $this->description = $description;
-        $this->filename = $filename;
-        $this->licence = $licence;
-        $this->category = $category;
-        $this->subCategory = $subCategory;
-        $this->isExternal = $isExternal;
-        $this->isReadOnly = $isReadOnly;
-        $this->issuedDate = $issuedDate;
-        $this->size = $size;
-    }
-
     public function __construct($identifier)
     {
         parent::__construct();

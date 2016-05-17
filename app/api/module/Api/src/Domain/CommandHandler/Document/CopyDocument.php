@@ -65,7 +65,6 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
                 'filename' => $document->getFilename(),
                 'isScan' => $document->getIsScan(),
                 'isExternal' => $document->getIsExternal(),
-                'isReadOnly' => $document->getIsReadOnly()
             ];
 
             $trafficArea = $document->getTrafficArea();
