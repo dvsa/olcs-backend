@@ -23,6 +23,12 @@ class FeeType extends AbstractQueryHandler
 
         $feeType = $repo->fetchUsingId($query);
 
-        return $this->result($feeType);
+        return $this->result(
+            $feeType,
+            [],
+            [
+                'showQuantity' => $feeType->getShowQuantity()
+            ]
+        );
     }
 }
