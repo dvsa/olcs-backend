@@ -90,4 +90,21 @@ class FeeType extends AbstractFeeType
     {
         return $this->getIsNi() === 'Y' ? self::COUNTRY_CODE_NI : self::COUNTRY_CODE_GB;
     }
+
+    /**
+     * Get show quantity
+     *
+     * @return bool
+     */
+    public function getShowQuantity()
+    {
+        return in_array(
+            $this->getFeeType()->getId(),
+            [
+                self::FEE_TYPE_IRFOPSVCOPY,
+                self::FEE_TYPE_IRFOPSVANN,
+                self::FEE_TYPE_IRFOGVPERMIT
+            ]
+        );
+    }
 }

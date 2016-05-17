@@ -63,10 +63,17 @@ class FeeTypeList extends AbstractQueryHandler
             $valueOptions['feeType'][$ft->getId()] = $ft->getDescription();
         }
 
+        $showQuantity = false;
+        if ($query->getCurrentFeeType()) {
+            $feeType = $this->getRepo()->fetchById($query->getCurrentFeeType());
+            $showQuantity = $feeType->getShowQuantity();
+        }
+
         return [
             'result' => $this->resultList($filteredFeeTypes),
             'count' => count($filteredFeeTypes),
             'valueOptions' => $valueOptions,
+            'showQuantity' => $showQuantity
         ];
     }
 

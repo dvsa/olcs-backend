@@ -80,6 +80,7 @@ class FeeTypeListTest extends QueryHandlerTestCase
                 'irfoGvPermit' => [],
                 'irfoPsvAuth' => [],
             ],
+            'showQuantity' => false
         ];
 
         static::assertEquals($expected, $result);
@@ -87,7 +88,7 @@ class FeeTypeListTest extends QueryHandlerTestCase
 
     public function testIrfo()
     {
-        $query = Qry::create(['organisation' => self::ORG_ID]);
+        $query = Qry::create(['organisation' => self::ORG_ID, 'currentFeeType' => 123]);
 
         $mockOrganisation = m::mock(Organisation::class);
 
@@ -108,7 +109,18 @@ class FeeTypeListTest extends QueryHandlerTestCase
             ->shouldReceive('fetchList')
             ->with($query, DoctrineQuery::HYDRATE_OBJECT)
             ->once()
-            ->andReturn(new \ArrayObject());
+            ->andReturn(new \ArrayObject())
+            //
+            ->shouldReceive('fetchById')
+            ->with(123)
+            ->once()
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getShowQuantity')
+                ->andReturn(true)
+                ->once()
+                ->getMock()
+            );
 
         //  irfo Gv Permit
         $mockPermit = m::mock(IrfoGvPermit::class);
@@ -153,6 +165,7 @@ class FeeTypeListTest extends QueryHandlerTestCase
                     69 => '69 (auth description)',
                 ],
             ],
+            'showQuantity' => true
         ];
 
         static::assertEquals($expected, $result);
@@ -201,6 +214,7 @@ class FeeTypeListTest extends QueryHandlerTestCase
                 'irfoGvPermit' => [],
                 'irfoPsvAuth' => [],
             ],
+            'showQuantity' => false
         ];
 
         static::assertEquals($expected, $result);
