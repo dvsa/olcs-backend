@@ -153,7 +153,7 @@ class Search
                 $correspondencePostcodeQuery->setField('correspondence_postcode', $search);
                 $queryBool->addShould($correspondencePostcodeQuery);
 
-                if (!empty($search)) {
+                if (is_numeric($search)) {
                     // searching for empty string causes exception
                     $applicationIdQuery = new Query\Match();
                     $applicationIdQuery->setField('app_id', $search);
@@ -166,7 +166,7 @@ class Search
                 $correspondencePostcodeQuery->setField('correspondence_postcode', $search);
                 $queryBool->addShould($correspondencePostcodeQuery);
 
-                if (!empty($search)) {
+                if (is_numeric($search)) {
                     // searching for empty string causes exception
                     $caseIdQuery = new Query\Match();
                     $caseIdQuery->setField('case_id', $search);
