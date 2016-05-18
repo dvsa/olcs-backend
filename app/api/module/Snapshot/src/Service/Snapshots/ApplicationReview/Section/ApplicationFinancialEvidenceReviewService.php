@@ -84,7 +84,7 @@ class ApplicationFinancialEvidenceReviewService extends AbstractReviewService
         $files = [];
 
         foreach ($documents as $document) {
-            $files[] = $document->getDescription();
+            $files[] = $document['description'];
         }
 
         return implode('<br>', $files);

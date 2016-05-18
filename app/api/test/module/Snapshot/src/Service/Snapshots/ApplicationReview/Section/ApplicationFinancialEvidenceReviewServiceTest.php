@@ -113,10 +113,12 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
             ]
         ];
 
-        $document1 = m::mock(Document::class)->makePartial();
-        $document1->setDescription('foo.txt');
-        $document2 = m::mock(Document::class)->makePartial();
-        $document2->setDescription('bar.txt');
+        $document1 = [
+            'description' => 'foo.txt'
+        ];
+        $document2 = [
+            'description' => 'bar.txt'
+        ];
 
         $qhManager = m::mock();
         $qhManager->shouldReceive('handleQuery->serialize')
