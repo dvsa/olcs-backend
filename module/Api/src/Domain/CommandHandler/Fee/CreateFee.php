@@ -71,8 +71,11 @@ final class CreateFee extends AbstractCommandHandler implements TransactionedInt
         $feeType = $this->getRepo()->getReference(FeeType::class, $command->getFeeType());
         $feeStatus = $this->getRepo()->getRefdataReference($command->getFeeStatus());
 
-        $amount = ($command->getQuantity() > 1 && $command->getAmount() !== null) ?
-            $command->getAmount() * $command->getQuantity() : $command->getAmount();
+        $amount = (
+            $command->getQuantity() > 1 && $command->getAmount() !== null
+                ? $command->getAmount() * $command->getQuantity()
+                : $command->getAmount()
+        );
         $fee = new Fee($feeType, $amount, $feeStatus);
 
         if ($command->getInvoicedDate() !== null) {
@@ -94,8 +97,11 @@ final class CreateFee extends AbstractCommandHandler implements TransactionedInt
 
         // if amount is null, we should use the amount from the feeType
         if (is_null($fee->getNetAmount())) {
-            $amount = ($command->getQuantity() > 1) ?
-                $feeType->getAmount() * $command->getQuantity() : $feeType->getAmount();
+            $amount = (
+                ($command->getQuantity() > 1)
+                    ? $feeType->getAmount() * $command->getQuantity()
+                    : $feeType->getAmount()
+            );
             $fee->setNetAmount($amount);
             $fee->setVatandGrossAmountsFromNetAmountUsingRate($feeType->getVatRate());
         }
