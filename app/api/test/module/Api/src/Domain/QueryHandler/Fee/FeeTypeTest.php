@@ -34,7 +34,11 @@ class FeeTypeTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 69]);
 
-        $mockFeeType = m::mock(Entity::class);
+        $mockFeeType = m::mock(Entity::class)
+            ->shouldReceive('isShowQuantity')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
 
         $this->repoMap['FeeType']
             ->shouldReceive('fetchUsingId')
@@ -51,7 +55,7 @@ class FeeTypeTest extends QueryHandlerTestCase
             ->once()
             ->andReturn(['id' => 69]);
 
-        $expected = ['id' => '69'];
+        $expected = ['id' => 69, 'showQuantity' => true];
 
         $this->assertEquals($expected, $result->serialize());
     }

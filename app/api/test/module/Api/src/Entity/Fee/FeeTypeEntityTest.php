@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Fee;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as Entity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * FeeType Entity Unit Tests
@@ -94,5 +95,17 @@ class FeeTypeEntityTest extends EntityTester
             ['N', 'GB'],
             [null, 'GB'],
         ];
+    }
+
+    public function testIsShowQuantity()
+    {
+        $feeType = new RefData();
+        $feeType->setId(Entity::FEE_TYPE_IRFOPSVANN);
+        $this->sut->setFeeType($feeType);
+        $this->assertTrue($this->sut->isShowQuantity());
+
+        $feeType->setId(Entity::FEE_TYPE_IRFOPSVAPP);
+        $this->sut->setFeeType($feeType);
+        $this->assertFalse($this->sut->isShowQuantity());
     }
 }
