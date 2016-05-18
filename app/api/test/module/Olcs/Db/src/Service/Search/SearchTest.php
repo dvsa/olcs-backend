@@ -241,7 +241,6 @@ class SearchTest extends TestCase
                         'should' => [
                             $this->generateMatch('_all', 'FOO BAR'),
                             $this->generateMatch('postcode', 'FOO BAR'),
-                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
                 ],
