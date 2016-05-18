@@ -97,15 +97,15 @@ class FeeTypeEntityTest extends EntityTester
         ];
     }
 
-    public function testGetShowQuantity()
+    public function testIsShowQuantity()
     {
         $feeType = new RefData();
         $feeType->setId(Entity::FEE_TYPE_IRFOPSVANN);
         $this->sut->setFeeType($feeType);
-        $this->assertTrue($this->sut->getShowQuantity());
+        $this->assertTrue($this->sut->isShowQuantity());
 
         $feeType->setId(Entity::FEE_TYPE_IRFOPSVAPP);
         $this->sut->setFeeType($feeType);
-        $this->assertFalse($this->sut->getShowQuantity());
+        $this->assertFalse($this->sut->isShowQuantity());
     }
 }

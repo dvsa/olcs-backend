@@ -92,11 +92,11 @@ class FeeType extends AbstractFeeType
     }
 
     /**
-     * Get show quantity
+     * Is show quantity
      *
      * @return bool
      */
-    public function getShowQuantity()
+    public function isShowQuantity()
     {
         return in_array(
             $this->getFeeType()->getId(),

@@ -35,7 +35,7 @@ class FeeTypeTest extends QueryHandlerTestCase
         $query = Qry::create(['id' => 69]);
 
         $mockFeeType = m::mock(Entity::class)
-            ->shouldReceive('getShowQuantity')
+            ->shouldReceive('isShowQuantity')
             ->andReturn(true)
             ->once()
             ->getMock();

@@ -66,7 +66,7 @@ class FeeTypeList extends AbstractQueryHandler
         $showQuantity = false;
         if ($query->getCurrentFeeType()) {
             $feeType = $this->getRepo()->fetchById($query->getCurrentFeeType());
-            $showQuantity = $feeType->getShowQuantity();
+            $showQuantity = $feeType->isShowQuantity();
         }
 
         return [

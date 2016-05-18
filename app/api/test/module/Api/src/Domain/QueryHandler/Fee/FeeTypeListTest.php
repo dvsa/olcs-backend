@@ -116,7 +116,7 @@ class FeeTypeListTest extends QueryHandlerTestCase
             ->once()
             ->andReturn(
                 m::mock()
-                ->shouldReceive('getShowQuantity')
+                ->shouldReceive('isShowQuantity')
                 ->andReturn(true)
                 ->once()
                 ->getMock()
