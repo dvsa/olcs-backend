@@ -22,13 +22,29 @@ class MissingReason extends AbstractValidator
     ];
 
     /**
+     * @var array
+     */
+    protected $fieldMap = [
+        'bankHolidayChange',
+        'unforseenChange',
+        'timetableChange',
+        'replacementChange',
+        'holidayChange',
+        'trcChange',
+        'policeChange',
+        'specialOccasionChange',
+        'connectionChange',
+        'notAvailableChange'
+    ];
+
+    /**
      * Returns true if and only if $value meets the validation requirements
      *
      * If $value fails validation, then this method returns false, and
      * getMessages() will return an array of messages that explain why the
      * validation failed.
      *
-     * @param  mixed $value
+     * @param array $value
      * @param array $context
      * @return bool
      */
@@ -38,18 +54,19 @@ class MissingReason extends AbstractValidator
         $busReg = $context['busReg'];
 
         if ($busReg->getIsShortNotice() === 'Y') {
+            $reasonGiven = false;
             $sn = $value['busShortNotice'];
 
-            //we can only do this validation if fields have been explicitly set
-            if ((isset($sn['notAvailableChange']) && isset($sn['timetableChange']))
-                && ($sn['notAvailableChange'] === 'N' && $sn['timetableChange'] === 'N')) {
-                //if the change is available to the public and its not a timetable (low impact) change, an additional
-                //reason must be supplied, thus the busShortNoticeArray must contain at least 3 elements.
-                //(not available, timetable change and the additional reason element)
-                if (count($sn) < 3) {
-                    $this->error(self::SHORT_NOTICE_MISSING_REASON_ERROR);
-                    return false;
+            foreach ($this->fieldMap as $field) {
+                if (isset($sn[$field]) && $sn[$field] === 'Y') {
+                    $reasonGiven = true;
+                    break;
                 }
+            }
+
+            if ($reasonGiven === false) {
+                $this->error(self::SHORT_NOTICE_MISSING_REASON_ERROR);
+                return false;
             }
         }
 

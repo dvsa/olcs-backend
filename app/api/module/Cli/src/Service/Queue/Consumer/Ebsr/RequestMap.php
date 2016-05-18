@@ -24,6 +24,6 @@ class RequestMap extends AbstractCommandConsumer
     public function getCommandData(QueueEntity $item)
     {
         $json = new ZendJson();
-        return $json->unserialize($item->getOptions());
+        return array_merge($json->unserialize($item->getOptions()), ['user' => $item->getCreatedBy()->getId()]);
     }
 }

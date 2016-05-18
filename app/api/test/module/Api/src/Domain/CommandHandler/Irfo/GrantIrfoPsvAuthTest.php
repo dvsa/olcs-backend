@@ -5,18 +5,16 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Irfo;
 
-use Common\BusinessRule\Rule\Fee;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\GrantIrfoPsvAuth;
 use Dvsa\Olcs\Api\Domain\Repository\IrfoPsvAuth;
 use Dvsa\Olcs\Api\Domain\Repository\IrfoPsvAuthNumber;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
-use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthNumber as IrfoPsvAuthNumberEntity;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Transfer\Command\Irfo\GrantIrfoPsvAuth as Cmd;
-use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPsvAuth as UpdateIrfoPsvAuthCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -65,8 +63,10 @@ class GrantIrfoPsvAuthTest extends CommandHandlerTestCase
             ],
             FeeTypeEntity::class => [
                 1 => m::mock(FeeTypeEntity::class)->makePartial()->setFixedValue(20)
-
-        ]
+            ],
+            IrfoPsvAuthType::class => [
+                22 => m::mock(IrfoPsvAuthType::class)
+            ],
         ];
 
         parent::initReferences();
@@ -93,20 +93,10 @@ class GrantIrfoPsvAuthTest extends CommandHandlerTestCase
             'copiesRequired' => 1,
             'copiesRequiredTotal' => 1,
             'countrys' => ['GB'],
-            'irfoPsvAuthNumbers' => [
-                ['name' => 'test 1'],
-                ['name' => ''],
-            ],
+            'irfoPsvAuthNumbers' => [],
         ];
 
         $command = Cmd::create($data);
-
-        // handle update
-        $this->expectedSideEffect(
-            UpdateIrfoPsvAuthCmd::class, $command->getArrayCopy(),
-            (new Result())->addMessage('IRFO PSV Auth updated successfully')
-                ->addId('irfoPsvAuth', $data['id'])
-        );
 
         $this->repoMap['FeeType']->shouldReceive('getLatestIrfoFeeType')
             ->andReturn($this->references[FeeTypeEntity::class][1]);
@@ -151,7 +141,7 @@ class GrantIrfoPsvAuthTest extends CommandHandlerTestCase
                 'invoicedDate' => date('Y-m-d'),
                 'description' => ' for Auth ' . $data['id'],
                 'feeType' => 1,
-                'amount' => 0,
+                'amount' => 20,
                 'feeStatus' => FeeEntity::STATUS_OUTSTANDING,
                 'application' => null,
                 'busReg' => null,
@@ -188,7 +178,7 @@ class GrantIrfoPsvAuthTest extends CommandHandlerTestCase
             'organisation' => 11,
             'irfoPsvAuthType' => 22,
             'status' => IrfoPsvAuthEntity::STATUS_PENDING,
-            'validityPeriod' => 2,
+            'validityPeriod' => 4,
             'inForceDate' => '2015-01-01',
             'expiryDate' => '2016-01-01',
             'applicationSentDate' => '2014-01-01',
@@ -201,26 +191,15 @@ class GrantIrfoPsvAuthTest extends CommandHandlerTestCase
             'copiesRequired' => 1,
             'copiesRequiredTotal' => 1,
             'countrys' => ['GB'],
-            'irfoPsvAuthNumbers' => [
-                ['name' => 'test 1'],
-                ['name' => ''],
-            ],
+            'irfoPsvAuthNumbers' => [],
         ];
 
         $command = Cmd::create($data);
-
-        // handle update
-        $this->expectedSideEffect(
-            UpdateIrfoPsvAuthCmd::class, $command->getArrayCopy(),
-            (new Result())->addMessage('IRFO PSV Auth updated successfully')
-                ->addId('irfoPsvAuth', $data['id'])
-        );
 
         $this->repoMap['FeeType']->shouldReceive('getLatestIrfoFeeType')
             ->andReturn($this->references[FeeTypeEntity::class][1]);
 
         $irfoPsvAuth = $this->generatePsvAuth($data);
-        $irfoPsvAuth->setValidityPeriod(4);
 
         $feeType = new FeeTypeEntity();
 
@@ -261,7 +240,7 @@ class GrantIrfoPsvAuthTest extends CommandHandlerTestCase
                 'invoicedDate' => date('Y-m-d'),
                 'description' => ' for Auth ' . $data['id'],
                 'feeType' => 1,
-                'amount' => 0,
+                'amount' => 20,
                 'feeStatus' => FeeEntity::STATUS_OUTSTANDING,
                 'application' => null,
                 'busReg' => null,
@@ -313,20 +292,10 @@ class GrantIrfoPsvAuthTest extends CommandHandlerTestCase
             'copiesRequired' => 1,
             'copiesRequiredTotal' => 1,
             'countrys' => ['GB'],
-            'irfoPsvAuthNumbers' => [
-                ['name' => 'test 1'],
-                ['name' => ''],
-            ],
+            'irfoPsvAuthNumbers' => [],
         ];
 
         $command = Cmd::create($data);
-
-        // handle update
-        $this->expectedSideEffect(
-            UpdateIrfoPsvAuthCmd::class, $command->getArrayCopy(),
-            (new Result())->addMessage('IRFO PSV Auth updated successfully')
-                ->addId('irfoPsvAuth', $data['id'])
-        );
 
         $this->repoMap['FeeType']->shouldReceive('getLatestIrfoFeeType')
             ->andReturn($this->references[FeeTypeEntity::class][1]);
@@ -348,18 +317,10 @@ class GrantIrfoPsvAuthTest extends CommandHandlerTestCase
 
     private function generatePsvAuth($data)
     {
-        $irfoPsvAuthNumber1 = m::mock(IrfoPsvAuthNumberEntity::class)->makePartial();
-        $irfoPsvAuthNumber1->setId(101);
-        $irfoPsvAuthNumber1->setName('existing number');
-
-        $irfoPsvAuthNumber2 = m::mock(IrfoPsvAuthNumberEntity::class)->makePartial();
-        $irfoPsvAuthNumber2->setId(102);
-        $irfoPsvAuthNumber2->setName('deleted number');
-
         /** @var IrfoPsvAuthEntity $irfoPsvAuth */
         $irfoPsvAuth = m::mock(IrfoPsvAuthEntity::class)->makePartial();
         $irfoPsvAuth->setId($data['id']);
-        $irfoPsvAuth->setIrfoPsvAuthNumbers([$irfoPsvAuthNumber1, $irfoPsvAuthNumber2]);
+        $irfoPsvAuth->setIrfoPsvAuthNumbers([]);
         $irfoPsvAuth->setIsFeeExemptAnnual($data['isFeeExemptAnnual']);
         $irfoPsvAuth->setValidityPeriod(2);
 

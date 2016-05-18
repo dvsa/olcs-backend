@@ -18,6 +18,8 @@ final class CreatePsvVehicleListForDiscs extends \Dvsa\Olcs\Transfer\Command\Abs
 
     protected $knownValues;
 
+    protected $user;
+
     /**
      * @return mixed
      */
@@ -32,5 +34,13 @@ final class CreatePsvVehicleListForDiscs extends \Dvsa\Olcs\Transfer\Command\Abs
     public function getKnownValues()
     {
         return $this->knownValues;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

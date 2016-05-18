@@ -488,4 +488,62 @@ class IrfoPsvAuthEntityTest extends EntityTester
 
         $this->entity->renew($newStatus);
     }
+
+    /**
+     * @dataProvider isGeneratableDataProvider
+     */
+    public function testIsGeneratable($statusId, $outstandingFees, $expected)
+    {
+        $status = new RefData();
+        $status->setId($statusId);
+        $this->entity->setStatus($status);
+
+        $this->assertEquals($expected, $this->entity->isGeneratable($outstandingFees));
+    }
+
+    public function isGeneratableDataProvider()
+    {
+        return [
+            [Entity::STATUS_PENDING, [], false],
+            [Entity::STATUS_CNS, [], false],
+            [Entity::STATUS_RENEW, [], false],
+            [Entity::STATUS_APPROVED, [], true],
+            [Entity::STATUS_WITHDRAWN, [], false],
+            [Entity::STATUS_GRANTED, [], false],
+            [Entity::STATUS_GRANTED, ['FEE'], false],
+            [Entity::STATUS_REFUSED, [], false]
+        ];
+    }
+
+    public function testGenerate()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_APPROVED);
+        $this->entity->setStatus($status);
+
+        $this->entity->setCopiesRequired(2);
+        $this->entity->setCopiesRequiredTotal(5);
+
+        $this->entity->setCopiesIssued(20);
+        $this->entity->setCopiesIssuedTotal(50);
+
+        $this->entity->generate([]);
+
+        $this->assertEquals(0, $this->entity->getCopiesRequired());
+        $this->assertEquals(0, $this->entity->getCopiesRequiredTotal());
+        $this->assertEquals(22, $this->entity->getCopiesIssued());
+        $this->assertEquals(55, $this->entity->getCopiesIssuedTotal());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testGenerateThrowsException()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_GRANTED);
+        $this->entity->setStatus($status);
+
+        $this->entity->generate(['FEE']);
+    }
 }

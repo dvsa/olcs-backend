@@ -4,6 +4,7 @@
  * Create Task
  *
  * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Task;
 
@@ -19,15 +20,14 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as Cmd;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**
  * Create Task
  *
- * @NOTE This command is used by the scanning service which does not currently have authentication. I have removed
- * AuthAware as it was only being used for createBy and modifiedBy columns which should eventually be handled
- * generically
- *
  * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 final class CreateTask extends AbstractCommandHandler
 {
@@ -35,6 +35,25 @@ final class CreateTask extends AbstractCommandHandler
 
     protected $extraRepos = ['TaskAllocationRule', 'SystemParameter'];
 
+    protected $alphaNumericTranslations = [
+        0 => 'Z',
+        1 => 'O',
+        2 => 'T',
+        3 => 'T',
+        4 => 'F',
+        5 => 'F',
+        6 => 'S',
+        7 => 'S',
+        8 => 'E',
+        9 => 'N'
+    ];
+
+    /**
+     * Handle command
+     *
+     * @param Cmd $command
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $task = $this->createTaskObject($command);
@@ -52,20 +71,20 @@ final class CreateTask extends AbstractCommandHandler
         return $result;
     }
 
+    /**
+     * Auto assign task
+     *
+     * @param Task $task
+     * @return void
+     */
     private function autoAssignTask(Task $task)
     {
-        $ruleType = $task->getCategory()->getTaskAllocationType()->getId();
-
-        switch ($ruleType) {
-            case Task::TYPE_SIMPLE:
-                $rules = $this->getRepo('TaskAllocationRule')
-                    ->fetchForSimpleTaskAssignment($task->getCategory());
-                break;
-            // no other allocation type is yet implemented as of OLCS-3406
-            case Task::TYPE_MEDIUM:
-            case Task::TYPE_COMPLEX:
-            default:
-                return;
+        if ($task->getLicence() !== null) {
+            $rules = $this->getRulesBasedOnLicence($task);
+            $useAlphaSplit = true;
+        } else {
+            $rules = $this->getRulesBasedOnCategory($task);
+            $useAlphaSplit = false;
         }
 
         /**
@@ -74,18 +93,14 @@ final class CreateTask extends AbstractCommandHandler
         if (count($rules) !== 1) {
             return $this->assignToDefault($task);
         }
-
-        /** @var TaskAllocationRule $rule */
-        $rule = $rules[0];
-
-        $task->setAssignedToUser($rule->getUser());
-        $task->setAssignedToTeam($rule->getTeam());
+        $this->assignByRule($task, $rules[0], $useAlphaSplit);
     }
 
     /**
      * Fall back on system configuration to populate user and team
      *
-     * @return array
+     * @param Task $task
+     * @return void
      */
     private function assignToDefault(Task $task)
     {
@@ -102,6 +117,155 @@ final class CreateTask extends AbstractCommandHandler
     }
 
     /**
+     * Assign by rule
+     *
+     * @param Task $task
+     * @param TaskAllocationRule $rule
+     * @param bool $useAlphaSplit
+     * @return void
+     */
+    protected function assignByRule(Task $task, TaskAllocationRule $rule, $useAlphaSplit)
+    {
+        $task->setAssignedToTeam($rule->getTeam());
+        if ($rule->getUser() !== null) {
+            $task->setAssignedToUser($rule->getUser());
+        } elseif ($useAlphaSplit) {
+            $this->assignByAlphaSplit($task, $rule);
+        }
+    }
+
+    /**
+     * Assign by alpha split
+     *
+     * @param Task $task
+     * @param TaskAllocationRule $rule
+     * @return void
+     */
+    protected function assignByAlphaSplit(Task $task, TaskAllocationRule $rule)
+    {
+        $taskAlphaSplits = $rule->getTaskAlphaSplits();
+        if ($taskAlphaSplits === null) {
+            return;
+        }
+        $letter = $this->getLetterForAlphaSplit($task);
+        if (is_numeric($letter)) {
+            $letter = $this->alphaNumericTranslations[(int) $letter];
+        }
+        $criteria = Criteria::create();
+        $criteria->andWhere($criteria->expr()->contains('letters', $letter));
+        $alphaSplits = $taskAlphaSplits->matching($criteria);
+        if (count($alphaSplits) !== 1) {
+            return;
+        }
+        $task->setAssignedToUser($alphaSplits->first()->getUser());
+    }
+
+    /**
+     * Get rules based on category
+     *
+     * @param Task $task
+     * @return array
+     */
+    protected function getRulesBasedOnCategory(Task $task)
+    {
+        return $this->getRepo('TaskAllocationRule')->fetchByParameters($task->getCategory()->getId());
+    }
+
+    /**
+     * Get rules based on licence
+     *
+     * @param Task $task
+     * @return array
+     */
+    protected function getRulesBasedOnLicence(Task $task)
+    {
+        $repo = $this->getRepo('TaskAllocationRule');
+        $operatorType = $task->getLicence()->getGoodsOrPsv()->getId();
+        $trafficArea = $task->getLicence()->getTrafficArea()->getId();
+        $categoryId = $task->getCategory()->getId();
+        // Goods Licence
+        if ($operatorType === Licence::LICENCE_CATEGORY_GOODS_VEHICLE) {
+
+            $rules = $this->getRepo('TaskAllocationRule')->fetchByParameters(
+                $categoryId,
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                $trafficArea,
+                $task->getLicence()->getOrganisation()->isMlh()
+            );
+            if (count($rules) >= 1) {
+                return $rules;
+            }
+        }
+        // PSV licence or no rules found for Goods Licence
+        // search rules by category, operator type and traffic area
+        $rules = $repo->fetchByParameters(
+            $categoryId,
+            $operatorType,
+            $trafficArea
+        );
+        if (count($rules) >= 1) {
+            return $rules;
+        }
+        // search rules by category and traffic area
+        $rules = $repo->fetchByParameters(
+            $categoryId,
+            null,
+            $trafficArea
+        );
+        if (count($rules) >= 1) {
+            return $rules;
+        }
+        // search rules by category and operator type
+        $rules = $repo->fetchByParameters(
+            $categoryId,
+            $operatorType
+        );
+        if (count($rules) >= 1) {
+            return $rules;
+        }
+        // search rules by category only
+        return $repo->fetchByParameters($categoryId);
+    }
+
+    /**
+     * Get letter for alpha split
+     *
+     * @param Task $task
+     * @return string
+     */
+    protected function getLetterForAlphaSplit(Task $task)
+    {
+        $organisation = $task->getLicence()->getOrganisation();
+        switch ($organisation->getType()) {
+            case Organisation::ORG_TYPE_REGISTERED_COMPANY:
+            case Organisation::ORG_TYPE_LLP:
+            case Organisation::ORG_TYPE_OTHER:
+                $companyName = strtoupper($organisation->getName());
+                if (strlen($companyName) > 4 && substr($companyName, 0, 4) === 'THE ') {
+                    $companyName = substr($companyName, 4);
+                }
+                $letter = substr($companyName, 0, 1);
+                break;
+            case Organisation::ORG_TYPE_SOLE_TRADER:
+                $organisationPerson = $organisation->getOrganisationPersons()->first();
+                $letter = strtoupper(substr($organisationPerson->getPerson()->getFamilyName(), 0, 1));
+                break;
+            case Organisation::ORG_TYPE_PARTNERSHIP:
+                $organisationPerson = $organisation->getOrganisationPersons();
+                $criteria = Criteria::create();
+                $criteria->orderBy(array('createdOn' => Criteria::ASC));
+                $person = $organisationPerson->matching($criteria)->first()->getPerson();
+                $letter = strtoupper(substr($person->getFamilyName(), 0, 1));
+                break;
+            default:
+                $letter = '';
+        }
+        return $letter;
+    }
+
+    /**
+     * Create task object
+     *
      * @param Cmd $command
      * @return Task
      */

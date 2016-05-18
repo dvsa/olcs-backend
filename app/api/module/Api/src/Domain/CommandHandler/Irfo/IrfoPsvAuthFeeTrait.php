@@ -25,6 +25,8 @@ trait IrfoPsvAuthFeeTrait
      */
     public function generateApplicationFee(IrfoPsvAuth $irfoPsvAuth)
     {
+        $this->extraRepos[] = 'FeeType';
+
         // generate application fee
         if ($irfoPsvAuth->getIsFeeExemptApplication() !== 'Y') {
             return $this->createApplicationFee($irfoPsvAuth);

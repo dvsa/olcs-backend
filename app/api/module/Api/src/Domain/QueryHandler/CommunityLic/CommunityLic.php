@@ -41,7 +41,7 @@ class CommunityLic extends AbstractQueryHandler
             'count' =>  $repo->fetchCount($query),
             'count-unfiltered' => $repo->hasRows($unfilteredQuery),
             'totCommunityLicences' => $licence->getTotCommunityLicences(),
-            'officeCopy' => $officeCopy
+            'officeCopy' => $this->result($officeCopy)
         ];
     }
 }

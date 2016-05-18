@@ -1,19 +1,15 @@
 <?php
 
-/**
- * Operating Centres Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\InspectionRequest;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\InspectionRequest\OperatingCentres as QueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\InspectionRequest as InspectionRequestRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query\InspectionRequest\OperatingCentres as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\InspectionRequest as InspectionRequestRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 
 /**
  * Operating Centres Test
@@ -22,6 +18,8 @@ use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
  */
 class OperatingCentresTest extends QueryHandlerTestCase
 {
+    const ID = 9999;
+
     public function setUp()
     {
         $this->sut = new QueryHandler();
@@ -34,41 +32,66 @@ class OperatingCentresTest extends QueryHandlerTestCase
 
     public function testHandleQueryForLicence()
     {
-        $query = Query::create(['type' => 'licence', 'identifier' => 1]);
+        $query = Query::create(['type' => 'licence', 'identifier' => self::ID]);
+
+        $mockOperCentreEntity = m::mock(Entity\Licence\LicenceOperatingCentre::class)
+            ->shouldReceive('serialize')
+            ->with(['address'])
+            ->times(3)
+            ->andReturn('SERIALIZED')
+            ->getMock();
 
         $mockLicence = m::mock()
             ->shouldReceive('getOcForInspectionRequest')
-            ->andReturn(['foo'])
             ->once()
+            ->andReturn([$mockOperCentreEntity, $mockOperCentreEntity, $mockOperCentreEntity])
             ->getMock();
 
         $this->repoMap['Licence']
             ->shouldReceive('fetchWithOperatingCentres')
-            ->with(1)
-            ->andReturn($mockLicence)
+            ->with(self::ID)
             ->once()
+            ->andReturn($mockLicence)
             ->getMock();
 
-        $this->assertEquals(['result' => ['foo'], 'count' => 1], $this->sut->handleQuery($query));
+        static::assertEquals(
+            [
+                'result' => ['SERIALIZED', 'SERIALIZED', 'SERIALIZED'],
+                'count' => 3,
+            ],
+            $this->sut->handleQuery($query)
+        );
     }
 
     public function testHandleQueryForApplication()
     {
-        $query = Query::create(['type' => 'application', 'identifier' => 1]);
+        $query = Query::create(['type' => 'application', 'identifier' => self::ID]);
+
+        $mockOperCentreEntity = m::mock(Entity\Application\ApplicationOperatingCentre::class)
+            ->shouldReceive('serialize')
+            ->times(2)
+            ->andReturn('SERIALIZED')
+            ->getMock();
 
         $mockLicence = m::mock()
             ->shouldReceive('getOcForInspectionRequest')
-            ->andReturn(['foo'])
             ->once()
+            ->andReturn([$mockOperCentreEntity, $mockOperCentreEntity])
             ->getMock();
 
         $this->repoMap['Application']
             ->shouldReceive('fetchWithLicenceAndOc')
-            ->with(1)
+            ->with(self::ID)
             ->andReturn($mockLicence)
             ->once()
             ->getMock();
 
-        $this->assertEquals(['result' => ['foo'], 'count' => 1], $this->sut->handleQuery($query));
+        static::assertEquals(
+            [
+                'result' => ['SERIALIZED', 'SERIALIZED'],
+                'count' => 2,
+            ],
+            $this->sut->handleQuery($query)
+        );
     }
 }

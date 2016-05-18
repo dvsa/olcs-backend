@@ -29,9 +29,11 @@ class Message
 
     protected $docs = [];
 
-    protected $body;
+    protected $plainBody;
 
-    protected $html = true;
+    protected $htmlBody;
+
+    protected $hasHtml = true;
 
     protected $locale = 'en_GB';
 
@@ -52,8 +54,9 @@ class Message
             'subject' => $this->getSubject(),
             'subjectVariables' => $this->getSubjectVariables(),
             'docs' => $this->getDocs(),
-            'body' => $this->getBody(),
-            'html' => $this->getHtml(),
+            'plainBody' => $this->getPlainBody(),
+            'htmlBody' => $this->getHtmlBody(),
+            'hasHtml' => $this->getHasHtml(),
             'locale' => $this->getLocale()
         ];
 
@@ -103,17 +106,25 @@ class Message
     /**
      * @return string
      */
-    public function getBody()
+    public function getPlainBody()
     {
-        return $this->body;
+        return $this->plainBody;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHtmlBody()
+    {
+        return $this->htmlBody;
     }
 
     /**
      * @return bool
      */
-    public function getHtml()
+    public function getHasHtml()
     {
-        return $this->html;
+        return $this->hasHtml;
     }
 
     /**
@@ -158,22 +169,32 @@ class Message
     }
 
     /**
-     * @param string $body
+     * @param string $plainBody
      * @return \Dvsa\Olcs\Email\Data\Message
      */
-    public function setBody($body)
+    public function setPlainBody($plainBody)
     {
-        $this->body = $body;
+        $this->plainBody = $plainBody;
         return $this;
     }
 
     /**
-     * @param bool $html
+     * @param string $htmlBody
      * @return \Dvsa\Olcs\Email\Data\Message
      */
-    public function setHtml($html)
+    public function setHtmlBody($htmlBody)
     {
-        $this->html = $html;
+        $this->htmlBody = $htmlBody;
+        return $this;
+    }
+
+    /**
+     * @param bool $hasHtml
+     * @return \Dvsa\Olcs\Email\Data\Message
+     */
+    public function setHasHtml($hasHtml)
+    {
+        $this->hasHtml = $hasHtml;
         return $this;
     }
 

@@ -6,9 +6,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Query\Discs\CreatePsvDiscs;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\PsvDisc;
 use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbQueryTestCase;
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceManager;
 
 /**
  * CreatePsvDiscsTest
@@ -32,6 +29,9 @@ class CreatePsvDiscsTest extends AbstractDbQueryTestCase
             ],
             'createdOn' => [
                 'column' => 'created_on'
+            ],
+            'createdBy' => [
+                'column' => 'created_by'
             ],
         ],
     ];
@@ -59,9 +59,7 @@ class CreatePsvDiscsTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'UPDATE psv_disc pd
-      SET pd.ceased_date = :ceasedDate, pd.created_on = NOW()
-      WHERE pd.licence_id = :licence AND pd.ceased_date IS NULL';
+        return '';
     }
 
     /**
@@ -87,9 +85,9 @@ class CreatePsvDiscsTest extends AbstractDbQueryTestCase
 
         $this->connection->shouldReceive('executeUpdate')
             ->with(
-                'INSERT INTO psv_disc (licence_id, is_copy, created_on) '.
-                'VALUES (\'1102\', \'0\', NOW()), (\'1102\', \'0\', NOW()), '.
-                '(\'1102\', \'0\', NOW()), (\'1102\', \'0\', NOW())'
+                'INSERT INTO psv_disc (licence_id, is_copy, created_on, created_by) '.
+                'VALUES (\'1102\', \'0\', NOW(), 1), (\'1102\', \'0\', NOW(), 1), '.
+                '(\'1102\', \'0\', NOW(), 1), (\'1102\', \'0\', NOW(), 1)'
             )->once()
             ->andReturn('result');
 
@@ -105,9 +103,9 @@ class CreatePsvDiscsTest extends AbstractDbQueryTestCase
 
         $this->connection->shouldReceive('executeUpdate')
             ->with(
-                'INSERT INTO psv_disc (licence_id, is_copy, created_on) '.
-                'VALUES (\'1102\', \'0\', NOW()), (\'1102\', \'0\', NOW()), '.
-                '(\'1102\', \'0\', NOW()), (\'1102\', \'0\', NOW())'
+                'INSERT INTO psv_disc (licence_id, is_copy, created_on, created_by) '.
+                'VALUES (\'1102\', \'0\', NOW(), 1), (\'1102\', \'0\', NOW(), 1), '.
+                '(\'1102\', \'0\', NOW(), 1), (\'1102\', \'0\', NOW(), 1)'
             )->once()
             ->andThrow(new \Exception());
 

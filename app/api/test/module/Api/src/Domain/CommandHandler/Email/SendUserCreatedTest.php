@@ -83,7 +83,7 @@ class SendUserCreatedTest extends CommandHandlerTestCase
                     'loginId' => $loginId,
                     'url' => 'http://selfserve/'
                 ],
-                null
+                'default'
             );
 
         $this->expectedSideEffect(
@@ -144,7 +144,7 @@ class SendUserCreatedTest extends CommandHandlerTestCase
                     'loginId' => $loginId,
                     'url' => 'http://internal/'
                 ],
-                null
+                'default'
             );
 
         $this->expectedSideEffect(

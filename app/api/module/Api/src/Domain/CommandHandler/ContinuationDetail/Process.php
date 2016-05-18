@@ -42,7 +42,7 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
         }
 
         // 1. Generate the checklist document
-        $result->merge($this->generateDocument($continuationDetail));
+        $result->merge($this->generateDocument($continuationDetail, $command->getUser()));
 
         // 2. Update continuation detail record with the checklist document
         // reference and 'printed' status
@@ -64,9 +64,10 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
 
     /**
      * @param ContinuationDetailEntity $continuationDetail
+     * @param int $user
      * @return Result
      */
-    protected function generateDocument(ContinuationDetailEntity $continuationDetail)
+    protected function generateDocument(ContinuationDetailEntity $continuationDetail, $user)
     {
         $template = $this->getTemplate($continuationDetail);
 
@@ -80,12 +81,12 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
                 'licenceType' => $licence->getLicenceType()->getId(),
                 'niFlag' => $licence->getNiFlag(),
                 'organisation' => $licence->getOrganisation()->getId(),
+                'user' => $user
             ],
             'description' => 'Continuation checklist',
             'licence' => $continuationDetail->getLicence()->getId(),
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
-            'isReadOnly'  => 'Y',
             'isExternal'  => false,
             'isScan' => false,
             'dispatch' => true

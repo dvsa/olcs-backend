@@ -2,13 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository\Query\LicenceVehicle;
 
-use Dvsa\Olcs\Api\Domain\Repository\Query\LicenceVehicle\RemoveAllForLicence;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Domain\Repository\Query\LicenceVehicle\MarkDuplicateVrmsForLicence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbQueryTestCase;
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceManager;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
@@ -46,6 +42,12 @@ class MarkDuplicateVrmsForLicenceTest extends AbstractDbQueryTestCase
             ],
             'warningLetterSentDate' => [
                 'column' => 'warning_letter_sent_date'
+            ],
+            'lastModifiedOn' => [
+                'column' => 'last_modified_on'
+            ],
+            'lastModifiedBy' => [
+                'column' => 'last_modified_by'
             ],
         ],
         Vehicle::class => [
@@ -98,23 +100,25 @@ class MarkDuplicateVrmsForLicenceTest extends AbstractDbQueryTestCase
 
     protected function getSut()
     {
-        return new \Dvsa\Olcs\Api\Domain\Repository\Query\LicenceVehicle\MarkDuplicateVrmsForLicence();
+        return new MarkDuplicateVrmsForLicence();
     }
 
     protected function getExpectedQuery()
     {
-        return "UPDATE licence_vehicle lv
-    JOIN vehicle v ON lv.vehicle_id = v.id
-    JOIN licence l ON lv.licence_id = l.id
-        SET
-            lv.warning_letter_seed_date = NOW(),
-            lv.warning_letter_sent_date = NULL
-    WHERE
-        v.vrm IN (:vrms)
-        AND lv.specified_date IS NOT NULL
-        AND lv.removal_date IS NULL
-        AND lv.licence_id <> :licence
-        AND l.goods_or_psv = :goodsOrPsv
-        AND l.status IN (:licenceStatuses)";
+        return 'UPDATE licence_vehicle lv '
+        . 'JOIN vehicle v '
+            . 'ON lv.vehicle_id = v.id '
+        . 'JOIN licence l '
+            . 'ON lv.licence_id = l.id '
+        . 'SET lv.warning_letter_seed_date = NOW(), '
+            . 'lv.warning_letter_sent_date = NULL, '
+            . 'lv.last_modified_on = NOW(), '
+            . 'lv.last_modified_by = :currentUserId '
+        . 'WHERE v.vrm IN (:vrms) '
+            . 'AND lv.specified_date IS NOT NULL '
+            . 'AND lv.removal_date IS NULL '
+            . 'AND lv.licence_id <> :licence '
+            . 'AND l.goods_or_psv = :goodsOrPsv '
+            . 'AND l.status IN (:licenceStatuses)';
     }
 }

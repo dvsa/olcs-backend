@@ -32,9 +32,9 @@ class SendEmail extends AbstractCommand
 
     protected $subjectVariables;
 
-    protected $body;
+    protected $plainBody;
 
-    protected $html = true;
+    protected $htmlBody;
 
     protected $locale = 'en_GB';
 
@@ -78,14 +78,14 @@ class SendEmail extends AbstractCommand
         return $this->subjectVariables;
     }
 
-    public function getBody()
+    public function getPlainBody()
     {
-        return $this->body;
+        return $this->plainBody;
     }
 
-    public function getHtml()
+    public function getHtmlBody()
     {
-        return $this->html;
+        return $this->htmlBody;
     }
 
     public function getLocale()

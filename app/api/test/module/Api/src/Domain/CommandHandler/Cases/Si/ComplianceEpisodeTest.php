@@ -283,7 +283,6 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             'description' => 'ERRU case has been automatically created',
             'actionDate' => date('Y-m-d', strtotime('+7 days')),
             'urgent' => 'Y',
-            'assignedToTeam' => 2,
             'case' => null,
             'licence' => $licenceId,
         ];

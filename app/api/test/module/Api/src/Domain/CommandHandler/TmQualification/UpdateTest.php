@@ -12,11 +12,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TmQualification\Update as TmQualificatio
 use Dvsa\Olcs\Api\Domain\Repository\TmQualification as TmQualificationRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\TmQualification\Update as Cmd;
-use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Entity\User\Team;
-use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
 
 /**
@@ -30,10 +25,6 @@ class UpdateTest extends CommandHandlerTestCase
     {
         $this->sut = new TmQualificationUpdate();
         $this->mockRepo('TmQualification', TmQualificationRepo::class);
-
-        $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
-        ];
 
         parent::setUp();
     }
@@ -55,8 +46,6 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $this->mockAuthService();
-
         $id = 1;
         $data = [
             'id' => $id,
@@ -75,10 +64,7 @@ class UpdateTest extends CommandHandlerTestCase
                 $this->refData['qtype'],
                 '123',
                 '2015-01-01',
-                $this->references[CountryEntity::class]['GB'],
-                null,
-                null,
-                m::type(User::class)
+                $this->references[CountryEntity::class]['GB']
             )
             ->once()
             ->shouldReceive('getId')
@@ -108,20 +94,5 @@ class UpdateTest extends CommandHandlerTestCase
                 ]
             ]
         );
-    }
-
-    protected function mockAuthService()
-    {
-        /** @var Team $mockTeam */
-        $mockTeam = m::mock(Team::class)->makePartial();
-        $mockTeam->setId(2);
-
-        /** @var User $mockUser */
-        $mockUser = m::mock(User::class)->makePartial();
-        $mockUser->setId(1);
-        $mockUser->setTeam($mockTeam);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($mockUser);
     }
 }

@@ -56,11 +56,13 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
             $options = [
                 'discs' => $queuedDiscsIds,
                 'startNumber' => $queuedStartNumber,
-                'type' => $command->getType()
+                'type' => $command->getType(),
+                'user' => $command->getUser()
             ];
         }
 
         $queryData = $discsToPrintIds;
+        $queryData['user'] = $command->getUser();
 
         $knownValues = [
             $bookmark => []
@@ -77,7 +79,8 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
         $printQueue = EnqueueFileCommand::create(
             [
                 'documentId' => $documentId,
-                'jobName' => $command->getType() . ' Disc List'
+                'jobName' => $command->getType() . ' Disc List',
+                'user' => $command->getUser()
             ]
         );
         $printQueueResult = $this->handleSideEffect($printQueue);

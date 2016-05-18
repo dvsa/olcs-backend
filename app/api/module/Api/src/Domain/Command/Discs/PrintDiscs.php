@@ -21,6 +21,8 @@ final class PrintDiscs extends \Dvsa\Olcs\Transfer\Command\AbstractCommand
 
     protected $startNumber;
 
+    protected $user;
+
     /**
      * @return mixed
      */
@@ -43,5 +45,13 @@ final class PrintDiscs extends \Dvsa\Olcs\Transfer\Command\AbstractCommand
     public function getStartNumber()
     {
         return $this->startNumber;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

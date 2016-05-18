@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * TaskAlphaSplit Abstract Entity
@@ -13,17 +14,40 @@ use Doctrine\ORM\Mapping as ORM;
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="task_alpha_split",
  *    indexes={
- *        @ORM\Index(name="ix_task_alpha_split_task_allocation_rules_id",
-     *     columns={"task_allocation_rules_id"}),
- *        @ORM\Index(name="ix_task_alpha_split_user_id", columns={"user_id"})
+ *        @ORM\Index(name="ix_task_alpha_split_task_allocation_rule_id",
+     *     columns={"task_allocation_rule_id"}),
+ *        @ORM\Index(name="ix_task_alpha_split_user_id", columns={"user_id"}),
+ *        @ORM\Index(name="ix_task_alpha_split_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_task_alpha_split_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
 abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
+
+    /**
+     * Created by
+     *
+     * @var \Dvsa\Olcs\Api\Entity\User\User
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="create")
+     */
+    protected $createdBy;
+
+    /**
+     * Created on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="created_on", nullable=true)
+     */
+    protected $createdOn;
 
     /**
      * Identifier - Id
@@ -37,32 +61,47 @@ abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, Js
     protected $id;
 
     /**
-     * Split from inclusive
+     * Last modified by
+     *
+     * @var \Dvsa\Olcs\Api\Entity\User\User
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="update")
+     */
+    protected $lastModifiedBy;
+
+    /**
+     * Last modified on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
+     */
+    protected $lastModifiedOn;
+
+    /**
+     * Letters
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="split_from_inclusive", length=2, nullable=false)
+     * @ORM\Column(type="string", name="letters", length=50, nullable=false)
      */
-    protected $splitFromInclusive;
+    protected $letters;
 
     /**
-     * Split to inclusive
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="split_to_inclusive", length=2, nullable=false)
-     */
-    protected $splitToInclusive;
-
-    /**
-     * Task allocation rules
+     * Task allocation rule
      *
      * @var \Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule", fetch="LAZY")
-     * @ORM\JoinColumn(name="task_allocation_rules_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule",
+     *     fetch="LAZY",
+     *     inversedBy="taskAlphaSplits"
+     * )
+     * @ORM\JoinColumn(name="task_allocation_rule_id", referencedColumnName="id", nullable=false)
      */
-    protected $taskAllocationRules;
+    protected $taskAllocationRule;
 
     /**
      * User
@@ -73,6 +112,62 @@ abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, Js
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     protected $user;
+
+    /**
+     * Version
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
+     * @ORM\Version
+     */
+    protected $version = 1;
+
+    /**
+     * Set the created by
+     *
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @return TaskAlphaSplit
+     */
+    public function setCreatedBy($createdBy)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the created by
+     *
+     * @return \Dvsa\Olcs\Api\Entity\User\User
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set the created on
+     *
+     * @param \DateTime $createdOn
+     * @return TaskAlphaSplit
+     */
+    public function setCreatedOn($createdOn)
+    {
+        $this->createdOn = $createdOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the created on
+     *
+     * @return \DateTime
+     */
+    public function getCreatedOn()
+    {
+        return $this->createdOn;
+    }
 
     /**
      * Set the id
@@ -98,72 +193,95 @@ abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, Js
     }
 
     /**
-     * Set the split from inclusive
+     * Set the last modified by
      *
-     * @param string $splitFromInclusive
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
      * @return TaskAlphaSplit
      */
-    public function setSplitFromInclusive($splitFromInclusive)
+    public function setLastModifiedBy($lastModifiedBy)
     {
-        $this->splitFromInclusive = $splitFromInclusive;
+        $this->lastModifiedBy = $lastModifiedBy;
 
         return $this;
     }
 
     /**
-     * Get the split from inclusive
+     * Get the last modified by
+     *
+     * @return \Dvsa\Olcs\Api\Entity\User\User
+     */
+    public function getLastModifiedBy()
+    {
+        return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the last modified on
+     *
+     * @param \DateTime $lastModifiedOn
+     * @return TaskAlphaSplit
+     */
+    public function setLastModifiedOn($lastModifiedOn)
+    {
+        $this->lastModifiedOn = $lastModifiedOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified on
+     *
+     * @return \DateTime
+     */
+    public function getLastModifiedOn()
+    {
+        return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the letters
+     *
+     * @param string $letters
+     * @return TaskAlphaSplit
+     */
+    public function setLetters($letters)
+    {
+        $this->letters = $letters;
+
+        return $this;
+    }
+
+    /**
+     * Get the letters
      *
      * @return string
      */
-    public function getSplitFromInclusive()
+    public function getLetters()
     {
-        return $this->splitFromInclusive;
+        return $this->letters;
     }
 
     /**
-     * Set the split to inclusive
+     * Set the task allocation rule
      *
-     * @param string $splitToInclusive
+     * @param \Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule $taskAllocationRule
      * @return TaskAlphaSplit
      */
-    public function setSplitToInclusive($splitToInclusive)
+    public function setTaskAllocationRule($taskAllocationRule)
     {
-        $this->splitToInclusive = $splitToInclusive;
+        $this->taskAllocationRule = $taskAllocationRule;
 
         return $this;
     }
 
     /**
-     * Get the split to inclusive
-     *
-     * @return string
-     */
-    public function getSplitToInclusive()
-    {
-        return $this->splitToInclusive;
-    }
-
-    /**
-     * Set the task allocation rules
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule $taskAllocationRules
-     * @return TaskAlphaSplit
-     */
-    public function setTaskAllocationRules($taskAllocationRules)
-    {
-        $this->taskAllocationRules = $taskAllocationRules;
-
-        return $this;
-    }
-
-    /**
-     * Get the task allocation rules
+     * Get the task allocation rule
      *
      * @return \Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule
      */
-    public function getTaskAllocationRules()
+    public function getTaskAllocationRule()
     {
-        return $this->taskAllocationRules;
+        return $this->taskAllocationRule;
     }
 
     /**
@@ -189,7 +307,48 @@ abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, Js
         return $this->user;
     }
 
+    /**
+     * Set the version
+     *
+     * @param int $version
+     * @return TaskAlphaSplit
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
 
+        return $this;
+    }
+
+    /**
+     * Get the version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set the createdOn field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setCreatedOnBeforePersist()
+    {
+        $this->createdOn = new \DateTime();
+    }
+
+    /**
+     * Set the lastModifiedOn field on persist
+     *
+     * @ORM\PreUpdate
+     */
+    public function setLastModifiedOnBeforeUpdate()
+    {
+        $this->lastModifiedOn = new \DateTime();
+    }
 
     /**
      * Clear properties

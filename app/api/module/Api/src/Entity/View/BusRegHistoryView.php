@@ -87,6 +87,15 @@ class BusRegHistoryView implements BundleSerializableInterface, JsonSerializable
     protected $user;
 
     /**
+     * Event description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="event_description", length=255, nullable=true)
+     */
+    protected $eventDescription;
+
+    /**
      * @return int
      */
     public function getId()
@@ -132,5 +141,13 @@ class BusRegHistoryView implements BundleSerializableInterface, JsonSerializable
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEventDescription()
+    {
+        return $this->eventDescription;
     }
 }

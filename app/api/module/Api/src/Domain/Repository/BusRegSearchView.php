@@ -9,6 +9,7 @@ use Dvsa\Olcs\Transfer\Query\Bus\SearchViewList as ListQueryObject;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Doctrine\ORM\Query;
 
 /**
  * BusRegSearchView
@@ -51,19 +52,26 @@ class BusRegSearchView extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         /** @var ListQueryObject $query */
-
-        if (!empty($query->getLicId())) {
-
-            $qb->andWhere($qb->expr()->eq($this->alias . '.licId', ':licence'))
-                ->setParameter('licence', $query->getLicId());
+        if (method_exists($query, 'getLicId') && !empty($query->getLicId())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.licId', ':licId'))
+                ->setParameter('licId', $query->getLicId());
         }
 
-        if (!empty($query->getStatus())) {
+        if (method_exists($query, 'getBusRegStatus') && !empty($query->getBusRegStatus())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.busRegStatus', ':busRegStatus'))
+                ->setParameter('busRegStatus', $query->getBusRegStatus());
+        }
 
+        if (method_exists($query, 'getOrganisationId') && !empty($query->getOrganisationId())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.organisationId', ':organisationId'))
+                ->setParameter('organisationId', $query->getOrganisationId());
+        }
+
+        // this is required for filtering from BusReg home page
+        if (method_exists($query, 'getStatus') && !empty($query->getStatus())) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.busRegStatus', ':status'))
                 ->setParameter('status', $query->getStatus());
         }
-
     }
 
     /**
@@ -90,5 +98,42 @@ class BusRegSearchView extends AbstractRepository
             ->setParameter('activeStatuses', $activeStatuses);
 
         return $dqb->getQuery()->getResult();
+    }
+
+    /**
+     * @param QueryInterface $query
+     * @param null $organisationId null if LA user
+     * @param int $hydrateMode
+     * @return array
+     */
+    public function fetchDistinctList(
+        QueryInterface $query,
+        $organisationId = null,
+        $hydrateMode = Query::HYDRATE_OBJECT
+    ) {
+        $qb = $this->createQueryBuilder();
+
+        // organisationId is determined by the logged in user and sent from the query handler and not from the query
+        if (!empty($organisationId)) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.organisationId', ':organisationId'))
+                ->setParameter('organisationId', $organisationId);
+        }
+
+        switch ($query->getContext())
+        {
+            case 'licence':
+                $qb->addGroupBy($this->alias . '.licId');
+                break;
+            case 'organisation':
+                $qb->addGroupBy($this->alias . '.organisationId');
+                break;
+            case 'busRegStatus':
+                $qb->addGroupBy($this->alias . '.busRegStatus');
+                break;
+        }
+
+        $result = $qb->getQuery()->getResult($hydrateMode);
+
+        return $result;
     }
 }

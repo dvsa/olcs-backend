@@ -35,18 +35,18 @@ class FinancialHistoryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
-        $mockFinancialDocuments = m::mock()
-            ->shouldReceive('toArray')
-            ->andReturn(['documents' => 'documents'])
+        $mockFinancialDocument = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->andReturn(['document' => 'document'])
             ->once()
             ->getMock();
 
-        $mockApplication = m::mock()
+        $mockApplication = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class)
             ->shouldReceive('getApplicationDocuments')
             ->with('category', 'subCategory')
-            ->andReturn($mockFinancialDocuments)
+            ->andReturn([$mockFinancialDocument])
             ->once()
-            ->shouldReceive('jsonSerialize')
+            ->shouldReceive('serialize')
             ->andReturn(['application' => 'application'])
             ->once()
             ->getMock();
@@ -64,10 +64,13 @@ class FinancialHistoryTest extends QueryHandlerTestCase
             ->andReturn('subCategory')
             ->once();
 
-        $result = [
+        $expected = [
             'application' => 'application',
-            'documents' => ['documents' => 'documents']
+            'documents' => [['document' => 'document']]
         ];
-        $this->assertEquals($result, $this->sut->handleQuery($query));
+
+        $result = $this->sut->handleQuery($query)->serialize();
+
+        $this->assertEquals($expected, $result);
     }
 }

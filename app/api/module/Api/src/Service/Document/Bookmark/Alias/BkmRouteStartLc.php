@@ -2,12 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark\Alias;
 
-use Dvsa\Olcs\Api\Service\Document\Bookmark\BkmRouteStart;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\IrfoPsvRouteFrom;
 
 /**
- * Alias of BkmRouteStart
+ * Alias of IrfoPsvRouteFrom
  */
-class BkmRouteStartLc extends BkmRouteStart
+class BkmRouteStartLc extends IrfoPsvRouteFrom
 {
     //
 }

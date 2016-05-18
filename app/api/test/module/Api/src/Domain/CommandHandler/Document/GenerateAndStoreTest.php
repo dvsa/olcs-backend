@@ -123,6 +123,7 @@ class GenerateAndStoreTest extends CommandHandlerTestCase
         $data['identifier'] = 12345;
         $data['size'] = 100;
         $data['filename'] = '/foo/bar/cake.rtf';
+        $data['user'] = 123;
 
         $this->expectedSideEffect(DispatchDocument::class, $data, $result);
 

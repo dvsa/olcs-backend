@@ -38,7 +38,6 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
             $continuation = $continuations[0];
         }
         $this->result->addId('continuation', $continuation->getId());
-
         $licences = $this->getRepo('Licence')->fetchForContinuation(
             $command->getYear(),
             $command->getMonth(),
@@ -85,24 +84,17 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
      */
     protected function createContinuationDetails(ContinuationEntity $continuation, $licences)
     {
-        foreach ($licences as $licence) {
-            // check if continuation details already exists for the licence
-            $existingContinuationDetails = $this->getRepo('ContinuationDetail')->fetchForContinuationAndLicence(
-                $continuation->getId(),
-                $licence->getId()
-            );
-            // if not exists then create it
-            if (count($existingContinuationDetails) === 0) {
-                $continuationDetail = new ContinuationDetailEntity();
-                $continuationDetail->setLicence($licence);
-                $continuationDetail->setReceived('N');
-                $continuationDetail->setStatus(
-                    $this->getRepo()->getRefdataReference(ContinuationDetailEntity::STATUS_PREPARED)
-                );
-                $continuationDetail->setContinuation($continuation);
+        $allLicenceIds = array_column($licences, 'id');
 
-                $this->getRepo('ContinuationDetail')->save($continuationDetail);
-            }
+        $existingLicenceIds = $this->getRepo('ContinuationDetail')->fetchLicenceIdsForContinuationAndLicences(
+            $continuation->getId(),
+            $allLicenceIds
+        );
+        $deltaIds = array_diff($allLicenceIds, $existingLicenceIds);
+        if (count($deltaIds)) {
+            $this->getRepo('ContinuationDetail')->createContinuationDetails(
+                $deltaIds, false, ContinuationDetailEntity::STATUS_PREPARED, $continuation->getId()
+            );
         }
     }
 }

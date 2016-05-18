@@ -63,6 +63,7 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
 
@@ -111,6 +112,7 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
 
@@ -122,6 +124,24 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
      * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
      */
     protected $lastModifiedOn;
+
+    /**
+     * Olbs key
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
+     */
+    protected $olbsKey;
+
+    /**
+     * Olbs type
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="olbs_type", length=48, nullable=true)
+     */
+    protected $olbsType;
 
     /**
      * Reason
@@ -417,6 +437,52 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     public function getLastModifiedOn()
     {
         return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the olbs key
+     *
+     * @param int $olbsKey
+     * @return SeriousInfringement
+     */
+    public function setOlbsKey($olbsKey)
+    {
+        $this->olbsKey = $olbsKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the olbs key
+     *
+     * @return int
+     */
+    public function getOlbsKey()
+    {
+        return $this->olbsKey;
+    }
+
+    /**
+     * Set the olbs type
+     *
+     * @param string $olbsType
+     * @return SeriousInfringement
+     */
+    public function setOlbsType($olbsType)
+    {
+        $this->olbsType = $olbsType;
+
+        return $this;
+    }
+
+    /**
+     * Get the olbs type
+     *
+     * @return string
+     */
+    public function getOlbsType()
+    {
+        return $this->olbsType;
     }
 
     /**

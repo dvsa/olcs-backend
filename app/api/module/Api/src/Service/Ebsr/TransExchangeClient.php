@@ -2,8 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr;
 
+use Dvsa\Olcs\Api\Domain\Exception\RestResponseException;
+use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Filter\MapXmlFile;
+use Olcs\XmlTools\Validator\Xsd;
 use Zend\Http\Client as RestClient;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Class TransExchangeClient
@@ -13,6 +17,7 @@ class TransExchangeClient implements TransExchangeClientInterface
 {
     const REQUEST_MAP_TEMPLATE = 'RequestMap';
     const GENERATE_DOCS_TEMPLATE = 'Standard';
+    const TRANSXCHANGE_INVALID_XML = 'TransXchange response did not validate against the schema';
 
     /**
      * @var RestClient
@@ -25,30 +30,58 @@ class TransExchangeClient implements TransExchangeClientInterface
     private $xmlFilter;
 
     /**
-     * @param $restClient
-     * @param $xmlFilter
+     * @var ParseXmlString
      */
-    public function __construct($restClient, $xmlFilter)
-    {
+    private $xmlParser;
+
+    /**
+     * @var Xsd
+     */
+    private $xsdValidator;
+
+    /**
+     * TransExchangeClient constructor.
+     * @param RestClient $restClient
+     * @param MapXmlFile $xmlFilter
+     * @param ParseXmlString $xmlParser
+     * @param Xsd $xsdValidator
+     */
+    public function __construct(
+        RestClient $restClient,
+        MapXmlFile $xmlFilter,
+        ParseXmlString $xmlParser,
+        Xsd $xsdValidator
+    ) {
         $this->restClient = $restClient;
         $this->xmlFilter = $xmlFilter;
+        $this->xmlParser = $xmlParser;
+        $this->xsdValidator = $xsdValidator;
     }
 
     /**
      * @param string $content
+     * @throws RestResponseException
      * @return array
      */
     public function makeRequest($content)
     {
+        Logger::info('TransXchange request', ['data' => $content]);
+
         $this->restClient->getRequest()->setContent($content);
         $response = $this->restClient->send();
         $body = $response->getContent();
 
-        $dom = new \DOMDocument();
-        $dom->loadXML($body);
+        Logger::info('TransXchange response', ['data' => $body]);
 
-        $result = $this->xmlFilter->filter($dom);
+        //security check, and parse into dom document
+        $dom = $this->xmlParser->filter($body);
 
-        return $result;
+        //validate against schema
+        if (!($this->xsdValidator->isValid($dom))) {
+            Logger::info('TransXchange error', ['data' => self::TRANSXCHANGE_INVALID_XML]);
+            throw new RestResponseException(self::TRANSXCHANGE_INVALID_XML);
+        }
+
+        return $this->xmlFilter->filter($dom);
     }
 }

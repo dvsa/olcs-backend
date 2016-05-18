@@ -29,7 +29,8 @@ class IrfoGvPermit extends AbstractQueryHandler
             [
                 'isApprovable' => $irfoGvPermit->isApprovable(
                     $this->getRepo('Fee')->fetchFeesByIrfoGvPermitId($query->getId())
-                )
+                ),
+                'isGeneratable' => $irfoGvPermit->isGeneratable()
             ]
         );
     }

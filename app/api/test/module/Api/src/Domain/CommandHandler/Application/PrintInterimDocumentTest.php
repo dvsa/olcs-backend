@@ -68,7 +68,6 @@ class PrintInterimDocumentTest extends CommandHandlerTestCase
             'transportManager' => null,
             'operatingCentre' => null,
             'opposition' => null,
-            'isReadOnly' => null,
             'issuedDate' => null,
             'dispatch' => true
         ];
@@ -125,7 +124,6 @@ class PrintInterimDocumentTest extends CommandHandlerTestCase
             'transportManager' => null,
             'operatingCentre' => null,
             'opposition' => null,
-            'isReadOnly' => null,
             'issuedDate' => null,
             'dispatch' => true
         ];

@@ -102,7 +102,7 @@ class GenericControllerTest extends TestCase
         $viewModel = new JsonModel();
         $application = new Application();
         $ex = new \Exception('blargle');
-        $errors = ['blargle', explode('#', $ex->getTraceAsString())];
+        $errors = ['blargle'];
 
         $mockResponse = m::mock(Response::class);
         $mockResponse->shouldReceive('error')->with(500, $errors)->andReturn($viewModel);
@@ -217,7 +217,7 @@ class GenericControllerTest extends TestCase
         $viewModel = new JsonModel();
         $application = new Application();
         $ex = new \Exception('blargle');
-        $errors = ['blargle', explode('#', $ex->getTraceAsString())];
+        $errors = ['blargle'];
 
         $mockResponse = m::mock(Response::class);
         $mockResponse->shouldReceive('error')->with(500, $errors)->andReturn($viewModel);
@@ -351,7 +351,7 @@ class GenericControllerTest extends TestCase
         $viewModel = new JsonModel();
         $application = new UpdateTypeOfLicence();
         $ex = new \Exception('blargle');
-        $errors = ['blargle', explode('#', $ex->getTraceAsString())];
+        $errors = ['blargle'];
 
         $mockResponse = m::mock(Response::class);
         $mockResponse->shouldReceive('error')->with(500, $errors)->andReturn($viewModel);
@@ -486,7 +486,7 @@ class GenericControllerTest extends TestCase
         $viewModel = new JsonModel();
         $application = new UpdateTypeOfLicence();
         $ex = new \Exception('blargle');
-        $errors = ['blargle', explode('#', $ex->getTraceAsString())];
+        $errors = ['blargle'];
 
         $mockResponse = m::mock(Response::class);
         $mockResponse->shouldReceive('error')->with(500, $errors)->andReturn($viewModel);
@@ -565,7 +565,7 @@ class GenericControllerTest extends TestCase
         $viewModel = new JsonModel();
         $application = new UpdateTypeOfLicence();
         $ex = new \Exception('blargle');
-        $errors = ['blargle', explode('#', $ex->getTraceAsString())];
+        $errors = ['blargle'];
 
         $mockResponse = m::mock(Response::class);
         $mockResponse->shouldReceive('error')->with(500, $errors)->andReturn($viewModel);
@@ -669,7 +669,7 @@ class GenericControllerTest extends TestCase
         $viewModel = new JsonModel();
         $application = new UpdateTypeOfLicence();
         $ex = new \Exception('blargle');
-        $errors = ['blargle', explode('#', $ex->getTraceAsString())];
+        $errors = ['blargle'];
 
         $mockResponse = m::mock(Response::class);
         $mockResponse->shouldReceive('error')->with(500, $errors)->andReturn($viewModel);
@@ -774,7 +774,7 @@ class GenericControllerTest extends TestCase
         $viewModel = new JsonModel();
         $application = new UpdateTypeOfLicence();
         $ex = new \Exception('blargle');
-        $errors = ['blargle', explode('#', $ex->getTraceAsString())];
+        $errors = ['blargle'];
 
         $mockResponse = m::mock(Response::class);
         $mockResponse->shouldReceive('error')->with(500, $errors)->andReturn($viewModel);

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * GracePeriods.php
- *
- * @author Joshua Curtis <josh.curtis@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\GracePeriod;
 
 use Doctrine\ORM\Query;
@@ -20,15 +15,20 @@ class GracePeriods extends AbstractQueryHandler
 {
     protected $repoServiceName = 'GracePeriod';
 
+    /**
+     * @param \Dvsa\Olcs\Transfer\Query\GracePeriod\GracePeriods $query
+     *
+     * @return array
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
-        // Object hydration to enforce JsonSerialize.
-        $result = $this->getRepo()
-            ->fetchList($query, Query::HYDRATE_OBJECT);
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\GracePeriod $repo */
+        $repo = $this->getRepo();
 
         return [
-            'result' => $result,
-            'count' => $this->getRepo()->fetchCount($query)
+            'result' => $this->resultList($repo->fetchList($query, Query::HYDRATE_OBJECT)),
+            'count' => $repo->fetchCount($query),
         ];
     }
 }

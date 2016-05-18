@@ -17,9 +17,6 @@ use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as SaveAddressCmd;
 use Dvsa\Olcs\Api\Domain\Command\Person\UpdateFull as UpdatePersonCmd;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
-use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Entity\User\Team;
-use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 
@@ -36,10 +33,6 @@ class UpdateTest extends CommandHandlerTestCase
         $this->mockRepo('TransportManager', TransportManagerRepo::class);
         $this->mockRepo('ContactDetails', ContactDetailsRepo::class);
 
-        $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
-        ];
-
         parent::setUp();
     }
 
@@ -55,8 +48,6 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $this->mockAuthService();
-
         $id = 1;
         $data = [
             'id' => $id,
@@ -180,10 +171,7 @@ class UpdateTest extends CommandHandlerTestCase
             ->with(
                 m::type(RefData::class),
                 m::type(RefData::class),
-                null,
-                null,
-                null,
-                m::type(User::class)
+                null
             )
             ->once()
             ->shouldReceive('updateNysiis')
@@ -212,20 +200,5 @@ class UpdateTest extends CommandHandlerTestCase
         $this->assertEquals($res['id']['workAddress'], 10);
         $this->assertEquals($res['id']['homeContactDetails'], $data['homeCdId']);
         $this->assertEquals($res['id']['person'], $data['personId']);
-    }
-
-    protected function mockAuthService()
-    {
-        /** @var Team $mockTeam */
-        $mockTeam = m::mock(Team::class)->makePartial();
-        $mockTeam->setId(2);
-
-        /** @var User $mockUser */
-        $mockUser = m::mock(User::class)->makePartial();
-        $mockUser->setId(1);
-        $mockUser->setTeam($mockTeam);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($mockUser);
     }
 }

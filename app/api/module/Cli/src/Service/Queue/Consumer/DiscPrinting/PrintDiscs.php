@@ -30,7 +30,8 @@ class PrintDiscs extends AbstractCommandConsumer
         return [
             'discs' => $options['discs'],
             'type' => $options['type'],
-            'startNumber' => $options['startNumber']
+            'startNumber' => $options['startNumber'],
+            'user' => isset($options['user']) ? $options['user'] : $item->getCreatedBy()->getId()
         ];
     }
 }

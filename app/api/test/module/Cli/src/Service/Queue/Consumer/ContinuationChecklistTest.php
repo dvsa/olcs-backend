@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklist as Sut;
 use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * Continuation Checklist Queue Consumer Test
@@ -24,11 +25,14 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
 
     public function testProcessMessageSuccess()
     {
+        $user = new UserEntity('pid', 'type');
+        $user->setId(1);
         $item = new QueueEntity();
         $item->setId(99);
         $item->setEntityId(69);
+        $item->setCreatedBy($user);
 
-        $expectedDtoData = ['id' => 69];
+        $expectedDtoData = ['id' => 69, 'user' => 1];
         $cmdResult = new Result();
         $cmdResult
             ->addId('continuationDetail', 69)
@@ -58,13 +62,16 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
 
     public function testProcessMessageFailure()
     {
+        $user = new UserEntity('pid', 'type');
+        $user->setId(1);
         $item = new QueueEntity();
         $item->setId(99);
         $item->setEntityId(69);
+        $item->setCreatedBy($user);
 
         $this->expectCommandException(
             \Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\Process::class,
-            ['id' => 69],
+            ['id' => 69, 'user' => 1],
             \Dvsa\Olcs\Api\Domain\Exception\Exception::class,
             'epic fail'
         );

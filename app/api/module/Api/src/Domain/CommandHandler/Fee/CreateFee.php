@@ -7,8 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -31,10 +29,8 @@ use Dvsa\Olcs\Transfer\Command\Fee\ApproveWaive as ApproveWaiveCmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateFee extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class CreateFee extends AbstractCommandHandler implements TransactionedInterface
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'Fee';
 
     public function handleCommand(CommandInterface $command)
@@ -76,8 +72,6 @@ final class CreateFee extends AbstractCommandHandler implements AuthAwareInterfa
         $feeStatus = $this->getRepo()->getRefdataReference($command->getFeeStatus());
 
         $fee = new Fee($feeType, $command->getAmount(), $feeStatus);
-
-        $fee->setCreatedBy($this->getCurrentUser());
 
         if ($command->getInvoicedDate() !== null) {
             $fee->setInvoicedDate(new \DateTime($command->getInvoicedDate()));

@@ -159,7 +159,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
             'canHaveCommunityLicences' => true,
             'canHaveSchedule41' => false,
             'possibleEnforcementAreas' => [33 => 'EA'],
-            'possibleTrafficAreas' => [],
+            'possibleTrafficAreas' => ['foo' => 'bar'],
             'canAddAnother' => true,
             'documents' => []
         ];

@@ -22,11 +22,13 @@ class BatchVehicleListGeneratorForPsvDiscsTest extends PHPUnit_Framework_TestCas
         $command = BatchVehicleListGeneratorForPsvDiscs::create(
             [
                 'bookmarks' => ['b1', 'b2'],
-                'queries' => ['q1', 'q2']
+                'queries' => ['q1', 'q2'],
+                'user' => 1
             ]
         );
 
         $this->assertEquals(['b1', 'b2'], $command->getBookmarks());
         $this->assertEquals(['q1', 'q2'], $command->getQueries());
+        $this->assertEquals(1, $command->getUser());
     }
 }

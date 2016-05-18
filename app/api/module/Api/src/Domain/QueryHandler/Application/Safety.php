@@ -50,7 +50,7 @@ class Safety extends AbstractQueryHandler
                 ]
             ],
             [
-                'safetyDocuments' => $safetyDocuments->toArray(),
+                'safetyDocuments' => $this->resultList($safetyDocuments),
                 'canHaveTrailers' => ($goodsOrPsv === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE),
                 'hasTrailers' => $application->getTotAuthTrailers() > 0
             ]

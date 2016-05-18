@@ -18,7 +18,7 @@ class CreateGoodsDiscs extends AbstractRawQuery
         'lv' => LicenceVehicle::class,
     ];
 
-    protected $queryTemplate = 'SELECT {lv.id}, :isCopy, NOW() FROM {lv}
+    protected $queryTemplate = 'SELECT {lv.id}, :isCopy, NOW(), :currentUserId FROM {lv}
         WHERE {lv.specifiedDate} IS NOT NULL
         AND {lv.removalDate} IS NULL
         AND {lv.interimApplication} IS NULL
@@ -29,7 +29,7 @@ class CreateGoodsDiscs extends AbstractRawQuery
     {
         // build query in two parts, as Insert part cannot use aliases
         return $this->buildQueryFromTemplate(
-            'INSERT INTO {gd} ({gd.licenceVehicle}, {gd.isCopy}, {gd.createdOn}) ', false
-        ) .$this->queryTemplate;
+            'INSERT INTO {gd} ({gd.licenceVehicle}, {gd.isCopy}, {gd.createdOn}, {gd.createdBy}) ', false
+        ) .parent::getQueryTemplate();
     }
 }

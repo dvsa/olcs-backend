@@ -22,7 +22,11 @@ class RemoveAllForLicence extends AbstractRawQuery
         'lv' => LicenceVehicle::class
     ];
 
-    protected $queryTemplate = 'UPDATE {lv} SET {lv.removalDate} = :removalDate WHERE {lv.licence} = :licence';
+    protected $queryTemplate = 'UPDATE {lv}
+      SET {lv.removalDate} = :removalDate,
+        {lv.lastModifiedOn} = NOW(),
+        {lv.lastModifiedBy} = :currentUserId
+      WHERE {lv.licence} = :licence';
 
     /**
      * {@inheritdoc}

@@ -34,11 +34,13 @@ class BatchVehicleListGeneratorForGoodsDiscsTest extends CommandHandlerTestCase
     {
         $licences = $this->getLicences();
         $data = [
-            'licences' => $licences
+            'licences' => $licences,
+            'user' => 1
         ];
         $queuedLicences = array_slice($licences, Batch::BATCH_SIZE);
         $options = [
             'licences' => $queuedLicences,
+            'user' => 1
         ];
 
         $command = Cmd::create($data);

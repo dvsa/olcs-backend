@@ -89,7 +89,6 @@ class CreateGrantFeeTest extends CommandHandlerTestCase
             'transportManager' => null,
             'operatingCentre' => null,
             'opposition' => null,
-            'isReadOnly' => null,
             'isScan' => 0,
             'issuedDate' => null,
             'metadata' => null

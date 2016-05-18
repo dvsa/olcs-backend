@@ -209,9 +209,10 @@ class GrantBusRegTest extends CommandHandlerTestCase
             new Result()
         );
 
-        $this->expectedSideEffect(
+        $this->expectedEmailQueueSideEffect(
             $emailSideEffectClass,
             ['id' => $ebsrId],
+            $ebsrId,
             new Result()
         );
 

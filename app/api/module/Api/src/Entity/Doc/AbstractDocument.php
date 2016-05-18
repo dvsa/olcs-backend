@@ -103,6 +103,7 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
 
@@ -182,15 +183,6 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     protected $isExternal = 0;
 
     /**
-     * Is read only
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="is_read_only", nullable=true)
-     */
-    protected $isReadOnly;
-
-    /**
      * Is scan
      *
      * @var boolean
@@ -215,6 +207,7 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
 
@@ -708,29 +701,6 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getIsExternal()
     {
         return $this->isExternal;
-    }
-
-    /**
-     * Set the is read only
-     *
-     * @param string $isReadOnly
-     * @return Document
-     */
-    public function setIsReadOnly($isReadOnly)
-    {
-        $this->isReadOnly = $isReadOnly;
-
-        return $this;
-    }
-
-    /**
-     * Get the is read only
-     *
-     * @return string
-     */
-    public function getIsReadOnly()
-    {
-        return $this->isReadOnly;
     }
 
     /**

@@ -14,6 +14,10 @@ class TaName extends DynamicBookmark
 {
     public function getQuery(array $data)
     {
+        if (empty($data['licence'])) {
+            return null;
+        }
+
         return Qry::create(['id' => $data['licence'], 'bundle' => ['trafficArea']]);
     }
 

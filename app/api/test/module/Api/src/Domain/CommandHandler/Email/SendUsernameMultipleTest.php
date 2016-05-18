@@ -93,7 +93,7 @@ class SendUsernameMultipleTest extends CommandHandlerTestCase
                     'loginId' => 'u1',
                     'url' => 'http://selfserve/'
                 ],
-                null
+                'default'
             );
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')
@@ -105,7 +105,7 @@ class SendUsernameMultipleTest extends CommandHandlerTestCase
                     'loginId' => 'u2',
                     'url' => 'http://selfserve/'
                 ],
-                null
+                'default'
             );
 
         $result = new Result();

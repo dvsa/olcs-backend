@@ -8,6 +8,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Irfo;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoPermitStock as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\IrfoPermitStock;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as IrfoGvPermitEntity;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPermitStock as IrfoPermitStockEntity;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPermitStock as Cmd;
@@ -54,6 +55,7 @@ class UpdateIrfoPermitStockTest extends CommandHandlerTestCase
         $irfoPermitStock2->setId(1002);
         $irfoPermitStock2->setSerialNo(103);
         $irfoPermitStock2->setStatus(IrfoPermitStockEntity::STATUS_VOID);
+        $irfoPermitStock2->setIrfoGvPermit(m::mock(IrfoGvPermitEntity::class));
 
         $this->repoMap['IrfoPermitStock']->shouldReceive('fetchByIds')
             ->once()
@@ -93,6 +95,9 @@ class UpdateIrfoPermitStockTest extends CommandHandlerTestCase
             $this->assertSame(
                 $this->refData[IrfoPermitStockEntity::STATUS_IN_STOCK],
                 $savedIrfoPermitStock->getStatus()
+            );
+            $this->assertNull(
+                $savedIrfoPermitStock->getIrfoGvPermit()
             );
         }
     }

@@ -1,17 +1,11 @@
 <?php
 
-/**
- * Application
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
-use Doctrine\ORM\Query\Expr\Join;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 
@@ -25,15 +19,6 @@ class Application extends AbstractRepository
     protected $entity = Entity::class;
 
     protected $alias = 'a';
-
-    public function fetchWithPreviousConvictionsUsingId($query)
-    {
-        $qb = $this->createQueryBuilder();
-        $this->buildDefaultQuery($qb, $query->getId())
-            ->with('previousConvictions');
-
-        return $qb->getQuery()->getSingleResult();
-    }
 
     /**
      * @param int $organisationId
@@ -68,13 +53,16 @@ class Application extends AbstractRepository
      * Extend the default resource bundle to include licence
      *
      * @param QueryBuilder $qb
-     * @param QryCmd $query
+     * @param int $id
      */
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {
         return $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->with('licence')->byId($id);
     }
 
+    /**
+     * @return \Dvsa\Olcs\Api\Entity\Application\Application
+     */
     public function fetchWithLicenceAndOc($applicationId)
     {
         $qb = $this->createQueryBuilder();

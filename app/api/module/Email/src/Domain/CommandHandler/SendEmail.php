@@ -212,17 +212,15 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
     }
 
     /**
-     * @param CommandInterface $command
+     * @param CommandInterface|SendEmailCmd $command
      * @return Result
      * @throws EmailNotSentException
      */
     public function handleCommand(CommandInterface $command)
     {
-        /**
-         * @var SendEmailCmd $command
-         */
-        if (empty($command->getBody())) {
-            throw new \RuntimeException('No message body has been set');
+        //make sure we have at least a plain text version
+        if (empty($command->getPlainBody())) {
+            throw new \RuntimeException('No message body has been set (plain text)');
         }
 
         $fromName = $command->getFromName();
@@ -257,12 +255,17 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
 
             $originalTo = implode(', ', (array)$command->getTo());
 
-            $subject = $originalTo .' : '. $subject;
+            $subject = $originalTo . ' : ' . $subject;
         }
 
         $subject = vsprintf($subject, $command->getSubjectVariables());
 
-        $body = $this->replaceUris($this->translate($command->getBody(), $command->getLocale()));
+        $plainBody = $this->replaceUris($this->translate($command->getPlainBody(), $command->getLocale()));
+        $htmlBody = $command->getHtmlBody();
+
+        if ($htmlBody !== null) {
+            $htmlBody = $this->replaceUris($this->translate($htmlBody, $command->getLocale()));
+        }
 
         /**
          * @var DocumentRepo $docRepo
@@ -282,7 +285,7 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
             ];
         }
 
-        $this->send($to, $subject, $body, $command->getHtml(), $fromEmail, $fromName, $cc, $bcc, $downloadedDocs);
+        $this->send($to, $subject, $plainBody, $htmlBody, $fromEmail, $fromName, $cc, $bcc, $downloadedDocs);
 
         $this->result->addMessage('Email sent');
         return $this->result;
@@ -291,17 +294,17 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
     /**
      * @param string $to
      * @param string $subject
-     * @param string $body
-     * @param bool $isHtml
+     * @param string $plain
+     * @param string $html
      * @param string $fromEmail
      * @param string $fromName
      * @param array $cc
      * @param array $bcc
      * @param array $docs
      */
-    protected function send($to, $subject, $body, $isHtml, $fromEmail, $fromName, array $cc, array $bcc, array $docs)
+    protected function send($to, $subject, $plain, $html, $fromEmail, $fromName, array $cc, array $bcc, array $docs)
     {
-        $this->getEmailService()->send($fromEmail, $fromName, $to, $subject, $body, $isHtml, $cc, $bcc, $docs);
+        $this->getEmailService()->send($fromEmail, $fromName, $to, $subject, $plain, $html, $cc, $bcc, $docs);
     }
 
     /**

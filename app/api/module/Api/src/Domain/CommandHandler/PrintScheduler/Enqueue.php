@@ -21,6 +21,8 @@ final class Enqueue extends AbstractCommandHandler implements \Dvsa\Olcs\Api\Dom
 
     protected $repoServiceName = 'Document';
 
+    protected $extraRepos = ['User'];
+
     public function handleCommand(CommandInterface $command)
     {
         /* @var $command \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue */
@@ -32,7 +34,7 @@ final class Enqueue extends AbstractCommandHandler implements \Dvsa\Olcs\Api\Dom
             );
         }
 
-        $user = $this->getCurrentUser();
+        $user = $command->getUser() ? $this->getRepo('User')->fetchById($command->getUser()) : $this->getCurrentUser();
         // if the user is in a team check the user has a team printer assigned
         if ($user->getTeam() && $user->getTeam()->getTeamPrinters()->isEmpty()) {
             throw new \Dvsa\Olcs\Api\Domain\Exception\BadRequestException(

@@ -2,11 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Controller;
 
-use Zend\Log\Logger;
+use Olcs\Logging\Log\Logger;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
-use Dvsa\Olcs\Api\Domain\ValidationHandler\ValidationHandlerInterface;
 
 /**
  * Generic Controller
@@ -33,7 +32,8 @@ class GenericController extends AbstractRestfulController
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
-            return $this->response()->error(500, [$ex->getMessage(), explode('#', $ex->getTraceAsString())]);
+            Logger::logException($ex, \Zend\Log\Logger::ERR);
+            return $this->response()->error(500, [$ex->getMessage()]);
         }
     }
 
@@ -63,7 +63,8 @@ class GenericController extends AbstractRestfulController
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
-            return $this->response()->error(500, [$ex->getMessage(), explode('#', $ex->getTraceAsString())]);
+            Logger::logException($ex, \Zend\Log\Logger::ERR);
+            return $this->response()->error(500, [$ex->getMessage()]);
         }
     }
 
@@ -86,7 +87,8 @@ class GenericController extends AbstractRestfulController
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
-            return $this->response()->error(500, [$ex->getMessage(), explode('#', $ex->getTraceAsString())]);
+            Logger::logException($ex, \Zend\Log\Logger::ERR);
+            return $this->response()->error(500, [$ex->getMessage()]);
         }
     }
 
@@ -107,7 +109,8 @@ class GenericController extends AbstractRestfulController
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
-            return $this->response()->error(500, [$ex->getMessage(), explode('#', $ex->getTraceAsString())]);
+            Logger::logException($ex, \Zend\Log\Logger::ERR);
+            return $this->response()->error(500, [$ex->getMessage()]);
         }
     }
 
@@ -126,7 +129,8 @@ class GenericController extends AbstractRestfulController
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
-            return $this->response()->error(500, [$ex->getMessage(), explode('#', $ex->getTraceAsString())]);
+            Logger::logException($ex, \Zend\Log\Logger::ERR);
+            return $this->response()->error(500, [$ex->getMessage()]);
         }
     }
 
@@ -145,7 +149,8 @@ class GenericController extends AbstractRestfulController
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
-            return $this->response()->error(500, [$ex->getMessage(), explode('#', $ex->getTraceAsString())]);
+            Logger::logException($ex, \Zend\Log\Logger::ERR);
+            return $this->response()->error(500, [$ex->getMessage()]);
         }
     }
 
@@ -161,7 +166,8 @@ class GenericController extends AbstractRestfulController
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
-            return $this->response()->error(500, [$ex->getMessage(), explode('#', $ex->getTraceAsString())]);
+            Logger::logException($ex, \Zend\Log\Logger::ERR);
+            return $this->response()->error(500, [$ex->getMessage()]);
         }
     }
 
