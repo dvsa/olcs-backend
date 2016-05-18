@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Create Task
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Task;
 
 use Doctrine\ORM\Query;
@@ -91,9 +85,10 @@ final class CreateTask extends AbstractCommandHandler
          * Multiple rules are just as useless as no rules according to AC
          */
         if (count($rules) !== 1) {
-            return $this->assignToDefault($task);
+            $this->assignToDefault($task);
+        } else {
+            $this->assignByRule($task, $rules[0], $useAlphaSplit);
         }
-        $this->assignByRule($task, $rules[0], $useAlphaSplit);
     }
 
     /**
@@ -104,13 +99,15 @@ final class CreateTask extends AbstractCommandHandler
      */
     private function assignToDefault(Task $task)
     {
-        $teamId = $this->getRepo('SystemParameter')->fetchValue('task.default_team');
-        $userId = $this->getRepo('SystemParameter')->fetchValue('task.default_user');
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\SystemParameter $repo */
+        $repo = $this->getRepo('SystemParameter');
 
+        $teamId = $repo->fetchValue('task.default_team');
         if ($teamId !== null) {
             $task->setAssignedToTeam($this->getRepo()->getReference(Team::class, $teamId));
         }
 
+        $userId = $repo->fetchValue('task.default_user');
         if ($userId !== null) {
             $task->setAssignedToUser($this->getRepo()->getReference(User::class, $userId));
         }
@@ -179,23 +176,40 @@ final class CreateTask extends AbstractCommandHandler
      */
     protected function getRulesBasedOnLicence(Task $task)
     {
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\TaskAllocationRule $repo */
         $repo = $this->getRepo('TaskAllocationRule');
-        $operatorType = $task->getLicence()->getGoodsOrPsv()->getId();
-        $trafficArea = $task->getLicence()->getTrafficArea()->getId();
+
+        $licence = $task->getLicence();
+        $app = $task->getApplication();
+
+        $trafficArea = $licence->getTrafficArea()->getId();
         $categoryId = $task->getCategory()->getId();
+
+        //  define operator Type
+        $operatorType = null;
+
+        $obj = ($licence ?: $app);
+        if ($obj) {
+            $goodsOrPsv = $obj->getGoodsOrPsv();
+
+            if ($goodsOrPsv !== null) {
+                $operatorType = $goodsOrPsv->getId();
+            }
+        }
+
         // Goods Licence
         if ($operatorType === Licence::LICENCE_CATEGORY_GOODS_VEHICLE) {
-
-            $rules = $this->getRepo('TaskAllocationRule')->fetchByParameters(
+            $rules = $repo->fetchByParameters(
                 $categoryId,
                 Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 $trafficArea,
-                $task->getLicence()->getOrganisation()->isMlh()
+                $licence->getOrganisation()->isMlh()
             );
             if (count($rules) >= 1) {
                 return $rules;
             }
         }
+
         // PSV licence or no rules found for Goods Licence
         // search rules by category, operator type and traffic area
         $rules = $repo->fetchByParameters(
@@ -206,6 +220,7 @@ final class CreateTask extends AbstractCommandHandler
         if (count($rules) >= 1) {
             return $rules;
         }
+
         // search rules by category and traffic area
         $rules = $repo->fetchByParameters(
             $categoryId,
@@ -215,6 +230,7 @@ final class CreateTask extends AbstractCommandHandler
         if (count($rules) >= 1) {
             return $rules;
         }
+
         // search rules by category and operator type
         $rules = $repo->fetchByParameters(
             $categoryId,
@@ -223,6 +239,7 @@ final class CreateTask extends AbstractCommandHandler
         if (count($rules) >= 1) {
             return $rules;
         }
+
         // search rules by category only
         return $repo->fetchByParameters($categoryId);
     }
