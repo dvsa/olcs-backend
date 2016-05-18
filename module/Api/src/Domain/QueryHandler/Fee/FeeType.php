@@ -27,7 +27,7 @@ class FeeType extends AbstractQueryHandler
             $feeType,
             [],
             [
-                'showQuantity' => $feeType->getShowQuantity()
+                'showQuantity' => $feeType->isShowQuantity()
             ]
         );
     }
