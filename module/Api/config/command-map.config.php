@@ -155,6 +155,9 @@ return [
     TransferCommand\Cases\Si\Applied\Delete::class => CommandHandler\Cases\Si\Applied\Delete::class,
     TransferCommand\Cases\Si\Applied\Create::class => CommandHandler\Cases\Si\Applied\Create::class,
     TransferCommand\Cases\Si\Applied\Update::class => CommandHandler\Cases\Si\Applied\Update::class,
+    TransferCommand\Cases\Si\CreateSi::class => CommandHandler\Cases\Si\CreateSi::class,
+    TransferCommand\Cases\Si\DeleteSi::class => CommandHandler\Cases\Si\DeleteSi::class,
+    TransferCommand\Cases\Si\UpdateSi::class => CommandHandler\Cases\Si\UpdateSi::class,
     TransferCommand\Cases\Si\SendResponse::class => CommandHandler\Cases\Si\SendResponse::class,
     TransferCommand\Cases\Si\ComplianceEpisode::class => CommandHandler\Cases\Si\ComplianceEpisode::class,
 

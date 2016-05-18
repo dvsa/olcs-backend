@@ -3,11 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Domain\Repository\SeriousInfringement as SiRepo;
-use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\Expr\Comparison;
-use Mockery as m;
+use Dvsa\Olcs\Transfer\Query\Cases\Si\SiList as SiListQry;
 
 /**
  * SeriousInfringementTest
@@ -31,7 +27,7 @@ class SeriousInfringementTest extends RepositoryTestCase
             ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
             ->shouldReceive('withRefdata')->once()->andReturnSelf();
 
-        $dto = \Dvsa\Olcs\Transfer\Query\Cases\Si\GetList::create(['case' => 812]);
+        $dto = SiListQry::create(['case' => 812]);
         $this->sut->shouldReceive('fetchPaginatedList')->andReturn('RESULTS');
 
         $this->assertEquals('RESULTS', $this->sut->fetchList($dto));
