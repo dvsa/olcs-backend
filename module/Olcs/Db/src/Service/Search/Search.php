@@ -147,9 +147,6 @@ class Search
                 $postcodeQuery = new Query\Match();
                 $postcodeQuery->setField('postcode', $search);
                 $queryBool->addShould($postcodeQuery);
-
-                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
-
                 break;
             case 'application':
                 $correspondencePostcodeQuery = new Query\Match();
