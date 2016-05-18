@@ -12,9 +12,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerLicence\UpdateForRespons
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TransportManagerLicenceRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\TransportManagerLicence\UpdateForResponsibilities as Cmd;
-use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Entity\User\Team;
-use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntity;
 use Doctrine\ORM\Query;
 
@@ -29,10 +26,6 @@ class UpdateForResponsibilitiesTest extends CommandHandlerTestCase
     {
         $this->sut = new UpdateForResp();
         $this->mockRepo('TransportManagerLicence', TransportManagerLicenceRepo::class);
-
-        $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
-        ];
 
         parent::setUp();
     }
@@ -54,8 +47,6 @@ class UpdateForResponsibilitiesTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $this->mockAuthService();
-
         $id = 1;
         $data = [
             'id' => $id,
@@ -98,7 +89,6 @@ class UpdateForResponsibilitiesTest extends CommandHandlerTestCase
                 6,
                 7,
                 'ai',
-                m::type(User::class),
                 1
             )
             ->once()
@@ -129,20 +119,5 @@ class UpdateForResponsibilitiesTest extends CommandHandlerTestCase
                 ]
             ]
         );
-    }
-
-    protected function mockAuthService()
-    {
-        /** @var Team $mockTeam */
-        $mockTeam = m::mock(Team::class)->makePartial();
-        $mockTeam->setId(2);
-
-        /** @var User $mockUser */
-        $mockUser = m::mock(User::class)->makePartial();
-        $mockUser->setId(1);
-        $mockUser->setTeam($mockTeam);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($mockUser);
     }
 }

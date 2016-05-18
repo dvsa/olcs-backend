@@ -23,6 +23,13 @@ class GetList extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
+        $continuation = $this->getRepo('Continuation')->fetchWithTa($query->getContinuationId());
+        $header = [
+            'year' => $continuation->getYear(),
+            'month' => $continuation->getMonth(),
+            'name' => $continuation->getTrafficArea()->getName()
+        ];
+
         $results = $this->getRepo()->fetchDetails(
             $query->getContinuationId(),
             $query->getLicenceStatus(),
@@ -30,11 +37,22 @@ class GetList extends AbstractQueryHandler
             $query->getMethod(),
             $query->getStatus()
         );
-        $header = $this->getRepo('Continuation')->fetchWithTa($query->getContinuationId());
         return [
-            'result' => $results,
-            'count' => count($results),
-            'header' => $header
+            'results' => $this->resultList(
+                $results,
+                [
+                    'continuation',
+                    'status',
+                    'licence' => [
+                        'status',
+                        'organisation',
+                        'licenceType',
+                        'goodsOrPsv'
+                    ]
+                ]
+            ),
+            'header' => $header,
+            'count' => count($results)
         ];
     }
 }

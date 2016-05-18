@@ -23,7 +23,8 @@ class ExpireAllForLicence extends AbstractRawQuery
     ];
 
     protected $queryTemplate = 'UPDATE {cl}
-      SET {cl.status} = :status, {cl.expiredDate} = :expiredDate
+      SET {cl.status} = :status, {cl.expiredDate} = :expiredDate,
+        {cl.lastModifiedOn} = NOW(), {cl.lastModifiedBy} = :currentUserId
       WHERE {cl.expiredDate} IS NULL AND {cl.licence} = :licence';
 
     /**

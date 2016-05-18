@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * SystemInfoMessage Abstract Entity
@@ -14,10 +15,13 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="system_info_message",
  *    indexes={
  *        @ORM\Index(name="ix_system_info_message_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_system_info_message_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_system_info_message_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_system_info_message_is_internal_start_date_end_date",
+     *     columns={"is_internal","start_date","end_date"})
  *    }
  * )
  */
@@ -26,21 +30,13 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     use BundleSerializableTrait;
 
     /**
-     * Activate date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="activate_date", nullable=false)
-     */
-    protected $activateDate;
-
-    /**
      * Created by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
 
@@ -54,6 +50,15 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     protected $createdOn;
 
     /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
+
+    /**
      * Description
      *
      * @var string
@@ -61,6 +66,15 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
      * @ORM\Column(type="string", name="description", length=1024, nullable=false)
      */
     protected $description;
+
+    /**
+     * End date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="end_date", nullable=false)
+     */
+    protected $endDate;
 
     /**
      * Identifier - Id
@@ -83,15 +97,6 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     protected $importance;
 
     /**
-     * Is deleted
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_deleted", nullable=false, options={"default": 0})
-     */
-    protected $isDeleted = 0;
-
-    /**
      * Is internal
      *
      * @var string
@@ -107,6 +112,7 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
 
@@ -120,6 +126,15 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     protected $lastModifiedOn;
 
     /**
+     * Start date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="start_date", nullable=false)
+     */
+    protected $startDate;
+
+    /**
      * Version
      *
      * @var int
@@ -128,29 +143,6 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
      * @ORM\Version
      */
     protected $version = 1;
-
-    /**
-     * Set the activate date
-     *
-     * @param \DateTime $activateDate
-     * @return SystemInfoMessage
-     */
-    public function setActivateDate($activateDate)
-    {
-        $this->activateDate = $activateDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the activate date
-     *
-     * @return \DateTime
-     */
-    public function getActivateDate()
-    {
-        return $this->activateDate;
-    }
 
     /**
      * Set the created by
@@ -199,6 +191,29 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     }
 
     /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate
+     * @return SystemInfoMessage
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate()
+    {
+        return $this->deletedDate;
+    }
+
+    /**
      * Set the description
      *
      * @param string $description
@@ -219,6 +234,29 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set the end date
+     *
+     * @param \DateTime $endDate
+     * @return SystemInfoMessage
+     */
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the end date
+     *
+     * @return \DateTime
+     */
+    public function getEndDate()
+    {
+        return $this->endDate;
     }
 
     /**
@@ -265,29 +303,6 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     public function getImportance()
     {
         return $this->importance;
-    }
-
-    /**
-     * Set the is deleted
-     *
-     * @param string $isDeleted
-     * @return SystemInfoMessage
-     */
-    public function setIsDeleted($isDeleted)
-    {
-        $this->isDeleted = $isDeleted;
-
-        return $this;
-    }
-
-    /**
-     * Get the is deleted
-     *
-     * @return string
-     */
-    public function getIsDeleted()
-    {
-        return $this->isDeleted;
     }
 
     /**
@@ -357,6 +372,29 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     public function getLastModifiedOn()
     {
         return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the start date
+     *
+     * @param \DateTime $startDate
+     * @return SystemInfoMessage
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the start date
+     *
+     * @return \DateTime
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
     }
 
     /**

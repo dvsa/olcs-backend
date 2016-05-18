@@ -20,12 +20,10 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Task\Task;
-use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\Fee\RecommendWaive as RecommendWaiveCmd;
 use Dvsa\Olcs\Transfer\Command\Fee\ApproveWaive as ApproveWaiveCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Create Fee Test
@@ -39,15 +37,7 @@ class CreateFeeTest extends CommandHandlerTestCase
         $this->sut = new CreateFee();
         $this->mockRepo('Fee', Fee::class);
 
-        $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
-        ];
-
         parent::setUp();
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('getIdentity->getUser')
-            ->andReturn($this->references[User::class][1]);
     }
 
     protected function initReferences()
@@ -80,9 +70,6 @@ class CreateFeeTest extends CommandHandlerTestCase
             IrfoPsvAuth::class => [
                 66 => m::mock(IrfoPsvAuth::class)
             ],
-            User::class => [
-                1 => m::mock(User::class)
-            ],
         ];
 
         parent::initReferences();
@@ -100,7 +87,6 @@ class CreateFeeTest extends CommandHandlerTestCase
             'busReg' => 44,
             'invoicedDate' => '2015-01-01',
             'description' => 'Some fee',
-            'user' => 1,
         ];
 
         $this->mapReference(FeeType::class, 99)
@@ -150,7 +136,6 @@ class CreateFeeTest extends CommandHandlerTestCase
         $this->assertEquals(0, $savedFee->getVatAmount());
         $this->assertSame($this->refData[FeeEntity::STATUS_OUTSTANDING], $savedFee->getFeeStatus());
         $this->assertSame($this->references[FeeType::class][99], $savedFee->getFeeType());
-        $this->assertSame($this->references[User::class][1], $savedFee->getCreatedBy());
     }
 
     public function testHandleCommandForApplicationFee()

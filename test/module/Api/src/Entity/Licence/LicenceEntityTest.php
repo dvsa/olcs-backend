@@ -935,4 +935,55 @@ class LicenceEntityTest extends EntityTester
         $this->assertEquals($outstandingApplications, $licence->getOutstandingApplications(true));
 
     }
+
+    /**
+     * @dataProvider firstApplicationIdProvider
+     */
+    public function testGetFirstApplicationId($status, $firstApplicationId)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getStatus')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->once()
+                ->andReturn($status)
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('getId')
+            ->andReturn($firstApplicationId)
+            ->getMock();
+
+        $applications = new ArrayCollection();
+        $applications->add($application);
+        $licence->setApplications($applications);
+        $this->assertEquals($firstApplicationId, $licence->getFirstApplicationId());
+    }
+
+    public function firstApplicationIdProvider()
+    {
+        return [
+            [Entity::LICENCE_STATUS_NOT_SUBMITTED, 1],
+            [Entity::LICENCE_STATUS_VALID, null],
+        ];
+    }
+
+    public function testGetApplicationsByStatus()
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+
+        $allApplications = m::mock(ArrayCollection::class);
+        $outstandingApplications = m::mock(ArrayCollection::class);
+        $licence->setApplications($allApplications);
+
+        $allApplications->shouldReceive('matching')
+            ->once()
+            ->with(m::type(Criteria::class))
+            ->andReturn($outstandingApplications);
+
+        $this->assertEquals($outstandingApplications, $licence->getApplicationsByStatus(['foo']));
+    }
 }

@@ -183,64 +183,20 @@ class SearchTest extends TestCase
         $sut->updateVehicleSection26($ids, $section26Value);
     }
 
-    public function testSearchPerson()
+    /**
+     * @dataProvider searchIndexProvider
+     *
+     * @param $index
+     * @param $expectedQuery
+     */
+    public function testSearchIndex($index, $expectedQuery)
     {
         $sut = new SearchService();
 
-        $expectedQuery = [
-            'query' => [
-                'bool' => [
-                    'should' => [
-                        [
-                            'match' => [
-                                '_all' => 'SMITH'
-                            ]
-                        ],
-                        [
-                            'match' => [
-                                'vrm' => 'SMITH'
-                            ]
-                        ],
-                        [
-                            'match' => [
-                                'correspondence_postcode' => 'SMITH'
-                            ]
-                        ],
-                        [
-                            'wildcard' => [
-                                'org_name_wildcard' => [
-                                    'value' => 'smith*',
-                                    'boost' => 2.0,
-                                ]
-                            ]
-                        ],
-                        [
-                            'wildcard' => [
-                                'person_family_name_wildcard' => [
-                                    'value' => '*smith*',
-                                    'boost' => 2.0,
-                                ]
-                            ]
-                        ],
-                        [
-                            'wildcard' => [
-                                'person_forename_wildcard' => [
-                                    'value' => '*smith*',
-                                    'boost' => 2.0,
-                                ]
-                            ]
-                        ],
-                    ],
-                ]
-            ],
-            'size' => 10,
-            'from' => 0
-        ];
-
         $mockClient = m::mock(\Elastica\Client::class);
         $mockClient->shouldReceive('request')->once()->andReturnUsing(
-            function ($path, $method, $query, $params) use ($expectedQuery) {
-                $this->assertSame('person/_search', $path);
+            function ($path, $method, $query, $params) use ($index, $expectedQuery) {
+                $this->assertSame($index . '/_search', $path);
                 $this->assertSame('GET', $method);
                 $this->assertSame($expectedQuery, $query);
                 $this->assertSame([], $params);
@@ -253,72 +209,311 @@ class SearchTest extends TestCase
 
         $sut->setClient($mockClient);
 
-        $sut->search('SMITH', ['person']);
+        $sut->search('FOO BAR', [$index]);
     }
 
-
-    public function testSearchBusReg()
+    public function searchIndexProvider()
     {
-        $sut = new SearchService();
+        return [
+            $this->getExpectedAddressSearch(),
+            $this->getExpectedApplicationSearch(),
+            $this->getExpectedCaseSearch(),
+            $this->getExpectedOperatorSearch(),
+            $this->getExpectedIrfoSearch(),
+            $this->getExpectedLicenceSearch(),
+            $this->getExpectedPsvDiscSearch(),
+            $this->getExpectedPublicationSearch(),
+            $this->getExpectedUserSearch(),
+            $this->getExpectedVehicleCurrentSearch(),
+            $this->getExpectedVehicleRemovedSearch(),
+            $this->getExpectedPersonSearch(),
+            $this->getExpectedBusRegSearch()
+        ];
+    }
 
-        $expectedQuery = [
-            'query' => [
-                'bool' => [
-                    'should' => [
-                        [
-                            'match' => [
-                                '_all' => 'SMITH'
-                            ]
-                        ],
-                        [
-                            'match' => [
-                                'vrm' => 'SMITH'
-                            ]
-                        ],
-                        [
-                            'match' => [
-                                'correspondence_postcode' => 'SMITH'
-                            ]
-                        ],
-                        [
-                            'wildcard' => [
-                                'org_name_wildcard' => [
-                                    'value' => 'smith*',
-                                    'boost' => 2.0,
-                                ]
-                            ]
-                        ],
-                        [
-                            'match' => [
-                                'reg_no' => [
-                                    'query' => 'SMITH',
-                                    'boost' => 2.0,
-                                ]
-                            ]
+    private function getExpectedAddressSearch()
+    {
+        return [
+            'address',
+            [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateMatch('postcode', 'FOO BAR'),
+                        ]
+                    ]
+                ],
+                'size' => 10,
+                'from' => 0
+            ]
+        ];
+    }
+
+    private function getExpectedApplicationSearch()
+    {
+        return [
+            'application',
+            [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateMatch('correspondence_postcode', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', 2.0)
+                        ]
+                    ]
+                ],
+                'size' => 10,
+                'from' => 0
+            ]
+        ];
+    }
+
+    private function getExpectedCaseSearch()
+    {
+        return [
+            'case',
+            [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateMatch('correspondence_postcode', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        ]
+                    ]
+                ],
+                'size' => 10,
+                'from' => 0
+            ]
+        ];
+    }
+
+    private function getExpectedOperatorSearch()
+    {
+        return [
+            'operator',
+            [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateMatch('postcode', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        ]
+                    ]
+                ],
+                'size' => 10,
+                'from' => 0
+            ]
+        ];
+    }
+
+    private function getExpectedIrfoSearch()
+    {
+        return [
+            'irfo',
+            [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        ]
+                    ]
+                ],
+                'size' => 10,
+                'from' => 0
+            ]
+        ];
+    }
+
+    private function getExpectedLicenceSearch()
+    {
+        return [
+            'licence',
+            [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        ]
+                    ]
+                ],
+                'size' => 10,
+                'from' => 0
+            ]
+        ];
+    }
+
+    private function getExpectedPsvDiscSearch()
+    {
+        return [
+            'psv_disc',
+            [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        ]
+                    ]
+                ],
+                'size' => 10,
+                'from' => 0
+            ]
+        ];
+    }
+
+    private function getExpectedPublicationSearch()
+    {
+        return [
+            'publication',
+            [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        ]
+                    ]
+                ],
+                'size' => 10,
+                'from' => 0
+            ]
+        ];
+    }
+
+    private function getExpectedUserSearch()
+    {
+        return [
+            'user',
+            [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        ]
+                    ]
+                ],
+                'size' => 10,
+                'from' => 0
+            ]
+        ];
+    }
+
+    private function getExpectedVehicleCurrentSearch()
+    {
+        return [
+            'vehicle_current',
+            [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateMatch('vrm', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        ]
+                    ]
+                ],
+                'size' => 10,
+                'from' => 0
+            ]
+        ];
+    }
+
+    private function getExpectedVehicleRemovedSearch()
+    {
+        return [
+            'vehicle_removed',
+            [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateMatch('vrm', 'FOO BAR'),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        ]
+                    ]
+                ],
+                'size' => 10,
+                'from' => 0
+            ]
+        ];
+    }
+
+    private function getExpectedPersonSearch()
+    {
+        return [
+            'person',
+            [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateWildcard('person_family_name_wildcard', '*foo bar*', '2.0'),
+                            $this->generateWildcard('person_forename_wildcard', '*foo bar*', '2.0'),
+                            $this->generateWildcard('person_family_name_wildcard', '*foo*', '2.0'),
+                            $this->generateWildcard('person_forename_wildcard', '*foo*', '2.0'),
+                            $this->generateWildcard('person_family_name_wildcard', '*bar*', '2.0'),
+                            $this->generateWildcard('person_forename_wildcard', '*bar*', '2.0'),
                         ],
                     ]
-                ]
-            ],
-            'size' => 10,
-            'from' => 0
+                ],
+                'size' => 10,
+                'from' => 0
+            ]
         ];
+    }
 
-        $mockClient = m::mock(\Elastica\Client::class);
-        $mockClient->shouldReceive('request')->once()->andReturnUsing(
-            function ($path, $method, $query, $params) use ($expectedQuery) {
-                $this->assertSame('busreg/_search', $path);
-                $this->assertSame('GET', $method);
-                $this->assertSame($expectedQuery, $query);
-                $this->assertSame([], $params);
+    private function getExpectedBusRegSearch()
+    {
+        return [
+            'busreg',
+            [
+                'query' => [
+                    'bool' => [
+                        'should' => [
 
-                $searchResponse = m::mock(\Elastica\Response::class);
-                $searchResponse->shouldReceive('getData')->andReturn([]);
-                return $searchResponse;
-            }
-        );
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateMatch(
+                                'reg_no',
+                                [
+                                    'query' => 'FOO BAR',
+                                    'boost' => 2.0,
+                                ]
+                            ),
+                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        ]
+                    ]
+                ],
+                'size' => 10,
+                'from' => 0
+            ]
+        ];
+    }
 
-        $sut->setClient($mockClient);
+    private function generateMatch($field, $value)
+    {
+        return [
+            'match' => [
+                $field => $value,
+            ]
+        ];
+    }
 
-        $sut->search('SMITH', ['busreg']);
+    private function generateWildcard($name, $value, $boost)
+    {
+        return [
+            'wildcard' => [
+                $name => [
+                    'value' => $value,
+                    'boost' => (float) $boost,
+                ]
+            ]
+        ];
     }
 }

@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
-use Dvsa\Olcs\Transfer\Command\Scan\CreateDocument as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Scan\CreateDocument as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Scan\CreateDocument;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -102,7 +101,6 @@ class CreateDocumentTest extends CommandHandlerTestCase
             'filename'         => 'foo.pdf',
             'description'      => 'DESCRIPTION',
             'isExternal'       => false,
-            'isReadOnly'       => true,
             'isScan'           => true,
             'licence'          => 61,
             'busReg'           => 62,

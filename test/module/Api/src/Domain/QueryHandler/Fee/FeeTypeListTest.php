@@ -1,21 +1,18 @@
 <?php
 
-/**
- * FeeType List Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Fee;
 
 use Doctrine\ORM\Query as DoctrineQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Fee\FeeTypeList as QueryHandler;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType as Entity;
-use Dvsa\Olcs\Api\Entity\Fee\System\RefData;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Query\Fee\FeeTypeList as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -27,6 +24,15 @@ use Mockery as m;
  */
 class FeeTypeListTest extends QueryHandlerTestCase
 {
+    const IRFO_FEE_REF_ID = 'IRFO0001';
+
+    const FEE_REF_1_ID = 'APP';
+    const FEE_REF_2_ID = 'GRANT';
+
+    const FEE_DESC = 'fee type ';
+
+    const ORG_ID = 9999;
+
     public function setUp()
     {
         $this->sut = new QueryHandler();
@@ -37,319 +43,97 @@ class FeeTypeListTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQueryNonIrfo()
+    public function testTrafficAreaApplication()
     {
         $query = Qry::create([]);
 
-        $feeTypeRefData = m::mock(RefData::class)
-            ->shouldReceive('getId')
-            ->andReturn(99)
-            ->getMock();
-
-        $feeType1 = m::mock(Entity::class)
-            ->shouldReceive('getTrafficArea')
-            ->andReturn(null)
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->shouldReceive('getDescription')
-            ->andReturn('fee type 1')
-            ->shouldReceive('getIrfoFeeType')
-            ->andReturn(null)
-            ->shouldReceive('getFeeType')
-            ->andReturn($feeTypeRefData)
-            ->shouldReceive('getEffectiveFrom')
-            ->andReturn('2015-10-23')
-            ->shouldReceive('serialize')
-            ->andReturn(['id' => 1])
-            ->getMock();
-        $feeType2 = m::mock(Entity::class)
-            ->shouldReceive('getTrafficArea')
-            ->andReturn(null)
-            ->shouldReceive('getId')
-            ->andReturn(2)
-            ->shouldReceive('getDescription')
-            ->andReturn('fee type 2')
-            ->shouldReceive('getIrfoFeeType')
-            ->andReturn(null)
-            ->shouldReceive('getFeeType')
-            ->andReturn($feeTypeRefData)
-            ->shouldReceive('getEffectiveFrom')
-            ->andReturn('2014-10-23')
-            ->shouldReceive('serialize')
-            ->andReturn(['id' => 2])
-            ->getMock();
-        $mockList = new \ArrayObject([$feeType1, $feeType2]);
+        $mockTrafficArea = m::mock(TrafficArea::class);
 
         $this->repoMap['FeeType']
             ->shouldReceive('getReference')
+            ->with(Licence::class, null)
             ->andReturn(null)
-            ->shouldReceive('fetchList')
-            ->with($query, DoctrineQuery::HYDRATE_OBJECT)
-            ->once()
-            ->andReturn($mockList)
-            ->shouldReceive('fetchCount')
-            ->with($query)
-            ->andReturn(2);
-
-        $result = $this->sut->handleQuery($query);
-
-        $expected = [
-            'result' => [
-                ['id' => 1],
-            ],
-            'count' => 1,
-            'valueOptions' => [
-                'feeType' => [
-                    // we should only get the latest as feeType1 and feeType2 have the same feeType
-                    1 => 'fee type 1',
-                ],
-                'irfoGvPermit' => [],
-                'irfoPsvAuth' => [],
-            ],
-         ];
-
-        $this->assertEquals($expected, $result);
-    }
-
-    public function testHandleQueryNonIrfoTrafficAreaLicence()
-    {
-        $query = Qry::create([]);
-
-        $feeTypeRefData = m::mock(RefData::class)
-            ->shouldReceive('getId')
-            ->andReturn(99)
-            ->getMock();
-
-        $mockTrafficArea = m::mock(\Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea::class);
-
-        $feeType1 = m::mock(Entity::class)
-            ->shouldReceive('getTrafficArea')
-            ->andReturn(null)
-            ->shouldReceive('getId')
-            ->andReturn(34)
-            ->shouldReceive('getDescription')
-            ->andReturn('fee type 1')
-            ->shouldReceive('getIrfoFeeType')
-            ->andReturn(null)
-            ->shouldReceive('getFeeType')
-            ->andReturn($feeTypeRefData)
-            ->shouldReceive('getEffectiveFrom')
-            ->andReturn('2015-10-23')
-            ->shouldReceive('serialize')
-            ->andReturn(['id' => 1])
-            ->getMock();
-        $feeType2 = m::mock(Entity::class)
-            ->shouldReceive('getTrafficArea')
-            ->andReturn($mockTrafficArea)
-            ->shouldReceive('getId')
-            ->andReturn(24)
-            ->shouldReceive('getDescription')
-            ->andReturn('fee type 2')
-            ->shouldReceive('getIrfoFeeType')
-            ->andReturn(null)
-            ->shouldReceive('getFeeType')
-            ->andReturn($feeTypeRefData)
-            ->shouldReceive('getEffectiveFrom')
-            ->andReturn('2014-10-23')
-            ->shouldReceive('serialize')
-            ->andReturn(['id' => 24])
-            ->getMock();
-        $mockList = new \ArrayObject([$feeType1, $feeType2]);
-
-        $this->repoMap['FeeType']
+            //
             ->shouldReceive('getReference')
+            ->with(Application::class, null)
             ->andReturn(
-                m::mock()->shouldReceive('getTrafficArea')->andReturn($mockTrafficArea)->getMock()
+                m::mock()->shouldReceive('getLicence')
+                    ->andReturn(
+                        m::mock()->shouldReceive('getTrafficArea')
+                            ->andReturn($mockTrafficArea)
+                            ->getMock()
+                    )
+                    ->getMock()
             )
+            //
             ->shouldReceive('fetchList')
             ->with($query, DoctrineQuery::HYDRATE_OBJECT)
             ->once()
-            ->andReturn($mockList)
-            ->shouldReceive('fetchCount')
-            ->with($query)
-            ->andReturn(2);
+            ->andReturn(new \ArrayObject());
 
         $result = $this->sut->handleQuery($query);
 
         $expected = [
-            'result' => [
-                ['id' => 24],
-            ],
-            'count' => 1,
+            'result' => [],
+            'count' => 0,
             'valueOptions' => [
-                'feeType' => [
-                    // we should only get the latest as feeType1 and feeType2 have the same feeType
-                    24 => 'fee type 2',
-                ],
                 'irfoGvPermit' => [],
                 'irfoPsvAuth' => [],
             ],
-         ];
+        ];
 
-        $this->assertEquals($expected, $result);
+        static::assertEquals($expected, $result);
     }
 
-    public function testHandleQueryNonIrfoTrafficAreaApplication()
+    public function testIrfo()
     {
-        $query = Qry::create([]);
-
-        $feeTypeRefData = m::mock(RefData::class)
-            ->shouldReceive('getId')
-            ->andReturn(99)
-            ->getMock();
-
-        $mockTrafficArea = m::mock(\Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea::class);
-
-        $feeType1 = m::mock(Entity::class)
-            ->shouldReceive('getTrafficArea')
-            ->andReturn(null)
-            ->shouldReceive('getId')
-            ->andReturn(34)
-            ->shouldReceive('getDescription')
-            ->andReturn('fee type 1')
-            ->shouldReceive('getIrfoFeeType')
-            ->andReturn(null)
-            ->shouldReceive('getFeeType')
-            ->andReturn($feeTypeRefData)
-            ->shouldReceive('getEffectiveFrom')
-            ->andReturn('2015-10-23')
-            ->shouldReceive('serialize')
-            ->andReturn(['id' => 1])
-            ->getMock();
-        $feeType2 = m::mock(Entity::class)
-            ->shouldReceive('getTrafficArea')
-            ->andReturn($mockTrafficArea)
-            ->shouldReceive('getId')
-            ->andReturn(24)
-            ->shouldReceive('getDescription')
-            ->andReturn('fee type 2')
-            ->shouldReceive('getIrfoFeeType')
-            ->andReturn(null)
-            ->shouldReceive('getFeeType')
-            ->andReturn($feeTypeRefData)
-            ->shouldReceive('getEffectiveFrom')
-            ->andReturn('2014-10-23')
-            ->shouldReceive('serialize')
-            ->andReturn(['id' => 24])
-            ->getMock();
-        $mockList = new \ArrayObject([$feeType1, $feeType2]);
-
-        $this->repoMap['FeeType']
-            ->shouldReceive('getReference')
-            ->with(\Dvsa\Olcs\Api\Entity\Licence\Licence::class, null)
-            ->andReturn(null)
-            ->shouldReceive('getReference')
-            ->with(\Dvsa\Olcs\Api\Entity\Application\Application::class, null)
-            ->andReturn(
-                m::mock()->shouldReceive('getLicence')->andReturn(
-                    m::mock()->shouldReceive('getTrafficArea')->andReturn($mockTrafficArea)->getMock()
-                )->getMock()
-            )
-            ->shouldReceive('fetchList')
-            ->with($query, DoctrineQuery::HYDRATE_OBJECT)
-            ->once()
-            ->andReturn($mockList)
-            ->shouldReceive('fetchCount')
-            ->with($query)
-            ->andReturn(2);
-
-        $result = $this->sut->handleQuery($query);
-
-        $expected = [
-            'result' => [
-                ['id' => 24],
-            ],
-            'count' => 1,
-            'valueOptions' => [
-                'feeType' => [
-                    // we should only get the latest as feeType1 and feeType2 have the same feeType
-                    24 => 'fee type 2',
-                ],
-                'irfoGvPermit' => [],
-                'irfoPsvAuth' => [],
-            ],
-         ];
-
-        $this->assertEquals($expected, $result);
-    }
-
-    public function testHandleQueryIrfo()
-    {
-        $query = Qry::create(['organisation' => 123]);
-
-        $irfoFeeTypeRefData = m::mock(RefData::class)
-            ->shouldReceive('getId')
-            ->andReturn(101)
-            ->getMock();
-
-        $feeType1 = m::mock(Entity::class)
-            ->shouldReceive('getTrafficArea')
-            ->andReturn(null)
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->shouldReceive('getDescription')
-            ->andReturn('irfo fee type 1')
-            ->shouldReceive('getIrfoFeeType')
-            ->andReturn($irfoFeeTypeRefData)
-            ->shouldReceive('getEffectiveFrom')
-            ->andReturn('2015-10-23')
-            ->shouldReceive('serialize')
-            ->andReturn(['id' => 1])
-            ->getMock();
-        $feeType2 = m::mock(Entity::class)
-            ->shouldReceive('getTrafficArea')
-            ->andReturn(null)
-            ->shouldReceive('getId')
-            ->andReturn(2)
-            ->shouldReceive('getDescription')
-            ->andReturn('irfo fee type 2')
-            ->shouldReceive('getIrfoFeeType')
-            ->andReturn($irfoFeeTypeRefData)
-            ->shouldReceive('getEffectiveFrom')
-            ->andReturn('2014-10-23')
-            ->shouldReceive('serialize')
-            ->andReturn(['id' => 2])
-            ->getMock();
-        $mockList = new \ArrayObject([$feeType1, $feeType2]);
-
-        $this->repoMap['FeeType']
-            ->shouldReceive('fetchList')
-            ->with($query, DoctrineQuery::HYDRATE_OBJECT)
-            ->once()
-            ->andReturn($mockList)
-            ->shouldReceive('fetchCount')
-            ->with($query)
-            ->andReturn(2);
+        $query = Qry::create(['organisation' => self::ORG_ID]);
 
         $mockOrganisation = m::mock(Organisation::class);
+
+        $this->repoMap['FeeType']
+            ->shouldReceive('getReference')
+            ->with(Licence::class, null)
+            ->andReturn(null)
+            //
+            ->shouldReceive('getReference')
+            ->with(Application::class, null)
+            ->andReturn(null)
+            //
+            ->shouldReceive('getReference')
+            ->twice()
+            ->with(Organisation::class, self::ORG_ID)
+            ->andReturn($mockOrganisation)
+            //
+            ->shouldReceive('fetchList')
+            ->with($query, DoctrineQuery::HYDRATE_OBJECT)
+            ->once()
+            ->andReturn(new \ArrayObject());
+
+        //  irfo Gv Permit
         $mockPermit = m::mock(IrfoGvPermit::class);
-        $mockPermit
-            ->shouldReceive('getId')
+        $mockPermit->shouldReceive('getId')
+            ->twice()
             ->andReturn(69);
-        $mockPermit
-            ->shouldReceive('getIrfoGvPermitType->getDescription')
+        $mockPermit->shouldReceive('getIrfoGvPermitType->getDescription')
             ->once()
             ->andReturn('permit description');
-        $mockAuth = m::mock(IrfoPsvAuth::class);
-        $mockAuth
-            ->shouldReceive('getId')
-            ->andReturn(69);
-        $mockAuth
-            ->shouldReceive('getIrfoPsvAuthType->getDescription')
-            ->once()
-            ->andReturn('auth description');
-        $this->repoMap['FeeType']
-            ->shouldReceive('getReference')->twice()->with(Organisation::class, 123)->andReturn($mockOrganisation);
-        $this->repoMap['FeeType']
-            ->shouldReceive('getReference')->with(\Dvsa\Olcs\Api\Entity\Licence\Licence::class, null)->andReturn(null);
-        $this->repoMap['FeeType']
-            ->shouldReceive('getReference')->with(\Dvsa\Olcs\Api\Entity\Application\Application::class, null)
-            ->andReturn(null);
+
         $this->repoMap['IrfoGvPermit']
             ->shouldReceive('fetchByOrganisation')
             ->once()
             ->with($mockOrganisation)
             ->andReturn([$mockPermit]);
+
+        //  irfo Psv Auth
+        $mockAuth = m::mock(IrfoPsvAuth::class);
+        $mockAuth->shouldReceive('getId')
+            ->twice()
+            ->andReturn(69);
+        $mockAuth->shouldReceive('getIrfoPsvAuthType->getDescription')
+            ->once()
+            ->andReturn('auth description');
+
         $this->repoMap['IrfoPsvAuth']
             ->shouldReceive('fetchByOrganisation')
             ->once()
@@ -359,15 +143,9 @@ class FeeTypeListTest extends QueryHandlerTestCase
         $result = $this->sut->handleQuery($query);
 
         $expected = [
-            'result' => [
-                ['id' => 1],
-            ],
-            'count' => 1,
+            'result' => [],
+            'count' => 0,
             'valueOptions' => [
-                'feeType' => [
-                    // we should only get the latest as feeType1 and feeType2 have the same irfoFeeType
-                    1 => 'irfo fee type 1',
-                ],
                 'irfoGvPermit' => [
                     69 => '69 (permit description)',
                 ],
@@ -375,8 +153,230 @@ class FeeTypeListTest extends QueryHandlerTestCase
                     69 => '69 (auth description)',
                 ],
             ],
-         ];
+        ];
 
-        $this->assertEquals($expected, $result);
+        static::assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider dataProviderTestFilter
+     */
+    public function testFilter(array $fees, $mockTrafficArea, $expect)
+    {
+        $query = Qry::create([]);
+
+        $mockList = new \ArrayObject();
+        foreach ($fees as $fee) {
+            $mockList->append(
+                $this->getMockFeeType(
+                    $fee['id'],
+                    $fee['effectiveFrom'],
+                    $fee['trafficArea'],
+                    $fee['irfoFeeTypeRefId'],
+                    $fee['feeTypeRefId']
+                )
+            );
+        }
+
+        $repo = $this->repoMap['FeeType'];
+        $repo->shouldReceive('getReference')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getTrafficArea')
+                    ->andReturn($mockTrafficArea)
+                    ->getMock()
+            );
+        $repo->shouldReceive('fetchList')
+            ->with($query, DoctrineQuery::HYDRATE_OBJECT)
+            ->once()
+            ->andReturn($mockList);
+
+        $result = $this->sut->handleQuery($query);
+
+        $expected = [
+            'result' => $expect['result'],
+            'count' => count($expect['result']),
+            'valueOptions' => [
+                'feeType' => $expect['feeType'],
+                'irfoGvPermit' => [],
+                'irfoPsvAuth' => [],
+            ],
+        ];
+
+        static::assertEquals($expected, $result);
+    }
+
+    public function dataProviderTestFilter()
+    {
+        $mockTrafficAreaA = m::mock(TrafficArea::class);
+
+        return [
+            //  test effective data and few diff Fee ref types
+            [
+                'fees' => [
+                    [
+                        'id' => 24,
+                        'trafficArea' => null,
+                        'irfoFeeTypeRefId' => null,
+                        'feeTypeRefId' => self::FEE_REF_1_ID,
+                        'effectiveFrom' => '2015-01-01',
+                    ],
+                    [
+                        'id' => 25,
+                        'trafficArea' => null,
+                        'irfoFeeTypeRefId' => null,
+                        'feeTypeRefId' => self::FEE_REF_1_ID,
+                        'effectiveFrom' => '2014-01-01',
+                    ],
+                    [
+                        'id' => 34,
+                        'trafficArea' => null,
+                        'irfoFeeTypeRefId' => null,
+                        'feeTypeRefId' => self::FEE_REF_2_ID,
+                        'effectiveFrom' => '2015-01-01',
+                    ],
+                ],
+                'trafficArea' => null,
+                'expect' => [
+                    'result' => [
+                        ['id' => 24],
+                        ['id' => 34],
+                    ],
+                    'feeType' => [
+                        24 => self::FEE_DESC . '24',
+                        34 => self::FEE_DESC . '34',
+                    ],
+                ],
+            ],
+            //  test take only for specified traffic area
+            [
+                'fees' => [
+                    [
+                        'id' => 24,
+                        'trafficArea' => null,
+                        'irfoFeeTypeRefId' => null,
+                        'feeTypeRefId' => self::FEE_REF_1_ID,
+                        'effectiveFrom' => '2015-01-01',
+                    ],
+                    [
+                        'id' => 25,
+                        'trafficArea' => $mockTrafficAreaA,
+                        'irfoFeeTypeRefId' => null,
+                        'feeTypeRefId' => self::FEE_REF_1_ID,
+                        'effectiveFrom' => '2015-01-01',
+                    ],
+                    [
+                        'id' => 34,
+                        'trafficArea' => null,
+                        'irfoFeeTypeRefId' => null,
+                        'feeTypeRefId' => self::FEE_REF_2_ID,
+                        'effectiveFrom' => '2015-01-01',
+                    ],
+                ],
+                'trafficArea' => $mockTrafficAreaA,
+                'expect' => [
+                    'result' => [
+                        ['id' => 25],
+                        ['id' => 34],
+                    ],
+                    'feeType' => [
+                        25 => self::FEE_DESC . '25',
+                        34 => self::FEE_DESC . '34',
+                    ],
+                ],
+            ],
+            //  test group by IfroFeeTypeRefId and FeeTypeRefId
+            [
+                'fees' => [
+                    [
+                        'id' => 24,
+                        'trafficArea' => null,
+                        'irfoFeeTypeRefId' => self::IRFO_FEE_REF_ID,
+                        'feeTypeRefId' => self::FEE_REF_1_ID,
+                        'effectiveFrom' => '2015-01-01',
+                    ],
+                    [
+                        'id' => 25,
+                        'trafficArea' => null,
+                        'irfoFeeTypeRefId' => self::IRFO_FEE_REF_ID,
+                        'feeTypeRefId' => self::FEE_REF_1_ID,
+                        'effectiveFrom' => '2016-01-01',
+                    ],
+                    [
+                        'id' => 26,
+                        'trafficArea' => null,
+                        'irfoFeeTypeRefId' => self::IRFO_FEE_REF_ID,
+                        'feeTypeRefId' => self::FEE_REF_2_ID,
+                        'effectiveFrom' => '2015-01-01',
+                    ],
+                ],
+                'trafficArea' => $mockTrafficAreaA,
+                'expect' => [
+                    'result' => [
+                        ['id' => 25],
+                        ['id' => 26],
+                    ],
+                    'feeType' => [
+                        25 => self::FEE_DESC . '25',
+                        26 => self::FEE_DESC . '26',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private function getMockFeeType(
+        $id,
+        $effectiveFrom,
+        $trafficArea = null,
+        $irfoFeeRefId = null,
+        $feeRefId = null
+    ) {
+        $irfoFeeTypeRefData = null;
+        if ($irfoFeeRefId) {
+            $irfoFeeTypeRefData = m::mock(RefData::class)
+                ->shouldReceive('getId')
+                ->andReturn($irfoFeeRefId)
+                ->getMock();
+        }
+
+        $feeTypeRefData = null;
+        if ($feeRefId) {
+            $feeTypeRefData = m::mock(RefData::class)
+                ->shouldReceive('getId')
+                ->andReturn($feeRefId)
+                ->getMock();
+        }
+
+        return m::mock(FeeType::class)
+            ->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($id)
+            //
+            ->shouldReceive('getDescription')
+            ->withNoArgs()
+            ->andReturn(self::FEE_DESC . $id)
+            //
+            ->shouldReceive('getEffectiveFrom')
+            ->withNoArgs()
+            ->andReturn($effectiveFrom)
+            //
+            ->shouldReceive('serialize')
+            ->withAnyArgs()
+            ->andReturn(['id' => $id])
+            //
+            ->shouldReceive('getTrafficArea')
+            ->withNoArgs()
+            ->andReturn($trafficArea)
+            //
+            ->shouldReceive('getIrfoFeeType')
+            ->withNoArgs()
+            ->andReturn($irfoFeeTypeRefData)
+            //
+            ->shouldReceive('getFeeType')
+            ->withNoArgs()
+            ->andReturn($feeTypeRefData)
+            //
+            ->getMock();
     }
 }

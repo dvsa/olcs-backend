@@ -57,7 +57,7 @@ class RefuseBusRegTest extends CommandHandlerTestCase
         $busReg->shouldReceive('getId')->andReturn($id);
         $busReg->shouldReceive('isFromEbsr')->once()->andReturn(true);
         $busReg->shouldReceive('getEbsrSubmissions->first->getId')->once()->andReturn($ebsrId);
-        $this->expectedSideEffect(SendEbsrRefused::class, ['id' => $ebsrId], new Result());
+        $this->expectedEmailQueueSideEffect(SendEbsrRefused::class, ['id' => $ebsrId], $ebsrId, new Result());
 
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT)

@@ -24,6 +24,7 @@ class History extends AbstractQueryHandler
     {
         /** @var EventHistory $repo */
         $repo = $this->getRepo();
+        $repo->disableSoftDeleteable();
 
         return [
             'result' => $repo->fetchList($query),

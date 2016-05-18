@@ -116,7 +116,7 @@ class OperatorApproveTest extends CommandHandlerTestCase
                     ],
                     $vars
                 );
-                $this->assertNull($layout);
+                $this->assertSame('default', $layout);
 
             }
         );

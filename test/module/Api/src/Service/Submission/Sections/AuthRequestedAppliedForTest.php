@@ -26,35 +26,15 @@ class AuthRequestedAppliedForTest extends SubmissionSectionTest
                 'tables' => [
                     'auth-requested-applied-for' => [
                         0 => [
-                            'id' => 75,
-                            'version' => 150,
-                            'currentVehiclesInPossession' => '0',
-                            'currentTrailersInPossession' => '0',
-                            'currentVehicleAuthorisation' => '0',
-                            'currentTrailerAuthorisation' => '0',
-                            'requestedVehicleAuthorisation' => '0',
-                            'requestedTrailerAuthorisation' => '0',
-                        ],
-                        1 => [
-                            'id' => 75,
-                            'version' => 150,
-                            'currentVehiclesInPossession' => '0',
-                            'currentTrailersInPossession' => '0',
-                            'currentVehicleAuthorisation' => '0',
-                            'currentTrailerAuthorisation' => '0',
-                            'requestedVehicleAuthorisation' => '0',
-                            'requestedTrailerAuthorisation' => '0',
-                        ],
-                        2 => [
-                            'id' => 75,
-                            'version' => 150,
+                            'id' => 777,
+                            'version' => 1554,
                             'currentVehiclesInPossession' => 3,
-                            'currentTrailersInPossession' => 5,
+                            'currentTrailersInPossession' => '0',
                             'currentVehicleAuthorisation' => '0',
                             'currentTrailerAuthorisation' => 5,
                             'requestedVehicleAuthorisation' => '0',
                             'requestedTrailerAuthorisation' => '0',
-                        ]
+                        ],
                     ]
                 ]
             ]

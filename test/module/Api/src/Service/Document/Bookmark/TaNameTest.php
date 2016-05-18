@@ -14,8 +14,9 @@ class TaNameTest extends \PHPUnit_Framework_TestCase
     public function testGetQuery()
     {
         $bookmark = new TaName();
-        $query = $bookmark->getQuery(['licence' => 123]);
+        $this->assertNull($bookmark->getQuery([]));
 
+        $query = $bookmark->getQuery(['licence' => 123]);
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query);
     }
 

@@ -31,7 +31,7 @@ class PrintJobTest extends CommandHandlerTestCase
 
         $this->mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $this->mockUser->setLoginId('LOGIN_ID');
-        $this->repoMap['User']->shouldReceive('fetchById')->with('USER_ID')->once()->andReturn($this->mockUser);
+        $this->repoMap['User']->shouldReceive('fetchById')->with('USER_ID')->andReturn($this->mockUser);
 
         $mockDocument = m::mock(\Dvsa\Olcs\Api\Entity\Doc\Document::class)->makePartial();
         $mockDocument->setIdentifier('IDENTIFIER');
@@ -54,6 +54,29 @@ class PrintJobTest extends CommandHandlerTestCase
         ];
 
         parent::initReferences();
+    }
+
+    public function testHandleCommandNoUser()
+    {
+        $command = Cmd::create(['id' => 'QUEUE_ID', 'document' => 'DOC_ID', 'title' => 'JOB', 'user' => '']);
+
+        $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
+            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
+
+        $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+            ->andReturn($mockFile);
+
+        $this->sut->shouldReceive('createTmpFile')->with($mockFile, 'QUEUE_ID', 'FILENAME')->once()
+            ->andReturn('TEMP_FILE.rtf');
+
+        $this->expectPrintFile(0, 0, 'Anonymous');
+
+        $this->sut->shouldReceive('deleteTempFiles')->with('TEMP_FILE.rtf')->once();
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(["Printed successfully"], $result->getMessages());
     }
 
     public function testHandleCommandSelfserveUser()
@@ -211,7 +234,7 @@ class PrintJobTest extends CommandHandlerTestCase
         $this->assertSame(["Printed successfully (stub to licence 34)"], $result->getMessages());
     }
 
-    private function expectPrintFile($commandPdfResult = 0, $commandLprResult = 0)
+    private function expectPrintFile($commandPdfResult = 0, $commandLprResult = 0, $userName = 'LOGIN_ID')
     {
         $this->sut->shouldReceive('executeCommand')
             ->with("soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp 'TEMP_FILE.rtf'", [], null)
@@ -228,7 +251,7 @@ class PrintJobTest extends CommandHandlerTestCase
         }
 
         $this->sut->shouldReceive('executeCommand')
-            ->with("lpr 'TEMP_FILE.pdf' -H 'PRINT_SERVER' -C 'TEMP_FILE.rtf' -h -P 'QUEUE1' -U 'LOGIN_ID'", [], null)
+            ->with("lpr 'TEMP_FILE.pdf' -H 'PRINT_SERVER' -C 'TEMP_FILE.rtf' -h -P 'QUEUE1' -U '{$userName}'", [], null)
             ->once()
             ->andReturnUsing(
                 function ($command, &$output, &$result) use ($commandLprResult) {

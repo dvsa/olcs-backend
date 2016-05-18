@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Queue\Failed;
 use Dvsa\Olcs\Api\Domain\Repository\Queue as Repo;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Delete as DeleteQueueCmd;
 
 /**
  *  Queue Failed Command Handler Test
@@ -38,13 +39,18 @@ class FailedTest extends CommandHandlerTestCase
      */
     public function testHandleCommand()
     {
+        $id = 1234;
+
         $item = new QueueEntity();
+        $item->setId($id);
         $command = Cmd::create(['item' => $item]);
 
         $this->repoMap['Queue']
             ->shouldReceive('save')
             ->once()
             ->with($item);
+
+        $this->expectedSideEffect(DeleteQueueCmd::class, ['id' => $id], new Result());
 
         $result = $this->sut->handleCommand($command);
 

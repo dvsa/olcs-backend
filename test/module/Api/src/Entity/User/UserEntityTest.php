@@ -104,6 +104,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(null, $entity->getLocalAuthority());
         $this->assertEquals(0, $entity->getOrganisationUsers()->count());
         $this->assertEquals('DVSA', $entity->getRelatedOrganisationName());
+        $this->assertEquals(false, $entity->isAnonymous());
     }
 
     public function testUpdateInternal()
@@ -160,6 +161,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(null, $entity->getLocalAuthority());
         $this->assertEquals(0, $entity->getOrganisationUsers()->count());
         $this->assertEquals('DVSA', $entity->getRelatedOrganisationName());
+        $this->assertEquals(false, $entity->isAnonymous());
     }
 
     public function testCreateTransportManager()
@@ -199,6 +201,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(1, $entity->getOrganisationUsers()->count());
         $this->assertEquals('Y', $entity->getOrganisationUsers()->first()->getIsAdministrator());
         $this->assertEquals($orgName, $entity->getRelatedOrganisationName());
+        $this->assertEquals(false, $entity->isAnonymous());
     }
 
     public function testUpdateTransportManager()
@@ -258,6 +261,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(1, $entity->getOrganisationUsers()->count());
         $this->assertEquals('N', $entity->getOrganisationUsers()->first()->getIsAdministrator());
         $this->assertEquals($orgName, $entity->getRelatedOrganisationName());
+        $this->assertEquals(false, $entity->isAnonymous());
     }
 
     public function testCreatePartner()
@@ -298,6 +302,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(null, $entity->getLocalAuthority());
         $this->assertEquals(0, $entity->getOrganisationUsers()->count());
         $this->assertEquals($orgName, $entity->getRelatedOrganisationName());
+        $this->assertEquals(false, $entity->isAnonymous());
     }
 
     public function testUpdatePartner()
@@ -358,6 +363,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(null, $entity->getLocalAuthority());
         $this->assertEquals(0, $entity->getOrganisationUsers()->count());
         $this->assertEquals($orgName, $entity->getRelatedOrganisationName());
+        $this->assertEquals(false, $entity->isAnonymous());
     }
 
     public function testCreateLocalAuthority()
@@ -398,6 +404,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['localAuthority'], $entity->getLocalAuthority());
         $this->assertEquals(0, $entity->getOrganisationUsers()->count());
         $this->assertEquals($orgName, $entity->getRelatedOrganisationName());
+        $this->assertEquals(false, $entity->isAnonymous());
     }
 
     public function testUpdateLocalAuthority()
@@ -458,6 +465,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['localAuthority'], $entity->getLocalAuthority());
         $this->assertEquals(0, $entity->getOrganisationUsers()->count());
         $this->assertEquals($orgName, $entity->getRelatedOrganisationName());
+        $this->assertEquals(false, $entity->isAnonymous());
     }
 
     public function testCreateOperator()
@@ -497,6 +505,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(1, $entity->getOrganisationUsers()->count());
         $this->assertEquals('Y', $entity->getOrganisationUsers()->first()->getIsAdministrator());
         $this->assertEquals($orgName, $entity->getRelatedOrganisationName());
+        $this->assertEquals(false, $entity->isAnonymous());
     }
 
     public function testUpdateOperator()
@@ -556,6 +565,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(1, $entity->getOrganisationUsers()->count());
         $this->assertEquals('N', $entity->getOrganisationUsers()->first()->getIsAdministrator());
         $this->assertEquals($orgName, $entity->getRelatedOrganisationName());
+        $this->assertEquals(false, $entity->isAnonymous());
     }
 
     public function testUpdateOperatorIsAdministratorOnly()
@@ -776,6 +786,7 @@ class UserEntityTest extends EntityTester
         $this->assertInstanceOf(RoleEntity::class, $role);
         $this->assertEquals(RoleEntity::ROLE_ANON, $role->getId());
         $this->assertEquals('anon', $user->getLoginId());
+        $this->assertEquals(true, $user->isAnonymous());
     }
 
     /**

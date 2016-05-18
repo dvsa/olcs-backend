@@ -83,7 +83,7 @@ class SendUserRegisteredTest extends CommandHandlerTestCase
                     'loginId' => $loginId,
                     'url' => 'http://selfserve/'
                 ],
-                null
+                'default'
             );
 
         $this->expectedSideEffect(

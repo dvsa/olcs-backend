@@ -126,7 +126,7 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
                 'hasBusData' => true,
                 'publicationId' => null,
             ],
-            null
+            'default'
         );
 
         $result = new Result();

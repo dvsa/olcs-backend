@@ -1,19 +1,14 @@
 <?php
 
-/**
- * Repository Test Case
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\DbQueryServiceManager;
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
-use Doctrine\ORM\QueryBuilder;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Repository Test Case
@@ -23,22 +18,22 @@ use Doctrine\ORM\QueryBuilder;
 class RepositoryTestCase extends MockeryTestCase
 {
     /**
-     * @var RepositoryInterface
+     * @var m\MockInterface|RepositoryInterface
      */
     protected $sut;
 
     /**
-     * @var EntityManager
+     * @var m\MockInterface|EntityManager
      */
     protected $em;
 
     /**
-     * @var QueryBuilderInterface
+     * @var m\MockInterface
      */
     protected $queryBuilder;
 
     /**
-     * @var DbQueryServiceManager
+     * @var m\MockInterface|DbQueryServiceManager
      */
     protected $dbQueryService;
 
@@ -69,6 +64,9 @@ class RepositoryTestCase extends MockeryTestCase
             ->andReturn($mock);
     }
 
+    /**
+     * @return m\MockInterface
+     */
     protected function createMockQb($query = '')
     {
         $this->query = $query;
@@ -135,12 +133,22 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('setParameter')
             ->andReturnUsing([$this, 'mockSetParameter']);
 
+        $this->qb->shouldReceive('setMaxResults')
+            ->andReturnUsing([$this, 'mockSetMaxResults']);
+
         return $this->qb;
     }
 
     public function mockOrderBy($sort, $order)
     {
         $this->query .= ' ORDER BY ' . $sort . ' ' . $order;
+
+        return $this->qb;
+    }
+
+    public function mockSetMaxResults($maxResults)
+    {
+        $this->query .= ' LIMIT ' . $maxResults;
 
         return $this->qb;
     }
@@ -288,7 +296,7 @@ class RepositoryTestCase extends MockeryTestCase
             $value = json_encode($value);
         }
 
-        if (is_a($value, \DateTime::class)) {
+        if ($value instanceof \DateTime) {
             return $value->format(\DateTime::W3C);
         }
 

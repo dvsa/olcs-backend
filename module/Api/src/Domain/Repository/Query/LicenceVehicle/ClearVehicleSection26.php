@@ -20,7 +20,7 @@ class ClearVehicleSection26 extends AbstractRawQuery
 
     protected $queryTemplate = 'UPDATE {v}
       INNER JOIN {lv} ON {lv.vehicle} = {v.id}
-      SET {v.section26} = 0, {v.lastModifiedOn} = NOW()
+      SET {v.section26} = 0, {v.lastModifiedOn} = NOW(), {v.lastModifiedBy} = :currentUserId
       WHERE {lv.licence} = :licence
       AND {v.section26} <> 0';
 }

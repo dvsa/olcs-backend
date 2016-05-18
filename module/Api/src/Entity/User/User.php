@@ -140,6 +140,16 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
+     * Checks if it is an anonymous user
+     *
+     * @return bool
+     */
+    public function isAnonymous()
+    {
+        return empty($this->pid);
+    }
+
+    /**
      * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
      * @return User
      */

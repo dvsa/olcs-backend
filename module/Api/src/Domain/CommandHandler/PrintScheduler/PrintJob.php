@@ -43,13 +43,20 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
     public function handleCommand(CommandInterface $command)
     {
         /* @var $user User */
-        $user = $this->getRepo('User')->fetchById($command->getUser());
+        if (!empty($command->getUser())) {
+            $user = $this->getRepo('User')->fetchById($command->getUser());
+            // get the username of the person who has sent the print job
+            $username = $user->getLoginId();
+        } else {
+            $user = null;
+            $username = 'Anonymous';
+        }
 
         /* @var $document Document */
         $document = $this->getRepo('Document')->fetchById($command->getDocument());
 
         // get destination ie the CUPS print queue name
-        if ($user->getTeam()) {
+        if ($user !== null && $user->getTeam()) {
             $printer = $this->findPrinterForUserAndDocument($user, $document);
             $destination = $printer->getPrinterName();
         } else {
@@ -57,8 +64,6 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
             $destination = $this->getSelfserveUserPrinter();
         }
 
-        // get the username of the person who has sent the print job
-        $username = $user->getLoginId();
         // This config allows us to override the username on the environments that use the CUPS PDF print driver
         // This is needed as the username has to exist on the CUPS box so that the PDF file can be created
         if ($this->getConfigUser() !== false) {
@@ -303,7 +308,6 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
             )
         );
         $printDocument->setIsExternal(false);
-        $printDocument->setIsReadOnly('Y');
         $printDocument->setIssuedDate(new \Datetime());
 
         $this->getRepo()->save($printDocument);

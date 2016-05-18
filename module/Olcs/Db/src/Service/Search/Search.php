@@ -85,18 +85,6 @@ class Search
                 }
             }
 
-            $vrmQuery = new Query\Match();
-            $vrmQuery->setField('vrm', $query);
-            $elasticaQueryBool->addShould($vrmQuery);
-
-            $postcodeQuery = new Query\Match();
-            $postcodeQuery->setField('correspondence_postcode', $query);
-            $elasticaQueryBool->addShould($postcodeQuery);
-
-            $wildcardQuery = strtolower(rtrim($query, '*') . '*');
-            $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
-            $elasticaQueryBool->addShould($elasticaQueryWildcard);
-
             foreach ($indexes as $index) {
                 $this->modifyQueryForIndex($index, $query, $elasticaQueryBool);
             }
@@ -155,7 +143,64 @@ class Search
     private function modifyQueryForIndex($index, $search, Query\Bool $queryBool)
     {
         switch ($index) {
+            case 'address':
+                $postcodeQuery = new Query\Match();
+                $postcodeQuery->setField('postcode', $search);
+                $queryBool->addShould($postcodeQuery);
+                break;
+            case 'application':
+                $correspondencePostcodeQuery = new Query\Match();
+                $correspondencePostcodeQuery->setField('correspondence_postcode', $search);
+                $queryBool->addShould($correspondencePostcodeQuery);
+
+                if (is_numeric($search)) {
+                    // searching for empty string causes exception
+                    $applicationIdQuery = new Query\Match();
+                    $applicationIdQuery->setField('app_id', $search);
+                    $queryBool->addShould($applicationIdQuery);
+                }
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
+                break;
+            case 'case':
+                $correspondencePostcodeQuery = new Query\Match();
+                $correspondencePostcodeQuery->setField('correspondence_postcode', $search);
+                $queryBool->addShould($correspondencePostcodeQuery);
+
+                if (is_numeric($search)) {
+                    // searching for empty string causes exception
+                    $caseIdQuery = new Query\Match();
+                    $caseIdQuery->setField('case_id', $search);
+                    $queryBool->addShould($caseIdQuery);
+                }
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
+                break;
+            case 'operator':
+                $postcodeQuery = new Query\Match();
+                $postcodeQuery->setField('postcode', $search);
+                $queryBool->addShould($postcodeQuery);
+
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
+
+                break;
+            case 'irfo':
+            case 'licence':
+            case 'psv_disc':
+            case 'publication':
+            case 'user':
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
+
+                break;
+            case 'vehicle_current':
+            case 'vehicle_removed':
+                $vrmQuery = new Query\Match();
+                $vrmQuery->setField('vrm', $search);
+                $queryBool->addShould($vrmQuery);
+
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
+
+                break;
             case 'person':
+                // apply search term to forename and family name wildcards
                 $wildcardQuery = '*'. strtolower(trim($search, '*')). '*';
                 $queryBool->addShould(
                     new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
@@ -164,14 +209,52 @@ class Search
                     new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
                 );
 
+                // separate search into words
+                $search = preg_replace('/\s{2,}/', ' ', $search);
+                $parts = explode(' ', $search);
+
+                if (count($parts) > 1) {
+                    // apply wildcard to each search term
+                    foreach ($parts as $part_search) {
+                        // only search if valid
+                        if (!empty($part_search)) {
+                            $wildcardQuery = '*' . strtolower(trim($part_search, '*')) . '*';
+                            $queryBool->addShould(
+                                new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
+                            );
+                            $queryBool->addShould(
+                                new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
+                            );
+                        }
+                    }
+                }
+
                 break;
             case 'busreg':
+
                 $queryMatch = new Query\Match();
                 $queryMatch->setFieldQuery('reg_no', $search);
                 $queryMatch->setFieldBoost('reg_no', 2);
                 $queryBool->addShould($queryMatch);
+
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
+
                 break;
         }
+    }
+
+    /**
+     * Generates and returns the wildcard query for Org Name
+     *
+     * @param $search
+     * @return Query\Wildcard
+     */
+    private function generateOrgNameWildcardQuery($search)
+    {
+        $wildcardQuery = strtolower(rtrim($search, '*') . '*');
+        $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
+
+        return $elasticaQueryWildcard;
     }
 
     public function processDateRanges(Query\Bool $bool)

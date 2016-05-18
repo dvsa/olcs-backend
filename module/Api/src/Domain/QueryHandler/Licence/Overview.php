@@ -78,7 +78,8 @@ class Overview extends AbstractQueryHandler
                     'trafficAreas' => $trafficAreas,
                 ],
                 'organisationLicenceCount' => $licence->getOrganisation()->getActiveLicences()->count(),
-                'numberOfVehicles' => $licence->getActiveVehicles()->count()
+                'numberOfVehicles' => $licence->getActiveVehicles()->count(),
+                'firstApplicationId' => $licence->getFirstApplicationId()
             ]
         );
     }

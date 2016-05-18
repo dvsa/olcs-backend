@@ -15,8 +15,8 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreateVehicleListDocument;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as Cmd;
-use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as LicenceCmd;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Create Goods Vehicle Test
@@ -29,6 +29,9 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateVehicleListDocument();
         $this->mockRepo('Licence', LicenceRepo::class);
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
 
         parent::setUp();
     }
@@ -36,26 +39,27 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'id' => 111
+            'id' => 111,
+            'user' => 1
         ];
         $command = Cmd::create($data);
 
         $data = [
             'documentId' => 123,
-            'jobName' => 'Goods Vehicle List'
+            'jobName' => 'Goods Vehicle List',
+            'user' => 1
         ];
         $result1 = new Result();
         $this->expectedSideEffect(Enqueue::class, $data, $result1);
 
         $data = [
             'template' => 'GVVehiclesList',
-            'query' => ['licence' => 111],
+            'query' => ['licence' => 111, 'user' => 1],
             'licence' => 111,
             'description' => 'Goods Vehicle List',
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST,
             'isExternal' => false,
-            'isReadOnly' => true,
             'application' => null,
             'busReg' => null,
             'case' => null,
@@ -88,26 +92,27 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 111,
-            'type' => 'dp'
+            'type' => 'dp',
+            'user' => 1
         ];
         $command = Cmd::create($data);
 
         $data = [
             'documentId' => 123,
-            'jobName' => 'New disc notification'
+            'jobName' => 'New disc notification',
+            'user' => 1
         ];
         $result1 = new Result();
         $this->expectedSideEffect(Enqueue::class, $data, $result1);
 
         $data = [
             'template' => 'GVDiscLetter',
-            'query' => ['licence' => 111],
+            'query' => ['licence' => 111, 'user' => 1],
             'licence' => 111,
             'description' => 'New disc notification',
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST,
             'isExternal' => false,
-            'isReadOnly' => true,
             'application' => null,
             'busReg' => null,
             'case' => null,

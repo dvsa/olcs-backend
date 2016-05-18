@@ -6,6 +6,9 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * TaskAllocationRule Abstract Entity
@@ -13,13 +16,16 @@ use Doctrine\ORM\Mapping as ORM;
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="task_allocation_rule",
  *    indexes={
  *        @ORM\Index(name="ix_task_allocation_rule_category_id", columns={"category_id"}),
  *        @ORM\Index(name="ix_task_allocation_rule_team_id", columns={"team_id"}),
  *        @ORM\Index(name="ix_task_allocation_rule_user_id", columns={"user_id"}),
  *        @ORM\Index(name="ix_task_allocation_rule_goods_or_psv", columns={"goods_or_psv"}),
- *        @ORM\Index(name="ix_task_allocation_rule_traffic_area_id", columns={"traffic_area_id"})
+ *        @ORM\Index(name="ix_task_allocation_rule_traffic_area_id", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="ix_task_allocation_rule_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_task_allocation_rule_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -36,6 +42,26 @@ abstract class AbstractTaskAllocationRule implements BundleSerializableInterface
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=true)
      */
     protected $category;
+
+    /**
+     * Created by
+     *
+     * @var \Dvsa\Olcs\Api\Entity\User\User
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="create")
+     */
+    protected $createdBy;
+
+    /**
+     * Created on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="created_on", nullable=true)
+     */
+    protected $createdOn;
 
     /**
      * Goods or psv
@@ -66,6 +92,26 @@ abstract class AbstractTaskAllocationRule implements BundleSerializableInterface
      * @ORM\Column(type="boolean", name="is_mlh", nullable=true)
      */
     protected $isMlh;
+
+    /**
+     * Last modified by
+     *
+     * @var \Dvsa\Olcs\Api\Entity\User\User
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="update")
+     */
+    protected $lastModifiedBy;
+
+    /**
+     * Last modified on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
+     */
+    protected $lastModifiedOn;
 
     /**
      * Team
@@ -102,6 +148,41 @@ abstract class AbstractTaskAllocationRule implements BundleSerializableInterface
     protected $user;
 
     /**
+     * Version
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
+     * @ORM\Version
+     */
+    protected $version = 1;
+
+    /**
+     * Task alpha split
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Task\TaskAlphaSplit",
+     *     mappedBy="taskAllocationRule"
+     * )
+     */
+    protected $taskAlphaSplits;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
+        $this->taskAlphaSplits = new ArrayCollection();
+    }
+
+    /**
      * Set the category
      *
      * @param \Dvsa\Olcs\Api\Entity\System\Category $category
@@ -122,6 +203,52 @@ abstract class AbstractTaskAllocationRule implements BundleSerializableInterface
     public function getCategory()
     {
         return $this->category;
+    }
+
+    /**
+     * Set the created by
+     *
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @return TaskAllocationRule
+     */
+    public function setCreatedBy($createdBy)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the created by
+     *
+     * @return \Dvsa\Olcs\Api\Entity\User\User
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set the created on
+     *
+     * @param \DateTime $createdOn
+     * @return TaskAllocationRule
+     */
+    public function setCreatedOn($createdOn)
+    {
+        $this->createdOn = $createdOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the created on
+     *
+     * @return \DateTime
+     */
+    public function getCreatedOn()
+    {
+        return $this->createdOn;
     }
 
     /**
@@ -194,6 +321,52 @@ abstract class AbstractTaskAllocationRule implements BundleSerializableInterface
     }
 
     /**
+     * Set the last modified by
+     *
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @return TaskAllocationRule
+     */
+    public function setLastModifiedBy($lastModifiedBy)
+    {
+        $this->lastModifiedBy = $lastModifiedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified by
+     *
+     * @return \Dvsa\Olcs\Api\Entity\User\User
+     */
+    public function getLastModifiedBy()
+    {
+        return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the last modified on
+     *
+     * @param \DateTime $lastModifiedOn
+     * @return TaskAllocationRule
+     */
+    public function setLastModifiedOn($lastModifiedOn)
+    {
+        $this->lastModifiedOn = $lastModifiedOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified on
+     *
+     * @return \DateTime
+     */
+    public function getLastModifiedOn()
+    {
+        return $this->lastModifiedOn;
+    }
+
+    /**
      * Set the team
      *
      * @param \Dvsa\Olcs\Api\Entity\User\Team $team
@@ -262,7 +435,108 @@ abstract class AbstractTaskAllocationRule implements BundleSerializableInterface
         return $this->user;
     }
 
+    /**
+     * Set the version
+     *
+     * @param int $version
+     * @return TaskAllocationRule
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
 
+        return $this;
+    }
+
+    /**
+     * Get the version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set the task alpha split
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $taskAlphaSplits
+     * @return TaskAllocationRule
+     */
+    public function setTaskAlphaSplits($taskAlphaSplits)
+    {
+        $this->taskAlphaSplits = $taskAlphaSplits;
+
+        return $this;
+    }
+
+    /**
+     * Get the task alpha splits
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTaskAlphaSplits()
+    {
+        return $this->taskAlphaSplits;
+    }
+
+    /**
+     * Add a task alpha splits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $taskAlphaSplits
+     * @return TaskAllocationRule
+     */
+    public function addTaskAlphaSplits($taskAlphaSplits)
+    {
+        if ($taskAlphaSplits instanceof ArrayCollection) {
+            $this->taskAlphaSplits = new ArrayCollection(
+                array_merge(
+                    $this->taskAlphaSplits->toArray(),
+                    $taskAlphaSplits->toArray()
+                )
+            );
+        } elseif (!$this->taskAlphaSplits->contains($taskAlphaSplits)) {
+            $this->taskAlphaSplits->add($taskAlphaSplits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a task alpha splits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $taskAlphaSplits
+     * @return TaskAllocationRule
+     */
+    public function removeTaskAlphaSplits($taskAlphaSplits)
+    {
+        if ($this->taskAlphaSplits->contains($taskAlphaSplits)) {
+            $this->taskAlphaSplits->removeElement($taskAlphaSplits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the createdOn field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setCreatedOnBeforePersist()
+    {
+        $this->createdOn = new \DateTime();
+    }
+
+    /**
+     * Set the lastModifiedOn field on persist
+     *
+     * @ORM\PreUpdate
+     */
+    public function setLastModifiedOnBeforeUpdate()
+    {
+        $this->lastModifiedOn = new \DateTime();
+    }
 
     /**
      * Clear properties

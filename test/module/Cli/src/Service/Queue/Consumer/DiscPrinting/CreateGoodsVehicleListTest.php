@@ -24,11 +24,11 @@ class CreateGoodsVehicleListTest extends AbstractConsumerTestCase
     {
         $item = new QueueEntity();
         $item->setOptions(
-            json_encode(['licences' => [1, 2]])
+            json_encode(['licences' => [1, 2], 'user' => 1])
         );
 
         $result = $this->sut->getCommandData($item);
 
-        $this->assertEquals(['licences' => [1, 2]], $result);
+        $this->assertEquals(['licences' => [1, 2], 'user' => 1], $result);
     }
 }

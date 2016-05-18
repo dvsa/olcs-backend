@@ -34,7 +34,7 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
 
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['GoodsDisc', 'Fee'];
+    protected $extraRepos = ['GoodsDisc', 'Fee', 'LicenceVehicle'];
 
     /**
      * @param Cmd $command
@@ -71,6 +71,7 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
         }
 
         if ($currentStatusId === ApplicationEntity::INTERIM_STATUS_INFORCE) {
+            $this->maybeUnspecifyVehiclesAndCeaseDiscs($command->getStatus(), $application);
             $this->saveInterimData($application, $command, true);
             return $this->result;
         }
@@ -296,5 +297,34 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
     protected function getExistingFees(ApplicationEntity $application)
     {
         return $this->getRepo('Fee')->fetchInterimFeesByApplicationId($application->getId(), true);
+    }
+
+    /**
+     * Unspecify vehicles and cease discs if status changed
+     *
+     * @param string $status
+     * @param Dvsa\Olcs\Api\Entity\Application\Application
+     */
+    protected function maybeUnspecifyVehiclesAndCeaseDiscs($status, $application)
+    {
+        // don't do anything if status is not changed
+        if ($status === ApplicationEntity::INTERIM_STATUS_INFORCE) {
+            return;
+        }
+        $licenceVehicles = $application->getInterimLicenceVehicles();
+        if (!$licenceVehicles) {
+            return;
+        }
+
+        // shouldn't have a lot of interim vehicles on application so we use Doctrine functionality
+        foreach ($licenceVehicles as $licenceVehicle) {
+            $licenceVehicle->setSpecifiedDate(null);
+            $disc = $licenceVehicle->getActiveDisc();
+            if ($disc) {
+                $disc->setCeasedDate(new DateTime());
+                $this->getRepo('GoodsDisc')->save($disc);
+            }
+            $this->getRepo('LicenceVehicle')->save($licenceVehicle);
+        }
     }
 }

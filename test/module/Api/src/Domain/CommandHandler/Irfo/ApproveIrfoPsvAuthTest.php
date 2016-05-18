@@ -8,10 +8,10 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Irfo;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\ApproveIrfoPsvAuth as Sut;
-use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPsvAuth as UpdateIrfoPsvAuthCmd;
 use Dvsa\Olcs\Api\Domain\Repository\IrfoPsvAuth as IrfoPsvAuthRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType;
 use Dvsa\Olcs\Transfer\Command\Irfo\ApproveIrfoPsvAuth as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -33,7 +33,14 @@ class ApproveIrfoPsvAuthTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
+            IrfoPsvAuthEntity::JOURNEY_FREQ_DAILY,
             IrfoPsvAuthEntity::STATUS_APPROVED,
+        ];
+
+        $this->references = [
+            IrfoPsvAuthType::class => [
+                22 => m::mock(IrfoPsvAuthType::class)
+            ],
         ];
 
         parent::initReferences();
@@ -49,31 +56,31 @@ class ApproveIrfoPsvAuthTest extends CommandHandlerTestCase
         $data = [
             'id' => $id,
             'version' => 2,
+            'irfoPsvAuthType' => 22,
+            'journeyFrequency' => IrfoPsvAuthEntity::JOURNEY_FREQ_DAILY,
+            'irfoPsvAuthNumbers' => [],
         ];
 
         $command = Cmd::create($data);
-
-        // handle update
-        $this->expectedSideEffect(
-            UpdateIrfoPsvAuthCmd::class, $command->getArrayCopy(),
-            (new Result())->addMessage('IRFO PSV Auth updated successfully')
-                ->addId('irfoPsvAuth', $data['id'])
-        );
 
         $this->repoMap['Fee']->shouldReceive('fetchFeesByIrfoPsvAuthId')
             ->with($id, true)
             ->andReturn(['FEE']);
 
         /** @var IrfoPsvAuthEntity $irfoPsvAuth */
-        $irfoPsvAuth = m::mock(IrfoPsvAuthEntity::class);
-        $irfoPsvAuth->shouldReceive('approve')
+        $irfoPsvAuth = m::mock(IrfoPsvAuthEntity::class)->makePartial();
+        $irfoPsvAuth->setIrfoPsvAuthNumbers([]);
+        $irfoPsvAuth
+            ->shouldReceive('update')
+            ->once()
+            ->shouldReceive('approve')
             ->once()
             ->with($this->refData[IrfoPsvAuthEntity::STATUS_APPROVED], ['FEE'])
             ->shouldReceive('getId')
             ->andReturn($id);
 
         $this->repoMap['IrfoPsvAuth']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT)
+            ->with($command, Query::HYDRATE_OBJECT, 2)
             ->andReturn($irfoPsvAuth)
             ->shouldReceive('save')
             ->with(m::type(IrfoPsvAuthEntity::class))

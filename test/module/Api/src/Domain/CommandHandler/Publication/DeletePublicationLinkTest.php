@@ -41,6 +41,7 @@ class DeletePublicationLinkTest extends CommandHandlerTestCase
         $publicationLink = m::mock(PublicationLinkEntity::class)->makePartial();
         $publicationLink->setPublication($publication);
         $publicationLink->setId($id);
+        $publicationLink->shouldReceive('getPoliceDatas->clear')->once()->andReturnSelf();
 
         $this->repoMap['PublicationLink']
             ->shouldReceive('fetchUsingId')

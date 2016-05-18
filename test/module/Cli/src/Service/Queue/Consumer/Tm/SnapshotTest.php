@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer\Tm;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm\Snapshot as Sut;
 use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
+use Dvsa\Olcs\Api\Entity\User\User;
 
 /**
  * Snapshot Test
@@ -22,11 +23,14 @@ class SnapshotTest extends AbstractConsumerTestCase
 
     public function testGetCommandData()
     {
+        $user = new User('pid', 'type');
+        $user->setId(1);
         $item = new QueueEntity();
         $item->setEntityId(111);
+        $item->setCreatedBy($user);
 
         $result = $this->sut->getCommandData($item);
 
-        $this->assertEquals(['id' => 111], $result);
+        $this->assertEquals(['id' => 111, 'user' => 1], $result);
     }
 }

@@ -7,4 +7,5 @@ use Dvsa\Olcs\Cli\Domain\CommandHandler as CliCommandHandler;
 
 return [
     CliCommandHandler\CreateViExtractFiles::class => IsSystemUser::class,
+    CliCommandHandler\SetViFlags::class => IsSystemUser::class,
 ];

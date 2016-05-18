@@ -4,14 +4,10 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Publication;
 
 use Doctrine\ORM\Query;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Publication\Application;
 use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
-use Dvsa\Olcs\Api\Domain\Repository\PiHearing as ApplicationRepo;
-use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as TrafficAreaRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Publication\Application as Cmd;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
@@ -57,7 +53,7 @@ class LicenceTest extends CommandHandlerTestCase
     {
         $publication = new PublicationEntity(
             new TrafficAreaEntity(),
-            new RefData(),
+            new RefData(PublicationEntity::PUB_NEW_STATUS),
             new \Dvsa\Olcs\Api\Entity\Doc\DocTemplate(),
             'PUB_DATE',
             'PU_TYPE',
@@ -135,8 +131,6 @@ class LicenceTest extends CommandHandlerTestCase
         $licence = $this->getTestingLicence();
         $licence->getStatus()->setId(LicenceEntity::LICENCE_STATUS_VALID);
         $licence->setGoodsOrPsv(new RefData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE));
-
-        $publicationLink = new PublicationLinkEntity();
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($licence);
         $this->repoMap['Publication']->shouldReceive('fetchLatestForTrafficAreaAndType')->with('T', 'A&D')->once()

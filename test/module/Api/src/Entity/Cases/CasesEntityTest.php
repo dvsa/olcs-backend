@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Cases\Appeal as AppealEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Stay as StayEntity;
 use Mockery as m;
 
 /**
@@ -231,13 +233,96 @@ class CasesEntityTest extends EntityTester
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function testCloseThrowsException()
     {
         $this->entity->setOutcomes(new ArrayCollection());
 
         $this->entity->close();
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testCloseWithOutstandingAppealThrowsValidationException()
+    {
+        $outcome = m::mock(RefData::class);
+        $appeal = new AppealEntity('1234');
+
+        $this->entity->setAppeal($appeal);
+        $this->entity->setOutcomes(new ArrayCollection([$outcome]));
+
+        $this->entity->close();
+    }
+
+    public function testCloseWithWithdrawnAppeal()
+    {
+        $outcome = m::mock(RefData::class);
+        $appeal = new AppealEntity('1234');
+        $appeal->setWithdrawnDate('2015-06-10');
+
+        $this->entity->setAppeal($appeal);
+        $this->entity->setOutcomes(new ArrayCollection([$outcome]));
+
+        $this->entity->close();
+        $this->assertInstanceOf('\DateTime', $this->entity->getClosedDate());
+    }
+
+    public function testCloseWithCompleteAppeal()
+    {
+        $outcome = m::mock(RefData::class);
+        $appeal = new AppealEntity('1234');
+
+        $appeal->setOutcome($outcome);
+        $appeal->setDecisionDate('2015-06-10');
+
+        $this->entity->setAppeal($appeal);
+        $this->entity->setOutcomes(new ArrayCollection([$outcome]));
+
+        $this->entity->close();
+        $this->assertInstanceOf('\DateTime', $this->entity->getClosedDate());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testCloseWithOutstandingStay()
+    {
+        $outcome = m::mock(RefData::class);
+        $stay = new StayEntity($this->entity, $outcome);
+
+        $this->entity->setStays(new ArrayCollection([$stay]));
+        $this->entity->setOutcomes(new ArrayCollection([$outcome]));
+
+        $this->entity->close();
+    }
+
+    public function testCloseWithWithdrawnStay()
+    {
+        $outcome = m::mock(RefData::class);
+        $stay = new StayEntity($this->entity, $outcome);
+        $stay->setWithdrawnDate('2015-06-10');
+
+        $this->entity->setStays(new ArrayCollection([$stay]));
+        $this->entity->setOutcomes(new ArrayCollection([$outcome]));
+
+        $this->entity->close();
+        $this->assertInstanceOf('\DateTime', $this->entity->getClosedDate());
+    }
+
+    public function testCloseWithCompleteStay()
+    {
+        $outcome = m::mock(RefData::class);
+        $stay = new StayEntity($this->entity, $outcome);
+        $stay->setOutcome($outcome);
+        $stay->setDecisionDate('2015-06-10');
+
+        $this->entity->setStays(new ArrayCollection([$stay]));
+        $this->entity->setOutcomes(new ArrayCollection([$outcome]));
+
+        $this->entity->close();
+        $this->assertInstanceOf('\DateTime', $this->entity->getClosedDate());
     }
 
     public function testReopen()

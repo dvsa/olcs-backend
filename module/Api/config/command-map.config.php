@@ -120,6 +120,8 @@ return [
     Command\Task\CreateTranslateToWelshTask::class => CommandHandler\Task\CreateTranslateToWelshTask::class,
     TransferCommand\Application\UpdatePsvVehicles::class => CommandHandler\Application\UpdatePsvVehicles::class,
     TransferCommand\Application\CreatePsvVehicle::class => CommandHandler\Application\CreatePsvVehicle::class,
+    // * @todo remove after task allocation rules will be tested (OLCS-6844 & OLCS-12638)
+    TransferCommand\Task\CreateTaskTemp::class => CommandHandler\Task\CreateTask::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -293,14 +295,17 @@ return [
     TransferCommand\Irfo\UpdateIrfoGvPermit::class => CommandHandler\Irfo\UpdateIrfoGvPermit::class,
     TransferCommand\Irfo\ResetIrfoGvPermit::class => CommandHandler\Irfo\ResetIrfoGvPermit::class,
     TransferCommand\Irfo\ApproveIrfoGvPermit::class => CommandHandler\Irfo\ApproveIrfoGvPermit::class,
+    TransferCommand\Irfo\GenerateIrfoGvPermit::class => CommandHandler\Irfo\GenerateIrfoGvPermit::class,
     TransferCommand\Irfo\WithdrawIrfoGvPermit::class => CommandHandler\Irfo\WithdrawIrfoGvPermit::class,
     TransferCommand\Irfo\RefuseIrfoGvPermit::class => CommandHandler\Irfo\RefuseIrfoGvPermit::class,
     TransferCommand\Irfo\CreateIrfoPermitStock::class => CommandHandler\Irfo\CreateIrfoPermitStock::class,
     TransferCommand\Irfo\UpdateIrfoPermitStock::class => CommandHandler\Irfo\UpdateIrfoPermitStock::class,
+    TransferCommand\Irfo\UpdateIrfoPermitStockIssued::class => CommandHandler\Irfo\UpdateIrfoPermitStockIssued::class,
     TransferCommand\Irfo\CreateIrfoPsvAuth::class => CommandHandler\Irfo\CreateIrfoPsvAuth::class,
     TransferCommand\Irfo\UpdateIrfoPsvAuth::class => CommandHandler\Irfo\UpdateIrfoPsvAuth::class,
     TransferCommand\Irfo\GrantIrfoPsvAuth::class => CommandHandler\Irfo\GrantIrfoPsvAuth::class,
     TransferCommand\Irfo\ApproveIrfoPsvAuth::class => CommandHandler\Irfo\ApproveIrfoPsvAuth::class,
+    TransferCommand\Irfo\GenerateIrfoPsvAuth::class => CommandHandler\Irfo\GenerateIrfoPsvAuth::class,
     TransferCommand\Irfo\RefuseIrfoPsvAuth::class => CommandHandler\Irfo\RefuseIrfoPsvAuth::class,
     TransferCommand\Irfo\WithdrawIrfoPsvAuth::class => CommandHandler\Irfo\WithdrawIrfoPsvAuth::class,
     TransferCommand\Irfo\CnsIrfoPsvAuth::class => CommandHandler\Irfo\CnsIrfoPsvAuth::class,
@@ -823,6 +828,7 @@ return [
     QueueCommand\Failed::class => QueueCommandHandler\Failed::class,
     QueueCommand\Retry::class => QueueCommandHandler\Retry::class,
     QueueCommand\Create::class => QueueCommandHandler\Create::class,
+    QueueCommand\Delete::class => QueueCommandHandler\Delete::class,
 
     // Transfer - TmCaseDecision
     TransferCommand\TmCaseDecision\CreateReputeNotLost::class
@@ -903,4 +909,20 @@ return [
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
     TransferCommand\System\UpdateSlaTargetDate::class => CommandHandler\System\UpdateSlaTargetDate::class,
     Command\System\GenerateSlaTargetDate::class => CommandHandler\System\GenerateSlaTargetDate::class,
+
+    // Task Allocation
+    TransferCommand\TaskAllocationRule\DeleteList::class => CommandHandler\TaskAllocationRule\DeleteList::class,
+    TransferCommand\TaskAllocationRule\Create::class => CommandHandler\TaskAllocationRule\Create::class,
+    TransferCommand\TaskAllocationRule\Update::class => CommandHandler\TaskAllocationRule\Update::class,
+
+    // Task Alpha Split
+    TransferCommand\TaskAlphaSplit\DeleteList::class => CommandHandler\TaskAlphaSplit\DeleteList::class,
+    TransferCommand\TaskAlphaSplit\Delete::class => CommandHandler\TaskAlphaSplit\Delete::class,
+    TransferCommand\TaskAlphaSplit\Create::class => CommandHandler\TaskAlphaSplit\Create::class,
+    TransferCommand\TaskAlphaSplit\Update::class => CommandHandler\TaskAlphaSplit\Update::class,
+
+    // System Messages
+    TransferCommand\System\InfoMessage\Create::class => CommandHandler\System\InfoMessage\Create::class,
+    TransferCommand\System\InfoMessage\Update::class => CommandHandler\System\InfoMessage\Update::class,
+    TransferCommand\System\InfoMessage\Delete::class => CommandHandler\System\InfoMessage\Delete::class,
 ];

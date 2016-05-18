@@ -9,6 +9,22 @@ class OrganisationName implements FormatterInterface
 {
     protected static $separator = ' ';
 
+    /**
+     * Needs to reset static properties to default
+     *
+     * @return void
+     */
+    public static function resetToDefault()
+    {
+        static::$separator = ' ';
+    }
+
+    /**
+     * Formats the data
+     *
+     * @param array $data
+     * @return string
+     */
     public static function format(array $data)
     {
         $nameParts = [];
@@ -19,9 +35,20 @@ class OrganisationName implements FormatterInterface
             $nameParts[] = 'T/A ' . static::getFirstTradingName($data['tradingNames']);
         }
 
-        return implode(static::getSeparator(), $nameParts);
+        $result = implode(static::getSeparator(), $nameParts);
+
+        // need to reset static properties to default
+        static::resetToDefault();
+
+        return $result;
     }
 
+    /**
+     * Gets the first trading name
+     *
+     * @param array $tradingNames
+     * @return string
+     */
     private static function getFirstTradingName($tradingNames)
     {
         // we could use usort here, but we don't actually want to sort

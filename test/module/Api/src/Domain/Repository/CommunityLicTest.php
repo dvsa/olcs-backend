@@ -64,9 +64,11 @@ class CommunityLicTest extends RepositoryTestCase
         $mockQb->shouldReceive('andWhere')->with('statuses')->once()->andReturnSelf();
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
-        $mockQb->shouldReceive('getQuery->execute')->once()->andReturn(['result']);
+        $mockQb->shouldReceive('getQuery->getOneOrNullResult')
+            ->once()
+            ->andReturn(['result']);
 
-        $this->assertEquals('result', $this->sut->fetchOfficeCopy($licenceId));
+        $this->assertEquals(['result'], $this->sut->fetchOfficeCopy($licenceId));
     }
 
     public function testFetchValidLicences()

@@ -54,7 +54,7 @@ class CorrespondenceInboxTest extends RepositoryTestCase
         $qb->shouldReceive('andWhere')->with('condition4')->once()->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('maxDate', $maxDate)->once()->andReturnSelf();
 
-        $qb->shouldReceive('expr->isNull')->with('m.printed')->once()->andReturn('condition5');
+        $qb->shouldReceive('expr->eq')->with('m.printed', 0)->once()->andReturn('condition5');
         $qb->shouldReceive('andWhere')->with('condition5')->once()->andReturnSelf();
 
         $qb->shouldReceive('expr->isNotNull')->with('l.id')->once()->andReturn('condition6');
@@ -94,10 +94,10 @@ class CorrespondenceInboxTest extends RepositoryTestCase
         $qb->shouldReceive('andWhere')->with('condition3')->once()->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('maxDate', $maxDate)->once()->andReturnSelf();
 
-        $qb->shouldReceive('expr->isNull')->with('m.emailReminderSent')->once()->andReturn('condition4');
+        $qb->shouldReceive('expr->eq')->with('m.emailReminderSent', 0)->once()->andReturn('condition4');
         $qb->shouldReceive('andWhere')->with('condition4')->once()->andReturnSelf();
 
-        $qb->shouldReceive('expr->isNull')->with('m.printed')->once()->andReturn('condition5');
+        $qb->shouldReceive('expr->eq')->with('m.printed', 0)->once()->andReturn('condition5');
         $qb->shouldReceive('andWhere')->with('condition5')->once()->andReturnSelf();
 
         $qb->shouldReceive('expr->isNotNull')->with('l.id')->once()->andReturn('condition6');

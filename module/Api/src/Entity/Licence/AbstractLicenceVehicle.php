@@ -59,6 +59,7 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
 
@@ -96,7 +97,11 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\Application
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\Application",
+     *     fetch="LAZY",
+     *     inversedBy="interimLicenceVehicles"
+     * )
      * @ORM\JoinColumn(name="interim_application_id", referencedColumnName="id", nullable=true)
      */
     protected $interimApplication;
@@ -108,6 +113,7 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
 

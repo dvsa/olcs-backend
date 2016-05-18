@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Email\Service;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
+use Zend\View\Model\ViewModel;
 
 /**
  * TemplateRendererTest
@@ -13,69 +14,75 @@ use Dvsa\Olcs\Email\Service\TemplateRenderer;
  */
 class TemplateRendererTest extends MockeryTestCase
 {
-    protected $sut;
-
-    public function setUp()
+    /**
+     * @dataProvider renderBodyProvider
+     *
+     * @param bool $hasHtml
+     * @param int $htmlRenderTimes
+     * @param string|null $renderedHtml
+     */
+    public function testRenderBody($hasHtml, $htmlRenderTimes, $renderedHtml)
     {
-        $this->sut = new TemplateRenderer();
-    }
-
-    public function testRenderBody()
-    {
-        $this->assertNull($this->sut->getDefaultLayout());
-        $this->assertSame($this->sut, $this->sut->setDefaultLayout('foobar'));
-        $this->assertSame('foobar', $this->sut->getDefaultLayout());#
-
+        $sut = new TemplateRenderer();
         $message = new \Dvsa\Olcs\Email\Data\Message('TO', 'SUBJECT');
-        $message->setLocale('LC');
+        $message->setLocale('en_GB');
+        $message->setHasHtml($hasHtml);
 
         $mockViewRenderer = m::mock(\Zend\View\Renderer\RendererInterface::class);
-        $this->assertSame($this->sut, $this->sut->setViewRenderer($mockViewRenderer));
-        $this->assertSame($this->sut, $this->sut->setDefaultLayout('LAYOUT'));
+        $this->assertSame($sut, $sut->setViewRenderer($mockViewRenderer));
 
         $mockViewRenderer->shouldReceive('render')->once()->andReturnUsing(
-            function (\Zend\View\Model\ViewModel $model) {
-                $this->assertSame('LC/TEMPLATE', $model->getTemplate());
+            function (ViewModel $model) {
+                $this->assertSame('en_GB/plain/TEMPLATE', $model->getTemplate());
                 $this->assertSame(['var1', 'var2'], $model->getVariables()->getArrayCopy());
 
-                return 'RENDER_TEMPLATE';
+                return 'RENDER_PLAIN_TEMPLATE';
             }
         );
 
         $mockViewRenderer->shouldReceive('render')->once()->andReturnUsing(
-            function (\Zend\View\Model\ViewModel $model) {
-                $this->assertSame('LAYOUT', $model->getTemplate());
-                $this->assertSame(['content' => 'RENDER_TEMPLATE'], $model->getVariables()->getArrayCopy());
+            function (ViewModel $model) {
+                $this->assertSame('en_GB/plain/default', $model->getTemplate());
+                $this->assertSame(['content' => 'RENDER_PLAIN_TEMPLATE'], $model->getVariables()->getArrayCopy());
 
-                return 'RENDER_LAYOUT';
+                return 'RENDER_PLAIN_LAYOUT';
             }
         );
 
-        $this->sut->renderBody($message, 'TEMPLATE', ['var1', 'var2']);
+        $mockViewRenderer->shouldReceive('render')->times($htmlRenderTimes)->andReturnUsing(
+            function (ViewModel $model) {
+                $this->assertSame('en_GB/html/TEMPLATE', $model->getTemplate());
+                $this->assertSame(['var1', 'var2'], $model->getVariables()->getArrayCopy());
 
-        $this->assertSame('RENDER_LAYOUT', $message->getBody());
+                return 'RENDER_HTML_TEMPLATE';
+            }
+        );
+
+        $mockViewRenderer->shouldReceive('render')->times($htmlRenderTimes)->andReturnUsing(
+            function (ViewModel $model) {
+                $this->assertSame('en_GB/html/default', $model->getTemplate());
+                $this->assertSame(['content' => 'RENDER_HTML_TEMPLATE'], $model->getVariables()->getArrayCopy());
+
+                return 'RENDER_HTML_LAYOUT';
+            }
+        );
+
+        $sut->renderBody($message, 'TEMPLATE', ['var1', 'var2']);
+
+        $this->assertSame('RENDER_PLAIN_LAYOUT', $message->getPlainBody());
+        $this->assertSame($renderedHtml, $message->getHtmlBody());
     }
 
-    public function testRenderBodyNoLayout()
+    /**
+     * Data provider for testRenderBody
+     *
+     * @return array
+     */
+    public function renderBodyProvider()
     {
-
-        $message = new \Dvsa\Olcs\Email\Data\Message('TO', 'SUBJECT');
-        $message->setLocale('LC');
-
-        $mockViewRenderer = m::mock(\Zend\View\Renderer\RendererInterface::class);
-        $this->assertSame($this->sut, $this->sut->setViewRenderer($mockViewRenderer));
-
-        $mockViewRenderer->shouldReceive('render')->once()->andReturnUsing(
-            function (\Zend\View\Model\ViewModel $model) {
-                $this->assertSame('LC/TEMPLATE', $model->getTemplate());
-                $this->assertSame(['var1', 'var2'], $model->getVariables()->getArrayCopy());
-
-                return 'RENDER_TEMPLATE';
-            }
-        );
-
-        $this->sut->renderBody($message, 'TEMPLATE', ['var1', 'var2'], false);
-
-        $this->assertSame('RENDER_TEMPLATE', $message->getBody());
+        return [
+            [true, 1, 'RENDER_HTML_LAYOUT'],
+            [false, 0, null]
+        ];
     }
 }

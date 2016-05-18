@@ -59,6 +59,10 @@ return [
         'configuration' => [
             'orm_default' => [
                 'metadata_cache' => 'apc'
+
+                // Disable these in Development environment
+                //'query_cache' => 'apc',
+                //'result_cache' => 'apc',
             ]
         ],
     ],
@@ -88,6 +92,9 @@ return [
             'workspace' => 'olcs'
         ],
     ],
+
+    // Asset path, URI to olcs-static (CSS, JS, etc) *Environment specific*
+    'asset_path' => '',     //  https://dev-olcs-static.i-env.net'
 
     // Companies house RESTful API
     'companies_house' => [

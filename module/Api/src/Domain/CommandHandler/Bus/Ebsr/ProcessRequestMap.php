@@ -22,8 +22,6 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Domain\TransExchangeAwareInterface;
 use Dvsa\Olcs\Api\Domain\TransExchangeAwareTrait;
-use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
-use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
@@ -41,13 +39,11 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     TransactionedInterface,
     UploaderAwareInterface,
     TransExchangeAwareInterface,
-    EmailAwareInterface,
     ConfigAwareInterface,
     FileProcessorAwareInterface
 {
     use UploaderAwareTrait;
     use TransExchangeAwareTrait;
-    use EmailAwareTrait;
     use ConfigAwareTrait;
     use FileProcessorAwareTrait;
     use QueueAwareTrait;
@@ -105,7 +101,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
 
             foreach ($documents['files'] as $document) {
                 $result->merge(
-                    $this->handleSideEffect($this->generateDocumentCmd($document, $busReg))
+                    $this->handleSideEffect($this->generateDocumentCmd($document, $busReg, $command->getUser()))
                 );
             }
 
@@ -161,9 +157,10 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     /**
      * @param string $document
      * @param BusRegEntity $busReg
+     * @param int $user
      * @return UploadCmd
      */
-    private function generateDocumentCmd($document, BusRegEntity $busReg)
+    private function generateDocumentCmd($document, BusRegEntity $busReg, $user)
     {
         $data = [
             'content' => base64_encode(file_get_contents($document)),
@@ -172,7 +169,8 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
             'category' => CategoryEntity::CATEGORY_BUS_REGISTRATION,
             'subCategory' => CategoryEntity::BUS_SUB_CATEGORY_OTHER_DOCUMENTS,
             'filename' => basename($document),
-            'description' => 'TransXchange file'
+            'description' => 'TransXchange file',
+            'user' => $user
         ];
 
         return UploadCmd::create($data);

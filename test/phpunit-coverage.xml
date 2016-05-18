@@ -32,6 +32,7 @@
         <testsuite name="ApiMisc">
             <directory>./module/Api/src/Assertion</directory>
             <directory>./module/Api/src/Controller</directory>
+            <directory>./module/Api/src/Mvc</directory>
             <directory>./module/Api/src/Rbac</directory>
             <directory>./module/Api/src/Filesystem</directory>
         </testsuite>

@@ -2,12 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark\Alias;
 
-use Dvsa\Olcs\Api\Service\Document\Bookmark\BkmExpiry;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\IrfoPsvEndDate;
 
 /**
- * Alias of BkmExpiry
+ * Alias of IrfoPsvEndDate
  */
-class BkmServiceDurOrDate extends BkmExpiry
+class BkmServiceDurOrDate extends IrfoPsvEndDate
 {
     //
 }

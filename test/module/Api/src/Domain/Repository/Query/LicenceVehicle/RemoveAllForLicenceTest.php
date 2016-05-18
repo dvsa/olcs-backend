@@ -11,9 +11,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Query\LicenceVehicle\RemoveAllForLicence;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbQueryTestCase;
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceManager;
 
 /**
  * Cease Discs For Licence Test
@@ -34,7 +31,13 @@ class RemoveAllForLicenceTest extends AbstractDbQueryTestCase
             'licence' => [
                 'isAssocation' => true,
                 'column' => 'licence_id'
-            ]
+            ],
+            'lastModifiedOn' => [
+                'column' => 'last_modified_on'
+            ],
+            'lastModifiedBy' => [
+                'column' => 'last_modified_by'
+            ],
         ]
     ];
 
@@ -61,6 +64,10 @@ class RemoveAllForLicenceTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'UPDATE licence_vehicle lv SET lv.removal_date = :removalDate WHERE lv.licence_id = :licence';
+        return 'UPDATE licence_vehicle lv '
+        . 'SET lv.removal_date = :removalDate, '
+            . 'lv.last_modified_on = NOW(), '
+            . 'lv.last_modified_by = :currentUserId '
+        . 'WHERE lv.licence_id = :licence';
     }
 }

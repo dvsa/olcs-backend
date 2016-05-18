@@ -35,7 +35,6 @@ return [
             'ApplicationPublishValidationService' =>
                 \Dvsa\Olcs\Api\Service\Lva\Application\PublishValidationService::class,
             'ContentStore' => \Dvsa\Olcs\DocumentShare\Service\ClientFactory::class,
-            \Dvsa\Olcs\Api\Rbac\IdentityProvider::class => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
             'PayloadValidationListener' => \Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory::class,
             'CommandHandlerManager' => \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::class,
             'QueryHandlerManager' => \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::class,
@@ -96,7 +95,9 @@ return [
             'ComplianceEpisodeXmlMapping' => \Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXmlFactory::class,
 
             \Dvsa\Olcs\Api\Service\Nr\InrClientInterface::class => Dvsa\Olcs\Api\Service\Nr\InrClientFactory::class,
-            \Dvsa\Olcs\Api\Service\Nr\MsiResponse::class => \Dvsa\Olcs\Api\Service\Nr\MsiResponseFactory::class
+            \Dvsa\Olcs\Api\Service\Nr\MsiResponse::class => \Dvsa\Olcs\Api\Service\Nr\MsiResponseFactory::class,
+
+            \Dvsa\Olcs\Api\Mvc\OlcsBlameableListener::class => \Dvsa\Olcs\Api\Mvc\OlcsBlameableListenerFactory::class
         ],
     ],
     'view_manager' => [
@@ -212,6 +213,7 @@ return [
             'Stay' => RepositoryFactory::class,
             'Submission ' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
+            'TaskAlphaSplit' => RepositoryFactory::class,
             'IrfoPartner' => RepositoryFactory::class,
             'Transaction' => RepositoryFactory::class,
             'TransportManager' => RepositoryFactory::class,
@@ -301,6 +303,9 @@ return [
             'ViOpView' => RepositoryFactory::class,
             'ViTnmView' => RepositoryFactory::class,
             'ViVhlView' => RepositoryFactory::class,
+            'SystemInfoMessage' => RepositoryFactory::class,
+            'Reason' => RepositoryFactory::class,
+            'PiDefinition' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
@@ -331,7 +336,8 @@ return [
             'orm_default' => [
                 'subscribers' => [
                     'Gedmo\SoftDeleteable\SoftDeleteableListener',
-                    'Gedmo\Translatable\TranslatableListener'
+                    'Gedmo\Translatable\TranslatableListener',
+                    \Dvsa\Olcs\Api\Mvc\OlcsBlameableListener::class
                 ],
             ],
         ],
@@ -389,8 +395,6 @@ return [
             Dvsa\Olcs\Api\Service\Publication\Context\Application\BusNote::class,
         Dvsa\Olcs\Api\Service\Publication\Context\Application\ConditionUndertaking::class =>
             Dvsa\Olcs\Api\Service\Publication\Context\Application\ConditionUndertaking::class,
-        Dvsa\Olcs\Api\Service\Publication\Context\Application\LicenceCancelled::class =>
-            Dvsa\Olcs\Api\Service\Publication\Context\Application\LicenceCancelled::class,
         Dvsa\Olcs\Api\Service\Publication\Context\Application\OperatingCentres::class =>
             Dvsa\Olcs\Api\Service\Publication\Context\Application\OperatingCentres::class,
         Dvsa\Olcs\Api\Service\Publication\Context\Application\TransportManagers::class =>
@@ -419,8 +423,6 @@ return [
             Dvsa\Olcs\Api\Service\Publication\Process\Application\Text2::class,
         Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class =>
             Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class,
-        Dvsa\Olcs\Api\Service\Publication\Process\Police::class =>
-            Dvsa\Olcs\Api\Service\Publication\Process\Police::class,
         Dvsa\Olcs\Api\Service\Publication\Process\Application\Police::class =>
             Dvsa\Olcs\Api\Service\Publication\Process\Application\Police::class,
         Dvsa\Olcs\Api\Service\Publication\Process\Licence\Text1::class =>
@@ -634,6 +636,8 @@ return [
         'http://www.w3.org/2001/xml.xsd' => __DIR__ . '/../data/ebsr/xsd/xml.xsd',
         'http://www.transxchange.org.uk/schema/2.1/TransXChange_registration.xsd' =>
             __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.1/TransXChange_registration.xsd',
+        'http://www.transxchange.org.uk/schema/2.1/publisher/3.1.2/TransXChangePublisherService.xsd' =>
+            __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.1/TransXChangePublisherService.xsd',
         'https://webgate.ec.testa.eu/erru/1.0' => __DIR__ . '/../data/nr/xsd/ERRU2MS_Infringement_Req.xsd'
     ],
     'validators' => [
@@ -724,7 +728,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates::class,
             \Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber::class =>
                 \Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber::class,
-
+            \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification::class
         ],
         'factories' => [
             \Dvsa\Olcs\Api\Service\Nr\Filter\Vrm::class => \Dvsa\Olcs\Api\Service\Nr\Filter\VrmFactory::class

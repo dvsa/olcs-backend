@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Cpms\DownloadReport as Cmd;
@@ -43,6 +42,7 @@ final class DownloadReport extends AbstractCommandHandler implements CpmsAwareIn
             'category'    => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_FINANCIAL_REPORTS,
             'isExternal'  => false,
+            'user'        => $command->getUser()
         ];
 
         $command = UploadCmd::create($uploadData);

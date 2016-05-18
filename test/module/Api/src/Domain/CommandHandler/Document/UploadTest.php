@@ -84,7 +84,8 @@ class UploadTest extends CommandHandlerTestCase
             'category' => 11,
             'subCategory' => 22,
             'isExternal' => 1,
-            'description' => 'foo'
+            'description' => 'foo',
+            'user' => 1
         ];
 
         $data[$key] = $id;
@@ -126,7 +127,8 @@ class UploadTest extends CommandHandlerTestCase
             'identifier' => '/some/identifier.pdf',
             'filename' => '/some/identifier.pdf',
             'description' => 'foo',
-            'isExternal' => 1
+            'isExternal' => 1,
+            'user' => 1
         ];
         $this->expectedSideEffect(CreateDocumentSpecific::class, $data, $result);
 
@@ -157,7 +159,8 @@ class UploadTest extends CommandHandlerTestCase
             'filename' => 'foo.pdf',
             'category' => 11,
             'subCategory' => 22,
-            'isExternal' => 1
+            'isExternal' => 1,
+            'user' => 1
         ];
 
         $data[$key] = $id;
@@ -202,7 +205,8 @@ class UploadTest extends CommandHandlerTestCase
             'content' => base64_encode('<foo>'),
             'filename' => 'foo.pdf',
             'category' => 11,
-            'subCategory' => 22
+            'subCategory' => 22,
+            'user' => 1
         ];
 
         $command = \Dvsa\Olcs\Transfer\Command\Document\Upload::create($data);
@@ -241,7 +245,8 @@ class UploadTest extends CommandHandlerTestCase
         $data = [
             'identifier' => '/some/identifier.pdf',
             'filename' => '/some/identifier.pdf',
-            'description' => 'foo'
+            'description' => 'foo',
+            'user' => 1
         ];
         $this->expectedSideEffect(CreateDocument::class, $data, $result);
 

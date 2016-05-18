@@ -82,7 +82,6 @@ TRUNCATE TABLE `impounding`;
 TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
-TRUNCATE TABLE `task_allocation_rule`;
 TRUNCATE TABLE `txc_inbox`;
 TRUNCATE TABLE `scan`;
 TRUNCATE TABLE `serious_infringement`;
@@ -479,7 +478,7 @@ VALUES
     (77,'ct_corr',1072,46,4,1,'Important Person',0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (100,'ct_reg',1100,44,4,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (101,'ct_user',1026,4,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (102,'ct_corr',1041,NULL,1,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (102,'ct_irfo_op',1041,NULL,1,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (103,'ct_complainant',1072,46,4,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (104,'ct_tm',1110,NULL,1,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (105,'ct_user',1026,81,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
@@ -1122,7 +1121,19 @@ INSERT INTO `person` (`id`, `created_by`, `last_modified_by`, `birth_place`, `ti
     (85,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Kevin','Rooney',NULL,NULL,NULL,1,NULL),
     (86,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Sarah','Thompson',NULL,NULL,NULL,1,NULL),
     (87,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Tom','Smith',NULL,NULL,NULL,1,NULL),
-    (90,1,1,'Aldershot','title_mr','1960-02-01 00:00:00','ABDOU','BONOMI',NULL,NULL,NULL,1,NULL);
+    (90,1,1,'Aldershot','title_mr','1960-02-01 00:00:00','ABDOU','BONOMI',NULL,NULL,NULL,1,NULL),
+
+    (91,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Kirstie','Brown',NULL,NULL,NULL,1,NULL),
+    (92,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Dianne','Craven',NULL,NULL,NULL,1,NULL),
+    (93,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Neil','Chivers',NULL,NULL,NULL,1,NULL),
+    (94,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Shakil','Ahmed',NULL,NULL,NULL,1,NULL),
+    (95,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Rachael','Evans',NULL,NULL,NULL,1,NULL),
+    (96,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Nicola','Field',NULL,NULL,NULL,1,NULL),
+    (97,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Julie','Goward',NULL,NULL,NULL,1,NULL),
+    (98,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Catherine','Tobin',NULL,NULL,NULL,1,NULL),
+    (99,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Philip','Stagg',NULL,NULL,NULL,1,NULL),
+    (100,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Carole','Ryalls',NULL,NULL,NULL,1,NULL),
+    (101,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Steven','Jones',NULL,NULL,NULL,1,NULL);
 
 INSERT INTO `disqualification` (
     `id`, `created_by`, `last_modified_by`, `is_disqualified`, `period`,
@@ -1311,14 +1322,14 @@ INSERT INTO `tm_case_decision_unfitness` (`tm_case_decision_id`,`unfitness_reaso
   (1,'tm_unfit_inn');
 
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `login_id`,`contact_details_id`, `local_authority_id`,`transport_manager_id`,`partner_contact_details_id`, `pid`) VALUES
-  (273, 1, 2, 2, now(), now(), 'usr273', 105, null, NULL, NULL, '0a041b9462caa4a31bac3567e0b6e6fd9100787db2ab433d96f6d178cabfce90'),
-  (291, 1, 2, 2, now(), now(), 'usr291', 106, null, NULL, NULL, '6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3'), -- ADMIN, System	Internal
-  (20, 1, 2, 2, now(), now(), 'usr20', 130, null, NULL, NULL,'5860faf02b6bc6222ba5aca523560f0e364ccd8b67bee486fe8bf7c01d492ccb'), -- CW, Case Worker	Internal
-  (21, 1, 2, 2, now(), now(), 'usr21', 131, null, NULL, NULL, '5269ef980de47819ba3d14340f4665262c41e933dc92c1a27dd5d01b047ac80e'), -- CW, Case Worker	Internal
-  (528, 1, 2, 2, now(), now(), 'usr528', 132, null, NULL, NULL, '5a39bead318f306939acb1d016647be2e38c6501c58367fdb3e9f52542aa2442'),-- CWRO, Case Worker Read Only	Internal
-  (529, 1, 2, 2, now(), now(), 'usr529', 133, null, NULL, NULL, 'ecb48a1cc94f951252ec462fe9ecc55c3ef123fadfe935661396c26a45a5809d'),-- CWRO, Case Worker Read Only	Internal
-  (331, 1, 2, 2, now(), now(), 'usr331', 114, null, NULL, NULL,'9400f1b21cb527d7fa3d3eabba93557a18ebe7a2ca4e471cfe5e4c5b4ca7f767'),	-- CWRON, Case Worker Read Only No Documents	Internal
-  (342, 1, 2, 2, now(), now(), 'usr342', 101, null, NULL, NULL, 'f5ca38f748a1d6eaf726b8a42fb575c3c71f1864a8143301782de13da2d9202b'),	-- CWRON, Case Worker Read Only No Documents	Internal
+  (273, 13, 2, 2, now(), now(), 'usr273', 105, null, NULL, NULL, '0a041b9462caa4a31bac3567e0b6e6fd9100787db2ab433d96f6d178cabfce90'),
+  (291, 14, 2, 2, now(), now(), 'usr291', 106, null, NULL, NULL, '6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3'), -- ADMIN, System	Internal
+  (20, 13, 2, 2, now(), now(), 'usr20', 130, null, NULL, NULL,'5860faf02b6bc6222ba5aca523560f0e364ccd8b67bee486fe8bf7c01d492ccb'), -- CW, Case Worker	Internal
+  (21, 13, 2, 2, now(), now(), 'usr21', 131, null, NULL, NULL, '5269ef980de47819ba3d14340f4665262c41e933dc92c1a27dd5d01b047ac80e'), -- CW, Case Worker	Internal
+  (528, 13, 2, 2, now(), now(), 'usr528', 132, null, NULL, NULL, '5a39bead318f306939acb1d016647be2e38c6501c58367fdb3e9f52542aa2442'),-- CWRO, Case Worker Read Only	Internal
+  (529, 13, 2, 2, now(), now(), 'usr529', 133, null, NULL, NULL, 'ecb48a1cc94f951252ec462fe9ecc55c3ef123fadfe935661396c26a45a5809d'),-- CWRO, Case Worker Read Only	Internal
+  (331, 13, 2, 2, now(), now(), 'usr331', 114, null, NULL, NULL,'9400f1b21cb527d7fa3d3eabba93557a18ebe7a2ca4e471cfe5e4c5b4ca7f767'),	-- CWRON, Case Worker Read Only No Documents	Internal
+  (342, 13, 2, 2, now(), now(), 'usr342', 101, null, NULL, NULL, 'f5ca38f748a1d6eaf726b8a42fb575c3c71f1864a8143301782de13da2d9202b'),	-- CWRON, Case Worker Read Only No Documents	Internal
   (20131, NULL, 2, 2, now(), now(), 'usr20131', 169, 1, NULL, NULL, '3268151e52d97b4cacf97f5b46a5c76c8416e928e137e3b3dc447696a29afbaa'),-- LA, Local Authority, LA dashboard application	SelfServe
   (20132, NULL, 2, 2, now(), now(), 'usr20132', 170, 1, NULL, NULL, 'f60afa4989a7db13314a2ab9881372634b5402c30ba7257448b13fa388de1b78'),-- LA, Local Authority, LA dashboard application	SelfServe
   (1964, NULL, 2, 2, now(), now(), 'usr1964', 101, null, NULL, 140, '19581e27de7ced00ff1ce50b2047e7a567c76b1cbaebabe5ef03f7c3017bb5b7'),-- PART, Partner, HMRC	Partner
@@ -1329,7 +1340,29 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
   (543, NULL, 2, 2, now(), now(), 'usr543', 101, null, 1, NULL, '8527a891e224136950ff32ca212b45bc93f69fbb801c3b1ebedac52775f99e61'),-- SS, Self Serve    SelfServe
   (611, NULL, 2, 2, now(), now(), 'usr611', 165, null, NULL, NULL,'8fab3a60577befd765cde83f2737cd1a9f25a72356c94052c2194e816829b331'),-- SSADMIN, Self Service Administrators NB Does not use a role. Instead see organisation_user link table where is_administrator=1 for users with the self service role	SelfServe
   (612, NULL, 2, 2, now(), now(), 'usr612', 101, null, NULL, NULL, 'b999205cdacd2c4516598d99b420d29786443e9908556a65f583a6fd4765ee4a'), -- SSADMIN, Self Service Administrators NB Does not use a role. Instead see organisation_user link table where is_administrator=1 for users with the self service role	SelfServe
-  (1, NULL, 2, 2, now(), now(), 'system', null, null, NULL, NULL, '10236fc8becc3b78f6956e26de661d57bc67d9424424fbdbe584d9736ba6aa38') -- System User
+  (1, NULL, 2, 2, now(), now(), 'system', null, null, NULL, NULL, '10236fc8becc3b78f6956e26de661d57bc67d9424424fbdbe584d9736ba6aa38'), -- System User
+  /* Kirstie Brown */
+  (36047, 17, 2, 2, now(), now(), 'usr36047', 230, NULL, NULL, NULL, NULL),
+  /* Dianne Craven */
+  (29431, 17, 2, 2, now(), now(), 'usr29431', 231, NULL, NULL, NULL, NULL),
+  /* Neil Chivers */
+  (76754, 17, 2, 2, now(), now(), 'usr76754', 232, NULL, NULL, NULL, NULL),
+  /* Shakil Ahmed */
+  (322, 17, 2, 2, now(), now(), 'usr322', 233, NULL, NULL, NULL, NULL),
+  /* 	Rachael Evans */
+  (73852, 17, 2, 2, now(), now(), 'usr73852', 234, NULL, NULL, NULL, NULL),
+  /* 	Nicola Field */
+  (68648, 17, 2, 2, now(), now(), 'usr68648', 235, NULL, NULL, NULL, NULL),
+  /* 	Julie Goward */
+  (1071, 99, 2, 2, now(), now(), 'usr1071', 236, NULL, NULL, NULL, NULL),
+  /* 	Catherine Tobin */
+  (39158, 99, 2, 2, now(), now(), 'usr39158', 237, NULL, NULL, NULL, NULL),
+  /* 	Philip Stagg */
+  (455, 99, 2, 2, now(), now(), 'usr455', 238, NULL, NULL, NULL, NULL),
+  /* 	Carole Ryalls */
+  (76189, 99, 2, 2, now(), now(), 'usr76189', 239, NULL, NULL, NULL, NULL),
+  /* 	Steven Jones */
+  (59, 21, 2, 2, now(), now(), 'usr59', 240, NULL, NULL, NULL, NULL)
 ;
 
 UPDATE `user` SET pid = SHA2(login_id, 256);
@@ -1359,7 +1392,19 @@ INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
   (543, 27),
   (611, 25),
   (612, 25),
-  (1, 24)
+  (1, 24),
+
+  (36047, 24),
+  (29431, 24),
+  (76754, 24),
+  (322, 24),
+  (73852, 24),
+  (68648, 24),
+  (1071, 24),
+  (39158, 24),
+  (455, 24),
+  (76189, 24),
+  (59, 24)
   ;
 
 INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_weight`,
@@ -1440,17 +1485,106 @@ VALUES
   (83,'case_t_tm',NULL,NULL,3,NULL,NULL,'','2014-02-11',NULL,'Case linked to an external Transport manager',0,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1),
   (84,'case_t_tm',NULL,NULL,3,NULL,NULL,'','2014-02-11',NULL,'Case linked to an external Transport manager',0,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1);
 
-INSERT INTO team(id,version,name,traffic_area_id) VALUES
-    (1,1,'Marketing','B'),
-    (2,1,'Development','B'),
-    (3,1,'Infrastructure','B'),
-    (4,1,'Support','B'),
-    (5,1,'Assisted Digital FEP','B'),
-    (6,1,'Bus Reg Team','B'),
-    (7,1,'Compliance Team','B'),
-    (8,1,'Environmental Team',NULL),
-    (9,1,'IRFO Team',NULL),
-    (32,1,'Self service Operators',NULL);
+INSERT INTO `team` (`id`, `traffic_area_id`, `description`, `name`, `created_on`, `last_modified_on`, `version`)
+VALUES
+	(1, 'B', 'System Team', 'System Team', '2012-07-10 10:09:23.000000', '2012-07-10 10:09:23.000000', 1),
+	(2, 'B', 'Archive Staff Users', 'Archive Staff Users', '2011-06-02 10:58:43.000000', '2011-06-02 10:58:43.000000', 1),
+	(3, 'M', 'Scottish TAN Case workers', 'STA', '2012-01-24 15:39:24.000000', '2012-01-24 15:39:24.000000', 1),
+	(4, 'K', 'South East and Metropolitan traffic area', 'SEMTA', '2012-01-24 15:38:35.000000', '2012-01-24 15:38:35.000000', 1),
+	(6, 'F', 'Eastern Traffic Area', 'ETA', '2012-03-12 11:05:05.000000', '2012-03-12 11:05:05.000000', 1),
+	(7, 'H', 'WTA', 'WTA', '2012-01-24 15:42:06.000000', '2012-01-24 15:42:06.000000', 1),
+	(10, 'G', 'Welsh Traffic Area', 'TWTA', '2012-01-24 15:40:41.000000', '2012-01-24 15:40:41.000000', 1),
+	(12, 'D', 'West Midlands Traffic Area', 'WMTA', '2012-01-24 15:41:44.000000', '2012-01-24 15:41:44.000000', 1),
+	(13, 'C', 'Leeds Licensing Team 1', 'Leeds Licensing Team 1', '2015-04-09 08:33:09.000000', '2015-04-09 08:33:09.000000', 1),
+	(14, 'C', 'Leeds Licensing Team 2', 'Leeds Licensing Team 2', '2015-04-16 10:29:54.000000', '2015-04-16 10:29:54.000000', 1),
+	(15, 'C', 'Leeds Licensing Team 3', 'Leeds Licensing Team 3', '2015-04-09 08:32:43.000000', '2015-04-09 08:32:43.000000', 1),
+	(16, 'C', 'Leeds Licensing Team 4', 'Leeds Licensing Team 4', '2015-04-16 10:30:47.000000', '2015-04-16 10:30:47.000000', 1),
+	(17, 'C', 'Leeds Licensing Team 5', 'Leeds Licensing Team 5', '2014-02-21 10:11:15.000000', '2014-02-21 10:11:15.000000', 1),
+	(18, 'C', 'Leeds Licensing Team 6 (Managers)', 'Leeds Licensing Team 6', '2014-09-04 15:29:12.000000', '2014-09-04 15:29:12.000000', 1),
+	(19, 'M', 'STA Licensing Team 1', 'STA Licensing Team 1', '2012-01-31 12:26:52.000000', '2012-01-31 12:26:52.000000', 1),
+	(20, 'M', 'STA Licensing Team 2', 'STA Licensing Team 2', '2012-01-24 15:40:15.000000', '2012-01-24 15:40:15.000000', 1),
+	(21, 'M', 'STA Compliance Team 1', 'STA Compliance Team 1', '2013-05-09 14:16:09.000000', '2013-05-09 14:16:09.000000', 1),
+	(23, 'C', 'Leeds Compliance Team 1', 'Leeds Compliance Team 1', '2002-01-29 00:00:00.000000', '2002-01-29 00:00:00.000000', 1),
+	(24, 'C', 'VOSA Finance', 'VOSA Finance', '2010-01-08 16:01:32.000000', '2010-01-08 16:01:32.000000', 1),
+	(25, 'C', 'VOSA Information Access Team', 'VOSA Information Access Team', '2010-01-08 16:02:21.000000', '2010-01-08 16:02:21.000000', 1),
+	(26, 'C', 'VOSA NIU', 'VOSA NIU', '2010-01-08 16:03:06.000000', '2010-01-08 16:03:06.000000', 1),
+	(27, 'H', 'WTA Licensing Team 1', 'WTA Licensing Team 1', '2012-01-24 15:42:46.000000', '2012-01-24 15:42:46.000000', 1),
+	(28, 'H', 'VOSA Records Management', 'VOSA Records Management', '2002-02-05 00:00:00.000000', '2002-02-05 00:00:00.000000', 1),
+	(30, 'H', 'WTA Compliance Team', 'WTA Compliance Team', '2013-08-23 12:57:43.000000', '2013-08-23 12:57:43.000000', 1),
+	(31, 'D', 'West Mids Licensing Team 1', 'West Mids Licensing Team 1', '2012-07-05 10:08:22.000000', '2012-07-05 10:08:22.000000', 1),
+	(32, 'D', 'VOSA BCO', 'VOSA BCO', '2002-02-06 00:00:00.000000', '2002-02-06 00:00:00.000000', 1),
+	(33, 'G', 'VOSA SAS data team', 'VOSA SAS data team', '2012-01-24 15:41:14.000000', '2012-01-24 15:41:14.000000', 1),
+	(34, 'G', 'Welsh Compliance Team', 'Welsh Compliance Team', '2012-01-26 15:26:51.000000', '2012-01-26 15:26:51.000000', 1),
+	(35, 'K', 'SEMTA Licensing Team 1', 'SEMTA Licensing Team 1', '2013-01-11 11:41:01.000000', '2013-01-11 11:41:01.000000', 1),
+	(36, 'K', 'SEMTA Licensing Team 2', 'SEMTA Licensing Team 2', '2013-01-16 11:28:46.000000', '2013-01-16 11:28:46.000000', 1),
+	(37, 'K', 'SEMTA Compliance Team 1', 'SEMTA Compliance Team 1', '2012-01-24 15:38:51.000000', '2012-01-24 15:38:51.000000', 1),
+	(39, 'C', 'Self Service Operators', 'Self Service Operators', '2014-12-10 09:43:13.000000', '2014-12-10 09:43:13.000000', 1),
+	(40, 'F', 'ETA - Licensing Team 1', 'ETA - Licensing Team 1', '2012-07-05 09:21:00.000000', '2012-07-05 09:21:00.000000', 1),
+	(41, 'F', 'ETA - Licensing Team 2', 'ETA - Licensing Team 2', '2012-07-05 09:21:24.000000', '2012-07-05 09:21:24.000000', 1),
+	(43, 'C', 'Leeds - Office Support', 'Leeds - Office Support', '2010-07-01 17:30:22.000000', '2010-07-01 17:30:22.000000', 1),
+	(44, 'C', 'Leeds Licensing Team 7', 'Leeds Licensing Team 7', '2016-01-25 11:31:21.000000', '2016-01-25 11:31:21.000000', 1),
+	(45, 'K', 'VOSA Enforcement staff', 'VOSA Enforcement staff', '2003-03-24 18:15:35.000000', '2003-03-24 18:15:35.000000', 1),
+	(48, 'C', 'VOSA Contact Centre', 'VOSA Contact Centre', '2005-02-11 17:36:23.000000', '2005-02-11 17:36:23.000000', 1),
+	(49, 'M', 'Local Authority Scottish Traffic Area', 'LA Scottish Traffic Area', NULL, NULL, 1),
+	(50, 'B', 'Local Authority North Eastern Traffic Area', 'LA North Eastern Traffic Area', NULL, NULL, 1),
+	(51, 'C', 'Local Authority North Western Traffic Area', 'LA North Western Traffic Area', NULL, NULL, 1),
+	(52, 'D', 'Local Authority West Midland Traffic Area', 'LA West Midland Traffic Area', NULL, NULL, 1),
+	(53, 'F', 'Local Authority Eastern Traffic Area', 'LA Eastern Traffic Area', NULL, NULL, 1),
+	(54, 'G', 'Local Authority Welsh Traffic Area', 'LA Welsh Traffic Area', NULL, NULL, 1),
+	(55, 'H', 'Local Authority Western Traffic Area', 'LA Western Traffic Area', NULL, NULL, 1),
+	(56, 'K', 'Local Authority S.E.Met Traffic Area', 'LA S.E.Met Traffic Area', NULL, NULL, 1),
+	(57, 'M', 'EBSR Files Scottish Traffic Area', 'EBSR_Scottish', '2005-02-24 17:54:26.000000', '2005-02-24 17:54:26.000000', 1),
+	(58, 'B', 'EBSR Files Other Traffic Area', 'EBSR_Other', '2010-07-09 14:26:34.000000', '2010-07-09 14:26:34.000000', 1),
+	(66, 'K', 'VOSA SIU', 'VOSA SIU', '2005-09-22 16:07:34.000000', '2005-09-22 16:07:34.000000', 1),
+	(67, 'H', 'Northern Ireland Licensing Team', 'Northern Ireland Licensing Team', '2012-12-14 09:57:59.000000', '2012-12-14 09:57:59.000000', 1),
+	(70, 'C', 'Leeds Licensing Team 8', 'Leeds Licensing Team 8', '2012-07-05 10:02:39.000000', '2012-07-05 10:02:39.000000', 1),
+	(71, 'C', 'Leeds Licensing MLH', 'Leeds Licensing MLH', '2015-03-03 15:00:56.000000', '2015-03-03 15:00:56.000000', 1),
+	(72, 'C', 'Separater Sheet Print Team for NE & NW', 'Scanning Print Team - North East & North West', '2016-02-01 12:19:47.000000', '2016-02-01 12:19:47.000000', 1),
+	(73, 'C', 'Separater Sheet Print Team for Western & SEMTA', 'Scanning Print Team - Western & SEMTA', '2016-02-08 15:13:43.000000', '2016-02-08 15:13:43.000000', 1),
+	(74, 'C', 'Separater Sheet Print Team for Scottish & Eastern', 'Scanning Print Team - Scottish & Eastern', '2016-02-01 12:16:58.000000', '2016-02-01 12:16:58.000000', 1),
+	(75, 'C', 'Separater Sheet Print Team for Welsh & West Midlands', 'Scanning Print Team - Welsh & West Midlands', '2016-02-01 14:58:41.000000', '2016-02-01 14:58:41.000000', 1),
+	(76, 'B', 'Scanning  NETA Task ', 'OB - NETA GV Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(77, 'C', 'Scanning  NWTA Task ', 'OC - NWTA GV Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(78, 'F', 'Scanning  ETA Task ', 'OF - ETA GV Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(79, 'D', 'Scanning  WMTA Task ', 'OD - WMTA GV Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(80, 'G', 'Scanning  Wales Task ', 'OG - WALES GV Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(81, 'H', 'Scanning WTA Task ', 'OH - WTA GV Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(82, 'K', 'Scanning SEMTA Task ', 'OK - SEMTA GV Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(83, 'M', 'Scanning SCOTA Task ', 'OM - SCOTA GV Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(84, 'B', 'PSV Scanning  NETA Task ', 'PB - NETA PSV Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(85, 'C', 'PSV Scanning  NWTA Task ', 'PC - NWTA PSV Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(86, 'F', 'PSV Scanning  ETA Task ', 'PF - ETA PSV Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(87, 'D', 'PSV Scanning  WMTA Task ', 'PD - WMTA PSV Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(88, 'G', 'PSV Scanning  Wales Task ', 'PG - WALES PSV Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(89, 'H', 'PSV Scanning WTA Task ', 'PH - WTA PSV Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(90, 'K', 'PSV Scanning SEMTA Task ', 'PK - SEMTA PSV Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(91, 'M', 'PSV Scanning SCOTA Task ', 'PM - SCOTA PSV Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(92, 'B', 'Environmental Scanning Tasks ', 'Environmental Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(93, 'B', 'PI - Scanning Tasks ', 'PI - Scanning Tasks', '2007-10-26 19:28:53.000000', '2007-10-26 19:28:53.000000', 1),
+	(95, 'B', 'MLH Scanning Team', 'MLH Scanning Team', '2007-11-27 12:46:57.000000', '2007-11-27 12:46:57.000000', 1),
+	(96, 'C', 'Atos', 'Atos', '2008-01-10 12:51:49.000000', '2008-01-10 12:51:49.000000', 1),
+	(97, 'C', 'Leeds Licensing Team 5 - 1', 'Leeds Licensing Team 5 - 1', '2012-09-07 14:34:20.000000', '2012-09-07 14:34:20.000000', 1),
+	(98, 'C', 'Leeds Licensing Team 5 - 2', 'Leeds Licensing Team 5 - 2', '2015-02-03 11:25:54.000000', '2015-02-03 11:25:54.000000', 1),
+	(99, 'C', 'Leeds Licensing Team 5 - 3', 'Leeds Licensing Team 5 - 3', '2015-02-18 15:48:33.000000', '2015-02-18 15:48:33.000000', 1),
+	(100, 'C', 'Leeds Licensing Team 5 - 4', 'Leeds Licensing Team 5 - 4', '2012-09-07 14:36:15.000000', '2012-09-07 14:36:15.000000', 1),
+	(101, 'C', 'Leeds Licensing Team 5 - 5', 'Leeds Licensing Team 5 - 5', '2014-11-19 15:38:20.000000', '2014-11-19 15:38:20.000000', 1),
+	(102, 'C', 'Leeds Licensing Team 5 - 6', 'Leeds Licensing Team 5 - 6', '2012-09-07 14:37:41.000000', '2012-09-07 14:37:41.000000', 1),
+	(103, 'C', 'Golborne OTC Team', 'Golborne OTC Team', '2012-01-24 15:38:11.000000', '2012-01-24 15:38:11.000000', 1),
+	(104, 'C', 'Leeds Licensing Team 6 - 1', 'Leeds Licensing Team 6 - 1', '2015-11-11 09:34:09.000000', '2015-11-11 09:34:09.000000', 1),
+	(105, 'C', 'Leeds Licensing Team 6 - 2', 'Leeds Licensing Team 6 - 2', '2015-08-27 09:44:21.000000', '2015-08-27 09:44:21.000000', 1),
+	(106, 'C', 'Leeds Licensing Team 6 - 3', 'Leeds Licensing Team 6 - 3', '2015-07-29 11:56:32.000000', '2015-07-29 11:56:32.000000', 1),
+	(107, 'C', 'Leeds Licensing Team 6 - 4', 'Leeds Licensing Team 6 - 4', '2014-02-06 09:25:19.000000', '2014-02-06 09:25:19.000000', 1),
+	(108, 'C', 'Leeds Licensing Team 6 - 5', 'Leeds Licensing Team 6 - 5', '2015-07-30 13:31:55.000000', '2015-07-30 13:31:55.000000', 1),
+	(109, 'C', 'Leeds Licensing Team 6 - 6', 'Leeds Licensing Team 6 - 6', '2014-11-21 11:06:42.000000', '2014-11-21 11:06:42.000000', 1),
+	(110, 'C', 'EU Regulations Team 1', 'EU Regulations Team 1', '2012-02-15 16:27:17.000000', '2012-02-15 16:27:17.000000', 1),
+	(111, 'C', 'EU Regulations Team 2', 'EU Regulations Team 2', '2012-05-29 14:06:46.000000', '2012-05-29 14:06:46.000000', 1),
+	(112, 'N', 'DVA Enforcement Team', 'DVA Enforcement Team', '2012-09-14 00:00:00.000000', '2012-09-14 00:00:00.000000', 1),
+	(113, 'N', 'NI Env Team', 'NI Env Team', '2012-09-14 00:00:00.000000', '2012-09-14 00:00:00.000000', 1),
+	(114, 'N', 'NI Frontend Processing Team', 'NI Frontend Processing Team', '2015-10-19 15:26:52.000000', '2015-10-19 15:26:52.000000', 1),
+	(115, 'N', 'NI Licensing Caseworker', 'NI Licensing Caseworker', '2015-04-24 14:12:31.000000', '2015-04-24 14:12:31.000000', 1),
+	(116, 'N', 'NI Scanning Team', 'NI Scanning Team', '2012-09-14 00:00:00.000000', '2012-09-14 00:00:00.000000', 1),
+	(117, 'N', 'ON - NI GV Scanning Tasks', 'ON - NI GV Scanning Tasks', '2012-09-14 00:00:00.000000', '2012-09-14 00:00:00.000000', 1),
+	(118, 'N', 'TRU Team', 'TRU Team', '2012-12-20 15:35:13.000000', '2012-12-20 15:35:13.000000', 1);
 
 INSERT INTO `case_category` (`case_id`, `category_id`)
 VALUES
@@ -1461,42 +1595,34 @@ VALUES
  */
 /* Application task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (1,1,7,9,8,1,2,'A test task','2014-08-12',1);
+    (1,1,7,9,8,1,13,'A test task','2014-08-12',1);
     /* Licence task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (2,null,110,1,74,1,2,'Another test task','2013-02-11',1);
+    (2,null,110,1,74,1,13,'Another test task','2013-02-11',1);
 /* IRFO task */
 INSERT INTO task(id,irfo_organisation_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (3,1,8,70,1,2,'An organisation task','2014-05-01',1);
+    (3,1,8,70,1,13,'An organisation task','2014-05-01',1);
 /* Transport Manager task */
 INSERT INTO task(id,transport_manager_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (4,2,5,105,6,3,'A transport task','2010-01-01',1);
+    (4,2,5,105,6,13,'A transport task','2010-01-01',1);
 /* Case task */
 INSERT INTO task(id,case_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (5,24,2,44,null,4,'A case task','2010-02-01',1);
+    (5,24,2,44,null,13,'A case task','2010-02-01',1);
 /* Unlinked task */
 INSERT INTO task(id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (6,7,67,null,4,'Unassigned task','2010-07-03',1);
+    (6,7,67,null,13,'Unassigned task','2010-07-03',1);
 /* Application, future, urgent task */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
-    (7,2,7,9,33,1,2,'A test task','2018-09-27',1,1);
+    (7,2,7,9,33,1,13,'A test task','2018-09-27',1,1);
 /* Licence, single licence holder */
 INSERT INTO task(id,application_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,urgent,version) VALUES
-    (8,null,63,1,110,1,2,'Single licence','2012-09-27',0,1);
+    (8,null,63,1,110,1,13,'Single licence','2012-09-27',0,1);
 /* Transport Manager task */
 INSERT INTO task(id,transport_manager_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (9,3,5,103,1,2,'A test task for TM 3','2014-12-15',1);
+    (9,3,5,103,1,13,'A test task for TM 3','2014-12-15',1);
 /* Bus Registration task */
 INSERT INTO task(id,bus_reg_id,licence_id,category_id,sub_category_id,assigned_to_user_id,assigned_to_team_id,description,action_date,version) VALUES
-    (10,1,110,3,39,1,2,'A test Bus Reg task','2014-12-15',1);
-
-INSERT INTO `task_allocation_rule` (`id`, `category_id`, `team_id`, `user_id`, `goods_or_psv`, `is_mlh`, `traffic_area_id`) VALUES
-    (1,9,5,291,NULL,NULL,NULL),
-    (2,3,6,291,NULL,NULL,NULL),
-    (3,2,7,291,NULL,NULL,NULL),
-    (4,7,8,291,NULL,NULL,NULL),
-    (5,8,9,291,NULL,NULL,NULL),
-    (6,1,5,291,NULL,NULL,NULL);
+    (10,1,110,3,39,1,13,'A test Bus Reg task','2014-12-15',1);
 
 /* Disc sequence dummy data */
 INSERT INTO `disc_sequence` (
@@ -1823,22 +1949,47 @@ VALUES
   (4,'N');
 
 INSERT INTO `irfo_gv_permit` (`id`, `organisation_id`, `irfo_gv_permit_type_id`, `irfo_permit_status`, `year_required`,
-                              `in_force_date`, `expiry_date`, `created_on`)
+                              `in_force_date`, `expiry_date`, `no_of_copies`, `created_on`)
 VALUES
-    (1, 101, 1, 'irfo_perm_s_approved', 2014, '2015-03-10', '2016-03-09', NOW());
+    (1, 101, 17, 'irfo_perm_s_pending', 2015, '2015-03-10', '2016-03-09', 1, NOW()),
+    (2, 101, 1, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 2, NOW()),
+    (3, 101, 2, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 3, NOW()),
+    (4, 101, 3, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 4, NOW()),
+    (5, 101, 4, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 5, NOW()),
+    (6, 101, 5, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 6, NOW()),
+    (7, 101, 6, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 7, NOW()),
+    (8, 101, 7, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 8, NOW()),
+    (9, 101, 8, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 9, NOW()),
+    (10, 101, 9, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 10, NOW()),
+    (11, 101, 10, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 1, NOW()),
+    (12, 101, 11, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 2, NOW()),
+    (13, 101, 12, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 3, NOW()),
+    (14, 101, 13, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 4, NOW()),
+    (15, 101, 14, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 5, NOW()),
+    (16, 101, 15, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 6, NOW()),
+    (17, 101, 16, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 7, NOW()),
+    (18, 101, 17, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 8, NOW()),
+    (19, 101, 18, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 9, NOW()),
+    (20, 101, 19, 'irfo_perm_s_approved', 2015, '2015-03-10', '2016-03-09', 10, NOW());
 
 INSERT INTO `irfo_psv_auth` (`organisation_id`, `irfo_psv_auth_type_id`, `status`, `journey_frequency`,
                              `irfo_file_no`, `service_route_from`, `service_route_to`, `validity_period`,
                              `in_force_date`, `created_on`, `expiry_date`, `renewal_date`, `irfo_fee_id`)
 VALUES
-    (101, 1, 'irfo_auth_s_approved', 'psv_freq_daily', '17/1', 'From', 'To', 3, '2015-03-10',  NOW(), '2016-10-31', '2018-03-09', 'FeeId'),
     (101, 4, 'irfo_auth_s_renew', 'psv_freq_daily', '17/2', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-29', '2016-10-19', 'FeeId'),
     (101, 2, 'irfo_auth_s_pending', 'psv_freq_daily', '19A/3', 'From', 'To', 1, '2015-10-30',  NOW(), '2016-10-19', '2016-10-19', 'FeeId'),
     (101, 3, 'irfo_auth_s_granted', 'psv_freq_daily', '18/4', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-01', '2016-10-19', 'FeeId'),
     (101, 4, 'irfo_auth_s_cns', 'psv_freq_daily', '19/5', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-01', '2016-10-19', 'FeeId'),
     (101, 5, 'irfo_auth_s_renew', 'psv_freq_daily', '19/5', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-01', '2016-10-19', 'FeeId'),
     (101, 6, 'irfo_auth_s_renew', 'psv_freq_daily', '20/5', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-01', '2016-10-19', 'FeeId'),
-    (101, 7, 'irfo_auth_s_pending', 'psv_freq_daily', '21/6', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-01', '2016-10-19', 'FeeId');
+    (101, 7, 'irfo_auth_s_pending', 'psv_freq_daily', '21/6', 'From', 'To', 1, '2015-10-20',  NOW(), '2016-10-01', '2016-10-19', 'FeeId'),
+    (101, 1, 'irfo_auth_s_approved', 'psv_freq_daily', '17/1', 'From', 'To', 3, '2015-03-10',  NOW(), '2016-10-31', '2018-03-09', 'FeeId'),
+    (101, 2, 'irfo_auth_s_approved', 'psv_freq_daily', '19A/1', 'From', 'To', 3, '2015-03-10',  NOW(), '2016-10-31', '2018-03-09', 'FeeId'),
+    (101, 3, 'irfo_auth_s_approved', 'psv_freq_daily', '18/1', 'From', 'To', 3, '2015-03-10',  NOW(), '2016-10-31', '2018-03-09', 'FeeId'),
+    (101, 4, 'irfo_auth_s_approved', 'psv_freq_daily', '19/1', 'From', 'To', 3, '2015-03-10',  NOW(), '2016-10-31', '2018-03-09', 'FeeId'),
+    (101, 5, 'irfo_auth_s_approved', 'psv_freq_daily', '19/1', 'From', 'To', 3, '2015-03-10',  NOW(), '2016-10-31', '2018-03-09', 'FeeId'),
+    (101, 6, 'irfo_auth_s_approved', 'psv_freq_daily', '20/1', 'From', 'To', 3, '2015-03-10',  NOW(), '2016-10-31', '2018-03-09', 'FeeId'),
+    (101, 7, 'irfo_auth_s_approved', 'psv_freq_daily', '21/1', 'From', 'To', 3, '2015-03-10',  NOW(), '2016-10-31', '2018-03-09', 'FeeId');
 
 INSERT INTO `irfo_permit_stock` (`serial_no`, `irfo_country_id`, `status`, `valid_for_year`, `irfo_gv_permit_id`, `created_on`)
 VALUES
@@ -1919,36 +2070,42 @@ VALUES
   (4, 1, 1, 7, "D4000", "2015-01-01", NULL, "2015-04-01", "2015-04-01", 1);
 
 -- Start: Event History Test Data
-INSERT INTO `event_history` (`id`, `event_history_type_id`, `application_id`, `bus_reg_id`, `case_id`, `licence_id`, `organisation_id`, `transport_manager_id`, `user_id`, `entity_pk`, `entity_type`, `entity_version`, `event_data`, `event_datetime`, `event_description`)
+INSERT INTO `event_history` (`id`, `event_history_type_id`, `application_id`, `bus_reg_id`, `case_id`, `licence_id`, `organisation_id`, `transport_manager_id`, `user_id`, `entity_pk`, `entity_type`, `entity_version`, `event_data`, `event_datetime`)
 VALUES
-	(8, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Event Data', '2015-03-24 11:02:49', 'Event Description 1'),
-	(9, 1, NULL, NULL, NULL, 30, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 2'),
-	(10, 1, NULL, NULL, NULL, 110, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 3'),
-	(11, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 4'),
-	(12, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 5'),
-	(13, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 6'),
-	(14, 1, NULL, NULL, NULL, 30, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 7'),
-	(15, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 8'),
-	(16, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 9'),
-	(17, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 10'),
-	(18, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 11'),
-	(19, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 12'),
-	(20, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 13'),
-	(21, 1, NULL, NULL, NULL, 110, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 14'),
-	(22, 1, NULL, NULL, NULL, 110, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 15'),
-	(23, 1, NULL, NULL, NULL, 110, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 16'),
-	(24, 1, NULL, NULL, NULL, 110, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 17'),
-	(25, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 18'),
-	(26, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 19'),
-	(27, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 20'),
-	(28, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 21'),
-	(29, 1, NULL, NULL, NULL, 7, 1, NULL, 4, NULL, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18', 'Event Description 22'),
-	(39, 102, NULL, NULL, 29, NULL, 1, NULL, 4, NULL, NULL, NULL, 'Case Event Data', '2015-03-24 11:02:49', 'Not used'),
-	(30, 131, NULL, NULL, NULL, NULL, NULL, 1, 4, NULL, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36', 'Not used'),
-	(33, 131, 1, NULL, NULL, NULL, NULL, 1, 4, NULL, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36', 'Not used'),
-	(34, 131, 1, NULL, NULL, NULL, NULL, 1, 4, NULL, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36', 'Not used'),
-	(35, 131, 1, NULL, NULL, NULL, 1, 1, 4, NULL, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36', 'Not used'),
-	(36, 131, 1, NULL, NULL, NULL, 1, 1, 4, NULL, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36', 'Not used');
+	(8, 1, NULL, NULL, NULL, 7, NULL, NULL, 273, 7, NULL, NULL, 'Event Data', '2015-03-24 11:02:49'),
+	(9, 1, NULL, NULL, NULL, 30, NULL, NULL, 273, 30, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(10, 1, NULL, NULL, NULL, 110, NULL, NULL, 273, 110, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(11, 1, NULL, NULL, NULL, 7, NULL, NULL, 273, 7, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(12, 1, NULL, NULL, NULL, 7, NULL, NULL, 273, 7, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(13, 1, NULL, NULL, NULL, 7, NULL, NULL, 273, 7, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(14, 1, NULL, NULL, NULL, 30, NULL, NULL, 273, 30, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(15, 1, NULL, NULL, NULL, 7, NULL, NULL, 273, 7, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(16, 1, NULL, NULL, NULL, 7, NULL, NULL, 273, 7, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(17, 1, NULL, NULL, NULL, 7, NULL, NULL, 273, 7, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(18, 1, NULL, NULL, NULL, 7, NULL, NULL, 273, 7, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(19, 1, NULL, NULL, NULL, 7, NULL, NULL, 273, 7, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(20, 1, NULL, NULL, NULL, 7, NULL, NULL, 273, 7, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(21, 1, NULL, NULL, NULL, 110, NULL, NULL, 273, 110, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(22, 1, NULL, NULL, NULL, 110, NULL, NULL, 273, 110, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(23, 1, NULL, NULL, NULL, 110, NULL, NULL, 273, 110, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(24, 1, NULL, NULL, NULL, 110, NULL, NULL, 273, 110, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(25, 1, NULL, NULL, NULL, 7, NULL, NULL, 273, 7, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(26, 1, NULL, NULL, NULL, 7, NULL, NULL, 273, 7, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(27, 1, NULL, NULL, NULL, 7, NULL, NULL, 273, 7, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(28, 1, NULL, NULL, NULL, 7, NULL, NULL, 273, 7, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(29, 1, NULL, NULL, NULL, 7, 1, NULL, 273, 7, NULL, NULL, 'Licence Event Data', '2015-03-16 10:30:18'),
+	(39, 102, NULL, NULL, 29, NULL, 1, NULL, 273, 29, NULL, NULL, 'Case Event Data', '2015-03-24 11:02:49'),
+	(30, 131, NULL, NULL, NULL, NULL, NULL, 1, 273, 1, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36'),
+	(33, 131, 1, NULL, NULL, NULL, NULL, 1, 273, 1, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36'),
+	(34, 131, 1, NULL, NULL, NULL, NULL, 1, 273, 1, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36'),
+	(35, 131, 1, NULL, NULL, NULL, 1, 1, 273, 1, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36'),
+	(36, 131, 1, NULL, NULL, NULL, 1, 1, 273, 1, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36'),
+	(40, 15, 7, NULL, NULL, NULL, NULL, NULL, 273, 7, NULL, NULL, 'Application Event Data', '2015-03-16 10:30:18'),
+	(41, 15, 7, NULL, NULL, NULL, NULL, NULL, 273, 7, NULL, NULL, 'Application Event Data', '2015-03-16 10:30:18'),
+	(42, 1001, NULL, 12, NULL, NULL, NULL, NULL, 273, 12, NULL, NULL, 'Bus Reg Event Data', '2015-03-16 10:30:18'),
+	(43, 1001, NULL, 12, NULL, NULL, NULL, NULL, 273, 12, NULL, NULL, 'Bus Reg Event Data', '2015-03-16 10:30:18'),
+	(44, 102, NULL, NULL, 74, NULL, 1, NULL, 273, 74, NULL, NULL, 'Case Event Data', '2015-03-24 11:02:49'),
+	(45, 102, NULL, NULL, 74, NULL, 1, NULL, 273, 74, NULL, NULL, 'Case Event Data', '2015-03-24 11:02:49');
 -- End: Event History Test Data
 
 -- Start: Application 7 - new Goods Vehicle Standard National application ready to submit
@@ -2366,15 +2523,15 @@ VALUES
 
 -- OLCS-10506 submission section files
 INSERT INTO `document` (`id`, `application_id`, `bus_reg_id`, `case_id`, `category_id`, `created_by`,
-                        `irfo_organisation_id`, `last_modified_by`, `licence_id`, `operating_centre_id`, `sub_category_id`, `submission_id`, `traffic_area_id`, `transport_manager_id`, `created_on`, `deleted_date`, `description`, `filename`, `document_store_id`, `is_external`, `is_read_only`, `is_scan`, `issued_date`, `last_modified_on`, `metadata`, `olbs_key`, `olbs_type`, `size`, `version`) VALUES
-  (809,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,148,1,NULL,NULL,'2015-10-06 08:43:20',NULL, 'site-plan-parking-area.png','documents/Submission/Site_plans/2015/10/20151006084312__site-plan-parking-area.png','documents/Submission/Site_plans/2015/10/20151006084312__site-plan-parking-area.png',0,NULL,0,'2015-10-06 08:43:20','2015-10-06 08:43:20',NULL,NULL,NULL,388800,2),
+                        `irfo_organisation_id`, `last_modified_by`, `licence_id`, `operating_centre_id`, `sub_category_id`, `submission_id`, `traffic_area_id`, `transport_manager_id`, `created_on`, `deleted_date`, `description`, `filename`, `document_store_id`, `is_external`, `is_scan`, `issued_date`, `last_modified_on`, `metadata`, `olbs_key`, `olbs_type`, `size`, `version`) VALUES
+  (809,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,148,1,NULL,NULL,'2015-10-06 08:43:20',NULL, 'site-plan-parking-area.png','documents/Submission/Site_plans/2015/10/20151006084312__site-plan-parking-area.png','documents/Submission/Site_plans/2015/10/20151006084312__site-plan-parking-area.png',0,0,'2015-10-06 08:43:20','2015-10-06 08:43:20',NULL,NULL,NULL,388800,2),
   (810,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,122,1,NULL,NULL,'2015-10-06 09:00:15',NULL,
    'John-Smith-Transport-Ltd-parking-area.png',
-   'documents/Submission/Conditions_and_undertakings/2015/10/20151006090008__parking-area-undertaking.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090008__parking-area-undertaking.png',0,NULL,0,'2015-10-06 09:00:15','2015-10-06 09:00:15',NULL,NULL,NULL,112024,2),
+   'documents/Submission/Conditions_and_undertakings/2015/10/20151006090008__parking-area-undertaking.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090008__parking-area-undertaking.png',0,0,'2015-10-06 09:00:15','2015-10-06 09:00:15',NULL,NULL,NULL,112024,2),
   (811,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,122,1,NULL,NULL,'2015-10-06 09:01:41',NULL,
    'Little-Trucks-Ltd-parking-area.png','documents/Submission/Conditions_and_undertakings/2015/10
-   /20151006090135__parking-area-undertaking2.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090135__parking-area-undertaking2.png',0,NULL,0,'2015-10-06 09:01:41','2015-10-06 09:01:41',NULL,NULL,NULL,64316,2),
-  (812,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,156,1,NULL,NULL,'2015-10-06 09:01:41',NULL,'ariel-view-operating-centre.png','documents/Submission/Maps/2015/10/20151006142959__ariel-view-operating-centre.png','documents/Submission/Maps/2015/10/20151006142959__ariel-view-operating-centre.png',0,NULL,0,'2015-10-06 09:01:41','2015-10-06 09:01:41',NULL,NULL,NULL,342832,2);
+   /20151006090135__parking-area-undertaking2.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090135__parking-area-undertaking2.png',0,0,'2015-10-06 09:01:41','2015-10-06 09:01:41',NULL,NULL,NULL,64316,2),
+  (812,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,156,1,NULL,NULL,'2015-10-06 09:01:41',NULL,'ariel-view-operating-centre.png','documents/Submission/Maps/2015/10/20151006142959__ariel-view-operating-centre.png','documents/Submission/Maps/2015/10/20151006142959__ariel-view-operating-centre.png',0,0,'2015-10-06 09:01:41','2015-10-06 09:01:41',NULL,NULL,NULL,342832,2);
 
 -- OLCS-10506 recommendation / decision
 INSERT INTO `submission_action` (`id`, `created_by`, `last_modified_by`, `submission_id`, `comment`, `created_on`, `is_decision`, `last_modified_on`, `version`) VALUES
@@ -2445,8 +2602,8 @@ COMMIT;
 INSERT INTO `printer` (`id`, `printer_name`, `description`) VALUES (1, 'TESTING-STUB-LICENCE:7','Test Default Printer');
 INSERT INTO `printer` (`id`, `printer_name`) VALUES (2, 'Test Printer');
 
-INSERT INTO `team_printer` (`id`, `version`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (1, 1, 1, 1, NULL, NULL);
-INSERT INTO `team_printer` (`id`, `version`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (2, 1, 2, 2, 1, 1);
+INSERT INTO `team_printer` (`id`, `version`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (1, 1, 13, 1, NULL, NULL);
+INSERT INTO `team_printer` (`id`, `version`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (2, 1, 13, 2, 1, 1);
 
 
 /* Test document sla target dates */
@@ -2460,5 +2617,21 @@ INSERT IGNORE INTO sla_target_date(id,document_id,agreed_date, target_date, sent
      '2014-08-25 12:04:35', 1),
   (4,674,'2014-08-25 12:04:35','2014-08-30 12:04:35','2014-08-27 12:04:35', 1,'Passed SLA target',273, 273,
      '2014-08-25 12:04:35', 1);
+
+INSERT INTO `contact_details` (`id`,`contact_type`,`address_id`,`person_id`,
+   `last_modified_by`,`created_by`,`fao`,`written_permission_to_engage`,`email_address`,
+   `description`,`deleted_date`,`created_on`,`last_modified_on`,`version`)
+VALUES
+    (230,'ct_user',1,91,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (231,'ct_user',1,92,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (232,'ct_user',1,93,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (233,'ct_user',1,94,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (234,'ct_user',1,95,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (235,'ct_user',1,96,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (236,'ct_user',1,97,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (237,'ct_user',1,98,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (238,'ct_user',1,99,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (239,'ct_user',1,100,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (240,'ct_user',1,101,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
 
 SET foreign_key_checks = 1;

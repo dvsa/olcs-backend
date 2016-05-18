@@ -1,52 +1,34 @@
 <?php
 
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
+
+use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+
 /**
  * Transport Managers Query Handler
  * Retreive the application and a list of transport manager applications/licences (including contact details)
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
-
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
-
-/**
- * Transport Managers Query Handler
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 class TransportManagers extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Application';
-
-    /**
-     * @var \Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication
-     */
-    protected $tmaRepo;
-    /**
-     * @var \Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence
-     */
-    protected $tmlRepo;
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->tmaRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('TransportManagerApplication');
-        $this->tmlRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('TransportManagerLicence');
-
-        return parent::createService($serviceLocator);
-    }
+    protected $extraRepos = ['TransportManagerApplication', 'TransportManagerLicence'];
 
     public function handleQuery(QueryInterface $query)
     {
         /* @var $application \Dvsa\Olcs\Api\Entity\Application\Application */
         $application = $this->getRepo()->fetchUsingId($query);
 
-        $this->tmaRepo->fetchWithContactDetailsByApplication($application->getId());
-        $this->tmlRepo->fetchWithContactDetailsByLicence($application->getLicence()->getId());
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication $repoApp */
+        $repoApp = $this->getRepo('TransportManagerApplication');
+        $repoApp->fetchWithContactDetailsByApplication($application->getId());
+
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence $repoLic */
+        $repoLic = $this->getRepo('TransportManagerLicence');
+        $repoLic->fetchWithContactDetailsByLicence($application->getLicence()->getId());
 
         return $this->result(
             $application,
@@ -55,18 +37,18 @@ class TransportManagers extends AbstractQueryHandler
                     'transportManager' => [
                         'homeCd' => [
                             'person'
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
                 'licence' => [
                     'tmLicences' => [
                         'transportManager' => [
                             'homeCd' => [
                                 'person'
-                            ]
-                        ]
-                    ]
-                ]
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
     }

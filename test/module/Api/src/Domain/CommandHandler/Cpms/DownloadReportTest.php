@@ -66,6 +66,7 @@ class DownloadReportTest extends CommandHandlerTestCase
                 'category'    => Category::CATEGORY_LICENSING,
                 'subCategory' => Category::DOC_SUB_CATEGORY_FINANCIAL_REPORTS,
                 'isExternal'  => false,
+                'user' => 1
             ],
             $docResult
         );
@@ -76,6 +77,7 @@ class DownloadReportTest extends CommandHandlerTestCase
                 'reference' => $reference,
                 'token' => $token,
                 'filename' => 'foobar.csv',
+                'user' => 1
             ]
         );
         $result = $this->sut->handleCommand($command);

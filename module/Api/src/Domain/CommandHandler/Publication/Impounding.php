@@ -151,7 +151,7 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
 
                 //if previous publication is found, remove it
                 if ($publicationLink->getId() !== null) {
-                    $this->clearPoliceData($publicationLink);
+                    $publicationLink->getPoliceDatas()->clear();
                     $this->getRepo()->delete($publicationLink);
                 }
             }

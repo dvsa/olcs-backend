@@ -624,6 +624,22 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * Return applications of a particular status
+     *
+     * @param array $status
+     * @return ArrayCollection|static
+     */
+    public function getApplicationsByStatus($status)
+    {
+        $criteria = Criteria::create()
+            ->where(
+                Criteria::expr()->in('status', $status)
+            );
+
+        return $this->getApplications()->matching($criteria);
+    }
+
+    /**
      * Return Conditions and Undertakings that are added via Licence. Used in submissions.
      *
      * @return \Doctrine\Common\Collections\Collection|static
@@ -789,5 +805,31 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         );
 
         return $this->documents->matching($criteria);
+    }
+
+    /**
+     * Get first application id for the new licence
+     *
+     * @return int|null
+     */
+    public function getFirstApplicationId()
+    {
+        $firstApplicationId = null;
+        $statuses = [
+            self::LICENCE_STATUS_NOT_SUBMITTED,
+            self::LICENCE_STATUS_UNDER_CONSIDERATION,
+            self::LICENCE_STATUS_GRANTED,
+            self::LICENCE_STATUS_NOT_TAKEN_UP,
+            self::LICENCE_STATUS_WITHDRAWN,
+            self::LICENCE_STATUS_REFUSED
+        ];
+        if (in_array($this->getStatus()->getId(), $statuses)) {
+            $applications = $this->getApplications();
+            if ($applications->count()) {
+                $firstApplicationId = $applications[0]->getId();
+            }
+        }
+
+        return $firstApplicationId;
     }
 }

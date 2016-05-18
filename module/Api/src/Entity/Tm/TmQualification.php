@@ -42,9 +42,7 @@ class TmQualification extends AbstractTmQualification
         $serialNo,
         $issuedDate,
         $countryCode,
-        $tm = null,
-        $createdBy = null,
-        $lastModifiedBy = null
+        $tm = null
     ) {
         $this->validateTmQualification($issuedDate);
 
@@ -54,12 +52,6 @@ class TmQualification extends AbstractTmQualification
         $this->setCountryCode($countryCode);
         if ($tm !== null) {
             $this->setTransportManager($tm);
-        }
-        if ($createdBy !== null) {
-            $this->setCreatedBy($createdBy);
-        }
-        if ($lastModifiedBy !== null) {
-            $this->setLastModifiedBy($lastModifiedBy);
         }
     }
 

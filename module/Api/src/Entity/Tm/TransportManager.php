@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
-use Dvsa\Olcs\Transfer\Query\InspectionRequest\ApplicationInspectionRequestList;
 use Doctrine\Common\Collections\Criteria;
 
 /**
@@ -23,9 +22,6 @@ use Doctrine\Common\Collections\Criteria;
  *        @ORM\Index(name="ix_transport_manager_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_transport_manager_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_transport_manager_work_cd_id", columns={"work_cd_id"})
- *    },
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_transport_manager_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -42,9 +38,7 @@ class TransportManager extends AbstractTransportManager implements ContextProvid
         $type,
         $status,
         $workCd = null,
-        $homeCd = null,
-        $createdBy = null,
-        $modifiedBy = null
+        $homeCd = null
     ) {
         $this->setTmType($type);
         $this->setTmStatus($status);
@@ -53,12 +47,6 @@ class TransportManager extends AbstractTransportManager implements ContextProvid
         }
         if ($homeCd !== null) {
             $this->setHomeCd($homeCd);
-        }
-        if ($createdBy !== null) {
-            $this->setCreatedBy($createdBy);
-        }
-        if ($modifiedBy !== null) {
-            $this->setLastModifiedBy($modifiedBy);
         }
     }
 

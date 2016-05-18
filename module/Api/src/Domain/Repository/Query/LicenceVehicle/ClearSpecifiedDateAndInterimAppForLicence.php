@@ -22,6 +22,7 @@ class ClearSpecifiedDateAndInterimAppForLicence extends AbstractRawQuery
     ];
 
     protected $queryTemplate = 'UPDATE {lv}
-      SET {lv.specifiedDate} = null, {lv.interimApplication} = null
+      SET {lv.specifiedDate} = null, {lv.interimApplication} = null,
+        {lv.lastModifiedOn} = NOW(), {lv.lastModifiedBy} = :currentUserId
       WHERE {lv.licence} = :licence';
 }

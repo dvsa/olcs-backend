@@ -27,4 +27,16 @@ class Appeal extends AbstractAppeal
     {
         $this->setAppealNo($appealNo);
     }
+
+    /**
+     * Has the appeal been completed? Dealt with if outcome or decision date set. Or if its been withdrawn.
+     *
+     * @return bool
+     */
+    public function isOutstanding()
+    {
+        // Appeal is considered completed if it is withdrawn or if it has a decision date and outcome set
+        return !empty($this->getWithdrawnDate()) ||
+            (!empty($this->getDecisionDate()) && !empty($this->getOutcome()));
+    }
 }

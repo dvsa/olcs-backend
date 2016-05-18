@@ -8,8 +8,6 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Discs;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
-use Mockery as m;
-use Doctrine\ORM\Query;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Discs\CreatePsvVehicleListForDiscs;
@@ -37,14 +35,16 @@ class CreatePsvVehicleListForDiscsTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 1,
-            'knownValues' => 'knownValues'
+            'knownValues' => 'knownValues',
+            'user' => 2
         ];
 
         $command = Cmd::create($data);
 
         $printData = [
             'documentId' => 'id1',
-            'jobName' => 'New disc notification'
+            'jobName' => 'New disc notification',
+            'user' => 2
         ];
 
         $this->expectedSideEffect(Enqueue::class, $printData, new Result());
@@ -52,7 +52,8 @@ class CreatePsvVehicleListForDiscsTest extends CommandHandlerTestCase
         $createDocData = [
             'template' => 'PSVVehiclesList',
             'query' => [
-                'licence' => 1
+                'licence' => 1,
+                'user' => 2
             ],
             'irfoOrganisation' => null,
             'submission' => null,
@@ -63,7 +64,6 @@ class CreatePsvVehicleListForDiscsTest extends CommandHandlerTestCase
             'subCategory'   => Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST,
             'description'   => 'New disc notification',
             'isExternal'    => false,
-            'isReadOnly'    => true,
             'isScan' => 0,
             'issuedDate' => null,
             'application' => null,

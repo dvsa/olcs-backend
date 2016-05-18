@@ -45,13 +45,13 @@ class CreateDocumentSpecific extends AbstractCommand
 
     protected $isExternal;
 
-    protected $isReadOnly;
-
     protected $isScan = 0;
 
     protected $issuedDate;
 
     protected $metadata;
+
+    protected $user;
 
     /**
      * @return mixed
@@ -192,14 +192,6 @@ class CreateDocumentSpecific extends AbstractCommand
     /**
      * @return mixed
      */
-    public function getIsReadOnly()
-    {
-        return $this->isReadOnly;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getIsScan()
     {
         return $this->isScan;
@@ -219,5 +211,13 @@ class CreateDocumentSpecific extends AbstractCommand
     public function getMetadata()
     {
         return $this->metadata;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

@@ -7,24 +7,23 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Operator;
 
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as SaveAddressCmd;
 use Dvsa\Olcs\Api\Domain\Command\Organisation\ChangeBusinessType;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Operator\SaveOperator;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\OrganisationPerson as OrganisationPersonRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Person as PersonRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Operator\Create as CreateCmd;
-use Dvsa\Olcs\Transfer\Command\Operator\Update as UpdateCmd;
-use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as SaveAddressCmd;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
-use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson as OrganisationPersonEntity;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
+use Dvsa\Olcs\Transfer\Command\Operator\Create as CreateCmd;
+use Dvsa\Olcs\Transfer\Command\Operator\Update as UpdateCmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Save Operator Test
@@ -79,10 +78,14 @@ class SaveOperatorTest extends CommandHandlerTestCase
             'lastName' => $commandDetails['lastName']
         ];
 
-        $this->setExpectedException(ValidationException::class, $expectedErrors);
+        try {
+            $command = CreateCmd::create($data);
+            $this->sut->handleCommand($command);
 
-        $command = CreateCmd::create($data);
-        $this->sut->handleCommand($command);
+            static::fail('Exception should be thrown');
+        } catch (\Dvsa\Olcs\Api\Domain\Exception\Exception $e) {
+            static::assertEquals($expectedErrors, $e->getMessages());
+        }
     }
 
     public function organisationProvider()
@@ -112,9 +115,9 @@ class SaveOperatorTest extends CommandHandlerTestCase
                     'lastName' => 'lname'
                 ],
                 [
-                    'name' => ['Operator name is required'],
+                    'name' => ['Operator Name is required'],
                     'companyNumber' => ['Company Number is required'],
-                    'natureOfBusiness' => ['Nature of Business is required']
+                    'natureOfBusiness' => ['Nature of Business is required'],
                 ]
             ],
             [
@@ -127,8 +130,8 @@ class SaveOperatorTest extends CommandHandlerTestCase
                     'lastName' => null
                 ],
                 [
-                    'name' => ['Operator name is required'],
-                    'natureOfBusiness' => ['Nature of Business is required']
+                    'natureOfBusiness' => ['Nature of Business is required'],
+                    'lastName' => ['Last name is required'],
                 ]
             ],
             [
@@ -141,7 +144,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
                     'lastName' => 'bar'
                 ],
                 [
-                    'name' => ['Operator name is required'],
+                    'name' => ['Operator Name is required'],
                 ]
             ],
             [
@@ -154,7 +157,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
                     'lastName' => null
                 ],
                 [
-                    [SaveOperator::ERROR_UNKNOWN_TYPE => 'Unknown business type']
+                    SaveOperator::ERROR_UNKNOWN_TYPE => 'Unknown business type',
                 ]
             ]
         ];
@@ -209,8 +212,8 @@ class SaveOperatorTest extends CommandHandlerTestCase
             ->once();
 
         $result = $this->sut->handleCommand($command);
-        $this->assertEquals(1, $result->getIds()['organisation']);
-        $this->assertEquals('Organisation created successfully', $result->getMessages()[0]);
+        static::assertEquals(1, $result->getIds()['organisation']);
+        static::assertEquals('Organisation created successfully', $result->getMessages()[0]);
     }
 
     public function testHandleCommandUpdatePartnershipOrOther()
@@ -230,6 +233,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
 
         $command = UpdateCmd::create($data);
 
+        /** @var m\MockInterface|OrganisationEntity $mockOrganisation */
         $mockOrganisation = m::mock(OrganisationEntity::class)->makePartial();
         $mockOrganisation->setId(1);
 
@@ -242,9 +246,8 @@ class SaveOperatorTest extends CommandHandlerTestCase
             ->once();
 
         $result = $this->sut->handleCommand($command);
-        $this->assertEquals(1, $result->getIds()['organisation']);
-        $this->assertEquals('Organisation updated successfully', $result->getMessages()[0]);
-
+        static::assertEquals(1, $result->getIds()['organisation']);
+        static::assertEquals('Organisation updated successfully', $result->getMessages()[0]);
     }
 
     public function testHandleCommandUpdateSoleTrader()
@@ -263,6 +266,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
 
         $command = UpdateCmd::create($data);
 
+        /** @var m\MockInterface|OrganisationEntity $mockOrganisation */
         $mockOrganisation = m::mock(OrganisationEntity::class)->makePartial();
         $mockOrganisation->setId(1);
 
@@ -274,6 +278,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
             ->with($mockOrganisation)
             ->once();
 
+        /** @var m\MockInterface|PersonEntity $mockPerson */
         $mockPerson = m::mock(PersonEntity::class)->makePartial();
         $mockPerson->setId(3);
 
@@ -286,8 +291,8 @@ class SaveOperatorTest extends CommandHandlerTestCase
             ->once();
 
         $result = $this->sut->handleCommand($command);
-        $this->assertEquals(1, $result->getIds()['organisation']);
-        $this->assertEquals('Organisation updated successfully', $result->getMessages()[0]);
+        static::assertEquals(1, $result->getIds()['organisation']);
+        static::assertEquals('Organisation updated successfully', $result->getMessages()[0]);
     }
 
     public function testHandleCommandCreateSoleTrader()
@@ -306,6 +311,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
 
         $command = UpdateCmd::create($data);
 
+        /** @var m\MockInterface|OrganisationEntity $mockOrganisation */
         $mockOrganisation = m::mock(OrganisationEntity::class)->makePartial();
         $mockOrganisation->setId(1);
 
@@ -330,8 +336,8 @@ class SaveOperatorTest extends CommandHandlerTestCase
             ->getMock();
 
         $result = $this->sut->handleCommand($command);
-        $this->assertEquals(1, $result->getIds()['organisation']);
-        $this->assertEquals('Organisation updated successfully', $result->getMessages()[0]);
+        static::assertEquals(1, $result->getIds()['organisation']);
+        static::assertEquals('Organisation updated successfully', $result->getMessages()[0]);
     }
 
     public function testHandleCommandUpdateIrfo()
@@ -347,6 +353,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
 
         $command = UpdateCmd::create($data);
 
+        /** @var m\MockInterface|OrganisationEntity $mockOrganisation */
         $mockOrganisation = m::mock(OrganisationEntity::class)->makePartial();
         $mockOrganisation->setId(1);
 
@@ -359,8 +366,8 @@ class SaveOperatorTest extends CommandHandlerTestCase
             ->once();
 
         $result = $this->sut->handleCommand($command);
-        $this->assertEquals(1, $result->getIds()['organisation']);
-        $this->assertEquals('Organisation updated successfully', $result->getMessages()[0]);
+        static::assertEquals(1, $result->getIds()['organisation']);
+        static::assertEquals('Organisation updated successfully', $result->getMessages()[0]);
     }
 
     public function testHandleCommandUpdateFromRcToSoleTrader()
@@ -392,6 +399,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
             ->with($mockOrganisation)
             ->once();
 
+        /** @var m\MockInterface|PersonEntity $mockPerson */
         $mockPerson = m::mock(PersonEntity::class)->makePartial();
         $mockPerson->setId(3);
 
@@ -412,7 +420,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
         $this->expectedSideEffect(ChangeBusinessType::class, $data, $result);
 
         $result = $this->sut->handleCommand($command);
-        $this->assertEquals(1, $result->getIds()['organisation']);
-        $this->assertEquals('Organisation updated successfully', $result->getMessages()[0]);
+        static::assertEquals(1, $result->getIds()['organisation']);
+        static::assertEquals('Organisation updated successfully', $result->getMessages()[0]);
     }
 }

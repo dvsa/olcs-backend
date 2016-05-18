@@ -21,7 +21,7 @@ class CeaseGoodsDiscsForApplication extends AbstractRawQuery
 
     protected $queryTemplate = 'UPDATE {gd}
       INNER JOIN {lv} ON {lv.id} = {gd.licenceVehicle}
-      SET {gd.ceasedDate} = :ceasedDate, {gd.lastModifiedOn} = NOW()
+      SET {gd.ceasedDate} = :ceasedDate, {gd.lastModifiedOn} = NOW(), {gd.lastModifiedBy} = :currentUserId
       WHERE {gd.ceasedDate} IS NULL
       AND {lv.specifiedDate} IS NOT NULL
       AND {lv.removalDate} IS NULL

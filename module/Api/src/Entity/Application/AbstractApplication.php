@@ -94,6 +94,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
 
@@ -285,6 +286,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
+     * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
 
@@ -540,6 +542,33 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     protected $refusedDate;
 
     /**
+     * Request inspection
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="request_inspection", nullable=true)
+     */
+    protected $requestInspection;
+
+    /**
+     * Request inspection comment
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="request_inspection_comment", length=300, nullable=true)
+     */
+    protected $requestInspectionComment;
+
+    /**
+     * Request inspection delay
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="request_inspection_delay", nullable=true)
+     */
+    protected $requestInspectionDelay;
+
+    /**
      * Safety confirmation
      *
      * @var string
@@ -729,6 +758,18 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     protected $fees;
 
     /**
+     * Interim licence vehicle
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle",
+     *     mappedBy="interimApplication"
+     * )
+     */
+    protected $interimLicenceVehicles;
+
+    /**
      * Licence vehicle
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -824,6 +865,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
         $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->fees = new ArrayCollection();
+        $this->interimLicenceVehicles = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
         $this->otherLicences = new ArrayCollection();
         $this->previousConvictions = new ArrayCollection();
@@ -2053,6 +2095,75 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     }
 
     /**
+     * Set the request inspection
+     *
+     * @param int $requestInspection
+     * @return Application
+     */
+    public function setRequestInspection($requestInspection)
+    {
+        $this->requestInspection = $requestInspection;
+
+        return $this;
+    }
+
+    /**
+     * Get the request inspection
+     *
+     * @return int
+     */
+    public function getRequestInspection()
+    {
+        return $this->requestInspection;
+    }
+
+    /**
+     * Set the request inspection comment
+     *
+     * @param string $requestInspectionComment
+     * @return Application
+     */
+    public function setRequestInspectionComment($requestInspectionComment)
+    {
+        $this->requestInspectionComment = $requestInspectionComment;
+
+        return $this;
+    }
+
+    /**
+     * Get the request inspection comment
+     *
+     * @return string
+     */
+    public function getRequestInspectionComment()
+    {
+        return $this->requestInspectionComment;
+    }
+
+    /**
+     * Set the request inspection delay
+     *
+     * @param int $requestInspectionDelay
+     * @return Application
+     */
+    public function setRequestInspectionDelay($requestInspectionDelay)
+    {
+        $this->requestInspectionDelay = $requestInspectionDelay;
+
+        return $this;
+    }
+
+    /**
+     * Get the request inspection delay
+     *
+     * @return int
+     */
+    public function getRequestInspectionDelay()
+    {
+        return $this->requestInspectionDelay;
+    }
+
+    /**
      * Set the safety confirmation
      *
      * @param string $safetyConfirmation
@@ -2720,6 +2831,66 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     {
         if ($this->fees->contains($fees)) {
             $this->fees->removeElement($fees);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the interim licence vehicle
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles
+     * @return Application
+     */
+    public function setInterimLicenceVehicles($interimLicenceVehicles)
+    {
+        $this->interimLicenceVehicles = $interimLicenceVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the interim licence vehicles
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getInterimLicenceVehicles()
+    {
+        return $this->interimLicenceVehicles;
+    }
+
+    /**
+     * Add a interim licence vehicles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles
+     * @return Application
+     */
+    public function addInterimLicenceVehicles($interimLicenceVehicles)
+    {
+        if ($interimLicenceVehicles instanceof ArrayCollection) {
+            $this->interimLicenceVehicles = new ArrayCollection(
+                array_merge(
+                    $this->interimLicenceVehicles->toArray(),
+                    $interimLicenceVehicles->toArray()
+                )
+            );
+        } elseif (!$this->interimLicenceVehicles->contains($interimLicenceVehicles)) {
+            $this->interimLicenceVehicles->add($interimLicenceVehicles);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a interim licence vehicles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles
+     * @return Application
+     */
+    public function removeInterimLicenceVehicles($interimLicenceVehicles)
+    {
+        if ($this->interimLicenceVehicles->contains($interimLicenceVehicles)) {
+            $this->interimLicenceVehicles->removeElement($interimLicenceVehicles);
         }
 
         return $this;

@@ -4,6 +4,7 @@
  * Task Allocation Rule Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
@@ -19,19 +20,30 @@ use Doctrine\ORM\EntityRepository;
  * Task Allocation Rule Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 class TaskAllocationRuleTest extends RepositoryTestCase
 {
+    /**
+     * Set up
+     */
     public function setUp()
     {
         $this->setUpSut(TaskAllocationRuleRepo::class);
     }
 
-    public function testFetchForSimpleTaskAssignment()
+    /**
+     * Test fetch by parameters
+     *
+     * @dataProvider paramProvider
+     * @param int $category
+     * @param string $operatorType
+     * @param string $trafficArea
+     * @param bool $isMlh
+     * @param string $query
+     */
+    public function testFetchByParameters($category, $operatorType, $trafficArea, $isMlh, $query)
     {
-        $category = m::mock(Category::class)->makePartial();
-        $category->setId(111);
-
         $qb = $this->createMockQb('[QUERY]');
         $qb->shouldReceive('getQuery->getResult')
             ->with(Query::HYDRATE_OBJECT)
@@ -47,10 +59,79 @@ class TaskAllocationRuleTest extends RepositoryTestCase
             ->with(Entity::class)
             ->andReturn($repo);
 
-        $this->assertEquals('RESULT', $this->sut->fetchForSimpleTaskAssignment($category));
-
         $this->assertEquals(
-            '[QUERY] AND m.category = [[111]] AND m.isMlh IS NULL AND m.trafficArea IS NULL',
+            'RESULT',
+            $this->sut->fetchByParameters($category, $operatorType, $trafficArea, $isMlh)
+        );
+        $this->assertEquals(
+            $query,
+            $this->query
+        );
+    }
+
+    /**
+     * Param provider
+     *
+     * @return array
+     */
+    public function paramProvider()
+    {
+        return [
+            // category, operatorType, trafficArea, isMlh, query
+            [
+                111,
+                'gv',
+                'B',
+                1,
+                '[QUERY] AND m.category = [[111]] AND m.goodsOrPsv = [[gv]] AND m.trafficArea = [[B]] ' .
+                'AND m.isMlh = [[1]]'
+            ],
+            [
+                111,
+                'gv',
+                'B',
+                null,
+                '[QUERY] AND m.category = [[111]] AND m.goodsOrPsv = [[gv]] AND m.trafficArea = [[B]] ' .
+                'AND m.isMlh IS NULL'
+            ],
+            [
+                111,
+                'gv',
+                null,
+                null,
+                '[QUERY] AND m.category = [[111]] AND m.goodsOrPsv = [[gv]] AND m.trafficArea IS NULL ' .
+                'AND m.isMlh IS NULL'
+            ],
+            [
+                111,
+                null,
+                null,
+                null,
+                '[QUERY] AND m.category = [[111]] AND m.goodsOrPsv IS NULL AND m.trafficArea IS NULL ' .
+                'AND m.isMlh IS NULL'
+            ],
+        ];
+    }
+
+    /**
+     * Test build default list query
+     */
+    public function testBuildDefaultListQuery()
+    {
+        $qb = $this->createMockQb('[QUERY]');
+        $query = m::mock(QueryInterface::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('category', 'cat')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('goodsOrPsv', 'gop')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('trafficArea', 'ta')->once()->andReturnSelf();
+
+        $this->sut->buildDefaultListQuery($qb, $query);
+
+        $this->assertSame(
+            '[QUERY] SELECT cat.description as HIDDEN categoryDescription SELECT gop.id as HIDDEN criteria SELECT '
+            . 'ta.name as HIDDEN trafficAreaName',
             $this->query
         );
     }

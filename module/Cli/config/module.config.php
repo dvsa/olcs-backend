@@ -184,6 +184,7 @@ return [
         'factories' => [
             Command\RemoveReadAudit::class => CommandHandler\RemoveReadAudit::class,
             Command\CreateViExtractFiles::class => CommandHandler\CreateViExtractFiles::class,
+            Command\SetViFlags::class => CommandHandler\SetViFlags::class,
         ]
     ],
     'batch_config' => [

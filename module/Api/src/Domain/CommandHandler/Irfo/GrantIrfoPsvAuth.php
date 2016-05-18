@@ -5,44 +5,38 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Irfo;
 
+use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as FeeCreateFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
-use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPsvAuth as UpdateDto;
-use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as FeeCreateFee;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
-use Olcs\Logging\Log\Logger;
-use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Grant IrfoPsvAuth
  */
 final class GrantIrfoPsvAuth extends AbstractCommandHandler implements TransactionedInterface
 {
+    use IrfoPsvAuthUpdateTrait;
+
     protected $repoServiceName = 'IrfoPsvAuth';
 
-    protected $extraRepos = ['IrfoPsvAuthNumber', 'Fee', 'FeeType'];
+    protected $extraRepos = ['Fee', 'FeeType'];
 
+    /**
+     * Handle Grant command
+     *
+     * @param CommandInterface $command
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
-        /** @var IrfoPsvAuth $irfoPsvAuth */
-        $irfoPsvAuth = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
+        // common IRFO PSV Auth update
+        $irfoPsvAuth = $this->updateIrfoPsvAuth($command);
 
-        $this->handleSideEffect(
-            UpdateDto::create(
-                $command->getArrayCopy()
-            )
-        );
-
-        /*
-        Update does not affect status or fees, so there is no need to ensure we have the updated entity prior to
-        granting. Granting only affects the status
-         */
         $irfoPsvAuth->grant(
             $this->getRepo()->getRefdataReference(IrfoPsvAuth::STATUS_GRANTED),
             $this->getRepo('Fee')->fetchApplicationFeeByPsvAuthId($irfoPsvAuth->getId())

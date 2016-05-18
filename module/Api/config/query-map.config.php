@@ -30,13 +30,16 @@ return [
     BookmarkQuery\ImpoundingBundle::class => BookmarkQueryHandler\ImpoundingBundle::class,
     BookmarkQuery\InterimUnlinkedTm::class => BookmarkQueryHandler\InterimUnlinkedTm::class,
     BookmarkQuery\InterimOperatingCentres::class => BookmarkQueryHandler\InterimOperatingCentres::class,
+    BookmarkQuery\IrfoGvPermitBundle::class => BookmarkQueryHandler\IrfoGvPermitBundle::class,
     BookmarkQuery\IrfoPsvAuthBundle::class => BookmarkQueryHandler\IrfoPsvAuthBundle::class,
+    BookmarkQuery\OrganisationBundle::class => BookmarkQueryHandler\OrganisationBundle::class,
     BookmarkQuery\UserBundle::class => BookmarkQueryHandler\UserBundle::class,
     BookmarkQuery\BusRegBundle::class => BookmarkQueryHandler\BusRegBundle::class,
     BookmarkQuery\PublicationLinkBundle::class => BookmarkQueryHandler\PublicationLinkBundle::class,
     BookmarkQuery\PublicationBundle::class => BookmarkQueryHandler\PublicationBundle::class,
     BookmarkQuery\PublicationLatestByTaAndTypeBundle::class
         => BookmarkQueryHandler\PublicationLatestByTaAndTypeBundle::class,
+    BookmarkQuery\PolicePeopleBundle::class => BookmarkQueryHandler\PolicePeople::class,
     BookmarkQuery\ConditionsUndertakings::class => BookmarkQueryHandler\ConditionsUndertakings::class,
     BookmarkQuery\GoodsDiscBundle::class => BookmarkQueryHandler\GoodsDiscBundle::class,
     BookmarkQuery\PsvDiscBundle::class => BookmarkQueryHandler\PsvDiscBundle::class,
@@ -139,6 +142,8 @@ return [
     TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
     TransferQuery\Cases\Pi\Hearing::class => QueryHandler\Cases\Pi\Hearing::class,
     TransferQuery\Cases\Pi\HearingList::class => QueryHandler\Cases\Pi\HearingList::class,
+    TransferQuery\Cases\Pi\ReportList::class => QueryHandler\Cases\Pi\ReportList::class,
+    TransferQuery\Cases\Pi\PiDefinitionList::class => QueryHandler\Cases\Pi\PiDefinitionList::class,
     TransferQuery\Cases\AnnualTestHistory::class => QueryHandler\Cases\AnnualTestHistory::class,
     TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
     TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
@@ -163,6 +168,7 @@ return [
     TransferQuery\Cases\Statement\StatementList::class => QueryHandler\Cases\Statement\StatementList::class,
     TransferQuery\Cases\ByTransportManager::class => QueryHandler\Cases\ByTransportManager::class,
     TransferQuery\Cases\ByLicence::class => QueryHandler\Cases\ByLicence::class,
+    TransferQuery\Cases\ByApplication::class => QueryHandler\Cases\ByApplication::class,
 
     TransferQuery\Cases\Si\Applied\Penalty::class => QueryHandler\Cases\Si\Applied\Penalty::class,
     TransferQuery\Cases\Si\Si::class => QueryHandler\Cases\Si\Si::class,
@@ -332,6 +338,12 @@ return [
     // Bus Reg Search View
     TransferQuery\Bus\SearchViewList::class => QueryHandler\Bus\SearchViewList::class,
 
+    // Bus Reg Filtered List
+    TransferQuery\BusRegSearchView\BusRegSearchViewList::class =>
+        QueryHandler\BusRegSearchView\BusRegSearchViewList::class,
+    TransferQuery\BusRegSearchView\BusRegSearchViewContextList::class =>
+        QueryHandler\BusRegSearchView\BusRegSearchViewContextList::class,
+
     // Fee
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
     TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,
@@ -464,6 +476,7 @@ return [
     TransferQuery\ContactDetail\CountryList::class => QueryHandler\ContactDetail\CountryList::class,
     TransferQuery\ContactDetail\ContactDetailsList::class => QueryHandler\ContactDetail\ContactDetailsList::class,
     TransferQuery\TrafficArea\TrafficAreaList::class => QueryHandler\TrafficArea\TrafficAreaList::class,
+    TransferQuery\TrafficArea\Get::class => QueryHandler\TrafficArea\Get::class,
 
     TransferQuery\RefData\RefDataList::class => QueryHandler\RefData\RefDataList::class,
     TransferQuery\LocalAuthority\LocalAuthorityList::class => QueryHandler\LocalAuthority\LocalAuthorityList::class,
@@ -478,4 +491,20 @@ return [
     // Decisions
     TransferQuery\Decision\DecisionList::class => QueryHandler\Decision\DecisionList::class,
 
+    // Reasons
+    TransferQuery\Reason\ReasonList::class => QueryHandler\Reason\ReasonList::class,
+
+    TransferQuery\TaskAllocationRule\GetList::class => QueryHandler\TaskAllocationRule\GetList::class,
+    TransferQuery\TaskAllocationRule\Get::class => QueryHandler\TaskAllocationRule\Get::class,
+
+    TransferQuery\TaskAlphaSplit\Get::class => QueryHandler\TaskAlphaSplit\Get::class,
+    TransferQuery\TaskAlphaSplit\GetList::class => QueryHandler\TaskAlphaSplit\GetList::class,
+
+    // EventHistory
+    TransferQuery\EventHistory\EventHistory::class => QueryHandler\EventHistory\EventHistory::class,
+
+    // System Messages
+    TransferQuery\System\InfoMessage\Get::class => QueryHandler\System\InfoMessage\Get::class,
+    TransferQuery\System\InfoMessage\GetList::class => QueryHandler\System\InfoMessage\GetList::class,
+    TransferQuery\System\InfoMessage\GetListActive::class => QueryHandler\System\InfoMessage\GetListActive::class,
 ];

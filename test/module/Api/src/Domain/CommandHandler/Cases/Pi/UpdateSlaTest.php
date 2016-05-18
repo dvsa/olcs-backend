@@ -32,7 +32,7 @@ class UpdateSlaTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            SlaEntity::WRITTEN_OUTCOME_NONE,
+            SlaEntity::VERBAL_DECISION_ONLY,
             SlaEntity::WRITTEN_OUTCOME_DECISION,
             SlaEntity::WRITTEN_OUTCOME_REASON
         ];
@@ -89,7 +89,7 @@ class UpdateSlaTest extends CommandHandlerTestCase
     public function writtenOutcomeProvider()
     {
         return [
-            [SlaEntity::WRITTEN_OUTCOME_NONE],
+            [SlaEntity::VERBAL_DECISION_ONLY],
             [SlaEntity::WRITTEN_OUTCOME_DECISION],
             [SlaEntity::WRITTEN_OUTCOME_REASON],
             [null]

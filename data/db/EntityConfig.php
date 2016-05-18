@@ -352,6 +352,14 @@ return array(
             )
         ),
     ),
+    'task_alpha_split' => array(
+        'task_allocation_rule_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TaskAllocationRule',
+                'property' => 'taskAlphaSplit'
+            )
+        ),
+    ),
     'document_sub_category' => array(
         'is_scanned' => array(
             'type' => 'yesno'
@@ -521,9 +529,6 @@ return array(
                 'property' => 'document'
             )
         ),
-        'is_read_only' => array(
-            'type' => 'yesnonull'
-        ),
         'licence_id' => array(
             'inversedBy' => array(
                 'entity' => 'Licence',
@@ -640,6 +645,12 @@ return array(
             'inversedBy' => array(
                 'entity' => 'Application',
                 'property' => 'licenceVehicle'
+            )
+        ),
+        'interim_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'interimLicenceVehicle'
             )
         ),
         'vehicle_id' => array(
@@ -1312,16 +1323,16 @@ return array(
     ),
     'correspondence_inbox' => array(
         'archived' => array(
-            'type' => 'yesnonull'
+            'type' => 'yesno'
         ),
         'accessed' => array(
-            'type' => 'yesnonull'
+            'type' => 'yesno'
         ),
         'email_reminder_sent' => array(
-            'type' => 'yesnonull'
+            'type' => 'yesno'
         ),
         'printed' => array(
-            'type' => 'yesnonull'
+            'type' => 'yesno'
         )
     ),
     'disc_sequence' => array(
