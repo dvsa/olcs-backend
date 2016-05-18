@@ -147,19 +147,18 @@ class Search
                 $postcodeQuery = new Query\Match();
                 $postcodeQuery->setField('postcode', $search);
                 $queryBool->addShould($postcodeQuery);
-
-                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
-
                 break;
             case 'application':
                 $correspondencePostcodeQuery = new Query\Match();
                 $correspondencePostcodeQuery->setField('correspondence_postcode', $search);
                 $queryBool->addShould($correspondencePostcodeQuery);
 
-                $applicationIdQuery = new Query\Match();
-                $applicationIdQuery->setField('app_id', $search);
-                $queryBool->addShould($applicationIdQuery);
-
+                if (is_numeric($search)) {
+                    // searching for empty string causes exception
+                    $applicationIdQuery = new Query\Match();
+                    $applicationIdQuery->setField('app_id', $search);
+                    $queryBool->addShould($applicationIdQuery);
+                }
                 $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
                 break;
             case 'case':
@@ -167,10 +166,12 @@ class Search
                 $correspondencePostcodeQuery->setField('correspondence_postcode', $search);
                 $queryBool->addShould($correspondencePostcodeQuery);
 
-                $caseIdQuery = new Query\Match();
-                $caseIdQuery->setField('case_id', $search);
-                $queryBool->addShould($caseIdQuery);
-
+                if (is_numeric($search)) {
+                    // searching for empty string causes exception
+                    $caseIdQuery = new Query\Match();
+                    $caseIdQuery->setField('case_id', $search);
+                    $queryBool->addShould($caseIdQuery);
+                }
                 $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
                 break;
             case 'operator':
