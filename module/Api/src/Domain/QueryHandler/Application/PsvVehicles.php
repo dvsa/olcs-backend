@@ -43,7 +43,8 @@ class PsvVehicles extends AbstractQueryHandler
 
         $lvQuery = $this->getRepo('LicenceVehicle')->createPaginatedVehiclesDataForApplicationQueryPsv(
             $query,
-            $application->getId()
+            $application->getId(),
+            $application->getLicence()->getId()
         );
 
         $flags = $this->helper->getCommonQueryFlags($application, $query);

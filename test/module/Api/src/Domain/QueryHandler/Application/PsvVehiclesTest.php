@@ -45,15 +45,29 @@ class PsvVehiclesTest extends QueryHandlerTestCase
 
         $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         /** @var Entity\Application\Application|m\MockInterface $application */
-        $application = m::mock(Entity\Application\Application::class)->makePartial();
+        $application = m::mock(Entity\Application\Application::class);
         $application->shouldReceive('serialize')
             ->with([])
             ->andReturn(['foo' => 'bar'])
             ->shouldReceive('getId')
             ->andReturn(111)
-            ->once();
-
-        $application->shouldReceive('getAllVehiclesCount')->once()->andReturn(3)->getMock();
+            ->once()
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(222)
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getTotAuthVehicles')
+            ->andReturn(0)
+            ->once()
+            ->shouldReceive('getAllVehiclesCount')
+            ->andReturn(3)
+            ->once()
+            ->getMock();
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($query)
@@ -67,7 +81,7 @@ class PsvVehiclesTest extends QueryHandlerTestCase
 
         $this->repoMap['LicenceVehicle']
             ->shouldReceive('createPaginatedVehiclesDataForApplicationQueryPsv')
-            ->with($query, 111)
+            ->with($query, 111, 222)
             ->andReturn($mockQb)
             ->once()
             ->shouldReceive('fetchPaginatedList')
