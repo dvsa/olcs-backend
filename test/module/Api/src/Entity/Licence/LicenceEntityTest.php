@@ -862,6 +862,20 @@ class LicenceEntityTest extends EntityTester
         $this->assertEquals(1, $licence->getVariations()[0]->getId());
     }
 
+    public function testGetNewApplications()
+    {
+        $licence = $this->instantiate(Entity::class);
+        $app1 = new Application($licence, $this->getRefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION), 0);
+        $app1->setIsVariation(false);
+        $app1->setId(1);
+        $app2 = new Application($licence, $this->getRefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION), 0);
+        $app2->setIsVariation(true);
+        $app2->setId(2);
+        $licence->setApplications(new \Doctrine\Common\Collections\ArrayCollection([$app1, $app2]));
+
+        $this->assertEquals(1, $licence->getNewApplications()[0]->getId());
+    }
+
     protected function getRefData($id)
     {
         $refData = new RefData();

@@ -768,6 +768,17 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * Get new applications
+     *
+     * @return ArrayCollection
+     */
+    public function getNewApplications()
+    {
+        $criteria = Criteria::create()->andWhere(Criteria::expr()->eq('isVariation', false));
+        return $this->getApplications()->matching($criteria);
+    }
+
+    /**
      * Has this licence got a queued/scheduled revocation
      *
      * @return bool
