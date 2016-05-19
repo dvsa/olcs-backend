@@ -44,6 +44,8 @@ class CreateTaskTest extends CommandHandlerTestCase
 {
     protected $mockLicence;
 
+    protected $mockApplication;
+
     protected $rules;
 
     protected $rulesForAlphaSplit;
@@ -94,6 +96,7 @@ class CreateTaskTest extends CommandHandlerTestCase
         ];
 
         $this->mockLicence = m::mock(Licence::class);
+        $this->mockApplication = m::mock(Application::class);
 
         $this->references = [
             User::class => [
@@ -106,7 +109,7 @@ class CreateTaskTest extends CommandHandlerTestCase
                 999 => m::mock(Team::class)
             ],
             Application::class => [
-                111 => m::mock(Application::class)
+                111 => $this->mockApplication
             ],
             Licence::class => [
                 222 => $this->mockLicence
@@ -706,4 +709,65 @@ class CreateTaskTest extends CommandHandlerTestCase
                 ->getMock();
         }
     }
+
+    /**
+     * Test handle command with auto assignment with goods licence with no operator type
+     */
+    public function testHandleCommandWithAutoAssignmentGoodsLicenceNoOperatorType()
+    {
+        $command = Cmd::create($this->getData());
+
+        $mockApp = m::mock()
+            ->shouldReceive('getGoodsOrPsv')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(Licence::LICENCE_CATEGORY_GOODS_VEHICLE)
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $apps = new ArrayCollection();
+        $apps->add($mockApp);
+
+        $this->mockLicence
+            ->shouldReceive('getGoodsOrPsv')
+            ->andReturn(null)
+            ->once()
+            ->shouldReceive('getTrafficArea')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn('B')
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getOrganisation')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('isMlh')
+                    ->andReturn(false)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getNewApplications')
+            ->andReturn($apps)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchByParameters')
+            ->with(1, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'B', false)
+            ->once()
+            ->andReturn($this->rules);
+
+        $this->mockSaveTask($this->references[User::class][888]);
+        $result = $this->sut->handleCommand($command);
+        $expected = ['id' => ['task' => 123], 'messages' => ['Task created successfully']];
+        $this->assertEquals($expected, $result->toArray());
+    }
+
 }

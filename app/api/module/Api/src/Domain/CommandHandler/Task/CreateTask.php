@@ -188,10 +188,17 @@ final class CreateTask extends AbstractCommandHandler
         //  define operator Type
         $operatorType = null;
 
-        $obj = ($licence ?: $app);
-        if ($obj) {
-            $goodsOrPsv = $obj->getGoodsOrPsv();
+        $goodsOrPsv = $licence->getGoodsOrPsv();
+        if ($goodsOrPsv === null && $app !== null) {
+            $goodsOrPsv = $app->getGoodsOrPsv();
+        }
 
+        if ($goodsOrPsv !== null) {
+            $operatorType = $goodsOrPsv->getId();
+        } else {
+            $newApplications = $licence->getNewApplications();
+            $app = $newApplications->first();
+            $goodsOrPsv = $app->getGoodsOrPsv();
             if ($goodsOrPsv !== null) {
                 $operatorType = $goodsOrPsv->getId();
             }
