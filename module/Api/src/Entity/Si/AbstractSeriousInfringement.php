@@ -25,7 +25,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"si_category_type_id"}),
  *        @ORM\Index(name="ix_serious_infringement_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_serious_infringement_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_serious_infringement_case_id", columns={"case_id"})
+ *        @ORM\Index(name="ix_serious_infringement_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_serious_infringement_member_state_code", columns={"member_state_code"})
  *    }
  * )
  */
@@ -124,6 +125,16 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
      * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
      */
     protected $lastModifiedOn;
+
+    /**
+     * Member state code
+     *
+     * @var \Dvsa\Olcs\Api\Entity\ContactDetails\Country
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country", fetch="LAZY")
+     * @ORM\JoinColumn(name="member_state_code", referencedColumnName="id", nullable=true)
+     */
+    protected $memberStateCode;
 
     /**
      * Olbs key
@@ -437,6 +448,29 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     public function getLastModifiedOn()
     {
         return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the member state code
+     *
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $memberStateCode
+     * @return SeriousInfringement
+     */
+    public function setMemberStateCode($memberStateCode)
+    {
+        $this->memberStateCode = $memberStateCode;
+
+        return $this;
+    }
+
+    /**
+     * Get the member state code
+     *
+     * @return \Dvsa\Olcs\Api\Entity\ContactDetails\Country
+     */
+    public function getMemberStateCode()
+    {
+        return $this->memberStateCode;
     }
 
     /**
