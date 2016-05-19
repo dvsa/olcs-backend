@@ -769,5 +769,4 @@ class CreateTaskTest extends CommandHandlerTestCase
         $expected = ['id' => ['task' => 123], 'messages' => ['Task created successfully']];
         $this->assertEquals($expected, $result->toArray());
     }
-
 }
