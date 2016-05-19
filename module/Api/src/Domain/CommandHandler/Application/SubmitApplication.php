@@ -21,14 +21,18 @@ use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\Application\S4;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as Cmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Submit Application
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class SubmitApplication extends AbstractCommandHandler implements TransactionedInterface
+final class SubmitApplication extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'Application';
 
     /**
@@ -67,6 +71,9 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
      */
     private function shouldPublishApplication(ApplicationEntity $application)
     {
+        if ($this->isInternalUser()) {
+            return false;
+        }
         // Exclude for PSV variation applications
         if ($application->isVariation() && $application->isPsv()) {
             return false;
