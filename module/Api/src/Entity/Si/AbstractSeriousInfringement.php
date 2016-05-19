@@ -137,6 +137,15 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     protected $memberStateCode;
 
     /**
+     * Notification number
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="notification_number", length=36, nullable=true)
+     */
+    protected $notificationNumber;
+
+    /**
      * Olbs key
      *
      * @var int
@@ -471,6 +480,29 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     public function getMemberStateCode()
     {
         return $this->memberStateCode;
+    }
+
+    /**
+     * Set the notification number
+     *
+     * @param string $notificationNumber
+     * @return SeriousInfringement
+     */
+    public function setNotificationNumber($notificationNumber)
+    {
+        $this->notificationNumber = $notificationNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get the notification number
+     *
+     * @return string
+     */
+    public function getNotificationNumber()
+    {
+        return $this->notificationNumber;
     }
 
     /**
