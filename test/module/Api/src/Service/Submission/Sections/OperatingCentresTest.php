@@ -19,7 +19,7 @@ class OperatingCentresTest extends SubmissionSectionTest
      */
     public function sectionTestProvider()
     {
-        $case = $this->getCase();
+        $case = $this->getApplicationCase();
 
         $expectedResult = [
             'data' => [
