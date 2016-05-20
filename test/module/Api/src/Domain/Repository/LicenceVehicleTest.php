@@ -290,7 +290,7 @@ class LicenceVehicleTest extends RepositoryTestCase
         $this->assertSame($qb, $this->sut->createPaginatedVehiclesDataForLicenceQueryPsv($qry, $licId));
 
         $expectedQuery = '[QUERY] INNER JOIN m.vehicle v AND m.removalDate IS NULL ' .
-            'AND v.vrm LIKE [[%VRM123%]] AND m.licence = [[222]]';
+            'AND v.vrm LIKE [[%VRM123%]] AND m.specifiedDate IS NOT NULL AND m.licence = [[222]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 

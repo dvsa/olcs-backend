@@ -72,6 +72,7 @@ class LicenceVehicle extends AbstractRepository
     {
         $qb = $this->createFilteredQueryForLvaPsv($query);
 
+        $this->filterSpecifiedOnly($qb);
         $qb->andWhere($qb->expr()->eq('m.licence', ':licence'));
         $qb->setParameter('licence', $licenceId);
 
