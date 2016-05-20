@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Download
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
@@ -26,7 +21,7 @@ class Download extends AbstractQueryHandler implements UploaderAwareInterface
     protected $repoServiceName = 'Document';
 
     /**
-     * @param QueryInterface $query
+     * @param \Dvsa\Olcs\Transfer\Query\Document\Download $query
      * @return array
      * @throws NotFoundException
      */

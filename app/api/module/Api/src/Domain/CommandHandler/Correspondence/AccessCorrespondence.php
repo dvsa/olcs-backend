@@ -1,10 +1,5 @@
 <?php
 
-/**
- * AccessCorrespondence.php
- *
- * @author Josh Curtis <josh.curtis@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Correspondence;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -21,17 +16,25 @@ final class AccessCorrespondence extends AbstractCommandHandler
 {
     protected $repoServiceName = 'Correspondence';
 
+    /**
+     * @param \Dvsa\Olcs\Transfer\Command\Correspondence\AccessCorrespondence $command
+     *
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
-        $correspondence = $this->getRepo()
-            ->fetchById(
-                $command->getId(),
-                \Doctrine\ORM\Query::HYDRATE_OBJECT
-            );
+        $repo = $this->getRepo();
+
+        /** @var \Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox $correspondence */
+        $correspondence = $repo->fetchById(
+            $command->getId(),
+            \Doctrine\ORM\Query::HYDRATE_OBJECT
+        );
 
         $correspondence->setAccessed('Y');
 
-        $this->getRepo()->save($correspondence);
+        $repo->save($correspondence);
 
         $result = new Result();
         $result->addId('correspondence', $correspondence->getId());
