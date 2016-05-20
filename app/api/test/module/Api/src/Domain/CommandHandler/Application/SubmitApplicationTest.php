@@ -52,6 +52,9 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 7 => m::mock(LicenceEntity::class)
             ],
         ];
+        $this->mockedSmServices = [
+            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
+        ];
 
         parent::setUp();
     }
@@ -59,10 +62,13 @@ class SubmitApplicationTest extends CommandHandlerTestCase
     /**
      * @param boolean $isVariation
      * @param array $expected
+     * @param bool $isInternalUser
      * @dataProvider isVariationProvider
      */
-    public function testHandleCommand($isVariation, $expected)
+    public function testHandleCommand($isVariation, $expected, $isInternalUser)
     {
+        $this->setupIsInternalUser($isInternalUser);
+
         $applicationId = 69;
         $version       = 10;
         $licenceId     = 7;
@@ -115,17 +121,18 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 ->once()
                 ->andReturnSelf();
 
-            $this->expectedSideEffect(
-                \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
-                ['id' => 69, 'trafficArea' => 'TA'],
-                new Result()
-            );
-            $this->expectedSideEffect(
-                \Dvsa\Olcs\Api\Domain\Command\Application\CreateTexTask::class,
-                ['id' => 69],
-                new Result()
-            );
-
+            if (!$isInternalUser) {
+                $this->expectedSideEffect(
+                    \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
+                    ['id' => 69, 'trafficArea' => 'TA'],
+                    new Result()
+                );
+                $this->expectedSideEffect(
+                    \Dvsa\Olcs\Api\Domain\Command\Application\CreateTexTask::class,
+                    ['id' => 69],
+                    new Result()
+                );
+            }
         }
 
         $this->repoMap['Application']
@@ -173,6 +180,8 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
     public function testHandleCommandVariationPsv()
     {
+        $this->setupIsInternalUser(false);
+
         $applicationId = 69;
         $version       = 10;
         $licenceId     = 7;
@@ -275,6 +284,8 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
     public function testHandleCommandSpecialRestricted()
     {
+        $this->setupIsInternalUser(false);
+
         $applicationId = 69;
         $version       = 10;
         $licenceId     = 7;
@@ -387,6 +398,8 @@ class SubmitApplicationTest extends CommandHandlerTestCase
      */
     public function testHandleCommandWithS4($isVariation, $expected)
     {
+        $this->setupIsInternalUser(false);
+
         $applicationId = 69;
         $version       = 10;
         $licenceId     = 7;
@@ -501,7 +514,8 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                         'task created',
                     ],
                 ],
-                LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL
+                LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                false
             ],
             'variation' => [
                 true,
@@ -516,8 +530,27 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                         'task created'
                     ],
                 ],
-                LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL
+                LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                false
             ],
+            'new app internal' => [
+                false,
+                [
+                    'id' => [
+                        'application' => 69,
+                        'licence' => 7,
+                        'task' => 111,
+                    ],
+                    'messages' => [
+                        'Snapshot created',
+                        'Application updated',
+                        'Licence updated',
+                        'task created',
+                    ],
+                ],
+                LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                true
+            ]
         ];
     }
 

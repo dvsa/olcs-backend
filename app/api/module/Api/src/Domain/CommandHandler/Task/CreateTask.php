@@ -182,8 +182,18 @@ final class CreateTask extends AbstractCommandHandler
         $licence = $task->getLicence();
         $app = $task->getApplication();
 
-        $trafficArea = $licence->getTrafficArea()->getId();
-        $categoryId = $task->getCategory()->getId();
+        $licenceTrafficArea = $licence->getTrafficArea();
+        $trafficArea = (
+            $licenceTrafficArea !== null
+            ? $licenceTrafficArea->getId()
+            : null
+        );
+        $category = $task->getCategory();
+        $categoryId = (
+            $category !== null
+            ? $category->getId()
+            : null
+        );
 
         //  define operator Type
         $operatorType = null;
