@@ -14,6 +14,8 @@ use Dvsa\Olcs\Api\Domain\Query;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Cli\Controller\BatchController;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence;
+use Dvsa\Olcs\Transfer\Command\Application\NotTakenUpApplication;
+use Dvsa\Olcs\Api\Domain\Query\Application\NotTakenUpList;
 use Dvsa\Olcs\Transfer\Query\Application\Application;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
@@ -328,5 +330,198 @@ class BatchControllerTest extends TestCase
             ->andReturn(new Command\Result());
 
         $this->sut->createViExtractFilesAction();
+    }
+
+    public function testProcessNtuAction()
+    {
+        $mockParams =  m::mock(\Zend\Mvc\Controller\Plugin\Params::class)
+            ->shouldReceive('__invoke')
+            ->andReturnUsing(
+                function ($param) {
+                    $map = [
+                        'dryrun' => false,
+                        'verbose' => true,
+                    ];
+                    return isset($map[$param]) && $map[$param];
+                }
+            )
+            ->getMock();
+
+        $this->pm
+            ->shouldReceive('get')
+            ->with('params', null)
+            ->andReturn($mockParams);
+
+        $mockCommandHandler = m::mock();
+        $mockQueryHandler = m::mock();
+
+        $now = new DateTime();
+
+        $this->sm
+            ->shouldReceive('get')
+            ->with('CommandHandlerManager')
+            ->andReturn($mockCommandHandler)
+            ->shouldReceive('get')
+            ->with('QueryHandlerManager')
+            ->andReturn($mockQueryHandler);
+
+        $mockApplication = m::mock()
+            ->shouldReceive('getId')
+            ->andReturn(1)
+            ->twice()
+            ->getMock();
+
+        $applications = [$mockApplication];
+
+        $mockQueryHandler
+            ->shouldReceive('handleQuery')
+            ->with(m::type(NotTakenUpList::class))
+            ->andReturnUsing(
+                function ($qry) use ($applications, $now) {
+                    $this->assertEquals(
+                        $now->format('Y-m-d'),
+                        $qry->getDate()->format('Y-m-d')
+                    );
+                    return [
+                        'result' => $applications,
+                        'count' => 1,
+                    ];
+                }
+            );
+
+        $mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(NotTakenUpApplication::class))
+            ->once()
+            ->andReturnUsing(
+                function ($cmd) {
+                    $result = new Command\Result();
+                    $result->addMessage('Processing Application ID 1');
+                    return $result;
+                }
+            );
+
+        $mockConsole = m::mock(AdapterInterface::class);
+        $mockConsole->shouldReceive('writeLine')->times(5);
+        $this->sut->setConsole($mockConsole);
+
+        $this->sut->processNtuAction();
+
+    }
+
+    /**
+     * @dataProvider exceptionClassesProvider
+     * @param string $exceptionClass
+     * @param int $outputCount
+     */
+    public function testProcessNtuActionWithExceptions($exceptionClass, $outputCount)
+    {
+        $mockParams =  m::mock(\Zend\Mvc\Controller\Plugin\Params::class)
+            ->shouldReceive('__invoke')
+            ->andReturnUsing(
+                function ($param) {
+                    $map = [
+                        'dryrun' => false,
+                        'verbose' => true,
+                    ];
+                    return isset($map[$param]) && $map[$param];
+                }
+            )
+            ->getMock();
+
+        $this->pm
+            ->shouldReceive('get')
+            ->with('params', null)
+            ->andReturn($mockParams);
+
+        $mockQueryHandler = m::mock()
+            ->shouldReceive('handleQuery')
+            ->with(m::type(NotTakenUpList::class))
+            ->andThrow($exceptionClass)
+            ->once()
+            ->getMock();
+
+        $this->sm
+            ->shouldReceive('get')
+            ->with('QueryHandlerManager')
+            ->andReturn($mockQueryHandler);
+
+        $mockConsole = m::mock(AdapterInterface::class);
+        $mockConsole->shouldReceive('writeLine')->times($outputCount);
+        $this->sut->setConsole($mockConsole);
+
+        $this->sut->processNtuAction();
+    }
+
+    /**
+     * Exception classes provider
+     */
+    public function exceptionClassesProvider()
+    {
+        return [
+            [Exception\NotFoundException::class, 3],
+            [Exception\Exception::class, 2],
+            [\Exception::class, 2]
+        ];
+    }
+
+    public function testProcessNtuActionWithDryRun()
+    {
+        $mockParams =  m::mock(\Zend\Mvc\Controller\Plugin\Params::class)
+            ->shouldReceive('__invoke')
+            ->andReturnUsing(
+                function ($param) {
+                    $map = [
+                        'dryrun' => true,
+                        'verbose' => true,
+                    ];
+                    return isset($map[$param]) && $map[$param];
+                }
+            )
+            ->getMock();
+
+        $this->pm
+            ->shouldReceive('get')
+            ->with('params', null)
+            ->andReturn($mockParams);
+
+        $mockQueryHandler = m::mock();
+
+        $now = new DateTime();
+
+        $this->sm
+            ->shouldReceive('get')
+            ->with('QueryHandlerManager')
+            ->andReturn($mockQueryHandler);
+
+        $mockApplication = m::mock()
+            ->shouldReceive('getId')
+            ->andReturn(1)
+            ->twice()
+            ->getMock();
+
+        $applications = [$mockApplication];
+
+        $mockQueryHandler
+            ->shouldReceive('handleQuery')
+            ->with(m::type(NotTakenUpList::class))
+            ->andReturnUsing(
+                function ($qry) use ($applications, $now) {
+                    $this->assertEquals(
+                        $now->format('Y-m-d'),
+                        $qry->getDate()->format('Y-m-d')
+                    );
+                    return [
+                        'result' => $applications,
+                        'count' => 1,
+                    ];
+                }
+            );
+
+        $mockConsole = m::mock(AdapterInterface::class);
+        $mockConsole->shouldReceive('writeLine')->times(3);
+        $this->sut->setConsole($mockConsole);
+
+        $this->sut->processNtuAction();
     }
 }

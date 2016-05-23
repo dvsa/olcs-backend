@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Retry as RetryCmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Abstract Queue Consumer
@@ -35,9 +36,16 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
         $this->getServiceLocator()->get('CommandHandlerManager')
             ->handleCommand($command);
 
-        return 'Successfully processed message: '
-            . $item->getId() . ' ' . $item->getOptions()
-            . ($message ? ' ' . $message : '');
+        $description = 'Successfully processed message';
+        $content = $item->getId() . ' ' . $item->getOptions() . ($message ? ' ' . $message : '');
+
+        Logger::log(
+            \Zend\Log\Logger::DEBUG,
+            $description,
+            ['errorLevel' => 0, 'content' => $content]
+        );
+
+        return $description . ': ' . $content;
     }
 
     /**
@@ -53,9 +61,16 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
         $this->getServiceLocator()->get('CommandHandlerManager')
             ->handleCommand($command);
 
-        return 'Failed to process message: '
-            . $item->getId() . ' ' . $item->getOptions()
-            . ' ' .  $reason;
+        $description = 'Failed to process message';
+        $content = $item->getId() . ' ' . $item->getOptions() . ' ' .  $reason;
+
+        Logger::log(
+            \Zend\Log\Logger::ERR,
+            $description,
+            ['errorLevel' => 1, 'content' => $content]
+        );
+
+        return $description . ': ' . $content;
     }
 
     /**
@@ -71,8 +86,15 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
         $this->getServiceLocator()->get('CommandHandlerManager')
             ->handleCommand($command);
 
-        return 'Requeued message: '
-            . $item->getId() . ' ' . $item->getOptions()
-            . ' for retry in ' .  $retryAfter;
+        $description = 'Requeued message';
+        $content = $item->getId() . ' ' . $item->getOptions() . ' for retry in ' .  $retryAfter;
+
+        Logger::log(
+            \Zend\Log\Logger::WARN,
+            $description,
+            ['errorLevel' => 0, 'content' => $content]
+        );
+
+        return $description . ': ' . $content;
     }
 }
