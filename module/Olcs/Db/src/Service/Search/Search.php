@@ -216,7 +216,7 @@ class Search implements AuthAwareInterface
                 );
 
                 // Hide Removed TMs from SS and Anonymous users
-                if ($this->isAnonymousUser() || $this->isExternalUser()) {
+                if ($this->isAnonymousUser() || !$this->isInternalUser() || $this->isExternalUser()) {
                     $statusQuery = new Query\Match();
                     $statusQuery->setField('tm_status_id', TransportManager::TRANSPORT_MANAGER_STATUS_REMOVED);
                     $queryBool->addMustNot($statusQuery);
