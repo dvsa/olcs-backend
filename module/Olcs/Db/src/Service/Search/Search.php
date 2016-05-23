@@ -2,19 +2,24 @@
 
 namespace Olcs\Db\Service\Search;
 
+use Dvsa\Olcs\Api\Entity\User\User;
 use Elastica\Aggregation\Terms;
 use Elastica\Query;
 use Elastica\Filter;
 use Elastica\ResultSet;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Class Search
  * @package Olcs\Db\Service\Search
  */
-class Search
+class Search implements AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     /**
      * @var
      */
@@ -208,6 +213,13 @@ class Search
                 $queryBool->addShould(
                     new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
                 );
+
+                // Hide Removed TMs from SS and Anonymous users
+                if ($this->isAnonymousUser() || $this->isExternalUser()) {
+                    $statusQuery = new Query\Match();
+                    $statusQuery->setField('tm_status_desc', 'Removed');
+                    $queryBool->addMustNot($statusQuery);
+                }
 
                 // separate search into words
                 $search = preg_replace('/\s{2,}/', ' ', $search);
