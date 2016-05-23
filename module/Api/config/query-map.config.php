@@ -172,7 +172,7 @@ return [
 
     TransferQuery\Cases\Si\Applied\Penalty::class => QueryHandler\Cases\Si\Applied\Penalty::class,
     TransferQuery\Cases\Si\Si::class => QueryHandler\Cases\Si\Si::class,
-    TransferQuery\Cases\Si\GetList::class => QueryHandler\Cases\Si\GetList::class,
+    TransferQuery\Cases\Si\SiList::class => QueryHandler\Cases\Si\SiList::class,
     TransferQuery\Cases\PresidingTc\GetList::class => QueryHandler\Cases\PresidingTc\GetList::class,
 
     TransferQuery\Venue\VenueList::class => QueryHandler\Venue\VenueList::class,
@@ -507,4 +507,7 @@ return [
     TransferQuery\System\InfoMessage\Get::class => QueryHandler\System\InfoMessage\Get::class,
     TransferQuery\System\InfoMessage\GetList::class => QueryHandler\System\InfoMessage\GetList::class,
     TransferQuery\System\InfoMessage\GetListActive::class => QueryHandler\System\InfoMessage\GetListActive::class,
+
+    // Si
+    TransferQuery\Si\SiCategoryTypeListData::class => QueryHandler\Si\SiCategoryTypeListData::class,
 ];

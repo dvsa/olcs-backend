@@ -2,17 +2,17 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Si;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Si\GetList as QueryHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Si\SiList as QueryHandler;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Doctrine\ORM\Query;
 use Mockery as m;
 
 /**
- * GetListTest
+ * SiListTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class GetListTest extends QueryHandlerTestCase
+class SiListTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
@@ -31,10 +31,11 @@ class GetListTest extends QueryHandlerTestCase
         )->once()->andReturn(['foo' => 'bar']);
 
         $this->repoMap['SeriousInfringement']
-            ->shouldReceive('fetchList')->with($query, Query::HYDRATE_OBJECT)->once()->andReturn([$mockResult]);
+            ->shouldReceive('fetchList')->with($query, Query::HYDRATE_OBJECT)->once()->andReturn([$mockResult])
+            ->shouldReceive('fetchCount')->with($query)->once()->andReturn(1);
 
         $expected = [
-            'results' => [
+            'result' => [
                 ['foo' => 'bar']
             ],
             'count' => 1,

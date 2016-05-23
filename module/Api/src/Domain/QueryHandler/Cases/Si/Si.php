@@ -31,6 +31,7 @@ final class Si extends AbstractQueryHandler
         return $this->result(
             $si,
             [
+                'memberStateCode',
                 'siCategory',
                 'siCategoryType',
                 'appliedPenalties' => ['siPenaltyType', 'seriousInfringement'],
