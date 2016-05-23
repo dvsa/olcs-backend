@@ -35,7 +35,7 @@ class BkmExpiryTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 [
-                    'expiryDate' => '30.12.2015'
+                    'expiryDate' => new \DateTime('2015-12-30')
                 ],
                 '30 December 2015'
             ],

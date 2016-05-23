@@ -6,6 +6,9 @@ use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType as IrfoPsvAuthTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -39,8 +42,15 @@ final class GenerateIrfoPsvAuth extends AbstractCommandHandler implements Transa
 
         $this->getRepo()->save($irfoPsvAuth);
 
-        $template = 'IRFO_PSV_'
-            . str_replace(' ', '_', $irfoPsvAuth->getIrfoPsvAuthType()->getSectionCode());
+        // generate related documents
+        $templates = $this->getTemplates($irfoPsvAuth);
+
+        if (empty($templates)) {
+            throw new Exception\BadRequestException(
+                'No template found for given IRFO PSV Auth Type: '
+                .$irfoPsvAuth->getIrfoPsvAuthType()->getIrfoFeeType()->getId()
+            );
+        }
 
         $description = sprintf(
             'IRFO PSV Authorisation (%d) x %d',
@@ -48,30 +58,69 @@ final class GenerateIrfoPsvAuth extends AbstractCommandHandler implements Transa
             $command->getCopiesRequiredTotal()
         );
 
-        // generate document
-        $this->handleSideEffect(
-            GenerateAndStore::create(
-                [
-                    'template' => $template,
-                    'query' => [
-                        'irfoPsvAuth' => $irfoPsvAuth->getId(),
-                        'organisation' => $irfoPsvAuth->getOrganisation()->getId(),
-                    ],
-                    'knownValues' => [],
-                    'description' => $description,
-                    'irfoOrganisation' => $irfoPsvAuth->getOrganisation()->getId(),
-                    'category' => CategoryEntity::CATEGORY_IRFO,
-                    'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_IRFO_CONTINUATIONS_AND_RENEWALS,
-                    'isExternal' => false,
-                    'isScan' => false
-                ]
-            )
-        );
+        foreach ($templates as $template) {
+            // generate document
+            $this->handleSideEffect(
+                GenerateAndStore::create(
+                    [
+                        'template' => $template,
+                        'query' => [
+                            'irfoPsvAuth' => $irfoPsvAuth->getId(),
+                            'organisation' => $irfoPsvAuth->getOrganisation()->getId(),
+                        ],
+                        'knownValues' => [],
+                        'description' => $description,
+                        'irfoOrganisation' => $irfoPsvAuth->getOrganisation()->getId(),
+                        'category' => CategoryEntity::CATEGORY_IRFO,
+                        'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_IRFO_CONTINUATIONS_AND_RENEWALS,
+                        'isExternal' => false,
+                        'isScan' => false
+                    ]
+                )
+            );
+        }
 
         $result = new Result();
         $result->addId('irfoPsvAuth', $irfoPsvAuth->getId());
         $result->addMessage('IRFO PSV Auth generated successfully');
 
         return $result;
+    }
+
+    /**
+     * Get templates
+     *
+     * @param IrfoPsvAuthEntity $irfoPsvAuth
+     *
+     * @return array
+     */
+    private function getTemplates(IrfoPsvAuthEntity $irfoPsvAuth)
+    {
+        $templates = [];
+
+        switch ($irfoPsvAuth->getIrfoPsvAuthType()->getIrfoFeeType()->getId()) {
+            case IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_EU_REG_17:
+            case IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_EU_REG_19A:
+                $templates = ['IRFO_eu_auth_pink_GV280'];
+                break;
+            case IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_NON_EU_REG_18:
+                $templates = [
+                    'IRFO_uk_green_authorisation_INT_P17',
+                    'IRFO_non_eu_blue_authorisation_to_foreign_partner_INT_P18'
+                ];
+                break;
+            case IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_NON_EU_REG_19:
+                $templates = ['IRFO_non_eu_blue_authorisation_foreign_operator_no_partner_INT_P18A'];
+                break;
+            case IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_NON_EU_OCCASIONAL_19:
+            case IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_SHUTTLE_OPERATOR_20:
+                $templates = ['IRFO_eu_auth_pink_special_regular_GV280'];
+                break;
+            case IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_OWN_AC_21:
+                $templates = ['IRFO_own_acc'];
+                break;
+        }
+
+        return $templates;
     }
 }
