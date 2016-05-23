@@ -23,6 +23,13 @@ use Dvsa\Olcs\Api\Entity\Si\SiCategoryType as SiCategoryTypeEntity;
  */
 class SeriousInfringement extends AbstractSeriousInfringement
 {
+    /**
+     * @param \DateTime $checkDate
+     * @param \DateTime $infringementDate
+     * @param SiCategoryEntity $siCategory
+     * @param SiCategoryTypeEntity $siCategoryType
+     * @return void
+     */
     public function __construct(
         CaseEntity $case,
         \DateTime $checkDate,
@@ -33,6 +40,24 @@ class SeriousInfringement extends AbstractSeriousInfringement
         parent::__construct();
 
         $this->case = $case;
+        $this->update($checkDate, $infringementDate, $siCategory, $siCategoryType);
+    }
+
+    /**
+     * Update
+     *
+     * @param \DateTime $checkDate
+     * @param \DateTime $infringementDate
+     * @param SiCategoryEntity $siCategory
+     * @param SiCategoryTypeEntity $siCategoryType
+     * @return void
+     */
+    public function update(
+        \DateTime $checkDate,
+        \DateTime $infringementDate,
+        SiCategoryEntity $siCategory,
+        SiCategoryTypeEntity $siCategoryType
+    ) {
         $this->checkDate = $checkDate;
         $this->infringementDate = $infringementDate;
         $this->siCategory = $siCategory;
