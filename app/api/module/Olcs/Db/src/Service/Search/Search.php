@@ -2,6 +2,7 @@
 
 namespace Olcs\Db\Service\Search;
 
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Elastica\Aggregation\Terms;
 use Elastica\Query;
@@ -217,7 +218,7 @@ class Search implements AuthAwareInterface
                 // Hide Removed TMs from SS and Anonymous users
                 if ($this->isAnonymousUser() || $this->isExternalUser()) {
                     $statusQuery = new Query\Match();
-                    $statusQuery->setField('tm_status_desc', 'Removed');
+                    $statusQuery->setField('tm_status_id', TransportManager::TRANSPORT_MANAGER_STATUS_REMOVED);
                     $queryBool->addMustNot($statusQuery);
                 }
 
