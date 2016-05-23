@@ -72,6 +72,7 @@ class LicenceVehicle extends AbstractRepository
     {
         $qb = $this->createFilteredQueryForLvaPsv($query);
 
+        $this->filterSpecifiedOnly($qb);
         $qb->andWhere($qb->expr()->eq('m.licence', ':licence'));
         $qb->setParameter('licence', $licenceId);
 
@@ -82,13 +83,14 @@ class LicenceVehicle extends AbstractRepository
      * Create paginated query - vehicles data for PSV application
      *
      * @param QueryInterface $query
-     * @param $applicationId
+     * @param int $applicationId
+     * @param int $licenceId
      * @return QueryBuilder
      */
-    public function createPaginatedVehiclesDataForApplicationQueryPsv(QueryInterface $query, $applicationId)
+    public function createPaginatedVehiclesDataForApplicationQueryPsv(QueryInterface $query, $applicationId, $licenceId)
     {
         $qb = $this->createFilteredQueryForLvaPsv($query);
-        $qb->andWhere($qb->expr()->eq('m.application', ':application'));
+        $qb->andWhere($qb->expr()->eq('m.licence', ':licence'));
 
         $qb->andWhere(
             $qb->expr()->orX(
@@ -98,6 +100,7 @@ class LicenceVehicle extends AbstractRepository
         );
 
         $qb->setParameter('application', $applicationId);
+        $qb->setParameter('licence', $licenceId);
 
         return $qb;
     }

@@ -290,7 +290,7 @@ class LicenceVehicleTest extends RepositoryTestCase
         $this->assertSame($qb, $this->sut->createPaginatedVehiclesDataForLicenceQueryPsv($qry, $licId));
 
         $expectedQuery = '[QUERY] INNER JOIN m.vehicle v AND m.removalDate IS NULL ' .
-            'AND v.vrm LIKE [[%VRM123%]] AND m.licence = [[222]]';
+            'AND v.vrm LIKE [[%VRM123%]] AND m.specifiedDate IS NOT NULL AND m.licence = [[222]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
@@ -303,6 +303,7 @@ class LicenceVehicleTest extends RepositoryTestCase
         ];
         $qry = LicGoodsVehicles::create($data);
         $appId = 222;
+        $licId = 333;
 
         $qb = $this->createMockQb('[QUERY]');
 
@@ -315,9 +316,9 @@ class LicenceVehicleTest extends RepositoryTestCase
             ->shouldReceive('paginate')
             ->with(3, 10);
 
-        $this->assertSame($qb, $this->sut->createPaginatedVehiclesDataForApplicationQueryPsv($qry, $appId));
+        $this->assertSame($qb, $this->sut->createPaginatedVehiclesDataForApplicationQueryPsv($qry, $appId, $licId));
 
-        $expectedQuery = '[QUERY] INNER JOIN m.vehicle v AND m.removalDate IS NULL AND m.application = [[222]] '
+        $expectedQuery = '[QUERY] INNER JOIN m.vehicle v AND m.removalDate IS NULL AND m.licence = [[333]] '
             . 'AND (m.application = [[222]] OR m.specifiedDate IS NOT NULL)';
         $this->assertEquals($expectedQuery, $this->query);
     }
