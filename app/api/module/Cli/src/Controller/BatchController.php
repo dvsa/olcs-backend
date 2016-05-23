@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Domain\Query;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Transfer\Command as TransferCommand;
+use Olcs\Logging\Log\Logger;
 
 /**
  * BatchController
@@ -157,25 +158,32 @@ class BatchController extends AbstractConsoleController
         );
     }
 
+    /**
+     * Process NTU action
+     *
+     * @return ConsoleModel
+     */
     public function processNtuAction()
     {
         $dryRun = $this->isDryRun();
         $date = new DateTime();
         $dto = Query\Application\NotTakenUpList::create(['date' => $date]);
         $result = $this->handleQuery($dto);
-        $this->writeVerboseMessages("{$result['count']} Application(s) found to change to NTU");
-        $applications = $result['result'];
-        $commands = [];
-        foreach ($applications as $application) {
-            $this->writeVerboseMessages("Processing Application ID {$application->getId()}");
-            $commands[] = TransferCommand\Application\NotTakenUpApplication::create(
-                [
-                    'id' => $application->getId()
-                ]
-            );
-        }
-        if (!$dryRun) {
-            return $this->handleExitStatus($this->handleCommand($commands));
+        if (is_array($result) && isset($result['result'])) {
+            $this->writeVerboseMessages("{$result['count']} Application(s) found to change to NTU");
+            $applications = $result['result'];
+            $commands = [];
+            foreach ($applications as $application) {
+                $this->writeVerboseMessages("Processing Application ID {$application->getId()}");
+                $commands[] = TransferCommand\Application\NotTakenUpApplication::create(
+                    [
+                        'id' => $application->getId()
+                    ]
+                );
+            }
+            if (!$dryRun) {
+                return $this->handleExitStatus($this->handleCommand($commands));
+            }
         }
 
         return $this->handleExitStatus(0);
@@ -201,7 +209,7 @@ class BatchController extends AbstractConsoleController
         $result = $this->handleCommand([$dto]);
 
         if ($result === 404) {
-            $this->writeMessages("SystemParameter with name '{$name}' was not found.");
+            $this->writeVerboseMessages("SystemParameter with name '{$name}' was not found.");
         }
 
         return $this->handleExitStatus($result);
@@ -299,18 +307,18 @@ class BatchController extends AbstractConsoleController
             $count = 0;
             foreach ($dto as $dtoCommand) {
                 $count++;
-                $this->writeVerboseMessages("Handle command ". $count .' '. get_class($dtoCommand));
+                $this->writeVerboseMessages("Handle command ". $count .' '. get_class($dtoCommand), false);
                 $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dtoCommand);
-                $this->writeVerboseMessages($result->getMessages());
+                $this->writeVerboseMessages($result->getMessages(), false);
             }
         } catch (Exception\NotFoundException $e) {
-            $this->writeVerboseMessages(['NotFoundException', $e->getMessage()]);
+            $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], false);
             return 404;
         } catch (Exception\Exception $e) {
-            $this->writeVerboseMessages($e->getMessages());
+            $this->writeVerboseMessages($e->getMessages(), false);
             return 400;
         } catch (\Exception $e) {
-            $this->writeVerboseMessages($e->getMessage());
+            $this->writeVerboseMessages($e->getMessage(), false);
             return 500;
         }
 
@@ -327,14 +335,14 @@ class BatchController extends AbstractConsoleController
     protected function handleQuery(QueryInterface $dto)
     {
         try {
-            $this->writeVerboseMessages("Handle command ". get_class($dto));
+            $this->writeVerboseMessages("Handle query ". get_class($dto), false);
             return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
         } catch (Exception\NotFoundException $e) {
-            $this->writeVerboseMessages(['NotFoundException', $e->getMessage()]);
+            $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], false);
         } catch (Exception\Exception $e) {
-            $this->writeVerboseMessages($e->getMessages());
+            $this->writeVerboseMessages($e->getMessages(), false);
         } catch (\Exception $e) {
-            $this->writeVerboseMessages($e->getMessage());
+            $this->writeVerboseMessages([$e->getMessage()], false);
         }
 
         return false;
@@ -344,26 +352,36 @@ class BatchController extends AbstractConsoleController
      * Write verbose messages, ie only if verbose flag is set
      *
      * @param array|string $messages
+     * @param bool $logMessage
      */
-    protected function writeVerboseMessages($messages)
+    protected function writeVerboseMessages($messages, $logMessage = true)
     {
+        if (!is_array($messages)) {
+            $messages = [$messages];
+        }
         if ($this->isVerbose()) {
             $this->writeMessages($messages);
+        }
+        if ($logMessage) {
+            foreach ($messages as $message) {
+                Logger::log(
+                    \Zend\Log\Logger::DEBUG,
+                    $message,
+                    ['errorLevel' => 0, 'content' => $message]
+                );
+            }
         }
     }
 
     /**
      * Write messages to the console
      *
-     * @param array|string $messages
+     * @param array $messages
      *
      * @return void
      */
     protected function writeMessages($messages)
     {
-        if (!is_array($messages)) {
-            $messages = [$messages];
-        }
         foreach ($messages as $message) {
             $this->getConsole()->writeLine((new \DateTime())->format(\DateTime::W3C) .' '. $message);
         }
