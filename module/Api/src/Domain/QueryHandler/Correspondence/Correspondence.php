@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Correspondence
- *
- * @author Josh Curtis <josh.curtis@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Correspondence;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -21,6 +16,12 @@ class Correspondence extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchUsingId($query);
+        return $this->result(
+            $this->getRepo()->fetchUsingId($query),
+            [
+                'document',
+                'licence',
+            ]
+        );
     }
 }

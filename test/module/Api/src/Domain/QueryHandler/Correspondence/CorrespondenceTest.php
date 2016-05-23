@@ -1,16 +1,13 @@
 <?php
 
-/**
- * CorrespondenceTest.php
- *
- * @author Joshua Curtis <josh.curtis@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\GracePeriod;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Correspondence\Correspondence;
+use Dvsa\Olcs\Api\Domain\QueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Transfer\Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\Correspondence as CorrespondenceRepo;
-use Dvsa\Olcs\Transfer\Query\Correspondence\Correspondence as Qry;
+use Mockery as m;
 
 /**
  * Correspondence Test
@@ -21,27 +18,34 @@ class CorrespondenceTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new Correspondence();
-        $this->mockRepo('Correspondence', CorrespondenceRepo::class);
+        $this->sut = new QueryHandler\Correspondence\Correspondence();
+        $this->mockRepo('Correspondence', Repository\Correspondence::class);
 
         parent::setUp();
     }
 
     public function testHandleQuery()
     {
-        $query = Qry::create(['id' => 1]);
+        $expect = ['SERIALIZED'];
+
+        $query = Query\Correspondence\Correspondence::create(['id' => 1]);
+
+        $mockEntity = m::mock(Entity\Organisation\CorrespondenceInbox::class)
+            ->shouldReceive('serialize')
+            ->once()
+            ->with(['document', 'licence'])
+            ->andReturn($expect)
+            ->getMock();
 
         $this->repoMap['Correspondence']
             ->shouldReceive('fetchUsingId')
             ->with($query)
-            ->andReturn(
-                [
-                    [
-                        'id' => 1
-                    ],
-                ]
-            );
+            ->andReturn($mockEntity);
 
-        $this->sut->handleQuery($query);
+        /** @var QueryHandler\Result $actual */
+        $actual = $this->sut->handleQuery($query);
+
+        static::assertInstanceOf(QueryHandler\Result::class, $actual);
+        static::assertEquals($expect, $actual->serialize());
     }
 }
