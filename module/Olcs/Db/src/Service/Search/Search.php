@@ -220,6 +220,12 @@ class Search implements AuthAwareInterface
                     $statusQuery = new Query\Match();
                     $statusQuery->setField('tm_status_id', TransportManager::TRANSPORT_MANAGER_STATUS_REMOVED);
                     $queryBool->addMustNot($statusQuery);
+
+                    // add must have licence
+                    $licenceQuery = new Query\Filtered();
+                    $licenceFilter = new Filter\Exists('lic_no');
+                    $licenceQuery->setFilter($licenceFilter);
+                    $queryBool->addMust($licenceQuery);
                 }
 
                 // separate search into words
