@@ -34,6 +34,7 @@ class BkmExpiry extends DynamicBookmark
      */
     public function render()
     {
-        return !empty($this->data['expiryDate']) ? date('j F Y', strtotime($this->data['expiryDate'])) : '';
+        return (isset($this->data['expiryDate']) && ($this->data['expiryDate'] instanceof \DateTime))
+            ? $this->data['expiryDate']->format('j F Y') : '';
     }
 }
