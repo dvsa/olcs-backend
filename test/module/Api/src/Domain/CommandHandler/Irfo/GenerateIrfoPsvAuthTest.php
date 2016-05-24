@@ -9,6 +9,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\GenerateIrfoPsvAuth as Sut;
+use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Repository\IrfoPsvAuth as IrfoPsvAuthRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
@@ -79,7 +80,7 @@ class GenerateIrfoPsvAuthTest extends CommandHandlerTestCase
         $irfoPsvAuth->setIrfoPsvAuthNumbers([]);
         $irfoPsvAuth->shouldReceive('update')->once();
         $irfoPsvAuth->shouldReceive('generate')->once()->with(['FEE'])->shouldReceive('getId')->andReturn($id);
-        $irfoPsvAuth->shouldReceive('getIrfoPsvAuthType->getIrfoFeeType->getId')->once()->andReturn($irfoFeeTypeId);
+        $irfoPsvAuth->shouldReceive('getIrfoPsvAuthType->getIrfoFeeType->getId')->andReturn($irfoFeeTypeId);
         $irfoPsvAuth->shouldReceive('getOrganisation->getId')->andReturn($orgId);
 
         $this->repoMap['IrfoPsvAuth']->shouldReceive('fetchUsingId')
@@ -89,25 +90,29 @@ class GenerateIrfoPsvAuthTest extends CommandHandlerTestCase
             ->with(m::type(IrfoPsvAuthEntity::class))
             ->once();
 
-        foreach ($expectedDocs as $expectedTemplate) {
-            $this->expectedSideEffect(
-                GenerateAndStore::class,
-                [
-                    'template' => $expectedTemplate,
-                    'query' => [
-                        'irfoPsvAuth' => $id,
-                        'organisation' => $orgId
+        if (!empty($expectedDocs)) {
+            foreach ($expectedDocs as $expectedTemplate) {
+                $this->expectedSideEffect(
+                    GenerateAndStore::class,
+                    [
+                        'template' => $expectedTemplate,
+                        'query' => [
+                            'irfoPsvAuth' => $id,
+                            'organisation' => $orgId
+                        ],
+                        'knownValues' => [],
+                        'description' => 'IRFO PSV Authorisation (99) x 5',
+                        'irfoOrganisation' => $orgId,
+                        'category' => CategoryEntity::CATEGORY_IRFO,
+                        'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_IRFO_CONTINUATIONS_AND_RENEWALS,
+                        'isExternal' => false,
+                        'isScan' => false
                     ],
-                    'knownValues' => [],
-                    'description' => 'IRFO PSV Authorisation (99) x 5',
-                    'irfoOrganisation' => $orgId,
-                    'category' => CategoryEntity::CATEGORY_IRFO,
-                    'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_IRFO_CONTINUATIONS_AND_RENEWALS,
-                    'isExternal' => false,
-                    'isScan' => false
-                ],
-                new Result()
-            );
+                    new Result()
+                );
+            }
+        } else {
+            $this->setExpectedException(Exception\BadRequestException::class);
         }
 
         $result = $this->sut->handleCommand($command);
@@ -151,6 +156,10 @@ class GenerateIrfoPsvAuthTest extends CommandHandlerTestCase
             [
                 IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_OWN_AC_21,
                 ['IRFO_own_acc']
+            ],
+            [
+                '',
+                []
             ],
         ];
     }
