@@ -221,7 +221,7 @@ class Search implements AuthAwareInterface
                     $statusQuery->setField('tm_status_id', TransportManager::TRANSPORT_MANAGER_STATUS_REMOVED);
                     $queryBool->addMustNot($statusQuery);
 
-                    // add must have licence
+                    // Add must have licence no
                     $licenceQuery = new Query\Filtered();
                     $licenceFilter = new Filter\Exists('lic_no');
                     $licenceQuery->setFilter($licenceFilter);
