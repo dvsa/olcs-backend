@@ -36,9 +36,9 @@ class PrintIrfoPsvAuthChecklistTest extends CommandHandlerTestCase
      * @dataProvider handleCommandProvider
      *
      * @param int $irfoFeeTypeId
-     * @param array $expectedDocs
+     * @param string $expectedTemplate
      */
-    public function testHandleCommand($irfoFeeTypeId, $expectedDocs)
+    public function testHandleCommand($irfoFeeTypeId, $expectedTemplate)
     {
         $data = [
             'ids' => array_fill(0, Sut::MAX_IDS_COUNT, 'id')
@@ -101,36 +101,35 @@ class PrintIrfoPsvAuthChecklistTest extends CommandHandlerTestCase
         $generateResult2 = new Result();
         $generateResult2->addId('document', $docId2);
 
-        foreach ($expectedDocs as $expectedTemplate => $expectedDesc) {
-            $this->expectedSideEffect(
-                GenerateAndStore::class,
-                [
-                    'template' => $expectedTemplate,
-                    'query' => [
-                        'irfoPsvAuth' => 1001
-                    ],
-                    'knownValues' => [],
-                    'description' => $expectedDesc,
-                    'irfoOrganisation' => $orgId,
-                    'category' => CategoryEntity::CATEGORY_IRFO,
-                    'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_IRFO_CONTINUATIONS_AND_RENEWALS,
-                    'isExternal' => false,
-                    'isScan' => false
+        $this->expectedSideEffect(
+            GenerateAndStore::class,
+            [
+                'template' => $expectedTemplate,
+                'query' => [
+                    'irfoPsvAuth' => 1001,
+                    'organisation' => $orgId
                 ],
-                $generateResult2
-            );
+                'knownValues' => [],
+                'description' => 'IRFO PSV Auth Checklist Application letter (1001)',
+                'irfoOrganisation' => $orgId,
+                'category' => CategoryEntity::CATEGORY_IRFO,
+                'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_IRFO_CONTINUATIONS_AND_RENEWALS,
+                'isExternal' => false,
+                'isScan' => false
+            ],
+            $generateResult2
+        );
 
-            $docQueueResult2 = new Result();
-            $docQueueResult2->addMessage('Document queued: ' . $docId2);
-            $this->expectedSideEffect(
-                EnqueueFileCommand::class,
-                [
-                    'documentId' => $docId2,
-                    'jobName' => $expectedDesc
-                ],
-                $docQueueResult2
-            );
-        }
+        $docQueueResult2 = new Result();
+        $docQueueResult2->addMessage('Document queued: ' . $docId2);
+        $this->expectedSideEffect(
+            EnqueueFileCommand::class,
+            [
+                'documentId' => $docId2,
+                'jobName' => 'IRFO PSV Auth Checklist Application letter (1001)'
+            ],
+            $docQueueResult2
+        );
 
         $result = $this->sut->handleCommand($command);
 
@@ -145,38 +144,31 @@ class PrintIrfoPsvAuthChecklistTest extends CommandHandlerTestCase
         return [
             [
                 IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_EU_REG_17,
-                ['IRFO_eu_auth_pink_GV280' => 'IRFO eu auth pink GV280 (1001)']
+                'IRFO_app_eu_regular_service'
             ],
             [
                 IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_EU_REG_19A,
-                ['IRFO_eu_auth_pink_GV280' => 'IRFO eu auth pink GV280 (1001)']
+                'IRFO_app_eu_regular_service'
             ],
             [
                 IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_NON_EU_OCCASIONAL_19,
-                ['IRFO_eu_auth_pink_special_regular_GV280' => 'IRFO eu auth pink special regular GV280 (1001)']
+                'IRFO_app_non_eu_service'
             ],
             [
                 IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_NON_EU_REG_18,
-                [
-                    'IRFO_uk_green_authorisation_INT_P17' => 'IRFO uk green authorisation INT P17 (1001)',
-                    'IRFO_non_eu_blue_authorisation_to_foreign_partner_INT_P18'
-                        => 'IRFO non eu blue authorisation to foreign partner INT P18 (1001)',
-                ]
+                'IRFO_app_non_eu_service'
             ],
             [
                 IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_NON_EU_REG_19,
-                [
-                    'IRFO_non_eu_blue_authorisation_foreign_operator_no_partner_INT_P18A'
-                        => 'IRFO non eu blue authorisation foreign operator no partner INT P18A (1001)'
-                ]
+                'IRFO_app_non_eu_service'
             ],
             [
                 IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_SHUTTLE_OPERATOR_20,
-                ['IRFO_eu_auth_pink_special_regular_GV280' => 'IRFO eu auth pink special regular GV280 (1001)']
+                'IRFO_app_non_eu_service'
             ],
             [
                 IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_OWN_AC_21,
-                ['IRFO_own_acc' => 'IRFO own acc (1001)']
+                'IRFO_app_non_eu_service'
             ],
         ];
     }
