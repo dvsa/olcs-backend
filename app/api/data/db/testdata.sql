@@ -214,7 +214,7 @@ INSERT INTO `application` (
         1,7,NULL,NULL,'apsts_not_submitted',
         NULL,NULL,
         NULL,NULL,NULL,NULL,NULL,
-        NULL,NULL,'2010-12-15 10:48:00',
+        NULL,NULL,NULL,
         NULL,NULL,NOW(),NULL,
         1,0,'lcat_gv',0, 'ltyp_si',
         'int_sts_requested', 'Interim reason', '2014-01-01', '2015-01-01', 10, 20, 'applied_via_selfserve'
@@ -223,8 +223,8 @@ INSERT INTO `application` (
         2,7,NULL,NULL,'apsts_not_submitted',
         NULL,NULL,
         NULL,NULL,NULL,NULL,NULL,
-        NULL,NULL,'2014-12-15 10:48:00',
-        '2015-02-16 10:48:00',NULL,NULL,NULL,
+        NULL,NULL,NULL,
+        '2015-02-16 10:48:00',NULL,'2010-12-15 10:48:00',NULL,
         1,1,'lcat_gv',0, NULL,
         NULL,NULL,NULL,NULL,NULL,NULL, 'applied_via_selfserve'
     ),
