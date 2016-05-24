@@ -216,7 +216,13 @@ class Search implements AuthAwareInterface
                 );
 
                 // Hide Removed TMs from SS and Anonymous users
-                if ($this->isAnonymousUser() || !$this->isInternalUser() || $this->isExternalUser()) {
+                /* @to-do The permission check below first checks for anonymous users. This is because isInternalUser()
+                 * method doesnt handle anon users (yet).
+                 *
+                 * @to-do Use of Filtered Query will be deprecated in the future.
+                 * @see https://www.elastic.co/blog/better-query-execution-coming-elasticsearch-2-0
+                 */
+                if ($this->isAnonymousUser() || !$this->isInternalUser()) {
                     $statusQuery = new Query\Match();
                     $statusQuery->setField('tm_status_id', TransportManager::TRANSPORT_MANAGER_STATUS_REMOVED);
                     $queryBool->addMustNot($statusQuery);
