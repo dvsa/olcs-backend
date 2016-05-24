@@ -97,6 +97,16 @@ trait AuthAwareTrait
     }
 
     /**
+     * Is the current user an anonymous user
+     *
+     * @return bool
+     */
+    public function isAnonymousUser()
+    {
+        return ($this->getCurrentUser()->isAnonymous());
+    }
+
+    /**
      * Does the current user have a Local Authority user role
      *
      * @return bool
