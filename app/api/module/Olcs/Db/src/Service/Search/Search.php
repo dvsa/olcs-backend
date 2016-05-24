@@ -2,19 +2,25 @@
 
 namespace Olcs\Db\Service\Search;
 
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Elastica\Aggregation\Terms;
 use Elastica\Query;
 use Elastica\Filter;
 use Elastica\ResultSet;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Class Search
  * @package Olcs\Db\Service\Search
  */
-class Search
+class Search implements AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     /**
      * @var
      */
@@ -208,6 +214,25 @@ class Search
                 $queryBool->addShould(
                     new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
                 );
+
+                // Hide Removed TMs from SS and Anonymous users
+                /* @to-do The permission check below first checks for anonymous users. This is because isInternalUser()
+                 * method doesnt handle anon users (yet).
+                 *
+                 * @to-do Use of Filtered Query will be deprecated in the future.
+                 * @see https://www.elastic.co/blog/better-query-execution-coming-elasticsearch-2-0
+                 */
+                if ($this->isAnonymousUser() || !$this->isInternalUser()) {
+                    $statusQuery = new Query\Match();
+                    $statusQuery->setField('tm_status_id', TransportManager::TRANSPORT_MANAGER_STATUS_REMOVED);
+                    $queryBool->addMustNot($statusQuery);
+
+                    // Add must have licence no
+                    $licenceQuery = new Query\Filtered();
+                    $licenceFilter = new Filter\Exists('lic_no');
+                    $licenceQuery->setFilter($licenceFilter);
+                    $queryBool->addMust($licenceQuery);
+                }
 
                 // separate search into words
                 $search = preg_replace('/\s{2,}/', ' ', $search);
