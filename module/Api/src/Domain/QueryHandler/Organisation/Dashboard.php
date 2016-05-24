@@ -40,6 +40,7 @@ class Dashboard extends AbstractQueryHandler
                         [
                             'licenceType',
                             'status',
+                            'trafficArea'
                         ]
                     ),
                     'applications' => $this->resultList(
