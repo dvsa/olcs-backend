@@ -1,21 +1,19 @@
 <?php
 
-/**
- * BkmExpiry Test
- */
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Service\Document\Bookmark\BkmExpiry as Sut;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\BkmPostCode as Sut;
 
 /**
- * BkmExpiry Test
+ * BkmPostCode bookmark test
  */
-class BkmExpiryTest extends \PHPUnit_Framework_TestCase
+class BkmPostCodeTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {
         $bookmark = new Sut();
-        $query = $bookmark->getQuery(['irfoPsvAuth' => 123]);
+        $query = $bookmark->getQuery(['organisation' => 123]);
+
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query);
     }
 
@@ -35,15 +33,18 @@ class BkmExpiryTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 [
-                    'expiryDate' => new \DateTime('2015-12-30')
+                    'irfoContactDetails' => [
+                        'address' => [
+                            'addressLine1' => 'Line 1',
+                            'addressLine2' => 'Line 2',
+                            'addressLine3' => 'Line 3',
+                            'addressLine4' => 'Line 4',
+                            'town' => 'Leeds',
+                            'postcode' => 'LS9 6NF',
+                        ]
+                    ]
                 ],
-                '30 December 2015'
-            ],
-            [
-                [
-                    'expiryDate' => '2015-12-30'
-                ],
-                '30 December 2015'
+                'LS9 6NF'
             ],
             [
                 [],
