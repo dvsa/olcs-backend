@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query\Expr;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider as PidIdentityProviderEntity;
 
 /**
  * User
@@ -105,6 +106,10 @@ class User extends AbstractRepository
         if (method_exists($query, 'getIsInternal') && $query->getIsInternal() == true) {
             $qb->andWhere($qb->expr()->isNotNull($this->alias . '.team'));
         }
+
+        // exclude system user from all lists
+        $qb->andWhere($qb->expr()->neq($this->alias . '.id', ':systemUser'))
+            ->setParameter('systemUser', PidIdentityProviderEntity::SYSTEM_USER);
     }
 
     public function fetchForTma($userId)
