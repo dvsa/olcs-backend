@@ -174,10 +174,10 @@ class BatchController extends AbstractConsoleController
             $applications = $result['result'];
             $commands = [];
             foreach ($applications as $application) {
-                $this->writeVerboseMessages("Processing Application ID {$application->getId()}");
+                $this->writeVerboseMessages("Processing Application ID {$application['id']}");
                 $commands[] = TransferCommand\Application\NotTakenUpApplication::create(
                     [
-                        'id' => $application->getId()
+                        'id' => $application['id']
                     ]
                 );
             }
