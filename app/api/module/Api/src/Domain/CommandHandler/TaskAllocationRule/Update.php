@@ -34,7 +34,13 @@ final class Update extends AbstractCommandHandler
             $repo->getReference(\Dvsa\Olcs\Api\Entity\User\User::class, $command->getUser())
         );
         $taskAllocationRule->setGoodsOrPsv($repo->getRefdataReference($command->getGoodsOrPsv()));
-        $taskAllocationRule->setIsMlh($command->getIsMlh() === 'Y');
+        $isMlh = null;
+        if ($command->getIsMlh() === 'Y') {
+            $isMlh = true;
+        } elseif ($command->getIsMlh() === 'N') {
+            $isMlh = false;
+        }
+        $taskAllocationRule->setIsMlh($isMlh);
         $taskAllocationRule->setTrafficArea(
             $repo->getReference(\Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea::class, $command->getTrafficArea())
         );
