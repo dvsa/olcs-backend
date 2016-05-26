@@ -1,19 +1,18 @@
 <?php
 
-/**
- * Create Test
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Si\Applied;
 
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\Applied\Create as CreatePenalty;
 use Dvsa\Olcs\Api\Domain\Repository\SeriousInfringement as SiRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SiPenalty as SiPenaltyRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Cases\Si\Applied\Create as Cmd;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
+use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyType as SiPenaltyTypeEntity;
+use Dvsa\Olcs\Transfer\Command\Cases\Si\Applied\Create as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Create Test
@@ -61,8 +60,12 @@ class CreateTest extends CommandHandlerTestCase
             ]
         );
 
+        $caseEntity = m::mock(CaseEntity::class)->makePartial();
+        $caseEntity->shouldReceive('isClosed')->once()->andReturn(false);
+
         $siEntity = m::mock(SiEntity::class)->makePartial();
         $siEntity->setId($siId);
+        $siEntity->shouldReceive('getCase')->once()->andReturn($caseEntity);
 
         $this->repoMap['SeriousInfringement']->shouldReceive('fetchById')->with($siId)->once()->andReturn($siEntity);
 
@@ -89,5 +92,59 @@ class CreateTest extends CommandHandlerTestCase
 
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    /**
+     * @expectedException Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testHandleCommandThrowsExceptionWhenCaseClosed()
+    {
+        $siId = 333;
+
+        $caseEntity = m::mock(CaseEntity::class)->makePartial();
+        $caseEntity->shouldReceive('isClosed')->once()->andReturn(true);
+
+        $siEntity = m::mock(SiEntity::class)->makePartial();
+        $siEntity->setId($siId);
+        $siEntity->shouldReceive('getCase')->once()->andReturn($caseEntity);
+
+        $this->repoMap['SeriousInfringement']->shouldReceive('fetchById')->with($siId)->once()->andReturn($siEntity);
+
+        $command = Cmd::Create(
+            [
+                'si' => $siId
+            ]
+        );
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testHandleCommandThrowsExceptionWhenErruRequestSent()
+    {
+        $siId = 333;
+
+        $erruRequestEntity = m::mock(ErruRequestEntity::class)->makePartial();
+        $erruRequestEntity->setResponseSent('Y');
+
+        $caseEntity = m::mock(CaseEntity::class)->makePartial();
+        $caseEntity->shouldReceive('isClosed')->once()->andReturn(false);
+        $caseEntity->shouldReceive('getErruRequest')->once()->andReturn($erruRequestEntity);
+
+        $siEntity = m::mock(SiEntity::class)->makePartial();
+        $siEntity->setId($siId);
+        $siEntity->shouldReceive('getCase')->once()->andReturn($caseEntity);
+
+        $this->repoMap['SeriousInfringement']->shouldReceive('fetchById')->with($siId)->once()->andReturn($siEntity);
+
+        $command = Cmd::Create(
+            [
+                'si' => $siId
+            ]
+        );
+
+        $this->sut->handleCommand($command);
     }
 }
