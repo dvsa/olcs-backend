@@ -1,18 +1,17 @@
 <?php
 
-/**
- * Create Erru applied penalty
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\Applied;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
+use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyType as SiPenaltyTypeEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\Applied\Create as CreatePenaltyCmd;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Create Erru applied penalty
@@ -33,14 +32,22 @@ final class Create extends AbstractCommandHandler
     public function handleCommand(CommandInterface $command)
     {
         /**
-         * @var CaseEntity $case
          * @var SiEntity $si
+         * @var CaseEntity $case
+         * @var ErruRequestEntity $erruRequest
          * @var SiPenaltyTypeEntity $siPenaltyType
          * @var CreatePenaltyCmd $command
-         * @to-do ideally we should stop a penalty from being created if the msi response has already been sent,
-         * case is closed, case has the wrong status etc.
          */
         $si = $this->getRepo('SeriousInfringement')->fetchById($command->getSi());
+        $case = $si->getCase();
+        $erruRequest = $case->getErruRequest();
+
+        if ($case->isClosed()
+            || (($erruRequest instanceof ErruRequestEntity) && ($erruRequest->getResponseSent() === 'Y'))
+        ) {
+            throw new Exception\ValidationException(['Invalid action for the case']);
+        }
+
         $siPenaltyType = $this->getRepo()->getReference(SiPenaltyTypeEntity::class, $command->getSiPenaltyType());
         $startDate
             = ($command->getStartDate() !== null)

@@ -1,16 +1,16 @@
 <?php
 
-/**
- * Update Erru applied penalty
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\Applied;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
+use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyType as SiPenaltyTypeEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\Applied\Update as UpdatePenaltyCmd;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Update Erru applied penalty
@@ -31,12 +31,22 @@ final class Update extends AbstractCommandHandler
     {
         /**
          * @var SiPenaltyEntity $penalty
+         * @var CaseEntity $case
+         * @var ErruRequestEntity $erruRequest
          * @var SiPenaltyTypeEntity $siPenaltyType
          * @var UpdatePenaltyCmd $command
-         * @to-do we should stop a penalty from being deletable based on criteria such as the msi response
-         * already being sent, case being closed etc.
          */
         $penalty = $this->getRepo()->fetchUsingId($command);
+
+        $case = $penalty->getSeriousInfringement()->getCase();
+        $erruRequest = $case->getErruRequest();
+
+        if ($case->isClosed()
+            || (($erruRequest instanceof ErruRequestEntity) && ($erruRequest->getResponseSent() === 'Y'))
+        ) {
+            throw new Exception\ValidationException(['Invalid action for the case']);
+        }
+
         $siPenaltyType = $this->getRepo()->getReference(SiPenaltyTypeEntity::class, $command->getSiPenaltyType());
         $startDate
             = ($command->getStartDate() !== null)
