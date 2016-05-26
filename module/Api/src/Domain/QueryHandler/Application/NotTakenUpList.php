@@ -28,8 +28,8 @@ class NotTakenUpList extends AbstractQueryHandler
         $results = $this->getApplicationsForNtu($query->getDate());
 
         return [
-            'result' => $results,
-            'count' => count($results),
+            'result' => $this->resultList($results),
+            'count' => count($results)
         ];
     }
 
