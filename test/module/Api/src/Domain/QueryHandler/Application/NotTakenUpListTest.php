@@ -73,9 +73,9 @@ class NotTakenUpListTest extends QueryHandlerTestCase
             ->shouldReceive('getGrantedDate')
             ->andReturn('2014-12-01')
             ->once()
-            ->shouldReceive('getId')
-            ->andReturn(999)
+            ->shouldReceive('serialize')
             ->once()
+            ->andReturn(['id' => 999])
             ->getMock();
 
         $this->repoMap['Application']
@@ -91,6 +91,6 @@ class NotTakenUpListTest extends QueryHandlerTestCase
         $result = $this->sut->handleQuery($query);
 
         $this->assertEquals(1, $result['count']);
-        $this->assertEquals(999, $result['result'][0]->getId());
+        $this->assertEquals(999, $result['result'][0]['id']);
     }
 }

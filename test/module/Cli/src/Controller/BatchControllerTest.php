@@ -365,13 +365,11 @@ class BatchControllerTest extends TestCase
             ->with('QueryHandlerManager')
             ->andReturn($mockQueryHandler);
 
-        $mockApplication = m::mock()
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->twice()
-            ->getMock();
+        $application = [
+            'id' => 1
+        ];
 
-        $applications = [$mockApplication];
+        $applications = [$application];
 
         $mockQueryHandler
             ->shouldReceive('handleQuery')
@@ -494,13 +492,9 @@ class BatchControllerTest extends TestCase
             ->with('QueryHandlerManager')
             ->andReturn($mockQueryHandler);
 
-        $mockApplication = m::mock()
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->twice()
-            ->getMock();
+        $application = ['id' => 1];
 
-        $applications = [$mockApplication];
+        $applications = [$application];
 
         $mockQueryHandler
             ->shouldReceive('handleQuery')
