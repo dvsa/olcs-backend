@@ -10,7 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as CreateDocumentSpecific;
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as CreateDocumentSpecificCmd;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -106,7 +106,7 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
                 case self::PUBLICATION:
                     /* @todo publication doesn't currently have a foreign key in document table - it should */
             }
-            $res = $this->handleSideEffect(CreateDocumentSpecific::create($params));
+            $res = $this->handleSideEffect(CreateDocumentSpecificCmd::create($params));
             $result->addId('document' . $res->getId('document'), $res->getId('document'));
         }
         $result->addMessage('Document(s) copied');
