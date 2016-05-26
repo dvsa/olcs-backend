@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Mockery as m;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider as PidIdentityProviderEntity;
 
 /**
  * UserTest
@@ -86,6 +87,10 @@ class UserTest extends RepositoryTestCase
             ->once();
         $mockQb->shouldReceive('setParameter')->with('organisation', 43)->once();
 
+        $mockQb->shouldReceive('expr->neq')->with('u.id', ':systemUser')->once()->andReturn('systemUser');
+        $mockQb->shouldReceive('andWhere')->with('systemUser')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('systemUser', PidIdentityProviderEntity::SYSTEM_USER)->once();
+
         $sut->applyListFilters($mockQb, $query);
     }
 
@@ -116,6 +121,10 @@ class UserTest extends RepositoryTestCase
         $mockQb->shouldReceive('setParameter')->with('team', 112)->once();
         $mockQb->shouldReceive('expr->isNotNull')->with('u.team')->andReturn('isInternal')->once();
         $mockQb->shouldReceive('andWhere')->with('isInternal')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->neq')->with('u.id', ':systemUser')->once()->andReturn('systemUser');
+        $mockQb->shouldReceive('andWhere')->with('systemUser')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('systemUser', PidIdentityProviderEntity::SYSTEM_USER)->once();
 
         $sut->applyListFilters($mockQb, $query);
     }
