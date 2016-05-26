@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateSubmission as CreateEbsrSubmissionCmd;
 use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks;
 
 /**
@@ -23,6 +24,10 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
 {
     protected $repoServiceName = 'Document';
 
+    /**
+     * @param CommandInterface $command
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -35,6 +40,11 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
         $data['id'] = $document->getId();
 
         $result->merge($this->handleSideEffect(UpdateDocumentLinks::create($data)));
+
+        //if the document is an EBSR pack, create a corresponding EBSR submission
+        if ($data['isEbsrPack']) {
+            $result->merge($this->handleSideEffect(CreateEbsrSubmissionCmd::create(['document' => $data['id']])));
+        }
 
         $result->addId('document', $document->getId());
         $result->addMessage('Document created');
@@ -57,12 +67,20 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
         return $document;
     }
 
+    /**
+     * @param Document $document
+     * @param Cmd $command
+     */
     private function setDocumentFlags(Document $document, Cmd $command)
     {
         $document->setIsExternal($command->getIsExternal());
         $document->setIsScan($command->getIsScan());
     }
 
+    /**
+     * @param Document $document
+     * @param Cmd $command
+     */
     private function setDocumentDetails(Document $document, Cmd $command)
     {
         $document->setFilename($command->getFilename());
@@ -78,6 +96,11 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
         }
     }
 
+    /**
+     * @param Document $document
+     * @param Cmd $command
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     private function categoriseDocument(Document $document, Cmd $command)
     {
         if ($command->getCategory() != null) {
