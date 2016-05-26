@@ -58,11 +58,11 @@ class CreateTest extends CommandHandlerTestCase
      * Test handle commands with all params
      *
      * @param string $goodsOrPsv
-     * @param string $isMlh
+     * @param string $mlh
      * @param bool $expected
      * @dataProvider mlhProvider
      */
-    public function testHandleCommandAllParams($goodsOrPsv, $isMlh, $expected)
+    public function testHandleCommandAllParams($goodsOrPsv, $mlh, $expected)
     {
         $command = Cmd::create(
             [
@@ -70,7 +70,7 @@ class CreateTest extends CommandHandlerTestCase
                 'team' => 2,
                 'user' => 3,
                 'goodsOrPsv' => $goodsOrPsv,
-                'isMlh' => $isMlh,
+                'isMlh' => $mlh,
                 'trafficArea' => 'T',
             ]
         );
