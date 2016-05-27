@@ -21,8 +21,9 @@ final class SetViFlags extends AbstractCommandHandler
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param CreateViExtractFiles
+     * @param ServiceLocatorInterface $serviceLocator Service locator
+     *
+     * @return $this
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -33,7 +34,11 @@ final class SetViFlags extends AbstractCommandHandler
     }
 
     /**
-     * @param \Doctrine\DBAL\Connection $dbConnection
+     * Set the DB connection
+     *
+     * @param \Doctrine\DBAL\Connection $dbConnection DB Connection
+     *
+     * @return void
      */
     private function setDbConnection(\Doctrine\DBAL\Connection $dbConnection)
     {
@@ -41,6 +46,8 @@ final class SetViFlags extends AbstractCommandHandler
     }
 
     /**
+     * Get the DB connection
+     *
      * @return \Doctrine\DBAL\Connection
      */
     private function getDbConnection()
@@ -51,8 +58,10 @@ final class SetViFlags extends AbstractCommandHandler
     /**
      * Handle command
      *
-     * @param CommandInterface $command
-     * @param Result
+     * @param CommandInterface $command The command to execute
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -62,11 +71,10 @@ final class SetViFlags extends AbstractCommandHandler
 
         $result = $stmt->fetchAll();
 
-        if (isset($result[0]['Result']) && $result[0]['Result'] == 0) {
-            $this->result->addMessage('VI Flags set');
-        } else {
-            throw new \Dvsa\Olcs\Api\Domain\Exception\RuntimeException('Error running stored procedure vi_set_flags');
+        if (isset($result[0]['Result'])) {
+            throw new \Dvsa\Olcs\Api\Domain\Exception\RuntimeException($result[0]['Result']);
         }
+        $this->result->addMessage('VI Flags set');
 
         return $this->result;
     }
