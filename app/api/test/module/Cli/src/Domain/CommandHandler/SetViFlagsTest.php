@@ -33,7 +33,7 @@ class SetViFlagsTest extends CommandHandlerTestCase
     {
         $mockStmt = m::mock();
         $mockStmt->shouldReceive('execute')->with()->once()->andReturn(true);
-        $mockStmt->shouldReceive('fetchAll')->with()->once()->andReturn([0 => ['Result' => 0]]);
+        $mockStmt->shouldReceive('fetchAll')->with()->once()->andReturn([0 => ['sp' => 'Done something']]);
         $this->mockDbConnection->shouldReceive('prepare')->with('CALL vi_set_flags()')->once()->andReturn($mockStmt);
 
         $response = $this->sut->handleCommand(\Dvsa\Olcs\Cli\Domain\Command\SetViFlags::create([]));
@@ -45,7 +45,7 @@ class SetViFlagsTest extends CommandHandlerTestCase
     {
         $mockStmt = m::mock();
         $mockStmt->shouldReceive('execute')->with()->once()->andReturn(true);
-        $mockStmt->shouldReceive('fetchAll')->with()->once()->andReturn(false);
+        $mockStmt->shouldReceive('fetchAll')->with()->once()->andReturn([0 => ['Result' => 'Something gone wrong']]);
         $this->mockDbConnection->shouldReceive('prepare')->with('CALL vi_set_flags()')->once()->andReturn($mockStmt);
 
         $this->setExpectedException(RuntimeException::class);
