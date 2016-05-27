@@ -662,6 +662,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      */
     public function getDecision()
     {
+        $decisionTaken = true;
         $reason = null;
 
         switch ($this->status->getId()) {
@@ -673,11 +674,16 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
                 $reason = $this->reasonCancelled;
                 break;
             case self::STATUS_WITHDRAWN:
-                $reason = $this->withdrawnReason->getDescription();
+                if ($this->withdrawnReason !== null) {
+                    $reason = $this->withdrawnReason->getDescription();
+                }
+                break;
+            default:
+                $decisionTaken = false;
                 break;
         }
 
-        return ($reason !== null) ? [
+        return ($decisionTaken) ? [
             'decision' => $this->status->getDescription(),
             'reason' => $reason,
         ] : null;

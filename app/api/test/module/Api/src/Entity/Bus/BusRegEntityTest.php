@@ -1265,9 +1265,10 @@ class BusRegEntityTest extends EntityTester
      *
      * @param string $statusId
      * @param string $shortNoticeRefused
+     * @param bool $withWithdrawnReason
      * @param array $expected
      */
-    public function testGetDecision($statusId, $shortNoticeRefused, $expected)
+    public function testGetDecision($statusId, $shortNoticeRefused, $withWithdrawnReason, $expected)
     {
         $status = new RefDataEntity();
         $status->setId($statusId);
@@ -1276,13 +1277,15 @@ class BusRegEntityTest extends EntityTester
         $this->entity->setStatus($status);
         $this->entity->setShortNoticeRefused($shortNoticeRefused);
 
-        $withdrawnReason = new RefDataEntity();
-        $withdrawnReason->setDescription('Withdrawn Reason');
+        if ($withWithdrawnReason) {
+            $withdrawnReason = new RefDataEntity();
+            $withdrawnReason->setDescription('Withdrawn Reason');
+            $this->entity->setWithdrawnReason($withdrawnReason);
+        }
 
         $this->entity->setReasonSnRefused('Reason SN Refused');
         $this->entity->setReasonRefused('Reason Refused');
         $this->entity->setReasonCancelled('Reason Cancelled');
-        $this->entity->setWithdrawnReason($withdrawnReason);
 
         $this->assertEquals($expected, $this->entity->getDecision());
     }
@@ -1294,37 +1297,50 @@ class BusRegEntityTest extends EntityTester
             [
                 Entity::STATUS_REGISTERED,
                 'N',
+                false,
                 null
             ],
             // refused - nonShortNoticeRefused
             [
                 Entity::STATUS_REFUSED,
                 'N',
+                false,
                 ['decision' => 'Decision', 'reason' => 'Reason Refused']
             ],
             // refused - ShortNoticeRefused
             [
                 Entity::STATUS_REFUSED,
                 'Y',
+                false,
                 ['decision' => 'Decision', 'reason' => 'Reason SN Refused']
             ],
             // cancelled
             [
                 Entity::STATUS_CANCELLED,
                 'N',
+                false,
                 ['decision' => 'Decision', 'reason' => 'Reason Cancelled']
             ],
             // admin cancelled
             [
                 Entity::STATUS_ADMIN,
                 'N',
+                false,
                 ['decision' => 'Decision', 'reason' => 'Reason Cancelled']
             ],
-            // admin withdrawn
+            // admin withdrawn with a reason
             [
                 Entity::STATUS_WITHDRAWN,
                 'N',
+                true,
                 ['decision' => 'Decision', 'reason' => 'Withdrawn Reason']
+            ],
+            // admin withdrawn without a reason
+            [
+                Entity::STATUS_WITHDRAWN,
+                'N',
+                false,
+                ['decision' => 'Decision', 'reason' => null]
             ],
         ];
     }
