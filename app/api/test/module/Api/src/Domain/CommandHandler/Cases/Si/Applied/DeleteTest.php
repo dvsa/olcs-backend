@@ -2,57 +2,35 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Si\Applied;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\Applied\Update as UpdatePenalty;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\Applied\Delete as DeletePenalty;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
-use Dvsa\Olcs\Api\Entity\Si\SiPenaltyType as SiPenaltyTypeEntity;
-use Dvsa\Olcs\Transfer\Command\Cases\Si\Applied\Update as Cmd;
+use Dvsa\Olcs\Transfer\Command\Cases\Si\Applied\Delete as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
 /**
- * Update Test
+ * Delete Test
  */
-class UpdateTest extends CommandHandlerTestCase
+class DeleteTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new UpdatePenalty();
+        $this->sut = new DeletePenalty();
         $this->mockRepo('SiPenalty', CasesRepo::class);
 
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->references = [
-            SiPenaltyTypeEntity::class => [
-                999 => m::mock(SiPenaltyTypeEntity::class)
-            ]
-        ];
-
-        parent::initReferences();
-    }
-
     public function testHandleCommand()
     {
-        $siPenaltyType = 999;
         $penaltyId = 111;
-        $startDate = '2015-12-25';
-        $endDate = '2015-12-26';
-        $imposed = 'Y';
-        $imposedReason = 'reason';
 
         $command = Cmd::Create(
             [
                 'id' => $penaltyId,
-                'siPenaltyType' => $siPenaltyType,
-                'imposed' => $imposed,
-                'startDate' => $startDate,
-                'endDate' => $endDate,
-                'imposedReason' => $imposedReason
             ]
         );
 
@@ -64,16 +42,16 @@ class UpdateTest extends CommandHandlerTestCase
         $penaltyEntity->shouldReceive('getSeriousInfringement->getCase')->once()->andReturn($caseEntity);
 
         $this->repoMap['SiPenalty']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($penaltyEntity);
-        $this->repoMap['SiPenalty']->shouldReceive('save')
+        $this->repoMap['SiPenalty']->shouldReceive('delete')
             ->with(m::type(SiPenaltyEntity::class))
             ->once();
 
         $expected = [
             'id' => [
-                'penalty' => $penaltyId
+                'id' => $penaltyId
             ],
             'messages' => [
-                'Applied penalty updated'
+                'Applied penalty deleted'
             ]
         ];
 
