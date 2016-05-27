@@ -307,18 +307,18 @@ class BatchController extends AbstractConsoleController
             $count = 0;
             foreach ($dto as $dtoCommand) {
                 $count++;
-                $this->writeVerboseMessages("Handle command ". $count .' '. get_class($dtoCommand), false);
+                $this->writeVerboseMessages("Handle command ". $count .' '. get_class($dtoCommand));
                 $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dtoCommand);
-                $this->writeVerboseMessages($result->getMessages(), false);
+                $this->writeVerboseMessages($result->getMessages());
             }
         } catch (Exception\NotFoundException $e) {
-            $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], false);
+            $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Zend\Log\Logger::WARN);
             return 404;
         } catch (Exception\Exception $e) {
-            $this->writeVerboseMessages($e->getMessages(), false);
+            $this->writeVerboseMessages($e->getMessages(), \Zend\Log\Logger::ERR);
             return 400;
         } catch (\Exception $e) {
-            $this->writeVerboseMessages($e->getMessage(), false);
+            $this->writeVerboseMessages($e->getMessage(), \Zend\Log\Logger::ERR);
             return 500;
         }
 
@@ -335,14 +335,14 @@ class BatchController extends AbstractConsoleController
     protected function handleQuery(QueryInterface $dto)
     {
         try {
-            $this->writeVerboseMessages("Handle query ". get_class($dto), false);
+            $this->writeVerboseMessages("Handle query ". get_class($dto));
             return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
         } catch (Exception\NotFoundException $e) {
-            $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], false);
+            $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Zend\Log\Logger::WARN);
         } catch (Exception\Exception $e) {
-            $this->writeVerboseMessages($e->getMessages(), false);
+            $this->writeVerboseMessages($e->getMessages(), \Zend\Log\Logger::ERR);
         } catch (\Exception $e) {
-            $this->writeVerboseMessages([$e->getMessage()], false);
+            $this->writeVerboseMessages([$e->getMessage()], \Zend\Log\Logger::ERR);
         }
 
         return false;
@@ -351,10 +351,12 @@ class BatchController extends AbstractConsoleController
     /**
      * Write verbose messages, ie only if verbose flag is set
      *
-     * @param array|string $messages
-     * @param bool $logMessage
+     * @param array|string $messages    Message to write
+     * @param int          $logPriority One of \Zend\Log\Logger::*
+     *
+     * @return void
      */
-    protected function writeVerboseMessages($messages, $logMessage = true)
+    protected function writeVerboseMessages($messages, $logPriority = \Zend\Log\Logger::DEBUG)
     {
         if (!is_array($messages)) {
             $messages = [$messages];
@@ -362,21 +364,16 @@ class BatchController extends AbstractConsoleController
         if ($this->isVerbose()) {
             $this->writeMessages($messages);
         }
-        if ($logMessage) {
-            foreach ($messages as $message) {
-                Logger::log(
-                    \Zend\Log\Logger::DEBUG,
-                    $message,
-                    ['errorLevel' => 0, 'content' => $message]
-                );
-            }
-        }
+        Logger::log(
+            $logPriority,
+            json_encode($messages)
+        );
     }
 
     /**
      * Write messages to the console
      *
-     * @param array $messages
+     * @param array $messages Message to write
      *
      * @return void
      */
