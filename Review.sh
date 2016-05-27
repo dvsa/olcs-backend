@@ -1,6 +1,28 @@
 #!/bin/bash
 
-BASE_BRANCH=${1-"origin/develop"}
+PHPCS_SEVERITY=1
+BASE_BRANCH="origin/develop"
+while getopts "hib:" opt; do
+  case $opt in
+    h)
+        echo;
+        echo Run a few checks on changed code before commiting
+        echo;
+        echo "  -h          Show help (this)"
+        echo "  -i          Ignore new DocBlock coding standards"
+        echo "  -b <branch> Base branch for comparing"
+        echo;
+        exit;
+      ;;
+    i)
+        PHPCS_SEVERITY=5
+      ;;
+    b)
+        BASE_BRANCH=$OPTARG
+      ;;
+  esac
+done
+
 WORKSPACE=${dev_workspace}
 if [ -d "${WORKSPACE}/olcs-devtools" ]; then
     DIR="${WORKSPACE}/olcs-devtools"
@@ -71,7 +93,7 @@ do
 		then
 		if [[ ${file: -4} == ".php" ]]
 			then
-			 $PHPCS --standard="${dev_workspace}/sonar-configuration/Profiles/DVSA/CS/ruleset.xml" $file
+			 $PHPCS --severity=$PHPCS_SEVERITY --standard="${dev_workspace}/sonar-configuration/Profiles/DVSA/CS/ruleset.xml" $file
 		fi
 	fi
 done
