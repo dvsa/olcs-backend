@@ -21,7 +21,6 @@ $map = [
     CommandHandler\Application\EndInterim::class                                  => Standard::class, // @todo
     CommandHandler\Application\GenerateLicenceNumber::class                       => Standard::class, // @todo
     CommandHandler\Application\GenerateOrganisationName::class                    => Standard::class, // @todo
-    CommandHandler\Application\NotTakenUpApplication::class                       => Standard::class, // @todo
     CommandHandler\Application\Overview::class                                    => Standard::class, // @todo
     CommandHandler\Application\PrintInterimDocument::class                        => Standard::class, // @todo
     CommandHandler\Application\Publish::class                                     => Standard::class, // @todo
