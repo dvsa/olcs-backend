@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument as CreateDocumentCmd;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as CreateDocumentSpecificCmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
@@ -32,6 +33,7 @@ final class Upload extends AbstractCommandHandler implements
     NamingServiceAwareInterface
 {
     const ERR_MIME = 'ERR_MIME';
+    const ERR_EBSR_MIME = 'ERR_EBSR_MIME';
 
     use UploaderAwareTrait,
         NamingServiceAwareTrait;
@@ -39,7 +41,8 @@ final class Upload extends AbstractCommandHandler implements
     protected $repoServiceName = 'Document';
 
     /**
-     * @param Cmd $command
+     * @param CommandInterface $command
+     * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -80,6 +83,10 @@ final class Upload extends AbstractCommandHandler implements
         $file = new File();
         $file->setName($command->getFilename());
         $file->setContentAndSize($command->getContent());
+
+        if ($command->getIsEbsrPack() && $file->getRealType() !== 'application/zip') {
+            throw new ValidationException([self::ERR_EBSR_MIME => self::ERR_EBSR_MIME]);
+        }
 
         try {
             $this->getUploader()->setFile($file);

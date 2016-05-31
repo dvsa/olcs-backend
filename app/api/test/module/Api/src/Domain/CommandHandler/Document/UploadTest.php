@@ -148,6 +148,46 @@ class UploadTest extends CommandHandlerTestCase
     }
 
     /**
+     * Tests EBSR doc upload throws exception if file isn't zip
+     *
+     * @dataProvider provideLinkedEntity
+     * @param string $key
+     * @param int $id
+     * @param string $entityClass
+     */
+    public function testHandleCommandInvalidEbsrMime($key, $id, $entityClass)
+    {
+        $this->setExpectedException(ValidationException::class);
+
+        $data = [
+            'content' => base64_encode('<foo>'),
+            'filename' => 'foo.pdf',
+            'category' => 11,
+            'subCategory' => 22,
+            'isExternal' => 1,
+            'isEbsrPack' => true,
+            'user' => 1
+        ];
+
+        $data[$key] = $id;
+
+        $command = \Dvsa\Olcs\Transfer\Command\Document\Upload::create($data);
+
+        $this->mockedSmServices['DocumentNamingService']->shouldReceive('generateName')
+            ->once()
+            ->with(
+                'foo',
+                'pdf',
+                $this->categoryReferences[11],
+                $this->subCategoryReferences[22],
+                $this->references[$entityClass][$id]
+            )
+            ->andReturn('/some/identifier.pdf');
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
      * @dataProvider provideLinkedEntity
      */
     public function testHandleCommandInvalidMime($key, $id, $entityClass)
