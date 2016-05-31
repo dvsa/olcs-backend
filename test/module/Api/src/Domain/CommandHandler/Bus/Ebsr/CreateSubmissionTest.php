@@ -40,7 +40,7 @@ class CreateSubmissionTest extends CommandHandlerTestCase
         ];
 
         $this->refData = [
-            EbsrSubmissionEntity::SUBMITTING_STATUS,
+            EbsrSubmissionEntity::UPLOADED_STATUS,
             EbsrSubmissionEntity::UNKNOWN_SUBMISSION_TYPE,
         ];
 
