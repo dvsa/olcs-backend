@@ -25,6 +25,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  */
 class EbsrSubmission extends AbstractEbsrSubmission
 {
+    const UPLOADED_STATUS = 'ebsrs_uploaded';
     const SUBMITTING_STATUS = 'ebsrs_submitting';
     const SUBMITTED_STATUS = 'ebsrs_submitted';
     const VALIDATING_STATUS = 'ebsrs_validating';
