@@ -29,7 +29,7 @@ final class CreateSubmission extends AbstractCommandHandler implements AuthAware
         /** @var CreateSubmissionCmd $command */
         $ebsrSub = new EbsrSubmission(
             $this->getCurrentOrganisation(),
-            $this->getRepo()->getRefdataReference(EbsrSubmission::SUBMITTING_STATUS),
+            $this->getRepo()->getRefdataReference(EbsrSubmission::UPLOADED_STATUS),
             $this->getRepo()->getRefdataReference(EbsrSubmission::UNKNOWN_SUBMISSION_TYPE),
             $this->getRepo()->getReference(Document::class, $command->getDocument())
         );
