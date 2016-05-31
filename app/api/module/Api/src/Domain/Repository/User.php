@@ -72,7 +72,8 @@ class User extends AbstractRepository
         $this->getQueryBuilder()
             ->with('team', 't')
             ->with('contactDetails', 'cd')
-            ->with('cd.person', 'p');
+            ->with('cd.person', 'p')
+            ->with('p.disqualifications', 'd');
     }
 
     /**
@@ -207,7 +208,15 @@ class User extends AbstractRepository
     public function fetchByPid($pid)
     {
         $qb = $this->createQueryBuilder();
-        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata();
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->withRefdata()
+            ->withPersonContactDetails()
+            ->with('team')
+            ->with('organisationUsers')
+            ->with('roles')
+            ->with('transportManager')
+            ->with('localAuthority');
 
         $qb->where($this->alias . '.pid = :pid')->setParameter('pid', $pid);
 

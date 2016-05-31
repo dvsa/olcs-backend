@@ -146,6 +146,7 @@ class UserTest extends RepositoryTestCase
         $mockQb->shouldReceive('with')->with('team', 't')->once()->andReturnSelf();
         $mockQb->shouldReceive('with')->with('contactDetails', 'cd')->once()->andReturnSelf();
         $mockQb->shouldReceive('with')->with('cd.person', 'p')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('p.disqualifications', 'd')->once()->andReturnSelf();
 
         $sut->buildDefaultListQuery($mockQb, $mockQi);
     }
@@ -176,6 +177,12 @@ class UserTest extends RepositoryTestCase
 
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withPersonContactDetails')->with()->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('team')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('organisationUsers')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('roles')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('transportManager')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('localAuthority')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('where')->with('u.pid = :pid')->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('pid', '123456');
