@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\CommunityLic;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
+use Doctrine\ORM\Query;
 
 /**
  * Community Licence
@@ -37,7 +38,9 @@ class CommunityLic extends AbstractQueryHandler
         $unfilteredQuery = \Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLic::create($data);
 
         return [
-            'result' => $repo->fetchList($query),
+            'result' => $this->resultList(
+                $repo->fetchList($query, Query::HYDRATE_OBJECT)
+            ),
             'count' =>  $repo->fetchCount($query),
             'count-unfiltered' => $repo->hasRows($unfilteredQuery),
             'totCommunityLicences' => $licence->getTotCommunityLicences(),
