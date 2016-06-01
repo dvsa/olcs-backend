@@ -86,7 +86,7 @@ abstract class AbstractInspectionEmail implements BundleSerializableInterface, J
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="sender_email_address", length=200, nullable=true)
+     * @ORM\Column(type="string", name="sender_email_address", length=255, nullable=true)
      */
     protected $senderEmailAddress;
 
