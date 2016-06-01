@@ -6,6 +6,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\TransportManagerApplication\Delete;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider as PidIdentityProviderEntity;
 
 /**
  * DeleteTest
@@ -27,10 +28,21 @@ class DeleteTest extends AbstractHandlerTestCase
     }
 
     /**
+     * Test is valid
+     *
+     * @param bool $canAccess
+     * @param bool $expected
+     * @param bool $userId
      * @dataProvider provider
      */
-    public function testIsValid($canAccess, $expected)
+    public function testIsValid($canAccess, $expected, $userId)
     {
+        $mockUser = $this->mockUser();
+        $mockUser->shouldReceive('getId')
+            ->andReturn($userId)
+            ->once()
+            ->getMock();
+
         /** @var CommandInterface $dto */
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getIds')->andReturn([19, 11, 2015]);
@@ -48,8 +60,9 @@ class DeleteTest extends AbstractHandlerTestCase
     public function provider()
     {
         return [
-            [true, true],
-            [false, false],
+            [true, true, 10],
+            [false, false, 10],
+            [false, true, 1]
         ];
     }
 }
