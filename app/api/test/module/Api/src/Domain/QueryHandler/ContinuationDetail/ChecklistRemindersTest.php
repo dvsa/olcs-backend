@@ -7,6 +7,8 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @covers Dvsa\Olcs\Api\Domain\QueryHandler\ContinuationDetail\ChecklistReminders
@@ -22,6 +24,9 @@ class ChecklistRemindersTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
+    /**
+     * Test handleQuery
+     */
     public function test()
     {
         $data = [
@@ -31,20 +36,27 @@ class ChecklistRemindersTest extends QueryHandlerTestCase
         ];
         $query = Query\ContinuationDetail\ChecklistReminders::create($data);
 
-        $expect = ['unit_RepoResult', null, null];
+        $reminder = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->andReturn(['unit_RepoResult', null, null])
+            ->once()
+            ->getMock();
+
+        $reminders = new ArrayCollection();
+        $reminders->add($reminder);
 
         $this->repoMap['ContinuationDetail']
             ->shouldReceive('fetchChecklistReminders')
             ->with('unit_Month', 'unit_Year', ['unit_Ids'])
             ->once()
-            ->andReturn($expect);
+            ->andReturn($reminders);
 
         $actual = $this->sut->handleQuery($query);
 
         static::assertEquals(
             [
-                'result' => $expect,
-                'count' => 3,
+                'result' => [['unit_RepoResult', null, null]],
+                'count' => 1,
             ],
             $actual
         );

@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * ContinuationDetail
@@ -195,29 +196,35 @@ class ContinuationDetail extends AbstractRepository
         ->setParameter('status', Entity::STATUS_PREPARED);
 
         return $this->filterByFee(
-            $qb->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY),
+            $qb->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_OBJECT),
             FeeTypeEntity::FEE_TYPE_CONT,
             [FeeEntity::STATUS_OUTSTANDING]
         );
     }
 
     /**
-     * @return array
+     * Filter by fee
+     *
+     * @param array $entities
+     * @param string $feeType
+     * @param array $feeStatuses
+     * @return ArrayCollection
      */
     protected function filterByFee($entities, $feeType, $feeStatuses)
     {
-        $filtered = [];
+        $filtered = new ArrayCollection();
         foreach ($entities as $entity) {
-            if (isset($entity['licence']['fees'])) {
-                foreach ($entity['licence']['fees'] as $fee) {
-                    if ($fee['feeType']['feeType']['id'] === $feeType
-                        && in_array($fee['feeStatus']['id'], $feeStatuses, true) !== false
+            $fees = $entity->getLicence()->getFees();
+            if (count($fees)) {
+                foreach ($fees as $fee) {
+                    if ($fee->getFeeType()->getFeeType()->getId() === $feeType
+                        && in_array($fee->getFeeStatus()->getId(), $feeStatuses, true) !== false
                     ) {
                         continue 2;
                     }
                 }
             }
-            $filtered[] = $entity;
+            $filtered->add($entity);
         }
 
         return $filtered;
