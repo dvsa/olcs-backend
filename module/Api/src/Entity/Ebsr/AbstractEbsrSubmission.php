@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * EbsrSubmission Abstract Entity
@@ -13,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="ebsr_submission",
  *    indexes={
  *        @ORM\Index(name="ix_ebsr_submission_document_id", columns={"document_id"}),
@@ -54,6 +56,15 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
      * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
      */
     protected $busReg;
+
+    /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
 
     /**
      * Distribute end
@@ -313,6 +324,29 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     public function getBusReg()
     {
         return $this->busReg;
+    }
+
+    /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate
+     * @return EbsrSubmission
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate()
+    {
+        return $this->deletedDate;
     }
 
     /**
