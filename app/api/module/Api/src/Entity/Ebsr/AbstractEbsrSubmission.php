@@ -174,7 +174,7 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="organisation_email_address", length=100, nullable=true)
+     * @ORM\Column(type="string", name="organisation_email_address", length=255, nullable=true)
      */
     protected $organisationEmailAddress;
 
