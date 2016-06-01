@@ -76,7 +76,7 @@ abstract class AbstractLocalAuthority implements BundleSerializableInterface, Js
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="email_address", length=45, nullable=true)
+     * @ORM\Column(type="string", name="email_address", length=255, nullable=true)
      */
     protected $emailAddress;
 
