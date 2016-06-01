@@ -33,8 +33,16 @@ class ChecklistReminders extends AbstractQueryHandler
         );
 
         return [
-            //  result already serialized
-            'result' => $reminders,
+            'result' => $this->resultList(
+                $reminders,
+                [
+                    'licence' => [
+                        'status',
+                        'goodOrPsv',
+                        'organisation',
+                    ]
+                ]
+            ),
             'count' => count($reminders),
         ];
     }

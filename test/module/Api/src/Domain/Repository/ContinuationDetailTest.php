@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * ContinuationDetailTest
@@ -96,6 +97,9 @@ EOT;
         static::assertEquals($expectedQuery, $this->query);
     }
 
+    /**
+     * Test fetchChecklistReminders
+     */
     public function testFetchChecklistReminders()
     {
         $mockQb = m::mock(QueryBuilder::class);
@@ -164,50 +168,84 @@ EOT;
             ->once()
             ->andReturn($mockQb);
 
-        $result = [
-            [
-                'licence' => [
-                    'fees' => [
-                        [
-                            'feeStatus' => [
-                                'id' => FeeEntity::STATUS_OUTSTANDING
-                            ],
-                            'feeType' => [
-                                'feeType' => [
-                                    'id' => FeeTypeEntity::FEE_TYPE_APP
-                                ]
-                            ]
-                        ],
-                        [
-                            'feeStatus' => [
-                                'id' => FeeEntity::STATUS_OUTSTANDING
-                            ],
-                            'feeType' => [
-                                'feeType' => [
-                                    'id' => FeeTypeEntity::FEE_TYPE_CONT
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ],
-            [
-                'licence' => [
-                    'fees' => []
-                ]
-            ]
-        ];
-        $expected = [
-            [
-                'licence' => [
-                    'fees' => []
-                ]
-            ]
-        ];
-        $mockQb->shouldReceive('getQuery->getResult')
-            ->with(\Doctrine\ORM\Query::HYDRATE_ARRAY)
+        $fee1 = m::mock()
+            ->shouldReceive('getFeeType')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getFeeType')
+                    ->andReturn(
+                        m::mock()
+                        ->shouldReceive('getId')
+                        ->andReturn(FeeTypeEntity::FEE_TYPE_APP)
+                        ->once()
+                        ->getMock()
+                    )
+                    ->once()
+                    ->getMock()
+            )
             ->once()
-            ->andReturn($result);
+            ->getMock();
+
+        $fee2 = m::mock()
+            ->shouldReceive('getFeeType')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getFeeType')
+                    ->andReturn(
+                        m::mock()
+                            ->shouldReceive('getId')
+                            ->andReturn(FeeTypeEntity::FEE_TYPE_CONT)
+                            ->once()
+                            ->getMock()
+                    )
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getFeeStatus')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(FeeEntity::STATUS_OUTSTANDING)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $fees = [$fee1, $fee2];
+
+        $mockEntity1 = m::mock()
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getFees')
+                    ->andReturn($fees)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $mockEntity2 = m::mock()
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getFees')
+                    ->andReturn([])
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $expected = new ArrayCollection();
+        $expected->add($mockEntity2);
+
+        $mockQb->shouldReceive('getQuery->getResult')
+            ->with(\Doctrine\ORM\Query::HYDRATE_OBJECT)
+            ->once()
+            ->andReturn([$mockEntity1, $mockEntity2]);
 
         static::assertEquals($expected, $this->sut->fetchChecklistReminders(1, 2016, [1]));
     }
