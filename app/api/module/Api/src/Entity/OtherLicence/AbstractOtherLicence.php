@@ -117,9 +117,9 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Hours per week
      *
-     * @var int
+     * @var float
      *
-     * @ORM\Column(type="smallint", name="hours_per_week", nullable=true)
+     * @ORM\Column(type="decimal", name="hours_per_week", precision=3, scale=1, nullable=true)
      */
     protected $hoursPerWeek;
 
@@ -460,7 +460,7 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the hours per week
      *
-     * @param int $hoursPerWeek
+     * @param float $hoursPerWeek
      * @return OtherLicence
      */
     public function setHoursPerWeek($hoursPerWeek)
@@ -473,7 +473,7 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Get the hours per week
      *
-     * @return int
+     * @return float
      */
     public function getHoursPerWeek()
     {

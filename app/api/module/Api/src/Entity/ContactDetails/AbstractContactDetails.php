@@ -103,7 +103,7 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="email_address", length=60, nullable=true)
+     * @ORM\Column(type="string", name="email_address", length=255, nullable=true)
      */
     protected $emailAddress;
 

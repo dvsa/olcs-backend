@@ -75,7 +75,7 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="email_address", length=100, nullable=true)
+     * @ORM\Column(type="string", name="email_address", length=255, nullable=true)
      */
     protected $emailAddress;
 
