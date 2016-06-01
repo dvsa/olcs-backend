@@ -28,11 +28,6 @@ class DeleteTest extends AbstractHandlerTestCase
     }
 
     /**
-     * Test is valid
-     *
-     * @param bool $canAccess
-     * @param bool $expected
-     * @param bool $userId
      * @dataProvider provider
      */
     public function testIsValid($canAccess, $expected, $userId)
@@ -62,7 +57,7 @@ class DeleteTest extends AbstractHandlerTestCase
         return [
             [true, true, 10],
             [false, false, 10],
-            [false, true, 1]
+            [false, true, PidIdentityProviderEntity::SYSTEM_USER]
         ];
     }
 }
