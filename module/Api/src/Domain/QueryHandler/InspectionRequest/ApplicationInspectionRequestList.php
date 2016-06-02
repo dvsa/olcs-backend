@@ -26,6 +26,19 @@ class ApplicationInspectionRequestList extends AbstractQueryHandler
     {
         $application = $this->getRepo('Application')->fetchWithLicence($query->getApplication());
         $licenceId = $application->getLicence()->getId();
-        return $this->getRepo()->fetchPage($query, $licenceId);
+        $inspectionRequest = $this->getRepo()->fetchPage($query, $licenceId);
+        return [
+            'result' => $this->resultList(
+                $inspectionRequest['result'],
+                [
+                    'reportType',
+                    'requestType',
+                    'resultType',
+                    'licence',
+                    'application'
+                ]
+            ),
+            'count' => $inspectionRequest['count']
+        ];
     }
 }

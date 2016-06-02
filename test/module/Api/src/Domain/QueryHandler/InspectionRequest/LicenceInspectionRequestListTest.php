@@ -11,6 +11,9 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\InspectionRequest\LicenceInspectionRequest
 use Dvsa\Olcs\Transfer\Query\InspectionRequest\LicenceInspectionRequestList as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\InspectionRequest as InspectionRequestRepo;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Mockery as m;
+use Doctrine\ORM\Query as OrmQuery;
 
 /**
  * Licence Inspection Request List Test
@@ -33,15 +36,23 @@ class LicenceInspectionRequestListTest extends QueryHandlerTestCase
 
         $this->repoMap['InspectionRequest']
             ->shouldReceive('fetchList')
-            ->with($query)
-            ->andReturn('foo')
+            ->with($query, OrmQuery::HYDRATE_OBJECT)
+            ->andReturn(
+                [
+                    m::mock(BundleSerializableInterface::class)
+                        ->shouldReceive('serialize')
+                        ->andReturn(['foo'])
+                        ->once()
+                        ->getMock()
+                ]
+            )
             ->once()
             ->shouldReceive('fetchCount')
             ->with($query)
-            ->andReturn('bar')
+            ->andReturn(1)
             ->once()
             ->getMock();
 
-        $this->assertSame(['result' => 'foo', 'count' => 'bar'], $this->sut->handleQuery($query));
+        $this->assertSame(['result' => [['foo']], 'count' => 1], $this->sut->handleQuery($query));
     }
 }
