@@ -2,15 +2,13 @@
 
 namespace Dvsa\Olcs\Email\Service;
 
+use Dvsa\Olcs\Email\Exception\EmailNotSentException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Mail as ZendMail;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Part as ZendMimePart;
 use Zend\Mime\Mime as ZendMime;
-use Zend\Mail\Transport\Smtp as SmtpTransport;
-use Zend\Mail\Transport\SmtpOptions;
-use Zend\Mail\Transport\Exception\RuntimeException as ZendMailTransportRuntimeException;
 use Zend\Mail\Exception\RuntimeException as ZendMailRuntimeException;
 use Zend\Mail\Transport\TransportInterface;
 
@@ -68,6 +66,8 @@ class Email implements FactoryInterface
     }
 
     /**
+     * Sends an email
+     *
      * @param string $fromEmail From email address
      * @param string $fromName  From name
      * @param string $to        To address
@@ -77,6 +77,9 @@ class Email implements FactoryInterface
      * @param array  $cc        cc'd addresses
      * @param array  $bcc       bcc'd addresses
      * @param array  $docs      attached documents
+     *
+     * @return void
+     * @throws EmailNotSentException
      */
     public function send(
         $fromEmail,
@@ -144,6 +147,11 @@ class Email implements FactoryInterface
         $mail->getHeaders()->get('content-type')->setType($messageType);
 
         $trans = $this->getMailTransport();
-        $trans->send($mail);
+
+        try {
+            $trans->send($mail);
+        } catch (\Exception $e) {
+            throw new EmailNotSentException('Email not sent', 0, $e);
+        }
     }
 }

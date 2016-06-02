@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
 use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+use Dvsa\Olcs\Email\Exception\EmailNotSentException;
 
 /**
  * Abstract Command Queue Consumer
@@ -18,7 +19,15 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
  */
 abstract class AbstractCommandConsumer extends AbstractConsumer
 {
+    /**
+     * @var int Max retry attempts before fails
+     */
     protected $maxAttempts;
+
+    /**
+     * @var int Retry internal in seconds
+     */
+    protected $retryAfter = 900;
 
     /**
      * @var string the command to handle processing
@@ -60,6 +69,8 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
             $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command);
         } catch (NotReadyException $e) {
             return $this->retry($item, $e->getRetryAfter());
+        } catch (EmailNotSentException $e) {
+            return $this->retry($item, $this->retryAfter);
         } catch (DomainException $e) {
             $message = !empty($e->getMessages()) ? implode(', ', $e->getMessages()) : $e->getMessage();
             return $this->failed($item, $message);
