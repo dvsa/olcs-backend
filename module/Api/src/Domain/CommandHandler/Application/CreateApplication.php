@@ -23,6 +23,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\CreateApplication as Cmd;
 use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber;
 
 /**
  * Create Application
@@ -61,6 +62,9 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
         if ($updatedTol) {
             $result->merge($this->createApplicationFee($application->getId()));
             $result->merge($this->updateApplicationCompletion($application->getId()));
+            if ($application->getLicence()->getTrafficArea() !== null) {
+                $result->merge($this->generateLicenceNumber($application->getId()));
+            }
         }
 
         return $result;
@@ -92,6 +96,19 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
     {
         return $this->getCommandHandler()->handleCommand(
             UpdateApplicationCompletion::create(['id' => $applicationId, 'section' => 'typeOfLicence'])
+        );
+    }
+
+    /**
+     * Generate licence number
+     *
+     * @param int $applicationId
+     * @return Result
+     */
+    private function generateLicenceNumber($applicationId)
+    {
+        return $this->getCommandHandler()->handleCommand(
+            GenerateLicenceNumber::create(['id' => $applicationId])
         );
     }
 
