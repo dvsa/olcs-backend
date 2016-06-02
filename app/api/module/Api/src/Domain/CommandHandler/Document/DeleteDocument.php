@@ -8,12 +8,14 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\DeleteSubmission as DeleteEbsrSubmission;
 
 /**
  * Delete Document
@@ -29,6 +31,12 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
      */
     private $fileUploader;
 
+    /**
+     * Creates service (needs instance of file uploader)
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return TransactioningCommandHandler
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var ServiceLocatorInterface $mainServiceLocator  */
@@ -39,6 +47,12 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
         return parent::createService($serviceLocator);
     }
 
+    /**
+     * Deletes a document and optionally triggers side effect of deleting the associated EBSR submission
+     *
+     * @param CommandInterface $command
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -48,9 +62,17 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
         $identifier = $document->getIdentifier();
 
         if (!empty($identifier)) {
-
             $this->fileUploader->remove($identifier);
             $result->addMessage('File removed');
+        }
+
+        //if it's an EBSR doc, also delete the associated submission
+        if (!$document->getEbsrSubmissions()->isEmpty()) {
+            $result->merge(
+                $this->handleSideEffect(
+                    DeleteEbsrSubmission::create(['id' => $document->getEbsrSubmissions()->first()->getId()])
+                )
+            );
         }
 
         $this->getRepo()->delete($document);
