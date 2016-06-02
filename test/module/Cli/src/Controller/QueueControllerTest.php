@@ -105,4 +105,35 @@ class QueueControllerTest extends MockeryTestCase
         $this->routeMatch->setParam('action', 'index');
         $this->sut->dispatch($this->request);
     }
+
+    public function testIndexActionHandlesException()
+    {
+        // Mocks
+        $mockConfig = [
+            'queue' => [
+                'runFor' => 0.1,
+            ]
+        ];
+        $mockQueue = m::mock();
+        $this->sm->setService('Config', $mockConfig);
+        $this->sm->setService('Queue', $mockQueue);
+
+        // Expectations
+        $this->request->shouldReceive('getParam')
+            ->with('type')
+            ->andReturn('foo');
+
+        $errorMessage = 'error message';
+        $mockQueue->shouldReceive('processNextItem')
+            ->with('foo')
+            ->andThrow(new \Exception($errorMessage));
+
+        $this->console->shouldReceive('writeLine')
+            ->atLeast(1)
+            ->with('Error: '.$errorMessage);
+
+        // Assertions
+        $this->routeMatch->setParam('action', 'index');
+        $this->sut->dispatch($this->request);
+    }
 }

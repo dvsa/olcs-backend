@@ -23,4 +23,14 @@ interface MessageConsumerInterface
      * @return boolean
      */
     public function processMessage(QueueEntity $item);
+
+    /**
+     * Mark the item as failed
+     *
+     * @param QueueEntity $item
+     * @param string $reason
+     *
+     * @return string
+     */
+    public function failed(QueueEntity $item, $reason = null);
 }

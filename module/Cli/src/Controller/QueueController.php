@@ -9,8 +9,6 @@
 namespace Dvsa\Olcs\Cli\Controller;
 
 use Zend\Mvc\Controller\AbstractConsoleController;
-use Zend\View\Model\ConsoleModel;
-use Dvsa\Olcs\Api\Domain\Exception;
 
 /**
  * QueueController
@@ -24,6 +22,11 @@ class QueueController extends AbstractConsoleController
     protected $endTime;
     protected $sleepFor = 1000000; // microseconds
 
+    /**
+     * Index Action
+     *
+     * @return void
+     */
     public function indexAction()
     {
         // Which message type to process, if null then we process any message type
@@ -44,8 +47,14 @@ class QueueController extends AbstractConsoleController
         }
 
         while ($this->shouldRunAgain()) {
-
-            $response = $service->processNextItem($type);
+            try {
+                // process next item
+                $response = $service->processNextItem($type);
+            } catch (\Exception $e) {
+                $this->getConsole()->writeLine('Error: '.$e->getMessage());
+                // continue with the next item
+                continue;
+            }
 
             if ($response === null) {
                 $this->getConsole()->writeLine('No items queued, waiting for items');
