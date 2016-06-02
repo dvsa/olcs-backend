@@ -24,6 +24,7 @@ use Dvsa\Olcs\Transfer\Command\Application\CreateApplication as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber;
 
 /**
  * Create Application Test
@@ -177,6 +178,10 @@ class CreateApplicationTest extends CommandHandlerTestCase
             $result2
         );
 
+        $result3 = new Result();
+        $result3->addMessage('Licence number generated');
+        $this->expectedSideEffect(GenerateLicenceNumber::class, ['id' => 22], $result3);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -190,7 +195,8 @@ class CreateApplicationTest extends CommandHandlerTestCase
                 'Application created',
                 'Application Completion created',
                 'Application Tracking created',
-                'Section updated'
+                'Section updated',
+                'Licence number generated'
             ]
         ];
 
@@ -272,6 +278,10 @@ class CreateApplicationTest extends CommandHandlerTestCase
             $result2
         );
 
+        $result3 = new Result();
+        $result3->addMessage('Licence number generated');
+        $this->expectedSideEffect(GenerateLicenceNumber::class, ['id' => 22], $result3);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -285,7 +295,8 @@ class CreateApplicationTest extends CommandHandlerTestCase
                 'Application created',
                 'Application Completion created',
                 'Application Tracking created',
-                'Section updated'
+                'Section updated',
+                'Licence number generated'
             ]
         ];
 
