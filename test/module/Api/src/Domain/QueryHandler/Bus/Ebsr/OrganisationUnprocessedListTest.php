@@ -61,15 +61,11 @@ class OrganisationUnprocessedListTest extends QueryHandlerTestCase
         $ebsrSub1->shouldReceive('getDocument')->once()->andReturn($document1);
 
         $ebsrSub2 = m::mock(EbsrSubmissionEntity::class);
-        $ebsrSub2->shouldReceive('getDocument')->once()->andReturn(null);
-
-        $ebsrSub3 = m::mock(EbsrSubmissionEntity::class);
-        $ebsrSub3->shouldReceive('getDocument')->once()->andReturn($document2);
+        $ebsrSub2->shouldReceive('getDocument')->once()->andReturn($document2);
 
         $searchResults = [
             0 => $ebsrSub1,
             1 => $ebsrSub2,
-            2 => $ebsrSub3
         ];
         
         $expectedDocuments = [
@@ -79,8 +75,8 @@ class OrganisationUnprocessedListTest extends QueryHandlerTestCase
 
         $expectedQueryResult = (new ResultList($expectedDocuments, []))->serialize();
 
-        $this->repoMap['EbsrSubmission']->shouldReceive('fetchForOrganisationWithDocs')
-            ->with($organisationId, EbsrSubmissionEntity::SUBMITTING_STATUS)
+        $this->repoMap['EbsrSubmission']->shouldReceive('fetchForOrganisationByStatus')
+            ->with($organisationId, EbsrSubmissionEntity::UPLOADED_STATUS)
             ->andReturn($searchResults);
 
         $this->assertEquals($expectedQueryResult, $this->sut->handleQuery($query));
