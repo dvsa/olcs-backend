@@ -40,19 +40,13 @@ class OrganisationUnprocessedList extends AbstractQueryHandler implements AuthAw
             throw new ValidationException(['No organisation was found']);
         }
 
-        $results = $repo->fetchForOrganisationWithDocs($organisation->getId(), EbsrSubmission::SUBMITTING_STATUS);
+        $results = $repo->fetchForOrganisationByStatus($organisation->getId(), EbsrSubmission::UPLOADED_STATUS);
 
         $documents = [];
         
         /** @var EbsrSubmission $ebsrSub */
         foreach ($results as $ebsrSub) {
-            /** @var Document $document */
-            $document = $ebsrSub->getDocument();
-
-            //document may have been deleted from the document store
-            if ($document instanceof Document) {
-                $documents[] = $document;
-            }
+            $documents[] = $ebsrSub->getDocument();
         }
 
         return $this->resultList($documents);
