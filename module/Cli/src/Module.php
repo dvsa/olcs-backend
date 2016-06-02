@@ -1,13 +1,9 @@
 <?php
-/**
- * Cli Module
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
+
 namespace Dvsa\Olcs\Cli;
 
-use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
 use Zend\Console\Adapter\AdapterInterface as ConsoleAdapterInterface;
+use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
 use Zend\Mvc\MvcEvent;
 
 /**
@@ -29,7 +25,7 @@ class Module implements ConsoleUsageProviderInterface
         // supress PMD error
         unset($console);
 
-        return array(
+        return [
             // Describe available commands
             'licence-status-rules [--verbose|-v]' => 'Process licence status change rules',
             'enqueue-ch-compare [--verbose|-v]' => 'Enqueue Companies House lookups for all Organisations',
@@ -44,11 +40,15 @@ class Module implements ConsoleUsageProviderInterface
             'create-vi-extract-files [--verbose|-v] [--oc|-oc] [--op|-op] [--tnm|-tnm] [--vhl|-vhl] [--all|-all]' .
                 ' [--path=<exportPath>] ' => 'Create mobile compliance VI extract files',
             // Describe parameters
-            array( '--verbose|-v', '(optional) turn on verbose mode'),
-            array( '--dryrun|-d', '(optional) dryrun, nothing is actually changed'),
+            ['--verbose|-v', '(optional) turn on verbose mode'],
+            ['--dryrun|-d', '(optional) dryrun, nothing is actually changed'],
             'process-queue [--type=]' => 'Process the queue',
-            array( '--type=<que_typ_xxx>', '(optional) queue message type to process'),
-        );
+            ['--type=<que_typ_xxx>', '(optional) queue message type to process'],
+
+            'data-gov-uk-export <report-name> [--verbose|-v] [--path=<exportPath>]' => 'Export to csv for data.gov.uk',
+            ['<report-name>', 'export report name'],
+            ['--path=<exportPath>', '(optional) story export file in specified directory'],
+        ];
     }
 
     /**
@@ -67,8 +67,7 @@ class Module implements ConsoleUsageProviderInterface
 
     public function getConfig()
     {
-        $base = include __DIR__ . '/../config/module.config.php';
-        return $base;
+        return (include __DIR__ . '/../config/module.config.php');
     }
 
     public function getAutoloaderConfig()

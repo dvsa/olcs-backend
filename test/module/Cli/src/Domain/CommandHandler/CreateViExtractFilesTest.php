@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Create VI Extract Files Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Cli\Domain\CommandHandler\CreateViExtractFiles;
