@@ -43,7 +43,9 @@ class GetForResponsibilitiesTest extends QueryHandlerTestCase
                     ]
                 ],
                 'operatingCentres',
-                'otherLicences'
+                'otherLicences' => [
+                    'role'
+                ]
             ]
         )->once()->andReturn(['foo' => 'bar']);
 
