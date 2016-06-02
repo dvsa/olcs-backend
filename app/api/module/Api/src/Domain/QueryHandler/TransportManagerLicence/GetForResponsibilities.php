@@ -25,7 +25,13 @@ class GetForResponsibilities extends AbstractQueryHandler
         $transportManagerLicence = $this->getRepo()->fetchForResponsibilities($query->getId());
         return $this->result(
             $transportManagerLicence,
-            ['otherLicences', 'licence', 'operatingCentres']
+            [
+                'otherLicences' => [
+                    'role'
+                ],
+                'licence',
+                'operatingCentres'
+            ]
         );
 
     }

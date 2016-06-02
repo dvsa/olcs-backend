@@ -35,7 +35,9 @@ class GetForResponsibilitiesTest extends QueryHandlerTestCase
         $tma = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
         $tma->shouldReceive('serialize')->with(
             [
-                'otherLicences',
+                'otherLicences' => [
+                    'role'
+                ],
                 'licence',
                 'operatingCentres'
             ]

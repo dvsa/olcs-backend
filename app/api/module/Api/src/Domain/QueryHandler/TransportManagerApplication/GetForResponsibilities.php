@@ -36,7 +36,9 @@ class GetForResponsibilities extends AbstractQueryHandler
                     ]
                 ],
                 'operatingCentres',
-                'otherLicences'
+                'otherLicences' => [
+                    'role'
+                ]
             ]
         );
     }
