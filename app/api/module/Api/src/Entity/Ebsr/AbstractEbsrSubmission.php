@@ -98,7 +98,11 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
      *
      * @var \Dvsa\Olcs\Api\Entity\Doc\Document
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document",
+     *     fetch="LAZY",
+     *     inversedBy="ebsrSubmissions"
+     * )
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
      */
     protected $document;
