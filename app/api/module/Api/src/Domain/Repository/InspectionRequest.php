@@ -89,7 +89,7 @@ class InspectionRequest extends AbstractRepository
             ->with('application', 'a');
 
         return [
-            'result' => $this->fetchPaginatedList($qb),
+            'result' => $this->fetchPaginatedList($qb, Query::HYDRATE_OBJECT),
             'count'  => $this->fetchPaginatedCount($qb)
         ];
     }

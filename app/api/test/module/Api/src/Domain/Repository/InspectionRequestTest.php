@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\InspectionRequest as InspectionRequestRepo;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 /**
  * Inspection Request test
@@ -219,7 +220,7 @@ class InspectionRequestTest extends RepositoryTestCase
 
         $this->sut
             ->shouldReceive('fetchPaginatedList')
-            ->with($qb)
+            ->with($qb, Query::HYDRATE_OBJECT)
             ->andReturn(['foo'])
             ->once()
             ->shouldReceive('fetchPaginatedCount')
