@@ -172,7 +172,7 @@ return [
     'controllers' => [
         'invokables' => [
             'Generic' => 'Olcs\Db\Controller\GenericController',
-            'Search' => 'Olcs\Db\Controller\SearchController',
+            'Search' => Olcs\Db\Controller\SearchController::class,
             'licencevehicleusage' => 'Olcs\Db\Controller\LicenceVehicleUsageController',
             'licence-vehicle' => 'Olcs\Db\Controller\LicenceVehicleController',
             'note' => 'Olcs\Db\Controller\NoteController',

@@ -11,6 +11,15 @@
  * in ZendSkeletonApplication. This is a good practice, as it prevents sensitive
  * credentials from accidentally being committed into version control.
  */
+
+$doctrine_connection_params = [
+    'host' => 'localhost',
+    'port' => '3306',
+    'user' => 'olcs_be',
+    'password' => 'password',
+    'dbname' => 'olcs_be',
+];
+
 return [
      // Postcode/Address service
     'address' => [
@@ -32,21 +41,18 @@ return [
     'doctrine' => [
         'connection' => [
             'orm_default' => [
-                'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
+                'driverClass' => \Doctrine\DBAL\Driver\PDOMySql\Driver::class,
                 // Database connection details
-                'params' => [
-                    // *Environment specific*
-                    'host' => 'localhost',
-                    // *Environment specific*
-                    'port' => '3306',
-                    // *Environment specific*
-                    'user' => 'olcs_be',
-                    // *Environment specific*
-                    'password' => 'password',
-                    // *Environment specific*
-                    'dbname' => 'olcs_be',
-                ]
-            ]
+                'params' => $doctrine_connection_params,
+            ],
+            'export' => [
+                'driverClass' => \Doctrine\DBAL\Driver\PDOMySql\Driver::class,
+                'params' => $doctrine_connection_params +
+                    [
+                        PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false,
+                        PDO::CURSOR_FWDONLY => true,
+                    ],
+            ],
         ],
         'driver' => [
             'EntityDriver' => [
@@ -244,5 +250,8 @@ return [
     ],
     'vi_extract_files' => [
         'export_path' => '/tmp/ViExtract'
-    ]
+    ],
+    'data-gov-uk-export' => [
+        'path' => '/var/tmp/dataGovUk',
+    ],
 ];
