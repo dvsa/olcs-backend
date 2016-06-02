@@ -1237,6 +1237,15 @@ return array(
                 'entity' => 'BusReg',
                 'property' => 'ebsrSubmission'
             )
+        ),
+        'document_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Document',
+                'property' => 'ebsrSubmission',
+                'cascade' => array(
+                    'persist'
+                )
+            )
         )
     ),
     'alpha_split' => array(
