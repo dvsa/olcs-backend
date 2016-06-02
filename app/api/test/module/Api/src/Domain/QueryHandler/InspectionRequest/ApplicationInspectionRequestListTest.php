@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\InspectionRequest;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\QueryHandler\InspectionRequest\ApplicationInspectionRequestList as QueryHandler;
 use Dvsa\Olcs\Transfer\Query\InspectionRequest\ApplicationInspectionRequestList as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -52,13 +53,22 @@ class ApplicationInspectionRequestListTest extends QueryHandlerTestCase
             ->once()
             ->andReturn($mockLicence);
 
-        $this->repoMap['InspectionRequest']
-            ->shouldReceive('fetchPage')
-            ->with($query, 2)
-            ->andReturn('foo')
+        $inspectionRequests = new ArrayCollection();
+        $inspectionRequest = m::mock()
+            ->shouldReceive('serialize')
+            ->andReturn(['foo'])
             ->once()
             ->getMock();
 
-        $this->assertSame('foo', $this->sut->handleQuery($query));
+        $inspectionRequests->add($inspectionRequest);
+
+        $this->repoMap['InspectionRequest']
+            ->shouldReceive('fetchPage')
+            ->with($query, 2)
+            ->andReturn(['result' => $inspectionRequests, 'count' => 1])
+            ->once()
+            ->getMock();
+
+        $this->assertSame(['result' => [['foo']], 'count' => 1], $this->sut->handleQuery($query));
     }
 }
