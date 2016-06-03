@@ -72,12 +72,54 @@ class EbsrSubmissionEntityTest extends EntityTester
     {
         $ebsrSubmissionStatus = m::mock(RefData::class)->makePartial();
 
+        $previousEbsrSubmissionStatus = m::mock(RefData::class)->makePartial();
+        $previousEbsrSubmissionStatus->setId(Entity::SUBMITTED_STATUS);
+
         $entity = $this->instantiate(Entity::class);
+        $entity->setEbsrSubmissionStatus($previousEbsrSubmissionStatus);
 
         $entity->beginValidating($ebsrSubmissionStatus);
 
         $this->assertEquals($ebsrSubmissionStatus, $entity->getEbsrSubmissionStatus());
         $this->assertInstanceOf(\DateTime::class, $entity->getValidationStart());
+    }
+
+    /**
+     * tests beginValidating throws an exception for incorrect statuses
+     *
+     * @dataProvider beginValidatingProvider
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     *
+     * @param string $previousStatus
+     */
+    public function testBeginValidatingThrowsException($previousStatus)
+    {
+        $ebsrSubmissionStatus = m::mock(RefData::class)->makePartial();
+
+        $previousEbsrSubmissionStatus = m::mock(RefData::class)->makePartial();
+        $previousEbsrSubmissionStatus->setId($previousStatus);
+
+        $entity = $this->instantiate(Entity::class);
+        $entity->setEbsrSubmissionStatus($previousEbsrSubmissionStatus);
+
+        $entity->beginValidating($ebsrSubmissionStatus);
+    }
+
+    /**
+     * Date provider for testBeginValidatingThrowsException
+     *
+     * @return array
+     */
+    public function beginValidatingProvider()
+    {
+        return [
+            [Entity::UPLOADED_STATUS],
+            [Entity::SUBMITTING_STATUS],
+            [Entity::VALIDATING_STATUS],
+            [Entity::PROCESSING_STATUS],
+            [Entity::PROCESSED_STATUS],
+            [Entity::FAILED_STATUS]
+        ];
     }
 
     /**
@@ -158,12 +200,48 @@ class EbsrSubmissionEntityTest extends EntityTester
     public function isFailureProvider()
     {
         return [
+            [Entity::UPLOADED_STATUS, false],
             [Entity::SUBMITTING_STATUS, false],
             [Entity::SUBMITTED_STATUS, false],
             [Entity::VALIDATING_STATUS, false],
             [Entity::PROCESSING_STATUS, false],
             [Entity::PROCESSED_STATUS, false],
             [Entity::FAILED_STATUS, true]
+        ];
+    }
+
+    /**
+     * @dataProvider isSubmittedProvider
+     *
+     * @param $submissionStatusString
+     * @param $expectedResult
+     */
+    public function testIsSubmitted($submissionStatusString, $expectedResult)
+    {
+        $ebsrSubmissionStatus = m::mock(RefData::class);
+        $ebsrSubmissionStatus->shouldReceive('getId')->once()->andReturn($submissionStatusString);
+
+        $entity = $this->instantiate(Entity::class);
+        $entity->setEbsrSubmissionStatus($ebsrSubmissionStatus);
+
+        $this->assertEquals($expectedResult, $entity->isSubmitted());
+    }
+
+    /**
+     * Date provider for isSubmitted
+     *
+     * @return array
+     */
+    public function isSubmittedProvider()
+    {
+        return [
+            [Entity::UPLOADED_STATUS, false],
+            [Entity::SUBMITTING_STATUS, false],
+            [Entity::SUBMITTED_STATUS, true],
+            [Entity::VALIDATING_STATUS, false],
+            [Entity::PROCESSING_STATUS, false],
+            [Entity::PROCESSED_STATUS, false],
+            [Entity::FAILED_STATUS, false]
         ];
     }
 
