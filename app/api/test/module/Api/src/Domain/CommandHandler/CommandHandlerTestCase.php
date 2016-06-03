@@ -175,6 +175,37 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
     }
 
     /**
+     * Shortcut for queue side effects
+     *
+     * @param int $entityId
+     * @param string $queueType
+     * @param array $options
+     * @param Result|null $result
+     * @param string|null $processAfterDate
+     */
+    public function expectedQueueSideEffect(
+        $entityId,
+        $queueType,
+        array $options = [],
+        $result = null,
+        $processAfterDate = null
+    ) {
+        if ($result === null) {
+            $result = new Result();
+        }
+
+        $data = [
+            'entityId' => $entityId,
+            'type' => $queueType,
+            'status' => QueueEntity::STATUS_QUEUED,
+            'options' => ZendJson::encode($options),
+            'processAfterDate' => $processAfterDate
+        ];
+
+        $this->expectedSideEffect(CreateQueueCmd::class, $data, $result);
+    }
+
+    /**
      * Shortcut for email queue side effects
      *
      * @param string $emailCmdClass
