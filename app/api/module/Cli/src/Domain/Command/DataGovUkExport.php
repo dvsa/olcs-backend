@@ -11,7 +11,9 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  */
 final class DataGovUkExport extends AbstractCommand
 {
+    /** @var string  */
     protected $reportName = null;
+    /** @var string|null  */
     protected $path = null;
 
     /**
@@ -23,6 +25,8 @@ final class DataGovUkExport extends AbstractCommand
     }
 
     /**
+     * Optional path to folder where cvs files should be saved
+     *
      * @return string|null
      */
     public function getPath()

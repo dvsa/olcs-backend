@@ -14,7 +14,7 @@ use Zend\ServiceManager\ServiceManager;
  */
 class DataGovUkFactoryTest extends MockeryTestCase
 {
-    public function test()
+    public function testCreateService()
     {
         $mockSl = m::mock(ServiceLocatorInterface::class)
             ->shouldReceive('get')
