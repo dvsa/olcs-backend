@@ -43,11 +43,35 @@ class TmResponsibilitiesList extends AbstractQueryHandler
             ],
             true
         );
-
         return [
-            'result' => $tmLicences,
+            'result' => $this->resultList(
+                $tmLicences,
+                [
+                    'tmType',
+                    'licence' => [
+                        'organisation',
+                        'status'
+                    ],
+                    'transportManager',
+                    'operatingCentres'
+                ]
+            ),
             'count' => count($tmLicences),
-            'tmApplications' => $tmApplications,
+            'tmApplications' => $this->resultList(
+                $tmApplications,
+                [
+                    'tmType',
+                    'application' => [
+                        'licence' => [
+                            'organisation'
+                        ],
+                        'status'
+                    ],
+                    'transportManager',
+                    'operatingCentres',
+                    'tmApplicationStatus'
+                ]
+            ),
             'tmApplicationsCount' => count($tmApplications)
         ];
     }
