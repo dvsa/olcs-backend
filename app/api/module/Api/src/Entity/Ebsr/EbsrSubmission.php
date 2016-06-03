@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Ebsr;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -38,6 +39,8 @@ class EbsrSubmission extends AbstractEbsrSubmission
     const UNKNOWN_SUBMISSION_TYPE = 'ebsrt_unknown';
 
     /**
+     * Creates EBSR submission
+     *
      * @param Organisation $organisation
      * @param RefData $ebsrSubmissionStatus
      * @param RefData $ebsrSubmissionType
@@ -56,6 +59,8 @@ class EbsrSubmission extends AbstractEbsrSubmission
     }
 
     /**
+     * Called when a previously uploaded EBSR pack is submitted
+     *
      * @param RefData $ebsrSubmissionStatus
      * @param RefData $ebsrSubmissionType
      */
@@ -67,15 +72,24 @@ class EbsrSubmission extends AbstractEbsrSubmission
     }
 
     /**
+     * Called when EBSR pack begins processing, includes a check that the status is correct
+     *
      * @param RefData $ebsrSubmissionStatus
+     * @throws ValidationException
      */
     public function beginValidating(RefData $ebsrSubmissionStatus)
     {
+        if (!$this->isSubmitted()) {
+            throw new ValidationException(['Only newly submitted records may be processed']);
+        }
+
         $this->ebsrSubmissionStatus = $ebsrSubmissionStatus;
         $this->validationStart = new \DateTime();
     }
 
     /**
+     * Called when validation of EBSR pack is completed
+     *
      * @param RefData $ebsrSubmissionStatus
      * @param String $ebsrSubmissionResult this is a serialized array
      */
@@ -92,6 +106,8 @@ class EbsrSubmission extends AbstractEbsrSubmission
     }
 
     /**
+     * Whether the EBSR submission is a failure
+     *
      * @return bool
      */
     public function isFailure()
@@ -100,6 +116,18 @@ class EbsrSubmission extends AbstractEbsrSubmission
     }
 
     /**
+     * Whether the EBSR submission is at the "submitted" stage
+     *
+     * @return bool
+     */
+    public function isSubmitted()
+    {
+        return $this->ebsrSubmissionStatus->getId() === self::SUBMITTED_STATUS;
+    }
+
+    /**
+     * Called when a submission has finished processing
+     *
      * @param RefData $ebsrSubmissionStatus
      */
     public function finishProcessing(RefData $ebsrSubmissionStatus)
@@ -109,6 +137,8 @@ class EbsrSubmission extends AbstractEbsrSubmission
     }
 
     /**
+     * Whether the EBSR submission is a data refresh
+     *
      * @return bool
      */
     public function isDataRefresh()
