@@ -32,7 +32,7 @@ class GetList extends AbstractQueryHandler
                 ]
             ),
             'count' => $this->getRepo()->fetchCount($query),
-            'transportManager' => $transportManager
+            'transportManager' => $this->result($transportManager)
         ];
     }
 }
