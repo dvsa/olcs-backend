@@ -15,6 +15,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Dvsa\Olcs\Api\Domain\Repository\TmQualification as TmQualificationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
+use Doctrine\ORM\Query as OrmQuery;
 
 /**
  * TmQualificationList Test
@@ -37,14 +38,32 @@ class TmQualificationListTest extends QueryHandlerTestCase
     {
         $query = Query::create(['transportManager' => 1]);
 
+        $mockTransportManager = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->once()
+            ->andReturn(['bar' => 'cake'])
+            ->getMock();
+
         $this->repoMap['TransportManager']->shouldReceive('fetchById')
-            ->with(1)->andReturn(['tm']);
+            ->with(1)->andReturn($mockTransportManager);
+
+        $mockQualification = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->once()
+            ->andReturn('foo')
+            ->getMock();
+
+        $mockDocument = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->once()
+            ->andReturn('doc')
+            ->getMock();
 
         $this->repoMap['TmQualification']
             ->shouldReceive('fetchList')
-            ->with($query)
+            ->with($query, OrmQuery::HYDRATE_OBJECT)
             ->once()
-            ->andReturn(['foo'])
+            ->andReturn([$mockQualification])
             ->shouldReceive('fetchCount')
             ->with($query)
             ->once()
@@ -54,20 +73,22 @@ class TmQualificationListTest extends QueryHandlerTestCase
         $this->repoMap['Document']
             ->shouldReceive('fetchListForTm')
             ->with(1)
-            ->andReturn(['doc'])
+            ->andReturn([$mockDocument])
             ->once()
             ->getMock();
+
+        $result = $this->sut->handleQuery($query);
+        $tm = $result['transportManager'];
+        $this->assertEquals($tm->serialize(), ['bar' => 'cake']);
+        unset($result['transportManager']);
 
         $this->assertSame(
             [
                 'result'    => ['foo'],
                 'count'     => 1,
-                'documents' => ['doc'],
-                'transportManager' => [
-                    'tm'
-                ]
+                'documents' => ['doc']
             ],
-            $this->sut->handleQuery($query)
+            $result
         );
     }
 }

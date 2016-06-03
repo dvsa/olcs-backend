@@ -14,6 +14,8 @@ use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportMang
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TransportMangerLicenceRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Mockery as m;
 
 /**
  * TmResponsibilitiesList Test
@@ -39,6 +41,18 @@ class TmResponsibilitiesListTest extends QueryHandlerTestCase
             ]
         );
 
+        $mockLicence = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->once()
+            ->andReturn('licence')
+            ->getMock();
+
+        $mockApplication = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->once()
+            ->andReturn('application')
+            ->getMock();
+
         $this->repoMap['TransportManagerLicence']
             ->shouldReceive('fetchForTransportManager')
             ->with(
@@ -50,7 +64,7 @@ class TmResponsibilitiesListTest extends QueryHandlerTestCase
                 ]
             )
             ->once()
-            ->andReturn(['licences'])
+            ->andReturn([$mockLicence])
             ->getMock();
 
         $this->repoMap['TransportManagerApplication']
@@ -65,14 +79,14 @@ class TmResponsibilitiesListTest extends QueryHandlerTestCase
                 true
             )
             ->once()
-            ->andReturn(['applications'])
+            ->andReturn([$mockApplication])
             ->getMock();
 
         $this->assertEquals(
             [
-                'result' => ['licences'],
+                'result' => ['licence'],
                 'count'  => 1,
-                'tmApplications' => ['applications'],
+                'tmApplications' => ['application'],
                 'tmApplicationsCount' => 1
             ],
             $this->sut->handleQuery($query)

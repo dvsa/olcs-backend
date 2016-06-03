@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TmEmployment;
 
-use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\TmEmployment\GetList as QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\TmEmployment as Repo;
 use Dvsa\Olcs\Transfer\Query\TmEmployment\GetList as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 
 /**
  * GetListTest
@@ -29,10 +29,14 @@ class GetListTest extends QueryHandlerTestCase
     {
         $query = Query::create(['transportManager' => 1]);
 
-        $tm = new TransportManager();
+        $mockTm = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->once()
+            ->andReturn(['foo' => 'bar'])
+            ->getMock();
 
         $this->repoMap['TransportManager']->shouldReceive('fetchById')
-            ->with(1)->andReturn([$tm]);
+            ->with(1)->andReturn($mockTm);
 
         $tmEmployment = m::mock(\Dvsa\Olcs\Api\Entity\Tm\TmEmployment::class);
         $tmEmployment->shouldReceive('serialize')->with(
@@ -53,5 +57,6 @@ class GetListTest extends QueryHandlerTestCase
 
         $this->assertSame(['SERIALIZE'], $result['result']);
         $this->assertSame('COUNT', $result['count']);
+        $this->assertSame(['foo' => 'bar'], $result['transportManager']->serialize());
     }
 }

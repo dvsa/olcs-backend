@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\TmQualification;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\Query;
 
 /**
  * TmQualifications List
@@ -25,10 +26,10 @@ class TmQualificationsList extends AbstractQueryHandler
         $transportManager = $this->getRepo('TransportManager')->fetchById($query->getTransportManager());
         $documents = $this->getRepo('Document')->fetchListForTm($query->getTransportManager());
         return [
-            'result'    => $this->getRepo()->fetchList($query),
+            'result'    => $this->resultList($this->getRepo()->fetchList($query, Query::HYDRATE_OBJECT)),
             'count'     => $this->getRepo()->fetchCount($query),
-            'documents' => $documents,
-            'transportManager' => $transportManager
+            'documents' => $this->resultList($documents),
+            'transportManager' => $this->result($transportManager)
         ];
     }
 }
