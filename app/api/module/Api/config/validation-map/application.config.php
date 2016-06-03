@@ -12,6 +12,6 @@ return [
     CommandHandler\Application\Schedule41Refuse::class  => IsInternalUser::class,
     CommandHandler\Application\Schedule41Cancel::class  => IsInternalOrSystemUser::class,
     CommandHandler\Application\Schedule41Reset::class   => IsInternalUser::class,
-    CommandHandler\Application\NotTakenUpApplication::class => IsSystemUser::class,
+    CommandHandler\Application\NotTakenUpApplication::class => IsInternalOrSystemUser::class,
     QueryHandler\Application\OutstandingFees::class     => CanAccessApplicationWithId::class,
 ];
