@@ -11,7 +11,7 @@ use Mockery as m;
  */
 class DataGovUkTest extends MockeryTestCase
 {
-    public function test()
+    public function testFetchOperatorLicences()
     {
         $expectStmt = 'Expect_PDOStatement';
 
@@ -19,7 +19,7 @@ class DataGovUkTest extends MockeryTestCase
         $mockConn = m::mock(\Doctrine\DBAL\Connection::class)
             ->shouldReceive('query')
             ->once()
-            ->with('/data_gov_uk_operator_licence_vw$/')
+            ->with('/data_gov_uk_operator_licence_view$/')
             ->andReturn($expectStmt)
             //
             ->shouldReceive('close')

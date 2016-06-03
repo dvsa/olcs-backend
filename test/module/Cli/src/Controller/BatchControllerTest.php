@@ -30,12 +30,11 @@ class BatchControllerTest extends MockeryTestCase
     protected $sut;
 
     /** @var ServiceManager|m\MockInterface */
-    protected $sm;
+    private $sm;
     /** @var PluginManager|m\MockInterface */
-    protected $pm;
+    private $pm;
     /** @var  AdapterInterface|m\MockInterface */
     private $mockConsole;
-
     /** @var m\MockInterface */
     private $mockCommandHandler;
 

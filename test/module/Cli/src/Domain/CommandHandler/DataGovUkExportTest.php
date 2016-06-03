@@ -10,6 +10,7 @@ use Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * @covers Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport
@@ -50,14 +51,13 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         parent::setUp();
 
         $this->now = new DateTime;
-        $this->tmpPath = sys_get_temp_dir() . '/unit';
+
+        $this->tmpPath = vfsStream::setup('root')->url() . '/unit';
     }
 
     public function tearDown()
     {
         parent::tearDown();
-
-        system('rm -rf ' . escapeshellarg($this->tmpPath), $retval);
     }
 
     public function testInvalidReportExpection()
@@ -90,9 +90,13 @@ class DataGovUkExportTest extends CommandHandlerTestCase
             'col1' => 'val1',
             'col2' => 'v"\'-/\,',
         ];
-
+        $row2 = [
+            'col1' => 'val21',
+            'col2' => 'val22',
+        ];
         $this->mockStmt
             ->shouldReceive('fetch')->once()->andReturn($row)
+            ->shouldReceive('fetch')->once()->andReturn($row2)
             ->shouldReceive('fetch')->andReturn(false);
 
         //  call & check
@@ -103,10 +107,8 @@ class DataGovUkExportTest extends CommandHandlerTestCase
             $this->now->format(DataGovUkExport::FILE_DATETIME_FORMAT) . '.csv';
 
         $expectMsg =
-            'Export operator licences to file for data.gov.uk:' .
-            "\t- Fetching data from DB" .
-            "\t- Export data to csv file " . $expectFile .
-            'done.';
+            "Fetching data from DB" .
+            "Export data to csv file " . $expectFile;
 
         static::assertEquals(
             $expectMsg,
@@ -114,7 +116,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         );
 
         static::assertSame(
-            'col1,col2' . PHP_EOL . 'val1,"v""\'-/\,"' . PHP_EOL,
+            'col1,col2' . PHP_EOL . 'val1,"v""\'-/\,"' . PHP_EOL . 'val21,val22' . PHP_EOL,
             file_get_contents($expectFile)
         );
     }
@@ -158,7 +160,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
             $this->now->format(DataGovUkExport::FILE_DATETIME_FORMAT) . '.csv';
 
         /** @noinspection MkdirRaceConditionInspection */
-        mkdir($expectFile, 0777, true);
+        mkdir($expectFile, 0750, true);
 
         //  expect
         $this->setExpectedException(\Exception::class, DataGovUkExport::ERR_CANT_CREATE_FILE . $expectFile);

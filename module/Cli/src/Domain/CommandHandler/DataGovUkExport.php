@@ -51,9 +51,7 @@ final class DataGovUkExport extends AbstractCommandHandler
         $repo = $this->getRepo();
 
         if ($reportName === self::OPERATOR_LICENCE) {
-            $this->result->addMessage('Export operator licences to file for data.gov.uk:');
-
-            $this->result->addMessage("\t- Fetching data from DB");
+            $this->result->addMessage('Fetching data from DB');
             $stmt = $repo->fetchOperatorLicences();
 
             $this->exportToCsv(self::OPERATOR_LICENCE, $stmt);
@@ -63,21 +61,25 @@ final class DataGovUkExport extends AbstractCommandHandler
             throw new \Exception(self::ERR_INVALID_REPORT);
         }
 
-        $this->result->addMessage('done.');
-
         return $this->result;
     }
 
+    /**
+     * Create csv file from DB Statement
+     *
+     * @param string    $fileName
+     * @param Statement $stmt
+     */
     private function exportToCsv($fileName, Statement $stmt)
     {
         $now = new DateTime();
 
         $filePath = $this->path . '/' . $fileName . '-' . $now->format(self::FILE_DATETIME_FORMAT) . '.csv';
-        $this->result->addMessage("\t- Export data to csv file " . $filePath);
+        $this->result->addMessage('Export data to csv file ' . $filePath);
 
         //  create folders
         $dir = dirname($filePath);
-        if (!@mkdir($dir, 0777, true) && !is_dir($dir)) {
+        if (!@mkdir($dir, 0750, true) && !is_dir($dir)) {
             throw new Exception(self::ERR_CANT_CREATE_DIR . $filePath);
         }
 
@@ -87,16 +89,15 @@ final class DataGovUkExport extends AbstractCommandHandler
             throw new Exception(self::ERR_CANT_CREATE_FILE . $filePath);
         }
 
-        $isColumnNamesSet = false;
+        //  add title & first row
+        $row = $stmt->fetch();
+        if ($row !== false) {
+            fputcsv($output, array_keys($row));
+            fputcsv($output, $row);
+        }
+
+        //  add rows
         while (($row = $stmt->fetch()) !== false) {
-            //  add first row with column names
-            if (!$isColumnNamesSet) {
-                fputcsv($output, array_keys($row));
-
-                $isColumnNamesSet = true;
-            }
-
-            //  add row
             fputcsv($output, $row);
         }
 
