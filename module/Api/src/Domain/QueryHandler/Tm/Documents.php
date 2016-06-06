@@ -23,7 +23,7 @@ class Documents extends AbstractQueryHandler
     {
         $documents = $this->getRepo()->fetchListForTm($query->getId());
         return [
-            'result' => $documents,
+            'result' => $this->resultList($documents),
             'count'  => count($documents)
         ];
     }
