@@ -73,10 +73,11 @@ final class QueuePacks extends AbstractCommandHandler implements AuthAwareInterf
             $queuedPacks++;
         }
 
-        if (!empty($queueItems)) {
-            $result->merge($this->handleSideEffects($queueItems));
+        if (empty($queueItems)) {
+            throw new ValidationException(['There were no packs to queue']);
         }
 
+        $result->merge($this->handleSideEffects($queueItems));
         $result->addMessage($queuedPacks . ' packs were queued for upload');
 
         return $result;
