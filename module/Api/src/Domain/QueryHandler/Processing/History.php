@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Processing;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\EventHistory;
+use Doctrine\ORM\Query;
 
 /**
  * Application
@@ -27,7 +28,22 @@ class History extends AbstractQueryHandler
         $repo->disableSoftDeleteable();
 
         return [
-            'result' => $repo->fetchList($query),
+            'result' => $this->resultList(
+                $repo->fetchList($query, Query::HYDRATE_OBJECT),
+                [
+                    'licence',
+                    'application',
+                    'organisation',
+                    'transportManager',
+                    'eventHistoryType',
+                    'case',
+                    'user' => [
+                        'contactDetails' => [
+                            'person'
+                        ]
+                    ]
+                ]
+            ),
             'count' => $repo->fetchCount($query)
         ];
     }

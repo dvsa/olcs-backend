@@ -12,6 +12,8 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\Processing\NoteList as Qry;
 use Mockery as m;
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 
 /**
  * Note List Test
@@ -38,15 +40,25 @@ class NoteListTest extends QueryHandlerTestCase
 
         $query = Qry::create($data);
 
+        $mockNote = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->once()
+            ->andReturn(['foo' => 'bar'])
+            ->getMock();
+
         $this->repoMap['Note']->shouldReceive('disableSoftDeleteable')->once();
-        $this->repoMap['Note']->shouldReceive('fetchList')->once()->with($query)->andReturn(['foo' => 'bar']);
+        $this->repoMap['Note']
+            ->shouldReceive('fetchList')
+            ->once()
+            ->with($query, Query::HYDRATE_OBJECT)
+            ->andReturn([$mockNote]);
         $this->repoMap['Note']->shouldReceive('fetchCount')->with($query)->andReturn(5);
         $this->repoMap['Note']->shouldReceive('hasRows')->with(m::type(Qry::class))->andReturn(1);
 
         $result = $this->sut->handleQuery($query);
 
         $expected = [
-            'result' => ['foo' => 'bar'],
+            'result' => [['foo' => 'bar']],
             'count' => 5,
             'count-unfiltered' => 1
         ];
