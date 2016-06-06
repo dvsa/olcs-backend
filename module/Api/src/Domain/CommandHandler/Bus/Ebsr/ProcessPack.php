@@ -125,7 +125,7 @@ final class ProcessPack extends AbstractCommandHandler implements
     {
         /** @var EbsrSubmissionEntity $ebsrSub */
         $ebsrSub = $this->getRepo('EbsrSubmission')->fetchUsingId($command);
-        $ebsrSub->beginValidating($this->getRepo()->getRefdataReference(EbsrSubmissionEntity::VALIDATED_STATUS));
+        $ebsrSub->beginValidating($this->getRepo()->getRefdataReference(EbsrSubmissionEntity::VALIDATING_STATUS));
         $this->getRepo('EbsrSubmission')->save($ebsrSub);
 
         $this->result->addId('ebsrSubmission', $ebsrSub->getId());
