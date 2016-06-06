@@ -67,7 +67,7 @@ class OrganisationUnprocessedListTest extends QueryHandlerTestCase
             0 => $ebsrSub1,
             1 => $ebsrSub2,
         ];
-        
+
         $expectedDocuments = [
             0 => $document1,
             1 => $document2

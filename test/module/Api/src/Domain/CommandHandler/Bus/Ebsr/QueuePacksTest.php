@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\QueuePacks as QueuePacksCmd;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Identity\IdentityInterface;
@@ -41,7 +41,7 @@ class QueuePacksTest extends CommandHandlerTestCase
 
         parent::initReferences();
     }
-    
+
     /**
      * Tests EBSR packs are queued correctly
      */
@@ -55,11 +55,17 @@ class QueuePacksTest extends CommandHandlerTestCase
 
         $ebsrSub1 = m::mock(EbsrSubmission::class);
         $ebsrSub1->shouldReceive('getId')->once()->andReturn($ebsrId1);
-        $ebsrSub1->shouldReceive('submit')->once()->with($this->refData[EbsrSubmission::SUBMITTED_STATUS], $this->refData[$submissionType]);
+        $ebsrSub1->shouldReceive('submit')->once()->with(
+            $this->refData[EbsrSubmission::SUBMITTED_STATUS],
+            $this->refData[$submissionType]
+        );
 
         $ebsrSub2 = m::mock(EbsrSubmission::class);
         $ebsrSub2->shouldReceive('getId')->once()->andReturn($ebsrId2);
-        $ebsrSub2->shouldReceive('submit')->once()->with($this->refData[EbsrSubmission::SUBMITTED_STATUS], $this->refData[$submissionType]);
+        $ebsrSub2->shouldReceive('submit')->once()->with(
+            $this->refData[EbsrSubmission::SUBMITTED_STATUS],
+            $this->refData[$submissionType]
+        );
 
         $ebsrSubmissions = [$ebsrSub1, $ebsrSub2];
 
