@@ -108,6 +108,8 @@ class QueuePacksTest extends CommandHandlerTestCase
 
     /**
      * Tests what happens if there are no packs for the organisation
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function testHandleCommandNoPacks()
     {
@@ -133,14 +135,13 @@ class QueuePacksTest extends CommandHandlerTestCase
             ->once()
             ->andReturn([]);
 
-        $result = $this->sut->handleCommand($cmd);
-
-        $this->assertInstanceOf(Result::class, $result);
-        $this->assertEquals($result->getMessages()[0], '0 packs were queued for upload');
+        $this->sut->handleCommand($cmd);
     }
 
     /**
      * Tests what happens if the organisation is missing
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function testHandleCommandNoOrganisation()
     {
