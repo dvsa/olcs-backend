@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Note as NoteRepository;
 use Dvsa\Olcs\Transfer\Query\Processing\NoteList as NoteListQuery;
+use Doctrine\ORM\Query;
 
 /**
  * Note
@@ -104,7 +105,20 @@ class NoteList extends AbstractQueryHandler
         $unfilteredQuery = \Dvsa\Olcs\Transfer\Query\Processing\NoteList::create($data);
 
         return [
-            'result' => $repo->fetchList($query),
+            'result' => $this->resultList(
+                $repo->fetchList($query, Query::HYDRATE_OBJECT),
+                [
+                    'noteType',
+                    'case',
+                    'application',
+                    'busReg',
+                    'createdBy' => [
+                        'contactDetails' => [
+                            'person'
+                        ]
+                    ]
+                ]
+            ),
             'count' => $repo->fetchCount($query),
             'count-unfiltered' => $repo->hasRows($unfilteredQuery),
         ];
