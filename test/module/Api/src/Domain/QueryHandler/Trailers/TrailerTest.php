@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Trailer\Trailer;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Trailer as TrailerRepo;
 use Dvsa\Olcs\Transfer\Query\Trailer\Trailer as Qry;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Mockery as m;
 
 /**
  * Grace Periods Test
@@ -31,17 +33,17 @@ class TrailerTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 1]);
 
+        $mockTrailer = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->once()
+            ->andReturn(['foo' => 'bar'])
+            ->getMock();
+
         $this->repoMap['Trailer']
             ->shouldReceive('fetchUsingId')
             ->with($query)
-            ->andReturn(
-                [
-                    [
-                        'id' => 1
-                    ],
-                ]
-            );
+            ->andReturn($mockTrailer);
 
-        $this->sut->handleQuery($query);
+        $this->assertEquals(['foo' => 'bar'], $this->sut->handleQuery($query)->serialize());
     }
 }
