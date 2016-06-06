@@ -104,7 +104,7 @@ class CpidOrganisationExport implements MessageConsumerInterface
             . ($message ? ' ' . $message : '');
     }
 
-    private function failed(QueueEntity $item, $reason = null)
+    public function failed(QueueEntity $item, $reason = null)
     {
         $command = FailedCmd::create(['item' => $item]);
         $this->commandHandler->handleCommand($command);

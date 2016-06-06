@@ -55,7 +55,7 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
      * @param string $reason
      * @return string
      */
-    protected function failed(QueueEntity $item, $reason = null)
+    public function failed(QueueEntity $item, $reason = null)
     {
         $command = FailedCmd::create(['item' => $item]);
         $this->getServiceLocator()->get('CommandHandlerManager')

@@ -212,9 +212,13 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
     }
 
     /**
+     * Handles Send Email command
+     *
      * @param CommandInterface|SendEmailCmd $command
+     *
      * @return Result
      * @throws EmailNotSentException
+     * @throws \RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -292,6 +296,8 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
     }
 
     /**
+     * Sends an email
+     *
      * @param string $to
      * @param string $subject
      * @param string $plain
@@ -301,6 +307,9 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
      * @param array $cc
      * @param array $bcc
      * @param array $docs
+     *
+     * @return void
+     * @throws EmailNotSentException
      */
     protected function send($to, $subject, $plain, $html, $fromEmail, $fromName, array $cc, array $bcc, array $docs)
     {
