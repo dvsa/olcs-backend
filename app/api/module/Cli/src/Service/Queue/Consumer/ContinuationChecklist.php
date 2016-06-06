@@ -39,7 +39,7 @@ class ContinuationChecklist extends AbstractCommandConsumer
      * @param string $reason
      * @return string
      */
-    protected function failed(QueueEntity $item, $reason = null)
+    public function failed(QueueEntity $item, $reason = null)
     {
         $dtoData = [
             'id' => $item->getEntityId(),

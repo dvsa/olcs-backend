@@ -310,4 +310,28 @@ class EmailTest extends MockeryTestCase
             []
         );
     }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Email\Exception\EmailNotSentException
+     */
+    public function testSendHandlesException()
+    {
+        $transport = m::mock(TransportInterface::class);
+
+        $this->sut->setMailTransport($transport);
+
+        $transport->shouldReceive('send')
+            ->once()
+            ->with(m::type(Message::class))
+            ->andThrow(new \Exception());
+
+        $this->sut->send(
+            'foo@bar.com',
+            'foo',
+            'bar@foo.com',
+            'Subject',
+            'This is the content',
+            null
+        );
+    }
 }
