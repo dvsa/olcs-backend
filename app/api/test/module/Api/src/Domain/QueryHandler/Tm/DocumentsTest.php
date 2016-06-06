@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Tm\Documents as QueryHandler;
 use Dvsa\Olcs\Transfer\Query\Tm\Documents as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Mockery as m;
 
 /**
  * Documents Test
@@ -31,11 +33,17 @@ class DocumentsTest extends QueryHandlerTestCase
     {
         $query = Query::create(['id' => 1]);
 
+        $mockDocument = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->andReturn('foo')
+            ->once()
+            ->getMock();
+
         $this->repoMap['Document']
             ->shouldReceive('fetchListForTm')
             ->with(1)
             ->once()
-            ->andReturn(['foo'])
+            ->andReturn([$mockDocument])
             ->getMock();
 
         $this->assertSame(
