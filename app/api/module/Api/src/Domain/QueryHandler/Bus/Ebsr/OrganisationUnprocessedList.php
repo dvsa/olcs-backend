@@ -43,7 +43,7 @@ class OrganisationUnprocessedList extends AbstractQueryHandler implements AuthAw
         $results = $repo->fetchForOrganisationByStatus($organisation->getId(), EbsrSubmission::UPLOADED_STATUS);
 
         $documents = [];
-        
+
         /** @var EbsrSubmission $ebsrSub */
         foreach ($results as $ebsrSub) {
             $documents[] = $ebsrSub->getDocument();

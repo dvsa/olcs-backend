@@ -103,7 +103,7 @@ class DeleteDocumentTest extends CommandHandlerTestCase
             ->shouldReceive('delete')
             ->with($document);
 
-        $this->expectedSideEffect(DeleteSubmissionCmd::class,['id' => $ebsrSubId], new Result());
+        $this->expectedSideEffect(DeleteSubmissionCmd::class, ['id' => $ebsrSubId], new Result());
 
         $result = $this->sut->handleCommand($command);
 
