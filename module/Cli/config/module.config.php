@@ -3,6 +3,7 @@
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Cli\Domain\CommandHandler;
 use Dvsa\Olcs\Cli\Domain\Command;
+use Dvsa\Olcs\Cli;
 
 return [
     'console' => [
@@ -12,7 +13,7 @@ return [
                     'options' => [
                         'route' => 'licence-status-rules [--verbose|-v]',
                         'defaults' => [
-                            'controller' => 'BatchController',
+                            'controller' => Cli\Controller\BatchController::class,
                             'action' => 'licenceStatusRules'
                         ],
                     ],
@@ -21,7 +22,7 @@ return [
                     'options' => [
                         'route' => 'enqueue-ch-compare [--verbose|-v]',
                         'defaults' => [
-                            'controller' => 'BatchController',
+                            'controller' => Cli\Controller\BatchController::class,
                             'action' => 'enqueueCompaniesHouseCompare',
                         ],
                     ],
@@ -30,7 +31,7 @@ return [
                     'options' => [
                         'route' => 'duplicate-vehicle-warning [--verbose|-v]',
                         'defaults' => [
-                            'controller' => 'BatchController',
+                            'controller' => Cli\Controller\BatchController::class,
                             'action' => 'duplicateVehicleWarning',
                         ],
                     ],
@@ -39,7 +40,7 @@ return [
                     'options' => [
                         'route' => 'batch-cns [--verbose|-v] [--dryrun|-d]',
                         'defaults' => [
-                            'controller' => 'BatchController',
+                            'controller' => Cli\Controller\BatchController::class,
                             'action' => 'continuationNotSought'
                         ],
                     ],
@@ -48,7 +49,7 @@ return [
                     'options' => [
                         'route' => 'process-queue [--type=]',
                         'defaults' => [
-                            'controller' => 'QueueController',
+                            'controller' => Cli\Controller\QueueController::class,
                             'action' => 'index'
                         ],
                     ],
@@ -57,7 +58,7 @@ return [
                     'options' => [
                         'route' => 'process-inbox [--verbose|-v]',
                         'defaults' => [
-                            'controller' => 'BatchController',
+                            'controller' => Cli\Controller\BatchController::class,
                             'action' => 'processInboxDocuments'
                         ],
                     ],
@@ -66,7 +67,7 @@ return [
                     'options' => [
                         'route' => 'process-ntu [--verbose|-v]',
                         'defaults' => [
-                            'controller' => 'BatchController',
+                            'controller' => Cli\Controller\BatchController::class,
                             'action' => 'processNtu'
                         ],
                     ],
@@ -75,7 +76,7 @@ return [
                     'options' => [
                         'route' => 'inspection-request-email [--verbose|-v]',
                         'defaults' => [
-                            'controller' => 'BatchController',
+                            'controller' => Cli\Controller\BatchController::class,
                             'action' => 'inspectionRequestEmail'
                         ],
                     ],
@@ -84,7 +85,7 @@ return [
                     'options' => [
                         'route' => 'remove-read-audit [--verbose|-v]',
                         'defaults' => [
-                            'controller' => 'BatchController',
+                            'controller' => Cli\Controller\BatchController::class,
                             'action' => 'removeReadAudit'
                         ],
                     ],
@@ -93,7 +94,7 @@ return [
                     'options' => [
                         'route' => 'system-parameter <name> <value> [--verbose|-v]',
                         'defaults' => [
-                            'controller' => 'BatchController',
+                            'controller' => Cli\Controller\BatchController::class,
                             'action' => 'setSystemParameter'
                         ],
                     ],
@@ -102,7 +103,7 @@ return [
                     'options' => [
                         'route' => 'resolve-payments [--verbose|-v]',
                         'defaults' => [
-                            'controller' => 'BatchController',
+                            'controller' => Cli\Controller\BatchController::class,
                             'action' => 'resolvePayments',
                         ],
                     ],
@@ -113,8 +114,18 @@ return [
                             'create-vi-extract-files [--verbose|-v] [--oc|-oc] ' .
                             '[--op|-op] [--tnm|-tnm] [--vhl|-vhl] [--all|-all] [--path=]',
                         'defaults' => [
-                            'controller' => 'BatchController',
+                            'controller' => Cli\Controller\BatchController::class,
                             'action' => 'createViExtractFiles',
+                        ],
+                    ],
+                ],
+
+                'export-to-data-gov-uk' => [
+                    'options' => [
+                        'route' => 'data-gov-uk-export <report-name> [--verbose|-v] [--path=]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'dataGovUkExport',
                         ],
                     ],
                 ],
@@ -123,8 +134,8 @@ return [
     ],
     'controllers' => [
         'invokables' => [
-            'BatchController' => Dvsa\Olcs\Cli\Controller\BatchController::class,
-            'QueueController' => Dvsa\Olcs\Cli\Controller\QueueController::class,
+            Cli\Controller\BatchController::class => Cli\Controller\BatchController::class,
+            Cli\Controller\QueueController::class => Cli\Controller\QueueController::class,
         ]
     ],
     'cache' => [
@@ -169,8 +180,7 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting\CreatePsvVehicleList::class,
         ],
         'factories' => [
-            Queue::TYPE_CPID_EXPORT_CSV
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,
+            Queue::TYPE_CPID_EXPORT_CSV => Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,
         ]
     ],
     'queue' => [
@@ -185,6 +195,7 @@ return [
             Command\RemoveReadAudit::class => CommandHandler\RemoveReadAudit::class,
             Command\CreateViExtractFiles::class => CommandHandler\CreateViExtractFiles::class,
             Command\SetViFlags::class => CommandHandler\SetViFlags::class,
+            Command\DataGovUkExport::class => CommandHandler\DataGovUkExport::class,
         ]
     ],
     'batch_config' => [

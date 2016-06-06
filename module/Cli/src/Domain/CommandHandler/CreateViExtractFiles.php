@@ -1,16 +1,10 @@
 <?php
 
-/**
- * Create VI Extract files
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Create VI Extract files
