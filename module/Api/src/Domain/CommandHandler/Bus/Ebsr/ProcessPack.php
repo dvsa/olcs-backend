@@ -100,6 +100,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     protected $result;
 
     /**
+     * Creates the service, including the various input filters/validators
+     *
      * @param ServiceLocatorInterface $serviceLocator
      * @return TransactioningCommandHandler
      */
@@ -117,6 +119,9 @@ final class ProcessPack extends AbstractCommandHandler implements
     }
 
     /**
+     * Process the EBSR pack
+     * Error information is added into the ebsr_submission_result column of the ebsr_submission table
+     *
      * @param CommandInterface|ProcessPackCmd $command
      * @return Result
      * @throws \Exception
@@ -225,6 +230,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     }
 
     /**
+     * Calls the specified input filters/validators
+     *
      * @param string $filter
      * @param EbsrSubmissionEntity $ebsrSub
      * @param DocumentEntity $doc
@@ -263,6 +270,9 @@ final class ProcessPack extends AbstractCommandHandler implements
     }
 
     /**
+     * Processes a validation failure
+     * Sets submission to failed and queues error email
+     *
      * @param EbsrSubmissionEntity $ebsrSub
      * @param DocumentEntity $doc
      * @param array $messages
@@ -304,6 +314,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     }
 
     /**
+     * Adds error messages to the result object
+     *
      * @param DocumentEntity $doc
      * @param array $messages
      * @param string $xmlName
@@ -342,6 +354,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     }
 
     /**
+     * Sets the EBSR submission to failed, and saves the record
+     *
      * @param EbsrSubmissionEntity $ebsrSub
      * @param string $ebsrResultData
      * @return EbsrSubmissionEntity
@@ -400,6 +414,15 @@ final class ProcessPack extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns a list of side effects as a result of the EBSR submission success
+     *
+     * 1. Add supporting documents to the doc store
+     * 2. Create TXC inbox record
+     * 3. Create a task
+     * 4. Queue Transxchange map request
+     * 5. Create fee (optional)
+     * 6. Queue confirmation email
+     *
      * @param array $ebsrData
      * @param BusRegEntity $busReg
      * @param string $docPath
@@ -431,6 +454,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns a side effect to save the supporting documents and schematic map to the doc store
+     *
      * @param array $ebsrData
      * @param BusRegEntity $busReg
      * @param string $docPath
@@ -458,6 +483,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns an upload command to add the supporting docs to the doc store
+     *
      * @param string $content
      * @param BusRegEntity $busReg
      * @param string $filename
@@ -480,6 +507,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns a command to create a txc inbox record
+     *
      * @param int $busRegId
      * @return CreateTxcInboxCmd
      */
@@ -489,6 +518,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns a command to queue a transxchange map request
+     *
      * @param int $busRegId
      * @return RequestMapQueueCmd
      */
@@ -498,6 +529,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns a command to queue a data refresh email
+     *
      * @param int $ebsrId
      * @return SendEbsrRefreshedCmd
      */
@@ -507,6 +540,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns a command to queue a received email
+     *
      * @param int $ebsrId
      * @return SendEbsrReceivedCmd
      */
@@ -516,6 +551,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns a command to queue an error email
+     *
      * @param int $ebsrId
      * @return SendEbsrErrorsCmd
      */
@@ -525,6 +562,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns a command to create a task
+     *
      * @param BusRegEntity $busReg
      * @return CreateTaskCmd
      */
@@ -595,6 +634,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     }
 
     /**
+     * Creates a bus reg variation
+     *
      * @param BusRegEntity $busReg
      * @param string $status
      * @return BusRegEntity
@@ -652,6 +693,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     }
 
     /**
+     * Processes additional service numbers
+     *
      * @param BusRegEntity $busReg
      * @param array $serviceNumbers
      * @return BusRegEntity
