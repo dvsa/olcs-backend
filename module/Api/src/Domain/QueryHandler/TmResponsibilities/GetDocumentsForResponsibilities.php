@@ -42,7 +42,7 @@ class GetDocumentsForResponsibilities extends AbstractQueryHandler
                 );
         }
         return [
-            'result' => $documents,
+            'result' => $this->resultList($documents),
             'count' => count($documents),
         ];
     }

@@ -14,6 +14,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportMangerApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TransportMangerLicenceRepo;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 
 /**
  * GetDocumentsForResponsibilities Test
@@ -61,10 +62,16 @@ class GetDocumentsForResponsibilitiesTest extends QueryHandlerTestCase
             ->andReturn($tmApplicationMock)
             ->getMock();
 
+        $mockDocument = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->once()
+            ->andReturn('RESULT')
+            ->getMock();
+
         $this->repoMap['Document']
             ->shouldReceive('fetchListForTmApplication')
             ->with(2, 3)
-            ->andReturn(['RESULT'])
+            ->andReturn([$mockDocument])
             ->once()
             ->getMock();
 
@@ -106,10 +113,16 @@ class GetDocumentsForResponsibilitiesTest extends QueryHandlerTestCase
             ->andReturn($tmLicenceMock)
             ->getMock();
 
+        $mockDocument = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->once()
+            ->andReturn('RESULT')
+            ->getMock();
+
         $this->repoMap['Document']
             ->shouldReceive('fetchListForTmLicence')
             ->with(2, 3)
-            ->andReturn(['RESULT'])
+            ->andReturn([$mockDocument])
             ->once()
             ->getMock();
 
