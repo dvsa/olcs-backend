@@ -1,25 +1,19 @@
 <?php
 
-/**
- * Batch Controller Test
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Cli\Controller;
 
 use Dvsa\Olcs\Api\Domain\Command;
-use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Query;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Cli\Controller\BatchController;
-use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence;
+use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
 use Dvsa\Olcs\Transfer\Command\Application\NotTakenUpApplication;
-use Dvsa\Olcs\Api\Domain\Query\Application\NotTakenUpList;
-use Dvsa\Olcs\Transfer\Query\Application\Application;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\Console\Adapter\AdapterInterface;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\Plugin\Params;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\ServiceManager\ServiceManager;
@@ -30,37 +24,44 @@ use Zend\View\Model\JsonModel;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class BatchControllerTest extends TestCase
+class BatchControllerTest extends MockeryTestCase
 {
+    /** @var  BatchController */
     protected $sut;
 
-    protected $sm;
-
-    protected $pm;
+    /** @var ServiceManager|m\MockInterface */
+    private $sm;
+    /** @var PluginManager|m\MockInterface */
+    private $pm;
+    /** @var  AdapterInterface|m\MockInterface */
+    private $mockConsole;
+    /** @var m\MockInterface */
+    private $mockCommandHandler;
 
     protected function setUp()
     {
-        $this->sut = new BatchController();
+        $this->mockCommandHandler = m::mock(CommandHandlerManager::class);
 
-        $this->sm = m::mock(ServiceManager::class);
-        $this->sut->setServiceLocator($this->sm);
+        $this->sm = m::mock(ServiceManager::class)
+            ->shouldReceive('get')->with('CommandHandlerManager')->andReturn($this->mockCommandHandler)
+            ->getMock();
 
         $this->pm = m::mock(PluginManager::class);
         $this->pm->shouldReceive('setController');
 
-        $this->sut->setPluginManager($this->pm);
+        $this->mockConsole = m::mock(AdapterInterface::class);
 
+        $this->sut = new BatchController();
+        $this->sut
+            ->setConsole($this->mockConsole)
+            ->setPluginManager($this->pm)
+            ->setServiceLocator($this->sm);
     }
 
     public function testLicenceStatusRulesActionVerboseMessages()
     {
         $this->pm->shouldReceive('get')->with('params', null)->andReturn(true);
-
-        $mockConsole = m::mock(AdapterInterface::class);
-
-        $mockConsole->shouldReceive('writeLine');
-
-        $this->sut->setConsole($mockConsole);
+        $this->mockConsole->shouldReceive('writeLine');
 
         $this->sut->licenceStatusRulesAction();
     }
@@ -69,10 +70,10 @@ class BatchControllerTest extends TestCase
     {
         $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
 
-        $mockCommandHandler = m::mock();
-        $this->sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($mockCommandHandler);
-
-        $mockCommandHandler->shouldReceive('handleCommand')->twice()->andReturn(new Command\Result());
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->twice()
+            ->andReturn(new Command\Result());
 
         $this->sut->licenceStatusRulesAction();
     }
@@ -81,55 +82,52 @@ class BatchControllerTest extends TestCase
     {
         $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
 
-        $mockCommandHandler = m::mock();
-        $this->sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($mockCommandHandler);
-
-        $mockCommandHandler->shouldReceive('handleCommand')->once()->andThrow(Exception\NotFoundException::class);
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->once()
+            ->andThrow(Exception\NotFoundException::class);
 
         /* @var $result \Zend\View\Model\ConsoleModel */
         $result = $this->sut->licenceStatusRulesAction();
 
-        $this->assertSame(404, $result->getErrorLevel());
+        static::assertSame(404, $result->getErrorLevel());
     }
 
     public function testLicenceStatusRulesDomainException()
     {
         $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
 
-        $mockCommandHandler = m::mock();
-        $this->sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($mockCommandHandler);
-
-        $mockCommandHandler->shouldReceive('handleCommand')->once()->andThrow(Exception\RuntimeException::class);
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->once()
+            ->andThrow(Exception\RuntimeException::class);
 
         /* @var $result \Zend\View\Model\ConsoleModel */
         $result = $this->sut->licenceStatusRulesAction();
 
-        $this->assertSame(400, $result->getErrorLevel());
+        static::assertSame(Response::STATUS_CODE_400, $result->getErrorLevel());
     }
 
     public function testLicenceStatusRulesException()
     {
         $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
 
-        $mockCommandHandler = m::mock();
-        $this->sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($mockCommandHandler);
-
-        $mockCommandHandler->shouldReceive('handleCommand')->once()->andThrow(\Exception::class);
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->once()
+            ->andThrow(\Exception::class);
 
         /* @var $result \Zend\View\Model\ConsoleModel */
         $result = $this->sut->licenceStatusRulesAction();
 
-        $this->assertSame(500, $result->getErrorLevel());
+        static::assertSame(500, $result->getErrorLevel());
     }
 
     public function testEnqueueCompaniesHouseCompareAction()
     {
         $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
 
-        $mockCommandHandler = m::mock();
-        $this->sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($mockCommandHandler);
-
-        $mockCommandHandler
+        $this->mockCommandHandler
             ->shouldReceive('handleCommand')
             ->with(m::type(Command\CompaniesHouse\EnqueueOrganisations::class))
             ->once()
@@ -142,10 +140,7 @@ class BatchControllerTest extends TestCase
     {
         $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
 
-        $mockCommandHandler = m::mock();
-        $this->sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($mockCommandHandler);
-
-        $mockCommandHandler
+        $this->mockCommandHandler
             ->shouldReceive('handleCommand')
             ->with(m::type(Command\Vehicle\ProcessDuplicateVehicleWarnings::class))
             ->once()
@@ -156,34 +151,18 @@ class BatchControllerTest extends TestCase
 
     public function testContinuationNotSoughtAction()
     {
-        $mockParams =  m::mock(\Zend\Mvc\Controller\Plugin\Params::class)
-            ->shouldReceive('__invoke')
-            ->andReturnUsing(
-                function ($param) {
-                    $map = [
-                        'dryrun' => false,
-                        'verbose' => true,
-                    ];
-                    return isset($map[$param]) && $map[$param];
-                }
-            )
-            ->getMock();
+        $this->mockParamsPlugin(
+            [
+                'dryrun' => false,
+                'verbose' => true,
+            ]
+        );
 
-        $this->pm
-            ->shouldReceive('get')
-            ->with('params', null)
-            ->andReturn($mockParams);
-
-        $mockCommandHandler = m::mock();
         $mockQueryHandler = m::mock();
-        $mockConsole = m::mock(AdapterInterface::class);
 
         $now = new DateTime();
 
         $this->sm
-            ->shouldReceive('get')
-            ->with('CommandHandlerManager')
-            ->andReturn($mockCommandHandler)
             ->shouldReceive('get')
             ->with('QueryHandlerManager')
             ->andReturn($mockQueryHandler);
@@ -213,8 +192,8 @@ class BatchControllerTest extends TestCase
             ->shouldReceive('handleQuery')
             ->with(m::type(Query\Licence\ContinuationNotSoughtList::class))
             ->andReturnUsing(
-                function ($qry) use ($licences, $now) {
-                    $this->assertEquals(
+                function (Query\Licence\ContinuationNotSoughtList $qry) use ($licences, $now) {
+                    static::assertEquals(
                         $now->format('Y-m-d'),
                         $qry->getDate()->format('Y-m-d')
                     );
@@ -225,105 +204,85 @@ class BatchControllerTest extends TestCase
                 }
             );
 
-        $mockCommandHandler
+        $this->mockCommandHandler
             ->shouldReceive('handleCommand')
             ->with(m::type(Command\Licence\ProcessContinuationNotSought::class))
             ->twice()
-            ->andReturnUsing(
-                function ($cmd) {
-                    $result = new Command\Result();
-                    $result->addMessage('Licence updated');
-                    return $result;
-                }
+            ->andReturn(
+                (new Command\Result())
+                    ->addMessage('Licence updated')
             );
 
-        $mockCommandHandler
+        $this->mockCommandHandler
             ->shouldReceive('handleCommand')
             ->with(m::type(Command\Email\SendContinuationNotSought::class))
             ->once()
             ->andReturnUsing(
-                function ($cmd) use ($licences, $now) {
-                    $this->assertEquals($now->format('Y-m-d'), $cmd->getDate()->format('Y-m-d'));
-                    $this->assertSame($licences, $cmd->getLicences());
+                function (Command\Email\SendContinuationNotSought $cmd) use ($licences, $now) {
+                    static::assertEquals($now->format('Y-m-d'), $cmd->getDate()->format('Y-m-d'));
+                    static::assertSame($licences, $cmd->getLicences());
                     $result = new Command\Result();
                     $result->addMessage('Email sent');
                     return $result;
                 }
             );
 
-        $mockConsole = m::mock(AdapterInterface::class);
-        $mockConsole->shouldReceive('writeLine')->times(9);
-        $this->sut->setConsole($mockConsole);
+        $this->mockConsole->shouldReceive('writeLine')->times(9);
 
         $this->sut->continuationNotSoughtAction();
     }
 
     public function testSetSystemParameter()
     {
-        $mockConsole = m::mock(AdapterInterface::class);
-        $mockConsole->shouldReceive('writeLine');
-        $this->sut->setConsole($mockConsole);
+        $this->mockConsole->shouldReceive('writeLine');
 
         $this->pm->shouldReceive('get')->with('params', null)->andReturn('NAME', 'VALUE');
 
-        $mockCommandHandler = m::mock();
-        $this->sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($mockCommandHandler);
-
-        $mockCommandHandler
+        $this->mockCommandHandler
             ->shouldReceive('handleCommand')
             ->with(m::type(Command\SystemParameter\Update::class))
             ->once()
             ->andReturnUsing(
-                function ($dto) {
-                    $this->assertSame('NAME', $dto->getId());
-                    $this->assertSame('VALUE', $dto->getParamValue());
+                function (Command\SystemParameter\Update $dto) {
+                    static::assertSame('NAME', $dto->getId());
+                    static::assertSame('VALUE', $dto->getParamValue());
 
                     return new Command\Result();
                 }
             );
 
         $response = $this->sut->setSystemParameterAction();
-        $this->assertSame(0, $response->getErrorLevel());
+        static::assertSame(0, $response->getErrorLevel());
     }
 
     public function testSetSystemParameterMissing()
     {
-        $mockConsole = m::mock(AdapterInterface::class);
-        $mockConsole->shouldReceive('writeLine');
-        $this->sut->setConsole($mockConsole);
+        $this->mockConsole->shouldReceive('writeLine');
 
         $this->pm->shouldReceive('get')->with('params', null)->andReturn('MISSING', 'VALUE');
 
-        $mockCommandHandler = m::mock();
-        $this->sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($mockCommandHandler);
-
-        $mockCommandHandler
+        $this->mockCommandHandler
             ->shouldReceive('handleCommand')
             ->with(m::type(Command\SystemParameter\Update::class))
             ->once()
             ->andThrow(Exception\NotFoundException::class);
 
         $response = $this->sut->setSystemParameterAction();
-        $this->assertSame(404, $response->getErrorLevel());
+        static::assertSame(404, $response->getErrorLevel());
     }
 
     public function testCreateViExtractFilesAction()
     {
-        $mockConsole = m::mock(AdapterInterface::class);
-        $mockConsole->shouldReceive('writeLine');
-        $this->sut->setConsole($mockConsole);
+        $this->mockConsole->shouldReceive('writeLine');
 
         $this->pm->shouldReceive('get')->with('params', null)->andReturn(true, true, true, true, true);
 
-        $mockCommandHandler = m::mock();
-        $this->sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($mockCommandHandler);
-
-        $mockCommandHandler
+        $this->mockCommandHandler
             ->shouldReceive('handleCommand')
             ->with(m::type(CliCommand\SetViFlags::class))
             ->once()
             ->andReturn(new Command\Result());
-        $mockCommandHandler
+        $this->mockCommandHandler
             ->shouldReceive('handleCommand')
             ->with(m::type(CliCommand\CreateViExtractFiles::class))
             ->once()
@@ -334,49 +293,34 @@ class BatchControllerTest extends TestCase
 
     public function testProcessNtuAction()
     {
-        $mockParams =  m::mock(\Zend\Mvc\Controller\Plugin\Params::class)
-            ->shouldReceive('__invoke')
-            ->andReturnUsing(
-                function ($param) {
-                    $map = [
-                        'dryrun' => false,
-                        'verbose' => true,
-                    ];
-                    return isset($map[$param]) && $map[$param];
-                }
-            )
-            ->getMock();
+        $this->mockParamsPlugin(
+            [
+                'dryrun' => false,
+                'verbose' => true,
+            ]
+        );
 
-        $this->pm
-            ->shouldReceive('get')
-            ->with('params', null)
-            ->andReturn($mockParams);
-
-        $mockCommandHandler = m::mock();
         $mockQueryHandler = m::mock();
 
         $now = new DateTime();
 
         $this->sm
             ->shouldReceive('get')
-            ->with('CommandHandlerManager')
-            ->andReturn($mockCommandHandler)
-            ->shouldReceive('get')
             ->with('QueryHandlerManager')
             ->andReturn($mockQueryHandler);
 
         $application = [
-            'id' => 1
+            'id' => 1,
         ];
 
         $applications = [$application];
 
         $mockQueryHandler
             ->shouldReceive('handleQuery')
-            ->with(m::type(NotTakenUpList::class))
+            ->with(m::type(Query\Application\NotTakenUpList::class))
             ->andReturnUsing(
-                function ($qry) use ($applications, $now) {
-                    $this->assertEquals(
+                function (Query\Application\NotTakenUpList $qry) use ($applications, $now) {
+                    static::assertEquals(
                         $now->format('Y-m-d'),
                         $qry->getDate()->format('Y-m-d')
                     );
@@ -387,54 +331,38 @@ class BatchControllerTest extends TestCase
                 }
             );
 
-        $mockCommandHandler
+        $this->mockCommandHandler
             ->shouldReceive('handleCommand')
             ->with(m::type(NotTakenUpApplication::class))
             ->once()
-            ->andReturnUsing(
-                function ($cmd) {
-                    $result = new Command\Result();
-                    $result->addMessage('Processing Application ID 1');
-                    return $result;
-                }
+            ->andReturn(
+                (new Command\Result())
+                    ->addMessage('Processing Application ID 1')
             );
 
-        $mockConsole = m::mock(AdapterInterface::class);
-        $mockConsole->shouldReceive('writeLine')->times(5);
-        $this->sut->setConsole($mockConsole);
+        $this->mockConsole->shouldReceive('writeLine')->times(5);
 
         $this->sut->processNtuAction();
-
     }
 
     /**
      * @dataProvider exceptionClassesProvider
+     *
      * @param string $exceptionClass
-     * @param int $outputCount
+     * @param int    $outputCount
      */
     public function testProcessNtuActionWithExceptions($exceptionClass, $outputCount)
     {
-        $mockParams =  m::mock(\Zend\Mvc\Controller\Plugin\Params::class)
-            ->shouldReceive('__invoke')
-            ->andReturnUsing(
-                function ($param) {
-                    $map = [
-                        'dryrun' => false,
-                        'verbose' => true,
-                    ];
-                    return isset($map[$param]) && $map[$param];
-                }
-            )
-            ->getMock();
-
-        $this->pm
-            ->shouldReceive('get')
-            ->with('params', null)
-            ->andReturn($mockParams);
+        $this->mockParamsPlugin(
+            [
+                'dryrun' => false,
+                'verbose' => true,
+            ]
+        );
 
         $mockQueryHandler = m::mock()
             ->shouldReceive('handleQuery')
-            ->with(m::type(NotTakenUpList::class))
+            ->with(m::type(Query\Application\NotTakenUpList::class))
             ->andThrow($exceptionClass)
             ->once()
             ->getMock();
@@ -444,9 +372,7 @@ class BatchControllerTest extends TestCase
             ->with('QueryHandlerManager')
             ->andReturn($mockQueryHandler);
 
-        $mockConsole = m::mock(AdapterInterface::class);
-        $mockConsole->shouldReceive('writeLine')->times($outputCount);
-        $this->sut->setConsole($mockConsole);
+        $this->mockConsole->shouldReceive('writeLine')->times($outputCount);
 
         $this->sut->processNtuAction();
     }
@@ -459,29 +385,18 @@ class BatchControllerTest extends TestCase
         return [
             [Exception\NotFoundException::class, 3],
             [Exception\Exception::class, 2],
-            [\Exception::class, 2]
+            [\Exception::class, 2],
         ];
     }
 
     public function testProcessNtuActionWithDryRun()
     {
-        $mockParams =  m::mock(\Zend\Mvc\Controller\Plugin\Params::class)
-            ->shouldReceive('__invoke')
-            ->andReturnUsing(
-                function ($param) {
-                    $map = [
-                        'dryrun' => true,
-                        'verbose' => true,
-                    ];
-                    return isset($map[$param]) && $map[$param];
-                }
-            )
-            ->getMock();
-
-        $this->pm
-            ->shouldReceive('get')
-            ->with('params', null)
-            ->andReturn($mockParams);
+        $this->mockParamsPlugin(
+            [
+                'dryrun' => true,
+                'verbose' => true,
+            ]
+        );
 
         $mockQueryHandler = m::mock();
 
@@ -498,10 +413,10 @@ class BatchControllerTest extends TestCase
 
         $mockQueryHandler
             ->shouldReceive('handleQuery')
-            ->with(m::type(NotTakenUpList::class))
+            ->with(m::type(Query\Application\NotTakenUpList::class))
             ->andReturnUsing(
-                function ($qry) use ($applications, $now) {
-                    $this->assertEquals(
+                function (Query\Application\NotTakenUpList $qry) use ($applications, $now) {
+                    static::assertEquals(
                         $now->format('Y-m-d'),
                         $qry->getDate()->format('Y-m-d')
                     );
@@ -512,10 +427,51 @@ class BatchControllerTest extends TestCase
                 }
             );
 
-        $mockConsole = m::mock(AdapterInterface::class);
-        $mockConsole->shouldReceive('writeLine')->times(3);
-        $this->sut->setConsole($mockConsole);
+        $this->mockConsole->shouldReceive('writeLine')->times(3);
 
         $this->sut->processNtuAction();
+    }
+
+    public function testDataGovUkExport()
+    {
+        $this->mockParamsPlugin(
+            [
+                'report-name' => 'unit_ReportName',
+                'path' => 'unit_Path',
+                'verbose' => true,
+            ]
+        );
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(CliCommand\DataGovUkExport::class))
+            ->once()
+            ->andReturn(
+                (new Command\Result())
+                    ->addMessage('unit_message')
+            );
+
+        $this->mockConsole
+            ->shouldReceive('writeLine')->once()->with('/' . addslashes(CliCommand\DataGovUkExport::class) . '$/')
+            ->shouldReceive('writeLine')->once()->with('/unit_message$/');
+
+        $this->sut->dataGovUkExportAction();
+    }
+
+    private function mockParamsPlugin(array $map)
+    {
+        $mockParams = m::mock(\Zend\Mvc\Controller\Plugin\Params::class)
+            ->shouldReceive('__invoke')
+            ->andReturnUsing(
+                function ($param) use ($map) {
+                    return isset($map[$param]) && $map[$param];
+                }
+            )
+            ->getMock();
+
+        $this->pm
+            ->shouldReceive('get')
+            ->with('params', null)
+            ->andReturn($mockParams);
     }
 }

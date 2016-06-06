@@ -1,23 +1,18 @@
 <?php
 
-/**
- * BatchController
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Cli\Controller;
 
-use Dvsa\Olcs\Cli\Domain\Command\RemoveReadAudit;
-use Dvsa\Olcs\Cli\Domain\Command\CreateViExtractFiles;
+use Dvsa\Olcs\Api\Domain\Command;
+use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\Query;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
+use Dvsa\Olcs\Transfer\Command as TransferCommand;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Olcs\Logging\Log\Logger;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractConsoleController;
 use Zend\View\Model\ConsoleModel;
-use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Api\Domain\Command;
-use Dvsa\Olcs\Api\Domain\Query;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Transfer\Command as TransferCommand;
-use Olcs\Logging\Log\Logger;
 
 /**
  * BatchController
@@ -31,7 +26,7 @@ class BatchController extends AbstractConsoleController
      */
     public function removeReadAuditAction()
     {
-        return $this->handleExitStatus($this->handleCommand([RemoveReadAudit::create([])]));
+        return $this->handleExitStatus($this->handleCommand([CliCommand\RemoveReadAudit::create([])]));
     }
 
     /**
@@ -127,7 +122,6 @@ class BatchController extends AbstractConsoleController
 
         // execute commands
         if (!$dryRun) {
-
             // @todo This process is memory intensive and slow, recommend to BJSS that cli jobs need min 512M
             // Then remove this
             $memoryLimit = ini_set('memory_limit', '512M');
@@ -208,7 +202,7 @@ class BatchController extends AbstractConsoleController
 
         $result = $this->handleCommand([$dto]);
 
-        if ($result === 404) {
+        if ($result === Response::STATUS_CODE_404) {
             $this->writeVerboseMessages("SystemParameter with name '{$name}' was not found.");
         }
 
@@ -257,10 +251,27 @@ class BatchController extends AbstractConsoleController
         return $this->handleExitStatus(
             $this->handleCommand(
                 [
-                    \Dvsa\Olcs\Cli\Domain\Command\SetViFlags::create([]),
-                    CreateViExtractFiles::create($params),
+                    CliCommand\SetViFlags::create([]),
+                    CliCommand\CreateViExtractFiles::create($params),
                 ]
             )
+        );
+    }
+
+    /**
+     * Create csv files for data.org.uk
+     *
+     * @return ConsoleModel
+     */
+    public function dataGovUkExportAction()
+    {
+        $params = [
+            'reportName' =>  $this->params('report-name'),
+            'path' =>  $this->params('path'),
+        ];
+
+        return $this->handleExitStatus(
+            $this->handleCommand([CliCommand\DataGovUkExport::create($params)])
         );
     }
 
@@ -308,7 +319,10 @@ class BatchController extends AbstractConsoleController
             foreach ($dto as $dtoCommand) {
                 $count++;
                 $this->writeVerboseMessages("Handle command ". $count .' '. get_class($dtoCommand));
+
+                /** @var \Dvsa\Olcs\Api\Domain\Command\Result $result */
                 $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dtoCommand);
+
                 $this->writeVerboseMessages($result->getMessages());
             }
         } catch (Exception\NotFoundException $e) {
