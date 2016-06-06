@@ -12,6 +12,8 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\CpidOrganisation;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation;
 use Dvsa\Olcs\Transfer\Query\Organisation\CpidOrganisation as Qry;
+use Mockery as m;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 
 /**
  * CpidOrganisationExportTest.php
@@ -30,21 +32,30 @@ class CpidOrganisationTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
-        $data = [
-            'cpid' => null
-        ];
+        $query = Qry::create(['cpid' => 1]);
 
-        $query = Qry::create($data);
+        $mockCpid = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->once()
+            ->andReturn(['foo' => 'bar'])
+            ->getMock();
 
         $this->repoMap['Organisation']
             ->shouldReceive('fetchByStatusPaginated')
-            ->with($query);
+            ->with($query)
+            ->andReturn(
+                [
+                    'count' => 1,
+                    'result' => [$mockCpid]
+                ]
+            )
+            ->getMock();
 
         $this->assertEquals(
             $this->sut->handleQuery($query),
             [
-                'result' => null,
-                'count' => null
+                'result' => [['foo' => 'bar']],
+                'count' => 1
             ]
         );
     }
