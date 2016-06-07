@@ -24,7 +24,7 @@ class CpidOrganisation extends AbstractQueryHandler
         $result = $this->getRepo()->fetchByStatusPaginated($query);
 
         return [
-            'result' => $result['result'],
+            'result' => $this->resultList($result['result']),
             'count' => $result['count']
         ];
     }
