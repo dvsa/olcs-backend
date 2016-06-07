@@ -13,10 +13,18 @@ final class AnnualTestHistory extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Cases';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
-        $case = $this->getRepo()->fetchUsingId($query);
-
-        return $case;
+        return $this->result(
+            $this->getRepo()->fetchUsingId($query)
+        );
     }
 }

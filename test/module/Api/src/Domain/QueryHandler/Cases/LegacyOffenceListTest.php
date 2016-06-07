@@ -11,6 +11,9 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\LegacyOffenceList;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\LegacyOffence as LegacyOffenceRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\LegacyOffenceList as Qry;
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Mockery as m;
 
 /**
  * LegacyOffenceList Test
@@ -31,16 +34,22 @@ class LegacyOffenceListTest extends QueryHandlerTestCase
     {
         $query = Qry::create([]);
 
+        $mockLegacyOffence = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar'])
+            ->once()
+            ->getMock();
+
         $this->repoMap['LegacyOffence']->shouldReceive('fetchList')
-            ->with($query)
-            ->andReturn(['foo']);
+            ->with($query, Query::HYDRATE_OBJECT)
+            ->andReturn([$mockLegacyOffence]);
 
         $this->repoMap['LegacyOffence']->shouldReceive('fetchCount')
             ->with($query)
-            ->andReturn(2);
+            ->andReturn(1);
 
         $result = $this->sut->handleQuery($query);
-        $this->assertEquals($result['count'], 2);
-        $this->assertEquals($result['result'], ['foo']);
+        $this->assertEquals($result['count'], 1);
+        $this->assertEquals($result['result'], [['foo' => 'bar']]);
     }
 }
