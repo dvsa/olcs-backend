@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Task\TaskDetails;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\TaskSearchView as Repo;
 use Dvsa\Olcs\Transfer\Query\Task\TaskDetails as Qry;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 
 /**
  * Task Details Test
@@ -33,10 +34,16 @@ class TaskDetailsTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
-        $this->repoMap['TaskSearchView']->shouldReceive('fetchUsingId')
-            ->with($query, Query::HYDRATE_ARRAY)
-            ->andReturn(['foo' => 'bar']);
+        $mockTask = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar'])
+            ->once()
+            ->getMock();
 
-        $this->assertEquals(['foo' => 'bar'], $this->sut->handleQuery($query));
+        $this->repoMap['TaskSearchView']->shouldReceive('fetchUsingId')
+            ->with($query)
+            ->andReturn($mockTask);
+
+        $this->assertEquals(['foo' => 'bar'], $this->sut->handleQuery($query)->serialize());
     }
 }

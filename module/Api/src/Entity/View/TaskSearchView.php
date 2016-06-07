@@ -17,6 +17,8 @@
 namespace Dvsa\Olcs\Api\Entity\View;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 
 /**
  * Task Search View
@@ -24,8 +26,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(readOnly=true)
  * @ORM\Table(name="task_search_view")
  */
-class TaskSearchView
+class TaskSearchView implements BundleSerializableInterface
 {
+    use BundleSerializableTrait;
+
     /**
      * Id
      *
