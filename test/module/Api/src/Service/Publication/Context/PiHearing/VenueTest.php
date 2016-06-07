@@ -6,8 +6,6 @@ use Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\Venue;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 
@@ -24,7 +22,7 @@ class VenueTest extends MockeryTestCase
      */
     public function testProvide()
     {
-        $venueAddress = 'venue address';
+        $venueAddress = 'al1, al2, Town, pc';
         $venueName = 'venue name';
         $venueId = 99;
 
@@ -39,14 +37,26 @@ class VenueTest extends MockeryTestCase
 
         $expectedOutput = new \ArrayObject($output);
 
-        $addressEntityMock = m::mock(AddressEntity::class);
-
-        $venueMock = m::mock(VenueEntity::class);
-        $venueMock->shouldReceive('getName')->once()->andReturn($venueName);
-        $venueMock->shouldReceive('getAddress')->once()->andReturn($addressEntityMock);
+        $venueResult = m::mock()
+            ->shouldReceive('serialize')
+            ->andReturn(
+                [
+                    'name' => $venueName,
+                    'address' => [
+                        'addressLine1' => 'al1',
+                        'addressLine2' => 'al2',
+                        'addressLine3' => null,
+                        'addressLine4' => null,
+                        'town' => 'Town',
+                        'postcode' => 'pc'
+                    ]
+                ]
+            )
+            ->once()
+            ->getMock();
 
         $mockQueryHandler = m::mock(QueryHandlerInterface::class);
-        $mockQueryHandler->shouldReceive('handleQuery')->once()->andReturn($venueMock);
+        $mockQueryHandler->shouldReceive('handleQuery')->once()->andReturn($venueResult);
 
         $mockAddressFormatter = m::mock(FormatAddress::class);
         $mockAddressFormatter->shouldReceive('format')->once()->andReturn($venueAddress);

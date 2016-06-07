@@ -39,11 +39,14 @@ class PreviousPublicationNoTest extends MockeryTestCase
         $publication->shouldReceive('getPublication->getPublicationNo')->once()->andReturn($currentPublicationNo);
         $publication->shouldReceive('getTrafficArea')->once()->andReturn($trafficArea);
 
-        $previousPublicationResult = m::mock(PublicationLink::class);
-        $previousPublicationResult
-            ->shouldReceive('getPublication->getPublicationNo')
+        $previousPublicationResult = m::mock()
+            ->shouldReceive('isEmpty')
+            ->andReturn(false)
             ->once()
-            ->andReturn($previousPublicationNo);
+            ->shouldReceive('serialize')
+            ->andReturn(['publication' => ['publicationNo' => $previousPublicationNo]])
+            ->once()
+            ->getMock();
 
         $mockQueryHandler = m::mock(QueryHandlerInterface::class);
         $mockQueryHandler->shouldReceive('handleQuery')->once()->andReturn($previousPublicationResult);

@@ -14,8 +14,19 @@ class VenueBundle extends AbstractBundle
 {
     protected $repoServiceName = 'Venue';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchUsingId($query);
+        return $this->result(
+            $this->getRepo()->fetchUsingId($query),
+            ['address']
+        );
     }
 }

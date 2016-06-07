@@ -76,4 +76,10 @@ class ResultTest extends MockeryTestCase
         $result->setValue('cake', 'choc');
         $this->assertEquals($expected, $result->serialize());
     }
+
+    public function testResult()
+    {
+        $result = new Result(m::mock(BundleSerializableInterface::class));
+        $this->assertFalse($result->isEmpty());
+    }
 }

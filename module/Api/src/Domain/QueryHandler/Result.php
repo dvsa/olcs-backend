@@ -24,6 +24,15 @@ class Result
      */
     protected $values = [];
 
+    /**
+     * Constructor
+     *
+     * @param BundleSerializableInterface $object object
+     * @param array                       $bundle bundle
+     * @param array                       $values values
+     *
+     * @return void
+     */
     public function __construct(BundleSerializableInterface $object, array $bundle = [], array $values = [])
     {
         $this->object = $object;
@@ -31,6 +40,14 @@ class Result
         $this->values = $values;
     }
 
+    /**
+     * Set value
+     *
+     * @param string $key   key
+     * @param mixed  $value value
+     *
+     * @return void
+     */
     public function setValue($key, $value)
     {
         $this->values[$key] = $value;
@@ -38,11 +55,23 @@ class Result
 
     /**
      * Recursively serialize objects based on the bundle
+     *
+     * @return array
      */
     public function serialize()
     {
         $data = $this->object->serialize($this->bundle);
 
         return array_merge($data, $this->values);
+    }
+
+    /**
+     * Check if Result is empty
+     *
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return $this->object === null;
     }
 }
