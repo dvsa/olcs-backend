@@ -15,8 +15,19 @@ class PreviousPublication extends AbstractQueryHandler
 {
     protected $repoServiceName = 'PublicationLink';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchPreviousPublicationNo($query);
+        return $this->result(
+            $this->getRepo()->fetchPreviousPublicationNo($query),
+            ['publication']
+        );
     }
 }
