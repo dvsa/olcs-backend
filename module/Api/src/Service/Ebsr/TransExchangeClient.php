@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr;
 
-use Dvsa\Olcs\Api\Domain\Exception\RestResponseException;
+use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Validator\Xsd;
@@ -60,7 +60,7 @@ class TransExchangeClient implements TransExchangeClientInterface
 
     /**
      * @param string $content
-     * @throws RestResponseException
+     * @throws TransxchangeException
      * @return array
      */
     public function makeRequest($content)
@@ -79,7 +79,7 @@ class TransExchangeClient implements TransExchangeClientInterface
         //validate against schema
         if (!($this->xsdValidator->isValid($dom))) {
             Logger::info('TransXchange error', ['data' => self::TRANSXCHANGE_INVALID_XML]);
-            throw new RestResponseException(self::TRANSXCHANGE_INVALID_XML);
+            throw new TransxchangeException(self::TRANSXCHANGE_INVALID_XML);
         }
 
         return $this->xmlFilter->filter($dom);
