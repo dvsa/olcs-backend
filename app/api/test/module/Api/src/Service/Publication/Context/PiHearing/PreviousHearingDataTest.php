@@ -3,11 +3,9 @@
 namespace Dvsa\OlcsTest\Api\Service\Publication\Context\PiHearing;
 
 use Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PreviousHearingData;
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\PreviousHearingBundle;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 
 /**
@@ -42,11 +40,17 @@ class PreviousHearingDataTest extends MockeryTestCase
         $publication = m::mock(PublicationLink::class);
         $publication->shouldReceive('getPi->getId')->once()->andReturn($pi);
 
-        $piHearingMock = m::mock(PiHearingEntity::class);
-        $piHearingMock->shouldReceive('getAdjournedDate')->once()->andReturn($adjournedDate);
+        $piHearingResult = m::mock();
+        $piHearingResult->shouldReceive('isEmpty')
+            ->andReturn(false)
+            ->once()
+            ->shouldReceive('serialize')
+            ->andReturn(['adjournedDate' => $adjournedDate])
+            ->once()
+            ->getMock();
 
         $mockQueryHandler = m::mock(QueryHandlerInterface::class);
-        $mockQueryHandler->shouldReceive('handleQuery')->once()->andReturn($piHearingMock);
+        $mockQueryHandler->shouldReceive('handleQuery')->once()->andReturn($piHearingResult);
 
         $sut = new PreviousHearingData($mockQueryHandler);
 

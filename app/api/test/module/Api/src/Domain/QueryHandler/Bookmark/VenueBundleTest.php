@@ -33,12 +33,16 @@ class VenueBundleTest extends QueryHandlerTestCase
         $query = Qry::create(['id' => $id, 'bundle' => $bundle]);
 
         /** @var Entity $entity */
-        $entity = m::mock(Entity::class);
+        $entity = m::mock(Entity::class)
+            ->shouldReceive('serialize')
+            ->once()
+            ->andReturn(['foo' => 'bar'])
+            ->getMock();
 
         $this->repoMap['Venue']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($entity);
 
-        $this->assertEquals($entity, $this->sut->handleQuery($query));
+        $this->assertEquals(['foo' => 'bar'], $this->sut->handleQuery($query)->serialize());
     }
 }

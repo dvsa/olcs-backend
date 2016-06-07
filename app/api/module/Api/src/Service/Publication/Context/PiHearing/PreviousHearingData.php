@@ -16,6 +16,14 @@ final class PreviousHearingData extends AbstractContext
 {
     private static $bundle = [];
 
+    /**
+     * Provide
+     *
+     * @param PublicationLink $publication publication
+     * @param \ArrayObject    $context     context
+     *
+     * @return \ArrayObject
+     */
     public function provide(PublicationLink $publication, \ArrayObject $context)
     {
         $params = [
@@ -27,9 +35,9 @@ final class PreviousHearingData extends AbstractContext
         /** @var PiHearing $previousHearing */
         $query = PreviousHearingBundle::create($params);
         $previousHearing = $this->handleQuery($query);
-
-        if ($previousHearing instanceof PiHearing) {
-            $date = new \DateTime($previousHearing->getAdjournedDate());
+        if (!$previousHearing->isEmpty()) {
+            $ph = $previousHearing->serialize();
+            $date = new \DateTime($ph['adjournedDate']);
             $context->offsetSet('previousHearing', $date->format('d F Y'));
         }
 

@@ -15,6 +15,14 @@ final class PreviousPublicationNo extends AbstractContext
 {
     private static $bundle = [];
 
+    /**
+     * Provide
+     *
+     * @param PublicationLink $publication publication
+     * @param \ArrayObject    $context     context
+     *
+     * @return \ArrayObject
+     */
     public function provide(PublicationLink $publication, \ArrayObject $context)
     {
         $params = [
@@ -30,8 +38,9 @@ final class PreviousPublicationNo extends AbstractContext
         /** @var PublicationLink $previousPublication */
         $previousPublication = $this->handleQuery($query);
 
-        if ($previousPublication instanceof PublicationLink) {
-            $context->offsetSet('previousPublication', $previousPublication->getPublication()->getPublicationNo());
+        if (!$previousPublication->isEmpty()) {
+            $pp = $previousPublication->serialize();
+            $context->offsetSet('previousPublication', $pp['publication']['publicationNo']);
         }
 
         return $context;

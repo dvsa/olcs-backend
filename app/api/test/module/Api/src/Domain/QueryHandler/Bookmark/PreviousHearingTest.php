@@ -34,12 +34,16 @@ class PreviousHearingTest extends QueryHandlerTestCase
         $query = Qry::create(['pi' => $pi, 'hearingDate' => $hearingDate, 'bundle' => $bundle]);
 
         /** @var Entity $entity */
-        $entity = m::mock(Entity::class);
+        $entity = m::mock(Entity::class)
+            ->shouldReceive('serialize')
+            ->once()
+            ->andReturn(['foo' => 'bar'])
+            ->getMock();
 
         $this->repoMap['PiHearing']->shouldReceive('fetchPreviousHearing')
             ->with($pi, m::type(\DateTime::class))
             ->andReturn($entity);
 
-        $this->assertEquals($entity, $this->sut->handleQuery($query));
+        $this->assertEquals(['foo' => 'bar'], $this->sut->handleQuery($query)->serialize());
     }
 }
