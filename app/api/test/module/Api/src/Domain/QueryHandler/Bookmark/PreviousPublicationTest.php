@@ -44,12 +44,16 @@ class PreviousPublicationTest extends QueryHandlerTestCase
         );
 
         /** @var Entity $entity */
-        $entity = m::mock(Entity::class);
+        $entity = m::mock(Entity::class)
+            ->shouldReceive('serialize')
+            ->once()
+            ->andReturn(['foo' => 'bar'])
+            ->getMock();
 
         $this->repoMap['PublicationLink']->shouldReceive('fetchPreviousPublicationNo')
             ->with($query)
             ->andReturn($entity);
 
-        $this->assertEquals($entity, $this->sut->handleQuery($query));
+        $this->assertEquals(['foo' => 'bar'], $this->sut->handleQuery($query)->serialize());
     }
 }

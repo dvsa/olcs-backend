@@ -15,8 +15,18 @@ class PreviousHearing extends AbstractQueryHandler
 {
     protected $repoServiceName = 'PiHearing';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchPreviousHearing($query->getPi(), new \DateTime($query->getHearingDate()));
+        return $this->result(
+            $this->getRepo()->fetchPreviousHearing($query->getPi(), new \DateTime($query->getHearingDate()))
+        );
     }
 }
