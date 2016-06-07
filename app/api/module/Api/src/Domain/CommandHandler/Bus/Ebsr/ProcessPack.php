@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Process Ebsr packs
+ * Process Ebsr pack
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
@@ -16,14 +16,18 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
+use Dvsa\Olcs\Api\Domain\Repository\BusServiceType as BusServiceTypeRepo;
 use Dvsa\Olcs\Api\Entity\Bus\BusServiceType as BusServiceTypeEntity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as TrafficAreaRepo;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
+use Dvsa\Olcs\Api\Domain\Repository\LocalAuthority as LocalAuthorityRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
-use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\ProcessPacks as ProcessPacksCmd;
+use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessPack as ProcessPackCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateBusFeeCmd;
@@ -42,11 +46,12 @@ use Dvsa\Olcs\Api\Domain\FileProcessorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Doctrine\ORM\Query;
 use Doctrine\Common\Util\Debug as DoctrineDebug;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 
 /**
- * Process Ebsr packs
+ * Process Ebsr pack
  */
-final class ProcessPacks extends AbstractCommandHandler implements
+final class ProcessPack extends AbstractCommandHandler implements
     AuthAwareInterface,
     TransactionedInterface,
     UploaderAwareInterface,
@@ -95,15 +100,11 @@ final class ProcessPacks extends AbstractCommandHandler implements
     protected $result;
 
     /**
-     * @var int
+     * Creates the service, including the various input filters/validators
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return TransactioningCommandHandler
      */
-    protected $validPacks = 0;
-
-    /**
-     * @var int
-     */
-    protected $invalidPacks = 0;
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
@@ -118,119 +119,119 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
-     * @param CommandInterface $command
+     * Process the EBSR pack
+     * Error information is added into the ebsr_submission_result column of the ebsr_submission table
+     *
+     * @param CommandInterface|ProcessPackCmd $command
      * @return Result
      * @throws \Exception
      */
     public function handleCommand(CommandInterface $command)
     {
-        /** @var ProcessPacksCmd $command */
-        $packs = $command->getPacks();
+        /** @var EbsrSubmissionEntity $ebsrSub */
+        $ebsrSub = $this->getRepo('EbsrSubmission')->fetchUsingId($command);
+        $ebsrSub->beginValidating($this->getRepo()->getRefdataReference(EbsrSubmissionEntity::VALIDATING_STATUS));
+        $this->getRepo('EbsrSubmission')->save($ebsrSub);
+
+        $this->result->addId('ebsrSubmission', $ebsrSub->getId());
 
         /** @var OrganisationEntity $organisation */
-        $organisation = $this->getCurrentOrganisation();
+        $organisation = $ebsrSub->getOrganisation();
 
-        foreach ($packs as $packId) {
-            /** @var DocumentEntity $doc */
-            $doc = $this->getRepo('Document')->fetchById($packId);
-            $ebsrSub = $this->createEbsrSubmission($organisation, $doc, $command->getSubmissionType());
-            $this->getRepo('EbsrSubmission')->save($ebsrSub);
-            $this->result->addId('ebsrSubmission_' . $ebsrSub->getId(), $ebsrSub->getId());
+        /** @var DocumentEntity $doc */
+        $doc = $ebsrSub->getDocument();
 
-            try {
-                $xmlName = $this->getFileProcessor()->fetchXmlFileNameFromDocumentStore($doc->getIdentifier());
-            } catch (\RuntimeException $e) {
-                //process the validation failure information
-                $this->processValidationFailure($ebsrSub, $doc, ['upload-failure' => $e->getMessage()], '', []);
+        try {
+            $xmlName = $this->getFileProcessor()->fetchXmlFileNameFromDocumentStore($doc->getIdentifier());
+        } catch (\RuntimeException $e) {
+            //process the validation failure information
+            $this->processValidationFailure($ebsrSub, $doc, ['upload-failure' => $e->getMessage()], '', []);
 
-                continue;
-            }
-
-            //validate the xml structure
-            $xmlDocContext = ['xml_filename' => $xmlName];
-            $ebsrDoc = $this->validateInput('xmlStructure', $ebsrSub, $doc, $xmlName, $xmlName, $xmlDocContext);
-
-            if ($ebsrDoc === false) {
-                continue;
-            }
-
-            $busRegInputContext = [
-                'submissionType' => $command->getSubmissionType(),
-                'organisation' => $organisation
-            ];
-
-            //do some pre-doctrine data processing
-            $ebsrData = $this->validateInput('busReg', $ebsrSub, $doc, $xmlName, $ebsrDoc, $busRegInputContext);
-
-            if ($ebsrData === false) {
-                continue;
-            }
-
-            //we now have xml data we can add to our ebsr submission record
-            $ebsrSub = $this->addXmlDataToEbsrSubmission($ebsrSub, $ebsrData);
-
-            //get the parts of the data we need doctrine for
-            $ebsrData = $this->getDoctrineInformation($ebsrData);
-
-            /** @var BusRegEntity $previousBusReg */
-            $previousBusReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
-
-            //we now have the data from doctrine, so validate this additional data
-            $processedContext = ['busReg' => $previousBusReg];
-            $ebsrData = $this->validateInput('processedData', $ebsrSub, $doc, $xmlName, $ebsrData, $processedContext);
-
-            if ($ebsrData === false) {
-                continue;
-            }
-
-            //we have valid data, so build a bus reg record
-            $busReg = $this->createBusReg($ebsrData, $previousBusReg);
-
-            //we can only validate short notice data once we've created the bus reg
-            if (!$this->validateInput('shortNotice', $ebsrSub, $doc, $xmlName, $ebsrData, ['busReg' => $busReg])) {
-                continue;
-            }
-
-            //short notice has passed validation
-            if ($busReg->getIsShortNotice() === 'Y') {
-                $busReg->getShortNotice()->fromData($ebsrData['busShortNotice']);
-            }
-
-            //update the ebsr submission to show a validated status
-            $ebsrSub->updateStatus($this->getRepo()->getRefdataReference(EbsrSubmissionEntity::VALIDATED_STATUS));
-
-            //save submission result data, used for error messages in emails, and possible debugging later
-            $ebsrSub->setEbsrSubmissionResult($this->getSubmissionResultData([], $ebsrData));
-
-            //save the submission and the bus reg
-            $this->getRepo('EbsrSubmission')->save($ebsrSub);
-            $busReg->setEbsrSubmissions(new ArrayCollection([$ebsrSub]));
-            $this->getRepo()->save($busReg);
-
-            //update submission status to processed
-            $ebsrSub->updateStatus($this->getRepo()->getRefdataReference(EbsrSubmissionEntity::PROCESSED_STATUS));
-            $ebsrSub->setBusReg($busReg);
-            $this->getRepo('EbsrSubmission')->save($ebsrSub);
-
-            //trigger side effects (persist docs, txc inbox, create task, request a route map, create fee, send email)
-            $sideEffects = $this->getSideEffects($ebsrData, $busReg, dirname($xmlName));
-            $this->handleSideEffects($sideEffects);
-
-            //if we've got this far then it was a valid pack, increment counter
-            $this->validPacks++;
-
-            $this->result->addMessage(
-                $doc->getDescription() . '(' . basename($xmlName) . '): file processed successfully'
-            );
+            return $this->result;
         }
 
-        $this->result->addId('valid', $this->validPacks);
-        $this->result->addId('errors', $this->invalidPacks);
+        //validate the xml structure
+        $xmlDocContext = ['xml_filename' => $xmlName];
+        $ebsrDoc = $this->validateInput('xmlStructure', $ebsrSub, $doc, $xmlName, $xmlName, $xmlDocContext);
+
+        if ($ebsrDoc === false) {
+            return $this->result;
+        }
+
+        $busRegInputContext = [
+            'submissionType' => $ebsrSub->getEbsrSubmissionType()->getId(),
+            'organisation' => $organisation
+        ];
+
+        //do some pre-doctrine data processing
+        $ebsrData = $this->validateInput('busReg', $ebsrSub, $doc, $xmlName, $ebsrDoc, $busRegInputContext);
+
+        if ($ebsrData === false) {
+            return $this->result;
+        }
+
+        //we now have xml data we can add to our ebsr submission record
+        $ebsrSub = $this->addXmlDataToEbsrSubmission($ebsrSub, $ebsrData);
+
+        //get the parts of the data we need doctrine for
+        $ebsrData = $this->getDoctrineInformation($ebsrData);
+
+        /** @var BusRegEntity $previousBusReg */
+        $previousBusReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
+
+        //we now have the data from doctrine, so validate this additional data
+        $processedContext = ['busReg' => $previousBusReg];
+        $ebsrData = $this->validateInput('processedData', $ebsrSub, $doc, $xmlName, $ebsrData, $processedContext);
+
+        if ($ebsrData === false) {
+            return $this->result;
+        }
+
+        //we have valid data, so build a bus reg record
+        $busReg = $this->createBusReg($ebsrData, $previousBusReg);
+
+        //we can only validate short notice data once we've created the bus reg
+        if (!$this->validateInput('shortNotice', $ebsrSub, $doc, $xmlName, $ebsrData, ['busReg' => $busReg])) {
+            return $this->result;
+        }
+
+        //short notice has passed validation
+        if ($busReg->getIsShortNotice() === 'Y') {
+            $busReg->getShortNotice()->fromData($ebsrData['busShortNotice']);
+        }
+
+        //we've finished validating
+        $ebsrSub->finishValidating(
+            $this->getRepo()->getRefdataReference(EbsrSubmissionEntity::PROCESSING_STATUS),
+            $this->getSubmissionResultData([], $ebsrData)
+        );
+
+        //save the submission and the bus reg
+        $this->getRepo('EbsrSubmission')->save($ebsrSub);
+        $busReg->setEbsrSubmissions(new ArrayCollection([$ebsrSub]));
+        $this->getRepo()->save($busReg);
+
+        //update submission status to processed
+        $ebsrSub->setBusReg($busReg);
+        $this->getRepo('EbsrSubmission')->save($ebsrSub);
+
+        //trigger side effects (persist docs, txc inbox, create task, request a route map, create fee, send email)
+        $sideEffects = $this->getSideEffects($ebsrData, $busReg, dirname($xmlName));
+        $this->handleSideEffects($sideEffects);
+
+        //we've finished processing
+        $ebsrSub->finishProcessing($this->getRepo()->getRefdataReference(EbsrSubmissionEntity::PROCESSED_STATUS));
+
+        $this->result->addMessage(
+            $doc->getDescription() . '(' . basename($xmlName) . '): file processed successfully'
+        );
 
         return $this->result;
     }
 
     /**
+     * Calls the specified input filters/validators
+     *
      * @param string $filter
      * @param EbsrSubmissionEntity $ebsrSub
      * @param DocumentEntity $doc
@@ -269,6 +270,9 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * Processes a validation failure
+     * Sets submission to failed and queues error email
+     *
      * @param EbsrSubmissionEntity $ebsrSub
      * @param DocumentEntity $doc
      * @param array $messages
@@ -282,9 +286,6 @@ final class ProcessPacks extends AbstractCommandHandler implements
         $xmlName,
         $inputValue
     ) {
-        //the pack isn't valid, so increment counter
-        $this->invalidPacks++;
-
         $this->addErrorMessages($doc, $messages, $xmlName);
 
         //save submission result data, used for error messages in emails, and possible debugging later
@@ -313,6 +314,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * Adds error messages to the result object
+     *
      * @param DocumentEntity $doc
      * @param array $messages
      * @param string $xmlName
@@ -334,24 +337,6 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
-     * @param OrganisationEntity $organisation
-     * @param DocumentEntity $doc
-     * @param $submissionType
-     * @return EbsrSubmissionEntity
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
-    private function createEbsrSubmission(OrganisationEntity $organisation, DocumentEntity $doc, $submissionType)
-    {
-        return new EbsrSubmissionEntity(
-            $organisation,
-            $this->getRepo()->getRefdataReference(EbsrSubmissionEntity::VALIDATING_STATUS),
-            $this->getRepo()->getRefdataReference($submissionType),
-            $doc,
-            new \DateTime()
-        );
-    }
-
-    /**
      * Add in ebsr submission data after the file has been processed
      *
      * @param EbsrSubmissionEntity $ebsrSub
@@ -369,14 +354,19 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * Sets the EBSR submission to failed, and saves the record
+     *
      * @param EbsrSubmissionEntity $ebsrSub
      * @param string $ebsrResultData
      * @return EbsrSubmissionEntity
      */
     private function setEbsrSubmissionFailed(EbsrSubmissionEntity $ebsrSub, $ebsrResultData)
     {
-        $ebsrSub->updateStatus($this->getRepo()->getRefdataReference(EbsrSubmissionEntity::FAILED_STATUS));
-        $ebsrSub->setEbsrSubmissionResult($ebsrResultData);
+        $ebsrSub->finishValidating(
+            $this->getRepo()->getRefdataReference(EbsrSubmissionEntity::FAILED_STATUS),
+            $ebsrResultData
+        );
+
         $this->getRepo('EbsrSubmission')->save($ebsrSub);
         return $ebsrSub;
     }
@@ -424,6 +414,15 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns a list of side effects as a result of the EBSR submission success
+     *
+     * 1. Add supporting documents to the doc store
+     * 2. Create TXC inbox record
+     * 3. Create a task
+     * 4. Queue Transxchange map request
+     * 5. Create fee (optional)
+     * 6. Queue confirmation email
+     *
      * @param array $ebsrData
      * @param BusRegEntity $busReg
      * @param string $docPath
@@ -455,6 +454,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns a side effect to save the supporting documents and schematic map to the doc store
+     *
      * @param array $ebsrData
      * @param BusRegEntity $busReg
      * @param string $docPath
@@ -482,6 +483,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns an upload command to add the supporting docs to the doc store
+     *
      * @param string $content
      * @param BusRegEntity $busReg
      * @param string $filename
@@ -504,6 +507,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns a command to create a txc inbox record
+     *
      * @param int $busRegId
      * @return CreateTxcInboxCmd
      */
@@ -513,6 +518,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns a command to queue a transxchange map request
+     *
      * @param int $busRegId
      * @return RequestMapQueueCmd
      */
@@ -522,6 +529,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns a command to queue a data refresh email
+     *
      * @param int $ebsrId
      * @return SendEbsrRefreshedCmd
      */
@@ -531,6 +540,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns a command to queue a received email
+     *
      * @param int $ebsrId
      * @return SendEbsrReceivedCmd
      */
@@ -540,6 +551,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns a command to queue an error email
+     *
      * @param int $ebsrId
      * @return SendEbsrErrorsCmd
      */
@@ -549,6 +562,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * Returns a command to create a task
+     *
      * @param BusRegEntity $busReg
      * @return CreateTaskCmd
      */
@@ -596,8 +611,12 @@ final class ProcessPacks extends AbstractCommandHandler implements
      */
     private function createNew(array $ebsrData)
     {
-        /** @var LicenceEntity $licence */
-        $licence = $this->getRepo('Licence')->fetchByLicNoWithoutAdditionalData($ebsrData['licNo']);
+        /**
+         * @var LicenceRepo $repo
+         * @var LicenceEntity $licence
+         */
+        $repo = $this->getRepo('Licence');
+        $licence = $repo->fetchByLicNoWithoutAdditionalData($ebsrData['licNo']);
         $refDataStatus = $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_NEW);
 
         $newBusReg = BusRegEntity::createNew(
@@ -615,6 +634,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * Creates a bus reg variation
+     *
      * @param BusRegEntity $busReg
      * @param string $status
      * @return BusRegEntity
@@ -656,9 +677,11 @@ final class ProcessPacks extends AbstractCommandHandler implements
         $collection = new ArrayCollection();
 
         if (!empty($serviceTypes)) {
+            /** @var BusServiceTypeRepo $repo */
+            $repo = $this->getRepo('BusServiceType');
             $serviceTypeArray = array_keys($serviceTypes);
 
-            $serviceTypeList = $this->getRepo('BusServiceType')->fetchByTxcName($serviceTypeArray);
+            $serviceTypeList = $repo->fetchByTxcName($serviceTypeArray);
 
             /** @var BusServiceTypeEntity $serviceType */
             foreach ($serviceTypeList as $serviceType) {
@@ -670,6 +693,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
     }
 
     /**
+     * Processes additional service numbers
+     *
      * @param BusRegEntity $busReg
      * @param array $serviceNumbers
      * @return BusRegEntity
@@ -697,7 +722,9 @@ final class ProcessPacks extends AbstractCommandHandler implements
         $collection = new ArrayCollection();
 
         if (!empty($localAuthority)) {
-            $laList = $this->getRepo('LocalAuthority')->fetchByTxcName($localAuthority);
+            /** @var LocalAuthorityRepo $repo */
+            $repo = $this->getRepo('LocalAuthority');
+            $laList = $repo->fetchByTxcName($localAuthority);
 
             /** @var LocalAuthorityEntity $la */
             foreach ($laList as $la) {
@@ -719,7 +746,9 @@ final class ProcessPacks extends AbstractCommandHandler implements
         $collection = new ArrayCollection();
 
         if (!empty($naptan)) {
-            $laList = $this->getRepo('LocalAuthority')->fetchByNaptan($naptan);
+            /** @var LocalAuthorityRepo $repo */
+            $repo = $this->getRepo('LocalAuthority');
+            $laList = $repo->fetchByNaptan($naptan);
 
             /** @var LocalAuthorityEntity $la */
             foreach ($laList as $la) {
@@ -742,7 +771,9 @@ final class ProcessPacks extends AbstractCommandHandler implements
         $collection = new ArrayCollection();
 
         if (!empty($trafficAreas)) {
-            $taList = $this->getRepo('TrafficArea')->fetchByTxcName($trafficAreas);
+            /** @var TrafficAreaRepo $repo */
+            $repo = $this->getRepo('TrafficArea');
+            $taList = $repo->fetchByTxcName($trafficAreas);
 
             /** @var TrafficAreaEntity $ta */
             foreach ($taList as $ta) {

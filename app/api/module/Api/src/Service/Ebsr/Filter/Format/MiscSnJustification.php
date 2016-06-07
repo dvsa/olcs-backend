@@ -34,6 +34,9 @@ class MiscSnJustification extends AbstractFilter
             $value['busShortNotice']['unforseenDetail'] .= ' ' . $miscJustification;
         }
 
+        //now we have an unforseen detail, we need to set the corresponding reason to yes
+        $value['busShortNotice']['unforseenChange'] = 'Y';
+
         return $value;
     }
 }

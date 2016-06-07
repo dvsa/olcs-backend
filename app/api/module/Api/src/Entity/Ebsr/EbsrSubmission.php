@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Ebsr;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -25,40 +26,121 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  */
 class EbsrSubmission extends AbstractEbsrSubmission
 {
+    const UPLOADED_STATUS = 'ebsrs_uploaded';
+    const SUBMITTING_STATUS = 'ebsrs_submitting';
+    const SUBMITTED_STATUS = 'ebsrs_submitted';
     const VALIDATING_STATUS = 'ebsrs_validating';
-    const VALIDATED_STATUS = 'ebsrs_validated';
     const PROCESSED_STATUS = 'ebsrs_processed';
-    const FAILED_STATUS = 'ebsrs_expired'; //use expired for now, but ideally we'd have a status of failed
+    const PROCESSING_STATUS = 'ebsrs_processing';
+    const FAILED_STATUS = 'ebsrs_failed';
 
     const DATA_REFRESH_SUBMISSION_TYPE = 'ebsrt_refresh';
     const NEW_SUBMISSION_TYPE = 'ebsrt_new';
+    const UNKNOWN_SUBMISSION_TYPE = 'ebsrt_unknown';
 
     /**
+     * Creates EBSR submission
+     *
      * @param Organisation $organisation
      * @param RefData $ebsrSubmissionStatus
      * @param RefData $ebsrSubmissionType
      * @param Document $document
-     * @param \DateTime $submittedDate
      */
     public function __construct(
         Organisation $organisation,
         RefData $ebsrSubmissionStatus,
         RefData $ebsrSubmissionType,
-        Document $document,
-        \DateTime $submittedDate
+        Document $document
     ) {
         $this->organisation = $organisation;
         $this->ebsrSubmissionStatus = $ebsrSubmissionStatus;
         $this->ebsrSubmissionType = $ebsrSubmissionType;
         $this->document = $document;
-        $this->submittedDate = $submittedDate;
     }
 
-    public function updateStatus(RefData $ebsrSubmissionStatus)
+    /**
+     * Called when a previously uploaded EBSR pack is submitted
+     *
+     * @param RefData $ebsrSubmissionStatus
+     * @param RefData $ebsrSubmissionType
+     */
+    public function submit(RefData $ebsrSubmissionStatus, RefData $ebsrSubmissionType)
     {
         $this->ebsrSubmissionStatus = $ebsrSubmissionStatus;
+        $this->ebsrSubmissionType = $ebsrSubmissionType;
+        $this->submittedDate = new \DateTime();
     }
 
+    /**
+     * Called when EBSR pack begins processing, includes a check that the status is correct
+     *
+     * @param RefData $ebsrSubmissionStatus
+     * @throws ValidationException
+     */
+    public function beginValidating(RefData $ebsrSubmissionStatus)
+    {
+        if (!$this->isSubmitted()) {
+            throw new ValidationException(['Only newly submitted records may be processed']);
+        }
+
+        $this->ebsrSubmissionStatus = $ebsrSubmissionStatus;
+        $this->validationStart = new \DateTime();
+    }
+
+    /**
+     * Called when validation of EBSR pack is completed
+     *
+     * @param RefData $ebsrSubmissionStatus
+     * @param String $ebsrSubmissionResult this is a serialized array
+     */
+    public function finishValidating(RefData $ebsrSubmissionStatus, $ebsrSubmissionResult)
+    {
+        $this->ebsrSubmissionStatus = $ebsrSubmissionStatus;
+        $this->ebsrSubmissionResult = $ebsrSubmissionResult;
+        $this->validationEnd = new \DateTime();
+
+        //if the submission hasn't failed (so far - this isn't yet a success) then also populate processStart timestamp
+        if (!$this->isFailure()) {
+            $this->processStart = $this->validationEnd;
+        }
+    }
+
+    /**
+     * Whether the EBSR submission is a failure
+     *
+     * @return bool
+     */
+    public function isFailure()
+    {
+        return $this->ebsrSubmissionStatus->getId() === self::FAILED_STATUS;
+    }
+
+    /**
+     * Whether the EBSR submission is at the "submitted" stage
+     *
+     * @return bool
+     */
+    public function isSubmitted()
+    {
+        return $this->ebsrSubmissionStatus->getId() === self::SUBMITTED_STATUS;
+    }
+
+    /**
+     * Called when a submission has finished processing
+     *
+     * @param RefData $ebsrSubmissionStatus
+     */
+    public function finishProcessing(RefData $ebsrSubmissionStatus)
+    {
+        $this->ebsrSubmissionStatus = $ebsrSubmissionStatus;
+        $this->processEnd = new \DateTime();
+    }
+
+    /**
+     * Whether the EBSR submission is a data refresh
+     *
+     * @return bool
+     */
     public function isDataRefresh()
     {
         return $this->ebsrSubmissionType->getId() === self::DATA_REFRESH_SUBMISSION_TYPE;

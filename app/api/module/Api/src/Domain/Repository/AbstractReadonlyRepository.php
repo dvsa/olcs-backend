@@ -399,16 +399,28 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         }
     }
 
+    /**
+     * @param string $id
+     * @return RefDataEntity|null
+     */
     public function getRefdataReference($id)
     {
         return $this->getReference(RefDataEntity::class, $id);
     }
 
+    /**
+     * @param int $id
+     * @return Category|null
+     */
     public function getCategoryReference($id)
     {
         return $this->getReference(Category::class, $id);
     }
 
+    /**
+     * @param $id
+     * @return SubCategory|null
+     */
     public function getSubCategoryReference($id)
     {
         return $this->getReference(SubCategory::class, $id);

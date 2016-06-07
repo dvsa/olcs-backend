@@ -5,9 +5,6 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as Entity;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
-use Dvsa\Olcs\Transfer\Query\OrderedQueryInterface;
-use Dvsa\Olcs\Transfer\Query\PagedQueryInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -61,6 +58,36 @@ class EbsrSubmission extends AbstractRepository
     }
 
     /**
+     * Fetch a list of ebsr submission by organisation and status
+     *
+     * This is only used to bring back newly submitted documents and therefore doesn't bring back extra
+     * information for efficiency reasons
+     *
+     * @param int $organisation
+     * @param string $ebsrSubmissionStatus
+     * @param int $hydrateMode
+     * @return array
+     */
+    public function fetchForOrganisationByStatus(
+        $organisation,
+        $ebsrSubmissionStatus,
+        $hydrateMode = Query::HYDRATE_OBJECT
+    ) {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb);
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.ebsrSubmissionStatus', ':ebsrSubmissionStatus'))
+            ->setParameter('ebsrSubmissionStatus', $ebsrSubmissionStatus);
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.organisation', ':organisation'))
+            ->setParameter('organisation', $organisation);
+
+        return $qb->getQuery()->getResult($hydrateMode);
+    }
+
+    /**
      * @param QueryBuilder $qb
      * @param QueryInterface $query
      * @param array $compositeFields
@@ -77,7 +104,9 @@ class EbsrSubmission extends AbstractRepository
     }
 
     /**
-     * @param QueryBuilder   $qb
+     * Applies filters to list queries. Note we always ignore newly uploaded files until they've been fully submitted
+     *
+     * @param QueryBuilder $qb
      * @param QueryInterface $query
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
@@ -93,5 +122,9 @@ class EbsrSubmission extends AbstractRepository
             $qb->andWhere($qb->expr()->eq($this->alias . '.ebsrSubmissionType', ':ebsrSubmissionType'))
                 ->setParameter('ebsrSubmissionType', $query->getSubType());
         }
+
+        //always exclude entities that are in the process of being submitted
+        $qb->andWhere($qb->expr()->neq($this->alias . '.ebsrSubmissionStatus', ':ebsrSubmissionStatus'))
+            ->setParameter('ebsrSubmissionStatus', Entity::UPLOADED_STATUS);
     }
 }

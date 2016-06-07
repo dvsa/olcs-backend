@@ -183,9 +183,12 @@ return [
     TransferCommand\Bus\Ebsr\UpdateTxcInbox::class => CommandHandler\Bus\Ebsr\UpdateTxcInbox::class,
     Command\Bus\Ebsr\CreateTxcInbox::class => CommandHandler\Bus\Ebsr\CreateTxcInbox::class,
     Command\Bus\Ebsr\UpdateTxcInboxPdf::class => CommandHandler\Bus\Ebsr\UpdateTxcInboxPdf::class,
-    TransferCommand\Bus\Ebsr\ProcessPacks::class => CommandHandler\Bus\Ebsr\ProcessPacks::class,
+    Command\Bus\Ebsr\ProcessPack::class => CommandHandler\Bus\Ebsr\ProcessPack::class,
     TransferCommand\Bus\Ebsr\RequestMap::class => CommandHandler\Bus\Ebsr\RequestMapQueue::class,
+    TransferCommand\Bus\Ebsr\QueuePacks::class => CommandHandler\Bus\Ebsr\QueuePacks::class,
     Command\Bus\Ebsr\ProcessRequestMap::class => CommandHandler\Bus\Ebsr\ProcessRequestMap::class,
+    Command\Bus\Ebsr\CreateSubmission::class => CommandHandler\Bus\Ebsr\CreateSubmission::class,
+    Command\Bus\Ebsr\DeleteSubmission::class => CommandHandler\Bus\Ebsr\DeleteSubmission::class,
 
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
