@@ -11,6 +11,9 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\LegacyOffence;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\LegacyOffence as LegacyOffenceRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\LegacyOffence as Qry;
+use Doctrine\ORM\Query;
+use Mockery as m;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 
 /**
  * LegacyOffence Test
@@ -31,11 +34,16 @@ class LegacyOffenceTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 1]);
 
+        $mockLegacyOffence = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar'])
+            ->once()
+            ->getMock();
+
         $this->repoMap['LegacyOffence']->shouldReceive('fetchCaseLegacyOffenceUsingId')
             ->with($query)
-            ->andReturn(['foo']);
+            ->andReturn($mockLegacyOffence);
 
-        $result = $this->sut->handleQuery($query);
-        $this->assertEquals($result, ['foo']);
+        $this->assertEquals(['foo' => 'bar'], $this->sut->handleQuery($query)->serialize());
     }
 }

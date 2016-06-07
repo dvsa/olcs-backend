@@ -9,6 +9,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\AnnualTestHistory;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
 use Dvsa\Olcs\Transfer\Query\Bus\BusReg as Qry;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Mockery as m;
 
 /**
  * Annual Test History Test
@@ -27,10 +29,16 @@ class AnnualTestHistoryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
+        $mockCase = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar'])
+            ->once()
+            ->getMock();
+
         $this->repoMap['Cases']->shouldReceive('fetchUsingId')
             ->with($query)
-            ->andReturn(['foo']);
+            ->andReturn($mockCase);
 
-        $this->assertEquals(['foo'], $this->sut->handleQuery($query));
+        $this->assertEquals(['foo' => 'bar'], $this->sut->handleQuery($query)->serialize());
     }
 }
