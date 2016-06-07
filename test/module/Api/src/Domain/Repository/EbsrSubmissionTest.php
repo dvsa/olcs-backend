@@ -6,8 +6,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bus\EbsrSubmissionList;
 use Mockery as m;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as Repo;
-use Dvsa\Olcs\Transfer\Query\Ebsr\SubmissionList as SubmissionListQry;
-use \Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 
 /**
  * EbsrSubmissionTest
@@ -57,7 +56,7 @@ class EbsrSubmissionTest extends RepositoryTestCase
     {
         $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $mockQb = m::mock(QueryBuilder::class);
         $mockQi = m::mock(\Dvsa\Olcs\Transfer\Query\QueryInterface::class);
 
         $sut->shouldReceive('getQueryBuilder')->with()->andReturn($mockQb);
@@ -72,6 +71,56 @@ class EbsrSubmissionTest extends RepositoryTestCase
         $sut->buildDefaultListQuery($mockQb, $mockQi);
     }
 
+    /**
+     * tests fetching a list by organisation and status
+     */
+    public function testFetchForOrganisationByStatus()
+    {
+        $organisation = 3;
+        $status = 'status';
+
+        $qb = m::mock(QueryBuilder::class);
+        $this->mockCreateQueryBuilder($qb);
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+
+        // organisation clause
+        $qb->shouldReceive('expr')
+            ->andReturnSelf()
+            ->shouldReceive('eq')
+            ->with('m.organisation', ':organisation')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('organisation', $organisation)
+            ->andReturnSelf();
+
+        // status clause
+        $qb->shouldReceive('expr')
+            ->andReturnSelf()
+            ->shouldReceive('eq')
+            ->with('m.ebsrSubmissionStatus', ':ebsrSubmissionStatus')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('ebsrSubmissionStatus', $status)
+            ->andReturnSelf();
+
+        $this->assertEquals(['RESULTS'], $this->sut->fetchForOrganisationByStatus($organisation, $status, 1));
+    }
+
+    /**
+     * Tests applyListFilters
+     */
     public function testApplyListFilters()
     {
         $this->setUpSut(Repo::class, true);
@@ -112,6 +161,18 @@ class EbsrSubmissionTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('setParameter')
             ->with('ebsrSubmissionType', 'bar')
+            ->andReturnSelf();
+
+        // always ignore uploaded status
+        $mockQb->shouldReceive('expr')
+            ->andReturnSelf()
+            ->shouldReceive('neq')
+            ->with('m.ebsrSubmissionStatus', ':ebsrSubmissionStatus')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('ebsrSubmissionStatus', EbsrSubmissionEntity::UPLOADED_STATUS)
             ->andReturnSelf();
 
         $query = EbsrSubmissionList::create(['organisation' => 3, 'subType' => 'bar', 'status' => 'foo']);

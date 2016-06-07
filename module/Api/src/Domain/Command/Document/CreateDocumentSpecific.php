@@ -47,6 +47,8 @@ class CreateDocumentSpecific extends AbstractCommand
 
     protected $isScan = 0;
 
+    protected $isEbsrPack = 0;
+
     protected $issuedDate;
 
     protected $metadata;
@@ -195,6 +197,14 @@ class CreateDocumentSpecific extends AbstractCommand
     public function getIsScan()
     {
         return $this->isScan;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsEbsrPack()
+    {
+        return $this->isEbsrPack;
     }
 
     /**

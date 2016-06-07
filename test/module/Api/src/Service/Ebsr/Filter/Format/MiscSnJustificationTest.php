@@ -34,29 +34,37 @@ class MiscSnJustificationTest extends \PHPUnit_Framework_TestCase
     {
         $unforseenDetailValue = 'unforseen detail text';
         $unforseenDetailKey = 'unforseenDetail';
+        $unforseenChangeKey = 'unforseenChange';
         $miscJustificationValue = 'misc justification text';
         $miscJustificationKey = 'miscJustification';
         $formattedMiscJustification = 'Miscellaneous justification: ' . $miscJustificationValue;
 
-        $onlyUnforseen = [$unforseenDetailKey => $unforseenDetailValue];
+        $onlyUnforseen = [
+            $unforseenDetailKey => $unforseenDetailValue,
+            $unforseenChangeKey => 'Y'
+        ];
 
         $bothHaveValuesInput = [
             $unforseenDetailKey => $unforseenDetailValue,
-            $miscJustificationKey => $miscJustificationValue
+            $miscJustificationKey => $miscJustificationValue,
+            $unforseenChangeKey => 'Y'
         ];
 
         $bothHaveValuesResult = [
             $unforseenDetailKey => $unforseenDetailValue . ' ' . $formattedMiscJustification,
-            $miscJustificationKey => $miscJustificationValue
+            $miscJustificationKey => $miscJustificationValue,
+            $unforseenChangeKey => 'Y'
         ];
 
         $onlyMiscJustificationInput = [
-            $miscJustificationKey => $miscJustificationValue
+            $miscJustificationKey => $miscJustificationValue,
+            $unforseenChangeKey => 'N'
         ];
 
         $onlyMiscJustificationResult = [
             $unforseenDetailKey => $formattedMiscJustification,
-            $miscJustificationKey => $miscJustificationValue
+            $miscJustificationKey => $miscJustificationValue,
+            $unforseenChangeKey => 'Y'
         ];
 
         return [

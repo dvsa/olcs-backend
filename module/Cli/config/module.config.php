@@ -168,6 +168,8 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms\ReportDownload::class,
             Queue::TYPE_EBSR_REQUEST_MAP
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\RequestMap::class,
+            Queue::TYPE_EBSR_PACK
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\ProcessPack::class,
             Queue::TYPE_EMAIL
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send::class,
             Queue::TYPE_PRINT

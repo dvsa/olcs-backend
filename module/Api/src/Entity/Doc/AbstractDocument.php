@@ -378,6 +378,19 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     protected $templates;
 
     /**
+     * Ebsr submission
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission",
+     *     mappedBy="document",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $ebsrSubmissions;
+
+    /**
      * Sla target date
      *
      * @var \Dvsa\Olcs\Api\Entity\System\SlaTargetDate
@@ -402,6 +415,7 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     {
         $this->continuationDetails = new ArrayCollection();
         $this->templates = new ArrayCollection();
+        $this->ebsrSubmissions = new ArrayCollection();
     }
 
     /**
@@ -1186,6 +1200,66 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     {
         if ($this->templates->contains($templates)) {
             $this->templates->removeElement($templates);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the ebsr submission
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions
+     * @return Document
+     */
+    public function setEbsrSubmissions($ebsrSubmissions)
+    {
+        $this->ebsrSubmissions = $ebsrSubmissions;
+
+        return $this;
+    }
+
+    /**
+     * Get the ebsr submissions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getEbsrSubmissions()
+    {
+        return $this->ebsrSubmissions;
+    }
+
+    /**
+     * Add a ebsr submissions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions
+     * @return Document
+     */
+    public function addEbsrSubmissions($ebsrSubmissions)
+    {
+        if ($ebsrSubmissions instanceof ArrayCollection) {
+            $this->ebsrSubmissions = new ArrayCollection(
+                array_merge(
+                    $this->ebsrSubmissions->toArray(),
+                    $ebsrSubmissions->toArray()
+                )
+            );
+        } elseif (!$this->ebsrSubmissions->contains($ebsrSubmissions)) {
+            $this->ebsrSubmissions->add($ebsrSubmissions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a ebsr submissions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions
+     * @return Document
+     */
+    public function removeEbsrSubmissions($ebsrSubmissions)
+    {
+        if ($this->ebsrSubmissions->contains($ebsrSubmissions)) {
+            $this->ebsrSubmissions->removeElement($ebsrSubmissions);
         }
 
         return $this;
