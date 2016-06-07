@@ -10,6 +10,8 @@ namespace Dvsa\Olcs\Api\Entity\View;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 
 /**
  * Document Search View
@@ -18,8 +20,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Entity(readOnly=true)
  * @ORM\Table(name="document_search_view")
  */
-class DocumentSearchView
+class DocumentSearchView implements BundleSerializableInterface
 {
+    use BundleSerializableTrait;
+
     /**
      * Id
      *
@@ -441,7 +445,9 @@ class DocumentSearchView
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate deleted date
+     *
+     * @return DocumentSearchView
      */
     public function setDeletedDate($deletedDate)
     {
@@ -461,6 +467,8 @@ class DocumentSearchView
     }
 
     /**
+     * Is Deleted
+     * 
      * @return bool
      */
     public function isDeleted()

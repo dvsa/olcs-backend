@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\Query;
 
 /**
  * Document List
@@ -19,6 +20,14 @@ class DocumentList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'DocumentSearchView';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return array
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
         $data = $query->getArrayCopy();
@@ -30,7 +39,7 @@ class DocumentList extends AbstractQueryHandler
         $unfilteredQuery = \Dvsa\Olcs\Transfer\Query\Document\DocumentList::create($data);
 
         return [
-            'result' => $this->getRepo()->fetchList($query),
+            'result' => $this->resultList($this->getRepo()->fetchList($query, Query::HYDRATE_OBJECT)),
             'count' => $this->getRepo()->fetchCount($query),
             'count-unfiltered' => $this->getRepo()->hasRows($unfilteredQuery)
         ];

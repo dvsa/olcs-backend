@@ -7,12 +7,13 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Document;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Document\DocumentList;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\DocumentSearchView as Repo;
 use Dvsa\Olcs\Transfer\Query\Document\DocumentList as Qry;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Doctrine\ORM\Query;
 
 /**
  * Document List Test
@@ -33,20 +34,26 @@ class DocumentListTest extends QueryHandlerTestCase
     {
         $query = Qry::create([]);
 
-        $this->repoMap['DocumentSearchView']->shouldReceive('fetchList')
-            ->with($query)
+        $mockDocument = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
             ->andReturn(['foo' => 'bar'])
+            ->once()
+            ->getMock();
+
+        $this->repoMap['DocumentSearchView']->shouldReceive('fetchList')
+            ->with($query, Query::HYDRATE_OBJECT)
+            ->andReturn([$mockDocument])
             ->shouldReceive('fetchCount')
             ->with($query)
-            ->andReturn(10)
+            ->andReturn(1)
             ->shouldReceive('hasRows')
             ->with(m::type(Qry::class))
             ->andReturn(1);
 
         $this->assertEquals(
             [
-                'result' => ['foo' => 'bar'],
-                'count' => 10,
+                'result' => [['foo' => 'bar']],
+                'count' => 1,
                 'count-unfiltered' => 1
             ],
             $this->sut->handleQuery($query)
