@@ -37,6 +37,16 @@ class Search implements AuthAwareInterface
     protected $dateRanges = [];
 
     /**
+     * @var string
+     */
+    protected $sort = '';
+
+    /**
+     * @var string
+     */
+    protected $order = '';
+
+    /**
      * @param mixed $client
      */
     public function setClient($client)
@@ -50,6 +60,38 @@ class Search implements AuthAwareInterface
     public function getClient()
     {
         return $this->client;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSort()
+    {
+        return $this->sort;
+    }
+
+    /**
+     * @param string $sort
+     */
+    public function setSort($sort)
+    {
+        $this->sort = $sort;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * @param string $order
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
     }
 
     /**
@@ -81,6 +123,7 @@ class Search implements AuthAwareInterface
              * Here we send the filters.
              */
             $filters = $this->getFilters();
+
             foreach ($filters as $field => $value) {
 
                 if (!empty($value)) {
@@ -99,6 +142,9 @@ class Search implements AuthAwareInterface
 
             $elasticaQuery->setQuery($elasticaQueryBool);
 
+            if (!empty($this->getSort() && !empty($this->getOrder()))) {
+                $elasticaQuery->setSort([$this->getSort() => strtolower($this->getOrder())]);
+            }
         }
 
         $elasticaQuery->setSize($limit);
@@ -282,6 +328,12 @@ class Search implements AuthAwareInterface
         return $elasticaQueryWildcard;
     }
 
+    /**
+     * Process the date ranges against the query.
+     *
+     * @param Query\Bool $bool
+     * @return Query\Bool
+     */
     public function processDateRanges(Query\Bool $bool)
     {
         /**
