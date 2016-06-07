@@ -15,6 +15,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\RequestMap as RequestMapCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Zend\Serializer\Adapter\Json as ZendJson;
 
 /**
@@ -24,23 +25,28 @@ final class RequestMapQueue extends AbstractCommandHandler implements AuthAwareI
 {
     use AuthAwareTrait;
 
-    protected $repoServiceName = 'bus';
+    protected $repoServiceName = 'Bus';
 
     /**
+     * Command to queue an EBSR map request
+     *
      * @param CommandInterface $command
+     *
      * @return Result
-     * @throws \Exception
+     * @throws NotFoundException
      */
     public function handleCommand(CommandInterface $command)
     {
+        /**
+         * @var BusReg $busReg
+         * @var RequestMapCmd $command
+         */
         $busReg = $this->getRepo()->fetchUsingId($command);
-        $ebsrSubmissions = $busReg->getEbsrSubmissions();
 
-        if ($ebsrSubmissions->isEmpty()) {
+        if ($busReg->getEbsrSubmissions()->isEmpty()) {
             throw new NotFoundException('The specified bus registration doesn\'t have an EBSR file');
         }
 
-        /** @var RequestMapCmd $command */
         $result = new Result();
 
         $jsonSerializer = new ZendJson();
@@ -48,6 +54,8 @@ final class RequestMapQueue extends AbstractCommandHandler implements AuthAwareI
         $optionData = [
             'scale' => $command->getScale(),
             'id' => $command->getId(),
+            'regNo' => $busReg->getRegNo(),
+            'licence' => $busReg->getLicence()->getId(),
             'user' => $this->getCurrentUser()->getId(),
             'template' => TransExchangeClient::REQUEST_MAP_TEMPLATE
         ];

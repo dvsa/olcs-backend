@@ -16,6 +16,10 @@ class ProcessRequestMap extends AbstractIdOnlyCommand
 
     protected $template;
 
+    protected $licence;
+
+    protected $regNo;
+
     /**
      * @return string
      */
@@ -25,10 +29,26 @@ class ProcessRequestMap extends AbstractIdOnlyCommand
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegNo()
+    {
+        return $this->regNo;
     }
 }
