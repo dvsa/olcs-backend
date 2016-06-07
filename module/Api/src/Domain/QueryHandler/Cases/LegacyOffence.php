@@ -13,10 +13,23 @@ final class LegacyOffence extends AbstractQueryHandler
 {
     protected $repoServiceName = 'LegacyOffence';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
-        $legacyOffence = $this->getRepo()->fetchCaseLegacyOffenceUsingId($query);
-
-        return $legacyOffence;
+        return $this->result(
+            $this->getRepo()->fetchCaseLegacyOffenceUsingId($query),
+            [
+                'case',
+                'lastModifiedBy',
+                'createdBy'
+            ]
+        );
     }
 }
