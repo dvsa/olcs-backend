@@ -204,6 +204,9 @@ class SearchTest extends MockeryTestCase
     {
         $sut = new SearchService();
 
+        $sut->setSort('foo');
+        $sut->setOrder('desc');
+
         $authService = m::mock(AuthorizationService::class);
 
         $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
@@ -275,6 +278,9 @@ class SearchTest extends MockeryTestCase
                         ]
                     ]
                 ],
+                'sort' => [
+                    'foo' => 'desc'
+                ],
                 'size' => 10,
                 'from' => 0
             ]
@@ -294,6 +300,9 @@ class SearchTest extends MockeryTestCase
                             $this->generateWildcard('org_name_wildcard', 'foo bar*', 2.0)
                         ]
                     ]
+                ],
+                'sort' => [
+                    'foo' => 'desc'
                 ],
                 'size' => 10,
                 'from' => 0
@@ -315,6 +324,9 @@ class SearchTest extends MockeryTestCase
                         ]
                     ]
                 ],
+                'sort' => [
+                    'foo' => 'desc'
+                ],
                 'size' => 10,
                 'from' => 0
             ]
@@ -335,6 +347,9 @@ class SearchTest extends MockeryTestCase
                         ]
                     ]
                 ],
+                'sort' => [
+                    'foo' => 'desc'
+                ],
                 'size' => 10,
                 'from' => 0
             ]
@@ -353,6 +368,9 @@ class SearchTest extends MockeryTestCase
                             $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
+                ],
+                'sort' => [
+                    'foo' => 'desc'
                 ],
                 'size' => 10,
                 'from' => 0
@@ -373,6 +391,9 @@ class SearchTest extends MockeryTestCase
                         ]
                     ]
                 ],
+                'sort' => [
+                    'foo' => 'desc'
+                ],
                 'size' => 10,
                 'from' => 0
             ]
@@ -391,6 +412,9 @@ class SearchTest extends MockeryTestCase
                             $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
+                ],
+                'sort' => [
+                    'foo' => 'desc'
                 ],
                 'size' => 10,
                 'from' => 0
@@ -411,6 +435,9 @@ class SearchTest extends MockeryTestCase
                         ]
                     ]
                 ],
+                'sort' => [
+                    'foo' => 'desc'
+                ],
                 'size' => 10,
                 'from' => 0
             ]
@@ -429,6 +456,9 @@ class SearchTest extends MockeryTestCase
                             $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
+                ],
+                'sort' => [
+                    'foo' => 'desc'
                 ],
                 'size' => 10,
                 'from' => 0
@@ -450,6 +480,9 @@ class SearchTest extends MockeryTestCase
                         ]
                     ]
                 ],
+                'sort' => [
+                    'foo' => 'desc'
+                ],
                 'size' => 10,
                 'from' => 0
             ]
@@ -469,6 +502,9 @@ class SearchTest extends MockeryTestCase
                             $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
+                ],
+                'sort' => [
+                    'foo' => 'desc'
                 ],
                 'size' => 10,
                 'from' => 0
@@ -508,6 +544,9 @@ class SearchTest extends MockeryTestCase
                         ]
                     ]
                 ],
+                'sort' => [
+                    'foo' => 'desc'
+                ],
                 'size' => 10,
                 'from' => 0
             ],
@@ -532,6 +571,9 @@ class SearchTest extends MockeryTestCase
                             $this->generateWildcard('person_forename_wildcard', '*bar*', '2.0'),
                         ]
                     ]
+                ],
+                'sort' => [
+                    'foo' => 'desc'
                 ],
                 'size' => 10,
                 'from' => 0
@@ -560,6 +602,9 @@ class SearchTest extends MockeryTestCase
                             $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
                         ]
                     ]
+                ],
+                'sort' => [
+                    'foo' => 'desc'
                 ],
                 'size' => 10,
                 'from' => 0
