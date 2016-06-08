@@ -1,18 +1,12 @@
 <?php
 
-/**
- * Traffic Area
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as Entity;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as Entity;
 
 /**
  * Traffic Area
@@ -32,6 +26,7 @@ class TrafficArea extends AbstractRepository
         $results = $qb->getQuery()->getResult();
 
         $valueOptions = [];
+        /** @var \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $result */
         foreach ($results as $result) {
             if ($result->getId() == Entity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE) {
                 continue;
