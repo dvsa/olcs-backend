@@ -67,10 +67,10 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
         }
 
         //if it's an EBSR doc, also delete the associated submission
-        if (!$document->getEbsrSubmissions()->isEmpty()) {
+        if ($document->getEbsrSubmission()) {
             $result->merge(
                 $this->handleSideEffect(
-                    DeleteEbsrSubmission::create(['id' => $document->getEbsrSubmissions()->first()->getId()])
+                    DeleteEbsrSubmission::create(['id' => $document->getEbsrSubmission()->getId()])
                 )
             );
         }

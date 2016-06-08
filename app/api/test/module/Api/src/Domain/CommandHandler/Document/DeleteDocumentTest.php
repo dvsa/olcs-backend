@@ -14,6 +14,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Document\DeleteDocument as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\DeleteSubmission as DeleteSubmissionCmd;
 use Dvsa\Olcs\Api\Entity\Doc\Document as Entity;
+use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
@@ -54,7 +55,6 @@ class DeleteDocumentTest extends CommandHandlerTestCase
         /** @var Entity $document */
         $document = m::mock(Entity::class)->makePartial();
         $document->setIdentifier('ABC');
-        $document->shouldReceive('getEbsrSubmissions->isEmpty')->once()->andReturn(true);
 
         $this->mockedSmServices['FileUploader']->shouldReceive('remove')
             ->once()
@@ -87,11 +87,14 @@ class DeleteDocumentTest extends CommandHandlerTestCase
         $ebsrSubId = 123345;
         $command = Cmd::create(['id' => 123]);
 
+        /** @var EbsrSubmissionEntity $ebsrSubmission */
+        $ebsrSubmission = m::mock(EbsrSubmissionEntity::class)->makePartial();
+        $ebsrSubmission->setId($ebsrSubId);
+
         /** @var Entity $document */
         $document = m::mock(Entity::class)->makePartial();
         $document->setIdentifier('ABC');
-        $document->shouldReceive('getEbsrSubmissions->isEmpty')->once()->andReturn(false);
-        $document->shouldReceive('getEbsrSubmissions->first->getId')->once()->andReturn($ebsrSubId);
+        $document->shouldReceive('getEbsrSubmission')->andReturn($ebsrSubmission);
 
         $this->mockedSmServices['FileUploader']->shouldReceive('remove')
             ->once()
