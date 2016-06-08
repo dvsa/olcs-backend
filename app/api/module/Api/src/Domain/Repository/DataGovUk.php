@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
+use PDO;
 
 /**
  * Contains methods to get data from DB to export for data.gov.uk
@@ -21,13 +22,44 @@ class DataGovUk
         $this->conn = $conn;
     }
 
-    public function fetchOperatorLicences()
+    public function __destruct()
     {
-        //  query data
-        $stmt = $this->conn->query('SELECT * FROM data_gov_uk_operator_licence_view');
+        if ($this->conn !== null) {
+            $this->conn->close();
+        }
+    }
 
-        //  close db connection
-        $this->conn->close();
+    public function fetchOperatorLicences(array $areaNames)
+    {
+        $inStmt = implode(', ', array_fill(0, count($areaNames), '?'));
+
+        //  query data
+        $stmt = $this->conn->prepare(
+            'SELECT * FROM data_gov_uk_operator_licence_view WHERE `GeographicRegion` IN (' . $inStmt . ')'
+        );
+
+        foreach ($areaNames as $idx => $name) {
+            $stmt->bindValue($idx + 1, $name, PDO::PARAM_STR);
+        }
+
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    public function fetchBusRegisteredOnly($areaCodes)
+    {
+        $inStmt = implode(', ', array_fill(0, count($areaCodes), '?'));
+
+        $stmt = $this->conn->prepare(
+            'SELECT * FROM data_gov_uk_bus_registered_only_view WHERE `Current Traffic Area` IN (' . $inStmt . ')'
+        );
+
+        foreach ($areaCodes as $idx => $code) {
+            $stmt->bindValue($idx + 1, $code, PDO::PARAM_STR);
+        }
+
+        $stmt->execute();
 
         return $stmt;
     }

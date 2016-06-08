@@ -16,11 +16,15 @@ class DataGovUkFactoryTest extends MockeryTestCase
 {
     public function testCreateService()
     {
+        $mockConn = m::mock(\Doctrine\DBAL\Connection::class)
+            ->shouldReceive('close')
+            ->getMock();
+
         $mockSl = m::mock(ServiceLocatorInterface::class)
             ->shouldReceive('get')
             ->once()
             ->with('doctrine.connection.export')
-            ->andReturn(m::mock(\Doctrine\DBAL\Connection::class))
+            ->andReturn($mockConn)
             ->getMock();
 
         /** @var ServiceManager $mockSm */

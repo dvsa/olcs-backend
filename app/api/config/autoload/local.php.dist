@@ -49,8 +49,10 @@ return [
                 'driverClass' => \Doctrine\DBAL\Driver\PDOMySql\Driver::class,
                 'params' => $doctrine_connection_params +
                     [
-                        PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false,
-                        PDO::CURSOR_FWDONLY => true,
+                        'driverOptions' => [
+                            PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false,
+                            PDO::CURSOR_FWDONLY => true,
+                        ],
                     ],
             ],
         ],
