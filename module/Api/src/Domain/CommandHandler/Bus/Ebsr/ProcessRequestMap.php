@@ -7,6 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
@@ -30,7 +31,7 @@ use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Olcs\XmlTools\Xml\TemplateBuilder;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 
 /**
  * Request new Ebsr map
@@ -49,7 +50,6 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     use QueueAwareTrait;
 
     const TASK_SUCCESS_DESC = 'New route map available: %s';
-    const TASK_FAIL_DESC = 'Route map generation for: %s failed';
 
     protected $repoServiceName = 'Bus';
 
@@ -60,6 +60,12 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
      */
     protected $templateBuilder;
 
+    /**
+     * Creates the service (injects template builder)
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return TransactioningCommandHandler
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
@@ -70,9 +76,11 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     }
 
     /**
+     * Transxchange map request
+     *
      * @param CommandInterface $command
+     * @throws TransxchangeException
      * @return Result
-     * @throws \Exception
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -81,64 +89,68 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
          * @var BusRegEntity $busReg
          * @var EbsrSubmissionEntity $submission
          */
+        $config = $this->getConfig();
+
+        if (!isset($config['ebsr']['tmp_extra_path'])) {
+            throw new TransxchangeException('No tmp directory specified in config');
+        }
+
         $result = new Result();
         $busReg = $this->getRepo()->fetchUsingId($command);
         $ebsrSubmissions = $busReg->getEbsrSubmissions();
         $submission = $ebsrSubmissions->first();
 
-        try {
-            $xmlFilename = $this->getFileProcessor()->fetchXmlFileNameFromDocumentStore(
-                $submission->getDocument()->getIdentifier()
-            );
+        $this->getFileProcessor()->setSubDirPath($config['ebsr']['tmp_extra_path']);
 
-            $template = $this->createRequestMapTemplate($command->getTemplate(), $xmlFilename, $command->getScale());
+        $xmlFilename = $this->getFileProcessor()->fetchXmlFileNameFromDocumentStore(
+            $submission->getDocument()->getIdentifier()
+        );
 
-            $documents = $this->getTransExchange()->makeRequest($template);
+        $template = $this->createRequestMapTemplate($command->getTemplate(), $xmlFilename, $command->getScale());
 
-            if (!isset($documents['files'])) {
-                throw new \Exception('Invalid response from transXchange publisher');
-            }
+        $documents = $this->getTransExchange()->makeRequest($template);
 
-            foreach ($documents['files'] as $document) {
-                $result->merge(
-                    $this->handleSideEffect($this->generateDocumentCmd($document, $busReg, $command->getUser()))
-                );
-            }
-
-            $ebsrId = $submission->getId();
-
-            //update txc inbox records with the new document id, create a task and send confirmation email
-            $result->merge(
-                $this->handleSideEffects(
-                    [
-                        $this->createUpdateTxcInboxPdfCmd($busReg->getId(), $result->getId('document')),
-                        $this->createTaskCmd($busReg, self::TASK_SUCCESS_DESC),
-                        $this->emailQueue(SendEbsrRequestMapCmd::class, ['id' => $ebsrId], $ebsrId)
-                    ]
-                )
-            );
-        } catch (\Exception $e) {
-            $failedTaskCmd = $this->createTaskCmd($busReg, self::TASK_FAIL_DESC);
-            $this->handleSideEffect($failedTaskCmd);
-
-            throw ($e);
+        if (!isset($documents['files'])) {
+            throw new TransxchangeException('Invalid response from transXchange publisher');
         }
+
+        foreach ($documents['files'] as $document) {
+            $result->merge(
+                $this->handleSideEffect($this->generateDocumentCmd($document, $busReg, $command->getUser()))
+            );
+        }
+
+        $ebsrId = $submission->getId();
+
+        //update txc inbox records with the new document id, create a task and send confirmation email
+        $result->merge(
+            $this->handleSideEffects(
+                [
+                    $this->createUpdateTxcInboxPdfCmd($busReg->getId(), $result->getId('document')),
+                    $this->createTaskCmd($busReg, self::TASK_SUCCESS_DESC),
+                    $this->emailQueue(SendEbsrRequestMapCmd::class, ['id' => $ebsrId], $ebsrId)
+                ]
+            )
+        );
 
         return $result;
     }
 
     /**
+     * Creates a transxchange xml file to request a map
+     *
+     * @param string $template
      * @param string $xmlFilename
      * @param string $scale
-     * @throws \Exception
-     * @return ProcessRequestMap
+     * @return string
+     * @throws TransxchangeException
      */
     private function createRequestMapTemplate($template, $xmlFilename, $scale)
     {
         $config = $this->getConfig();
 
         if (!isset($config['ebsr']['transexchange_publisher']['templates'][$template])) {
-            throw new \Exception('Missing template');
+            throw new TransxchangeException('Missing template');
         }
 
         $templatePath = $config['ebsr']['transexchange_publisher']['templates'][$template];
@@ -155,6 +167,8 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     }
 
     /**
+     * Creates a command to upload the transxchange map
+     *
      * @param string $document
      * @param BusRegEntity $busReg
      * @param int $user
@@ -177,6 +191,8 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     }
 
     /**
+     * Creates a command to add a task
+     *
      * @param BusRegEntity $busReg
      * @param string $description
      * @return CreateTaskCmd
