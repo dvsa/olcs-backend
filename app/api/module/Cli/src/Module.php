@@ -50,6 +50,7 @@ class Module implements ConsoleUsageProviderInterface
             ['<report-name>', 'export report name'],
             ['    ' . DataGovUkExport::OPERATOR_LICENCE, '- export operator licences'],
             ['    ' . DataGovUkExport::BUS_REGISTERED_ONLY, '- export bus registered only'],
+            ['    ' . DataGovUkExport::BUS_VARIATION, '- export bus variations'],
             ['--path=<exportPath>', '(optional) save export file in specified directory'],
         ];
     }
