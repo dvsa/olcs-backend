@@ -80,7 +80,7 @@ class RequestMapQueueTest extends CommandHandlerTestCase
             'user' => $userId,
             'template' => TransExchangeClient::REQUEST_MAP_TEMPLATE
         ];
-        
+
         $this->expectedQueueSideEffect($busRegId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData);
 
         $result = $this->sut->handleCommand($cmd);
