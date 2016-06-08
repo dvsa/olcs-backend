@@ -56,4 +56,29 @@ class PreviousPublicationTest extends QueryHandlerTestCase
 
         $this->assertEquals(['foo' => 'bar'], $this->sut->handleQuery($query)->serialize());
     }
+
+    public function testHandleQueryNull()
+    {
+        $trafficArea = 99;
+        $pi = 88;
+        $pubType = 'A&D';
+        $publicationNo = 77;
+        $bundle = [];
+
+        $query = Qry::create(
+            [
+                'pi' => $pi,
+                'pubType' => $pubType,
+                'publicationNo' => $publicationNo,
+                'trafficArea' => $trafficArea,
+                'bundle' => $bundle
+            ]
+        );
+
+        $this->repoMap['PublicationLink']->shouldReceive('fetchPreviousPublicationNo')
+            ->with($query)
+            ->andReturn(null);
+
+        $this->assertNull($this->sut->handleQuery($query));
+    }
 }
