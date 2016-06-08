@@ -46,4 +46,19 @@ class PreviousHearingTest extends QueryHandlerTestCase
 
         $this->assertEquals(['foo' => 'bar'], $this->sut->handleQuery($query)->serialize());
     }
+
+    public function testHandleQueryEmpty()
+    {
+        $pi = 99;
+        $hearingDate = '2015-03-06 20:00:00';
+        $bundle = [];
+
+        $query = Qry::create(['pi' => $pi, 'hearingDate' => $hearingDate, 'bundle' => $bundle]);
+
+        $this->repoMap['PiHearing']->shouldReceive('fetchPreviousHearing')
+            ->with($pi, m::type(\DateTime::class))
+            ->andReturn(null);
+
+        $this->assertNull($this->sut->handleQuery($query));
+    }
 }
