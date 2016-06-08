@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
 use Symfony\Component\Finder\Finder;
 use Zend\Filter\Decompress;
+use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
 
 /**
  * Class FileProcessor
@@ -69,6 +70,7 @@ class FileProcessor implements FileProcessorInterface
      * @param string $identifier
      * @return string
      * @throws \RuntimeException
+     * @throws EbsrPackException
      */
     public function fetchXmlFileNameFromDocumentStore($identifier)
     {
@@ -92,9 +94,9 @@ class FileProcessor implements FileProcessorInterface
         $files = iterator_to_array($finder->files()->name('*.xml')->in($tmpDir));
 
         if (count($files) > 1) {
-            throw new \RuntimeException('There is more than one XML file in the pack');
+            throw new EbsrPackException('There is more than one XML file in the pack');
         } elseif (!count($files)) {
-            throw new \RuntimeException('Could not find an XML file in the pack');
+            throw new EbsrPackException('Could not find an XML file in the pack');
         }
 
         $xml = key($files);

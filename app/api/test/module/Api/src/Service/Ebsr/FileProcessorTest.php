@@ -54,7 +54,7 @@ class FileProcessorTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\EbsrPackException
      */
     public function testFetchXmlFileNameFromDocumentStoreExGt1()
     {
@@ -92,7 +92,7 @@ class FileProcessorTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\EbsrPackException
      */
     public function testFetchXmlFileNameFromDocumentStoreEx0()
     {

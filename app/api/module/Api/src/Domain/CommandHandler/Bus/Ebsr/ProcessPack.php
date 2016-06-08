@@ -7,6 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\RequestMap as RequestMapQueueCmd;
@@ -156,7 +157,7 @@ final class ProcessPack extends AbstractCommandHandler implements
 
         try {
             $xmlName = $this->getFileProcessor()->fetchXmlFileNameFromDocumentStore($doc->getIdentifier());
-        } catch (\RuntimeException $e) {
+        } catch (EbsrPackException $e) {
             //process the validation failure information
             $this->processValidationFailure($ebsrSub, $doc, ['upload-failure' => $e->getMessage()], '', []);
 
