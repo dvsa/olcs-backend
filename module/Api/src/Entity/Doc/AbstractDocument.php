@@ -380,15 +380,15 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     /**
      * Ebsr submission
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var \Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission
      *
-     * @ORM\OneToMany(
+     * @ORM\OneToOne(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission",
      *     mappedBy="document",
      *     cascade={"persist"}
      * )
      */
-    protected $ebsrSubmissions;
+    protected $ebsrSubmission;
 
     /**
      * Sla target date
@@ -415,7 +415,6 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     {
         $this->continuationDetails = new ArrayCollection();
         $this->templates = new ArrayCollection();
-        $this->ebsrSubmissions = new ArrayCollection();
     }
 
     /**
@@ -1208,61 +1207,24 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     /**
      * Set the ebsr submission
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions
+     * @param \Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission $ebsrSubmission
      * @return Document
      */
-    public function setEbsrSubmissions($ebsrSubmissions)
+    public function setEbsrSubmission($ebsrSubmission)
     {
-        $this->ebsrSubmissions = $ebsrSubmissions;
+        $this->ebsrSubmission = $ebsrSubmission;
 
         return $this;
     }
 
     /**
-     * Get the ebsr submissions
+     * Get the ebsr submission
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return \Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission
      */
-    public function getEbsrSubmissions()
+    public function getEbsrSubmission()
     {
-        return $this->ebsrSubmissions;
-    }
-
-    /**
-     * Add a ebsr submissions
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions
-     * @return Document
-     */
-    public function addEbsrSubmissions($ebsrSubmissions)
-    {
-        if ($ebsrSubmissions instanceof ArrayCollection) {
-            $this->ebsrSubmissions = new ArrayCollection(
-                array_merge(
-                    $this->ebsrSubmissions->toArray(),
-                    $ebsrSubmissions->toArray()
-                )
-            );
-        } elseif (!$this->ebsrSubmissions->contains($ebsrSubmissions)) {
-            $this->ebsrSubmissions->add($ebsrSubmissions);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a ebsr submissions
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions
-     * @return Document
-     */
-    public function removeEbsrSubmissions($ebsrSubmissions)
-    {
-        if ($this->ebsrSubmissions->contains($ebsrSubmissions)) {
-            $this->ebsrSubmissions->removeElement($ebsrSubmissions);
-        }
-
-        return $this;
+        return $this->ebsrSubmission;
     }
 
     /**
