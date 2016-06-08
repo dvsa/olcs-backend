@@ -30,6 +30,10 @@ class FileProcessor implements FileProcessorInterface
      * @var string
      */
     private $tmpDir;
+    /**
+     * @var string
+     */
+    private $subDirPath = '';
 
     /**
      * FileProcessor constructor.
@@ -50,14 +54,36 @@ class FileProcessor implements FileProcessorInterface
         $this->tmpDir = $tmpDir;
     }
 
+    /**
+     * Sets the sub directory path, allows outputting to different directories within /tmp and makes the file processor
+     * a bit more reusable in future
+     */
+    public function setSubDirPath($subDirPath)
+    {
+        $this->subDirPath = $subDirPath;
+    }
+
+    /**
+     * Returns the filename of extracted EBSR xml file
+     *
+     * @param string $identifier
+     * @return string
+     * @throws \RuntimeException
+     */
     public function fetchXmlFileNameFromDocumentStore($identifier)
     {
+        $targetDir = $this->tmpDir . $this->subDirPath;
+
+        if (!$this->fileSystem->exists($targetDir)) {
+            throw new \RuntimeException('The specified tmp directory does not exist');
+        }
+
         $file = $this->fileUploader->download($identifier);
 
-        $filePath = $this->fileSystem->createTmpFile($this->tmpDir, 'ebsr');
+        $filePath = $this->fileSystem->createTmpFile($targetDir, 'ebsr');
         $this->fileSystem->dumpFile($filePath, $file->getContent());
 
-        $tmpDir = $this->fileSystem->createTmpDir($this->tmpDir, 'zip');
+        $tmpDir = $this->fileSystem->createTmpDir($targetDir, 'zip');
 
         $this->decompressFilter->setTarget($tmpDir);
         $this->decompressFilter->filter($filePath);
