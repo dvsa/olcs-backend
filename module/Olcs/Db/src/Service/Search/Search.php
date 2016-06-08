@@ -2,8 +2,8 @@
 
 namespace Olcs\Db\Service\Search;
 
+use Dvsa\Olcs\Api\Entity\Publication\Publication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
-use Dvsa\Olcs\Api\Entity\User\User;
 use Elastica\Aggregation\Terms;
 use Elastica\Query;
 use Elastica\Filter;
@@ -230,17 +230,21 @@ class Search implements AuthAwareInterface
                 $postcodeQuery = new Query\Match();
                 $postcodeQuery->setField('postcode', $search);
                 $queryBool->addShould($postcodeQuery);
-
                 $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
-
+                break;
+            case 'publication':
+                if ($this->isAnonymousUser() || !$this->isInternalUser()) {
+                    $statusQuery = new Query\Match();
+                    $statusQuery->setField('pub_status', Publication::PUB_PRINTED_STATUS);
+                    $queryBool->addMust($statusQuery);
+                }
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
                 break;
             case 'irfo':
             case 'licence':
             case 'psv_disc':
-            case 'publication':
             case 'user':
                 $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
-
                 break;
             case 'vehicle_current':
             case 'vehicle_removed':
