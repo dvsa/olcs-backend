@@ -60,6 +60,8 @@ final class DataGovUkExport extends AbstractCommandHandler
             $this->processOperatorLicences();
         } elseif ($this->reportName === self::BUS_REGISTERED_ONLY) {
             $this->processBusRegOnly();
+        } elseif ($this->reportName === self::BUS_VARIATION) {
+            $this->processBusVariation();
         } else {
             throw new \Exception(self::ERR_INVALID_REPORT);
         }
@@ -95,6 +97,21 @@ final class DataGovUkExport extends AbstractCommandHandler
         $stmt = $this->dataGovUkRepo->fetchBusRegisteredOnly($areas);
 
         $this->makeCsvsFromStatement($stmt, 'Current Traffic Area', 'Bus_RegisteredOnly');
+    }
+
+    private function processBusVariation()
+    {
+        $areas = array_map(
+            function (TrafficAreaEntity $item) {
+                return $item->getId();
+            },
+            $this->getTrafficAreas()
+        );
+
+        $this->result->addMessage('Fetching data from DB for Bus Variation');
+        $stmt = $this->dataGovUkRepo->fetchBusVariation($areas);
+
+        $this->makeCsvsFromStatement($stmt, 'Current Traffic Area', 'Bus_Variation');
     }
 
     /**
