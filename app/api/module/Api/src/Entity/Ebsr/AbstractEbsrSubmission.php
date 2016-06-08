@@ -17,7 +17,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="ebsr_submission",
  *    indexes={
- *        @ORM\Index(name="ix_ebsr_submission_document_id", columns={"document_id"}),
  *        @ORM\Index(name="ix_ebsr_submission_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_ebsr_submission_ebsr_submission_status_id",
      *     columns={"ebsr_submission_status_id"}),
@@ -26,7 +25,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_ebsr_submission_organisation_id", columns={"organisation_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_ebsr_submission_olbs_key", columns={"olbs_key"})
+ *        @ORM\UniqueConstraint(name="uk_ebsr_submission_olbs_key", columns={"olbs_key"}),
+ *        @ORM\UniqueConstraint(name="uk_ebsr_submission_document_id", columns={"document_id"})
  *    }
  * )
  */
@@ -98,10 +98,10 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
      *
      * @var \Dvsa\Olcs\Api\Entity\Doc\Document
      *
-     * @ORM\ManyToOne(
+     * @ORM\OneToOne(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document",
      *     fetch="LAZY",
-     *     inversedBy="ebsrSubmissions"
+     *     inversedBy="ebsrSubmission"
      * )
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
      */
