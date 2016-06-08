@@ -25,8 +25,9 @@ class PreviousHearing extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        return $this->result(
-            $this->getRepo()->fetchPreviousHearing($query->getPi(), new \DateTime($query->getHearingDate()))
+        $previousHearing = $this->getRepo()->fetchPreviousHearing(
+            $query->getPi(), new \DateTime($query->getHearingDate())
         );
+        return $previousHearing === null ? null : $this->result($previousHearing);
     }
 }

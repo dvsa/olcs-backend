@@ -25,9 +25,7 @@ class PreviousPublication extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        return $this->result(
-            $this->getRepo()->fetchPreviousPublicationNo($query),
-            ['publication']
-        );
+        $previousPublicatioNo = $this->getRepo()->fetchPreviousPublicationNo($query);
+        return $previousPublicatioNo === null ? null : $this->result($previousPublicatioNo, ['publication']);
     }
 }
