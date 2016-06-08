@@ -432,6 +432,9 @@ class SearchTest extends MockeryTestCase
                         'should' => [
                             $this->generateMatch('_all', 'FOO BAR'),
                             $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        ],
+                        'must' => [
+                            0 => $this->generateMatch('pub_status', 'pub_s_printed')
                         ]
                     ]
                 ],
