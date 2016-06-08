@@ -24,6 +24,7 @@ class FileProcessorTest extends TestCase
         $fileIdentifier = 'ebsr.zip';
         $fileContent = 'contents';
         $tmpDir = '/tmp';
+        $extraPath = '/extra/path';
         $tmpEbsrFile = 'ebsr123';
         $extractDir = vfsStream::url('root');
         $xmlFilename = vfsStream::url('root/ebsr.xml');
@@ -37,15 +38,17 @@ class FileProcessorTest extends TestCase
         $mockFileUploader->shouldReceive('download')->with($fileIdentifier)->andReturn($mockFile);
 
         $mockFileSystem = m::mock(Filesystem::class);
-        $mockFileSystem->shouldReceive('createTmpFile')->with($tmpDir, 'ebsr')->andReturn($tmpEbsrFile);
+        $mockFileSystem->shouldReceive('exists')->with($tmpDir . $extraPath)->andReturn(true);
+        $mockFileSystem->shouldReceive('createTmpFile')->with($tmpDir . $extraPath, 'ebsr')->andReturn($tmpEbsrFile);
         $mockFileSystem->shouldReceive('dumpFile')->with($tmpEbsrFile, $fileContent);
-        $mockFileSystem->shouldReceive('createTmpDir')->with($tmpDir, 'zip')->andReturn($extractDir);
+        $mockFileSystem->shouldReceive('createTmpDir')->with($tmpDir . $extraPath, 'zip')->andReturn($extractDir);
 
         $mockFilter = m::mock(Decompress::class);
         $mockFilter->shouldReceive('setTarget')->with($extractDir);
         $mockFilter->shouldReceive('filter')->with($tmpEbsrFile);
 
         $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $tmpDir);
+        $sut->setSubDirPath($extraPath);
 
         $this->assertEquals($xmlFilename, $sut->fetchXmlFileNameFromDocumentStore($fileIdentifier));
     }
@@ -74,6 +77,7 @@ class FileProcessorTest extends TestCase
         $mockFileUploader->shouldReceive('download')->with($fileIdentifier)->andReturn($mockFile);
 
         $mockFileSystem = m::mock(Filesystem::class);
+        $mockFileSystem->shouldReceive('exists')->with($tmpDir)->andReturn(true);
         $mockFileSystem->shouldReceive('createTmpFile')->with($tmpDir, 'ebsr')->andReturn($tmpEbsrFile);
         $mockFileSystem->shouldReceive('dumpFile')->with($tmpEbsrFile, $fileContent);
         $mockFileSystem->shouldReceive('createTmpDir')->with($tmpDir, 'zip')->andReturn($extractDir);
@@ -107,6 +111,7 @@ class FileProcessorTest extends TestCase
         $mockFileUploader->shouldReceive('download')->with($fileIdentifier)->andReturn($mockFile);
 
         $mockFileSystem = m::mock(Filesystem::class);
+        $mockFileSystem->shouldReceive('exists')->with($tmpDir)->andReturn(true);
         $mockFileSystem->shouldReceive('createTmpFile')->with($tmpDir, 'ebsr')->andReturn($tmpEbsrFile);
         $mockFileSystem->shouldReceive('dumpFile')->with($tmpEbsrFile, $fileContent);
         $mockFileSystem->shouldReceive('createTmpDir')->with($tmpDir, 'zip')->andReturn($extractDir);
@@ -114,6 +119,28 @@ class FileProcessorTest extends TestCase
         $mockFilter = m::mock(Decompress::class);
         $mockFilter->shouldReceive('setTarget')->with($extractDir);
         $mockFilter->shouldReceive('filter')->with($tmpEbsrFile);
+
+        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $tmpDir);
+
+        $sut->fetchXmlFileNameFromDocumentStore($fileIdentifier);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testFetchXmlFileNameFromDocumentStoreMissingTmpDir()
+    {
+        vfsStream::setup();
+
+        $fileIdentifier = 'ebsr.zip';
+        $tmpDir = '/tmp';
+
+        $mockFileUploader = m::mock(FileUploaderInterface::class);
+
+        $mockFileSystem = m::mock(Filesystem::class);
+        $mockFileSystem->shouldReceive('exists')->with($tmpDir)->andReturn(false);
+
+        $mockFilter = m::mock(Decompress::class);
 
         $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $tmpDir);
 
