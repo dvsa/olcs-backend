@@ -22,12 +22,16 @@ class SearchControllerTest extends \PHPUnit_Framework_TestCase
                 'q' => 'test',
                 'index' => 'application',
                 'page' => 1,
-                'limit' => 10
+                'limit' => 10,
+                'sort' => 'someField',
+                'order' => 'desc'
             ]
         );
 
         $mockElastic = m::mock('Olcs\Db\Service\Search\Search');
         $mockElastic->shouldReceive('search')->with('test', ['application'], 1, 10)->andReturn('resultSet');
+        $mockElastic->shouldReceive('setSort')->with('someField');
+        $mockElastic->shouldReceive('setOrder')->with('desc');
 
         $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('ElasticSearch\Search')->andReturn($mockElastic);
