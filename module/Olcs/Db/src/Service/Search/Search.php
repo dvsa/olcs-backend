@@ -142,7 +142,7 @@ class Search implements AuthAwareInterface
 
             $elasticaQuery->setQuery($elasticaQueryBool);
 
-            if (!empty($this->getSort() && !empty($this->getOrder()))) {
+            if (!empty($this->getSort()) && !empty($this->getOrder())) {
                 $elasticaQuery->setSort([$this->getSort() => strtolower($this->getOrder())]);
             }
         }
