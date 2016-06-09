@@ -36,8 +36,8 @@ class SystemInfoMessageEntityTest extends EntityTester
             //  current date in interval
             [
                 'entity' => (new Entity())
-                    ->setStartDate(date('Y-m-d H:i:s', $now - 300))
-                    ->setEndDate(date('Y-m-d H:i:s', $now + 300)),
+                    ->setStartDate(date('Y-m-d H:i:s', $now - 30000))
+                    ->setEndDate(date('Y-m-d H:i:s', $now + 30000)),
                 'expect' => [
                     'isActive' => true,
                 ],
@@ -45,8 +45,8 @@ class SystemInfoMessageEntityTest extends EntityTester
             //  interval in past, internal false
             [
                 'entity' => (new Entity())
-                    ->setStartDate(date('Y-m-d H:i:s', $now - 2 * 300))
-                    ->setEndDate(date('Y-m-d H:i:s', $now - 300)),
+                    ->setStartDate(date('Y-m-d H:i:s', $now - 2 * 30000))
+                    ->setEndDate(date('Y-m-d H:i:s', $now - 30000)),
                 'expect' => [
                     'isActive' => false,
                 ],
@@ -54,8 +54,8 @@ class SystemInfoMessageEntityTest extends EntityTester
             //  interval in future, internal false
             [
                 'entity' => (new Entity())
-                    ->setStartDate(date('Y-m-d H:i:s', $now + 300))
-                    ->setEndDate(date('Y-m-d H:i:s', $now + 2 * 300)),
+                    ->setStartDate(date('Y-m-d H:i:s', $now + 30000))
+                    ->setEndDate(date('Y-m-d H:i:s', $now + 2 * 30000)),
                 'expect' => [
                     'isActive' => false,
                 ],

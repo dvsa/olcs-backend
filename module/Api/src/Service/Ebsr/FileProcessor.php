@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
 use Symfony\Component\Finder\Finder;
 use Zend\Filter\Decompress;
+use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
 
 /**
  * Class FileProcessor
@@ -30,6 +31,10 @@ class FileProcessor implements FileProcessorInterface
      * @var string
      */
     private $tmpDir;
+    /**
+     * @var string
+     */
+    private $subDirPath = '';
 
     /**
      * FileProcessor constructor.
@@ -50,14 +55,37 @@ class FileProcessor implements FileProcessorInterface
         $this->tmpDir = $tmpDir;
     }
 
+    /**
+     * Sets the sub directory path, allows outputting to different directories within /tmp and makes the file processor
+     * a bit more reusable in future
+     */
+    public function setSubDirPath($subDirPath)
+    {
+        $this->subDirPath = $subDirPath;
+    }
+
+    /**
+     * Returns the filename of extracted EBSR xml file
+     *
+     * @param string $identifier
+     * @return string
+     * @throws \RuntimeException
+     * @throws EbsrPackException
+     */
     public function fetchXmlFileNameFromDocumentStore($identifier)
     {
+        $targetDir = $this->tmpDir . $this->subDirPath;
+
+        if (!$this->fileSystem->exists($targetDir)) {
+            throw new \RuntimeException('The specified tmp directory does not exist');
+        }
+
         $file = $this->fileUploader->download($identifier);
 
-        $filePath = $this->fileSystem->createTmpFile($this->tmpDir, 'ebsr');
+        $filePath = $this->fileSystem->createTmpFile($targetDir, 'ebsr');
         $this->fileSystem->dumpFile($filePath, $file->getContent());
 
-        $tmpDir = $this->fileSystem->createTmpDir($this->tmpDir, 'zip');
+        $tmpDir = $this->fileSystem->createTmpDir($targetDir, 'zip');
 
         $this->decompressFilter->setTarget($tmpDir);
         $this->decompressFilter->filter($filePath);
@@ -66,9 +94,9 @@ class FileProcessor implements FileProcessorInterface
         $files = iterator_to_array($finder->files()->name('*.xml')->in($tmpDir));
 
         if (count($files) > 1) {
-            throw new \RuntimeException('There is more than one XML file in the pack');
+            throw new EbsrPackException('There is more than one XML file in the pack');
         } elseif (!count($files)) {
-            throw new \RuntimeException('Could not find an XML file in the pack');
+            throw new EbsrPackException('Could not find an XML file in the pack');
         }
 
         $xml = key($files);
