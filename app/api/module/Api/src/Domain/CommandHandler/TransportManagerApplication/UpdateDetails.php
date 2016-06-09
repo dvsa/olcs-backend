@@ -29,8 +29,17 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
 {
     protected $repoServiceName = 'TransportManagerApplication';
 
-    protected $extraRepos = ['ContactDetails', 'Address'];
+    protected $extraRepos = ['ContactDetails', 'Address', 'TransportManager'];
 
+    /**
+     * Handle query
+     *
+     * @param CommandInterface $command command
+     *
+     * @return Result
+     * @throws ValidationException
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         /* @var $command UpdateDetailsCommand */
@@ -55,6 +64,10 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
             $command->getDob() ? new DateTime($command->getDob()) : null
         );
 
+        if ($tma->getTransportManager()->getTmType() === null) {
+            $this->updateTmType($tma->getTransportManager(), $command->getTmType());
+        }
+
         $this->getRepo()->save($tma);
 
         $result->addMessage("Transport Manager Application ID {$tma->getId()} updated");
@@ -65,8 +78,10 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
     /**
      * Update TMA properties
      *
-     * @param TransportManagerApplication $tma
-     * @param UpdateDetailsCommand        $command
+     * @param TransportManagerApplication $tma     tma
+     * @param UpdateDetailsCommand        $command command
+     *
+     * @return void
      */
     protected function updateTma(TransportManagerApplication $tma, UpdateDetailsCommand $command)
     {
@@ -96,8 +111,10 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
     /**
      * Update home address
      *
-     * @param TransportManagerApplication $tma
-     * @param array                       $addressData
+     * @param TransportManagerApplication $tma         tma
+     * @param array                       $addressData addressData
+     *
+     * @return void
      */
     protected function updateHomeAddress(TransportManagerApplication $tma, array $addressData)
     {
@@ -114,8 +131,10 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
     /**
      * Update work address
      *
-     * @param TransportManagerApplication $tma
-     * @param array                       $address
+     * @param TransportManagerApplication $tma     tma
+     * @param array                       $address address
+     *
+     * @return void
      */
     protected function updateWorkAddress(TransportManagerApplication $tma, array $address)
     {
@@ -138,8 +157,10 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
     /**
      * Populate an Address entity
      *
-     * @param Address $address
-     * @param array $addressData
+     * @param Address $address     address
+     * @param array   $addressData addressData
+     *
+     * @return void
      */
     protected function populateAddress(Address $address, array $addressData)
     {
@@ -162,8 +183,10 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
     /**
      * Validate dob field
      *
-     * @param array $dob
+     * @param array $dob date of birth
+     *
      * @throws ValidationException
+     * @return void
      */
     protected function validateDob($dob)
     {
@@ -176,5 +199,20 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
                 ]
             );
         }
+    }
+
+    /**
+     * Update tm type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $tm     transport manager
+     * @param string                                    $tmType transport manager type
+     *
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return void
+     */
+    protected function updateTmType($tm, $tmType)
+    {
+        $tm->setTmType($this->getRepo()->getRefdataReference($tmType));
+        $this->getRepo('TransportManager')->save($tm);
     }
 }
