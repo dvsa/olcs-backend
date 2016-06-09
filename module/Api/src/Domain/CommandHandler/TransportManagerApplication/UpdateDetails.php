@@ -19,6 +19,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateDetails as UpdateDetailsCommand;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 
 /**
  * UpdateDetails
@@ -210,7 +211,7 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      * @return void
      */
-    protected function updateTmType($tm, $tmType)
+    protected function updateTmType(TransportManager $tm, $tmType)
     {
         $tm->setTmType($this->getRepo()->getRefdataReference($tmType));
         $this->getRepo('TransportManager')->save($tm);
