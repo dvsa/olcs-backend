@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
 use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
+use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 
 /**
  * Abstract Command Queue Consumer
@@ -70,6 +71,8 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
         } catch (NotReadyException $e) {
             return $this->retry($item, $e->getRetryAfter());
         } catch (EmailNotSentException $e) {
+            return $this->retry($item, $this->retryAfter);
+        } catch (TransxchangeException $e) {
             return $this->retry($item, $this->retryAfter);
         } catch (DomainException $e) {
             $message = !empty($e->getMessages()) ? implode(', ', $e->getMessages()) : $e->getMessage();

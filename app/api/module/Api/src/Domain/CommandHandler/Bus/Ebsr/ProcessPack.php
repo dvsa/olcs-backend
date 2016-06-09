@@ -7,6 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\RequestMap as RequestMapQueueCmd;
@@ -41,6 +42,8 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
+use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
+use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -55,12 +58,14 @@ final class ProcessPack extends AbstractCommandHandler implements
     AuthAwareInterface,
     TransactionedInterface,
     UploaderAwareInterface,
-    FileProcessorAwareInterface
+    FileProcessorAwareInterface,
+    ConfigAwareInterface
 {
     use AuthAwareTrait;
     use UploaderAwareTrait;
     use QueueAwareTrait;
     use FileProcessorAwareTrait;
+    use ConfigAwareTrait;
 
     /**
      * @var int
@@ -141,9 +146,18 @@ final class ProcessPack extends AbstractCommandHandler implements
         /** @var DocumentEntity $doc */
         $doc = $ebsrSub->getDocument();
 
+        $config = $this->getConfig();
+
+        if (!isset($config['ebsr']['tmp_extra_path'])) {
+            throw new \RuntimeException('No tmp directory specified in config');
+        }
+
+        //set the sub directory of /tmp where we extract the EBSR files
+        $this->getFileProcessor()->setSubDirPath($config['ebsr']['tmp_extra_path']);
+
         try {
             $xmlName = $this->getFileProcessor()->fetchXmlFileNameFromDocumentStore($doc->getIdentifier());
-        } catch (\RuntimeException $e) {
+        } catch (EbsrPackException $e) {
             //process the validation failure information
             $this->processValidationFailure($ebsrSub, $doc, ['upload-failure' => $e->getMessage()], '', []);
 

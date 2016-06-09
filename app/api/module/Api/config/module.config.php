@@ -624,8 +624,6 @@ return [
     'submissions' => require(__DIR__ . '/submissions.config.php'),
     'ebsr' => [
         'transexchange_publisher' => [
-            'uri' => 'http://localhost:8080/txc/publisherService',
-            'options' => ['timeout' => 30],
             'templates' => [
                 \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::GENERATE_DOCS_TEMPLATE =>
                     __DIR__ . '/../data/ebsr/txc_template.xml',
