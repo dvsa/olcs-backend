@@ -58,6 +58,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 
     /**
      * @dataProvider handleCommandProvider
+     * @group test123
      */
     public function testHandleCommand(
         $section,
@@ -299,9 +300,9 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $licence->setLicenceVehicles($vehicleCollection);
 
         $psvDiscsCollection = new ArrayCollection();
-        $psvDiscsCollection->add(['foo' => 'bar']);
-        $psvDiscsCollection->add(['foo' => 'bar']);
-        $psvDiscsCollection->add(['foo' => 'bar']);
+        $psvDiscsCollection->add(['foo' => 'bar', 'ceasedDate' => null]);
+        $psvDiscsCollection->add(['foo' => 'bar', 'ceasedDate' => null]);
+        $psvDiscsCollection->add(['foo' => 'bar', 'ceasedDate' => null]);
         $licence->setPsvDiscs($psvDiscsCollection);
 
         $licence->shouldReceive('getActiveCommunityLicences->count')->andReturn(6);
@@ -319,7 +320,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $licence->setLicenceVehicles($vehicleCollection);
 
         $psvDiscsCollection = new ArrayCollection();
-        $psvDiscsCollection->add(['foo' => 'bar']);
+        $psvDiscsCollection->add(['foo' => 'bar', 'ceasedDate' => null]);
         $licence->setPsvDiscs($psvDiscsCollection);
 
         $licence->setTotAuthVehicles(3);
