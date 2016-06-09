@@ -475,6 +475,13 @@ class Fee extends AbstractRepository
             $qb
                 ->leftJoin($this->alias . '.irfoGvPermit', 'igp')
                 ->leftJoin($this->alias . '.irfoPsvAuth', 'ipa')
+                // This where clause make the query run quicker by hinting to MySQL to use the indexes
+                ->andWhere(
+                    $qb->expr()->orX(
+                        $qb->expr()->isNotNull($this->alias . '.irfoGvPermit'),
+                        $qb->expr()->isNotNull($this->alias . '.irfoPsvAuth')
+                    )
+                )
                 ->andWhere(
                     $qb->expr()->orX(
                         $qb->expr()->eq('igp.organisation', ':organisationId'),
