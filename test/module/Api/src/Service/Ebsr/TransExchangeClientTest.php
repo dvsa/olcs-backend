@@ -59,7 +59,7 @@ class TransExchangeClientTest extends TestCase
     /**
      * Tests exception thrown when request not valid
      *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RestResponseException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\TransxchangeException
      */
     public function testMakeRequestThrowsException()
     {

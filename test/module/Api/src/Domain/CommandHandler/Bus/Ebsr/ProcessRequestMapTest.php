@@ -23,6 +23,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRequestMap as SendEbsrRequestMapC
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Olcs\XmlTools\Xml\TemplateBuilder;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
+use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Doctrine\Common\Collections\ArrayCollection;
 use Zend\Http\Header\ContentSecurityPolicy;
@@ -50,14 +51,15 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
                 'transexchange_publisher' => [
                     'templates' => [
                         $this->template => 'template path'
-                    ]
-                ]
+                    ],
+                ],
+                'tmp_extra_path' => '/tmp/file/path'
             ]
         ];
 
         $this->mockedSmServices = [
             TemplateBuilder::class => m::mock(TemplateBuilder::class),
-            FileProcessorInterface::class => m::mock(FileProcessorInterface::class),
+            FileProcessorInterface::class => m::mock(FileProcessor::class)->makePartial(),
             TransExchangeClient::class => m::mock(TransExchangeClient::class),
             'Config' => $config,
             'FileUploader' => m::mock(ContentStoreFileUploader::class)
@@ -178,8 +180,9 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
     }
 
     /**
-     * test handleCommand creates failure task when exception thrown
-     * @expectedException \Exception
+     * test handleCommand throws an exception when transxchange doesn't return a good response
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\TransxchangeException
      */
     public function testHandleCommandFail()
     {
@@ -233,19 +236,74 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
             ->with($xmlTemplate)
             ->andReturn(false);
 
-        $taskData = [
-            'category' => TaskEntity::CATEGORY_BUS,
-            'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
-            'description' => sprintf(ProcessRequestMap::TASK_FAIL_DESC, $busRegNo),
-            'actionDate' => date('Y-m-d'),
-            'busReg' => $id,
-            'licence' => $licenceId,
-        ];
-
-        $this->expectedSideEffect(CreateTaskCmd::class, $taskData, new Result());
-
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf(Result::class, $result);
+    }
+
+    /**
+     * test handleCommand throws an exception when template config is not found
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\TransxchangeException
+     */
+    public function testHandleCommandMissingTemplateConfig()
+    {
+        $config = [
+            'ebsr' => [
+                'transexchange_publisher' => [
+                    'templates' => [],
+                ],
+                'tmp_extra_path' => '/tmp/file/path'
+            ]
+        ];
+
+        $this->sut->setConfig($config);
+
+        $id = 99;
+        $submissionId = 55;
+        $scale = 'small';
+        $xmlFilename = 'filename.xml';
+        $documentIdentifier = 'identifier';
+
+        $command = ProcessRequestMapCmd::Create(
+            [
+                'id' => $id,
+                'template' => $this->template,
+                'scale' => $scale,
+                'user' => 1
+            ]
+        );
+
+        $submission = m::mock(EbsrSubmissionEntity::class);
+        $submission->shouldReceive('getDocument->getIdentifier')->andReturn($documentIdentifier);
+        $submission->shouldReceive('getId')->andReturn($submissionId);
+
+        $busReg = m::mock(BusRegEntity::class);
+        $busReg->shouldReceive('getEbsrSubmissions')->once()->andReturn(new ArrayCollection([$submission]));
+
+        $this->repoMap['Bus']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command)
+            ->andReturn($busReg);
+
+        $this->mockedSmServices[FileProcessorInterface::class]
+            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
+            ->once()
+            ->with($documentIdentifier)
+            ->andReturn($xmlFilename);
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * test handleCommand throws an exception when config not found
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\TransxchangeException
+     */
+    public function testHandleCommandMissingFilePathConfig()
+    {
+        $command = ProcessRequestMapCmd::create([]);
+        $this->sut->setConfig([]);
+        $this->sut->handleCommand($command);
     }
 }
