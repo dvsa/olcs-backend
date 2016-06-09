@@ -139,6 +139,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
 
         $submission->shouldReceive('getCase->getId')->andReturn(12)->getMock();
         $submission->shouldReceive('getCase->getLicence->getId')->andReturn(121)->getMock();
+        $submission->shouldReceive('getCase->getLicence->getLicNo')->andReturn('AB123456')->getMock();
         $submission->shouldReceive('getInformationCompleteDate')->andReturn('2015-01-01')->getMock();
         $submission->shouldReceive('getCase->isTm')->andReturn(false)->getMock();
 
@@ -190,7 +191,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
         $params = [
             'category' => TaskEntity::CATEGORY_SUBMISSION,
             'subCategory' => TaskEntity::SUBCATEGORY_SUBMISSION_ASSIGNMENT,
-            'description' => 'Licence 121 Case 12 Submission 1',
+            'description' => 'Licence AB123456 Case 12 Submission 1',
             'actionDate' => date('Y-m-d'),
             'assignedToUser' => 4,
             'assignedToTeam' => 5,
@@ -247,6 +248,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
 
         $submission->shouldReceive('getCase->getId')->andReturn(12)->getMock();
         $submission->shouldReceive('getCase->getLicence->getId')->andReturn(121)->getMock();
+        $submission->shouldReceive('getCase->getLicence->getLicNo')->andReturn('AB123456')->getMock();
         $submission->shouldReceive('getInformationCompleteDate')->andReturn('2015-01-01')->getMock();
         $submission->shouldReceive('getCase->isTm')->andReturn(false)->getMock();
 
@@ -297,7 +299,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
         $params = [
             'category' => TaskEntity::CATEGORY_SUBMISSION,
             'subCategory' => TaskEntity::SUBCATEGORY_SUBMISSION_ASSIGNMENT,
-            'description' => 'Licence 121 Case 12 Submission 1',
+            'description' => 'Licence AB123456 Case 12 Submission 1',
             'actionDate' => date('Y-m-d'),
             'assignedToUser' => 4,
             'assignedToTeam' => null,
@@ -360,6 +362,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
     {
         $submissionId = 99;
         $licenceId = 77;
+        $licNo = 'AB1234678';
         $caseId = 322;
         $data = [
             'id' => $submissionId,
@@ -389,6 +392,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
                     ->setLicence(
                         m::mock(LicenceEntity::class)->makePartial()
                             ->setId($licenceId)
+                            ->setLicNo($licNo)
                     )
             );
 
@@ -445,7 +449,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
         $params = [
             'category' => TaskEntity::CATEGORY_SUBMISSION,
             'subCategory' => TaskEntity::SUBCATEGORY_SUBMISSION_ASSIGNMENT,
-            'description' => 'Licence ' . $licenceId . ' Case ' . $caseId . ' Submission ' . $submissionId,
+            'description' => 'Licence ' . $licNo . ' Case ' . $caseId . ' Submission ' . $submissionId,
             'assignedToUser' => 4,
             'assignedToTeam' => 5,
             'assignedByUser' => 1,
