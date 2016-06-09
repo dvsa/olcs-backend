@@ -1285,10 +1285,19 @@ return array(
                 )
             )
         ),
-        'document_id' => array(
+        'request_document_id' => array(
             'inversedBy' => array(
                 'entity' => 'Document',
-                'property' => 'erruRequest',
+                'property' => 'requestErru',
+                'cascade' => array(
+                    'persist'
+                )
+            )
+        ),
+        'response_document_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Document',
+                'property' => 'responseErru',
                 'cascade' => array(
                     'persist'
                 )
