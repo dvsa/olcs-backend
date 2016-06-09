@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -121,6 +122,14 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
      */
     private $data = [];
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         $section = $command->getSection();
@@ -156,7 +165,8 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
     /**
      * Method to call the corresponding business rule
      *
-     * @param string $section
+     * @param string $section section
+     *
      * @return boolean
      */
     private function hasSectionChanged($section)
@@ -174,11 +184,21 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         return $this->application->getLicenceType() !== $this->licence->getLicenceType();
     }
 
+    /**
+     * Has updated business type
+     *
+     * @return bool
+     */
     protected function hasUpdatedBusinessType()
     {
         return ($this->data['type'] !== $this->licence->getOrganisation()->getType()->getId());
     }
 
+    /**
+     * Has updated business details
+     *
+     * @return bool
+     */
     protected function hasUpdatedBusinessDetails()
     {
         // If requires attention or already updated, then we mark the section as updated
@@ -194,6 +214,11 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         return false;
     }
 
+    /**
+     * Has updated address
+     *
+     * @return bool
+     */
     protected function hasUpdatedAddresses()
     {
         // If requires attention or already updated, then we mark the section as updated
@@ -209,6 +234,11 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         return false;
     }
 
+    /**
+     * Has updated people
+     *
+     * @return bool
+     */
     protected function hasUpdatedPeople()
     {
         // If requires attention or already updated, then we mark the section as updated
@@ -219,6 +249,11 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         return !$this->application->getApplicationOrganisationPersons()->isEmpty();
     }
 
+    /**
+     * Has updated safety section
+     *
+     * @return bool
+     */
     protected function hasUpdatedSafetySection()
     {
         // Otherwise we check for an actual change
@@ -253,6 +288,11 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         return $this->hasActuallyUpdatedOperatingCentres();
     }
 
+    /**
+     * Has actually updated operating centres
+     *
+     * @return bool
+     */
     protected function hasActuallyUpdatedOperatingCentres()
     {
         if ($this->application->getOperatingCentres()->count() > 0) {
@@ -361,6 +401,7 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
     }
 
     /**
+     * Has update declarations internal
      *
      * @return bool
      */
@@ -373,8 +414,8 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
     /**
      * If we have completed at least 1 of the fields in the list
      *
-     * @param array $data
-     * @param array $fields
+     * @param array $fields field
+     *
      * @return boolean
      */
     protected function hasCompletedFields($fields)
@@ -392,7 +433,9 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
     /**
      * Mark a section as required
      *
-     * @param string $section
+     * @param string $section section
+     *
+     * @return void
      */
     protected function markSectionRequired($section)
     {
@@ -402,7 +445,9 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
     /**
      * Mark a section as unchanged
      *
-     * @param string $section
+     * @param string $section section
+     *
+     * @return void
      */
     protected function markSectionUnchanged($section)
     {
@@ -412,7 +457,9 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
     /**
      * Mark a section as updated
      *
-     * @param string $section
+     * @param string $section section
+     *
+     * @return void
      */
     protected function markSectionUpdated($section)
     {
@@ -422,8 +469,10 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
     /**
      * Mark a section with the given status
      *
-     * @param string $section
-     * @param int $status
+     * @param string $section section
+     * @param int    $status  status
+     *
+     * @return void
      */
     protected function markSectionStatus($section, $status)
     {
@@ -435,7 +484,8 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
     /**
      * Check if a section has been updated
      *
-     * @param string $section
+     * @param string $section section
+     *
      * @return boolean
      */
     protected function isUpdated($section)
@@ -446,7 +496,8 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
     /**
      * Check if the section is unchanged
      *
-     * @param string $section
+     * @param string $section section
+     *
      * @return string
      */
     protected function isUnchanged($section)
@@ -457,7 +508,8 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
     /**
      * Check if the section requires attention
      *
-     * @param string $section
+     * @param string $section section
+     *
      * @return string
      */
     protected function doesRequireAttention($section)
@@ -468,8 +520,9 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
     /**
      * Shared logic to check a sections status
      *
-     * @param string $section
-     * @param int $status
+     * @param string $section section
+     * @param int    $status  status
+     *
      * @return boolean
      */
     protected function isStatus($section, $status)
@@ -479,6 +532,13 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         return (int)$this->application->getApplicationCompletion()->$getter() == (int)$status;
     }
 
+    /**
+     * Get section as suffix
+     *
+     * @param string $section section
+     *
+     * @return mixed
+     */
     protected function getSectionAsSuffix($section)
     {
         if (empty($this->suffixes[$section])) {
@@ -491,6 +551,8 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
 
     /**
      * Reset the undertakings section
+     *
+     * @return void
      */
     protected function resetUndertakings()
     {
@@ -504,7 +566,9 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
     /**
      * Apply the generic rules on sections requiring attention
      *
-     * @param string $currentSection
+     * @param string $currentSection current section
+     *
+     * @return void
      */
     protected function updateSectionsRequiringAttention($currentSection)
     {
@@ -529,6 +593,8 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
 
     /**
      * Some sections have more complicated rules, we hook into these here
+     *
+     * @return void
      */
     protected function applyBespokeRules()
     {
@@ -541,6 +607,8 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
 
     /**
      * Apply bespoke type of licence rules
+     *
+     * @return void
      */
     protected function updateRelatedTypeOfLicenceSections()
     {
@@ -569,6 +637,8 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
 
     /**
      * Apply the operating centre rules
+     *
+     * @return void
      */
     protected function updateRelatedOperatingCentreSections()
     {
@@ -609,6 +679,11 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         }
     }
 
+    /**
+     * Update related people sections
+     *
+     * @return void
+     */
     protected function updateRelatedPeopleSections()
     {
         // Don't change if we require attention
@@ -624,6 +699,11 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         $this->markSectionUpdated('people');
     }
 
+    /**
+     * Update related tm sections
+     *
+     * @return void
+     */
     protected function updateRelatedTmSections()
     {
         if (!$this->hasUpdatedTransportManagers()) {
@@ -635,6 +715,11 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         }
     }
 
+    /**
+     * Update related vehicles sections
+     *
+     * @return void
+     */
     protected function updateRelatedVehiclesSections()
     {
         $licenceVehicles = $this->licence->getActiveVehiclesCount();
@@ -655,6 +740,11 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         $this->markSectionUpdated($this->getRelevantVehicleSection());
     }
 
+    /**
+     * Update related disc sections
+     *
+     * @return void
+     */
     protected function updateRelatedDiscSections()
     {
         if ((int)$this->application->getTotAuthVehicles() < (int)$this->licence->getPsvDiscsNotCeasedCount()) {
@@ -665,6 +755,11 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         $this->markSectionUpdated('discs');
     }
 
+    /**
+     * Update related community licences sections
+     *
+     * @return void
+     */
     protected function updateRelatedCommunityLicencesSections()
     {
         if ($this->isTotAuthLessThanComLic()) {
@@ -675,6 +770,11 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         $this->markSectionUpdated('community_licences');
     }
 
+    /**
+     * Is total authority less than community licences count
+     *
+     * @return bool
+     */
     protected function isTotAuthLessThanComLic()
     {
         $activeComLics = (int)$this->licence->getActiveCommunityLicences()->count();
@@ -686,7 +786,6 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
     /**
      * Check whether the total auth vehicles has been increased
      *
-     * @param array $data
      * @return boolean
      */
     protected function hasTotAuthVehiclesIncreased()
@@ -699,6 +798,8 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
 
     /**
      * Grab the tot vehicle auths for both application and licence
+     *
+     * @param mixed $entity entity
      *
      * @return array
      */
@@ -734,7 +835,6 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
     /**
      * Check whether the total auth vehicles has dropped below the number of vehicles added
      *
-     * @param array $data
      * @return boolean
      */
     protected function hasTotAuthVehiclesDroppedBelowVehicleCount()
@@ -747,6 +847,13 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         return $totAuthVehicles < $totVehicles;
     }
 
+    /**
+     * Count vehicles
+     *
+     * @param ArrayCollection $vehicles vehicles
+     *
+     * @return mixed
+     */
     protected function countVehicles($vehicles)
     {
         $criteria = Criteria::create();
@@ -758,32 +865,13 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
     /**
      * Check whether the total auth vehicles has dropped below the number of discs added
      *
-     * @param array $data
      * @return boolean
      */
     protected function hasTotAuthVehiclesDroppedBelowDiscsCount()
     {
         $totAuthVehicles = $this->getTotAuthVehicles($this->application);
-        $totDiscs = $this->licence->getPsvDiscs()->count();
+        $totDiscs = $this->licence->getPsvDiscsNotCeasedCount();
 
         return $totAuthVehicles < $totDiscs;
     }
-
-    /** Not sure if this is needed yet
-    public function hasUpdatedLicenceHistory()
-    {
-        $data = $this->getVariationCompletionStatusData();
-
-        $fields = [
-            'prevHasLicence',
-            'prevHadLicence',
-            'prevBeenRefused',
-            'prevBeenRevoked',
-            'prevBeenAtPi',
-            'prevBeenDisqualifiedTc',
-            'prevPurchasedAssets'
-        ];
-
-        return $this->hasCompletedFields($data, $fields);
-    }*/
 }
