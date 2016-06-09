@@ -314,7 +314,7 @@ class FeeTest extends RepositoryTestCase
                 'sort' => 'id',
                 'order' => 'ASC',
                 'isMiscellaneous' => true,
-                'ids' => [1,2,3],
+                'ids' => [1, 2, 3],
                 'status' => $status,
             ]
         );
@@ -392,8 +392,9 @@ class FeeTest extends RepositoryTestCase
             ->times(2)
             ->andReturnSelf();
 
-        $mockQb->shouldReceive('expr->orX')->once();
+        $mockQb->shouldReceive('expr->orX')->times(2);
         $mockQb->shouldReceive('expr->eq')->times(2);
+        $mockQb->shouldReceive('expr->isNotNull')->times(2);
         $mockQb->shouldReceive('expr->in');
 
         // mock pagination
