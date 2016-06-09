@@ -26,7 +26,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_erru_request_case_id", columns={"case_id"}),
- *        @ORM\UniqueConstraint(name="uk_erru_request_workflow_id", columns={"workflow_id"})
+ *        @ORM\UniqueConstraint(name="uk_erru_request_workflow_id", columns={"workflow_id"}),
+ *        @ORM\UniqueConstraint(name="uk_erru_request_document_id", columns={"document_id"})
  *    }
  * )
  */
@@ -76,6 +77,20 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
      * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
      */
     protected $deletedDate;
+
+    /**
+     * Document
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Doc\Document
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document",
+     *     fetch="LAZY",
+     *     inversedBy="erruRequest"
+     * )
+     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
+     */
+    protected $document;
 
     /**
      * Identifier - Id
@@ -301,6 +316,29 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     public function getDeletedDate()
     {
         return $this->deletedDate;
+    }
+
+    /**
+     * Set the document
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $document
+     * @return ErruRequest
+     */
+    public function setDocument($document)
+    {
+        $this->document = $document;
+
+        return $this;
+    }
+
+    /**
+     * Get the document
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Doc\Document
+     */
+    public function getDocument()
+    {
+        return $this->document;
     }
 
     /**

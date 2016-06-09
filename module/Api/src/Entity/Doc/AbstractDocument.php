@@ -391,6 +391,19 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     protected $ebsrSubmission;
 
     /**
+     * Erru request
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Si\ErruRequest
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Si\ErruRequest",
+     *     mappedBy="document",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $erruRequest;
+
+    /**
      * Sla target date
      *
      * @var \Dvsa\Olcs\Api\Entity\System\SlaTargetDate
@@ -1225,6 +1238,29 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getEbsrSubmission()
     {
         return $this->ebsrSubmission;
+    }
+
+    /**
+     * Set the erru request
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Si\ErruRequest $erruRequest
+     * @return Document
+     */
+    public function setErruRequest($erruRequest)
+    {
+        $this->erruRequest = $erruRequest;
+
+        return $this;
+    }
+
+    /**
+     * Get the erru request
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Si\ErruRequest
+     */
+    public function getErruRequest()
+    {
+        return $this->erruRequest;
     }
 
     /**

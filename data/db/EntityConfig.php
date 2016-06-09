@@ -1284,6 +1284,15 @@ return array(
                     'persist'
                 )
             )
+        ),
+        'document_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Document',
+                'property' => 'erruRequest',
+                'cascade' => array(
+                    'persist'
+                )
+            )
         )
     ),
     'serious_infringement' => array(
