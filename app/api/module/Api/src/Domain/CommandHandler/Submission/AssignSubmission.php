@@ -145,7 +145,9 @@ final class AssignSubmission extends AbstractCommandHandler implements
             $data['transportManager'] = $tmId;
         } else {
             $licenceId = $submission->getCase()->getLicence()->getId();
-            $data['description'] = 'Licence ' . $licenceId . ' Case ' . $submission->getCase()->getId() .
+            $licenceNo = $submission->getCase()->getLicence()->getLicNo();
+
+            $data['description'] = 'Licence ' . $licenceNo . ' Case ' . $submission->getCase()->getId() .
                 ' Submission ' . $submission->getId();
             $data['licence'] = $licenceId;
         }
