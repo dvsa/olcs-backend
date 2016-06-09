@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\UpdateDetails as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManager;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateDetails as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -30,6 +31,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
         $this->mockRepo('TransportManagerApplication', TransportManagerApplication::class);
         $this->mockRepo('ContactDetails', ContactDetails::class);
         $this->mockRepo('Address', \Dvsa\Olcs\Api\Domain\Repository\Address::class);
+        $this->mockRepo('TransportManager', TransportManager::class);
 
         parent::setUp();
     }
@@ -112,6 +114,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
         $this->repoMap['ContactDetails']->shouldReceive('save')->once();
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
+        $this->repoMap['TransportManager']->shouldReceive('save')->once();
 
         $result = $this->sut->handleCommand($command);
 
