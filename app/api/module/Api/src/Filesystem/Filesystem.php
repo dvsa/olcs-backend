@@ -26,7 +26,7 @@ class Filesystem extends BaseFileSystem
             $dirname = $path . DIRECTORY_SEPARATOR . uniqid($prefix);
         } while ($this->exists($dirname));
 
-        $this->mkdir($dirname);
+        $this->mkdir($dirname, 0750);
 
         $lock->release();
 
