@@ -391,17 +391,30 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     protected $ebsrSubmission;
 
     /**
-     * Erru request
+     * Request erru
      *
      * @var \Dvsa\Olcs\Api\Entity\Si\ErruRequest
      *
      * @ORM\OneToOne(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Si\ErruRequest",
-     *     mappedBy="document",
+     *     mappedBy="requestDocument",
      *     cascade={"persist"}
      * )
      */
-    protected $erruRequest;
+    protected $requestErru;
+
+    /**
+     * Response erru
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Si\ErruRequest
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Si\ErruRequest",
+     *     mappedBy="responseDocument",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $responseErru;
 
     /**
      * Sla target date
@@ -1241,26 +1254,49 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     }
 
     /**
-     * Set the erru request
+     * Set the request erru
      *
-     * @param \Dvsa\Olcs\Api\Entity\Si\ErruRequest $erruRequest
+     * @param \Dvsa\Olcs\Api\Entity\Si\ErruRequest $requestErru
      * @return Document
      */
-    public function setErruRequest($erruRequest)
+    public function setRequestErru($requestErru)
     {
-        $this->erruRequest = $erruRequest;
+        $this->requestErru = $requestErru;
 
         return $this;
     }
 
     /**
-     * Get the erru request
+     * Get the request erru
      *
      * @return \Dvsa\Olcs\Api\Entity\Si\ErruRequest
      */
-    public function getErruRequest()
+    public function getRequestErru()
     {
-        return $this->erruRequest;
+        return $this->requestErru;
+    }
+
+    /**
+     * Set the response erru
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Si\ErruRequest $responseErru
+     * @return Document
+     */
+    public function setResponseErru($responseErru)
+    {
+        $this->responseErru = $responseErru;
+
+        return $this;
+    }
+
+    /**
+     * Get the response erru
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Si\ErruRequest
+     */
+    public function getResponseErru()
+    {
+        return $this->responseErru;
     }
 
     /**
