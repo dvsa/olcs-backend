@@ -58,7 +58,6 @@ class CreateBusFeeTest extends CommandHandlerTestCase
         $regNo = 12345;
 
         $receivedDate = '2015-01-01';
-        $receivedDateTime = new \DateTime($receivedDate);
         $feeTypeRef = $this->refData[$feeType];
         $goodsOrPsv = $this->refData[Licence::LICENCE_CATEGORY_PSV];
         $licenceType = $this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL];
@@ -86,10 +85,10 @@ class CreateBusFeeTest extends CommandHandlerTestCase
         $busReg->setVariationNo($variationNumber);
 
         /** @var FeeTypeEntity $feeType */
-        $feeType = m::mock(FeeTypeEntity::class)->makePartial();
-        $feeType->setId(444);
-        $feeType->setDescription('Fee description');
-        $feeType->setFixedValue(10.5);
+        $feeTypeEntity = m::mock(FeeTypeEntity::class)->makePartial();
+        $feeTypeEntity->setId(444);
+        $feeTypeEntity->setDescription('Fee description');
+        $feeTypeEntity->setFixedValue(10.5);
 
         $this->repoMap['FeeType']->shouldReceive('fetchLatest')
             ->with(
@@ -99,7 +98,7 @@ class CreateBusFeeTest extends CommandHandlerTestCase
                 m::type('\DateTime'),
                 TrafficArea::SCOTTISH_TRAFFIC_AREA_CODE
             )
-            ->andReturn($feeType);
+            ->andReturn($feeTypeEntity);
 
         $this->repoMap['Bus']
             ->shouldReceive('fetchUsingId')
@@ -110,7 +109,7 @@ class CreateBusFeeTest extends CommandHandlerTestCase
             'task' => null,
             'application' => null,
             'licence' => 222,
-            'invoicedDate' => $receivedDateTime->format('Y-m-d'),
+            'invoicedDate' => date('Y-m-d'),
             'description' => 'Fee description ' . $regNo . ' V' . $variationNumber,
             'feeType' => 444,
             'amount' => 10.5,
