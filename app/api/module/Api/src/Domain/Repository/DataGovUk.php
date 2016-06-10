@@ -47,12 +47,22 @@ class DataGovUk
         return $stmt;
     }
 
-    public function fetchBusRegisteredOnly($areaCodes)
+    public function fetchBusRegisteredOnly(array $areaCodes)
+    {
+        return $this->fetchBusReg('data_gov_uk_bus_registered_only_view', $areaCodes);
+    }
+
+    public function fetchBusVariation(array $areaCodes)
+    {
+        return $this->fetchBusReg('data_gov_uk_bus_variation_view', $areaCodes);
+    }
+
+    private function fetchBusReg($view, array $areaCodes)
     {
         $inStmt = implode(', ', array_fill(0, count($areaCodes), '?'));
 
         $stmt = $this->conn->prepare(
-            'SELECT * FROM data_gov_uk_bus_registered_only_view WHERE `Current Traffic Area` IN (' . $inStmt . ')'
+            'SELECT * FROM ' . $view . ' WHERE `Current Traffic Area` IN (' . $inStmt . ')'
         );
 
         foreach ($areaCodes as $idx => $code) {

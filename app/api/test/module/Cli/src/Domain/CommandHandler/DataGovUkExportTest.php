@@ -183,6 +183,53 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         );
     }
 
+    public function testBugVariationOk()
+    {
+        $cmd = Cmd::create(
+            [
+                'reportName' => DataGovUkExport::BUS_VARIATION,
+                'path' => $this->tmpPath,
+            ]
+        );
+
+        //  mock repository
+        $this->mockTrafficAreaRepo();
+
+        $row1 = [
+            'Current Traffic Area' => 'areaId1',
+            'col1' => 'val11',
+            'col2' => 'v"\'-/\,',
+        ];
+        $this->mockStmt
+            ->shouldReceive('fetch')->once()->andReturn($row1)
+            ->shouldReceive('fetch')->andReturn(false);
+
+        $this->repoMap['DataGovUk']
+            ->shouldReceive('fetchBusVariation')
+            ->once()
+            ->andReturn($this->mockStmt);
+
+        //  call & check
+        $actual = $this->sut->handleCommand($cmd);
+
+        $expectFile1 = $this->tmpPath . '/Bus_Variation_areaId1.csv';
+
+        $expectMsg =
+            'Fetching data from DB for Bus Variation' .
+            'create csv file: ' . $expectFile1;
+
+        static::assertEquals(
+            $expectMsg,
+            implode('', $actual->toArray()['messages'])
+        );
+
+        static::assertSame(
+            '"Current Traffic Area",col1,col2' . PHP_EOL .
+            'areaId1,val11,"v""\'-/\,"' . PHP_EOL,
+            file_get_contents($expectFile1)
+        );
+    }
+
     public function testTrafficAreaNotFound()
     {
         $this->repoMap['TrafficArea']
