@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Cli;
 
+use Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport;
 use Zend\Console\Adapter\AdapterInterface as ConsoleAdapterInterface;
 use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
 use Zend\Mvc\MvcEvent;
@@ -47,7 +48,9 @@ class Module implements ConsoleUsageProviderInterface
 
             'data-gov-uk-export <report-name> [--verbose|-v] [--path=<exportPath>]' => 'Export to csv for data.gov.uk',
             ['<report-name>', 'export report name'],
-            ['--path=<exportPath>', '(optional) story export file in specified directory'],
+            ['    ' . DataGovUkExport::OPERATOR_LICENCE, '- export operator licences'],
+            ['    ' . DataGovUkExport::BUS_REGISTERED_ONLY, '- export bus registered only'],
+            ['--path=<exportPath>', '(optional) save export file in specified directory'],
         ];
     }
 
