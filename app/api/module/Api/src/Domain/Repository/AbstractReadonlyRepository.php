@@ -38,6 +38,14 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     protected $alias = 'm';
 
     /**
+     * Force paginated queries to fetch joined tables when paginating. Default is true.
+     * @see http://doctrine-orm.readthedocs.io/projects/doctrine-orm/en/latest/tutorials/pagination.html
+     *
+     * @var bool
+     */
+    protected $fetchJoinCollection = true;
+
+    /**
      * @var EntityManagerInterface
      */
     private $em;
@@ -526,6 +534,6 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
      */
     protected function getPaginator($query)
     {
-        return new Paginator($query);
+        return new Paginator($query, $this->fetchJoinCollection);
     }
 }
