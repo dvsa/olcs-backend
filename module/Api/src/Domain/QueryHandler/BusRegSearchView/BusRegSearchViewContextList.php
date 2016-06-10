@@ -44,12 +44,10 @@ class BusRegSearchViewContextList extends AbstractQueryHandler implements AuthAw
             $organisationId = $this->getCurrentOrganisation()->getId();
         }
 
-        $results = $repo->fetchDistinctList($query, $organisationId, DoctrineQuery::HYDRATE_OBJECT);
+        $results = $repo->fetchDistinctList($query, $organisationId);
 
         return [
-            'result' => $this->resultList(
-                $results
-            ),
+            'result' => $results,
             'count' => count($results)
         ];
     }

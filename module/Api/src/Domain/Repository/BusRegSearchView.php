@@ -10,6 +10,7 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query as DoctrineQuery;
 
 /**
  * BusRegSearchView
@@ -116,8 +117,7 @@ class BusRegSearchView extends AbstractRepository
      */
     public function fetchDistinctList(
         QueryInterface $query,
-        $organisationId = null,
-        $hydrateMode = Query::HYDRATE_OBJECT
+        $organisationId = null
     ) {
         $qb = $this->createQueryBuilder();
 
@@ -130,17 +130,20 @@ class BusRegSearchView extends AbstractRepository
         switch ($query->getContext())
         {
             case 'licence':
-                $qb->addGroupBy($this->alias . '.licId');
+                $qb = $this->createQueryBuilder()->distinct()
+                ->select([$this->alias . '.licId', $this->alias . '.licNo']);
                 break;
             case 'organisation':
-                $qb->addGroupBy($this->alias . '.organisationId');
+                $qb = $this->createQueryBuilder()->distinct()
+                    ->select([$this->alias . '.organisationId', $this->alias . '.organisationName']);
                 break;
             case 'busRegStatus':
-                $qb->addGroupBy($this->alias . '.busRegStatus');
+                $qb = $this->createQueryBuilder()->distinct()
+                    ->select([$this->alias . '.busRegStatus', $this->alias . '.busRegStatusDesc']);
                 break;
         }
 
-        $result = $qb->getQuery()->getResult($hydrateMode);
+        $result = $qb->getQuery()->getResult();
 
         return $result;
     }
