@@ -87,15 +87,12 @@ class BusRegSearchViewContextListTest extends QueryHandlerTestCase
             ]
         );
 
-        $mockRecord = m::mock(\Dvsa\Olcs\Api\Entity\View\BusRegSearchView::class)->makePartial();
-        $mockRecord->shouldReceive('serialize')
-            ->with([])
-            ->andReturn(['foo' => 'bar']);
+        $mockRecord = ['foo' => 'bar'];
 
         $this->repoMap['BusRegSearchView']
             ->shouldReceive('fetchDistinctList')
             ->once()
-            ->with($query, $organisationId, m::type('integer'))
+            ->with($query, $organisationId)
             ->andReturn([$mockRecord]);
 
         $expected = [
@@ -128,15 +125,12 @@ class BusRegSearchViewContextListTest extends QueryHandlerTestCase
             ]
         );
 
-        $mockRecord = m::mock(\Dvsa\Olcs\Api\Entity\View\BusRegSearchView::class)->makePartial();
-        $mockRecord->shouldReceive('serialize')
-            ->with([])
-            ->andReturn(['foo' => 'bar']);
+        $mockRecord = ['foo' => 'bar'];
 
         $this->repoMap['BusRegSearchView']
             ->shouldReceive('fetchDistinctList')
             ->once()
-            ->with($query, null, m::type('integer'))
+            ->with($query, null)
             ->andReturn([$mockRecord]);
 
         $expected = [

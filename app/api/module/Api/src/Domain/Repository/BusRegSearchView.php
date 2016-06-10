@@ -130,15 +130,15 @@ class BusRegSearchView extends AbstractRepository
         switch ($query->getContext())
         {
             case 'licence':
-                $qb = $this->createQueryBuilder()->distinct()
+                $qb->distinct()
                 ->select([$this->alias . '.licId', $this->alias . '.licNo']);
                 break;
             case 'organisation':
-                $qb = $this->createQueryBuilder()->distinct()
+                $qb->distinct()
                     ->select([$this->alias . '.organisationId', $this->alias . '.organisationName']);
                 break;
             case 'busRegStatus':
-                $qb = $this->createQueryBuilder()->distinct()
+                $qb->distinct()
                     ->select([$this->alias . '.busRegStatus', $this->alias . '.busRegStatusDesc']);
                 break;
         }
