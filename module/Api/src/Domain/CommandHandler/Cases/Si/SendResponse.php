@@ -13,9 +13,11 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Service\Nr\InrClientInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Service\Nr\MsiResponse as MsiResponseService;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\SendResponse as SendErruResponseCmd;
 use Zend\Http\Response;
+use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Domain\Exception\RestResponseException;
 use Zend\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeException;
 
@@ -30,7 +32,10 @@ final class SendResponse extends AbstractCommandHandler implements AuthAwareInte
 
     protected $repoServiceName = 'Cases';
 
-    protected $extraRepos = ['ErruRequest'];
+    protected $extraRepos = [
+        'ErruRequest',
+        'Document'
+    ];
 
     /**
      * @var InrClient
@@ -76,6 +81,16 @@ final class SendResponse extends AbstractCommandHandler implements AuthAwareInte
         //generate the xml to send to national register
         $xml = $this->msiResponseService->create($case);
 
+        $erruRequest = $case->getErruRequest();
+
+        $result = $this->handleSideEffect($this->CreateDocumentCommand($xml, $erruRequest->getWorkflowId()));
+
+        $docRepo = $this->getRepo('Document');
+        $document = $docRepo->fetchById($result->getId('document'));
+
+        $erruRequest->setResponseDocument($document);
+        $this->getRepo('ErruRequest')->save($erruRequest);
+
         //here is where we would expect the response from national register.
         try {
             $responseCode = $this->inrClient->makeRequest($xml);
@@ -87,9 +102,6 @@ final class SendResponse extends AbstractCommandHandler implements AuthAwareInte
             throw new RestResponseException('INR Http response code was ' . $responseCode);
         }
 
-        /** @var ErruRequestEntity $erruRequest */
-        $erruRequest = $case->getErruRequest();
-
         $erruRequest->updateErruResponse(
             $this->getCurrentUser(),
             new \DateTime($this->msiResponseService->getResponseDateTime())
@@ -97,10 +109,30 @@ final class SendResponse extends AbstractCommandHandler implements AuthAwareInte
 
         $this->getRepo('ErruRequest')->save($erruRequest);
 
-        $result = new Result();
         $result->addMessage('Msi Response sent');
         $result->addId('case', $case->getId());
 
         return $result;
+    }
+
+    /**
+     * Returns an upload command to add the XML to the doc store
+     *
+     * @param string $content
+     * @param string $workflowId this will be a GUID
+     *
+     * @return UploadCmd
+     */
+    private function CreateDocumentCommand($content, $workflowId)
+    {
+        $data = [
+            'content' => base64_encode($content),
+            'category' => CategoryEntity::CATEGORY_COMPLIANCE,
+            'subCategory' => CategoryEntity::DOC_SUB_CATEGORY_NR,
+            'filename' => 'msiresponse.xml',
+            'description' => 'ERRU MSI response for workflow ID: ' . $workflowId
+        ];
+
+        return UploadCmd::create($data);
     }
 }
