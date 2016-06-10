@@ -12,32 +12,45 @@ use Mockery as m;
  */
 class DataGovUkTest extends MockeryTestCase
 {
+    /** @var  m\MockInterface */
+    private $mockStmt;
+    /** @var  m\MockInterface */
+    private $mockConn;
+
+    /** @var DataGovUk */
+    private $sut;
+
+    public function setUp()
+    {
+        $this->mockStmt = m::mock(Statement::class)
+            ->shouldReceive('execute')->once()->andReturn(true)
+            ->getMock();
+
+        $this->mockConn = m::mock(\Doctrine\DBAL\Connection::class)
+            ->shouldReceive('close')->atMost()
+            ->getMock();
+
+        $this->sut = new DataGovUk($this->mockConn);
+    }
+
     public function testFetchOperatorLicences()
     {
         $areas = ['areaKey1', 'areaKey2', 'areaKey3'];
 
-        $mockStmt = m::mock(Statement::class)
+        $this->mockStmt
             ->shouldReceive('bindValue')
             ->times(count($areas))
-            ->with(m::anyOf(1, 2, 3), '/^areaKey/', \PDO::PARAM_STR)
-            //
-            ->shouldReceive('execute')->once()->andReturn(true)
-            ->getMock();
+            ->with(m::anyOf(1, 2, 3), '/^areaKey/', \PDO::PARAM_STR);
 
-        /** @var \Doctrine\DBAL\Connection $mockConn */
-        $mockConn = m::mock(\Doctrine\DBAL\Connection::class)
+        $this->mockConn
             ->shouldReceive('prepare')
             ->once()
             ->with('/data_gov_uk_operator_licence_view (.*)IN \(\?, \?, \?\)$/')
-            ->andReturn($mockStmt)
-            //
-            ->shouldReceive('close')->once()
-            //
-            ->getMock();
+            ->andReturn($this->mockStmt);
 
         static::assertEquals(
-            $mockStmt,
-            (new DataGovUk($mockConn))->fetchOperatorLicences($areas)
+            $this->mockStmt,
+            $this->sut->fetchOperatorLicences($areas)
         );
     }
 
@@ -45,28 +58,42 @@ class DataGovUkTest extends MockeryTestCase
     {
         $areas = ['areaKey1', 'areaKey2', 'areaKey3'];
 
-        $mockStmt = m::mock(Statement::class)
+        $this->mockStmt
             ->shouldReceive('bindValue')
             ->times(count($areas))
-            ->with(m::anyOf(1, 2, 3), '/^areaKey/', \PDO::PARAM_STR)
-            //
-            ->shouldReceive('execute')->once()->andReturn(true)
-            ->getMock();
+            ->with(m::anyOf(1, 2, 3), '/^areaKey/', \PDO::PARAM_STR);
 
-        /** @var \Doctrine\DBAL\Connection $mockConn */
-        $mockConn = m::mock(\Doctrine\DBAL\Connection::class)
+        $this->mockConn
             ->shouldReceive('prepare')
             ->once()
             ->with('/data_gov_uk_bus_registered_only_view (.*)IN \(\?, \?, \?\)$/')
-            ->andReturn($mockStmt)
-            //
-            ->shouldReceive('close')->once()
-            //
-            ->getMock();
+            ->andReturn($this->mockStmt);
 
         static::assertEquals(
-            $mockStmt,
-            (new DataGovUk($mockConn))->fetchBusRegisteredOnly($areas)
+            $this->mockStmt,
+            $this->sut->fetchBusRegisteredOnly($areas)
+        );
+    }
+
+    public function testBusVariation()
+    {
+        $areas = ['areaKey1'];
+
+        $this->mockStmt
+            ->shouldReceive('bindValue')
+            ->times(count($areas))
+            ->with(1, 'areaKey1', \PDO::PARAM_STR);
+
+        /** @var \Doctrine\DBAL\Connection $mockConn */
+        $this->mockConn
+            ->shouldReceive('prepare')
+            ->once()
+            ->with('/data_gov_uk_bus_variation_view (.*)IN \(\?\)$/')
+            ->andReturn($this->mockStmt);
+
+        static::assertEquals(
+            $this->mockStmt,
+            $this->sut->fetchBusVariation($areas)
         );
     }
 }
