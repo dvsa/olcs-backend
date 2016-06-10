@@ -1,55 +1,38 @@
 <?php
 
-/**
- * Create Bus Reg Fee
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
-use Dvsa\Olcs\Api\Domain\Repository\FeeType;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Create BusReg Fee
  */
 final class CreateBusFee extends AbstractCommandHandler
 {
-
-    /**
-     * @var FeeType
-     */
-    protected $feeTypeRepo;
-
     protected $repoServiceName = 'Bus';
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->feeTypeRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('FeeType');
+    protected $extraRepos = ['FeeType'];
 
-        return parent::createService($serviceLocator);
-    }
-
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         /** @var BusReg $busReg */
         $busReg = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
         $trafficArea = $busReg->getLicence()->getTrafficArea();
-
-        if ($busReg->getVariationNo()) {
-            $feeType = FeeTypeEntity::FEE_TYPE_BUSVAR;
-        } else {
-            $feeType = FeeTypeEntity::FEE_TYPE_BUSAPP;
-        }
-
-        $feeType = $this->feeTypeRepo->getRefdataReference($feeType);
 
         $feeTrafficArea = null;
 
@@ -63,8 +46,10 @@ final class CreateBusFee extends AbstractCommandHandler
             $receivedDate = new \DateTime($receivedDate);
         }
 
-        $feeType = $this->feeTypeRepo->fetchLatest(
-            $feeType,
+        $feeType = $this->getRepo('FeeType')->fetchLatest(
+            $this->getRepo()->getRefdataReference(
+                ($busReg->getVariationNo()) ? FeeTypeEntity::FEE_TYPE_BUSVAR : FeeTypeEntity::FEE_TYPE_BUSAPP
+            ),
             $busReg->getLicence()->getGoodsOrPsv(),
             $busReg->getLicence()->getLicenceType(),
             $receivedDate,
@@ -74,7 +59,7 @@ final class CreateBusFee extends AbstractCommandHandler
         $data = [
             'busReg' => $busReg->getId(),
             'licence' => $busReg->getLicence()->getId(),
-            'invoicedDate' => $receivedDate->format('Y-m-d'),
+            'invoicedDate' => date('Y-m-d'),
             'description' => $feeType->getDescription() . ' ' . $busReg->getRegNo() . ' V' . $busReg->getVariationNo(),
             'feeType' => $feeType->getId(),
             'feeStatus' => FeeEntity::STATUS_OUTSTANDING,

@@ -7,13 +7,11 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\CreateBus;
 use Dvsa\Olcs\Transfer\Command\Bus\CreateBus as Cmd;
-use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateFeeCmd;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 
 /**
