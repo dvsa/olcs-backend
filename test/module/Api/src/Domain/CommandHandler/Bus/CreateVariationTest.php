@@ -8,12 +8,10 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\CreateVariation;
 use Dvsa\Olcs\Transfer\Command\Bus\CreateVariation as Cmd;
-use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateFeeCmd;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 
 /**

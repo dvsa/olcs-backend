@@ -1,18 +1,14 @@
 <?php
 
-/**
- * Create Bus
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Bus\CreateBus as Cmd;
-use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateBusFeeCmd;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Create Bus
@@ -21,6 +17,13 @@ final class CreateBus extends AbstractCommandHandler
 {
     protected $repoServiceName = 'Bus';
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $bus = $this->createBusRegObject($command);
@@ -35,7 +38,10 @@ final class CreateBus extends AbstractCommandHandler
     }
 
     /**
-     * @param Cmd $command
+     * Create bus reg object
+     *
+     * @param Cmd $command Command
+     *
      * @return BusReg
      */
     private function createBusRegObject(Cmd $command)
