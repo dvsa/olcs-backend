@@ -27,20 +27,13 @@ class ContinuationNotSoughtListTest extends QueryHandlerTestCase
     {
         $query = Query::create(['QUERY']);
 
-        $licence = m::mock(\Dvsa\Olcs\Api\Entity\Licence\Licence::class)
-            ->shouldReceive('serialize')
-            ->with(['trafficArea'])
-            ->once()
-            ->andReturn('SERIALIZED')
-            ->getMock();
-
         $this->repoMap['Licence']
             ->shouldReceive('fetchForContinuationNotSought')
-            ->andReturn([$licence]);
+            ->andReturn([['licence']]);
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertSame(['SERIALIZED'], $result['result']);
+        $this->assertSame([['licence']], $result['result']);
         $this->assertEquals('1', $result['count']);
     }
 }
