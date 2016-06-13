@@ -4,7 +4,6 @@ namespace OlcsTest\Db\Service\Search;
 
 use Olcs\Db\Service\Search\Search as SearchService;
 use Mockery as m;
-use PHPUnit_Framework_TestCase as TestCase;
 use Elastica\Query as Query;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use ZfcRbac\Service\AuthorizationService;
