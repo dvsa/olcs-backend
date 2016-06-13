@@ -4,16 +4,26 @@ namespace OlcsTest\Db\Service\Search;
 
 use Olcs\Db\Service\Search\Search as SearchService;
 use Mockery as m;
-use PHPUnit_Framework_TestCase as TestCase;
 use Elastica\Query as Query;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Class Search Test
  *
  * @package OlcsTest\Db\Service\Search
  */
-class SearchTest extends TestCase
+class SearchTest extends MockeryTestCase
 {
+    public function setUp()
+    {
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
+
+        parent::setUp();
+    }
+
     public function testProcessDateRanges()
     {
         $bool = new Query\Bool();
@@ -188,10 +198,30 @@ class SearchTest extends TestCase
      *
      * @param $index
      * @param $expectedQuery
+     * @param string $userType
      */
-    public function testSearchIndex($index, $expectedQuery)
+    public function testSearchIndex($index, $expectedQuery, $userType = 'external')
     {
         $sut = new SearchService();
+
+        $authService = m::mock(AuthorizationService::class);
+
+        $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
+        $mockUser->shouldReceive('getUser')
+            ->andReturnSelf();
+
+        if ($userType === 'internal') {
+            $mockUser->shouldReceive('isAnonymous')->once()->andReturn(false);
+            $authService->shouldReceive('isGranted')->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
+                ->andReturn(true);
+            $authService->shouldReceive('isGranted')->with(\Dvsa\Olcs\Api\Entity\User\Permission::SELFSERVE_USER, null)
+                ->andReturn(false);
+        }
+
+        $authService->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
+
+        $sut->setAuthService($authService);
 
         $mockClient = m::mock(\Elastica\Client::class);
         $mockClient->shouldReceive('request')->once()->andReturnUsing(
@@ -226,7 +256,8 @@ class SearchTest extends TestCase
             $this->getExpectedUserSearch(),
             $this->getExpectedVehicleCurrentSearch(),
             $this->getExpectedVehicleRemovedSearch(),
-            $this->getExpectedPersonSearch(),
+            $this->getExpectedPersonSearchForInternalUser(),
+            $this->getExpectedPersonSearchForExternalUser(),
             $this->getExpectedBusRegSearch()
         ];
     }
@@ -446,7 +477,7 @@ class SearchTest extends TestCase
         ];
     }
 
-    private function getExpectedPersonSearch()
+    private function getExpectedPersonSearchForExternalUser()
     {
         return [
             'person',
@@ -462,11 +493,51 @@ class SearchTest extends TestCase
                             $this->generateWildcard('person_family_name_wildcard', '*bar*', '2.0'),
                             $this->generateWildcard('person_forename_wildcard', '*bar*', '2.0'),
                         ],
+                        'must_not' => [
+                            $this->generateMatch('tm_status_id', 'tm_s_rem'),
+                        ],
+                        'must' => [
+                            0 => [
+                                'filtered' => [
+                                    'filter' => [
+                                        'exists' => [
+                                            'field' => 'lic_no'
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
                     ]
                 ],
                 'size' => 10,
                 'from' => 0
-            ]
+            ],
+            'external'
+        ];
+    }
+
+    private function getExpectedPersonSearchForInternalUser()
+    {
+        return [
+            'person',
+            [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            $this->generateMatch('_all', 'FOO BAR'),
+                            $this->generateWildcard('person_family_name_wildcard', '*foo bar*', '2.0'),
+                            $this->generateWildcard('person_forename_wildcard', '*foo bar*', '2.0'),
+                            $this->generateWildcard('person_family_name_wildcard', '*foo*', '2.0'),
+                            $this->generateWildcard('person_forename_wildcard', '*foo*', '2.0'),
+                            $this->generateWildcard('person_family_name_wildcard', '*bar*', '2.0'),
+                            $this->generateWildcard('person_forename_wildcard', '*bar*', '2.0'),
+                        ]
+                    ]
+                ],
+                'size' => 10,
+                'from' => 0
+            ],
+            'internal'
         ];
     }
 
