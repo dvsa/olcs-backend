@@ -14,13 +14,18 @@ class ContinuationNotSoughtList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return array
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
-        $results = $this->resultList(
-            $this->getRepo()->fetchForContinuationNotSought($query->getDate()),
-            ['trafficArea']
-        );
-
+        // this query is recursion save
+        $results = $this->getRepo()->fetchForContinuationNotSought($query->getDate());
         return [
             'result' => $results,
             'count' => count($results),

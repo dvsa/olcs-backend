@@ -124,7 +124,7 @@ class BatchController extends AbstractConsoleController
         if (!$dryRun) {
             // @todo This process is memory intensive and slow, recommend to BJSS that cli jobs need min 512M
             // Then remove this
-            $memoryLimit = ini_set('memory_limit', '512M');
+            $memoryLimit = ini_set('memory_limit', '-1');
 
             $this->writeVerboseMessages("Processing commands");
             $result = $this->handleCommand($commands);
