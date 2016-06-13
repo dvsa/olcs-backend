@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Si;
 
+use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequest as Entity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
@@ -60,19 +61,23 @@ class ErruRequestEntityTest extends EntityTester
     }
 
     /**
-     * tests updateErruResponse
+     * tests queueErruResponse
      */
-    public function testUpdateErruResponse()
+    public function testQueueErruResponse()
     {
         $user = m::mock(UserEntity::class);
         $date = new \DateTime();
+        $document = m::mock(Document::class);
+        $msiType = m::mock(RefData::class);
 
+        /** @var Entity $entity */
         $entity = m::mock(Entity::class)->makePartial();
 
-        $entity->updateErruResponse($user, $date);
+        $entity->queueErruResponse($user, $date, $document, $msiType);
 
         $this->assertEquals($user, $entity->getResponseUser());
         $this->assertEquals($date, $entity->getResponseTime());
-        $this->assertEquals('Y', $entity->getResponseSent());
+        $this->assertEquals($document, $entity->getResponseDocument());
+        $this->assertEquals($msiType, $entity->getMsiType());
     }
 }
