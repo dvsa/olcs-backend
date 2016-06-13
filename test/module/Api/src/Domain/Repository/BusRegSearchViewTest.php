@@ -111,8 +111,9 @@ class BusRegSearchViewTest extends RepositoryTestCase
 
         $repo->shouldReceive('createQueryBuilder')->with('m')->once()->andReturn($qb);
 
-        $qb->shouldReceive('addGroupBy')->with($expected)->andReturnSelf();
-        $qb->shouldReceive('getQuery->getResult')->with(m::type('integer'))->once()->andReturn(['RESULTS']);
+        $qb->shouldReceive('distinct')->andReturnSelf();
+        $qb->shouldReceive('select')->with($expected)->andReturnSelf();
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULTS']);
 
         $mockQuery = m::mock(QueryInterface::class);
         $mockQuery->shouldReceive('getContext')->andReturn($context);
@@ -134,12 +135,14 @@ class BusRegSearchViewTest extends RepositoryTestCase
         $this->em->shouldReceive('getRepository')->with(Entity::class)->andReturn($repo);
 
         $repo->shouldReceive('createQueryBuilder')->with('m')->once()->andReturn($qb);
+
+        $qb->shouldReceive('distinct')->andReturnSelf();
+        $qb->shouldReceive('select')->with($expected)->andReturnSelf();
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULTS']);
+
         $qb->shouldReceive('expr->eq')->with('m.organisationId', ':organisationId')->once()->andReturn('S_EXPR');
         $qb->shouldReceive('andWhere')->with('S_EXPR')->once()->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('organisationId', $organisationId)->once()->andReturnSelf();
-
-        $qb->shouldReceive('addGroupBy')->with($expected)->andReturnSelf();
-        $qb->shouldReceive('getQuery->getResult')->with(m::type('integer'))->once()->andReturn(['RESULTS']);
 
         $mockQuery = m::mock(QueryInterface::class);
         $mockQuery->shouldReceive('getContext')->andReturn($context);
@@ -156,13 +159,13 @@ class BusRegSearchViewTest extends RepositoryTestCase
     {
         return [
             [
-                'licence', 'm.licId',
+                'licence', ['m.licId', 'm.licNo'],
             ],
             [
-                'organisation', 'm.organisationId',
+                'organisation', ['m.organisationId', 'm.organisationName']
             ],
             [
-                'busRegStatus', 'm.busRegStatus',
+                'busRegStatus', ['m.busRegStatus', 'm.busRegStatusDesc']
             ],
         ];
     }

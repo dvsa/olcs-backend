@@ -30,6 +30,11 @@ class BusRegSearchViewContextList extends AbstractQueryHandler implements AuthAw
      * Returns a distinct list of column entries identified by query->getContext().
      * Used to populate filter form drop down lists.
      *
+     * This query handler uses a distinct query to retrieve only unique values given a certain context.
+     * Because of this we cannot use the entity to hydrate since it will populate the entire row of data.
+     * Consequently we cannot use the Result object here. There are no additional joins on this table since it is a view
+     * and therefore safe from recursion.
+     *
      * @return array
      */
     public function handleQuery(QueryInterface $query)
@@ -44,12 +49,10 @@ class BusRegSearchViewContextList extends AbstractQueryHandler implements AuthAw
             $organisationId = $this->getCurrentOrganisation()->getId();
         }
 
-        $results = $repo->fetchDistinctList($query, $organisationId, DoctrineQuery::HYDRATE_OBJECT);
+        $results = $repo->fetchDistinctList($query, $organisationId);
 
         return [
-            'result' => $this->resultList(
-                $results
-            ),
+            'result' => $results,
             'count' => count($results)
         ];
     }
