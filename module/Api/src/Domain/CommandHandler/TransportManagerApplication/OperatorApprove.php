@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
 use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 
 /**
  * OperatorApprove
@@ -21,6 +22,16 @@ final class OperatorApprove extends AbstractCommandHandler implements Transactio
 
     protected $repoServiceName = 'TransportManagerApplication';
 
+    protected $extraRepos = ['TransportManager'];
+
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         /* @var $tma TransportManagerApplication */
@@ -35,6 +46,10 @@ final class OperatorApprove extends AbstractCommandHandler implements Transactio
         );
         $this->getRepo()->save($tma);
 
+        if ($tma->getTransportManager()->getTmType() === null) {
+            $this->updateTmType($tma->getTransportManager(), $tma->getTmType());
+        }
+
         $this->sendConfirmedEmail($tma);
 
         $this->result->addMessage("Transport Manager Application ID {$tma->getId()} operator approved");
@@ -45,7 +60,9 @@ final class OperatorApprove extends AbstractCommandHandler implements Transactio
     /**
      * Send an email to the TM
      *
-     * @param TransportManagerApplication $tma
+     * @param TransportManagerApplication $tma tma
+     *
+     * @return void
      */
     private function sendConfirmedEmail(TransportManagerApplication $tma)
     {
@@ -69,5 +86,20 @@ final class OperatorApprove extends AbstractCommandHandler implements Transactio
                 ),
             ]
         );
+    }
+
+    /**
+     * Update tm type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $tm     transport manager
+     * @param string                                    $tmType transport manager type
+     *
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return void
+     */
+    protected function updateTmType(TransportManager $tm, $tmType)
+    {
+        $tm->setTmType($this->getRepo()->getRefdataReference($tmType));
+        $this->getRepo('TransportManager')->save($tm);
     }
 }

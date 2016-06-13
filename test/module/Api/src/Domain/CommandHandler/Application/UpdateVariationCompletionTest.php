@@ -58,7 +58,6 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 
     /**
      * @dataProvider handleCommandProvider
-     * @group test123
      */
     public function testHandleCommand(
         $section,
