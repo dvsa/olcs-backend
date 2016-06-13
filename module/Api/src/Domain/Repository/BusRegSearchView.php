@@ -21,6 +21,14 @@ class BusRegSearchView extends AbstractRepository
     protected $entity = Entity::class;
 
     /**
+     * Setting to false removes the unnecessary DISTINCT clause from pagination queries
+     * @see http://doctrine-orm.readthedocs.io/projects/doctrine-orm/en/latest/tutorials/pagination.html
+     *
+     * @var bool
+     */
+    protected $fetchJoinCollection = false;
+
+    /**
      * Fetch an entry from the view for a Reg No
      *
      * @param string $regNo
@@ -102,26 +110,39 @@ class BusRegSearchView extends AbstractRepository
 
     /**
      * @param QueryInterface $query
+     * @param null $organisationId null if LA user
      * @param int $hydrateMode
-     *
-     * @return \ArrayIterator|\Traversable
+     * @return array
      */
-    public function fetchDistinctList(QueryInterface $query, $hydrateMode = Query::HYDRATE_OBJECT)
-    {
+    public function fetchDistinctList(
+        QueryInterface $query,
+        $organisationId = null
+    ) {
+        $qb = $this->createQueryBuilder();
+
+        // organisationId is determined by the logged in user and sent from the query handler and not from the query
+        if (!empty($organisationId)) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.organisationId', ':organisationId'))
+                ->setParameter('organisationId', $organisationId);
+        }
+
         switch ($query->getContext())
         {
             case 'licence':
-                $qb = $this->createQueryBuilder()->addGroupBy($this->alias . '.licId');
+                $qb->distinct()
+                ->select([$this->alias . '.licId', $this->alias . '.licNo']);
                 break;
             case 'organisation':
-                $qb = $this->createQueryBuilder()->addGroupBy($this->alias . '.organisationId');
+                $qb->distinct()
+                    ->select([$this->alias . '.organisationId', $this->alias . '.organisationName']);
                 break;
             case 'busRegStatus':
-                $qb = $this->createQueryBuilder()->addGroupBy($this->alias . '.busRegStatus');
+                $qb->distinct()
+                    ->select([$this->alias . '.busRegStatus', $this->alias . '.busRegStatusDesc']);
                 break;
         }
 
-        $result = $qb->getQuery()->getResult($hydrateMode);
+        $result = $qb->getQuery()->getResult();
 
         return $result;
     }
