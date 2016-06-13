@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 
 /**
  * ErruRequest Entity
@@ -29,7 +30,10 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
  */
 class ErruRequest extends AbstractErruRequest
 {
-    const DEFAULT_CASE_TYPE = 'erru_case_t_msirnys'; //MSI with no response sent
+    const DEFAULT_CASE_TYPE = 'erru_case_t_msinre'; //MSI with no response entered
+    const QUEUED_CASE_TYPE = 'erru_case_t_msirnys'; //MSI with response queued
+    const FAILED_CASE_TYPE = 'erru_case_t_msirsf'; //MSI with response failure
+    const SENT_CASE_TYPE = 'erru_case_t_msirs'; //MSI with no response sent
 
     /**
      * ErruRequest constructor.
@@ -63,15 +67,22 @@ class ErruRequest extends AbstractErruRequest
     }
 
     /**
-     * Updates the serious infringement with an erru response
+     * Updates the serious infringement response information, called while the response is being queued
      *
      * @param UserEntity $user
      * @param \DateTime $responseDateTime
+     * @param DocumentEntity $responseDocument
+     * @param RefData $msiType
      */
-    public function updateErruResponse(UserEntity $user, \DateTime $responseDateTime)
-    {
+    public function queueErruResponse(
+        UserEntity $user,
+        \DateTime $responseDateTime,
+        DocumentEntity $responseDocument,
+        RefData $msiType
+    ) {
         $this->setResponseUser($user);
         $this->setResponseTime($responseDateTime);
-        $this->setResponseSent('Y');
+        $this->setResponseDocument($responseDocument);
+        $this->setMsiType($msiType);
     }
 }
