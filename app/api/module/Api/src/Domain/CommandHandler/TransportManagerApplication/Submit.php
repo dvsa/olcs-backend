@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
 use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 
 /**
  * Submit
@@ -21,6 +22,16 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
 
     protected $repoServiceName = 'TransportManagerApplication';
 
+    protected $extraRepos = ['TransportManager'];
+
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         /* @var $tma TransportManagerApplication */
@@ -38,6 +49,8 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
 
         if ($nextStatus === TransportManagerApplication::STATUS_TM_SIGNED) {
             $this->sendSubmittedEmail($tma);
+        } elseif ($tma->getTransportManager()->getTmType() === null) {
+            $this->updateTmType($tma->getTransportManager(), $tma->getTmType());
         }
 
         $this->result->addMessage("Transport Manager Application ID {$tma->getId()} submitted");
@@ -48,7 +61,9 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
     /**
      * Send an email to the Organisations admins and TMA creator
      *
-     * @param TransportManagerApplication $tma
+     * @param TransportManagerApplication $tma tma
+     *
+     * @return void
      */
     private function sendSubmittedEmail(TransportManagerApplication $tma)
     {
@@ -85,7 +100,8 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
     /**
      * Get list of users who should receive the email
      *
-     * @param TransportManagerApplication $tma
+     * @param TransportManagerApplication $tma tma
+     *
      * @return array Array of User indexed by id
      */
     private function getRecipients(TransportManagerApplication $tma)
@@ -104,5 +120,20 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
         }
 
         return $users;
+    }
+
+    /**
+     * Update tm type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $tm     transport manager
+     * @param string                                    $tmType transport manager type
+     *
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return void
+     */
+    protected function updateTmType(TransportManager $tm, $tmType)
+    {
+        $tm->setTmType($this->getRepo()->getRefdataReference($tmType));
+        $this->getRepo('TransportManager')->save($tm);
     }
 }

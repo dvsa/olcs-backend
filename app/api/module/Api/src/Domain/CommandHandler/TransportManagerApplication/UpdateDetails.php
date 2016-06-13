@@ -19,7 +19,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateDetails as UpdateDetailsCommand;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 
 /**
  * UpdateDetails
@@ -30,7 +29,7 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
 {
     protected $repoServiceName = 'TransportManagerApplication';
 
-    protected $extraRepos = ['ContactDetails', 'Address', 'TransportManager'];
+    protected $extraRepos = ['ContactDetails', 'Address'];
 
     /**
      * Handle query
@@ -64,10 +63,6 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
         $tma->getTransportManager()->getHomeCd()->getPerson()->setBirthDate(
             $command->getDob() ? new DateTime($command->getDob()) : null
         );
-
-        if ($tma->getTransportManager()->getTmType() === null) {
-            $this->updateTmType($tma->getTransportManager(), $command->getTmType());
-        }
 
         $this->getRepo()->save($tma);
 
@@ -200,20 +195,5 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
                 ]
             );
         }
-    }
-
-    /**
-     * Update tm type
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $tm     transport manager
-     * @param string                                    $tmType transport manager type
-     *
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     * @return void
-     */
-    protected function updateTmType(TransportManager $tm, $tmType)
-    {
-        $tm->setTmType($this->getRepo()->getRefdataReference($tmType));
-        $this->getRepo('TransportManager')->save($tm);
     }
 }

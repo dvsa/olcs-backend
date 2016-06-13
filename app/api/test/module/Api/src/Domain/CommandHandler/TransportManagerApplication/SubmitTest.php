@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateStatus as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -32,6 +33,10 @@ class SubmitTest extends CommandHandlerTestCase
             'TransportManagerApplication',
             \Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication::class
         );
+        $this->mockRepo(
+            'TransportManager',
+            \Dvsa\Olcs\Api\Domain\Repository\TransportManager::class
+        );
 
         $this->mockedSmServices = [
             TemplateRenderer::class => m::mock(TemplateRenderer::class),
@@ -45,6 +50,7 @@ class SubmitTest extends CommandHandlerTestCase
         $this->refData = [
             TransportManagerApplication::STATUS_TM_SIGNED,
             TransportManagerApplication::STATUS_OPERATOR_SIGNED,
+            TransportManagerApplication::TYPE_EXTERNAL,
         ];
 
         parent::initReferences();
@@ -81,6 +87,8 @@ class SubmitTest extends CommandHandlerTestCase
 
         $tma = new TransportManagerApplication();
         $tma->setIsOwner('Y');
+        $tma->setTmType(TransportManagerApplication::TYPE_EXTERNAL);
+        $tma->setTransportManager(new TransportManager());
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command)->andReturn($tma);
@@ -89,6 +97,14 @@ class SubmitTest extends CommandHandlerTestCase
                 $this->assertSame(
                     $this->refData[TransportManagerApplication::STATUS_OPERATOR_SIGNED],
                     $tma->getTmApplicationStatus()
+                );
+            }
+        );
+        $this->repoMap['TransportManager']->shouldReceive('save')->once()->andReturnUsing(
+            function (TransportManager $tm) {
+                $this->assertSame(
+                    $this->refData[TransportManagerApplication::TYPE_EXTERNAL],
+                    $tm->getTmType()
                 );
             }
         );

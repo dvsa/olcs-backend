@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\OperatorApprove as CommandHandler;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateStatus as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -27,6 +28,10 @@ class OperatorApproveTest extends CommandHandlerTestCase
             'TransportManagerApplication',
             \Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication::class
         );
+        $this->mockRepo(
+            'TransportManager',
+            \Dvsa\Olcs\Api\Domain\Repository\TransportManager::class
+        );
 
         $this->mockedSmServices = [
             TemplateRenderer::class => m::mock(TemplateRenderer::class),
@@ -39,6 +44,7 @@ class OperatorApproveTest extends CommandHandlerTestCase
     {
         $this->refData = [
             TransportManagerApplication::STATUS_OPERATOR_SIGNED,
+            TransportManagerApplication::TYPE_EXTERNAL,
         ];
 
         parent::initReferences();
@@ -48,8 +54,28 @@ class OperatorApproveTest extends CommandHandlerTestCase
     {
         $command = Command::create(['id' => 863, 'version' => 234]);
 
+        $mockTransportManager = m::mock(TransportManager::class)
+            ->shouldReceive('getTmType')
+            ->andReturnNull()
+            ->once()
+            ->shouldReceive('setTmType')
+            ->with($this->refData[TransportManagerApplication::TYPE_EXTERNAL])
+            ->once()
+            ->shouldReceive('getHomeCd')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getEmailAddress')
+                ->andReturn('email1')
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
         $tma = m::mock(TransportManagerApplication::class)->makePartial();
         $tma->setId(12);
+        $tma->setTmType(TransportManagerApplication::TYPE_EXTERNAL);
+        $tma->setTransportManager($mockTransportManager);
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 234)->andReturn($tma);
@@ -61,6 +87,7 @@ class OperatorApproveTest extends CommandHandlerTestCase
                 );
             }
         );
+        $this->repoMap['TransportManager']->shouldReceive('save')->once();
 
         $this->assertEmailSent($tma);
 
@@ -71,8 +98,28 @@ class OperatorApproveTest extends CommandHandlerTestCase
     {
         $command = Command::create(['id' => 863]);
 
+        $mockTransportManager = m::mock(TransportManager::class)
+            ->shouldReceive('getTmType')
+            ->andReturnNull()
+            ->once()
+            ->shouldReceive('setTmType')
+            ->with($this->refData[TransportManagerApplication::TYPE_EXTERNAL])
+            ->once()
+            ->shouldReceive('getHomeCd')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getEmailAddress')
+                    ->andReturn('email1')
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->getMock();
+
         $tma = m::mock(TransportManagerApplication::class)->makePartial();
         $tma->setId(12);
+        $tma->setTmType(TransportManagerApplication::TYPE_EXTERNAL);
+        $tma->setTransportManager($mockTransportManager);
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command)->andReturn($tma);
@@ -84,6 +131,7 @@ class OperatorApproveTest extends CommandHandlerTestCase
                 );
             }
         );
+        $this->repoMap['TransportManager']->shouldReceive('save')->once();
 
         $this->assertEmailSent($tma);
 
@@ -92,7 +140,6 @@ class OperatorApproveTest extends CommandHandlerTestCase
 
     private function assertEmailSent($tma)
     {
-        $tma->shouldReceive('getTransportManager->getHomeCd->getEmailAddress')->with()->once()->andReturn('email1');
         $tma->shouldReceive('getApplication->getLicence->getTranslateToWelsh')->with()->once()->andReturn('Y');
         $tma->shouldReceive('getApplication->getLicence->getOrganisation->getName')->with()->once()
             ->andReturn('ORG_NAME');
