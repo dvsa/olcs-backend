@@ -200,11 +200,13 @@ class Search implements AuthAwareInterface
                     new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
                 );
 
-                // Hide Removed TMs from SS and Anonymous users
-                /* @to-do The permission check below first checks for anonymous users. This is because isInternalUser()
+                /*
+                 * Hide Removed TMs from SS and Anonymous users
+                 *
+                 * The permission check below first checks for anonymous users. This is because isInternalUser()
                  * method doesnt handle anon users (yet).
                  *
-                 * @to-do Use of Filtered Query will be deprecated in the future.
+                 * Use of Filtered Query will be deprecated in the future.
                  * @see https://www.elastic.co/blog/better-query-execution-coming-elasticsearch-2-0
                  */
                 if ($this->isAnonymousUser() || !$this->isInternalUser()) {
