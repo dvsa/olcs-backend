@@ -18,6 +18,14 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  */
 class DocumentSearchView extends AbstractReadonlyRepository
 {
+    /**
+     * Setting to false removes the unnecessary DISTINCT clause from pagination queries
+     * @see http://doctrine-orm.readthedocs.io/projects/doctrine-orm/en/latest/tutorials/pagination.html
+     *
+     * @var bool
+     */
+    protected $fetchJoinCollection = false;
+
     protected $entity = Entity::class;
 
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
