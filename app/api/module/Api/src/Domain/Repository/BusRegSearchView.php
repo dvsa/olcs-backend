@@ -10,7 +10,6 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Query as DoctrineQuery;
 
 /**
  * BusRegSearchView
