@@ -17,14 +17,14 @@ class ContinuationNotSoughtList extends AbstractQueryHandler
     /**
      * Handle query
      *
-     * @param QueryInterface $query query
+     * @param \Dvsa\Olcs\Transfer\Query\QueryInterface $query query
      *
      * @return array
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleQuery(QueryInterface $query)
     {
-        // this query is recursion save
+        // this query is recursion save, no need to serialise, already serialised
         $results = $this->getRepo()->fetchForContinuationNotSought($query->getDate());
         return [
             'result' => $results,
