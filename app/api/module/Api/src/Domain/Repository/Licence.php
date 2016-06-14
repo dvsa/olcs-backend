@@ -326,8 +326,17 @@ class Licence extends AbstractRepository
         $qb->select($this->alias, 'ta');
 
         $query = $qb->getQuery();
-
-        return $query->getResult();
+        $results = $query->getResult(Query::HYDRATE_ARRAY);
+        $licences = [];
+        foreach ($results as $result) {
+            $licences[] = [
+                'id' => $result['id'],
+                'version' => $result['version'],
+                'licNo' => $result['licNo'],
+                'taName' => $result['trafficArea']['name']
+            ];
+        }
+        return $licences;
     }
 
     /**
