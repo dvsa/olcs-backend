@@ -522,6 +522,6 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
      */
     protected function getPaginator($query)
     {
-        return new Paginator($query);
+        return new Paginator($query, $this->fetchJoinCollection);
     }
 }
