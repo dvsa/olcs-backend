@@ -33,6 +33,17 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
 
     protected $extraRepos = ['TransportManagerLicence', 'ContactDetails', 'GoodsDisc', 'PsvDisc'];
 
+    /**
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Licence\UpdateTypeOfLicence $command command
+     *
+     * @return Result
+     * @throws ForbiddenException
+     * @throws RequiresVariationException
+     * @throws ValidationException
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -82,8 +93,8 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
     /**
      * Handle the side effects of change licence type
      *
-     * @param Licence $licence
-     * @param string $newLicenceType New licence type RefData constant
+     * @param Licence $licence        licence
+     * @param string  $newLicenceType New licence type RefData constant
      *
      * @return Result
      */
@@ -131,7 +142,9 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
     /**
      * Delink Transport Managers
      *
-     * @param Licence $licence
+     * @param Licence $licence licence
+     *
+     * @return void
      */
     private function delinkTransportManagers(Licence $licence)
     {
@@ -144,7 +157,9 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
     /**
      * Remove the Establishment address from a licence
      *
-     * @param Licence $licence
+     * @param Licence $licence licence
+     *
+     * @return void
      */
     private function removeEstablishmentAddress(Licence $licence)
     {
@@ -157,7 +172,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
     /**
      * Return All Community Licences
      *
-     * @param Licence $licence
+     * @param Licence $licence licence
      *
      * @return Result
      */
@@ -171,7 +186,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
     /**
      * Reissue Goods Discs
      *
-     * @param Licence $licence
+     * @param Licence $licence licence
      *
      * @return Result
      */
@@ -189,7 +204,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
     /**
      * Reissue PSV discs
      *
-     * @param Licence $licence
+     * @param Licence $licence licence
      *
      * @return Result
      */
@@ -198,7 +213,10 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
         $amount = $licence->getPsvDiscsNotCeased()->count();
 
         $ceaseCount = $this->getRepo('PsvDisc')->ceaseDiscsForLicence($licence->getId());
-        $createCount = $this->getRepo('PsvDisc')->createPsvDiscs($licence->getId(), $amount);
+        $createCount = 0;
+        if ($ceaseCount > 0) {
+            $createCount = $this->getRepo('PsvDisc')->createPsvDiscs($licence->getId(), $amount);
+        }
 
         $result = new Result();
         $result->addMessage("{$ceaseCount} psv discs ceased, {$createCount} discs created");
