@@ -111,7 +111,7 @@ class FeeTypeTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
 
         $expectedQuery = 'QUERY'
-         . ' AND ft.effectiveFrom <= [[2014-10-26T00:00:00+01:00]]'
+         . ' AND ft.effectiveFrom <= [[2014-10-26T00:00:00+00:00]]'
          . ' AND ft.isMiscellaneous = [[0]]'
          . ' AND ft.feeType IN ["APP","VAR","GRANT","GRANTINT"]'
          . ' AND ft.goodsOrPsv = [[GOODS_OR_PSV]]'
@@ -173,7 +173,7 @@ class FeeTypeTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
 
         $expectedQuery = 'QUERY'
-         . ' AND ft.effectiveFrom <= [[2014-10-26T00:00:00+01:00]]'
+         . ' AND ft.effectiveFrom <= [[2014-10-26T00:00:00+00:00]]'
          . ' AND ft.feeType IN ["CONT"]'
          . ' AND ft.licenceType = [[LICENCE_TYPE]]';
 

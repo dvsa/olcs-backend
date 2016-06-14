@@ -1,5 +1,7 @@
 <?php
 $startTime = microtime(true);
+// Backend default timezone is UTC
+date_default_timezone_set('UTC');
 
 // Ensures at the very least we send a 500 response on fatal
 register_shutdown_function('handleFatal');
