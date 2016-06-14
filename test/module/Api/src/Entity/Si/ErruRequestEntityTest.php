@@ -80,4 +80,36 @@ class ErruRequestEntityTest extends EntityTester
         $this->assertEquals($document, $entity->getResponseDocument());
         $this->assertEquals($msiType, $entity->getMsiType());
     }
+
+    /**
+     * Tests canModify
+     *
+     * @dataProvider canModifyProvider
+     *
+     * @param string $msiStatus
+     * @param bool $isNew
+     */
+    public function testCanModify($msiStatus, $isNew)
+    {
+        $msiType = m::mock(RefData::class);
+        $msiType->shouldReceive('getId')->once()->andReturn($msiStatus);
+
+        $entity = $this->instantiate(Entity::class);
+        $entity->setMsiType($msiType);
+
+        $this->assertEquals($isNew, $entity->canModify());
+    }
+
+    /**
+     * @return array
+     */
+    public function canModifyProvider()
+    {
+        return [
+            [Entity::FAILED_CASE_TYPE, false],
+            [Entity::QUEUED_CASE_TYPE, false],
+            [Entity::SENT_CASE_TYPE, false],
+            [Entity::DEFAULT_CASE_TYPE, true]
+        ];
+    }
 }
