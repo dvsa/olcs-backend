@@ -61,6 +61,7 @@ class Queue extends AbstractQueue
         self::TYPE_CPMS_REPORT_DOWNLOAD,
         self::TYPE_EBSR_REQUEST_MAP,
         self::TYPE_EBSR_PACK,
+        self::TYPE_SEND_MSI_RESPONSE,
         self::TYPE_EMAIL,
         self::TYPE_PRINT,
         self::TYPE_DISC_PRINTING,
