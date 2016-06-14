@@ -94,10 +94,16 @@ class GrantTest extends CommandHandlerTestCase
             ->andReturn(true);
         $application->shouldReceive('getTrafficArea->getId')
             ->andReturn('TA');
+        $application->shouldReceive('setRequestInspection')
+            ->with(false)
+            ->once();
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
-            ->andReturn($application);
+            ->andReturn($application)
+            ->once()
+            ->shouldReceive('save')
+            ->once();
 
         $this->mockedSmServices['ApplicationGrantValidationService']->shouldReceive('validate')->with($application)
             ->andReturn([]);
@@ -239,6 +245,74 @@ class GrantTest extends CommandHandlerTestCase
             'messages' => [
                 'GrantPsv',
                 'CreateFromGrant'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandGoodsWithInspectionRequest()
+    {
+        $data = [
+            'shouldCreateInspectionRequest' => 'Y',
+            'dueDate' => 3,
+            'id' => 111,
+            'notes' => 'foo'
+        ];
+
+        $command = Cmd::create($data);
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setId(111);
+
+        $application->shouldReceive('isGoods')
+            ->andReturn(true);
+        $application->shouldReceive('getTrafficArea->getId')
+            ->andReturn('TA');
+        $application->shouldReceive('setRequestInspection')
+            ->with(true)
+            ->once()
+            ->shouldReceive('setRequestInspectionDelay')
+            ->with(3)
+            ->once()
+            ->shouldReceive('setRequestInspectionComment')
+            ->with('foo')
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application)
+            ->once()
+            ->shouldReceive('save')
+            ->once();
+
+        $this->mockedSmServices['ApplicationGrantValidationService']->shouldReceive('validate')->with($application)
+            ->andReturn([]);
+
+        $result1 = new Result();
+        $result1->addMessage('GrantGoods');
+        $this->expectedSideEffect(GrantGoods::class, $data, $result1);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
+            ['id' => 111, 'trafficArea' => 'TA', 'publicationSection' => 4],
+            new Result()
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            ['id' => 111],
+            new Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'GrantGoods',
+                'Inspection request details saved'
             ]
         ];
 
