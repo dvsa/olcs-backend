@@ -219,7 +219,7 @@ class PiHearing extends AbstractPiHearing
         }
 
         if ($isAdjourned == 'Y') {
-            $this->adjournedDate = $this->processDate($adjournedDate, 'Y-m-d H:i:s', false);
+            $this->adjournedDate = $this->processDate($adjournedDate, \DateTime::ISO8601, false);
             $this->adjournedReason = $adjournedReason;
         } else {
             $this->adjournedReason = null;
