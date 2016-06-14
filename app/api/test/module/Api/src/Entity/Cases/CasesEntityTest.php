@@ -344,6 +344,40 @@ class CasesEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider canAddSiProvider
+     *
+     * @param ErruRequestEntity|null $erruRequest
+     * @param bool $expectedResult
+     */
+    public function testCanAddSi($erruRequest, $expectedResult)
+    {
+        $sut = $this->instantiate($this->entityClass);
+        $sut->setErruRequest($erruRequest);
+
+        $this->assertEquals($expectedResult, $sut->canAddSi());
+    }
+
+    /**
+     * data provider for testCanSendMsiResponse
+     *
+     * @return array
+     */
+    public function canAddSiProvider()
+    {
+        $erruRequestNoModify = m::mock(ErruRequestEntity::class);
+        $erruRequestNoModify->shouldReceive('canModify')->once()->andReturn(false);
+
+        $erruRequestCanModify = m::mock(ErruRequestEntity::class);
+        $erruRequestCanModify->shouldReceive('canModify')->once()->andReturn(true);
+
+        return [
+            [null, false],
+            [$erruRequestNoModify, false],
+            [$erruRequestCanModify, true]
+        ];
+    }
+
+    /**
      * @dataProvider canSendMsiResponseProvider
      *
      * @param ErruRequestEntity|null $erruRequest
@@ -372,25 +406,17 @@ class CasesEntityTest extends EntityTester
         $siNoResponseSet = m::mock(SeriousInfringement::class);
         $siNoResponseSet->shouldReceive('responseSet')->andReturn(false);
 
-        $erruRequestNoResponse = m::mock(ErruRequestEntity::class);
-        $erruRequestNoResponse->shouldReceive('getMsiType->getId')->andReturn(ErruRequestEntity::DEFAULT_CASE_TYPE);
+        $erruRequestNoModify = m::mock(ErruRequestEntity::class);
+        $erruRequestNoModify->shouldReceive('canModify')->once()->andReturn(false);
 
-        $erruRequestSentResponse = m::mock(ErruRequestEntity::class);
-        $erruRequestSentResponse->shouldReceive('getMsiType->getId')->andReturn(ErruRequestEntity::SENT_CASE_TYPE);
-
-        $erruRequestQueuedResponse = m::mock(ErruRequestEntity::class);
-        $erruRequestQueuedResponse->shouldReceive('getMsiType->getId')->andReturn(ErruRequestEntity::QUEUED_CASE_TYPE);
-
-        $erruRequestFailedResponse = m::mock(ErruRequestEntity::class);
-        $erruRequestFailedResponse->shouldReceive('getMsiType->getId')->andReturn(ErruRequestEntity::FAILED_CASE_TYPE);
+        $erruRequestCanModify = m::mock(ErruRequestEntity::class);
+        $erruRequestCanModify->shouldReceive('canModify')->once()->andReturn(true);
 
         return [
             [null, new ArrayCollection([$siResponseSet]), false],
-            [$erruRequestSentResponse, new ArrayCollection([$siResponseSet]), false],
-            [$erruRequestQueuedResponse, new ArrayCollection([$siResponseSet]), false],
-            [$erruRequestFailedResponse, new ArrayCollection([$siResponseSet]), false],
-            [$erruRequestNoResponse, new ArrayCollection([$siNoResponseSet, $siResponseSet]), false],
-            [$erruRequestNoResponse, new ArrayCollection([$siResponseSet]), true]
+            [$erruRequestNoModify, new ArrayCollection([$siResponseSet]), false],
+            [$erruRequestCanModify, new ArrayCollection([$siNoResponseSet, $siResponseSet]), false],
+            [$erruRequestCanModify, new ArrayCollection([$siResponseSet]), true]
         ];
     }
 
@@ -404,6 +430,7 @@ class CasesEntityTest extends EntityTester
             'canReopen' => false,
             'canClose' => false,
             'canSendMsiResponse' => false,
+            'canAddSi' => false,
             'isErru' => false,
         ];
 
