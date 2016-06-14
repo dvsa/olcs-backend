@@ -22,6 +22,14 @@ class Schedule41Approve extends AbstractCommandHandler implements TransactionedI
 {
     protected $repoServiceName = 'Application';
 
+    /**
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Application\Schedule41\Approve $command command
+     *
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         /* @var $application ApplicationEntity */
@@ -32,6 +40,9 @@ class Schedule41Approve extends AbstractCommandHandler implements TransactionedI
         $criteria = Criteria::create();
         $criteria->where(
             $criteria->expr()->eq('agreedDate', null)
+        );
+        $criteria->andWhere(
+            $criteria->expr()->eq('outcome', null)
         );
 
         $s4s = $application->getS4s()->matching($criteria);
@@ -71,8 +82,8 @@ class Schedule41Approve extends AbstractCommandHandler implements TransactionedI
     /**
      * Create a publicaction
      *
-     * @param ApplicationEntity $application
-     * @param int $publicationSection Publication Section ID
+     * @param ApplicationEntity $application        application
+     * @param int               $publicationSection Publication Section ID
      *
      * @return Result
      */
@@ -92,8 +103,8 @@ class Schedule41Approve extends AbstractCommandHandler implements TransactionedI
     /**
      * Get the publication section for the application
      *
-     * @param ApplicationEntity $application
-     * @param bool $isTrue
+     * @param ApplicationEntity $application application
+     * @param bool              $isTrue      is true
      *
      * @return int
      */
@@ -109,8 +120,8 @@ class Schedule41Approve extends AbstractCommandHandler implements TransactionedI
     /**
      * Get publication section ID for a GB application
      *
-     * @param ApplicationEntity $application
-     * @param bool $isTrue
+     * @param ApplicationEntity $application application
+     * @param bool              $isTrue      is true
      *
      * @return int
      */
@@ -132,8 +143,8 @@ class Schedule41Approve extends AbstractCommandHandler implements TransactionedI
     /**
      * Get publication section ID for an NI application
      *
-     * @param ApplicationEntity $application
-     * @param bool $isTrue
+     * @param ApplicationEntity $application application
+     * @param bool              $isTrue      is true
      *
      * @return int
      */
@@ -155,7 +166,7 @@ class Schedule41Approve extends AbstractCommandHandler implements TransactionedI
     /**
      * Create a TEX task
      *
-     * @param ApplicationEntity $application
+     * @param ApplicationEntity $application application
      *
      * @return Result
      */
