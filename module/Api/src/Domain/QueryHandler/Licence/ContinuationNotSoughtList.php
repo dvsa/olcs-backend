@@ -17,7 +17,7 @@ class ContinuationNotSoughtList extends AbstractQueryHandler
     /**
      * Handle query
      *
-     * @param \Dvsa\Olcs\Transfer\Query\QueryInterface $query query
+     * @param \Dvsa\Olcs\Api\Domain\Query\Licence\ContinuationNotSoughtList $query query
      *
      * @return array
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
