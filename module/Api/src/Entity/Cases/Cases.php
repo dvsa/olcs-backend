@@ -378,7 +378,7 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
     public function canSendMsiResponse()
     {
         //check this is an erru case, and if so that the response isn't already sent
-        if (!$this->isErru() || $this->erruRequest->getMsiType()->getId() !== ErruRequest::DEFAULT_CASE_TYPE) {
+        if (!$this->isErru() || !$this->erruRequest->canModify()) {
             return false;
         }
 
@@ -394,6 +394,21 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
     }
 
     /**
+     * Returns whether a serious infringement can be added to the case
+     *
+     * @return bool
+     */
+    public function canAddSi()
+    {
+        //check this is an erru case, and if so that it can be modified
+        if ($this->isErru() && $this->erruRequest->canModify()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Calculated values to be added to a bundle
      *
      * @return array
@@ -405,6 +420,7 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
             'canReopen' => $this->canReopen(),
             'canClose' => $this->canClose(),
             'canSendMsiResponse' => $this->canSendMsiResponse(),
+            'canAddSi' => $this->canAddSi(),
             'isErru' => $this->isErru()
         ];
     }
