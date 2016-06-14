@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Note\Note;
+use Dvsa\Olcs\Api\Entity\Si\ErruRequest;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -377,7 +378,7 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
     public function canSendMsiResponse()
     {
         //check this is an erru case, and if so that the response isn't already sent
-        if (!$this->isErru() || $this->erruRequest->getResponseSent() === 'Y') {
+        if (!$this->isErru() || $this->erruRequest->getMsiType()->getId() !== ErruRequest::DEFAULT_CASE_TYPE) {
             return false;
         }
 
