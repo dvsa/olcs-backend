@@ -372,15 +372,23 @@ class CasesEntityTest extends EntityTester
         $siNoResponseSet = m::mock(SeriousInfringement::class);
         $siNoResponseSet->shouldReceive('responseSet')->andReturn(false);
 
-        $erruRequestWithResponse = m::mock(ErruRequestEntity::class);
-        $erruRequestWithResponse->shouldReceive('getResponseSent')->andReturn('Y');
-
         $erruRequestNoResponse = m::mock(ErruRequestEntity::class);
-        $erruRequestNoResponse->shouldReceive('getResponseSent')->andReturn('N');
+        $erruRequestNoResponse->shouldReceive('getMsiType->getId')->andReturn(ErruRequestEntity::DEFAULT_CASE_TYPE);
+
+        $erruRequestSentResponse = m::mock(ErruRequestEntity::class);
+        $erruRequestSentResponse->shouldReceive('getMsiType->getId')->andReturn(ErruRequestEntity::SENT_CASE_TYPE);
+
+        $erruRequestQueuedResponse = m::mock(ErruRequestEntity::class);
+        $erruRequestQueuedResponse->shouldReceive('getMsiType->getId')->andReturn(ErruRequestEntity::QUEUED_CASE_TYPE);
+
+        $erruRequestFailedResponse = m::mock(ErruRequestEntity::class);
+        $erruRequestFailedResponse->shouldReceive('getMsiType->getId')->andReturn(ErruRequestEntity::FAILED_CASE_TYPE);
 
         return [
             [null, new ArrayCollection([$siResponseSet]), false],
-            [$erruRequestWithResponse, new ArrayCollection([$siResponseSet]), false],
+            [$erruRequestSentResponse, new ArrayCollection([$siResponseSet]), false],
+            [$erruRequestQueuedResponse, new ArrayCollection([$siResponseSet]), false],
+            [$erruRequestFailedResponse, new ArrayCollection([$siResponseSet]), false],
             [$erruRequestNoResponse, new ArrayCollection([$siNoResponseSet, $siResponseSet]), false],
             [$erruRequestNoResponse, new ArrayCollection([$siResponseSet]), true]
         ];
