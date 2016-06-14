@@ -67,6 +67,16 @@ class ErruRequest extends AbstractErruRequest
     }
 
     /**
+     * Returns whether the erru request is allowed to be modified (have si added and responses sent)
+     *
+     * @return bool
+     */
+    public function canModify()
+    {
+        return $this->msiType->getId() === self::DEFAULT_CASE_TYPE;
+    }
+
+    /**
      * Updates the serious infringement response information, called while the response is being queued
      *
      * @param UserEntity $user
