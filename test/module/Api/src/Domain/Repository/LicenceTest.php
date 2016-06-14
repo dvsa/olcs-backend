@@ -555,11 +555,30 @@ class LicenceTest extends RepositoryTestCase
 
         $this->mockCreateQueryBuilder($qb);
 
+        $results = [
+            [
+                'id' => 1,
+                'version' => 2,
+                'licNo' => 'foo',
+                'trafficArea' => [
+                    'name' => 'bar'
+                ]
+            ]
+        ];
+        $expected = [
+            [
+                'id' => 1,
+                'version' => 2,
+                'licNo' => 'foo',
+                'taName' => 'bar'
+            ]
+        ];
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()
                 ->shouldReceive('getResult')
+                ->with(Query::HYDRATE_ARRAY)
                 ->once()
-                ->andReturn(['RESULTS'])
+                ->andReturn($results)
                 ->getMock()
         );
 
@@ -577,7 +596,7 @@ class LicenceTest extends RepositoryTestCase
         $now = new DateTime();
 
         $qb->shouldReceive('select')->with('m', 'ta')->once();
-        $this->assertEquals(['RESULTS'], $this->sut->fetchForContinuationNotSought($now));
+        $this->assertEquals($expected, $this->sut->fetchForContinuationNotSought($now));
 
         $expectedQuery = '[QUERY] AND m.expiryDate < [[' . $now->format(\DateTime::W3C) . ']] '
             . 'AND m.status IN [[["lsts_valid","lsts_curtailed","lsts_suspended"]]] '
