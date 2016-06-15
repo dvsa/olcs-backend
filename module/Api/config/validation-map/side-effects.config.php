@@ -165,4 +165,12 @@ return [
     CommandHandler\Licence\BatchVehicleListGeneratorForGoodsDiscs::class              => NoValidationRequired::class,
     CommandHandler\Discs\BatchVehicleListGeneratorForPsvDiscs::class                  => NoValidationRequired::class,
     CommandHandler\System\GenerateSlaTargetDate::class                                => NoValidationRequired::class,
+    CommandHandler\Bus\Ebsr\CreateTxcInbox::class                                     => NoValidationRequired::class,
+    CommandHandler\Bus\Ebsr\UpdateTxcInboxPdf::class                                  => NoValidationRequired::class,
+    CommandHandler\Transaction\ResolveOutstandingPayments::class                      => NoValidationRequired::class,
+    QueryHandler\Application\NotTakenUpList::class                                    => NoValidationRequired::class,
+    QueryHandler\Bus\ByLicenceRoute::class                                            => NoValidationRequired::class,
+    QueryHandler\Licence\ContinuationNotSoughtList::class                             => NoValidationRequired::class,
+    Dvsa\Olcs\Email\Domain\CommandHandler\UpdateInspectionRequest::class              => NoValidationRequired::class,
+    Dvsa\Olcs\Email\Domain\CommandHandler\SendEmail::class                            => NoValidationRequired::class,
 ];
