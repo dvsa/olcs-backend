@@ -51,7 +51,7 @@ final class CreateHearing extends AbstractCommandHandler implements AuthAwareInt
         /** @var RefData $presidingTcRole */
         $presidedByRole = $this->getRepo()->getRefdataReference($command->getPresidedByRole());
 
-        $hearingDate = \DateTime::createFromFormat('Y-m-d H:i:s', $command->getHearingDate());
+        $hearingDate = new \DateTime($command->getHearingDate());
 
         if ($command->getVenue() === null) {
             $venue = null;

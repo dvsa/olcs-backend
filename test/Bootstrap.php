@@ -15,6 +15,8 @@ class Bootstrap
 
     public static function init()
     {
+        date_default_timezone_set('UTC');
+
         ini_set('memory_limit', '1G');
         // Setup the autloader
         $loader = static::initAutoloader();
