@@ -19,6 +19,7 @@ use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ValidateApplication as Cmd;
+use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant;
 
 /**
  * Validate Application Test
@@ -33,6 +34,15 @@ class ValidateApplicationTest extends CommandHandlerTestCase
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
 
         parent::setUp();
+    }
+
+    protected function initReferences()
+    {
+        $this->refData = [
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE
+        ];
+
+        parent::initReferences();
     }
 
     public function testHandleCommand()
@@ -51,6 +61,10 @@ class ValidateApplicationTest extends CommandHandlerTestCase
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
         $application->setId(111);
+        $application->setGoodsOrPsv($this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE]);
+        $application->setRequestInspection(true);
+        $application->setRequestInspectionDelay(3);
+        $application->setRequestInspectionComment('foo');
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -81,6 +95,15 @@ class ValidateApplicationTest extends CommandHandlerTestCase
         $discData['currentTotAuth'] = 10;
         $this->expectedSideEffect(CreateDiscRecords::class, $discData, $result5);
 
+        $result6 = new Result();
+        $result6->addMessage('InspectionRequestCreated');
+        $irData = [
+            'application' => 111,
+            'duePeriod' => 3,
+            'caseworkerNotes' => 'foo'
+        ];
+        $this->expectedSideEffect(CreateFromGrant::class, $irData, $result6);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -90,7 +113,8 @@ class ValidateApplicationTest extends CommandHandlerTestCase
                 'CopyApplicationDataToLicence',
                 'ProcessApplicationOperatingCentres',
                 'CommonGrant',
-                'CreateDiscRecords'
+                'CreateDiscRecords',
+                'InspectionRequestCreated'
             ]
         ];
 
