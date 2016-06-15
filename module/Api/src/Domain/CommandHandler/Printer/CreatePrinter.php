@@ -21,11 +21,18 @@ final class CreatePrinter extends AbstractCommandHandler
 {
     protected $repoServiceName = 'Printer';
 
+    /**
+     * Handle command
+     * 
+     * @param CommandInterface $command command
+     *
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         $printer = new PrinterEntity();
         $printer->setPrinterName($command->getPrinterName());
-        $printer->setPrinterTray($command->getPrinterTray());
         $printer->setDescription($command->getDescription());
 
         $this->getRepo()->save($printer);

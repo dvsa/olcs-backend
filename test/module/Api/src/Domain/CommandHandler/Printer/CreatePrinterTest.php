@@ -34,8 +34,7 @@ class CreatePrinterTest extends CommandHandlerTestCase
         $command = Cmd::create(
             [
                 'printerName' => 'foo',
-                'description' => 'bar',
-                'trayName' => 'cake'
+                'description' => 'bar'
             ]
         );
 
