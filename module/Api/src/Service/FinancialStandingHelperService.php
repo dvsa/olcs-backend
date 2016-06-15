@@ -1,14 +1,8 @@
 <?php
 
-/**
- * Financial Standing Helper Service
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Service;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\System\FinancialStandingRate;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -89,18 +83,21 @@ class FinancialStandingHelperService implements FactoryInterface
         );
 
         // 2. Get first vehicle charge
+        $firstVehicleKey = null;
         foreach ($auths as $key => $auth) {
             if (!$foundHigher && $auth['count']>0) {
                 $firstVehicleCharge = $this->getFirstVehicleRate($auth['type'], $auth['category']);
                 $firstVehicleKey = $key;
-                if (in_array($auth['type'], $higherChargeTypes)) {
+                if (in_array($auth['type'], $higherChargeTypes, true)) {
                     $foundHigher = true;
                 }
             }
         }
 
         // 3. Ensure we don't double-count the first vehicle
-        $auths[$firstVehicleKey]['count']--;
+        if ($firstVehicleKey !== null) {
+            $auths[$firstVehicleKey]['count']--;
+        }
 
         // 4. Get the additional vehicle charges
         foreach ($auths as $key => $auth) {
@@ -124,6 +121,8 @@ class FinancialStandingHelperService implements FactoryInterface
                 return (float) $rate->getFirstVehicleRate();
             }
         }
+
+        return null;
     }
 
     /**
@@ -138,6 +137,8 @@ class FinancialStandingHelperService implements FactoryInterface
                 return (float) $rate->getAdditionalVehicleRate();
             }
         }
+
+        return null;
     }
 
     /**

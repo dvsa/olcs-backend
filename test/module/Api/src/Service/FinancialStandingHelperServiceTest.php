@@ -143,6 +143,31 @@ class FinancialStandingHelperServiceTest extends MockeryTestCase
         ];
     }
 
+    public function testGetAdditionalVehicleRateNull()
+    {
+        $mockRatesRepo = m::mock()
+            ->shouldReceive('fetchRatesInEffect')
+            ->andReturn([])
+            ->getMock();
+
+        static::assertNull(
+            $this->createService($mockRatesRepo)->getAdditionalVehicleRate(null, null)
+        );
+    }
+
+    public function testGetFirstVehicleRateNull()
+    {
+        $mockRatesRepo = m::mock()
+            ->shouldReceive('fetchRatesInEffect')
+            ->andReturn([])
+            ->getMock();
+
+        static::assertNull(
+            $this->createService($mockRatesRepo)->getFirstVehicleRate(null, null)
+        );
+    }
+
+
     public function getStubRates()
     {
         return [
