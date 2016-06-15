@@ -7,4 +7,6 @@ return [
     CliCommandHandler\CreateViExtractFiles::class => IsSystemUser::class,
     CliCommandHandler\SetViFlags::class => IsSystemUser::class,
     CliCommandHandler\DataGovUkExport::class => IsSystemUser::class,
+    CliCommandHandler\RemoveReadAudit::class => IsSystemUser::class,
+    Dvsa\Olcs\Email\Domain\CommandHandler\ProcessInspectionRequestEmail::class => IsSystemUser::class,
 ];
