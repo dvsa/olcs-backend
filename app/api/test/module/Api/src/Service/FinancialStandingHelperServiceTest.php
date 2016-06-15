@@ -150,7 +150,7 @@ class FinancialStandingHelperServiceTest extends MockeryTestCase
             ->andReturn([])
             ->getMock();
 
-        static::assertNull(
+        $this->assertNull(
             $this->createService($mockRatesRepo)->getAdditionalVehicleRate(null, null)
         );
     }
@@ -162,7 +162,7 @@ class FinancialStandingHelperServiceTest extends MockeryTestCase
             ->andReturn([])
             ->getMock();
 
-        static::assertNull(
+        $this->assertNull(
             $this->createService($mockRatesRepo)->getFirstVehicleRate(null, null)
         );
     }
