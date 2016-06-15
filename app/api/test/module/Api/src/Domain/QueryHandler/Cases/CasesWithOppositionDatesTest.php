@@ -71,8 +71,8 @@ class CasesWithOppositionDatesTest extends QueryHandlerTestCase
         $this->assertSame(
             [
                 'SERIALIZED',
-                'oooDate' => '1996-07-27T00:00:00+0100',
-                'oorDate' => '2002-10-02T00:00:00+0100',
+                'oooDate' => '1996-07-27T00:00:00+0000',
+                'oorDate' => '2002-10-02T00:00:00+0000',
             ],
             $result->serialize()
         );

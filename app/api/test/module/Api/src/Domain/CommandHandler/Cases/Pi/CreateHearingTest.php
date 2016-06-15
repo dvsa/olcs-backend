@@ -85,13 +85,13 @@ class CreateHearingTest extends CommandHandlerTestCase
         $venueOther = 'venue other';
         $presidedByRole = 'tc_r_dhtru';
         $witnesses = 5;
-        $hearingDate = '2015-25-12 12:00:00';
+        $hearingDate = '2015-12-25 12:00:00';
         $isCancelled = 'N';
         $cancelledReason = null;
         $cancelledDate = null;
         $isAdjourned = 'Y';
         $adjournedReason = null;
-        $adjournedDate = '2015-25-12 18:30:00';
+        $adjournedDate = '2015-12-25 18:30:00';
         $details = 'details';
         $trafficAreas = ['M'];
         $pubType = 'A&D';

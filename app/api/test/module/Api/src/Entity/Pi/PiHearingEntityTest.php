@@ -105,7 +105,13 @@ class PiHearingEntityTest extends EntityTester
         $isAdjourned = 'Y';
         $adjournedReason = 'adjourned reason';
         $details = 'details';
-        $entityAdjournedDate = \DateTime::createFromFormat('Y-m-d H:i:s', $adjournedDate);
+
+        if ($adjournedDate == null) {
+            $entityAdjournedDate = null;
+        } else {
+            $entityAdjournedDate = new \DateTime($adjournedDate);
+        }
+
         $cancelledDate = '2015-12-25';
         $entityCancelledDate = \DateTime::createFromFormat('Y-m-d', $cancelledDate)->setTime(0, 0, 0);
 
@@ -205,7 +211,7 @@ class PiHearingEntityTest extends EntityTester
     {
         return [
             [null],
-            ['2015-12-25 12:00:00']
+            ['2015-12-25T12:00:00+01:00']
         ];
     }
 }
