@@ -127,7 +127,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      *
      * @return Result
      */
-    public function createInspectionRequest($applicationId, $duePeriod, $caseworkerNotes)
+    private function createInspectionRequest($applicationId, $duePeriod, $caseworkerNotes)
     {
         $data = [
             'application' => $applicationId,
@@ -147,7 +147,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      * @return Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
-    public function saveInspectionRequestDetails($application, $duePeriod, $caseworkerNotes)
+    private function saveInspectionRequestDetails($application, $duePeriod, $caseworkerNotes)
     {
         $application->setRequestInspection(true);
         $application->setRequestInspectionDelay($duePeriod);
