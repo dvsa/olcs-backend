@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Remind Username Selfserve
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -10,7 +7,6 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendUsernameSingle as SendUsernameSingleD
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUsernameMultiple as SendUsernameMultipleDto;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -20,6 +16,13 @@ final class RemindUsernameSelfserve extends AbstractCommandHandler implements Tr
 {
     protected $repoServiceName = 'User';
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -27,7 +30,7 @@ final class RemindUsernameSelfserve extends AbstractCommandHandler implements Tr
         $users = $this->getRepo()->fetchForRemindUsername($command->getLicenceNumber(), $command->getEmailAddress());
 
         if (empty($users)) {
-            throw new Exception\BadRequestException('Resource not found');
+            $result->addMessage('ERR_USERNAME_NOT_FOUND');
         } elseif (count($users) === 1) {
             // exact match - send email to the user
             $this->handleSideEffect(

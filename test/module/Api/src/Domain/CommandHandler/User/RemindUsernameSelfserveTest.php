@@ -114,9 +114,6 @@ class RemindUsernameSelfserveTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
     public function testHandleCommandThrowsNotFoundException()
     {
         $data = [
@@ -134,6 +131,15 @@ class RemindUsernameSelfserveTest extends CommandHandlerTestCase
             ->with($data['licenceNumber'], $data['emailAddress'])
             ->andReturn($users);
 
-        $this->sut->handleCommand($command);
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'ERR_USERNAME_NOT_FOUND'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
     }
 }
