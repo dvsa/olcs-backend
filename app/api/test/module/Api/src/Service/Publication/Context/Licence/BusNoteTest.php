@@ -7,10 +7,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 
 /**
  * Class BusNoteTest
@@ -28,8 +25,7 @@ class BusNoteTest extends MockeryTestCase
      */
     public function testProvide($section, $expectedString)
     {
-
-        $sut = new BusNote(m::mock(QueryHandlerInterface::class));
+        $sut = new BusNote(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
 
         $output = [
             'busNote' => sprintf($sut::BUS_STRING, $expectedString)
@@ -54,7 +50,7 @@ class BusNoteTest extends MockeryTestCase
 
     public function testProvideNotPsv()
     {
-        $sut = new BusNote(m::mock(QueryHandlerInterface::class));
+        $sut = new BusNote(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
 
         $output = [];
         $expectedOutput = new \ArrayObject($output);
@@ -82,7 +78,7 @@ class BusNoteTest extends MockeryTestCase
      */
     public function provideTestProvider()
     {
-        $sut = new BusNote(m::mock(QueryHandlerInterface::class));
+        $sut = new BusNote(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
 
         return [
             [PublicationSectionEntity::LIC_TERMINATED_SECTION, $sut::BUS_SURRENDERED],

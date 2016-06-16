@@ -45,7 +45,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
                 'contactType'  => ContactDetailsEntity::CONTACT_TYPE_TRANSPORT_MANAGER
             ]
         );
-        $workAddressResult = $this->getCommandHandler()->handleCommand($saveWorkAddress);
+        $workAddressResult = $this->handleSideEffect($saveWorkAddress);
 
         $saveHomeAddress = SaveAddressCmd::create(
             [
@@ -59,7 +59,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
                 'contactType'  => ContactDetailsEntity::CONTACT_TYPE_TRANSPORT_MANAGER
             ]
         );
-        $homeAddressResult = $this->getCommandHandler()->handleCommand($saveHomeAddress);
+        $homeAddressResult = $this->handleSideEffect($saveHomeAddress);
 
         $createPerson = CreatePersonCmd::create(
             [
@@ -70,7 +70,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
                 'birthPlace' => $command->getBirthPlace()
             ]
         );
-        $personResult = $this->getCommandHandler()->handleCommand($createPerson);
+        $personResult = $this->handleSideEffect($createPerson);
 
         $this->updateHomeContactDetails(
             $homeAddressResult->getId('contactDetails'),

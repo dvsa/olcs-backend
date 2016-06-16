@@ -7,7 +7,6 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 
 /**
  * Class LicenceCancelledTest
@@ -28,7 +27,7 @@ class LicenceCancelledTest extends MockeryTestCase
     public function testProvide($section, $expectedString)
     {
 
-        $sut = new LicenceCancelled(m::mock(QueryHandlerInterface::class));
+        $sut = new LicenceCancelled(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
 
         $output = [
             'licenceCancelled' => $expectedString . $sut->createDate()
@@ -52,7 +51,7 @@ class LicenceCancelledTest extends MockeryTestCase
      */
     public function provideTestProvider()
     {
-        $sut = new LicenceCancelled(m::mock(QueryHandlerInterface::class));
+        $sut = new LicenceCancelled(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
 
         return [
             [PublicationSectionEntity::LIC_SURRENDERED_SECTION, $sut::LIC_SURRENDERED],

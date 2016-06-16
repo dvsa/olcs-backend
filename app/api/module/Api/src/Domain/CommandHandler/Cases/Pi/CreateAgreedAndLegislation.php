@@ -70,7 +70,7 @@ final class CreateAgreedAndLegislation extends AbstractCommandHandler implements
 
         // generate all related SLA Target Dates
         $result->merge(
-            $this->getCommandHandler()->handleCommand(
+            $this->handleSideEffect(
                 GenerateSlaTargetDateCmd::create(
                     [
                         'pi' => $pi->getId()

@@ -8,7 +8,6 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 
 /**
  * Class TransportManagerNameTest
@@ -44,7 +43,7 @@ class TransportManagerNameTest extends MockeryTestCase
         $publication = m::mock(PublicationLink::class);
         $publication->shouldReceive('getTransportManager->getHomeCd->getPerson')->andReturn($mockPerson);
 
-        $sut = new TransportManagerName(m::mock(QueryHandlerInterface::class));
+        $sut = new TransportManagerName(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
         $this->assertEquals($expectedOutput, $sut->provide($publication, new \ArrayObject()));
     }
 
@@ -72,7 +71,7 @@ class TransportManagerNameTest extends MockeryTestCase
         $publication = m::mock(PublicationLink::class);
         $publication->shouldReceive('getTransportManager->getHomeCd->getPerson')->andReturn($mockPerson);
 
-        $sut = new TransportManagerName(m::mock(QueryHandlerInterface::class));
+        $sut = new TransportManagerName(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
         $this->assertEquals($expectedOutput, $sut->provide($publication, new \ArrayObject()));
     }
 }

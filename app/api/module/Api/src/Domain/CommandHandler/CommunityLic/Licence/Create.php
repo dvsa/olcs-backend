@@ -67,7 +67,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
 
         $sideEffects = $this->determineSideEffects($licenceId, $ids);
         foreach ($sideEffects as $sideEffect) {
-            $result->merge($this->getCommandHandler()->handleCommand($sideEffect));
+            $result->merge($this->handleSideEffect($sideEffect));
         }
 
         return $result;

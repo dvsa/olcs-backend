@@ -8,7 +8,6 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TmEntity;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 
 /**
  * Class PersonTest
@@ -42,7 +41,7 @@ class PersonTest extends MockeryTestCase
         $publication = m::mock(PublicationLink::class);
         $publication->shouldReceive('getTransportManager')->once()->andReturn($mockTm);
 
-        $sut = new Sut(m::mock(QueryHandlerInterface::class));
+        $sut = new Sut(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
         $this->assertEquals($expectedOutput, $sut->provide($publication, new \ArrayObject()));
     }
 }

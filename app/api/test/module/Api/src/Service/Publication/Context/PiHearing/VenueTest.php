@@ -7,7 +7,6 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 
 /**
  * Class VenueTest
@@ -55,7 +54,7 @@ class VenueTest extends MockeryTestCase
             ->once()
             ->getMock();
 
-        $mockQueryHandler = m::mock(QueryHandlerInterface::class);
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
         $mockQueryHandler->shouldReceive('handleQuery')->once()->andReturn($venueResult);
 
         $mockAddressFormatter = m::mock(FormatAddress::class);

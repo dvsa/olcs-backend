@@ -57,7 +57,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
      */
     protected function updateContactDetails(Address $address, \Dvsa\Olcs\Transfer\Command\TmEmployment\Update $command)
     {
-        $response = $this->getCommandHandler()->handleCommand(
+        $response = $this->handleSideEffect(
             SaveAddress::create(
                 [
                     'id' => $address->getId(),
