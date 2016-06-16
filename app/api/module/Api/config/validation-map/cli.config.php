@@ -9,4 +9,5 @@ return [
     CliCommandHandler\DataGovUkExport::class => IsSystemUser::class,
     CliCommandHandler\RemoveReadAudit::class => IsSystemUser::class,
     Dvsa\Olcs\Email\Domain\CommandHandler\ProcessInspectionRequestEmail::class => IsSystemUser::class,
+    Dvsa\Olcs\Api\Domain\QueryHandler\Application\NotTakenUpList::class => IsSystemUser::class,
 ];
