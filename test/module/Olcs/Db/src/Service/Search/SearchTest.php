@@ -200,7 +200,7 @@ class SearchTest extends MockeryTestCase
      * @param $index
      * @param $expectedQuery
      */
-    public function testSearchIndex($index, $expectedQuery, $userType = 'external')
+    public function testSearchIndex($index, $expectedQuery, $userType = 'external', $searchString = 'FOO BAR')
     {
         $sut = new SearchService();
 
@@ -242,7 +242,7 @@ class SearchTest extends MockeryTestCase
 
         $sut->setClient($mockClient);
 
-        $sut->search('FOO BAR', [$index]);
+        $sut->search($searchString, [$index]);
     }
 
     public function searchIndexProvider()
@@ -260,6 +260,7 @@ class SearchTest extends MockeryTestCase
             $this->getExpectedVehicleCurrentSearch(),
             $this->getExpectedVehicleRemovedSearch(),
             $this->getExpectedPersonSearchForInternalUser(),
+            $this->getExpectedPersonSearchForInternalUserIdLookup(),
             $this->getExpectedPersonSearchForExternalUser(),
             $this->getExpectedBusRegSearch()
         ];
@@ -283,7 +284,9 @@ class SearchTest extends MockeryTestCase
                 ],
                 'size' => 10,
                 'from' => 0
-            ]
+            ],
+            'external',
+            'FOO BAR'
         ];
     }
 
@@ -306,7 +309,9 @@ class SearchTest extends MockeryTestCase
                 ],
                 'size' => 10,
                 'from' => 0
-            ]
+            ],
+            'external',
+            'FOO BAR'
         ];
     }
 
@@ -329,7 +334,9 @@ class SearchTest extends MockeryTestCase
                 ],
                 'size' => 10,
                 'from' => 0
-            ]
+            ],
+            'external',
+            'FOO BAR'
         ];
     }
 
@@ -352,7 +359,9 @@ class SearchTest extends MockeryTestCase
                 ],
                 'size' => 10,
                 'from' => 0
-            ]
+            ],
+            'external',
+            'FOO BAR'
         ];
     }
 
@@ -374,7 +383,9 @@ class SearchTest extends MockeryTestCase
                 ],
                 'size' => 10,
                 'from' => 0
-            ]
+            ],
+            'external',
+            'FOO BAR'
         ];
     }
 
@@ -396,7 +407,9 @@ class SearchTest extends MockeryTestCase
                 ],
                 'size' => 10,
                 'from' => 0
-            ]
+            ],
+            'external',
+            'FOO BAR'
         ];
     }
 
@@ -418,7 +431,9 @@ class SearchTest extends MockeryTestCase
                 ],
                 'size' => 10,
                 'from' => 0
-            ]
+            ],
+            'external',
+            'FOO BAR'
         ];
     }
 
@@ -443,7 +458,9 @@ class SearchTest extends MockeryTestCase
                 ],
                 'size' => 10,
                 'from' => 0
-            ]
+            ],
+            'external',
+            'FOO BAR'
         ];
     }
 
@@ -465,7 +482,9 @@ class SearchTest extends MockeryTestCase
                 ],
                 'size' => 10,
                 'from' => 0
-            ]
+            ],
+            'external',
+            'FOO BAR'
         ];
     }
 
@@ -488,7 +507,9 @@ class SearchTest extends MockeryTestCase
                 ],
                 'size' => 10,
                 'from' => 0
-            ]
+            ],
+            'external',
+            'FOO BAR'
         ];
     }
 
@@ -511,7 +532,9 @@ class SearchTest extends MockeryTestCase
                 ],
                 'size' => 10,
                 'from' => 0
-            ]
+            ],
+            'external',
+            'FOO BAR'
         ];
     }
 
@@ -553,7 +576,8 @@ class SearchTest extends MockeryTestCase
                 'size' => 10,
                 'from' => 0
             ],
-            'external'
+            'external',
+            'FOO BAR'
         ];
     }
 
@@ -581,7 +605,33 @@ class SearchTest extends MockeryTestCase
                 'size' => 10,
                 'from' => 0
             ],
-            'internal'
+            'internal',
+            'FOO BAR'
+        ];
+    }
+
+    private function getExpectedPersonSearchForInternalUserIdLookup()
+    {
+        return [
+            'person',
+            [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            $this->generateMatch('_all', '123'),
+                            $this->generateBoostedMatch('person_id', '123', 2.0),
+                            $this->generateBoostedMatch('tm_id', '123', 2.0),
+                        ]
+                    ]
+                ],
+                'sort' => [
+                    'foo' => 'desc'
+                ],
+                'size' => 10,
+                'from' => 0
+            ],
+            'internal',
+            '123'
         ];
     }
 
@@ -593,7 +643,6 @@ class SearchTest extends MockeryTestCase
                 'query' => [
                     'bool' => [
                         'should' => [
-
                             $this->generateMatch('_all', 'FOO BAR'),
                             $this->generateMatch(
                                 'reg_no',
@@ -611,8 +660,21 @@ class SearchTest extends MockeryTestCase
                 ],
                 'size' => 10,
                 'from' => 0
-            ]
+            ],
+            'external',
+            'FOO BAR'
         ];
+    }
+
+    private function generateBoostedMatch($field, $value, $boost)
+    {
+        return $this->generateMatch(
+            $field,
+            [
+                'query' => $value,
+                'boost' => (float) $boost,
+            ]
+        );
     }
 
     private function generateMatch($field, $value)
