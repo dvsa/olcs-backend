@@ -90,14 +90,23 @@ class SlaCalculatorTest extends MockeryTestCase
     public function slaDateProvider()
     {
         return [
-            ['2015-12-18', -35, true, true, 'B', '2015-10-30'],
-            ['2015-12-18', -14, true, true, 'B', '2015-11-30'],
+            ['2015-12-18', -35, true, false, 'B', '2015-10-30'],
+            ['2015-12-18', -35, false, true, 'B', '2015-11-12'],
+            ['2015-12-18', -35, false, false, 'B', '2015-11-13'],
+            ['2015-12-18', -35, true, true, 'B', '2015-10-29'],
+            ['2015-12-18', -14, true, true, 'B', '2015-11-27'],
             ['2015-12-18', 5, true, true, 'B', '2015-12-29'],
             ['2015-12-18', 20, true, true, 'B', '2016-01-20'],
             ['2015-12-18', 5, true, true, 'B', '2015-12-29'],
             ['2015-12-12', 5, true, true, 'B', '2015-12-18'],
             ['2015-12-18', 2, true, true, 'B', '2015-12-22'],
-            ['2015-12-12', 60, true, true, 'B', '2016-03-09']
+            ['2015-12-12', 60, true, true, 'B', '2016-03-09'],
+            ['2015-01-01', 100, true, true, 'B', '2015-05-28'],
+            ['2015-01-01', 100, true, false, 'B', '2015-05-21'],
+            ['2015-01-01', 100, false, false, 'B', '2015-04-11'],
+            ['2015-12-31', -100, true, true, 'B', '2015-08-07'],
+            ['2015-12-31', -100, true, false, 'B', '2015-08-13'],
+            ['2015-12-31', -100, false, false, 'B', '2015-09-22']
         ];
     }
 
@@ -109,7 +118,7 @@ class SlaCalculatorTest extends MockeryTestCase
      * @param $trafficArea
      * @return array
      */
-    private function generateSelectPublicHolidaysArray($startDate, $endDate, $trafficArea)
+    private function generateSelectPublicHolidaysArray($startDate, $endDate)
     {
         $publicHolidays = $this->getAllPublicHolidays();
         $returnHolidays = [];
@@ -138,6 +147,7 @@ class SlaCalculatorTest extends MockeryTestCase
             ['publicHolidayDate' => '2015-05-04'],
             ['publicHolidayDate' => '2015-05-25'],
             ['publicHolidayDate' => '2015-08-31'],
+            ['publicHolidayDate' => '2015-12-10'],
             ['publicHolidayDate' => '2015-12-25'],
             ['publicHolidayDate' => '2015-12-28'],
             ['publicHolidayDate' => '2016-01-01'],
