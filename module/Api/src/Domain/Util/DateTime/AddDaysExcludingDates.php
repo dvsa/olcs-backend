@@ -41,11 +41,20 @@ class AddDaysExcludingDates implements DateTimeCalculatorInterface
 
             Logger::debug('new endDate => ' . $wdEndDate->format('d/m/Y'));
             Logger::debug(
-                'Getting holidays to exclude between ' . $endDate->format('d/m/Y') . ' and ' . $wdEndDate->format
-                ('d/m/Y')
+                'Getting holidays to exclude between ' . $endDate->format('d/m/Y') . ' and ' . $wdEndDate->format(
+                    'd/m/Y'
+                )
             );
 
-            $excludedDates = $this->excluded->between($endDate, $wdEndDate);
+            $countingBackwards = false;
+            if ($endDate > $wdEndDate) {
+                $countingBackwards = true;
+                // if we are counting backwards then the dates need to be in the correct order so we switch the
+                // parameters around
+                $excludedDates = $this->excluded->between($wdEndDate, $endDate);
+            } else {
+                $excludedDates = $this->excluded->between($endDate, $wdEndDate);
+            }
 
             $excludedDateCount = 0;
             foreach ($excludedDates as $ed) {
@@ -57,10 +66,14 @@ class AddDaysExcludingDates implements DateTimeCalculatorInterface
                     Logger::debug('Skipping date -> ' . $ed['publicHolidayDate']);
                 }
             }
-            
+
             $endDate = $wdEndDate;
 
             $days = $excludedDateCount;
+            if ($countingBackwards && $days) {
+                $days = -$days;
+            }
+
             Logger::debug('END Recursion ' . $count . "\n\n");
             $count++;
         }
