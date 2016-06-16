@@ -8,7 +8,6 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntity;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
@@ -52,7 +51,7 @@ class ConditionUndertakingTest extends MockeryTestCase
         $publication = m::mock(PublicationLink::class);
         $publication->shouldReceive('getApplication->getConditionUndertakings')->andReturn($conditionUndertakings);
 
-        $sut = new ConditionUndertakingContext(m::mock(QueryHandlerInterface::class));
+        $sut = new ConditionUndertakingContext(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
         $sut->setAddressFormatter($mockAddressFormatter);
 
         $output = [
@@ -74,7 +73,7 @@ class ConditionUndertakingTest extends MockeryTestCase
      */
     public function testProvideUpdateNoOperatingCentre()
     {
-        $sut = new ConditionUndertakingContext(m::mock(QueryHandlerInterface::class));
+        $sut = new ConditionUndertakingContext(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
 
         $conditionTypeDescription = 'condition type description';
         $notes = 'notes';
@@ -112,7 +111,7 @@ class ConditionUndertakingTest extends MockeryTestCase
      */
     public function provideTestProvider()
     {
-        $sut = new ConditionUndertakingContext(m::mock(QueryHandlerInterface::class));
+        $sut = new ConditionUndertakingContext(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
 
         return [
             ['A', $sut::COND_NEW],

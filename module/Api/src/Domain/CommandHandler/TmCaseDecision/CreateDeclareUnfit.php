@@ -52,7 +52,7 @@ final class CreateDeclareUnfit extends AbstractCommandHandler implements Transac
         $this->getRepo('TransportManager')->save($transportManager);
 
         // create a task
-        $taskResult = $this->getCommandHandler()->handleCommand(
+        $taskResult = $this->handleSideEffect(
             $this->createCreateTaskCommand(
                 $command,
                 $case,

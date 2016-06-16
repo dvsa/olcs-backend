@@ -51,7 +51,7 @@ final class CreateOfficeCopy extends AbstractCommandHandler implements Transacti
 
         $sideEffects = $this->determineSideEffects($licenceId, $communityLic->getId());
         foreach ($sideEffects as $sideEffect) {
-            $result->merge($this->getCommandHandler()->handleCommand($sideEffect));
+            $result->merge($this->handleSideEffect($sideEffect));
         }
 
         return $result;

@@ -41,7 +41,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
                 'birthPlace' => $command->getBirthPlace()
             ]
         );
-        $personResult = $this->getCommandHandler()->handleCommand($updatePerson);
+        $personResult = $this->handleSideEffect($updatePerson);
 
         $saveWorkAddress = SaveAddressCmd::create(
             [
@@ -57,7 +57,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
                 'contactType'  => ContactDetails::CONTACT_TYPE_TRANSPORT_MANAGER
             ]
         );
-        $workAddressResult = $this->getCommandHandler()->handleCommand($saveWorkAddress);
+        $workAddressResult = $this->handleSideEffect($saveWorkAddress);
         $workCdId = $workAddressResult->getId('contactDetails');
 
         $saveHomeAddress = SaveAddressCmd::create(
@@ -74,7 +74,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
                 'contactType'  => ContactDetails::CONTACT_TYPE_TRANSPORT_MANAGER,
             ]
         );
-        $homeAddressResult = $this->getCommandHandler()->handleCommand($saveHomeAddress);
+        $homeAddressResult = $this->handleSideEffect($saveHomeAddress);
 
         $contactDetails = $this->updateHomeContactDetails($command);
         $transportManager = $this->updateTransportManager($command, $workCdId);

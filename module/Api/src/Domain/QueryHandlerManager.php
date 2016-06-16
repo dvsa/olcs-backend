@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\ValidationHandler\ValidationHandlerInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class QueryHandlerManager extends AbstractPluginManager implements QueryHandlerInterface
+class QueryHandlerManager extends AbstractPluginManager
 {
     public function __construct(ConfigInterface $config = null)
     {
@@ -33,8 +33,10 @@ class QueryHandlerManager extends AbstractPluginManager implements QueryHandlerI
         }
     }
 
-    public function handleQuery(QueryInterface $query)
+    public function handleQuery(QueryInterface $query, $validate = true)
     {
+        $start = microtime(true);
+
         $queryFqcl = get_class($query);
 
         $queryHandler = $this->get($queryFqcl);
@@ -46,7 +48,9 @@ class QueryHandlerManager extends AbstractPluginManager implements QueryHandlerI
 
         $queryHandlerFqcl = get_class($queryHandler);
 
-        $this->validateDto($query, $queryHandlerFqcl);
+        if ($validate) {
+            $this->validateDto($query, $queryHandlerFqcl);
+        }
 
         $response = $queryHandler->handleQuery($query);
         if ($query instanceof LoggerOmitResponseInterface) {
@@ -60,7 +64,12 @@ class QueryHandlerManager extends AbstractPluginManager implements QueryHandlerI
 
         Logger::debug(
             'Query Handler Response: ' . $queryHandlerFqcl,
-            ['data' => ['response' => $logData]]
+            [
+                'data' => [
+                    'response' => $logData,
+                    'time' => round(microtime(true) - $start, 5),
+                ]
+            ]
         );
 
         return $response;
@@ -81,6 +90,13 @@ class QueryHandlerManager extends AbstractPluginManager implements QueryHandlerI
         $validationHandler = $vhm->get($queryHandlerFqcl);
 
         if (!$validationHandler->isValid($dto)) {
+            Logger::debug(
+                'DTO Failed validation',
+                [
+                    'handler' => $queryHandlerFqcl,
+                    'data' => $dto->getArrayCopy(),
+                ]
+            );
             throw new ForbiddenException('You do not have access to this resource');
         }
     }

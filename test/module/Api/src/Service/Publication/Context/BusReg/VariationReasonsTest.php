@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Service\Publication\Context\BusReg\VariationReasons;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -35,7 +34,7 @@ class VariationReasonsTest extends MockeryTestCase
         $publication = m::mock(PublicationLink::class);
         $publication->shouldReceive('getBusReg')->andReturn($busReg);
 
-        $sut = new VariationReasons(m::mock(QueryHandlerInterface::class));
+        $sut = new VariationReasons(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
 
         $output = [
             'variationReasons' => $expectedString

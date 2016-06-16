@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre as ApplicationOperatingCentreEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
@@ -57,7 +56,7 @@ class OperatingCentresTest extends MockeryTestCase
         $publication = m::mock(PublicationLink::class);
         $publication->shouldReceive('getApplication')->andReturn($application);
 
-        $sut = new OperatingCentresContext(m::mock(QueryHandlerInterface::class));
+        $sut = new OperatingCentresContext(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
         $sut->setAddressFormatter($mockAddressFormatter);
 
         $output = [

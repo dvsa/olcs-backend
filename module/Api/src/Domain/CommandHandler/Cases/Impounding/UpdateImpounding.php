@@ -41,7 +41,7 @@ class UpdateImpounding extends AbstractImpounding implements TransactionedInterf
 
         // handle publish
         if ($command->getPublish() === 'Y') {
-            $result->merge($this->getCommandHandler()->handleCommand($this->createPublishCommand($impounding)));
+            $result->merge($this->handleSideEffect($this->createPublishCommand($impounding)));
         }
 
         return $result;

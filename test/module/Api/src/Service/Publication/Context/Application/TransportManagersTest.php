@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Service\Publication\Context\Application\TransportManagers;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as TransportManagerApplicationEntity;
 
@@ -22,7 +21,7 @@ class TransportManagersTest extends MockeryTestCase
         $publicationLink->shouldReceive('getApplication->getTransportManagers')
             ->andReturn(new ArrayCollection());
 
-        $sut = new TransportManagers(m::mock(QueryHandlerInterface::class));
+        $sut = new TransportManagers(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
 
         $output = [];
         $expectedOutput = new \ArrayObject($output);
@@ -45,7 +44,7 @@ class TransportManagersTest extends MockeryTestCase
         $publicationLink->shouldReceive('getApplication->getTransportManagers')
             ->andReturn(new ArrayCollection([$tma1, $tma2, $tma3]));
 
-        $sut = new TransportManagers(m::mock(QueryHandlerInterface::class));
+        $sut = new TransportManagers(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
         $output = [
             'transportManagers' => 'Bill Clinton, Barbara Bush, Nancy Reagan',
             'applicationTransportManagers' => [$tma1->getTransportManager(), $tma3->getTransportManager()],

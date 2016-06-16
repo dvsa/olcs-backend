@@ -45,7 +45,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
         }
 
         if ($this->changeRequiresConfirmation($application, $command)) {
-            return $this->getCommandHandler()->handleCommand($this->createResetApplicationCommand($command));
+            return $this->handleSideEffect($this->createResetApplicationCommand($command));
         }
 
         $sideEffects = $this->determineSideEffects($application, $command);
@@ -59,7 +59,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
         $this->getRepo()->save($application);
 
         foreach ($sideEffects as $sideEffect) {
-            $result->merge($this->getCommandHandler()->handleCommand($sideEffect));
+            $result->merge($this->handleSideEffect($sideEffect));
         }
 
         $result->addMessage('Application saved successfully');

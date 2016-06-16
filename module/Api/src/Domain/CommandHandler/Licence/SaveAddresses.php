@@ -69,7 +69,7 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
     {
         $address = $command->getCorrespondenceAddress();
         $address['contactType'] = ContactDetails::CONTACT_TYPE_CORRESPONDENCE_ADDRESS;
-        $result = $this->getCommandHandler()->handleCommand(
+        $result = $this->handleSideEffect(
             SaveAddress::create($address)
         );
 

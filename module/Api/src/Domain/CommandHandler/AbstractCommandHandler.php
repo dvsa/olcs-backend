@@ -229,7 +229,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     protected function handleSideEffect(CommandInterface $command)
     {
-        return $this->getCommandHandler()->handleCommand($command);
+        return $this->getCommandHandler()->handleCommand($command, false);
     }
 
     /**

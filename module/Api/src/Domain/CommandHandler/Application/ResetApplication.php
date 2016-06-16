@@ -95,7 +95,7 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
             $data['receivedDate'] = $receivedDate;
         }
 
-        return $this->getCommandHandler()->handleCommand(
+        return $this->handleSideEffect(
             CreateApplicationCommand::create($data)
         );
     }

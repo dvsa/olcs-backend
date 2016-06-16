@@ -35,7 +35,7 @@ final class CancelIrfoPsvAuthFees extends AbstractCommandHandler implements Tran
                 )
             ) {
                 $result->merge(
-                    $this->getCommandHandler()->handleCommand(
+                    $this->handleSideEffect(
                         CancelFeeCommand::create(['id' => $fee->getId()])
                     )
                 );
