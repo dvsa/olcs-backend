@@ -256,14 +256,20 @@ class Search implements AuthAwareInterface
 
                 break;
             case 'person':
-                // apply search term to forename and family name wildcards
-                $wildcardQuery = '*'. strtolower(trim($search, '*')). '*';
-                $queryBool->addShould(
-                    new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
-                );
-                $queryBool->addShould(
-                    new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
-                );
+                if (is_numeric($search)) {
+                    // OLCS-12934 look up by single ID
+                    $queryBool->addShould($this->addQueryMatch('person_id', $search, 2.0));
+                    $queryBool->addShould($this->addQueryMatch('tm_id', $search, 2.0));
+                } else {
+                    // apply search term to forename and family name wildcards
+                    $wildcardQuery = '*' . strtolower(trim($search, '*')) . '*';
+                    $queryBool->addShould(
+                        new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
+                    );
+                    $queryBool->addShould(
+                        new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
+                    );
+                }
 
                 // Hide Removed TMs from SS and Anonymous users
                 /* @to-do The permission check below first checks for anonymous users. This is because isInternalUser()
@@ -330,6 +336,21 @@ class Search implements AuthAwareInterface
         $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
 
         return $elasticaQueryWildcard;
+    }
+
+    /**
+     * Wrapper function to generate a simple field match
+     *
+     * @param $field
+     * @param $search
+     * @return Query\Match
+     */
+    private function addQueryMatch($field, $search, $boost = null)
+    {
+        $queryMatch = new Query\Match();
+        $queryMatch->setFieldQuery($field, $search);
+        $queryMatch->setFieldBoost($field, $boost);
+        return $queryMatch;
     }
 
     /**
