@@ -158,7 +158,7 @@ return [
     TransferCommand\Cases\Si\CreateSi::class => CommandHandler\Cases\Si\CreateSi::class,
     TransferCommand\Cases\Si\DeleteSi::class => CommandHandler\Cases\Si\DeleteSi::class,
     TransferCommand\Cases\Si\UpdateSi::class => CommandHandler\Cases\Si\UpdateSi::class,
-    TransferCommand\Cases\Si\SendResponse::class => CommandHandler\Cases\Si\SendResponse::class,
+    TransferCommand\Cases\Si\CreateResponse::class => CommandHandler\Cases\Si\CreateResponse::class,
     TransferCommand\Cases\Si\ComplianceEpisode::class => CommandHandler\Cases\Si\ComplianceEpisode::class,
 
     // Transfer - Bus
@@ -554,6 +554,9 @@ return [
         => CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class,
     Command\Cases\ConditionUndertaking\DeleteConditionUndertakingS4::class
         => CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertakingS4::class,
+
+    // Domain - Si, Erru
+    Command\Cases\Si\SendResponse::class => CommandHandler\Cases\Si\SendResponse::class,
 
     // Domain - Schedule41
     Command\Schedule41\CreateS4::class => CommandHandler\Schedule41\CreateS4::class,
