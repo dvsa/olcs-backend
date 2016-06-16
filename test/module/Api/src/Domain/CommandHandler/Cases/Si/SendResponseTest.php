@@ -6,18 +6,14 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\SendResponse;
-use Dvsa\Olcs\Transfer\Command\Cases\Si\SendResponse as SendErruResponseCmd;
-use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
+use Dvsa\Olcs\Api\Domain\Command\Cases\Si\SendResponse as SendResponseCmd;
 use Dvsa\Olcs\Api\Domain\Repository\ErruRequest as ErruRequestRepo;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
-use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
-use Dvsa\Olcs\Api\Service\Nr\MsiResponse as MsiResponseService;
 use Dvsa\Olcs\Api\Service\Nr\InrClient;
 use Dvsa\Olcs\Api\Service\Nr\InrClientInterface;
-use ZfcRbac\Service\AuthorizationService;
-use ZfcRbac\Identity\IdentityInterface;
 use Zend\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeException;
+use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
 
 /**
  * SendResponseTest
@@ -29,13 +25,16 @@ class SendResponseTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new SendResponse();
-        $this->mockRepo('Cases', CasesRepo::class);
         $this->mockRepo('ErruRequest', ErruRequestRepo::class);
 
         $this->mockedSmServices = [
-            MsiResponseService::class => m::mock(MsiResponseService::class),
             InrClientInterface::class => m::mock(InrClient::class),
-            AuthorizationService::class => m::mock(AuthorizationService::class)
+            'FileUploader' => m::mock(ContentStoreFileUploader::class)
+        ];
+
+        $this->refData = [
+            ErruRequestEntity::FAILED_CASE_TYPE,
+            ErruRequestEntity::SENT_CASE_TYPE
         ];
 
         parent::setUp();
@@ -46,45 +45,30 @@ class SendResponseTest extends CommandHandlerTestCase
      */
     public function testHandleCommand()
     {
-        $responseDate = '2015-12-25 00:00:00';
         $xml = 'xml string';
-        $userId = 111;
-        $caseId = 333;
-        $command = SendErruResponseCmd::create(['case' => $caseId]);
+        $xmlIdentifier = 'identifier';
+        $erruId = 333;
+        $command = SendResponseCmd::create(['id' => $erruId]);
 
-        $user = m::mock(UserEntity::class);
-        $user->shouldReceive('getId')->andReturn($userId);
+        $xmlFile = m::mock(File::class);
+        $xmlFile->shouldReceive('getContent')->once()->andReturn($xml);
+
+        $this->mockedSmServices['FileUploader']
+            ->shouldReceive('download')
+            ->once()
+            ->with($xmlIdentifier)
+            ->andReturn($xmlFile);
 
         $erruRequest = m::mock(ErruRequestEntity::class)->makePartial();
+        $erruRequest->shouldReceive('getId')->once()->andReturn($erruId);
+        $erruRequest->shouldReceive('getResponseDocument->getIdentifier')->once()->andReturn($xmlIdentifier);
         $erruRequest
-            ->shouldReceive('updateErruResponse')
+            ->shouldReceive('setMsiType')
             ->once()
-            ->with(m::type(UserEntity::class), m::type(\DateTime::class));
+            ->with($this->refData[ErruRequestEntity::SENT_CASE_TYPE]);
 
-        $case = m::mock(CasesEntity::class);
-        $case->shouldReceive('getId')->once()->andReturn($caseId);
-        $case->shouldReceive('getErruRequest')->once()->andReturn($erruRequest);
-
-        $this->repoMap['Cases']->shouldReceive('fetchById')->once()->with($caseId)->andReturn($case);
+        $this->repoMap['ErruRequest']->shouldReceive('fetchUsingId')->once()->with($command)->andReturn($erruRequest);
         $this->repoMap['ErruRequest']->shouldReceive('save')->once()->with(m::type(ErruRequestEntity::class));
-
-        $rbacIdentity = m::mock(IdentityInterface::class);
-        $rbacIdentity->shouldReceive('getUser')->andReturn($user);
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('getIdentity->getUser')
-            ->andReturn($user);
-
-        $this->mockedSmServices[MsiResponseService::class]
-            ->shouldReceive('getResponseDateTime')
-            ->once()
-            ->andReturn($responseDate);
-
-        $this->mockedSmServices[MsiResponseService::class]
-            ->shouldReceive('create')
-            ->once()
-            ->with($case)
-            ->andReturn($xml);
 
         $this->mockedSmServices[InrClientInterface::class]
             ->shouldReceive('makeRequest')
@@ -96,7 +80,7 @@ class SendResponseTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'case' => $caseId
+                'Erru request' => $erruId
             ],
             'messages' => [
                 'Msi Response sent'
@@ -108,34 +92,36 @@ class SendResponseTest extends CommandHandlerTestCase
     }
 
     /**
-     * Tests sending the Msi response
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RestResponseException
+     * Tests sending the Msi response when the response code is 400
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\InrClientException
+     * @expectedExceptionMessage INR Http response code was 400
      */
-    public function testHandleCommandBadInrResponse()
+    public function testHandleCommandInvalidResponseCode()
     {
         $xml = 'xml string';
-        $userId = 111;
-        $caseId = 333;
-        $case = m::mock(CasesEntity::class);
-        $command = SendErruResponseCmd::create(['case' => $caseId]);
+        $xmlIdentifier = 'identifier';
+        $erruId = 333;
+        $command = SendResponseCmd::create(['id' => $erruId]);
 
-        $user = m::mock(UserEntity::class);
-        $user->shouldReceive('getId')->andReturn($userId);
+        $xmlFile = m::mock(File::class);
+        $xmlFile->shouldReceive('getContent')->once()->andReturn($xml);
 
-        $this->repoMap['Cases']->shouldReceive('fetchById')->once()->with($caseId)->andReturn($case);
-
-        $rbacIdentity = m::mock(IdentityInterface::class);
-        $rbacIdentity->shouldReceive('getUser')->andReturn($user);
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('getIdentity->getUser')
-            ->andReturn($user);
-
-        $this->mockedSmServices[MsiResponseService::class]
-            ->shouldReceive('create')
+        $this->mockedSmServices['FileUploader']
+            ->shouldReceive('download')
             ->once()
-            ->with($case)
-            ->andReturn($xml);
+            ->with($xmlIdentifier)
+            ->andReturn($xmlFile);
+
+        $erruRequest = m::mock(ErruRequestEntity::class)->makePartial();
+        $erruRequest->shouldReceive('getResponseDocument->getIdentifier')->once()->andReturn($xmlIdentifier);
+        $erruRequest
+            ->shouldReceive('setMsiType')
+            ->once()
+            ->with($this->refData[ErruRequestEntity::FAILED_CASE_TYPE]);
+
+        $this->repoMap['ErruRequest']->shouldReceive('fetchUsingId')->once()->with($command)->andReturn($erruRequest);
+        $this->repoMap['ErruRequest']->shouldReceive('save')->once()->with(m::type(ErruRequestEntity::class));
 
         $this->mockedSmServices[InrClientInterface::class]
             ->shouldReceive('makeRequest')
@@ -147,34 +133,36 @@ class SendResponseTest extends CommandHandlerTestCase
     }
 
     /**
-     * Tests sending the Msi response
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RestResponseException
+     * Tests sending the Msi response when the inr client throws an exception
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\InrClientException
+     * @expectedExceptionMessage There was an error sending the INR response
      */
-    public function testHandleCommandCurlException()
+    public function testHandleCommandAdapterException()
     {
         $xml = 'xml string';
-        $userId = 111;
-        $caseId = 333;
-        $case = m::mock(CasesEntity::class);
-        $command = SendErruResponseCmd::create(['case' => $caseId]);
+        $xmlIdentifier = 'identifier';
+        $erruId = 333;
+        $command = SendResponseCmd::create(['id' => $erruId]);
 
-        $user = m::mock(UserEntity::class);
-        $user->shouldReceive('getId')->andReturn($userId);
+        $xmlFile = m::mock(File::class);
+        $xmlFile->shouldReceive('getContent')->once()->andReturn($xml);
 
-        $this->repoMap['Cases']->shouldReceive('fetchById')->once()->with($caseId)->andReturn($case);
-
-        $rbacIdentity = m::mock(IdentityInterface::class);
-        $rbacIdentity->shouldReceive('getUser')->andReturn($user);
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('getIdentity->getUser')
-            ->andReturn($user);
-
-        $this->mockedSmServices[MsiResponseService::class]
-            ->shouldReceive('create')
+        $this->mockedSmServices['FileUploader']
+            ->shouldReceive('download')
             ->once()
-            ->with($case)
-            ->andReturn($xml);
+            ->with($xmlIdentifier)
+            ->andReturn($xmlFile);
+
+        $erruRequest = m::mock(ErruRequestEntity::class)->makePartial();
+        $erruRequest->shouldReceive('getResponseDocument->getIdentifier')->once()->andReturn($xmlIdentifier);
+        $erruRequest
+            ->shouldReceive('setMsiType')
+            ->once()
+            ->with($this->refData[ErruRequestEntity::FAILED_CASE_TYPE]);
+
+        $this->repoMap['ErruRequest']->shouldReceive('fetchUsingId')->once()->with($command)->andReturn($erruRequest);
+        $this->repoMap['ErruRequest']->shouldReceive('save')->once()->with(m::type(ErruRequestEntity::class));
 
         $this->mockedSmServices[InrClientInterface::class]
             ->shouldReceive('makeRequest')
