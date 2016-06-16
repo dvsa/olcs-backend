@@ -77,7 +77,7 @@ final class CreateResponse extends AbstractCommandHandler implements AuthAwareIn
         $erruRequest = $case->getErruRequest();
 
         //save the xml into the document store
-        $result = $this->handleSideEffect($this->CreateDocumentCommand($xml, $erruRequest->getNotificationNumber()));
+        $result = $this->handleSideEffect($this->createDocumentCommand($xml, $erruRequest->getNotificationNumber()));
 
         //get the document record so we can link it to the erru request
         $docRepo = $this->getRepo('Document');
@@ -89,13 +89,13 @@ final class CreateResponse extends AbstractCommandHandler implements AuthAwareIn
             $responseDocument,
             $this->getRepo()->getRefdataReference(ErruRequest::QUEUED_CASE_TYPE)
         );
-        
+
         $this->getRepo('ErruRequest')->save($erruRequest);
 
         $requestId = $erruRequest->getId();
         $queueCmd = $this->createQueue($requestId, Queue::TYPE_SEND_MSI_RESPONSE, ['id' => $requestId]);
         $result->merge($this->handleSideEffect($queueCmd));
-        
+
         $result->addMessage('Msi Response queued');
         $result->addId('case', $case->getId());
         $result->addId('erruRequest', $erruRequest->getId());
@@ -111,7 +111,7 @@ final class CreateResponse extends AbstractCommandHandler implements AuthAwareIn
      *
      * @return UploadCmd
      */
-    private function CreateDocumentCommand($content, $notificationNumber)
+    private function createDocumentCommand($content, $notificationNumber)
     {
         $data = [
             'content' => base64_encode($content),
