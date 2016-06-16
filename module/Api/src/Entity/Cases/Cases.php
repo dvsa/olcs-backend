@@ -378,7 +378,7 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
     public function canSendMsiResponse()
     {
         //check this is an erru case, and if so that the response isn't already sent
-        if (!$this->isErru() || !$this->erruRequest->canModify()) {
+        if (!$this->isOpenErruCase()) {
             return false;
         }
 
@@ -400,12 +400,17 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
      */
     public function canAddSi()
     {
-        //check this is an erru case, and if so that it can be modified
-        if ($this->isErru() && $this->erruRequest->canModify()) {
-            return true;
-        }
+        return $this->isOpenErruCase();
+    }
 
-        return false;
+    /**
+     * Returns whether the case is both open and erru with no response set
+     *
+     * @return bool
+     */
+    public function isOpenErruCase()
+    {
+        return !($this->isClosed() || !$this->isErru() || !$this->erruRequest->canModify());
     }
 
     /**
