@@ -347,12 +347,14 @@ class CasesEntityTest extends EntityTester
      * @dataProvider canAddSiProvider
      *
      * @param ErruRequestEntity|null $erruRequest
+     * @param \DateTime|null $closedDate
      * @param bool $expectedResult
      */
-    public function testCanAddSi($erruRequest, $expectedResult)
+    public function testCanAddSi($erruRequest, $closedDate, $expectedResult)
     {
         $sut = $this->instantiate($this->entityClass);
         $sut->setErruRequest($erruRequest);
+        $sut->setClosedDate($closedDate);
 
         $this->assertEquals($expectedResult, $sut->canAddSi());
     }
@@ -370,10 +372,15 @@ class CasesEntityTest extends EntityTester
         $erruRequestCanModify = m::mock(ErruRequestEntity::class);
         $erruRequestCanModify->shouldReceive('canModify')->once()->andReturn(true);
 
+        $closedDate = new \DateTime('2016-12-25');
+
         return [
-            [null, false],
-            [$erruRequestNoModify, false],
-            [$erruRequestCanModify, true]
+            [null, $closedDate, false],
+            [$erruRequestNoModify, $closedDate, false],
+            [$erruRequestCanModify, $closedDate, false],
+            [null, null, false],
+            [$erruRequestNoModify, null, false],
+            [$erruRequestCanModify, null, true]
         ];
     }
 
@@ -382,13 +389,15 @@ class CasesEntityTest extends EntityTester
      *
      * @param ErruRequestEntity|null $erruRequest
      * @param ArrayCollection $si
+     * @param \DateTime|null $closedDate
      * @param bool $expectedResult
      */
-    public function testCanSendMsiResponse($erruRequest, $si, $expectedResult)
+    public function testCanSendMsiResponse($erruRequest, $si, $closedDate, $expectedResult)
     {
         $sut = $this->instantiate($this->entityClass);
         $sut->setSeriousInfringements($si);
         $sut->setErruRequest($erruRequest);
+        $sut->setClosedDate($closedDate);
 
         $this->assertEquals($expectedResult, $sut->canSendMsiResponse());
     }
@@ -412,11 +421,17 @@ class CasesEntityTest extends EntityTester
         $erruRequestCanModify = m::mock(ErruRequestEntity::class);
         $erruRequestCanModify->shouldReceive('canModify')->once()->andReturn(true);
 
+        $closedDate = new \DateTime('2016-12-25');
+
         return [
-            [null, new ArrayCollection([$siResponseSet]), false],
-            [$erruRequestNoModify, new ArrayCollection([$siResponseSet]), false],
-            [$erruRequestCanModify, new ArrayCollection([$siNoResponseSet, $siResponseSet]), false],
-            [$erruRequestCanModify, new ArrayCollection([$siResponseSet]), true]
+            [null, new ArrayCollection([$siResponseSet]), $closedDate, false],
+            [$erruRequestNoModify, new ArrayCollection([$siResponseSet]), $closedDate, false],
+            [$erruRequestCanModify, new ArrayCollection([$siNoResponseSet, $siResponseSet]), $closedDate, false],
+            [$erruRequestCanModify, new ArrayCollection([$siResponseSet]), $closedDate, false],
+            [null, new ArrayCollection([$siResponseSet]), null, false],
+            [$erruRequestNoModify, new ArrayCollection([$siResponseSet]), null, false],
+            [$erruRequestCanModify, new ArrayCollection([$siNoResponseSet, $siResponseSet]), null, false],
+            [$erruRequestCanModify, new ArrayCollection([$siResponseSet]), null, true]
         ];
     }
 
