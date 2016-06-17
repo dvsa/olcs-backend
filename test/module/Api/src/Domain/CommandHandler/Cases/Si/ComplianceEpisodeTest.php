@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\ComplianceEpisode;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
-use Dvsa\Olcs\Api\Domain\Repository\SeriousInfringement as SiRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SiCategory as SiCategoryRepo;
@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Domain\Repository\SiCategoryType as SiCategoryTypeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SiPenaltyImposedType as SiPenaltyImposedTypeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SiPenaltyRequestedType as SiPenaltyRequestedTypeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ErruRequest as ErruRequestRepo;
-use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -25,10 +24,13 @@ use Dvsa\Olcs\Api\Entity\Si\SiCategoryType as SiCategoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyImposedType as SiPenaltyImposedTypeEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyRequestedType as SiPenaltyRequestedTypeEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiCategory as SiCategoryEntity;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Service\Nr\InputFilter\XmlStructureInputFactory;
 use Dvsa\Olcs\Api\Service\Nr\InputFilter\SeriousInfringementInputFactory;
 use Dvsa\Olcs\Api\Service\Nr\InputFilter\ComplianceEpisodeInputFactory;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\ComplianceEpisode as ComplianceEpisodeCmd;
+use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 
 /**
@@ -42,7 +44,6 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
     {
         $this->sut = new ComplianceEpisode();
         $this->mockRepo('Cases', CasesRepo::class);
-        $this->mockRepo('SeriousInfringement', SiRepo::class);
         $this->mockRepo('Licence', LicenceRepo::class);
         $this->mockRepo('Country', CountryRepo::class);
         $this->mockRepo('SiCategory', SiCategoryRepo::class);
@@ -50,6 +51,7 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
         $this->mockRepo('SiPenaltyImposedType', SiPenaltyImposedTypeRepo::class);
         $this->mockRepo('SiPenaltyRequestedType', SiPenaltyRequestedTypeRepo::class);
         $this->mockRepo('ErruRequest', ErruRequestRepo::class);
+        $this->mockRepo('Document', DocumentRepo::class);
 
         $this->mockedSmServices = [
             'ComplianceXmlStructure' => m::mock(XmlStructureInputFactory::class),
@@ -88,6 +90,7 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
     {
         $xmlString = 'xml string';
         $command = ComplianceEpisodeCmd::create(['xml' => $xmlString]);
+        $documentId = 111;
         $licenceId = 999;
 
         //common data
@@ -175,6 +178,10 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
                 0 => $si
             ]
         ];
+
+        $this->documentSideEffect($xmlString, $documentId);
+        $requestDocument = m::mock(DocumentEntity::class);
+        $this->repoMap['Document']->shouldReceive('fetchById')->once()->with($documentId)->andReturn($requestDocument);
 
         $this->mockedSmServices['ComplianceXmlStructure']
             ->shouldReceive('setValue')
@@ -278,14 +285,15 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
         $taskResult = new Result();
         $taskResult->addId('task', 88);
         $taskData = [
-            'category' => TaskEntity::CATEGORY_NR,
-            'subCategory' => TaskEntity::SUBCATEGORY_NR,
+            'category' => CategoryEntity::CATEGORY_COMPLIANCE,
+            'subCategory' => CategoryEntity::TASK_SUB_CATEGORY_NR,
             'description' => 'ERRU case has been automatically created',
             'actionDate' => date('Y-m-d', strtotime('+7 days')),
             'urgent' => 'Y',
             'case' => null,
             'licence' => $licenceId,
         ];
+
         $this->expectedSideEffect(CreateTask::class, $taskData, $taskResult);
 
         $result = $this->sut->handleCommand($command);
@@ -298,6 +306,7 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
     public function testExceptionThrownForMissingData()
     {
         $xmlString = 'xml string';
+        $documentId = 111;
         $command = ComplianceEpisodeCmd::create(['xml' => $xmlString]);
 
         $licenceNumber = 'OB1234567';
@@ -350,6 +359,8 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             ->with($workflowId)
             ->andReturn(false);
 
+        $this->documentSideEffect($xmlString, $documentId);
+
         $this->sut->handleCommand($command);
     }
 
@@ -359,6 +370,7 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
     public function testExceptionThrownForExistingErruRequest()
     {
         $xmlString = 'xml string';
+        $documentId = 111;
         $command = ComplianceEpisodeCmd::create(['xml' => $xmlString]);
 
         $licenceNumber = 'OB1234567';
@@ -405,6 +417,8 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             ->with($workflowId)
             ->andReturn(true);
 
+        $this->documentSideEffect($xmlString, $documentId);
+
         $this->sut->handleCommand($command);
     }
 
@@ -414,6 +428,7 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
     public function testExceptionThrownForValidationFailure()
     {
         $xmlString = 'xml string';
+        $documentId = 111;
         $command = ComplianceEpisodeCmd::create(['xml' => $xmlString]);
 
         $this->mockedSmServices['ComplianceXmlStructure']
@@ -430,6 +445,30 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             ->shouldReceive('getMessages')
             ->andReturn(['message 1', 'message2']);
 
+        $this->documentSideEffect($xmlString, $documentId);
+
         $this->sut->handleCommand($command);
+    }
+
+    /**
+     * Gets document uplaod data
+     *
+     * @param string $xmlString
+     * @param int $documentId
+     * @return array
+     */
+    private function documentSideEffect($xmlString, $documentId)
+    {
+        $documentData = [
+            'content' => base64_encode($xmlString),
+            'category' => CategoryEntity::CATEGORY_COMPLIANCE,
+            'subCategory' => CategoryEntity::DOC_SUB_CATEGORY_NR,
+            'filename' => 'compliance-episode.xml',
+            'description' => 'ERRU incoming compliance episode'
+        ];
+
+        $documentResult = new Result();
+        $documentResult->addId('document', $documentId);
+        $this->expectedSideEffect(UploadCmd::class, $documentData, $documentResult);
     }
 }
