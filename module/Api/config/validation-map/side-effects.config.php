@@ -159,7 +159,6 @@ return [
     CommandHandler\Discs\CreatePsvVehicleListForDiscs::class                          => IsSideEffect::class,
     CommandHandler\Licence\ProcessContinuationNotSought::class                        => IsSideEffect::class,
     CommandHandler\Variation\EndInterim::class                                        => IsSideEffect::class,
-    CommandHandler\SystemParameter\Update::class                                      => IsSideEffect::class,
     QueryHandler\Queue\NextItem::class                                                => IsSideEffect::class,
     CommandHandler\MyAccount\UpdateMyAccount::class                                   => IsSideEffect::class,
     CommandHandler\Licence\BatchVehicleListGeneratorForGoodsDiscs::class              => IsSideEffect::class,
