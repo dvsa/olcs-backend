@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Zend\View\Renderer\PhpRenderer;
@@ -14,7 +14,7 @@ use Zend\View\Renderer\PhpRenderer;
 abstract class AbstractSection implements SectionGeneratorInterface
 {
     /**
-     * @var QueryHandlerInterface
+     * @var QueryHandlerManager
      */
     private $queryHandler;
 
@@ -23,7 +23,7 @@ abstract class AbstractSection implements SectionGeneratorInterface
      */
     private $viewRenderer;
 
-    public function __construct(QueryHandlerInterface $queryHandler, PhpRenderer $viewRenderer)
+    public function __construct(QueryHandlerManager $queryHandler, PhpRenderer $viewRenderer)
     {
         $this->queryHandler = $queryHandler;
         $this->viewRenderer = $viewRenderer;

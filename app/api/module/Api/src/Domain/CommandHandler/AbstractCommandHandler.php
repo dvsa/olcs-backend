@@ -214,7 +214,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     }
 
     /**
-     * @return CommandHandlerInterface
+     * @return \Dvsa\Olcs\Api\Domain\CommandHandlerManager
      */
     protected function getCommandHandler()
     {

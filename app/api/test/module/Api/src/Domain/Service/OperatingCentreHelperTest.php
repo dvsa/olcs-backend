@@ -460,7 +460,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
         $commandHandler = m::mock(CommandHandlerManager::class);
         $commandHandler->shouldReceive('handleCommand')
-            ->with(m::type(SaveAddress::class))
+            ->with(m::type(SaveAddress::class), false)
             ->andReturn($result);
 
         $result = new Result();

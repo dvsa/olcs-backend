@@ -28,6 +28,6 @@ class ByApplication extends AbstractQueryHandler
             'licence' => $application->getLicence()->getId(),
         ];
 
-        return $this->getQueryHandler()->handleQuery(ByLicenceQry::create($licenceQuery));
+        return $this->getQueryHandler()->handleQuery(ByLicenceQry::create($licenceQuery), false);
     }
 }
