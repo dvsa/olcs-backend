@@ -26,6 +26,7 @@ final class Update extends AbstractCommandHandler
      *
      * @param CommandInterface $command
      * @return Result
+     * @throws Exception\ValidationException
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -38,12 +39,7 @@ final class Update extends AbstractCommandHandler
          */
         $penalty = $this->getRepo()->fetchUsingId($command);
 
-        $case = $penalty->getSeriousInfringement()->getCase();
-        $erruRequest = $case->getErruRequest();
-
-        if ($case->isClosed()
-            || (($erruRequest instanceof ErruRequestEntity) && ($erruRequest->getResponseSent() === 'Y'))
-        ) {
+        if (!$penalty->getSeriousInfringement()->getCase()->isOpenErruCase()) {
             throw new Exception\ValidationException(['Invalid action for the case']);
         }
 
