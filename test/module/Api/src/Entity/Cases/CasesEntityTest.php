@@ -367,10 +367,10 @@ class CasesEntityTest extends EntityTester
     public function canAddSiProvider()
     {
         $erruRequestNoModify = m::mock(ErruRequestEntity::class);
-        $erruRequestNoModify->shouldReceive('canModify')->once()->andReturn(false);
+        $erruRequestNoModify->shouldReceive('canModify')->andReturn(false);
 
         $erruRequestCanModify = m::mock(ErruRequestEntity::class);
-        $erruRequestCanModify->shouldReceive('canModify')->once()->andReturn(true);
+        $erruRequestCanModify->shouldReceive('canModify')->andReturn(true);
 
         $closedDate = new \DateTime('2016-12-25');
 
@@ -416,10 +416,10 @@ class CasesEntityTest extends EntityTester
         $siNoResponseSet->shouldReceive('responseSet')->andReturn(false);
 
         $erruRequestNoModify = m::mock(ErruRequestEntity::class);
-        $erruRequestNoModify->shouldReceive('canModify')->once()->andReturn(false);
+        $erruRequestNoModify->shouldReceive('canModify')->andReturn(false);
 
         $erruRequestCanModify = m::mock(ErruRequestEntity::class);
-        $erruRequestCanModify->shouldReceive('canModify')->once()->andReturn(true);
+        $erruRequestCanModify->shouldReceive('canModify')->andReturn(true);
 
         $closedDate = new \DateTime('2016-12-25');
 
