@@ -33,6 +33,7 @@ class ErruRequestEntityTest extends EntityTester
         $case = m::mock(CaseEntity::class);
         $msiType = m::mock(RefData::class);
         $memberStateCode = m::mock(CountryEntity::class);
+        $requestDocument = m::mock(Document::class);
         $originatingAuthority = 'originating authority';
         $transportUndertakingName = 'transport undertaking';
         $vrm = 'vrm';
@@ -43,6 +44,7 @@ class ErruRequestEntityTest extends EntityTester
             $case,
             $msiType,
             $memberStateCode,
+            $requestDocument,
             $originatingAuthority,
             $transportUndertakingName,
             $vrm,
@@ -53,6 +55,7 @@ class ErruRequestEntityTest extends EntityTester
         $this->assertEquals($case, $entity->getCase());
         $this->assertEquals($msiType, $entity->getMsiType());
         $this->assertEquals($memberStateCode, $entity->getMemberStateCode());
+        $this->assertEquals($requestDocument, $entity->getRequestDocument());
         $this->assertEquals($originatingAuthority, $entity->getOriginatingAuthority());
         $this->assertEquals($transportUndertakingName, $entity->getTransportUndertakingName());
         $this->assertEquals($vrm, $entity->getVrm());

@@ -37,9 +37,11 @@ class ErruRequest extends AbstractErruRequest
 
     /**
      * ErruRequest constructor.
+     * 
      * @param CaseEntity $case
      * @param RefData $msiType
      * @param CountryEntity $memberStateCode
+     * @param DocumentEntity $requestDocument
      * @param string $originatingAuthority
      * @param string $transportUndertakingName
      * @param string $vrm
@@ -50,6 +52,7 @@ class ErruRequest extends AbstractErruRequest
         CaseEntity $case,
         RefData $msiType,
         CountryEntity $memberStateCode,
+        DocumentEntity $requestDocument,
         $originatingAuthority,
         $transportUndertakingName,
         $vrm,
@@ -59,6 +62,7 @@ class ErruRequest extends AbstractErruRequest
         $this->case = $case;
         $this->msiType = $msiType;
         $this->memberStateCode = $memberStateCode;
+        $this->requestDocument = $requestDocument;
         $this->originatingAuthority = $originatingAuthority;
         $this->transportUndertakingName = $transportUndertakingName;
         $this->vrm = $vrm;
