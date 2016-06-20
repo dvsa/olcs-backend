@@ -930,8 +930,14 @@ return [
     TransferCommand\TaskAlphaSplit\Create::class => CommandHandler\TaskAlphaSplit\Create::class,
     TransferCommand\TaskAlphaSplit\Update::class => CommandHandler\TaskAlphaSplit\Update::class,
 
-    // System Messages
+    // Admin :: System Messages
     TransferCommand\System\InfoMessage\Create::class => CommandHandler\System\InfoMessage\Create::class,
     TransferCommand\System\InfoMessage\Update::class => CommandHandler\System\InfoMessage\Update::class,
     TransferCommand\System\InfoMessage\Delete::class => CommandHandler\System\InfoMessage\Delete::class,
+
+    // Admin :: Public holidays
+    TransferCommand\System\PublicHoliday\Create::class => CommandHandler\System\PublicHoliday\Create::class,
+    TransferCommand\System\PublicHoliday\Update::class => CommandHandler\System\PublicHoliday\Update::class,
+    TransferCommand\System\PublicHoliday\Delete::class => CommandHandler\System\PublicHoliday\Delete::class,
+
 ];
