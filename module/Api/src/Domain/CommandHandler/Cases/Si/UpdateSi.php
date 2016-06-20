@@ -10,6 +10,8 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiCategory as SiCategoryEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiCategoryType as SiCategoryTypeEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement;
+use Dvsa\Olcs\Transfer\Command\Cases\Si\UpdateSi as UpdateSiCmd;
 
 /**
  * UpdateSi
@@ -23,9 +25,14 @@ final class UpdateSi extends AbstractCommandHandler
      *
      * @param CommandInterface $command
      * @return Result
+     * @throws Exception\ValidationException
      */
     public function handleCommand(CommandInterface $command)
     {
+        /**
+         * @var SeriousInfringement $si
+         * @var UpdateSiCmd $command
+         */
         $si = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         if ($si->getCase()->isErru()) {
