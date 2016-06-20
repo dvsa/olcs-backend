@@ -25,7 +25,7 @@ class ConditionUndertakingTest extends MockeryTestCase
     public function setUp()
     {
         $this->sut = new \Dvsa\Olcs\Api\Service\Publication\Context\Variation\ConditionUndertaking(
-            m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface::class)
+            m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class)
         );
 
         parent::setUp();

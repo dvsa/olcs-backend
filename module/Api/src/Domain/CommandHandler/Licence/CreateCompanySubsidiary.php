@@ -63,6 +63,6 @@ final class CreateCompanySubsidiary extends AbstractCommandHandler implements Au
             'licence' => $command->getLicence()
         ];
 
-        return $this->getCommandHandler()->handleCommand(CreateTask::create($data));
+        return $this->handleSideEffect(CreateTask::create($data));
     }
 }

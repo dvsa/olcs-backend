@@ -43,7 +43,7 @@ final class UpdateFinancialEvidence extends AbstractCommandHandler
 
     private function updateApplicationCompletion(Cmd $command)
     {
-        return $this->getCommandHandler()->handleCommand(
+        return $this->handleSideEffect(
             UpdateApplicationCompletionCmd::create(['id' => $command->getId(), 'section' => 'financialEvidence'])
         );
     }

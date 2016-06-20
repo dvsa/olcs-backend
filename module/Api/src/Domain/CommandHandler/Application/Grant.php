@@ -34,6 +34,13 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      */
     private $grantValidationService;
 
+    /**
+     * Create service
+     *
+     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator service locator
+     *
+     * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
+     */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
@@ -44,7 +51,11 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     }
 
     /**
-     * @param Cmd $command
+     * Handle command
+     *
+     * @param Cmd $command command
+     *
+     * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -77,14 +88,26 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         }
 
         if ($command->getShouldCreateInspectionRequest() == 'Y') {
-
-            $data = [
-                'application' => $application->getId(),
-                'duePeriod' => $command->getDueDate(),
-                'caseworkerNotes' => $command->getNotes()
-            ];
-
-            $result->merge($this->handleSideEffect(CreateFromGrant::create($data)));
+            if ($application->isGoods()) {
+                $result->merge(
+                    $this->saveInspectionRequestDetails(
+                        $application,
+                        $command->getDueDate(),
+                        $command->getNotes()
+                    )
+                );
+            } else {
+                $result->merge(
+                    $this->createInspectionRequest(
+                        $application->getId(),
+                        $command->getDueDate(),
+                        $command->getNotes()
+                    )
+                );
+            }
+        } elseif ($application->isGoods()) {
+            $application->setRequestInspection(false);
+            $this->getRepo()->save($application);
         }
 
         if ($application->isNew()) {
@@ -96,9 +119,49 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     }
 
     /**
+     * Create inspection request
+     *
+     * @param int    $applicationId   application id
+     * @param int    $duePeriod       due period
+     * @param string $caseworkerNotes caseworker notes
+     *
+     * @return Result
+     */
+    private function createInspectionRequest($applicationId, $duePeriod, $caseworkerNotes)
+    {
+        $data = [
+            'application' => $applicationId,
+            'duePeriod' => $duePeriod,
+            'caseworkerNotes' => $caseworkerNotes
+        ];
+        return $this->handleSideEffect(CreateFromGrant::create($data));
+    }
+
+    /**
+     * Save inspection request details
+     *
+     * @param Application $application     application
+     * @param int         $duePeriod       due period
+     * @param string      $caseworkerNotes caseworker notes
+     *
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function saveInspectionRequestDetails($application, $duePeriod, $caseworkerNotes)
+    {
+        $application->setRequestInspection(true);
+        $application->setRequestInspectionDelay($duePeriod);
+        $application->setRequestInspectionComment($caseworkerNotes);
+        $this->getRepo()->save($application);
+        $result = new Result();
+        $result->addMessage('Inspection request details saved');
+        return $result;
+    }
+
+    /**
      * Publish the application
      *
-     * @param ApplicationEntity $application
+     * @param ApplicationEntity $application application
      *
      * @return Result
      */
@@ -118,7 +181,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     /**
      * Close any TEX tasks on the application
      *
-     * @param ApplicationEntity $application
+     * @param ApplicationEntity $application application
      *
      * @return Result
      */

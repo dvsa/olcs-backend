@@ -82,7 +82,7 @@ class OverviewTest extends QueryHandlerTestCase
             ->andReturn(['id' => $licenceId])
             ->getMock();
         $this->sut->shouldReceive('getQueryHandler->handleQuery')
-            ->with(m::type(LicenceOverviewQry::class))
+            ->with(m::type(LicenceOverviewQry::class), false)
             ->andReturn($licenceResult);
 
         $this->repoMap['Fee']

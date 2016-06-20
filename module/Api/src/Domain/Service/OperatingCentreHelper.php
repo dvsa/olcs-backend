@@ -247,7 +247,7 @@ class OperatingCentreHelper implements FactoryInterface
         $data = $command->getAddress();
         $data['contactType'] = ContactDetails::CONTACT_TYPE_CORRESPONDENCE_ADDRESS;
 
-        $result->merge($commandHandler->handleCommand(SaveAddress::create($data)));
+        $result->merge($commandHandler->handleCommand(SaveAddress::create($data), false));
 
         $operatingCentre = new OperatingCentre();
 

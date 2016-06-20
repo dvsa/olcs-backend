@@ -43,7 +43,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     private $repos = [];
 
     /**
-     * @var QueryHandlerInterface
+     * @var \Dvsa\Olcs\Api\Domain\QueryHandlerManager
      */
     private $queryHandler;
 
@@ -112,7 +112,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     }
 
     /**
-     * @return QueryHandlerInterface
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandlerManager
      */
     protected function getQueryHandler()
     {

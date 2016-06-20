@@ -1,14 +1,10 @@
 <?php
 
-/**
- * Submit Application
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -18,11 +14,8 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
-use Dvsa\Olcs\Api\Entity\Application\S4;
-use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as Cmd;
+use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Submit Application
@@ -36,7 +29,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
     protected $repoServiceName = 'Application';
 
     /**
-     * @param CommandInterface $command
+     * @param \Dvsa\Olcs\Transfer\Command\Application\SubmitApplication $command
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -98,7 +91,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
 
         $newStatus = ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION;
         $status = $this->getRepo()->getRefdataReference($newStatus);
-        $licenceUpdated = false;
+        $licence = null;
 
         $application
             ->setStatus($status)
@@ -109,9 +102,11 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
         if (!$application->isVariation()) {
             // update licence status for new apps only, will cascade persist on save
             $licence = $application->getLicence();
-            $newLicenceStatus = LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION;
-            $licence->setStatus($this->getRepo()->getRefdataReference($newLicenceStatus));
-            $licenceUpdated = true;
+            $licence->setStatus(
+                $this->getRepo()->getRefdataReference(
+                    LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION
+                )
+            );
         }
 
         $this->getRepo()->save($application);
@@ -120,7 +115,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
             ->addId('application', $application->getId())
             ->addMessage('Application updated');
 
-        if ($licenceUpdated) {
+        if ($licence !== null) {
              $result
                 ->addId('licence', $licence->getId())
                 ->addMessage('Licence updated');
@@ -154,7 +149,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
             'licence' => $application->getLicence()->getId(),
         ];
 
-        return $this->getCommandHandler()->handleCommand(CreateTaskCmd::create($taskData));
+        return $this->handleSideEffect(CreateTaskCmd::create($taskData));
     }
 
     /**

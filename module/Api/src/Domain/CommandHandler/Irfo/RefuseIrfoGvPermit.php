@@ -45,7 +45,7 @@ final class RefuseIrfoGvPermit extends AbstractCommandHandler implements Transac
 
     private function cancelFees(CommandInterface $command)
     {
-        return $this->getCommandHandler()->handleCommand(
+        return $this->handleSideEffect(
             CancelFeesDto::create(
                 [
                     'id' => $command->getId(),

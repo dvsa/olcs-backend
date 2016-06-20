@@ -46,12 +46,12 @@ final class UpdateCompanySubsidiary extends AbstractCommandHandler implements Tr
         $data = $command->getArrayCopy();
         $data['licence'] = $licence->getId();
 
-        return $this->getCommandHandler()->handleCommand(LicenceUpdateCompanySubsidiary::create($data));
+        return $this->handleSideEffect(LicenceUpdateCompanySubsidiary::create($data));
     }
 
     private function updateApplicationCompletion(Cmd $command, $hasChanged)
     {
-        return $this->getCommandHandler()->handleCommand(
+        return $this->handleSideEffect(
             UpdateApplicationCompletionCommand::create(
                 [
                     'id' => $command->getApplication(),

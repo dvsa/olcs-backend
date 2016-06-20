@@ -36,7 +36,7 @@ final class UpdatePreviousConvictions extends AbstractCommandHandler implements 
 
         $this->getRepo()->save($application);
 
-        $update = $this->getCommandHandler()->handleCommand(
+        $update = $this->handleSideEffect(
             UpdateApplicationCompletionCommand::create(
                 [
                     'id' => $application->getId(),

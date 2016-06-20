@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\ValidationHandler\ValidationHandlerInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CommandHandlerManager extends AbstractPluginManager implements CommandHandlerInterface
+class CommandHandlerManager extends AbstractPluginManager
 {
     public function __construct(ConfigInterface $config = null)
     {
@@ -34,8 +34,10 @@ class CommandHandlerManager extends AbstractPluginManager implements CommandHand
         }
     }
 
-    public function handleCommand(CommandInterface $command)
+    public function handleCommand(CommandInterface $command, $validate = true)
     {
+        $start = microtime(true);
+
         $commandFqcn = get_class($command);
 
         $commandHandler = $this->get($commandFqcn);
@@ -59,13 +61,20 @@ class CommandHandlerManager extends AbstractPluginManager implements CommandHand
 
         $commandHandlerFqcn = get_class($validateCommandHandler);
 
-        $this->validateDto($command, $commandHandlerFqcn);
+        if ($validate) {
+            $this->validateDto($command, $commandHandlerFqcn);
+        }
 
         $response = $commandHandler->handleCommand($command);
 
         Logger::debug(
             'Command Handler Response: ' . $commandHandlerFqcn,
-            ['data' => ['response' => (array)$response]]
+            [
+                'data' => [
+                    'response' => (array)$response,
+                    'time' => round(microtime(true) - $start, 5),
+                ]
+            ]
         );
 
         return $response;
@@ -86,6 +95,13 @@ class CommandHandlerManager extends AbstractPluginManager implements CommandHand
         $validationHandler = $vhm->get($queryHandlerFqcl);
 
         if (!$validationHandler->isValid($dto)) {
+            Logger::debug(
+                'DTO Failed validation',
+                [
+                    'handler' => $queryHandlerFqcl,
+                    'data' => $dto->getArrayCopy(),
+                ]
+            );
             throw new ForbiddenException('You do not have access to this resource');
         }
     }

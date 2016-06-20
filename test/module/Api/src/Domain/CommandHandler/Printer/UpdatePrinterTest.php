@@ -35,17 +35,13 @@ class UpdatePrinterTest extends CommandHandlerTestCase
             [
                 'id' => 111,
                 'printerName' => 'foo',
-                'description' => 'bar',
-                'printerTray' => 'cake'
+                'description' => 'bar'
             ]
         );
 
         $mockPrinter = m::mock(PrinterEntity::class)
             ->shouldReceive('setPrinterName')
             ->with('foo')
-            ->once()
-            ->shouldReceive('setPrinterTray')
-            ->with('cake')
             ->once()
             ->shouldReceive('setDescription')
             ->with('bar')

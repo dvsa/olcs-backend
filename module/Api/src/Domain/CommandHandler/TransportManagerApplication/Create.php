@@ -86,14 +86,14 @@ final class Create extends AbstractCommandHandler implements
 
         if ($this->getUser() !== $user) {
             $result->merge(
-                $this->getCommandHandler()->handleCommand(
+                $this->handleSideEffect(
                     \Dvsa\Olcs\Api\Domain\Command\Email\SendTmApplication::create(['id' => $tma->getId()])
                 )
             );
         }
 
         $result->merge(
-            $this->getCommandHandler()->handleCommand(
+            $this->handleSideEffect(
                 \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::create(
                     ['id' => $tma->getApplication()->getId(), 'section' => 'transportManagers']
                 )

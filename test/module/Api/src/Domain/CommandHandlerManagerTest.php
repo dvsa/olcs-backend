@@ -91,7 +91,7 @@ class CommandHandlerManagerTest extends MockeryTestCase
         $this->setExpectedException(ForbiddenException::class);
 
         $command = m::mock(CommandInterface::class)->makePartial();
-        $command->shouldReceive('getArrayCopy')->once()->andReturn(['foo' => 'bar']);
+        $command->shouldReceive('getArrayCopy')->twice()->andReturn(['foo' => 'bar']);
 
         $mockService = m::mock(CommandHandlerInterface::class);
         $mockService->shouldReceive('handleCommand')->never();
