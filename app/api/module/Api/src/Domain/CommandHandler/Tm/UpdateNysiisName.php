@@ -52,7 +52,7 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
         $nysiisData = $this->requestNyiisData(
             [
                 'forename' => $personDetails->getForename(),
-                'lastname' => $personDetails->getFamilyName()
+                'familyName' => $personDetails->getFamilyName()
             ]
         );
 

@@ -133,11 +133,13 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
 
         $this->getRepo('TransportManager')->save($transportManager);
 
-        $this->handleSideEffects(
-            $this->getNysiisNameUpdateQueueCmd(
-                [
-                    'id' => $transportManager->getId()
-                ]
+        $this->result->merge(
+            $this->handleSideEffect(
+                $this->getNysiisNameUpdateQueueCmd(
+                    [
+                        'id' => $transportManager->getId()
+                    ]
+                )
             )
         );
 
