@@ -26,7 +26,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_erru_request_case_id", columns={"case_id"}),
- *        @ORM\UniqueConstraint(name="uk_erru_request_workflow_id", columns={"workflow_id"})
+ *        @ORM\UniqueConstraint(name="uk_erru_request_workflow_id", columns={"workflow_id"}),
+ *        @ORM\UniqueConstraint(name="uk_erru_request_request_document_id", columns={"request_document_id"}),
+ *        @ORM\UniqueConstraint(name="uk_erru_request_response_document_id", columns={"response_document_id"})
  *    }
  * )
  */
@@ -147,13 +149,41 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     protected $originatingAuthority;
 
     /**
+     * Request document
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Doc\Document
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document",
+     *     fetch="LAZY",
+     *     inversedBy="requestErru"
+     * )
+     * @ORM\JoinColumn(name="request_document_id", referencedColumnName="id", nullable=true)
+     */
+    protected $requestDocument;
+
+    /**
+     * Response document
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Doc\Document
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document",
+     *     fetch="LAZY",
+     *     inversedBy="responseErru"
+     * )
+     * @ORM\JoinColumn(name="response_document_id", referencedColumnName="id", nullable=true)
+     */
+    protected $responseDocument;
+
+    /**
      * Response sent
      *
      * @var string
      *
-     * @ORM\Column(type="yesno", name="response_sent", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno", name="response_sent", nullable=true)
      */
-    protected $responseSent = 0;
+    protected $responseSent;
 
     /**
      * Response time
@@ -462,6 +492,52 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     public function getOriginatingAuthority()
     {
         return $this->originatingAuthority;
+    }
+
+    /**
+     * Set the request document
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $requestDocument
+     * @return ErruRequest
+     */
+    public function setRequestDocument($requestDocument)
+    {
+        $this->requestDocument = $requestDocument;
+
+        return $this;
+    }
+
+    /**
+     * Get the request document
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Doc\Document
+     */
+    public function getRequestDocument()
+    {
+        return $this->requestDocument;
+    }
+
+    /**
+     * Set the response document
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $responseDocument
+     * @return ErruRequest
+     */
+    public function setResponseDocument($responseDocument)
+    {
+        $this->responseDocument = $responseDocument;
+
+        return $this;
+    }
+
+    /**
+     * Get the response document
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Doc\Document
+     */
+    public function getResponseDocument()
+    {
+        return $this->responseDocument;
     }
 
     /**

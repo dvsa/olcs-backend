@@ -1,0 +1,126 @@
+<?php
+
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si;
+
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Entity\Si\ErruRequest;
+use Dvsa\Olcs\Api\Service\Nr\MsiResponse as MsiResponseService;
+use Dvsa\Olcs\Transfer\Command\Cases\Si\CreateResponse as CreateErruResponseCmd;
+use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
+
+/**
+ * CreateResponse
+ *
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
+final class CreateResponse extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
+{
+    use AuthAwareTrait;
+    use QueueAwareTrait;
+
+    const RESPONSE_DOCUMENT_DESCRIPTION = 'ERRU MSI response for business case ID: %s';
+
+    protected $repoServiceName = 'Cases';
+
+    protected $extraRepos = [
+        'ErruRequest',
+        'Document'
+    ];
+
+    /**
+     * @var MsiResponseService
+     */
+    protected $msiResponseService;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+        $this->msiResponseService = $mainServiceLocator->get(MsiResponseService::class);
+
+        return parent::createService($serviceLocator);
+    }
+
+    /**
+     * SendResponse
+     *
+     * @param CommandInterface $command
+     * @return Result
+     */
+    public function handleCommand(CommandInterface $command)
+    {
+        /**
+         * @var CasesEntity $case
+         * @var CreateErruResponseCmd $command
+         */
+        $case = $this->getRepo()->fetchById($command->getCase());
+
+        //generate the xml to send to national register
+        $xml = $this->msiResponseService->create($case);
+
+        $erruRequest = $case->getErruRequest();
+
+        //save the xml into the document store
+        $result = $this->handleSideEffect($this->createDocumentCommand($xml, $erruRequest->getNotificationNumber()));
+
+        //get the document record so we can link it to the erru request
+        $docRepo = $this->getRepo('Document');
+        $responseDocument = $docRepo->fetchById($result->getId('document'));
+
+        $erruRequest->queueErruResponse(
+            $this->getCurrentUser(),
+            new \DateTime($this->msiResponseService->getResponseDateTime()),
+            $responseDocument,
+            $this->getRepo()->getRefdataReference(ErruRequest::QUEUED_CASE_TYPE)
+        );
+
+        $this->getRepo('ErruRequest')->save($erruRequest);
+
+        $requestId = $erruRequest->getId();
+        $queueCmd = $this->createQueue($requestId, Queue::TYPE_SEND_MSI_RESPONSE, ['id' => $requestId]);
+        $result->merge($this->handleSideEffect($queueCmd));
+
+        $result->addMessage('Msi Response queued');
+        $result->addId('case', $case->getId());
+        $result->addId('erruRequest', $erruRequest->getId());
+
+        return $result;
+    }
+
+    /**
+     * Returns an upload command to add the response XML to the doc store
+     *
+     * @param string $content this will be xml
+     * @param string $notificationNumber this will be a GUID
+     *
+     * @return UploadCmd
+     */
+    private function createDocumentCommand($content, $notificationNumber)
+    {
+        $data = [
+            'content' => base64_encode($content),
+            'category' => CategoryEntity::CATEGORY_COMPLIANCE,
+            'subCategory' => CategoryEntity::DOC_SUB_CATEGORY_NR,
+            'filename' => 'msiresponse.xml',
+            'description' => sprintf(CreateResponse::RESPONSE_DOCUMENT_DESCRIPTION, $notificationNumber)
+        ];
+
+        return UploadCmd::create($data);
+    }
+}

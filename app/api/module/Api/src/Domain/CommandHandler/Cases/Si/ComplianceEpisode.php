@@ -10,23 +10,24 @@ use Dvsa\Olcs\Api\Domain\Exception\Exception;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiCategory as SiCategoryEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruRequested as PenaltyRequestedEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruImposed as PenaltyImposedEntity;
-use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Domain\Repository\SiCategoryType as SiCategoryTypeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SiPenaltyImposedType as SiPenaltyImposedTypeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SiPenaltyRequestedType as SiPenaltyRequestedTypeRepo;
-use Dvsa\Olcs\Api\Domain\Repository\SeriousInfringement as SiRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ErruRequest as ErruRequestRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepo;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\ComplianceEpisode as ComplianceEpisodeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
+use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -41,12 +42,12 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     protected $extraRepos = [
         'Licence',
         'Country',
-        'SeriousInfringement',
         'SiCategory',
         'SiCategoryType',
         'SiPenaltyRequestedType',
         'SiPenaltyImposedType',
-        'ErruRequest'
+        'ErruRequest',
+        'Document'
     ];
 
     protected $xmlStructureInput;
@@ -95,6 +96,12 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
      */
     protected $result;
 
+    /**
+     * create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
@@ -103,12 +110,12 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
         $this->complianceEpisodeInput = $mainServiceLocator->get('ComplianceEpisodeInput');
         $this->seriousInfringementInput = $mainServiceLocator->get('SeriousInfringementInput');
 
-        $this->result = new Result();
-
         return parent::createService($serviceLocator);
     }
 
     /**
+     * Handle command to create erru compliance episode
+     *
      * @param CommandInterface $command
      * @return Result
      * @throws \Exception
@@ -120,7 +127,11 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
          * @var \DomDocument $xmlDomDocument
          * @var array $erruData
          */
-        $xmlDomDocument = $this->validateInput('xmlStructure', $command->getXml(), []);
+        $xmlString = $command->getXml();
+
+        $this->result = $this->handleSideEffect($this->createDocumentCommand($xmlString));
+
+        $xmlDomDocument = $this->validateInput('xmlStructure', $xmlString, []);
 
         //do some pre-doctrine data processing
         $erruData = $this->validateInput('complianceEpisode', $xmlDomDocument, []);
@@ -133,7 +144,11 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
             throw new Exception('some data was not correct');
         }
 
-        $case = $this->generateCase($erruData);
+        //get the document record so we can link it to the erru request
+        $docRepo = $this->getRepo('Document');
+        $requestDocument = $docRepo->fetchById($this->result->getId('document'));
+
+        $case = $this->generateCase($erruData, $requestDocument);
 
         //there can be more than one serious infringement per request
         foreach ($erruData['si'] as $si) {
@@ -155,6 +170,8 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     }
 
     /**
+     * Gets a serious infringement entity
+     *
      * @param CaseEntity $case
      * @param array $si
      *
@@ -177,6 +194,8 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     }
 
     /**
+     * Returns an array collection of imposed errus
+     *
      * @param SiEntity $si
      * @param array $imposedErrus
      * @return ArrayCollection
@@ -202,6 +221,8 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     }
 
     /**
+     * Returns an array collection of requested errus
+     *
      * @param SiEntity $si
      * @param array $requestedErrus
      * @return ArrayCollection
@@ -222,9 +243,10 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
      * Builds the case entity
      *
      * @param array $erruData
+     * @param Document $requestDocument
      * @return CaseEntity
      */
-    private function generateCase($erruData)
+    private function generateCase(array $erruData, Document $requestDocument)
     {
         $case = new CaseEntity(
             new \DateTime(),
@@ -240,6 +262,7 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
 
         $erruRequest = $this->getErruRequest(
             $case,
+            $requestDocument,
             $erruData['originatingAuthority'],
             $erruData['transportUndertakingName'],
             $erruData['vrm']
@@ -254,6 +277,7 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
      * Builds the ErruRequest entity
      *
      * @param CaseEntity $case
+     * @param Document $requestDocument
      * @param $originatingAuthority
      * @param $transportUndertakingName
      * @param $vrm
@@ -261,12 +285,18 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
      * @return ErruRequestEntity
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
-    private function getErruRequest(CaseEntity $case, $originatingAuthority, $transportUndertakingName, $vrm)
-    {
+    private function getErruRequest(
+        CaseEntity $case,
+        Document $requestDocument,
+        $originatingAuthority,
+        $transportUndertakingName,
+        $vrm
+    ) {
         return new ErruRequestEntity(
             $case,
             $this->getRepo()->getRefdataReference(ErruRequestEntity::DEFAULT_CASE_TYPE),
             $this->commonData['memberState'],
+            $requestDocument,
             $originatingAuthority,
             $transportUndertakingName,
             $vrm,
@@ -325,7 +355,7 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
             $executedValue = $imposedErru[$executedKey];
 
             if (!isset($this->imposedPen[$executedKey][$executedValue])) {
-                $this->imposedPen[$executedKey][$executedValue] = $this->getRepo()->getRefDataReference($executedValue);
+                $this->imposedPen[$executedKey][$executedValue] = $this->getRepo()->getRefdataReference($executedValue);
             }
 
             //doctrine data for siPenaltyImposedType
@@ -363,7 +393,6 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
          * @var LicenceRepo $licenceRepo
          * @var CountryRepo $countryRepo
          */
-
         $erruRequestRepo = $this->getRepo('ErruRequest');
 
         //check we don't already have an erru request with this workflow id
@@ -385,6 +414,8 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     }
 
     /**
+     * Validates the input
+     *
      * @param string $filter
      * @param mixed $value
      * @param array $context
@@ -406,14 +437,16 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     }
 
     /**
+     * Creates a task
+     *
      * @param CaseEntity $case
      * @return CreateTaskCmd
      */
     private function createTaskCmd($case)
     {
         $data = [
-            'category' => TaskEntity::CATEGORY_NR,
-            'subCategory' => TaskEntity::SUBCATEGORY_NR,
+            'category' => CategoryEntity::CATEGORY_COMPLIANCE,
+            'subCategory' => CategoryEntity::TASK_SUB_CATEGORY_NR,
             'description' => 'ERRU case has been automatically created',
             'actionDate' => date('Y-m-d', strtotime('+7 days')),
             'urgent' => 'Y',
@@ -422,5 +455,25 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
         ];
 
         return CreateTaskCmd::create($data);
+    }
+
+    /**
+     * Returns an upload command to add xml to the doc store
+     *
+     * @param string $content
+     *
+     * @return UploadCmd
+     */
+    private function createDocumentCommand($content)
+    {
+        $data = [
+            'content' => base64_encode($content),
+            'category' => CategoryEntity::CATEGORY_COMPLIANCE,
+            'subCategory' => CategoryEntity::DOC_SUB_CATEGORY_NR,
+            'filename' => 'compliance-episode.xml',
+            'description' => 'ERRU incoming compliance episode'
+        ];
+
+        return UploadCmd::create($data);
     }
 }
