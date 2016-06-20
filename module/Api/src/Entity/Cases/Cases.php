@@ -410,7 +410,7 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
      */
     public function isOpenErruCase()
     {
-        return !($this->isClosed() || !$this->isErru() || !$this->erruRequest->canModify());
+        return !$this->isClosed() && $this->isErru() && $this->erruRequest->canModify();
     }
 
     /**
