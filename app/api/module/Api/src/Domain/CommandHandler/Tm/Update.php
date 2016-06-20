@@ -14,6 +14,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\Tm\UpdateNysiisName as UpdateNysiisNameCmd;
+use Zend\Serializer\Adapter\Json as ZendJson;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
 
 /**
  * Transport Manager / Update
@@ -111,10 +115,16 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         return $contactDetails;
     }
 
+    /**
+     * @param $command
+     * @param null $workCdId
+     * @return mixed
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     protected function updateTransportManager($command, $workCdId = null)
     {
         $transportManager = $this->getRepo('TransportManager')->fetchById($command->getId());
-        $transportManager->updateNysiis($command->getNysiisForename(), $command->getNysiisFamilyname());
+
         $transportManager->updateTransportManager(
             $this->getRepo()->getRefdataReference($command->getType()),
             $this->getRepo()->getRefdataReference($command->getStatus()),
@@ -122,6 +132,39 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         );
 
         $this->getRepo('TransportManager')->save($transportManager);
+
+        $this->handleSideEffects(
+            $this->getNysiisNameUpdateQueueCmd(
+                [
+                    'id' => $transportManager->getId()
+                ]
+            )
+        );
+
         return $transportManager;
+    }
+
+    /**
+     * Returns a command to queue a NYSIIS name request and update
+     *
+     * @param array $params
+     * @return UpdateNysiisNameCmd
+     */
+    private function getNysiisNameUpdateQueueCmd($params)
+    {
+        $jsonSerializer = new ZendJson();
+
+        $optionData = [
+            'id' => $params['id']
+        ];
+
+        $dtoData = [
+            'entityId' => $params['id'],
+            'type' => Queue::TYPE_UPDATE_NYSIIS_TM_NAME,
+            'status' => Queue::STATUS_QUEUED,
+            'options' => $jsonSerializer->serialize($optionData)
+        ];
+
+        return CreateQueue::create($dtoData);
     }
 }
