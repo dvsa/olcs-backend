@@ -22,7 +22,7 @@ class CreateTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function test()
+    public function testHandleCommand()
     {
         $id = 99999;
         $holidayDate = (new \DateTime())->setTime(0, 0, 0);

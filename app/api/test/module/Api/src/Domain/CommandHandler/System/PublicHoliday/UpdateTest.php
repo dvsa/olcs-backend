@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\System\PublicHoliday;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\System\PublicHoliday\Update as Handler;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command\System\PublicHoliday\Update as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -23,7 +24,7 @@ class UpdateTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function test()
+    public function testHandleCommand()
     {
         $id = 99999;
         $holidayDate = (new \DateTime())->format('Y-m-d');
@@ -51,7 +52,7 @@ class UpdateTest extends CommandHandlerTestCase
             ->once()
             ->andReturnUsing(
                 function (Entity\System\PublicHoliday $entity) use ($holidayDate, $id) {
-                    static::assertEquals($entity->getPublicHolidayDate(), $holidayDate);
+                    static::assertEquals($entity->getPublicHolidayDate(), new DateTime($holidayDate));
                     static::assertEquals($entity->getIsEngland(), 'Y');
                     static::assertEquals($entity->getIsWales(), 'N');
                     static::assertEquals($entity->getIsScotland(), 'Y');

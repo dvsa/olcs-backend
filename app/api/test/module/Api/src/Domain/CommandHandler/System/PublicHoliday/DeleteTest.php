@@ -22,7 +22,7 @@ class DeleteTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function test()
+    public function testHandleCommand()
     {
         $id = 99999;
 
