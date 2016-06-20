@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\System\PublicHoliday;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Transfer\Command;
 
 /**
@@ -25,12 +26,13 @@ class Update extends AbstractCommandHandler
         /** @var \Dvsa\Olcs\Api\Entity\System\PublicHoliday $entity */
         $entity = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
-        $entity
-            ->setPublicHolidayDate($command->getHolidayDate())
-            ->setIsEngland($command->getIsEngland())
-            ->setIsWales($command->getIsWales())
-            ->setIsScotland($command->getIsScotland())
-            ->setIsNi($command->getIsIreland());
+        $entity->update(
+            new DateTime($command->getHolidayDate()),
+            $command->getIsEngland(),
+            $command->getIsWales(),
+            $command->getIsScotland(),
+            $command->getIsIreland()
+        );
 
         $this->getRepo()->save($entity);
 

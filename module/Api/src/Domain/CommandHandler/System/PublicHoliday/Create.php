@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\System\PublicHoliday;
 
-use DateTime;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\System\PublicHoliday;
 use Dvsa\Olcs\Transfer\Command;
 
@@ -23,12 +23,13 @@ class Create extends AbstractCommandHandler
      */
     public function handleCommand(Command\CommandInterface $command)
     {
-        $entity = (new PublicHoliday())
-            ->setPublicHolidayDate(new DateTime($command->getHolidayDate()))
-            ->setIsEngland($command->getIsEngland())
-            ->setIsWales($command->getIsWales())
-            ->setIsScotland($command->getIsScotland())
-            ->setIsNi($command->getIsIreland());
+        $entity = new PublicHoliday(
+            new DateTime($command->getHolidayDate()),
+            $command->getIsEngland(),
+            $command->getIsWales(),
+            $command->getIsScotland(),
+            $command->getIsIreland()
+        );
 
         $this->getRepo()->save($entity);
 
