@@ -6,6 +6,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -178,6 +180,44 @@ abstract class AbstractCommunityLic implements BundleSerializableInterface, Json
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Community lic suspension
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicSuspension",
+     *     mappedBy="communityLic"
+     * )
+     */
+    protected $communityLicSuspensions;
+
+    /**
+     * Community lic withdrawal
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicWithdrawal",
+     *     mappedBy="communityLic"
+     * )
+     */
+    protected $communityLicWithdrawals;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
+        $this->communityLicSuspensions = new ArrayCollection();
+        $this->communityLicWithdrawals = new ArrayCollection();
+    }
 
     /**
      * Set the created by
@@ -522,6 +562,126 @@ abstract class AbstractCommunityLic implements BundleSerializableInterface, Json
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the community lic suspension
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $communityLicSuspensions
+     * @return CommunityLic
+     */
+    public function setCommunityLicSuspensions($communityLicSuspensions)
+    {
+        $this->communityLicSuspensions = $communityLicSuspensions;
+
+        return $this;
+    }
+
+    /**
+     * Get the community lic suspensions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCommunityLicSuspensions()
+    {
+        return $this->communityLicSuspensions;
+    }
+
+    /**
+     * Add a community lic suspensions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $communityLicSuspensions
+     * @return CommunityLic
+     */
+    public function addCommunityLicSuspensions($communityLicSuspensions)
+    {
+        if ($communityLicSuspensions instanceof ArrayCollection) {
+            $this->communityLicSuspensions = new ArrayCollection(
+                array_merge(
+                    $this->communityLicSuspensions->toArray(),
+                    $communityLicSuspensions->toArray()
+                )
+            );
+        } elseif (!$this->communityLicSuspensions->contains($communityLicSuspensions)) {
+            $this->communityLicSuspensions->add($communityLicSuspensions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a community lic suspensions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $communityLicSuspensions
+     * @return CommunityLic
+     */
+    public function removeCommunityLicSuspensions($communityLicSuspensions)
+    {
+        if ($this->communityLicSuspensions->contains($communityLicSuspensions)) {
+            $this->communityLicSuspensions->removeElement($communityLicSuspensions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the community lic withdrawal
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $communityLicWithdrawals
+     * @return CommunityLic
+     */
+    public function setCommunityLicWithdrawals($communityLicWithdrawals)
+    {
+        $this->communityLicWithdrawals = $communityLicWithdrawals;
+
+        return $this;
+    }
+
+    /**
+     * Get the community lic withdrawals
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCommunityLicWithdrawals()
+    {
+        return $this->communityLicWithdrawals;
+    }
+
+    /**
+     * Add a community lic withdrawals
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $communityLicWithdrawals
+     * @return CommunityLic
+     */
+    public function addCommunityLicWithdrawals($communityLicWithdrawals)
+    {
+        if ($communityLicWithdrawals instanceof ArrayCollection) {
+            $this->communityLicWithdrawals = new ArrayCollection(
+                array_merge(
+                    $this->communityLicWithdrawals->toArray(),
+                    $communityLicWithdrawals->toArray()
+                )
+            );
+        } elseif (!$this->communityLicWithdrawals->contains($communityLicWithdrawals)) {
+            $this->communityLicWithdrawals->add($communityLicWithdrawals);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a community lic withdrawals
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $communityLicWithdrawals
+     * @return CommunityLic
+     */
+    public function removeCommunityLicWithdrawals($communityLicWithdrawals)
+    {
+        if ($this->communityLicWithdrawals->contains($communityLicWithdrawals)) {
+            $this->communityLicWithdrawals->removeElement($communityLicWithdrawals);
+        }
+
+        return $this;
     }
 
     /**

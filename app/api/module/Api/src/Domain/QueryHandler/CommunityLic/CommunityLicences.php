@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Community Licence
+ * Community Licences
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
@@ -17,12 +17,20 @@ use Doctrine\ORM\Query;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CommunityLic extends AbstractQueryHandler
+class CommunityLicences extends AbstractQueryHandler
 {
     protected $repoServiceName = 'CommunityLic';
 
     protected $extraRepos = ['Licence'];
 
+    /**
+     * Handle query
+     *
+     * @param \Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLicences $query query
+     *
+     * @return array
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
         /** @var CommunityLicRepo $repo */
@@ -35,7 +43,7 @@ class CommunityLic extends AbstractQueryHandler
 
         unset($data['statuses']);
 
-        $unfilteredQuery = \Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLic::create($data);
+        $unfilteredQuery = \Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLicences::create($data);
 
         return [
             'result' => $this->resultList(
