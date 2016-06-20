@@ -192,7 +192,7 @@ return [
             Queue::TYPE_SEND_MSI_RESPONSE
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Nr\SendMsiResponse::class,
             Queue::TYPE_UPDATE_NYSIIS_TM_NAME
-            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Nysiis\UpdateTmName::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm\UpdateTmNysiisName::class,
         ],
         'factories' => [
             Queue::TYPE_CPID_EXPORT_CSV => Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,
