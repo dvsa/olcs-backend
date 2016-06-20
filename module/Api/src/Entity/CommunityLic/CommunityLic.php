@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\CommunityLic;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * CommunityLic Entity
@@ -38,7 +39,16 @@ class CommunityLic extends AbstractCommunityLic
     const ERROR_CANT_RESTORE = 'CL_CANT_RESTORE';
     const ERROR_CANT_REPRINT = 'CL_CANT_REPRINT';
     const ERROR_CANT_STOP = 'CL_CANT_STOP';
+    const ERROR_START_DATE_EMPTY = 'CL_START_DATE_EMPTY';
+    const ERROR_END_DATE_WRONG = 'CL_END_DATE_WRONG';
 
+    /**
+     * Update community licence
+     *
+     * @param array $data data
+     *
+     * @return void
+     */
     public function updateCommunityLic($data)
     {
         $this->setStatus($data['status']);
@@ -50,6 +60,14 @@ class CommunityLic extends AbstractCommunityLic
         $this->setIssueNo($data['issueNo']);
     }
 
+    /**
+     * Change status and expiry date
+     *
+     * @param RefData $status     status
+     * @param string  $expiryDate string
+     *
+     * @return void
+     */
     public function changeStatusAndExpiryDate($status, $expiryDate = '')
     {
         $this->setStatus($status);
@@ -57,4 +75,101 @@ class CommunityLic extends AbstractCommunityLic
             $this->setExpiredDate($expiryDate);
         }
     }
+
+    /**
+     * Get future suspension
+     *
+     * @return CommunityLicSuspension|null
+     */
+    public function getFutureSuspention()
+    {
+        if ($this->getStatus()->getId() === self::STATUS_ACTIVE) {
+            $criteria = Criteria::create()
+                ->where(Criteria::expr()->gt('startDate', (new \DateTime())->format(\DateTime::ISO8601)))
+                ->setMaxResults(1);
+            $suspension = $this->getCommunityLicSuspensions()->matching($criteria)->current();
+            if ($suspension) {
+                return [
+                    'startDate' => $suspension->getStartDate(),
+                    'endDate' => $suspension->getEndDate(),
+                    'reasons' => $this->prepareReasons($suspension),
+                    'id' => $suspension->getId(),
+                    'version' => $suspension->getVersion()
+                ];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get current suspension
+     *
+     * @return CommunityLicSuspension|null
+     */
+    public function getCurrentSuspention()
+    {
+        if ($this->getStatus()->getId() === self::STATUS_SUSPENDED) {
+            $criteria = Criteria::create()
+                ->where(Criteria::expr()->lte('startDate', (new \DateTime())->format(\DateTime::ISO8601)))
+                ->setMaxResults(1);
+            $suspension = $this->getCommunityLicSuspensions()->matching($criteria)->current();
+            if ($suspension) {
+                return [
+                    'startDate' => $suspension->getStartDate(),
+                    'endDate' => $suspension->getEndDate(),
+                    'reasons' => $this->prepareReasons($suspension),
+                    'id' => $suspension->getId(),
+                    'version' => $suspension->getVersion()
+                ];
+            }
+        }
+        return null;
+    }
+
+    private function prepareReasons($suspension)
+    {
+        $reasons = $suspension->getCommunityLicSuspensionReasons();
+        $retv = [];
+        foreach($reasons as $reason) {
+            $retv[] = $reason->getType()->getId();
+        }
+        return $retv;
+    }
+
+    /**
+     * Get current withdrawal
+     *
+     * @return CommunityLicSuspension|null
+     */
+    public function getCurrentWithdrawal()
+    {
+        if ($this->getStatus()->getId() === self::STATUS_WITHDRAWN) {
+            $criteria = Criteria::create()
+                ->where(Criteria::expr()->lte('startDate', (new \DateTime())->format(\DateTime::ISO8601)))
+                ->setMaxResults(1);
+            $withdrawal = $this->getCommunityLicWithdrawals()->matching($criteria)->current();
+            if ($withdrawal) {
+                return [
+                    'startDate' => $withdrawal->getStartDate(),
+                    'id' => $withdrawal->getId()
+                ];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Calculated values to be added to a bundle
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'futureSuspension' => $this->getFutureSuspention(),
+            'currentSuspension' => $this->getCurrentSuspention(),
+            'currentWithdrawal' => $this->getCurrentWithdrawal()
+        ];
+    }
+
 }

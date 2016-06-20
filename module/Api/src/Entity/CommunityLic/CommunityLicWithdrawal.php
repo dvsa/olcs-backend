@@ -21,8 +21,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CommunityLicWithdrawal extends AbstractCommunityLicWithdrawal
 {
-    public function updateCommunityLicWithdrawal($communityLic)
+    /**
+     * Update community licence withdrawal
+     *
+     * @param CommunityLic $communityLic community licence
+     * @param string       $startDate    start date
+     *
+     * @return void
+     */
+    public function updateCommunityLicWithdrawal($communityLic, $startDate)
     {
         $this->communityLic = $communityLic;
+        $this->startDate = new \DateTime($startDate);
     }
 }

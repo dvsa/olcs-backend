@@ -301,7 +301,8 @@ return [
     TransferQuery\Transaction\TransactionByReference::class => QueryHandler\Transaction\TransactionByReference::class,
 
     // CommunityLic
-    TransferQuery\CommunityLic\CommunityLic::class => QueryHandler\CommunityLic\CommunityLic::class,
+    TransferQuery\CommunityLic\CommunityLicences::class => QueryHandler\CommunityLic\CommunityLicences::class,
+    TransferQuery\CommunityLic\CommunityLicence::class  => QueryHandler\CommunityLic\CommunityLicence::class,
 
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,

@@ -224,7 +224,6 @@ $map = [
     QueryHandler\Bus\SearchViewList::class                                        => Standard::class, // @todo
     QueryHandler\Bus\ShortNoticeByBusReg::class                                   => Standard::class, // @todo
     QueryHandler\ChangeOfEntity\ChangeOfEntity::class                             => Standard::class, // @todo
-    QueryHandler\CommunityLic\CommunityLic::class                                 => Standard::class, // @todo
     QueryHandler\CompaniesHouse\AlertList::class                                  => Standard::class, // @todo
     QueryHandler\CompaniesHouse\GetList::class                                    => Standard::class, // @todo
     QueryHandler\Complaint\Complaint::class                                       => Standard::class, // @todo
