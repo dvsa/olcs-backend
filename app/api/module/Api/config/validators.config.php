@@ -29,5 +29,6 @@ return [
         'canAccessTransportManagerLicence' => Validators\CanAccessTransportManagerLicence::class,
         'canAccessUser' => Validators\CanAccessUser::class,
         'canAccessLicenceVehicle' => Validators\CanAccessLicenceVehicle::class,
+        'canAccessCorrespondenceInbox' => Validators\CanAccessCorrespondenceInbox::class,
     ]
 ];
