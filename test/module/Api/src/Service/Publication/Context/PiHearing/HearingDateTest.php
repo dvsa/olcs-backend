@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 
 /**
  * Class HearingDateTest
@@ -33,7 +32,7 @@ class HearingDateTest extends MockeryTestCase
 
         $expectedOutput = new \ArrayObject($output);
 
-        $sut = new HearingDate(m::mock(QueryHandlerInterface::class));
+        $sut = new HearingDate(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
         $this->assertEquals($expectedOutput, $sut->provide(new PublicationLink(), new \ArrayObject($input)));
     }
 }

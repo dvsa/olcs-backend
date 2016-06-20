@@ -34,7 +34,7 @@ class RegistrationHistoryList extends AbstractQueryHandler
             'licenceId' => $busReg->getLicence()->getId(),
         ];
 
-        $result = $this->getQueryHandler()->handleQuery(ByLicenceRouteQry::create($routeNoQuery));
+        $result = $this->getQueryHandler()->handleQuery(ByLicenceRouteQry::create($routeNoQuery), false);
 
         return $result;
     }

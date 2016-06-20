@@ -79,7 +79,7 @@ final class UpdateSla extends AbstractCommandHandler implements TransactionedInt
 
         // generate all related SLA Target Dates
         $result->merge(
-            $this->getCommandHandler()->handleCommand(
+            $this->handleSideEffect(
                 GenerateSlaTargetDateCmd::create(
                     [
                         'pi' => $pi->getId()

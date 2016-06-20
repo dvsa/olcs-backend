@@ -24,7 +24,7 @@ class PeopleTest extends MockeryTestCase
     public function setUp()
     {
         $this->sut = new \Dvsa\Olcs\Api\Service\Publication\Context\Application\People(
-            m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface::class)
+            m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class)
         );
 
         parent::setUp();

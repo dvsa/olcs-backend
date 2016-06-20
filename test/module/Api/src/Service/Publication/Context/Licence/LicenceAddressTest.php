@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -40,7 +39,7 @@ class LicenceAddressTest extends MockeryTestCase
         $mockAddressFormatter = m::mock(FormatAddress::class);
         $mockAddressFormatter->shouldReceive('format')->once()->andReturn($licenceAddress);
 
-        $sut = new LicenceAddress(m::mock(QueryHandlerInterface::class));
+        $sut = new LicenceAddress(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
         $sut->setAddressFormatter($mockAddressFormatter);
 
         $output = [
@@ -65,7 +64,7 @@ class LicenceAddressTest extends MockeryTestCase
         $publicationLink = m::mock(PublicationLink::class);
         $publicationLink->shouldReceive('getLicence')->andReturn($licenceEntityMock);
 
-        $sut = new LicenceAddress(m::mock(QueryHandlerInterface::class));
+        $sut = new LicenceAddress(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
 
         $output = [
             'licenceAddress' => ''
@@ -86,7 +85,7 @@ class LicenceAddressTest extends MockeryTestCase
         $publicationLink = m::mock(PublicationLink::class);
         $publicationLink->shouldReceive('getLicence')->andReturn(null);
 
-        $sut = new LicenceAddress(m::mock(QueryHandlerInterface::class));
+        $sut = new LicenceAddress(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
 
         $output = [
             'licenceAddress' => ''

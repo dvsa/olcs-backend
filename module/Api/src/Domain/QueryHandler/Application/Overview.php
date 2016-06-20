@@ -30,7 +30,7 @@ class Overview extends AbstractQueryHandler
         $application = $this->getRepo()->fetchUsingId($query);
 
         $licenceQuery = LicenceOverviewQry::create(['id' => $application->getLicence()->getId()]);
-        $licence = $this->getQueryHandler()->handleQuery($licenceQuery);
+        $licence = $this->getQueryHandler()->handleQuery($licenceQuery, false);
 
         return $this->result(
             $application,

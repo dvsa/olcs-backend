@@ -55,7 +55,7 @@ final class CreateEnvironmentalComplaint extends AbstractCommandHandler implemen
         $result->addMessage('Environmental Complaint created');
 
         // create a task
-        $taskResult = $this->getCommandHandler()->handleCommand($this->createCreateTaskCommand($command));
+        $taskResult = $this->handleSideEffect($this->createCreateTaskCommand($command));
         $result->merge($taskResult);
 
         return $result;

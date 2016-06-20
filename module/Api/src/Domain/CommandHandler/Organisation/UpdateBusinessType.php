@@ -113,7 +113,7 @@ final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwa
 
         if ($appId !== null) {
             $result->merge(
-                $this->getCommandHandler()->handleCommand(
+                $this->handleSideEffect(
                     $this->createUpdateApplicationCompletionCommand($appId)
                 )
             );

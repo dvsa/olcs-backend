@@ -77,7 +77,7 @@ final class TransportManagerDeleteDelta extends AbstractCommandHandler implement
 
         foreach ($applicationIds as $applicationId) {
             $result->merge(
-                $this->getCommandHandler()->handleCommand(
+                $this->handleSideEffect(
                     \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::create(
                         ['id' => $applicationId, 'section' => 'transportManagers']
                     )

@@ -34,6 +34,6 @@ class PaginatedRegistrationHistoryList extends RegistrationHistoryListQueryHandl
             'licenceId' => $busReg->getLicence()->getId(),
         ];
 
-        return $this->getQueryHandler()->handleQuery(ByLicenceRouteQry::create($routeNoQuery));
+        return $this->getQueryHandler()->handleQuery(ByLicenceRouteQry::create($routeNoQuery), false);
     }
 }

@@ -307,7 +307,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                         'paymentMethod' => $ft->getTransaction()->getPaymentMethod()->getId(),
                     ]
                 );
-                $this->result->merge($this->getCommandHandler()->handleCommand($dto));
+                $this->result->merge($this->handleSideEffect($dto));
 
                 // check payment status
                 $transaction = $this->getRepo()->fetchById($transactionId);

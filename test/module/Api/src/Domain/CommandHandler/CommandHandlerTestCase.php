@@ -241,7 +241,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
     {
         $this->commandHandler->shouldReceive('handleCommand')
             ->once()
-            ->with(m::type($class))
+            ->with(m::type($class), false)
             ->andReturnUsing(
                 function (CommandInterface $command) use ($class, $data, $result) {
                     $this->commands[] = [$command, $data];
@@ -254,7 +254,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
     {
         $this->commandHandler->shouldReceive('handleCommand')
             ->once()
-            ->with(m::type($class))
+            ->with(m::type($class), false)
             ->andReturnUsing(
                 function (CommandInterface $command) use ($class, $data, $exception) {
                     $this->commands[] = [$command, $data];

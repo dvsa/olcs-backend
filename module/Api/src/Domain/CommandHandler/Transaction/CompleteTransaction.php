@@ -65,7 +65,7 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
 
     protected function resolvePayment($command, $transaction)
     {
-        return  $this->getCommandHandler()->handleCommand(
+        return  $this->handleSideEffect(
             ResolvePaymentCommand::create(
                 [
                     'id' => $transaction->getId(),
@@ -77,7 +77,7 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
 
     protected function updateApplication($command)
     {
-        return $this->getCommandHandler()->handleCommand(
+        return $this->handleSideEffect(
             SubmitApplicationCmd::create(
                 [
                     'id' => $command->getSubmitApplicationId(),

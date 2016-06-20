@@ -71,7 +71,7 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
     {
         $address = $command->getAddress();
         $address['contactType'] = AddressEntity::CONTACT_TYPE_REGISTERED_ADDRESS;
-        $result = $this->getCommandHandler()->handleCommand(
+        $result = $this->handleSideEffect(
             SaveAddressCmd::create($address)
         );
         $contactDetailsId = $result->getId('contactDetails');

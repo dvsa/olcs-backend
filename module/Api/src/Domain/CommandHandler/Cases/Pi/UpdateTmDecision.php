@@ -73,7 +73,7 @@ final class UpdateTmDecision extends AbstractCommandHandler implements Transacti
         $result->addId('Pi', $pi->getId());
 
         if ($command->getPublish() === 'Y') {
-            $result->merge($this->getCommandHandler()->handleCommand($this->createPublishCommand($pi, $command)));
+            $result->merge($this->handleSideEffect($this->createPublishCommand($pi, $command)));
         }
 
         return $result;

@@ -33,12 +33,12 @@ final class UpdateAddresses extends AbstractCommandHandler
         $params = $command->getArrayCopy();
         $params['id'] = $licence->getId();
 
-        $result = $this->getCommandHandler()->handleCommand(
+        $result = $this->handleSideEffect(
             SaveAddresses::create($params)
         );
 
         $result->merge(
-            $this->getCommandHandler()->handleCommand(
+            $this->handleSideEffect(
                 UpdateApplicationCompletionCommand::create(
                     ['id' => $application->getId(), 'section' => 'addresses']
                 )

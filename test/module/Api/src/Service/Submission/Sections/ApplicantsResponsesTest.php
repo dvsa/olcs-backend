@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Zend\View\Renderer\PhpRenderer;
 use Mockery as m;
 
@@ -38,7 +37,7 @@ class ApplicantsResponsesTest extends SubmissionSectionTest
      */
     public function testGenerateSection($input = null, $expectedResult = null)
     {
-        $mockQueryHandler = m::mock(QueryHandlerInterface::class);
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
         $mockViewRenderer = m::mock(PhpRenderer::class);
 
         $mockViewRenderer->shouldReceive('render')

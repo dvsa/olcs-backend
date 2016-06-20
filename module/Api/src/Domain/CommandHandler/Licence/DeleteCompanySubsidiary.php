@@ -61,6 +61,6 @@ final class DeleteCompanySubsidiary extends AbstractCommandHandler implements Au
             'licence' => $licence
         ];
 
-        return $this->getCommandHandler()->handleCommand(CreateTask::create($data));
+        return $this->handleSideEffect(CreateTask::create($data));
     }
 }
