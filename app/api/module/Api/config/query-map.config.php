@@ -505,10 +505,14 @@ return [
     // EventHistory
     TransferQuery\EventHistory\EventHistory::class => QueryHandler\EventHistory\EventHistory::class,
 
-    // System Messages
+    // Admin :: System Messages
     TransferQuery\System\InfoMessage\Get::class => QueryHandler\System\InfoMessage\Get::class,
     TransferQuery\System\InfoMessage\GetList::class => QueryHandler\System\InfoMessage\GetList::class,
     TransferQuery\System\InfoMessage\GetListActive::class => QueryHandler\System\InfoMessage\GetListActive::class,
+
+    // Admin :: Public holidays
+    TransferQuery\System\PublicHoliday\Get::class => QueryHandler\System\PublicHoliday\Get::class,
+    TransferQuery\System\PublicHoliday\GetList::class => QueryHandler\System\PublicHoliday\GetList::class,
 
     // Si
     TransferQuery\Si\SiCategoryTypeListData::class => QueryHandler\Si\SiCategoryTypeListData::class,
