@@ -86,7 +86,7 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
      */
     private function updateApplicationCompletionCommand(UpdateDeclarationCommand $command)
     {
-        return $this->getCommandHandler()->handleCommand(
+        return $this->handleSideEffect(
             UpdateApplicationCompletionCommand::create(
                 ['id' => $command->getId(), 'section' => 'undertakings']
             )
@@ -108,7 +108,7 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
             $outstandingInterimFees = $this->feeRepo->fetchInterimFeesByApplicationId($command->getId(), true);
             // if there are no existing interim fees then create interim fee
             if (empty($outstandingInterimFees)) {
-                return $this->getCommandHandler()->handleCommand(
+                return $this->handleSideEffect(
                     CreateFeeCommand::create(
                         [
                             'id' => $command->getId(),
@@ -118,7 +118,7 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
                 );
             }
         } else {
-            return $this->getCommandHandler()->handleCommand(
+            return $this->handleSideEffect(
                 CancelAllInterimFeesCommand::create(['id' => $command->getId()])
             );
         }

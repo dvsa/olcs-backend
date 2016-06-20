@@ -33,7 +33,7 @@ final class InformationComplete extends AbstractCommandHandler implements Transa
 
         // generate all related SLA Target Dates
         $result->merge(
-            $this->getCommandHandler()->handleCommand(
+            $this->handleSideEffect(
                 GenerateSlaTargetDateCmd::create(
                     [
                         'submission' => $submissionEntity->getId()

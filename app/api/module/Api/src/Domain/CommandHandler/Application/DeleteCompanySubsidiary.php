@@ -42,12 +42,12 @@ final class DeleteCompanySubsidiary extends AbstractCommandHandler implements Tr
         $data = $command->getArrayCopy();
         $data['licence'] = $licence->getId();
 
-        return $this->getCommandHandler()->handleCommand(LicenceDeleteCompanySubsidiary::create($data));
+        return $this->handleSideEffect(LicenceDeleteCompanySubsidiary::create($data));
     }
 
     private function updateApplicationCompletion(Cmd $command)
     {
-        return $this->getCommandHandler()->handleCommand(
+        return $this->handleSideEffect(
             UpdateApplicationCompletionCommand::create(
                 [
                     'id' => $command->getApplication(),

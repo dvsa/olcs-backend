@@ -56,7 +56,7 @@ final class WithdrawIrfoPsvAuth extends AbstractCommandHandler implements Transa
      */
     private function cancelFees(CommandInterface $command)
     {
-        return $this->getCommandHandler()->handleCommand(
+        return $this->handleSideEffect(
             CancelFeesDto::create(
                 [
                     'id' => $command->getId(),

@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PreviousHearingData;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 
 /**
  * Class PreviousHearingDataTest
@@ -49,7 +48,7 @@ class PreviousHearingDataTest extends MockeryTestCase
             ->once()
             ->getMock();
 
-        $mockQueryHandler = m::mock(QueryHandlerInterface::class);
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
         $mockQueryHandler->shouldReceive('handleQuery')->once()->andReturn($piHearingResult);
 
         $sut = new PreviousHearingData($mockQueryHandler);

@@ -71,7 +71,7 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler implement
         $result = new Result();
 
         foreach (array_keys($sectionsToUpdate) as $section) {
-            $result->merge($this->getCommandHandler()->handleCommand($this->getUpdateCommand($section, $command)));
+            $result->merge($this->handleSideEffect($this->getUpdateCommand($section, $command)));
         }
 
         return $result;

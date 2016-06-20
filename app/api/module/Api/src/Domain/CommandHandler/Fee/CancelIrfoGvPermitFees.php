@@ -27,7 +27,7 @@ final class CancelIrfoGvPermitFees extends AbstractCommandHandler implements Tra
         /* @var $fee \Dvsa\Olcs\Api\Entity\Fee\Fee */
         foreach ($fees as $fee) {
             $result->merge(
-                $this->getCommandHandler()->handleCommand(
+                $this->handleSideEffect(
                     CancelFeeCommand::create(['id' => $fee->getId()])
                 )
             );

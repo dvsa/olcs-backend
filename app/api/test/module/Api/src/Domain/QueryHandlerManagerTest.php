@@ -61,7 +61,7 @@ class QueryHandlerManagerTest extends MockeryTestCase
 
         $this->sut->setService(get_class($query), $mockService);
 
-        $this->assertEquals(['response'], $this->sut->handleQuery($query));
+        $this->assertEquals(['response'], $this->sut->handleQuery($query, true));
     }
 
     public function testHandleQueryReturningEntity()
@@ -81,7 +81,7 @@ class QueryHandlerManagerTest extends MockeryTestCase
 
         $this->sut->setService(get_class($query), $mockService);
 
-        $this->assertEquals($response, $this->sut->handleQuery($query));
+        $this->assertEquals($response, $this->sut->handleQuery($query, true));
     }
 
     public function testHandleQueryFailingValidator()
@@ -89,7 +89,7 @@ class QueryHandlerManagerTest extends MockeryTestCase
         $this->setExpectedException(ForbiddenException::class);
 
         $query = m::mock(QueryInterface::class)->makePartial();
-        $query->shouldReceive('getArrayCopy')->once()->andReturn(['foo' => 'bar']);
+        $query->shouldReceive('getArrayCopy')->twice()->andReturn(['foo' => 'bar']);
 
         $mockService = m::mock(QueryHandlerInterface::class);
         $mockService->shouldReceive('handleQuery')->never();
@@ -100,7 +100,7 @@ class QueryHandlerManagerTest extends MockeryTestCase
 
         $this->sut->setService(get_class($query), $mockService);
 
-        $this->sut->handleQuery($query);
+        $this->sut->handleQuery($query, true);
     }
 
     public function testHandleQueryInvalid()

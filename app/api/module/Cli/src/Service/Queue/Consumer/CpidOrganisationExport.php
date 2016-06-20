@@ -34,7 +34,7 @@ class CpidOrganisationExport implements MessageConsumerInterface
      */
     private $commandHandler;
 
-    public function __construct(Organisation $organisation, CommandHandlerInterface $commandHandler)
+    public function __construct(Organisation $organisation, \Dvsa\Olcs\Api\Domain\CommandHandlerManager $commandHandler)
     {
         $this->organisationRepo = $organisation;
         $this->commandHandler = $commandHandler;

@@ -63,7 +63,7 @@ final class ApproveWaive extends AbstractCommandHandler implements Transactioned
             ->addMessage('Waive transaction updated');
 
         $result->merge(
-            $this->getCommandHandler()->handleCommand(PayFeeCmd::create(['id' => $fee->getId()]))
+            $this->handleSideEffect(PayFeeCmd::create(['id' => $fee->getId()]))
         );
 
         return $result;

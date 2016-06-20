@@ -40,7 +40,6 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use \Dvsa\Olcs\Api\Entity\Cases\Statement;
 use Zend\View\Renderer\PhpRenderer;
@@ -67,7 +66,7 @@ class SubmissionSectionTest extends MockeryTestCase
     public function testGenerateSection($input = null, $expectedResult = null)
     {
         if (!empty($input)) {
-            $mockQueryHandler = m::mock(QueryHandlerInterface::class);
+            $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
             $mockViewRenderer = m::mock(PhpRenderer::class);
             $sut = new $this->submissionSection($mockQueryHandler, $mockViewRenderer);
 

@@ -34,7 +34,7 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(QueryHandlerInterface::class);
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
         $mockQueryHandler->shouldReceive('handleQuery')->with($application)->andReturn($data);
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
@@ -57,7 +57,7 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(QueryHandlerInterface::class);
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
         $mockQueryHandler->shouldReceive('handleQuery')
                          ->with($application)
                          ->andThrow(new Exception\NotFoundException());
@@ -83,7 +83,7 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(QueryHandlerInterface::class);
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
         $mockQueryHandler->shouldReceive('handleQuery')
             ->with($application)
             ->andThrow(new Exception\ValidationException($errors));
@@ -110,7 +110,7 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(QueryHandlerInterface::class);
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
         $mockQueryHandler->shouldReceive('handleQuery')
             ->with($application)
             ->andThrow($ex);
@@ -140,7 +140,7 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(QueryHandlerInterface::class);
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
         $mockQueryHandler->shouldReceive('handleQuery')
              ->with($application)
              ->andReturn(
@@ -172,7 +172,7 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(QueryHandlerInterface::class);
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
         $mockQueryHandler->shouldReceive('handleQuery')
             ->with($application)
             ->andThrow(new Exception\NotFoundException());
@@ -198,7 +198,7 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(QueryHandlerInterface::class);
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
         $mockQueryHandler->shouldReceive('handleQuery')
             ->with($application)
             ->andThrow(new Exception\ValidationException($errors));
@@ -225,7 +225,7 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(QueryHandlerInterface::class);
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
         $mockQueryHandler->shouldReceive('handleQuery')
             ->with($application)
             ->andThrow($ex);
