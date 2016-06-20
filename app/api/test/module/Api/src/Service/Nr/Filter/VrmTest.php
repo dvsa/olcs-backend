@@ -5,22 +5,24 @@ namespace Dvsa\OlcsTest\Api\Service\Nr\Filter;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Vrm;
 use Dvsa\Olcs\Transfer\Filter\Vrm as TransferVrmFilter;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
 /**
  * Class VrmTest
  * @package Dvsa\OlcsTest\Api\Service\Nr\Filter
  */
-class VrmTest extends TestCase
+class VrmTest extends MockeryTestCase
 {
     /**
      * test filter()
+     *
+     * @dataProvider testFilterProvider
+     * @param string $initialValue
+     * @param string $expectedResult
      */
-    public function testFilter()
+    public function testFilter($initialValue, $expectedResult)
     {
-        $initialValue = 'icZs';
-        $expectedResult = '1CZS';
         $value = ['vrm' => $initialValue];
         $expected = ['vrm' => $expectedResult];
 
@@ -31,5 +33,19 @@ class VrmTest extends TestCase
         $sut->setVrmFilter($mockTransferFilter);
 
         $this->assertEquals($expected, $sut->filter($value));
+    }
+
+    /**
+     * Dat provider for testFilterProvider
+     *
+     * @return array
+     */
+    public function testFilterProvider()
+    {
+        return [
+            ['icZs', '1CZS'],
+            ['ic Z s', '1CZS'],
+            ['icZsab cd efgh ijk lmno p qrs t u ', 'ICZSABCDEFGHIJK']
+        ];
     }
 }
