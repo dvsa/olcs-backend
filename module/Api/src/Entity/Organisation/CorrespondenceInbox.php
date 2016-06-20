@@ -29,4 +29,14 @@ class CorrespondenceInbox extends AbstractCorrespondenceInbox
         $this->setLicence($licence);
         $this->setDocument($document);
     }
+
+    /**
+     * Get Orgainsation owner
+     *
+     * @return Organisation
+     */
+    public function getRelatedOrganisation()
+    {
+        return $this->getLicence()->getOrganisation();
+    }
 }
