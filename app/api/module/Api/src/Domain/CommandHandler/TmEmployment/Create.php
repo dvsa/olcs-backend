@@ -79,7 +79,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
      */
     protected function createContactDetails(CreateCommand $command)
     {
-        $response = $this->getCommandHandler()->handleCommand(
+        $response = $this->handleSideEffect(
             SaveAddress::create(
                 [
                     'addressLine1' => $command->getAddress()['addressLine1'],

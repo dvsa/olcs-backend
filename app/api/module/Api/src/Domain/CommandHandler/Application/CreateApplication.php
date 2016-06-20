@@ -94,7 +94,7 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
 
     private function updateApplicationCompletion($applicationId)
     {
-        return $this->getCommandHandler()->handleCommand(
+        return $this->handleSideEffect(
             UpdateApplicationCompletion::create(['id' => $applicationId, 'section' => 'typeOfLicence'])
         );
     }
@@ -107,14 +107,14 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
      */
     private function generateLicenceNumber($applicationId)
     {
-        return $this->getCommandHandler()->handleCommand(
+        return $this->handleSideEffect(
             GenerateLicenceNumber::create(['id' => $applicationId])
         );
     }
 
     private function createApplicationFee($applicationId)
     {
-        return $this->getCommandHandler()->handleCommand(CreateAplicationFeeCommand::create(['id' => $applicationId]));
+        return $this->handleSideEffect(CreateAplicationFeeCommand::create(['id' => $applicationId]));
     }
 
     private function createApplicationCompletion(Application $application)

@@ -38,12 +38,13 @@ class VariationOperatingCentre extends AbstractQueryHandler
                         'id' => $id,
                         'isVariation' => true
                     ]
-                )
+                ),
+                false
             );
             $response->setValue('canUpdateAddress', false);
         } else {
             /* @var $response Result  */
-            $response = $this->getQueryHandler()->handleQuery(ApplicationOperatingCentre::create(['id' => $id]));
+            $response = $this->getQueryHandler()->handleQuery(ApplicationOperatingCentre::create(['id' => $id]), false);
 
             $aocData = $response->serialize();
             $response->setValue('canUpdateAddress', isset($aocData['action']) && $aocData['action'] === 'A');

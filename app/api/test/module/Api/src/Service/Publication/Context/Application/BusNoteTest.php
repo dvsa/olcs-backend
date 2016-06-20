@@ -10,7 +10,6 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEnt
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 
 /**
  * Class BusNoteTest
@@ -30,8 +29,7 @@ class BusNoteTest extends MockeryTestCase
      */
     public function testProvide($section, $expectedString)
     {
-
-        $sut = new BusNote(m::mock(QueryHandlerInterface::class));
+        $sut = new BusNote(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
 
         $output = [
             'busNote' => sprintf($sut::BUS_STRING, $expectedString)
@@ -62,7 +60,7 @@ class BusNoteTest extends MockeryTestCase
      */
     public function provideTestProvider()
     {
-        $sut = new BusNote(m::mock(QueryHandlerInterface::class));
+        $sut = new BusNote(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
 
         return [
             [PublicationSectionEntity::LIC_SURRENDERED_SECTION, $sut::BUS_SURRENDERED],

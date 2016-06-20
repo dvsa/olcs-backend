@@ -149,7 +149,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
             'licence' => $application->getLicence()->getId(),
         ];
 
-        return $this->getCommandHandler()->handleCommand(CreateTaskCmd::create($taskData));
+        return $this->handleSideEffect(CreateTaskCmd::create($taskData));
     }
 
     /**

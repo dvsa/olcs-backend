@@ -90,16 +90,16 @@ final class UpdateHearing extends AbstractCommandHandler implements AuthAwareInt
         $result->addId('PiHearing', $id);
 
         if (($isAdjourned === 'N' || $isCancelled === 'N') && $command->getPublish() === 'Y') {
-            $result->merge($this->getCommandHandler()->handleCommand($this->createPublishCommand($id, $command)));
+            $result->merge($this->handleSideEffect($this->createPublishCommand($id, $command)));
         }
 
         if ($isAdjourned === 'Y') {
-            $result->merge($this->getCommandHandler()->handleCommand($this->createTaskCommand($piHearing)));
+            $result->merge($this->handleSideEffect($this->createTaskCommand($piHearing)));
         }
 
         // generate all related SLA Target Dates
         $result->merge(
-            $this->getCommandHandler()->handleCommand(
+            $this->handleSideEffect(
                 GenerateSlaTargetDateCmd::create(
                     [
                         'pi' => $piHearing->getPi()->getId()

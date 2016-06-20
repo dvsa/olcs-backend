@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousLicencePublica
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 
 /**
  * Class PreviousApplicationPublicationNoTest
@@ -38,7 +37,7 @@ class PreviousLicencePublicationNoTest extends MockeryTestCase
             ->once()
             ->andReturn($previousPublicationNo);
 
-        $mockQueryHandler = m::mock(QueryHandlerInterface::class);
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
         $mockQueryHandler->shouldReceive('handleQuery')->once()->andReturn($previousPublicationResult);
 
         $context = new \ArrayObject();

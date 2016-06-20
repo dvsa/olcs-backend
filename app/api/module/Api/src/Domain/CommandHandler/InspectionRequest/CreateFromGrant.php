@@ -48,7 +48,7 @@ final class CreateFromGrant extends AbstractCommandHandler implements Transactio
                 'id' => $inspectionRequest->getId()
             ]
         );
-        $result->merge($this->getCommandHandler()->handleCommand($sendInspectionRequest));
+        $result->merge($this->handleSideEffect($sendInspectionRequest));
 
         return $result;
     }

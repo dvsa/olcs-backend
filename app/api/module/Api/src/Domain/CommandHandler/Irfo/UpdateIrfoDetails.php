@@ -83,7 +83,7 @@ final class UpdateIrfoDetails extends AbstractCommandHandler implements Transact
      */
     private function processTradingNames(Organisation $org, array $tradingNames)
     {
-        return $this->getCommandHandler()->handleCommand(
+        return $this->handleSideEffect(
             UpdateTradingNames::create(
                 [
                     'organisation' => $org->getId(),
