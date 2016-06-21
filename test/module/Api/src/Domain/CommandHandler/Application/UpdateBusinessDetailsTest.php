@@ -62,7 +62,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
             'natureOfBusiness' => null,
             'companyOrLlpNo' => null,
             'registeredAddress' => null,
-            'tradingNames' => null,
+            'tradingNames' => [],
             'partial' => null
         ];
 
