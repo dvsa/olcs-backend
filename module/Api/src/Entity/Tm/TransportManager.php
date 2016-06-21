@@ -39,7 +39,7 @@ class TransportManager extends AbstractTransportManager implements
 
     /**
      * Update type, status and home/work contact details of the TM
-     * 
+     *
      * @param $type
      * @param $status
      * @param null $workCd
