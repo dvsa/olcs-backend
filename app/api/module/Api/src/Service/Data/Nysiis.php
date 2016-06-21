@@ -1,6 +1,6 @@
 <?php
 
-namespace Olcs\Service\Data;
+namespace Dvsa\Olcs\Api\Service\Data;
 
 use Common\Service\Entity\Exceptions\UnexpectedResponseException;
 
