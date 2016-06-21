@@ -1,19 +1,13 @@
 <?php
 
-/**
- * Psv Disc
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Api\Entity\Licence\PsvDisc as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Licence\PsvDisc as Entity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
-use Doctrine\DBAL\Connection;
 
 /**
  * Psv Disc
@@ -44,6 +38,10 @@ class PsvDisc extends AbstractRepository
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @param string $licenceType
+     */
     protected function addFilteringConditions($qb, $licenceType)
     {
         $activeStatuses = [
@@ -152,7 +150,9 @@ class PsvDisc extends AbstractRepository
      */
     public function createPsvDiscs($licenceId, $howMany, $isCopy = false)
     {
-        return $this->getDbQueryManager()->get('Discs\CreatePsvDiscs')
-            ->executeInsert($licenceId, $howMany, $isCopy);
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\Query\Discs\CreatePsvDiscs $rawQuery */
+        $rawQuery = $this->getDbQueryManager()->get('Discs\CreatePsvDiscs');
+
+        return $rawQuery->executeInsert($licenceId, $howMany, $isCopy);
     }
 }
