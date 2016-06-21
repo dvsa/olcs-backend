@@ -72,7 +72,7 @@ class LicenceStatusRule extends AbstractRepository
      * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
      * @return array
      */
-    public function fetchForLicence($licence = null)
+    public function fetchForLicence($licence)
     {
         $qb = $this->createQueryBuilder();
 
