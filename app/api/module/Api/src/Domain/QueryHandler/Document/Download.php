@@ -22,19 +22,23 @@ class Download extends AbstractQueryHandler implements UploaderAwareInterface
 
     /**
      * @param \Dvsa\Olcs\Transfer\Query\Document\Download $query
+     *
      * @return array
      * @throws NotFoundException
      */
     public function handleQuery(QueryInterface $query)
     {
-        $file = $this->getUploader()->download($query->getIdentifier());
+        /* @var \Dvsa\Olcs\Api\Entity\Doc\Document $document */
+        $document = $this->getRepo()->fetchById($query->getIdentifier());
+
+        $file = $this->getUploader()->download($document->getIdentifier());
 
         if ($file === null) {
             throw new NotFoundException();
         }
 
         return [
-            'fileName' => basename($query->getIdentifier()),
+            'fileName' => basename($document->getIdentifier()),
             'content' => base64_encode($file->getContent()),
         ];
     }

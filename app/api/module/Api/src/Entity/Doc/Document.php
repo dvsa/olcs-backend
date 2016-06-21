@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Doc;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * Document Entity
@@ -28,7 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class Document extends AbstractDocument
+class Document extends AbstractDocument implements OrganisationProviderInterface
 {
     const GV_CONTINUATION_CHECKLIST = 1252;
     const GV_CONTINUATION_CHECKLIST_NI = 1501;
@@ -78,5 +79,51 @@ class Document extends AbstractDocument
         if ($this->getIssuedDate() === null) {
             $this->setIssuedDate(new \DateTime());
         }
+    }
+
+    /**
+     * Get organisations this entity is linked to
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation|\Dvsa\Olcs\Api\Entity\Organisation\Organisation[]|null
+     */
+    public function getRelatedOrganisation()
+    {
+        if ($this->getLicence()) {
+            return $this->getLicence()->getRelatedOrganisation();
+        }
+
+        if ($this->getApplication()) {
+            return $this->getApplication()->getRelatedOrganisation();
+        }
+
+        if ($this->getTransportManager()) {
+            return $this->getTransportManager()->getRelatedOrganisation();
+        }
+
+        if ($this->getCase()) {
+            return $this->getCase()->getRelatedOrganisation();
+        }
+
+        if ($this->getOperatingCentre()) {
+            return $this->getOperatingCentre()->getRelatedOrganisation();
+        }
+
+        if ($this->getBusReg()) {
+            return $this->getBusReg()->getRelatedOrganisation();
+        }
+
+        if ($this->getIrfoOrganisation()) {
+            return $this->getIrfoOrganisation()->getRelatedOrganisation();
+        }
+
+        if ($this->getSubmission()) {
+            return $this->getSubmission()->getRelatedOrganisation();
+        }
+
+        if ($this->getStatement()) {
+            return $this->getStatement()->getRelatedOrganisation();
+        }
+
+        return null;
     }
 }
