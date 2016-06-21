@@ -19,6 +19,8 @@ class Vrm extends ZendAbstractFilter
     private $vrmFilter;
 
     /**
+     * Gets the transfer vrm filter
+     *
      * @return VrmFilter
      */
     public function getVrmFilter()
@@ -27,7 +29,11 @@ class Vrm extends ZendAbstractFilter
     }
 
     /**
-     * @param VrmFilter $vrmFilter
+     * Sets the transfer vrm filter
+     *
+     * @param VrmFilter $vrmFilter the transfer vrm filter
+     *
+     * @return void
      */
     public function setVrmFilter($vrmFilter)
     {
@@ -36,13 +42,17 @@ class Vrm extends ZendAbstractFilter
 
     /**
      * Returns the result of filtering $value
+     * 1. First of all will filter using the vrm filter from olcs-transfer
+     * 2. Since we no longer validate the VRM is valid, we trim whatever we have to 15 characters, so we can ensure it
+     * at least matches the size of the field in the DB
      *
-     * @param  array $value
+     * @param array $value the input value
+     *
      * @return array
      */
     public function filter($value)
     {
-        $value['vrm'] = $this->getVrmFilter()->filter($value['vrm']);
+        $value['vrm'] = substr($this->getVrmFilter()->filter($value['vrm']), 0, 15);
         return $value;
     }
 }
