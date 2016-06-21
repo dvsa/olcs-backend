@@ -12,12 +12,16 @@ use Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber;
 class LicenceNumberTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * test filter()
+     * Tests that if a community licence number pattern is found then we split out the part we need.
+     * Otherwise, just use the value as is
+     *
+     * @dataProvider filterProvider
+     *
+     * @param string $initialValue initial value
+     * @param string $expectedResult expected result
      */
-    public function testFilter()
+    public function testFilter($initialValue, $expectedResult)
     {
-        $initialValue = 'UKGB/OB1234567/00000';
-        $expectedResult = 'OB1234567';
         $value = ['communityLicenceNumber' => $initialValue];
         $expected = [
             'communityLicenceNumber' => $initialValue,
@@ -30,30 +34,15 @@ class LicenceNumberTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $invalidValue
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\Exception
-     *
-     * @dataProvider exceptionProvider
-     */
-    public function testExceptions($invalidValue)
-    {
-        $value = ['communityLicenceNumber' => $invalidValue];
-        $sut = new LicenceNumber();
-        $sut->filter($value);
-    }
-
-    /**
-     * data provider for testExceptions()
+     * data provider for testFilter
      *
      * @return array
      */
-    public function exceptionProvider()
+    public function filterProvider()
     {
         return [
-            ['UKGB/OB1234567'],
-            ['UKGB/OB1234567/00000/1111'],
-            ['OB1234567'],
-            ['UKGB-OB1234567-00000']
+            ['UKGB/OB1234567/00000', 'OB1234567'],
+            ['OB1234567', 'OB1234567'],
         ];
     }
 }
