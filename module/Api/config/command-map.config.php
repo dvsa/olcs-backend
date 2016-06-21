@@ -804,6 +804,7 @@ return [
     TransferCommand\Tm\Unmerge::class => CommandHandler\Tm\Unmerge::class,
     TransferCommand\Tm\UndoDisqualification::class => CommandHandler\Tm\UndoDisqualification::class,
     TransferCommand\Tm\UpdateNysiisName::class => CommandHandler\Tm\UpdateNysiisName::class,
+    Command\Tm\UpdateNysiisNameRequest::class => CommandHandler\Tm\UpdateNysiisName::class,
 
     // Task
     TransferCommand\Task\CloseTasks::class => CommandHandler\Task\CloseTasks::class,
