@@ -10,12 +10,8 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
-use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;;
 use Zend\Serializer\Adapter\Json as ZendJson;
-
 use Dvsa\Olcs\Transfer\Command\Tm\UpdateNysiisName as UpdateNysiisNameCmd;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 
@@ -43,16 +39,16 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
          * @var UpdateNysiisNameCmd $command
          */
         $transportManager = $this->getRepo()->fetchUsingId($command);
-        $personDetails = $transportManager->getHomeCd()->getPerson();
+        $person = $transportManager->getHomeCd()->getPerson();
 
-        if (empty($personDetails)) {
+        if (empty($person)) {
             throw new NotFoundException('The specified TM doesn\'t have an associated person');
         }
 
         $nysiisData = $this->requestNyiisData(
             [
-                'forename' => $personDetails->getForename(),
-                'familyName' => $personDetails->getFamilyName()
+                'forename' => $person->getForename(),
+                'familyName' => $person->getFamilyName()
             ]
         );
 
@@ -78,7 +74,7 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
 
         // connect to Nysiis here and return whatever Nysiis returns
         return [
-            'forename' => $params['firstName'],
+            'forename' => $params['forename'],
             'familyName' => $params['familyName']
         ];
     }
