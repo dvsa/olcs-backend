@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Data;
 
 use Common\Service\Entity\Exceptions\UnexpectedResponseException;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Class IrfoPsvAuthType
@@ -41,8 +42,13 @@ class Nysiis
      */
     public function getNysiisSearchKeys($params)
     {
-        return $params;
-        //$result = $this->soapClient->GetNYSIISSearchKeys($params['nysiisForename'], $params['nysiisFamilyname']);
+        try {
+            $result = $this->soapClient->GetNYSIISSearchKeys($params['nysiisForename'], $params['nysiisFamilyname']);
+        } catch (\Exception $e) {
+            Logger::warn(__FILE__ . 'Failed SOAP request for GetNYSIISSearchKeys(' . $params['nysiisForename'] . ', '
+                . $params['nysiisFamilyname'] . ' Response: ' . $e->getMessage());
+            return $params;
+        }
     }
 
     /**
