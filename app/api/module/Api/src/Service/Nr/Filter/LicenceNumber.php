@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Service\Nr\Filter;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\Filter\AbstractFilter as ZendAbstractFilter;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Domain\Exception\Exception;
 
 /**
  * Class LicenceNumber
@@ -20,7 +19,6 @@ class LicenceNumber extends ZendAbstractFilter
      *
      * @param array $value input value
      *
-     * @throws Exception
      * @return array
      */
     public function filter($value)
