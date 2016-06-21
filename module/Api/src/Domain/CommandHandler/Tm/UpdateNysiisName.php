@@ -14,6 +14,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;;
 use Zend\Serializer\Adapter\Json as ZendJson;
 use Dvsa\Olcs\Transfer\Command\Tm\UpdateNysiisName as UpdateNysiisNameCmd;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Service\Data\Nysiis as NysiisService;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Update TM NYSIIS name
@@ -23,6 +25,28 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
     use AuthAwareTrait;
 
     protected $repoServiceName = 'TransportManager';
+
+    /**
+     * Service to connect to Nysiis servers
+     *
+     * @var NysiisService
+     */
+    protected $nysiisService;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->nysiisService = $mainServiceLocator->get(NysiisService::class);
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Command to queue a request to update TM with Nysiis data
@@ -47,8 +71,8 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
 
         $nysiisData = $this->requestNyiisData(
             [
-                'forename' => $person->getForename(),
-                'familyName' => $person->getFamilyName()
+                'nysiisForename' => $person->getForename(),
+                'nysiisFamilyname' => $person->getFamilyName()
             ]
         );
 
@@ -65,17 +89,18 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
     /**
      * Connect to Nysiis with given params and return values returned by Nysiis
      *
-     * @param $params
+     * @param array $nysiisParams
      * @return mixed
      */
-    private function requestNyiisData($params)
+    private function requestNyiisData($nysiisParams)
     {
-        // @to-do  Make request to Nysiis
+
+        $nysiisData = $this->nysiisService->getNysiisSearchKeys($nysiisParams);
 
         // connect to Nysiis here and return whatever Nysiis returns
         return [
-            'forename' => $params['forename'],
-            'familyName' => $params['familyName']
+            'forename' => $nysiisData['nysiisForename'],
+            'familyName' => $nysiisData['nysiisFamilyname']
         ];
     }
 }
