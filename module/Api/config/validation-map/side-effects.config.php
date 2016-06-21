@@ -146,4 +146,5 @@ return [
     QueryHandler\Bus\ByLicenceRoute::class                                            => IsSideEffect::class,
     Dvsa\Olcs\Email\Domain\CommandHandler\UpdateInspectionRequest::class              => IsSideEffect::class,
     Dvsa\Olcs\Email\Domain\CommandHandler\SendEmail::class                            => IsSideEffect::class,
+    CommandHandler\Tm\UpdateNysiisName::class                                         => \Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser::class,
 ];
