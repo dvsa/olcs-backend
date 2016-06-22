@@ -44,7 +44,10 @@ class Nysiis
     {
         try {
             if ($this->soapClient instanceof \Zend\Soap\Client) {
-                $result = $this->soapClient->GetNYSIISSearchKeys($params['nysiisForename'], $params['nysiisFamilyname']);
+                $result = $this->soapClient->GetNYSIISSearchKeys(
+                    $params['nysiisForename'],
+                    $params['nysiisFamilyname']
+                );
                 return $result;
             }
             Logger::warn(
