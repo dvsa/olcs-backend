@@ -1,17 +1,16 @@
 <?php
 
-namespace OlcsTest\Service\Data;
+namespace Dvsa\OlcsTest\Api\Service\Data;
 
-use Olcs\Service\Data\Nysiis;
+use Dvsa\Olcs\Api\Service\Data\Nysiis;
 use Mockery as m;
-use Common\Service\Entity\Exceptions\UnexpectedResponseException;
-use CommonTest\Service\Data\AbstractDataServiceTestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class IrfoPsvAuthType Test
  * @package CommonTest\Service
  */
-class NysiisTest extends AbstractDataServiceTestCase
+class NysiisTest extends MockeryTestCase
 {
     /**
      *
