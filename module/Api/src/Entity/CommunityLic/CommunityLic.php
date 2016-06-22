@@ -79,9 +79,9 @@ class CommunityLic extends AbstractCommunityLic
     /**
      * Get future suspension
      *
-     * @return CommunityLicSuspension|null
+     * @return array|null
      */
-    public function getFutureSuspention()
+    public function getFutureSuspension()
     {
         if ($this->getStatus()->getId() === self::STATUS_ACTIVE) {
             $criteria = Criteria::create()
@@ -104,9 +104,9 @@ class CommunityLic extends AbstractCommunityLic
     /**
      * Get current suspension
      *
-     * @return CommunityLicSuspension|null
+     * @return array|null
      */
-    public function getCurrentSuspention()
+    public function getCurrentSuspension()
     {
         if ($this->getStatus()->getId() === self::STATUS_SUSPENDED) {
             $criteria = Criteria::create()
@@ -129,7 +129,7 @@ class CommunityLic extends AbstractCommunityLic
     /**
      * Prepare reasons
      *
-     * @param CommunityLicSuspensio $suspension suspension
+     * @param CommunityLicSuspension $suspension suspension
      *
      * @return array
      */
@@ -146,7 +146,7 @@ class CommunityLic extends AbstractCommunityLic
     /**
      * Get current withdrawal
      *
-     * @return CommunityLicSuspension|null
+     * @return array|null
      */
     public function getCurrentWithdrawal()
     {
@@ -173,8 +173,8 @@ class CommunityLic extends AbstractCommunityLic
     public function getCalculatedBundleValues()
     {
         return [
-            'futureSuspension' => $this->getFutureSuspention(),
-            'currentSuspension' => $this->getCurrentSuspention(),
+            'futureSuspension' => $this->getFutureSuspension(),
+            'currentSuspension' => $this->getCurrentSuspension(),
             'currentWithdrawal' => $this->getCurrentWithdrawal()
         ];
     }

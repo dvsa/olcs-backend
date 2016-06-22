@@ -27,7 +27,7 @@ class CommunityLicSuspensionReason extends AbstractCommunityLicSuspensionReason
      * Constructor
      *
      * @param \Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicSuspension $suspension suspension
-     * @param string                                                    $type       type
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData                      $type       type
      */
     public function __construct($suspension, $type)
     {
