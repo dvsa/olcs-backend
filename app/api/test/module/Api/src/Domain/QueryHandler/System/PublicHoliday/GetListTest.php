@@ -36,7 +36,12 @@ class GetListTest extends QueryHandlerTestCase
             ->shouldReceive('fetchList')
             ->with($query, \Doctrine\ORM\Query::HYDRATE_OBJECT)
             ->once()
-            ->andReturn([$mockEntity, clone $mockEntity]);
+            ->andReturn([$mockEntity, clone $mockEntity])
+            //
+            ->shouldReceive('fetchCount')
+            ->with($query)
+            ->once()
+            ->andReturn(2);
 
         /** @var QueryHandler\ResultList $actual */
         $actual = $this->sut->handleQuery($query);
