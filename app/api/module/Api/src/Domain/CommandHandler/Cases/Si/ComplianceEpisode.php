@@ -11,8 +11,11 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiCategory as SiCategoryEntity;
@@ -25,18 +28,23 @@ use Dvsa\Olcs\Api\Domain\Repository\SiPenaltyRequestedType as SiPenaltyRequested
 use Dvsa\Olcs\Api\Domain\Repository\ErruRequest as ErruRequestRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepo;
-use Dvsa\Olcs\Transfer\Command\Cases\Si\ComplianceEpisode as ComplianceEpisodeCmd;
+use Dvsa\Olcs\Api\Domain\Command\Cases\Si\ComplianceEpisode as ComplianceEpisodeCmd;
+use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks as UpdateDocLinksCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
-use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
+use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
 
 /**
  * Process Si Compliance Episode
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-final class ComplianceEpisode extends AbstractCommandHandler implements TransactionedInterface
+final class ComplianceEpisode extends AbstractCommandHandler implements TransactionedInterface, UploaderAwareInterface
 {
+    use UploaderAwareTrait;
+
     protected $repoServiceName = 'Cases';
 
     protected $extraRepos = [
@@ -125,13 +133,15 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
         /**
          * @var ComplianceEpisodeCmd $command
          * @var \DomDocument $xmlDomDocument
+         * @var Document $document
          * @var array $erruData
          */
-        $xmlString = $command->getXml();
+        $requestDocument = $this->getRepo('Document')->fetchUsingId($command);
 
-        $this->result = $this->handleSideEffect($this->createDocumentCommand($xmlString));
+        /** @var File $xmlFile */
+        $xmlFile = $this->getUploader()->download($requestDocument->getIdentifier());
 
-        $xmlDomDocument = $this->validateInput('xmlStructure', $xmlString, []);
+        $xmlDomDocument = $this->validateInput('xmlStructure', $xmlFile->getContent(), []);
 
         //do some pre-doctrine data processing
         $erruData = $this->validateInput('complianceEpisode', $xmlDomDocument, []);
@@ -143,10 +153,6 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
             //will result in a 400 response from XML controller, which is what we're looking for
             throw new Exception('some data was not correct');
         }
-
-        //get the document record so we can link it to the erru request
-        $docRepo = $this->getRepo('Document');
-        $requestDocument = $docRepo->fetchById($this->result->getId('document'));
 
         $case = $this->generateCase($erruData, $requestDocument);
 
@@ -163,7 +169,14 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
         }
 
         $this->getRepo()->save($case);
-        $this->result->merge($this->handleSideEffect($this->createTaskCmd($case)));
+        $this->result->merge(
+            $this->handleSideEffects(
+                [
+                    $this->createTaskCmd($case),
+                    $this->createUpdateDocLinksCmd($requestDocument, $case, $this->commonData['licence'])
+                ]
+            )
+        );
         $this->result->addId('case', $case->getId());
 
         return $this->result;
@@ -458,22 +471,22 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     }
 
     /**
-     * Returns an upload command to add xml to the doc store
+     * Updates the document record with case and licence ids
      *
-     * @param string $content
+     * @param DocumentEntity $document
+     * @param CaseEntity $case
+     * @param Licence $licence
      *
-     * @return UploadCmd
+     * @return UpdateDocLinksCmd
      */
-    private function createDocumentCommand($content)
+    private function createUpdateDocLinksCmd(DocumentEntity $document, CaseEntity $case, LicenceEntity $licence)
     {
         $data = [
-            'content' => base64_encode($content),
-            'category' => CategoryEntity::CATEGORY_COMPLIANCE,
-            'subCategory' => CategoryEntity::DOC_SUB_CATEGORY_NR,
-            'filename' => 'compliance-episode.xml',
-            'description' => 'ERRU incoming compliance episode'
+            'id' => $document->getId(),
+            'case' => $case->getId(),
+            'licence' => $licence->getId(),
         ];
 
-        return UploadCmd::create($data);
+        return UpdateDocLinksCmd::create($data);
     }
 }
