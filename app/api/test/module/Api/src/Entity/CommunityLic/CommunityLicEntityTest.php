@@ -124,7 +124,7 @@ class CommunityLicEntityTest extends EntityTester
             ->once()
             ->getMock();
 
-        $result = $sut->getFutureSuspention();
+        $result = $sut->getFutureSuspension();
 
         $expected = [
             'startDate' => new \DateTime('3016-01-01'),
@@ -184,7 +184,7 @@ class CommunityLicEntityTest extends EntityTester
             ->once()
             ->getMock();
 
-        $result = $sut->getCurrentSuspention();
+        $result = $sut->getCurrentSuspension();
 
         $expected = [
             'startDate' => new \DateTime('2000-01-01'),

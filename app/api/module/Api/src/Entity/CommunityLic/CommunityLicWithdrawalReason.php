@@ -27,7 +27,7 @@ class CommunityLicWithdrawalReason extends AbstractCommunityLicWithdrawalReason
      * Withdrawal
      *
      * @param \Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicWithdrawal $withdrawal withdrawal
-     * @param string                                                    $type       type
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData                      $type       type
      */
     public function __construct($withdrawal, $type)
     {
