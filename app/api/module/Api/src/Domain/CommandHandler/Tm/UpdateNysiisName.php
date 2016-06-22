@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Queue request to update TM name with Nysiis values
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Tm;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -10,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\Serializer\Adapter\Json as ZendJson;
 use Dvsa\Olcs\Transfer\Command\Tm\UpdateNysiisName as UpdateNysiisNameCmd;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
@@ -18,7 +15,7 @@ use Dvsa\Olcs\Api\Service\Data\Nysiis as NysiisService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Update TM NYSIIS name
+ * Queue request to update TM name with Nysiis values
  */
 final class UpdateNysiisName extends AbstractCommandHandler implements AuthAwareInterface
 {
