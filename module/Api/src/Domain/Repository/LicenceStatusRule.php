@@ -1,16 +1,11 @@
 <?php
 
-/**
- * LicenceStatusRule.php
- *
- * @author Joshua Curtis <josh.curtis@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule as Entity;
-use Doctrine\ORM\QueryBuilder;
 
 /**
  * LicenceStatusRule Repo
@@ -74,10 +69,10 @@ class LicenceStatusRule extends AbstractRepository
     /**
      * Fetch for a licence.
      *
-     * @param null $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
      * @return array
      */
-    public function fetchForLicence($licence = null)
+    public function fetchForLicence($licence)
     {
         $qb = $this->createQueryBuilder();
 
