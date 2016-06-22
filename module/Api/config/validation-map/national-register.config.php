@@ -18,7 +18,7 @@ return [
      * This is incoming xml from ATOS. The xml will have been validated on the transfer side using ZendXml/Security.
      * The schema and other data is validated by national register itself \Dvsa\Olcs\Api\Service\Nr\InputFilter
      */
-    CommandHandler\Cases\Si\ComplianceEpisode::class => Misc\NoValidationRequired::class,
+    CommandHandler\Cases\Si\ComplianceEpisodeDocument::class => Misc\NoValidationRequired::class,
 
     /**
      * Create response xml and send to ATOS
