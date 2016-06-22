@@ -71,12 +71,14 @@ class StopTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommandSuspension()
+    /**
+     * @dataProvider dataProvider
+     */
+    public function testHandleCommandSuspension($startDate, $message)
     {
         $licenceId = 1;
         $communityLicenceIds = [10];
-        $startDate = '2014-01-01';
-        $endDate = '2015-01-01';
+        $endDate = '3017-01-01';
 
         $data = [
             'licence' => $licenceId,
@@ -94,10 +96,11 @@ class StopTest extends CommandHandlerTestCase
         $mockCommunityLicence = m::mock(CommunityLicEntity::class)
             ->shouldReceive('getId')
             ->andReturn(10)
-            ->twice()
-            ->shouldReceive('changeStatusAndExpiryDate')
-            ->with($this->refData[CommunityLicEntity::STATUS_SUSPENDED])
-            ->once()
+            ->times(3)
+            ->shouldReceive('setStatus')
+            ->with(
+                $this->refData[CommunityLicEntity::STATUS_SUSPENDED]
+            )
             ->shouldReceive('getStatus')
             ->andReturn(
                 m::mock()
@@ -167,7 +170,7 @@ class StopTest extends CommandHandlerTestCase
                 'communityLic10' => 10
             ],
             'messages' => [
-                'The licence 10 have been suspended'
+                $message
             ]
         ];
 
@@ -182,12 +185,20 @@ class StopTest extends CommandHandlerTestCase
         $this->assertEquals('reason', $communityLicSuspensionReason->getType()->getId());
     }
 
+    public function dataProvider()
+    {
+        return [
+            [(new \DateTime())->format('Y-m-d'), 'The licence 10 have been suspended'],
+            [(new \DateTime('3000-01-01'))->format('Y-m-d'), 'The licence 10 due to suspend'],
+        ];
+    }
+
     public function testHandleCommandSuspensionWithApplication()
     {
         $licenceId = 1;
         $communityLicenceIds = [10];
-        $startDate = '2014-01-01';
-        $endDate = '2015-01-01';
+        $startDate = (new \DateTime())->format('Y-m-d');
+        $endDate = '3017-01-01';
 
         $data = [
             'application' => 111,
@@ -206,9 +217,11 @@ class StopTest extends CommandHandlerTestCase
         $mockCommunityLicence = m::mock(CommunityLicEntity::class)
             ->shouldReceive('getId')
             ->andReturn(10)
-            ->twice()
-            ->shouldReceive('changeStatusAndExpiryDate')
-            ->with($this->refData[CommunityLicEntity::STATUS_SUSPENDED])
+            ->times(3)
+            ->shouldReceive('setStatus')
+            ->with(
+                $this->refData[CommunityLicEntity::STATUS_SUSPENDED]
+            )
             ->once()
             ->shouldReceive('getStatus')
             ->andReturn(
@@ -312,7 +325,7 @@ class StopTest extends CommandHandlerTestCase
             'licence' => $licenceId,
             'communityLicenceIds' => $communityLicenceIds,
             'type' => 'withdrawal',
-            'startDate' => '',
+            'startDate' => '2015-01-01',
             'endDate' => '',
             'reasons' => [
                 'reason'
@@ -322,11 +335,10 @@ class StopTest extends CommandHandlerTestCase
         $mockCommunityLicence = m::mock(CommunityLicEntity::class)
             ->shouldReceive('getId')
             ->andReturn(10)
-            ->twice()
-            ->shouldReceive('changeStatusAndExpiryDate')
+            ->times(3)
+            ->shouldReceive('setStatus')
             ->with(
-                $this->refData[CommunityLicEntity::STATUS_WITHDRAWN],
-                m::type(DateTime::class)
+                $this->refData[CommunityLicEntity::STATUS_WITHDRAWN]
             )
             ->once()
             ->getMock();
@@ -464,8 +476,8 @@ class StopTest extends CommandHandlerTestCase
             'licence' => $licenceId,
             'communityLicenceIds' => $communityLicenceIds,
             'type' => 'withdrawal',
-            'startDate' => '',
-            'endDate' => '',
+            'startDate' => '2016-01-01',
+            'endDate' => '2015-01-01',
             'reasons' => [
                 'reason'
             ]

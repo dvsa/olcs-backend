@@ -36,6 +36,8 @@ class CommunityLicSuspension extends AbstractCommunityLicSuspension
         $this->startDate = new \DateTime($startDate);
         if ($endDate) {
             $this->endDate = new \DateTime($endDate);
+        } else {
+            $this->endDate = null;
         }
     }
 }

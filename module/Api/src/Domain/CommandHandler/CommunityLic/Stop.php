@@ -63,14 +63,13 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
 
         $result = new Result();
         foreach ($licences as $communityLicence) {
-            $result->merge($this->updateCommunityLicenceStatus($communityLicence, $type, $startDate, $result));
+            $result->merge($this->updateCommunityLicenceStatus($communityLicence, $type, $startDate));
 
             $id = $communityLicence->getId();
             $result->addId('communityLic' . $id, $id);
 
             $this->getRepo()->save($communityLicence);
         }
-
         if ($type == 'withdrawal') {
             $this->createWithrawalAndReasons($licences, $reasons);
         } else {
@@ -99,13 +98,13 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
      * @param CommunityLic $communityLicence community licence
      * @param string       $type             type
      * @param string       $startDate        start date
-     * @param Reult        $result           result
      *
      * @return mixed
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
-    protected function updateCommunityLicenceStatus($communityLicence, $type, $startDate, $result)
+    protected function updateCommunityLicenceStatus($communityLicence, $type, $startDate)
     {
+        $result = new Result();
         $id = $communityLicence->getId();
         if ($type === self::STOP_TYPE_WITHDRAWN) {
             $communityLicence->setStatus(
@@ -136,6 +135,7 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
      * @param array $reasons       reasons
      *
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return void
      */
     protected function createWithrawalAndReasons($communityLics, $reasons)
     {
@@ -144,8 +144,7 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
             $withdrawal->updateCommunityLicWithdrawal($licence);
             $this->getRepo('CommunityLicWithdrawal')->save($withdrawal);
             foreach ($reasons as $reason) {
-                $withdrawalReason = new CommunityLicWithdrawalReasonEntity();
-                $withdrawalReason->updateReason(
+                $withdrawalReason = new CommunityLicWithdrawalReasonEntity(
                     $this->getRepo()->getReference(CommunityLicWithdrawalEntity::class, $withdrawal->getId()),
                     $this->getRepo()->getRefdataReference($reason)
                 );
@@ -163,6 +162,7 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
      * @param string $endDate       end date
      *
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return void
      */
     protected function createSuspensionAndReasons($communityLics, $reasons, $startDate, $endDate)
     {
@@ -171,8 +171,7 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
             $suspension->updateCommunityLicSuspension($licence, $startDate, $endDate);
             $this->getRepo('CommunityLicSuspension')->save($suspension);
             foreach ($reasons as $reason) {
-                $suspensionReason = new CommunityLicSuspensionReasonEntity();
-                $suspensionReason->updateReason(
+                $suspensionReason = new CommunityLicSuspensionReasonEntity(
                     $this->getRepo()->getReference(CommunityLicSuspensionEntity::class, $suspension->getId()),
                     $this->getRepo()->getRefdataReference($reason)
                 );
@@ -189,6 +188,7 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
      *
      * @throws ValidationException
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return void
      */
     protected function validateLicences($command, $licenceId)
     {

@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\CommunityLic;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicWithdrawalReason as Entity;
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicWithdrawal;
 use Mockery as m;
 
 /**
@@ -22,11 +23,10 @@ class CommunityLicWithdrawalReasonEntityTest extends EntityTester
 
     public function testUpdateReason()
     {
-        $withdrawalId = 1;
+        $withdrawal = m::mock(CommunityLicWithdrawal::class);
         $type = 'type';
-        $sut = m::mock(Entity::class)->makePartial();
-        $sut->updateReason($withdrawalId, $type);
-        $this->assertEquals($withdrawalId, $sut->getCommunityLicWithdrawal());
+        $sut = new Entity($withdrawal, $type);
+        $this->assertSame($withdrawal, $sut->getCommunityLicWithdrawal());
         $this->assertEquals($type, $sut->getType());
     }
 }
