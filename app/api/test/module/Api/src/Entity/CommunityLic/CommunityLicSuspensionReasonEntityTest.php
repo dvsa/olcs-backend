@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\CommunityLic;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicSuspensionReason as Entity;
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicSuspension;
 use Mockery as m;
 
 /**
@@ -20,13 +21,12 @@ class CommunityLicSuspensionReasonEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
-    public function testUpdateReason()
+    public function testConstruct()
     {
-        $suspensionId = 1;
+        $suspension = m::mock(CommunityLicSuspension::class);
         $type = 'type';
-        $sut = m::mock(Entity::class)->makePartial();
-        $sut->updateReason($suspensionId, $type);
-        $this->assertEquals($suspensionId, $sut->getCommunityLicSuspension());
+        $sut = new Entity($suspension, $type);
+        $this->assertSame($suspension, $sut->getCommunityLicSuspension());
         $this->assertEquals($type, $sut->getType());
     }
 }

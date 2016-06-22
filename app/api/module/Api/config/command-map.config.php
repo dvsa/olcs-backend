@@ -448,6 +448,7 @@ return [
     TransferCommand\CommunityLic\Restore::class => CommandHandler\CommunityLic\Restore::class,
     TransferCommand\CommunityLic\Stop::class => CommandHandler\CommunityLic\Stop::class,
     TransferCommand\CommunityLic\Reprint::class => CommandHandler\CommunityLic\Reprint::class,
+    TransferCommand\CommunityLic\EditSuspension::class => CommandHandler\CommunityLic\EditSuspension::class,
 
     // Conviction
     TransferCommand\Cases\Conviction\Create::class => CommandHandler\Cases\Conviction\Create::class,

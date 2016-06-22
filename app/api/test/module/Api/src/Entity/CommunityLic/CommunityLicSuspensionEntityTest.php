@@ -20,15 +20,25 @@ class CommunityLicSuspensionEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
-    public function testUpdateCommunityLicSuspension()
+    /**
+     * @dataProvider dataProvider
+     */
+    public function testUpdateCommunityLicSuspension($endDate, $expected)
     {
         $communityLic = 1;
         $startDate = '2014-01-01';
-        $endDate = '2015-01-1';
         $sut = m::mock(Entity::class)->makePartial();
         $sut->updateCommunityLicSuspension($communityLic, $startDate, $endDate);
         $this->assertEquals($communityLic, $sut->getCommunityLic());
         $this->assertEquals(new \DateTime($startDate), $sut->getStartDate());
-        $this->assertEquals(new \DateTime($endDate), $sut->getEndDate());
+        $this->assertEquals($expected, $sut->getEndDate());
+    }
+
+    public function dataProvider()
+    {
+        return [
+            ['2016-01-01', new \DateTime('2016-01-01')],
+            [null, null]
+        ];
     }
 }

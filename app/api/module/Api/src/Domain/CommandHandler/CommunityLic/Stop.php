@@ -41,7 +41,10 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
     ];
 
     /**
-     * @param Cmd $command
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\CommunityLic\Stop $command command
+     *
      * @return Result
      * @throws ValidationException
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
@@ -55,28 +58,18 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
         $endDate = $command->getEndDate();
         $reasons = $command->getReasons();
 
-        $this->validateLicences($ids, $licenceId);
+        $this->validateLicences($command, $licenceId);
         $licences = $this->getRepo()->fetchLicencesByIds($ids);
 
         $result = new Result();
         foreach ($licences as $communityLicence) {
+            $result->merge($this->updateCommunityLicenceStatus($communityLicence, $type, $startDate));
+
             $id = $communityLicence->getId();
-            if ($type == self::STOP_TYPE_WITHDRAWN) {
-                $communityLicence->changeStatusAndExpiryDate(
-                    $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_WITHDRAWN),
-                    new DateTime('now')
-                );
-                $result->addMessage("The licence {$id} have been withdrawn");
-            } else {
-                $communityLicence->changeStatusAndExpiryDate(
-                    $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_SUSPENDED)
-                );
-                $result->addMessage("The licence {$id} have been suspended");
-            }
             $result->addId('communityLic' . $id, $id);
+
             $this->getRepo()->save($communityLicence);
         }
-
         if ($type == 'withdrawal') {
             $this->createWithrawalAndReasons($licences, $reasons);
         } else {
@@ -99,6 +92,51 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
         return $result;
     }
 
+    /**
+     * Update community licence status
+     *
+     * @param CommunityLic $communityLicence community licence
+     * @param string       $type             type
+     * @param string       $startDate        start date
+     *
+     * @return mixed
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    protected function updateCommunityLicenceStatus($communityLicence, $type, $startDate)
+    {
+        $result = new Result();
+        $id = $communityLicence->getId();
+        if ($type === self::STOP_TYPE_WITHDRAWN) {
+            $communityLicence->setStatus(
+                $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_WITHDRAWN)
+            );
+            $result->addMessage("The licence {$id} have been withdrawn");
+            return $result;
+        }
+
+        $today = (new DateTime())->setTime(0, 0, 0)->format('Y-m-d');
+        $startDate = (new DateTime($startDate))->format('Y-m-d');
+
+        if ($startDate === $today) {
+            $communityLicence->setStatus(
+                $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_SUSPENDED)
+            );
+            $result->addMessage("The licence {$id} have been suspended");
+        } else {
+            $result->addMessage("The licence {$id} due to suspend");
+        }
+        return $result;
+    }
+
+    /**
+     * Create withdrawal and reasons
+     *
+     * @param array $communityLics community licences
+     * @param array $reasons       reasons
+     *
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return void
+     */
     protected function createWithrawalAndReasons($communityLics, $reasons)
     {
         foreach ($communityLics as $licence) {
@@ -106,8 +144,7 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
             $withdrawal->updateCommunityLicWithdrawal($licence);
             $this->getRepo('CommunityLicWithdrawal')->save($withdrawal);
             foreach ($reasons as $reason) {
-                $withdrawalReason = new CommunityLicWithdrawalReasonEntity();
-                $withdrawalReason->updateReason(
+                $withdrawalReason = new CommunityLicWithdrawalReasonEntity(
                     $this->getRepo()->getReference(CommunityLicWithdrawalEntity::class, $withdrawal->getId()),
                     $this->getRepo()->getRefdataReference($reason)
                 );
@@ -116,6 +153,17 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
         }
     }
 
+    /**
+     * Create suspension and reasons
+     *
+     * @param array  $communityLics community licences
+     * @param array  $reasons       reasons
+     * @param string $startDate     start date
+     * @param string $endDate       end date
+     *
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return void
+     */
     protected function createSuspensionAndReasons($communityLics, $reasons, $startDate, $endDate)
     {
         foreach ($communityLics as $licence) {
@@ -123,8 +171,7 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
             $suspension->updateCommunityLicSuspension($licence, $startDate, $endDate);
             $this->getRepo('CommunityLicSuspension')->save($suspension);
             foreach ($reasons as $reason) {
-                $suspensionReason = new CommunityLicSuspensionReasonEntity();
-                $suspensionReason->updateReason(
+                $suspensionReason = new CommunityLicSuspensionReasonEntity(
                     $this->getRepo()->getReference(CommunityLicSuspensionEntity::class, $suspension->getId()),
                     $this->getRepo()->getRefdataReference($reason)
                 );
@@ -133,8 +180,20 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
         }
     }
 
-    protected function validateLicences($ids, $licenceId)
+    /**
+     * Validate licences
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\CommunityLic\Stop $command   command
+     * @param int                                           $licenceId licence id
+     *
+     * @throws ValidationException
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return void
+     */
+    protected function validateLicences($command, $licenceId)
     {
+        $messages = [];
+        $ids = $command->getCommunityLicenceIds();
         $licence = $this->getRepo('Licence')->fetchById($licenceId);
         if ($licence->hasCommunityLicenceOfficeCopy($ids)) {
             $validLicences = $this->getRepo()->fetchValidLicences($licenceId);
@@ -147,17 +206,28 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
                            !in_array($communityLicence->getId(), $ids)
                         )
                     ) {
-                        throw new ValidationException(
-                            [
-                                'communityLicence' => [
-                                    CommunityLicEntity::ERROR_CANT_STOP =>
-                                        'Please annul, withdraw or suspend the other pending/active ' .
-                                        'licences before the office copy'
-                                ]
-                            ]
-                        );
+                        $messages['communityLicence'][CommunityLicEntity::ERROR_CANT_STOP] =
+                            'Please annul, withdraw or suspend the other pending/active ' .
+                            'licences before the office copy';
                 }
             }
+        }
+        $startDate = $command->getStartDate();
+        $endDate = $command->getEndDate();
+        if (!$startDate && $command->getType() === 'suspension') {
+            $messages['communityLicence'][CommunityLicEntity::ERROR_START_DATE_EMPTY] =
+                'Start date can not be empty';
+        }
+        if ($endDate) {
+            $startDate = new DateTime($startDate);
+            $endDate = new DateTime($endDate);
+            if ($endDate <= $startDate) {
+                $messages['communityLicence'][CommunityLicEntity::ERROR_END_DATE_WRONG] =
+                    'End date must be after start date';
+            }
+        }
+        if (count($messages)) {
+            throw new ValidationException($messages);
         }
     }
 }
