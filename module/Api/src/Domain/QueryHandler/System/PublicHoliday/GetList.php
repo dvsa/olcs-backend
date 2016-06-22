@@ -24,7 +24,7 @@ class GetList extends AbstractQueryHandler
 
         return [
             'result' => $this->resultList($result),
-            'count' => count($result),
+            'count' => $repo->fetchCount($query),
         ];
     }
 }
