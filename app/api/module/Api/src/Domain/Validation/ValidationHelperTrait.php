@@ -40,6 +40,8 @@ use Dvsa\Olcs\Api\Domain\ValidatorManager;
  * @method Validators\CanAccessTransportManagerLicence canAccessTransportManagerLicence($entityId)
  * @method Validators\CanAccessUser canAccessUser($entityId)
  * @method Validators\CanAccessLicenceVehicle canAccessLicenceVehicle($entityId)
+ * @method Validators\CanAccessCorrespondenceInbox canAccessCorrespondenceInbox($entityId)
+ * @method Validators\CanAccessDocument canAccessDocument($entityId)
  */
 trait ValidationHelperTrait
 {

@@ -165,4 +165,16 @@ class SubmissionEntityTest extends EntityTester
 
         $this->assertFalse($submission->isNi());
     }
+
+    public function testGetRelatedOrganisation()
+    {
+        $case = m::mock(CaseEntity::class)->makePartial();
+        $case->shouldReceive('getRelatedOrganisation')->with()->once()->andReturn('ORG1');
+
+        $submissionType = m::mock(RefDataEntity::class)->makePartial();
+        $submission = new Entity($case, $submissionType);
+
+        $this->assertSame('ORG1', $submission->getRelatedOrganisation());
+
+    }
 }

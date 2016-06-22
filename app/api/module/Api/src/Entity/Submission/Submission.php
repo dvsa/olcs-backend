@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * Submission Entity
@@ -20,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *    }
  * )
  */
-class Submission extends AbstractSubmission
+class Submission extends AbstractSubmission implements OrganisationProviderInterface
 {
     protected $sectionData;
 
@@ -126,5 +127,15 @@ class Submission extends AbstractSubmission
             return $application->getNiFlag() === 'Y';
         }
         return false;
+    }
+
+    /**
+     * Get organisations this entity is linked to
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation|\Dvsa\Olcs\Api\Entity\Organisation\Organisation[]|null
+     */
+    public function getRelatedOrganisation()
+    {
+        return $this->getCase()->getRelatedOrganisation();
     }
 }
