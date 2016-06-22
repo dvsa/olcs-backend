@@ -214,7 +214,7 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
         }
         $startDate = $command->getStartDate();
         $endDate = $command->getEndDate();
-        if (!$startDate) {
+        if (!$startDate && $command->getType() === 'suspension') {
             $messages['communityLicence'][CommunityLicEntity::ERROR_START_DATE_EMPTY] =
                 'Start date can not be empty';
         }

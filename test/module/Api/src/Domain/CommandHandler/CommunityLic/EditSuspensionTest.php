@@ -55,9 +55,6 @@ class EditSuspensionTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    /**
-     * @group test123
-     */
     public function testHandleCommandActiveToday()
     {
         $startDate = (new \DateTime())->format('Y-m-d');
@@ -128,9 +125,6 @@ class EditSuspensionTest extends CommandHandlerTestCase
             ->getMock();
     }
 
-    /**
-     * @group test123
-     */
     public function testHandleCommandActiveInFuture()
     {
         $startDate = '3015-01-01';
@@ -163,9 +157,6 @@ class EditSuspensionTest extends CommandHandlerTestCase
         $this->assertEquals($result->getMessages(), ['The community licence suspension details have been updated']);
     }
 
-    /**
-     * @group test123
-     */
     public function testHandleCommandSuspendedNotToday()
     {
         $startDate = '3015-01-01';
@@ -198,9 +189,6 @@ class EditSuspensionTest extends CommandHandlerTestCase
         $this->assertEquals($result->getMessages(), ['The community licence suspension details have been updated']);
     }
 
-    /**
-     * @group test123
-     */
     public function testHandleCommandSuspendedToday()
     {
         $endDate = (new \DateTime())->format('Y-m-d');
