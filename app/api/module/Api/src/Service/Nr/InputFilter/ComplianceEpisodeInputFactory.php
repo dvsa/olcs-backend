@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Vrm as VrmFilter;
-use Dvsa\Olcs\Api\Service\Nr\Validator\Vrm as VrmValidator;
 
 /**
  * Class ComplianceEpisodeInputFactory
@@ -20,7 +19,8 @@ class ComplianceEpisodeInputFactory implements FactoryInterface
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator Service locator
+     *
      * @return mixed
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -35,9 +35,6 @@ class ComplianceEpisodeInputFactory implements FactoryInterface
         $filterChain->attach($mapXmlFile);
         $filterChain->attach($serviceLocator->get('FilterManager')->get(VrmFilter::class));
         $filterChain->attach($serviceLocator->get('FilterManager')->get(LicenceNumber::class));
-
-        $validatorChain = $service->getValidatorChain();
-        $validatorChain->attach($serviceLocator->get('ValidatorManager')->get(VrmValidator::class));
 
         return $service;
     }

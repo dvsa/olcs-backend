@@ -675,9 +675,6 @@ return [
             \Dvsa\Olcs\Api\Service\Nr\Validator\SiPenaltyImposedDate::class =>
                 \Dvsa\Olcs\Api\Service\Nr\Validator\SiPenaltyImposedDate::class
         ],
-        'factories' => [
-            \Dvsa\Olcs\Api\Service\Nr\Validator\Vrm::class => \Dvsa\Olcs\Api\Service\Nr\Validator\VrmFactory::class
-        ],
         'aliases' => [
             'Structure\Operator' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class,
             'Structure\Registration' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration::class,

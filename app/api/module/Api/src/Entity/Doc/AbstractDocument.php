@@ -391,6 +391,32 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     protected $ebsrSubmission;
 
     /**
+     * Request erru
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Si\ErruRequest
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Si\ErruRequest",
+     *     mappedBy="requestDocument",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $requestErru;
+
+    /**
+     * Response erru
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Si\ErruRequest
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Si\ErruRequest",
+     *     mappedBy="responseDocument",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $responseErru;
+
+    /**
      * Sla target date
      *
      * @var \Dvsa\Olcs\Api\Entity\System\SlaTargetDate
@@ -1225,6 +1251,52 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getEbsrSubmission()
     {
         return $this->ebsrSubmission;
+    }
+
+    /**
+     * Set the request erru
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Si\ErruRequest $requestErru
+     * @return Document
+     */
+    public function setRequestErru($requestErru)
+    {
+        $this->requestErru = $requestErru;
+
+        return $this;
+    }
+
+    /**
+     * Get the request erru
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Si\ErruRequest
+     */
+    public function getRequestErru()
+    {
+        return $this->requestErru;
+    }
+
+    /**
+     * Set the response erru
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Si\ErruRequest $responseErru
+     * @return Document
+     */
+    public function setResponseErru($responseErru)
+    {
+        $this->responseErru = $responseErru;
+
+        return $this;
+    }
+
+    /**
+     * Get the response erru
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Si\ErruRequest
+     */
+    public function getResponseErru()
+    {
+        return $this->responseErru;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Si;
 
+use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequest as Entity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
@@ -32,6 +33,7 @@ class ErruRequestEntityTest extends EntityTester
         $case = m::mock(CaseEntity::class);
         $msiType = m::mock(RefData::class);
         $memberStateCode = m::mock(CountryEntity::class);
+        $requestDocument = m::mock(Document::class);
         $originatingAuthority = 'originating authority';
         $transportUndertakingName = 'transport undertaking';
         $vrm = 'vrm';
@@ -42,6 +44,7 @@ class ErruRequestEntityTest extends EntityTester
             $case,
             $msiType,
             $memberStateCode,
+            $requestDocument,
             $originatingAuthority,
             $transportUndertakingName,
             $vrm,
@@ -52,6 +55,7 @@ class ErruRequestEntityTest extends EntityTester
         $this->assertEquals($case, $entity->getCase());
         $this->assertEquals($msiType, $entity->getMsiType());
         $this->assertEquals($memberStateCode, $entity->getMemberStateCode());
+        $this->assertEquals($requestDocument, $entity->getRequestDocument());
         $this->assertEquals($originatingAuthority, $entity->getOriginatingAuthority());
         $this->assertEquals($transportUndertakingName, $entity->getTransportUndertakingName());
         $this->assertEquals($vrm, $entity->getVrm());
@@ -60,19 +64,55 @@ class ErruRequestEntityTest extends EntityTester
     }
 
     /**
-     * tests updateErruResponse
+     * tests queueErruResponse
      */
-    public function testUpdateErruResponse()
+    public function testQueueErruResponse()
     {
         $user = m::mock(UserEntity::class);
         $date = new \DateTime();
+        $document = m::mock(Document::class);
+        $msiType = m::mock(RefData::class);
 
+        /** @var Entity $entity */
         $entity = m::mock(Entity::class)->makePartial();
 
-        $entity->updateErruResponse($user, $date);
+        $entity->queueErruResponse($user, $date, $document, $msiType);
 
         $this->assertEquals($user, $entity->getResponseUser());
         $this->assertEquals($date, $entity->getResponseTime());
-        $this->assertEquals('Y', $entity->getResponseSent());
+        $this->assertEquals($document, $entity->getResponseDocument());
+        $this->assertEquals($msiType, $entity->getMsiType());
+    }
+
+    /**
+     * Tests canModify
+     *
+     * @dataProvider canModifyProvider
+     *
+     * @param string $msiStatus
+     * @param bool $isNew
+     */
+    public function testCanModify($msiStatus, $isNew)
+    {
+        $msiType = m::mock(RefData::class);
+        $msiType->shouldReceive('getId')->once()->andReturn($msiStatus);
+
+        $entity = $this->instantiate(Entity::class);
+        $entity->setMsiType($msiType);
+
+        $this->assertEquals($isNew, $entity->canModify());
+    }
+
+    /**
+     * @return array
+     */
+    public function canModifyProvider()
+    {
+        return [
+            [Entity::FAILED_CASE_TYPE, false],
+            [Entity::QUEUED_CASE_TYPE, false],
+            [Entity::SENT_CASE_TYPE, false],
+            [Entity::DEFAULT_CASE_TYPE, true]
+        ];
     }
 }

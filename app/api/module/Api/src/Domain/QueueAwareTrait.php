@@ -37,7 +37,7 @@ trait QueueAwareTrait
      * @param string $type
      * @param array $options
      * @param string|null $processAfterDate
-     * @return static
+     * @return CreateQueue
      */
     public function createQueue($entityId, $type, array $options, $processAfterDate = null)
     {

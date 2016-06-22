@@ -43,14 +43,12 @@ class Task extends AbstractTask
     const CATEGORY_ENVIRONMENTAL = 7;
     const CATEGORY_APPLICATION = 9;
     const CATEGORY_SUBMISSION = 10;
-    const CATEGORY_NR = 2;
 
     const SUBCATEGORY_FEE_DUE = 11;
     const SUBCATEGORY_EBSR = 36;
     const SUB_CATEGORY_HEARINGS_APPEALS = 49;
     const SUBCATEGORY_REVIEW_COMPLAINT = 61;
     const SUBCATEGORY_SUBMISSION_ASSIGNMENT = 114;
-    const SUBCATEGORY_NR = 47;
 
     /**
      * Ref data constants

@@ -61,7 +61,7 @@ class CreateTest extends CommandHandlerTestCase
         );
 
         $caseEntity = m::mock(CaseEntity::class)->makePartial();
-        $caseEntity->shouldReceive('isClosed')->once()->andReturn(false);
+        $caseEntity->shouldReceive('canAddSi')->once()->andReturn(true);
 
         $siEntity = m::mock(SiEntity::class)->makePartial();
         $siEntity->setId($siId);
@@ -102,39 +102,9 @@ class CreateTest extends CommandHandlerTestCase
         $siId = 333;
 
         $caseEntity = m::mock(CaseEntity::class)->makePartial();
-        $caseEntity->shouldReceive('isClosed')->once()->andReturn(true);
+        $caseEntity->shouldReceive('canAddSi')->once()->andReturn(false);
 
         $siEntity = m::mock(SiEntity::class)->makePartial();
-        $siEntity->setId($siId);
-        $siEntity->shouldReceive('getCase')->once()->andReturn($caseEntity);
-
-        $this->repoMap['SeriousInfringement']->shouldReceive('fetchById')->with($siId)->once()->andReturn($siEntity);
-
-        $command = Cmd::Create(
-            [
-                'si' => $siId
-            ]
-        );
-
-        $this->sut->handleCommand($command);
-    }
-
-    /**
-     * @expectedException Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
-    public function testHandleCommandThrowsExceptionWhenErruRequestSent()
-    {
-        $siId = 333;
-
-        $erruRequestEntity = m::mock(ErruRequestEntity::class)->makePartial();
-        $erruRequestEntity->setResponseSent('Y');
-
-        $caseEntity = m::mock(CaseEntity::class)->makePartial();
-        $caseEntity->shouldReceive('isClosed')->once()->andReturn(false);
-        $caseEntity->shouldReceive('getErruRequest')->once()->andReturn($erruRequestEntity);
-
-        $siEntity = m::mock(SiEntity::class)->makePartial();
-        $siEntity->setId($siId);
         $siEntity->shouldReceive('getCase')->once()->andReturn($caseEntity);
 
         $this->repoMap['SeriousInfringement']->shouldReceive('fetchById')->with($siId)->once()->andReturn($siEntity);
