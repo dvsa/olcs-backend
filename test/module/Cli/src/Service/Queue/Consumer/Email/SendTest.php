@@ -79,7 +79,7 @@ class SendTest extends AbstractConsumerTestCase
 
         $this->chm
             ->shouldReceive('handleCommand')
-            ->with(SampleEmail::class)
+            ->with(SampleEmail::class, false)
             ->andThrow(new EmailNotSentException('Email not sent'));
 
         $this->expectCommand(
