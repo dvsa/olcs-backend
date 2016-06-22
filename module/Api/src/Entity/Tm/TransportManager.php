@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * TransportManager Entity
@@ -25,7 +26,9 @@ use Doctrine\Common\Collections\Criteria;
  *    }
  * )
  */
-class TransportManager extends AbstractTransportManager implements ContextProviderInterface
+class TransportManager extends AbstractTransportManager implements
+    ContextProviderInterface,
+    OrganisationProviderInterface
 {
     const TRANSPORT_MANAGER_STATUS_CURRENT = 'tm_s_cur';
     const TRANSPORT_MANAGER_STATUS_DISQUALIFIED = 'tm_s_dis';
@@ -365,5 +368,29 @@ class TransportManager extends AbstractTransportManager implements ContextProvid
     public function getContextValue()
     {
         return $this->getId();
+    }
+
+    /**
+     * Get organisations this entity is linked to
+     *
+     * @return array Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     */
+    public function getRelatedOrganisation()
+    {
+        $organisations = [];
+
+        /* @var $tma TransportManagerApplication */
+        foreach ($this->getTmApplications() as $tma) {
+            $organisation = $tma->getApplication()->getRelatedOrganisation();
+            $organisations[$organisation->getId()] = $organisation;
+        }
+
+        /* @var $tml TransportManagerLicence */
+        foreach ($this->getTmLicences() as $tml) {
+            $organisation = $tml->getLicence()->getRelatedOrganisation();
+            $organisations[$organisation->getId()] = $organisation;
+        }
+
+        return $organisations;
     }
 }

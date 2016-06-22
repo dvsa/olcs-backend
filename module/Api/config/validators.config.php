@@ -30,5 +30,6 @@ return [
         'canAccessUser' => Validators\CanAccessUser::class,
         'canAccessLicenceVehicle' => Validators\CanAccessLicenceVehicle::class,
         'canAccessCorrespondenceInbox' => Validators\CanAccessCorrespondenceInbox::class,
+        'canAccessDocument' => Validators\CanAccessDocument::class,
     ]
 ];

@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Cases;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * Statement Entity
@@ -23,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *    }
  * )
  */
-class Statement extends AbstractStatement
+class Statement extends AbstractStatement implements OrganisationProviderInterface
 {
     /**
      * Construct Statement entity
@@ -34,5 +35,15 @@ class Statement extends AbstractStatement
     {
         $this->setCase($case);
         $this->setStatementType($statementType);
+    }
+
+    /**
+     * Get organisations this entity is linked to
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation|\Dvsa\Olcs\Api\Entity\Organisation\Organisation[]|null
+     */
+    public function getRelatedOrganisation()
+    {
+        return $this->getCase()->getRelatedOrganisation();
     }
 }

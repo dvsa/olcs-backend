@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * BusReg Entity
@@ -40,7 +41,7 @@ use Doctrine\Common\Collections\Criteria;
  *    }
  * )
  */
-class BusReg extends AbstractBusReg implements ContextProviderInterface
+class BusReg extends AbstractBusReg implements ContextProviderInterface, OrganisationProviderInterface
 {
     const STATUS_NEW = 'breg_s_new';
     const STATUS_VAR = 'breg_s_var';
@@ -1027,8 +1028,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
     /**
      * Gets the publication section for a grant/cancellation email
      *
-     * @throws
-     * @return string
+     * @return int
+     * @throws RuntimeException
      */
     public function getPublicationSectionForGrantEmail()
     {
@@ -1145,5 +1146,19 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
         }
 
         return $this->serviceNo;
+    }
+
+    /**
+     * Get organisations this entity is linked to
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation|null
+     */
+    public function getRelatedOrganisation()
+    {
+        if ($this->getLicence()) {
+            return $this->getLicence()->getRelatedOrganisation();
+        }
+
+        return null;
     }
 }
