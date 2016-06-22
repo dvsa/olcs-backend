@@ -7,8 +7,6 @@
  */
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
@@ -60,7 +58,8 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
                         );
                         return $matched;
                     }
-                )
+                ),
+                false
             )
             ->once()
             ->andReturn($result);
@@ -85,7 +84,8 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
                         );
                         return $matched;
                     }
-                )
+                ),
+                false
             )
             ->once()
             ->andThrow(new $exceptionClass($exceptionMsg));
