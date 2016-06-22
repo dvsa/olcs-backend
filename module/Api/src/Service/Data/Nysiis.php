@@ -45,8 +45,10 @@ class Nysiis
         try {
             $result = $this->soapClient->GetNYSIISSearchKeys($params['nysiisForename'], $params['nysiisFamilyname']);
         } catch (\Exception $e) {
-            Logger::warn(__FILE__ . 'Failed SOAP request for GetNYSIISSearchKeys(' . $params['nysiisForename'] . ', '
-                . $params['nysiisFamilyname'] . ' Response: ' . $e->getMessage());
+            Logger::warn(
+                __FILE__ . 'Failed SOAP request for GetNYSIISSearchKeys(' . $params['nysiisForename'] . ', '
+                . $params['nysiisFamilyname'] . ' Response: ' . $e->getMessage()
+            );
             return $params;
         }
     }
