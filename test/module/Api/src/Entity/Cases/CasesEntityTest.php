@@ -344,17 +344,60 @@ class CasesEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider canAddSiProvider
+     *
+     * @param ErruRequestEntity|null $erruRequest
+     * @param \DateTime|null $closedDate
+     * @param bool $expectedResult
+     */
+    public function testCanAddSi($erruRequest, $closedDate, $expectedResult)
+    {
+        $sut = $this->instantiate($this->entityClass);
+        $sut->setErruRequest($erruRequest);
+        $sut->setClosedDate($closedDate);
+
+        $this->assertEquals($expectedResult, $sut->canAddSi());
+    }
+
+    /**
+     * data provider for testCanSendMsiResponse
+     *
+     * @return array
+     */
+    public function canAddSiProvider()
+    {
+        $erruRequestNoModify = m::mock(ErruRequestEntity::class);
+        $erruRequestNoModify->shouldReceive('canModify')->andReturn(false);
+
+        $erruRequestCanModify = m::mock(ErruRequestEntity::class);
+        $erruRequestCanModify->shouldReceive('canModify')->andReturn(true);
+
+        $closedDate = new \DateTime('2016-12-25');
+
+        return [
+            [null, $closedDate, false],
+            [$erruRequestNoModify, $closedDate, false],
+            [$erruRequestCanModify, $closedDate, false],
+            [null, null, false],
+            [$erruRequestNoModify, null, false],
+            [$erruRequestCanModify, null, true]
+        ];
+    }
+
+    /**
      * @dataProvider canSendMsiResponseProvider
      *
      * @param ErruRequestEntity|null $erruRequest
      * @param ArrayCollection $si
+     * @param \DateTime|null $closedDate
      * @param bool $expectedResult
      */
-    public function testCanSendMsiResponse($erruRequest, $si, $expectedResult)
+    public function testCanSendMsiResponse($erruRequest, $si, $closedDate, $expectedResult)
     {
         $sut = $this->instantiate($this->entityClass);
         $sut->setSeriousInfringements($si);
         $sut->setErruRequest($erruRequest);
+        $sut->setClosedDate($closedDate);
 
         $this->assertEquals($expectedResult, $sut->canSendMsiResponse());
     }
@@ -372,17 +415,23 @@ class CasesEntityTest extends EntityTester
         $siNoResponseSet = m::mock(SeriousInfringement::class);
         $siNoResponseSet->shouldReceive('responseSet')->andReturn(false);
 
-        $erruRequestWithResponse = m::mock(ErruRequestEntity::class);
-        $erruRequestWithResponse->shouldReceive('getResponseSent')->andReturn('Y');
+        $erruRequestNoModify = m::mock(ErruRequestEntity::class);
+        $erruRequestNoModify->shouldReceive('canModify')->andReturn(false);
 
-        $erruRequestNoResponse = m::mock(ErruRequestEntity::class);
-        $erruRequestNoResponse->shouldReceive('getResponseSent')->andReturn('N');
+        $erruRequestCanModify = m::mock(ErruRequestEntity::class);
+        $erruRequestCanModify->shouldReceive('canModify')->andReturn(true);
+
+        $closedDate = new \DateTime('2016-12-25');
 
         return [
-            [null, new ArrayCollection([$siResponseSet]), false],
-            [$erruRequestWithResponse, new ArrayCollection([$siResponseSet]), false],
-            [$erruRequestNoResponse, new ArrayCollection([$siNoResponseSet, $siResponseSet]), false],
-            [$erruRequestNoResponse, new ArrayCollection([$siResponseSet]), true]
+            [null, new ArrayCollection([$siResponseSet]), $closedDate, false],
+            [$erruRequestNoModify, new ArrayCollection([$siResponseSet]), $closedDate, false],
+            [$erruRequestCanModify, new ArrayCollection([$siNoResponseSet, $siResponseSet]), $closedDate, false],
+            [$erruRequestCanModify, new ArrayCollection([$siResponseSet]), $closedDate, false],
+            [null, new ArrayCollection([$siResponseSet]), null, false],
+            [$erruRequestNoModify, new ArrayCollection([$siResponseSet]), null, false],
+            [$erruRequestCanModify, new ArrayCollection([$siNoResponseSet, $siResponseSet]), null, false],
+            [$erruRequestCanModify, new ArrayCollection([$siResponseSet]), null, true]
         ];
     }
 
@@ -396,6 +445,7 @@ class CasesEntityTest extends EntityTester
             'canReopen' => false,
             'canClose' => false,
             'canSendMsiResponse' => false,
+            'canAddSi' => false,
             'isErru' => false,
         ];
 

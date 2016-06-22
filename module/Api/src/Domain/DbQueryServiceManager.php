@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Db Query Service Manager
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain;
 
 use Zend\ServiceManager\AbstractPluginManager;
@@ -15,7 +10,7 @@ use Zend\ServiceManager\ConfigInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  *
- * @method Repository\Query\AbstractRawQuery get() Get the Query service
+ * @method Repository\Query\AbstractRawQuery get($name) Get the Query service
  */
 class DbQueryServiceManager extends AbstractPluginManager
 {

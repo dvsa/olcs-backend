@@ -1,12 +1,5 @@
 <?php
 
-/**
- * LicenceDecisions.php
- *
- * @author Josh Curtis <josh.curtis@valtech.co.uk>
- *
- * @todo it seems that this query handler not in use and can be removed
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\LicenceStatusRule;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -21,8 +14,22 @@ class LicenceStatusRule extends AbstractQueryHandler
 {
     protected $repoServiceName = 'LicenceStatusRule';
 
+    /**
+     * @param \Dvsa\Olcs\Transfer\Query\LicenceStatusRule\LicenceStatusRule $query
+     * 
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchUsingId($query);
+        return $this->result(
+            $this->getRepo()->fetchUsingId($query),
+            [
+                'licence' => [
+                    'decisions',
+                ],
+                'licenceStatus',
+            ]
+        );
     }
 }

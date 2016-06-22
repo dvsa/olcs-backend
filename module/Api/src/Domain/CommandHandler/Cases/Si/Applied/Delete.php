@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\Applied;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
+use Dvsa\Olcs\Api\Entity\Si\SiPenalty;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -20,17 +20,14 @@ final class Delete extends AbstractCommandHandler
      *
      * @param CommandInterface $command
      * @return Result
+     * @throws Exception\ValidationException
      */
     public function handleCommand(CommandInterface $command)
     {
+        /** @var SiPenalty $penalty */
         $penalty = $this->getRepo()->fetchUsingId($command);
 
-        $case = $penalty->getSeriousInfringement()->getCase();
-        $erruRequest = $case->getErruRequest();
-
-        if ($case->isClosed()
-            || (($erruRequest instanceof ErruRequestEntity) && ($erruRequest->getResponseSent() === 'Y'))
-        ) {
+        if (!$penalty->getSeriousInfringement()->getCase()->isOpenErruCase()) {
             throw new Exception\ValidationException(['Invalid action for the case']);
         }
 

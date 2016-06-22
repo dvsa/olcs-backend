@@ -74,7 +74,9 @@ final class Cases extends AbstractQueryHandler
                     )
                 ),
                 'tmDecisions',
-                'erruRequest'
+                'erruRequest' => array(
+                    'msiType'
+                )
             ],
             [
                 'latestNote' => $latestNote

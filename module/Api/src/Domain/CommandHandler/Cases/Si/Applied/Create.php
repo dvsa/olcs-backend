@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
-use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyType as SiPenaltyTypeEntity;
@@ -28,23 +27,20 @@ final class Create extends AbstractCommandHandler
      *
      * @param CommandInterface $command
      * @return Result
+     * @throws Exception\ValidationException
      */
     public function handleCommand(CommandInterface $command)
     {
         /**
          * @var SiEntity $si
          * @var CaseEntity $case
-         * @var ErruRequestEntity $erruRequest
          * @var SiPenaltyTypeEntity $siPenaltyType
          * @var CreatePenaltyCmd $command
          */
         $si = $this->getRepo('SeriousInfringement')->fetchById($command->getSi());
         $case = $si->getCase();
-        $erruRequest = $case->getErruRequest();
 
-        if ($case->isClosed()
-            || (($erruRequest instanceof ErruRequestEntity) && ($erruRequest->getResponseSent() === 'Y'))
-        ) {
+        if (!$case->canAddSi()) {
             throw new Exception\ValidationException(['Invalid action for the case']);
         }
 

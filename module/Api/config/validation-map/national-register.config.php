@@ -23,5 +23,5 @@ return [
     /**
      * Create response xml and send to ATOS
      */
-    CommandHandler\Cases\Si\SendResponse::class => Misc\IsInternalUser::class
+    CommandHandler\Cases\Si\CreateResponse::class => Misc\IsInternalUser::class
 ];

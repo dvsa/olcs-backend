@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractDeleteCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement;
 
 /**
  * Delete Si
@@ -18,13 +19,15 @@ final class DeleteSi extends AbstractDeleteCommandHandler
     protected $repoServiceName = 'SeriousInfringement';
 
     /**
-     * Delete
+     * Delete serious infringement
      *
      * @param CommandInterface $command
      * @return Result
+     * @throws Exception\ValidationException
      */
     public function handleCommand(CommandInterface $command)
     {
+        /** @var SeriousInfringement $si */
         $si = $this->getRepo()->fetchUsingId($command);
 
         if ($si->getCase()->isErru()) {

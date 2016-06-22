@@ -61,7 +61,8 @@ class UpdateIrfoDetailsTest extends CommandHandlerTestCase
             'tradingNames' => [
                 ['id' => 101, 'name' => 'updated trading name', 'version' => 1],
                 ['name' => 'new trading name'],
-            ]
+            ],
+            'irfoPartners' => null,
         ];
 
         $command = Cmd::create($data);
@@ -131,6 +132,7 @@ class UpdateIrfoDetailsTest extends CommandHandlerTestCase
                 ['name' => 'new partner'],
                 ['name' => ''],
             ],
+            'tradingNames' => null,
         ];
 
         $command = Cmd::create($data);
@@ -238,6 +240,8 @@ class UpdateIrfoDetailsTest extends CommandHandlerTestCase
                     ]
                 ],
             ],
+            'irfoPartners' => null,
+            'tradingNames' => null,
         ];
 
         $command = Cmd::create($data);
@@ -353,6 +357,8 @@ class UpdateIrfoDetailsTest extends CommandHandlerTestCase
                     ]
                 ],
             ],
+            'irfoPartners' => null,
+            'tradingNames' => null,
         ];
 
         $command = Cmd::create($data);

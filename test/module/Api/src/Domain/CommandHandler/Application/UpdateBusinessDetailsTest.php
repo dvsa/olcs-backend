@@ -1,22 +1,14 @@
 <?php
 
-/**
- * Update Business Details Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateBusinessDetails;
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
-use Dvsa\Olcs\Transfer\Command\Licence\UpdateBusinessDetails as LicenceCmd;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateBusinessDetails as Cmd;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\Application;
+use Dvsa\Olcs\Transfer\Command\Licence\UpdateBusinessDetails as LicenceCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Mockery as m;
 
 /**
  * Update Business Details Test
@@ -62,7 +54,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
             'natureOfBusiness' => null,
             'companyOrLlpNo' => null,
             'registeredAddress' => null,
-            'tradingNames' => null,
+            'tradingNames' => [],
             'partial' => null
         ];
 

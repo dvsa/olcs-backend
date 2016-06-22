@@ -4,43 +4,39 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
+use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Service\Nr\InrClient;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Service\Nr\InrClientInterface;
-use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
-use Dvsa\Olcs\Api\Service\Nr\MsiResponse as MsiResponseService;
-use Dvsa\Olcs\Transfer\Command\Cases\Si\SendResponse as SendErruResponseCmd;
+use Dvsa\Olcs\Api\Domain\Command\Cases\Si\SendResponse as SendResponseCmd;
 use Zend\Http\Response;
-use Dvsa\Olcs\Api\Domain\Exception\RestResponseException;
 use Zend\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeException;
+use Dvsa\Olcs\Api\Domain\Exception\InrClientException;
 
 /**
  * SendResponse
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-final class SendResponse extends AbstractCommandHandler implements AuthAwareInterface
+final class SendResponse extends AbstractCommandHandler implements UploaderAwareInterface
 {
-    use AuthAwareTrait;
+    use UploaderAwareTrait;
 
-    protected $repoServiceName = 'Cases';
+    protected $repoServiceName = 'ErruRequest';
 
-    protected $extraRepos = ['ErruRequest'];
+    protected $extraRepos = [
+        'Document'
+    ];
 
     /**
      * @var InrClient
      */
     protected $inrClient;
-
-    /**
-     * @var MsiResponseService
-     */
-    protected $msiResponseService;
 
     /**
      * Create service
@@ -51,9 +47,7 @@ final class SendResponse extends AbstractCommandHandler implements AuthAwareInte
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
-
         $this->inrClient = $mainServiceLocator->get(InrClientInterface::class);
-        $this->msiResponseService = $mainServiceLocator->get(MsiResponseService::class);
 
         return parent::createService($serviceLocator);
     }
@@ -62,45 +56,55 @@ final class SendResponse extends AbstractCommandHandler implements AuthAwareInte
      * SendResponse
      *
      * @param CommandInterface $command
-     * @throws RestResponseException
+     * @throws InrClientException
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {
         /**
-         * @var CasesEntity $case
-         * @var SendErruResponseCmd $command
+         * @var ErruRequestEntity $erruRequest
+         * @var SendResponseCmd $command
          */
-        $case = $this->getRepo()->fetchById($command->getCase());
+        $erruRequest = $this->getRepo()->fetchUsingId($command);
 
-        //generate the xml to send to national register
-        $xml = $this->msiResponseService->create($case);
+        /** @var File $xmlFile */
+        $xmlFile = $this->getUploader()->download($erruRequest->getResponseDocument()->getIdentifier());
 
         //here is where we would expect the response from national register.
         try {
-            $responseCode = $this->inrClient->makeRequest($xml);
+            $responseCode = $this->inrClient->makeRequest($xmlFile->getContent());
         } catch (AdapterRuntimeException $e) {
-            throw new RestResponseException('The was an error sending the INR response');
+            $this->updateStatus($erruRequest, ErruRequestEntity::FAILED_CASE_TYPE);
+            throw new InrClientException('There was an error sending the INR response');
         }
 
         if ($responseCode !== Response::STATUS_CODE_202) {
-            throw new RestResponseException('INR Http response code was ' . $responseCode);
+            $this->updateStatus($erruRequest, ErruRequestEntity::FAILED_CASE_TYPE);
+            throw new InrClientException('INR Http response code was ' . $responseCode);
         }
 
-        /** @var ErruRequestEntity $erruRequest */
-        $erruRequest = $case->getErruRequest();
-
-        $erruRequest->updateErruResponse(
-            $this->getCurrentUser(),
-            new \DateTime($this->msiResponseService->getResponseDateTime())
-        );
-
-        $this->getRepo('ErruRequest')->save($erruRequest);
+        $this->updateStatus($erruRequest, ErruRequestEntity::SENT_CASE_TYPE);
 
         $result = new Result();
         $result->addMessage('Msi Response sent');
-        $result->addId('case', $case->getId());
+        $result->addId('Erru request', $erruRequest->getId());
 
         return $result;
+    }
+
+    /**
+     * Sets the erru request status to the specified status key
+     *
+     * @param ErruRequestEntity $erruRequest
+     * @param string $statusKey
+     * @return ErruRequestEntity
+     */
+    private function updateStatus(ErruRequestEntity $erruRequest, $statusKey)
+    {
+        $erruStatus = $this->getRepo()->getRefdataReference($statusKey);
+        $erruRequest->setMsiType($erruStatus);
+        $this->getRepo('ErruRequest')->save($erruRequest);
+
+        return $erruRequest;
     }
 }

@@ -46,6 +46,7 @@ class Category extends AbstractCategory
     const TASK_SUB_CATEGORY_CHANGE_TO_TAXI_PHV_DIGITAL = 165;
     const TASK_SUB_CATEGORY_BUSINESS_DETAILS_CHANGE = 169;
     const TASK_SUB_CATEGORY_SUR_41_ASSISTED_DIGITAL = 82;
+    const TASK_SUB_CATEGORY_NR = 47;
 
     const TASK_SUB_CATEGORY_TM_PERIOD_OF_GRACE = 84;
 
@@ -65,6 +66,7 @@ class Category extends AbstractCategory
     const DOC_SUB_CATEGORY_CPID = 170;
     const DOC_SUB_CATEGORY_DISCS = 166;
     const DOC_SUB_CATEGORY_FINANCIAL_REPORTS = 180;
+    const DOC_SUB_CATEGORY_NR = 53;
 
     const BUS_SUB_CATEGORY_OTHER_DOCUMENTS = 40;
 }
