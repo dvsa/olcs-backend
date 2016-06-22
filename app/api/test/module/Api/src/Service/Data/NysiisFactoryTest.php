@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Service\Data\NysiisFactory;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Zend\Soap\Client as ZendSoapClient;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * NysiisFactory Test
@@ -56,7 +55,7 @@ class NysiisFactoryTest extends MockeryTestCase
         $config = [
             'nysiis' => [
                 'wsdl' => [
-                    'uri' => __DIR__ . '/../../../../../module/Olcs/config/nysiis/nysiis.svc.wsdl',
+                    'uri' => __DIR__ . '/../../../../../../module/Nysiis/config/nysiis.svc.wsdl',
                     'soap' => [
                         'options' => []
                     ]

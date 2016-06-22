@@ -43,14 +43,22 @@ class Nysiis
     public function getNysiisSearchKeys($params)
     {
         try {
-            $result = $this->soapClient->GetNYSIISSearchKeys($params['nysiisForename'], $params['nysiisFamilyname']);
+            if ($this->soapClient instanceof \Zend\Soap\Client) {
+                $result = $this->soapClient->GetNYSIISSearchKeys($params['nysiisForename'], $params['nysiisFamilyname']);
+                return $result;
+            }
+            Logger::warn(
+                __FILE__ . 'Failed SOAP request for GetNYSIISSearchKeys(' . $params['nysiisForename'] . ', '
+                . $params['nysiisFamilyname'] . ' Response: soapClient not initialised.'
+            );
+
         } catch (\Exception $e) {
             Logger::warn(
                 __FILE__ . 'Failed SOAP request for GetNYSIISSearchKeys(' . $params['nysiisForename'] . ', '
                 . $params['nysiisFamilyname'] . ' Response: ' . $e->getMessage()
             );
-            return $params;
         }
+        return $params;
     }
 
     /**
