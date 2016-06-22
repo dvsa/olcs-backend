@@ -420,7 +420,7 @@ class StopTest extends CommandHandlerTestCase
         $data = [
             'licence' => $licenceId,
             'communityLicenceIds' => $communityLicenceIds,
-            'type' => 'withdrawal',
+            'type' => 'suspension',
             'startDate' => '',
             'endDate' => '',
             'reasons' => [
