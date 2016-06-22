@@ -84,7 +84,6 @@ $map = [
     QueryHandler\Bus\Ebsr\BusRegWithTxcInbox::class => Standard::class, // @todo
     QueryHandler\Bus\RegistrationHistoryList::class => Standard::class, // @todo
     QueryHandler\Bus\SearchViewList::class => Standard::class, // @todo
-    QueryHandler\CommunityLic\CommunityLic::class => Standard::class, // @todo
     QueryHandler\CompaniesHouse\GetList::class => Standard::class, // @todo
     QueryHandler\ConditionUndertaking\Get::class => Standard::class, // @todo
     QueryHandler\ConditionUndertaking\GetList::class => Standard::class, // @todo

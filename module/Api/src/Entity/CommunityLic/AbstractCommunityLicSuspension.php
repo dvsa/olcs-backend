@@ -6,6 +6,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -38,7 +40,12 @@ abstract class AbstractCommunityLicSuspension implements BundleSerializableInter
      *
      * @var \Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic",
+     *     fetch="LAZY",
+     *     cascade={"persist"},
+     *     inversedBy="communityLicSuspensions"
+     * )
      * @ORM\JoinColumn(name="community_lic_id", referencedColumnName="id", nullable=false)
      */
     protected $communityLic;
@@ -148,6 +155,31 @@ abstract class AbstractCommunityLicSuspension implements BundleSerializableInter
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Community lic suspension reason
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicSuspensionReason",
+     *     mappedBy="communityLicSuspension"
+     * )
+     */
+    protected $communityLicSuspensionReasons;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
+        $this->communityLicSuspensionReasons = new ArrayCollection();
+    }
 
     /**
      * Set the community lic
@@ -423,6 +455,66 @@ abstract class AbstractCommunityLicSuspension implements BundleSerializableInter
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the community lic suspension reason
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $communityLicSuspensionReasons
+     * @return CommunityLicSuspension
+     */
+    public function setCommunityLicSuspensionReasons($communityLicSuspensionReasons)
+    {
+        $this->communityLicSuspensionReasons = $communityLicSuspensionReasons;
+
+        return $this;
+    }
+
+    /**
+     * Get the community lic suspension reasons
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCommunityLicSuspensionReasons()
+    {
+        return $this->communityLicSuspensionReasons;
+    }
+
+    /**
+     * Add a community lic suspension reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $communityLicSuspensionReasons
+     * @return CommunityLicSuspension
+     */
+    public function addCommunityLicSuspensionReasons($communityLicSuspensionReasons)
+    {
+        if ($communityLicSuspensionReasons instanceof ArrayCollection) {
+            $this->communityLicSuspensionReasons = new ArrayCollection(
+                array_merge(
+                    $this->communityLicSuspensionReasons->toArray(),
+                    $communityLicSuspensionReasons->toArray()
+                )
+            );
+        } elseif (!$this->communityLicSuspensionReasons->contains($communityLicSuspensionReasons)) {
+            $this->communityLicSuspensionReasons->add($communityLicSuspensionReasons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a community lic suspension reasons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $communityLicSuspensionReasons
+     * @return CommunityLicSuspension
+     */
+    public function removeCommunityLicSuspensionReasons($communityLicSuspensionReasons)
+    {
+        if ($this->communityLicSuspensionReasons->contains($communityLicSuspensionReasons)) {
+            $this->communityLicSuspensionReasons->removeElement($communityLicSuspensionReasons);
+        }
+
+        return $this;
     }
 
     /**

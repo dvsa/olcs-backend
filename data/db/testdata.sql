@@ -2006,20 +2006,23 @@ INSERT INTO `community_lic` (
 ) VALUES
     (1, 'cl_sts_active', 110, NULL, 0, NULL, 'UKGB', '2015-01-01', NULL),
     (2, 'cl_sts_active', 110, NULL, 1, NULL, 'UKGB', '2015-01-01', NULL),
-    (3, 'cl_sts_expired', 110, '2014-01-01', 2, NULL, 'UKGB', '2015-01-01', NULL),
-    (4, 'cl_sts_withdrawn', 110, NULL, 3, NULL, 'UKGB', NULL, NULL),
-    (5, 'cl_sts_suspended', 110, NULL, 4, NULL, 'UKGB', '2015-01-01', NULL),
-    (6, 'cl_sts_void', 110, '2014-09-20', 5, NULL, 'UKNI', '2015-01-01', NULL),
-    (7, 'cl_sts_returned', 110, '2014-01-18', 6, NULL, 'UKNI', '2015-01-01', NULL),
-    (8, 'cl_sts_pending', 110, NULL, 7, NULL, 'UKNI', NULL, NULL),
-    (9, 'cl_sts_pending', 7, NULL, 7, NULL, 'UKNI', NULL, NULL),
-    (10, 'cl_sts_pending', 7, NULL, 7, NULL, 'UKNI', NULL, NULL);
+    (3, 'cl_sts_suspended', 110, NULL, 2, NULL, 'UKGB', '2015-01-01', NULL),
+    (4, 'cl_sts_suspended', 110, NULL, 3, NULL, 'UKGB', NULL, NULL),
+    (5, 'cl_sts_active', 110, NULL, 4, NULL, 'UKGB', '2015-01-01', NULL),
+    (6, 'cl_sts_withdrawn', 110, NULL, 5, NULL, 'UKGB', '2015-01-01', NULL),
+    (7, 'cl_sts_annuled', 110, '2014-01-18', 6, NULL, 'UKNI', '2015-01-01', NULL),
+    (8, 'cl_sts_active', 110, NULL, 7, NULL, 'UKNI', NULL, NULL),
+    (9, 'cl_sts_pending', 7, NULL, 8, NULL, 'UKNI', NULL, NULL),
+    (10, 'cl_sts_pending', 7, NULL, 9, NULL, 'UKNI', NULL, NULL);
 
 INSERT INTO `community_lic_suspension` (`id`, `community_lic_id`, `created_by`,
     `last_modified_by`, `is_actioned`, `created_on`, `end_date`, `last_modified_on`, `start_date`, `version`, `deleted_date`)
 VALUES
-	(1, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL),
-	(2, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL);
+	(1, 5, NULL, NULL, NULL, NULL, '2018-01-01', NULL, '2017-01-01', 1, NULL),
+	(2, 4, NULL, NULL, NULL, NULL, '2017-01-01', NULL, '2015-01-01', 1, NULL),
+	(3, 3, NULL, NULL, NULL, NULL, NULL, NULL, '2015-01-01', 1, NULL),
+	(4, 2, NULL, NULL, NULL, NULL, NULL, NULL, '2017-01-01', 1, NULL),
+	(5, 6, NULL, NULL, NULL, NULL, NULL, NULL, '2015-01-01', 1, NULL);
 
 INSERT INTO `community_lic_suspension_reason` (`id`, `community_lic_suspension_id`, `type_id`, `created_by`,
     `last_modified_by`, `created_on`, `deleted_date`, `last_modified_on`, `version`)
@@ -2030,8 +2033,7 @@ VALUES
 INSERT INTO `community_lic_withdrawal` (`id`, `community_lic_id`, `created_by`, `last_modified_by`,
     `created_on`, `end_date`, `last_modified_on`, `start_date`, `version`, `deleted_date`)
 VALUES
-	(1, 4, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL),
-	(2, 4, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL);
+	(1, 6, NULL, NULL, NULL, NULL, NULL, '2015-01-01', 1, NULL);
 
 INSERT INTO `community_lic_withdrawal_reason` (`id`, `community_lic_withdrawal_id`, `type_id`,
     `created_by`, `last_modified_by`, `created_on`, `deleted_date`, `last_modified_on`, `version`)

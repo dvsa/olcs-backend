@@ -1401,7 +1401,38 @@ return array(
     'community_lic_suspension' => array(
         'is_actioned' => array(
             'type' => 'yesnonull'
-        )
+        ),
+        'community_lic_id' => array(
+            'inversedBy' => array(
+                'entity' => 'CommunityLic',
+                'property' => 'communityLicSuspension'
+            ),
+            'cascade' => array(
+                'persist'
+            )
+        ),
+    ),
+    'community_lic_withdrawal' => array(
+        'community_lic_id' => array(
+            'inversedBy' => array(
+                'entity' => 'CommunityLic',
+                'property' => 'communityLicWithdrawal'
+            ),
+            'cascade' => array(
+                'persist'
+            )
+        ),
+    ),
+    'community_lic_suspension_reason' => array(
+        'community_lic_suspension_id' => array(
+            'inversedBy' => array(
+                'entity' => 'CommunityLicSuspension',
+                'property' => 'communityLicSuspensionReason'
+            ),
+            'cascade' => array(
+                'persist'
+            )
+        ),
     ),
     'irfo_vehicle' => array(
         'coc_a' => array(
