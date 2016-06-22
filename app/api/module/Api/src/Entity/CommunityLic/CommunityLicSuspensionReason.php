@@ -23,9 +23,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CommunityLicSuspensionReason extends AbstractCommunityLicSuspensionReason
 {
-    public function updateReason($suspensionId, $type)
+    /**
+     * Constructor
+     *
+     * @param \Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicSuspension $suspension suspension
+     * @param string                                                    $type       type
+     */
+    public function __construct($suspension, $type)
     {
-        $this->communityLicSuspension = $suspensionId;
+        $this->communityLicSuspension = $suspension;
         $this->type = $type;
     }
 }

@@ -26,5 +26,6 @@ class CommunityLicWithdrawalEntityTest extends EntityTester
         $sut = m::mock(Entity::class)->makePartial();
         $sut->updateCommunityLicWithdrawal($communityLic);
         $this->assertEquals($communityLic, $sut->getCommunityLic());
+        $this->assertEquals(new \DateTime(), $sut->getStartDate());
     }
 }

@@ -25,13 +25,12 @@ class CommunityLicWithdrawal extends AbstractCommunityLicWithdrawal
      * Update community licence withdrawal
      *
      * @param CommunityLic $communityLic community licence
-     * @param string       $startDate    start date
      *
      * @return void
      */
-    public function updateCommunityLicWithdrawal($communityLic, $startDate)
+    public function updateCommunityLicWithdrawal($communityLic)
     {
         $this->communityLic = $communityLic;
-        $this->startDate = new \DateTime($startDate);
+        $this->startDate = new \DateTime();
     }
 }

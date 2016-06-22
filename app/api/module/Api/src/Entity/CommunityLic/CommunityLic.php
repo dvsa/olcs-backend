@@ -126,11 +126,18 @@ class CommunityLic extends AbstractCommunityLic
         return null;
     }
 
+    /**
+     * Prepare reasons
+     *
+     * @param CommunityLicSuspensio $suspension suspension
+     *
+     * @return array
+     */
     private function prepareReasons($suspension)
     {
         $reasons = $suspension->getCommunityLicSuspensionReasons();
         $retv = [];
-        foreach($reasons as $reason) {
+        foreach ($reasons as $reason) {
             $retv[] = $reason->getType()->getId();
         }
         return $retv;
@@ -171,5 +178,4 @@ class CommunityLic extends AbstractCommunityLic
             'currentWithdrawal' => $this->getCurrentWithdrawal()
         ];
     }
-
 }

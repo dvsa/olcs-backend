@@ -8,9 +8,9 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\CommunityLic;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Domain\QueryHandler\CommunityLic\CommunityLic as CommunityLicQueryHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler\CommunityLic\CommunityLicences as CommunityLicencesQueryHandler;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLic as Qry;
+use Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLicences as Qry;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Mockery as m;
@@ -21,11 +21,11 @@ use Doctrine\ORM\Query;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CommunityLicTest extends QueryHandlerTestCase
+class CommunityLicencesTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new CommunityLicQueryHandler();
+        $this->sut = new CommunityLicencesQueryHandler();
         $this->mockRepo('CommunityLic', CommunityLicRepo::class);
         $this->mockRepo('Licence', LicenceRepo::class);
 
