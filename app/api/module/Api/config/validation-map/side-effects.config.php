@@ -1,9 +1,9 @@
 <?php
 
-use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion as AppCompCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Queue as QueueCommandHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSideEffect;
 
 /**
@@ -33,8 +33,6 @@ return [
     CommandHandler\Application\CloseTexTask::class                                    => IsSideEffect::class,
     CommandHandler\Application\CloseFeeDueTask::class                                 => IsSideEffect::class,
     CommandHandler\Task\CreateTranslateToWelshTask::class                             => IsSideEffect::class,
-    CommandHandler\Bus\Ebsr\ProcessRequestMap::class                                  => IsSideEffect::class,
-    CommandHandler\Bus\Ebsr\ProcessPack::class                                        => IsSideEffect::class,
     CommandHandler\Bus\Ebsr\CreateSubmission::class                                   => IsSideEffect::class,
     CommandHandler\Bus\Ebsr\DeleteSubmission::class                                   => IsSideEffect::class,
     CommandHandler\Document\DispatchDocument::class                                   => IsSideEffect::class,
@@ -48,7 +46,6 @@ return [
     CommandHandler\Licence\NotTakenUp::class                                          => IsSideEffect::class,
     CommandHandler\Licence\UnderConsideration::class                                  => IsSideEffect::class,
     CommandHandler\Organisation\ChangeBusinessType::class                             => IsSideEffect::class,
-    CommandHandler\Correspondence\ProcessInboxDocuments::class                        => IsSideEffect::class,
     CommandHandler\Document\CreateDocumentSpecific::class                             => IsSideEffect::class,
     CommandHandler\Application\CreateApplicationFee::class                            => IsSideEffect::class,
     CommandHandler\Application\ResetApplication::class                                => IsSideEffect::class,
@@ -68,7 +65,6 @@ return [
     CommandHandler\OperatingCentre\DeleteTmLinks::class                               => IsSideEffect::class,
     CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class       => IsSideEffect::class,
     CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertakingS4::class     => IsSideEffect::class,
-    CommandHandler\Cases\Si\SendResponse::class                                       => IsSideEffect::class,
     CommandHandler\Schedule41\CreateS4::class                                         => IsSideEffect::class,
     CommandHandler\Schedule41\ApproveS4::class                                        => IsSideEffect::class,
     CommandHandler\Schedule41\ResetS4::class                                          => IsSideEffect::class,
@@ -87,7 +83,6 @@ return [
     CommandHandler\Discs\CeasePsvDiscs::class                                         => IsSideEffect::class,
     CommandHandler\LicenceVehicle\RemoveLicenceVehicle::class                         => IsSideEffect::class,
     CommandHandler\Vehicle\ProcessDuplicateVehicleWarning::class                      => IsSideEffect::class,
-    CommandHandler\Vehicle\ProcessDuplicateVehicleWarnings::class                     => IsSideEffect::class,
     CommandHandler\Tm\DeleteTransportManagerLicence::class                            => IsSideEffect::class,
     CommandHandler\ContactDetails\SaveAddress::class                                  => IsSideEffect::class,
     CommandHandler\Organisation\UpdateTradingNames::class                             => IsSideEffect::class,
@@ -117,11 +112,8 @@ return [
     AppCompCommandHandler\UpdateBusinessDetailsStatus::class                          => IsSideEffect::class,
     AppCompCommandHandler\UpdateDeclarationsInternalStatus::class                     => IsSideEffect::class,
     CommandHandler\CommunityLic\GenerateBatch::class                                  => IsSideEffect::class,
-    CommandHandler\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class             => IsSideEffect::class,
-    CommandHandler\LicenceStatusRule\ProcessToValid::class                            => IsSideEffect::class,
     CommandHandler\LicenceStatusRule\RemoveLicenceStatusRulesForLicence::class        => IsSideEffect::class,
     CommandHandler\Email\CreateCorrespondenceRecord::class                            => IsSideEffect::class,
-    CommandHandler\Email\SendContinuationNotSought::class                             => IsSideEffect::class,
     CommandHandler\Email\SendTmUserCreated::class                                     => IsSideEffect::class,
     CommandHandler\Email\SendUserCreated::class                                       => IsSideEffect::class,
     CommandHandler\Email\SendUserRegistered::class                                    => IsSideEffect::class,
@@ -139,37 +131,19 @@ return [
     CommandHandler\Email\SendPublication::class                                       => IsSideEffect::class,
     CommandHandler\Person\Create::class                                               => IsSideEffect::class,
     CommandHandler\Person\UpdateFull::class                                           => IsSideEffect::class,
-    CommandHandler\TransportManagerApplication\Snapshot::class                        => IsSideEffect::class,
     CommandHandler\PrintScheduler\Enqueue::class                                      => IsSideEffect::class,
     CommandHandler\Vehicle\CreateGoodsVehicle::class                                  => IsSideEffect::class,
     CommandHandler\Vehicle\CeaseActiveDiscs::class                                    => IsSideEffect::class,
     CommandHandler\Vehicle\CreateGoodsDiscs::class                                    => IsSideEffect::class,
     CommandHandler\InspectionRequest\SendInspectionRequest::class                     => IsSideEffect::class,
-    CommandHandler\ContinuationDetail\Process::class                                  => IsSideEffect::class,
-    CommandHandler\ContinuationDetail\ProcessReminder::class                          => IsSideEffect::class,
-    CommandHandler\CompaniesHouse\EnqueueOrganisations::class                         => IsSideEffect::class,
-    CommandHandler\CompaniesHouse\InitialLoad::class                                  => IsSideEffect::class,
-    CommandHandler\CompaniesHouse\Compare::class                                      => IsSideEffect::class,
     CommandHandler\CompaniesHouse\CreateAlert::class                                  => IsSideEffect::class,
-    QueueCommandHandler\Complete::class                                               => IsSideEffect::class,
-    QueueCommandHandler\Failed::class                                                 => IsSideEffect::class,
-    QueueCommandHandler\Retry::class                                                  => IsSideEffect::class,
-    QueueCommandHandler\Create::class                                                 => IsSideEffect::class,
-    QueueCommandHandler\Delete::class                                                 => IsSideEffect::class,
-    CommandHandler\Discs\PrintDiscs::class                                            => IsSideEffect::class,
     CommandHandler\Discs\CreatePsvVehicleListForDiscs::class                          => IsSideEffect::class,
-    CommandHandler\Licence\ProcessContinuationNotSought::class                        => IsSideEffect::class,
     CommandHandler\Variation\EndInterim::class                                        => IsSideEffect::class,
-    QueryHandler\Queue\NextItem::class                                                => IsSideEffect::class,
     CommandHandler\MyAccount\UpdateMyAccount::class                                   => IsSideEffect::class,
-    CommandHandler\Licence\BatchVehicleListGeneratorForGoodsDiscs::class              => IsSideEffect::class,
-    CommandHandler\Discs\BatchVehicleListGeneratorForPsvDiscs::class                  => IsSideEffect::class,
     CommandHandler\System\GenerateSlaTargetDate::class                                => IsSideEffect::class,
     CommandHandler\Bus\Ebsr\CreateTxcInbox::class                                     => IsSideEffect::class,
     CommandHandler\Bus\Ebsr\UpdateTxcInboxPdf::class                                  => IsSideEffect::class,
-    CommandHandler\Transaction\ResolveOutstandingPayments::class                      => IsSideEffect::class,
     QueryHandler\Bus\ByLicenceRoute::class                                            => IsSideEffect::class,
-    QueryHandler\Licence\ContinuationNotSoughtList::class                             => IsSideEffect::class,
     Dvsa\Olcs\Email\Domain\CommandHandler\UpdateInspectionRequest::class              => IsSideEffect::class,
     Dvsa\Olcs\Email\Domain\CommandHandler\SendEmail::class                            => IsSideEffect::class,
 ];

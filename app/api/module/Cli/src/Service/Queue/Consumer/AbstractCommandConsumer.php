@@ -7,11 +7,11 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
-use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
 use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
+use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
+use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
-use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 
 /**
  * Abstract Command Queue Consumer
@@ -67,7 +67,11 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
         $command = $commandClass::create($commandData);
 
         try {
-            $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command);
+            // @todo These commands should be validated, see OLCS-13145
+            // Temporarily treat them as side effects, which aren't validated
+            // As the Send class allows any command to be injected, we currently don't have the correct
+            // validators setup as we don;t know which commands it could run
+            $result = $this->handleSideEffectCommand($command);
         } catch (NotReadyException $e) {
             return $this->retry($item, $e->getRetryAfter());
         } catch (EmailNotSentException $e) {
