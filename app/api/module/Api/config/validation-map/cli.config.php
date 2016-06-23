@@ -6,9 +6,6 @@ use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSideEffect;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemUser;
 use Dvsa\Olcs\Cli\Domain\CommandHandler as CliCommandHandler;
-use Dvsa\Olcs\Api\Domain\QueryHandler as QueryHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Queue as QueueCommandHandler;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSideEffect;
 
 return [
     CliCommandHandler\CreateViExtractFiles::class => IsSystemUser::class,
