@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Query;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
+use Dvsa\Olcs\Cli\Domain\Query as CliQuery;
 use Dvsa\Olcs\Transfer\Command as TransferCommand;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Olcs\Logging\Log\Logger;
@@ -22,6 +23,8 @@ use Zend\View\Model\ConsoleModel;
 class BatchController extends AbstractConsoleController
 {
     /**
+     * Remove read audit action
+     *
      * @return \Zend\View\Model\ConsoleModel
      */
     public function removeReadAuditAction()
@@ -30,6 +33,8 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * Inspection request email action
+     *
      * @return \Zend\View\Model\ConsoleModel
      */
     public function inspectionRequestEmailAction()
@@ -43,6 +48,11 @@ class BatchController extends AbstractConsoleController
         );
     }
 
+    /**
+     * Duplicate vehicle warning action
+     *
+     * @return ConsoleModel
+     */
     public function duplicateVehicleWarningAction()
     {
         return $this->handleExitStatus(
@@ -72,6 +82,8 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * Enqueue companies house compare action
+     *
      * @return ConsoleModel
      */
     public function enqueueCompaniesHouseCompareAction()
@@ -86,6 +98,8 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * Continuation not sought action
+     *
      * @return ConsoleModel
      */
     public function continuationNotSoughtAction()
@@ -139,6 +153,8 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * Process inbox documents action
+     *
      * @return ConsoleModel
      */
     public function processInboxDocumentsAction()
@@ -178,6 +194,43 @@ class BatchController extends AbstractConsoleController
             if (!$dryRun) {
                 return $this->handleExitStatus($this->handleCommand($commands));
             }
+        }
+
+        return $this->handleExitStatus(0);
+    }
+
+    /**
+     * Process NTU action
+     *
+     * @return ConsoleModel
+     */
+    public function processCommunityLicencesAction()
+    {
+        $dryRun = $this->isDryRun();
+        $date = (new DateTime())->setTime(0, 0, 0);
+
+        $commands = [];
+
+        $dto = CliQuery\CommunityLic\CommunityLicencesForSuspensionList::create(['date' => $date]);
+        $result = $this->handleQuery($dto);
+        $this->writeVerboseMessages("{$result['count']} community licence(s) found for suspension");
+        if (is_array($result) && $result['count']) {
+            $commands[] = CliCommand\CommunityLic\Suspend::create(
+                ['communityLicenceIds' => array_column($result['result'], 'id')]
+            );
+        }
+
+        $dto = CliQuery\CommunityLic\CommunityLicencesForActivationList::create(['date' => $date]);
+        $result = $this->handleQuery($dto);
+        $this->writeVerboseMessages("{$result['count']} community licence(s) found for activation");
+        if (is_array($result) && $result['count']) {
+            $commands[] = CliCommand\CommunityLic\Activate::create(
+                ['communityLicenceIds' => array_column($result['result'], 'id')]
+            );
+        }
+
+        if (!$dryRun && count($commands)) {
+            return $this->handleExitStatus($this->handleCommand($commands));
         }
 
         return $this->handleExitStatus(0);
@@ -276,6 +329,8 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * Is verbose
+     *
      * @return boolean
      */
     private function isVerbose()
@@ -284,6 +339,8 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * Is dry run
+     *
      * @return boolean
      */
     private function isDryRun()
@@ -296,6 +353,7 @@ class BatchController extends AbstractConsoleController
      * exit code from the process.
      *
      * @param int $result exit code, should be non-zero if there was an error
+     *
      * @return \Zend\View\Model\ConsoleModel
      */
     private function handleExitStatus($result)
@@ -308,7 +366,7 @@ class BatchController extends AbstractConsoleController
     /**
      * Handle DTO commands
      *
-     * @param array $dto
+     * @param array $dto dto
      *
      * @return int Response code
      */
@@ -342,7 +400,7 @@ class BatchController extends AbstractConsoleController
     /**
      * Handle DTO query
      *
-     * @param QueryInterface $dto
+     * @param QueryInterface $dto dto
      *
      * @return mixed $result|false
      */

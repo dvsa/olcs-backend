@@ -7,6 +7,8 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark as BookmarkQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark as BookmarkQueryHandler;
 use Dvsa\Olcs\Api\Domain\Query\Queue as QueueQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Queue as QueueQueryHandler;
+use Dvsa\Olcs\Cli\Domain\Query as QueryCli;
+use Dvsa\Olcs\Cli\Domain\QueryHandler as QueryHandlerCli;
 
 return [
     // Audit
@@ -303,6 +305,10 @@ return [
     // CommunityLic
     TransferQuery\CommunityLic\CommunityLicences::class => QueryHandler\CommunityLic\CommunityLicences::class,
     TransferQuery\CommunityLic\CommunityLicence::class  => QueryHandler\CommunityLic\CommunityLicence::class,
+    QueryCli\CommunityLic\CommunityLicencesForSuspensionList::class =>
+        QueryHandlerCli\CommunityLic\CommunityLicencesForSuspensionList::class,
+    QueryCli\CommunityLic\CommunityLicencesForActivationList::class =>
+        QueryHandlerCli\CommunityLic\CommunityLicencesForActivationList::class,
 
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
