@@ -91,6 +91,7 @@ class RequestMapTest extends AbstractConsumerTestCase
      */
     public function testProcessMessageHandlesTransxchangeException()
     {
+        $message = 'Invalid response from transXchange publisher';
         $user = new User('pid', 'type');
         $user->setId(11);
 
@@ -105,7 +106,7 @@ class RequestMapTest extends AbstractConsumerTestCase
         $this->chm
             ->shouldReceive('handleCommand')
             ->with(ProcessRequestMapCmd::class, false)
-            ->andThrow(new TransxchangeException('Invalid response from transXchange publisher'));
+            ->andThrow(new TransxchangeException($message));
 
         $this->expectCommand(
             RetryCmd::class,
@@ -119,7 +120,7 @@ class RequestMapTest extends AbstractConsumerTestCase
         $result = $this->sut->processMessage($item);
 
         $this->assertEquals(
-            'Requeued message: 99 ' . $options . ' for retry in 900',
+            'Requeued message: 99 ' . $options . ' for retry in 900 ' . $message,
             $result
         );
     }
