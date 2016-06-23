@@ -90,7 +90,6 @@ class UpdateNysiisNameTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals('TM NYIIS name was requested and updated', $result->getMessages()[0]);
