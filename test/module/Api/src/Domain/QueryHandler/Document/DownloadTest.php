@@ -27,6 +27,7 @@ class DownloadTest extends QueryHandlerTestCase
     public function setUp()
     {
         $this->sut = new Download();
+        $this->mockRepo('Document', \Dvsa\Olcs\Api\Domain\Repository\Document::class);
         $this->mockedSmServices['FileUploader'] = m::mock(ContentStoreFileUploader::class);
 
         parent::setUp();
@@ -36,7 +37,10 @@ class DownloadTest extends QueryHandlerTestCase
     {
         $this->setExpectedException(NotFoundException::class);
 
-        $query = \Dvsa\Olcs\Transfer\Query\Document\Download::create(['identifier' => 'foo/bar/12345.pdf']);
+        $query = \Dvsa\Olcs\Transfer\Query\Document\Download::create(['identifier' => 20062016]);
+
+        $document = new Document('foo/bar/12345.pdf');
+        $this->repoMap['Document']->shouldReceive('fetchById')->with(20062016)->once()->andReturn($document);
 
         $file = null;
         $this->mockedSmServices['FileUploader']->shouldReceive('download')
@@ -49,7 +53,10 @@ class DownloadTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
-        $query = \Dvsa\Olcs\Transfer\Query\Document\Download::create(['identifier' => 'foo/bar/12345.pdf']);
+        $query = \Dvsa\Olcs\Transfer\Query\Document\Download::create(['identifier' => 20062016]);
+
+        $document = new Document('foo/bar/12345.pdf');
+        $this->repoMap['Document']->shouldReceive('fetchById')->with(20062016)->once()->andReturn($document);
 
         $file = m::mock();
         $file->shouldReceive('getContent')

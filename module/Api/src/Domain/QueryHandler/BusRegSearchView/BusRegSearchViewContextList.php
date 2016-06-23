@@ -52,7 +52,7 @@ class BusRegSearchViewContextList extends AbstractQueryHandler implements AuthAw
         $results = $repo->fetchDistinctList($query, $organisationId);
 
         return [
-            'result' => $results,
+            'result' => $results, // no need for serialisation, already array
             'count' => count($results)
         ];
     }
