@@ -129,6 +129,15 @@ return [
                         ],
                     ],
                 ],
+                'process-cl' => [
+                    'options' => [
+                        'route' => 'process-cl [--verbose|-v] [--dryrun|-d]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'processCommunityLicences'
+                        ],
+                    ],
+                ],
             ]
         ]
     ],

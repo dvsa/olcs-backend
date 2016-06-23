@@ -7,6 +7,8 @@ use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion as AppCompCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion as AppCompCommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Queue as QueueCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Queue as QueueCommandHandler;
+use Dvsa\Olcs\Cli\Domain\Command as CommandCli;
+use Dvsa\Olcs\Cli\Domain\CommandHandler as CommandHandlerCli;
 
 return [
     // Transfer - Audit
@@ -666,6 +668,10 @@ return [
         CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class,
     Command\CommunityLic\Void::class =>
         CommandHandler\CommunityLic\Void::class,
+
+    // Cli - CommunityLic
+    CommandCli\CommunityLic\Activate::class => CommandHandlerCli\CommunityLic\Activate::class,
+    CommandCli\CommunityLic\Suspend::class => CommandHandlerCli\CommunityLic\Suspend::class,
 
     // Domain - Document
     Command\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,

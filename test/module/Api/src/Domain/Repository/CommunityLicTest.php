@@ -115,9 +115,9 @@ class CommunityLicTest extends RepositoryTestCase
     public function testFetchLicencesById()
     {
         $mockQb = m::mock();
-        $mockQb->shouldReceive('expr->eq')->with('m.id', ':id1')->once()->andReturn('id1');
-        $mockQb->shouldReceive('orWhere')->with('id1')->once()->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('id1', 1)->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->in')->with('m.id', ':ids')->once()->andReturn('id');
+        $mockQb->shouldReceive('andWhere')->with('id')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('ids', [1])->once()->andReturnSelf();
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
         $mockQb->shouldReceive('getQuery->execute')->once()->andReturn('result');
@@ -192,5 +192,41 @@ class CommunityLicTest extends RepositoryTestCase
         $this->expectQueryWithData('CommunityLicence\ExpireAllForLicence', ['licence' => 123]);
 
         $this->sut->expireAllForLicence($licenceId);
+    }
+
+    public function testFetchForSuspension()
+    {
+        $mockQb = m::mock();
+        $mockQb->shouldReceive('innerJoin')->with('m.communityLicSuspensions', 's')->andReturnSelf();
+        $mockQb->shouldReceive('innerJoin')->with('s.communityLicSuspensionReasons', 'sr')->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('m.status', ':status')->once()->andReturn('status');
+        $mockQb->shouldReceive('expr->lte')->with('s.startDate', ':startDate')->once()->andReturn('startDate');
+        $mockQb->shouldReceive('andWhere')->with('status')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->with('startDate')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('status', CommunityLicEntity::STATUS_ACTIVE)->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('startDate', 'foo')->andReturnSelf();
+
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
+        $mockQb->shouldReceive('getQuery->execute')->once()->andReturn('result');
+        $this->assertEquals('result', $this->sut->fetchForSuspension('foo'));
+    }
+
+    public function testFetchForActivation()
+    {
+        $mockQb = m::mock();
+        $mockQb->shouldReceive('innerJoin')->with('m.communityLicSuspensions', 's')->andReturnSelf();
+        $mockQb->shouldReceive('innerJoin')->with('s.communityLicSuspensionReasons', 'sr')->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('m.status', ':status')->once()->andReturn('status');
+        $mockQb->shouldReceive('expr->lte')->with('s.endDate', ':endDate')->once()->andReturn('endDate');
+        $mockQb->shouldReceive('andWhere')->with('status')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->with('endDate')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('status', CommunityLicEntity::STATUS_SUSPENDED)->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('endDate', 'foo')->andReturnSelf();
+
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
+        $mockQb->shouldReceive('getQuery->execute')->once()->andReturn('result');
+        $this->assertEquals('result', $this->sut->fetchForActivation('foo'));
     }
 }

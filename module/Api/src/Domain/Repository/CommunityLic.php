@@ -4,6 +4,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLic as CommunityLicDTO;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -17,8 +18,12 @@ class CommunityLic extends AbstractRepository
     protected $entity = CommunityLicEntity::class;
 
     /**
-     * @param QueryBuilder $qb
-     * @param CommunityLicDTO $query
+     * Apply list filters
+     *
+     * @param QueryBuilder    $qb    query builder
+     * @param CommunityLicDTO $query query
+     *
+     * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
@@ -41,6 +46,13 @@ class CommunityLic extends AbstractRepository
         }
     }
 
+    /**
+     * Fetch office copy
+     *
+     * @param int $licenceId licence idd
+     *
+     * @return mixed
+     */
     public function fetchOfficeCopy($licenceId)
     {
         $qb = $this->createQueryBuilder();
@@ -63,6 +75,13 @@ class CommunityLic extends AbstractRepository
         return $qb->getQuery()->getOneOrNullResult();
     }
 
+    /**
+     * Fetch valid licences
+     *
+     * @param int $licence licence id
+     *
+     * @return mixed
+     */
     public function fetchValidLicences($licence)
     {
         $qb = $this->createQueryBuilder();
@@ -86,17 +105,29 @@ class CommunityLic extends AbstractRepository
         return $qb->getQuery()->execute();
     }
 
+    /**
+     * Fetch licences by ids
+     *
+     * @param array $ids community licence ids
+     *
+     * @return array
+     */
     public function fetchLicencesByIds($ids)
     {
         $qb = $this->createQueryBuilder();
-        $i = 1;
-        foreach ($ids as $id) {
-            $qb->orWhere($qb->expr()->eq($this->alias . '.id', ':id' . $i));
-            $qb->setParameter('id' . $i++, $id);
-        }
+        $qb->andWhere($qb->expr()->in($this->alias . '.id', ':ids'));
+        $qb->setParameter('ids', $ids);
+
         return $qb->getQuery()->execute();
     }
 
+    /**
+     * Fetch active licences
+     *
+     * @param int $licence licence id
+     *
+     * @return mixed
+     */
     public function fetchActiveLicences($licence)
     {
         $qb = $this->createQueryBuilder();
@@ -108,6 +139,15 @@ class CommunityLic extends AbstractRepository
         return $qb->getQuery()->execute();
     }
 
+    /**
+     * Expire all for licence
+     *
+     * @param int     $licenceId licence id
+     * @param RefData $status    status
+     *
+     * @return void
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function expireAllForLicence($licenceId, $status = null)
     {
         $params = ['licence' => $licenceId];
@@ -117,5 +157,45 @@ class CommunityLic extends AbstractRepository
         }
 
         $this->getDbQueryManager()->get('CommunityLicence\ExpireAllForLicence')->execute($params);
+    }
+
+    /**
+     * Fetch licences for suspension
+     *
+     * @param DateTime $date date
+     *
+     * @return ArrayCollection
+     */
+    public function fetchForSuspension($date)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->innerJoin('m.communityLicSuspensions', 's')
+            ->innerJoin('s.communityLicSuspensionReasons', 'sr')
+            ->andWhere($qb->expr()->eq($this->alias . '.status', ':status'))
+            ->andWhere($qb->expr()->lte('s.startDate', ':startDate'))
+            ->setParameter('status', CommunityLicEntity::STATUS_ACTIVE)
+            ->setParameter('startDate', $date);
+
+        return $qb->getQuery()->execute();
+    }
+
+    /**
+     * Fetch licences for activation
+     *
+     * @param DateTime $date date
+     *
+     * @return ArrayCollection
+     */
+    public function fetchForActivation($date)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->innerJoin('m.communityLicSuspensions', 's')
+            ->innerJoin('s.communityLicSuspensionReasons', 'sr')
+            ->andWhere($qb->expr()->eq($this->alias . '.status', ':status'))
+            ->andWhere($qb->expr()->lte('s.endDate', ':endDate'))
+            ->setParameter('status', CommunityLicEntity::STATUS_SUSPENDED)
+            ->setParameter('endDate', $date);
+
+        return $qb->getQuery()->execute();
     }
 }
