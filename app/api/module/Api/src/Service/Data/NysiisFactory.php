@@ -6,6 +6,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Soap\Client as SoapClient;
 use Olcs\Logging\Log\Logger;
+use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
 
 /**
  * Class NysiisFactory
@@ -23,23 +24,16 @@ class NysiisFactory implements FactoryInterface
     {
         $config = $serviceLocator->get('Config');
 
-        $soapClient = false;
-
-        try {
-            if (file_exists($config['nysiis']['wsdl']['uri'])) {
-                $wsdl = file_get_contents($config['nysiis']['wsdl']['uri']);
-
-                $soapClient = new SoapClient(
-                    $wsdl,
-                    $config['nysiis']['wsdl']['soap']['options']
-                );
-            } else {
-                throw new \Exception('WSDL file not found');
-            }
-
-        } catch (\Exception $e) {
-            Logger::debug(__FILE__ . 'Unable to create soap client: ' . $e->getMessage());
+        if (!isset($config['nysiis']['wsdl']['uri']) || !file_exists($config['nysiis']['wsdl']['uri'])) {
+            throw new NysiisException('Unable to create soap client: WSDL file not found');
         }
+
+        $wsdl = file_get_contents($config['nysiis']['wsdl']['uri']);
+
+        $soapClient = new SoapClient(
+            $wsdl,
+            $config['nysiis']['wsdl']['soap']['options']
+        );
 
         return new Nysiis($soapClient, $config);
     }

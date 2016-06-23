@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Service\Data\NysiisFactory;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Zend\Soap\Client as ZendSoapClient;
+use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
 
 /**
  * NysiisFactory Test
@@ -40,6 +41,8 @@ class NysiisFactoryTest extends MockeryTestCase
             ->andReturn($config);
 
         $sut = new NysiisFactory();
+
+        $this->setExpectedException(NysiisException::class);
 
         $service = $sut->createService($this->sm);
 

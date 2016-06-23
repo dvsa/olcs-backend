@@ -7,6 +7,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\Soap\Client as SoapClient;
 use Zend\Server\Client as ServerClient;
+use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
 
 /**
  * Class IrfoPsvAuthType Test
@@ -23,12 +24,18 @@ class NysiisTest extends MockeryTestCase
             'nysiisForename' => 'fn',
             'nysiisFamilyname' => 'ln'
         ];
-        $soapClient = m::mock(ServerClient::class)->makePartial();
+        $soapClient = m::mock(ServerClient::class);
+        $soapClient->shouldReceive('GetNYSIISSearchKeys')
+            ->with('fn', 'ln')
+            ->andReturn(
+                'nysiis_result'
+            );
+
         $config = ['foo' => 'bar'];
 
         $sut = new Nysiis($soapClient, $config);
 
-        $this->assertEquals($source, $sut->getNysiisSearchKeys($source));
+        $this->assertEquals('nysiis_result', $sut->getNysiisSearchKeys($source));
         $this->assertEquals($soapClient, $sut->getSoapClient());
         $this->assertEquals($config, $sut->getNysiisConfig());
     }
@@ -38,17 +45,11 @@ class NysiisTest extends MockeryTestCase
      */
     public function testGetNysiisSearchKeysSoapClientInvalid()
     {
-        $source = [
-            'nysiisForename' => 'fn',
-            'nysiisFamilyname' => 'ln'
-        ];
-        $soapClient = 'soapclient';
+        $soapClient = 'invalid';
         $config = ['foo' => 'bar'];
 
-        $sut = new Nysiis($soapClient, $config);
+        $this->setExpectedException(NysiisException::class);
 
-        $this->assertEquals($source, $sut->getNysiisSearchKeys($source));
-        $this->assertEquals($soapClient, $sut->getSoapClient());
-        $this->assertEquals($config, $sut->getNysiisConfig());
+        $sut = new Nysiis($soapClient, $config);
     }
 }

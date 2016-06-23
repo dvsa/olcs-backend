@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Data;
 use Common\Service\Entity\Exceptions\UnexpectedResponseException;
 use Olcs\Logging\Log\Logger;
 use Zend\Server\Client as ServerClient;
+use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
 
 /**
  * Class IrfoPsvAuthType
@@ -31,39 +32,28 @@ class Nysiis
     {
         $this->soapClient = $soapClient;
         $this->nysiisConfig = $config;
+        if (!$this->soapClient instanceof ServerClient) {
+            throw new NysiisException('Unable to make soap request : Invalid SOAP client');
+        }
     }
 
     /**
      * Make SOAP request to NYSIIS to extract the firstName and familyName.
      * @to-do When WSDL/SOAP server known, do the connection proper.
-     * For now just return the params
+     * For now just throw an exception
      *
-     * @param $params
-     * @return mixed
+     * @param   array   $params
+     * @return  mixed
+     * @throws NysiisException
      */
     public function getNysiisSearchKeys($params)
     {
-        try {
-            if ($this->soapClient instanceof ServerClient) {
+        $result = $this->getSoapClient()->GetNYSIISSearchKeys(
+            $params['nysiisForename'],
+            $params['nysiisFamilyname']
+        );
 
-                $result = $this->soapClient->GetNYSIISSearchKeys(
-                    $params['nysiisForename'],
-                    $params['nysiisFamilyname']
-                );
-
-                return $result;
-            }
-            Logger::warn(
-                __FILE__ . 'Failed SOAP request for GetNYSIISSearchKeys(' . $params['nysiisForename'] . ', '
-                . $params['nysiisFamilyname'] . ' Response: soapClient not initialised.'
-            );
-        } catch (\Exception $e) {
-            Logger::warn(
-                __FILE__ . 'Failed SOAP request for GetNYSIISSearchKeys(' . $params['nysiisForename'] . ', '
-                . $params['nysiisFamilyname'] . ' Response: ' . $e->getMessage()
-            );
-        }
-        return $params;
+        return $result;
     }
 
     /**
