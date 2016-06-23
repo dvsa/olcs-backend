@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Query;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Cli\Controller\BatchController;
 use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
+use Dvsa\Olcs\Cli\Domain\Query as CliQuery;
 use Dvsa\Olcs\Transfer\Command\Application\NotTakenUpApplication;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -37,13 +38,17 @@ class BatchControllerTest extends MockeryTestCase
     private $mockConsole;
     /** @var m\MockInterface */
     private $mockCommandHandler;
+    /** @var m\MockInterface */
+    private $mockQueryHandler;
 
     protected function setUp()
     {
         $this->mockCommandHandler = m::mock(CommandHandlerManager::class);
+        $this->mockQueryHandler = m::mock(QueryHandlerManager::class);
 
         $this->sm = m::mock(ServiceManager::class)
             ->shouldReceive('get')->with('CommandHandlerManager')->andReturn($this->mockCommandHandler)
+            ->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->mockQueryHandler)
             ->getMock();
 
         $this->pm = m::mock(PluginManager::class);
@@ -158,14 +163,7 @@ class BatchControllerTest extends MockeryTestCase
             ]
         );
 
-        $mockQueryHandler = m::mock();
-
         $now = new DateTime();
-
-        $this->sm
-            ->shouldReceive('get')
-            ->with('QueryHandlerManager')
-            ->andReturn($mockQueryHandler);
 
         $licences = [
             [
@@ -188,7 +186,7 @@ class BatchControllerTest extends MockeryTestCase
             ],
         ];
 
-        $mockQueryHandler
+        $this->mockQueryHandler
             ->shouldReceive('handleQuery')
             ->with(m::type(Query\Licence\ContinuationNotSoughtList::class))
             ->andReturnUsing(
@@ -300,14 +298,7 @@ class BatchControllerTest extends MockeryTestCase
             ]
         );
 
-        $mockQueryHandler = m::mock();
-
         $now = new DateTime();
-
-        $this->sm
-            ->shouldReceive('get')
-            ->with('QueryHandlerManager')
-            ->andReturn($mockQueryHandler);
 
         $application = [
             'id' => 1,
@@ -315,7 +306,7 @@ class BatchControllerTest extends MockeryTestCase
 
         $applications = [$application];
 
-        $mockQueryHandler
+        $this->mockQueryHandler
             ->shouldReceive('handleQuery')
             ->with(m::type(Query\Application\NotTakenUpList::class))
             ->andReturnUsing(
@@ -360,17 +351,12 @@ class BatchControllerTest extends MockeryTestCase
             ]
         );
 
-        $mockQueryHandler = m::mock()
+        $this->mockQueryHandler
             ->shouldReceive('handleQuery')
             ->with(m::type(Query\Application\NotTakenUpList::class))
             ->andThrow($exceptionClass)
             ->once()
             ->getMock();
-
-        $this->sm
-            ->shouldReceive('get')
-            ->with('QueryHandlerManager')
-            ->andReturn($mockQueryHandler);
 
         $this->mockConsole->shouldReceive('writeLine')->times($outputCount);
 
@@ -398,20 +384,13 @@ class BatchControllerTest extends MockeryTestCase
             ]
         );
 
-        $mockQueryHandler = m::mock();
-
         $now = new DateTime();
-
-        $this->sm
-            ->shouldReceive('get')
-            ->with('QueryHandlerManager')
-            ->andReturn($mockQueryHandler);
 
         $application = ['id' => 1];
 
         $applications = [$application];
 
-        $mockQueryHandler
+        $this->mockQueryHandler
             ->shouldReceive('handleQuery')
             ->with(m::type(Query\Application\NotTakenUpList::class))
             ->andReturnUsing(
@@ -456,6 +435,145 @@ class BatchControllerTest extends MockeryTestCase
             ->shouldReceive('writeLine')->once()->with('/unit_message$/');
 
         $this->sut->dataGovUkExportAction();
+    }
+
+    public function testProcessCommunityLicencesAction()
+    {
+        $this->mockParamsPlugin(
+            [
+                'dryrun' => false,
+                'verbose' => true,
+            ]
+        );
+
+        $now = new DateTime();
+
+        $communityLicencesToActivate = [
+            ['id' => 1],
+            ['id' => 2]
+        ];
+        $communityLicencesToSuspend = [
+            ['id' => 3],
+            ['id' => 4]
+        ];
+
+        $this->mockQueryHandler
+            ->shouldReceive('handleQuery')
+            ->with(m::type(CliQuery\CommunityLic\CommunityLicencesForActivationList::class))
+            ->andReturnUsing(
+                function (CliQuery\CommunityLic\CommunityLicencesForActivationList $qry) use (
+                    $communityLicencesToActivate,
+                    $now
+                ) {
+                    $this->assertEquals(
+                        $now->format('Y-m-d'),
+                        $qry->getDate()->format('Y-m-d')
+                    );
+                    return [
+                        'result' => $communityLicencesToActivate,
+                        'count' => 2,
+                    ];
+                }
+            )
+            ->once()
+            ->shouldReceive('handleQuery')
+            ->with(m::type(CliQuery\CommunityLic\CommunityLicencesForSuspensionList::class))
+            ->andReturnUsing(
+                function (CliQuery\CommunityLic\CommunityLicencesForSuspensionList $qry) use (
+                    $communityLicencesToSuspend,
+                    $now
+                ) {
+                    $this->assertEquals(
+                        $now->format('Y-m-d'),
+                        $qry->getDate()->format('Y-m-d')
+                    );
+                    return [
+                        'result' => $communityLicencesToSuspend,
+                        'count' => 2,
+                    ];
+                }
+            )
+            ->once();
+
+        $idsForActivation = [1, 2];
+        $idsForSuspension = [3, 4];
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(CliCommand\CommunityLic\Activate::class))
+            ->andReturnUsing(
+                function (CliCommand\CommunityLic\Activate $cmd) use ($idsForActivation) {
+                    $this->assertSame($idsForActivation, $cmd->getCommunityLicenceIds());
+                    $result = new Command\Result();
+                    $result->addMessage('Community licence 1 activated');
+                    $result->addMessage('Community licence 2 activated');
+                    return $result;
+                }
+            )
+            ->once()
+            ->shouldReceive('handleCommand')
+            ->with(m::type(CliCommand\CommunityLic\Suspend::class))
+            ->andReturnUsing(
+                function (CliCommand\CommunityLic\Suspend $cmd) use ($idsForSuspension) {
+                    $this->assertSame($idsForSuspension, $cmd->getCommunityLicenceIds());
+                    $result = new Command\Result();
+                    $result->addMessage('Community licence 3 suspended');
+                    $result->addMessage('Community licence 4 suspended');
+                    return $result;
+                }
+            )
+            ->once();
+
+        $this->mockConsole->shouldReceive('writeLine')->times(10);
+
+        $this->sut->processCommunityLicencesAction();
+    }
+
+    public function testProcessCommunityLicencesActionNoLicences()
+    {
+        $this->mockParamsPlugin(
+            [
+                'dryrun' => false,
+                'verbose' => true,
+            ]
+        );
+
+        $now = new DateTime();
+
+        $this->mockQueryHandler
+            ->shouldReceive('handleQuery')
+            ->with(m::type(CliQuery\CommunityLic\CommunityLicencesForActivationList::class))
+            ->andReturnUsing(
+                function (CliQuery\CommunityLic\CommunityLicencesForActivationList $qry) use ($now) {
+                    $this->assertEquals(
+                        $now->format('Y-m-d'),
+                        $qry->getDate()->format('Y-m-d')
+                    );
+                    return [
+                        'result' => [],
+                        'count' => 0,
+                    ];
+                }
+            )
+            ->once()
+            ->shouldReceive('handleQuery')
+            ->with(m::type(CliQuery\CommunityLic\CommunityLicencesForSuspensionList::class))
+            ->andReturnUsing(
+                function (CliQuery\CommunityLic\CommunityLicencesForSuspensionList $qry) use ($now) {
+                    $this->assertEquals(
+                        $now->format('Y-m-d'),
+                        $qry->getDate()->format('Y-m-d')
+                    );
+                    return [
+                        'result' => [],
+                        'count' => 0,
+                    ];
+                }
+            )
+            ->once();
+
+        $this->mockConsole->shouldReceive('writeLine')->times(4);
+
+        $this->sut->processCommunityLicencesAction();
     }
 
     private function mockParamsPlugin(array $map)
