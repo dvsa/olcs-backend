@@ -27,7 +27,9 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
     /**
      * Called when processing the message was successful
      *
-     * @param QueueEntity $item
+     * @param QueueEntity $item    queue item
+     * @param string|null $message success message
+     *
      * @return string
      */
     protected function success(QueueEntity $item, $message = null)
@@ -50,8 +52,9 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
     /**
      * Mark the message as failed
      *
-     * @param QueueEntity $item
-     * @param string $reason
+     * @param QueueEntity $item   queue item
+     * @param string      $reason exception message passed from the command handler
+     *
      * @return string
      */
     public function failed(QueueEntity $item, $reason = null)
@@ -74,17 +77,19 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
     /**
      * Requeue the message
      *
-     * @param QueueEntity $item
-     * @param string $retryAfter (seconds)
+     * @param QueueEntity $item       queue item
+     * @param string      $retryAfter (seconds)
+     * @param string|null $reason     exception message passed from the command handler
+     *
      * @return string
      */
-    protected function retry(QueueEntity $item, $retryAfter)
+    protected function retry(QueueEntity $item, $retryAfter, $reason = null)
     {
         $command = RetryCmd::create(['item' => $item, 'retryAfter' => $retryAfter]);
         $this->handleSideEffectCommand($command);
 
         $description = 'Requeued message';
-        $content = $item->getId() . ' ' . $item->getOptions() . ' for retry in ' .  $retryAfter;
+        $content = $item->getId() . ' ' . $item->getOptions() . ' for retry in ' .  $retryAfter . ' ' .  $reason;
 
         Logger::log(
             \Zend\Log\Logger::WARN,
@@ -98,7 +103,7 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
     /**
      * Run a DTO command side effect
      *
-     * @param \Dvsa\Olcs\Transfer\Command\CommandInterface $command
+     * @param \Dvsa\Olcs\Transfer\Command\CommandInterface $command the command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
