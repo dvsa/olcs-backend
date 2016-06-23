@@ -62,10 +62,6 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
         $transportManager = $this->getRepo()->fetchUsingId($command);
         $person = $transportManager->getHomeCd()->getPerson();
 
-        if (empty($person)) {
-            throw new NotFoundException('The specified TM doesn\'t have an associated person');
-        }
-
         $nysiisData = $this->requestNyiisData(
             [
                 'nysiisForename' => $person->getForename(),
