@@ -11,9 +11,9 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Complete as CompleteCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Failed as FailedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Retry as RetryCmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Olcs\Logging\Log\Logger;
 
 /**
  * Abstract Queue Consumer
@@ -33,8 +33,7 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
     protected function success(QueueEntity $item, $message = null)
     {
         $command = CompleteCmd::create(['item' => $item]);
-        $this->getServiceLocator()->get('CommandHandlerManager')
-            ->handleCommand($command);
+        $this->handleSideEffectCommand($command);
 
         $description = 'Successfully processed message';
         $content = $item->getId() . ' ' . $item->getOptions() . ($message ? ' ' . $message : '');
@@ -58,8 +57,7 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
     public function failed(QueueEntity $item, $reason = null)
     {
         $command = FailedCmd::create(['item' => $item]);
-        $this->getServiceLocator()->get('CommandHandlerManager')
-            ->handleCommand($command);
+        $this->handleSideEffectCommand($command);
 
         $description = 'Failed to process message';
         $content = $item->getId() . ' ' . $item->getOptions() . ' ' .  $reason;
@@ -83,8 +81,7 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
     protected function retry(QueueEntity $item, $retryAfter)
     {
         $command = RetryCmd::create(['item' => $item, 'retryAfter' => $retryAfter]);
-        $this->getServiceLocator()->get('CommandHandlerManager')
-            ->handleCommand($command);
+        $this->handleSideEffectCommand($command);
 
         $description = 'Requeued message';
         $content = $item->getId() . ' ' . $item->getOptions() . ' for retry in ' .  $retryAfter;
@@ -96,5 +93,17 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
         );
 
         return $description . ': ' . $content;
+    }
+
+    /**
+     * Run a DTO command side effect
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\CommandInterface $command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
+    protected function handleSideEffectCommand(\Dvsa\Olcs\Transfer\Command\CommandInterface $command)
+    {
+        return $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command, false);
     }
 }

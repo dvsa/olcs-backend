@@ -5,11 +5,11 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr;
 
-use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer;
-use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessRequestMap as Cmd;
-use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
+use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
+use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer;
 use Zend\Serializer\Adapter\Json as ZendJson;
 
 /**
@@ -63,7 +63,7 @@ class RequestMap extends AbstractCommandConsumer
 
         $command = CreateTaskCmd::create($data);
 
-        $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command);
+        $this->handleSideEffectCommand($command);
 
         return parent::failed($item, $reason);
     }

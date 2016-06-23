@@ -7,18 +7,18 @@
  */
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer\Ebsr;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
-use Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\RequestMap as Sut;
-use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
-use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
+use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessRequestMap as ProcessRequestMapCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Failed as FailedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Retry as RetryCmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
-use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessRequestMap as ProcessRequestMapCmd;
-use Zend\Serializer\Adapter\Json as ZendJson;
 use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
+use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
+use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\RequestMap as Sut;
+use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
+use Zend\Serializer\Adapter\Json as ZendJson;
 
 /**
  * RequestMap Test
@@ -104,7 +104,7 @@ class RequestMapTest extends AbstractConsumerTestCase
 
         $this->chm
             ->shouldReceive('handleCommand')
-            ->with(ProcessRequestMapCmd::class)
+            ->with(ProcessRequestMapCmd::class, false)
             ->andThrow(new TransxchangeException('Invalid response from transXchange publisher'));
 
         $this->expectCommand(
