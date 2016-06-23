@@ -117,7 +117,8 @@ class ReportDownloadTest extends AbstractConsumerTestCase
         $item->setCreatedBy($user);
 
         $expectedQryData = ['reference' => 'OLCS-1234-ABCD'];
-        $expectedException = new \Dvsa\Olcs\Api\Domain\Exception\NotReadyException('try again later');
+        $exceptionMessage = 'try again later';
+        $expectedException = new \Dvsa\Olcs\Api\Domain\Exception\NotReadyException($exceptionMessage);
         $expectedException->setRetryAfter(60);
         $this->expectQueryException(
             \Dvsa\Olcs\Transfer\Query\Cpms\ReportStatus::class,
@@ -134,7 +135,7 @@ class ReportDownloadTest extends AbstractConsumerTestCase
         $result = $this->sut->processMessage($item);
 
         $this->assertEquals(
-            'Requeued message: 99 {"reference":"OLCS-1234-ABCD"} for retry in 60',
+            'Requeued message: 99 {"reference":"OLCS-1234-ABCD"} for retry in 60 ' . $exceptionMessage,
             $result
         );
     }

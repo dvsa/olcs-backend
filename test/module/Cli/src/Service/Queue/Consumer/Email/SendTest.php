@@ -77,10 +77,12 @@ class SendTest extends AbstractConsumerTestCase
         $item->setId(99);
         $item->setOptions($options);
 
+        $message = 'Email not sent';
+
         $this->chm
             ->shouldReceive('handleCommand')
             ->with(SampleEmail::class, false)
-            ->andThrow(new EmailNotSentException('Email not sent'));
+            ->andThrow(new EmailNotSentException($message));
 
         $this->expectCommand(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Retry::class,
@@ -94,7 +96,7 @@ class SendTest extends AbstractConsumerTestCase
         $result = $this->sut->processMessage($item);
 
         $this->assertEquals(
-            'Requeued message: 99 ' . $options . ' for retry in 900',
+            'Requeued message: 99 ' . $options . ' for retry in 900 ' . $message,
             $result
         );
     }

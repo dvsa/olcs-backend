@@ -36,13 +36,19 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
     protected $commandName = 'override_me';
 
     /**
-     * @param QueueEntity $item
+     * Gets the command data
+     *
+     * @param QueueEntity $item the queue item
+     *
      * @return array
      */
     abstract public function getCommandData(QueueEntity $item);
 
     /**
-     * @param QueueEntity $item
+     * Gets the command name
+     *
+     * @param QueueEntity $item the queue item
+     *
      * @return string
      */
     protected function getCommandName(QueueEntity $item)
@@ -53,7 +59,8 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
     /**
      * Process the message item
      *
-     * @param QueueEntity $item
+     * @param QueueEntity $item the queue item
+     *
      * @return string
      */
     public function processMessage(QueueEntity $item)
@@ -73,11 +80,11 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
             // validators setup as we don;t know which commands it could run
             $result = $this->handleSideEffectCommand($command);
         } catch (NotReadyException $e) {
-            return $this->retry($item, $e->getRetryAfter());
+            return $this->retry($item, $e->getRetryAfter(), $e->getMessage());
         } catch (EmailNotSentException $e) {
-            return $this->retry($item, $this->retryAfter);
+            return $this->retry($item, $this->retryAfter, $e->getMessage());
         } catch (TransxchangeException $e) {
-            return $this->retry($item, $this->retryAfter);
+            return $this->retry($item, $this->retryAfter, $e->getMessage());
         } catch (DomainException $e) {
             $message = !empty($e->getMessages()) ? implode(', ', $e->getMessages()) : $e->getMessage();
             return $this->failed($item, $message);
