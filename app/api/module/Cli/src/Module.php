@@ -17,7 +17,7 @@ class Module implements ConsoleUsageProviderInterface
     /**
      * Display CLI usage
      *
-     * @param ConsoleAdapterInterface $console
+     * @param ConsoleAdapterInterface $console console
      *
      * @return array
      */
@@ -33,6 +33,7 @@ class Module implements ConsoleUsageProviderInterface
             'duplicate-vehicle-warning [--verbose|-v]' => 'Send duplicate vehicle warning letters',
             'process-inbox [--verbose|-v]' => 'Process inbox documents',
             'process-ntu [--verbose|-v]' => 'Process Not Taken Up Applications',
+            'process-cl [--verbose|-v] [--dryrun|-d]' => 'Process community licences',
             'batch-cns  [--verbose|-v] [--dryrun|-d]' => 'Process Licences for Continuation Not Sought',
             'inspection-request-email [--verbose|-v]' => 'Process inspection request email',
             'remove-read-audit [--verbose|-v]' => 'Process deletion of old read audit records',
@@ -56,7 +57,11 @@ class Module implements ConsoleUsageProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * On bootstrap
+     *
+     * @param MvcEvent $event event
+     *
+     * @return void
      */
     public function onBootstrap(MvcEvent $event)
     {
@@ -69,11 +74,21 @@ class Module implements ConsoleUsageProviderInterface
         }
     }
 
+    /**
+     * Get config
+     *
+     * @return array
+     */
     public function getConfig()
     {
         return (include __DIR__ . '/../config/module.config.php');
     }
 
+    /**
+     * Get autoloader config
+     *
+     * @return array
+     */
     public function getAutoloaderConfig()
     {
         return array(
