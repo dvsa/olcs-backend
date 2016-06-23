@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\ReopenableInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SeriousInfringementEntity;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * Cases Entity
@@ -34,7 +35,11 @@ use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SeriousInfringementEntity;
  *    }
  * )
  */
-class Cases extends AbstractCases implements CloseableInterface, ReopenableInterface, ContextProviderInterface
+class Cases extends AbstractCases implements
+    CloseableInterface,
+    ReopenableInterface,
+    ContextProviderInterface,
+    OrganisationProviderInterface
 {
     const LICENCE_CASE_TYPE = 'case_t_lic';
     const IMPOUNDING_CASE_TYPE = 'case_t_imp';
@@ -471,5 +476,27 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
             default:
                 return Note::NOTE_TYPE_CASE;
         }
+    }
+
+    /**
+     * Get organisations this entity is linked to
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation|\Dvsa\Olcs\Api\Entity\Organisation\Organisation[]|null
+     */
+    public function getRelatedOrganisation()
+    {
+        if ($this->getApplication()) {
+            return $this->getApplication()->getRelatedOrganisation();
+        }
+
+        if ($this->getLicence()) {
+            return $this->getLicence()->getRelatedOrganisation();
+        }
+
+        if ($this->getTransportManager()) {
+            return $this->getTransportManager()->getRelatedOrganisation();
+        }
+
+        return null;
     }
 }

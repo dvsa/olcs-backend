@@ -199,6 +199,7 @@ class SearchTest extends MockeryTestCase
      *
      * @param $index
      * @param $expectedQuery
+     * @param string $userType
      */
     public function testSearchIndex($index, $expectedQuery, $userType = 'external', $searchString = 'FOO BAR')
     {

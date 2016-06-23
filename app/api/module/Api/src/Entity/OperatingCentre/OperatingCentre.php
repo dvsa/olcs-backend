@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\OperatingCentre;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * OperatingCentre Entity
@@ -21,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
  *    }
  * )
  */
-class OperatingCentre extends AbstractOperatingCentre
+class OperatingCentre extends AbstractOperatingCentre implements OrganisationProviderInterface
 {
     protected $hasEnvironmentalComplaint;
 
@@ -75,5 +76,22 @@ class OperatingCentre extends AbstractOperatingCentre
         }
 
         return $this->hasOpposition;
+    }
+
+    /**
+     * Get organisation this entity is linked to
+     *
+     * @return null|\Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     */
+    public function getRelatedOrganisation()
+    {
+        // All applications would have to be on the same organisation, therefore we can just use the first one
+        if ($this->getApplications()->first()) {
+            return $this->getApplications()->first()->getRelatedOrganisation();
+        }
+
+        // not checking Operating centres linked to Licences at the moment as its not required
+
+        return null;
     }
 }
