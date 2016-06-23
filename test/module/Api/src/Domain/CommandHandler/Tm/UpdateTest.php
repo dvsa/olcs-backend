@@ -5,7 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManager;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Tm;
 
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Update;
@@ -165,7 +165,7 @@ class UpdateTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $mockTransportManager = m::mock(TrnasportManagerEntity::class)
+        $mockTransportManager = m::mock(TransportManagerEntity::class)
             ->shouldReceive('updateTransportManager')
             ->with(
                 m::type(RefData::class),
