@@ -26,7 +26,8 @@ class ReportDownload extends AbstractConsumer
     /**
      * Process the message item
      *
-     * @param QueueEntity $item
+     * @param QueueEntity $item queue item
+     *
      * @return string
      */
     public function processMessage(QueueEntity $item)
@@ -72,10 +73,18 @@ class ReportDownload extends AbstractConsumer
         return $this->success($item, implode('|', $messages));
     }
 
+    /**
+     * handle exception
+     *
+     * @param \Exception  $e    the exception
+     * @param QueueEntity $item queue item
+     *
+     * @return string
+     */
     protected function handleException(\Exception $e, QueueEntity $item)
     {
         if ($e instanceof NotReadyException) {
-            return $this->retry($item, $e->getRetryAfter());
+            return $this->retry($item, $e->getRetryAfter(), $e->getMessage());
         }
 
         if ($e instanceof DomainException) {

@@ -69,9 +69,23 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
      * @param string $class
      * @param array $expectedDtoData
      * @param string $exceptionClass
+     * @param string $exceptionMsg
+     * @param int $retryAfter
      */
-    protected function expectCommandException($class, $expectedDtoData, $exceptionClass, $exceptionMsg)
-    {
+    protected function expectCommandException(
+        $class,
+        $expectedDtoData,
+        $exceptionClass,
+        $exceptionMsg = '',
+        $retryAfter = 900
+    ) {
+        $exception = new $exceptionClass($exceptionMsg);
+
+        //it's a pain that we have two ways to set retry after - this deals with those that are set on the exception
+        if (method_exists($exceptionClass, 'setRetryAfter')) {
+            $exception->setRetryAfter($retryAfter);
+        }
+
         $this->chm
             ->shouldReceive('handleCommand')
             ->with(
@@ -88,7 +102,7 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
                 false
             )
             ->once()
-            ->andThrow(new $exceptionClass($exceptionMsg));
+            ->andThrow($exception);
     }
 
     /**
