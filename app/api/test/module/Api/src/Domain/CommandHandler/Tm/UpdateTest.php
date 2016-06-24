@@ -5,7 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManager;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Tm;
 
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Update;
@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 
 /**
  * Transport Manager / Update
@@ -81,9 +82,7 @@ class UpdateTest extends CommandHandlerTestCase
             'workAddressLine4' => 'wal4',
             'workTown' => 'wt',
             'workPostcode' => 'wpc',
-            'workCountryCode' => 'wcc',
-            'nysiisForename' => 'fn',
-            'nysiisFamilyname' => 'ln',
+            'workCountryCode' => 'wcc'
         ];
 
         $command = Cmd::create($data);
@@ -166,7 +165,7 @@ class UpdateTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $mockTransportManager = m::mock(TrnasportManagerEntity::class)
+        $mockTransportManager = m::mock(TransportManagerEntity::class)
             ->shouldReceive('updateTransportManager')
             ->with(
                 m::type(RefData::class),
@@ -174,12 +173,8 @@ class UpdateTest extends CommandHandlerTestCase
                 null
             )
             ->once()
-            ->shouldReceive('updateNysiis')
-            ->with($command->getNysiisForename(), $command->getNysiisFamilyname())
-            ->once()
             ->shouldReceive('getId')
             ->andReturn($id)
-            ->once()
             ->getMock();
 
         $this->repoMap['TransportManager']
@@ -191,6 +186,8 @@ class UpdateTest extends CommandHandlerTestCase
             ->with($mockTransportManager)
             ->once()
             ->getMock();
+
+        $this->expectedQueueSideEffect($id, Queue::TYPE_UPDATE_NYSIIS_TM_NAME, ['id' => $id]);
 
         $result = $this->sut->handleCommand($command);
 

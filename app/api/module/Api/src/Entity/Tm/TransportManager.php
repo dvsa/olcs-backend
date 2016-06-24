@@ -37,6 +37,14 @@ class TransportManager extends AbstractTransportManager implements
     const TRANSPORT_MANAGER_TYPE_BOTH = 'tm_t_b';
     const TRANSPORT_MANAGER_TYPE_INTERNAL = 'tm_t_i';
 
+    /**
+     * Update type, status and home/work contact details of the TM
+     *
+     * @param $type
+     * @param $status
+     * @param null $workCd
+     * @param null $homeCd
+     */
     public function updateTransportManager(
         $type,
         $status,
@@ -53,6 +61,12 @@ class TransportManager extends AbstractTransportManager implements
         }
     }
 
+    /**
+     * Update the NYSIIS name fields
+     *
+     * @param null $nysiisForename
+     * @param null $nysiisFamilyname
+     */
     public function updateNysiis(
         $nysiisForename = null,
         $nysiisFamilyname = null
