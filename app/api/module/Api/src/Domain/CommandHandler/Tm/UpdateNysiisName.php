@@ -98,7 +98,7 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
                 'familyName' => $nysiisData['nysiisFamilyname']
             ];
         } catch (\Exception $e) {
-          throw new NysiisException('Failed SOAP call to getNysiisSearchKeys(): ' . $e->getMessage());
+            throw new NysiisException('Failed SOAP call to getNysiisSearchKeys(): ' . $e->getMessage());
         }
     }
 }
