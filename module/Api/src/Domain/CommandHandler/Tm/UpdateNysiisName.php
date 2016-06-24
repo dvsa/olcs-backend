@@ -13,6 +13,8 @@ use Dvsa\Olcs\Transfer\Command\Tm\UpdateNysiisName as UpdateNysiisNameCmd;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Service\Data\Nysiis as NysiisService;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Olcs\Logging\Log\Logger;
+use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
 
 /**
  * Queue request to update TM name with Nysiis values
@@ -81,19 +83,22 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
 
     /**
      * Connect to Nysiis with given params and return values returned by Nysiis
-     *
-     * @param array $nysiisParams
-     * @return mixed
+     * @param $nysiisParams
+     * @return array
+     * @throws NysiisException
      */
     private function requestNyiisData($nysiisParams)
     {
+        try {
+            $nysiisData = $this->nysiisService->getNysiisSearchKeys($nysiisParams);
 
-        $nysiisData = $this->nysiisService->getNysiisSearchKeys($nysiisParams);
-
-        // connect to Nysiis here and return whatever Nysiis returns
-        return [
-            'forename' => $nysiisData['nysiisForename'],
-            'familyName' => $nysiisData['nysiisFamilyname']
-        ];
+            // connect to Nysiis here and return whatever Nysiis returns
+            return [
+                'forename' => $nysiisData['nysiisForename'],
+                'familyName' => $nysiisData['nysiisFamilyname']
+            ];
+        } catch (\Exception $e) {
+          throw new NysiisException('Failed SOAP call to getNysiisSearchKeys(): ' . $e->getMessage());
+        }
     }
 }

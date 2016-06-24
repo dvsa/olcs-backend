@@ -134,9 +134,8 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     private function createTransportManagerObject($command, $workCdId, $homeCdId)
     {
         $transportManager = new TransportManagerEntity();
-        $status = $command->getStatus() ? $command->getStatus() :
-            TransportManagerEntity::TRANSPORT_MANAGER_STATUS_CURRENT;
-        $transportManager->updateNysiis($command->getNysiisForename(), $command->getNysiisFamilyname());
+        $status = $command->getStatus() ?
+            $command->getStatus() : TransportManagerEntity::TRANSPORT_MANAGER_STATUS_CURRENT;
         $transportManager->updateTransportManager(
             $this->getRepo()->getRefdataReference($command->getType()),
             $this->getRepo()->getRefdataReference($status),
