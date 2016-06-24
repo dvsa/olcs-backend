@@ -12,23 +12,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Standard;
  */
 // @codingStandardsIgnoreStart
 $map = [
-    CommandHandler\Application\CancelApplication::class => Standard::class, // @todo
-    CommandHandler\Application\CreateApplication::class => Standard::class, // @todo
-    CommandHandler\Application\CreateSnapshot::class => Standard::class, // @todo
-    CommandHandler\Application\CreateTaxiPhv::class => Standard::class, // @todo
-    CommandHandler\Application\DeleteTaxiPhv::class => Standard::class, // @todo
-    CommandHandler\Application\GenerateOrganisationName::class => Standard::class, // @todo
-    CommandHandler\Application\Schedule41::class => Standard::class, // @todo
-    CommandHandler\Application\SubmitApplication::class => Standard::class, // @todo
-    CommandHandler\Application\UpdateAddresses::class => Standard::class, // @todo
-    CommandHandler\Application\UpdateApplicationCompletion::class => Standard::class, // @todo
-    CommandHandler\Application\UpdateBusinessDetails::class => Standard::class, // @todo
-    CommandHandler\Application\UpdateDeclaration::class => Standard::class, // @todo
-    CommandHandler\Application\UpdateFinancialEvidence::class => Standard::class, // @todo
-    CommandHandler\Application\UpdateFinancialHistory::class => Standard::class, // @todo
-    CommandHandler\Application\UpdateTaxiPhv::class => Standard::class, // @todo
-    CommandHandler\Application\UpdateTypeOfLicence::class => Standard::class, // @todo
-    CommandHandler\Application\WithdrawApplication::class => Standard::class, // @todo
     CommandHandler\Bus\Ebsr\UpdateTxcInbox::class => Standard::class, // @todo
     CommandHandler\CommunityLic\Application\Create::class => Standard::class, // @todo
     CommandHandler\CommunityLic\Application\CreateOfficeCopy::class => Standard::class, // @todo
@@ -70,15 +53,6 @@ $map = [
     CommandHandler\Variation\UpdateConditionUndertaking::class => Standard::class, // @todo
     CommandHandler\Variation\UpdateTypeOfLicence::class => Standard::class, // @todo
     QueryHandler\ApplicationOperatingCentre\ApplicationOperatingCentre::class => Standard::class, // @todo
-    QueryHandler\Application\Application::class => Standard::class, // @todo
-    QueryHandler\Application\Declaration::class => Standard::class, // @todo
-    QueryHandler\Application\DeclarationUndertakings::class => Standard::class, // @todo
-    QueryHandler\Application\FinancialEvidence::class => Standard::class, // @todo
-    QueryHandler\Application\FinancialHistory::class => Standard::class, // @todo
-    QueryHandler\Application\Review::class => Standard::class, // @todo
-    QueryHandler\Application\Schedule41Approve::class => Standard::class, // @todo
-    QueryHandler\Application\Summary::class => Standard::class, // @todo
-    QueryHandler\Application\TaxiPhv::class => Standard::class, // @todo
     QueryHandler\Bus\Ebsr\BusRegWithTxcInbox::class => Standard::class, // @todo
     QueryHandler\Bus\RegistrationHistoryList::class => Standard::class, // @todo
     QueryHandler\Bus\SearchViewList::class => Standard::class, // @todo
@@ -108,7 +82,6 @@ $map = [
     QueryHandler\User\UserListSelfserve::class => Standard::class, // @todo
     QueryHandler\User\UserSelfserve::class => Standard::class, // @todo
     QueryHandler\Variation\TypeOfLicence::class => Standard::class, // @todo
-    CommandHandler\Application\UpdatePrivateHireLicence::class => Standard::class, // @todo
     QueryHandler\Fee\GetLatestFeeType::class => Standard::class, // @todo
 ];
 // @codingStandardsIgnoreEnd
