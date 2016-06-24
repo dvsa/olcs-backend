@@ -50,6 +50,7 @@ class Queue extends AbstractQueue
     const TYPE_DISC_PRINTING = 'que_typ_disc_printing';
     const TYPE_CREATE_GOODS_VEHICLE_LIST = 'que_typ_create_gds_vehicle_list';
     const TYPE_CREATE_PSV_VEHICLE_LIST = 'que_typ_create_psv_vehicle_list';
+    const TYPE_UPDATE_NYSIIS_TM_NAME = 'que_typ_update_nysiis_tm_name';
 
     protected $types = [
         self::TYPE_COMPANIES_HOUSE_INITIAL,
@@ -66,7 +67,8 @@ class Queue extends AbstractQueue
         self::TYPE_PRINT,
         self::TYPE_DISC_PRINTING,
         self::TYPE_CREATE_GOODS_VEHICLE_LIST,
-        self::TYPE_CREATE_PSV_VEHICLE_LIST
+        self::TYPE_CREATE_PSV_VEHICLE_LIST,
+        self::TYPE_UPDATE_NYSIIS_TM_NAME
     ];
 
     public function incrementAttempts()

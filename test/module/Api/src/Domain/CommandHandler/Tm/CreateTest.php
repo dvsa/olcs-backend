@@ -22,6 +22,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 
 /**
  * Create Transport Manager Test
@@ -180,6 +181,8 @@ class CreateTest extends CommandHandlerTestCase
                     $transportManager = $tm;
                 }
             );
+
+        $this->expectedQueueSideEffect(111, Queue::TYPE_UPDATE_NYSIIS_TM_NAME, ['id' => 111]);
 
         $result = $this->sut->handleCommand($command);
 

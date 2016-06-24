@@ -17,6 +17,10 @@ use Dvsa\Olcs\Transfer\Command\Tm\Create as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as SaveAddressCmd;
 use Dvsa\Olcs\Api\Domain\Command\Person\Create as CreatePersonCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Transfer\Command\Tm\UpdateNysiisName as UpdateNysiisNameCmd;
+use Zend\Serializer\Adapter\Json as ZendJson;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
 
 /**
  * Transport Manager / Create
@@ -86,6 +90,16 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
 
         $this->getRepo()->save($transportManager);
 
+        $this->result->merge(
+            $this->handleSideEffect(
+                $this->getNysiisNameUpdateQueueCmd(
+                    [
+                        'id' => $transportManager->getId()
+                    ]
+                )
+            )
+        );
+
         $result->addId('transportManager', $transportManager->getId());
         $result->addMessage('Transport Manager created successfully');
         $result->merge($personResult);
@@ -120,9 +134,8 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     private function createTransportManagerObject($command, $workCdId, $homeCdId)
     {
         $transportManager = new TransportManagerEntity();
-        $status = $command->getStatus() ? $command->getStatus() :
-            TransportManagerEntity::TRANSPORT_MANAGER_STATUS_CURRENT;
-        $transportManager->updateNysiis($command->getNysiisForename(), $command->getNysiisFamilyname());
+        $status = $command->getStatus() ?
+            $command->getStatus() : TransportManagerEntity::TRANSPORT_MANAGER_STATUS_CURRENT;
         $transportManager->updateTransportManager(
             $this->getRepo()->getRefdataReference($command->getType()),
             $this->getRepo()->getRefdataReference($status),
@@ -130,5 +143,29 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
             $this->getRepo()->getReference(ContactDetailsEntity::class, $homeCdId)
         );
         return $transportManager;
+    }
+
+    /**
+     * Returns a command to queue a NYSIIS name request and update
+     *
+     * @param array $params
+     * @return UpdateNysiisNameCmd
+     */
+    private function getNysiisNameUpdateQueueCmd($params)
+    {
+        $jsonSerializer = new ZendJson();
+
+        $optionData = [
+            'id' => $params['id']
+        ];
+
+        $dtoData = [
+            'entityId' => $params['id'],
+            'type' => Queue::TYPE_UPDATE_NYSIIS_TM_NAME,
+            'status' => Queue::STATUS_QUEUED,
+            'options' => $jsonSerializer->serialize($optionData)
+        ];
+
+        return CreateQueue::create($dtoData);
     }
 }

@@ -154,11 +154,15 @@ return [
         ]
     ],
     'service_manager' => [
+        'alias' => [
+            'NysiisService' => 'Dvsa\Olcs\Api\Service\Data\Nysiis'
+        ],
         'invokables' => [
             'Queue' => Dvsa\Olcs\Cli\Service\Queue\QueueProcessor::class,
         ],
         'factories' => [
-            'MessageConsumerManager' => Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManagerFactory::class,
+            'MessageConsumerManager' => \Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManagerFactory::class,
+            'Dvsa\Olcs\Api\Service\Data\Nysiis' => Dvsa\Olcs\Api\Service\Data\NysiisFactory::class,
         ],
     ],
     'message_consumer_manager' => [
@@ -191,6 +195,8 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting\CreatePsvVehicleList::class,
             Queue::TYPE_SEND_MSI_RESPONSE
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Nr\SendMsiResponse::class,
+            Queue::TYPE_UPDATE_NYSIIS_TM_NAME
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm\UpdateTmNysiisName::class,
         ],
         'factories' => [
             Queue::TYPE_CPID_EXPORT_CSV => Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,

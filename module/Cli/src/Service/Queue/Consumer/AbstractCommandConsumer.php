@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
 use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
 use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
+use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
 use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
@@ -85,6 +86,8 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
             return $this->retry($item, $this->retryAfter, $e->getMessage());
         } catch (TransxchangeException $e) {
             return $this->retry($item, $this->retryAfter, $e->getMessage());
+        } catch (NysiisException $e) {
+            return $this->retry($item, $e->getRetryAfter(), $e->getMessage());
         } catch (DomainException $e) {
             $message = !empty($e->getMessages()) ? implode(', ', $e->getMessages()) : $e->getMessage();
             return $this->failed($item, $message);
