@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\Exception;
  */
 class NysiisException extends Exception
 {
-    protected $retryAfter = 20;
+    protected $retryAfter = 900;
 
     /**
      * Gets the value of retryAfter.
