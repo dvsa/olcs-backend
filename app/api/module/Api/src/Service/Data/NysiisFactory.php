@@ -30,10 +30,14 @@ class NysiisFactory implements FactoryInterface
 
         $wsdl = file_get_contents($config['nysiis']['wsdl']['uri']);
 
-        $soapClient = new SoapClient(
-            $wsdl,
-            $config['nysiis']['wsdl']['soap']['options']
-        );
+        try {
+            $soapClient = new SoapClient(
+                $wsdl,
+                $config['nysiis']['wsdl']['soap']['options']
+            );
+        } catch (\Exception $e) {
+            throw new NysiisException('Unable to create soap client: ' . $e->getMessage());
+        }
 
         return new Nysiis($soapClient, $config);
     }
