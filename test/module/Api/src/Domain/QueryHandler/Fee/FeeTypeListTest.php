@@ -80,7 +80,8 @@ class FeeTypeListTest extends QueryHandlerTestCase
                 'irfoGvPermit' => [],
                 'irfoPsvAuth' => [],
             ],
-            'showQuantity' => false
+            'showQuantity' => false,
+            'showVatRate' => false
         ];
 
         static::assertEquals($expected, $result);
@@ -118,6 +119,9 @@ class FeeTypeListTest extends QueryHandlerTestCase
                 m::mock()
                 ->shouldReceive('isShowQuantity')
                 ->andReturn(true)
+                ->once()
+                ->shouldReceive('getVatRate')
+                ->andReturn(20)
                 ->once()
                 ->getMock()
             );
@@ -165,7 +169,8 @@ class FeeTypeListTest extends QueryHandlerTestCase
                     69 => '69 (auth description)',
                 ],
             ],
-            'showQuantity' => true
+            'showQuantity' => true,
+            'showVatRate' => true
         ];
 
         static::assertEquals($expected, $result);
@@ -214,7 +219,8 @@ class FeeTypeListTest extends QueryHandlerTestCase
                 'irfoGvPermit' => [],
                 'irfoPsvAuth' => [],
             ],
-            'showQuantity' => false
+            'showQuantity' => false,
+            'showVatRate'  => false
         ];
 
         static::assertEquals($expected, $result);
@@ -390,6 +396,10 @@ class FeeTypeListTest extends QueryHandlerTestCase
             ->shouldReceive('getFeeType')
             ->withNoArgs()
             ->andReturn($feeTypeRefData)
+            //
+            ->shouldReceive('getVatRate')
+            ->withNoArgs()
+            ->andReturn(0)
             //
             ->getMock();
     }
