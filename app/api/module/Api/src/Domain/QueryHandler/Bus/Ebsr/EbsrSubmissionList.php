@@ -50,8 +50,9 @@ class EbsrSubmissionList extends AbstractQueryHandler implements AuthAwareInterf
                         'licence' => [
                             'organisation'
                         ],
-                        'otherServices'
-                    ]
+                        'otherServices',
+                    ],
+                    'document'
                 ]
             ),
             'count' => $repo->fetchCount($listDto)
