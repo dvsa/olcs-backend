@@ -27,7 +27,9 @@ class FeeTypeList extends AbstractQueryHandler
     protected $extraRepos = ['IrfoGvPermit', 'IrfoPsvAuth'];
 
     /**
-     * @param FeeTypeListQry $query
+     * Handle query
+     *
+     * @param FeeTypeListQry $query query
      *
      * @return array
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
@@ -64,23 +66,26 @@ class FeeTypeList extends AbstractQueryHandler
         }
 
         $showQuantity = false;
+        $showVatRate = false;
         if ($query->getCurrentFeeType()) {
             $feeType = $this->getRepo()->fetchById($query->getCurrentFeeType());
             $showQuantity = $feeType->isShowQuantity();
+            $showVatRate = ((float) $feeType->getVatRate() > 0);
         }
 
         return [
             'result' => $this->resultList($filteredFeeTypes),
             'count' => count($filteredFeeTypes),
             'valueOptions' => $valueOptions,
-            'showQuantity' => $showQuantity
+            'showQuantity' => $showQuantity,
+            'showVatRate' => $showVatRate
         ];
     }
 
     /**
      * Get a Traffic area from the query params
      *
-     * @param FeeTypeListQry $query
+     * @param FeeTypeListQry $query query
      *
      * @return TrafficArea|null
      */
@@ -105,7 +110,7 @@ class FeeTypeList extends AbstractQueryHandler
      * This is in lieu of being able to do proper groupwise max in the
      * repository method using Doctrine
      *
-     * @param \ArrayIterator $feeTypes Array of fee types
+     * @param \ArrayIterator $feeTypes    Array of fee types
      * @param TrafficArea    $trafficArea TrafficArea to get fee types for, default to null
      *
      * @return array
@@ -134,6 +139,14 @@ class FeeTypeList extends AbstractQueryHandler
         return $filtered;
     }
 
+    /**
+     * Get IRFO GV Permit value options
+     *
+     * @param FeeTypeListQry $query query
+     *
+     * @return array
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     private function getIrfoGvPermitValueOptions(FeeTypeListQry $query)
     {
         $valueOptions = [];
@@ -157,6 +170,14 @@ class FeeTypeList extends AbstractQueryHandler
         return $valueOptions;
     }
 
+    /**
+     * Get IRFO PSV auth value options
+     *
+     * @param FeeTypeListQry $query query
+     *
+     * @return array
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     private function getIrfoPsvAuthValueOptions(FeeTypeListQry $query)
     {
         $valueOptions = [];
