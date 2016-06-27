@@ -30,6 +30,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessPack as ProcessPackCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
+use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks as UpdateDocumentLinksCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateBusFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateTxcInbox as CreateTxcInboxCmd;
@@ -230,7 +231,7 @@ final class ProcessPack extends AbstractCommandHandler implements
         $this->getRepo('EbsrSubmission')->save($ebsrSub);
 
         //trigger side effects (persist docs, txc inbox, create task, request a route map, create fee, send email)
-        $sideEffects = $this->getSideEffects($ebsrData, $busReg, dirname($xmlName));
+        $sideEffects = $this->getSideEffects($ebsrData, $busReg, $ebsrSub, dirname($xmlName));
         $this->handleSideEffects($sideEffects);
 
         //we've finished processing
@@ -437,14 +438,16 @@ final class ProcessPack extends AbstractCommandHandler implements
      * 5. Create fee (optional)
      * 6. Queue confirmation email
      *
-     * @param array $ebsrData
-     * @param BusRegEntity $busReg
-     * @param string $docPath
+     * @param array                $ebsrData
+     * @param BusRegEntity         $busReg
+     * @param EbsrSubmissionEntity $ebsrSub
+     * @param string               $docPath
+     *
      * @return array
      */
-    private function getSideEffects(array $ebsrData, BusRegEntity $busReg, $docPath)
+    private function getSideEffects(array $ebsrData, BusRegEntity $busReg, EbsrSubmissionEntity $ebsrSub, $docPath)
     {
-        $sideEffects = $this->persistDocuments($ebsrData, $busReg, $docPath);
+        $sideEffects = $this->persistDocuments($ebsrData, $busReg, $ebsrSub, $docPath);
         $sideEffects[] = $this->createTxcInboxCmd($busReg->getId());
         $sideEffects[] = $this->createTaskCommand($busReg);
         $sideEffects[] = $this->getRequestMapQueueCmd($busReg->getId());
@@ -470,15 +473,15 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Returns a side effect to save the supporting documents and schematic map to the doc store
      *
-     * @param array $ebsrData
-     * @param BusRegEntity $busReg
-     * @param string $docPath
+     * @param array                $ebsrData
+     * @param BusRegEntity         $busReg
+     * @param EbsrSubmissionEntity $ebsrSub
+     * @param string               $docPath
+     *
      * @return array
      */
-    private function persistDocuments(array $ebsrData, BusRegEntity $busReg, $docPath)
+    private function persistDocuments(array $ebsrData, BusRegEntity $busReg, EbsrSubmissionEntity $ebsrSub, $docPath)
     {
-        $sideEffects = [];
-
         //store any supporting documents
         if (isset($ebsrData['documents'])) {
             foreach ($ebsrData['documents'] as $docName) {
@@ -492,6 +495,15 @@ final class ProcessPack extends AbstractCommandHandler implements
             $path = $docPath . '/' . $ebsrData['map'];
             $sideEffects[] = $this->persistSupportingDoc($path, $busReg, $ebsrData['map'], 'Schematic map');
         }
+
+        //update the original zip file with links to the licence and bus registration
+        $documentLinkData = [
+            'id' => $ebsrSub->getDocument()->getId(),
+            'busReg' => $busReg->getId(),
+            'licence' => $busReg->getLicence()->getId()
+        ];
+
+        $sideEffects[] = UpdateDocumentLinksCmd::create($documentLinkData);
 
         return $sideEffects;
     }
