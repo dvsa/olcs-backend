@@ -75,6 +75,7 @@ return [
     QueryHandler\User\User::class => IsInternalUser::class,
     QueryHandler\Variation\Variation::class => IsInternalUser::class,
     QueryHandler\Bus\PaginatedRegistrationHistoryList::class => IsInternalUser::class,
+    CommandHandler\Application\Schedule41::class => IsInternalUser::class,
     CommandHandler\Application\Overview::class => IsInternalUser::class,
     CommandHandler\Application\PrintInterimDocument::class => IsInternalUser::class,
     CommandHandler\Application\Publish::class => IsInternalUser::class,

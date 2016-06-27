@@ -29,6 +29,8 @@ class GenericController extends AbstractRestfulController
             return $this->response()->notReady($ex->getRetryAfter());
         } catch (Exception\RestResponseException $ex) {
             return $this->response()->error($ex->getCode(), $ex->getMessage());
+        } catch (Exception\ForbiddenException $ex) {
+            return $this->response()->error(403, $ex->getMessages());
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
@@ -60,6 +62,8 @@ class GenericController extends AbstractRestfulController
             return $this->response()->notFound();
         } catch (Exception\NotReadyException $ex) {
             return $this->response()->notReady($ex->getRetryAfter());
+        } catch (Exception\ForbiddenException $ex) {
+            return $this->response()->error(403, $ex->getMessages());
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
@@ -84,6 +88,8 @@ class GenericController extends AbstractRestfulController
             return $this->response()->notFound();
         } catch (Exception\RestResponseException $ex) {
             return $this->response()->error($ex->getCode(), $ex->getMessage());
+        } catch (Exception\ForbiddenException $ex) {
+            return $this->response()->error(403, $ex->getMessages());
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
@@ -126,6 +132,8 @@ class GenericController extends AbstractRestfulController
             return $this->response()->successfulCreate($result);
         } catch (Exception\RestResponseException $ex) {
             return $this->response()->error($ex->getCode(), $ex->getMessages());
+        } catch (Exception\ForbiddenException $ex) {
+            return $this->response()->error(403, $ex->getMessages());
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
@@ -146,6 +154,8 @@ class GenericController extends AbstractRestfulController
             return $this->response()->successfulUpdate($result);
         } catch (Exception\NotFoundException $ex) {
             return $this->response()->notFound();
+        } catch (Exception\ForbiddenException $ex) {
+            return $this->response()->error(403, $ex->getMessages());
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
@@ -163,6 +173,8 @@ class GenericController extends AbstractRestfulController
             return $this->response()->successfulUpdate($result);
         } catch (Exception\NotFoundException $ex) {
             return $this->response()->notFound();
+        } catch (Exception\ForbiddenException $ex) {
+            return $this->response()->error(403, $ex->getMessages());
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
