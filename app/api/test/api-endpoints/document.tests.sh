@@ -1,57 +1,9 @@
-#!/usr/bin/env bash
-
-# This is scripts tests that the data validators are working correctly on the backend
-# It does this by setting up the data (mysql), calling a backend URL (curl) and asserting the response for a 200 or 400
-# For issues see mat.evans@valtech.co.uk
-#
-# NB Currently run this against the dev test database (run inn Vagrant), It will need ID's changing if running on
-# another database
-
-curlOptions='-s --head --header "X-Pid: f1e9435a0975c1007d77bf466ac7507e66cc599ae3cafa3b2b0909cac2cc9da2"'
-backendUrl="http://olcs-backend/api"
-mysqlOptions="olcs_be"
-userId=611
-userOrganisationId=1
-userLicenceId=7
-userApplicationId=7
-notUserOrganisationId=30
-
-
-function assertValid {
-
-    result=$(eval curl $curlOptions -XGET $backendUrl/$1)
-    match=$(grep -o "HTTP/1.1 200 OK" <<< $result)
-
-    if [ -z "$match" ]; then
-        echo FAILED assertValid $backendUrl/$1
-        exit;
-    else
-        echo PASSED assertValid $backendUrl/$1
-    fi
-}
-
-function assertNotValid {
-
-    result=$(eval curl $curlOptions -XGET $backendUrl/$1)
-    match=$(grep -o "HTTP/1.1 400 Bad Request" <<< $result)
-
-    if [ -z "$match" ]; then
-        echo FAILED assertNotValid $backendUrl/$1
-        exit;
-    else
-        echo PASSED assertNotValid $backendUrl/$1
-    fi
-}
-
-function executeSql {
-    mysql $mysqlOptions -e "$1"
-}
 
 echo
-echo "=Testing document download="
-documentId=10009
+echo "Testing document download"
+documentId=10000
 
-echo "==Licence=="
+echo " |- Licence"
 executeSql "UPDATE document SET \
     licence_id = $userLicenceId, \
     application_id = NULL, \
@@ -65,12 +17,12 @@ executeSql "UPDATE document SET \
     WHERE id = $documentId"
 
 executeSql "UPDATE organisation_user SET organisation_id = $userOrganisationId WHERE user_id = $userId"
-assertValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId"
 
 executeSql  "UPDATE organisation_user SET organisation_id = $notUserOrganisationId WHERE user_id = $userId"
-assertNotValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId" 403
 
-echo "==Application=="
+echo  " |- Application"
 executeSql "UPDATE document SET \
     licence_id = NULL, \
     application_id = $userApplicationId, \
@@ -84,12 +36,12 @@ executeSql "UPDATE document SET \
     WHERE id = $documentId"
 
 executeSql "UPDATE organisation_user SET organisation_id = $userOrganisationId WHERE user_id = $userId"
-assertValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId"
 
 executeSql  "UPDATE organisation_user SET organisation_id = $notUserOrganisationId WHERE user_id = $userId"
-assertNotValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId" 403
 
-echo "==Case=="
+echo  " |- Case"
 caseId=24
 executeSql "UPDATE document SET \
     licence_id = NULL, \
@@ -103,7 +55,7 @@ executeSql "UPDATE document SET \
     statement_id = NULL \
     WHERE id = $documentId"
 
-echo "===Application==="
+echo  "   |- Application"
 executeSql "UPDATE cases SET \
     application_id = $userApplicationId, \
     transport_manager_id = NULL, \
@@ -111,12 +63,12 @@ executeSql "UPDATE cases SET \
     WHERE id = $caseId"
 
 executeSql "UPDATE organisation_user SET organisation_id = $userOrganisationId WHERE user_id = $userId"
-assertValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId"
 
 executeSql  "UPDATE organisation_user SET organisation_id = $notUserOrganisationId WHERE user_id = $userId"
-assertNotValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId" 403
 
-echo "===Transport Manager==="
+echo  "   |- Transport Manager"
 transportManagerId=1
 executeSql "UPDATE cases SET \
     application_id = NULL, \
@@ -124,27 +76,27 @@ executeSql "UPDATE cases SET \
     licence_id = NULL \
     WHERE id = $caseId"
 
-echo "====Transport Manager Application===="
+echo  "     |- Transport Manager Application"
 executeSql "UPDATE transport_manager_application SET application_id = $userApplicationId"
 executeSql "UPDATE transport_manager_licence SET licence_id = 114"
 
 executeSql "UPDATE organisation_user SET organisation_id = $userOrganisationId WHERE user_id = $userId"
-assertValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId"
 
 executeSql  "UPDATE organisation_user SET organisation_id = $notUserOrganisationId WHERE user_id = $userId"
-assertNotValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId" 403
 
-echo "====Transport Manager Licence===="
+echo  "     |- Transport Manager Licence"
 executeSql "UPDATE transport_manager_application SET application_id = 6"
 executeSql "UPDATE transport_manager_licence SET licence_id = $userLicenceId"
 
 executeSql "UPDATE organisation_user SET organisation_id = $userOrganisationId WHERE user_id = $userId"
-assertValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId"
 
 executeSql  "UPDATE organisation_user SET organisation_id = $notUserOrganisationId WHERE user_id = $userId"
-assertNotValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId" 403
 
-echo "===Licence==="
+echo  "   |- Licence"
 executeSql "UPDATE cases SET \
     application_id = NULL, \
     transport_manager_id = NULL, \
@@ -152,12 +104,12 @@ executeSql "UPDATE cases SET \
     WHERE id = $caseId"
 
 executeSql "UPDATE organisation_user SET organisation_id = $userOrganisationId WHERE user_id = $userId"
-assertValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId"
 
 executeSql  "UPDATE organisation_user SET organisation_id = $notUserOrganisationId WHERE user_id = $userId"
-assertNotValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId" 403
 
-echo "==Transport Manager=="
+echo  " |- Transport Manager"
 transportManagerId=1
 executeSql "UPDATE document SET \
     licence_id = NULL, \
@@ -171,25 +123,27 @@ executeSql "UPDATE document SET \
     statement_id = NULL \
     WHERE id = $documentId"
 
+echo  "   |- Transport Manager Application"
 executeSql "UPDATE transport_manager_application SET application_id = $userApplicationId"
 executeSql "UPDATE transport_manager_licence SET licence_id = 114"
 
 executeSql "UPDATE organisation_user SET organisation_id = $userOrganisationId WHERE user_id = $userId"
-assertValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId"
 
 executeSql  "UPDATE organisation_user SET organisation_id = $notUserOrganisationId WHERE user_id = $userId"
-assertNotValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId" 403
 
+echo  "   |- Transport Manager Licence"
 executeSql "UPDATE transport_manager_application SET application_id = 6"
 executeSql "UPDATE transport_manager_licence SET licence_id = $userLicenceId"
 
 executeSql "UPDATE organisation_user SET organisation_id = $userOrganisationId WHERE user_id = $userId"
-assertValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId"
 
 executeSql  "UPDATE organisation_user SET organisation_id = $notUserOrganisationId WHERE user_id = $userId"
-assertNotValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId" 403
 
-echo "==Operating Centre=="
+echo  " |- Operating Centre"
 operatingCentreId=16
 executeSql "UPDATE document SET \
     licence_id = NULL, \
@@ -206,12 +160,12 @@ executeSql "UPDATE document SET \
 executeSql "UPDATE application_operating_centre SET application_id = $userApplicationId"
 
 executeSql "UPDATE organisation_user SET organisation_id = $userOrganisationId WHERE user_id = $userId"
-assertValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId"
 
 executeSql  "UPDATE organisation_user SET organisation_id = $notUserOrganisationId WHERE user_id = $userId"
-assertNotValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId" 403
 
-echo "==Bus Reg=="
+echo  " |- Bus Reg"
 busRegId=1
 executeSql "UPDATE document SET \
     licence_id = NULL, \
@@ -228,12 +182,12 @@ executeSql "UPDATE document SET \
 executeSql "UPDATE bus_reg SET licence_id = $userLicenceId"
 
 executeSql "UPDATE organisation_user SET organisation_id = $userOrganisationId WHERE user_id = $userId"
-assertValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId"
 
 executeSql  "UPDATE organisation_user SET organisation_id = $notUserOrganisationId WHERE user_id = $userId"
-assertNotValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId" 403
 
-echo "==IRFO Organisation=="
+echo  " |- IRFO Organisation"
 executeSql "UPDATE document SET \
     licence_id = NULL, \
     application_id = NULL, \
@@ -247,12 +201,12 @@ executeSql "UPDATE document SET \
     WHERE id = $documentId"
 
 executeSql "UPDATE organisation_user SET organisation_id = $userOrganisationId WHERE user_id = $userId"
-assertValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId"
 
 executeSql  "UPDATE organisation_user SET organisation_id = $notUserOrganisationId WHERE user_id = $userId"
-assertNotValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId" 403
 
-echo "==Submission=="
+echo  " |- Submission"
 submissionId=1
 # Use caseId from previos test
 
@@ -277,12 +231,12 @@ executeSql "UPDATE cases SET \
     WHERE id = $caseId"
 
 executeSql "UPDATE organisation_user SET organisation_id = $userOrganisationId WHERE user_id = $userId"
-assertValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId"
 
 executeSql  "UPDATE organisation_user SET organisation_id = $notUserOrganisationId WHERE user_id = $userId"
-assertNotValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId" 403
 
-echo "==Statement=="
+echo  " |- Statement"
 statementId=1
 # Use caseId from previous test
 
@@ -307,16 +261,8 @@ executeSql "UPDATE cases SET \
     WHERE id = $caseId"
 
 executeSql "UPDATE organisation_user SET organisation_id = $userOrganisationId WHERE user_id = $userId"
-assertValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId"
 
 executeSql  "UPDATE organisation_user SET organisation_id = $notUserOrganisationId WHERE user_id = $userId"
-assertNotValid "document/download?identifier=$documentId"
+assertHttpCode "document/download?identifier=$documentId" 403
 
-
-
-
-
-
-echo
-echo Woohoo ALL PASSED !!!
-echo
