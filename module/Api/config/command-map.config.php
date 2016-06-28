@@ -30,16 +30,14 @@ return [
     TransferCommand\Application\UpdatePreviousConvictions::class =>
         CommandHandler\Application\UpdatePreviousConvictions::class,
     TransferCommand\Application\UpdateDeclaration::class => CommandHandler\Application\UpdateDeclaration::class,
-    TransferCommand\Application\UpdateBusinessDetails::class
-        => CommandHandler\Application\UpdateBusinessDetails::class,
+    TransferCommand\Application\UpdateBusinessDetails::class => CommandHandler\Application\UpdateBusinessDetails::class,
     TransferCommand\Application\UpdateCompanySubsidiary::class
         => CommandHandler\Application\UpdateCompanySubsidiary::class,
     TransferCommand\Application\CreateCompanySubsidiary::class
         => CommandHandler\Application\CreateCompanySubsidiary::class,
     TransferCommand\Application\DeleteCompanySubsidiary::class
         => CommandHandler\Application\DeleteCompanySubsidiary::class,
-    TransferCommand\Application\UpdateAddresses::class
-        => CommandHandler\Application\UpdateAddresses::class,
+    TransferCommand\Application\UpdateAddresses::class => CommandHandler\Application\UpdateAddresses::class,
     TransferCommand\Application\UpdateSafety::class => CommandHandler\Application\UpdateSafety::class,
     TransferCommand\Application\DeleteWorkshop::class => CommandHandler\Application\DeleteWorkshop::class,
     TransferCommand\Application\CreateWorkshop::class => CommandHandler\Application\CreateWorkshop::class,
@@ -575,6 +573,7 @@ return [
     Command\Licence\CancelLicenceFees::class => CommandHandler\Licence\CancelLicenceFees::class,
     Command\Licence\UpdateTotalCommunityLicences::class => CommandHandler\Licence\UpdateTotalCommunityLicences::class,
     Command\Licence\SaveAddresses::class => CommandHandler\Licence\SaveAddresses::class,
+    Command\Licence\SaveBusinessDetails::class => CommandHandler\Licence\SaveBusinessDetails::class,
 
     // Domain - Publications
     Command\Publication\PiHearing::class => CommandHandler\Publication\PiHearing::class,
@@ -948,5 +947,4 @@ return [
     TransferCommand\System\PublicHoliday\Create::class => CommandHandler\System\PublicHoliday\Create::class,
     TransferCommand\System\PublicHoliday\Update::class => CommandHandler\System\PublicHoliday\Update::class,
     TransferCommand\System\PublicHoliday\Delete::class => CommandHandler\System\PublicHoliday\Delete::class,
-
 ];

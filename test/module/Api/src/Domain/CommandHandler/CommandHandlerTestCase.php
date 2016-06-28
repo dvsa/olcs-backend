@@ -38,7 +38,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
     protected $sut;
 
     /**
-     * @var CommandHandlerManager
+     * @var m\MockInterface|CommandHandlerManager
      */
     protected $commandHandler;
 
@@ -160,18 +160,20 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
         parent::tearDown();
 
-        unset($this->sut);
-        unset($this->commandHandler);
-        unset($this->repoManager);
-        unset($this->repoMap);
-        unset($this->sideEffects);
-        unset($this->commands);
-        unset($this->refData);
-        unset($this->references);
-        unset($this->categoryReferences);
-        unset($this->subCategoryReferences);
-        unset($this->initRefdata);
-        unset($this->mockedSmServices);
+        unset(
+            $this->sut,
+            $this->commandHandler,
+            $this->repoManager,
+            $this->repoMap,
+            $this->sideEffects,
+            $this->commands,
+            $this->refData,
+            $this->references,
+            $this->categoryReferences,
+            $this->subCategoryReferences,
+            $this->initRefdata,
+            $this->mockedSmServices
+        );
     }
 
     /**
@@ -289,6 +291,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
     private function assertCommandData()
     {
         foreach ($this->commands as $command) {
+            /** @var CommandInterface $cmd */
             list($cmd, $data) = $command;
 
             $cmdData = $cmd->getArrayCopy();

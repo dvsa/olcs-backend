@@ -1,573 +1,150 @@
 <?php
 
-/**
- * Update Business Details Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
-use Dvsa\Olcs\Api\Domain\Command\Organisation\UpdateTradingNames;
+use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateBusinessDetails;
-use Dvsa\Olcs\Api\Domain\Repository\Organisation;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
-use Dvsa\Olcs\Transfer\Command\Licence\UpdateBusinessDetails as Cmd;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
- * Update Business Details Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateBusinessDetails
  */
 class UpdateBusinessDetailsTest extends CommandHandlerTestCase
 {
+    const ID = 111;
+
+    /** @var  UpdateBusinessDetails */
+    protected $sut;
+    /** @var  m\MockInterface */
+    private $mockAuthSrv;
+
     public function setUp()
     {
         $this->sut = new UpdateBusinessDetails();
-        $this->mockRepo('Licence', Licence::class);
-        $this->mockRepo('Organisation', Organisation::class);
 
-        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
+        $this->mockAuthSrv = m::mock(AuthorizationService::class);
+        $this->mockedSmServices[AuthorizationService::class] = $this->mockAuthSrv;
 
         parent::setUp();
     }
 
-    protected function initReferences()
+    public function testHandleCommand()
     {
-        $this->refData = [
-            '01110',
-            '01120',
-            '01130'
+        //  save business details
+        $saveCmdData = [
+            'id' => self::ID,
+            'version' => 1,
+            'name' => null,
+            'natureOfBusiness' => null,
+            'companyOrLlpNo' => null,
+            'registeredAddress' => null,
+            'tradingNames' => [],
+            'partial' => null,
+            'allowEmail' => null,
         ];
 
-        $this->references = [
-            ContactDetails::class => [
-                123 => m::mock(ContactDetails::class)
-            ]
+        $saveCmdResult = new Result();
+        $saveCmdResult->addMessage('Business Details updated');
+        $saveCmdResult->setFlag('hasChanged', true);
+
+        $this->expectedSideEffect(DomainCmd\Licence\SaveBusinessDetails::class, $saveCmdData, $saveCmdResult);
+
+        //  mock permissions
+        $this->mockIsGranted(Permission::SELFSERVE_USER, true);
+
+        //  create task
+        $taskCmdData = [
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::TASK_SUB_CATEGORY_BUSINESS_DETAILS_CHANGE,
+            'description' => 'Change to business details',
+            'licence' => self::ID,
         ];
 
-        parent::initReferences();
-    }
+        $taskCmdResult = new Result();
+        $taskCmdResult->addMessage('Task Created');
 
-    public function testHandleCommandWithoutPermissionWhenChangingName()
-    {
+        $this->expectedSideEffect(DomainCmd\Task\CreateTask::class, $taskCmdData, $taskCmdResult);
+
+        //  call
         $data = [
-            'id' => 111,
-            'name' => 'Changed name ltd'
+            'id' => self::ID,
+            'version' => 1,
         ];
-        $command = Cmd::create($data);
+        $command = TransferCmd\Licence\UpdateBusinessDetails::create($data);
 
-        /** @var OrganisationEntity $licence */
-        $organisation = m::mock(OrganisationEntity::class)->makePartial();
-        $organisation->setName('Original name ltd');
-        $organisation->shouldReceive('hasInforceLicences')
-            ->andReturn(true);
-
-        /** @var LicenceEntity $licence */
-        $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->setOrganisation($organisation);
-
-        $this->repoMap['Licence']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($licence);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(false);
-
-        $this->setExpectedException(ForbiddenException::class);
-
-        $this->sut->handleCommand($command);
-    }
-
-    public function testHandleCommandWithoutPermissionWhenChangingCompanyNo()
-    {
-        $data = [
-            'id' => 111,
-            'name' => 'Original name ltd',
-            'companyOrLlpNo' => '12345678'
-        ];
-        $command = Cmd::create($data);
-
-        /** @var OrganisationEntity $organisation */
-        $organisation = m::mock(OrganisationEntity::class)->makePartial();
-        $organisation->setName('Original name ltd');
-        $organisation->setCompanyOrLlpNo('87654321');
-        $organisation->shouldReceive('hasInforceLicences')
-            ->andReturn(true);
-
-        /** @var LicenceEntity $licence */
-        $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->setOrganisation($organisation);
-
-        $this->repoMap['Licence']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($licence);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(false);
-
-        $this->setExpectedException(ForbiddenException::class);
-
-        $this->sut->handleCommand($command);
-    }
-
-    public function testHandleCommandWithPermission()
-    {
-        $data = [
-            'id' => 111,
-            'version' => 2,
-            'name' => 'Changed name ltd',
-            'companyOrLlpNo' => '12345678',
-            'tradingNames' => [
-                'Foo ltd',
-                'Bar ltd'
-            ],
-            'registeredAddress' => [
-                'addressLine1' => 'Address 1',
-                'postcode' => 'AB1 1AB'
-            ],
-            'natureOfBusiness' => 'Stuff',
-        ];
-        $command = Cmd::create($data);
-
-        /** @var OrganisationEntity $organisation */
-        $organisation = m::mock(OrganisationEntity::class)->makePartial();
-        $organisation->setId(111);
-        $organisation->setName('Original name ltd');
-        $organisation->setCompanyOrLlpNo('87654321');
-        $organisation->setNatureOfBusiness('Old Stuff');
-
-        /** @var LicenceEntity $licence */
-        $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->setId(222);
-        $licence->setOrganisation($organisation);
-
-        $this->repoMap['Licence']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($licence);
-
-        $this->repoMap['Organisation']->shouldReceive('lock')
-            ->with($organisation, 2)
-            ->shouldReceive('save')
-            ->with($organisation);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(true)
-            ->shouldReceive('isGranted')
-            ->with(Permission::SELFSERVE_USER, null)
-            ->andReturn(false);
-
-        // Update trading names
-        $expectedData = [
-            'licence' => 222,
-            'organisation' => null,
-            'tradingNames' => [
-                'Foo ltd',
-                'Bar ltd'
-            ]
-        ];
-        $result1 = new Result();
-        $result1->setFlag('hasChanged', true);
-        $result1->addMessage('Trading names updated');
-        $this->expectedSideEffect(UpdateTradingNames::class, $expectedData, $result1);
-
-        // Save registered address
-        $expectedData = [
-            'addressLine1' => 'Address 1',
-            'postcode' => 'AB1 1AB',
-            'contactType' => ContactDetails::CONTACT_TYPE_REGISTERED_ADDRESS,
-            'id' => null,
-            'version' => null,
-            'addressLine2' => null,
-            'addressLine3' => null,
-            'addressLine4' => null,
-            'town' => null,
-            'countryCode' => null,
-        ];
-        $result2 = new Result();
-        $result2->setFlag('hasChanged', false);
-        $result2->addMessage('Address created');
-        $result2->addId('contactDetails', 123);
-        $this->expectedSideEffect(SaveAddress::class, $expectedData, $result2);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [
-                'contactDetails' => 123
-            ],
-            'messages' => [
-                'Trading names updated',
-                'Address created',
-                'Organisation updated'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-
-        $this->assertEquals('Changed name ltd', $organisation->getName());
-        $this->assertEquals('12345678', $organisation->getCompanyOrLlpNo());
-    }
-
-    public function testHandleCommandWithPermissionWithoutChange()
-    {
-        $data = [
-            'id' => 111,
-            'version' => 2,
-            'name' => 'Original name ltd',
-            'companyOrLlpNo' => '12345678',
-            'tradingNames' => [
-                'Foo ltd',
-                'Bar ltd'
-            ],
-            'registeredAddress' => [
-                'addressLine1' => 'Address 1',
-                'postcode' => 'AB1 1AB'
-            ],
-            'natureOfBusiness' => 'Stuff',
-        ];
-        $command = Cmd::create($data);
-
-        $nobCollection = new ArrayCollection();
-        $nobCollection->add($this->refData['01110']);
-
-        /** @var OrganisationEntity $organisation */
-        $organisation = m::mock(OrganisationEntity::class)->makePartial();
-        $organisation->setId(111);
-        $organisation->setName('Original name ltd');
-        $organisation->setCompanyOrLlpNo('12345678');
-        $organisation->setNatureOfBusiness('Stuff');
-        $organisation->shouldReceive('hasInforceLicences')
-            ->andReturn(false);
-
-        /** @var LicenceEntity $licence */
-        $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->setId(222);
-        $licence->setOrganisation($organisation);
-
-        $this->repoMap['Licence']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($licence);
-
-        $this->repoMap['Organisation']->shouldReceive('lock')
-            ->with($organisation, 2)
-            ->shouldReceive('save')
-            ->with($organisation);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(false)
-            ->shouldReceive('isGranted')
-            ->with(Permission::SELFSERVE_USER, null)
-            ->andReturn(true);
-
-        // Update trading names
-        $expectedData = [
-            'licence' => 222,
-            'organisation' => null,
-            'tradingNames' => [
-                'Foo ltd',
-                'Bar ltd'
-            ]
-        ];
-        $result1 = new Result();
-        $result1->setFlag('hasChanged', false);
-        $result1->addMessage('Trading names unchanged');
-        $this->expectedSideEffect(UpdateTradingNames::class, $expectedData, $result1);
-
-        // Save registered address
-        $expectedData = [
-            'addressLine1' => 'Address 1',
-            'postcode' => 'AB1 1AB',
-            'contactType' => ContactDetails::CONTACT_TYPE_REGISTERED_ADDRESS,
-            'id' => null,
-            'version' => null,
-            'addressLine2' => null,
-            'addressLine3' => null,
-            'addressLine4' => null,
-            'town' => null,
-            'countryCode' => null
-        ];
-        $result2 = new Result();
-        $result2->setFlag('hasChanged', false);
-        $result2->addMessage('Address unchanged');
-        $this->expectedSideEffect(SaveAddress::class, $expectedData, $result2);
-
-        $result = $this->sut->handleCommand($command);
+        $actual = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
-                'Trading names unchanged',
-                'Address unchanged',
-                'Organisation unchanged'
-            ]
+                'Business Details updated',
+                'Task Created',
+            ],
         ];
 
-        $this->assertEquals($expected, $result->toArray());
+        static::assertEquals($expected, $actual->toArray());
     }
 
-    public function testHandleCommandWithPermissionWithChangeSelfserve()
+    /**
+     * @dataProvider dpTestHandleCmdTaskNotCreated
+     */
+    public function testHandleCmdTaskNotCreated($hasChanged, $isGranted)
     {
-        $data = [
-            'id' => 111,
-            'version' => 2,
-            'name' => 'Original name ltd',
-            'companyOrLlpNo' => '87654321',
-            'tradingNames' => [
-                'Foo ltd',
-                'Bar ltd'
-            ],
-            'registeredAddress' => [
-                'addressLine1' => 'Address 1',
-                'postcode' => 'AB1 1AB'
-            ],
-            'natureOfBusiness' => 'Stuff',
-            'allowEmail' => 'Y'
-        ];
-        $command = Cmd::create($data);
+        /** @var m\MockInterface|UpdateBusinessDetails $sut */
+        $sut = m::mock(UpdateBusinessDetails::class . '[handleSideEffect]')
+            ->shouldAllowMockingProtectedMethods();
+        $sut->createService($this->commandHandler);
 
-        $nobCollection = new ArrayCollection();
-        $nobCollection->add($this->refData['01110']);
+        $saveCmdResult = new Result();
+        $saveCmdResult->addMessage('Business Details updated');
+        $saveCmdResult->setFlag('hasChanged', $hasChanged);
 
-        /** @var OrganisationEntity $organisation */
-        $organisation = m::mock(OrganisationEntity::class)->makePartial();
-        $organisation->setId(111);
-        $organisation->setName('Original name ltd');
-        $organisation->setCompanyOrLlpNo('12345678');
-        $organisation->setNatureOfBusiness('Stuff');
-        $organisation->shouldReceive('hasInforceLicences')
-            ->andReturn(false);
-        $organisation->setAllowEmail('N');
+        $sut->shouldReceive('handleSideEffect')
+            ->andReturn($saveCmdResult);
 
-        /** @var LicenceEntity $licence */
-        $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->setId(222);
-        $licence->setOrganisation($organisation);
+        //  mock permissions
+        $this->mockIsGranted(Permission::SELFSERVE_USER, $isGranted);
 
-        $this->repoMap['Licence']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($licence);
-
-        $this->repoMap['Organisation']->shouldReceive('lock')
-            ->with($organisation, 2)
-            ->shouldReceive('save')
-            ->with($organisation);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(false)
-            ->shouldReceive('isGranted')
-            ->with(Permission::SELFSERVE_USER, null)
-            ->andReturn(true);
-
-        // Update trading names
-        $expectedData = [
-            'licence' => 222,
-            'organisation' => null,
-            'tradingNames' => [
-                'Foo ltd',
-                'Bar ltd'
-            ]
-        ];
-        $result1 = new Result();
-        $result1->setFlag('hasChanged', false);
-        $result1->addMessage('Trading names unchanged');
-        $this->expectedSideEffect(UpdateTradingNames::class, $expectedData, $result1);
-
-        // Save registered address
-        $expectedData = [
-            'addressLine1' => 'Address 1',
-            'postcode' => 'AB1 1AB',
-            'contactType' => ContactDetails::CONTACT_TYPE_REGISTERED_ADDRESS,
-            'id' => null,
-            'version' => null,
-            'addressLine2' => null,
-            'addressLine3' => null,
-            'addressLine4' => null,
-            'town' => null,
-            'countryCode' => null
-        ];
-        $result2 = new Result();
-        $result2->setFlag('hasChanged', false);
-        $result2->addMessage('Address unchanged');
-        $this->expectedSideEffect(SaveAddress::class, $expectedData, $result2);
-
-        // Create task
-        $expectedData = [
-            'category' => Category::CATEGORY_LICENSING,
-            'subCategory' => Category::TASK_SUB_CATEGORY_BUSINESS_DETAILS_CHANGE,
-            'description' => 'Change to business details',
-            'licence' => 222,
-            'actionDate' => null,
-            'assignedToUser' => null,
-            'assignedToTeam' => null,
-            'isClosed' => false,
-            'urgent' => false,
-            'application' => null,
-            'busReg' => null,
-            'case' => null,
-            'transportManager' => null,
-            'irfoOrganisation' => null,
-        ];
-        $result3 = new Result();
-        $result3->addId('task', 321);
-        $result3->addMessage('Task created');
-        $this->expectedSideEffect(CreateTask::class, $expectedData, $result3);
-
-        $result = $this->sut->handleCommand($command);
+        //  call
+        $actual = $sut->handleCommand(
+            TransferCmd\Licence\UpdateBusinessDetails::create([])
+        );
 
         $expected = [
-            'id' => [
-                'task' => 321
-            ],
+            'id' => [],
             'messages' => [
-                'Trading names unchanged',
-                'Address unchanged',
-                'Organisation updated',
-                'Task created'
-            ]
+                'Business Details updated',
+            ],
         ];
 
-        $this->assertEquals($expected, $result->toArray());
+        static::assertEquals($expected, $actual->toArray());
     }
 
-    public function testHandleCommandWithoutPermissionWithoutChange()
+    public function dpTestHandleCmdTaskNotCreated()
     {
-        $data = [
-            'id' => 111,
-            'version' => 2,
-            'name' => 'Original name ltd',
-            'companyOrLlpNo' => '12345678',
-            'tradingNames' => [
-                'Foo ltd',
-                'Bar ltd'
+        return [
+            [
+                'hasChanged' => true,
+                'isGranted' => false,
             ],
-            'registeredAddress' => [
-                'addressLine1' => 'Address 1',
-                'postcode' => 'AB1 1AB'
+            [
+                'hasChanged' => false,
+                'isGranted' => true,
             ],
-            'natureOfBusiness' => 'Stuff',
         ];
-        $command = Cmd::create($data);
+    }
 
-        $nobCollection = new ArrayCollection();
-        $nobCollection->add($this->refData['01110']);
-
-        /** @var OrganisationEntity $organisation */
-        $organisation = m::mock(OrganisationEntity::class)->makePartial();
-        $organisation->setId(111);
-        $organisation->setName('Original name ltd');
-        $organisation->setCompanyOrLlpNo('12345678');
-        $organisation->setNatureOfBusiness('Stuff');
-        $organisation->shouldReceive('hasInforceLicences')
-            ->andReturn(true);
-
-        /** @var LicenceEntity $licence */
-        $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->setId(222);
-        $licence->setOrganisation($organisation);
-
-        $this->repoMap['Licence']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($licence);
-
-        $this->repoMap['Organisation']->shouldReceive('lock')
-            ->with($organisation, 2)
-            ->shouldReceive('save')
-            ->with($organisation);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(false)
+    private function mockIsGranted($permission, $result)
+    {
+        $this->mockAuthSrv
             ->shouldReceive('isGranted')
-            ->with(Permission::SELFSERVE_USER, null)
-            ->andReturn(true);
-
-        // Update trading names
-        $expectedData = [
-            'licence' => 222,
-            'organisation' => null,
-            'tradingNames' => [
-                'Foo ltd',
-                'Bar ltd'
-            ]
-        ];
-        $result1 = new Result();
-        $result1->setFlag('hasChanged', true);
-        $result1->addMessage('Trading names updated');
-        $this->expectedSideEffect(UpdateTradingNames::class, $expectedData, $result1);
-
-        // Save registered address
-        $expectedData = [
-            'addressLine1' => 'Address 1',
-            'postcode' => 'AB1 1AB',
-            'contactType' => ContactDetails::CONTACT_TYPE_REGISTERED_ADDRESS,
-            'id' => null,
-            'version' => null,
-            'addressLine2' => null,
-            'addressLine3' => null,
-            'addressLine4' => null,
-            'town' => null,
-            'countryCode' => null
-        ];
-        $result2 = new Result();
-        $result2->setFlag('hasChanged', false);
-        $result2->addMessage('Address unchanged');
-        $this->expectedSideEffect(SaveAddress::class, $expectedData, $result2);
-
-        // Create task
-        $expectedData = [
-            'category' => Category::CATEGORY_LICENSING,
-            'subCategory' => Category::TASK_SUB_CATEGORY_BUSINESS_DETAILS_CHANGE,
-            'description' => 'Change to business details',
-            'licence' => 222,
-            'actionDate' => null,
-            'assignedToUser' => null,
-            'assignedToTeam' => null,
-            'isClosed' => false,
-            'urgent' => false,
-            'application' => null,
-            'busReg' => null,
-            'case' => null,
-            'transportManager' => null,
-            'irfoOrganisation' => null,
-        ];
-        $result3 = new Result();
-        $result3->addId('task', 321);
-        $result3->addMessage('Task created');
-        $this->expectedSideEffect(CreateTask::class, $expectedData, $result3);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [
-                'task' => 321
-            ],
-            'messages' => [
-                'Trading names updated',
-                'Address unchanged',
-                'Organisation unchanged',
-                'Task created'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
+            ->with($permission, null)
+            ->andReturn($result);
     }
 }
