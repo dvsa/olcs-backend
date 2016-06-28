@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * Fee Entity
@@ -29,7 +30,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *    }
  * )
  */
-class Fee extends AbstractFee
+class Fee extends AbstractFee implements OrganisationProviderInterface
 {
     const STATUS_OUTSTANDING       = 'lfs_ot';
     const STATUS_PAID              = 'lfs_pd';
@@ -616,5 +617,35 @@ class Fee extends AbstractFee
         }
 
         return parent::getInvoicedDate();
+    }
+
+    /**
+     * Get organisations this entity is linked to
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation|null
+     */
+    public function getRelatedOrganisation()
+    {
+        if ($this->getApplication()) {
+            return $this->getApplication()->getRelatedOrganisation();
+        }
+
+        if ($this->getBusReg()) {
+            return $this->getBusReg()->getRelatedOrganisation();
+        }
+
+        if ($this->getLicence()) {
+            return $this->getLicence()->getRelatedOrganisation();
+        }
+
+        if ($this->getIrfoGvPermit()) {
+            return $this->getIrfoGvPermit()->getRelatedOrganisation();
+        }
+
+        if ($this->getIrfoPsvAuth()) {
+            return $this->getIrfoPsvAuth()->getRelatedOrganisation();
+        }
+
+        return null;
     }
 }
