@@ -119,18 +119,21 @@ class Search implements AuthAwareInterface
             $elasticaQuery        = new Query();
         } else {
 
+            // Generate _all_search as logical OR
             $elasticaQueryString  = new Query\Match();
             $elasticaQueryString->setField('_all', $query);
             $elasticaQueryBool->addShould($elasticaQueryString);
 
+            // add date ranges as logical AND
             $elasticaQueryBoolMain = $this->processDateRanges($elasticaQueryBoolMain);
 
             foreach ($indexes as $index) {
+                // amend query depending on index
                 $this->modifyQueryForIndex($index, $query, $elasticaQueryBool);
             }
 
             /**
-             * Here we send the filters.
+             * Here we send the filters as logical AND.
              */
             $filters = $this->getFilters();
             foreach ($filters as $field => $value) {
@@ -139,6 +142,8 @@ class Search implements AuthAwareInterface
 
                     $elasticaQueryString = new Query\Match();
                     $elasticaQueryString->setField($field, $value);
+
+                    // Add filter as logical AND
                     $elasticaQueryBoolMain->addMust($elasticaQueryString);
                 }
             }
