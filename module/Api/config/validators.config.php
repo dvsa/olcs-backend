@@ -37,5 +37,7 @@ return [
         'canAccessOperatingCentre' => Validators\CanAccessOperatingCentre::class,
         'canAccessBusReg' => Validators\CanAccessBusReg::class,
         'canAccessStatement' => Validators\CanAccessStatement::class,
+        'canAccessTransaction' => Validators\CanAccessTransaction::class,
+        'canAccessFee' => Validators\CanAccessFee::class,
     ]
 ];
