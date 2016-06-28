@@ -41,8 +41,6 @@ $map = [
     CommandHandler\TmEmployment\DeleteList::class => Standard::class, // @todo
     CommandHandler\TmEmployment\Update::class => Standard::class, // @todo
     CommandHandler\Tm\CreateNewUser::class => Standard::class, // @todo
-    CommandHandler\Transaction\CompleteTransaction::class => Standard::class, // @todo
-    CommandHandler\Transaction\PayOutstandingFees::class => Standard::class, // @todo
     CommandHandler\User\CreateUserSelfserve::class => Standard::class, // @todo
     CommandHandler\User\DeleteUserSelfserve::class => Standard::class, // @todo
     CommandHandler\User\UpdateUserSelfserve::class => Standard::class, // @todo
@@ -57,7 +55,6 @@ $map = [
     QueryHandler\CompaniesHouse\GetList::class => Standard::class, // @todo
     QueryHandler\ConditionUndertaking\Get::class => Standard::class, // @todo
     QueryHandler\ConditionUndertaking\GetList::class => Standard::class, // @todo
-    QueryHandler\Cpms\StoredCardList::class => Standard::class, // @todo
     QueryHandler\Licence\Addresses::class => Standard::class, // @todo
     QueryHandler\Licence\BusinessDetails::class => Standard::class, // @todo
     QueryHandler\Licence\ConditionUndertaking::class => Standard::class, // @todo
@@ -73,13 +70,10 @@ $map = [
     QueryHandler\OtherLicence\GetList::class => Standard::class, // @todo
     QueryHandler\Search\Licence::class => Standard::class, // @todo
     QueryHandler\TmEmployment\GetSingle::class => Standard::class, // @todo
-    QueryHandler\Transaction\Transaction::class => Standard::class, // @todo
-    QueryHandler\Transaction\TransactionByReference::class => Standard::class, // @todo
     QueryHandler\User\UserList::class => Standard::class, // @todo
     QueryHandler\User\UserListSelfserve::class => Standard::class, // @todo
     QueryHandler\User\UserSelfserve::class => Standard::class, // @todo
     QueryHandler\Variation\TypeOfLicence::class => Standard::class, // @todo
-    QueryHandler\Fee\GetLatestFeeType::class => Standard::class, // @todo
 ];
 // @codingStandardsIgnoreEnd
 
