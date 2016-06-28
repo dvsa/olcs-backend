@@ -28,8 +28,20 @@ abstract class AbstractDoesOwnEntity extends AbstractValidator implements
 
     public function isValid($entityId)
     {
-        $entity = $this->getRepo($this->repo)->fetchById($entityId);
+        $entity = $this->getEntity($entityId);
 
         return $this->isOwner($entity);
+    }
+
+    /**
+     * Get the entity to check
+     *
+     * @param mixed $entityId Entity identifier, mostly the primary key, but not always
+     *
+     * @return mixed An Entity object
+     */
+    protected function getEntity($entityId)
+    {
+        return $this->getRepo($this->repo)->fetchById($entityId);
     }
 }

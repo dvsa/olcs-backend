@@ -12,7 +12,7 @@ trait CpmsAwareTrait
     protected $cpmsService;
 
     /**
-     * @param Dvsa\Olcs\Api\Service\CpmsHelperInterface $service
+     * @param CpmsHelperInterface $service
      */
     public function setCpmsService(CpmsHelperInterface $service)
     {
@@ -20,7 +20,7 @@ trait CpmsAwareTrait
     }
 
     /**
-     * @return Dvsa\Olcs\Api\Service\CpmsHelperInterface
+     * @return CpmsHelperInterface
      */
     public function getCpmsService()
     {

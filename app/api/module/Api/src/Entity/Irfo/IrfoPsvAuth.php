@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * IrfoPsvAuth Entity
@@ -25,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *    }
  * )
  */
-class IrfoPsvAuth extends AbstractIrfoPsvAuth
+class IrfoPsvAuth extends AbstractIrfoPsvAuth implements OrganisationProviderInterface
 {
     const STATUS_APPROVED = 'irfo_auth_s_approved';
     const STATUS_CNS = 'irfo_auth_s_cns';
@@ -517,5 +518,15 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
         $this->setStatus($status);
 
         return $this;
+    }
+
+    /**
+     * Get organisations this entity is linked to
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     */
+    public function getRelatedOrganisation()
+    {
+        return $this->getOrganisation();
     }
 }
