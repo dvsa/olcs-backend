@@ -220,7 +220,7 @@ INSERT INTO `application` (
         'int_sts_requested', 'Interim reason', '2014-01-01', '2015-01-01', 10, 20, 'applied_via_selfserve'
     ),
     (
-        2,7,611,NULL,'apsts_not_submitted',
+        2,7,NULL,NULL,'apsts_not_submitted',
         NULL,NULL,
         NULL,NULL,NULL,NULL,NULL,
         NULL,NULL,NULL,
