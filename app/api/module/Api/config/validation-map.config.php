@@ -46,10 +46,6 @@ $map = [
     CommandHandler\User\CreateUserSelfserve::class => Standard::class, // @todo
     CommandHandler\User\DeleteUserSelfserve::class => Standard::class, // @todo
     CommandHandler\User\UpdateUserSelfserve::class => Standard::class, // @todo
-    CommandHandler\Variation\DeleteListConditionUndertaking::class => Standard::class, // @todo
-    CommandHandler\Variation\UpdateAddresses::class => Standard::class, // @todo
-    CommandHandler\Variation\UpdateConditionUndertaking::class => Standard::class, // @todo
-    CommandHandler\Variation\UpdateTypeOfLicence::class => Standard::class, // @todo
     QueryHandler\ApplicationOperatingCentre\ApplicationOperatingCentre::class => Standard::class, // @todo
     QueryHandler\Bus\Ebsr\BusRegWithTxcInbox::class => Standard::class, // @todo
     QueryHandler\Bus\RegistrationHistoryList::class => Standard::class, // @todo
@@ -78,7 +74,6 @@ $map = [
     QueryHandler\User\UserList::class => Standard::class, // @todo
     QueryHandler\User\UserListSelfserve::class => Standard::class, // @todo
     QueryHandler\User\UserSelfserve::class => Standard::class, // @todo
-    QueryHandler\Variation\TypeOfLicence::class => Standard::class, // @todo
     QueryHandler\Fee\GetLatestFeeType::class => Standard::class, // @todo
 ];
 // @codingStandardsIgnoreEnd
