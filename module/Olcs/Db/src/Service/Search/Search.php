@@ -125,6 +125,10 @@ class Search implements AuthAwareInterface
 
             $elasticaQueryBoolMain = $this->processDateRanges($elasticaQueryBoolMain);
 
+            foreach ($indexes as $index) {
+                $this->modifyQueryForIndex($index, $query, $elasticaQueryBool);
+            }
+
             /**
              * Here we send the filters.
              */
@@ -140,10 +144,6 @@ class Search implements AuthAwareInterface
             }
 
             $elasticaQueryBoolMain->addMust($elasticaQueryBool);
-
-            foreach ($indexes as $index) {
-                $this->modifyQueryForIndex($index, $query, $elasticaQueryBoolMain);
-            }
 
             $elasticaQuery = new Query();
 
