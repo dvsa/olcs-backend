@@ -274,9 +274,15 @@ class SearchTest extends MockeryTestCase
             [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            $this->generateMatch('_all', 'FOO BAR'),
-                            $this->generateMatch('postcode', 'FOO BAR'),
+                        'must' => [
+                            0 => [
+                                'bool' => [
+                                    'should' => [
+                                        $this->generateMatch('_all', 'FOO BAR'),
+                                        $this->generateMatch('postcode', 'FOO BAR'),
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ],
@@ -298,10 +304,16 @@ class SearchTest extends MockeryTestCase
             [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            $this->generateMatch('_all', 'FOO BAR'),
-                            $this->generateMatch('correspondence_postcode', 'FOO BAR'),
-                            $this->generateWildcard('org_name_wildcard', 'foo bar*', 2.0)
+                        'must' => [
+                            0 => [
+                                'bool' => [
+                                    'should' => [
+                                        $this->generateMatch('_all', 'FOO BAR'),
+                                        $this->generateMatch('correspondence_postcode', 'FOO BAR'),
+                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', 2.0)
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ],
@@ -323,10 +335,16 @@ class SearchTest extends MockeryTestCase
             [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            $this->generateMatch('_all', 'FOO BAR'),
-                            $this->generateMatch('correspondence_postcode', 'FOO BAR'),
-                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        'must' => [
+                            0 => [
+                                'bool' => [
+                                    'should' => [
+                                        $this->generateMatch('_all', 'FOO BAR'),
+                                        $this->generateMatch('correspondence_postcode', 'FOO BAR'),
+                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ],
@@ -348,10 +366,16 @@ class SearchTest extends MockeryTestCase
             [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            $this->generateMatch('_all', 'FOO BAR'),
-                            $this->generateMatch('postcode', 'FOO BAR'),
-                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        'must' => [
+                            0 => [
+                                'bool' => [
+                                    'should' => [
+                                        $this->generateMatch('_all', 'FOO BAR'),
+                                        $this->generateMatch('postcode', 'FOO BAR'),
+                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ],
@@ -373,9 +397,15 @@ class SearchTest extends MockeryTestCase
             [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            $this->generateMatch('_all', 'FOO BAR'),
-                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        'must' => [
+                            0 => [
+                                'bool' => [
+                                    'should' => [
+                                        $this->generateMatch('_all', 'FOO BAR'),
+                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ],
@@ -397,9 +427,15 @@ class SearchTest extends MockeryTestCase
             [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            $this->generateMatch('_all', 'FOO BAR'),
-                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        'must' => [
+                            0 => [
+                                'bool' => [
+                                    'should' => [
+                                        $this->generateMatch('_all', 'FOO BAR'),
+                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ],
@@ -421,9 +457,15 @@ class SearchTest extends MockeryTestCase
             [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            $this->generateMatch('_all', 'FOO BAR'),
-                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        'must' => [
+                            0 => [
+                                'bool' => [
+                                    'should' => [
+                                        $this->generateMatch('_all', 'FOO BAR'),
+                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ],
@@ -445,12 +487,18 @@ class SearchTest extends MockeryTestCase
             [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            $this->generateMatch('_all', 'FOO BAR'),
-                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
-                        ],
                         'must' => [
-                            0 => $this->generateMatch('pub_status', 'pub_s_printed')
+                            0 => [
+                                'bool' => [
+                                    'should' => [
+                                        $this->generateMatch('_all', 'FOO BAR'),
+                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                                    ],
+                                    'must' => [
+                                        0 => $this->generateMatch('pub_status', 'pub_s_printed')
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ],
@@ -472,9 +520,15 @@ class SearchTest extends MockeryTestCase
             [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            $this->generateMatch('_all', 'FOO BAR'),
-                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        'must' => [
+                            0 => [
+                                'bool' => [
+                                    'should' => [
+                                        $this->generateMatch('_all', 'FOO BAR'),
+                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ],
@@ -496,10 +550,16 @@ class SearchTest extends MockeryTestCase
             [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            $this->generateMatch('_all', 'FOO BAR'),
-                            $this->generateMatch('vrm', 'FOO BAR'),
-                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        'must' => [
+                            0 => [
+                                'bool' => [
+                                    'should' => [
+                                        $this->generateMatch('_all', 'FOO BAR'),
+                                        $this->generateMatch('vrm', 'FOO BAR'),
+                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ],
@@ -521,10 +581,16 @@ class SearchTest extends MockeryTestCase
             [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            $this->generateMatch('_all', 'FOO BAR'),
-                            $this->generateMatch('vrm', 'FOO BAR'),
-                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                        'must' => [
+                            0 => [
+                                'bool' => [
+                                    'should' => [
+                                        $this->generateMatch('_all', 'FOO BAR'),
+                                        $this->generateMatch('vrm', 'FOO BAR'),
+                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ],
@@ -546,24 +612,30 @@ class SearchTest extends MockeryTestCase
             [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            $this->generateMatch('_all', 'FOO BAR'),
-                            $this->generateWildcard('person_family_name_wildcard', '*foo bar*', '2.0'),
-                            $this->generateWildcard('person_forename_wildcard', '*foo bar*', '2.0'),
-                            $this->generateWildcard('person_family_name_wildcard', '*foo*', '2.0'),
-                            $this->generateWildcard('person_forename_wildcard', '*foo*', '2.0'),
-                            $this->generateWildcard('person_family_name_wildcard', '*bar*', '2.0'),
-                            $this->generateWildcard('person_forename_wildcard', '*bar*', '2.0'),
-                        ],
-                        'must_not' => [
-                            $this->generateMatch('tm_status_id', 'tm_s_rem'),
-                        ],
                         'must' => [
                             0 => [
-                                'filtered' => [
-                                    'filter' => [
-                                        'exists' => [
-                                            'field' => 'lic_no'
+                                'bool' => [
+                                    'should' => [
+                                        $this->generateMatch('_all', 'FOO BAR'),
+                                        $this->generateWildcard('person_family_name_wildcard', '*foo bar*', '2.0'),
+                                        $this->generateWildcard('person_forename_wildcard', '*foo bar*', '2.0'),
+                                        $this->generateWildcard('person_family_name_wildcard', '*foo*', '2.0'),
+                                        $this->generateWildcard('person_forename_wildcard', '*foo*', '2.0'),
+                                        $this->generateWildcard('person_family_name_wildcard', '*bar*', '2.0'),
+                                        $this->generateWildcard('person_forename_wildcard', '*bar*', '2.0'),
+                                    ],
+                                    'must_not' => [
+                                        $this->generateMatch('tm_status_id', 'tm_s_rem'),
+                                    ],
+                                    'must' => [
+                                        0 => [
+                                            'filtered' => [
+                                                'filter' => [
+                                                    'exists' => [
+                                                        'field' => 'lic_no'
+                                                    ]
+                                                ]
+                                            ]
                                         ]
                                     ]
                                 ]
@@ -589,14 +661,20 @@ class SearchTest extends MockeryTestCase
             [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            $this->generateMatch('_all', 'FOO BAR'),
-                            $this->generateWildcard('person_family_name_wildcard', '*foo bar*', '2.0'),
-                            $this->generateWildcard('person_forename_wildcard', '*foo bar*', '2.0'),
-                            $this->generateWildcard('person_family_name_wildcard', '*foo*', '2.0'),
-                            $this->generateWildcard('person_forename_wildcard', '*foo*', '2.0'),
-                            $this->generateWildcard('person_family_name_wildcard', '*bar*', '2.0'),
-                            $this->generateWildcard('person_forename_wildcard', '*bar*', '2.0'),
+                        'must' => [
+                            0 => [
+                                'bool' => [
+                                    'should' => [
+                                        $this->generateMatch('_all', 'FOO BAR'),
+                                        $this->generateWildcard('person_family_name_wildcard', '*foo bar*', '2.0'),
+                                        $this->generateWildcard('person_forename_wildcard', '*foo bar*', '2.0'),
+                                        $this->generateWildcard('person_family_name_wildcard', '*foo*', '2.0'),
+                                        $this->generateWildcard('person_forename_wildcard', '*foo*', '2.0'),
+                                        $this->generateWildcard('person_family_name_wildcard', '*bar*', '2.0'),
+                                        $this->generateWildcard('person_forename_wildcard', '*bar*', '2.0'),
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ],
@@ -618,10 +696,16 @@ class SearchTest extends MockeryTestCase
             [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            $this->generateMatch('_all', '123'),
-                            $this->generateBoostedMatch('person_id', '123', 2.0),
-                            $this->generateBoostedMatch('tm_id', '123', 2.0),
+                        'must' => [
+                            0 => [
+                                'bool' => [
+                                    'should' => [
+                                        $this->generateMatch('_all', '123'),
+                                        $this->generateBoostedMatch('person_id', '123', 2.0),
+                                        $this->generateBoostedMatch('tm_id', '123', 2.0),
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ],
@@ -643,16 +727,22 @@ class SearchTest extends MockeryTestCase
             [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            $this->generateMatch('_all', 'FOO BAR'),
-                            $this->generateMatch(
-                                'reg_no',
-                                [
-                                    'query' => 'FOO BAR',
-                                    'boost' => 2.0,
+                        'must' => [
+                            0 => [
+                                'bool' => [
+                                    'should' => [
+                                        $this->generateMatch('_all', 'FOO BAR'),
+                                        $this->generateMatch(
+                                            'reg_no',
+                                            [
+                                                'query' => 'FOO BAR',
+                                                'boost' => 2.0,
+                                            ]
+                                        ),
+                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                                    ]
                                 ]
-                            ),
-                            $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                            ]
                         ]
                     ]
                 ],

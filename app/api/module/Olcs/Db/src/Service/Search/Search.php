@@ -103,6 +103,11 @@ class Search implements AuthAwareInterface
      */
     public function search($query, $indexes = [], $page = 1, $limit = 10)
     {
+        /** @var  $elasticaQueryBoolMain Query/Bool
+         * Main query boolean that allows any filters to work as Logical ANDs with the main
+         * search query string. */
+        $elasticaQueryBoolMain = new Query\Bool();
+
         $elasticaQueryBool = new Query\Bool();
 
         /*
@@ -113,14 +118,22 @@ class Search implements AuthAwareInterface
             // ignore all query params and just search index for everything
             $elasticaQuery        = new Query();
         } else {
+
+            // Generate _all_search as logical OR
             $elasticaQueryString  = new Query\Match();
             $elasticaQueryString->setField('_all', $query);
             $elasticaQueryBool->addShould($elasticaQueryString);
 
-            $elasticaQueryBool = $this->processDateRanges($elasticaQueryBool);
+            // add date ranges as logical AND
+            $elasticaQueryBoolMain = $this->processDateRanges($elasticaQueryBoolMain);
+
+            foreach ($indexes as $index) {
+                // amend query depending on index
+                $this->modifyQueryForIndex($index, $query, $elasticaQueryBool);
+            }
 
             /**
-             * Here we send the filters.
+             * Here we send the filters as logical AND.
              */
             $filters = $this->getFilters();
             foreach ($filters as $field => $value) {
@@ -129,17 +142,17 @@ class Search implements AuthAwareInterface
 
                     $elasticaQueryString = new Query\Match();
                     $elasticaQueryString->setField($field, $value);
-                    $elasticaQueryBool->addMust($elasticaQueryString);
+
+                    // Add filter as logical AND
+                    $elasticaQueryBoolMain->addMust($elasticaQueryString);
                 }
             }
 
-            foreach ($indexes as $index) {
-                $this->modifyQueryForIndex($index, $query, $elasticaQueryBool);
-            }
+            $elasticaQueryBoolMain->addMust($elasticaQueryBool);
 
             $elasticaQuery = new Query();
 
-            $elasticaQuery->setQuery($elasticaQueryBool);
+            $elasticaQuery->setQuery($elasticaQueryBoolMain);
 
             if (!empty($this->getSort()) && !empty($this->getOrder())) {
                 $elasticaQuery->setSort([$this->getSort() => strtolower($this->getOrder())]);
