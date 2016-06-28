@@ -15,6 +15,7 @@ userOrganisationId=1
 userLicenceId=7
 userApplicationId=7
 notUserOrganisationId=30
+userVariationId=2
 
 while getopts "hf:" opt; do
   case $opt in
