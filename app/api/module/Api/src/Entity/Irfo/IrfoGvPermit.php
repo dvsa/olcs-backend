@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermitType;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * IrfoGvPermit Entity
@@ -25,7 +26,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  *    }
  * )
  */
-class IrfoGvPermit extends AbstractIrfoGvPermit
+class IrfoGvPermit extends AbstractIrfoGvPermit implements OrganisationProviderInterface
 {
     const STATUS_APPROVED = 'irfo_perm_s_approved';
     const STATUS_PENDING = 'irfo_perm_s_pending';
@@ -219,5 +220,15 @@ class IrfoGvPermit extends AbstractIrfoGvPermit
         }
 
         return false;
+    }
+
+    /**
+     * Get organisations this entity is linked to
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     */
+    public function getRelatedOrganisation()
+    {
+        return $this->getOrganisation();
     }
 }

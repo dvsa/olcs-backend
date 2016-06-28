@@ -48,6 +48,8 @@ use Dvsa\Olcs\Api\Domain\ValidatorManager;
  * @method bool canAccessOperatingCentre($entityId)
  * @method bool canAccessBusReg($entityId)
  * @method bool canAccessStatement($entityId)
+ * @method bool canAccessTransaction($transactionReference)
+ * @method bool canAccessFee($feeId)
  */
 trait ValidationHelperTrait
 {

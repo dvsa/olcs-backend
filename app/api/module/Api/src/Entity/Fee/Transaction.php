@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Fee;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * Transaction Entity
@@ -24,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class Transaction extends AbstractTransaction
+class Transaction extends AbstractTransaction implements OrganisationProviderInterface
 {
     const STATUS_OUTSTANDING = 'pay_s_os';
     const STATUS_CANCELLED = 'pay_s_cn';
@@ -351,7 +352,8 @@ class Transaction extends AbstractTransaction
 
     /**
      * Get all fees associated to the transaction, via the feeTransactions
-     * @return array of Fee
+     *
+     * @return Fee[]
      */
     public function getFees()
     {
@@ -440,5 +442,20 @@ class Transaction extends AbstractTransaction
         }
 
         return false;
+    }
+
+    /**
+     * Get organisations this entity is linked to
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation[]
+     */
+    public function getRelatedOrganisation()
+    {
+        $organisations = [];
+        foreach ($this->getFees() as $feeId => $fee) {
+            $organisations[$fee->getRelatedOrganisation()->getId()] = $fee->getRelatedOrganisation();
+        }
+
+        return $organisations;
     }
 }
