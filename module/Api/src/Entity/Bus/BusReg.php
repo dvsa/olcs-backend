@@ -249,6 +249,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             $newOtherService->setLastModifiedBy(null);
             $newOtherService->setCreatedOn(null);
             $newOtherService->setLastModifiedOn(null);
+            $newOtherService->setOlbsKey(null);
             $newOtherService->setBusReg($busReg);
 
             $otherServices->add($newOtherService);

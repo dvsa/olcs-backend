@@ -653,6 +653,7 @@ class BusRegEntityTest extends EntityTester
 
         $otherService1 = new BusRegOtherServiceEntity($licenceBusReg, 'otherService1');
         $otherService1->setId(201);
+        $otherService1->setOlbsKey('olbs-key');
 
         $otherService2 = new BusRegOtherServiceEntity($licenceBusReg, 'otherService2');
         $otherService2->setId(202);
@@ -703,6 +704,7 @@ class BusRegEntityTest extends EntityTester
         $this->assertEquals(2, $busReg->getOtherServices()->count());
         $this->assertNull($busReg->getOtherServices()->first()->getId());
         $this->assertNull($busReg->getOtherServices()->first()->getVersion());
+        $this->assertNull($busReg->getOtherServices()->first()->getOlbsKey());
         $this->assertEquals($busReg, $busReg->getOtherServices()->first()->getBusReg());
         $this->assertEquals('otherService1', $busReg->getOtherServices()->first()->getServiceNo());
         $this->assertEquals('otherService2', $busReg->getOtherServices()->last()->getServiceNo());
