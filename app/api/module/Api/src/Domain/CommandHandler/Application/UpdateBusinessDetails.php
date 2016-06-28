@@ -1,23 +1,17 @@
 <?php
 
-/**
- * Update Business Details
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Transfer\Command\Application\UpdateBusinessDetails as Cmd;
-use Dvsa\Olcs\Transfer\Command\Licence\UpdateBusinessDetails as LicenceCmd;
 
 /**
  * Update Business Details
- * @NOTE This handler basically calls the licence version, but then adds the update application completion side effect
+ * @NOTE   This handler calls the common version and adds the update application completion side effect
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -25,36 +19,36 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Tran
 {
     protected $repoServiceName = 'Application';
 
+    /**
+     * @inheritdoc
+     * @param \Dvsa\Olcs\Transfer\Command\Application\UpdateBusinessDetails $command
+     */
     public function handleCommand(CommandInterface $command)
     {
-        $updateResult = $this->updateBusinessDetails($command);
-        $this->result->merge($updateResult);
-        $this->result->merge($this->updateApplicationCompletion($command, $updateResult->getFlag('hasChanged')));
-
-        return $this->result;
-    }
-
-    private function updateBusinessDetails(Cmd $command)
-    {
         $data = $command->getArrayCopy();
-
         $data['id'] = $data['licence'];
 
-        return $this->handleSideEffect(LicenceCmd::create($data));
-    }
+        //  Update Business Details
+        $updateResult = $this->handleSideEffect(
+            DomainCmd\Licence\SaveBusinessDetails::create($data)
+        );
+        $this->result->merge($updateResult);
 
-    private function updateApplicationCompletion(Cmd $command, $hasChanged)
-    {
-        return $this->handleSideEffect(
-            UpdateApplicationCompletionCommand::create(
-                [
-                    'id' => $command->getId(),
-                    'section' => 'businessDetails',
-                    'data' => [
-                        'hasChanged' => $hasChanged
+        //  Update Application Completion
+        $this->result->merge(
+            $this->handleSideEffect(
+                DomainCmd\Application\UpdateApplicationCompletion::create(
+                    [
+                        'id' => $command->getId(),
+                        'section' => 'businessDetails',
+                        'data' => [
+                            'hasChanged' => $updateResult->getFlag('hasChanged'),
+                        ],
                     ]
-                ]
+                )
             )
         );
+
+        return $this->result;
     }
 }

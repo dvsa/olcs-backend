@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Update Licence Addresses
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Command\Licence;
 
 use Dvsa\Olcs\Transfer\Command\AbstractUpdateAddresses;

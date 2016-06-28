@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Licence Update Addresses
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses as SaveAddressesCmd;
@@ -32,6 +27,7 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
 
     public function handleCommand(CommandInterface $command)
     {
+        /** @var \Dvsa\Olcs\Api\Entity\Licence\Licence $licence */
         $licence = $this->getRepo()->fetchUsingId($command);
 
         $result = $this->handleSideEffect(SaveAddressesCmd::create($command->getArrayCopy()));
