@@ -51,6 +51,7 @@ class EbsrSubmissionList extends AbstractQueryHandler implements AuthAwareInterf
                             'organisation'
                         ],
                         'otherServices',
+                        'status'
                     ],
                     'document'
                 ]
