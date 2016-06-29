@@ -191,7 +191,7 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
         $busRegReceivedDate = new \DateTime('2015-12-25');
         $effectiveDate = '';
         $endDate = '';
-        $busNoticePeriod = null;
+        $busNoticePeriod = 2;
         $otherServices = [];
         $busServiceTypes = [];
 
