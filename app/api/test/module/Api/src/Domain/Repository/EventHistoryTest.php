@@ -90,28 +90,28 @@ class EventHistoryTest extends RepositoryTestCase
         $qb = m::mock(QueryBuilder::class);
 
         $qb->shouldReceive('expr->eq')->with('m.licence', ':licenceId')->once()->andReturn('licence');
-        $qb->shouldReceive('andWhere')->with('licence')->once()->andReturnSelf();
+        $qb->shouldReceive('orWhere')->with('licence')->once()->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('licenceId', $licenceId)->once()->andReturnSelf();
 
         $qb->shouldReceive('expr->eq')->with('m.case', ':caseId')->once()->andReturn('case');
-        $qb->shouldReceive('andWhere')->with('case')->once()->andReturnSelf();
+        $qb->shouldReceive('orWhere')->with('case')->once()->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('caseId', $caseId)->once()->andReturnSelf();
 
         $qb->shouldReceive('expr->eq')->with('m.organisation', ':organisationId')->once()->andReturn('organisation');
-        $qb->shouldReceive('andWhere')->with('organisation')->once()->andReturnSelf();
+        $qb->shouldReceive('orWhere')->with('organisation')->once()->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('organisationId', $organisationId)->once()->andReturnSelf();
 
         $qb->shouldReceive('expr->eq')
             ->with('m.transportManager', ':transportManagerId')->once()->andReturn('transportManager');
-        $qb->shouldReceive('andWhere')->with('transportManager')->once()->andReturnSelf();
+        $qb->shouldReceive('orWhere')->with('transportManager')->once()->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('transportManagerId', $transportManagerId)->once()->andReturnSelf();
 
         $qb->shouldReceive('expr->eq')->with('m.user', ':userId')->once()->andReturn('user');
-        $qb->shouldReceive('andWhere')->with('user')->once()->andReturnSelf();
+        $qb->shouldReceive('orWhere')->with('user')->once()->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('userId', $userId)->once()->andReturnSelf();
 
         $qb->shouldReceive('expr->eq')->with('m.application', ':applicationId')->once()->andReturn('application');
-        $qb->shouldReceive('andWhere')->with('application')->once()->andReturnSelf();
+        $qb->shouldReceive('orWhere')->with('application')->once()->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('applicationId', $applicationId)->once()->andReturnSelf();
 
         $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();

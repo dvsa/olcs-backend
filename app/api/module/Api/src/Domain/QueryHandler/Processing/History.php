@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Application
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Processing;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -13,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Repository\EventHistory;
 use Doctrine\ORM\Query;
 
 /**
- * Application
+ * Event History query handler
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -21,8 +16,20 @@ class History extends AbstractQueryHandler
 {
     protected $repoServiceName = 'EventHistory';
 
+    protected $extraRepos = ['Application', 'Licence', 'Cases'];
+
+    /**
+     * Handle the query
+     *
+     * @param QueryInterface $query Query
+     *
+     * @return array
+     */
     public function handleQuery(QueryInterface $query)
     {
+        /** @var \Dvsa\Olcs\Transfer\Query\Processing\History $query */
+        $this->modifyQuery($query);
+
         /** @var EventHistory $repo */
         $repo = $this->getRepo();
         $repo->disableSoftDeleteable();
@@ -46,5 +53,38 @@ class History extends AbstractQueryHandler
             ),
             'count' => $repo->fetchCount($query)
         ];
+    }
+
+    /**
+     * Modify the query, by adding in the organisation in specific scenarios
+     *
+     * @param \Dvsa\Olcs\Transfer\Query\Processing\History $query DTO query to modify
+     *
+     * @return void
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function modifyQuery(\Dvsa\Olcs\Transfer\Query\Processing\History $query)
+    {
+        $organisation = null;
+        if ($query->getApplication()) {
+            /** @var \Dvsa\Olcs\Api\Entity\Application\Application $application */
+            $application = $this->getRepo('Application')->fetchById($query->getApplication());
+            $organisation = $application->getLicence()->getOrganisation();
+        } elseif ($query->getLicence()) {
+            /** @var \Dvsa\Olcs\Api\Entity\Licence\Licence $licence */
+            $licence = $this->getRepo('Licence')->fetchById($query->getLicence());
+            $organisation = $licence->getOrganisation();
+
+        } elseif ($query->getCase()) {
+            /** @var \Dvsa\Olcs\Api\Entity\Cases\Cases $case */
+            $case = $this->getRepo('Cases')->fetchById($query->getCase());
+            if ($case->getLicence()) {
+                $organisation = $case->getLicence()->getOrganisation();
+            }
+        }
+
+        if ($organisation !== null) {
+            $query->exchangeArray(['organisation' => $organisation->getId()]);
+        }
     }
 }
