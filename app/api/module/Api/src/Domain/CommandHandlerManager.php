@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Command Handler Manager
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
@@ -16,7 +11,6 @@ use Zend\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
 use Zend\ServiceManager\Exception\RuntimeException;
-use Dvsa\Olcs\Api\Domain\ValidationHandler\ValidationHandlerInterface;
 
 /**
  * Command Handler Manager
@@ -87,11 +81,19 @@ class CommandHandlerManager extends AbstractPluginManager
         }
     }
 
+    /**
+     * Validate command data
+     * 
+     * @param CommandInterface $dto
+     * @param string           $queryHandlerFqcl
+     * 
+     * @throws ForbiddenException
+     */
     protected function validateDto($dto, $queryHandlerFqcl)
     {
+        /** @var ValidationHandlerManager $vhm */
         $vhm = $this->getServiceLocator()->get('ValidationHandlerManager');
 
-        /** @var ValidationHandlerInterface $validationHandler */
         $validationHandler = $vhm->get($queryHandlerFqcl);
 
         if (!$validationHandler->isValid($dto)) {
