@@ -486,11 +486,11 @@ class BusRegEntityTest extends EntityTester
         $via = 'via';
         $otherDetails = 'other details';
         $endDate = null;
-        $busNoticePeriod = 2;
 
-        $busRules = new BusNoticePeriodEntity();
-        $busRules->setCancellationPeriod($rules['cancellationPeriod']);
-        $busRules->setStandardPeriod($rules['standardPeriod']);
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(2);
+        $busNoticePeriod->setCancellationPeriod($rules['cancellationPeriod']);
+        $busNoticePeriod->setStandardPeriod($rules['standardPeriod']);
 
         $this->getAssertionsForCanEditIsTrue();
 
@@ -506,8 +506,7 @@ class BusRegEntityTest extends EntityTester
             $receivedDate,
             $effectiveDate,
             $endDate,
-            $busNoticePeriod,
-            $busRules
+            $busNoticePeriod
         );
 
         $this->assertEquals($serviceNo, $this->entity->getServiceNo());

@@ -101,11 +101,13 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     ];
 
     /**
-     * @param LicenceEntity $licence
-     * @param RefData $status
-     * @param RefData $revertStatus
-     * @param RefData $subsidised
-     * @param BusNoticePeriodEntity $busNoticePeriod
+     * Create new BusReg
+     *
+     * @param LicenceEntity         $licence         Licence
+     * @param RefData               $status          Status
+     * @param RefData               $revertStatus    Revert status
+     * @param RefData               $subsidised      Subsidised
+     * @param BusNoticePeriodEntity $busNoticePeriod Bus notice period
      *
      * @return BusReg
      */
@@ -184,8 +186,11 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     }
 
     /**
-     * @param RefData $status
-     * @param RefData $revertStatus
+     * Create BusReg variation
+     *
+     * @param RefData $status       Status
+     * @param RefData $revertStatus Revert status
+     *
      * @throws ForbiddenException
      * @return BusReg
      */
@@ -262,8 +267,9 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     /**
      * Populate properties from data
      *
-     * @param array $data
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     * @param array $data Data
+     *
+     * @return void
      */
     public function fromData($data)
     {
@@ -358,6 +364,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
 
     /**
      * Returns whether a bus reg is read only based on status and variation.
+     *
      * @note Ebsr is not checked (EBSR pages are often read only on the front end) - to check Ebsr use isFromEbsr()
      *
      * @return bool
@@ -402,15 +409,18 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     }
 
     /**
-     * @param $useAllStops
-     * @param $hasManoeuvre
-     * @param $manoeuvreDetail
-     * @param $needNewStop
-     * @param $newStopDetail
-     * @param $hasNotFixedStop
-     * @param $notFixedStopDetail
-     * @param $subsidised
-     * @param $subsidyDetail
+     * Update stops
+     *
+     * @param string  $useAllStops        Use all stops
+     * @param string  $hasManoeuvre       Has manoeuvre
+     * @param string  $manoeuvreDetail    Manoeuvre detail
+     * @param string  $needNewStop        Need new stop
+     * @param string  $newStopDetail      New stop detail
+     * @param string  $hasNotFixedStop    Has not fixed stop
+     * @param string  $notFixedStopDetail Not fixed stop detail
+     * @param RefData $subsidised         Subsidised
+     * @param string  $subsidyDetail      Subsidy detail
+     *
      * @return bool
      */
     public function updateStops(
@@ -440,11 +450,14 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     }
 
     /**
-     * @param $isQualityPartnership
-     * @param $qualityPartnershipDetails
-     * @param $qualityPartnershipFacilitiesUsed
-     * @param $isQualityContract
-     * @param $qualityContractDetails
+     * Update quality schemes
+     *
+     * @param string $isQualityPartnership             Is quality partnership
+     * @param string $qualityPartnershipDetails        Quality partnership details
+     * @param string $qualityPartnershipFacilitiesUsed Quality partnership facilities used
+     * @param string $isQualityContract                Is quality contract
+     * @param string $qualityContractDetails           Quality contract details
+     *
      * @return bool
      */
     public function updateQualitySchemes(
@@ -466,7 +479,10 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     }
 
     /**
-     * @param $stoppingArrangements
+     * Update TA Authority
+     *
+     * @param string $stoppingArrangements Stopping arrangements
+     *
      * @return bool
      */
     public function updateTaAuthority($stoppingArrangements)
@@ -478,6 +494,21 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         return true;
     }
 
+    /**
+     * Update service details
+     *
+     * @param string                $serviceNo       Service no
+     * @param string                $startPoint      Start point
+     * @param string                $finishPoint     Finish point
+     * @param string                $via             Via
+     * @param string                $otherDetails    Other details
+     * @param string                $receivedDate    Received date
+     * @param string                $effectiveDate   Effective date
+     * @param string                $endDate         End date
+     * @param BusNoticePeriodEntity $busNoticePeriod Bus notice period
+     *
+     * @return bool
+     */
     public function updateServiceDetails(
         $serviceNo,
         $startPoint,
@@ -487,8 +518,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         $receivedDate,
         $effectiveDate,
         $endDate,
-        $busNoticePeriod,
-        $busRules
+        $busNoticePeriod
     ) {
         $this->canEdit();
 
@@ -521,13 +551,28 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
 
         $this->isShortNotice = 'N';
 
-        if ($this->isShortNotice($effectiveDateTime, $receivedDateTime, $busRules)) {
+        if ($this->isShortNotice($effectiveDateTime, $receivedDateTime, $busNoticePeriod)) {
             $this->isShortNotice = 'Y';
         }
 
         return true;
     }
 
+    /**
+     * Update service register
+     *
+     * @param string $trcConditionChecked Trc condition checked
+     * @param string $trcNotes            Trc notes
+     * @param string $copiedToLaPte       Copied to la pte
+     * @param string $laShortNote         La short note
+     * @param string $opNotifiedLaPte     Op notified la pte
+     * @param string $applicationSigned   Application signed
+     * @param string $timetableAcceptable Timetable acceptable
+     * @param string $mapSupplied         Map supplied
+     * @param string $routeDescription    Route description
+     *
+     * @return BusReg
+     */
     public function updateServiceRegister(
         $trcConditionChecked,
         $trcNotes,
@@ -566,9 +611,12 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     }
 
     /**
-     * @param \DateTime $effectiveDate
-     * @param \DateTime $receivedDate
-     * @param BusNoticePeriodEntity $busRules
+     * Is short notice
+     *
+     * @param \DateTime             $effectiveDate Effective date
+     * @param \DateTime             $receivedDate  Received date
+     * @param BusNoticePeriodEntity $busRules      Bus rules
+     *
      * @return bool|null
      */
     private function isShortNotice($effectiveDate, $receivedDate, BusNoticePeriodEntity $busRules)
@@ -615,6 +663,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
 
     /**
      * Populates the short notice field
+     *
+     * @return void
      */
     public function populateShortNotice()
     {
@@ -629,9 +679,12 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     }
 
     /**
-     * @param string $date
-     * @param string $format
-     * @param bool $zeroTime
+     * Process date
+     *
+     * @param string $date     Date
+     * @param string $format   Format
+     * @param bool   $zeroTime Zero time
+     *
      * @return \DateTime|null
      */
     public function processDate($date, $format = 'Y-m-d', $zeroTime = true)
@@ -660,6 +713,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     }
 
     /**
+     * Get decision
+     *
      * @return array|null
      */
     public function getDecision()
@@ -694,7 +749,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     /**
      * Returns whether a bus reg may be granted
      *
-     * @param FeeEntity $fee
+     * @param FeeEntity $fee Fee
+     *
      * @return bool
      */
     public function isGrantable(FeeEntity $fee = null)
@@ -802,7 +858,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     /**
      * Returns whether a bus reg has a fee which makes it grantable
      *
-     * @param FeeEntity $fee
+     * @param FeeEntity $fee Fee
      *
      * @return bool
      */
@@ -824,7 +880,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     /**
      * Update status
      *
-     * @param RefData $status
+     * @param RefData $status Status
+     *
      * @return BusReg
      */
     private function updateStatus(RefData $status)
@@ -853,8 +910,9 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     /**
      * Admin cancel
      *
-     * @param RefData $status
-     * @param string $reason
+     * @param RefData $status Status
+     * @param string  $reason Reason
+     *
      * @throws BadRequestException
      * @return BusReg
      */
@@ -875,8 +933,9 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     /**
      * Withdraw
      *
-     * @param RefData $status
-     * @param RefData $reason
+     * @param RefData $status Status
+     * @param RefData $reason Reason
+     *
      * @throws BadRequestException
      * @return BusReg
      */
@@ -897,8 +956,9 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     /**
      * Refuse
      *
-     * @param RefData $status
-     * @param string $reason
+     * @param RefData $status Status
+     * @param string  $reason Reason
+     *
      * @throws BadRequestException
      * @return BusReg
      */
@@ -919,7 +979,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     /**
      * Refuse by Short Notice
      *
-     * @param string $reason
+     * @param string $reason Reason
+     *
      * @return BusReg
      */
     public function refuseByShortNotice($reason)
@@ -981,8 +1042,9 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     /**
      * Grant
      *
-     * @param RefData $status
-     * @param array $variationReasons
+     * @param RefData $status           Status
+     * @param array   $variationReasons Variation reasons
+     *
      * @throws BadRequestException
      * @return BusReg
      */
@@ -1018,13 +1080,22 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             ? self::$grantStatusMap[$this->status->getId()] : null;
     }
 
+    /**
+     * Get context value
+     *
+     * @return string
+     */
     public function getContextValue()
     {
         return $this->getLicence()->getLicNo();
     }
 
     /**
-     * @param string $serviceNo
+     * Add other service number
+     *
+     * @param string $serviceNo Service No
+     *
+     * @return void
      */
     public function addOtherServiceNumber($serviceNo)
     {
@@ -1062,8 +1133,11 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     }
 
     /**
-     * @param $revertStatus
-     * @param $shortNotice
+     * Get publication section for grant email registered
+     *
+     * @param string $revertStatus Revert status
+     * @param string $shortNotice  Short notice
+     *
      * @return int
      * @throws RuntimeException
      */
@@ -1087,7 +1161,10 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     }
 
     /**
-     * @param $shortNotice
+     * Get publication section for grant email cancelled
+     *
+     * @param string $shortNotice Short notice
+     *
      * @return int
      * @throws RuntimeException
      */
@@ -1106,6 +1183,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     /**
      * Gets a string of publications affected by a grant action, called by the EBSR emails,
      * only relevant for certain emails, so often will return empty string
+     *
+     * @param PublicationSectionEntity $pubSection Pub section
      *
      * @return string
      */
