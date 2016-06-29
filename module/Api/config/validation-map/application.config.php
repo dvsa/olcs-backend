@@ -2,11 +2,10 @@
 
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemUser;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalOrSystemUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessApplicationWithId;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessOrganisationWithOrganisation;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalOrSystemUser;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 
 return [
     CommandHandler\Application\Schedule41Approve::class => IsInternalUser::class,

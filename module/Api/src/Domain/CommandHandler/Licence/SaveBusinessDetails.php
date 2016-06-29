@@ -78,12 +78,17 @@ final class SaveBusinessDetails extends AbstractCommandHandler implements AuthAw
         return $this->result;
     }
 
+    /**
+     * Method set organisation data
+     *
+     * @throws ForbiddenException
+     */
     private function setDetails()
     {
         $canUpdate = ($this->isGranted(Permission::INTERNAL_USER) || !$this->org->hasInforceLicences());
 
-        $name = ($this->command->getName() ?: false);
-        if ($name !== $this->org->getName()) {
+        $name = $this->command->getName();
+        if (!empty($name) && $name !== $this->org->getName()) {
             if (!$canUpdate) {
                 throw new ForbiddenException(self::ERR_NOT_ALLOW_UPDATE_ORG_NAME);
             }
@@ -91,8 +96,8 @@ final class SaveBusinessDetails extends AbstractCommandHandler implements AuthAw
             $this->org->setName($name);
         }
 
-        $number = ($this->command->getCompanyOrLlpNo() ?: false);
-        if ($number !== $this->org->getCompanyOrLlpNo()) {
+        $number = $this->command->getCompanyOrLlpNo();
+        if (!empty($number) && $number !== $this->org->getCompanyOrLlpNo()) {
             if (!$canUpdate) {
                 throw new ForbiddenException(self::ERR_NOT_ALLOW_UPDATE_ORG_NUM);
             }
@@ -104,6 +109,9 @@ final class SaveBusinessDetails extends AbstractCommandHandler implements AuthAw
         $this->org->setAllowEmail($this->command->getAllowEmail());
     }
 
+    /**
+     * set organisation address of registration
+     */
     private function setRegAddress()
     {
         $regAddress = $this->command->getRegisteredAddress();
@@ -127,11 +135,19 @@ final class SaveBusinessDetails extends AbstractCommandHandler implements AuthAw
         }
     }
 
+    /**
+     * Set nature of business of organisation
+     */
     private function setNatureOfBusiness()
     {
         $this->org->setNatureOfBusiness($this->command->getNatureOfBusiness());
     }
 
+    /**
+     * Set trading names for licence
+     *
+     * @param $licenceId
+     */
     private function setTradingNames($licenceId)
     {
         $tradingNames = $this->command->getTradingNames();
@@ -151,6 +167,11 @@ final class SaveBusinessDetails extends AbstractCommandHandler implements AuthAw
         $this->handleSideEffectResult($result);
     }
 
+    /**
+     * Update hasChanged status in depend of result of side effect command
+     *
+     * @param Result $result
+     */
     private function handleSideEffectResult(Result $result)
     {
         $this->result->merge($result);

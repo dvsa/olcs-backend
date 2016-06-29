@@ -79,6 +79,7 @@ class SaveBusinessDetailsTest extends CommandHandlerTestCase
 
         //  mock licence repo
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
+            ->once()
             ->with($command)
             ->andReturn($this->mockLicenceEntity);
 
@@ -177,6 +178,7 @@ class SaveBusinessDetailsTest extends CommandHandlerTestCase
 
         //  mock licence repo
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
+            ->once()
             ->with($command)
             ->andReturn($this->mockLicenceEntity);
 
@@ -212,14 +214,13 @@ class SaveBusinessDetailsTest extends CommandHandlerTestCase
         //  mock organisation entity
         $this->mockOrgEntity
             ->shouldReceive('getVersion')->once()->andReturn(self::VERSION)
-            ->shouldReceive('setName')->once()->with('')
-            ->shouldReceive('setCompanyOrLlpNo')->once()->with('')
             ->shouldReceive('setAllowEmail')->once()->with('')
             ->shouldReceive('setNatureOfBusiness')->once()->with('')
             ->shouldReceive('setContactDetails')->never();
 
         //  mock licence repo
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
+            ->once()
             ->with($command)
             ->andReturn($this->mockLicenceEntity);
 
