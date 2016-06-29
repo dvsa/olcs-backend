@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Save LVA Addresses
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
@@ -36,6 +31,11 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
         'fax' => 'phone_t_fax'
     );
 
+    /**
+     * @inheritdoc
+     *
+     * @param \Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses $command
+     */
     public function handleCommand(CommandInterface $command)
     {
         /** @var Licence $licence */

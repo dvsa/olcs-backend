@@ -1,19 +1,12 @@
 <?php
 
-/**
- * Application Update Addresses
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses;
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
+use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Application Update Addresses
@@ -26,8 +19,10 @@ final class UpdateAddresses extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
+        /** @var \Dvsa\Olcs\Api\Entity\Application\Application $application */
         $application = $this->getRepo()->fetchUsingId($command);
 
+        /** @var \Dvsa\Olcs\Api\Entity\Licence\Licence $licence */
         $licence = $application->getLicence();
 
         $params = $command->getArrayCopy();

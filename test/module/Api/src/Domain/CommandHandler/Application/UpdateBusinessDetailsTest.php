@@ -2,21 +2,24 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
+use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateBusinessDetails;
-use Dvsa\Olcs\Transfer\Command\Application\UpdateBusinessDetails as Cmd;
-use Dvsa\Olcs\Transfer\Command\Licence\UpdateBusinessDetails as LicenceCmd;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
 /**
- * Update Business Details Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers  Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateBusinessDetails
  */
 class UpdateBusinessDetailsTest extends CommandHandlerTestCase
 {
+    const ID = 111;
+    const LIC_ID = 2222;
+
+    /** @var UpdateBusinessDetails  */
+    protected $sut;
+
     public function setUp()
     {
         $this->sut = new UpdateBusinessDetails();
@@ -24,54 +27,58 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [
-
-        ];
-
-        $this->references = [
-
-        ];
-
-        parent::initReferences();
-    }
-
     public function testHandleCommand()
     {
         $data = [
-            'id' => 111,
-            'licence' => 222,
-            'version' => 1
+            'id' => self::ID,
+            'licence' => self::LIC_ID,
+            'version' => 1,
         ];
+        $command = TransferCmd\Application\UpdateBusinessDetails::create($data);
 
-        $command = Cmd::create($data);
-
-        $licenceCmdData = [
-            'id' => 222,
+        //  save business details
+        $saveCmdData = [
+            'id' => self::LIC_ID,
             'version' => 1,
             'name' => null,
             'natureOfBusiness' => null,
             'companyOrLlpNo' => null,
             'registeredAddress' => null,
             'tradingNames' => [],
-            'partial' => null
+            'partial' => null,
+            'allowEmail' => null,
         ];
 
-        $result1 = new Result();
-        $result1->addMessage('Business Details updated');
-        $result1->setFlag('hasChanged', true);
+        $saveCmdResult = new Result();
+        $saveCmdResult->addMessage('Business Details updated');
+        $saveCmdResult->setFlag('hasChanged', true);
 
-        $this->expectedSideEffect(LicenceCmd::class, $licenceCmdData, $result1);
+        $this->expectedSideEffect(
+            DomainCmd\Licence\SaveBusinessDetails::class,
+            $saveCmdData,
+            $saveCmdResult
+        );
 
-        $updateData = ['id' => 111, 'section' => 'businessDetails'];
+        //  update application completion
+        $completionCmdData = [
+            'id' => self::ID,
+            'section' => 'businessDetails',
+            'data' => [
+                'hasChanged' => true,
+            ]
+        ];
 
-        $result2 = new Result();
-        $result2->addMessage('Section updated');
+        $completionCmdResult = new Result();
+        $completionCmdResult->addMessage('Section updated');
 
-        $this->expectedSideEffect(UpdateApplicationCompletion::class, $updateData, $result2);
+        $this->expectedSideEffect(
+            DomainCmd\Application\UpdateApplicationCompletion::class,
+            $completionCmdData,
+            $completionCmdResult
+        );
 
-        $result = $this->sut->handleCommand($command);
+        //  call
+        $actual = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
@@ -81,6 +88,6 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
             ]
         ];
 
-        $this->assertEquals($expected, $result->toArray());
+        static::assertEquals($expected, $actual->toArray());
     }
 }

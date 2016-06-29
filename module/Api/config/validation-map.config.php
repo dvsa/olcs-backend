@@ -1,10 +1,10 @@
 <?php
 
-use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Standard;
 use Dvsa\Olcs\Cli\Domain\CommandHandler as CliCommandHandler;
 use Dvsa\Olcs\Email\Domain\CommandHandler as EmailCommandHandler;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Standard;
 
 /**
  * @NOTE When you implement one of the following rules, please move it to the (or create a) relevant
@@ -27,7 +27,6 @@ $map = [
     CommandHandler\Email\SendTmApplication::class => Standard::class, // @todo
     CommandHandler\Licence\CreateVariation::class => Standard::class, // @todo
     CommandHandler\Licence\UpdateAddresses::class => Standard::class, // @todo
-    CommandHandler\Licence\UpdateBusinessDetails::class => Standard::class, // @todo
     CommandHandler\Licence\UpdateOperatingCentres::class => Standard::class, // @todo
     CommandHandler\Licence\UpdateTypeOfLicence::class => Standard::class, // @todo
     CommandHandler\Organisation\UpdateBusinessType::class => Standard::class, // @todo
@@ -56,7 +55,6 @@ $map = [
     QueryHandler\ConditionUndertaking\Get::class => Standard::class, // @todo
     QueryHandler\ConditionUndertaking\GetList::class => Standard::class, // @todo
     QueryHandler\Licence\Addresses::class => Standard::class, // @todo
-    QueryHandler\Licence\BusinessDetails::class => Standard::class, // @todo
     QueryHandler\Licence\ConditionUndertaking::class => Standard::class, // @todo
     QueryHandler\Licence\Licence::class => Standard::class, // @todo
     QueryHandler\Licence\LicenceByNumber::class => Standard::class, // @todo

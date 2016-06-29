@@ -74,6 +74,7 @@ return [
     CommandHandler\Licence\CancelLicenceFees::class                                   => IsSideEffect::class,
     CommandHandler\Licence\UpdateTotalCommunityLicences::class                        => IsSideEffect::class,
     CommandHandler\Licence\SaveAddresses::class                                       => IsSideEffect::class,
+    CommandHandler\Licence\SaveBusinessDetails::class                                 => IsSideEffect::class,
     CommandHandler\Publication\PiHearing::class                                       => IsSideEffect::class,
     CommandHandler\Publication\CreateNextPublication::class                           => IsSideEffect::class,
     CommandHandler\Publication\Licence::class                                         => IsSideEffect::class,
@@ -145,5 +146,5 @@ return [
     CommandHandler\Bus\Ebsr\UpdateTxcInboxPdf::class                                  => IsSideEffect::class,
     QueryHandler\Bus\ByLicenceRoute::class                                            => IsSideEffect::class,
     Dvsa\Olcs\Email\Domain\CommandHandler\UpdateInspectionRequest::class              => IsSideEffect::class,
-    Dvsa\Olcs\Email\Domain\CommandHandler\SendEmail::class                            => IsSideEffect::class
+    Dvsa\Olcs\Email\Domain\CommandHandler\SendEmail::class                            => IsSideEffect::class,
 ];
