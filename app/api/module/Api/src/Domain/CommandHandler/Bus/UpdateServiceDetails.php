@@ -15,8 +15,6 @@ use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService;
 use Dvsa\Olcs\Api\Entity\Bus\BusServiceType as BusServiceTypeEntity;
 use Dvsa\Olcs\Transfer\Command\Bus\UpdateServiceDetails as UpdateServiceDetailsCmd;
-use Dvsa\Olcs\Api\Domain\Repository\Fee;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CmdCreateBusFee;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
@@ -25,33 +23,15 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
  */
 final class UpdateServiceDetails extends AbstractCommandHandler implements TransactionedInterface
 {
-    /**
-     * @var BusNoticePeriod
-     */
-    protected $busNoticePeriodRepo;
-
-    /**
-     * @var Fee
-     */
-    protected $feeRepo;
-
     protected $repoServiceName = 'Bus';
 
-    protected $extraRepos = ['BusRegOtherService'];
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->busNoticePeriodRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('BusNoticePeriod');
-
-        $this->feeRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('Fee');
-
-        return parent::createService($serviceLocator);
-    }
+    protected $extraRepos = ['BusRegOtherService', 'Fee'];
 
     /**
-     * @param CommandInterface $command
+     * Handle command
+     *
+     * @param CommandInterface $command Command
+     *
      * @return Result
      * @throws \Exception
      */
@@ -64,14 +44,6 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
 
         $busReg = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
         $busRegId = $busReg->getId();
-        $busNoticePeriod = $command->getBusNoticePeriod();
-
-        //short notice rules
-        $busRules = false;
-
-        if ($busNoticePeriod) {
-            $busRules = $this->busNoticePeriodRepo->fetchById($busNoticePeriod, Query::HYDRATE_OBJECT);
-        }
 
         $busReg->updateServiceDetails(
             $command->getServiceNo(),
@@ -82,8 +54,7 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
             $command->getReceivedDate(),
             $command->getEffectiveDate(),
             $command->getEndDate(),
-            $this->getRepo()->getReference(BusNoticePeriodEntity::class, $busNoticePeriod),
-            $busRules
+            $this->getRepo()->getReference(BusNoticePeriodEntity::class, $command->getBusNoticePeriod())
         );
 
         $serviceTypes = $this->processServiceTypes($command->getBusServiceTypes());
@@ -107,12 +78,13 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
      * Returns whether we should create a fee
      * (basically this is down to whether there's already a fee in place for this busReg)
      *
-     * @param $busRegId
+     * @param int $busRegId Bus reg id
+     *
      * @return bool
      */
     private function shouldCreateFee($busRegId)
     {
-        $latestFee = $this->feeRepo->getLatestFeeForBusReg($busRegId);
+        $latestFee = $this->getRepo('Fee')->getLatestFeeForBusReg($busRegId);
 
         if (!empty($latestFee)) {
             return false;
@@ -122,7 +94,11 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
     }
 
     /**
-     * @param array $otherServiceNumbers
+     * Process service numbers
+     *
+     * @param BusReg $busReg              Bus reg
+     * @param array  $otherServiceNumbers Other service numbers
+     *
      * @return array
      */
     private function processServiceNumbers(BusReg $busReg, array $otherServiceNumbers)
@@ -168,7 +144,8 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
     /**
      * Returns collection of service types.
      *
-     * @param null $serviceTypes
+     * @param array $serviceTypes Service types
+     *
      * @return ArrayCollection
      */
     private function processServiceTypes($serviceTypes)
@@ -183,7 +160,10 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
     }
 
     /**
-     * @param $busRegId
+     * Create BusFee command
+     *
+     * @param int $busRegId BusReg id
+     *
      * @return CmdCreateBusFee
      */
     private function createBusFeeCommand($busRegId)
