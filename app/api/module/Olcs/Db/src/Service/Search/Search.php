@@ -279,8 +279,16 @@ class Search implements AuthAwareInterface
                         new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
                     );
                     $queryBool->addShould(
-                        new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
+                        new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 1.0)
                     );
+
+                    // OLCS-
+                    if ($this->isInternalUser()) {
+                        $loginMatch = new Query\Match();
+                        $loginMatch->setFieldQuery('login_id', $search);
+                        $loginMatch->setFieldBoost('login_id', 2.0);
+                        $queryBool->addShould($loginMatch);
+                    }
                 }
 
                 /*
@@ -318,7 +326,7 @@ class Search implements AuthAwareInterface
                                 new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
                             );
                             $queryBool->addShould(
-                                new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
+                                new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 1.0)
                             );
                         }
                     }
