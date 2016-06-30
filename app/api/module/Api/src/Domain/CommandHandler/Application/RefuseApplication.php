@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
+use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscsForApplication;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -73,12 +73,12 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
         }
 
         $this->result->merge(
-            $this->handleSideEffect(CeaseGoodsDiscs::create(['licence' => $application->getLicence()->getId()]))
+            $this->handleSideEffect(
+                CeaseGoodsDiscsForApplication::create(['application' => $application->getId()])
+            )
         );
 
-        $this->getRepo('LicenceVehicle')->clearSpecifiedDateAndInterimApp(
-            $application->getLicence()->getId()
-        );
+        $this->getRepo('LicenceVehicle')->clearSpecifiedDateAndInterimApp($application);
 
         $communityLicences = $application->getLicence()->getCommunityLics()->toArray();
         if (!empty($communityLicences)) {

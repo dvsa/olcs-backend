@@ -81,6 +81,7 @@ return [
     CommandHandler\Publication\Impounding::class                                      => IsSideEffect::class,
     CommandHandler\Publication\CreatePoliceDocument::class                            => IsSideEffect::class,
     CommandHandler\Discs\CeaseGoodsDiscs::class                                       => IsSideEffect::class,
+    CommandHandler\Discs\CeaseGoodsDiscsForApplication::class                         => IsSideEffect::class,
     CommandHandler\Discs\CeasePsvDiscs::class                                         => IsSideEffect::class,
     CommandHandler\LicenceVehicle\RemoveLicenceVehicle::class                         => IsSideEffect::class,
     CommandHandler\Vehicle\ProcessDuplicateVehicleWarning::class                      => IsSideEffect::class,

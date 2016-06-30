@@ -14,7 +14,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\RefuseApplication as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Application\RefuseApplication as Command;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
+use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscsForApplication;
 use Dvsa\Olcs\Api\Domain\Command\Licence\Refuse;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -68,7 +68,7 @@ class RefuseApplicationTest extends CommandHandlerTestCase
                 m::mock()
                     ->shouldReceive('toArray')
                     ->once()
-                    ->andReturn([1,2,3])
+                    ->andReturn([1, 2, 3])
                     ->getMock()
             )
             ->shouldReceive('getTrafficArea')->with()->once()->andReturn($trafficArea)
@@ -97,12 +97,12 @@ class RefuseApplicationTest extends CommandHandlerTestCase
 
         $this->repoMap['LicenceVehicle']
             ->shouldReceive('clearSpecifiedDateAndInterimApp')
-            ->with(123)
+            ->with($application)
             ->once()
             ->getMock();
 
         $this->expectedSideEffect(Refuse::class, ['id' => 123], new Result());
-        $this->expectedSideEffect(CeaseGoodsDiscs::class, ['licence' => 123], new Result());
+        $this->expectedSideEffect(CeaseGoodsDiscsForApplication::class, ['application' => 1], new Result());
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
@@ -155,7 +155,7 @@ class RefuseApplicationTest extends CommandHandlerTestCase
                 m::mock()
                     ->shouldReceive('toArray')
                     ->once()
-                    ->andReturn([1,2,3])
+                    ->andReturn([1, 2, 3])
                     ->getMock()
             )
             ->shouldReceive('getTrafficArea')->with()->once()->andReturn($trafficArea)
@@ -182,12 +182,12 @@ class RefuseApplicationTest extends CommandHandlerTestCase
             ->with(m::type(Application::class));
 
         $this->repoMap['LicenceVehicle']->shouldReceive('clearSpecifiedDateAndInterimApp')
-            ->with(123)
+            ->with($application)
             ->once()
             ->getMock();
 
         $this->expectedSideEffect(Refuse::class, ['id' => 123], new Result());
-        $this->expectedSideEffect(CeaseGoodsDiscs::class, ['licence' => 123], new Result());
+        $this->expectedSideEffect(CeaseGoodsDiscsForApplication::class, ['application' => 1], new Result());
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
@@ -260,13 +260,13 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $this->repoMap['Application']->shouldReceive('save')->once()->with(m::type(Application::class));
 
         $this->repoMap['LicenceVehicle']->shouldReceive('clearSpecifiedDateAndInterimApp')
-            ->with(123)
+            ->with($application)
             ->once()
             ->getMock();
 
         $this->expectedSideEffect(
-            CeaseGoodsDiscs::class,
-            ['licence' => 123],
+            CeaseGoodsDiscsForApplication::class,
+            ['application' => 1],
             new Result()
         );
         $this->expectedSideEffect(
@@ -309,7 +309,7 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $this->repoMap['Application']->shouldReceive('save')->once()->with(m::type(Application::class));
 
         $this->repoMap['LicenceVehicle']->shouldReceive('clearSpecifiedDateAndInterimApp')
-            ->with(123)
+            ->with($application)
             ->once()
             ->getMock();
 
@@ -329,8 +329,8 @@ class RefuseApplicationTest extends CommandHandlerTestCase
             new Result()
         );
         $this->expectedSideEffect(
-            CeaseGoodsDiscs::class,
-            ['licence' => 123],
+            CeaseGoodsDiscsForApplication::class,
+            ['application' => 1],
             new Result()
         );
 

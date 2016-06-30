@@ -17,7 +17,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\NotTakenUpApplication as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Licence\NotTakenUp as Command;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
+use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscsForApplication;
 use Dvsa\Olcs\Api\Domain\Command\Licence\NotTakenUp;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Delete;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -118,7 +118,7 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
 
         $this->repoMap['LicenceVehicle']
             ->shouldReceive('clearSpecifiedDateAndInterimApp')
-            ->with(123)
+            ->with($application)
             ->once()
             ->getMock();
 
@@ -129,9 +129,9 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(NotTakenUp::class, ['id' => 123], new Result());
 
         $this->expectedSideEffect(
-            CeaseGoodsDiscs::class,
+            CeaseGoodsDiscsForApplication::class,
             [
-                'licence' => 123,
+                'application' => 1,
             ],
             new Result()
         );
@@ -239,7 +239,7 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
 
         $this->repoMap['LicenceVehicle']
             ->shouldReceive('clearSpecifiedDateAndInterimApp')
-            ->with(123)
+            ->with($application)
             ->once()
             ->getMock();
 
@@ -250,9 +250,9 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(NotTakenUp::class, ['id' => 123], new Result());
 
         $this->expectedSideEffect(
-            CeaseGoodsDiscs::class,
+            CeaseGoodsDiscsForApplication::class,
             [
-                'licence' => 123,
+                'application' => 1,
             ],
             new Result()
         );
