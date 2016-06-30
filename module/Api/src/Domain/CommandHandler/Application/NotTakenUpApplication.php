@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Domain\Command\Licence\NotTakenUp;
-use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
+use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscsForApplication;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Delete;
 use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
@@ -61,12 +61,12 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
         );
 
         $this->result->merge(
-            $this->handleSideEffect(CeaseGoodsDiscs::create(['licence' => $application->getLicence()->getId()]))
+            $this->handleSideEffect(
+                CeaseGoodsDiscsForApplication::create(['application' => $application->getId()])
+            )
         );
 
-        $this->getRepo('LicenceVehicle')->clearSpecifiedDateAndInterimApp(
-            $application->getLicence()->getId()
-        );
+        $this->getRepo('LicenceVehicle')->clearSpecifiedDateAndInterimApp($application);
 
         $this->result->merge(
             $this->handleSideEffect(RemoveLicenceVehicle::create(['licence' => $application->getLicence()->getId()]))
