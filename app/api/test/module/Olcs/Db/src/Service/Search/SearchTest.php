@@ -220,6 +220,9 @@ class SearchTest extends MockeryTestCase
                 ->andReturn(true);
             $authService->shouldReceive('isGranted')->with(\Dvsa\Olcs\Api\Entity\User\Permission::SELFSERVE_USER, null)
                 ->andReturn(false);
+        } else {
+            $authService->shouldReceive('isGranted')->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
+                ->andReturn(false);
         }
 
         $authService->shouldReceive('getIdentity->getUser')
@@ -618,11 +621,11 @@ class SearchTest extends MockeryTestCase
                                     'should' => [
                                         $this->generateMatch('_all', 'FOO BAR'),
                                         $this->generateWildcard('person_family_name_wildcard', '*foo bar*', '2.0'),
-                                        $this->generateWildcard('person_forename_wildcard', '*foo bar*', '2.0'),
+                                        $this->generateWildcard('person_forename_wildcard', '*foo bar*', '1.0'),
                                         $this->generateWildcard('person_family_name_wildcard', '*foo*', '2.0'),
-                                        $this->generateWildcard('person_forename_wildcard', '*foo*', '2.0'),
+                                        $this->generateWildcard('person_forename_wildcard', '*foo*', '1.0'),
                                         $this->generateWildcard('person_family_name_wildcard', '*bar*', '2.0'),
-                                        $this->generateWildcard('person_forename_wildcard', '*bar*', '2.0'),
+                                        $this->generateWildcard('person_forename_wildcard', '*bar*', '1.0'),
                                     ],
                                     'must_not' => [
                                         $this->generateMatch('tm_status_id', 'tm_s_rem'),
@@ -667,11 +670,15 @@ class SearchTest extends MockeryTestCase
                                     'should' => [
                                         $this->generateMatch('_all', 'FOO BAR'),
                                         $this->generateWildcard('person_family_name_wildcard', '*foo bar*', '2.0'),
-                                        $this->generateWildcard('person_forename_wildcard', '*foo bar*', '2.0'),
+                                        $this->generateWildcard('person_forename_wildcard', '*foo bar*', '1.0'),
+                                        $this->generateMatch(
+                                            'login_id',
+                                            ['query' => 'FOO BAR', 'boost' => 2.0]
+                                        ),
                                         $this->generateWildcard('person_family_name_wildcard', '*foo*', '2.0'),
-                                        $this->generateWildcard('person_forename_wildcard', '*foo*', '2.0'),
+                                        $this->generateWildcard('person_forename_wildcard', '*foo*', '1.0'),
                                         $this->generateWildcard('person_family_name_wildcard', '*bar*', '2.0'),
-                                        $this->generateWildcard('person_forename_wildcard', '*bar*', '2.0'),
+                                        $this->generateWildcard('person_forename_wildcard', '*bar*', '1.0'),
                                     ]
                                 ]
                             ]
