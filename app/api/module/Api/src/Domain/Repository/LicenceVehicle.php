@@ -401,10 +401,15 @@ class LicenceVehicle extends AbstractRepository
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
-    public function clearSpecifiedDateAndInterimApp($licenceId)
+    public function clearSpecifiedDateAndInterimApp(\Dvsa\Olcs\Api\Entity\Application\Application $application)
     {
         return $this->getDbQueryManager()->get('LicenceVehicle\ClearSpecifiedDateAndInterimAppForLicence')
-            ->execute(['licence' => $licenceId]);
+            ->execute(
+                [
+                    'application' => $application->getId(),
+                    'licence' => $application->getLicence()->getId()
+                ]
+            );
     }
 
     public function removeAllForLicence($licenceId)

@@ -14,7 +14,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\WithdrawApplication as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Application\WithdrawApplication as Command;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
+use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscsForApplication;
 use Dvsa\Olcs\Api\Domain\Command\Licence\Withdraw;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -95,12 +95,12 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             ->with(m::type(Application::class));
 
         $this->repoMap['LicenceVehicle']->shouldReceive('clearSpecifiedDateAndInterimApp')
-            ->with(123)
+            ->with($application)
             ->once()
             ->getMock();
 
         $this->expectedSideEffect(Withdraw::class, ['id' => 123], new Result());
-        $this->expectedSideEffect(CeaseGoodsDiscs::class, ['licence' => 123], new Result());
+        $this->expectedSideEffect(CeaseGoodsDiscsForApplication::class, ['application' => 1], new Result());
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
@@ -182,12 +182,12 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             ->with(m::type(Application::class));
 
         $this->repoMap['LicenceVehicle']->shouldReceive('clearSpecifiedDateAndInterimApp')
-            ->with(123)
+            ->with($application)
             ->once()
             ->getMock();
 
         $this->expectedSideEffect(Withdraw::class, ['id' => 123], new Result());
-        $this->expectedSideEffect(CeaseGoodsDiscs::class, ['licence' => 123], new Result());
+        $this->expectedSideEffect(CeaseGoodsDiscsForApplication::class, ['application' => 1], new Result());
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
@@ -262,7 +262,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $this->repoMap['Application']->shouldReceive('save')->once()->with(m::type(Application::class));
 
         $this->repoMap['LicenceVehicle']->shouldReceive('clearSpecifiedDateAndInterimApp')
-            ->with(123)
+            ->with($application)
             ->once()
             ->getMock();
 
@@ -272,8 +272,8 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             (new Result())->addMessage('Snapshot created')
         );
         $this->expectedSideEffect(
-            CeaseGoodsDiscs::class,
-            ['licence' => 123],
+            CeaseGoodsDiscsForApplication::class,
+            ['application' => 1],
             new Result()
         );
 
@@ -310,7 +310,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $this->repoMap['Application']->shouldReceive('save')->once()->with(m::type(Application::class));
 
         $this->repoMap['LicenceVehicle']->shouldReceive('clearSpecifiedDateAndInterimApp')
-            ->with(123)
+            ->with($application)
             ->once()
             ->getMock();
 
@@ -330,8 +330,8 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             new Result()
         );
         $this->expectedSideEffect(
-            CeaseGoodsDiscs::class,
-            ['licence' => 123],
+            CeaseGoodsDiscsForApplication::class,
+            ['application' => 1],
             new Result()
         );
         $this->expectedSideEffect(
