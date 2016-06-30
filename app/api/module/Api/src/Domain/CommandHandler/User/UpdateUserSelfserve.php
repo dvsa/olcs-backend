@@ -28,6 +28,13 @@ final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
 
     protected $extraRepos = ['ContactDetails'];
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $user = $this->getRepo()->fetchById($command->getId(), Query::HYDRATE_OBJECT, $command->getVersion());

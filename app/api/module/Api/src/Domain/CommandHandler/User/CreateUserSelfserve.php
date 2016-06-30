@@ -35,6 +35,13 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
 
     protected $extraRepos = ['ContactDetails'];
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $data = $command->getArrayCopy();

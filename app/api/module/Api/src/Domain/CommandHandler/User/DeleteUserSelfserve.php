@@ -26,6 +26,13 @@ final class DeleteUserSelfserve extends AbstractCommandHandler implements
 
     protected $extraRepos = ['Task'];
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $user = $this->getRepo()->fetchUsingId($command);

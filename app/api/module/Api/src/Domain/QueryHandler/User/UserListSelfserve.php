@@ -23,6 +23,14 @@ class UserListSelfserve extends AbstractQueryHandler implements AuthAwareInterfa
 
     protected $repoServiceName = 'User';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
     public function handleQuery(QueryInterface $query)
     {
         $repo = $this->getRepo();

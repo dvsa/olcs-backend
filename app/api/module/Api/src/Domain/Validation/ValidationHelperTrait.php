@@ -61,6 +61,8 @@ trait ValidationHelperTrait
     protected $validatorManager;
 
     /**
+     * Get ValidatorManager
+     *
      * @return ValidatorManager
      */
     public function getValidatorManager()
@@ -69,13 +71,25 @@ trait ValidationHelperTrait
     }
 
     /**
-     * @param ValidatorManager $validatorManager
+     * Set ValidatorManager
+     *
+     * @param ValidatorManager $validatorManager Validator manager
+     *
+     * @return void
      */
     public function setValidatorManager(ValidatorManager $validatorManager)
     {
         $this->validatorManager = $validatorManager;
     }
 
+    /**
+     * Call
+     *
+     * @param string $method Method
+     * @param array  $params Params
+     *
+     * @return mixed
+     */
     public function __call($method, $params)
     {
         if ($this->getValidatorManager()->has($method) === false) {
@@ -87,6 +101,13 @@ trait ValidationHelperTrait
         return call_user_func_array([$validator, 'isValid'], $params);
     }
 
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service locator
+     *
+     * @return $this
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceManager = $serviceLocator->getServiceLocator();

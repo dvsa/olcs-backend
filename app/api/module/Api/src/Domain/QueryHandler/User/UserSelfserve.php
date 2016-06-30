@@ -15,6 +15,13 @@ class UserSelfserve extends AbstractQueryHandler
 {
     protected $repoServiceName = 'User';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
         $user = $this->getRepo()->fetchUsingId($query);

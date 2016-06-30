@@ -20,6 +20,13 @@ class UserList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'User';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return array
+     */
     public function handleQuery(QueryInterface $query)
     {
         /** @var User $repo */
