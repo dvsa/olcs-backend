@@ -28,7 +28,6 @@ return [
     CommandHandler\User\RegisterUserSelfserve::class                            => NoValidationRequired::class,
     CommandHandler\User\RemindUsernameSelfserve::class                          => NoValidationRequired::class,
     CommandHandler\User\UpdatePartner::class                                    => IsInternalUser::class,
-    CommandHandler\Tm\CreateNewUser::class                                      => NoValidationRequired::class, // @todo
     CommandHandler\User\CreateUserSelfserve::class                              => CanManageUser::class,
     CommandHandler\User\DeleteUserSelfserve::class                              => CanManageUser::class,
     CommandHandler\User\UpdateUserSelfserve::class                              => CanManageUser::class,
