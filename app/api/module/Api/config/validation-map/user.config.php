@@ -5,6 +5,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsExternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\User\CanAccessUserList;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\User\CanManageUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\User\CanReadUser;
 
@@ -15,7 +16,7 @@ return [
     QueryHandler\User\PartnerList::class                                        => IsInternalUser::class,
     QueryHandler\User\RoleList::class                                           => NoValidationRequired::class,
     QueryHandler\User\Pid::class                                                => NoValidationRequired::class,
-    QueryHandler\User\UserList::class                                           => NoValidationRequired::class, // @todo,
+    QueryHandler\User\UserList::class                                           => CanAccessUserList::class,
     QueryHandler\User\UserListInternal::class                                   => IsInternalUser::class,
     QueryHandler\User\UserListSelfserve::class                                  => CanManageUser::class,
     QueryHandler\User\UserSelfserve::class                                      => CanReadUser::class,
