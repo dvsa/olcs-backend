@@ -28,6 +28,10 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
     protected $repoServiceName = 'TxcInbox';
 
     /**
+     * handle query to retrieve a list of TXC inbox records
+     *
+     * @param QueryInterface $query the query
+     *
      * @return array
      */
     public function handleQuery(QueryInterface $query)
