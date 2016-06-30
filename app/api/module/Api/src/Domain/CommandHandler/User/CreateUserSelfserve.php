@@ -13,11 +13,9 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Service\OpenAm\Client;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -39,10 +37,6 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
 
     public function handleCommand(CommandInterface $command)
     {
-        if (!$this->isGranted(Permission::CAN_MANAGE_USER_SELFSERVE)) {
-            throw new ForbiddenException('You do not have permission to manage the record');
-        }
-
         $data = $command->getArrayCopy();
 
         // validate username

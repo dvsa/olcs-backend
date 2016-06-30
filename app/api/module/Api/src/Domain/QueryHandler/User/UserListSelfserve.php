@@ -8,10 +8,8 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\User;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Query\User\UserListSelfserve as ListDto;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
@@ -27,10 +25,6 @@ class UserListSelfserve extends AbstractQueryHandler implements AuthAwareInterfa
 
     public function handleQuery(QueryInterface $query)
     {
-        if (!$this->isGranted(Permission::CAN_MANAGE_USER_SELFSERVE)) {
-            throw new ForbiddenException('You do not have permission to manage the record');
-        }
-
         $repo = $this->getRepo();
 
         // get data from transfer query
