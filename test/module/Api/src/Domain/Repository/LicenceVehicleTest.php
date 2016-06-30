@@ -517,11 +517,16 @@ class LicenceVehicleTest extends RepositoryTestCase
 
     public function testClearSpecifiedDateAndInterimApp()
     {
-        $licenceId = 123;
+        $application = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class);
+        $application->shouldReceive('getId')->with()->once()->andReturn(12);
+        $application->shouldReceive('getLicence->getId')->with()->once()->andReturn(123);
 
-        $this->expectQueryWithData('LicenceVehicle\ClearSpecifiedDateAndInterimAppForLicence', ['licence' => 123]);
+        $this->expectQueryWithData(
+            'LicenceVehicle\ClearSpecifiedDateAndInterimAppForLicence',
+            ['application' => 12, 'licence' => 123]
+            );
 
-        $this->sut->clearSpecifiedDateAndInterimApp($licenceId);
+        $this->sut->clearSpecifiedDateAndInterimApp($application);
     }
 
     public function testRemoveAllForLicence()

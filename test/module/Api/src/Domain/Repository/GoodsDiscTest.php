@@ -21,6 +21,11 @@ use Doctrine\DBAL\Connection;
  */
 class GoodsDiscTest extends RepositoryTestCase
 {
+    /**
+     * @var m\MockInterface|GoodsDiscRepo
+     */
+    protected $sut;
+
     protected $activeStatuses;
 
     public function setUp()
@@ -226,6 +231,16 @@ class GoodsDiscTest extends RepositoryTestCase
         $this->expectQueryWithData('LicenceVehicle\CeaseDiscsForLicence', ['licence' => 123], [], $stmt);
 
         $this->assertSame(564, $this->sut->ceaseDiscsForLicence($licenceId));
+    }
+
+    public function testCeaseDiscsForApplication()
+    {
+        $stmt = m::mock();
+        $stmt->shouldReceive('rowCount')->with()->once()->andReturn(123);
+
+        $this->expectQueryWithData('LicenceVehicle\CeaseDiscsForApplication', ['application' => 45], [], $stmt);
+
+        $this->assertSame(123, $this->sut->ceaseDiscsForApplication(45));
     }
 
     public function testFetchDiscsToPrintMin()

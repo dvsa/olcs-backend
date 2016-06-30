@@ -14,7 +14,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs as Cmd;
 
 /**
- * Cease Goods Discs
+ * Cease Goods Discs for a Licence
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -23,12 +23,15 @@ final class CeaseGoodsDiscs extends AbstractCommandHandler implements Transactio
     protected $repoServiceName = 'GoodsDisc';
 
     /**
-     * @param Cmd $command
+     * Handle command
+     *
+     * @param CommandInterface $command
+     *
      * @return Result
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
+        /** @var Cmd $command */
         $this->getRepo()->ceaseDiscsForLicence($command->getLicence());
 
         $result = new Result();

@@ -158,6 +158,20 @@ class GoodsDisc extends AbstractRepository
     }
 
     /**
+     * Cease all goods discs linked to active licence vehicles for an Application
+     *
+     * @param int $applicationId
+     *
+     * @return int Number of discs ceased
+     */
+    public function ceaseDiscsForApplication($applicationId)
+    {
+        return $this->getDbQueryManager()->get('LicenceVehicle\CeaseDiscsForApplication')
+            ->execute(['application' => $applicationId])
+            ->rowCount();
+    }
+
+    /**
      * Create a goods disc for each active licence vehicle
      *
      * @param int $licenceId

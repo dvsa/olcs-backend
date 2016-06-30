@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
+use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscsForApplication;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -73,12 +73,12 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
         }
 
         $this->result->merge(
-            $this->handleSideEffect(CeaseGoodsDiscs::create(['licence' => $application->getLicence()->getId()]))
+            $this->handleSideEffect(
+                CeaseGoodsDiscsForApplication::create(['application' => $application->getId()])
+            )
         );
 
-        $this->getRepo('LicenceVehicle')->clearSpecifiedDateAndInterimApp(
-            $application->getLicence()->getId()
-        );
+        $this->getRepo('LicenceVehicle')->clearSpecifiedDateAndInterimApp($application);
 
         if ($application->getLicence()->getCommunityLics()->count() > 0) {
 

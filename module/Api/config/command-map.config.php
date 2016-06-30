@@ -585,6 +585,7 @@ return [
 
     // Domain - Discs
     Command\Discs\CeaseGoodsDiscs::class => CommandHandler\Discs\CeaseGoodsDiscs::class,
+    Command\Discs\CeaseGoodsDiscsForApplication::class => CommandHandler\Discs\CeaseGoodsDiscsForApplication::class,
     Command\Discs\CeasePsvDiscs::class => CommandHandler\Discs\CeasePsvDiscs::class,
 
     // Domain - Licence Vehicles
