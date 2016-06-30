@@ -4,6 +4,8 @@ namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 
 /**
@@ -22,14 +24,27 @@ final class OperatingCentres extends AbstractSection
      */
     public function generateSection(CasesEntity $case)
     {
+        $applicationOperatingCentres = new ArrayCollection();
         $licence = $case->getLicence();
+        $licenceOperatingCentres = $licence->getOperatingCentres();
 
-        $licenceOperatingCentres = $this->extractSortedOperatingCentres($licence);
+        if ($case->getCaseType()->getId() === CasesEntity::APP_CASE_TYPE) {
+           $applicationOperatingCentres = $case->getApplication()->getOperatingCentres();
+        }
+
+        $allOperatingCentres = $this->extractSortedOperatingCentres(
+            new ArrayCollection(
+                array_merge(
+                    $licenceOperatingCentres->toArray(),
+                    $applicationOperatingCentres->toArray()
+                )
+            )
+        );
 
         $data = [];
-        for ($i=0; $i<count($licenceOperatingCentres); $i++) {
+        for ($i=0; $i<count($allOperatingCentres); $i++) {
             /** @var OperatingCentre $operatingCentre */
-            $operatingCentre = $licenceOperatingCentres->current()->getOperatingCentre();
+            $operatingCentre = $allOperatingCentres->current()->getOperatingCentre();
 
             $thisEntity = array();
 
@@ -37,8 +52,8 @@ final class OperatingCentres extends AbstractSection
 
                 $thisEntity['id'] = $operatingCentre->getId();
                 $thisEntity['version'] = $operatingCentre->getVersion();
-                $thisEntity['totAuthVehicles'] = $licenceOperatingCentres->current()->getNoOfVehiclesRequired();
-                $thisEntity['totAuthTrailers'] = $licenceOperatingCentres->current()->getNoOfTrailersRequired();
+                $thisEntity['totAuthVehicles'] = $allOperatingCentres->current()->getNoOfVehiclesRequired();
+                $thisEntity['totAuthTrailers'] = $allOperatingCentres->current()->getNoOfTrailersRequired();
                 if (empty($operatingCentre->getAddress())) {
                     $thisEntity['OcAddress'] = [];
                 } else {
@@ -47,7 +62,7 @@ final class OperatingCentres extends AbstractSection
                 $data[] = $thisEntity;
             }
 
-            $licenceOperatingCentres->next();
+            $allOperatingCentres->next();
         }
 
         return [
@@ -65,11 +80,12 @@ final class OperatingCentres extends AbstractSection
      * @param $licence
      * @return ArrayCollection
      */
-    private function extractSortedOperatingCentres($licence)
+    private function extractSortedOperatingCentres(ArrayCollection $ocArray)
     {
         $sorted = [];
-        if (!empty($licence->getOperatingCentres())) {
-            $iterator = $licence->getOperatingCentres()->getIterator();
+        if (!empty($ocArray)) {
+            $iterator = $ocArray->getIterator();
+
             $iterator->uasort(
                 function ($a, $b) {
                     if (null !== $a->getOperatingCentre()->getAddress()->getPostcode() &&

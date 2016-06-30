@@ -87,10 +87,31 @@ class SubmissionSectionTest extends MockeryTestCase
         return [];
     }
 
+    /**
+    * Return a case attached to an application
+    *
+    * @return CasesEntity
+    */
+    protected function getApplicationCase()
+    {
+        $case = $this->getCase();
+        $case->setCaseType(new RefData('case_t_app'));
+        $application = $this->generateApplication(
+            852,
+            $case->getLicence(),
+            Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+            false
+        );
+
+        $case->setApplication($application);
+
+        return $case;
+    }
+
     protected function getCase()
     {
         $openDate = new \DateTime('2012-01-01 15:00:00');
-        $caseType = new RefData('case_type');
+        $caseType = new RefData('case_t_app');
         $caseType->setDescription('case type 1');
 
         $categorys = new ArrayCollection(['cat1', 'cat2']);
