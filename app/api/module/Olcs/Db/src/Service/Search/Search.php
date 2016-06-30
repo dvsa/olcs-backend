@@ -257,6 +257,15 @@ class Search implements AuthAwareInterface
             case 'psv_disc':
             case 'user':
                 $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
+
+                // OLCS-12130
+                if ($this->isInternalUser()) {
+                    $loginMatch = new Query\Match();
+                    $loginMatch->setFieldQuery('login_id', $search);
+                    $loginMatch->setFieldBoost('login_id', 2.0);
+                    $queryBool->addShould($loginMatch);
+                }
+
                 break;
             case 'vehicle_current':
             case 'vehicle_removed':
@@ -281,14 +290,6 @@ class Search implements AuthAwareInterface
                     $queryBool->addShould(
                         new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 1.0)
                     );
-
-                    // OLCS-
-                    if ($this->isInternalUser()) {
-                        $loginMatch = new Query\Match();
-                        $loginMatch->setFieldQuery('login_id', $search);
-                        $loginMatch->setFieldBoost('login_id', 2.0);
-                        $queryBool->addShould($loginMatch);
-                    }
                 }
 
                 /*
