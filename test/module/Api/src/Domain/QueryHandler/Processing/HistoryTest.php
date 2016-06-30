@@ -26,6 +26,9 @@ class HistoryTest extends QueryHandlerTestCase
     {
         $this->sut = new History();
         $this->mockRepo('EventHistory', Repository\EventHistory::class);
+        $this->mockRepo('Licence', Repository\Licence::class);
+        $this->mockRepo('Application', Repository\Application::class);
+        $this->mockRepo('Cases', Repository\Cases::class);
 
         parent::setUp();
     }
@@ -33,7 +36,7 @@ class HistoryTest extends QueryHandlerTestCase
     public function testHandleQuery()
     {
         $data = [
-            'licence' => 1
+            'transportManager' => 1
         ];
 
         $query = Qry::create($data);
@@ -64,5 +67,147 @@ class HistoryTest extends QueryHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * Test that the organisation gets added when querying an application
+     */
+    public function testHandleQueryApplication()
+    {
+        $data = [
+            'application' => 32
+        ];
+        $organisation = m::mock();
+        $organisation->shouldReceive('getId')->with()->once()->andReturn(99);
+        $licence = m::mock();
+        $licence->shouldReceive('getOrganisation')->with()->once()->andReturn($organisation);
+        $application = m::mock();
+        $application->shouldReceive('getLicence')->with()->once()->andReturn($licence);
+
+        $query = Qry::create($data);
+        $this->repoMap['Application']->shouldReceive('fetchById')->with(32)->once()->andReturn($application);
+
+        $mockEventHistory = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar'])
+            ->once()
+            ->getMock();
+
+        $this->repoMap['EventHistory']
+            ->shouldReceive('disableSoftDeleteable')
+            ->shouldReceive('fetchList')
+            ->with($query, Query::HYDRATE_OBJECT)
+            ->andReturn([$mockEventHistory])
+            ->shouldReceive('fetchCount')
+            ->andReturn(5);
+
+        $this->sut->handleQuery($query);
+
+        $this->assertSame(99, $query->getOrganisation());
+    }
+
+    /**
+     * Test that the organisation gets added when querying a licence
+     */
+    public function testHandleQueryLicence()
+    {
+        $data = [
+            'licence' => 32
+        ];
+        $organisation = m::mock();
+        $organisation->shouldReceive('getId')->with()->once()->andReturn(99);
+        $licence = m::mock();
+        $licence->shouldReceive('getOrganisation')->with()->once()->andReturn($organisation);
+
+        $query = Qry::create($data);
+        $this->repoMap['Licence']->shouldReceive('fetchById')->with(32)->once()->andReturn($licence);
+
+        $mockEventHistory = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar'])
+            ->once()
+            ->getMock();
+
+        $this->repoMap['EventHistory']
+            ->shouldReceive('disableSoftDeleteable')
+            ->shouldReceive('fetchList')
+            ->with($query, Query::HYDRATE_OBJECT)
+            ->andReturn([$mockEventHistory])
+            ->shouldReceive('fetchCount')
+            ->andReturn(5);
+
+        $this->sut->handleQuery($query);
+
+        $this->assertSame(99, $query->getOrganisation());
+    }
+
+    /**
+     * Test that the organisation gets added when querying a case attached to licence
+     */
+    public function testHandleQueryCaseLicence()
+    {
+        $data = [
+            'case' => 32
+        ];
+        $organisation = m::mock();
+        $organisation->shouldReceive('getId')->with()->once()->andReturn(99);
+        $licence = m::mock();
+        $licence->shouldReceive('getOrganisation')->with()->once()->andReturn($organisation);
+        $case = m::mock();
+        $case->shouldReceive('getLicence')->with()->twice()->andReturn($licence);
+
+        $query = Qry::create($data);
+        $this->repoMap['Cases']->shouldReceive('fetchById')->with(32)->once()->andReturn($case);
+
+        $mockEventHistory = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar'])
+            ->once()
+            ->getMock();
+
+        $this->repoMap['EventHistory']
+            ->shouldReceive('disableSoftDeleteable')
+            ->shouldReceive('fetchList')
+            ->with($query, Query::HYDRATE_OBJECT)
+            ->andReturn([$mockEventHistory])
+            ->shouldReceive('fetchCount')
+            ->andReturn(5);
+
+        $this->sut->handleQuery($query);
+
+        $this->assertSame(99, $query->getOrganisation());
+    }
+
+    /**
+     * Test that the organisation gets added when querying a case attached to transport manager
+     */
+    public function testHandleQueryCaseTransportManager()
+    {
+        $data = [
+            'case' => 32
+        ];
+        $case = m::mock();
+        $case->shouldReceive('getLicence')->with()->once()->andReturn(null);
+
+        $query = Qry::create($data);
+        $this->repoMap['Cases']->shouldReceive('fetchById')->with(32)->once()->andReturn($case);
+
+        $mockEventHistory = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar'])
+            ->once()
+            ->getMock();
+
+        $this->repoMap['EventHistory']
+            ->shouldReceive('disableSoftDeleteable')
+            ->shouldReceive('fetchList')
+            ->with($query, Query::HYDRATE_OBJECT)
+            ->andReturn([$mockEventHistory])
+            ->shouldReceive('fetchCount')
+            ->andReturn(5);
+
+        $this->sut->handleQuery($query);
+
+        $this->assertSame(null, $query->getOrganisation());
     }
 }
