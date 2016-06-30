@@ -3,8 +3,6 @@
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Standard;
-use Dvsa\Olcs\Cli\Domain\CommandHandler as CliCommandHandler;
-use Dvsa\Olcs\Email\Domain\CommandHandler as EmailCommandHandler;
 
 /**
  * @NOTE When you implement one of the following rules, please move it to the (or create a) relevant
@@ -35,10 +33,6 @@ $map = [
     CommandHandler\TmEmployment\Create::class => Standard::class, // @todo
     CommandHandler\TmEmployment\DeleteList::class => Standard::class, // @todo
     CommandHandler\TmEmployment\Update::class => Standard::class, // @todo
-    CommandHandler\Tm\CreateNewUser::class => Standard::class, // @todo
-    CommandHandler\User\CreateUserSelfserve::class => Standard::class, // @todo
-    CommandHandler\User\DeleteUserSelfserve::class => Standard::class, // @todo
-    CommandHandler\User\UpdateUserSelfserve::class => Standard::class, // @todo
     CommandHandler\Variation\DeleteListConditionUndertaking::class => Standard::class, // @todo
     CommandHandler\Variation\UpdateAddresses::class => Standard::class, // @todo
     CommandHandler\Variation\UpdateConditionUndertaking::class => Standard::class, // @todo
@@ -56,9 +50,6 @@ $map = [
     QueryHandler\OtherLicence\GetList::class => Standard::class, // @todo
     QueryHandler\Search\Licence::class => Standard::class, // @todo
     QueryHandler\TmEmployment\GetSingle::class => Standard::class, // @todo
-    QueryHandler\User\UserList::class => Standard::class, // @todo
-    QueryHandler\User\UserListSelfserve::class => Standard::class, // @todo
-    QueryHandler\User\UserSelfserve::class => Standard::class, // @todo
     QueryHandler\Variation\TypeOfLicence::class => Standard::class, // @todo
 ];
 // @codingStandardsIgnoreEnd

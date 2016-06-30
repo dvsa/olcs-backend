@@ -10,11 +10,9 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\DeleteUserSelfserve as Sut;
-use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Transfer\Command\User\DeleteUserSelfserve as Cmd;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Class Delete User Selfserve Test
@@ -28,7 +26,6 @@ class DeleteUserSelfserveTest extends CommandHandlerTestCase
         $this->mockRepo('Task', TaskRepo::class);
 
         $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class),
             UserInterface::class => m::mock(UserInterface::class)
         ];
 
@@ -49,11 +46,6 @@ class DeleteUserSelfserveTest extends CommandHandlerTestCase
         $userEntity = m::mock(UserEntity::class)->makePartial();
         $userEntity->setId(1);
         $userEntity->setPid('pid');
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, $userEntity)
-            ->andReturn(true);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('disableUser')
             ->once()
@@ -107,11 +99,6 @@ class DeleteUserSelfserveTest extends CommandHandlerTestCase
         $userEntity->setId(1);
         $userEntity->setLoginId('login_id');
 
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, $userEntity)
-            ->andReturn(true);
-
         $this->mockedSmServices[UserInterface::class]->shouldReceive('disableUser')
             ->never();
 
@@ -127,39 +114,6 @@ class DeleteUserSelfserveTest extends CommandHandlerTestCase
             ->with($userId, true)
             ->once()
             ->andReturn($tasks);
-
-        $this->sut->handleCommand($command);
-    }
-
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
-    public function testHandleCommandThrowsIncorrectPermissionException()
-    {
-        $data = [
-            'id' => 111,
-            'version' => 1,
-        ];
-
-        /** @var UserEntity $user */
-        $user = m::mock(UserEntity::class)->makePartial();
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, $user)
-            ->andReturn(false);
-
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('disableUser')
-            ->never();
-
-        $this->repoMap['User']
-            ->shouldReceive('fetchUsingId')
-            ->once()
-            ->andReturn($user)
-            ->shouldReceive('delete')
-            ->never();
-
-        $command = Cmd::create($data);
 
         $this->sut->handleCommand($command);
     }

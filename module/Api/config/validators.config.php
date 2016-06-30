@@ -39,5 +39,7 @@ return [
         'canAccessStatement' => Validators\CanAccessStatement::class,
         'canAccessTransaction' => Validators\CanAccessTransaction::class,
         'canAccessFee' => Validators\CanAccessFee::class,
+        'canManageUser' => Validators\CanManageUser::class,
+        'canReadUser' => Validators\CanReadUser::class,
     ]
 ];

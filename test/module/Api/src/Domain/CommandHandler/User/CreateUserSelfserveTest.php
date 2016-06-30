@@ -17,7 +17,6 @@ use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
-use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Transfer\Command\User\CreateUserSelfserve as Cmd;
@@ -68,11 +67,6 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
             ],
             'permission' => UserEntity::PERMISSION_ADMIN,
         ];
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, null)
-            ->andReturn(true);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('generatePid')->with('login_id')->andReturn('pid');
 
@@ -272,11 +266,6 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
             ],
         ];
 
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, null)
-            ->andReturn(true);
-
         $command = Cmd::create($data);
 
         $this->repoMap['User']
@@ -304,21 +293,6 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
-    public function testHandleCommandThrowsIncorrectPermissionException()
-    {
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, null)
-            ->andReturn(false);
-
-        $command = Cmd::create(['data']);
-
-        $this->sut->handleCommand($command);
-    }
-
-    /**
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function testHandleCommandThrowsUsernameExistsException()
@@ -326,11 +300,6 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
         $data = [
             'loginId' => 'login_id',
         ];
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, null)
-            ->andReturn(true);
 
         $command = Cmd::create($data);
 
