@@ -50,6 +50,22 @@ class CanAccessLicenceTest extends AbstractValidatorsTestCase
     /**
      * @dataProvider provider
      */
+    public function testIsValidLicNo($isOwner, $expected)
+    {
+        $this->setIsGranted(Permission::INTERNAL_USER, false);
+        $entity = m::mock(Licence::class);
+
+        $repo = $this->mockRepo('Licence');
+        $repo->shouldReceive('fetchByLicNo')->with('XY12345')->andReturn($entity);
+
+        $this->setIsValid('isOwner', [$entity], $isOwner);
+
+        $this->assertEquals($expected, $this->sut->isValid('XY12345'));
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testIsValidInternal($isOwner, $expected)
     {
         $this->setIsGranted(Permission::INTERNAL_USER, true);
