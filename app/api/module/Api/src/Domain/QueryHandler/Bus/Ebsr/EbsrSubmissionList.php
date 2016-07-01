@@ -27,6 +27,10 @@ class EbsrSubmissionList extends AbstractQueryHandler implements AuthAwareInterf
     protected $repoServiceName = 'EbsrSubmission';
 
     /**
+     * handle query to retrieve a list of EBSR submissions
+     *
+     * @param QueryInterface $query the query
+     *
      * @return array
      */
     public function handleQuery(QueryInterface $query)
@@ -50,8 +54,10 @@ class EbsrSubmissionList extends AbstractQueryHandler implements AuthAwareInterf
                         'licence' => [
                             'organisation'
                         ],
-                        'otherServices'
-                    ]
+                        'otherServices',
+                        'status'
+                    ],
+                    'document'
                 ]
             ),
             'count' => $repo->fetchCount($listDto)

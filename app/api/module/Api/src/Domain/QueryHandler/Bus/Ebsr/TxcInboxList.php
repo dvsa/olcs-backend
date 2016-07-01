@@ -13,6 +13,7 @@ use Doctrine\ORM\Query as DoctrineQuery;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Query\Bus\TxcInboxList as ListDto;
+use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Doctrine\ORM\Query;
 
 /**
@@ -27,11 +28,15 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
     protected $repoServiceName = 'TxcInbox';
 
     /**
+     * handle query to retrieve a list of TXC inbox records
+     *
+     * @param QueryInterface $query the query
+     *
      * @return array
      */
     public function handleQuery(QueryInterface $query)
     {
-        /** @var Repository $repo */
+        /** @var TxcInboxRepo $repo */
         $repo = $this->getRepo();
 
         // get data from transfer query
@@ -55,7 +60,8 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
                         'licence' => [
                             'organisation'
                         ],
-                        'otherServices'
+                        'otherServices',
+                        'status'
                     ]
                 ]
             ),
