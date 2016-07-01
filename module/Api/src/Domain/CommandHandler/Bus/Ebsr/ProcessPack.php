@@ -30,6 +30,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessPack as ProcessPackCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
+use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks as UpdateDocumentLinksCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateBusFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateTxcInbox as CreateTxcInboxCmd;
@@ -107,7 +108,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Creates the service, including the various input filters/validators
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
      * @return TransactioningCommandHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -127,7 +129,8 @@ final class ProcessPack extends AbstractCommandHandler implements
      * Process the EBSR pack
      * Error information is added into the ebsr_submission_result column of the ebsr_submission table
      *
-     * @param CommandInterface|ProcessPackCmd $command
+     * @param CommandInterface|ProcessPackCmd $command command to process EBSR pack
+     *
      * @return Result
      * @throws \Exception
      */
@@ -230,7 +233,7 @@ final class ProcessPack extends AbstractCommandHandler implements
         $this->getRepo('EbsrSubmission')->save($ebsrSub);
 
         //trigger side effects (persist docs, txc inbox, create task, request a route map, create fee, send email)
-        $sideEffects = $this->getSideEffects($ebsrData, $busReg, dirname($xmlName));
+        $sideEffects = $this->getSideEffects($ebsrData, $busReg, $ebsrSub, dirname($xmlName));
         $this->handleSideEffects($sideEffects);
 
         //we've finished processing
@@ -246,12 +249,12 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Calls the specified input filters/validators
      *
-     * @param string $filter
-     * @param EbsrSubmissionEntity $ebsrSub
-     * @param DocumentEntity $doc
-     * @param string $xmlName
-     * @param array $value
-     * @param array $context
+     * @param string               $filter  the filter being called
+     * @param EbsrSubmissionEntity $ebsrSub ebsr submission entity
+     * @param DocumentEntity       $doc     document entity
+     * @param string               $xmlName name of the xml file
+     * @param array                $value   input value
+     * @param array                $context input context
      *
      * @return array|bool
      */
@@ -287,11 +290,13 @@ final class ProcessPack extends AbstractCommandHandler implements
      * Processes a validation failure
      * Sets submission to failed and queues error email
      *
-     * @param EbsrSubmissionEntity $ebsrSub
-     * @param DocumentEntity $doc
-     * @param array $messages
-     * @param string $xmlName
-     * @param mixed $inputValue
+     * @param EbsrSubmissionEntity $ebsrSub    EBSR submission entity
+     * @param DocumentEntity       $doc        document entity
+     * @param array                $messages   array of error messages
+     * @param string               $xmlName    name of the xml file
+     * @param mixed                $inputValue the input value
+     *
+     * @return void
      */
     private function processValidationFailure(
         EbsrSubmissionEntity $ebsrSub,
@@ -313,11 +318,12 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Creates a serialized string consisting of error messages and input data, saved to ebsrSubmissionResult DB field
      *
-     * @param array $errorMessages
-     * @param mixed $rawData
+     * @param array $errorMessages array of error messages
+     * @param mixed $rawData       the raw data
+     *
      * @return string
      */
-    private function getSubmissionResultData($errorMessages, $rawData)
+    private function getSubmissionResultData(array $errorMessages, $rawData)
     {
         $errorData = [
             'errors' => $errorMessages,
@@ -330,9 +336,10 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Adds error messages to the result object
      *
-     * @param DocumentEntity $doc
-     * @param array $messages
-     * @param string $xmlName
+     * @param DocumentEntity $doc      document entity
+     * @param array          $messages array of error messages
+     * @param string         $xmlName  name of the xml file
+     *
      * @return Result
      */
     private function addErrorMessages(DocumentEntity $doc, array $messages, $xmlName)
@@ -353,8 +360,9 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Add in ebsr submission data after the file has been processed
      *
-     * @param EbsrSubmissionEntity $ebsrSub
-     * @param array $ebsrData
+     * @param EbsrSubmissionEntity $ebsrSub  EBSR submission entity
+     * @param array                $ebsrData array of EBSR data
+     *
      * @return EbsrSubmissionEntity
      */
     private function addXmlDataToEbsrSubmission(EbsrSubmissionEntity $ebsrSub, array $ebsrData)
@@ -370,8 +378,9 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Sets the EBSR submission to failed, and saves the record
      *
-     * @param EbsrSubmissionEntity $ebsrSub
-     * @param string $ebsrResultData
+     * @param EbsrSubmissionEntity $ebsrSub        EBSR submission entity
+     * @param string               $ebsrResultData serialized array of data
+     *
      * @return EbsrSubmissionEntity
      */
     private function setEbsrSubmissionFailed(EbsrSubmissionEntity $ebsrSub, $ebsrResultData)
@@ -388,8 +397,9 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Creates the bus registration
      *
-     * @param array $ebsrData
-     * @param BusRegEntity|array $previousBusReg
+     * @param array              $ebsrData       array of EBSR data
+     * @param BusRegEntity|array $previousBusReg information on the previous bus registration
+     *
      * @return BusRegEntity
      */
     private function createBusReg(array $ebsrData, $previousBusReg)
@@ -416,7 +426,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Unset any data keys that might clash with the busReg entity fromData method
      *
-     * @param array $ebsrData
+     * @param array $ebsrData array of EBSR data
+     *
      * @return array
      */
     private function prepareBusRegData($ebsrData)
@@ -437,14 +448,16 @@ final class ProcessPack extends AbstractCommandHandler implements
      * 5. Create fee (optional)
      * 6. Queue confirmation email
      *
-     * @param array $ebsrData
-     * @param BusRegEntity $busReg
-     * @param string $docPath
+     * @param array                $ebsrData array of EBSR data
+     * @param BusRegEntity         $busReg   bus reg entity
+     * @param EbsrSubmissionEntity $ebsrSub  EBSR submission entity
+     * @param string               $docPath  path to the documents being persisted
+     *
      * @return array
      */
-    private function getSideEffects(array $ebsrData, BusRegEntity $busReg, $docPath)
+    private function getSideEffects(array $ebsrData, BusRegEntity $busReg, EbsrSubmissionEntity $ebsrSub, $docPath)
     {
-        $sideEffects = $this->persistDocuments($ebsrData, $busReg, $docPath);
+        $sideEffects = $this->persistDocuments($ebsrData, $busReg, $ebsrSub, $docPath);
         $sideEffects[] = $this->createTxcInboxCmd($busReg->getId());
         $sideEffects[] = $this->createTaskCommand($busReg);
         $sideEffects[] = $this->getRequestMapQueueCmd($busReg->getId());
@@ -470,15 +483,15 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Returns a side effect to save the supporting documents and schematic map to the doc store
      *
-     * @param array $ebsrData
-     * @param BusRegEntity $busReg
-     * @param string $docPath
+     * @param array                $ebsrData array of EBSR data
+     * @param BusRegEntity         $busReg   bus reg entity
+     * @param EbsrSubmissionEntity $ebsrSub  EBSR submission entity
+     * @param string               $docPath  path to the documents being persisted
+     *
      * @return array
      */
-    private function persistDocuments(array $ebsrData, BusRegEntity $busReg, $docPath)
+    private function persistDocuments(array $ebsrData, BusRegEntity $busReg, EbsrSubmissionEntity $ebsrSub, $docPath)
     {
-        $sideEffects = [];
-
         //store any supporting documents
         if (isset($ebsrData['documents'])) {
             foreach ($ebsrData['documents'] as $docName) {
@@ -493,16 +506,26 @@ final class ProcessPack extends AbstractCommandHandler implements
             $sideEffects[] = $this->persistSupportingDoc($path, $busReg, $ebsrData['map'], 'Schematic map');
         }
 
+        //update the original zip file with links to the licence and bus registration
+        $documentLinkData = [
+            'id' => $ebsrSub->getDocument()->getId(),
+            'busReg' => $busReg->getId(),
+            'licence' => $busReg->getLicence()->getId()
+        ];
+
+        $sideEffects[] = UpdateDocumentLinksCmd::create($documentLinkData);
+
         return $sideEffects;
     }
 
     /**
      * Returns an upload command to add the supporting docs to the doc store
      *
-     * @param string $content
-     * @param BusRegEntity $busReg
-     * @param string $filename
-     * @param string $description
+     * @param string       $content     the document content
+     * @param BusRegEntity $busReg      bus registration entity
+     * @param string       $filename    document filename
+     * @param string       $description document description
+     *
      * @return UploadCmd
      */
     private function persistSupportingDoc($content, BusRegEntity $busReg, $filename, $description)
@@ -523,7 +546,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Returns a command to create a txc inbox record
      *
-     * @param int $busRegId
+     * @param int $busRegId bus reg id
+     *
      * @return CreateTxcInboxCmd
      */
     private function createTxcInboxCmd($busRegId)
@@ -534,7 +558,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Returns a command to queue a transxchange map request
      *
-     * @param int $busRegId
+     * @param int $busRegId bus reg id
+     *
      * @return RequestMapQueueCmd
      */
     private function getRequestMapQueueCmd($busRegId)
@@ -545,7 +570,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Returns a command to queue a data refresh email
      *
-     * @param int $ebsrId
+     * @param int $ebsrId EBSR submission id
+     *
      * @return SendEbsrRefreshedCmd
      */
     private function getEbsrRefreshedEmailCmd($ebsrId)
@@ -556,7 +582,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Returns a command to queue a received email
      *
-     * @param int $ebsrId
+     * @param int $ebsrId EBSR submission id
+     *
      * @return SendEbsrReceivedCmd
      */
     private function getEbsrReceivedEmailCmd($ebsrId)
@@ -567,7 +594,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Returns a command to queue an error email
      *
-     * @param int $ebsrId
+     * @param int $ebsrId EBSR submission id
+     *
      * @return SendEbsrErrorsCmd
      */
     private function getEbsrErrorEmailCmd($ebsrId)
@@ -578,7 +606,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Returns a command to create a task
      *
-     * @param BusRegEntity $busReg
+     * @param BusRegEntity $busReg bus reg entity
+     *
      * @return CreateTaskCmd
      */
     private function createTaskCommand(BusRegEntity $busReg)
@@ -619,7 +648,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Create a new bus reg
      *
-     * @param array $ebsrData
+     * @param array $ebsrData array of EBSR data
+     *
      * @throws Exception\ForbiddenException
      * @return BusRegEntity
      */
@@ -650,8 +680,9 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Creates a bus reg variation
      *
-     * @param BusRegEntity $busReg
-     * @param string $status
+     * @param BusRegEntity $busReg bus reg entity
+     * @param string       $status status ref data key
+     *
      * @return BusRegEntity
      */
     private function createVariation(BusRegEntity $busReg, $status)
@@ -663,7 +694,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Ebsr information which couldn't be processed using the pre-migration filters, as we needed Doctrine
      *
-     * @param array $ebsrData
+     * @param array $ebsrData array of EBSR data
+     *
      * @return array
      */
     private function getDoctrineInformation(array $ebsrData)
@@ -683,7 +715,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Returns collection of service types.
      *
-     * @param array $serviceTypes
+     * @param array $serviceTypes array of service types
+     *
      * @return ArrayCollection
      */
     private function processServiceTypes(array $serviceTypes)
@@ -709,8 +742,9 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Processes additional service numbers
      *
-     * @param BusRegEntity $busReg
-     * @param array $serviceNumbers
+     * @param BusRegEntity $busReg         bus reg entity
+     * @param array        $serviceNumbers array of service numbers
+     *
      * @return BusRegEntity
      */
     private function processServiceNumbers(BusRegEntity $busReg, array $serviceNumbers)
@@ -728,7 +762,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Returns collection of local authorities.
      *
-     * @param array $localAuthority
+     * @param array $localAuthority array of local authorities
+     *
      * @return ArrayCollection
      */
     private function processLocalAuthority(array $localAuthority)
@@ -752,7 +787,8 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Returns collection of local authorities based on the naptan codes.
      *
-     * @param array $naptan
+     * @param array $naptan array of naptan codes
+     *
      * @return ArrayCollection
      */
     private function processNaptan(array $naptan)
@@ -776,8 +812,9 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Returns collection of traffic areas.
      *
-     * @param array $trafficAreas
-     * @param ArrayCollection $localAuthorities
+     * @param array           $trafficAreas     array of traffic areas
+     * @param ArrayCollection $localAuthorities collections of local authorities
+     *
      * @return ArrayCollection
      */
     private function processTrafficAreas(array $trafficAreas, ArrayCollection $localAuthorities)
