@@ -116,7 +116,7 @@ class Client
             ->setUri($uri)
             ->setMethod('GET');
 
-        /** @var $response Zend\Http\Response */
+        /** @var $response \Zend\Http\Response */
         $response = $this->getHttpClient()->send();
 
         if (!$response->isOk()) {
