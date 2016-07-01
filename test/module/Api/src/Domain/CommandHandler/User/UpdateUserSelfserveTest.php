@@ -12,11 +12,9 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserSelfserve as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
-use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUserSelfserve as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Update User Selfserve Test
@@ -30,7 +28,6 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         $this->mockRepo('ContactDetails', ContactDetails::class);
 
         $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class),
             UserInterface::class => m::mock(UserInterface::class)
         ];
 
@@ -73,11 +70,6 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         $user->setPid('pid');
         $user->setLoginId($data['loginId']);
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, $user)
-            ->andReturn(true);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
             ->with('pid', 'login_id', 'test1@test.me');
@@ -168,11 +160,6 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         $user->setContactDetails($contactDetails);
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
 
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, $user)
-            ->andReturn(true);
-
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
             ->with('pid', 'login_id', 'test1@test.me');
 
@@ -221,36 +208,6 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
-    public function testHandleCommandThrowsIncorrectPermissionException()
-    {
-        $userId = 111;
-
-        $data = [
-            'id' => 111,
-            'version' => 1,
-        ];
-
-        /** @var UserEntity $user */
-        $user = m::mock(UserEntity::class)->makePartial();
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, $user)
-            ->andReturn(false);
-
-        $this->repoMap['User']->shouldReceive('fetchById')
-            ->once()
-            ->with($userId, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($user);
-
-        $command = Cmd::create($data);
-
-        $this->sut->handleCommand($command);
-    }
-
-    /**
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function testHandleCommandThrowsUsernameExistsException()
@@ -269,11 +226,6 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         $user = m::mock(UserEntity::class)->makePartial();
         $user->setId($userId);
         $user->setLoginId('loginId');
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, $user)
-            ->andReturn(true);
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()

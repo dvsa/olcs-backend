@@ -5,16 +5,12 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
@@ -23,24 +19,25 @@ use Doctrine\ORM\Query;
  * Update User Selfserve
  */
 final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
-    AuthAwareInterface,
     TransactionedInterface,
     OpenAmUserAwareInterface
 {
-    use AuthAwareTrait,
-        OpenAmUserAwareTrait;
+    use OpenAmUserAwareTrait;
 
     protected $repoServiceName = 'User';
 
     protected $extraRepos = ['ContactDetails'];
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $user = $this->getRepo()->fetchById($command->getId(), Query::HYDRATE_OBJECT, $command->getVersion());
-
-        if (!$this->isGranted(Permission::CAN_MANAGE_USER_SELFSERVE, $user)) {
-            throw new ForbiddenException('You do not have permission to manage the record');
-        }
 
         $data = $command->getArrayCopy();
 
