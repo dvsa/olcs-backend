@@ -43,18 +43,29 @@ final class ReverseTransaction extends AbstractCommandHandler implements
 
     protected $extraRepos = ['Fee'];
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return Result
+     * @throws RuntimeException
+     * @throws ValidationException
+     */
     public function handleCommand(CommandInterface $command)
     {
         $originalTransaction = $this->getRepo()->fetchUsingId($command);
 
         $this->validate($originalTransaction);
+        $extraParams = $this->prepareExtraParams($command);
 
         try {
             $fee = $originalTransaction->getFeeTransactions()->first()->getFee();
             $response = $this->getCpmsService()->reversePayment(
                 $originalTransaction->getReference(),
                 $originalTransaction->getPaymentMethod()->getId(),
-                [$fee]
+                [$fee],
+                $extraParams
             );
         } catch (CpmsResponseException $e) {
             // rethrow as Domain exception
@@ -115,8 +126,9 @@ final class ReverseTransaction extends AbstractCommandHandler implements
      * Copy payment method, payer name, cheque/po no., cheque/po date & paying
      * in slip no. from one transaction to another
      *
-     * @param TransactionEntity $original
-     * @param TransactionEntity $new
+     * @param TransactionEntity $original original transaction
+     * @param TransactionEntity $new      new transaction
+     *
      * @return null
      */
     private function copyTransactionDetails(TransactionEntity $original, TransactionEntity &$new)
@@ -129,6 +141,10 @@ final class ReverseTransaction extends AbstractCommandHandler implements
     }
 
     /**
+     * Validate
+     *
+     * @param TransactionEntity $transaction transaction entity
+     *
      * @return bool
      * @throws ValidationException
      */
@@ -143,5 +159,31 @@ final class ReverseTransaction extends AbstractCommandHandler implements
         }
 
         return true;
+    }
+
+    /**
+     * Prepare extra params
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Transaction\ReferseTransaction $command command
+     *
+     * @return array
+     */
+    private function prepareExtraParams($command)
+    {
+        $extraParams = [];
+
+        if ($command->getCustomerName()) {
+            $extraParams['customer_name'] = $command->getCustomerName();
+        }
+
+        if ($command->getCustomerReference()) {
+            $extraParams['customer_reference'] = $command->getCustomerReference();
+        }
+
+        if ($command->getAddress()) {
+            $extraParams['customer_address'] = $command->getAddress();
+        }
+
+        return $extraParams;
     }
 }

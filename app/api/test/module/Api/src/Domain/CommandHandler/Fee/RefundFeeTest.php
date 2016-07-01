@@ -87,6 +87,9 @@ class RefundFeeTest extends CommandHandlerTestCase
 
         $data = [
             'id' => $feeId,
+            'customerReference' => 'foo',
+            'customerName' => 'bar',
+            'address' => 'cake'
         ];
 
         $ft1 = $this->mapReference(FeeTransactionEntity::class, 101);
@@ -130,7 +133,14 @@ class RefundFeeTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('refundFee')
             ->once()
-            ->with($fee)
+            ->with(
+                $fee,
+                [
+                    'customer_name' => 'bar',
+                    'customer_reference' => 'foo',
+                    'customer_address' => 'cake'
+                ]
+            )
             ->andReturn(
                 [
                     'payment_ref_1' => 'refund_ref_1',
@@ -192,7 +202,9 @@ class RefundFeeTest extends CommandHandlerTestCase
     {
         $feeId = 69;
 
-        $command = Cmd::create(['id' => $feeId]);
+        $command = Cmd::create(
+            ['id' => $feeId, 'customerReference' => null, 'customerName' => null, 'address' => null]
+        );
 
         $fee = $this->mapReference(FeeEntity::class, $feeId);
 
@@ -206,7 +218,7 @@ class RefundFeeTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('refundFee')
             ->once()
-            ->with($fee)
+            ->with($fee, [])
             ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsResponseException('ohnoes'));
 
         $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);

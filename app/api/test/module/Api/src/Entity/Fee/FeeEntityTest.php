@@ -563,7 +563,7 @@ class FeeEntityTest extends EntityTester
             'neither' => [
                 null,
                 null,
-                'Miscellaneous payment',
+                null,
             ],
         ];
     }
@@ -576,6 +576,11 @@ class FeeEntityTest extends EntityTester
         $this->sut->setLicence($licence);
         $this->sut->setIrfoGvPermit($irfoGvPermit);
         $this->assertEquals($expected, $this->sut->getCustomerAddressForInvoice()->toArray());
+    }
+
+    public function testGetCustomerAddressForInvoiceEmpty()
+    {
+        $this->assertNull($this->sut->getCustomerAddressForInvoice());
     }
 
     public function getCustomerAddressProvider()
@@ -631,21 +636,7 @@ class FeeEntityTest extends EntityTester
                     'postcode' =>'FooPostcode',
                     'countryCode' => 'FooCountry',
                 ],
-            ],
-            'neither' => [
-                null,
-                null,
-                [
-                    'addressLine1' => 'Miscellaneous payment',
-                    'addressLine2' => null,
-                    'addressLine3' => null,
-                    'addressLine4' => null,
-                    'town' => 'Miscellaneous payment',
-                    // hardcoded to DVSA office, CPMS api enforces a valid postcode
-                    'postcode' => 'LS9 6NF',
-                    'countryCode' => null,
-                ],
-            ],
+            ]
         ];
     }
 
@@ -1056,7 +1047,7 @@ class FeeEntityTest extends EntityTester
             'std paid'         => [$nonMiscFeeType, $paid, [], false],
             'std cancelled'    => [$nonMiscFeeType, $cancelled, [], false],
             'misc outstanding' => [$miscFeeType, $outstanding, [], false],
-            'misc paid'        => [$miscFeeType, $paid, [], false],
+            'misc paid'        => [$miscFeeType, $paid, [$nonRefundedFeeTransaction], true],
             'misc cancelled'   => [$miscFeeType, $cancelled, [], false],
             'std not refunded' => [$nonMiscFeeType, $paid, [$nonRefundedFeeTransaction], true],
             'migrated'         => [$nonMiscFeeType, $paid, [$migratedTransaction], false],
