@@ -39,6 +39,6 @@ return [
     CommandHandler\TransportManagerApplication\UpdateDetails::class => Misc\CanAccessTmaWithId::class,
     CommandHandler\Variation\TransportManagerDeleteDelta::class     => Misc\CanAccessApplicationWithId::class,
 
-    CommandHandler\Tm\UpdateNysiisName::class                       => Misc\IsInternalUser::class
-
+    CommandHandler\Tm\CreateNewUser::class                          => Misc\CanAccessApplicationWithApplication::class,
+    CommandHandler\Tm\UpdateNysiisName::class                       => Misc\IsInternalUser::class,
 ];
