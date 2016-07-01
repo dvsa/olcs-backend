@@ -167,12 +167,12 @@ class EbsrSubmissionTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr')
             ->andReturnSelf()
             ->shouldReceive('neq')
-            ->with('m.ebsrSubmissionStatus', ':ebsrSubmissionStatus')
+            ->with('m.ebsrSubmissionStatus', ':ebsrtSubmissionStatus')
             ->andReturnSelf()
             ->shouldReceive('andWhere')
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with('ebsrSubmissionStatus', EbsrSubmissionEntity::UPLOADED_STATUS)
+            ->with('ebsrtSubmissionStatus', EbsrSubmissionEntity::UPLOADED_STATUS)
             ->andReturnSelf();
 
         $query = EbsrSubmissionList::create(['organisation' => 3, 'subType' => 'bar', 'status' => 'foo']);

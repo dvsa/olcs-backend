@@ -124,7 +124,7 @@ class EbsrSubmission extends AbstractRepository
         }
 
         //always exclude entities that are in the process of being submitted
-        $qb->andWhere($qb->expr()->neq($this->alias . '.ebsrSubmissionStatus', ':ebsrSubmissionStatus'))
-            ->setParameter('ebsrSubmissionStatus', Entity::UPLOADED_STATUS);
+        $qb->andWhere($qb->expr()->neq($this->alias . '.ebsrSubmissionStatus', ':ebsrtSubmissionStatus'))
+            ->setParameter('ebsrtSubmissionStatus', Entity::UPLOADED_STATUS);
     }
 }
