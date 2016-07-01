@@ -150,16 +150,11 @@ final class SaveBusinessDetails extends AbstractCommandHandler implements AuthAw
      */
     private function setTradingNames($licenceId)
     {
-        $tradingNames = $this->command->getTradingNames();
-        if (empty($tradingNames)) {
-            return;
-        }
-
         $result = $this->handleSideEffect(
             UpdateTradingNames::create(
                 [
                     'licence' => $licenceId,
-                    'tradingNames' => $tradingNames,
+                    'tradingNames' => $this->command->getTradingNames(),
                 ]
             )
         );

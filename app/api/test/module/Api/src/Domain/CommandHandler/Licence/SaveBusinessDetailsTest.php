@@ -211,6 +211,17 @@ class SaveBusinessDetailsTest extends CommandHandlerTestCase
         ];
         $command = DomainCmd\Licence\SaveBusinessDetails::create($data);
 
+        // mock handle trading names command
+        $expectedData = [
+            'licence' => self::ID,
+            'tradingNames' => [],
+        ];
+        $cmdResult = new Result();
+        $cmdResult->setFlag('hasChanged', false);
+        $cmdResult->addMessage('Trading names are not changed');
+
+        $this->expectedSideEffect(DomainCmd\Organisation\UpdateTradingNames::class, $expectedData, $cmdResult);
+
         //  mock organisation entity
         $this->mockOrgEntity
             ->shouldReceive('getVersion')->once()->andReturn(self::VERSION)
@@ -230,7 +241,9 @@ class SaveBusinessDetailsTest extends CommandHandlerTestCase
         static::assertEquals(
             [
                 'id' => [],
-                'messages' => [],
+                'messages' => [
+                    'Trading names are not changed',
+                ],
             ],
             $actual->toArray()
         );
