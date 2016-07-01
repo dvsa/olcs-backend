@@ -26,10 +26,13 @@ class RemoveAllForLicence extends AbstractRawQuery
       SET {lv.removalDate} = :removalDate,
         {lv.lastModifiedOn} = NOW(),
         {lv.lastModifiedBy} = :currentUserId
-      WHERE {lv.licence} = :licence';
+      WHERE {lv.licence} = :licence
+        AND {lv.removalDate} IS NULL';
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     protected function getParams()
     {

@@ -68,6 +68,7 @@ class RemoveAllForLicenceTest extends AbstractDbQueryTestCase
         . 'SET lv.removal_date = :removalDate, '
             . 'lv.last_modified_on = NOW(), '
             . 'lv.last_modified_by = :currentUserId '
-        . 'WHERE lv.licence_id = :licence';
+        . 'WHERE lv.licence_id = :licence'
+            .' AND lv.removal_date IS NULL';
     }
 }
