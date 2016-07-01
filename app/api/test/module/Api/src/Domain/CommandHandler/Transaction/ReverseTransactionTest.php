@@ -104,6 +104,9 @@ class ReverseTransactionTest extends CommandHandlerTestCase
         $data = [
             'id' => $transactionId,
             'reason' => 'reversal reason',
+            'customerReference' => 'foo',
+            'customerName' => 'bar',
+            'address' => 'cake'
         ];
         $command = Cmd::create($data);
 
@@ -156,7 +159,16 @@ class ReverseTransactionTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('reversePayment')
             ->once()
-            ->with($transactionReference, $paymentMethod, [$fee])
+            ->with(
+                $transactionReference,
+                $paymentMethod,
+                [$fee],
+                [
+                    'customer_name' => 'bar',
+                    'customer_reference' => 'foo',
+                    'customer_address' => 'cake'
+                ]
+            )
             ->andReturn(
                 [
                     'receipt_reference' => 'REFUND_REF_1',
@@ -231,7 +243,15 @@ class ReverseTransactionTest extends CommandHandlerTestCase
     {
         $transactionId = 123;
 
-        $command = Cmd::create(['id' => $transactionId, 'reason' => 'foo']);
+        $command = Cmd::create(
+            [
+                'id' => $transactionId,
+                'reason' => 'foo',
+                'customerReference' => null,
+                'customerName' => null,
+                'address' => null
+            ]
+        );
 
         $transaction = $this->mapReference(TransactionEntity::class, $transactionId);
         $fee = $this->mapReference(FeeEntity::class, 69);
@@ -259,7 +279,7 @@ class ReverseTransactionTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('reversePayment')
             ->once()
-            ->with('MY-REFERENCE', FeeEntity::METHOD_CHEQUE, [$fee])
+            ->with('MY-REFERENCE', FeeEntity::METHOD_CHEQUE, [$fee], [])
             ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsResponseException('ohnoes'));
 
         $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);

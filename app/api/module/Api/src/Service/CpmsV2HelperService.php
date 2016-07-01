@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * Cpms Version 2 Helper Service
@@ -81,66 +82,70 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * Initiate a card payment
      *
      * @param string $redirectUrl redirect back to here from payment gateway
-     * @param array $fees
+     * @param array  $fees        fees
+     * @param array  $extraParams extra params
      *
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      */
-    public function initiateCardRequest($redirectUrl, array $fees)
+    public function initiateCardRequest($redirectUrl, array $fees, array $extraParams = [])
     {
         $endPoint = '/api/payment/card';
         $scope    = ApiService::SCOPE_CARD;
 
-        return $this->initiateRequest($redirectUrl, $fees, $endPoint, $scope);
+        return $this->initiateRequest($redirectUrl, $fees, $endPoint, $scope, $extraParams);
     }
 
     /**
      * Initiate a stored card payment payment
      *
-     * @param string $redirectUrl redirect back to here from payment gateway
-     * @param array  $fees
+     * @param string $redirectUrl         redirect back to here from payment gateway
+     * @param array  $fees                fees
      * @param string $storedCardReference Stored card reference
+     * @param array  $extraParams         extra params
      *
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      */
-    public function initiateStoredCardRequest($redirectUrl, array $fees, $storedCardReference)
+    public function initiateStoredCardRequest($redirectUrl, array $fees, $storedCardReference, array $extraParams = [])
     {
         $endPoint = '/api/payment/stored-card/'. $storedCardReference;
         $scope    = ApiService::SCOPE_STORED_CARD;
 
-        return $this->initiateRequest($redirectUrl, $fees, $endPoint, $scope);
+        return $this->initiateRequest($redirectUrl, $fees, $endPoint, $scope, $extraParams);
     }
 
     /**
      * Initiate a card not present (CNP) payment
      *
      * @param string $redirectUrl redirect back to here from payment gateway
-     * @param array $fees
+     * @param array  $fees        fees
+     * @param array  $extraParams extra params
      *
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      */
-    public function initiateCnpRequest($redirectUrl, array $fees)
+    public function initiateCnpRequest($redirectUrl, array $fees, $extraParams = [])
     {
         $endPoint = '/api/payment/cardholder-not-present';
         $scope    = ApiService::SCOPE_CNP;
 
-        return $this->initiateRequest($redirectUrl, $fees, $endPoint, $scope);
+        return $this->initiateRequest($redirectUrl, $fees, $endPoint, $scope, $extraParams);
     }
 
     /**
      * Initiate a payment request
      *
-     * @param string $redirectUrl redirect back to here from payment gateway
-     * @param array $fees
-     * @param string $endPoint Either card or CNP endpoint
-     * @param string $scope    Either ApiService::SCOPE_CNP or ApiService::SCOPE_CARD
+     * @param string $redirectUrl      redirect back to here from payment gateway
+     * @param array  $fees            fees
+     * @param string $endPoint        Either card or CNP endpoint
+     * @param string $scope           Either ApiService::SCOPE_CNP or ApiService::SCOPE_CARD
+     * @param array  $miscExtraParams extra params
      *
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      */
-    private function initiateRequest($redirectUrl, array $fees, $endPoint, $scope)
+    private function initiateRequest($redirectUrl, array $fees, $endPoint, $scope, $miscExtraParams = [])
     {
         $method   = 'post';
         $extraParams = [
@@ -148,10 +153,11 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'disable_redirection' => true, // legacy??
             'scope' => $scope,
         ];
+        $extraParams = array_merge($extraParams, $miscExtraParams);
         $params = $this->getParametersForFees($fees, $extraParams);
 
         foreach ($fees as $fee) {
-            $params['payment_data'][] = $this->getPaymentDataForFee($fee);
+            $params['payment_data'][] = $this->getPaymentDataForFee($fee, [], $miscExtraParams);
         }
 
         $response = $this->send($method, $endPoint, $scope, $params);
@@ -230,14 +236,16 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     /**
      * Record a cash payment in CPMS
      *
-     * @param array $fees
-     * @param float $amount
-     * @param string|DateTime $receiptDate
-     * @param string $slipNo paying in slip number
+     * @param                 array $fees      fees
+     * @param                 float $amount    amount
+     * @param string|DateTime $receiptDate     receipt date
+     * @param string          $slipNo          paying in slip number
+     * @param array           $miscExtraParams misc extra params
+     *
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      */
-    public function recordCashPayment($fees, $amount, $receiptDate, $slipNo)
+    public function recordCashPayment($fees, $amount, $receiptDate, $slipNo, $miscExtraParams = [])
     {
         $method   = 'post';
         $endPoint = '/api/payment/cash';
@@ -250,13 +258,14 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
         ];
+        $extraParams = array_merge($extraParams, $miscExtraParams);
         $params = $this->getParametersForFees($fees, $extraParams);
 
         $allocations = $this->feesHelper->allocatePayments($amount, $fees);
 
         foreach ($fees as $fee) {
             $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
-            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
+            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData, $miscExtraParams);
             if (!empty($paymentData)) {
                 $params['payment_data'][] = $paymentData;
             }
@@ -270,18 +279,28 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     /**
      * Record a cheque payment in CPMS
      *
-     * @param array $fees
-     * @param float $amount
-     * @param string $receiptDate (from DateSelect)
-     * @param string $payer payer name
-     * @param string $slipNo paying in slip number
-     * @param string $chequeNo cheque number
-     * @param string $chequeDate (from DateSelect)
+     * @param array  $fees            fees
+     * @param float  $amount          amount
+     * @param string $receiptDate     (from DateSelect)
+     * @param string $payer           payer name
+     * @param string $slipNo          paying in slip number
+     * @param string $chequeNo        cheque number
+     * @param string $chequeDate      (from DateSelect)
+     * @param array  $miscExtraParams misc extra params
+     *
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      */
-    public function recordChequePayment($fees, $amount, $receiptDate, $payer, $slipNo, $chequeNo, $chequeDate)
-    {
+    public function recordChequePayment(
+        $fees,
+        $amount,
+        $receiptDate,
+        $payer,
+        $slipNo,
+        $chequeNo,
+        $chequeDate,
+        $miscExtraParams = []
+    ) {
         $method   = 'post';
         $endPoint = '/api/payment/cheque';
         $scope    = ApiService::SCOPE_CHEQUE;
@@ -296,13 +315,14 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
         ];
+        $extraParams = array_merge($extraParams, $miscExtraParams);
         $params = $this->getParametersForFees($fees, $extraParams);
 
         $allocations = $this->feesHelper->allocatePayments($amount, $fees);
 
         foreach ($fees as $fee) {
             $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
-            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
+            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData, $miscExtraParams);
             if (!empty($paymentData)) {
                 $params['payment_data'][] = $paymentData;
             }
@@ -316,15 +336,17 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     /**
      * Record a Postal Order payment in CPMS
      *
-     * @param array $fees
-     * @param float $amount
-     * @param string $receiptDate (from DateSelect)
-     * @param string $slipNo paying in slip number
-     * @param string $poNo Postal Order number
+     * @param array  $fees            fees
+     * @param float  $amount          amount
+     * @param string $receiptDate     (from DateSelect)
+     * @param string $slipNo          paying in slip number
+     * @param string $poNo            Postal Order number
+     * @param array  $miscExtraParams misc extra params
+     *
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      */
-    public function recordPostalOrderPayment($fees, $amount, $receiptDate, $slipNo, $poNo)
+    public function recordPostalOrderPayment($fees, $amount, $receiptDate, $slipNo, $poNo, $miscExtraParams = [])
     {
         $method   = 'post';
         $endPoint = '/api/payment/postal-order';
@@ -338,13 +360,14 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
         ];
+        $extraParams = array_merge($extraParams, $miscExtraParams);
         $params = $this->getParametersForFees($fees, $extraParams);
 
         $allocations = $this->feesHelper->allocatePayments($amount, $fees);
 
         foreach ($fees as $fee) {
             $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
-            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
+            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData, $miscExtraParams);
             if (!empty($paymentData)) {
                 $params['payment_data'][] = $paymentData;
             }
@@ -426,28 +449,30 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     /**
      * Refund a fee
      *
-     * @param Fee $fee
+     * @param Fee   $fee         fee
+     * @param array $extraParams extra params for misc fees
      *
      * @return array of refund receipt references one for each payment. key = payment ref, value = refund ref
      */
-    public function refundFee(Fee $fee)
+    public function refundFee(Fee $fee, $extraParams = [])
     {
         if (count($fee->getFeeTransactionsForRefund()) === 1) {
-            return $this->singlePaymentRefund($fee);
+            return $this->singlePaymentRefund($fee, $extraParams);
         } else {
-            return $this->batchRefund($fee);
+            return $this->batchRefund($fee, $extraParams);
         }
     }
 
     /**
      * Refund a fee that has a single payment
      *
-     * @param Fee $fee
+     * @param Fee   $fee         fee
+     * @param array $extraParams extra params for misc fees
      *
      * @return array key = payment ref, value = refund ref
      * @throws \Dvsa\Olcs\Api\Service\CpmsResponseException
      */
-    private function singlePaymentRefund(Fee $fee)
+    private function singlePaymentRefund(Fee $fee, $extraParams = [])
     {
         $feeTransactions = $fee->getFeeTransactionsForRefund();
         // get first (and only) fee transaction
@@ -459,20 +484,15 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $scope    = ApiService::SCOPE_REFUND;
 
         $params = array_merge(
-            $this->getRefundPaymentDataForFeeTransaction($ft),
+            $this->getRefundPaymentDataForFeeTransaction($ft, $extraParams),
             [
                 'scope' => $scope,
                 'total_amount' => $this->formatAmount($ft->getAmount()),
-                'customer_reference' => (string) $this->getCustomerReference([$fee]),
-                'customer_name' => $this->truncate($fee->getCustomerNameForInvoice(), self::PARAM_CUSTOMER_NAME_LIMIT),
-                'customer_manager_name' => $this->truncate(
-                    $fee->getCustomerNameForInvoice(),
-                    self::PARAM_CUSTOMER_MANAGER_NAME_LIMIT
-                ),
-                'customer_address' => $this->formatAddress($fee->getCustomerAddressForInvoice()),
                 'country_code' => $fee->getFeeType()->getCountryCode(),
             ]
         );
+        $params = array_merge($params, $extraParams);
+        $params = $this->addCustomerParams($params, [$fee], $fee);
 
         $response = $this->send($method, $endPoint, $scope, $params);
 
@@ -489,12 +509,13 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     /**
      * Refund payments in a batch
      *
-     * @param Fee $fee
+     * @param Fee   $fee         fee
+     * @param array $extraParams extra params for misc fees
      *
      * @return array one for each fee payment, key = payment ref, value = refund ref
      * @throws CpmsResponseException if response is invalid
      */
-    public function batchRefund($fee)
+    public function batchRefund($fee, $extraParams = [])
     {
         $method   = 'post';
         $endPoint = '/api/refund';
@@ -503,14 +524,17 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $payments = [];
 
         foreach ($fee->getFeeTransactionsForRefund() as $ft) {
-            $payments[] = $this->getRefundPaymentDataForFeeTransaction($ft);
+            $payments[] = $this->getRefundPaymentDataForFeeTransaction($ft, $extraParams);
         }
 
-        $params = [
-            'scope' => $scope,
-            'customer_reference' => (string) $this->getCustomerReference([$fee]),
-            'payments' => $payments,
-        ];
+        $params = array_merge(
+            [
+                'scope' => $scope,
+                'payments' => $payments,
+            ],
+            $extraParams
+        );
+        $params = $this->addCustomerParams($params, [$fee], $fee);
 
         $response = $this->send($method, $endPoint, $scope, $params);
 
@@ -525,17 +549,22 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
-     * @param FeeTransaction $ft
+     * Get refund payment data for fee transaction
+     *
+     * @param FeeTransaction $ft          fee transaction
+     * @param array          $extraParams extra params for misc fees
+     *
      * @return array of 'payment' data for batch refund call
      * @see https://wiki.i-env.net/display/CPMS/CPMS+API+V2+Specification#CPMSAPIV2Specification-Batchrefund
      */
-    protected function getRefundPaymentDataForFeeTransaction(FeeTransaction $ft)
+    protected function getRefundPaymentDataForFeeTransaction(FeeTransaction $ft, $extraParams = [])
     {
         $paymentData = $this->getPaymentDataForFee(
             $ft->getFee(),
             [
                 'amount' => $this->formatAmount($ft->getAmount()),
-            ]
+            ],
+            $extraParams
         );
 
         return [
@@ -551,13 +580,15 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     /**
      * Reverse a cheque, cash, PO or card payment
      *
-     * @param string $receiptReference
-     * @param string $paymentMethod original payment method, e.g. 'fpm_cash'
-     * @param array $fees needed to get customer reference
+     * @param string $receiptReference  receipt reference
+     * @param string $paymentMethod     original payment method, e.g. 'fpm_cash'
+     * @param array  $fees              needed to get customer reference
+     * @param array  $extraParams       extra params
+     *
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      */
-    public function reversePayment($receiptReference, $paymentMethod, $fees = array())
+    public function reversePayment($receiptReference, $paymentMethod, $fees = [], $extraParams = [])
     {
         $method   = 'post';
         $endPoint = '/api/payment/'.$receiptReference.'/reversal';
@@ -577,10 +608,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             $endPoint = '/api/payment/'.$receiptReference.'/chargeback';
         }
 
-        $params = [
-            'scope' => $scope,
-            'customer_reference' => (string) $this->getCustomerReference($fees),
-        ];
+        $firstFee = reset($fees);
+        $params = array_merge(['scope' => $scope], $extraParams);
+        $params = $this->addCustomerParams($params, $fees, $firstFee);
 
         $response = $this->send($method, $endPoint, $scope, $params);
 
@@ -693,12 +723,28 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
-     * @param Dvsa\Olcs\Api\Entity\ContactDetails\Address $address
-     * @return array
+     * Format address
+     *
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Address|array $address address
+     *
+     * @return array|null
      */
     protected function formatAddress($address)
     {
-         return [
+        if ($address === null) {
+            return null;
+        }
+        if (is_array($address)) {
+            return [
+                'line_1' => $address['addressLine1'],
+                'line_2' => $address['addressLine2'],
+                'line_3' => $address['addressLine3'],
+                'line_4' => $address['addressLine4'],
+                'city' => $address['town'],
+                'postcode' => $address['postcode'],
+            ];
+        }
+        return [
             'line_1' => $address->getAddressLine1(),
             'line_2' => $address->getAddressLine2(),
             'line_3' => $address->getAddressLine3(),
@@ -760,12 +806,13 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * Gets Customer Reference based on the fees details
      * The method assumes that all fees link to the same organisationId
      *
-     * @param array $fees
+     * @param array $fees fees
+     *
      * @return int organisationId
      */
     protected function getCustomerReference($fees)
     {
-        $reference = 'Miscellaneous'; // default value
+        $reference = null;
 
         foreach ($fees as $fee) {
             if (!empty($fee->getOrganisation())) {
@@ -780,16 +827,36 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     /**
      * Get data for 'payment_data' elements of a payment request
      *
-     * @param Fee $fee
+     * @param Fee   $fee              fee
      * @param array $extraPaymentData data
+     * @param array $miscExtraParams  extra params
+     *
      * @return array|null (will return null if we don't want to include a fee,
      * e.g. overpayment balancing fees)
      */
-    protected function getPaymentDataForFee(Fee $fee, $extraPaymentData = [])
+    protected function getPaymentDataForFee(Fee $fee, $extraPaymentData = [], $miscExtraParams = [])
     {
         if ($fee->isBalancingFee()) {
             return;
         }
+
+        $receiverReference = isset($miscExtraParams['customer_reference'])
+            ? (string) $miscExtraParams['customer_reference']
+            : (string) $this->getCustomerReference([$fee]);
+
+        $receiverName = $this->truncate(
+            isset($miscExtraParams['customer_name'])
+                ? $miscExtraParams['customer_name']
+                : $fee->getCustomerNameForInvoice(),
+            self::PARAM_RECEIVER_NAME_LIMIT
+        );
+
+        $receiverAddress = $this->formatAddress(
+            isset($miscExtraParams['customer_address'])
+                ? $miscExtraParams['customer_address']
+                : $fee->getCustomerAddressForInvoice()
+        );
+        $this->validateReceiverParams(compact('receiverReference', 'receiverName', 'receiverAddress'));
 
         $commonPaymentData = [
             'line_identifier' => (string) $fee->getId(),
@@ -809,9 +876,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             // fee_type description, NOT the product_reference column!
             'product_reference' => $fee->getFeeType()->getDescription(),
             'product_description' => $fee->getFeeType()->getDescription(),
-            'receiver_reference' => (string) $this->getCustomerReference([$fee]),
-            'receiver_name' => $this->truncate($fee->getCustomerNameForInvoice(), self::PARAM_RECEIVER_NAME_LIMIT),
-            'receiver_address' => $this->formatAddress($fee->getCustomerAddressForInvoice()),
+            'receiver_reference' => $receiverReference,
+            'receiver_name' => $receiverName,
+            'receiver_address' => $receiverAddress,
             'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
             'deferment_period' => (string) $fee->getDefermentPeriod(),
             'country_code' => $fee->getFeeType()->getCountryCode(),
@@ -822,12 +889,41 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * Validate receiver fields
+     *
+     * @param array $params params
+     *
+     * @return void
+     * @throws ValidationException
+     */
+    protected function validateReceiverParams($params = null)
+    {
+        $messages = [];
+
+        if (empty($params['receiverReference'])) {
+            $messages[] = 'Receiver reference should not be empty';
+        }
+        if (empty($params['receiverName'])) {
+            $messages[] = 'Receiver reference should not be empty';
+        }
+        if (empty($params['receiverAddress'])) {
+            $messages[] = 'Receiver address should not be empty';
+        }
+
+        if (count($messages)) {
+            throw new ValidationException($messages);
+        }
+    }
+
+    /**
      * Get top-level data for a payment request
      *
-     * @param array $fees array of Fee objects
+     * @param array $fees        array of Fee objects
+     * @param array $extraParams extra params
+     *
      * @return array
      */
-    protected function getParametersForFees(array $fees, array $extraParams)
+    protected function getParametersForFees(array $fees, array $extraParams = [])
     {
         if (empty($fees)) {
             return [];
@@ -836,20 +932,42 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $totalAmount = $this->getTotalAmountFromFees($fees);
         $firstFee = reset($fees);
         $commonParams = [
-            'customer_reference' => (string) $this->getCustomerReference($fees),
             'payment_data' => [],
             'total_amount' => $this->formatAmount($totalAmount),
-            'customer_name' => $this->truncate($firstFee->getCustomerNameForInvoice(), self::PARAM_CUSTOMER_NAME_LIMIT),
-            'customer_manager_name' => $this->truncate(
-                $firstFee->getCustomerNameForInvoice(),
-                self::PARAM_CUSTOMER_MANAGER_NAME_LIMIT
-            ),
-            'customer_address' => $this->formatAddress($firstFee->getCustomerAddressForInvoice()),
             'refund_overpayment' => $this->isOverpayment($fees),
             'country_code' => $firstFee->getFeeType()->getCountryCode(),
         ];
+        $params = array_merge($commonParams, $extraParams);
+        $params = $this->addCustomerParams($params, $fees, $firstFee);
 
-        return array_merge($commonParams, $extraParams);
+        return $params;
+    }
+
+    /**
+     * Validate customer params
+     *
+     * @param array $params params
+     *
+     * @return void
+     * @throws ValidationException
+     */
+    protected function validateCustomerParams($params = null)
+    {
+        $messages = [];
+
+        if (empty($params['customer_reference'])) {
+            $messages[] = 'Customer reference should not be empty';
+        }
+        if (empty($params['customer_name'])) {
+            $messages[] = 'Customer name should not be empty';
+        }
+        if (empty($params['customer_address'])) {
+            $messages[] = 'Customer address should not be empty';
+        }
+
+        if (count($messages)) {
+            throw new ValidationException($messages);
+        }
     }
 
     /**
@@ -961,5 +1079,44 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     private function truncate($text, $length)
     {
         return substr($text, 0, $length);
+    }
+
+    /**
+     * Process misc params
+     *
+     * @param array $params   params
+     * @param array $fees     fees
+     * @param Fee   $firstFee first fee
+     *
+     * @return array
+     * @throws ValidationException
+     */
+    private function addCustomerParams($params = [], $fees = [], $firstFee = null)
+    {
+        if (!isset($params['customer_reference'])) {
+            $params['customer_reference'] = $this->getCustomerReference($fees);
+        }
+
+        if (!isset($params['customer_name'])) {
+            $params['customer_name'] = $firstFee->getCustomerNameForInvoice();
+            $params['customer_manager_name'] = $firstFee->getCustomerNameForInvoice();
+        } else {
+            $params['customer_manager_name'] = $params['customer_name'];
+        }
+
+        if (!isset($params['customer_address'])) {
+            $params['customer_address'] = $firstFee->getCustomerAddressForInvoice();
+        }
+
+        $this->validateCustomerParams($params);
+
+        $params['customer_reference'] = (string) $params['customer_reference'];
+        $params['customer_name'] = $this->truncate($params['customer_name'], self::PARAM_CUSTOMER_NAME_LIMIT);
+        $params['customer_address'] = $this->formatAddress($params['customer_address']);
+        $params['customer_manager_name'] = $this->truncate(
+            $params['customer_manager_name'],
+            self::PARAM_CUSTOMER_MANAGER_NAME_LIMIT
+        );
+        return $params;
     }
 }
