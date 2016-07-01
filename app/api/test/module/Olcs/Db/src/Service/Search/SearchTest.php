@@ -215,10 +215,16 @@ class SearchTest extends MockeryTestCase
             ->andReturnSelf();
 
         if ($userType === 'internal') {
-            $mockUser->shouldReceive('isAnonymous')->once()->andReturn(false);
-            $authService->shouldReceive('isGranted')->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
+            $mockUser->shouldReceive('isAnonymous')
+                ->zeroOrMoreTimes()
+                ->andReturn(false);
+            $authService->shouldReceive('isGranted')
+                ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
+                ->zeroOrMoreTimes()
                 ->andReturn(true);
-            $authService->shouldReceive('isGranted')->with(\Dvsa\Olcs\Api\Entity\User\Permission::SELFSERVE_USER, null)
+            $authService->shouldReceive('isGranted')
+                ->zeroOrMoreTimes()
+                ->with(\Dvsa\Olcs\Api\Entity\User\Permission::SELFSERVE_USER, null)
                 ->andReturn(false);
         } else {
             $authService->shouldReceive('isGranted')->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
@@ -528,7 +534,11 @@ class SearchTest extends MockeryTestCase
                                 'bool' => [
                                     'should' => [
                                         $this->generateMatch('_all', 'FOO BAR'),
-                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
+                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0'),
+                                        $this->generateMatch(
+                                            'login_id',
+                                            ['query' => 'FOO BAR', 'boost' => 2.0]
+                                        )
                                     ]
                                 ]
                             ]
@@ -541,7 +551,7 @@ class SearchTest extends MockeryTestCase
                 'size' => 10,
                 'from' => 0
             ],
-            'external',
+            'internal',
             'FOO BAR'
         ];
     }
@@ -671,10 +681,6 @@ class SearchTest extends MockeryTestCase
                                         $this->generateMatch('_all', 'FOO BAR'),
                                         $this->generateWildcard('person_family_name_wildcard', '*foo bar*', '2.0'),
                                         $this->generateWildcard('person_forename_wildcard', '*foo bar*', '1.0'),
-                                        $this->generateMatch(
-                                            'login_id',
-                                            ['query' => 'FOO BAR', 'boost' => 2.0]
-                                        ),
                                         $this->generateWildcard('person_family_name_wildcard', '*foo*', '2.0'),
                                         $this->generateWildcard('person_forename_wildcard', '*foo*', '1.0'),
                                         $this->generateWildcard('person_family_name_wildcard', '*bar*', '2.0'),
