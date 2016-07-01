@@ -40,13 +40,22 @@ final class RefundFee extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'Fee';
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return Result
+     * @throws RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         /** @var FeeEntity $fee */
         $fee = $this->getRepo()->fetchUsingId($command);
+        $extraParams = $this->prepareExtraParams($command);
 
         try {
-            $references = $this->getCpmsService()->refundFee($fee);
+            $references = $this->getCpmsService()->refundFee($fee, $extraParams);
         } catch (CpmsResponseException $e) {
             // rethrow as Domain exception
             throw new RuntimeException(
@@ -100,5 +109,31 @@ final class RefundFee extends AbstractCommandHandler implements
         );
 
         return $this->result;
+    }
+
+    /**
+     * Prepare extra params
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Fee\RefundFee $command command
+     *
+     * @return array
+     */
+    private function prepareExtraParams($command)
+    {
+        $extraParams = [];
+
+        if ($command->getCustomerName()) {
+            $extraParams['customer_name'] = $command->getCustomerName();
+        }
+
+        if ($command->getCustomerReference()) {
+            $extraParams['customer_reference'] = $command->getCustomerReference();
+        }
+
+        if ($command->getAddress()) {
+            $extraParams['customer_address'] = $command->getAddress();
+        }
+
+        return $extraParams;
     }
 }

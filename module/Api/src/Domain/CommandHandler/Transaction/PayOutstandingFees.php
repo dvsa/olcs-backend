@@ -62,6 +62,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      *  - organisationId AND feeIds
      *  - applicationId only
      *  - feeIds only
+     *
+     * @param CommandInterface $command command
+     *
+     * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -72,6 +76,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             $this->result->addMessage('Card payments are disabled');
             return $this->result;
         }
+
+        $extraParams = $this->prepareExtraParams($command);
 
         if (!empty($command->getOrganisationId())) {
             $fees = $this->getOutstandingFeesForOrganisation($command);
@@ -92,9 +98,9 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         try {
             $cardMethods = [FeeEntity::METHOD_CARD_ONLINE, FeeEntity:: METHOD_CARD_OFFLINE];
             if (in_array($command->getPaymentMethod(), $cardMethods)) {
-                return $this->cardPayment($command, $feesToPay);
+                return $this->cardPayment($command, $feesToPay, $extraParams);
             } else {
-                return $this->immediatePayment($command, $feesToPay);
+                return $this->immediatePayment($command, $feesToPay, $extraParams);
             }
         } catch (CpmsResponseException $e) {
             // rethrow as Domain exception
@@ -109,24 +115,30 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     /**
      * Initiates a CPMS card payment which is a two-step process
      *
-     * @param CommandInterface $command
-     * @param array $feesToPay
+     * @param CommandInterface $command     command
+     * @param array            $feesToPay   fees to pay
+     * @param array            $extraParams extra params
      *
      * @return Result
      */
-    protected function cardPayment($command, $feesToPay)
+    protected function cardPayment($command, $feesToPay, $extraParams = [])
     {
         // fire off to CPMS
         if ($command->getPaymentMethod() === FeeEntity::METHOD_CARD_OFFLINE) {
-            $response = $this->getCpmsService()->initiateCnpRequest($command->getCpmsRedirectUrl(), $feesToPay);
+            $response = $this->getCpmsService()->initiateCnpRequest(
+                $command->getCpmsRedirectUrl(), $feesToPay, $extraParams
+            );
         } elseif ($command->getStoredCardReference()) {
             $response = $this->getCpmsService()->initiateStoredCardRequest(
                 $command->getCpmsRedirectUrl(),
                 $feesToPay,
-                $command->getStoredCardReference()
+                $command->getStoredCardReference(),
+                $extraParams
             );
         } else {
-            $response = $this->getCpmsService()->initiateCardRequest($command->getCpmsRedirectUrl(), $feesToPay);
+            $response = $this->getCpmsService()->initiateCardRequest(
+                $command->getCpmsRedirectUrl(), $feesToPay, $extraParams
+            );
         }
 
         // create transaction
@@ -165,12 +177,13 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     /**
      * Cash/cheque/PO payment
      *
-     * @param CommandInterface $command
-     * @param array $fees
+     * @param CommandInterface $command     command
+     * @param array            $fees        fees
+     * @param array            $extraParams extra params
      *
      * @return Result
      */
-    protected function immediatePayment($command, $fees)
+    protected function immediatePayment($command, $fees, $extraParams = [])
     {
         $this->validateAmount($command->getReceived(), $fees);
 
@@ -179,7 +192,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         $allocations = $this->allocatePayments($command->getReceived(), $fees);
 
         // fire off to relevant CPMS method to record payment
-        $response = $this->recordPaymentInCpms($command, $fees);
+        $response = $this->recordPaymentInCpms($command, $fees, $extraParams);
 
         $receiptDate = new \DateTime($command->getReceiptDate());
         $chequeDate = $command->getChequeDate() ? new \DateTime($command->getChequeDate()) : null;
@@ -239,10 +252,16 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     }
 
     /**
+     * Record payment in CPMS
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Transaction\PayOutstandingFees $command     command
+     * @param array                                                      $fees        fees
+     * @param array                                                      $extraParams extra params
+     *
      * @return array|false
      * @throws BadRequestException if paymentMethod is invalid
      */
-    protected function recordPaymentInCpms($command, $fees)
+    protected function recordPaymentInCpms($command, $fees, $extraParams = [])
     {
         switch ($command->getPaymentMethod()) {
             case FeeEntity::METHOD_CASH:
@@ -250,7 +269,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                     $fees,
                     $command->getReceived(),
                     $command->getReceiptDate(),
-                    $command->getSlipNo()
+                    $command->getSlipNo(),
+                    $extraParams
                 );
                 break;
             case FeeEntity::METHOD_CHEQUE:
@@ -261,7 +281,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                     $command->getPayer(),
                     $command->getSlipNo(),
                     $command->getChequeNo(),
-                    $command->getChequeDate()
+                    $command->getChequeDate(),
+                    $extraParams
                 );
                 break;
             case FeeEntity::METHOD_POSTAL_ORDER:
@@ -270,7 +291,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                     $command->getReceived(),
                     $command->getReceiptDate(),
                     $command->getSlipNo(),
-                    $command->getPoNo()
+                    $command->getPoNo(),
+                    $extraParams
                 );
                 break;
             default:
@@ -280,6 +302,13 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         return $response;
     }
 
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
+     * @return $this
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         parent::createService($serviceLocator);
@@ -288,7 +317,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     }
 
     /**
-     * @param FeeEntity $fee
+     * Resolve outstanding payments
+     *
+     * @param FeeEntity $fee fee
+     *
      * @return boolean whether fee was paid
      */
     protected function resolveOutstandingPayments($fee)
@@ -322,7 +354,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     }
 
     /**
-     * @param array $fees
+     * Resolve paid fees
+     *
+     * @param array $fees fees
+     *
      * @return array
      */
     public function resolvePaidFees($fees)
@@ -347,8 +382,9 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      * The form validation will normally catch any mismatch but it relies on a
      * hidden field so we have a secondary check here in the service layer.
      *
-     * @param string $amount
-     * @param array $fees
+     * @param string $amount amount
+     * @param array  $fees   fees
+     *
      * @return null
      * @throws ValidationException
      */
@@ -360,6 +396,14 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         }
     }
 
+    /**
+     * Get outstanding fees for organisation
+     *
+     * @param CommandInterface $command command
+     *
+     * @return array
+     * @throws RuntimeException
+     */
     protected function getOutstandingFeesForOrganisation(CommandInterface $command)
     {
         // get outstanding fees for organisation
@@ -380,8 +424,11 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     }
 
     /**
-     * @param string $receivedAmount
-     * @param array $fees - passed by reference as we may need to append
+     * Allocate payments
+     *
+     * @param string $receivedAmount received amount
+     * @param array  $fees           fees passed by reference as we may need to append
+     *
      * @return array
      */
     protected function allocatePayments($receivedAmount, &$fees)
@@ -411,6 +458,14 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         return $allocations;
     }
 
+    /**
+     * Generate insufficient fee request letter
+     *
+     * @param FeeEntity $fee             fee
+     * @param string    $allocatedAmount allocated amount
+     *
+     * @return Result
+     */
     private function generateInsufficientFeeRequestLetter(FeeEntity $fee, $allocatedAmount)
     {
 
@@ -447,6 +502,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
 
     /**
      * If there is an outstanding waive transaction for a fee, reject it
+     *
+     * @param FeeEntity $fee fee
+     *
+     * @return Result
      */
     private function maybeCancelPendingWaive(FeeEntity $fee)
     {
@@ -458,5 +517,31 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         }
 
         return $result;
+    }
+
+    /**
+     * Prepare extra params
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Transaction\PayOutstandingFees $command command
+     *
+     * @return array
+     */
+    private function prepareExtraParams($command)
+    {
+        $extraParams = [];
+
+        if ($command->getCustomerName()) {
+            $extraParams['customer_name'] = $command->getCustomerName();
+        }
+
+        if ($command->getCustomerReference()) {
+            $extraParams['customer_reference'] = $command->getCustomerReference();
+        }
+
+        if ($command->getAddress()) {
+            $extraParams['customer_address'] = $command->getAddress();
+        }
+
+        return $extraParams;
     }
 }

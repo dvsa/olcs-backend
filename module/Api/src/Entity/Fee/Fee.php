@@ -51,7 +51,6 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     const METHOD_RECEIPT      = 'fpm_rcpt';
     const METHOD_MIGRATED     = 'fpm_migrated';
 
-    const DEFAULT_INVOICE_CUSTOMER_NAME = 'Miscellaneous payment';
     const DEFAULT_INVOICE_ADDRESS_LINE = 'Miscellaneous payment';
     // CPMS enforces 'valid' postcodes :(
     const DEFAULT_POSTCODE = 'LS9 6NF';
@@ -334,11 +333,13 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     }
 
     /**
+     * Get customer name for invoice
+     *
      * @return string
      */
     public function getCustomerNameForInvoice()
     {
-        $name = self::DEFAULT_INVOICE_CUSTOMER_NAME;
+        $name = null;
 
         if (!empty($this->getOrganisation())) {
             $name = $this->getOrganisation()->getName();
@@ -348,7 +349,9 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     }
 
     /**
-     * @return Address
+     * Get customer address for invoice
+     *
+     * @return Address|null
      */
     public function getCustomerAddressForInvoice()
     {
@@ -369,13 +372,7 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
             }
         }
 
-        // we always need to return a valid address object
-        $default = new Address();
-        $default
-            ->setAddressLine1(self::DEFAULT_INVOICE_ADDRESS_LINE)
-            ->setTown(self::DEFAULT_INVOICE_ADDRESS_LINE)
-            ->setPostcode(self::DEFAULT_POSTCODE);
-        return $default;
+        return null;
     }
 
     /**
@@ -483,11 +480,6 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     public function canRefund()
     {
         if ($this->isMigrated()) {
-            return false;
-        }
-
-        if ($this->getFeeType()->isMiscellaneous()) {
-            // miscellaneous fees are not currently refundable
             return false;
         }
 
