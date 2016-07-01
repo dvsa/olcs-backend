@@ -22,6 +22,7 @@ use Dvsa\Olcs\Api\Service\CpmsV2HelperService as Sut;
 use Dvsa\Olcs\Api\Service\FeesHelperService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * CPMS Version 2 Helper Service Test
@@ -84,7 +85,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         return $sut->createService($sm);
     }
 
-    public function testInitiateCardRequest()
+    /**
+     * @dataProvider miscParamsProvider
+     */
+    public function testInitiateCardRequest($miscParams, $expectedCustomer, $expectedReceiver)
     {
         $orgId = 99;
         $redirectUrl = 'http://olcs-selfserve/foo';
@@ -96,81 +100,59 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $now = (new DateTime())->format('Y-m-d');
 
-        $expectedParams = [
-            'customer_reference' => $orgId,
-            'payment_data' => [
-                [
-                    'line_identifier' => '1',
-                    'amount' => '525.25',
-                    'allocated_amount' => '525.25',
-                    'net_amount' => '525.25',
-                    'tax_amount' => '0.00',
-                    'tax_code' => 'Z',
-                    'tax_rate' => '0',
-                    'invoice_date' => '2015-08-29',
-                    'sales_reference' => '1',
-                    'product_reference' => 'fee type description',
-                    'product_description' => 'fee type description',
-                    'receiver_reference' => '99',
-                    'receiver_name' => 'some organisation',
-                    'receiver_address' => [
-                        'line_1' => 'Foo',
-                        'line_2' => null,
-                        'line_3' => null,
-                        'line_4' => null,
-                        'city' => 'Bar',
-                        'postcode' => 'LS9 6NF',
-                    ],
-                    'rule_start_date' => $now,
-                    'deferment_period' => '1',
-                    'country_code' => 'GB',
-                    'sales_person_reference' => 'Traffic Area Ref',
+        $expectedParams = array_merge(
+            $expectedCustomer,
+            [
+                'payment_data' => [
+                    array_merge(
+                        $expectedReceiver,
+                        [
+                            'line_identifier' => '1',
+                            'amount' => '525.25',
+                            'allocated_amount' => '525.25',
+                            'net_amount' => '525.25',
+                            'tax_amount' => '0.00',
+                            'tax_code' => 'Z',
+                            'tax_rate' => '0',
+                            'invoice_date' => '2015-08-29',
+                            'sales_reference' => '1',
+                            'product_reference' => 'fee type description',
+                            'product_description' => 'fee type description',
+                            'rule_start_date' => $now,
+                            'deferment_period' => '1',
+                            'country_code' => 'GB',
+                            'sales_person_reference' => 'Traffic Area Ref',
+                        ]
+                    ),
+                    array_merge(
+                        $expectedReceiver,
+                        [
+                            'line_identifier' => '2',
+                            'amount' => '125.25',
+                            'allocated_amount' => '125.25',
+                            'net_amount' => '125.25',
+                            'tax_amount' => '0.00',
+                            'tax_code' => 'Z',
+                            'tax_rate' => '0',
+                            'invoice_date' => '2015-08-30',
+                            'sales_reference' => '2',
+                            'product_reference' => 'fee type description',
+                            'product_description' => 'fee type description',
+                            'rule_start_date' => '2014-12-25',
+                            'deferment_period' => '60',
+                            'country_code' => 'GB',
+                            'sales_person_reference' => 'Traffic Area Ref',
+                        ]
+                    )
                 ],
-                [
-                    'line_identifier' => '2',
-                    'amount' => '125.25',
-                    'allocated_amount' => '125.25',
-                    'net_amount' => '125.25',
-                    'tax_amount' => '0.00',
-                    'tax_code' => 'Z',
-                    'tax_rate' => '0',
-                    'invoice_date' => '2015-08-30',
-                    'sales_reference' => '2',
-                    'product_reference' => 'fee type description',
-                    'product_description' => 'fee type description',
-                    'receiver_reference' => '99',
-                    'receiver_name' => 'some organisation',
-                    'receiver_address' => [
-                        'line_1' => 'Foo',
-                        'line_2' => null,
-                        'line_3' => null,
-                        'line_4' => null,
-                        'city' => 'Bar',
-                        'postcode' => 'LS9 6NF',
-                    ],
-                    'rule_start_date' => '2014-12-25',
-                    'deferment_period' => '60',
-                    'country_code' => 'GB',
-                    'sales_person_reference' => 'Traffic Area Ref',
-                ]
-            ],
-            'total_amount' => '650.50',
-            'customer_name' => 'some organisation',
-            'customer_manager_name' => 'some organisation',
-            'customer_address' =>[
-                'line_1' => 'Foo',
-                'line_2' => null,
-                'line_3' => null,
-                'line_4' => null,
-                'city' => 'Bar',
-                'postcode' => 'LS9 6NF',
-            ],
-            'redirect_uri' => $redirectUrl,
-            'disable_redirection' => true,
-            'scope' => 'CARD',
-            'refund_overpayment' => false,
-            'country_code' => 'GB',
-        ];
+                'total_amount' => '650.50',
+                'redirect_uri' => $redirectUrl,
+                'disable_redirection' => true,
+                'scope' => 'CARD',
+                'refund_overpayment' => false,
+                'country_code' => 'GB',
+            ]
+        );
 
         $response = ['receipt_reference' => 'guid_123'];
 
@@ -180,12 +162,88 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
-        $result = $this->sut->initiateCardRequest($redirectUrl, $fees);
+        $result = $this->sut->initiateCardRequest($redirectUrl, $fees, $miscParams);
 
         $this->assertSame($response, $result);
     }
 
-    public function testInitiateCnpRequest()
+    public function miscParamsProvider()
+    {
+        return [
+            'mics payment' => [
+                [
+                    'customer_reference' => 'foo',
+                    'customer_name' => 'bar',
+                    'customer_address' => [
+                        'addressLine1' => 'line1',
+                        'addressLine2' => 'line2',
+                        'addressLine3' => 'line3',
+                        'addressLine4' => 'line4',
+                        'town' => 'town',
+                        'postcode' => 'pc'
+                    ]
+                ],
+                [
+                    'customer_reference' => 'foo',
+                    'customer_name' => 'bar',
+                    'customer_manager_name' => 'bar',
+                    'customer_address' => [
+                        'line_1' => 'line1',
+                        'line_2' => 'line2',
+                        'line_3' => 'line3',
+                        'line_4' => 'line4',
+                        'city' => 'town',
+                        'postcode' => 'pc'
+                    ]
+                ],
+                [
+                    'receiver_reference' => 'foo',
+                    'receiver_name' => 'bar',
+                    'receiver_address' => [
+                        'line_1' => 'line1',
+                        'line_2' => 'line2',
+                        'line_3' => 'line3',
+                        'line_4' => 'line4',
+                        'city' => 'town',
+                        'postcode' => 'pc'
+                    ]
+                ]
+            ],
+            'usual payment' => [
+                [],
+                [
+                    'customer_reference' => 99,
+                    'customer_name' => 'some organisation',
+                    'customer_manager_name' => 'some organisation',
+                    'customer_address' =>[
+                        'line_1' => 'Foo',
+                        'line_2' => null,
+                        'line_3' => null,
+                        'line_4' => null,
+                        'city' => 'Bar',
+                        'postcode' => 'LS9 6NF',
+                    ],
+                ],
+                [
+                    'receiver_reference' => '99',
+                    'receiver_name' => 'some organisation',
+                    'receiver_address' => [
+                        'line_1' => 'Foo',
+                        'line_2' => null,
+                        'line_3' => null,
+                        'line_4' => null,
+                        'city' => 'Bar',
+                        'postcode' => 'LS9 6NF',
+                    ],
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider miscParamsProvider
+     */
+    public function testInitiateCnpRequest($miscParams, $expectedCustomer, $expectedReceiver)
     {
         $orgId = 99;
         $redirectUrl = 'http://olcs-selfserve/foo';
@@ -197,81 +255,59 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $now = (new DateTime())->format('Y-m-d');
 
-        $expectedParams = [
-            'customer_reference' => $orgId,
-            'payment_data' => [
-                [
-                    'line_identifier' => '1',
-                    'amount' => '525.25',
-                    'allocated_amount' => '525.25',
-                    'net_amount' => '525.25',
-                    'tax_amount' => '0.00',
-                    'tax_code' => 'Z',
-                    'tax_rate' => '0',
-                    'invoice_date' => '2015-08-29',
-                    'sales_reference' => '1',
-                    'product_reference' => 'fee type description',
-                    'product_description' => 'fee type description',
-                    'receiver_reference' => '99',
-                    'receiver_name' => 'some organisation',
-                    'receiver_address' => [
-                        'line_1' => 'Foo',
-                        'line_2' => null,
-                        'line_3' => null,
-                        'line_4' => null,
-                        'city' => 'Bar',
-                        'postcode' => 'LS9 6NF',
-                    ],
-                    'rule_start_date' => $now,
-                    'deferment_period' => '1',
-                    'country_code' => 'GB',
-                    'sales_person_reference' => 'Traffic Area Ref',
+        $expectedParams = array_merge(
+            $expectedCustomer,
+            [
+                'payment_data' => [
+                    array_merge(
+                        $expectedReceiver,
+                        [
+                            'line_identifier' => '1',
+                            'amount' => '525.25',
+                            'allocated_amount' => '525.25',
+                            'net_amount' => '525.25',
+                            'tax_amount' => '0.00',
+                            'tax_code' => 'Z',
+                            'tax_rate' => '0',
+                            'invoice_date' => '2015-08-29',
+                            'sales_reference' => '1',
+                            'product_reference' => 'fee type description',
+                            'product_description' => 'fee type description',
+                            'rule_start_date' => $now,
+                            'deferment_period' => '1',
+                            'country_code' => 'GB',
+                            'sales_person_reference' => 'Traffic Area Ref',
+                        ]
+                    ),
+                    array_merge(
+                        $expectedReceiver,
+                        [
+                            'line_identifier' => '2',
+                            'amount' => '125.25',
+                            'allocated_amount' => '125.25',
+                            'net_amount' => '125.25',
+                            'tax_amount' => '0.00',
+                            'tax_code' => 'Z',
+                            'tax_rate' => '0',
+                            'invoice_date' => '2015-08-30',
+                            'sales_reference' => '2',
+                            'product_reference' => 'fee type description',
+                            'product_description' => 'fee type description',
+                            'rule_start_date' => '2014-12-25',
+                            'deferment_period' => '60',
+                            'country_code' => 'GB',
+                            'sales_person_reference' => 'Traffic Area Ref',
+                        ]
+                    )
                 ],
-                [
-                    'line_identifier' => '2',
-                    'amount' => '125.25',
-                    'allocated_amount' => '125.25',
-                    'net_amount' => '125.25',
-                    'tax_amount' => '0.00',
-                    'tax_code' => 'Z',
-                    'tax_rate' => '0',
-                    'invoice_date' => '2015-08-30',
-                    'sales_reference' => '2',
-                    'product_reference' => 'fee type description',
-                    'product_description' => 'fee type description',
-                    'receiver_reference' => '99',
-                    'receiver_name' => 'some organisation',
-                    'receiver_address' => [
-                        'line_1' => 'Foo',
-                        'line_2' => null,
-                        'line_3' => null,
-                        'line_4' => null,
-                        'city' => 'Bar',
-                        'postcode' => 'LS9 6NF',
-                    ],
-                    'rule_start_date' => '2014-12-25',
-                    'deferment_period' => '60',
-                    'country_code' => 'GB',
-                    'sales_person_reference' => 'Traffic Area Ref',
-                ]
-            ],
-            'total_amount' => '650.50',
-            'customer_name' => 'some organisation',
-            'customer_manager_name' => 'some organisation',
-            'customer_address' =>[
-                'line_1' => 'Foo',
-                'line_2' => null,
-                'line_3' => null,
-                'line_4' => null,
-                'city' => 'Bar',
-                'postcode' => 'LS9 6NF',
-            ],
-            'redirect_uri' => $redirectUrl,
-            'disable_redirection' => true,
-            'scope' => 'CNP',
-            'refund_overpayment' => false,
-            'country_code' => 'GB',
-        ];
+                'total_amount' => '650.50',
+                'redirect_uri' => $redirectUrl,
+                'disable_redirection' => true,
+                'scope' => 'CNP',
+                'refund_overpayment' => false,
+                'country_code' => 'GB',
+            ]
+        );
 
         $response = ['receipt_reference' => 'guid_123'];
 
@@ -281,12 +317,15 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
-        $result = $this->sut->initiateCnpRequest($redirectUrl, $fees);
+        $result = $this->sut->initiateCnpRequest($redirectUrl, $fees, $miscParams);
 
         $this->assertSame($response, $result);
     }
 
-    public function testInitiateStoredCardRequest()
+    /**
+     * @dataProvider miscParamsProvider
+     */
+    public function testInitiateStoredCardRequest($miscParams, $expectedCustomer, $expectedReceiver)
     {
         $orgId = 99;
         $redirectUrl = 'http://olcs-selfserve/foo';
@@ -298,81 +337,59 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $now = (new DateTime())->format('Y-m-d');
 
-        $expectedParams = [
-            'customer_reference' => $orgId,
+        $expectedParams = array_merge(
+            $expectedCustomer,
+            [
             'payment_data' => [
-                [
-                    'line_identifier' => '1',
-                    'amount' => '525.25',
-                    'allocated_amount' => '525.25',
-                    'net_amount' => '525.25',
-                    'tax_amount' => '0.00',
-                    'tax_code' => 'Z',
-                    'tax_rate' => '0',
-                    'invoice_date' => '2015-08-29',
-                    'sales_reference' => '1',
-                    'product_reference' => 'fee type description',
-                    'product_description' => 'fee type description',
-                    'receiver_reference' => '99',
-                    'receiver_name' => 'some organisation',
-                    'receiver_address' => [
-                        'line_1' => 'Foo',
-                        'line_2' => null,
-                        'line_3' => null,
-                        'line_4' => null,
-                        'city' => 'Bar',
-                        'postcode' => 'LS9 6NF',
-                    ],
-                    'rule_start_date' => $now,
-                    'deferment_period' => '1',
-                    'country_code' => 'GB',
-                    'sales_person_reference' => 'Traffic Area Ref',
-                ],
-                [
-                    'line_identifier' => '2',
-                    'amount' => '125.25',
-                    'allocated_amount' => '125.25',
-                    'net_amount' => '125.25',
-                    'tax_amount' => '0.00',
-                    'tax_code' => 'Z',
-                    'tax_rate' => '0',
-                    'invoice_date' => '2015-08-30',
-                    'sales_reference' => '2',
-                    'product_reference' => 'fee type description',
-                    'product_description' => 'fee type description',
-                    'receiver_reference' => '99',
-                    'receiver_name' => 'some organisation',
-                    'receiver_address' => [
-                        'line_1' => 'Foo',
-                        'line_2' => null,
-                        'line_3' => null,
-                        'line_4' => null,
-                        'city' => 'Bar',
-                        'postcode' => 'LS9 6NF',
-                    ],
-                    'rule_start_date' => '2014-12-25',
-                    'deferment_period' => '60',
-                    'country_code' => 'GB',
-                    'sales_person_reference' => 'Traffic Area Ref',
-                ]
+                array_merge(
+                    $expectedReceiver,
+                    [
+                        'line_identifier' => '1',
+                        'amount' => '525.25',
+                        'allocated_amount' => '525.25',
+                        'net_amount' => '525.25',
+                        'tax_amount' => '0.00',
+                        'tax_code' => 'Z',
+                        'tax_rate' => '0',
+                        'invoice_date' => '2015-08-29',
+                        'sales_reference' => '1',
+                        'product_reference' => 'fee type description',
+                        'product_description' => 'fee type description',
+                        'rule_start_date' => $now,
+                        'deferment_period' => '1',
+                        'country_code' => 'GB',
+                        'sales_person_reference' => 'Traffic Area Ref',
+                    ]
+                ),
+                array_merge(
+                    $expectedReceiver,
+                    [
+                        'line_identifier' => '2',
+                        'amount' => '125.25',
+                        'allocated_amount' => '125.25',
+                        'net_amount' => '125.25',
+                        'tax_amount' => '0.00',
+                        'tax_code' => 'Z',
+                        'tax_rate' => '0',
+                        'invoice_date' => '2015-08-30',
+                        'sales_reference' => '2',
+                        'product_reference' => 'fee type description',
+                        'product_description' => 'fee type description',
+                        'rule_start_date' => '2014-12-25',
+                        'deferment_period' => '60',
+                        'country_code' => 'GB',
+                        'sales_person_reference' => 'Traffic Area Ref',
+                    ]
+                )
             ],
             'total_amount' => '650.50',
-            'customer_name' => 'some organisation',
-            'customer_manager_name' => 'some organisation',
-            'customer_address' =>[
-                'line_1' => 'Foo',
-                'line_2' => null,
-                'line_3' => null,
-                'line_4' => null,
-                'city' => 'Bar',
-                'postcode' => 'LS9 6NF',
-            ],
             'redirect_uri' => $redirectUrl,
             'disable_redirection' => true,
             'scope' => 'STORED_CARD',
             'refund_overpayment' => false,
             'country_code' => 'GB',
-        ];
+            ]
+        );
 
         $response = ['receipt_reference' => 'guid_123'];
 
@@ -382,7 +399,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
-        $result = $this->sut->initiateStoredCardRequest($redirectUrl, $fees, 'STORED_CARD');
+        $result = $this->sut->initiateStoredCardRequest($redirectUrl, $fees, 'STORED_CARD', $miscParams);
 
         $this->assertSame($response, $result);
     }
@@ -413,7 +430,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->assertSame(['FOO'], $this->sut->getListStoredCards());
     }
 
-    public function testRecordCashPaymentWithOverpayment()
+    /**
+     * @dataProvider miscParamsProvider
+     */
+    public function testRecordCashPaymentWithOverpayment($miscParams, $expectedCustomer, $expectedReceiver)
     {
         $orgId = 99;
 
@@ -438,82 +458,60 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $now = (new DateTime())->format('Y-m-d');
 
-        $expectedParams = [
-            'customer_reference' => $orgId,
-            'payment_data' => [
-                [
-                    'line_identifier' => '1',
-                    'amount' => '500.00',
-                    'allocated_amount' => '500.00',
-                    'net_amount' => '500.00',
-                    'tax_amount' => '0.00',
-                    'tax_code' => 'Z',
-                    'tax_rate' => '0',
-                    'invoice_date' => '2015-08-29',
-                    'sales_reference' => '1',
-                    'product_reference' => 'fee type description',
-                    'product_description' => 'fee type description',
-                    'receiver_reference' => '99',
-                    'receiver_name' => 'some organisation',
-                    'receiver_address' => [
-                        'line_1' => 'Foo',
-                        'line_2' => null,
-                        'line_3' => null,
-                        'line_4' => null,
-                        'city' => 'Bar',
-                        'postcode' => 'LS9 6NF',
-                    ],
-                    'rule_start_date' => $now,
-                    'deferment_period' => '1',
-                    'country_code' => 'GB',
-                    'sales_person_reference' => 'Traffic Area Ref',
+        $expectedParams = array_merge(
+            $expectedCustomer,
+            [
+                'payment_data' => [
+                    array_merge(
+                        $expectedReceiver,
+                        [
+                            'line_identifier' => '1',
+                            'amount' => '500.00',
+                            'allocated_amount' => '500.00',
+                            'net_amount' => '500.00',
+                            'tax_amount' => '0.00',
+                            'tax_code' => 'Z',
+                            'tax_rate' => '0',
+                            'invoice_date' => '2015-08-29',
+                            'sales_reference' => '1',
+                            'product_reference' => 'fee type description',
+                            'product_description' => 'fee type description',
+                            'rule_start_date' => $now,
+                            'deferment_period' => '1',
+                            'country_code' => 'GB',
+                            'sales_person_reference' => 'Traffic Area Ref',
+                        ]
+                    ),
+                    array_merge(
+                        $expectedReceiver,
+                        [
+                            'line_identifier' => '2',
+                            'amount' => '100.00',
+                            'allocated_amount' => '100.00',
+                            'net_amount' => '100.00',
+                            'tax_amount' => '0.00',
+                            'tax_code' => 'Z',
+                            'tax_rate' => '0',
+                            'invoice_date' => '2015-08-30',
+                            'sales_reference' => '2',
+                            'product_reference' => 'fee type description',
+                            'product_description' => 'fee type description',
+                            'rule_start_date' => '2014-12-25',
+                            'deferment_period' => '60',
+                            'country_code' => 'GB',
+                            'sales_person_reference' => 'Traffic Area Ref',
+                        ]
+                    )
                 ],
-                [
-                    'line_identifier' => '2',
-                    'amount' => '100.00',
-                    'allocated_amount' => '100.00',
-                    'net_amount' => '100.00',
-                    'tax_amount' => '0.00',
-                    'tax_code' => 'Z',
-                    'tax_rate' => '0',
-                    'invoice_date' => '2015-08-30',
-                    'sales_reference' => '2',
-                    'product_reference' => 'fee type description',
-                    'product_description' => 'fee type description',
-                    'receiver_reference' => '99',
-                    'receiver_name' => 'some organisation',
-                    'receiver_address' => [
-                        'line_1' => 'Foo',
-                        'line_2' => null,
-                        'line_3' => null,
-                        'line_4' => null,
-                        'city' => 'Bar',
-                        'postcode' => 'LS9 6NF',
-                    ],
-                    'rule_start_date' => '2014-12-25',
-                    'deferment_period' => '60',
-                    'country_code' => 'GB',
-                    'sales_person_reference' => 'Traffic Area Ref',
-                ]
-            ],
-            'total_amount' => '1000.00',
-            'customer_name' => 'some organisation',
-            'customer_manager_name' => 'some organisation',
-            'customer_address' =>[
-                'line_1' => 'Foo',
-                'line_2' => null,
-                'line_3' => null,
-                'line_4' => null,
-                'city' => 'Bar',
-                'postcode' => 'LS9 6NF',
-            ],
-            'slip_number' => '12345',
-            'batch_number' => '12345',
-            'receipt_date' => '2015-09-10',
-            'scope' => 'CASH',
-            'refund_overpayment' => true,
-            'country_code' => 'GB',
-        ];
+                'total_amount' => '1000.00',
+                'slip_number' => '12345',
+                'batch_number' => '12345',
+                'receipt_date' => '2015-09-10',
+                'scope' => 'CASH',
+                'refund_overpayment' => true,
+                'country_code' => 'GB',
+            ]
+        );
 
          $response = [
             'code' => Sut::RESPONSE_SUCCESS,
@@ -537,12 +535,15 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                 ]
             );
 
-        $result = $this->sut->recordCashPayment($fees, $amount, $receiptDate, $slipNo);
+        $result = $this->sut->recordCashPayment($fees, $amount, $receiptDate, $slipNo, $miscParams);
 
         $this->assertSame($response, $result);
     }
 
-    public function testRecordChequePayment()
+    /**
+     * @dataProvider miscParamsProvider
+     */
+    public function testRecordChequePayment($miscParams, $expectedCustomer, $expectedReceiver)
     {
         $orgId = 99;
 
@@ -561,85 +562,63 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $now = (new DateTime())->format('Y-m-d');
 
-        $expectedParams = [
-            'customer_reference' => $orgId,
-            'payment_data' => [
-                [
-                    'line_identifier' => '1',
-                    'amount' => '525.25',
-                    'allocated_amount' => '525.25',
-                    'net_amount' => '525.25',
-                    'tax_amount' => '0.00',
-                    'tax_code' => 'Z',
-                    'tax_rate' => '0',
-                    'invoice_date' => '2015-08-29',
-                    'sales_reference' => '1',
-                    'product_reference' => 'fee type description',
-                    'product_description' => 'fee type description',
-                    'receiver_reference' => '99',
-                    'receiver_name' => 'some organisation',
-                    'receiver_address' => [
-                        'line_1' => 'Foo',
-                        'line_2' => null,
-                        'line_3' => null,
-                        'line_4' => null,
-                        'city' => 'Bar',
-                        'postcode' => 'LS9 6NF',
-                    ],
-                    'rule_start_date' => $now,
-                    'deferment_period' => '1',
-                    'country_code' => 'GB',
-                    'sales_person_reference' => 'Traffic Area Ref',
+        $expectedParams = array_merge(
+            $expectedCustomer,
+            [
+                'payment_data' => [
+                    array_merge(
+                        $expectedReceiver,
+                        [
+                            'line_identifier' => '1',
+                            'amount' => '525.25',
+                            'allocated_amount' => '525.25',
+                            'net_amount' => '525.25',
+                            'tax_amount' => '0.00',
+                            'tax_code' => 'Z',
+                            'tax_rate' => '0',
+                            'invoice_date' => '2015-08-29',
+                            'sales_reference' => '1',
+                            'product_reference' => 'fee type description',
+                            'product_description' => 'fee type description',
+                            'rule_start_date' => $now,
+                            'deferment_period' => '1',
+                            'country_code' => 'GB',
+                            'sales_person_reference' => 'Traffic Area Ref',
+                        ]
+                    ),
+                    array_merge(
+                        $expectedReceiver,
+                        [
+                            'line_identifier' => '2',
+                            'amount' => '125.25',
+                            'allocated_amount' => '125.25',
+                            'net_amount' => '125.25',
+                            'tax_amount' => '0.00',
+                            'tax_code' => 'Z',
+                            'tax_rate' => '0',
+                            'invoice_date' => '2015-08-30',
+                            'sales_reference' => '2',
+                            'product_reference' => 'fee type description',
+                            'product_description' => 'fee type description',
+                            'rule_start_date' => '2014-12-25',
+                            'deferment_period' => '60',
+                            'country_code' => 'GB',
+                            'sales_person_reference' => 'Traffic Area Ref',
+                        ]
+                    )
                 ],
-                [
-                    'line_identifier' => '2',
-                    'amount' => '125.25',
-                    'allocated_amount' => '125.25',
-                    'net_amount' => '125.25',
-                    'tax_amount' => '0.00',
-                    'tax_code' => 'Z',
-                    'tax_rate' => '0',
-                    'invoice_date' => '2015-08-30',
-                    'sales_reference' => '2',
-                    'product_reference' => 'fee type description',
-                    'product_description' => 'fee type description',
-                    'receiver_reference' => '99',
-                    'receiver_name' => 'some organisation',
-                    'receiver_address' => [
-                        'line_1' => 'Foo',
-                        'line_2' => null,
-                        'line_3' => null,
-                        'line_4' => null,
-                        'city' => 'Bar',
-                        'postcode' => 'LS9 6NF',
-                    ],
-                    'rule_start_date' => '2014-12-25',
-                    'deferment_period' => '60',
-                    'country_code' => 'GB',
-                    'sales_person_reference' => 'Traffic Area Ref',
-                ]
-            ],
-            'total_amount' => '1000.00',
-            'customer_name' => 'some organisation',
-            'customer_manager_name' => 'some organisation',
-            'customer_address' =>[
-                'line_1' => 'Foo',
-                'line_2' => null,
-                'line_3' => null,
-                'line_4' => null,
-                'city' => 'Bar',
-                'postcode' => 'LS9 6NF',
-            ],
-            'slip_number' => '12345',
-            'batch_number' => '12345',
-            'receipt_date' => '2015-09-10',
-            'scope' => 'CHEQUE',
-            'cheque_number' => '0098765',
-            'cheque_date' => '2015-09-01',
-            'name_on_cheque' => $payer,
-            'refund_overpayment' => false,
-            'country_code' => 'GB',
-        ];
+                'total_amount' => '1000.00',
+                'slip_number' => '12345',
+                'batch_number' => '12345',
+                'receipt_date' => '2015-09-10',
+                'scope' => 'CHEQUE',
+                'cheque_number' => '0098765',
+                'cheque_date' => '2015-09-01',
+                'name_on_cheque' => $payer,
+                'refund_overpayment' => false,
+                'country_code' => 'GB',
+            ]
+        );
 
         $response = [
             'code' => Sut::RESPONSE_SUCCESS,
@@ -669,13 +648,17 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             $payer,
             $slipNo,
             $chequeNo,
-            $chequeDate
+            $chequeDate,
+            $miscParams
         );
 
         $this->assertSame($response, $result);
     }
 
-    public function testRecordPostalOrderPayment()
+    /**
+     * @dataProvider miscParamsProvider
+     */
+    public function testRecordPostalOrderPayment($miscParams, $expectedCustomer, $expectedReceiver)
     {
         $orgId = 99;
 
@@ -692,83 +675,61 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $now = (new DateTime())->format('Y-m-d');
 
-        $expectedParams = [
-            'customer_reference' => $orgId,
-            'payment_data' => [
-                [
-                    'line_identifier' => '1',
-                    'amount' => '525.25',
-                    'allocated_amount' => '525.25',
-                    'net_amount' => '525.25',
-                    'tax_amount' => '0.00',
-                    'tax_code' => 'Z',
-                    'tax_rate' => '0',
-                    'invoice_date' => '2015-08-29',
-                    'sales_reference' => '1',
-                    'product_reference' => 'fee type description',
-                    'product_description' => 'fee type description',
-                    'receiver_reference' => '99',
-                    'receiver_name' => 'some organisation',
-                    'receiver_address' => [
-                        'line_1' => 'Foo',
-                        'line_2' => null,
-                        'line_3' => null,
-                        'line_4' => null,
-                        'city' => 'Bar',
-                        'postcode' => 'LS9 6NF',
-                    ],
-                    'rule_start_date' => $now,
-                    'deferment_period' => '1',
-                    'country_code' => 'GB',
-                    'sales_person_reference' => 'Traffic Area Ref',
+        $expectedParams = array_merge(
+            $expectedCustomer,
+            [
+                'payment_data' => [
+                    array_merge(
+                        $expectedReceiver,
+                        [
+                            'line_identifier' => '1',
+                            'amount' => '525.25',
+                            'allocated_amount' => '525.25',
+                            'net_amount' => '525.25',
+                            'tax_amount' => '0.00',
+                            'tax_code' => 'Z',
+                            'tax_rate' => '0',
+                            'invoice_date' => '2015-08-29',
+                            'sales_reference' => '1',
+                            'product_reference' => 'fee type description',
+                            'product_description' => 'fee type description',
+                            'rule_start_date' => $now,
+                            'deferment_period' => '1',
+                            'country_code' => 'GB',
+                            'sales_person_reference' => 'Traffic Area Ref',
+                        ]
+                    ),
+                    array_merge(
+                        $expectedReceiver,
+                        [
+                            'line_identifier' => '2',
+                            'amount' => '125.25',
+                            'allocated_amount' => '125.25',
+                            'net_amount' => '125.25',
+                            'tax_amount' => '0.00',
+                            'tax_code' => 'Z',
+                            'tax_rate' => '0',
+                            'invoice_date' => '2015-08-30',
+                            'sales_reference' => '2',
+                            'product_reference' => 'fee type description',
+                            'product_description' => 'fee type description',
+                            'rule_start_date' => '2014-12-25',
+                            'deferment_period' => '60',
+                            'country_code' => 'GB',
+                            'sales_person_reference' => 'Traffic Area Ref',
+                        ]
+                    )
                 ],
-                [
-                    'line_identifier' => '2',
-                    'amount' => '125.25',
-                    'allocated_amount' => '125.25',
-                    'net_amount' => '125.25',
-                    'tax_amount' => '0.00',
-                    'tax_code' => 'Z',
-                    'tax_rate' => '0',
-                    'invoice_date' => '2015-08-30',
-                    'sales_reference' => '2',
-                    'product_reference' => 'fee type description',
-                    'product_description' => 'fee type description',
-                    'receiver_reference' => '99',
-                    'receiver_name' => 'some organisation',
-                    'receiver_address' => [
-                        'line_1' => 'Foo',
-                        'line_2' => null,
-                        'line_3' => null,
-                        'line_4' => null,
-                        'city' => 'Bar',
-                        'postcode' => 'LS9 6NF',
-                    ],
-                    'rule_start_date' => '2014-12-25',
-                    'deferment_period' => '60',
-                    'country_code' => 'GB',
-                    'sales_person_reference' => 'Traffic Area Ref',
-                ]
-            ],
-            'total_amount' => '1000.00',
-            'customer_name' => 'some organisation',
-            'customer_manager_name' => 'some organisation',
-            'customer_address' =>[
-                'line_1' => 'Foo',
-                'line_2' => null,
-                'line_3' => null,
-                'line_4' => null,
-                'city' => 'Bar',
-                'postcode' => 'LS9 6NF',
-            ],
-            'slip_number' => '12345',
-            'batch_number' => '12345',
-            'receipt_date' => '2015-09-10',
-            'scope' => 'POSTAL_ORDER',
-            'postal_order_number' => '00666666',
-            'refund_overpayment' => false,
-            'country_code' => 'GB',
-        ];
+                'total_amount' => '1000.00',
+                'slip_number' => '12345',
+                'batch_number' => '12345',
+                'receipt_date' => '2015-09-10',
+                'scope' => 'POSTAL_ORDER',
+                'postal_order_number' => '00666666',
+                'refund_overpayment' => false,
+                'country_code' => 'GB',
+            ]
+        );
 
          $response = [
             'code' => Sut::RESPONSE_SUCCESS,
@@ -796,7 +757,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             $amount,
             $receiptDate,
             $slipNo,
-            $poNo
+            $poNo,
+            $miscParams
         );
 
         $this->assertSame($response, $result);
@@ -821,11 +783,12 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
      * @param string $paymentMethod
      * @param string $expectedScope
      * @param string $expectedEndpointSuffix
+     * @param array $miscParams
      * @dataProvider reversalProvider
      */
-    public function testReversePayment($paymentMethod, $expectedScope, $expectedEndpointSuffix)
+    public function testReversePayment($paymentMethod, $expectedScope, $expectedEndpointSuffix, $customer, $miscParams)
     {
-        $orgId = 123;
+        $orgId = 99;
 
         $response = [
             'code' => Sut::PAYMENT_PAYMENT_CHARGED_BACK,
@@ -833,10 +796,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'receipt_reference' => 'REVERSAL_REFERENCE',
         ];
 
-        $expectedParams = [
-            'customer_reference' => $orgId,
-            'scope' => $expectedScope,
-        ];
+        $expectedParams = array_merge(
+            $customer,
+            ['scope' => $expectedScope]
+        );
 
         $this->cpmsClient
             ->shouldReceive('post')
@@ -848,7 +811,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             $this->getStubFee(1, 100.00, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-11-04'),
         ];
 
-        $result = $this->sut->reversePayment('MY-REFERENCE', $paymentMethod, $fees);
+        $result = $this->sut->reversePayment('MY-REFERENCE', $paymentMethod, $fees, $miscParams);
 
         $this->assertSame($response, $result);
     }
@@ -856,11 +819,112 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
     public function reversalProvider()
     {
         return [
-            'cheque' => [FeeEntity::METHOD_CHEQUE, 'CHEQUE_RD', 'reversal'],
-            'cash' => [FeeEntity::METHOD_CASH, 'CASH', 'reversal'],
-            'po' => [FeeEntity::METHOD_POSTAL_ORDER, 'POSTAL_ORDER', 'reversal'],
-            'card digital' => [FeeEntity::METHOD_CARD_ONLINE, 'CHARGE_BACK', 'chargeback'],
-            'card assisted digital' => [FeeEntity::METHOD_CARD_OFFLINE, 'CHARGE_BACK', 'chargeback'],
+            'cheque' => [
+                FeeEntity::METHOD_CHEQUE,
+                'CHEQUE_RD',
+                'reversal',
+                [
+                    'customer_reference' => 'foo',
+                    'customer_name' => 'bar',
+                    'customer_manager_name' => 'bar',
+                    'customer_address' => [
+                        'line_1' => 'line1',
+                        'line_2' => 'line2',
+                        'line_3' => 'line3',
+                        'line_4' => 'line4',
+                        'city' => 'town',
+                        'postcode' => 'postcode',
+                    ]
+                ],
+                [
+                    'customer_reference' => 'foo',
+                    'customer_name' => 'bar',
+                    'customer_address' => [
+                        'addressLine1' => 'line1',
+                        'addressLine2' => 'line2',
+                        'addressLine3' => 'line3',
+                        'addressLine4' => 'line4',
+                        'town' => 'town',
+                        'postcode' => 'postcode',
+                    ]
+                ]
+            ],
+            'cash' => [
+                FeeEntity::METHOD_CASH,
+                'CASH',
+                'reversal',
+                [
+                    'customer_reference' => 99,
+                    'customer_name' => 'some organisation',
+                    'customer_manager_name' => 'some organisation',
+                    'customer_address' =>[
+                        'line_1' => 'Foo',
+                        'line_2' => null,
+                        'line_3' => null,
+                        'line_4' => null,
+                        'city' => 'Bar',
+                        'postcode' => 'LS9 6NF',
+                    ],
+                ],
+                []
+            ],
+            'po' => [
+                FeeEntity::METHOD_POSTAL_ORDER,
+                'POSTAL_ORDER',
+                'reversal',
+                [
+                    'customer_reference' => 99,
+                    'customer_name' => 'some organisation',
+                    'customer_manager_name' => 'some organisation',
+                    'customer_address' =>[
+                        'line_1' => 'Foo',
+                        'line_2' => null,
+                        'line_3' => null,
+                        'line_4' => null,
+                        'city' => 'Bar',
+                        'postcode' => 'LS9 6NF',
+                    ],
+                ],
+                []
+            ],
+            'card digital' => [
+                FeeEntity::METHOD_CARD_ONLINE,
+                'CHARGE_BACK',
+                'chargeback',
+                [
+                    'customer_reference' => 99,
+                    'customer_name' => 'some organisation',
+                    'customer_manager_name' => 'some organisation',
+                    'customer_address' =>[
+                        'line_1' => 'Foo',
+                        'line_2' => null,
+                        'line_3' => null,
+                        'line_4' => null,
+                        'city' => 'Bar',
+                        'postcode' => 'LS9 6NF',
+                    ],
+                ],
+                []
+            ],
+            'card assisted digital' => [
+                FeeEntity::METHOD_CARD_OFFLINE,
+                'CHARGE_BACK',
+                'chargeback',
+                [
+                    'customer_reference' => 99,
+                    'customer_name' => 'some organisation',
+                    'customer_manager_name' => 'some organisation',
+                    'customer_address' =>[
+                        'line_1' => 'Foo',
+                        'line_2' => null,
+                        'line_3' => null,
+                        'line_4' => null,
+                        'city' => 'Bar',
+                        'postcode' => 'LS9 6NF',
+                    ],
+                ],
+                []
+            ],
         ];
     }
 
@@ -1005,7 +1069,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->assertSame($response, $result);
     }
 
-    public function testRefundFeeSinglePayment()
+    /**
+     * @dataProvider miscParamsProvider
+     */
+    public function testRefundFeeSinglePayment($miscParams, $expectedCustomer, $expectedReceiver)
     {
         $fee = m::mock(FeeEntity::class);
 
@@ -1014,12 +1081,17 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $ft->shouldReceive('getAmount')->andReturn('100.00');
 
         $address = new Address();
-        $address->updateAddress('ADDR1', 'ADDR2', 'ADDR3', 'ADDR4', 'TOWN', 'POSTCODE');
+        $address->updateAddress('Foo', null, null, null, 'Bar', 'LS9 6NF');
         $fee
             ->shouldReceive('getFeeTransactionsForRefund')
             ->andReturn([$ft])
             ->shouldReceive('getOrganisation')
-            ->andReturn(null)
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(99)
+                ->getMock()
+            )
             ->shouldReceive('getId')
             ->andReturn(101)
             ->shouldReceive('isBalancingFee')
@@ -1033,7 +1105,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getInvoicedDate')
             ->andReturn(new \DateTime('2015-10-09'))
             ->shouldReceive('getCustomerNameForInvoice')
-            ->andReturn('Test Customer')
+            ->andReturn('some organisation')
             ->shouldReceive('getCustomerAddressForInvoice')
             ->andReturn($address)
             ->shouldReceive('getRuleStartDate')
@@ -1056,53 +1128,38 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $ft->shouldReceive('getFee')->andReturn($fee);
 
-        $params =  [
-            'receipt_reference' => 'payment_ref',
-            'refund_reason' => 'Refund',
-            'payment_data' => [
-                [
-                    'line_identifier' => '101',
-                    'amount' => '100.00',
-                    'allocated_amount' => '0.00',
-                    'net_amount' => '12.00',
-                    'tax_amount' => '15.00',
-                    'tax_code' => 'VAT_CODE',
-                    'tax_rate' => 'VAT_RATE',
-                    'invoice_date' => '2015-10-09',
-                    'sales_reference' => '101',
-                    'product_reference' => 'TEST_FEE_TYPE',
-                    'product_description' => 'TEST_FEE_TYPE',
-                    'receiver_reference' => 'Miscellaneous',
-                    'receiver_name' => 'Test Customer',
-                    'receiver_address' => [
-                        'line_1' => 'ADDR1',
-                        'line_2' => 'ADDR2',
-                        'line_3' => 'ADDR3',
-                        'line_4' => 'ADDR4',
-                        'city' => 'TOWN',
-                        'postcode' => 'POSTCODE',
-                    ],
-                    'rule_start_date' => '2015-10-12',
-                    'deferment_period' => '1',
-                    'country_code' => 'NI',
-                    'sales_person_reference' => 'TEST_SALES_PERSON_REF',
+        $params = array_merge(
+            $expectedCustomer,
+            [
+                'receipt_reference' => 'payment_ref',
+                'refund_reason' => 'Refund',
+                'payment_data' => [
+                    array_merge(
+                        $expectedReceiver,
+                        [
+                            'line_identifier' => '101',
+                            'amount' => '100.00',
+                            'allocated_amount' => '0.00',
+                            'net_amount' => '12.00',
+                            'tax_amount' => '15.00',
+                            'tax_code' => 'VAT_CODE',
+                            'tax_rate' => 'VAT_RATE',
+                            'invoice_date' => '2015-10-09',
+                            'sales_reference' => '101',
+                            'product_reference' => 'TEST_FEE_TYPE',
+                            'product_description' => 'TEST_FEE_TYPE',
+                            'rule_start_date' => '2015-10-12',
+                            'deferment_period' => '1',
+                            'country_code' => 'NI',
+                            'sales_person_reference' => 'TEST_SALES_PERSON_REF',
+                        ]
+                    )
                 ],
-            ],
-            'scope' => 'REFUND',
-            'total_amount' => '100.00',
-            'customer_reference' => 'Miscellaneous',
-            'customer_name' => 'Test Customer',
-            'customer_manager_name' => 'Test Customer',
-            'customer_address' => [
-                'line_1' => 'ADDR1',
-                'line_2' => 'ADDR2',
-                'line_3' => 'ADDR3',
-                'line_4' => 'ADDR4',
-                'city' => 'TOWN',
-                'postcode' => 'POSTCODE',
-            ],
-            'country_code' => 'NI',
-        ];
+                'scope' => 'REFUND',
+                'total_amount' => '100.00',
+                'country_code' => 'NI',
+            ]
+        );
 
         $response = [
             'code' => Sut::PAYMENT_REFUNDED,
@@ -1115,7 +1172,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
-        $result = $this->sut->refundFee($fee);
+        $result = $this->sut->refundFee($fee, $miscParams);
 
         $this->assertSame(['payment_ref' => 'RECEIPT_REF'], $result);
     }
@@ -1136,7 +1193,13 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getFeeTransactionsForRefund')
             ->andReturn([$ft])
             ->shouldReceive('getOrganisation')
-            ->andReturn(null)
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(99)
+                ->twice()
+                ->getMock()
+            )
             ->shouldReceive('getId')
             ->andReturn(101)
             ->shouldReceive('isBalancingFee')
@@ -1185,8 +1248,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->sut->refundFee($fee);
     }
 
-
-    public function testRefundFeeMultiplePayments()
+    /**
+     * @dataProvider miscParamsProvider
+     */
+    public function testRefundFeeMultiplePayments($miscParams, $expectedCustomer, $expectedReceiver)
     {
         $fee = m::mock(FeeEntity::class);
 
@@ -1207,12 +1272,17 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn('201.00');
 
         $address = new Address();
-        $address->updateAddress('ADDR1', 'ADDR2', 'ADDR3', 'ADDR4', 'TOWN', 'POSTCODE');
+        $address->updateAddress('Foo', null, null, null, 'Bar', 'LS9 6NF');
         $fee
             ->shouldReceive('getFeeTransactionsForRefund')
             ->andReturn([$ft, $ft2])
             ->shouldReceive('getOrganisation')
-            ->andReturn(null)
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(99)
+                    ->getMock()
+            )
             ->shouldReceive('getId')
             ->andReturn(101)
             ->shouldReceive('isBalancingFee')
@@ -1226,7 +1296,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getInvoicedDate')
             ->andReturn(new \DateTime('2015-10-09'))
             ->shouldReceive('getCustomerNameForInvoice')
-            ->andReturn('Test Customer')
+            ->andReturn('some organisation')
             ->shouldReceive('getCustomerAddressForInvoice')
             ->andReturn($address)
             ->shouldReceive('getRuleStartDate')
@@ -1251,80 +1321,68 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $ft->shouldReceive('getFee')->andReturn($fee);
         $ft2->shouldReceive('getFee')->andReturn($fee);
 
-        $params =  [
-            'scope' => 'REFUND',
-            'customer_reference' => 'Miscellaneous',
-            'payments' => [
-                [
-                    'receipt_reference' => 'payment_ref',
-                    'refund_reason' => 'Refund',
-                    'country_code' => 'NI',
-                    'payment_data' => [
-                        [
-                            'line_identifier' => '101',
-                            'amount' => '100.00',
-                            'allocated_amount' => '0.00',
-                            'net_amount' => '12.00',
-                            'tax_amount' => '15.00',
-                            'tax_code' => 'VAT_CODE',
-                            'tax_rate' => 'VAT_RATE',
-                            'invoice_date' => '2015-10-09',
-                            'sales_reference' => '101',
-                            'product_reference' => 'TEST_FEE_TYPE',
-                            'product_description' => 'TEST_FEE_TYPE',
-                            'receiver_reference' => 'Miscellaneous',
-                            'receiver_name' => 'Test Customer',
-                            'receiver_address' => [
-                                'line_1' => 'ADDR1',
-                                'line_2' => 'ADDR2',
-                                'line_3' => 'ADDR3',
-                                'line_4' => 'ADDR4',
-                                'city' => 'TOWN',
-                                'postcode' => 'POSTCODE',
-                            ],
-                            'rule_start_date' => '2015-10-12',
-                            'deferment_period' => '1',
-                            'country_code' => 'NI',
-                            'sales_person_reference' => 'TEST_SALES_PERSON_REF',
+        $params =  array_merge(
+            $expectedCustomer,
+            [
+                'scope' => 'REFUND',
+                'payments' => [
+                    [
+                        'receipt_reference' => 'payment_ref',
+                        'refund_reason' => 'Refund',
+                        'country_code' => 'NI',
+                        'payment_data' => [
+                            array_merge(
+                                $expectedReceiver,
+                                [
+                                    'line_identifier' => '101',
+                                    'amount' => '100.00',
+                                    'allocated_amount' => '0.00',
+                                    'net_amount' => '12.00',
+                                    'tax_amount' => '15.00',
+                                    'tax_code' => 'VAT_CODE',
+                                    'tax_rate' => 'VAT_RATE',
+                                    'invoice_date' => '2015-10-09',
+                                    'sales_reference' => '101',
+                                    'product_reference' => 'TEST_FEE_TYPE',
+                                    'product_description' => 'TEST_FEE_TYPE',
+                                    'rule_start_date' => '2015-10-12',
+                                    'deferment_period' => '1',
+                                    'country_code' => 'NI',
+                                    'sales_person_reference' => 'TEST_SALES_PERSON_REF',
+                                ]
+                            ),
+                        ],
+                    ],
+                    [
+                        'receipt_reference' => 'payment_ref',
+                        'refund_reason' => 'Refund',
+                        'country_code' => 'NI',
+                        'payment_data' => [
+                            array_merge(
+                                $expectedReceiver,
+                                [
+                                    'line_identifier' => '101',
+                                    'amount' => '201.00',
+                                    'allocated_amount' => '0.00',
+                                    'net_amount' => '12.00',
+                                    'tax_amount' => '15.00',
+                                    'tax_code' => 'VAT_CODE',
+                                    'tax_rate' => 'VAT_RATE',
+                                    'invoice_date' => '2015-10-09',
+                                    'sales_reference' => '101',
+                                    'product_reference' => 'TEST_FEE_TYPE',
+                                    'product_description' => 'TEST_FEE_TYPE',
+                                    'rule_start_date' => '2015-10-12',
+                                    'deferment_period' => '1',
+                                    'country_code' => 'NI',
+                                    'sales_person_reference' => 'TEST_SALES_PERSON_REF',
+                                ]
+                            )
                         ],
                     ],
                 ],
-                [
-                    'receipt_reference' => 'payment_ref',
-                    'refund_reason' => 'Refund',
-                    'country_code' => 'NI',
-                    'payment_data' => [
-                        [
-                            'line_identifier' => '101',
-                            'amount' => '201.00',
-                            'allocated_amount' => '0.00',
-                            'net_amount' => '12.00',
-                            'tax_amount' => '15.00',
-                            'tax_code' => 'VAT_CODE',
-                            'tax_rate' => 'VAT_RATE',
-                            'invoice_date' => '2015-10-09',
-                            'sales_reference' => '101',
-                            'product_reference' => 'TEST_FEE_TYPE',
-                            'product_description' => 'TEST_FEE_TYPE',
-                            'receiver_reference' => 'Miscellaneous',
-                            'receiver_name' => 'Test Customer',
-                            'receiver_address' => [
-                                'line_1' => 'ADDR1',
-                                'line_2' => 'ADDR2',
-                                'line_3' => 'ADDR3',
-                                'line_4' => 'ADDR4',
-                                'city' => 'TOWN',
-                                'postcode' => 'POSTCODE',
-                            ],
-                            'rule_start_date' => '2015-10-12',
-                            'deferment_period' => '1',
-                            'country_code' => 'NI',
-                            'sales_person_reference' => 'TEST_SALES_PERSON_REF',
-                        ],
-                    ],
-                ],
-            ],
-        ];
+            ]
+        );
 
         $response = [
             'code' => Sut::RESPONSE_SUCCESS,
@@ -1340,7 +1398,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
-        $result = $this->sut->refundFee($fee);
+        $result = $this->sut->refundFee($fee, $miscParams);
 
         $this->assertSame($response['receipt_references'], $result);
     }
@@ -1354,7 +1412,28 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getFeeTransactionsForRefund')
             ->andReturn([])
             ->shouldReceive('getOrganisation')
-            ->andReturn(null);
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(99)
+                ->once()
+                ->getMock()
+            )
+            ->shouldReceive('getCustomerNameForInvoice')
+            ->andReturn('foo')
+            ->twice()
+            ->shouldReceive('getCustomerAddressForInvoice')
+            ->andReturn(
+                [
+                    'addressLine1' => 'line1',
+                    'addressLine2' => 'line2',
+                    'addressLine3' => 'line3',
+                    'addressLine4' => 'line4',
+                    'town' => 'town',
+                    'postcode' => 'postcode'
+                ]
+            )
+            ->once();
 
         $this->cpmsClient
             ->shouldReceive('post')
@@ -1377,7 +1456,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         ];
 
         $expectedParams = [
-            'customer_reference' => '',
+            'customer_reference' => '99',
             'payment_data' => [
                 [
                     'line_identifier' => '100',
@@ -1391,7 +1470,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'sales_reference' => '100',
                     'product_reference' => 'fee type description',
                     'product_description' => 'fee type description',
-                    'receiver_reference' => '',
+                    'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
                     'receiver_address' => [
                         'line_1' => 'Foo',
@@ -1435,8 +1514,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
-        $fee1 = $this->getStubFee(100, '100.00');
-        $fee2 = $this->getStubFee(101, '100.00');
+        $fee1 = $this->getStubFee(100, '100.00', null, null, 99);
+        $fee2 = $this->getStubFee(101, '100.00', null, null, 99);
         $fees = [$fee1, $fee2];
 
         $originalTransaction = m::mock(TransactionEntity::class)
@@ -1493,5 +1572,28 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
     {
         $this->setExpectedException(\RuntimeException::class, 'Invoice prefix needs to be less than 8 chars');
         $this->sut->setInvoicePrefix('TOO_LONGX');
+    }
+
+    public function testFormatAddressNull()
+    {
+        $sut = m::mock(\Dvsa\Olcs\Api\Service\CpmsV2HelperService::class)->makePartial();
+
+        $this->assertNull($sut->formatAddress(null));
+    }
+
+    public function testValidateReceiverParamsWithException()
+    {
+        $sut = m::mock(\Dvsa\Olcs\Api\Service\CpmsV2HelperService::class)->makePartial();
+
+        $this->setExpectedException(ValidationException::class);
+        $sut->validateReceiverParams();
+    }
+
+    public function testValidateCustomerParamsWithException()
+    {
+        $sut = m::mock(\Dvsa\Olcs\Api\Service\CpmsV2HelperService::class)->makePartial();
+
+        $this->setExpectedException(ValidationException::class);
+        $sut->validateCustomerParams();
     }
 }

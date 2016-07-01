@@ -10,7 +10,6 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
-use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as CreateFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateOverpaymentFee as CreateOverpaymentFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -20,7 +19,6 @@ use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeePaymentEntity;
@@ -132,6 +130,14 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             'organisationId' => $organisationId,
             'cpmsRedirectUrl' => $cpmsRedirectUrl,
             'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
+            'customerName' => 'foo',
+            'customerReference' => 'bar',
+            'address' => 'cake',
+        ];
+        $extraParams = [
+            'customer_name' => 'foo',
+            'customer_reference' => 'bar',
+            'customer_address' => 'cake'
         ];
 
         $command = Cmd::create($data);
@@ -149,7 +155,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('initiateCardRequest')
             ->once()
-            ->with($cpmsRedirectUrl, $fees);
+            ->with($cpmsRedirectUrl, $fees, $extraParams);
 
         /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
@@ -355,6 +361,14 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             'feeIds' => $feeIds,
             'cpmsRedirectUrl' => $cpmsRedirectUrl,
             'paymentMethod' => FeeEntity::METHOD_CARD_OFFLINE,
+            'customerName' => 'foo',
+            'customerReference' => 'bar',
+            'address' => 'cake',
+        ];
+        $extraParams = [
+            'customer_name' => 'foo',
+            'customer_reference' => 'bar',
+            'customer_address' => 'cake',
         ];
 
         $command = Cmd::create($data);
@@ -369,7 +383,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('initiateCnpRequest')
             ->once()
-            ->with($cpmsRedirectUrl, $fees);
+            ->with($cpmsRedirectUrl, $fees, $extraParams);
 
         /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
@@ -418,6 +432,14 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             'cpmsRedirectUrl' => $cpmsRedirectUrl,
             'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
             'storedCardReference' => 'STORED_CARD',
+            'customerName' => 'foo',
+            'customerReference' => 'bar',
+            'address' => 'cake',
+        ];
+        $extraParams = [
+            'customer_name' => 'foo',
+            'customer_reference' => 'bar',
+            'customer_address' => 'cake'
         ];
 
         $command = Cmd::create($data);
@@ -435,7 +457,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('initiateStoredCardRequest')
             ->once()
-            ->with($cpmsRedirectUrl, $fees, 'STORED_CARD');
+            ->with($cpmsRedirectUrl, $fees, 'STORED_CARD', $extraParams);
 
         /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
@@ -483,6 +505,14 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             'applicationId' => $applicationId,
             'cpmsRedirectUrl' => $cpmsRedirectUrl,
             'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
+            'customerName' => 'foo',
+            'customerReference' => 'bar',
+            'address' => 'cake',
+        ];
+        $extraParams = [
+            'customer_name' => 'foo',
+            'customer_reference' => 'bar',
+            'customer_address' => 'cake'
         ];
 
         $command = Cmd::create($data);
@@ -500,7 +530,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('initiateCardRequest')
             ->once()
-            ->with($cpmsRedirectUrl, $fees);
+            ->with($cpmsRedirectUrl, $fees, $extraParams);
 
         /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
@@ -562,6 +592,14 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             'payer' => 'Dan',
             'slipNo' => '12345',
             'received' => '100.00', // overpayment of 0.01
+            'customerName' => 'foo',
+            'customerReference' => 'bar',
+            'address' => 'cake',
+        ];
+        $extraParams = [
+            'customer_name' => 'foo',
+            'customer_reference' => 'bar',
+            'customer_address' => 'cake'
         ];
 
         $command = Cmd::create($data);
@@ -595,7 +633,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('recordCashPayment')
             ->once()
-            ->with([$fee1, $fee2], '100.00', '2015-06-17', '12345')
+            ->with([$fee1, $fee2], '100.00', '2015-06-17', '12345', $extraParams)
             ->andReturn(
                 [
                     'code' => CpmsHelper::RESPONSE_SUCCESS,
@@ -710,6 +748,14 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             'received' => '99.99',
             'chequeNo' => '23456',
             'chequeDate' => '2015-06-10',
+            'customerName' => 'foo',
+            'customerReference' => 'bar',
+            'address' => 'cake',
+        ];
+        $extraParams = [
+            'customer_name' => 'foo',
+            'customer_reference' => 'bar',
+            'customer_address' => 'cake'
         ];
 
         $command = Cmd::create($data);
@@ -724,7 +770,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('recordChequePayment')
             ->once()
-            ->with($fees, '99.99', '2015-06-17', 'Dan', '12345', '23456', '2015-06-10')
+            ->with($fees, '99.99', '2015-06-17', 'Dan', '12345', '23456', '2015-06-10', $extraParams)
             ->andReturn(
                 [
                     'code' => CpmsHelper::RESPONSE_SUCCESS,
@@ -825,6 +871,14 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             'slipNo' => '12345',
             'received' => '99.99',
             'poNo' => '23456',
+            'customerName' => 'foo',
+            'customerReference' => 'bar',
+            'address' => 'cake',
+        ];
+        $extraParams = [
+            'customer_name' => 'foo',
+            'customer_reference' => 'bar',
+            'customer_address' => 'cake'
         ];
 
         $command = Cmd::create($data);
@@ -839,7 +893,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('recordPostalOrderPayment')
             ->once()
-            ->with($fees, '99.99', '2015-06-17', '12345', '23456')
+            ->with($fees, '99.99', '2015-06-17', '12345', '23456', $extraParams)
             ->andReturn(
                 [
                     'code' => CpmsHelper::RESPONSE_SUCCESS,
@@ -1101,6 +1155,14 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             'received' => '10.00',
             'chequeNo' => '23456',
             'chequeDate' => '2015-06-10',
+            'customerName' => 'foo',
+            'customerReference' => 'bar',
+            'address' => 'cake',
+        ];
+        $extraParams = [
+            'customer_name' => 'foo',
+            'customer_reference' => 'bar',
+            'customer_address' => 'cake'
         ];
 
         $command = Cmd::create($data);
@@ -1115,7 +1177,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('recordChequePayment')
             ->once()
-            ->with($fees, '10.00', '2015-06-17', 'Dan', '12345', '23456', '2015-06-10')
+            ->with($fees, '10.00', '2015-06-17', 'Dan', '12345', '23456', '2015-06-10', $extraParams)
             ->andReturn(
                 [
                     'code' => CpmsHelper::RESPONSE_SUCCESS,
@@ -1238,6 +1300,14 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             'feeIds' => $feeIds,
             'cpmsRedirectUrl' => $cpmsRedirectUrl,
             'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
+            'customerName' => 'foo',
+            'customerReference' => 'bar',
+            'address' => 'cake',
+        ];
+        $extraParams = [
+            'customer_name' => 'foo',
+            'customer_reference' => 'bar',
+            'customer_address' => 'cake'
         ];
 
         $command = Cmd::create($data);
@@ -1255,7 +1325,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('initiateCardRequest')
             ->once()
-            ->with($cpmsRedirectUrl, $fees);
+            ->with($cpmsRedirectUrl, $fees, $extraParams);
 
         /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
