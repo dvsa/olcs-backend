@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\Document;
 
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
+use Dvsa\Olcs\Transfer\Command\Document\CreateDocument as CreateDocumentDto;
+use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadDto;
 
 /**
  * Can Create a Document
@@ -17,12 +19,23 @@ class CanCreateDocument extends AbstractHandler
     /**
      * Validate DTO
      *
-     * @param \Dvsa\Olcs\Transfer\Command\Document\CreateDocument $dto The DTO being validated
+     * @param CreateDocumentDto|UploadDto $dto The DTO being validated
      *
      * @return bool
      */
     public function isValid($dto)
     {
+        /**
+         * @todo OLCS-13189
+         *
+         * The validator doesn't work properly for EBSR documents, this is a temporary fix.
+         * A permanent fix will be done as part of OLCS-13189. A note has been added to the ticket to ensure
+         * this code is removed once the permanent fix is in place
+         */
+        if (method_exists($dto, 'getIsEbsrPack') && $dto->getIsEbsrPack()) {
+            $this->setIsValid(true);
+        }
+
         if ($dto->getLicence()) {
             $this->setIsValid($this->canAccessLicence($dto->getLicence()));
         }
