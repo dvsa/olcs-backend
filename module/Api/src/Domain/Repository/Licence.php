@@ -272,8 +272,8 @@ class Licence extends AbstractRepository
     /**
      * Fetch for continuation not sought
      *
-     * @param \DateTime|null $now
-     * @param int|null       $limit
+     * @param \DateTime|null $now   current datetime
+     * @param int|null       $limit limit for fetching licences
      *
      * @return array
      */
