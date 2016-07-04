@@ -37,7 +37,11 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
     protected $extraRepos = ['GoodsDisc', 'Fee', 'LicenceVehicle'];
 
     /**
-     * @param Cmd $command
+     * Handle command
+     *
+     * @param Cmd $command command
+     *
+     * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -45,6 +49,11 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $currentStatusId = $application->getCurrentInterimStatus();
+
+        if ($currentStatusId !== ApplicationEntity::INTERIM_STATUS_INFORCE
+            && $command->getStatus() === ApplicationEntity::INTERIM_STATUS_INFORCE) {
+            $this->specifyVehiclesAndCreateDiscs($application);
+        }
 
         $requestedOrGranted = [
             ApplicationEntity::INTERIM_STATUS_GRANTED,
@@ -79,6 +88,14 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
         return $this->result;
     }
 
+    /**
+     * Process status requested
+     *
+     * @param ApplicationEntity $application application
+     * @param Cmd               $command     command
+     *
+     * @return void
+     */
     protected function processStatusRequested(ApplicationEntity $application, Cmd $command)
     {
         // Create fee if selecting Y and doesn't currently have a statue
@@ -95,6 +112,17 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
         }
     }
 
+    /**
+     * Save interim data
+     *
+     * @param ApplicationEntity $application     application
+     * @param Cmd               $command         command
+     * @param bool|false        $ignoreRequested ignore requested
+     *
+     * @return void
+     * @throws ValidationException
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     protected function saveInterimData(ApplicationEntity $application, Cmd $command, $ignoreRequested = false)
     {
         $this->validate($command);
@@ -141,13 +169,21 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
             $this->result->addMessage('Interim data reset');
         }
 
-        $this->saveApplictionOperatingCentresForInterim($application, $interimOcs);
+        $this->saveApplicationOperatingCentresForInterim($application, $interimOcs);
         $this->saveVehiclesForInterim($application, $interimVehicles, $processInForce);
 
         $this->getRepo()->save($application);
     }
 
-    protected function saveApplictionOperatingCentresForInterim(ApplicationEntity $application, array $interimOcs)
+    /**
+     * Save application operating centres for interm
+     *
+     * @param ApplicationEntity $application application
+     * @param array             $interimOcs  interim OCs
+     *
+     * @return void
+     */
+    protected function saveApplicationOperatingCentresForInterim(ApplicationEntity $application, array $interimOcs)
     {
         /** @var ApplicationOperatingCentre[] $operatingCentres */
         $operatingCentres = $application->getOperatingCentres();
@@ -163,6 +199,16 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
         }
     }
 
+    /**
+     * Save vehicles for interim
+     *
+     * @param ApplicationEntity $application     application
+     * @param array             $interimVehicles interim vehicles
+     * @param bool              $processInForce  process in force
+     *
+     * @return void
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     protected function saveVehiclesForInterim(ApplicationEntity $application, array $interimVehicles, $processInForce)
     {
         /** @var LicenceVehicle[] $licenceVehicles */
@@ -170,6 +216,9 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
 
         /** @var LicenceVehicle $licenceVehicle */
         foreach ($licenceVehicles as $licenceVehicle) {
+            if ($licenceVehicle->getRemovalDate() !== null) {
+                continue;
+            }
             // No longer interim
             if ($licenceVehicle->getInterimApplication() !== null
                 && !in_array($licenceVehicle->getId(), $interimVehicles)
@@ -201,6 +250,13 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
         }
     }
 
+    /**
+     * Cease active discs for vehicle
+     *
+     * @param LicenceVehicle $licenceVehicle licence vehicle
+     *
+     * @return void
+     */
     protected function ceaseActiveDiscsForVehicle(LicenceVehicle $licenceVehicle)
     {
         /** @var GoodsDisc $disc */
@@ -211,6 +267,14 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
         }
     }
 
+    /**
+     * Validate
+     *
+     * @param Cmd $command command
+     *
+     * @throws ValidationException
+     * @return void
+     */
     protected function validate(Cmd $command)
     {
         if ($command->getRequested() !== 'Y') {
@@ -251,8 +315,9 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
     /**
      * Create interim fee if needed
      *
-     * @param ApplicationEntity $application
-     * @return array
+     * @param ApplicationEntity $application application
+     *
+     * @return Result|void
      */
     protected function maybeCreateInterimFee(ApplicationEntity $application)
     {
@@ -272,8 +337,9 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
     /**
      * Cancel interim fee if needed
      *
-     * @params ApplicationEntity $application
-     * @return array
+     * @param ApplicationEntity $application application
+     *
+     * @return Result|void
      */
     protected function maybeCancelInterimFee(ApplicationEntity $application)
     {
@@ -291,7 +357,8 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
     /**
      * Get existing grant fees
      *
-     * @param ApplicationEntity $application
+     * @param ApplicationEntity $application application
+     *
      * @return array
      */
     protected function getExistingFees(ApplicationEntity $application)
@@ -302,8 +369,10 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
     /**
      * Unspecify vehicles and cease discs if status changed
      *
-     * @param string $status
-     * @param Dvsa\Olcs\Api\Entity\Application\Application
+     * @param string                                        $status      status
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application application
+     *
+     * @return void
      */
     protected function maybeUnspecifyVehiclesAndCeaseDiscs($status, $application)
     {
@@ -318,6 +387,9 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
 
         // shouldn't have a lot of interim vehicles on application so we use Doctrine functionality
         foreach ($licenceVehicles as $licenceVehicle) {
+            if ($licenceVehicle->getRemovalDate() !== null) {
+                continue;
+            }
             $licenceVehicle->setSpecifiedDate(null);
             $disc = $licenceVehicle->getActiveDisc();
             if ($disc) {
@@ -325,6 +397,32 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
                 $this->getRepo('GoodsDisc')->save($disc);
             }
             $this->getRepo('LicenceVehicle')->save($licenceVehicle);
+        }
+    }
+
+    /**
+     * Specify vehicles and create discs
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application application
+     *
+     * @return void
+     */
+    protected function specifyVehiclesAndCreateDiscs($application)
+    {
+        $licenceVehicles = $application->getInterimLicenceVehicles();
+        if (!$licenceVehicles->count()) {
+            return;
+        }
+        foreach ($licenceVehicles as $licenceVehicle) {
+            if ($licenceVehicle->getRemovalDate() !== null) {
+                continue;
+            }
+            $licenceVehicle->setSpecifiedDate(new DateTime());
+            $goodsDisc = new GoodsDisc($licenceVehicle);
+            $goodsDisc->setIsInterim('Y');
+
+            $this->getRepo('LicenceVehicle')->save($licenceVehicle);
+            $this->getRepo('GoodsDisc')->save($goodsDisc);
         }
     }
 }
