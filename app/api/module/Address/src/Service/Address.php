@@ -1,17 +1,13 @@
 <?php
 
-/**
- * Address
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Address\Service;
 
 use Dvsa\Olcs\Api\Domain\Repository\AdminAreaTrafficArea;
 use Dvsa\Olcs\Api\Domain\Repository\PostcodeEnforcementArea;
-use Dvsa\Olcs\Api\Entity\TrafficArea\AdminAreaTrafficArea as AdminAreaTrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\EnforcementArea\PostcodeEnforcementArea as PostcodeEnforcementAreaEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\AdminAreaTrafficArea as AdminAreaTrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Service\Exception;
 
 /**
  * Address
@@ -20,6 +16,9 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
  */
 class Address implements AddressInterface
 {
+    const ERR_INVALID_RESP_BY_POSTCODE = 'PostCode API not response or Address was not found by postcode';
+    const ERR_INVALID_RESP_BY_UPRN = 'PostCode API not response or Address was not found by uprn';
+
     /**
      * @var Client
      */
@@ -33,19 +32,20 @@ class Address implements AddressInterface
     }
 
     /**
-     * @param $postcode
+     * Get traffic area by Postcode
+     *
+     * @param string $postcode
      * @param AdminAreaTrafficArea $repo
+     *
      * @return TrafficArea
      * @throws \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
      */
     public function fetchTrafficAreaByPostcode($postcode, AdminAreaTrafficArea $repo)
     {
         if (!array_key_exists($postcode, $this->taCache)) {
-
             $adminArea = $this->fetchAdminAreaByPostcode($postcode);
 
             if ($adminArea) {
-
                 /** @var AdminAreaTrafficAreaEntity $record */
                 $record = $repo->fetchById($adminArea);
 
@@ -104,6 +104,13 @@ class Address implements AddressInterface
         return null;
     }
 
+    /**
+     * Request from Postcode API address details by Uprn
+     *
+     * @param string $postcode
+     *
+     * @return string
+     */
     public function fetchByPostcode($postcode)
     {
         $this->client->setUri('address/' . urlencode($postcode));
@@ -115,9 +122,16 @@ class Address implements AddressInterface
             return json_decode($content, true);
         }
 
-        return false;
+        throw new Exception(self::ERR_INVALID_RESP_BY_POSTCODE);
     }
 
+    /**
+     * Request from Postcode API address details by Uprn
+     *
+     * @param string $uprn
+     *
+     * @return string
+     */
     public function fetchByUprn($uprn)
     {
         $this->client->setUri('address/');
@@ -130,6 +144,6 @@ class Address implements AddressInterface
             return json_decode($content, true);
         }
 
-        return false;
+        throw new Exception(self::ERR_INVALID_RESP_BY_UPRN);
     }
 }
