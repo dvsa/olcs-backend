@@ -26,6 +26,11 @@ class Address implements AddressInterface
 
     private $taCache = [];
 
+    /**
+     * Constructor
+     *
+     * @param Client $client Postcode Api Http Client
+     */
     public function __construct(Client $client)
     {
         $this->client = $client;
@@ -34,8 +39,8 @@ class Address implements AddressInterface
     /**
      * Get traffic area by Postcode
      *
-     * @param string $postcode
-     * @param AdminAreaTrafficArea $repo
+     * @param string               $postcode Post code
+     * @param AdminAreaTrafficArea $repo     Repository
      *
      * @return TrafficArea
      * @throws \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
@@ -58,6 +63,14 @@ class Address implements AddressInterface
         return $this->taCache[$postcode];
     }
 
+    /**
+     * Get enforcement area by post code
+     *
+     * @param string                  $postcode Postcode
+     * @param PostcodeEnforcementArea $repo     Repository
+     *
+     * @return \Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea|null
+     */
     public function fetchEnforcementAreaByPostcode($postcode, PostcodeEnforcementArea $repo)
     {
         preg_match('/^([^\s]+)\s(\d).+$/', $postcode, $matches);
@@ -85,6 +98,13 @@ class Address implements AddressInterface
         return $pea->getEnforcementArea();
     }
 
+    /**
+     * Get admin aread by post code
+     *
+     * @param string $postcode Post code
+     *
+     * @return null
+     */
     public function fetchAdminAreaByPostcode($postcode)
     {
         $data = $this->fetchByPostcode($postcode);
@@ -107,7 +127,7 @@ class Address implements AddressInterface
     /**
      * Request from Postcode API address details by Uprn
      *
-     * @param string $postcode
+     * @param string $postcode Post code
      *
      * @return string
      */
@@ -128,7 +148,7 @@ class Address implements AddressInterface
     /**
      * Request from Postcode API address details by Uprn
      *
-     * @param string $uprn
+     * @param string $uprn Unique code for address in postcode Api
      *
      * @return string
      */
