@@ -269,7 +269,15 @@ class Licence extends AbstractRepository
         return $qb->getQuery()->getSingleResult(Query::HYDRATE_OBJECT);
     }
 
-    public function fetchForContinuationNotSought(\DateTime $now = null)
+    /**
+     * Fetch for continuation not sought
+     *
+     * @param \DateTime|null $now
+     * @param int|null       $limit
+     *
+     * @return array
+     */
+    public function fetchForContinuationNotSought(\DateTime $now = null, $limit = null)
     {
         if (is_null($now)) {
             $now = new DateTime('now');
@@ -324,6 +332,10 @@ class Licence extends AbstractRepository
         // The query can generate a lot of data which can exceed PHP memory_limit
         // minimize this by only selecting the root entity
         $qb->select($this->alias, 'ta');
+
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
 
         $query = $qb->getQuery();
         $results = $query->getResult(Query::HYDRATE_ARRAY);
