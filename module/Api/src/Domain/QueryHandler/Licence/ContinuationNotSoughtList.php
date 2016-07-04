@@ -12,6 +12,8 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  */
 class ContinuationNotSoughtList extends AbstractQueryHandler
 {
+    const CNS_LIMIT = 200;
+
     protected $repoServiceName = 'Licence';
 
     /**
@@ -25,7 +27,7 @@ class ContinuationNotSoughtList extends AbstractQueryHandler
     public function handleQuery(QueryInterface $query)
     {
         // this query is recursion save, no need to serialise, already serialised
-        $results = $this->getRepo()->fetchForContinuationNotSought($query->getDate());
+        $results = $this->getRepo()->fetchForContinuationNotSought($query->getDate(), self::CNS_LIMIT);
         return [
             'result' => $results,
             'count' => count($results),
