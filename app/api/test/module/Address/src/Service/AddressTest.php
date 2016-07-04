@@ -1,35 +1,25 @@
 <?php
 
-/**
- * Address Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Address\Service;
 
 use Dvsa\Olcs\Address\Service\Address;
 use Dvsa\Olcs\Address\Service\Client;
 use Dvsa\Olcs\Api\Domain\Repository\AdminAreaTrafficArea;
 use Dvsa\Olcs\Api\Domain\Repository\PostcodeEnforcementArea;
+use Dvsa\Olcs\Api\Service\Exception;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\Http\Response;
 
 /**
- * Address Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers Dvsa\Olcs\Address\Service\Address
  */
 class AddressTest extends MockeryTestCase
 {
-    /**
-     * @var Client
-     */
+    /**  @var Client */
     protected $client;
 
-    /**
-     * @var Address
-     */
+    /**  @var Address */
     protected $sut;
 
     public function setUp()
@@ -50,11 +40,15 @@ class AddressTest extends MockeryTestCase
 
     public function testFetchByPostcodeWithoutResults()
     {
+        //  expect
+        $this->setExpectedException(Exception::class, Address::ERR_INVALID_RESP_BY_POSTCODE);
+
+        //  call
         $postcode = 'AB1 1AB';
 
-        $this->mockClientLookup($postcode, '', 404);
+        $this->mockClientLookup($postcode, '', Response::STATUS_CODE_404);
 
-        $this->assertFalse($this->sut->fetchByPostcode($postcode));
+        $this->sut->fetchByPostcode($postcode);
     }
 
     public function testFetchAdminAreaByPostcodeWithResults()
@@ -86,11 +80,15 @@ class AddressTest extends MockeryTestCase
 
     public function testFetchAdminAreaByPostcodeWithoutResults()
     {
+        //  expect
+        $this->setExpectedException(Exception::class, Address::ERR_INVALID_RESP_BY_POSTCODE);
+
+        //  call
         $postcode = 'AB1 1AB';
 
-        $this->mockClientLookup($postcode, '', 404);
+        $this->mockClientLookup($postcode, '', Response::STATUS_CODE_404);
 
-        $this->assertNull($this->sut->fetchAdminAreaByPostcode($postcode));
+        $this->sut->fetchAdminAreaByPostcode($postcode);
     }
 
     public function testFetchTrafficAreaByPostcode()
@@ -115,12 +113,18 @@ class AddressTest extends MockeryTestCase
 
     public function testFetchTrafficAreaByPostcodeWithoutRecords()
     {
+        //  expect
+        $this->setExpectedException(Exception::class, Address::ERR_INVALID_RESP_BY_POSTCODE);
+
+        //  call
         $postcode = 'AB1 1AB';
+
+        /** @var AdminAreaTrafficArea $repo */
         $repo = m::mock(AdminAreaTrafficArea::class);
 
-        $this->mockClientLookup($postcode, '', 404);
+        $this->mockClientLookup($postcode, '', Response::STATUS_CODE_404);
 
-        $this->assertNull($this->sut->fetchTrafficAreaByPostcode($postcode, $repo));
+        $this->sut->fetchTrafficAreaByPostcode($postcode, $repo);
     }
 
     public function testFetchEnforcementAreaByPostcodeNoPostcode()
@@ -156,6 +160,7 @@ class AddressTest extends MockeryTestCase
             ->andReturn($ea);
 
         $postcode = 'AB1 1AB';
+
         $repo = m::mock(PostcodeEnforcementArea::class);
         $repo->shouldReceive('fetchByPostcodeId')
             ->once()
@@ -186,8 +191,9 @@ class AddressTest extends MockeryTestCase
 
     public function testFetchByUprn()
     {
+        /** @var Response $response */
         $response = m::mock(Response::class)->makePartial();
-        $response->setStatusCode(200);
+        $response->setStatusCode(Response::STATUS_CODE_200);
         $response->setContent('{"foo": "bar"}');
 
         $this->client->shouldReceive('setUri')
@@ -205,9 +211,12 @@ class AddressTest extends MockeryTestCase
 
     public function testFetchByUprnNotFound()
     {
+        /** @var Response $response */
         $response = m::mock(Response::class)->makePartial();
-        $response->setStatusCode(404);
+        $response->setStatusCode(Response::STATUS_CODE_404);
         $response->setContent('');
+
+        $this->setExpectedException(Exception::class, Address::ERR_INVALID_RESP_BY_UPRN);
 
         $this->client->shouldReceive('setUri')
             ->once()
