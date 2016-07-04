@@ -38,6 +38,8 @@ class ByLicenceTest extends QueryHandlerTestCase
         $licence = m::mock();
         $organisation = m::mock();
         $licence
+            ->shouldReceive('serialize')
+            ->once()
             ->shouldReceive('getOrganisation')
             ->andReturn($organisation);
 

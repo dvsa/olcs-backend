@@ -27,7 +27,7 @@ class ByLicence extends AbstractQueryHandler
         return [
             'result' => $this->resultList($repo->fetchList($query, Query::HYDRATE_OBJECT)),
             'count' => $repo->fetchCount($query),
-            'licence' => $licence,
+            'licence' => $licence->serialize(),
             'organisation' => $licence->getOrganisation(),
         ];
     }
