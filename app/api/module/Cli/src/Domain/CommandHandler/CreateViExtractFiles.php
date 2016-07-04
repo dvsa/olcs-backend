@@ -110,12 +110,11 @@ final class CreateViExtractFiles extends AbstractCommandHandler
                 }
                 $content = implode(self::PHP_EOL_WIN, array_column($results, 'line'));
                 $fileName = $this->getFilename($settings['prefix']);
-                if (file_exists($fileName)) {
-                    if (rename($fileName, $this->getBackupFilename($settings['prefix'])) === false) {
+                if (file_exists($fileName)
+                    && rename($fileName, $this->getBackupFilename($settings['prefix'])) === false) {
                         throw new \Exception(
                             'Error renaming record(s) for ' . $settings['name'] . ', please check the target path'
                         );
-                    }
                 }
                 if (file_put_contents($fileName, $content) === false) {
                     throw new \Exception(
