@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Create VI Extract files
@@ -67,8 +68,9 @@ final class CreateViExtractFiles extends AbstractCommandHandler
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param CreateViExtractFiles
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
+     * @return CreateViExtractFiles
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -86,8 +88,9 @@ final class CreateViExtractFiles extends AbstractCommandHandler
     /**
      * Handle command
      *
-     * @param CommandInterface $command
-     * @param Result
+     * @param CommandInterface $command command
+     *
+     * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -106,11 +109,15 @@ final class CreateViExtractFiles extends AbstractCommandHandler
                     continue;
                 }
                 $content = implode(self::PHP_EOL_WIN, array_column($results, 'line'));
-                $success = file_put_contents(
-                    $this->exportPath . '/' . $settings['prefix'] . ((new \DateTime())->format('Ymd')) . '.dat',
-                    $content
-                );
-                if ($success === false) {
+                $fileName = $this->getFilename($settings['prefix']);
+                if (file_exists($fileName)) {
+                    if (rename($fileName, $this->getBackupFilename($settings['prefix'])) === false) {
+                        throw new \Exception(
+                            'Error renaming record(s) for ' . $settings['name'] . ', please check the target path'
+                        );
+                    }
+                }
+                if (file_put_contents($fileName, $content) === false) {
                     throw new \Exception(
                         'Error writing record(s) for ' . $settings['name'] . ', please check the target path'
                     );
@@ -126,9 +133,11 @@ final class CreateViExtractFiles extends AbstractCommandHandler
     /**
      * Clear VI flags
      *
-     * @param mixed $repo
-     * @param array $results
-     * @param string $key
+     * @param mixed  $repo    repository
+     * @param array  $results results
+     * @param string $key     key
+     *
+     * @return void
      */
     protected function clearViFlags($repo, $results, $key)
     {
@@ -141,5 +150,40 @@ final class CreateViExtractFiles extends AbstractCommandHandler
             $params[] = $elements;
         }
         $repo->{$this->paramMap[$key]['method']}($params);
+    }
+
+    /**
+     * Get filename
+     *
+     * @param string $prefix prefix
+     *
+     * @return string
+     */
+    protected function getFilename($prefix = '')
+    {
+        return $this->exportPath
+            . '/'
+            . $prefix
+            . ((new DateTime())->format('Ymd'))
+            . '.dat';
+    }
+
+    /**
+     * Get backup filename
+     *
+     * @param string $prefix prefix
+     *
+     * @return string
+     */
+    protected function getBackupFilename($prefix = '')
+    {
+        $dt = new DateTime();
+        return $this->exportPath
+            . '/'
+            . $prefix
+            . $dt->format('Ymd')
+            . '_'
+            . $dt->format('His')
+            . '.bak';
     }
 }
