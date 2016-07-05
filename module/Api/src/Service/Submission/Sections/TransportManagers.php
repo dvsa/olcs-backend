@@ -45,21 +45,18 @@ final class TransportManagers extends AbstractSection
         $licences = !empty($organisation) ? $organisation->getLicences() : [];
 
         foreach ($licences as $licence) {
-            // process all but the case licence
-            if ($caseLicence->getId() !== $licence->getId()) {
-                /** @var Application $application */
+            /** @var Application $application */
 
-                foreach ($licence->getApplications() as $application) {
-                    /** @var TransportManagerApplication $transportManagerApplication */
+            foreach ($licence->getApplications() as $application) {
+                /** @var TransportManagerApplication $transportManagerApplication */
 
-                    foreach ($application->getTransportManagers() as $transportManagerApplication) {
-                        $this->extractTmData(
-                            $transportManagerApplication->getTransportManager(),
-                            $application->getLicence()->getLicNo()
-                        );
-                    }
-
+                foreach ($application->getTransportManagers() as $transportManagerApplication) {
+                    $this->extractTmData(
+                        $transportManagerApplication->getTransportManager(),
+                        $application->getLicence()->getLicNo()
+                    );
                 }
+
             }
         }
 
@@ -92,7 +89,7 @@ final class TransportManagers extends AbstractSection
 
         $thisRow['otherLicences'] = $this->extractOtherLicenceData($transportManager);
 
-        $this->dataToReturnArray[] = $thisRow;
+        $this->dataToReturnArray[$transportManager->getId()] = $thisRow;
     }
 
     /**
