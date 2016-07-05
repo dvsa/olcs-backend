@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Process Application Operating Centres
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant;
 
 use Doctrine\Common\Collections\Criteria;
@@ -33,6 +28,14 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
 
     protected $extraRepos = ['LicenceOperatingCentre', 'ApplicationOperatingCentre'];
 
+    /**
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Api\Domain\Command\Application\Grant\ProcessApplicationOperatingCentres $command command
+     *
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -77,11 +80,28 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
         return $result;
     }
 
+    /**
+     * Find corresponding licence operating centre
+     *
+     * @param Aoc     $aoc     app operating centre
+     * @param Licence $licence licence
+     *
+     * @return Loc
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     protected function findCorrespondingLoc(Aoc $aoc, Licence $licence)
     {
         return $this->getRepo('ApplicationOperatingCentre')->findCorrespondingLoc($aoc, $licence);
     }
 
+    /**
+     * Add licence operating centre
+     *
+     * @param Aoc     $aoc     app operating centre
+     * @param Licence $licence licence
+     *
+     * @return void
+     */
     protected function addLicenceOperatingCentre(Aoc $aoc, Licence $licence)
     {
         $loc = new Loc($licence, $aoc->getOperatingCentre());
@@ -89,6 +109,15 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
         $this->updateLicenceOperatingCentre($aoc, $loc);
     }
 
+    /**
+     * Delete licence operating centre
+     *
+     * @param Aoc     $aoc     app operating centre
+     * @param Licence $licence licence
+     *
+     * @return void
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     protected function deleteLicenceOperatingCentre(Aoc $aoc, Licence $licence)
     {
         $loc = $this->findCorrespondingLoc($aoc, $licence);
@@ -109,12 +138,22 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
         );
     }
 
+    /**
+     * Update licence operating centre
+     *
+     * @param Aoc $aoc app operating centre
+     * @param Loc $loc lic operating centre
+     *
+     * @return void
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     protected function updateLicenceOperatingCentre(Aoc $aoc, Loc $loc)
     {
         $ignore = [
             'action',
             'isInterim',
             's4',
+            'viAction'
         ];
 
         EntityCloner::cloneEntityInto($aoc, $loc, $ignore);
