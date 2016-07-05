@@ -410,7 +410,7 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
     protected function specifyVehiclesAndCreateDiscs($application)
     {
         $licenceVehicles = $application->getInterimLicenceVehicles();
-        if (!$licenceVehicles->count()) {
+        if ($licenceVehicles->count() === 0) {
             return;
         }
         foreach ($licenceVehicles as $licenceVehicle) {
