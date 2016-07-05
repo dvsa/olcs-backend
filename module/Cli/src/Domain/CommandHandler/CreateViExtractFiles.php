@@ -101,6 +101,13 @@ final class CreateViExtractFiles extends AbstractCommandHandler
             $method = 'get' . ucfirst($key);
             $commandParam = $command->$method();
             $repo = $this->getRepo($settings['repo']);
+            $fileName = $this->getFilename($settings['prefix']);
+            if (file_exists($fileName)
+                && rename($fileName, $this->getBackupFilename($settings['prefix'])) === false) {
+                throw new \Exception(
+                    'Error renaming record(s) for ' . $settings['name'] . ', please check the target path'
+                );
+            }
             if ($commandParam || $command->getAll()) {
                 $results = $repo->fetchForExport();
                 $total = count($results);
@@ -109,13 +116,6 @@ final class CreateViExtractFiles extends AbstractCommandHandler
                     continue;
                 }
                 $content = implode(self::PHP_EOL_WIN, array_column($results, 'line'));
-                $fileName = $this->getFilename($settings['prefix']);
-                if (file_exists($fileName)
-                    && rename($fileName, $this->getBackupFilename($settings['prefix'])) === false) {
-                        throw new \Exception(
-                            'Error renaming record(s) for ' . $settings['name'] . ', please check the target path'
-                        );
-                }
                 if (file_put_contents($fileName, $content) === false) {
                     throw new \Exception(
                         'Error writing record(s) for ' . $settings['name'] . ', please check the target path'
