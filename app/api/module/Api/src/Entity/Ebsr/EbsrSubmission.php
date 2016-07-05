@@ -41,10 +41,10 @@ class EbsrSubmission extends AbstractEbsrSubmission
     /**
      * Creates EBSR submission
      *
-     * @param Organisation $organisation
-     * @param RefData $ebsrSubmissionStatus
-     * @param RefData $ebsrSubmissionType
-     * @param Document $document
+     * @param Organisation $organisation         the organisation
+     * @param RefData      $ebsrSubmissionStatus the submission status
+     * @param RefData      $ebsrSubmissionType   the submission type
+     * @param Document     $document             the document
      */
     public function __construct(
         Organisation $organisation,
@@ -61,8 +61,10 @@ class EbsrSubmission extends AbstractEbsrSubmission
     /**
      * Called when a previously uploaded EBSR pack is submitted
      *
-     * @param RefData $ebsrSubmissionStatus
-     * @param RefData $ebsrSubmissionType
+     * @param RefData $ebsrSubmissionStatus submission status
+     * @param RefData $ebsrSubmissionType   submission type
+     *
+     * @return void
      */
     public function submit(RefData $ebsrSubmissionStatus, RefData $ebsrSubmissionType)
     {
@@ -74,7 +76,9 @@ class EbsrSubmission extends AbstractEbsrSubmission
     /**
      * Called when EBSR pack begins processing, includes a check that the status is correct
      *
-     * @param RefData $ebsrSubmissionStatus
+     * @param RefData $ebsrSubmissionStatus submission status
+     *
+     * @return void
      * @throws ValidationException
      */
     public function beginValidating(RefData $ebsrSubmissionStatus)
@@ -90,8 +94,10 @@ class EbsrSubmission extends AbstractEbsrSubmission
     /**
      * Called when validation of EBSR pack is completed
      *
-     * @param RefData $ebsrSubmissionStatus
-     * @param String $ebsrSubmissionResult this is a serialized array
+     * @param RefData $ebsrSubmissionStatus the submission status
+     * @param String  $ebsrSubmissionResult this is a serialized array
+     *
+     * @return void
      */
     public function finishValidating(RefData $ebsrSubmissionStatus, $ebsrSubmissionResult)
     {
@@ -154,7 +160,9 @@ class EbsrSubmission extends AbstractEbsrSubmission
     /**
      * Called when a submission has finished processing
      *
-     * @param RefData $ebsrSubmissionStatus
+     * @param RefData $ebsrSubmissionStatus submission status
+     *
+     * @return void
      */
     public function finishProcessing(RefData $ebsrSubmissionStatus)
     {
