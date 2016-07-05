@@ -317,7 +317,7 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
      *
      * @param ApplicationEntity $application application
      *
-     * @return Result|void
+     * @return void
      */
     protected function maybeCreateInterimFee(ApplicationEntity $application)
     {
@@ -339,7 +339,7 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
      *
      * @param ApplicationEntity $application application
      *
-     * @return Result|void
+     * @return void
      */
     protected function maybeCancelInterimFee(ApplicationEntity $application)
     {
