@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Exception\Exception;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -107,8 +108,9 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     /**
      * create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
+     * @return TransactioningCommandHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -124,15 +126,15 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     /**
      * Handle command to create erru compliance episode
      *
-     * @param CommandInterface $command
+     * @param CommandInterface|ComplianceEpisodeCmd $command the command
+     *
      * @return Result
      * @throws \Exception
      */
     public function handleCommand(CommandInterface $command)
     {
         /**
-         * @var ComplianceEpisodeCmd $command
-         * @var \DomDocument $xmlDomDocument
+         * @var \DOMDocument $xmlDomDocument
          * @var Document $document
          * @var array $erruData
          */
@@ -185,8 +187,8 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     /**
      * Gets a serious infringement entity
      *
-     * @param CaseEntity $case
-     * @param array $si
+     * @param CaseEntity $case case entity
+     * @param array      $si   array of serious infringement information
      *
      * @return SiEntity
      */
@@ -209,8 +211,9 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     /**
      * Returns an array collection of imposed errus
      *
-     * @param SiEntity $si
-     * @param array $imposedErrus
+     * @param SiEntity $si           serious infringement entity
+     * @param array    $imposedErrus array of imposed errus
+     *
      * @return ArrayCollection
      */
     private function getImposedErruCollection(SiEntity $si, $imposedErrus)
@@ -236,8 +239,9 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     /**
      * Returns an array collection of requested errus
      *
-     * @param SiEntity $si
-     * @param array $requestedErrus
+     * @param SiEntity $si             serious infringement entity
+     * @param array    $requestedErrus array of requested errus
+     *
      * @return ArrayCollection
      */
     private function getRequestedErruCollection(SiEntity $si, $requestedErrus)
@@ -255,8 +259,9 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     /**
      * Builds the case entity
      *
-     * @param array $erruData
-     * @param Document $requestDocument
+     * @param array    $erruData        array of erru data
+     * @param Document $requestDocument request document entity
+     *
      * @return CaseEntity
      */
     private function generateCase(array $erruData, Document $requestDocument)
@@ -289,11 +294,11 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     /**
      * Builds the ErruRequest entity
      *
-     * @param CaseEntity $case
-     * @param Document $requestDocument
-     * @param $originatingAuthority
-     * @param $transportUndertakingName
-     * @param $vrm
+     * @param CaseEntity $case                 case entity
+     * @param Document $requestDocument        request document entity
+     * @param string $originatingAuthority     originating authority
+     * @param string $transportUndertakingName transport undertaking name
+     * @param string $vrm                      vrm
      *
      * @return ErruRequestEntity
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
@@ -332,7 +337,9 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
      * Gets doctrine category type data for each serious infringement, if we've already retrieved the data previously,
      * we don't do so again
      *
-     * @param int $categoryType
+     * @param int $categoryType category type id
+     *
+     * @return void
      */
     private function addDoctrineCategoryTypeData($categoryType)
     {
@@ -348,8 +355,8 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
      * Gets doctrine penalty data for each serious infringement, if we've already retrieved the data previously,
      * we don't do so again
      *
-     * @param array $imposedErruData
-     * @param array $requestedErruData
+     * @param array $imposedErruData   imposed erru data
+     * @param array $requestedErruData requested erru data
      */
     private function addDoctrinePenaltyData(array $imposedErruData, array $requestedErruData)
     {
@@ -393,10 +400,10 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
      * Erru information which couldn't be processed using the pre-migration filters, as we needed Doctrine.
      * This is common information that can be used on all serious infringements in the request.
      *
-     * @param array $erruData
+     * @param array $erruData array of erru data
+     *
      * @throws NotFoundException
      * @throws Exception
-     *
      * @return array
      */
     private function getCommonData(array $erruData)
@@ -429,12 +436,11 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     /**
      * Validates the input
      *
-     * @param string $filter
-     * @param mixed $value
-     * @param array $context
+     * @param string $filter  filter bring called
+     * @param mixed  $value   input value
+     * @param array  $context input context
      *
      * @throws Exception
-     *
      * @return mixed
      */
     private function validateInput($filter, $value, $context = [])
@@ -452,7 +458,8 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     /**
      * Creates a task
      *
-     * @param CaseEntity $case
+     * @param CaseEntity $case case entity
+     *
      * @return CreateTaskCmd
      */
     private function createTaskCmd($case)
@@ -473,9 +480,9 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     /**
      * Updates the document record with case and licence ids
      *
-     * @param DocumentEntity $document
-     * @param CaseEntity $case
-     * @param Licence $licence
+     * @param DocumentEntity $document document entity
+     * @param CaseEntity     $case     case entity
+     * @param Licence        $licence  licence entity
      *
      * @return UpdateDocLinksCmd
      */
