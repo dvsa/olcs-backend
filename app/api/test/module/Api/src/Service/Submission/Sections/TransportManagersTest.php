@@ -25,40 +25,7 @@ class TransportManagersTest extends SubmissionSectionTest
             'data' => [
                 'tables' => [
                     'transport-managers' => [
-                        0 => [
-                            'id' => 153,
-                            'version' => 306,
-                            'licNo' => 'OB12345',
-                            'tmType' => 'tm_type1-desc',
-                            'title' => 'title-desc',
-                            'forename' => 'fn22',
-                            'familyName' => 'sn22',
-                            'qualifications' => [],
-                            'otherLicences' => [],
-                            'birthDate' => '22/01/1977',
-                            'birthPlace' => 'bp'
-                        ],
-                        1 => [
-                            'id' => 153,
-                            'version' => 306,
-                            'licNo' => 'OB12345',
-                            'tmType' => 'tm_type1-desc',
-                            'title' => 'title-desc',
-                            'forename' => 'fn22',
-                            'familyName' => 'sn22',
-                            'qualifications' => [
-                                0 => 'tm-qual-desc'
-                            ],
-                            'otherLicences' => [
-                                0 => [
-                                    'licNo' => '1-licNo',
-                                    'applicationId' => 2255
-                                ]
-                            ],
-                            'birthDate' => '22/01/1977',
-                            'birthPlace' => 'bp'
-                        ],
-                        2 => [
+                        153 => [
                             'id' => 153,
                             'version' => 306,
                             'licNo' => 'OB12345',
