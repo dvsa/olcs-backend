@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Cases by licence
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -18,6 +15,13 @@ class ByLicence extends AbstractQueryHandler
 
     protected $extraRepos = ['Licence'];
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return array
+     */
     public function handleQuery(QueryInterface $query)
     {
         $repo = $this->getRepo();
@@ -27,7 +31,7 @@ class ByLicence extends AbstractQueryHandler
         return [
             'result' => $this->resultList($repo->fetchList($query, Query::HYDRATE_OBJECT)),
             'count' => $repo->fetchCount($query),
-            'licence' => $licence,
+            'licence' => $licence->serialize(),
             'organisation' => $licence->getOrganisation(),
         ];
     }
