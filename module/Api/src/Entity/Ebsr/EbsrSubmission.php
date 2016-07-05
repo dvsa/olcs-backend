@@ -126,6 +126,32 @@ class EbsrSubmission extends AbstractEbsrSubmission
     }
 
     /**
+     * Whether the EBSR submission is being processed
+     *
+     * @return bool
+     */
+    public function isBeingProcessed()
+    {
+        $statuses = [
+            self::SUBMITTED_STATUS,
+            self::VALIDATING_STATUS,
+            self::PROCESSING_STATUS
+        ];
+
+        return in_array($this->ebsrSubmissionStatus->getId(), $statuses);
+    }
+
+    /**
+     * Whether the EBSR submission was successful
+     *
+     * @return bool
+     */
+    public function isSuccess()
+    {
+        return $this->ebsrSubmissionStatus->getId() === self::PROCESSED_STATUS;
+    }
+
+    /**
      * Called when a submission has finished processing
      *
      * @param RefData $ebsrSubmissionStatus
@@ -144,5 +170,36 @@ class EbsrSubmission extends AbstractEbsrSubmission
     public function isDataRefresh()
     {
         return $this->ebsrSubmissionType->getId() === self::DATA_REFRESH_SUBMISSION_TYPE;
+    }
+
+    /**
+     * Gets the array of errors for the EBSR submission
+     *
+     * @return array
+     */
+    public function getErrors()
+    {
+        if (!$this->isFailure()) {
+            return [];
+        }
+
+        $errorInfo = unserialize($this->ebsrSubmissionResult);
+
+        return $errorInfo['errors'];
+    }
+
+    /**
+     * Gets calculated values
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'isBeingProcessed' => $this->isBeingProcessed(),
+            'isFailure' => $this->isFailure(),
+            'isSuccess' => $this->isSuccess(),
+            'errors' => $this->getErrors(),
+        ];
     }
 }
