@@ -19,7 +19,8 @@ class EbsrSubmission extends AbstractQueryHandler
     /**
      * Fetches a single EBSR submission record
      *
-     * @param QueryInterface|EbsrSubmissionQry $query
+     * @param QueryInterface|EbsrSubmissionQry $query the query
+     *
      * @return Result
      * @throws NotFoundException
      */
