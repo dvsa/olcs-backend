@@ -88,7 +88,8 @@ executeSql "UPDATE organisation_user SET organisation_id = $userOrganisationId W
 assertHttpCode "licence/registered-address/$licNo" 400
 
 executeSql "UPDATE organisation_user SET organisation_id = $notUserOrganisationId WHERE user_id = $userId"
-assertHttpCode "licence/registered-address/$licNo" 403
+# assert 400, as this licence doesn't have an address, but this means it passed validation
+assertHttpCode "licence/registered-address/$licNo" 400
 
 echo " |- QueryHandler\Licence\OtherActiveLicences"
 executeSql "UPDATE organisation_user SET organisation_id = $userOrganisationId WHERE user_id = $userId"
