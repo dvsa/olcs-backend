@@ -3,9 +3,8 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission;
+use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -25,7 +24,10 @@ class OrganisationUnprocessedList extends AbstractQueryHandler implements AuthAw
     protected $repoServiceName = 'EbsrSubmission';
 
     /**
-     * @param QueryInterface $query
+     * query to retrieve list of unprocessed ebsr packs for an organisation
+     *
+     * @param QueryInterface $query the query
+     *
      * @return array
      * @throws ValidationException
      */
@@ -40,7 +42,7 @@ class OrganisationUnprocessedList extends AbstractQueryHandler implements AuthAw
             throw new ValidationException(['No organisation was found']);
         }
 
-        $results = $repo->fetchForOrganisationByStatus($organisation->getId(), EbsrSubmission::UPLOADED_STATUS);
+        $results = $repo->fetchForOrganisationByStatus($organisation->getId(), EbsrSubmissionEntity::UPLOADED_STATUS);
 
         $documents = [];
 
