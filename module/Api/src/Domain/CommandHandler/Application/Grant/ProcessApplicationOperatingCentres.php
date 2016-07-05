@@ -31,7 +31,7 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
     /**
      * Handle command
      *
-     * @param \Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\ProcessApplicationOperatingCentres $command command
+     * @param \Dvsa\Olcs\Api\Domain\Command\Application\Grant\ProcessApplicationOperatingCentres $command command
      *
      * @return Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
@@ -83,10 +83,10 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
     /**
      * Find corresponding licence operating centre
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre $aoc     app operating centre
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence                        $licence licence
+     * @param ApplicationOperatingCentre $aoc     app operating centre
+     * @param Licence                    $licence licence
      *
-     * @return  \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre
+     * @return LicenceOperatingCentre
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     protected function findCorrespondingLoc(Aoc $aoc, Licence $licence)
@@ -97,8 +97,8 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
     /**
      * Add licence operating centre
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre $aoc     app operating centre
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence                        $licence licence
+     * @param ApplicationOperatingCentre $aoc     app operating centre
+     * @param Licence                    $licence licence
      *
      * @return void
      */
@@ -112,8 +112,8 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
     /**
      * Delete licence operating centre
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre $aoc     app operating centre
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence                        $licence licence
+     * @param ApplicationOperatingCentre $aoc     app operating centre
+     * @param Licence                    $licence licence
      *
      * @return void
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
@@ -141,8 +141,8 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
     /**
      * Update licence operating centre
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre $aoc app operating centre
-     * @param \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre         $loc lic operating centre
+     * @param ApplicationOperatingCentre $aoc app operating centre
+     * @param LicenceOperatingCentre     $loc lic operating centre
      *
      * @return void
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
