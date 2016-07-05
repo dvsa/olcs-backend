@@ -20,8 +20,12 @@ class PiDefinition extends AbstractRepository
                 ->setParameter('isNi', $query->getIsNi() === 'Y');
         }
         if (method_exists($query, 'getGoodsOrPsv') && !empty($query->getGoodsOrPsv())) {
-            $qb->andWhere($qb->expr()->eq('m.goodsOrPsv', ':goodsOrPsv'))
-                ->setParameter('goodsOrPsv', $query->getGoodsOrPsv());
+            if ($query->getGoodsOrPsv() === 'NULL') {
+                $qb->andWhere($qb->expr()->isNull('m.goodsOrPsv'));
+            } else {
+                $qb->andWhere($qb->expr()->eq('m.goodsOrPsv', ':goodsOrPsv'))
+                    ->setParameter('goodsOrPsv', $query->getGoodsOrPsv());
+            }
         }
     }
 }

@@ -49,4 +49,28 @@ class PiDefinitionTest extends RepositoryTestCase
 
         $this->sut->applyListFilters($mockQb, $query);
     }
+
+    public function testApplyListFiltersForTm()
+    {
+        $this->setUpSut(Repo::class, true);
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr')
+            ->andReturnSelf()
+            ->shouldReceive('eq')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('isNi', 'Y')
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('isNull')
+            ->with('m.goodsOrPsv')
+            ->andReturnSelf();
+
+        $query = PiDefinitionList::create(['isNi' => 'Y', 'goodsOrPsv' => 'NULL']);
+
+        $this->sut->applyListFilters($mockQb, $query);
+    }
 }
