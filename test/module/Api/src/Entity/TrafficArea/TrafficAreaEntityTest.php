@@ -7,7 +7,6 @@ use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as Entity;
 use Dvsa\Olcs\Api\Entity\Publication\Recipient as RecipientEntity;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * TrafficArea Entity Unit Tests
@@ -15,7 +14,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  * Initially auto-generated but won't be overridden
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class TrafficAreaEntityTest extends MockeryTestCase
+class TrafficAreaEntityTest extends EntityTester
 {
     /**
      * Define the entity to test
