@@ -78,10 +78,11 @@ class EbsrSubmissionListTest extends QueryHandlerTestCase
             ->shouldReceive('getIdentity->getUser')
             ->andReturn($this->getCurrentUser(null, 5));
 
-        $mockResult = m::mock(EbsrSubmissionEntity::class)->makePartial();
+        $mockEbsrSubmission = m::mock(EbsrSubmissionEntity::class);
+        $mockEbsrSubmission->shouldReceive('serialize')->once();
 
         $this->repoMap['EbsrSubmission']->shouldReceive('fetchList')
-            ->andReturn([$mockResult])
+            ->andReturn([$mockEbsrSubmission])
             ->shouldReceive('fetchCount')
             ->andReturn(1);
 
