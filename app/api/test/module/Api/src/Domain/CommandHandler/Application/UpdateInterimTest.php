@@ -118,9 +118,14 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $lv2 = m::mock(LicenceVehicle::class)->makePartial();
         $lv2->setId(22);
 
+        $lv3 = m::mock(LicenceVehicle::class)->makePartial();
+        $lv3->setId(23);
+        $lv3->setRemovalDate(new DateTime());
+
         $lvs = [
             $lv1,
-            $lv2
+            $lv2,
+            $lv3
         ];
 
         /** @var ApplicationEntity $application */
@@ -360,6 +365,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $lv1->setInterimApplication($application);
         $lv1->setId(88);
         $lv1->setGoodsDiscs($gds);
+
         /** @var LicenceVehicle $lv2 */
         $lv2 = m::mock(LicenceVehicle::class)->makePartial();
         $lv2->setId(22);
@@ -377,10 +383,19 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $lv3 = m::mock(LicenceVehicle::class)->makePartial();
         $lv3->setGoodsDiscs($gdsInterim);
 
+        /** @var LicenceVehicle $lv4 */
+        $lv4 = m::mock(LicenceVehicle::class)->makePartial();
+        $lv4->setId(25);
+        $lv4->setRemovalDate(new DateTime());
+
+        $interimLicenceVehicles = new ArrayCollection();
+        $interimLicenceVehicles->add($lv3);
+        $interimLicenceVehicles->add($lv4);
+
         $application->setOperatingCentres($ocs);
         $application->setLicenceVehicles($lvs);
         $application->setInterimStatus($this->refData[ApplicationEntity::INTERIM_STATUS_INFORCE]);
-        $application->setInterimLicenceVehicles([$lv3]);
+        $application->setInterimLicenceVehicles($interimLicenceVehicles);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
@@ -641,5 +656,115 @@ class UpdateInterimTest extends CommandHandlerTestCase
             [ApplicationEntity::INTERIM_STATUS_REQUESTED],
             [ApplicationEntity::INTERIM_STATUS_INFORCE]
         ];
+    }
+
+    public function testHandleCommandRefusedToInforce()
+    {
+        $data = [
+            'id' => 111,
+            'version' => 1,
+            'status' => ApplicationEntity::INTERIM_STATUS_INFORCE
+        ];
+        $command = Cmd::create($data);
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setId(111);
+        $application->setInterimStatus($this->refData[ApplicationEntity::INTERIM_STATUS_REFUSED]);
+
+        $licenceVehicles = new ArrayCollection();
+
+        $licenceVehicle1 = m::mock(\Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle::class)
+            ->shouldReceive('getRemovalDate')
+            ->andReturn(new DateTime())
+            ->once()
+            ->getMock();
+
+        $licenceVehicle2 = m::mock(\Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle::class)
+            ->shouldReceive('getRemovalDate')
+            ->andReturnNull()
+            ->once()
+            ->shouldReceive('setSpecifiedDate')
+            ->with(m::type(DateTime::class))
+            ->once()
+            ->getMock();
+
+        $licenceVehicles->add($licenceVehicle1);
+        $licenceVehicles->add($licenceVehicle2);
+
+        $application->setInterimLicenceVehicles($licenceVehicles);
+
+        $this->repoMap['LicenceVehicle']
+            ->shouldReceive('save')
+            ->with($licenceVehicle2)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['GoodsDisc']
+            ->shouldReceive('save')
+            ->with(m::type(GoodsDisc::class))
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->with($application);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Interim status updated'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertSame(
+            $this->refData[ApplicationEntity::INTERIM_STATUS_INFORCE],
+            $application->getInterimStatus()
+        );
+    }
+
+    public function testHandleCommandRefusedToInforceNoLicenceVehicles()
+    {
+        $data = [
+            'id' => 111,
+            'version' => 1,
+            'status' => ApplicationEntity::INTERIM_STATUS_INFORCE
+        ];
+        $command = Cmd::create($data);
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setId(111);
+        $application->setInterimStatus($this->refData[ApplicationEntity::INTERIM_STATUS_REFUSED]);
+
+        $application->setInterimLicenceVehicles(new ArrayCollection());
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->with($application);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Interim status updated'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertSame(
+            $this->refData[ApplicationEntity::INTERIM_STATUS_INFORCE],
+            $application->getInterimStatus()
+        );
     }
 }
