@@ -12,6 +12,13 @@ use Zend\Http\Client as HttpClient;
  */
 class Client
 {
+    const ERR_KEY_COMPANY_PROFILE_NOT_FOUND = 'company-profile-not-found';
+
+    const ERR_INVALID_JSON = 'Invalid response JSON is broken';
+    const ERR_SERVICE_NOT_RESPONSE = 'Service not response';
+    const ERR_COMPANY_PROFILE_NOT_FOUND = 'Company not found';
+    const ERR_RATE_LIMIT_EXCEED = 'Rate limit exceeded';
+
     /**
      * @var HttpClient
      */
@@ -23,7 +30,10 @@ class Client
     protected $baseUri;
 
     /**
-     * @param \Zend\Http\Client $httpClient
+     * Set client to company house Api
+     *
+     * @param \Zend\Http\Client $httpClient Http Client to CP Api
+     *
      * @return $this
      */
     public function setHttpClient(HttpClient $httpClient)
@@ -33,15 +43,10 @@ class Client
     }
 
     /**
-     * @return \Zend\Http\Client
-     */
-    public function getHttpClient()
-    {
-        return $this->httpClient;
-    }
-
-    /**
-     * @param string $baseUri
+     * Set base part of url for CP Api requests
+     *
+     * @param string $baseUri Base url for CP api requests
+     *
      * @return $this
      */
     public function setBaseUri($baseUri)
@@ -51,25 +56,21 @@ class Client
     }
 
     /**
-     * @return string
-     */
-    public function getBaseUri()
-    {
-        return $this->baseUri;
-    }
-
-    /**
-     * @param string $companyNumber
-     * @param boolean $includeOfficers include officer_summary which was there
-     * by default in earlier versions of the api, however we now have to make a
-     * separate REST call to include it :(
-     * @link http://forum.aws.chdev.org/t/company-profile/136
+     * Get company data and company officers data from Company House API
+     *
+     * @param string $companyNumber   Company number
+     * @param bool   $includeOfficers True, if need also request officers
      *
      * @return array
+     * @throws Exception
      */
     public function getCompanyProfile($companyNumber, $includeOfficers = true)
     {
         $companyProfile = $this->getData('/company/' . $companyNumber);
+
+        if (!isset($companyProfile['company_number'])) {
+            throw new ServiceException(self::ERR_INVALID_JSON);
+        }
 
         if ($includeOfficers) {
             $officers = $this->getOfficerSummary($companyNumber);
@@ -82,6 +83,10 @@ class Client
     /**
      * Return active officers in the same format as was previously included
      * in the CompanyProfile response
+     *
+     * @param string $companyNumber Company no
+     *
+     * @return array
      */
     protected function getOfficerSummary($companyNumber)
     {
@@ -96,7 +101,10 @@ class Client
     }
 
     /**
-     * @param string $companyNumber
+     * Get Company Officers from CP api
+     *
+     * @param string $companyNumber Company number
+     *
      * @return array
      */
     public function getOfficers($companyNumber)
@@ -105,28 +113,53 @@ class Client
     }
 
     /**
+     * Make request to CP api
+     *
      * @param string $resourcePath to be appended to baseUri
+     *
      * @return array
      */
     protected function getData($resourcePath)
     {
-        $uri = $this->getBaseUri() . $resourcePath;
+        $uri = $this->baseUri . $resourcePath;
 
-        $this->getHttpClient()->getRequest()
+        $this->httpClient->getRequest()
             ->setUri($uri)
             ->setMethod('GET');
 
         /** @var $response \Zend\Http\Response */
-        $response = $this->getHttpClient()->send();
+        $response = $this->httpClient->send();
+
+        $statusCode = $response->getStatusCode();
+        $body = json_decode($response->getBody(), true);
 
         if (!$response->isOk()) {
+            $errors = (isset($body['errors']) ? $body['errors'] : []);
 
-            if ($response->getStatusCode() === \Zend\Http\Response::STATUS_CODE_429) {
-                $reason = 'Rate limit exceeded';
+            if ($statusCode === \Zend\Http\Response::STATUS_CODE_429) {
+                $reason = self::ERR_RATE_LIMIT_EXCEED;
                 $exceptionClass = RateLimitException::class;
-            } elseif ($response->getStatusCode() === \Zend\Http\Response::STATUS_CODE_404) {
-                $reason = 'Company not found';
-                $exceptionClass = NotFoundException::class;
+
+            } elseif ($statusCode === \Zend\Http\Response::STATUS_CODE_404) {
+                //  set common reason and exception class
+                $reason = self::ERR_SERVICE_NOT_RESPONSE;
+                $exceptionClass = ServiceException::class;
+
+                //  if has errors try to raise then specific exception or reason
+                if (! empty($errors)) {
+                    $err = array_filter(
+                        $errors,
+                        function ($item) {
+                            return ($item['error'] === self::ERR_KEY_COMPANY_PROFILE_NOT_FOUND);
+                        }
+                    );
+
+                    if (count($err) !== 0) {
+                        $reason = self::ERR_COMPANY_PROFILE_NOT_FOUND;
+                        $exceptionClass = NotFoundException::class;
+                    }
+                }
+
             } else {
                 $reason = $response->getBody();
                 $exceptionClass = ServiceException::class;
@@ -137,6 +170,6 @@ class Client
             throw new $exceptionClass($message);
         }
 
-        return json_decode($response->getBody(), true);
+        return $body;
     }
 }
