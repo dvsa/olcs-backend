@@ -380,7 +380,7 @@ class EbsrSubmissionEntityTest extends EntityTester
     public function testGetCalculatedBundleValues()
     {
         $ebsrSubmissionStatus = m::mock(RefData::class);
-        $ebsrSubmissionStatus->shouldReceive('getId')->once()->andReturn(Entity::PROCESSED_STATUS);
+        $ebsrSubmissionStatus->shouldReceive('getId')->times(4)->andReturn(Entity::PROCESSED_STATUS);
 
         $entity = $this->instantiate(Entity::class);
         $entity->setEbsrSubmissionStatus($ebsrSubmissionStatus);
