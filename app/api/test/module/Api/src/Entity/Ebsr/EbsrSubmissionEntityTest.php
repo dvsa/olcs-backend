@@ -246,6 +246,154 @@ class EbsrSubmissionEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider isSuccessProvider
+     *
+     * @param $submissionStatusString
+     * @param $expectedResult
+     */
+    public function testIsSuccess($submissionStatusString, $expectedResult)
+    {
+        $ebsrSubmissionStatus = m::mock(RefData::class);
+        $ebsrSubmissionStatus->shouldReceive('getId')->once()->andReturn($submissionStatusString);
+
+        $entity = $this->instantiate(Entity::class);
+        $entity->setEbsrSubmissionStatus($ebsrSubmissionStatus);
+
+        $this->assertEquals($expectedResult, $entity->isSuccess());
+    }
+
+    /**
+     * Date provider for isSuccess
+     *
+     * @return array
+     */
+    public function isSuccessProvider()
+    {
+        return [
+            [Entity::UPLOADED_STATUS, false],
+            [Entity::SUBMITTING_STATUS, false],
+            [Entity::SUBMITTED_STATUS, false],
+            [Entity::VALIDATING_STATUS, false],
+            [Entity::PROCESSING_STATUS, false],
+            [Entity::PROCESSED_STATUS, true],
+            [Entity::FAILED_STATUS, false]
+        ];
+    }
+
+    /**
+     * @dataProvider isBeingProcessedProvider
+     *
+     * @param $submissionStatusString
+     * @param $expectedResult
+     */
+    public function testIsBeingProcessed($submissionStatusString, $expectedResult)
+    {
+        $ebsrSubmissionStatus = m::mock(RefData::class);
+        $ebsrSubmissionStatus->shouldReceive('getId')->once()->andReturn($submissionStatusString);
+
+        $entity = $this->instantiate(Entity::class);
+        $entity->setEbsrSubmissionStatus($ebsrSubmissionStatus);
+
+        $this->assertEquals($expectedResult, $entity->isBeingProcessed());
+    }
+
+    /**
+     * Date provider for isBeingProcessed
+     *
+     * @return array
+     */
+    public function isBeingProcessedProvider()
+    {
+        return [
+            [Entity::UPLOADED_STATUS, false],
+            [Entity::SUBMITTING_STATUS, false],
+            [Entity::SUBMITTED_STATUS, true],
+            [Entity::VALIDATING_STATUS, true],
+            [Entity::PROCESSING_STATUS, true],
+            [Entity::PROCESSED_STATUS, false],
+            [Entity::FAILED_STATUS, false]
+        ];
+    }
+
+    /**
+     * tests get errors returns empty array when the submission isn't a failure
+     *
+     * @dataProvider getErrorsWithNoFailureProvider
+     *
+     * @param $submissionStatusString
+     */
+    public function testGetErrorsWithNoFailure($submissionStatusString)
+    {
+        $ebsrSubmissionStatus = m::mock(RefData::class);
+        $ebsrSubmissionStatus->shouldReceive('getId')->once()->andReturn($submissionStatusString);
+
+        $entity = $this->instantiate(Entity::class);
+        $entity->setEbsrSubmissionStatus($ebsrSubmissionStatus);
+
+        $this->assertEquals([], $entity->getErrors());
+    }
+
+    /**
+     * Date provider for isBeingProcessed
+     *
+     * @return array
+     */
+    public function getErrorsWithNoFailureProvider()
+    {
+        return [
+            [Entity::UPLOADED_STATUS],
+            [Entity::SUBMITTING_STATUS],
+            [Entity::SUBMITTED_STATUS],
+            [Entity::VALIDATING_STATUS],
+            [Entity::PROCESSING_STATUS],
+            [Entity::PROCESSED_STATUS]
+        ];
+    }
+
+    /**
+     * tests getErrors
+     */
+    public function testGetErrors()
+    {
+        $errorArray = [
+            0 => 'error1',
+            1 => 'error2'
+        ];
+
+        $errors = [
+            'errors' => $errorArray
+        ];
+
+        $entity = $this->instantiate(Entity::class);
+        $ebsrSubmissionStatus = m::mock(RefData::class);
+        $ebsrSubmissionStatus->shouldReceive('getId')->once()->andReturn(Entity::FAILED_STATUS);
+
+        $entity->setEbsrSubmissionStatus($ebsrSubmissionStatus);
+        $entity->setEbsrSubmissionResult(serialize($errors));
+
+        $this->assertEquals($errorArray, $entity->getErrors());
+    }
+
+    /**
+     * tests calculated bundle values
+     */
+    public function testGetCalculatedBundleValues()
+    {
+        $ebsrSubmissionStatus = m::mock(RefData::class);
+        $ebsrSubmissionStatus->shouldReceive('getId')->times(4)->andReturn(Entity::PROCESSED_STATUS);
+
+        $entity = $this->instantiate(Entity::class);
+        $entity->setEbsrSubmissionStatus($ebsrSubmissionStatus);
+
+        $result = $entity->getCalculatedBundleValues();
+
+        $this->assertEquals(false, $result['isBeingProcessed']);
+        $this->assertEquals(false, $result['isFailure']);
+        $this->assertEquals(true, $result['isSuccess']);
+        $this->assertEquals([], $result['errors']);
+    }
+
+    /**
      * @dataProvider isDataRefreshProvider
      *
      * @param string $status

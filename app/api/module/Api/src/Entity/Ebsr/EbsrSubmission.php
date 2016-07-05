@@ -41,10 +41,10 @@ class EbsrSubmission extends AbstractEbsrSubmission
     /**
      * Creates EBSR submission
      *
-     * @param Organisation $organisation
-     * @param RefData $ebsrSubmissionStatus
-     * @param RefData $ebsrSubmissionType
-     * @param Document $document
+     * @param Organisation $organisation         the organisation
+     * @param RefData      $ebsrSubmissionStatus the submission status
+     * @param RefData      $ebsrSubmissionType   the submission type
+     * @param Document     $document             the document
      */
     public function __construct(
         Organisation $organisation,
@@ -61,8 +61,10 @@ class EbsrSubmission extends AbstractEbsrSubmission
     /**
      * Called when a previously uploaded EBSR pack is submitted
      *
-     * @param RefData $ebsrSubmissionStatus
-     * @param RefData $ebsrSubmissionType
+     * @param RefData $ebsrSubmissionStatus submission status
+     * @param RefData $ebsrSubmissionType   submission type
+     *
+     * @return void
      */
     public function submit(RefData $ebsrSubmissionStatus, RefData $ebsrSubmissionType)
     {
@@ -74,7 +76,9 @@ class EbsrSubmission extends AbstractEbsrSubmission
     /**
      * Called when EBSR pack begins processing, includes a check that the status is correct
      *
-     * @param RefData $ebsrSubmissionStatus
+     * @param RefData $ebsrSubmissionStatus submission status
+     *
+     * @return void
      * @throws ValidationException
      */
     public function beginValidating(RefData $ebsrSubmissionStatus)
@@ -90,8 +94,10 @@ class EbsrSubmission extends AbstractEbsrSubmission
     /**
      * Called when validation of EBSR pack is completed
      *
-     * @param RefData $ebsrSubmissionStatus
-     * @param String $ebsrSubmissionResult this is a serialized array
+     * @param RefData $ebsrSubmissionStatus the submission status
+     * @param String  $ebsrSubmissionResult this is a serialized array
+     *
+     * @return void
      */
     public function finishValidating(RefData $ebsrSubmissionStatus, $ebsrSubmissionResult)
     {
@@ -126,9 +132,37 @@ class EbsrSubmission extends AbstractEbsrSubmission
     }
 
     /**
+     * Whether the EBSR submission is being processed
+     *
+     * @return bool
+     */
+    public function isBeingProcessed()
+    {
+        $statuses = [
+            self::SUBMITTED_STATUS,
+            self::VALIDATING_STATUS,
+            self::PROCESSING_STATUS
+        ];
+
+        return in_array($this->ebsrSubmissionStatus->getId(), $statuses);
+    }
+
+    /**
+     * Whether the EBSR submission was successful
+     *
+     * @return bool
+     */
+    public function isSuccess()
+    {
+        return $this->ebsrSubmissionStatus->getId() === self::PROCESSED_STATUS;
+    }
+
+    /**
      * Called when a submission has finished processing
      *
-     * @param RefData $ebsrSubmissionStatus
+     * @param RefData $ebsrSubmissionStatus submission status
+     *
+     * @return void
      */
     public function finishProcessing(RefData $ebsrSubmissionStatus)
     {
@@ -144,5 +178,36 @@ class EbsrSubmission extends AbstractEbsrSubmission
     public function isDataRefresh()
     {
         return $this->ebsrSubmissionType->getId() === self::DATA_REFRESH_SUBMISSION_TYPE;
+    }
+
+    /**
+     * Gets the array of errors for the EBSR submission
+     *
+     * @return array
+     */
+    public function getErrors()
+    {
+        if (!$this->isFailure()) {
+            return [];
+        }
+
+        $errorInfo = unserialize($this->ebsrSubmissionResult);
+
+        return $errorInfo['errors'];
+    }
+
+    /**
+     * Gets calculated values
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'isBeingProcessed' => $this->isBeingProcessed(),
+            'isFailure' => $this->isFailure(),
+            'isSuccess' => $this->isSuccess(),
+            'errors' => $this->getErrors(),
+        ];
     }
 }

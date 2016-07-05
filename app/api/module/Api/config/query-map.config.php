@@ -233,6 +233,7 @@ return [
     TransferQuery\Bus\Ebsr\EbsrSubmissionList::class => QueryHandler\Bus\Ebsr\EbsrSubmissionList::class,
     TransferQuery\Bus\Ebsr\OrganisationUnprocessedList::class =>
         QueryHandler\Bus\Ebsr\OrganisationUnprocessedList::class,
+    TransferQuery\Bus\Ebsr\EbsrSubmission::class => QueryHandler\Bus\Ebsr\EbsrSubmission::class,
 
     // Trailer
     TransferQuery\Licence\Trailers::class => QueryHandler\Licence\Trailers::class,
