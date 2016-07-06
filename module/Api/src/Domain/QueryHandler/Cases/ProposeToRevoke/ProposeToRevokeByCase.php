@@ -12,10 +12,26 @@ final class ProposeToRevokeByCase extends AbstractQueryHandler
 {
     protected $repoServiceName = 'ProposeToRevoke';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
+        $repo = $this->getRepo();
+
+        // retrieve reason even if deleted
+        $repo->disableSoftDeleteable(
+            [
+                \Dvsa\Olcs\Api\Entity\Pi\Reason::class
+            ]
+        );
+
         return $this->result(
-            $this->getRepo()->fetchProposeToRevokeUsingCase($query),
+            $repo->fetchProposeToRevokeUsingCase($query),
             ['presidingTc', 'reasons']
         );
     }

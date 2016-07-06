@@ -34,10 +34,26 @@ final class Pi extends AbstractQueryHandler
         'case',
     ];
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
+        $repo = $this->getRepo();
+
+        // retrieve reason even if deleted
+        $repo->disableSoftDeleteable(
+            [
+                \Dvsa\Olcs\Api\Entity\Pi\Reason::class
+            ]
+        );
+
         /** @var PiEntity $pi */
-        $pi = $this->getRepo()->fetchUsingCase($query, Query::HYDRATE_OBJECT);
+        $pi = $repo->fetchUsingCase($query, Query::HYDRATE_OBJECT);
 
         if ($pi === null) {
             return [];
