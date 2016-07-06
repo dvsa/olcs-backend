@@ -287,7 +287,7 @@ final class CreateTask extends AbstractCommandHandler
             case Organisation::ORG_TYPE_PARTNERSHIP:
                 $organisationPerson = $organisation->getOrganisationPersons();
                 $criteria = Criteria::create();
-                $criteria->orderBy(array('createdOn' => Criteria::ASC));
+                $criteria->orderBy(array('id' => Criteria::ASC));
                 $person = $organisationPerson->matching($criteria)->first()->getPerson();
                 $letter = strtoupper(substr($person->getFamilyName(), 0, 1));
                 break;
