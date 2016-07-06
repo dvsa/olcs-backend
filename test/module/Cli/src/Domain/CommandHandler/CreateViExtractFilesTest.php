@@ -85,7 +85,9 @@ class CreateViExtractFilesTest extends CommandHandlerTestCase
                 'Found 1 record(s) for Trading Names',
                 '1 record(s) saved for Trading Names',
                 'VI flags cleared',
-                'Found 0 record(s) for Vehicles'            ]
+                'Found 0 record(s) for Vehicles',
+                'Empty file written for Vehicles'
+            ]
         ];
         $this->assertEquals($expected, $response->toArray());
     }
