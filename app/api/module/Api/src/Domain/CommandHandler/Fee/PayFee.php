@@ -144,7 +144,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
      */
     protected function maybeProcessGrantingFee(Fee $fee)
     {
-        if ($fee->getFeeType()->getFeeType()->getId() !== FeeType::FEE_TYPE_GRANTINT) {
+        if ($fee->getFeeType()->getFeeType()->getId() !== FeeType::FEE_TYPE_GRANT) {
             return;
         }
 

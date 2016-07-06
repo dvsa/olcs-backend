@@ -283,7 +283,7 @@ class PayFeeTest extends CommandHandlerTestCase
         $fee = m::mock(FeeEntity::class)->makePartial();
         $fee->setApplication($application);
         $fee->shouldReceive('getFeeType->getFeeType->getId')
-            ->andReturn(FeeType::FEE_TYPE_GRANTINT);
+            ->andReturn(FeeType::FEE_TYPE_GRANT);
 
         $this->repoMap['Fee']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -398,7 +398,7 @@ class PayFeeTest extends CommandHandlerTestCase
         $fee = m::mock(FeeEntity::class)->makePartial();
         $fee->setApplication($application);
         $fee->shouldReceive('getFeeType->getFeeType->getId')
-            ->andReturn(FeeType::FEE_TYPE_GRANTINT);
+            ->andReturn(FeeType::FEE_TYPE_GRANT);
 
         $this->repoMap['Fee']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -455,7 +455,7 @@ class PayFeeTest extends CommandHandlerTestCase
         $fee = m::mock(FeeEntity::class)->makePartial();
         $fee->setApplication($application);
         $fee->shouldReceive('getFeeType->getFeeType->getId')
-            ->andReturn(FeeType::FEE_TYPE_GRANTINT);
+            ->andReturn(FeeType::FEE_TYPE_GRANT);
 
         $this->repoMap['Fee']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -487,7 +487,7 @@ class PayFeeTest extends CommandHandlerTestCase
         $application->setInterimStatus($this->refData[Application::INTERIM_STATUS_INFORCE]);
         $application->setInterimStatus($this->refData[Application::INTERIM_STATUS_INFORCE]);
 
-        $application->shouldReceive('isGoods')->once()->andReturn(true);
+        $application->shouldReceive('isGoods')->twice()->andReturn(true);
 
         /** @var FeeEntity $fee */
         $fee = m::mock(FeeEntity::class)->makePartial();
@@ -507,11 +507,18 @@ class PayFeeTest extends CommandHandlerTestCase
             (new Result())->addMessage('CLOSE_FEEDUE_TASK')
         );
 
+        $this->expectedSideEffect(
+            EndInterimCmd::class,
+            ['id' => 222],
+            (new Result())->addMessage('EndInterim')
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
+                'EndInterim',
                 'CLOSE_TEX_TASK',
                 'CLOSE_FEEDUE_TASK',
             ]
