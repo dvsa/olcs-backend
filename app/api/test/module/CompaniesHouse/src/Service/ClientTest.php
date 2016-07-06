@@ -131,7 +131,7 @@ class ClientTest extends MockeryTestCase
                 'statusCode' => Response::STATUS_CODE_404,
                 'content' => '{"errors": [{"error": "not found"}]}',
                 'errClass' => Exception::class,
-                'errMsg' => Client::ERR_SERVICE_NOT_RESPONSE,
+                'errMsg' => Client::ERR_SERVICE_NOT_RESPOND,
             ],
             [
                 'statusCode' => Response::STATUS_CODE_404,
@@ -150,6 +150,12 @@ class ClientTest extends MockeryTestCase
                 'content' => '{"body": "test"}',
                 'errClass' => Exception::class,
                 'errMsg' => '{"body": "test"}',
+            ],
+            [
+                'statusCode' => Response::STATUS_CODE_200,
+                'content' => '',
+                'errClass' => Exception::class,
+                'errMsg' => Client::ERR_INVALID_JSON,
             ],
         ];
     }
