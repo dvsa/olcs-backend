@@ -14,8 +14,8 @@ class Client
 {
     const ERR_KEY_COMPANY_PROFILE_NOT_FOUND = 'company-profile-not-found';
 
-    const ERR_INVALID_JSON = 'Invalid response JSON is broken';
-    const ERR_SERVICE_NOT_RESPONSE = 'Service not response';
+    const ERR_INVALID_JSON = 'Invalid JSON';
+    const ERR_SERVICE_NOT_RESPOND = 'Service not respond';
     const ERR_COMPANY_PROFILE_NOT_FOUND = 'Company not found';
     const ERR_RATE_LIMIT_EXCEED = 'Rate limit exceeded';
 
@@ -133,6 +133,9 @@ class Client
         $statusCode = $response->getStatusCode();
         $body = json_decode($response->getBody(), true);
 
+        $reason = null;
+        $exceptionClass = null;
+
         if (!$response->isOk()) {
             $errors = (isset($body['errors']) ? $body['errors'] : []);
 
@@ -142,7 +145,7 @@ class Client
 
             } elseif ($statusCode === \Zend\Http\Response::STATUS_CODE_404) {
                 //  set common reason and exception class
-                $reason = self::ERR_SERVICE_NOT_RESPONSE;
+                $reason = self::ERR_SERVICE_NOT_RESPOND;
                 $exceptionClass = ServiceException::class;
 
                 //  if has errors try to raise then specific exception or reason
@@ -165,6 +168,12 @@ class Client
                 $exceptionClass = ServiceException::class;
             }
 
+        } elseif (json_last_error() !== JSON_ERROR_NONE) {
+            $reason = self::ERR_INVALID_JSON;
+            $exceptionClass = ServiceException::class;
+        }
+
+        if ($exceptionClass !== null) {
             $message = sprintf('Error response (%s) %s', $response->getStatusCode(), $reason);
 
             throw new $exceptionClass($message);
