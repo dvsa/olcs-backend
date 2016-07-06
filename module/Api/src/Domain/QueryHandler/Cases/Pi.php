@@ -34,6 +34,13 @@ final class Pi extends AbstractQueryHandler
         'case',
     ];
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
         $repo = $this->getRepo();

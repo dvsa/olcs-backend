@@ -12,6 +12,13 @@ final class ProposeToRevokeByCase extends AbstractQueryHandler
 {
     protected $repoServiceName = 'ProposeToRevoke';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
         $repo = $this->getRepo();

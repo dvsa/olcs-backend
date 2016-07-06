@@ -15,6 +15,13 @@ class SubmissionAction extends AbstractQueryHandler
 {
     protected $repoServiceName = 'SubmissionAction';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
         $repo = $this->getRepo();
