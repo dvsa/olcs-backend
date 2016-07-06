@@ -34,7 +34,15 @@ class PiTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 1]);
 
-        $this->repoMap['Pi']->shouldReceive('fetchUsingCase')
+        $this->repoMap['Pi']
+            ->shouldReceive('disableSoftDeleteable')
+            ->with(
+                [
+                    \Dvsa\Olcs\Api\Entity\Pi\Reason::class
+                ]
+            )
+            ->once()
+            ->shouldReceive('fetchUsingCase')
             ->with($query, Query::HYDRATE_OBJECT)
             ->andReturn(null);
 
@@ -48,7 +56,15 @@ class PiTest extends QueryHandlerTestCase
         $pi = m::mock(PiEntity::class);
         $pi->shouldReceive('flattenSlaTargetDates')->once()->andReturn([]);
 
-        $this->repoMap['Pi']->shouldReceive('fetchUsingCase')
+        $this->repoMap['Pi']
+            ->shouldReceive('disableSoftDeleteable')
+            ->with(
+                [
+                    \Dvsa\Olcs\Api\Entity\Pi\Reason::class
+                ]
+            )
+            ->once()
+            ->shouldReceive('fetchUsingCase')
             ->with($query, Query::HYDRATE_OBJECT)
             ->andReturn($pi);
 

@@ -29,7 +29,15 @@ class SubmissionActionTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 1]);
 
-        $this->repoMap['SubmissionAction']->shouldReceive('fetchUsingId')
+        $this->repoMap['SubmissionAction']
+            ->shouldReceive('disableSoftDeleteable')
+            ->with(
+                [
+                    \Dvsa\Olcs\Api\Entity\Pi\Reason::class
+                ]
+            )
+            ->once()
+            ->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn(
                 m::mock(BundleSerializableInterface::class)
