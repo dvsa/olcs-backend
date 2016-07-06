@@ -29,7 +29,15 @@ class ProposeToRevokeByCaseTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['case' => 1]);
 
-        $this->repoMap['ProposeToRevoke']->shouldReceive('fetchProposeToRevokeUsingCase')
+        $this->repoMap['ProposeToRevoke']
+            ->shouldReceive('disableSoftDeleteable')
+            ->with(
+                [
+                    \Dvsa\Olcs\Api\Entity\Pi\Reason::class
+                ]
+            )
+            ->once()
+            ->shouldReceive('fetchProposeToRevokeUsingCase')
             ->with($query)
             ->andReturn(
                 m::mock(BundleSerializableInterface::class)

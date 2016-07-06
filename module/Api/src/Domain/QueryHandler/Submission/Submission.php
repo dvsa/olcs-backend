@@ -16,7 +16,16 @@ final class Submission extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        $submission = $this->getRepo()->fetchUsingId($query);
+        $repo = $this->getRepo();
+
+        // retrieve reason even if deleted
+        $repo->disableSoftDeleteable(
+            [
+                \Dvsa\Olcs\Api\Entity\Pi\Reason::class
+            ]
+        );
+
+        $submission = $repo->fetchUsingId($query);
 
         return $this->result(
             $submission,
