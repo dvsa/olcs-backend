@@ -191,9 +191,9 @@ class EbsrSubmission extends AbstractEbsrSubmission
             return [];
         }
 
-        $errorInfo = unserialize($this->ebsrSubmissionResult);
+        $errorInfo = @unserialize($this->ebsrSubmissionResult);
 
-        return $errorInfo['errors'];
+        return isset($errorInfo['errors']) ? $errorInfo['errors'] : [];
     }
 
     /**
