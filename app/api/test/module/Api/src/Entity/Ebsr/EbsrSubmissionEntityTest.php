@@ -375,6 +375,21 @@ class EbsrSubmissionEntityTest extends EntityTester
     }
 
     /**
+     * tests getErrors when we have legacy data
+     */
+    public function testGetErrorsWithLegacyData()
+    {
+        $entity = $this->instantiate(Entity::class);
+        $ebsrSubmissionStatus = m::mock(RefData::class);
+        $ebsrSubmissionStatus->shouldReceive('getId')->once()->andReturn(Entity::FAILED_STATUS);
+
+        $entity->setEbsrSubmissionStatus($ebsrSubmissionStatus);
+        $entity->setEbsrSubmissionResult('error as a string');
+
+        $this->assertEquals([], $entity->getErrors());
+    }
+
+    /**
      * tests calculated bundle values
      */
     public function testGetCalculatedBundleValues()
