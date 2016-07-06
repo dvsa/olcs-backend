@@ -112,14 +112,22 @@ final class CreateViExtractFiles extends AbstractCommandHandler
                 $results = $repo->fetchForExport();
                 $total = count($results);
                 $this->result->addMessage('Found ' . $total . ' record(s) for ' . $settings['name']);
-                if (!$total) {
+                if ($total) {
+                    $content = implode(self::PHP_EOL_WIN, array_column($results, 'line')) . self::PHP_EOL_WIN;
+                    if (file_put_contents($fileName, $content) === false) {
+                        throw new \Exception(
+                            'Error writing record(s) for ' . $settings['name'] . ', please check the target path'
+                        );
+                    }
+                } else {
+                    $content = self::PHP_EOL_WIN;
+                    if (file_put_contents($fileName, $content) === false) {
+                        throw new \Exception(
+                            'Error writing empty file for ' . $settings['name'] . ', please check the target path'
+                        );
+                    }
+                    $this->result->addMessage('Empty file written for ' . $settings['name']);
                     continue;
-                }
-                $content = implode(self::PHP_EOL_WIN, array_column($results, 'line'));
-                if (file_put_contents($fileName, $content) === false) {
-                    throw new \Exception(
-                        'Error writing record(s) for ' . $settings['name'] . ', please check the target path'
-                    );
                 }
                 $this->clearViFlags($repo, $results, $key);
                 $this->result->addMessage($total . ' record(s) saved for ' . $settings['name']);
