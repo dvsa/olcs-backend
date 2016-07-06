@@ -1,13 +1,10 @@
 <?php
 
-/**
- * CreateAlert
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\Command\CompaniesHouse;
 
 /**
+ * CreateAlert
+ *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
 final class CreateAlert extends \Dvsa\Olcs\Transfer\Command\AbstractCommand

@@ -2,9 +2,10 @@
 
 namespace Dvsa\OlcsTest\CompaniesHouse\Service;
 
+use Dvsa\Olcs\CompaniesHouse\Service\Client;
+use Dvsa\Olcs\CompaniesHouse\Service\ClientFactory;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\CompaniesHouse\Service\ClientFactory;
 
 /**
  * ClientFactoryTest
@@ -13,26 +14,36 @@ use Dvsa\Olcs\CompaniesHouse\Service\ClientFactory;
  */
 class ClientFactoryTest extends MockeryTestCase
 {
+    /** @var  ClientFactory */
     protected $sut;
+    /** @var  \Zend\ServiceManager\ServiceLocatorInterface|m\MockInterface */
+    private $sl;
 
     public function setUp()
     {
+        $this->sl = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+
         $this->sut = new ClientFactory();
     }
 
     public function testOptionsMissing()
     {
-        $sl = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
-        $sl->shouldReceive('get')->with('Configuration')->once()->andReturn([]);
-
+        //  expect
         $this->setExpectedException(\RuntimeException::class);
-        $this->sut->createService($sl);
+
+        //  call
+        $this->sl->shouldReceive('get')->with('Configuration')->once()->andReturn([]);
+
+        $this->sut->createService($this->sl);
     }
 
     public function testOptionsBaseUriMissing()
     {
-        $sl = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
-        $sl->shouldReceive('get')->with('Configuration')->once()->andReturn(
+        //  expect
+        $this->setExpectedException(\RuntimeException::class, 'Missing required option companies_house.client.baseuri');
+
+        //  call
+        $this->sl->shouldReceive('get')->with('Configuration')->once()->andReturn(
             [
                 'companies_house' => [
                     'http' => [],
@@ -42,14 +53,12 @@ class ClientFactoryTest extends MockeryTestCase
             ]
         );
 
-        $this->setExpectedException(\RuntimeException::class, 'Missing required option companies_house.client.baseuri');
-        $this->sut->createService($sl);
+        $this->sut->createService($this->sl);
     }
 
     public function testOptions()
     {
-        $sl = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
-        $sl->shouldReceive('get')->with('Configuration')->once()->andReturn(
+        $this->sl->shouldReceive('get')->with('Configuration')->once()->andReturn(
             [
                 'companies_house' => [
                     'http' => [
@@ -66,9 +75,8 @@ class ClientFactoryTest extends MockeryTestCase
             ]
         );
 
-        $service = $this->sut->createService($sl);
+        $service = $this->sut->createService($this->sl);
 
-        $this->assertSame('http://companies-house-api', $service->getBaseUri());
-        // HttpClient doesn't expose options so we can't assert they were set :(
+        static::assertInstanceOf(Client::class, $service);
     }
 }

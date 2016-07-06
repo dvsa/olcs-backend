@@ -2,79 +2,95 @@
 
 namespace Dvsa\OlcsTest\CompaniesHouse\Service;
 
+use Dvsa\Olcs\CompaniesHouse\Service\Client;
+use Dvsa\Olcs\CompaniesHouse\Service\Exception;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\CompaniesHouse\Service\Client;
+use Zend\Http\Response;
 
 /**
- * ClientTest
- *
- * @author Dan Eggleston <dan@stolenegg.com>
+ * @covers Dvsa\Olcs\CompaniesHouse\Service\Client
  */
 class ClientTest extends MockeryTestCase
 {
+    const COMPANY_NO = '03127414';
+
+    /** @var  Client */
     protected $sut;
+
+    /** @var  \Zend\Http\Client|m\MockInterface */
+    private $mockHttpClient;
+    /** @var  m\MockInterface */
+    private $mockRequest;
 
     public function setUp()
     {
+        $this->mockRequest = m::mock(\Zend\Http\Request::class)->makePartial();
+        $this->mockRequest->shouldReceive('setMethod')->with('GET')->andReturnSelf();
+
+        $this->mockHttpClient = m::mock(\Zend\Http\Client::class)
+            ->shouldReceive('getRequest')->with()->once()->andReturn($this->mockRequest)
+            ->getMock();
+
         $this->sut = new Client();
+        $this->sut->setBaseUri('BASE_URI');
+        $this->sut->setHttpClient($this->mockHttpClient);
     }
 
     public function testGetCompanyProfile()
     {
-        $companyNumber = '03127414';
+        $this->mockRequest
+            ->shouldReceive('setUri')->with('BASE_URI/company/03127414')->once()->andReturnSelf();
 
-        $this->sut->setBaseUri('BASE_URI');
+        $response = new Response();
+        $response->setStatusCode(Response::STATUS_CODE_200);
+        $response->setContent('{"company_number": "1234"}');
 
-        $mockRequest = m::mock(\Zend\Http\Request::class);
-        $mockHttpClient = m::mock(\Zend\Http\Client::class);
+        $this->mockHttpClient->shouldReceive('send')->with()->once()->andReturn($response);
 
-        $this->sut->setHttpClient($mockHttpClient);
+        static::assertEquals(
+            ['company_number' => '1234'],
+            $this->sut->getCompanyProfile(self::COMPANY_NO, false)
+        );
+    }
 
-        $mockHttpClient->shouldReceive('getRequest')->with()->once()->andReturn($mockRequest);
-        $mockRequest->shouldReceive('setUri')->with('BASE_URI/company/03127414')->once()->andReturnSelf();
-        $mockRequest->shouldReceive('setMethod')->with('GET')->once()->andReturnSelf();
+    public function testGetCompanyProfileFailInvalidJson()
+    {
+        //  expect
+        $this->setExpectedException(Exception::class, Client::ERR_INVALID_JSON);
 
-        $response = new \Zend\Http\Response();
-        $response->setStatusCode(200);
+        //  call
+        $response = new Response();
+        $response->setStatusCode(Response::STATUS_CODE_200);
         $response->setContent('{"foo":"bar"}');
 
-        $mockHttpClient->shouldReceive('send')->with()->once()->andReturn($response);
+        $this->mockHttpClient
+            ->shouldReceive('send')->with()->once()->andReturn($response);
 
-        $this->assertEquals(['foo' => 'bar'], $this->sut->getCompanyProfile($companyNumber, false));
+        $this->sut->getCompanyProfile(self::COMPANY_NO, false);
     }
 
     public function testGetCompanyProfileWithOfficers()
     {
-        $companyNumber = '03127414';
+        $this->mockRequest
+            ->shouldReceive('setUri')->once()->with('BASE_URI/company/03127414')->andReturnSelf()
+            ->shouldReceive('setUri')->once()->with('BASE_URI/company/03127414/officers')->andReturnSelf();
 
-        $this->sut->setBaseUri('BASE_URI');
+        $companyResponse = new Response();
+        $companyResponse->setStatusCode(Response::STATUS_CODE_200);
+        $companyResponse->setContent('{"company_number": "bar"}');
 
-        $mockRequest = m::mock(\Zend\Http\Request::class);
-        $mockHttpClient = m::mock(\Zend\Http\Client::class);
-
-        $this->sut->setHttpClient($mockHttpClient);
-
-        $mockHttpClient->shouldReceive('getRequest')->andReturn($mockRequest);
-        $mockRequest->shouldReceive('setMethod')->with('GET')->andReturnSelf();
-        $mockRequest->shouldReceive('setUri')->with('BASE_URI/company/03127414')->once()->andReturnSelf();
-        $mockRequest->shouldReceive('setUri')->with('BASE_URI/company/03127414/officers')->once()->andReturnSelf();
-
-        $companyResponse = new \Zend\Http\Response();
-        $companyResponse->setStatusCode(200);
-        $companyResponse->setContent('{"foo":"bar"}');
-
-        $officersResponse = new \Zend\Http\Response();
-        $officersResponse->setStatusCode(200);
+        $officersResponse = new Response();
+        $officersResponse->setStatusCode(Response::STATUS_CODE_200);
         $officersResponse->setContent('{"items": {"0":{"name":"Bob"}, "1":{"name":"Dave"}}}');
 
-        $mockHttpClient
-            ->shouldReceive('send')
-            ->andReturn($companyResponse, $officersResponse);
+        $this->mockHttpClient
+            ->shouldReceive('getRequest')->with()->once()->andReturn($this->mockRequest)
+            ->shouldReceive('send')->andReturn($companyResponse, $officersResponse);
 
-        $this->assertEquals(
+        static::assertEquals(
             [
-                'foo' => 'bar',
+                'company_number' => 'bar',
                 'officer_summary' => [
                     'officers' => [
                         ['name' => 'Bob'],
@@ -82,35 +98,65 @@ class ClientTest extends MockeryTestCase
                     ]
                 ]
             ],
-            $this->sut->getCompanyProfile($companyNumber, true)
+            $this->sut->getCompanyProfile(self::COMPANY_NO, true)
         );
     }
 
-    public function testGetCompanyProfileErrorResponse()
+    /**
+     * @dataProvider dpTestGetCompanyProfileErrorResponse
+     */
+    public function testGetCompanyProfileErrorResponse($statusCode, $content, $errClass, $errMsg)
     {
-        $companyNumber = '03127414';
+        //  expect
+        $this->setExpectedException($errClass, $errMsg);
 
-        $this->sut->setBaseUri('BASE_URI');
+        //  call
+        $this->mockRequest->shouldReceive('setUri')->once()->with('BASE_URI/company/03127414')->andReturnSelf();
 
-        $mockRequest = m::mock(\Zend\Http\Request::class);
-        $mockHttpClient = m::mock(\Zend\Http\Client::class);
+        $companyResponse = new Response();
+        $companyResponse->setStatusCode($statusCode);
+        $companyResponse->setContent($content);
 
-        $this->sut->setHttpClient($mockHttpClient);
-
-        $mockHttpClient->shouldReceive('getRequest')->andReturn($mockRequest);
-        $mockRequest->shouldReceive('setMethod')->with('GET')->andReturnSelf();
-        $mockRequest->shouldReceive('setUri')->with('BASE_URI/company/03127414')->once()->andReturnSelf();
-
-        $companyResponse = new \Zend\Http\Response();
-        $companyResponse->setStatusCode(404);
-        $companyResponse->setContent('{"error":"not found"}');
-
-        $mockHttpClient
+        $this->mockHttpClient
             ->shouldReceive('send')
             ->andReturn($companyResponse);
 
-        $this->setExpectedException(\Dvsa\Olcs\CompaniesHouse\Service\Exception::class);
+        $this->sut->getCompanyProfile(self::COMPANY_NO);
+    }
 
-        $this->sut->getCompanyProfile($companyNumber);
+    public function dpTestGetCompanyProfileErrorResponse()
+    {
+        return [
+            [
+                'statusCode' => Response::STATUS_CODE_404,
+                'content' => '{"errors": [{"error": "not found"}]}',
+                'errClass' => Exception::class,
+                'errMsg' => Client::ERR_SERVICE_NOT_RESPOND,
+            ],
+            [
+                'statusCode' => Response::STATUS_CODE_404,
+                'content' => '{"errors": [{"error": "' . Client::ERR_KEY_COMPANY_PROFILE_NOT_FOUND . '"}]}',
+                'errClass' => Exception\NotFoundException::class,
+                'errMsg' => Client::ERR_COMPANY_PROFILE_NOT_FOUND,
+            ],
+            [
+                'statusCode' => Response::STATUS_CODE_429,
+                'content' => '',
+                'errClass' => Exception\RateLimitException::class,
+                'errMsg' => Client::ERR_RATE_LIMIT_EXCEED,
+            ],
+            [
+                'statusCode' => Response::STATUS_CODE_500,
+                'content' => '{"body": "test"}',
+                'errClass' => Exception::class,
+                'errMsg' => '{"body": "test"}',
+            ],
+            [
+                'statusCode' => Response::STATUS_CODE_200,
+                'content' => '',
+                'errClass' => Exception::class,
+                'errMsg' => Client::ERR_INVALID_JSON,
+            ],
+        ];
     }
 }
