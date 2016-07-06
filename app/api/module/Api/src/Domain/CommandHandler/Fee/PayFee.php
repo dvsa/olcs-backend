@@ -36,6 +36,14 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
     protected $repoServiceName = 'Fee';
     protected $extraRepos = ['ContinuationDetail'];
 
+    /**
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\PayFee $command command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         $fee = $this->getRepo()->fetchUsingId($command);
@@ -50,9 +58,11 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
     }
 
     /**
-     * close Fee and TEX tasks, when pays the grant fee on a new goods application;
+     * Close Fee and TEX tasks, when pays the grant fee on a new goods application;
      *
-     * @param Fee $fee
+     * @param Fee $fee fee
+     *
+     * @return void
      */
     protected function maybeCancelApplicationTasks(Fee $fee)
     {
@@ -70,6 +80,14 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         }
     }
 
+    /**
+     * Process application fee
+     *
+     * @param Fee $fee fee
+     *
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return void
+     */
     protected function maybeProcessApplicationFee(Fee $fee)
     {
         $application = $fee->getApplication();
@@ -93,15 +111,15 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
     /**
      * If all criteria are true then continue the Licence
      *
-     * @param Fee $fee
+     * @param Fee $fee fee
      *
-     * @return Result|false
+     * @return void
      */
     protected function maybeContinueLicence(Fee $fee)
     {
         // Fee type is continuation fee
         if ($fee->getFeeType()->getFeeType()->getId() !== FeeType::FEE_TYPE_CONT) {
-            return false;
+            return;
         }
 
         $licenceId = $fee->getLicence()->getId();
@@ -110,7 +128,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         try {
             $this->getRepo('ContinuationDetail')->fetchOngoingForLicence($licenceId);
         } catch (\Doctrine\ORM\UnexpectedResultException $e) {
-            return false;
+            return;
         }
 
         // the licence status is Valid, Curtailed or Suspended
@@ -120,13 +138,13 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
             LicenceEntity::LICENCE_STATUS_SUSPENDED,
         ];
         if (!in_array($fee->getLicence()->getStatus()->getId(), $validLicenceStatuses)) {
-            return false;
+            return;
         }
 
         // there are no other outstanding or (waive recommended) continuation fees associated to the licence
         $outstandingFees = $this->getRepo()->fetchOutstandingContinuationFeesByLicenceId($licenceId);
         if (count($outstandingFees) !== 0) {
-            return false;
+            return;
         }
 
         $this->result->merge($this->handleSideEffect(ContinueLicenceCmd::create(['id' => $licenceId])));
@@ -140,11 +158,13 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
     /**
      * If the fee type is a interim, then check if we do need in-force processing
      *
-     * @param Fee $fee
+     * @param Fee $fee fee
+     *
+     * @return void
      */
     protected function maybeProcessGrantingFee(Fee $fee)
     {
-        if ($fee->getFeeType()->getFeeType()->getId() !== FeeType::FEE_TYPE_GRANTINT) {
+        if ($fee->getFeeType()->getFeeType()->getId() !== FeeType::FEE_TYPE_GRANT) {
             return;
         }
 
@@ -166,7 +186,9 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
     /**
      * If the fee has an associated task, close it
      *
-     * @param Fee $fee
+     * @param Fee $fee fee
+     *
+     * @return void
      */
     protected function maybeCloseFeeTask(Fee $fee)
     {
