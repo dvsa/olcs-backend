@@ -23,26 +23,46 @@ class DecisionTest extends RepositoryTestCase
 {
     public function setUp()
     {
-        $this->setUpSut(Repo::class);
+        $this->setUpSut(Repo::class, true);
     }
 
     public function testApplyListFilters()
     {
-        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
 
-        $goodsOrPsv = 'lcat_psv';
-        $isNi = 'Y';
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
 
-        $query = DecisionList::create(['isNi' => $isNi, 'goodsOrPsv' => $goodsOrPsv]);
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf();
 
-        $mockQb = m::mock(QueryBuilder::class);
-        $mockQb->shouldReceive('expr->eq')->with('m.isNi', ':isNi')->andReturnSelf();
-        $mockQb->shouldReceive('expr->eq')->with('m.goodsOrPsv', ':goodsOrPsv')->andReturnSelf();
-        $mockQb->shouldReceive('andWhere')->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('isNi', $isNi)->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('goodsOrPsv', $goodsOrPsv)->andReturnSelf();
+        $query = DecisionList::create(['isNi' => 'Y', 'goodsOrPsv' => 'lcat_psv']);
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
 
-        $sut->applyListFilters($mockQb, $query);
+        $expectedQuery = 'BLAH '
+            . 'AND m.isNi = [[true]] '
+            . 'AND m.goodsOrPsv = [[lcat_psv]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 
+    public function testApplyListFiltersForTm()
+    {
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
+
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf();
+
+        $query = DecisionList::create(['isNi' => 'Y', 'goodsOrPsv' => 'NULL']);
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
+
+        $expectedQuery = 'BLAH '
+            . 'AND m.isNi = [[true]] '
+            . 'AND m.goodsOrPsv IS NULL';
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }
