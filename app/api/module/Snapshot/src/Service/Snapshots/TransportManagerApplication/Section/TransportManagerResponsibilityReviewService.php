@@ -22,7 +22,8 @@ class TransportManagerResponsibilityReviewService extends AbstractReviewService
     /**
      * Format the readonly config from the given data
      *
-     * @param array $data
+     * @param TransportManagerApplication $tma transport manager application
+     *
      * @return array
      */
     public function getConfig(TransportManagerApplication $tma)
@@ -115,13 +116,27 @@ class TransportManagerResponsibilityReviewService extends AbstractReviewService
         ];
     }
 
+    /**
+     * Render hours
+     *
+     * @param string $value value
+     *
+     * @return string
+     */
     protected function renderHours($value)
     {
         $hours = $this->translate('hours');
 
-        return (int)$value . ' ' . $hours;
+        return (float)$value . ' ' . $hours;
     }
 
+    /**
+     * Format operating centres
+     *
+     * @param TransportManagerApplication $tma transport manager application
+     *
+     * @return string
+     */
     private function formatOperatingCentres(TransportManagerApplication $tma)
     {
         $addresses = [];
@@ -134,6 +149,13 @@ class TransportManagerResponsibilityReviewService extends AbstractReviewService
         return implode('<br>', $addresses);
     }
 
+    /**
+     * Format files
+     *
+     * @param TransportManagerApplication $tma transport manager application
+     *
+     * @return string
+     */
     private function formatFiles(TransportManagerApplication $tma)
     {
         $files = $this->findFiles(
@@ -155,6 +177,13 @@ class TransportManagerResponsibilityReviewService extends AbstractReviewService
         return implode('<br>', $fileNames);
     }
 
+    /**
+     * Format other licences
+     *
+     * @param TransportManagerApplication $tma transport manager application
+     *
+     * @return array
+     */
     private function formatOtherLicences(TransportManagerApplication $tma)
     {
         if ($tma->getOtherLicences()->isEmpty()) {
