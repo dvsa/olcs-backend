@@ -47,6 +47,13 @@ class ContactDetails extends AbstractContactDetails
     const CONTACT_TYPE_USER = 'ct_user';
     const CONTACT_TYPE_HACKNEY = 'ct_hackney';
 
+    /**
+     * Construct
+     *
+     * @param RefData $contactType Contact type
+     *
+     * @return void
+     */
     public function __construct(RefData $contactType)
     {
         parent::__construct();
@@ -54,8 +61,11 @@ class ContactDetails extends AbstractContactDetails
     }
 
     /**
-     * @param RefData $contactType
-     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     * Create
+     *
+     * @param RefData $contactType   Contact type
+     * @param array   $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     *
      * @return ContactDetails
      */
     public static function create(RefData $contactType, array $contactParams)
@@ -67,7 +77,11 @@ class ContactDetails extends AbstractContactDetails
     }
 
     /**
+     * Update
+     *
      * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     *
+     * @return $this
      */
     public function update(array $contactParams)
     {
@@ -100,7 +114,11 @@ class ContactDetails extends AbstractContactDetails
     }
 
     /**
+     * Update IRFO operator
+     *
      * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     *
+     * @return void
      */
     private function updateIrfoOperator(array $contactParams)
     {
@@ -121,7 +139,11 @@ class ContactDetails extends AbstractContactDetails
     }
 
     /**
+     * Update objector
+     *
      * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     *
+     * @return void
      */
     private function updateObjector(array $contactParams)
     {
@@ -153,7 +175,11 @@ class ContactDetails extends AbstractContactDetails
 
 
     /**
+     * Update statement requestor
+     *
      * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     *
+     * @return void
      */
     private function updateStatementRequestor(array $contactParams)
     {
@@ -165,7 +191,11 @@ class ContactDetails extends AbstractContactDetails
     }
 
     /**
-    * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\User\UpdatePartner
+     * Update partner
+     *
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\User\UpdatePartner
+     *
+     * @return void
     */
     private function updatePartner(array $contactParams)
     {
@@ -177,7 +207,11 @@ class ContactDetails extends AbstractContactDetails
     }
 
     /**
+     * Update user
+     *
      * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     *
+     * @return void
      */
     private function updateUser(array $contactParams)
     {
@@ -199,7 +233,11 @@ class ContactDetails extends AbstractContactDetails
     }
 
     /**
+     * Update complainant
+     *
      * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     *
+     * @return void
      */
     private function updateComplainant(array $contactParams)
     {
@@ -211,7 +249,11 @@ class ContactDetails extends AbstractContactDetails
     }
 
     /**
+     * Update correspondence address
+     *
      * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\OperatorContactDetails
+     *
+     * @return void
      */
     private function updateCorrespondenceAddress(array $contactParams)
     {
@@ -235,8 +277,10 @@ class ContactDetails extends AbstractContactDetails
 
     /**
      * Create address object
+     *
      * @param array $addressParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\Address
-     * @return Address|null
+     *
+     * @return void
      */
     private function populateAddress(array $addressParams)
     {
@@ -251,13 +295,16 @@ class ContactDetails extends AbstractContactDetails
             $addressParams['addressLine4'],
             $addressParams['town'],
             $addressParams['postcode'],
-            isset($addressParams['countryCode']) ? $addressParams['countryCode'] : null
+            !empty($addressParams['countryCode']) ? $addressParams['countryCode'] : null
         );
     }
 
     /**
+     * Populate phone contacts
+     *
      * @param array $phoneContacts List of Dvsa\Olcs\Transfer\Command\Partial\PhoneContact
-     * @return array
+     *
+     * @return void
      */
     private function populatePhoneContacts(array $phoneContacts)
     {
@@ -295,7 +342,11 @@ class ContactDetails extends AbstractContactDetails
     }
 
     /**
+     * Populate person
+     *
      * @param array $personParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\Person
+     *
+     * @return void
      */
     private function populatePerson(array $personParams)
     {
@@ -314,16 +365,25 @@ class ContactDetails extends AbstractContactDetails
     /**
      * Generates a parameter from either the params array, or returns a default.
      *
-     * @param $params
-     * @param $var
-     * @param null $default
-     * @return null
+     * @param array  $params  Params
+     * @param string $var     Variable name
+     * @param mixed  $default Default value
+     *
+     * @return mixed
      */
     private function getDefaultParameter($params, $var, $default = null)
     {
         return isset($params[$var]) ? $params[$var] : $default;
     }
 
+    /**
+     * Update contact details with person and email address
+     *
+     * @param Person|null $person       Person
+     * @param string|null $emailAddress Email address
+     *
+     * @return void
+     */
     public function updateContactDetailsWithPersonAndEmailAddress($person = null, $emailAddress = null)
     {
         if ($person !== null) {

@@ -24,6 +24,19 @@ class Address extends AbstractAddress
 {
     const CONTACT_TYPE_REGISTERED_ADDRESS = 'ct_reg';
 
+    /**
+     * Update address
+     *
+     * @param string  $addressLine1 Address line 1
+     * @param string  $addressLine2 Address line 2
+     * @param string  $addressLine3 Address line 3
+     * @param string  $addressLine4 Address line 4
+     * @param string  $town         Town
+     * @param string  $postcode     Postcode
+     * @param Country $countryCode  Country code
+     *
+     * @return void
+     */
     public function updateAddress(
         $addressLine1 = null,
         $addressLine2 = null,
@@ -39,11 +52,14 @@ class Address extends AbstractAddress
         $this->setAddressLine4($addressLine4);
         $this->setTown($town);
         $this->setPostcode($postcode);
-        if (!is_null($countryCode)) {
-            $this->setCountryCode($countryCode);
-        }
+        $this->setCountryCode($countryCode);
     }
 
+    /**
+     * To array
+     *
+     * @return array
+     */
     public function toArray()
     {
         return [
@@ -57,6 +73,11 @@ class Address extends AbstractAddress
         ];
     }
 
+    /**
+     * Is empty address
+     *
+     * @return bool
+     */
     public function isEmpty()
     {
         return empty(
