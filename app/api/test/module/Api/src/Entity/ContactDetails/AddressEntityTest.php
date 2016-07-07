@@ -44,6 +44,23 @@ class AddressEntityTest extends EntityTester
         $this->assertEquals('town', $address->getTown());
         $this->assertEquals('postcode', $address->getPostcode());
         $this->assertSame($country, $address->getCountryCode());
+
+        $address->updateAddress(
+            'address 11',
+            'address 22',
+            'address 33',
+            'address 44',
+            'town 1',
+            'postcode1'
+        );
+
+        $this->assertEquals('address 11', $address->getAddressLine1());
+        $this->assertEquals('address 22', $address->getAddressLine2());
+        $this->assertEquals('address 33', $address->getAddressLine3());
+        $this->assertEquals('address 44', $address->getAddressLine4());
+        $this->assertEquals('town 1', $address->getTown());
+        $this->assertEquals('postcode1', $address->getPostcode());
+        $this->assertNull($address->getCountryCode());
     }
 
     public function testIsEmpty()
