@@ -40,11 +40,13 @@ class ComplianceEpisodeXmlFactory implements FactoryInterface
         $seriousInfringement = [
             'ns0:Header' => [
                 new NodeAttribute('workflowId', 'workflowId'),
-                new NodeAttribute('memberStateCode', 'from')
+                new NodeAttribute('memberStateCode', 'from'),
+                new NodeAttribute('sentAt', 'sentAt')
             ],
             'ns0:Body' => [
                 new NodeAttribute('notificationNumber', 'businessCaseId'),
                 new NodeAttribute('originatingAuthority', 'originatingAuthority'),
+                new NodeAttribute('notificationDateTime', 'notificationDateTime'),
                 new Recursion(
                     'ns0:TransportUndertaking',
                     [
