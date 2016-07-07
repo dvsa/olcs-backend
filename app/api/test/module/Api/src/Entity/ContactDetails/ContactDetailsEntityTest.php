@@ -75,6 +75,7 @@ class ContactDetailsEntityTest extends EntityTester
         $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
         $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
         $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
+        $this->assertEquals($data['address']['countryCode'], $entity->getAddress()->getCountryCode());
 
         $this->assertEquals(2, count($entity->getPhoneContacts()));
     }
@@ -155,6 +156,7 @@ class ContactDetailsEntityTest extends EntityTester
         $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
         $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
         $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
+        $this->assertEquals($data['address']['countryCode'], $entity->getAddress()->getCountryCode());
 
         $phoneContacts = $entity->getPhoneContacts()->toArray();
         $this->assertEquals(2, count($phoneContacts));
@@ -200,6 +202,7 @@ class ContactDetailsEntityTest extends EntityTester
         $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
         $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
         $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
+        $this->assertEquals($data['address']['countryCode'], $entity->getAddress()->getCountryCode());
 
         $this->assertEquals(0, $entity->getPhoneContacts()->count());
     }
@@ -251,6 +254,7 @@ class ContactDetailsEntityTest extends EntityTester
         $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
         $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
         $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
+        $this->assertEquals($data['address']['countryCode'], $entity->getAddress()->getCountryCode());
 
         $this->assertEquals(0, $entity->getPhoneContacts()->count());
     }
@@ -306,6 +310,7 @@ class ContactDetailsEntityTest extends EntityTester
         $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
         $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
         $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
+        $this->assertEquals($data['address']['countryCode'], $entity->getAddress()->getCountryCode());
 
         $this->assertEquals(2, count($entity->getPhoneContacts()));
     }
@@ -327,7 +332,7 @@ class ContactDetailsEntityTest extends EntityTester
                 'addressLine4' => 'updated a4',
                 'town' => 'updated town',
                 'postcode' => 'LS1 2AB',
-                'countryCode' => m::mock(Country::class),
+                'countryCode' => '',
             ],
             'phoneContacts' => [
                 [
@@ -369,6 +374,7 @@ class ContactDetailsEntityTest extends EntityTester
         $addressEntity->setAddressLine4('existing a4');
         $addressEntity->setTown('existing town');
         $addressEntity->setPostcode('LS2 9AA');
+        $addressEntity->setCountryCode(m::mock(Country::class));
         $entity->setAddress($addressEntity);
 
         $phoneContactType = m::mock(RefData::class)->makePartial();
@@ -405,6 +411,7 @@ class ContactDetailsEntityTest extends EntityTester
         $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
         $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
         $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
+        $this->assertNull($entity->getAddress()->getCountryCode());
 
         $phoneContacts = $entity->getPhoneContacts()->toArray();
         $this->assertEquals(2, count($phoneContacts));
@@ -469,6 +476,7 @@ class ContactDetailsEntityTest extends EntityTester
         $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
         $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
         $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
+        $this->assertEquals($data['address']['countryCode'], $entity->getAddress()->getCountryCode());
 
         $this->assertEquals(2, count($entity->getPhoneContacts()));
     }
@@ -547,6 +555,7 @@ class ContactDetailsEntityTest extends EntityTester
         $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
         $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
         $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
+        $this->assertEquals($data['address']['countryCode'], $entity->getAddress()->getCountryCode());
 
         $phoneContacts = $entity->getPhoneContacts()->toArray();
         $this->assertEquals(2, count($phoneContacts));
