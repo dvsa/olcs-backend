@@ -1,6 +1,6 @@
 <?php
 
-use Dvsa\Olcs\Api\Domain\Repository\Factory\DataGovUkFactory;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory;
 use Dvsa\Olcs\Api\Domain\QueryPartial;
 use Dvsa\Olcs\Api\Domain\Util;
@@ -308,7 +308,8 @@ return [
             'SystemInfoMessage' => RepositoryFactory::class,
             'Reason' => RepositoryFactory::class,
             'PiDefinition' => RepositoryFactory::class,
-            'DataGovUk' => DataGovUkFactory::class,
+            'DataGovUk' => Repository\Factory\DataGovUkFactory::class,
+            'CompanyHouseVsOlcsDiffs' => Repository\Factory\CompaniesHouseVsOlcsDiffsFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

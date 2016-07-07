@@ -27,6 +27,15 @@ return [
                         ],
                     ],
                 ],
+                'ch-vs-olcs-compare' => [
+                    'options' => [
+                        'route' => 'ch-vs-olcs-diffs [--verbose|-v] [--path=]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'companiesHouseVsOlcsDiffsExport',
+                        ],
+                    ],
+                ],
                 'duplicate-vehicle-warning' => [
                     'options' => [
                         'route' => 'duplicate-vehicle-warning [--verbose|-v]',
@@ -215,7 +224,8 @@ return [
             Command\CreateViExtractFiles::class => CommandHandler\CreateViExtractFiles::class,
             Command\SetViFlags::class => CommandHandler\SetViFlags::class,
             Command\DataGovUkExport::class => CommandHandler\DataGovUkExport::class,
-        ]
+            Command\CompaniesHouseVsOlcsDiffsExport::class => CommandHandler\CompaniesHouseVsOlcsDiffsExport::class,
+        ],
     ],
     'batch_config' => [
         'remove-read-audit' => [

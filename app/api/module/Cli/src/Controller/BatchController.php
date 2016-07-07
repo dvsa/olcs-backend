@@ -98,6 +98,22 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * Find differences between Companies house and Olcs data
+     *
+     * @return ConsoleModel
+     */
+    public function companiesHouseVsOlcsDiffsExportAction()
+    {
+        $params = [
+            'path' =>  $this->params('path'),
+        ];
+
+        return $this->handleExitStatus(
+            $this->handleCommand([CliCommand\CompaniesHouseVsOlcsDiffsExport::create($params)])
+        );
+    }
+
+    /**
      * Continuation not sought action
      *
      * @return ConsoleModel
