@@ -141,6 +141,34 @@ class BatchControllerTest extends MockeryTestCase
         $this->sut->enqueueCompaniesHouseCompareAction();
     }
 
+    public function testCompaniesHouseVsOlcsDiffsExport()
+    {
+        $this->mockParamsPlugin(
+            [
+                'path' => 'unit_Path',
+                'verbose' => true,
+            ]
+        );
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(CliCommand\CompaniesHouseVsOlcsDiffsExport::class))
+            ->once()
+            ->andReturn(
+                (new Command\Result())
+                    ->addMessage('unit_message')
+            );
+
+        $this->mockConsole
+            ->shouldReceive('writeLine')
+            ->once()
+            ->with('/' . addslashes(CliCommand\CompaniesHouseVsOlcsDiffsExport::class) . '$/')
+            //
+            ->shouldReceive('writeLine')->once()->with('/unit_message$/');
+
+        $this->sut->companiesHouseVsOlcsDiffsExportAction();
+    }
+
     public function testDuplicateVehicleWarningAction()
     {
         $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);

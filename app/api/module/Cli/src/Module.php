@@ -53,17 +53,19 @@ class Module implements ConsoleUsageProviderInterface
             ['    ' . DataGovUkExport::BUS_REGISTERED_ONLY, '- export bus registered only'],
             ['    ' . DataGovUkExport::BUS_VARIATION, '- export bus variations'],
             ['--path=<exportPath>', '(optional) save export file in specified directory'],
+            //
+            'ch-vs-olcs-diffs [--verbose|-v] [--path=<exportPath>]' =>
+                'Compare data at olcs vs companies house and export to csv',
+            ['--path=<exportPath>', '(optional) save export file in specified directory'],
         ];
     }
 
     /**
      * On bootstrap
      *
-     * @param MvcEvent $event event
-     *
      * @return void
      */
-    public function onBootstrap(MvcEvent $event)
+    public function onBootstrap()
     {
         // block session saving when running cli, as causes permissions errors
         if (PHP_SAPI === 'cli') {
