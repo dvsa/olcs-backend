@@ -290,6 +290,7 @@ return [
             'TeamPrinter' => RepositoryFactory::class,
             'Printer' => RepositoryFactory::class,
             'ErruRequest' => RepositoryFactory::class,
+            'ErruRequestFailure' => RepositoryFactory::class,
             'SeriousInfringement' => RepositoryFactory::class,
             'SiPenalty' => RepositoryFactory::class,
             'SiCategory' => RepositoryFactory::class,
