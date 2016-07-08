@@ -17,8 +17,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="erru_request_failure",
  *    indexes={
- *        @ORM\Index(name="ix_erru_request_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_erru_request_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_erru_request_failure_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_erru_request_failure_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_erru_request_failure_document_id", columns={"document_id"})
@@ -32,9 +32,10 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -53,7 +54,7 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
      *
      * @var \Dvsa\Olcs\Api\Entity\Doc\Document
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", fetch="LAZY")
+     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", fetch="LAZY")
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=true)
      */
     protected $document;
@@ -90,9 +91,10 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -119,7 +121,7 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
     /**
      * Set the created by
      *
-     * @param int $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
      * @return ErruRequestFailure
      */
     public function setCreatedBy($createdBy)
@@ -132,7 +134,7 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -257,7 +259,7 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
      * @return ErruRequestFailure
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -270,7 +272,7 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {
