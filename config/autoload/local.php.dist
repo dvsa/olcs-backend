@@ -257,4 +257,7 @@ return [
     'data-gov-uk-export' => [
         'path' => '/var/tmp/dataGovUk',
     ],
+    'ch-vs-olcs-export' => [
+        'path' => '/tmp/companyHouse_vs_Olcs',
+    ],
 ];
