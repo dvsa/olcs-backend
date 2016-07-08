@@ -137,10 +137,11 @@ final class Result
     {
         $this->ids = array_merge($this->ids, $result->getIds());
         $this->messages = array_merge($this->messages, $result->getMessages());
+        $this->flags = array_merge($this->flags, $result->getFlags());
     }
 
     /**
-     * Export to array
+     * Returns the object represented as an array, minus the flags
      *
      * @return array
      */
