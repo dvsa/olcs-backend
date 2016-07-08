@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Si;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Zend\Serializer\Adapter\Json;
 
 /**
  * ErruRequestFailure Entity
@@ -20,5 +22,22 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ErruRequestFailure extends AbstractErruRequestFailure
 {
+    /**
+     * Creates erru request failure record
+     *
+     * @param Document        $document the document
+     * @param array           $errors   array of errors
+     * @param array|string    $input    usually array, if it's a string we don't save it
+     */
+    public function __construct(Document $document, array $errors, $input)
+    {
+        $json = new Json();
 
+        $this->document = $document;
+        $this->errors = $json->serialize($errors);
+
+        if (is_array($input)) {
+            $this->input = $json->serialize($input);
+        }
+    }
 }
