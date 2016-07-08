@@ -39,7 +39,6 @@ class CompaniesHouseVsOlcsDiffsExportTest extends CommandHandlerTestCase
         ];
 
         parent::setUp();
-
     }
 
     public function testMakeCsvsFromStatement()
@@ -81,7 +80,6 @@ class CompaniesHouseVsOlcsDiffsExportTest extends CommandHandlerTestCase
 
     private function mockRepoMethod($repoMethod)
     {
-
         $row1 = [
             'col1' => 'val11',
             'col2' => 'v"\'-/\,',
