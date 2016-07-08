@@ -104,12 +104,12 @@ final class CompaniesHouseVsOlcsDiffsExport extends AbstractCommandHandler
     /**
      * Fill csv files with data. Csv created by value of Key Field and File name.
      *
-     * @param Statement $stmt     db records set
-     * @param string    $fileName main part of file name
+     * @param Statement|boolean $stmt     DB Records set or false if failure
+     * @param string            $fileName main part of file name
      *
      * @return void
      */
-    private function makeCsvsFromStatement(Statement $stmt, $fileName)
+    private function makeCsvsFromStatement($stmt, $fileName)
     {
         //  create csv file
         $filePath = $this->path . '/' . $fileName . '.csv';
@@ -117,16 +117,20 @@ final class CompaniesHouseVsOlcsDiffsExport extends AbstractCommandHandler
         $this->result->addMessage('create csv file: ' . $filePath);
         $fh = ExportToCsv::createFile($filePath);
 
-        //  add title & first row
-        $row = $stmt->fetch();
+        if ($stmt instanceof Statement) {
+            //  add title & first row
+            $row = $stmt->fetch();
 
-        fputcsv($fh, array_keys($row));
-        fputcsv($fh, $row);
+            if ($row !== false) {
+                fputcsv($fh, array_keys($row));
+                fputcsv($fh, $row);
+            }
 
-        //  add rows
-        while (($row = $stmt->fetch()) !== false) {
-            //  add rows to csv from pool
-            fputcsv($fh, $row);
+            //  add rows
+            while (($row = $stmt->fetch()) !== false) {
+                //  add rows to csv from pool
+                fputcsv($fh, $row);
+            }
         }
 
         //  close file
