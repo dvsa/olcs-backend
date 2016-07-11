@@ -1093,7 +1093,13 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn(
                 m::mock()
                     ->shouldReceive('getPaymentMethod')
-                    ->andReturn(FeeEntity::METHOD_CARD_ONLINE)
+                    ->andReturn(
+                        m::mock()
+                            ->shouldReceive('getId')
+                            ->andReturn(FeeEntity::METHOD_CARD_ONLINE)
+                            ->once()
+                            ->getMock()
+                    )
                     ->once()
                     ->shouldReceive('getReference')
                     ->andReturn('payment_ref')
@@ -1219,7 +1225,13 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn(
                 m::mock()
                     ->shouldReceive('getPaymentMethod')
-                    ->andReturn(FeeEntity::METHOD_CARD_ONLINE)
+                    ->andReturn(
+                        m::mock()
+                            ->shouldReceive('getId')
+                            ->andReturn(FeeEntity::METHOD_CARD_ONLINE)
+                            ->once()
+                            ->getMock()
+                    )
                     ->once()
                     ->shouldReceive('getReference')
                     ->andReturn('payment_ref')
