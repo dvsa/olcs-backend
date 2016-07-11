@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Process Si Compliance Episode
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si;
 
 use Dvsa\Olcs\Api\Domain\Exception\Exception;
@@ -12,45 +9,42 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\ComplianceEpisode as ComplianceEpisodeDocCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
-use Dvsa\Olcs\Api\Domain\Command\Cases\Si\ComplianceEpisode as ComplianceEpisodeCmd;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\Command\Cases\Si\ComplianceEpisode as ComplianceEpisodeProcessCmd;
 
 /**
  * Save Si compliance document and then trigger processing
+ *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
 final class ComplianceEpisodeDocument extends AbstractCommandHandler
 {
     /**
-     * @var Result
-     */
-    protected $result;
-
-    /**
      * Handle command to save the xml to the doc store, then trigger processing of the compliance episode
      *
-     * @param CommandInterface $command
+     * @param CommandInterface|ComplianceEpisodeDocCmd $command the command
+     *
      * @return Result
-     * @throws \Exception
+     * @throws Exception
      */
     public function handleCommand(CommandInterface $command)
     {
         /**
-         * @var ComplianceEpisodeDocCmd $command
          * @var array $erruData
          */
-        $result = $this->handleSideEffect($this->createDocumentCommand($command->getXml()));
-        
-        //we process the compliance episode in a separate command as it needs to run in a DB transaction,
-        //whereas we save the incoming xml document regardless
-        try {
-            $result->merge(
-                $this->handleSideEffect(
-                    ComplianceEpisodeCmd::create(['id' => $result->getId('document')])
-                )
-            );
-        } catch (\Exception $e) {
-            //will result in a 400 response from XML controller, which is what we're looking for
+        $result = $this->handleSideEffect(
+            $this->createDocumentCommand($command->getXml())
+        );
+
+        //compliance episode runs inside a transaction, and needs to save to the database both success and failure
+        $result->merge(
+            $this->handleSideEffect(
+                ComplianceEpisodeProcessCmd::create(['id' => $result->getId('document')])
+            )
+        );
+
+        //throwing the exception within the compliance episode processor would result in a DB rollback,
+        //so we check for errors and throw the exception here instead
+        if ($result->getFlag('hasErrors')) {
             throw new Exception('some data was not correct');
         }
 
@@ -60,7 +54,7 @@ final class ComplianceEpisodeDocument extends AbstractCommandHandler
     /**
      * Returns an upload command to add xml to the doc store
      *
-     * @param string $content
+     * @param string $content document content
      *
      * @return UploadCmd
      */
