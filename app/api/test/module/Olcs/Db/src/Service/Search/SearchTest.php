@@ -538,6 +538,10 @@ class SearchTest extends MockeryTestCase
                                         $this->generateMatch(
                                             'login_id',
                                             ['query' => 'FOO BAR', 'boost' => 2.0]
+                                        ),
+                                        $this->generateMatch(
+                                            'lic_nos',
+                                            ['query' => 'FOO BAR']
                                         )
                                     ]
                                 ]
