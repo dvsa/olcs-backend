@@ -173,8 +173,15 @@ class CommunityLic extends AbstractRepository
             ->innerJoin('s.communityLicSuspensionReasons', 'sr')
             ->andWhere($qb->expr()->eq($this->alias . '.status', ':status'))
             ->andWhere($qb->expr()->lte('s.startDate', ':startDate'))
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->isNull('s.endDate'),
+                    $qb->expr()->gt('s.endDate', ':endDate')
+                )
+            )
             ->setParameter('status', CommunityLicEntity::STATUS_ACTIVE)
-            ->setParameter('startDate', $date);
+            ->setParameter('startDate', $date)
+            ->setParameter('endDate', $date);
 
         return $qb->getQuery()->execute();
     }

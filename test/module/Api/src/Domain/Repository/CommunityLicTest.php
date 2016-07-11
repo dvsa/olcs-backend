@@ -206,6 +206,11 @@ class CommunityLicTest extends RepositoryTestCase
         $mockQb->shouldReceive('andWhere')->with('startDate')->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('status', CommunityLicEntity::STATUS_ACTIVE)->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('startDate', 'foo')->andReturnSelf();
+        $mockQb->shouldReceive('expr->gt')->with('s.endDate', ':endDate')->once()->andReturn('endDateGt');
+        $mockQb->shouldReceive('expr->isNull')->with('s.endDate')->once()->andReturn('endDateNull');
+        $mockQb->shouldReceive('expr->orX')->with('endDateNull', 'endDateGt')->once()->andReturn('orExpr');
+        $mockQb->shouldReceive('andWhere')->with('orExpr')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('endDate', 'foo')->andReturnSelf();
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
         $mockQb->shouldReceive('getQuery->execute')->once()->andReturn('result');
