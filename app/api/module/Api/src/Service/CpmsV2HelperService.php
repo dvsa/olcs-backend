@@ -231,6 +231,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         if (isset($response['auth_code'])) {
             return $response['auth_code'];
         }
+        return null;
     }
 
     /**
@@ -478,9 +479,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         // get first (and only) fee transaction
         /* @var $ft FeeTransaction */
         $ft = array_shift($feeTransactions);
+        $reference = $ft->getTransaction()->getReference();
 
         $method   = 'post';
-        $endPoint = '/api/payment/'. $ft->getTransaction()->getReference() .'/refund';
+        $endPoint = '/api/payment/'. $reference .'/refund';
         $scope    = ApiService::SCOPE_REFUND;
 
         $params = array_merge(
@@ -493,6 +495,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         );
         $params = array_merge($params, $extraParams);
         $params = $this->addCustomerParams($params, [$fee], $fee);
+        $paymentMethod = $ft->getTransaction()->getPaymentMethod();
+        if (in_array($paymentMethod, [Fee::METHOD_CARD_ONLINE, Fee::METHOD_CARD_OFFLINE], true)) {
+            $params['auth_code'] = $this->getPaymentAuthCode($reference);
+        }
 
         $response = $this->send($method, $endPoint, $scope, $params);
 
