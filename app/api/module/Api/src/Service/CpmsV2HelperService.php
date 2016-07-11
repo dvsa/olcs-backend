@@ -496,7 +496,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $params = array_merge($params, $extraParams);
         $params = $this->addCustomerParams($params, [$fee], $fee);
         $paymentMethod = $ft->getTransaction()->getPaymentMethod();
-        if (in_array($paymentMethod, [Fee::METHOD_CARD_ONLINE, Fee::METHOD_CARD_OFFLINE], true)) {
+        if (in_array($paymentMethod, [Fee::METHOD_CARD_ONLINE, Fee::METHOD_CARD_OFFLINE])) {
             $params['auth_code'] = $this->getPaymentAuthCode($reference);
         }
 
