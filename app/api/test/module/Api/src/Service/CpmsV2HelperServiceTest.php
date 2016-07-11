@@ -764,9 +764,12 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->assertSame($response, $result);
     }
 
-    public function testGetPaymentAuthCode()
+    /**
+     * @dataProvider authCodeProvider
+     */
+    public function testGetPaymentAuthCode($authCode)
     {
-        $response = ['auth_code' => 'AUTH123'];
+        $response = ['auth_code' => $authCode];
 
         $this->cpmsClient
             ->shouldReceive('get')
@@ -776,7 +779,15 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $result = $this->sut->getPaymentAuthCode('MY-REFERENCE');
 
-        $this->assertSame('AUTH123', $result);
+        $this->assertSame($authCode, $result);
+    }
+
+    public function authCodeProvider()
+    {
+        return [
+            ['AUTH123'],
+            [null]
+        ];
     }
 
     /**
@@ -1077,8 +1088,19 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $fee = m::mock(FeeEntity::class);
 
         $ft = m::mock(FeeTransactionEntity::class);
-        $ft->shouldReceive('getTransaction->getReference')->andReturn('payment_ref');
         $ft->shouldReceive('getAmount')->andReturn('100.00');
+        $ft->shouldReceive('getTransaction')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getPaymentMethod')
+                    ->andReturn(FeeEntity::METHOD_CARD_ONLINE)
+                    ->once()
+                    ->shouldReceive('getReference')
+                    ->andReturn('payment_ref')
+                    ->times(3)
+                    ->getMock()
+            )
+            ->getMock();
 
         $address = new Address();
         $address->updateAddress('Foo', null, null, null, 'Bar', 'LS9 6NF');
@@ -1158,6 +1180,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                 'scope' => 'REFUND',
                 'total_amount' => '100.00',
                 'country_code' => 'NI',
+                'auth_code' => '123'
             ]
         );
 
@@ -1170,7 +1193,14 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('post')
             ->with('/api/payment/payment_ref/refund', 'REFUND', $params)
             ->once()
-            ->andReturn($response);
+            ->andReturn($response)
+            ->shouldReceive('get')
+            ->with('/api/payment/payment_ref/auth-code', 'QUERY_TXN', [])
+            ->andReturn(
+                ['auth_code' => '123']
+            )
+            ->once()
+            ->getMock();
 
         $result = $this->sut->refundFee($fee, $miscParams);
 
@@ -1184,8 +1214,19 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $fee = m::mock(FeeEntity::class);
 
         $ft = m::mock(FeeTransactionEntity::class);
-        $ft->shouldReceive('getTransaction->getReference')->andReturn('payment_ref');
         $ft->shouldReceive('getAmount')->andReturn('100.00');
+        $ft->shouldReceive('getTransaction')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getPaymentMethod')
+                    ->andReturn(FeeEntity::METHOD_CARD_ONLINE)
+                    ->once()
+                    ->shouldReceive('getReference')
+                    ->andReturn('payment_ref')
+                    ->twice(2)
+                    ->getMock()
+            )
+            ->getMock();
 
         $address = new Address();
         $address->updateAddress('ADDR1', 'ADDR2', 'ADDR3', 'ADDR4', 'TOWN', 'POSTCODE');
@@ -1239,7 +1280,14 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->cpmsClient
             ->shouldReceive('post')
             ->with('/api/payment/payment_ref/refund', 'REFUND', m::any())
-            ->andReturn([]);
+            ->andReturn([])
+            ->shouldReceive('get')
+            ->with('/api/payment/payment_ref/auth-code', 'QUERY_TXN', [])
+            ->andReturn(
+                ['auth_code' => '123']
+            )
+            ->once()
+            ->getMock();
 
         $this->cpmsClient
             ->shouldReceive('getClient->getHttpClient->getResponse->getStatusCode')
