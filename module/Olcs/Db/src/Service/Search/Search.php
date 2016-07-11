@@ -264,6 +264,10 @@ class Search implements AuthAwareInterface
                     $loginMatch->setFieldQuery('login_id', $search);
                     $loginMatch->setFieldBoost('login_id', 2.0);
                     $queryBool->addShould($loginMatch);
+
+                    $licNosMatch = new Query\Match();
+                    $licNosMatch->setFieldQuery('lic_nos', $search);
+                    $queryBool->addShould($licNosMatch);
                 }
 
                 break;
