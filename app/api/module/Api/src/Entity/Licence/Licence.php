@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
@@ -842,5 +843,21 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         }
 
         return $firstApplicationId;
+    }
+
+    /**
+     * Get traffic area for task allocation
+     *
+     * @return TrafficArea
+     */
+    public function getTrafficAreaForTaskAllocation()
+    {
+        if ($this->isGoods() === false || $this->getOrganisation()->isMlh() === false) {
+            return $this->getTrafficArea();
+        }
+        if ($this->getOrganisation()->getLeadTcArea() !== null) {
+            return $this->getOrganisation()->getLeadTcArea();
+        }
+        return $this->getTrafficArea();
     }
 }
