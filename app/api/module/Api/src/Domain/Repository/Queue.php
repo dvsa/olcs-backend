@@ -70,7 +70,7 @@ SQL;
 
         $query = 'INSERT INTO `queue` (`status`, `type`, `options`) VALUES ';
 
-        for ($i = 1; $i <= count($licences); $i++) {
+        for ($i = 1, $n = count($licences); $i <= $n; $i++) {
             $query .= "(:status{$i}, :type{$i}, :options{$i}), ";
         }
         $query = trim($query, ', ');
