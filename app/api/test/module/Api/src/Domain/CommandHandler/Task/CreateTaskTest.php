@@ -684,7 +684,7 @@ class CreateTaskTest extends CommandHandlerTestCase
                     ->getMock()
             )
             ->once()
-            ->shouldReceive('getTrafficArea')
+            ->shouldReceive('getTrafficAreaForTaskAllocation')
             ->andReturn(
                 m::mock()
                     ->shouldReceive('getId')
@@ -736,7 +736,7 @@ class CreateTaskTest extends CommandHandlerTestCase
             ->shouldReceive('getGoodsOrPsv')
             ->andReturn(null)
             ->once()
-            ->shouldReceive('getTrafficArea')
+            ->shouldReceive('getTrafficAreaForTaskAllocation')
             ->andReturn(
                 m::mock()
                     ->shouldReceive('getId')

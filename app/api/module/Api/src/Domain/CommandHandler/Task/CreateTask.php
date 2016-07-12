@@ -182,7 +182,7 @@ final class CreateTask extends AbstractCommandHandler
         $licence = $task->getLicence();
         $app = $task->getApplication();
 
-        $licenceTrafficArea = $licence->getTrafficArea();
+        $licenceTrafficArea = $licence->getTrafficAreaForTaskAllocation();
         $trafficArea = (
             $licenceTrafficArea !== null
             ? $licenceTrafficArea->getId()
