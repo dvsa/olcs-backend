@@ -26,4 +26,5 @@ return [
     CommandHandler\Licence\UpdateBusinessDetails::class => Misc\CanAccessLicenceWithId::class,
     CommandHandler\Licence\UpdateOperatingCentres::class => Misc\CanAccessLicenceWithId::class,
     CommandHandler\Licence\UpdateTypeOfLicence::class => Misc\CanAccessLicenceWithId::class,
+    CommandHandler\Licence\EnqueueContinuationNotSought::class => Misc\IsSystemUser::class
 ];

@@ -205,7 +205,11 @@ return [
             Queue::TYPE_SEND_MSI_RESPONSE
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Nr\SendMsiResponse::class,
             Queue::TYPE_UPDATE_NYSIIS_TM_NAME
-            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm\UpdateTmNysiisName::class,
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm\UpdateTmNysiisName::class,
+            Queue::TYPE_CNS
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Licence\ProcessContinuationNotSought::class,
+            Queue::TYPE_CNS_EMAIL
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Licence\SendContinuationNotSought::class,
         ],
         'factories' => [
             Queue::TYPE_CPID_EXPORT_CSV => Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,
