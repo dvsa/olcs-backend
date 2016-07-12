@@ -118,7 +118,6 @@ class Search implements AuthAwareInterface
             // ignore all query params and just search index for everything
             $elasticaQuery        = new Query();
         } else {
-
             // Generate _all_search as logical OR
             $elasticaQueryString  = new Query\Match();
             $elasticaQueryString->setField('_all', $query);
@@ -394,30 +393,48 @@ class Search implements AuthAwareInterface
 
         foreach ($dates as $fieldName => $value) {
 
-            if (strtolower(substr($fieldName, -2)) == 'to') {
-                // we'll deal with the TO fields later.
-                continue;
-            }
+            $lcFieldName = strtolower($fieldName);
 
-            $criteria = [];
-
-            $range = new Query\Range();
-
-            if (strtolower(substr($fieldName, -4)) == 'from') {
-                $fieldName = substr($fieldName, 0, -5);
+            if (substr($lcFieldName, -11) === 'from_and_to') {
+                /* from_and_to allows a single date field to be used as a terms filter whilst keeping the
+                 * individual Day/Month/Year input fields. The 'from_and_to' is identified and a single date is
+                 * added as a query match rather than a range (for efficiency)
+                 */
+                $fieldName = substr($fieldName, 0, -12);
                 $criteria['from'] = $value;
+                $criteria['to'] = $value;
 
-                // Let's now look for the to field.
-                $toFieldName = $fieldName . '_to';
-                if (array_key_exists($toFieldName, $dates)) {
-                    if ('' != $dates[$toFieldName]) {
-                        $criteria['to'] = $dates[$toFieldName];
+                $queryMatch = new Query\Match();
+                $queryMatch->setFieldQuery($fieldName, $value);
+                $bool->addMust($queryMatch);
+
+            } else {
+
+                if (substr($lcFieldName, -2) === 'to') {
+                    // we'll deal with the TO fields later.
+                    continue;
+                }
+
+                $criteria = [];
+
+                $range = new Query\Range();
+
+                if (substr($lcFieldName, -4) === 'from') {
+                    $fieldName = substr($fieldName, 0, -5);
+                    $criteria['from'] = $value;
+
+                    // Let's now look for the to field.
+                    $toFieldName = $fieldName . '_to';
+                    if (array_key_exists($toFieldName, $dates)) {
+                        if ('' != $dates[$toFieldName]) {
+                            $criteria['to'] = $dates[$toFieldName];
+                        }
                     }
                 }
-            }
 
-            $range->addField($fieldName, $criteria);
-            $bool->addMust($range);
+                $range->addField($fieldName, $criteria);
+                $bool->addMust($range);
+            }
         }
 
         return $bool;
