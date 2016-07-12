@@ -946,4 +946,8 @@ return [
     TransferCommand\System\PublicHoliday\Create::class => CommandHandler\System\PublicHoliday\Create::class,
     TransferCommand\System\PublicHoliday\Update::class => CommandHandler\System\PublicHoliday\Update::class,
     TransferCommand\System\PublicHoliday\Delete::class => CommandHandler\System\PublicHoliday\Delete::class,
+
+    // Command - CommunityLc
+    Command\Licence\EnqueueContinuationNotSought::class =>
+        CommandHandler\Licence\EnqueueContinuationNotSought::class,
 ];

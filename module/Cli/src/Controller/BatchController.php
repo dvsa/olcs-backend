@@ -131,40 +131,24 @@ class BatchController extends AbstractConsoleController
         $this->writeVerboseMessages("{$result['count']} Licence(s) found to change to CNS");
         $licences = $result['result'];
 
-        // build array of commands (once per licence)
-        $commands = [];
-        foreach ($licences as $licence) {
-            $commands[] = Command\Licence\ProcessContinuationNotSought::create(
-                [
-                    'id' => $licence['id'],
-                    'version' => $licence['version'],
-                ]
+        if (count($licences) === 0) {
+            return $this->handleExitStatus(0);
+        }
+
+        if (!$dryRun) {
+            return $this->handleExitStatus(
+                $this->handleCommand(
+                    [
+                        Command\Licence\EnqueueContinuationNotSought::create(
+                            [
+                                'licences' => $licences,
+                                'date' => $date
+                            ]
+                        ),
+                    ]
+                )
             );
         }
-
-        // add a command to send email summary
-        $commands[] = Command\Email\SendContinuationNotSought::create(
-            [
-                'date' => $date,
-                'licences' => $licences,
-            ]
-        );
-
-        // execute commands
-        if (!$dryRun) {
-            // @todo This process is memory intensive and slow, recommend to BJSS that cli jobs need min 512M
-            // Then remove this
-            $memoryLimit = ini_set('memory_limit', '-1');
-
-            $this->writeVerboseMessages("Processing commands");
-            $result = $this->handleCommand($commands);
-
-            // restore memory limit to original value
-            ini_set('memory_limit', $memoryLimit);
-
-            return $this->handleExitStatus($result);
-        }
-
         return $this->handleExitStatus(0);
     }
 

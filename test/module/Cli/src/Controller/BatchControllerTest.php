@@ -232,28 +232,51 @@ class BatchControllerTest extends MockeryTestCase
 
         $this->mockCommandHandler
             ->shouldReceive('handleCommand')
-            ->with(m::type(Command\Licence\ProcessContinuationNotSought::class))
-            ->twice()
-            ->andReturn(
-                (new Command\Result())
-                    ->addMessage('Licence updated')
-            );
-
-        $this->mockCommandHandler
-            ->shouldReceive('handleCommand')
-            ->with(m::type(Command\Email\SendContinuationNotSought::class))
+            ->with(m::type(Command\Licence\EnqueueContinuationNotSought::class))
             ->once()
             ->andReturnUsing(
-                function (Command\Email\SendContinuationNotSought $cmd) use ($licences, $now) {
+                function (Command\Licence\EnqueueContinuationNotSought $cmd) use ($licences, $now) {
                     static::assertEquals($now->format('Y-m-d'), $cmd->getDate()->format('Y-m-d'));
                     static::assertSame($licences, $cmd->getLicences());
-                    $result = new Command\Result();
-                    $result->addMessage('Email sent');
-                    return $result;
+                    return (new Command\Result());
                 }
             );
 
-        $this->mockConsole->shouldReceive('writeLine')->times(9);
+        $this->mockConsole->shouldReceive('writeLine')->times(3);
+
+        $this->sut->continuationNotSoughtAction();
+    }
+
+    public function testContinuationNotSoughtActionNoLicences()
+    {
+        $this->mockParamsPlugin(
+            [
+                'dryrun' => false,
+                'verbose' => true,
+            ]
+        );
+
+        $now = new DateTime();
+
+        $licences = [];
+
+        $this->mockQueryHandler
+            ->shouldReceive('handleQuery')
+            ->with(m::type(Query\Licence\ContinuationNotSoughtList::class))
+            ->andReturnUsing(
+                function (Query\Licence\ContinuationNotSoughtList $qry) use ($licences, $now) {
+                    static::assertEquals(
+                        $now->format('Y-m-d'),
+                        $qry->getDate()->format('Y-m-d')
+                    );
+                    return [
+                        'result' => $licences,
+                        'count' => 0,
+                    ];
+                }
+            );
+
+        $this->mockConsole->shouldReceive('writeLine')->times(2);
 
         $this->sut->continuationNotSoughtAction();
     }
