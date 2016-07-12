@@ -1,10 +1,5 @@
 <?php
 
-/**
- * User
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
@@ -37,7 +32,9 @@ class User extends AbstractRepository
     /**
      * Called from the factory to allow additional services to be injected
      *
-     * @param RepositoryServiceManager $serviceManager
+     * @param RepositoryServiceManager $serviceManager Repository manager
+     *
+     * @return void
      */
     public function initService(RepositoryServiceManager $serviceManager)
     {
@@ -45,8 +42,12 @@ class User extends AbstractRepository
     }
 
     /**
-     * @param QueryBuilder $qb
-     * @param int          $id
+     * Build default query
+     *
+     * @param QueryBuilder $qb Query
+     * @param int          $id Id
+     *
+     * @return void
      */
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {
@@ -60,9 +61,13 @@ class User extends AbstractRepository
     }
 
     /**
-     * @param QueryBuilder   $qb
-     * @param QueryInterface $query
-     * @param array $compositeFields
+     * Build default list query
+     *
+     * @param QueryBuilder   $qb              Query Builder
+     * @param QueryInterface $query           Query
+     * @param array          $compositeFields fields
+     *
+     * @return void
      */
     protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query, $compositeFields = [])
     {
@@ -77,8 +82,12 @@ class User extends AbstractRepository
     }
 
     /**
-     * @param QueryBuilder   $qb
-     * @param QueryInterface $query
+     * Apply filters
+     *
+     * @param QueryBuilder   $qb    Query Builder
+     * @param QueryInterface $query Query
+     *
+     * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
@@ -113,6 +122,13 @@ class User extends AbstractRepository
             ->setParameter('systemUser', PidIdentityProviderEntity::SYSTEM_USER);
     }
 
+    /**
+     * Fetch transport manager by user id
+     *
+     * @param int $userId User identifier
+     *
+     * @return mixed
+     */
     public function fetchForTma($userId)
     {
         $qb = $this->createQueryBuilder();
@@ -130,8 +146,8 @@ class User extends AbstractRepository
     /**
      * Get a list of users by licence number and email address
      *
-     * @param string $licNo
-     * @param string $emailAddress
+     * @param string $licNo        Licence number
+     * @param string $emailAddress email address
      *
      * @return array
      */
@@ -159,7 +175,10 @@ class User extends AbstractRepository
     }
 
     /**
+     * Populate Ref Data References
+     *
      * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     *
      * @return array
      */
     public function populateRefDataReference(array $data)
@@ -195,6 +214,13 @@ class User extends AbstractRepository
         return $data;
     }
 
+    /**
+     * Get count of users in team
+     *
+     * @param int $teamId Team indentifier
+     *
+     * @return int|null
+     */
     public function fetchUsersCountByTeam($teamId)
     {
         $qb = $this->createQueryBuilder();
@@ -205,6 +231,13 @@ class User extends AbstractRepository
         return $qb->getQuery()->getSingleScalarResult();
     }
 
+    /**
+     * Get by pid
+     *
+     * @param int $pid Pid
+     *
+     * @return Entity|null
+     */
     public function fetchByPid($pid)
     {
         $qb = $this->createQueryBuilder();
@@ -220,6 +253,6 @@ class User extends AbstractRepository
 
         $qb->where($this->alias . '.pid = :pid')->setParameter('pid', $pid);
 
-        return $qb->getQuery()->getSingleResult();
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }
