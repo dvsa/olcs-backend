@@ -51,6 +51,8 @@ class Queue extends AbstractQueue
     const TYPE_CREATE_GOODS_VEHICLE_LIST = 'que_typ_create_gds_vehicle_list';
     const TYPE_CREATE_PSV_VEHICLE_LIST = 'que_typ_create_psv_vehicle_list';
     const TYPE_UPDATE_NYSIIS_TM_NAME = 'que_typ_update_nysiis_tm_name';
+    const TYPE_CNS = 'que_typ_cns';
+    const TYPE_CNS_EMAIL = 'que_typ_cns_email';
 
     protected $types = [
         self::TYPE_COMPANIES_HOUSE_INITIAL,
@@ -68,9 +70,16 @@ class Queue extends AbstractQueue
         self::TYPE_DISC_PRINTING,
         self::TYPE_CREATE_GOODS_VEHICLE_LIST,
         self::TYPE_CREATE_PSV_VEHICLE_LIST,
-        self::TYPE_UPDATE_NYSIIS_TM_NAME
+        self::TYPE_UPDATE_NYSIIS_TM_NAME,
+        self::TYPE_CNS,
+        self::TYPE_CNS_EMAIL,
     ];
 
+    /**
+     * Increment attempts
+     *
+     * @return $this
+     */
     public function incrementAttempts()
     {
         $curr = $this->getAttempts();
@@ -78,6 +87,13 @@ class Queue extends AbstractQueue
         return $this;
     }
 
+    /**
+     * Constructor
+     *
+     * @param RefData $messageType message type
+     *
+     * @return void
+     */
     public function __construct(RefData $messageType = null)
     {
         if (!is_null($messageType)) {
@@ -86,9 +102,13 @@ class Queue extends AbstractQueue
     }
 
     /**
-     * @param string $type
-     * @param string $status
-     * @param string $processAfterDate
+     * Validate queue
+     *
+     * @param string $type             type
+     * @param string $status           status
+     * @param string $processAfterDate string
+     *
+     * @return void
      * @throws ValidationException
      */
     public function validateQueue($type, $status, $processAfterDate)

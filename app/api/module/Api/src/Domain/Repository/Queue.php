@@ -21,7 +21,9 @@ class Queue extends AbstractRepository
      * There are potentially tens of thousands of records so uses an
      * INSERT...SELECT query directly, for performance reasons.
      *
-     * @return boolean|string
+     * @param string $type type
+     *
+     * @return boolean
      */
     public function enqueueAllOrganisations($type)
     {
@@ -52,6 +54,41 @@ SQL;
         return $stmt->rowCount();
     }
 
+    /**
+     * Enqueue CNS
+     *
+     * @param array $licences licences
+     *
+     * @return int
+     */
+    public function enqueueContinuationNotSought($licences)
+    {
+        /**
+         * @var \Doctrine\DBAL\Connection
+         */
+        $db = $this->getEntityManager()->getConnection();
+
+        $query = 'INSERT INTO `queue` (`status`, `type`, `options`) VALUES ';
+
+        foreach ($licences as $licence) {
+            $options = '{"id":' . $licence['id'] . ',"version":' . $licence['version'] . '}';
+            $query .= "('" . Entity::STATUS_QUEUED . "', '" . Entity::TYPE_CNS . "', '" . $options . "'), ";
+        }
+        $query = trim($query, ', ');
+
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        return $stmt->rowCount();
+    }
+
+    /**
+     * Get next item
+     *
+     * @param string $type type
+     *
+     * @return Entity
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function getNextItem($type = null)
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
