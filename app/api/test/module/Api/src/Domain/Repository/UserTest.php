@@ -186,7 +186,7 @@ class UserTest extends RepositoryTestCase
 
         $mockQb->shouldReceive('where')->with('u.pid = :pid')->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('pid', '123456');
-        $mockQb->shouldReceive('getQuery->getSingleResult')->once()->andReturn('RESULT');
+        $mockQb->shouldReceive('getQuery->getOneOrNullResult')->once()->andReturn('RESULT');
 
         $this->assertSame('RESULT', $this->sut->fetchByPid('123456'));
     }

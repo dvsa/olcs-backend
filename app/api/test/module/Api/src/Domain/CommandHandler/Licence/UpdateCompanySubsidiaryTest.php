@@ -1,195 +1,133 @@
 <?php
 
-/**
- * Update Company Subsidiary Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
-use Dvsa\Olcs\Api\Domain\Repository\CompanySubsidiary;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateCompanySubsidiary;
-use Dvsa\Olcs\Transfer\Command\Licence\UpdateCompanySubsidiary as Cmd;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary as CompanySubsidiaryEntity;
-use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
- * Update Company Subsidiary Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateCompanySubsidiary
  */
 class UpdateCompanySubsidiaryTest extends CommandHandlerTestCase
 {
+    const LICENCE_ID = 1111;
+    const TASK_ID = 877;
+    const VERSION = 99;
+
+    /** @var  UpdateCompanySubsidiary|m\MockInterface */
+    protected $sut;
+    /** @var  m\MockInterface */
+    private $mockAuthSrv;
+
     public function setUp()
     {
-        $this->sut = new UpdateCompanySubsidiary();
-        $this->mockRepo('CompanySubsidiary', CompanySubsidiary::class);
+        $this->sut = m::mock(UpdateCompanySubsidiary::class . '[update]')
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
-        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
+        $this->mockRepo('CompanySubsidiary', Repository\CompanySubsidiary::class);
+
+        //  mock services
+        $this->mockAuthSrv = m::mock(AuthorizationService::class);
+        $this->mockedSmServices[AuthorizationService::class] = $this->mockAuthSrv;
 
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [
-
-        ];
-
-        parent::initReferences();
-    }
-
-    public function testHandleCommandWithoutChange()
+    /**
+     * @dataProvider dpTestHandleCommand
+     */
+    public function testHandleCommand($hasChanged, $isGranted, $expectTask)
     {
         $data = [
-            'id' => 11,
-            'version' => 1,
-            'licence' => 111,
-            'name' => 'Foo',
-            'companyNo' => '12345678'
+            'licence' => self::LICENCE_ID,
+            'name' => 'unit_Name',
+            'version' => self::VERSION,
         ];
+        $command = TransferCmd\Licence\UpdateCompanySubsidiary::create($data);
 
-        $command = Cmd::create($data);
+        //  mock is granted
+        $this->mockIsGranted(Permission::SELFSERVE_USER, $isGranted);
 
-        /** @var CompanySubsidiaryEntity $companySubsidiary */
-        $companySubsidiary = m::mock(CompanySubsidiaryEntity::class)->makePartial();
-        $companySubsidiary->setName('Foo');
-        $companySubsidiary->setCompanyNo('12345678');
+        //  mock update result
+        $result = new Result();
+        $result->setFlag('hasChanged', $hasChanged);
 
-        $this->repoMap['CompanySubsidiary']->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($companySubsidiary);
+        $this->sut->shouldReceive('update')->once()->with($command)->andReturn($result);
 
-        $result = $this->sut->handleCommand($command);
+        //  mock create task
+        if ($expectTask === true) {
+            $expectedData = [
+                'category' => Category::CATEGORY_APPLICATION,
+                'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SUBSIDIARY_DIGITAL,
+                'description' => 'Subsidiary company updated - unit_Name',
+                'licence' => self::LICENCE_ID,
+            ];
 
-        $expected = [
-            'id' => [],
-            'messages' => [
-                'Company Subsidiary unchanged'
-            ]
-        ];
+            $resultTask = new Result();
+            $resultTask->addId('task', self::TASK_ID);
+            $resultTask->addMessage('Task created');
 
-        $this->assertEquals($expected, $result->toArray());
-        $this->assertFalse($result->getFlag('hasChanged'));
+            $this->expectedSideEffect(DomainCmd\Task\CreateTask::class, $expectedData, $resultTask);
+        } else {
+            $this->sut->shouldReceive('handleSideEffect')->never();
+        }
+
+        //  call
+        $actual = $this->sut->handleCommand($command);
+
+        static::assertInstanceOf(Result::class, $actual);
+        static::assertEquals($hasChanged, $actual->getFlag('hasChanged'));
+
+        if ($expectTask === true) {
+            $expected = [
+                'id' => [
+                    'task' => self::TASK_ID,
+                ],
+                'messages' => [
+                    'Task created',
+                ],
+            ];
+            static::assertEquals($expected, $actual->toArray());
+        }
     }
 
-    public function testHandleCommand()
+    public function dpTestHandleCommand()
     {
-        $data = [
-            'id' => 11,
-            'version' => 1,
-            'licence' => 111,
-            'name' => 'Foo ltd',
-            'companyNo' => '12345678'
-        ];
-
-        $command = Cmd::create($data);
-
-        /** @var CompanySubsidiaryEntity $companySubsidiary */
-        $companySubsidiary = m::mock(CompanySubsidiaryEntity::class)->makePartial();
-        $companySubsidiary->setName('Foo');
-        $companySubsidiary->setCompanyNo('12345678');
-
-        $this->repoMap['CompanySubsidiary']->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($companySubsidiary)
-            ->shouldReceive('save')
-            ->once()
-            ->with($companySubsidiary);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->with(Permission::SELFSERVE_USER, null)
-            ->andReturn(true);
-
-        $expectedData = [
-            'category' => Category::CATEGORY_APPLICATION,
-            'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SUBSIDIARY_DIGITAL,
-            'description' => 'Subsidiary company updated - Foo ltd',
-            'licence' => 111,
-            'actionDate' => null,
-            'assignedToUser' => null,
-            'assignedToTeam' => null,
-            'isClosed' => false,
-            'urgent' => false,
-            'application' => null,
-            'busReg' => null,
-            'case' => null,
-            'transportManager' => null,
-            'irfoOrganisation' => null,
-        ];
-
-        $result1 = new Result();
-        $result1->addId('task', 123);
-        $result1->addMessage('Task created');
-
-        $this->expectedSideEffect(CreateTask::class, $expectedData, $result1);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [
-                'task' => 123
+        return [
+            [
+                'hasChanged' => false,
+                'isGranted' => true,
+                'expectTask' => false,
             ],
-            'messages' => [
-                'Company Subsidiary updated',
-                'Task created'
-            ]
+            [
+                'hasChanged' => true,
+                'isGranted' => false,
+                'expectTask' => false,
+            ],
+            [
+                'hasChanged' => true,
+                'isGranted' => true,
+                'expectTask' => true,
+            ],
         ];
-
-        $this->assertEquals($expected, $result->toArray());
-        $this->assertTrue($result->getFlag('hasChanged'));
     }
 
-    public function testHandleCommandInternal()
+    private function mockIsGranted($permission, $result)
     {
-        $data = [
-            'id' => 11,
-            'version' => 1,
-            'licence' => 111,
-            'name' => 'Foo ltd',
-            'companyNo' => '12345678'
-        ];
-
-        $command = Cmd::create($data);
-
-        /** @var CompanySubsidiaryEntity $companySubsidiary */
-        $companySubsidiary = m::mock(CompanySubsidiaryEntity::class)->makePartial();
-        $companySubsidiary->setName('Foo');
-        $companySubsidiary->setCompanyNo('12345678');
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->with(Permission::SELFSERVE_USER, null)
-            ->andReturn(false);
-
-        $this->repoMap['CompanySubsidiary']->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($companySubsidiary)
-            ->shouldReceive('save')
-            ->once()
-            ->with($companySubsidiary);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [],
-            'messages' => [
-                'Company Subsidiary updated'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-        $this->assertTrue($result->getFlag('hasChanged'));
-
-        $this->assertEquals('Foo ltd', $companySubsidiary->getName());
+        $this->mockAuthSrv
+            ->shouldReceive('isGranted')
+            ->with($permission, null)
+            ->andReturn($result);
     }
 }
