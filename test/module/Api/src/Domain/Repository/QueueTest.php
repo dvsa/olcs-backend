@@ -119,12 +119,21 @@ class QueueTest extends RepositoryTestCase
         $options1 = '{"id":1,"version":2}';
         $options2 = '{"id":3,"version":4}';
 
-        $query = 'INSERT INTO `queue` (`status`, `type`, `options`) VALUES ' .
-            "('" . QueueEntity::STATUS_QUEUED . "', '" . QueueEntity::TYPE_CNS . "', '" . $options1 . "'), " .
-            "('" . QueueEntity::STATUS_QUEUED . "', '" . QueueEntity::TYPE_CNS . "', '" . $options2 . "')";
+        $query = 'INSERT INTO `queue` (`status`, `type`, `options`) VALUES '
+            . '(:status1, :type1, :options1), (:status2, :type2, :options2)';
+
+        $params = [
+            'status1' => QueueEntity::STATUS_QUEUED,
+            'type1' => QueueEntity::TYPE_CNS,
+            'options1' => $options1,
+            'status2' => QueueEntity::STATUS_QUEUED,
+            'type2' => QueueEntity::TYPE_CNS,
+            'options2' => $options2
+        ];
 
         $mockStatement = m::mock()
             ->shouldReceive('execute')
+            ->with($params)
             ->once()
             ->shouldReceive('rowCount')
             ->andReturn(2)

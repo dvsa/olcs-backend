@@ -70,15 +70,24 @@ SQL;
 
         $query = 'INSERT INTO `queue` (`status`, `type`, `options`) VALUES ';
 
-        foreach ($licences as $licence) {
-            $options = '{"id":' . $licence['id'] . ',"version":' . $licence['version'] . '}';
-            $query .= "('" . Entity::STATUS_QUEUED . "', '" . Entity::TYPE_CNS . "', '" . $options . "'), ";
+        for ($i = 1; $i <= count($licences); $i++) {
+            $query .= "(:status{$i}, :type{$i}, :options{$i}), ";
         }
         $query = trim($query, ', ');
 
+        $params = [];
+        $i = 1;
+        foreach ($licences as $licence) {
+            $params['status' . $i] = Entity::STATUS_QUEUED;
+            $params['type' . $i] = Entity::TYPE_CNS;
+            $params['options' . $i] = '{"id":' . $licence['id'] . ',"version":' . $licence['version'] . '}';
+            $i++;
+        }
+
         $stmt = $conn->prepare($query);
-        $stmt->execute();
+        $stmt->execute($params);
         return $stmt->rowCount();
+
     }
 
     /**
