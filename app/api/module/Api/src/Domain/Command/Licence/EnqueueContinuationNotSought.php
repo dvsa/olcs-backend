@@ -11,14 +11,20 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  */
 final class EnqueueContinuationNotSought extends AbstractCommand
 {
+    /**
+     * @var array
+     */
     protected $licences;
 
+    /**
+     * @var \DateTime
+     */
     protected $date;
 
     /**
      * Get licences
      *
-     * @return mixed
+     * @return array
      */
     public function getLicences()
     {
@@ -28,7 +34,7 @@ final class EnqueueContinuationNotSought extends AbstractCommand
     /**
      * Get date
      *
-     * @return mixed
+     * @return \DateTime
      */
     public function getDate()
     {

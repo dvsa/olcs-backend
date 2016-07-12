@@ -75,5 +75,8 @@ class EnqueueContinuationNotSoughtTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals($expected, $result->toArray());
+        $this->assertEquals($savedQueue->getType(), $this->refData[QueueEntity::TYPE_CNS_EMAIL]);
+        $this->assertEquals($savedQueue->getStatus(), $this->refData[QueueEntity::STATUS_QUEUED]);
+        $this->assertEquals($savedQueue->getOptions(), json_encode($data));
     }
 }

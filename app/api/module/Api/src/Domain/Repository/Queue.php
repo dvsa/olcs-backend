@@ -64,9 +64,9 @@ SQL;
     public function enqueueContinuationNotSought($licences)
     {
         /**
-         * @var \Doctrine\DBAL\Connection
+         * @var \Doctrine\DBAL\Connection $conn
          */
-        $db = $this->getEntityManager()->getConnection();
+        $conn = $this->getEntityManager()->getConnection();
 
         $query = 'INSERT INTO `queue` (`status`, `type`, `options`) VALUES ';
 
@@ -76,7 +76,7 @@ SQL;
         }
         $query = trim($query, ', ');
 
-        $stmt = $db->prepare($query);
+        $stmt = $conn->prepare($query);
         $stmt->execute();
         return $stmt->rowCount();
     }
