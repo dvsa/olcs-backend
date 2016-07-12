@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as LicenceQry;
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\UserBundle as UserQry;
 
 /**
  * Traffic Area Address bookmark
@@ -14,16 +13,15 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\UserBundle as UserQry;
  */
 class TaAddress extends DynamicBookmark
 {
+    /**
+     * Get query
+     *
+     * @param array $data data
+     *
+     * @return LicenceQry
+     */
     public function getQuery(array $data)
     {
-        $userBundle = [
-            'contactDetails' => [
-                'address'
-            ],
-            'team' => [
-                'trafficArea'
-            ]
-        ];
         $licenceBundle = [
             'trafficArea' => [
                 'contactDetails' => [
@@ -31,21 +29,19 @@ class TaAddress extends DynamicBookmark
                 ]
             ]
         ];
-        $userQry = UserQry::create(['id' => $data['user'], 'bundle' => $userBundle]);
-        $licenceQry = LicenceQry::create(['id' => $data['licence'], 'bundle' => $licenceBundle]);
-
-        return [$userQry, $licenceQry];
+        return LicenceQry::create(['id' => $data['licence'], 'bundle' => $licenceBundle]);
     }
 
+    /**
+     * Render
+     *
+     * @return string
+     */
     public function render()
     {
-        $user = $this->data[0];
-        $licence = $this->data[1];
+        $licence = $this->data;
 
-        if (isset($user['contactDetails']['address'])) {
-            $trafficArea = isset($licence['trafficArea']['name']) ? $licence['trafficArea']['name'] : '';
-            $address = $user['contactDetails']['address'];
-        } elseif (isset($licence['trafficArea']['contactDetails']['address'])) {
+        if (isset($licence['trafficArea']['contactDetails']['address'])) {
             $trafficArea = $licence['trafficArea']['name'];
             $address = $licence['trafficArea']['contactDetails']['address'];
         } else {
