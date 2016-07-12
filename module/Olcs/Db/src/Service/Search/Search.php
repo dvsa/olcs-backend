@@ -401,8 +401,6 @@ class Search implements AuthAwareInterface
                  * added as a query match rather than a range (for efficiency)
                  */
                 $fieldName = substr($fieldName, 0, -12);
-                $criteria['from'] = $value;
-                $criteria['to'] = $value;
 
                 $queryMatch = new Query\Match();
                 $queryMatch->setFieldQuery($fieldName, $value);
