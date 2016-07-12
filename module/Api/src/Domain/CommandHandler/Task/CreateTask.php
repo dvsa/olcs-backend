@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Task\Task;
@@ -182,7 +183,7 @@ final class CreateTask extends AbstractCommandHandler
         $licence = $task->getLicence();
         $app = $task->getApplication();
 
-        $licenceTrafficArea = $licence->getTrafficArea();
+        $licenceTrafficArea = $licence->getTrafficAreaForTaskAllocation();
         $trafficArea = (
             $licenceTrafficArea !== null
             ? $licenceTrafficArea->getId()
