@@ -127,6 +127,16 @@ final class Result
     }
 
     /**
+     * Return the array of flags
+     *
+     * @return array
+     */
+    public function getFlags()
+    {
+        return $this->flags;
+    }
+
+    /**
      * Merge passed result in this Result
      *
      * @param Result $result Object necessary to merge in
