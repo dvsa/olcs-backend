@@ -406,28 +406,18 @@ class Search implements AuthAwareInterface
                 $queryMatch->setFieldQuery($fieldName, $value);
                 $bool->addMust($queryMatch);
 
-            } else {
-
-                if (substr($lcFieldName, -2) === 'to') {
-                    // we'll deal with the TO fields later.
-                    continue;
-                }
-
+            } elseif (substr($lcFieldName, -4) === 'from') {
                 $criteria = [];
 
                 $range = new Query\Range();
 
-                if (substr($lcFieldName, -4) === 'from') {
-                    $fieldName = substr($fieldName, 0, -5);
-                    $criteria['from'] = $value;
+                $fieldName = substr($fieldName, 0, -5);
+                $criteria['from'] = $value;
 
-                    // Let's now look for the to field.
-                    $toFieldName = $fieldName . '_to';
-                    if (array_key_exists($toFieldName, $dates)) {
-                        if ('' != $dates[$toFieldName]) {
-                            $criteria['to'] = $dates[$toFieldName];
-                        }
-                    }
+                // Let's now look for the to field.
+                $toFieldName = $fieldName . '_to';
+                if (array_key_exists($toFieldName, $dates) && !empty($dates[$toFieldName])) {
+                    $criteria['to'] = $dates[$toFieldName];
                 }
 
                 $range->addField($fieldName, $criteria);
