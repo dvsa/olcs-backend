@@ -1,63 +1,51 @@
 <?php
 
-/**
- * Create Company Subsidiary
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Lva\SaveCompanySubsidiary;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Transfer\Command\Application\CreateCompanySubsidiary as Cmd;
-use Dvsa\Olcs\Transfer\Command\Licence\CreateCompanySubsidiary as LicenceCreateCompanySubsidiary;
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Create Company Subsidiary
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateCompanySubsidiary extends AbstractCommandHandler implements TransactionedInterface
+class CreateCompanySubsidiary extends SaveCompanySubsidiary
 {
-    protected $repoServiceName = 'Application';
-
+    /**
+     * Command Handler
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Application\CreateCompanySubsidiary $command Command
+     *
+     * @return DomainCmd\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
-        /** @var Application $application */
-        $application = $this->getRepo()->fetchById($command->getApplication());
+        /** @var Application $app */
+        $app = $this->getRepo('Application')->fetchById($command->getApplication());
 
-        $this->result->merge($this->createCompanySubsidiary($command, $application->getLicence()));
-        $this->result->merge($this->updateApplicationCompletion($command));
+        //  create subsidiary
+        $this->result = $this->create($command, $app->getLicence()->getId());
 
-        return $this->result;
-    }
-
-    private function createCompanySubsidiary(Cmd $command, Licence $licence)
-    {
-        $data = $command->getArrayCopy();
-        $data['licence'] = $licence->getId();
-
-        return $this->handleSideEffect(LicenceCreateCompanySubsidiary::create($data));
-    }
-
-    private function updateApplicationCompletion(Cmd $command)
-    {
-        return $this->handleSideEffect(
-            UpdateApplicationCompletionCommand::create(
-                [
-                    'id' => $command->getApplication(),
-                    'section' => 'businessDetails',
-                    'data' => [
-                        'hasChanged' => true
+        //  update Application Completion
+        $this->result->merge(
+            $this->handleSideEffect(
+                DomainCmd\Application\UpdateApplicationCompletion::create(
+                    [
+                        'id' => $command->getApplication(),
+                        'section' => 'businessDetails',
+                        'data' => [
+                            'hasChanged' => true,
+                        ],
                     ]
-                ]
+                )
             )
         );
+
+        return $this->result;
     }
 }

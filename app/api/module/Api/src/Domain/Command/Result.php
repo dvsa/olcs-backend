@@ -25,10 +25,14 @@ final class Result
     private $flags = [];
 
     /**
-     * @param string $name
-     * @param int $id
+     * Add id to result
+     *
+     * @param string  $name     Name of related object
+     * @param int     $id       Id Value
      * @param boolean $multiple whether to allow multiple IDs of same type,
-     * the default behaviour is that subsequent IDs just override the first one
+     *                          the default behaviour is that subsequent IDs just override the first one
+     *
+     * @return $this
      */
     public function addId($name, $id, $multiple = false)
     {
@@ -51,12 +55,21 @@ final class Result
         return $this;
     }
 
+    /**
+     * Get Id by name of related object
+     *
+     * @param string $name Name of related object
+     *
+     * @return mixed|null
+     */
     public function getId($name)
     {
         return isset($this->ids[$name]) ? $this->ids[$name] : null;
     }
 
     /**
+     * Return ids
+     *
      * @return array
      */
     public function getIds()
@@ -64,6 +77,13 @@ final class Result
         return $this->ids;
     }
 
+    /**
+     * Add new message text to result
+     *
+     * @param string $message message text
+     *
+     * @return $this
+     */
     public function addMessage($message)
     {
         $this->messages[] = $message;
@@ -71,6 +91,8 @@ final class Result
     }
 
     /**
+     * Return messages
+     *
      * @return array
      */
     public function getMessages()
@@ -78,22 +100,50 @@ final class Result
         return $this->messages;
     }
 
+    /**
+     * Set flag
+     *
+     * @param string $name  Name of flag
+     * @param mixed  $value flag value
+     *
+     * @return $this
+     */
     public function setFlag($name, $value)
     {
         $this->flags[$name] = $value;
+        return $this;
     }
 
+    /**
+     * Get flag value
+     *
+     * @param string $name Name of flag
+     *
+     * @return mixed
+     */
     public function getFlag($name)
     {
         return $this->flags[$name];
     }
 
+    /**
+     * Merge passed result in this Result
+     *
+     * @param Result $result Object necessary to merge in
+     *
+     * @return void
+     */
     public function merge(Result $result)
     {
         $this->ids = array_merge($this->ids, $result->getIds());
         $this->messages = array_merge($this->messages, $result->getMessages());
     }
 
+    /**
+     * Export to array
+     *
+     * @return array
+     */
     public function toArray()
     {
         return [
