@@ -1,106 +1,83 @@
 <?php
 
-/**
- * Update Company Subsidiary Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateCompanySubsidiary;
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
-use Dvsa\Olcs\Transfer\Command\Licence\UpdateCompanySubsidiary as LicenceCmd;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Transfer\Command\Application\UpdateCompanySubsidiary as Cmd;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\Application;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Mockery as m;
 
 /**
- * Update Company Subsidiary Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateCompanySubsidiary
  */
 class UpdateCompanySubsidiaryTest extends CommandHandlerTestCase
 {
+    const ID = 666;
+    const APP_ID = 8888;
+    const LICENCE_ID = 7777;
+
+    /** @var  UpdateCompanySubsidiary|m\MockInterface */
+    protected $sut;
+
     public function setUp()
     {
-        $this->sut = new UpdateCompanySubsidiary();
-        $this->mockRepo('Application', Application::class);
+        $this->sut = m::mock(UpdateCompanySubsidiary::class . '[update]')
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $this->mockRepo('Application', Repository\Application::class);
+        $this->mockRepo('CompanySubsidiary', Repository\CompanySubsidiary::class);
 
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [
-
-        ];
-
-        $this->references = [
-
-        ];
-
-        parent::initReferences();
-    }
-
     public function testHandleCommand()
     {
-        /** @var LicenceEntity $application */
-        $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->setId(222);
-
-        /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setLicence($licence);
-
         $data = [
-            'id' => 123,
-            'application' => 111,
-            'name' => 'foo',
+            'application' => self::APP_ID,
+            'name' => 'unit_Name',
             'companyNo' => '12345678',
-            'version' => 1
+        ];
+        $command = TransferCmd\Application\CreateCompanySubsidiary::create($data);
+
+        //  mock create result
+        $result = (new Result())
+            ->setFlag('hasChanged', true)
+            ->addMessage('Company Subsidiary updated');
+
+        $this->sut->shouldReceive('update')->once()->with($command)->andReturn($result);
+
+        //  mock Application completion
+        $dataAppComplete = [
+            'id' => self::APP_ID,
+            'section' => 'businessDetails',
+            'data' => [
+                'hasChanged' => true,
+            ],
         ];
 
-        $command = Cmd::create($data);
+        $resultAppComplete = (new Result())
+            ->addMessage('Section updated');
 
-        $this->repoMap['Application']->shouldReceive('fetchById')
-            ->with(111)
-            ->andReturn($application);
+        $this->expectedSideEffect(
+            DomainCmd\Application\UpdateApplicationCompletion::class, $dataAppComplete, $resultAppComplete
+        );
 
-        $licenceCmdData = [
-            'licence' => 222,
-            'id' => 123,
-            'name' => 'foo',
-            'companyNo' => '12345678',
-            'version' => 1
-        ];
+        //  call & check
+        $actual = $this->sut->handleCommand($command);
 
-        $result1 = new Result();
-        $result1->addMessage('Company Subsidiary updated');
-        $result1->setFlag('hasChanged', true);
-
-        $this->expectedSideEffect(LicenceCmd::class, $licenceCmdData, $result1);
-
-        $updateData = ['id' => 111, 'section' => 'businessDetails'];
-
-        $result2 = new Result();
-        $result2->addMessage('Section updated');
-
-        $this->expectedSideEffect(UpdateApplicationCompletion::class, $updateData, $result2);
-
-        $result = $this->sut->handleCommand($command);
+        static::assertInstanceOf(Result::class, $actual);
 
         $expected = [
             'id' => [],
             'messages' => [
                 'Company Subsidiary updated',
-                'Section updated'
+                'Section updated',
             ]
         ];
-
-        $this->assertEquals($expected, $result->toArray());
+        static::assertEquals($expected, $actual->toArray());
     }
 }

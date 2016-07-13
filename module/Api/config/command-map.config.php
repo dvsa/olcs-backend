@@ -570,6 +570,8 @@ return [
     // Domain - Licence
     Command\Licence\CancelLicenceFees::class => CommandHandler\Licence\CancelLicenceFees::class,
     Command\Licence\UpdateTotalCommunityLicences::class => CommandHandler\Licence\UpdateTotalCommunityLicences::class,
+
+    // Domain - common for Application, Licence, variation
     Command\Licence\SaveAddresses::class => CommandHandler\Licence\SaveAddresses::class,
     Command\Licence\SaveBusinessDetails::class => CommandHandler\Licence\SaveBusinessDetails::class,
 
