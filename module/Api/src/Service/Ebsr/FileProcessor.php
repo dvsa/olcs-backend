@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
 
 /**
  * Class FileProcessor
- * @package Dvsa\Api\Service\Ebsr
+ * @package Dvsa\Olcs\Api\Service\Ebsr
  */
 class FileProcessor implements FileProcessorInterface
 {
@@ -38,10 +38,11 @@ class FileProcessor implements FileProcessorInterface
 
     /**
      * FileProcessor constructor.
-     * @param $fileUploader
-     * @param Filesystem $fileSystem
-     * @param $decompressFilter
-     * @param $tmpDir
+     *
+     * @param FileUploaderInterface $fileUploader     file uploader
+     * @param Filesystem            $fileSystem       symphony file system component
+     * @param Decompress            $decompressFilter decompression filter
+     * @param string                $tmpDir           the temporary directory
      */
     public function __construct(
         FileUploaderInterface $fileUploader,
@@ -58,6 +59,10 @@ class FileProcessor implements FileProcessorInterface
     /**
      * Sets the sub directory path, allows outputting to different directories within /tmp and makes the file processor
      * a bit more reusable in future
+     *
+     * @param string $subDirPath the sub directory path
+     *
+     * @return void
      */
     public function setSubDirPath($subDirPath)
     {
@@ -67,12 +72,14 @@ class FileProcessor implements FileProcessorInterface
     /**
      * Returns the filename of extracted EBSR xml file
      *
-     * @param string $identifier
+     * @param string $identifier     document identifier
+     * @param bool   $isTransXchange whether this is a transXchange request, requiring extra file permissions to be set
+     *
      * @return string
      * @throws \RuntimeException
      * @throws EbsrPackException
      */
-    public function fetchXmlFileNameFromDocumentStore($identifier)
+    public function fetchXmlFileNameFromDocumentStore($identifier, $isTransXchange = false)
     {
         $targetDir = $this->tmpDir . $this->subDirPath;
 
@@ -89,6 +96,12 @@ class FileProcessor implements FileProcessorInterface
 
         $this->decompressFilter->setTarget($tmpDir);
         $this->decompressFilter->filter($filePath);
+
+        //transxchange runs through tomcat, therefore tomcat needs permissions on the files we've just created
+        if ($isTransXchange) {
+            $execCmd = 'setfacl -bR -m u:tomcat:rwx ' . $tmpDir;
+            exec(escapeshellcmd($execCmd));
+        }
 
         $finder = new Finder();
         $files = iterator_to_array($finder->files()->name('*.xml')->in($tmpDir));
