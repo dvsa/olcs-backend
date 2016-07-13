@@ -392,7 +392,6 @@ class Search implements AuthAwareInterface
         $dates = $this->getDateRanges();
 
         foreach ($dates as $fieldName => $value) {
-
             $lcFieldName = strtolower($fieldName);
 
             if (substr($lcFieldName, -11) === 'from_and_to') {
@@ -409,17 +408,16 @@ class Search implements AuthAwareInterface
             } elseif (substr($lcFieldName, -4) === 'from') {
                 $criteria = [];
 
-                $range = new Query\Range();
-
                 $fieldName = substr($fieldName, 0, -5);
                 $criteria['from'] = $value;
 
                 // Let's now look for the to field.
                 $toFieldName = $fieldName . '_to';
-                if (array_key_exists($toFieldName, $dates) && !empty($dates[$toFieldName])) {
+                if (!empty($dates[$toFieldName])) {
                     $criteria['to'] = $dates[$toFieldName];
                 }
 
+                $range = new Query\Range();
                 $range->addField($fieldName, $criteria);
                 $bool->addMust($range);
             }
