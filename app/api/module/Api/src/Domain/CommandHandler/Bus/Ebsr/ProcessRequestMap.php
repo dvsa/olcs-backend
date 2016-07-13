@@ -63,7 +63,8 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     /**
      * Creates the service (injects template builder)
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
      * @return TransactioningCommandHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -78,14 +79,14 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     /**
      * Transxchange map request
      *
-     * @param CommandInterface $command
+     * @param CommandInterface|RequestMapCmd $command the command
+     *
      * @throws TransxchangeException
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {
         /**
-         * @var RequestMapCmd $command
          * @var BusRegEntity $busReg
          * @var EbsrSubmissionEntity $submission
          */
@@ -103,7 +104,8 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
         $this->getFileProcessor()->setSubDirPath($config['ebsr']['tmp_extra_path']);
 
         $xmlFilename = $this->getFileProcessor()->fetchXmlFileNameFromDocumentStore(
-            $submission->getDocument()->getIdentifier()
+            $submission->getDocument()->getIdentifier(),
+            true
         );
 
         $template = $this->createRequestMapTemplate($command->getTemplate(), $xmlFilename, $command->getScale());
@@ -139,9 +141,10 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     /**
      * Creates a transxchange xml file to request a map
      *
-     * @param string $template
-     * @param string $xmlFilename
-     * @param string $scale
+     * @param string $template    xml template
+     * @param string $xmlFilename xml file name and path
+     * @param string $scale       scale of route map
+     *
      * @return string
      * @throws TransxchangeException
      */
@@ -169,9 +172,10 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     /**
      * Creates a command to upload the transxchange map
      *
-     * @param string $document
-     * @param BusRegEntity $busReg
-     * @param int $user
+     * @param string       $document document content
+     * @param BusRegEntity $busReg   bus reg entity
+     * @param int          $user     user id
+     *
      * @return UploadCmd
      */
     private function generateDocumentCmd($document, BusRegEntity $busReg, $user)
@@ -194,7 +198,8 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
      * Creates a command to add a task
      *
      * @param BusRegEntity $busReg
-     * @param string $description
+     * @param string       $description task description
+     *
      * @return CreateTaskCmd
      */
     private function createTaskCmd(BusRegEntity $busReg, $description)
@@ -214,8 +219,8 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     /**
      * Creates a command to update TxcInbox records with the new document id
      *
-     * @param int $busRegId
-     * @param int $documentId
+     * @param int $busRegId   bus reg id
+     * @param int $documentId document id
      *
      * @return UpdateTxcInboxPdfCmd
      */
