@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Paginate
- */
 namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
 use Doctrine\ORM\QueryBuilder;
@@ -15,13 +12,19 @@ final class Paginate implements QueryPartialInterface
     /**
      * Adds a where id = XX clause
      *
-     * @param QueryBuilder $qb
-     * @param array $arguments
+     * @param QueryBuilder $qb        Query Builder
+     * @param array        $arguments Page and Limit parameters
+     *
+     * @return void
      */
     public function modifyQuery(QueryBuilder $qb, array $arguments = [])
     {
-        list($page, $limit) = $arguments;
-        $qb->setFirstResult(($page - 1) * $limit);
-        $qb->setMaxResults($limit);
+        list($page, $limit) = array_map('intval', $arguments);
+
+        $qb->setFirstResult(max($page -1, 0) * $limit);
+
+        if ($limit > 0) {
+            $qb->setMaxResults((int) $limit);
+        }
     }
 }
