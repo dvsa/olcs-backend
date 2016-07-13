@@ -124,7 +124,7 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
         $this->mockedSmServices[FileProcessorInterface::class]
             ->shouldReceive('fetchXmlFileNameFromDocumentStore')
             ->once()
-            ->with($documentIdentifier)
+            ->with($documentIdentifier, true)
             ->andReturn($xmlFilename);
 
         $this->mockedSmServices[TemplateBuilder::class]
@@ -222,7 +222,7 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
         $this->mockedSmServices[FileProcessorInterface::class]
             ->shouldReceive('fetchXmlFileNameFromDocumentStore')
             ->once()
-            ->with($documentIdentifier)
+            ->with($documentIdentifier, true)
             ->andReturn($xmlFilename);
 
         $this->mockedSmServices[TemplateBuilder::class]
@@ -289,7 +289,7 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
         $this->mockedSmServices[FileProcessorInterface::class]
             ->shouldReceive('fetchXmlFileNameFromDocumentStore')
             ->once()
-            ->with($documentIdentifier)
+            ->with($documentIdentifier, true)
             ->andReturn($xmlFilename);
 
         $this->sut->handleCommand($command);
