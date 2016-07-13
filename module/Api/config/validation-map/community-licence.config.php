@@ -15,4 +15,12 @@ return [
     CommandHandler\CommunityLic\EditSuspension::class                      => IsInternalUser::class,
     CommandHandlerCli\CommunityLic\Activate::class                         => IsSystemUser::class,
     CommandHandlerCli\CommunityLic\Suspend::class                          => IsSystemUser::class,
+    CommandHandler\CommunityLic\Application\Create::class                  => IsInternalUser::class,
+    CommandHandler\CommunityLic\Application\CreateOfficeCopy::class        => IsInternalUser::class,
+    CommandHandler\CommunityLic\Licence\Create::class                      => IsInternalUser::class,
+    CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class            => IsInternalUser::class,
+    CommandHandler\CommunityLic\Reprint::class                             => IsInternalUser::class,
+    CommandHandler\CommunityLic\Restore::class                             => IsInternalUser::class,
+    CommandHandler\CommunityLic\Stop::class                                => IsInternalUser::class,
+    CommandHandler\CommunityLic\Void::class                                => IsInternalUser::class,
 ];
