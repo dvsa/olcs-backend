@@ -543,14 +543,8 @@ class OrganisationEntityTest extends EntityTester
         $mockLicences->add($mockValidLicence);
 
         $mockNewApplication = m::mock(ApplicationEntity::class)
-            ->shouldReceive('getGoodsOrPsv')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('getId')
-                ->andReturn(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)
-                ->once()
-                ->getMock()
-            )
+            ->shouldReceive('isGoods')
+            ->andReturn(true)
             ->once()
             ->getMock();
         $mockNewApplications = new ArrayCollection();
