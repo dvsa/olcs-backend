@@ -308,8 +308,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         $totalLicencesWithNewGoodsApplications = 0;
         foreach ($newLicences as $licence) {
             $applications = $licence->getApplications();
-            if ($applications->count() > 0
-                && $applications->first()->getGoodsOrPsv()->getId() === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE) {
+            if ($applications->count() > 0 && $applications->first()->isGoods()) {
                 $totalLicencesWithNewGoodsApplications++;
             }
         }
