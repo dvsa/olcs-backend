@@ -27,6 +27,7 @@ class CanAccessTransactionTest extends AbstractValidatorsTestCase
     public function testIsValidId()
     {
         $this->setIsGranted(Permission::INTERNAL_USER, false);
+        $this->auth->shouldReceive('getIdentity')->andReturn(null);
         $entity = m::mock(Transaction::class);
 
         $repo = $this->mockRepo('Transaction');
@@ -40,6 +41,7 @@ class CanAccessTransactionTest extends AbstractValidatorsTestCase
     public function testIsValidReference()
     {
         $this->setIsGranted(Permission::INTERNAL_USER, false);
+        $this->auth->shouldReceive('getIdentity')->andReturn(null);
         $entity = m::mock(Transaction::class);
 
         $repo = $this->mockRepo('Transaction');
