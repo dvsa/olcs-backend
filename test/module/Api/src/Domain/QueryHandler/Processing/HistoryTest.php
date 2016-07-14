@@ -80,6 +80,7 @@ class HistoryTest extends QueryHandlerTestCase
         $organisation = m::mock();
         $organisation->shouldReceive('getId')->with()->once()->andReturn(99);
         $licence = m::mock();
+        $licence->shouldReceive('getId')->with()->once()->andReturn(87);
         $licence->shouldReceive('getOrganisation')->with()->once()->andReturn($organisation);
         $application = m::mock();
         $application->shouldReceive('getLicence')->with()->once()->andReturn($licence);
@@ -104,6 +105,7 @@ class HistoryTest extends QueryHandlerTestCase
         $this->sut->handleQuery($query);
 
         $this->assertSame(99, $query->getOrganisation());
+        $this->assertSame(87, $query->getLicence());
     }
 
     /**
@@ -117,6 +119,7 @@ class HistoryTest extends QueryHandlerTestCase
         $organisation = m::mock();
         $organisation->shouldReceive('getId')->with()->once()->andReturn(99);
         $licence = m::mock();
+        $licence->shouldReceive('getId')->with()->once()->andReturn(32);
         $licence->shouldReceive('getOrganisation')->with()->once()->andReturn($organisation);
 
         $query = Qry::create($data);
@@ -152,6 +155,7 @@ class HistoryTest extends QueryHandlerTestCase
         $organisation = m::mock();
         $organisation->shouldReceive('getId')->with()->once()->andReturn(99);
         $licence = m::mock();
+        $licence->shouldReceive('getId')->with()->once()->andReturn(552);
         $licence->shouldReceive('getOrganisation')->with()->once()->andReturn($organisation);
         $case = m::mock();
         $case->shouldReceive('getLicence')->with()->twice()->andReturn($licence);
@@ -176,6 +180,7 @@ class HistoryTest extends QueryHandlerTestCase
         $this->sut->handleQuery($query);
 
         $this->assertSame(99, $query->getOrganisation());
+        $this->assertSame(552, $query->getLicence());
     }
 
     /**
@@ -186,8 +191,13 @@ class HistoryTest extends QueryHandlerTestCase
         $data = [
             'case' => 32
         ];
+
+        $transportManager = m::mock();
+        $transportManager->shouldReceive('getId')->with()->once()->andReturn(46);
+
         $case = m::mock();
         $case->shouldReceive('getLicence')->with()->once()->andReturn(null);
+        $case->shouldReceive('getTransportManager')->with()->twice()->andReturn($transportManager);
 
         $query = Qry::create($data);
         $this->repoMap['Cases']->shouldReceive('fetchById')->with(32)->once()->andReturn($case);
@@ -209,5 +219,6 @@ class HistoryTest extends QueryHandlerTestCase
         $this->sut->handleQuery($query);
 
         $this->assertSame(null, $query->getOrganisation());
+        $this->assertSame(46, $query->getTransportManager());
     }
 }
