@@ -108,7 +108,7 @@ final class SaveBusinessDetails extends AbstractCommandHandler implements AuthAw
         // update allowEmail flag regardless of all conditions
         $allowEmail = $this->command->getAllowEmail();
         if ($allowEmail !== null) {
-            $this->org->setAllowEmail($this->command->getAllowEmail());
+            $this->org->setAllowEmail($allowEmail);
         }
     }
 
