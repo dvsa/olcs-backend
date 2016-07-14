@@ -789,6 +789,22 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(true, $user->isAnonymous());
     }
 
+    public function testIsSystemUserYes()
+    {
+        $user = new Entity('PID', 'type');
+        $user->setId(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER);
+
+        $this->assertTrue($user->isSystemUser());
+    }
+
+    public function testIsSystemUserNo()
+    {
+        $user = new Entity('PID', 'type');
+        $user->setId(123);
+
+        $this->assertFalse($user->isSystemUser());
+    }
+
     /**
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */

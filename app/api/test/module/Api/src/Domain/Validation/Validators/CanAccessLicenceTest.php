@@ -37,6 +37,7 @@ class CanAccessLicenceTest extends AbstractValidatorsTestCase
     public function testIsValid($isOwner, $expected)
     {
         $this->setIsGranted(Permission::INTERNAL_USER, false);
+        $this->auth->shouldReceive('getIdentity')->andReturn(null);
         $entity = m::mock(Licence::class);
 
         $repo = $this->mockRepo('Licence');
@@ -53,6 +54,7 @@ class CanAccessLicenceTest extends AbstractValidatorsTestCase
     public function testIsValidLicNo($isOwner, $expected)
     {
         $this->setIsGranted(Permission::INTERNAL_USER, false);
+        $this->auth->shouldReceive('getIdentity')->andReturn(null);
         $entity = m::mock(Licence::class);
 
         $repo = $this->mockRepo('Licence');

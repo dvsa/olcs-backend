@@ -50,6 +50,7 @@ class CanAccessPreviousConvictionTest extends AbstractValidatorsTestCase
         $entity->shouldReceive('getTransportManager')->with()->once()->andReturn(null);
 
         $this->setIsGranted(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null);
+        $this->auth->shouldReceive('getIdentity')->andReturn(null);
 
         $repo = $this->mockRepo('PreviousConviction');
         $repo->shouldReceive('fetchById')->with(111)->andReturn($entity);
