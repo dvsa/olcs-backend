@@ -20,6 +20,10 @@ abstract class AbstractCanAccessEntity extends AbstractDoesOwnEntity
             return true;
         }
 
+        if ($this->isSystemUser()) {
+            return true;
+        }
+
         return parent::isValid($entityId);
     }
 }

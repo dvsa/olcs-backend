@@ -37,6 +37,7 @@ class CanAccessApplicationTest extends AbstractValidatorsTestCase
     public function testIsValid($isOwner, $expected)
     {
         $this->setIsGranted(Permission::INTERNAL_USER, false);
+        $this->auth->shouldReceive('getIdentity')->andReturn(null);
         $entity = m::mock(Application::class);
 
         $repo = $this->mockRepo('Application');
