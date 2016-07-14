@@ -11,14 +11,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Standard;
 // @codingStandardsIgnoreStart
 $map = [
     CommandHandler\Bus\Ebsr\UpdateTxcInbox::class => Standard::class, // @todo
-    CommandHandler\CommunityLic\Application\Create::class => Standard::class, // @todo
-    CommandHandler\CommunityLic\Application\CreateOfficeCopy::class => Standard::class, // @todo
-    CommandHandler\CommunityLic\Licence\Create::class => Standard::class, // @todo
-    CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class => Standard::class, // @todo
-    CommandHandler\CommunityLic\Reprint::class => Standard::class, // @todo
-    CommandHandler\CommunityLic\Restore::class => Standard::class, // @todo
-    CommandHandler\CommunityLic\Stop::class => Standard::class, // @todo
-    CommandHandler\CommunityLic\Void::class => Standard::class, // @todo
     CommandHandler\ConditionUndertaking\Create::class => Standard::class, // @todo
     CommandHandler\ConditionUndertaking\DeleteList::class => Standard::class, // @todo
     CommandHandler\ConditionUndertaking\Update::class => Standard::class, // @todo
