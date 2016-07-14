@@ -56,7 +56,7 @@ class History extends AbstractQueryHandler
     }
 
     /**
-     * Modify the query, by adding in the organisation in specific scenarios
+     * Modify the query, by adding in the licence and organisation in specific scenarios
      *
      * @param \Dvsa\Olcs\Transfer\Query\Processing\History $query DTO query to modify
      *
@@ -65,26 +65,37 @@ class History extends AbstractQueryHandler
      */
     private function modifyQuery(\Dvsa\Olcs\Transfer\Query\Processing\History $query)
     {
+        $licence = null;
         $organisation = null;
+        $transportManager = null;
         if ($query->getApplication()) {
             /** @var \Dvsa\Olcs\Api\Entity\Application\Application $application */
             $application = $this->getRepo('Application')->fetchById($query->getApplication());
-            $organisation = $application->getLicence()->getOrganisation();
+            $licence = $application->getLicence();
+            $organisation = $licence->getOrganisation();
         } elseif ($query->getLicence()) {
             /** @var \Dvsa\Olcs\Api\Entity\Licence\Licence $licence */
             $licence = $this->getRepo('Licence')->fetchById($query->getLicence());
             $organisation = $licence->getOrganisation();
-
         } elseif ($query->getCase()) {
             /** @var \Dvsa\Olcs\Api\Entity\Cases\Cases $case */
             $case = $this->getRepo('Cases')->fetchById($query->getCase());
             if ($case->getLicence()) {
-                $organisation = $case->getLicence()->getOrganisation();
+                $licence = $case->getLicence();
+                $organisation = $licence->getOrganisation();
+            } elseif ($case->getTransportManager()) {
+                $transportManager = $case->getTransportManager();
             }
         }
 
+        if ($licence !== null) {
+            $query->exchangeArray(['licence' => $licence->getId()]);
+        }
         if ($organisation !== null) {
             $query->exchangeArray(['organisation' => $organisation->getId()]);
+        }
+        if ($transportManager !== null) {
+            $query->exchangeArray(['transportManager' => $transportManager->getId()]);
         }
     }
 }
