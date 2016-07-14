@@ -530,4 +530,61 @@ class OrganisationEntityTest extends EntityTester
 
         $this->assertNull($organisation->getAllowedOperatorLocation());
     }
+
+    public function testIsMlh()
+    {
+        $mockValidLicence = m::mock(LicenceEntity::class)
+            ->shouldReceive('getStatus')
+            ->andReturn(LicenceEntity::LICENCE_STATUS_VALID)
+            ->shouldReceive('getGoodsOrPsv')
+            ->andReturn(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)
+            ->getMock();
+        $mockLicences = new ArrayCollection();
+        $mockLicences->add($mockValidLicence);
+
+        $mockNewApplication = m::mock(ApplicationEntity::class)
+            ->shouldReceive('isGoods')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+        $mockNewApplications = new ArrayCollection();
+        $mockNewApplications->add($mockNewApplication);
+
+        $mockOutstandingLicence = m::mock(LicenceEntity::class)
+            ->shouldReceive('getStatus')
+            ->andReturn(LicenceEntity::LICENCE_STATUS_GRANTED)
+            ->shouldReceive('getApplications')
+            ->andReturn($mockNewApplications)
+            ->once()
+            ->getMock();
+        $mockLicences->add($mockOutstandingLicence);
+
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getLicences')
+            ->andReturn($mockLicences)
+            ->twice()
+            ->getMock();
+
+        $this->assertTrue($organisation->isMlh());
+    }
+
+    public function testNonMlh()
+    {
+        $mockValidLicence = m::mock(LicenceEntity::class)
+            ->shouldReceive('getStatus')
+            ->andReturn(LicenceEntity::LICENCE_STATUS_VALID)
+            ->shouldReceive('getGoodsOrPsv')
+            ->andReturn(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)
+            ->getMock();
+        $mockLicences = new ArrayCollection();
+        $mockLicences->add($mockValidLicence);
+
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getLicences')
+            ->andReturn($mockLicences)
+            ->twice()
+            ->getMock();
+
+        $this->assertFalse($organisation->isMlh());
+    }
 }
