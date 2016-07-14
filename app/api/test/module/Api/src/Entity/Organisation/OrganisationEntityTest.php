@@ -536,10 +536,8 @@ class OrganisationEntityTest extends EntityTester
         $mockValidLicence = m::mock(LicenceEntity::class)
             ->shouldReceive('getStatus')
             ->andReturn(LicenceEntity::LICENCE_STATUS_VALID)
-            ->once()
             ->shouldReceive('getGoodsOrPsv')
             ->andReturn(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)
-            ->once()
             ->getMock();
         $mockLicences = new ArrayCollection();
         $mockLicences->add($mockValidLicence);
@@ -561,7 +559,6 @@ class OrganisationEntityTest extends EntityTester
         $mockOutstandingLicence = m::mock(LicenceEntity::class)
             ->shouldReceive('getStatus')
             ->andReturn(LicenceEntity::LICENCE_STATUS_GRANTED)
-            ->once()
             ->shouldReceive('getApplications')
             ->andReturn($mockNewApplications)
             ->once()
@@ -571,7 +568,7 @@ class OrganisationEntityTest extends EntityTester
         $organisation = m::mock(Entity::class)->makePartial();
         $organisation->shouldReceive('getLicences')
             ->andReturn($mockLicences)
-            ->once()
+            ->twice()
             ->getMock();
 
         $this->assertTrue($organisation->isMlh());
@@ -582,10 +579,8 @@ class OrganisationEntityTest extends EntityTester
         $mockValidLicence = m::mock(LicenceEntity::class)
             ->shouldReceive('getStatus')
             ->andReturn(LicenceEntity::LICENCE_STATUS_VALID)
-            ->once()
             ->shouldReceive('getGoodsOrPsv')
             ->andReturn(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)
-            ->once()
             ->getMock();
         $mockLicences = new ArrayCollection();
         $mockLicences->add($mockValidLicence);
@@ -593,7 +588,7 @@ class OrganisationEntityTest extends EntityTester
         $organisation = m::mock(Entity::class)->makePartial();
         $organisation->shouldReceive('getLicences')
             ->andReturn($mockLicences)
-            ->once()
+            ->twice()
             ->getMock();
 
         $this->assertFalse($organisation->isMlh());
