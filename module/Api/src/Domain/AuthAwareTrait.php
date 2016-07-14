@@ -87,6 +87,16 @@ trait AuthAwareTrait
     }
 
     /**
+     * Is the current user a system user
+     *
+     * @return bool
+     */
+    public function isSystemUser()
+    {
+        return ($this->getCurrentUser() && $this->getCurrentUser()->isSystemUser());
+    }
+
+    /**
      * Does the current user have the External user role
      *
      * @return bool
