@@ -150,6 +150,18 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
+     * Is this user a System user
+     *
+     * @return bool
+     */
+    public function isSystemUser()
+    {
+        // If we add more System user accounts we probably want to change this to
+        // return $this->getId() === \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_TEAM
+        return $this->getId() === \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER;
+    }
+
+    /**
      * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
      * @return User
      */
