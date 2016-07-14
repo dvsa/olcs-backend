@@ -530,4 +530,72 @@ class OrganisationEntityTest extends EntityTester
 
         $this->assertNull($organisation->getAllowedOperatorLocation());
     }
+
+    public function testIsMlh()
+    {
+        $mockValidLicence = m::mock(LicenceEntity::class)
+            ->shouldReceive('getStatus')
+            ->andReturn(LicenceEntity::LICENCE_STATUS_VALID)
+            ->once()
+            ->shouldReceive('getGoodsOrPsv')
+            ->andReturn(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)
+            ->once()
+            ->getMock();
+        $mockLicences = new ArrayCollection();
+        $mockLicences->add($mockValidLicence);
+
+        $mockNewApplication = m::mock(ApplicationEntity::class)
+            ->shouldReceive('getGoodsOrPsv')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+        $mockNewApplications = new ArrayCollection();
+        $mockNewApplications->add($mockNewApplication);
+
+        $mockOutstandingLicence = m::mock(LicenceEntity::class)
+            ->shouldReceive('getStatus')
+            ->andReturn(LicenceEntity::LICENCE_STATUS_GRANTED)
+            ->once()
+            ->shouldReceive('getApplications')
+            ->andReturn($mockNewApplications)
+            ->once()
+            ->getMock();
+        $mockLicences->add($mockOutstandingLicence);
+
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getLicences')
+            ->andReturn($mockLicences)
+            ->once()
+            ->getMock();
+
+        $this->assertTrue($organisation->isMlh());
+    }
+
+    public function testNonMlh()
+    {
+        $mockValidLicence = m::mock(LicenceEntity::class)
+            ->shouldReceive('getStatus')
+            ->andReturn(LicenceEntity::LICENCE_STATUS_VALID)
+            ->once()
+            ->shouldReceive('getGoodsOrPsv')
+            ->andReturn(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)
+            ->once()
+            ->getMock();
+        $mockLicences = new ArrayCollection();
+        $mockLicences->add($mockValidLicence);
+
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getLicences')
+            ->andReturn($mockLicences)
+            ->once()
+            ->getMock();
+
+        $this->assertFalse($organisation->isMlh());
+    }
 }

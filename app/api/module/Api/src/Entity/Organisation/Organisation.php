@@ -266,7 +266,13 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      *  Curtailed
      *  Suspended
      *
+     *  Additional A/C:
+     *  Where licence status is Under consideration or Granted, pull the operator type from the associated
+     *  new application. (There should be only be one associated application)
+     *  For the Valid, Curtailed or Suspended statuses, pull the operator type from the licence record
+     *
      * @param $id
+     *
      * @return bool
      */
     public function isMlh()
@@ -276,8 +282,6 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
             $criteria->expr()->in(
                 'status',
                 [
-                    LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
-                    LicenceEntity::LICENCE_STATUS_GRANTED,
                     LicenceEntity::LICENCE_STATUS_VALID,
                     LicenceEntity::LICENCE_STATUS_CURTAILED,
                     LicenceEntity::LICENCE_STATUS_SUSPENDED
@@ -287,10 +291,30 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         // And the licence must be for goods vehicles
         $criteria->andWhere($criteria->expr()->in('goodsOrPsv', [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]));
+        $totalValidLicences = $this->getLicences()->matching($criteria)->count();
 
-        $totalLicences = $this->getLicences()->matching($criteria)->count();
+        $criteria = Criteria::create();
+        $criteria->where(
+            $criteria->expr()->in(
+                'status',
+                [
+                    LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+                    LicenceEntity::LICENCE_STATUS_GRANTED,
+                ]
+            )
+        );
+        $newLicences = $this->getLicences()->matching($criteria);
 
-        return (bool) ($totalLicences > 1);
+        $totalLicencesWithNewGoodsApplications = 0;
+        foreach ($newLicences as $licence) {
+            $applications = $licence->getApplications();
+            if ($applications->count() > 0
+                && $applications->first()->getGoodsOrPsv()->getId() === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE) {
+                $totalLicencesWithNewGoodsApplications++;
+            }
+        }
+
+        return (bool) (($totalValidLicences + $totalLicencesWithNewGoodsApplications) > 1);
     }
 
     /**
