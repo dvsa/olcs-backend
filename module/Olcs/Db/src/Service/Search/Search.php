@@ -311,7 +311,7 @@ class Search implements AuthAwareInterface
 
                     // Add must have licence no
                     $licenceQuery = new Query\Filtered();
-                    $licenceFilter = new Filter\Exists('lic_no');
+                    $licenceFilter = new Filter\Exists('lic_id');
                     $licenceQuery->setFilter($licenceFilter);
                     $queryBool->addMust($licenceQuery);
                 }
