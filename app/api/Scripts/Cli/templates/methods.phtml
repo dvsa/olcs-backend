@@ -5,11 +5,12 @@
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
      * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatParamName($item); ?>
 <?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
-     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatParamName($item); ?>
+     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatParamName($item) . ' ' . $this->formatParamName($item); ?> entity
 <?php else: ?>
-     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatParamName($item); ?>
+     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatParamName($item) . ' ' . $this->formatParamName($item); ?>
 <?php endif; ?>
 
+     *
      * @return <?php echo $fluidReturn; ?>
 
      */
@@ -43,13 +44,14 @@
 
      *
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
-     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatPropertyName($item); ?>
+     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatPropertyName($item); ?> collection
 <?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
-     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatPropertyName($item); ?>
+     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatPropertyName($item); ?> entity
 <?php else: ?>
-     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatPropertyName($item); ?>
+     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatPropertyName($item) . ' ' . $this->formatPropertyName($item); ?>
 <?php endif; ?>
 
+     *
      * @return <?php echo $fluidReturn; ?>
 
      */
@@ -76,11 +78,12 @@
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
      * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatPropertyName($item); ?>
 <?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
-     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatPropertyName($item); ?>
+     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatPropertyName($item) . ' ' . $this->formatPropertyName($item); ?> entity
 <?php else: ?>
-     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatPropertyName($item); ?>
+     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatPropertyName($item) . ' ' . $this->formatPropertyName($item); ?> property
 <?php endif; ?>
 
+     *
      * @return <?php echo $fluidReturn; ?>
 
      */
