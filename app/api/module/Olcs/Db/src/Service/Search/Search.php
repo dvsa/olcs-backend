@@ -252,8 +252,14 @@ class Search implements AuthAwareInterface
                 $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
                 break;
             case 'irfo':
-            case 'licence':
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
+                break;
             case 'psv_disc':
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
+                break;
+            case 'licence':
+                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
+                break;
             case 'user':
                 $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
 
