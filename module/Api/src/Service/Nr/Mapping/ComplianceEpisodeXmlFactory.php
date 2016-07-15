@@ -20,7 +20,8 @@ class ComplianceEpisodeXmlFactory implements FactoryInterface
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
      * @return MapXmlFile
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -62,6 +63,11 @@ class ComplianceEpisodeXmlFactory implements FactoryInterface
         return $seriousInfringement;
     }
 
+    /**
+     * Gets Si information
+     *
+     * @return RecursionValue
+     */
     protected function getSi()
     {
         $spec = [

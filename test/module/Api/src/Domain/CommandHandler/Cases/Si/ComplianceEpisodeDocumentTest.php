@@ -28,11 +28,12 @@ class ComplianceEpisodeDocumentTest extends CommandHandlerTestCase
     /**
      * Tests a successful compliance episode
      */
-    public function testHandleCommand() {
+    public function testHandleCommand()
+    {
         $xmlString = 'xml string';
         $documentId = 123;
         $cmd = ComplianceEpisodeDocCmd::create(['xml' => $xmlString]);
-        
+
         $this->documentSideEffect($xmlString, $documentId);
         $this->complianceEpisodeSideEffect($documentId, false);
 
@@ -44,7 +45,8 @@ class ComplianceEpisodeDocumentTest extends CommandHandlerTestCase
      *
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\Exception
      */
-    public function testHandleCommandWithException() {
+    public function testHandleCommandWithException()
+    {
         $xmlString = 'xml string';
         $documentId = 123;
         $cmd = ComplianceEpisodeDocCmd::create(['xml' => $xmlString]);
@@ -54,7 +56,7 @@ class ComplianceEpisodeDocumentTest extends CommandHandlerTestCase
 
         $this->assertInstanceOf(Result::class, $this->sut->handleCommand($cmd));
     }
-    
+
     /**
      * Gets document upload data
      *
@@ -89,10 +91,10 @@ class ComplianceEpisodeDocumentTest extends CommandHandlerTestCase
     private function complianceEpisodeSideEffect($documentId, $hasErrors)
     {
         $dtoData = ['id' => $documentId];
-        
+
         $complianceEpisodeResult = new Result();
         $complianceEpisodeResult->setFlag('hasErrors', $hasErrors);
-        
+
         $this->expectedSideEffect(ComplianceEpisodeProcessCmd::class, $dtoData, $complianceEpisodeResult);
     }
 }

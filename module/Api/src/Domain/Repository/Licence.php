@@ -62,6 +62,8 @@ class Licence extends AbstractRepository
     }
 
     /**
+     * fetch with addresses
+     *
      * @param QueryInterface $query the query
      *
      * @return mixed
@@ -87,6 +89,8 @@ class Licence extends AbstractRepository
     }
 
     /**
+     * fetch safety details using id
+     *
      * @param QueryInterface $query       the query
      * @param int            $hydrateMode hydrate mode
      * @param null|int       $version     the version
@@ -100,6 +104,8 @@ class Licence extends AbstractRepository
     }
 
     /**
+     * fetch safety details by id
+     *
      * @param int      $id          the id
      * @param int      $hydrateMode hydrate mode
      * @param null|int $version     version
@@ -322,7 +328,7 @@ class Licence extends AbstractRepository
     /**
      * Get a Licence and PrivateHireLicence data
      *
-     * @param int $licenceId
+     * @param int $licenceId licence id
      *
      * @return Entity
      */
@@ -450,6 +456,7 @@ class Licence extends AbstractRepository
      * @param int    $year        the year
      * @param int    $month       the month
      * @param string $trafficArea the traffic area
+     *
      * @return array
      */
     public function fetchForContinuation($year, $month, $trafficArea)

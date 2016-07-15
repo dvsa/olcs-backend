@@ -45,7 +45,7 @@ class SendErruErrors extends AbstractCommandHandler implements EmailAwareInterfa
     /**
      * Handle command to send error email for an erru request failure
      *
-     * @param CommandInterface|SendErruErrorsCmd $command
+     * @param CommandInterface|SendErruErrorsCmd $command the command
      *
      * @return Result
      */
