@@ -3,6 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Si;
 
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Entity\Si\ErruRequestFailure;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -16,6 +18,7 @@ use Dvsa\Olcs\Api\Domain\Repository\SiCategoryType as SiCategoryTypeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SiPenaltyImposedType as SiPenaltyImposedTypeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SiPenaltyRequestedType as SiPenaltyRequestedTypeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ErruRequest as ErruRequestRepo;
+use Dvsa\Olcs\Api\Domain\Repository\ErruRequestFailure as ErruRequestFailureRepo;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -26,12 +29,14 @@ use Dvsa\Olcs\Api\Entity\Si\SiPenaltyRequestedType as SiPenaltyRequestedTypeEnti
 use Dvsa\Olcs\Api\Entity\Si\SiCategory as SiCategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
+use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks as UpdateDocLinksCmd;
 use Dvsa\Olcs\Api\Service\Nr\InputFilter\XmlStructureInputFactory;
 use Dvsa\Olcs\Api\Service\Nr\InputFilter\SeriousInfringementInputFactory;
 use Dvsa\Olcs\Api\Service\Nr\InputFilter\ComplianceEpisodeInputFactory;
-use Dvsa\Olcs\Transfer\Command\Cases\Si\ComplianceEpisode as ComplianceEpisodeCmd;
-use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
+use Dvsa\Olcs\Api\Domain\Command\Cases\Si\ComplianceEpisode as ComplianceEpisodeCmd;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendErruErrors as SendErruErrorsCmd;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 
 /**
  * ComplianceEpisodeTest
@@ -51,12 +56,14 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
         $this->mockRepo('SiPenaltyImposedType', SiPenaltyImposedTypeRepo::class);
         $this->mockRepo('SiPenaltyRequestedType', SiPenaltyRequestedTypeRepo::class);
         $this->mockRepo('ErruRequest', ErruRequestRepo::class);
+        $this->mockRepo('ErruRequestFailure', ErruRequestFailureRepo::class);
         $this->mockRepo('Document', DocumentRepo::class);
 
         $this->mockedSmServices = [
             'ComplianceXmlStructure' => m::mock(XmlStructureInputFactory::class),
             'ComplianceEpisodeInput' => m::mock(ComplianceEpisodeInputFactory::class),
-            'SeriousInfringementInput' => m::mock(SeriousInfringementInputFactory::class)
+            'SeriousInfringementInput' => m::mock(SeriousInfringementInputFactory::class),
+            'FileUploader' => m::mock(ContentStoreFileUploader::class)
         ];
 
         parent::setUp();
@@ -89,8 +96,10 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $xmlString = 'xml string';
-        $command = ComplianceEpisodeCmd::create(['xml' => $xmlString]);
         $documentId = 111;
+        $command = ComplianceEpisodeCmd::create(['id' => $documentId]);
+
+        $this->fetchDocumentAndXml($command, $xmlString, $documentId, 1);
         $licenceId = 999;
 
         //common data
@@ -164,8 +173,6 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             ]
         ];
 
-        $xmlDomDocument = new \DomDocument();
-
         $erruData = [
             'workflowId' => $workflowId,
             'memberStateCode' => $memberStateCode,
@@ -179,54 +186,11 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             ]
         ];
 
-        $this->documentSideEffect($xmlString, $documentId);
-        $requestDocument = m::mock(DocumentEntity::class);
-        $this->repoMap['Document']->shouldReceive('fetchById')->once()->with($documentId)->andReturn($requestDocument);
-
-        $this->mockedSmServices['ComplianceXmlStructure']
-            ->shouldReceive('setValue')
-            ->with($xmlString)
-            ->andReturnSelf();
-
-        $this->mockedSmServices['ComplianceXmlStructure']
-            ->shouldReceive('isValid')
-            ->with([])
-            ->andReturn(true);
-
-        $this->mockedSmServices['ComplianceXmlStructure']
-            ->shouldReceive('getValue')
-            ->andReturn($xmlDomDocument);
-
-        $this->mockedSmServices['ComplianceEpisodeInput']
-            ->shouldReceive('setValue')
-            ->with($xmlDomDocument)
-            ->andReturnSelf();
-
-        $this->mockedSmServices['ComplianceEpisodeInput']
-            ->shouldReceive('isValid')
-            ->with([])
-            ->andReturn(true);
-
-        $this->mockedSmServices['ComplianceEpisodeInput']
-            ->shouldReceive('getValue')
-            ->andReturn($erruData);
-
-        $this->mockedSmServices['SeriousInfringementInput']
-            ->shouldReceive('setValue')
-            ->with($si)
-            ->andReturnSelf();
-
-        $this->mockedSmServices['SeriousInfringementInput']
-            ->shouldReceive('isValid')
-            ->with([])
-            ->andReturn(true);
-
-        $this->mockedSmServices['SeriousInfringementInput']
-            ->shouldReceive('getValue')
-            ->andReturn($filteredSi);
+        $this->validInitialInput($xmlString, $erruData, new \DOMDocument());
+        $this->validSiInput($si, $filteredSi);
 
         $licenceEntity = m::mock(LicenceEntity::class);
-        $licenceEntity->shouldReceive('getId')->once()->andReturn($licenceId);
+        $licenceEntity->shouldReceive('getId')->times(2)->andReturn($licenceId);
 
         $this->repoMap['Licence']
             ->shouldReceive('fetchByLicNoWithoutAdditionalData')
@@ -296,62 +260,174 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(CreateTask::class, $taskData, $taskResult);
 
+        $documentUpdateData = [
+            'id' => $documentId,
+            'case' => null,
+            'licence' => $licenceId,
+        ];
+
+        $this->expectedSideEffect(UpdateDocLinksCmd::class, $documentUpdateData, new Result());
+
         $result = $this->sut->handleCommand($command);
         $this->assertInstanceOf(Result::class, $result);
+
+        $errors = $this->sut->getErrors();
+        $this->assertEmpty($errors);
+        $this->assertFalse($result->getFlag('hasErrors'));
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\Exception
+     * Tests errors are thrown for erru requests which already exist
      */
-    public function testExceptionThrownForMissingData()
+    public function testErrorsForDoctrinePenaltyAndCategoryData()
     {
         $xmlString = 'xml string';
+        $memberStateCode = 'PL';
         $documentId = 111;
-        $command = ComplianceEpisodeCmd::create(['xml' => $xmlString]);
+        $command = ComplianceEpisodeCmd::create(['id' => $documentId]);
+
+        $this->fetchDocumentAndXml($command, $xmlString, $documentId);
 
         $licenceNumber = 'OB1234567';
         $workflowId = '0ffefb6b-6344-4a60-9a53-4381c32f98d9';
+        $siCategoryType = 101;
 
-        $xmlDomDocument = new \DomDocument();
+        //imposed erru
+        $siPenaltyImposedType = 102;
+        $executedRefData = 'pen_erru_imposed_executed_yes';
+
+        $filteredImposedErru = [
+            'siPenaltyImposedType' => $siPenaltyImposedType,
+            'executed' => $executedRefData
+        ];
+
+        //requested erru
+        $siPenaltyRequestedType = 301;
+        $duration = 12;
+
+        $requestedErru = [
+            'siPenaltyRequestedType' => $siPenaltyRequestedType,
+            'duration' => $duration
+        ];
+
+        $si = ['si'];
+
+        $filteredSi = [
+            'siCategoryType' => $siCategoryType,
+            'imposedErrus' => [
+                0 => $filteredImposedErru
+            ],
+            'requestedErrus' => [
+                0 => $requestedErru
+            ]
+        ];
+
+        $this->validSiInput($si, $filteredSi);
+
+        $this->repoMap['SiCategoryType']
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with($siCategoryType)
+            ->andThrow(NotFoundException::class);
+
+        $this->repoMap['SiPenaltyImposedType']
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with($siPenaltyImposedType)
+            ->andThrow(NotFoundException::class);
+
+        $this->repoMap['SiPenaltyRequestedType']
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with($siPenaltyRequestedType)
+            ->andThrow(NotFoundException::class);
 
         $erruData = [
             'licenceNumber' => $licenceNumber,
-            'workflowId' => $workflowId
+            'workflowId' => $workflowId,
+            'memberStateCode' => $memberStateCode,
+            'originatingAuthority' => 'originating authority',
+            'transportUndertakingName' => 'transport undertaking name',
+            'vrm' => 'vrm',
+            'notificationNumber' => 'notification number',
+            'si' => [
+                0 => $si
+            ]
         ];
 
-        $this->mockedSmServices['ComplianceXmlStructure']
-            ->shouldReceive('setValue')
-            ->with($xmlString)
-            ->andReturnSelf();
+        $this->validInitialInput($xmlString, $erruData, new \DOMDocument());
 
-        $this->mockedSmServices['ComplianceXmlStructure']
-            ->shouldReceive('isValid')
-            ->with([])
-            ->andReturn(true);
+        $this->repoMap['ErruRequest']
+            ->shouldReceive('existsByWorkflowId')
+            ->once()
+            ->with($workflowId)
+            ->andReturn(false);
 
-        $this->mockedSmServices['ComplianceXmlStructure']
-            ->shouldReceive('getValue')
-            ->andReturn($xmlDomDocument);
-
-        $this->mockedSmServices['ComplianceEpisodeInput']
-            ->shouldReceive('setValue')
-            ->with($xmlDomDocument)
-            ->andReturnSelf();
-
-        $this->mockedSmServices['ComplianceEpisodeInput']
-            ->shouldReceive('isValid')
-            ->with([])
-            ->andReturn(true);
-
-        $this->mockedSmServices['ComplianceEpisodeInput']
-            ->shouldReceive('getValue')
-            ->andReturn($erruData);
+        $this->repoMap['Country']
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with($memberStateCode)
+            ->andReturn(m::mock(CountryEntity::class));
 
         $this->repoMap['Licence']
             ->shouldReceive('fetchByLicNoWithoutAdditionalData')
             ->once()
             ->with($licenceNumber)
-            ->andThrowExceptions([new NotFoundException()]);
+            ->andReturn(m::mock(LicenceEntity::class));
+
+        $this->handleErrors();
+
+        $result = $this->sut->handleCommand($command);
+        $this->assertInstanceOf(Result::class, $result);
+
+        $imposedPenalty = sprintf(ComplianceEpisode::MISSING_IMPOSED_PENALTY_ERROR, $siPenaltyImposedType);
+        $requestedPenaltyError = sprintf(ComplianceEpisode::MISSING_REQUESTED_PENALTY_ERROR, $siPenaltyRequestedType);
+        $siCategoryTypeError = sprintf(ComplianceEpisode::MISSING_SI_CATEGORY_ERROR, $siCategoryType);
+        $errors = $this->sut->getErrors();
+
+        $this->assertCount(3, $errors);
+        $this->assertContains($imposedPenalty, $errors);
+        $this->assertContains($requestedPenaltyError, $errors);
+        $this->assertContains($siCategoryTypeError, $errors);
+        $this->assertTrue($result->getFlag('hasErrors'));
+    }
+
+    /**
+     * tests errors are returned when licence data is missing
+     */
+    public function testErrorsForMissingLicenceData()
+    {
+        $xmlString = 'xml string';
+        $documentId = 111;
+        $command = ComplianceEpisodeCmd::create(['id' => $documentId]);
+
+        $this->fetchDocumentAndXml($command, $xmlString, $documentId);
+
+        $licenceNumber = 'OB1234567';
+        $workflowId = '0ffefb6b-6344-4a60-9a53-4381c32f98d9';
+        $memberStateCode = 'PL';
+
+        $erruData = [
+            'licenceNumber' => $licenceNumber,
+            'workflowId' => $workflowId,
+            'memberStateCode' => $memberStateCode,
+        ];
+
+        $this->validInitialInput($xmlString, $erruData, new \DOMDocument());
+
+        $licenceError = 'licence not found error';
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchByLicNoWithoutAdditionalData')
+            ->once()
+            ->with($licenceNumber)
+            ->andThrow(NotFoundException::class, $licenceError);
+
+        $this->repoMap['Country']
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with($memberStateCode)
+            ->andReturn(m::mock(CountryEntity::class));
 
         $this->repoMap['ErruRequest']
             ->shouldReceive('existsByWorkflowId')
@@ -359,116 +435,422 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             ->with($workflowId)
             ->andReturn(false);
 
-        $this->documentSideEffect($xmlString, $documentId);
+        $this->handleErrors();
 
-        $this->sut->handleCommand($command);
+        $result = $this->sut->handleCommand($command);
+        $this->assertInstanceOf(Result::class, $result);
+
+        $errors = $this->sut->getErrors();
+
+        $this->assertCount(1, $errors);
+        $this->assertContains($licenceError, $errors);
+        $this->assertTrue($result->getFlag('hasErrors'));
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\Exception
+     * tests errors are returned when licence data is missing
      */
-    public function testExceptionThrownForExistingErruRequest()
+    public function testErrorsForMissingMemberState()
     {
         $xmlString = 'xml string';
         $documentId = 111;
-        $command = ComplianceEpisodeCmd::create(['xml' => $xmlString]);
+        $command = ComplianceEpisodeCmd::create(['id' => $documentId]);
+
+        $this->fetchDocumentAndXml($command, $xmlString, $documentId);
+
+        $licenceNumber = 'OB1234567';
+        $workflowId = '0ffefb6b-6344-4a60-9a53-4381c32f98d9';
+        $memberStateCode = 'PL';
+
+        $erruData = [
+            'licenceNumber' => $licenceNumber,
+            'workflowId' => $workflowId,
+            'memberStateCode' => $memberStateCode,
+        ];
+
+        $this->validInitialInput($xmlString, $erruData, new \DOMDocument());
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchByLicNoWithoutAdditionalData')
+            ->once()
+            ->with($licenceNumber)
+            ->andReturn(m::mock(LicenceEntity::class));
+
+        $this->repoMap['Country']
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with($memberStateCode)
+            ->andThrow(NotFoundException::class);
+
+        $this->repoMap['ErruRequest']
+            ->shouldReceive('existsByWorkflowId')
+            ->once()
+            ->with($workflowId)
+            ->andReturn(false);
+
+        $this->handleErrors();
+
+        $result = $this->sut->handleCommand($command);
+        $this->assertInstanceOf(Result::class, $result);
+
+        $memberStateError = sprintf(ComplianceEpisode::MISSING_MEMBER_STATE_ERROR, $memberStateCode);
+        $errors = $this->sut->getErrors();
+
+        $this->assertCount(1, $errors);
+        $this->assertContains($memberStateError, $errors);
+        $this->assertTrue($result->getFlag('hasErrors'));
+    }
+
+    /**
+     * Tests errors are thrown for erru requests which already exist
+     */
+    public function testErrorsForExistingErruRequest()
+    {
+        $xmlString = 'xml string';
+        $memberStateCode = 'PL';
+        $documentId = 111;
+        $command = ComplianceEpisodeCmd::create(['id' => $documentId]);
+
+        $this->fetchDocumentAndXml($command, $xmlString, $documentId);
 
         $licenceNumber = 'OB1234567';
         $workflowId = '0ffefb6b-6344-4a60-9a53-4381c32f98d9';
 
-        $xmlDomDocument = new \DomDocument();
+        $erruData = [
+            'licenceNumber' => $licenceNumber,
+            'workflowId' => $workflowId,
+            'memberStateCode' => $memberStateCode,
+        ];
+
+        $this->validInitialInput($xmlString, $erruData, new \DOMDocument());
+
+        $this->repoMap['ErruRequest']
+            ->shouldReceive('existsByWorkflowId')
+            ->once()
+            ->with($workflowId)
+            ->andReturn(true);
+
+        $this->repoMap['Country']
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with($memberStateCode)
+            ->andReturn(m::mock(CountryEntity::class));
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchByLicNoWithoutAdditionalData')
+            ->once()
+            ->with($licenceNumber)
+            ->andReturn(m::mock(LicenceEntity::class));
+
+        $this->handleErrors();
+
+        $result = $this->sut->handleCommand($command);
+        $this->assertInstanceOf(Result::class, $result);
+
+        $workFlowIdError = sprintf(ComplianceEpisode::WORKFLOW_ID_EXISTS, $workflowId);
+        $errors = $this->sut->getErrors();
+
+        $this->assertCount(1, $errors);
+        $this->assertContains($workFlowIdError, $errors);
+        $this->assertTrue($result->getFlag('hasErrors'));
+    }
+
+    /**
+     * Tests errors are thrown for erru requests which already exist
+     */
+    public function testErrorsForSeriousInfringementInputFailure()
+    {
+        $xmlString = 'xml string';
+        $memberStateCode = 'PL';
+        $documentId = 111;
+        $command = ComplianceEpisodeCmd::create(['id' => $documentId]);
+
+        $this->fetchDocumentAndXml($command, $xmlString, $documentId);
+
+        $licenceNumber = 'OB1234567';
+        $workflowId = '0ffefb6b-6344-4a60-9a53-4381c32f98d9';
+        $si = ['si'];
 
         $erruData = [
             'licenceNumber' => $licenceNumber,
-            'workflowId' => $workflowId
+            'workflowId' => $workflowId,
+            'memberStateCode' => $memberStateCode,
+            'originatingAuthority' => 'originating authority',
+            'transportUndertakingName' => 'transport undertaking name',
+            'vrm' => 'vrm',
+            'notificationNumber' => 'notification number',
+            'si' => [
+                0 => $si
+            ]
         ];
+
+        $this->validInitialInput($xmlString, $erruData, new \DOMDocument());
+
+        $this->repoMap['ErruRequest']
+            ->shouldReceive('existsByWorkflowId')
+            ->once()
+            ->with($workflowId)
+            ->andReturn(false);
+
+        $this->repoMap['Country']
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with($memberStateCode)
+            ->andReturn(m::mock(CountryEntity::class));
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchByLicNoWithoutAdditionalData')
+            ->once()
+            ->with($licenceNumber)
+            ->andReturn(m::mock(LicenceEntity::class));
+
+        $this->mockedSmServices['SeriousInfringementInput']
+            ->shouldReceive('setValue')
+            ->once()
+            ->with($si)
+            ->andReturnSelf();
+
+        $this->mockedSmServices['SeriousInfringementInput']
+            ->shouldReceive('isValid')
+            ->once()
+            ->with([])
+            ->andReturn(false);
+
+        $inputFilterErrors = ['message 1', 'message2'];
+
+        $this->mockedSmServices['SeriousInfringementInput']
+            ->shouldReceive('getMessages')
+            ->once()
+            ->andReturn($inputFilterErrors);
+
+        $this->handleErrors();
+
+        $result = $this->sut->handleCommand($command);
+        $this->assertInstanceOf(Result::class, $result);
+
+        $this->assertEquals($inputFilterErrors, $this->sut->getErrors());
+        $this->assertTrue($result->getFlag('hasErrors'));
+    }
+
+    /**
+     * Tests errors in the XML are handled correctly
+     */
+    public function testErrorsForXmlInputFailure()
+    {
+        $xmlString = 'xml string';
+        $documentId = 111;
+        $command = ComplianceEpisodeCmd::create(['id' => $documentId]);
+
+        $this->fetchDocumentAndXml($command, $xmlString, $documentId);
 
         $this->mockedSmServices['ComplianceXmlStructure']
             ->shouldReceive('setValue')
             ->with($xmlString)
+            ->once()
             ->andReturnSelf();
 
         $this->mockedSmServices['ComplianceXmlStructure']
             ->shouldReceive('isValid')
             ->with([])
-            ->andReturn(true);
+            ->once()
+            ->andReturn(false);
+
+        $inputFilterErrors = ['message 1', 'message2'];
 
         $this->mockedSmServices['ComplianceXmlStructure']
-            ->shouldReceive('getValue')
-            ->andReturn($xmlDomDocument);
+            ->shouldReceive('getMessages')
+            ->once()
+            ->andReturn($inputFilterErrors);
+
+        $this->handleErrors();
+
+        $result = $this->sut->handleCommand($command);
+        $this->assertInstanceOf(Result::class, $result);
+
+        $this->assertEquals($inputFilterErrors, $this->sut->getErrors());
+        $this->assertTrue($result->getFlag('hasErrors'));
+    }
+
+    /**
+     * Tests errors in the XML are handled correctly
+     */
+    public function testErrorsForComplianceEpisodeInputFailure()
+    {
+        $xmlString = 'xml string';
+        $documentId = 111;
+        $command = ComplianceEpisodeCmd::create(['id' => $documentId]);
+
+        $xmlDomDocument = new \DOMDocument();
+
+        $this->fetchDocumentAndXml($command, $xmlString, $documentId);
+        $this->validXml($xmlString, $xmlDomDocument);
 
         $this->mockedSmServices['ComplianceEpisodeInput']
             ->shouldReceive('setValue')
+            ->once()
             ->with($xmlDomDocument)
             ->andReturnSelf();
 
         $this->mockedSmServices['ComplianceEpisodeInput']
             ->shouldReceive('isValid')
+            ->once()
             ->with([])
-            ->andReturn(true);
+            ->andReturn(false);
+
+        $inputFilterErrors = ['message 1', 'message2'];
 
         $this->mockedSmServices['ComplianceEpisodeInput']
-            ->shouldReceive('getValue')
-            ->andReturn($erruData);
-
-        $this->repoMap['ErruRequest']
-            ->shouldReceive('existsByWorkflowId')
+            ->shouldReceive('getMessages')
             ->once()
-            ->with($workflowId)
-            ->andReturn(true);
+            ->andReturn($inputFilterErrors);
 
-        $this->documentSideEffect($xmlString, $documentId);
+        $this->handleErrors();
 
-        $this->sut->handleCommand($command);
+        $result = $this->sut->handleCommand($command);
+        $this->assertInstanceOf(Result::class, $result);
+
+        $this->assertEquals($inputFilterErrors, $this->sut->getErrors());
+        $this->assertTrue($result->getFlag('hasErrors'));
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\Exception
+     * Gets the email command to send the erru error email
      */
-    public function testExceptionThrownForValidationFailure()
+    private function handleErrors()
     {
-        $xmlString = 'xml string';
-        $documentId = 111;
-        $command = ComplianceEpisodeCmd::create(['xml' => $xmlString]);
+        $erruFailureId = 12345;
 
+        $this->repoMap['ErruRequestFailure']
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(ErruRequestFailure::class))
+            ->andReturnUsing(
+                function (ErruRequestFailure $erruRequestFailure) use (&$savedErruRequestFailure) {
+                    $erruRequestFailure->setId(12345);
+                    $savedErruRequestFailure = $erruRequestFailure;
+                }
+            );
+
+        $cmdData = ['id' => $erruFailureId];
+
+        $this->expectedEmailQueueSideEffect(SendErruErrorsCmd::class, $cmdData, $erruFailureId, new Result());
+    }
+
+    /**
+     * Creates assertions for fetching the document and associated xml
+     *
+     * @param $command
+     * @param $xmlString
+     * @param $documentId
+     * @param int $documentIdTimes
+     */
+    private function fetchDocumentAndXml($command, $xmlString, $documentId, $documentIdTimes = 0)
+    {
+        $docIdentifier = 'doc/identifier';
+
+        $documentEntity = m::mock(DocumentEntity::class);
+        $documentEntity->shouldReceive('getIdentifier')->once()->andReturn($docIdentifier);
+        $documentEntity->shouldReceive('getId')->times($documentIdTimes)->andReturn($documentId);
+
+        $this->repoMap['Document']
+            ->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command)->andReturn($documentEntity);
+
+        $xmlFile = m::mock(File::class);
+        $xmlFile->shouldReceive('getContent')->once()->andReturn($xmlString);
+
+        $this->mockedSmServices['FileUploader']
+            ->shouldReceive('download')
+            ->once()
+            ->with($docIdentifier)
+            ->andReturn($xmlFile);
+    }
+
+    /**
+     * @param $xmlString
+     * @param $erruData
+     * @param $xmlDomDocument
+     */
+    private function validInitialInput($xmlString, $erruData, $xmlDomDocument)
+    {
+        $this->validXml($xmlString, $xmlDomDocument);
+        $this->validComplianceEpisodeInput($erruData, $xmlDomDocument);
+    }
+
+    /**
+     * Creates assertions for a valid set of xml
+     *
+     * @param $xmlString
+     * @param $xmlDomDocument
+     */
+    private function validXml($xmlString, $xmlDomDocument)
+    {
         $this->mockedSmServices['ComplianceXmlStructure']
             ->shouldReceive('setValue')
+            ->once()
             ->with($xmlString)
             ->andReturnSelf();
 
         $this->mockedSmServices['ComplianceXmlStructure']
             ->shouldReceive('isValid')
+            ->once()
             ->with([])
-            ->andReturn(false);
+            ->andReturn(true);
 
         $this->mockedSmServices['ComplianceXmlStructure']
-            ->shouldReceive('getMessages')
-            ->andReturn(['message 1', 'message2']);
-
-        $this->documentSideEffect($xmlString, $documentId);
-
-        $this->sut->handleCommand($command);
+            ->shouldReceive('getValue')
+            ->once()
+            ->andReturn($xmlDomDocument);
     }
 
     /**
-     * Gets document uplaod data
+     * Creates assertions for a valid compliance episode input
      *
-     * @param string $xmlString
-     * @param int $documentId
-     * @return array
+     * @param $erruData
+     * @param $xmlDomDocument
      */
-    private function documentSideEffect($xmlString, $documentId)
+    private function validComplianceEpisodeInput($erruData, $xmlDomDocument)
     {
-        $documentData = [
-            'content' => base64_encode($xmlString),
-            'category' => CategoryEntity::CATEGORY_COMPLIANCE,
-            'subCategory' => CategoryEntity::DOC_SUB_CATEGORY_NR,
-            'filename' => 'compliance-episode.xml',
-            'description' => 'ERRU incoming compliance episode'
-        ];
+        $this->mockedSmServices['ComplianceEpisodeInput']
+            ->shouldReceive('setValue')
+            ->once()
+            ->with($xmlDomDocument)
+            ->andReturnSelf();
 
-        $documentResult = new Result();
-        $documentResult->addId('document', $documentId);
-        $this->expectedSideEffect(UploadCmd::class, $documentData, $documentResult);
+        $this->mockedSmServices['ComplianceEpisodeInput']
+            ->shouldReceive('isValid')
+            ->once()
+            ->with([])
+            ->andReturn(true);
+
+        $this->mockedSmServices['ComplianceEpisodeInput']
+            ->shouldReceive('getValue')
+            ->once()
+            ->andReturn($erruData);
+    }
+
+    /**
+     * @param $si
+     * @param $filteredSi
+     */
+    private function validSiInput($si, $filteredSi)
+    {
+        $this->mockedSmServices['SeriousInfringementInput']
+            ->shouldReceive('setValue')
+            ->once()
+            ->with($si)
+            ->andReturnSelf();
+
+        $this->mockedSmServices['SeriousInfringementInput']
+            ->shouldReceive('isValid')
+            ->once()
+            ->with([])
+            ->andReturn(true);
+
+        $this->mockedSmServices['SeriousInfringementInput']
+            ->shouldReceive('getValue')
+            ->once()
+            ->andReturn($filteredSi);
     }
 }

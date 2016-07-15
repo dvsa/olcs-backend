@@ -127,6 +127,16 @@ final class Result
     }
 
     /**
+     * Return the array of flags
+     *
+     * @return array
+     */
+    public function getFlags()
+    {
+        return $this->flags;
+    }
+
+    /**
      * Merge passed result in this Result
      *
      * @param Result $result Object necessary to merge in
@@ -137,10 +147,11 @@ final class Result
     {
         $this->ids = array_merge($this->ids, $result->getIds());
         $this->messages = array_merge($this->messages, $result->getMessages());
+        $this->flags = array_merge($this->flags, $result->getFlags());
     }
 
     /**
-     * Export to array
+     * Returns the object represented as an array, minus the flags
      *
      * @return array
      */

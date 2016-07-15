@@ -65,6 +65,7 @@ return [
     CommandHandler\OperatingCentre\DeleteTmLinks::class                               => IsSideEffect::class,
     CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class       => IsSideEffect::class,
     CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertakingS4::class     => IsSideEffect::class,
+    CommandHandler\Cases\Si\ComplianceEpisode::class                                  => IsSideEffect::class,
     CommandHandler\Schedule41\CreateS4::class                                         => IsSideEffect::class,
     CommandHandler\Schedule41\ApproveS4::class                                        => IsSideEffect::class,
     CommandHandler\Schedule41\ResetS4::class                                          => IsSideEffect::class,

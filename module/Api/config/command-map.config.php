@@ -157,7 +157,7 @@ return [
     TransferCommand\Cases\Si\DeleteSi::class => CommandHandler\Cases\Si\DeleteSi::class,
     TransferCommand\Cases\Si\UpdateSi::class => CommandHandler\Cases\Si\UpdateSi::class,
     TransferCommand\Cases\Si\CreateResponse::class => CommandHandler\Cases\Si\CreateResponse::class,
-    TransferCommand\Cases\Si\ComplianceEpisode::class => CommandHandler\Cases\Si\ComplianceEpisode::class,
+    TransferCommand\Cases\Si\ComplianceEpisode::class => CommandHandler\Cases\Si\ComplianceEpisodeDocument::class,
 
     // Transfer - Bus
     TransferCommand\Bus\CreateBus::class => CommandHandler\Bus\CreateBus::class,
@@ -556,6 +556,7 @@ return [
 
     // Domain - Si, Erru
     Command\Cases\Si\SendResponse::class => CommandHandler\Cases\Si\SendResponse::class,
+    Command\Cases\Si\ComplianceEpisode::class => CommandHandler\Cases\Si\ComplianceEpisode::class,
 
     // Domain - Schedule41
     Command\Schedule41\CreateS4::class => CommandHandler\Schedule41\CreateS4::class,
@@ -727,6 +728,7 @@ return [
     Command\Email\SendEbsrRegistered::class => CommandHandler\Email\SendEbsrRegistered::class,
     Command\Email\SendEbsrErrors::class => CommandHandler\Email\SendEbsrErrors::class,
     Command\Email\SendEbsrRequestMap::class => CommandHandler\Email\SendEbsrRequestMap::class,
+    Command\Email\SendErruErrors::class => CommandHandler\Email\SendErruErrors::class,
     Command\Email\SendPublication::class => CommandHandler\Email\SendPublication::class,
 
     // Person
