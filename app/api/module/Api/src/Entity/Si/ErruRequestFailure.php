@@ -25,9 +25,9 @@ class ErruRequestFailure extends AbstractErruRequestFailure
     /**
      * Creates erru request failure record
      *
-     * @param Document        $document the document
-     * @param array           $errors   array of errors
-     * @param array|string    $input    usually array, if it's a string we don't save it
+     * @param Document     $document the document
+     * @param array        $errors   array of errors
+     * @param array|string $input    usually array, if it's a string we don't save it
      */
     public function __construct(Document $document, array $errors, $input)
     {
