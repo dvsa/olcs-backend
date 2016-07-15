@@ -649,7 +649,7 @@ class SearchTest extends MockeryTestCase
                                             'filtered' => [
                                                 'filter' => [
                                                     'exists' => [
-                                                        'field' => 'lic_no'
+                                                        'field' => 'lic_id'
                                                     ]
                                                 ]
                                             ]
