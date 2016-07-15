@@ -14,6 +14,7 @@ return [
     CliCommandHandler\CompaniesHouseVsOlcsDiffsExport::class => IsSystemUser::class,
     CliCommandHandler\RemoveReadAudit::class => IsSystemUser::class,
     Dvsa\Olcs\Email\Domain\CommandHandler\ProcessInspectionRequestEmail::class => IsSystemUser::class,
+    CommandHandler\Email\SendErruErrors::class => IsSystemUser::class,
     QueryHandler\Application\NotTakenUpList::class => IsSystemUser::class,
     CommandHandler\Vehicle\ProcessDuplicateVehicleWarnings::class => IsSystemUser::class,
     CommandHandler\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class => IsSystemUser::class,
