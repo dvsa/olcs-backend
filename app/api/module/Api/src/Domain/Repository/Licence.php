@@ -13,6 +13,9 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\NonUniqueResultException;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Licence
@@ -23,6 +26,18 @@ class Licence extends AbstractRepository
 {
     protected $entity = Entity::class;
 
+    /**
+     * Fetches a licence based on the case id
+     *
+     * @param int      $caseId      case id
+     * @param int      $hydrateMode hydrate mode
+     * @param int|null $version     version
+     *
+     * @return mixed
+     * @throws Exception\NotFoundException
+     * @throws Exception\RuntimeException
+     * @throws Exception\VersionConflictException
+     */
     public function fetchByCaseId($caseId, $hydrateMode = Query::HYDRATE_ARRAY, $version = null)
     {
         $qb = $this->createQueryBuilder();
@@ -46,6 +61,15 @@ class Licence extends AbstractRepository
         return $results[0];
     }
 
+    /**
+     * fetch with addresses
+     *
+     * @param QueryInterface $query the query
+     *
+     * @return mixed
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
     public function fetchWithAddressesUsingId($query)
     {
         $qb = $this->createQueryBuilder();
@@ -64,11 +88,33 @@ class Licence extends AbstractRepository
         return $qb->getQuery()->getSingleResult();
     }
 
-    public function fetchSafetyDetailsUsingId($command, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
+    /**
+     * fetch safety details using id
+     *
+     * @param QueryInterface $query       the query
+     * @param int            $hydrateMode hydrate mode
+     * @param null|int       $version     the version
+     *
+     * @return mixed
+     * @throws Exception\NotFoundException
+     */
+    public function fetchSafetyDetailsUsingId($query, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
     {
-        return $this->fetchSafetyDetailsById($command->getId(), $hydrateMode, $version);
+        return $this->fetchSafetyDetailsById($query->getId(), $hydrateMode, $version);
     }
 
+    /**
+     * fetch safety details by id
+     *
+     * @param int      $id          the id
+     * @param int      $hydrateMode hydrate mode
+     * @param null|int $version     version
+     *
+     * @return mixed
+     * @throws Exception\NotFoundException
+     * @throws Exception\RuntimeException
+     * @throws Exception\VersionConflictException
+     */
     public function fetchSafetyDetailsById($id, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
     {
         $qb = $this->createQueryBuilder();
@@ -91,12 +137,12 @@ class Licence extends AbstractRepository
     }
 
     /**
-     * Get a Licence by the LicNo
+     * Get a licence by the licence number
      *
-     * @param string $licNo
-     * @throws Exception\NotFoundException
+     * @param string $licNo the licence number
      *
      * @return Entity
+     * @throws Exception\NotFoundException
      */
     public function fetchByLicNo($licNo)
     {
@@ -122,7 +168,8 @@ class Licence extends AbstractRepository
     /**
      * Returns whether or not the licence number exists in the database
      *
-     * @param string $licNo
+     * @param string $licNo the licence number
+     *
      * @return bool
      */
     public function existsByLicNo($licNo)
@@ -139,10 +186,10 @@ class Licence extends AbstractRepository
     /**
      * Returns whether or not the licence number exists in the database
      *
-     * @param string $licNo
-     * @throws Exception\NotFoundException
+     * @param string $licNo the licence number
      *
      * @return Entity
+     * @throws Exception\NotFoundException
      */
     public function fetchByLicNoWithoutAdditionalData($licNo)
     {
@@ -154,12 +201,21 @@ class Licence extends AbstractRepository
         $result = $qb->getQuery()->getOneOrNullResult();
 
         if ($result === null) {
-            throw new Exception\NotFoundException('Licence not found');
+            throw new Exception\NotFoundException('Licence ' . $licNo . ' not found');
         }
 
         return $result;
     }
 
+    /**
+     * fetch a licence for a user registration
+     *
+     * @param string $licNo the licence number
+     *
+     * @return Entity
+     * @throws Exception\NotFoundException
+     * @throws Exception\ValidationException
+     */
     public function fetchForUserRegistration($licNo)
     {
         $licence = $this->fetchByLicNo($licNo);
@@ -203,6 +259,13 @@ class Licence extends AbstractRepository
         return $licence;
     }
 
+    /**
+     * fetch by vehicle VRM
+     *
+     * @param string $vrm the vrm
+     *
+     * @return mixed
+     */
     public function fetchByVrm($vrm)
     {
         $qb = $this->createQueryBuilder();
@@ -220,6 +283,15 @@ class Licence extends AbstractRepository
         return $query->getResult();
     }
 
+    /**
+     * Fetch a licence with enforcement area data
+     *
+     * @param int $licenceId licence id
+     *
+     * @return mixed
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
     public function fetchWithEnforcementArea($licenceId)
     {
         $qb = $this->createQueryBuilder();
@@ -232,7 +304,13 @@ class Licence extends AbstractRepository
     }
 
     /**
-     * @return \Dvsa\Olcs\Api\Entity\Licence\Licence
+     * Fetch a licence with operating centre data
+     *
+     * @param int $licenceId licence id
+     *
+     * @return Entity
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function fetchWithOperatingCentres($licenceId)
     {
@@ -250,7 +328,7 @@ class Licence extends AbstractRepository
     /**
      * Get a Licence and PrivateHireLicence data
      *
-     * @param int $licenceId
+     * @param int $licenceId licence id
      *
      * @return Entity
      */
@@ -354,10 +432,12 @@ class Licence extends AbstractRepository
     /**
      * Override parent
      *
-     * @param QueryBuilder $qb
-     * @param \Dvsa\Olcs\Transfer\Query\QueryInterface $query
+     * @param QueryBuilder   $qb    query builder
+     * @param QueryInterface $query the query
+     *
+     * @return void
      */
-    protected function applyListFilters(QueryBuilder $qb, \Dvsa\Olcs\Transfer\Query\QueryInterface $query)
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         if (is_numeric($query->getOrganisation())) {
             $qb->andWhere($qb->expr()->eq($this->alias .'.organisation', ':organisation'))
@@ -370,6 +450,15 @@ class Licence extends AbstractRepository
         }
     }
 
+    /**
+     * fetch for continuation
+     *
+     * @param int    $year        the year
+     * @param int    $month       the month
+     * @param string $trafficArea the traffic area
+     *
+     * @return array
+     */
     public function fetchForContinuation($year, $month, $trafficArea)
     {
         $qb = $this->createQueryBuilder();
@@ -392,6 +481,13 @@ class Licence extends AbstractRepository
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
+    /**
+     * fetch with variations and interim in force
+     *
+     * @param int $licenceId licence id
+     *
+     * @return array
+     */
     public function fetchWithVariationsAndInterimInforce($licenceId)
     {
         $qb = $this->createQueryBuilder();

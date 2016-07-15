@@ -121,6 +121,7 @@ return [
     'Recipient' => 'Publication',
     'Queue' => 'Queue',
     'ErruRequest' => 'Si',
+    'ErruRequestFailure' => 'Si',
     'SeriousInfringement' => 'Si',
     'SiCategory' => 'Si',
     'SiCategoryType' => 'Si',

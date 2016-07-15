@@ -20,7 +20,8 @@ class ComplianceEpisodeXmlFactory implements FactoryInterface
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
      * @return MapXmlFile
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -38,15 +39,17 @@ class ComplianceEpisodeXmlFactory implements FactoryInterface
     protected function getSeriousInfringement()
     {
         $seriousInfringement = [
-            'Header' => [
+            'ns0:Header' => [
                 new NodeAttribute('workflowId', 'workflowId'),
-                new NodeAttribute('memberStateCode', 'from')
+                new NodeAttribute('memberStateCode', 'from'),
+                new NodeAttribute('sentAt', 'sentAt')
             ],
-            'Body' => [
+            'ns0:Body' => [
                 new NodeAttribute('notificationNumber', 'businessCaseId'),
                 new NodeAttribute('originatingAuthority', 'originatingAuthority'),
+                new NodeAttribute('notificationDateTime', 'notificationDateTime'),
                 new Recursion(
-                    'TransportUndertaking',
+                    'ns0:TransportUndertaking',
                     [
                         new NodeAttribute('communityLicenceNumber', 'communityLicenceNumber'),
                         new NodeAttribute('vrm', 'vehicleRegNumber'),
@@ -60,6 +63,11 @@ class ComplianceEpisodeXmlFactory implements FactoryInterface
         return $seriousInfringement;
     }
 
+    /**
+     * Gets Si information
+     *
+     * @return RecursionValue
+     */
     protected function getSi()
     {
         $spec = [
@@ -72,7 +80,7 @@ class ComplianceEpisodeXmlFactory implements FactoryInterface
 
         return new RecursionValue(
             'si',
-            new RecursionAttribute('SeriousInfringement', $spec)
+            new RecursionAttribute('ns0:SeriousInfringement', $spec)
         );
     }
 
@@ -93,7 +101,7 @@ class ComplianceEpisodeXmlFactory implements FactoryInterface
 
         return new RecursionValue(
             'imposedErrus',
-            new RecursionAttribute('PenaltyImposed', $spec)
+            new RecursionAttribute('ns0:PenaltyImposed', $spec)
         );
     }
 
@@ -111,7 +119,7 @@ class ComplianceEpisodeXmlFactory implements FactoryInterface
 
         return new RecursionValue(
             'requestedErrus',
-            new RecursionAttribute('PenaltyRequested', $spec)
+            new RecursionAttribute('ns0:PenaltyRequested', $spec)
         );
     }
 }
