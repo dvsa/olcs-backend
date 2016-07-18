@@ -27,6 +27,7 @@ return [
         'canAccessPsvDisc' => Validators\CanAccessPsvDisc::class,
         'canAccessOtherLicence' => Validators\CanAccessOtherLicence::class,
         'canAccessTransportManagerLicence' => Validators\CanAccessTransportManagerLicence::class,
+        'canAccessTmEmployment' => Validators\CanAccessTmEmployment::class,
         'canAccessUser' => Validators\CanAccessUser::class,
         'canAccessLicenceVehicle' => Validators\CanAccessLicenceVehicle::class,
         'canAccessCorrespondenceInbox' => Validators\CanAccessCorrespondenceInbox::class,
