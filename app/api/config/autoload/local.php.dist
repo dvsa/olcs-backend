@@ -21,7 +21,7 @@ $doctrine_connection_params = [
 ];
 
 return [
-     // Postcode/Address service
+    // Postcode/Address service
     'address' => [
         'client' => [
             // URI e.g. http://postcode.cit.olcs.mgt.mtpdvsa/ *Environment specific*
@@ -68,7 +68,7 @@ return [
             'orm_default' => [
                 'metadata_cache' => 'apc'
 
-                // Disable these in Development environment
+                // NOT used in production as may be causing issues
                 //'query_cache' => 'apc',
                 //'result_cache' => 'apc',
             ]
@@ -195,7 +195,7 @@ return [
             'uri' => 'http://localhost:8080/txc/publisherService',
             'options' => [
                 'timeout' => 30
-            ],
+            ]
         ],
         'tmp_extra_path' => '/EBSR-tmp', //extra path to ebsr files within /tmp
         //debug only - validation must always be set to true in production
@@ -251,13 +251,16 @@ return [
             ]
         ]
     ],
+    // Path to VI extract data
     'vi_extract_files' => [
         'export_path' => '/tmp/ViExtract'
     ],
+    // Path to export CSV data for data.gov.uk
     'data-gov-uk-export' => [
         'path' => '/var/tmp/dataGovUk',
     ],
+    // Path to export CSV data for Companies House differences
     'ch-vs-olcs-export' => [
-        'path' => '/tmp/companyHouse_vs_Olcs',
+        'path' => '/var/tmp/companyHouse_vs_Olcs',
     ],
 ];
