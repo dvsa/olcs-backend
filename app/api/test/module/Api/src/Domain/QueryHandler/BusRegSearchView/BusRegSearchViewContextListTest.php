@@ -70,6 +70,7 @@ class BusRegSearchViewContextListTest extends QueryHandlerTestCase
     public function testHandleQueryOperator()
     {
         $organisationId = 1;
+        $localAuthorityId = null;
 
         $currentUser = $this->getCurrentUser(null, $organisationId);
 
@@ -92,7 +93,7 @@ class BusRegSearchViewContextListTest extends QueryHandlerTestCase
         $this->repoMap['BusRegSearchView']
             ->shouldReceive('fetchDistinctList')
             ->once()
-            ->with($query, $organisationId)
+            ->with($query, $organisationId, $localAuthorityId)
             ->andReturn([$mockRecord]);
 
         $expected = [
@@ -107,13 +108,20 @@ class BusRegSearchViewContextListTest extends QueryHandlerTestCase
 
     public function testHandleQueryLocalAuthority()
     {
-        $localAuthority = 99;
+        $organisationId = null;
+        $localAuthorityId = 99;
 
-        $currentUser = $this->getCurrentUser($localAuthority, null);
+        $currentUser = $this->getCurrentUser($localAuthorityId, null);
 
-        // check for operator
+        // checks for operator before local authority so we mock these first
         $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']->shouldReceive('isGranted')
-            ->with(m::type('string'), null)->andReturn(false);
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::OPERATOR_ADMIN, null)->andReturn(false);
+        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::OPERATOR_USER, null)->andReturn(false);
+        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::LOCAL_AUTHORITY_USER, null)->andReturn(true);
+        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::LOCAL_AUTHORITY_ADMIN, null)->andReturn(true);
 
         $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
             ->shouldReceive('getIdentity')
@@ -130,7 +138,7 @@ class BusRegSearchViewContextListTest extends QueryHandlerTestCase
         $this->repoMap['BusRegSearchView']
             ->shouldReceive('fetchDistinctList')
             ->once()
-            ->with($query, null)
+            ->with($query, $organisationId, $localAuthorityId)
             ->andReturn([$mockRecord]);
 
         $expected = [

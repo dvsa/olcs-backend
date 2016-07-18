@@ -151,6 +151,35 @@ class BusRegSearchViewTest extends RepositoryTestCase
     }
 
     /**
+     * @dataProvider provideContextGroupBys
+     * @param $context
+     */
+    public function testFetchDistinctListWithLocalAuthorityId($context, $expected)
+    {
+        $localAuthorityId = 1;
+
+        $qb = m::mock(QueryBuilder::class);
+        $repo = m::mock(EntityRepository::class);
+
+        $this->em->shouldReceive('getRepository')->with(Entity::class)->andReturn($repo);
+
+        $repo->shouldReceive('createQueryBuilder')->with('m')->once()->andReturn($qb);
+
+        $qb->shouldReceive('distinct')->andReturnSelf();
+        $qb->shouldReceive('select')->with($expected)->andReturnSelf();
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULTS']);
+
+        $qb->shouldReceive('expr->eq')->with('m.localAuthorityId', ':localAuthorityId')->once()->andReturn('S_EXPR');
+        $qb->shouldReceive('andWhere')->with('S_EXPR')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('localAuthorityId', $localAuthorityId)->once()->andReturnSelf();
+
+        $mockQuery = m::mock(QueryInterface::class);
+        $mockQuery->shouldReceive('getContext')->andReturn($context);
+
+        $this->assertSame(['RESULTS'], $this->sut->fetchDistinctList($mockQuery, null, $localAuthorityId));
+    }
+
+    /**
      * Data provider maps the relevent group by clauses that should be applied to the query given a certain context
      *
      * @return array
@@ -170,7 +199,7 @@ class BusRegSearchViewTest extends RepositoryTestCase
         ];
     }
 
-    public function testApplyListFilters()
+    public function testApplyListFiltersOperator()
     {
         $this->setUpSut(Repo::class, true);
 
@@ -212,7 +241,7 @@ class BusRegSearchViewTest extends RepositoryTestCase
         $this->sut->applyListFilters($mockQb, $mockQ);
     }
 
-    public function testApplyListFiltersAlternative()
+    public function testApplyListFiltersAlternativeStatus()
     {
         $this->setUpSut(Repo::class, true);
 
@@ -229,6 +258,49 @@ class BusRegSearchViewTest extends RepositoryTestCase
             ->getMock();
 
         $mockQ = SearchViewList::create(['status' => 'bar']);
+
+        $this->sut->applyListFilters($mockQb, $mockQ);
+    }
+
+
+    public function testApplyListFiltersLocalAuthority()
+    {
+        $this->setUpSut(Repo::class, true);
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr')
+            ->andReturnSelf()
+            ->shouldReceive('eq')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('licId', '1234')
+            ->andReturnSelf()
+
+            ->shouldReceive('eq')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('busRegStatus', 'foo')
+            ->andReturnSelf()
+
+            ->shouldReceive('eq')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('localAuthorityId', 234)
+            ->andReturnSelf();
+
+        $mockQ = BusRegSearchViewList::create(
+            [
+                'licId' => '1234',
+                'busRegStatus' => 'foo',
+                'localAuthorityId' => 234
+            ]
+        );
 
         $this->sut->applyListFilters($mockQb, $mockQ);
     }
