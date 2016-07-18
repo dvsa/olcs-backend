@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc;
 
 return [
     // Commands
-    CommandHandler\PrivateHireLicence\Create::class          => PrivateHireLicence::class,
-    CommandHandler\PrivateHireLicence\DeleteList::class      => PrivateHireLicence::class,
-    CommandHandler\PrivateHireLicence\Update::class          => PrivateHireLicence::class,
+    CommandHandler\PrivateHireLicence\Create::class     => Handler\PrivateHireLicence\PrivateHireLicence::class,
+    CommandHandler\PrivateHireLicence\DeleteList::class => Handler\PrivateHireLicence\PrivateHireLicence::class,
+    CommandHandler\PrivateHireLicence\Update::class     => Handler\PrivateHireLicence\PrivateHireLicence::class,
 ];
