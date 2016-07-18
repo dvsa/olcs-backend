@@ -41,4 +41,10 @@ return [
 
     CommandHandler\Tm\CreateNewUser::class                          => Misc\CanAccessApplicationWithApplication::class,
     CommandHandler\Tm\UpdateNysiisName::class                       => Misc\IsInternalUser::class,
+
+    CommandHandler\Email\SendTmApplication::class     => Misc\CanAccessTmaWithId::class,
+    CommandHandler\TmEmployment\Create::class         => Handler\TmEmployment\Create::class,
+    CommandHandler\TmEmployment\Update::class         => Handler\TmEmployment\Modify::class,
+    CommandHandler\TmEmployment\DeleteList::class     => Handler\TmEmployment\ModifyList::class,
+    QueryHandler\TmEmployment\GetSingle::class        => Misc\CanAccessTmEmploymentWithId::class,
 ];
