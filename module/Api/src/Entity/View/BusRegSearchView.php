@@ -87,11 +87,20 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     /**
      * Organisation ID
      *
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(type="string", name="organisation_id")
+     * @ORM\Column(type="integer", name="organisation_id")
      */
     protected $organisationId;
+
+    /**
+     * Organisation name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="organisation_name")
+     */
+    protected $organisationName;
 
     /**
      * Local Authority ID
@@ -101,15 +110,6 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
      * @ORM\Column(type="integer", name="local_authority_id")
      */
     protected $localAuthorityId;
-
-    /**
-     * Organisation name
-     *
-     * @var integer
-     *
-     * @ORM\Column(type="integer", name="organisation_name")
-     */
-    protected $organisationName;
 
     /**
      * Start Point
@@ -295,23 +295,15 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
-     * @return string
+     * @param string $organisationName
      */
-    public function getOrganisationId()
+    public function setOrganisationName($organisationName)
     {
-        return $this->organisationId;
+        $this->organisationName = $organisationName;
     }
 
     /**
-     * @param string $organisationId
-     */
-    public function setOrganisationId($organisationId)
-    {
-        $this->organisationId = $organisationId;
-    }
-
-    /**
-     * @return int
+     * @return integer
      */
     public function getLocalAuthorityId()
     {
@@ -319,19 +311,11 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
-     * @param int $localAuthorityId
+     * @param integer $localAuthorityId
      */
     public function setLocalAuthorityId($localAuthorityId)
     {
         $this->localAuthorityId = $localAuthorityId;
-    }
-
-    /**
-     * @param string $organisationName
-     */
-    public function setOrganisationName($organisationName)
-    {
-        $this->organisationName = $organisationName;
     }
 
     /**
