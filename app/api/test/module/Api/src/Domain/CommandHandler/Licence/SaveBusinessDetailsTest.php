@@ -225,7 +225,6 @@ class SaveBusinessDetailsTest extends CommandHandlerTestCase
         //  mock organisation entity
         $this->mockOrgEntity
             ->shouldReceive('getVersion')->once()->andReturn(self::VERSION)
-            ->shouldReceive('setAllowEmail')->once()->with('')
             ->shouldReceive('setNatureOfBusiness')->once()->with('')
             ->shouldReceive('setContactDetails')->never();
 
