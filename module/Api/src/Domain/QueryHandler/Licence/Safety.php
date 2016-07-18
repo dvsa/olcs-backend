@@ -24,6 +24,13 @@ class Safety extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
 
+    /**
+     * Handle Query
+     *
+     * @param QueryInterface $query DTO
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
         /** @var LicenceEntity $licence */
@@ -46,7 +53,7 @@ class Safety extends AbstractQueryHandler
                 ],
             ],
             [
-                'safetyDocuments' => $safetyDocuments->toArray(),
+                'safetyDocuments' => $this->resultList($safetyDocuments),
                 'canHaveTrailers' => ($goodsOrPsv === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE),
                 'hasTrailers' => $licence->getTotAuthTrailers() > 0
             ]

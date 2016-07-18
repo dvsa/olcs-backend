@@ -52,9 +52,9 @@ class SafetyTest extends QueryHandlerTestCase
     {
         $licence = m::mock(BundleSerializableInterface::class);
 
-        $mockSafetyDocuments = m::mock()
-            ->shouldReceive('toArray')
-            ->andReturn(['DOCUMENTS'])
+        $mockSafetyDocument = m::mock()
+            ->shouldReceive('serialize')
+            ->andReturn(['DOCUMENT'])
             ->once()
             ->getMock();
 
@@ -67,7 +67,7 @@ class SafetyTest extends QueryHandlerTestCase
                 ->getMock()
             )
             ->shouldReceive('getLicenceDocuments')
-            ->andReturn($mockSafetyDocuments)
+            ->andReturn([$mockSafetyDocument])
             ->once()
             ->shouldReceive('getTotAuthTrailers')
             ->andReturn(0)
@@ -88,7 +88,7 @@ class SafetyTest extends QueryHandlerTestCase
                 'foo' => 'bar',
                 'canHaveTrailers' => $canHaveTrailers,
                 'hasTrailers' => false,
-                'safetyDocuments' => ['DOCUMENTS']
+                'safetyDocuments' => [['DOCUMENT']]
             ],
             $this->sut->handleQuery($query)->serialize()
         );
