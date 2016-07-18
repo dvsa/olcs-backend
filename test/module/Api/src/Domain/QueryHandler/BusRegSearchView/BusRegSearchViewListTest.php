@@ -71,8 +71,9 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
     public function testHandleQueryOperator()
     {
         $organisationId = 1;
+        $localAuthorityId = null;
 
-        $currentUser = $this->getCurrentUser(null, $organisationId);
+        $currentUser = $this->getCurrentUser($localAuthorityId, $organisationId);
 
         // check for operator
         $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']->shouldReceive('isGranted')
@@ -116,13 +117,19 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
 
     public function testHandleQueryLocalAuthority()
     {
-        $organisationId = 1;
+        $organisationId = null;
+        $localAuthorityId = 1;
+        $currentUser = $this->getCurrentUser($localAuthorityId, $organisationId);
 
-        $currentUser = $this->getCurrentUser(null, $organisationId);
-
-        // check for operator
+        // checks for operator before local authority so we mock these first
         $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']->shouldReceive('isGranted')
-            ->with(m::type('string'), null)->andReturn(false);
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::OPERATOR_ADMIN, null)->andReturn(false);
+        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::OPERATOR_USER, null)->andReturn(false);
+        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::LOCAL_AUTHORITY_USER, null)->andReturn(true);
+        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::LOCAL_AUTHORITY_ADMIN, null)->andReturn(true);
 
         $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
             ->shouldReceive('getIdentity')
