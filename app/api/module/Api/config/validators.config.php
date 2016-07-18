@@ -41,6 +41,7 @@ return [
         'canAccessTransaction' => Validators\CanAccessTransaction::class,
         'canAccessFee' => Validators\CanAccessFee::class,
         'canAccessEbsrSubmission' => Validators\CanAccessEbsrSubmission::class,
+        'canUploadEbsr' => Validators\CanUploadEbsr::class,
         'canManageUser' => Validators\CanManageUser::class,
         'canReadUser' => Validators\CanReadUser::class,
     ]
