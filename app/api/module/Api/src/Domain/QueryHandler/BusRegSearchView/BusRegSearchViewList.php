@@ -38,9 +38,7 @@ class BusRegSearchViewList extends AbstractQueryHandler implements \Dvsa\Olcs\Ap
 
         if ($this->isOperator()) {
             $query->setOrganisationId($this->getCurrentOrganisation()->getId());
-        }
-
-        if ($this->isLocalAuthority()) {
+        } elseif ($this->isLocalAuthority()) {
             $query->setLocalAuthorityId($this->getCurrentUser()->getLocalAuthority()->getId());
         }
 

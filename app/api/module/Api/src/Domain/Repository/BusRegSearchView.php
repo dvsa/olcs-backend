@@ -72,12 +72,11 @@ class BusRegSearchView extends AbstractRepository
                 ->setParameter('busRegStatus', $query->getBusRegStatus());
         }
 
+        // apply filter by organisation OR local authority (if set)
         if (method_exists($query, 'getOrganisationId') && !empty($query->getOrganisationId())) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.organisationId', ':organisationId'))
                 ->setParameter('organisationId', $query->getOrganisationId());
-        }
-
-        if (method_exists($query, 'getLocalAuthorityId') && !empty($query->getLocalAuthorityId())) {
+        } elseif (method_exists($query, 'getLocalAuthorityId') && !empty($query->getLocalAuthorityId())) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthorityId', ':localAuthorityId'))
                 ->setParameter('localAuthorityId', $query->getLocalAuthorityId());
         }
@@ -123,14 +122,19 @@ class BusRegSearchView extends AbstractRepository
      */
     public function fetchDistinctList(
         QueryInterface $query,
-        $organisationId = null
+        $organisationId = null,
+        $localAuthorityId = null
     ) {
         $qb = $this->createQueryBuilder();
 
+        // apply filter by organisation OR local authority (if set)
         // organisationId is determined by the logged in user and sent from the query handler and not from the query
         if (!empty($organisationId)) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.organisationId', ':organisationId'))
                 ->setParameter('organisationId', $organisationId);
+        } elseif (!empty($localAuthorityId)) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthorityId', ':localAuthorityId'))
+                ->setParameter('localAuthorityId', $localAuthorityId);
         }
 
         switch ($query->getContext())
