@@ -27,7 +27,9 @@ class BusRegSearchViewList extends AbstractQueryHandler implements \Dvsa\Olcs\Ap
     protected $repoServiceName = 'BusRegSearchView';
 
     /**
+     * @param QueryInterface $query
      * @return array
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleQuery(QueryInterface $query)
     {
@@ -36,6 +38,10 @@ class BusRegSearchViewList extends AbstractQueryHandler implements \Dvsa\Olcs\Ap
 
         if ($this->isOperator()) {
             $query->setOrganisationId($this->getCurrentOrganisation()->getId());
+        }
+
+        if ($this->isLocalAuthority()) {
+            $query->setLocalAuthorityId($this->getCurrentUser()->getLocalAuthority()->getId());
         }
 
         return [
