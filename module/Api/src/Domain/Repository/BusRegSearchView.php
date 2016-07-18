@@ -11,6 +11,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query as DoctrineQuery;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * BusRegSearchView
@@ -74,6 +75,11 @@ class BusRegSearchView extends AbstractRepository
         if (method_exists($query, 'getOrganisationId') && !empty($query->getOrganisationId())) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.organisationId', ':organisationId'))
                 ->setParameter('organisationId', $query->getOrganisationId());
+        }
+
+        if (method_exists($query, 'getLocalAuthorityId') && !empty($query->getLocalAuthorityId())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthorityId', ':localAuthorityId'))
+                ->setParameter('localAuthorityId', $query->getLocalAuthorityId());
         }
 
         // this is required for filtering from BusReg home page

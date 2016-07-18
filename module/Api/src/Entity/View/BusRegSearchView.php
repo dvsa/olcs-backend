@@ -94,11 +94,20 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     protected $organisationId;
 
     /**
+     * Local Authority ID
+     *
+     * @var integer
+     *
+     * @ORM\Column(type="integer", name="local_authority_id")
+     */
+    protected $localAuthorityId;
+
+    /**
      * Organisation name
      *
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(type="string", name="organisation_name")
+     * @ORM\Column(type="integer", name="organisation_name")
      */
     protected $organisationName;
 
@@ -283,6 +292,38 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     public function getOrganisationName()
     {
         return $this->organisationName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganisationId()
+    {
+        return $this->organisationId;
+    }
+
+    /**
+     * @param string $organisationId
+     */
+    public function setOrganisationId($organisationId)
+    {
+        $this->organisationId = $organisationId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLocalAuthorityId()
+    {
+        return $this->localAuthorityId;
+    }
+
+    /**
+     * @param int $localAuthorityId
+     */
+    public function setLocalAuthorityId($localAuthorityId)
+    {
+        $this->localAuthorityId = $localAuthorityId;
     }
 
     /**
