@@ -29,7 +29,8 @@ class IsOwner extends AbstractValidator implements AuthAwareInterface
      * Check whether the organisation that belongs to the current user, matches an organisation that is linked to the
      * entity
      *
-     * @param OrganisationProviderInterface $entity
+     * @param OrganisationProviderInterface $entity Entity implementing organisation provider interface
+     *
      * @return bool
      */
     public function isValid(OrganisationProviderInterface $entity)
@@ -39,21 +40,6 @@ class IsOwner extends AbstractValidator implements AuthAwareInterface
         // This is needed as if user has no organisation and entity has no organisation they would be granted access
         if (empty($currentUserOrg)) {
             return false;
-        }
-
-        /**
-         * @todo OLCS-13189
-         *
-         * The validator doesn't work properly for EBSR documents, this is a temporary fix.
-         * A permanent fix will be done as part of OLCS-13189. A note has been added to the ticket to ensure
-         * this code is removed once the permanent fix is in place
-         */
-        if ($entity instanceof Document) {
-            $subCategory = $entity->getSubCategory();
-
-            if ($subCategory instanceof SubCategory && $subCategory->getId() === 36) {
-                return true;
-            }
         }
 
         $relatedOrganisations = $entity->getRelatedOrganisation();
