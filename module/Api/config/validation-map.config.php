@@ -14,17 +14,7 @@ $map = [
     CommandHandler\ConditionUndertaking\Create::class => Standard::class, // @todo
     CommandHandler\ConditionUndertaking\DeleteList::class => Standard::class, // @todo
     CommandHandler\ConditionUndertaking\Update::class => Standard::class, // @todo
-    CommandHandler\Email\SendTmApplication::class => Standard::class, // @todo
     CommandHandler\Organisation\UpdateBusinessType::class => Standard::class, // @todo
-    CommandHandler\OtherLicence\CreateForTma::class => Standard::class, // @todo
-    CommandHandler\OtherLicence\CreatePreviousLicence::class => Standard::class, // @todo
-    CommandHandler\OtherLicence\UpdateForTma::class => Standard::class, // @todo
-    CommandHandler\PrivateHireLicence\Create::class => Standard::class, // @todo
-    CommandHandler\PrivateHireLicence\DeleteList::class => Standard::class, // @todo
-    CommandHandler\PrivateHireLicence\Update::class => Standard::class, // @todo
-    CommandHandler\TmEmployment\Create::class => Standard::class, // @todo
-    CommandHandler\TmEmployment\DeleteList::class => Standard::class, // @todo
-    CommandHandler\TmEmployment\Update::class => Standard::class, // @todo
     CommandHandler\Variation\DeleteListConditionUndertaking::class => Standard::class, // @todo
     CommandHandler\Variation\UpdateAddresses::class => Standard::class, // @todo
     CommandHandler\Variation\UpdateConditionUndertaking::class => Standard::class, // @todo
@@ -39,9 +29,7 @@ $map = [
     QueryHandler\Organisation\Dashboard::class => Standard::class, // @todo
     QueryHandler\Organisation\Organisation::class => Standard::class, // @todo
     QueryHandler\Organisation\OutstandingFees::class => Standard::class, // @todo
-    QueryHandler\OtherLicence\GetList::class => Standard::class, // @todo
     QueryHandler\Search\Licence::class => Standard::class, // @todo
-    QueryHandler\TmEmployment\GetSingle::class => Standard::class, // @todo
     QueryHandler\Variation\TypeOfLicence::class => Standard::class, // @todo
 ];
 // @codingStandardsIgnoreEnd

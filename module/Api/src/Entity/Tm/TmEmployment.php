@@ -19,5 +19,27 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TmEmployment extends AbstractTmEmployment
 {
+    /**
+     * Get related organisation
+     *
+     * @return array
+     */
+    public function getRelatedOrganisation()
+    {
+        $tmManager = $this->getTransportManager();
+        $relatedOrganisations = [];
 
+        $tmApplications = $tmManager->getTmApplications();
+        foreach ($tmApplications as $tmApplication) {
+            $org = $tmApplication->getApplication()->getLicence()->getOrganisation();
+            $relatedOrganisations[$org->getId()] = $org;
+        }
+
+        $tmLicences = $tmManager->getTmLicences();
+        foreach ($tmLicences as $tmLicence) {
+            $org = $tmLicence->getLicence()->getOrganisation();
+            $relatedOrganisations[$org->getId()] = $org;
+        }
+        return $relatedOrganisations;
+    }
 }
