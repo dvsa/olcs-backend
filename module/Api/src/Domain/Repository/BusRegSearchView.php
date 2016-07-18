@@ -116,8 +116,8 @@ class BusRegSearchView extends AbstractRepository
 
     /**
      * @param QueryInterface $query
-     * @param null $organisationId null if LA user
-     * @param int $hydrateMode
+     * @param null $organisationId
+     * @param null $localAuthorityId
      * @return array
      */
     public function fetchDistinctList(

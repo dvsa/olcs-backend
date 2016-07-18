@@ -315,7 +315,9 @@ VALUES
   (2, 8),
   (1, 3),
   (1, 6),
-  (1, 8);
+  (1, 8),
+  (11, 1),
+  (12, 1);
 
 
 INSERT INTO `bus_reg_bus_service_type` (`bus_reg_id`, `bus_service_type_id`)
