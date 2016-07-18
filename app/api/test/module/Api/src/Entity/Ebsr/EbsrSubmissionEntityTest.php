@@ -434,4 +434,16 @@ class EbsrSubmissionEntityTest extends EntityTester
             [Entity::NEW_SUBMISSION_TYPE, false]
         ];
     }
+
+    /**
+     * Tests getRelatedOrganisation (used by validators)
+     */
+    public function testGetRelatedOrganisation()
+    {
+        $organisation = m::mock(OrganisationEntity::class);
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setOrganisation($organisation);
+
+        $this->assertEquals($organisation, $entity->getRelatedOrganisation());
+    }
 }

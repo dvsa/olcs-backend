@@ -50,6 +50,7 @@ use Dvsa\Olcs\Api\Domain\ValidatorManager;
  * @method bool canAccessStatement($entityId)
  * @method bool canAccessTransaction($transactionReference)
  * @method bool canAccessFee($feeId)
+ * @method bool canAccessEbsrSubmission($entityId)
  * @method bool canManageUser($entityId)
  * @method bool canReadUser($entityId)
  */

@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * EbsrSubmission Entity
@@ -24,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  *    }
  * )
  */
-class EbsrSubmission extends AbstractEbsrSubmission
+class EbsrSubmission extends AbstractEbsrSubmission implements OrganisationProviderInterface
 {
     const UPLOADED_STATUS = 'ebsrs_uploaded';
     const SUBMITTING_STATUS = 'ebsrs_submitting';
@@ -194,6 +195,16 @@ class EbsrSubmission extends AbstractEbsrSubmission
         $errorInfo = @unserialize($this->ebsrSubmissionResult);
 
         return isset($errorInfo['errors']) ? $errorInfo['errors'] : [];
+    }
+
+    /**
+     * Get the organisation the entity is linked to, used by CanAccessEbsrSubmission validator
+     *
+     * @return Organisation
+     */
+    public function getRelatedOrganisation()
+    {
+        return $this->organisation;
     }
 
     /**
