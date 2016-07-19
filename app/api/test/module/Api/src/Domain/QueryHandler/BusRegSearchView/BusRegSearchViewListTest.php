@@ -121,6 +121,7 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
 
         $this->assertEquals($expected, $this->sut->handleQuery($query));
         $this->assertNotEmpty($query->getOrganisationId());
+        $this->assertEmpty($query->getLocalAuthorityId());
         $this->assertEquals($data, $query->getArrayCopy());
     }
 
@@ -165,11 +166,11 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
         $this->repoMap['BusRegSearchView']
             ->shouldReceive('fetchList')
             ->once()
-            ->with($query, Query::HYDRATE_OBJECT)
+            ->with(m::type(Qry::class), Query::HYDRATE_OBJECT)
             ->andReturn([$mockRecord])
             ->shouldReceive('fetchCount')
             ->once()
-            ->with($query)
+            ->with(m::type(Qry::class))
             ->andReturn(1);
 
         $expected = [
@@ -180,7 +181,8 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
         ];
 
         $this->assertEquals($expected, $this->sut->handleQuery($query));
-        $this->assertEmpty($query->getLocalAuthorityId());
+        $this->assertNotEmpty($query->getLocalAuthorityId());
+        $this->assertEmpty($query->getOrganisationId());
         $this->assertEquals($data, $query->getArrayCopy());
     }
 }

@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Dvsa\Olcs\Transfer\Query\BusRegSearchView\BusRegSearchViewList;
-use Dvsa\Olcs\Transfer\Query\Bus\SearchViewList;
+use Dvsa\Olcs\Api\Domain\Query\BusRegSearchView\BusRegSearchViewList as SearchViewList;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as Repo;
 use Doctrine\ORM\QueryBuilder;
@@ -245,7 +245,7 @@ class BusRegSearchViewTest extends RepositoryTestCase
     }
 
     /**
-     * Test applyListFilters when not logged in as either Operator or LA
+     * Test applyListFilters when using status (to comply with bus reg main page)
      */
     public function testApplyListFiltersAlternativeStatus()
     {
