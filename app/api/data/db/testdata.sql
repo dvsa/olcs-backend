@@ -550,44 +550,6 @@ VALUES
     (2, 29,1, 1, 'Some different definition', 1, 1, 'Authority 2', '2012-05-12', '2012-05-26', 'Al Capone', 3,
     'Some Position', 'Some Offence Type', 'Some Notes for Offence (case 29)', 'VRM12', NOW(), NOW(), 1);
 
-INSERT INTO `ebsr_submission` (`id`, `document_id`, `ebsr_submission_type_id`,
-    `ebsr_submission_status_id`, `bus_reg_id`, `submitted_date`, `licence_no`, `organisation_email_address`,
-    `application_classification`, `variation_no`, `registration_no`, `validation_start`, `validation_end`,
-    `publish_start`, `publish_end`, `process_start`, `process_end`, `distribute_start`, `distribute_end`,
-    `distribute_expire`, `is_from_ftp`, `organisation_id`) VALUES
-  (1, null, 'ebsrt_new', 'ebsrs_processing', 1, '2015-04-11 15:25:34', 'PB12351', null, null, 1, '1111', null,
-  null, null, null, null, null, null, null,null, 0, null),
-  (2, null, 'ebsrt_new', 'ebsrs_processing', 2, '2015-04-15 23:25:34', 'PB12352', null, null, 2, '1112', null, null, null, null, null,
-  null, null, null,null, 0, null),
-  (3, null, 'ebsrt_refresh', 'ebsrs_submitted', 3, '2015-03-11 15:25:34', 'PB12353', null, null, 3, '1113',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (4, null, 'ebsrt_refresh', 'ebsrs_expired', 4, '2015-02-21 12:35:34', 'PB12354', null, null, 4, '1114', null,
-  null, null, null, null, null, null, null,null, 0, null),
-  (5, null, 'ebsrt_unknown', 'ebsrs_validated', 5, '2015-02-14 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (6, null, 'ebsrt_new', 'ebsrs_processing', 6, '2013-01-14 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (7, null, 'ebsrt_refresh', 'ebsrs_validated', 7, '2013-08-24 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (8, null, 'ebsrt_unknown', 'ebsrs_expired', 99, '2011-09-14 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (9, null, 'ebsrt_new', 'ebsrs_processing', 99, '2009-11-14 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (10, null, 'ebsrt_refresh', 'ebsrs_validated', 5, '2015-01-04 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (11, null, 'ebsrt_unknown', 'ebsrs_validated', 3, '2014-09-30 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (12, null, 'ebsrt_refresh', 'ebsrs_processing', 3, '2006-06-07 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (13, null, 'ebsrt_new', 'ebsrs_validated', 1, '2010-05-05 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (14, null, 'ebsrt_new', 'ebsrs_validated', 20, '2010-05-05 11:55:32', 'PB12355', null, null, 5, '1115',
-   null, null, null, null, null, null, null, null,null, 0, null),
-  (15, null, 'ebsrt_new', 'ebsrs_validated', 19, '2010-05-05 11:55:32', 'PB12355', null, null, 5, '1115',
-   null, null, null, null, null, null, null, null,null, 0, null)
-
-  ;
-
 INSERT INTO `fee` (
 `id`,
 `fee_type_id`,
