@@ -43,13 +43,16 @@ class BusRegSearchViewContextList extends AbstractQueryHandler implements AuthAw
         $repo = $this->getRepo();
 
         $organisationId = null;
+        $localAuthorityId = null;
 
         if ($this->isOperator() ) {
             // fetch for Organisation
             $organisationId = $this->getCurrentOrganisation()->getId();
+        } elseif ($this->isLocalAuthority()) {
+            $localAuthorityId = $this->getCurrentUser()->getLocalAuthority()->getId();
         }
 
-        $results = $repo->fetchDistinctList($query, $organisationId);
+        $results = $repo->fetchDistinctList($query, $organisationId, $localAuthorityId);
 
         return [
             'result' => $results, // no need for serialisation, already array

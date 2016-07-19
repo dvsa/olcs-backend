@@ -87,9 +87,9 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     /**
      * Organisation ID
      *
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(type="string", name="organisation_id")
+     * @ORM\Column(type="integer", name="organisation_id")
      */
     protected $organisationId;
 
@@ -101,6 +101,15 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
      * @ORM\Column(type="string", name="organisation_name")
      */
     protected $organisationName;
+
+    /**
+     * Local Authority ID
+     *
+     * @var integer
+     *
+     * @ORM\Column(type="integer", name="local_authority_id")
+     */
+    protected $localAuthorityId;
 
     /**
      * Start Point
@@ -166,6 +175,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     protected $date1stReg;
 
     /**
+     * get date1stReg
+     *
      * @return \DateTime
      */
     public function getDate1stReg()
@@ -174,6 +185,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Set date1stReg
+     *
      * @param \DateTime $date1stReg
      */
     public function setDate1stReg($date1stReg)
@@ -182,6 +195,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Get id
+     *
      * @return int
      */
     public function getId()
@@ -190,6 +205,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Set id
+     *
      * @param int $id
      */
     public function setId($id)
@@ -198,6 +215,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Gets serviceNo
+     *
      * @return string
      */
     public function getServiceNo()
@@ -206,6 +225,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Sets serviceNo
+     *
      * @param string $serviceNo
      */
     public function setServiceNo($serviceNo)
@@ -214,6 +235,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Gets the regNo
+     *
      * @return string
      */
     public function getRegNo()
@@ -222,6 +245,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Sets the regNo
+     *
      * @param string $regNo
      */
     public function setRegNo($regNo)
@@ -230,6 +255,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Gets the licId
+     *
      * @return string
      */
     public function getLicId()
@@ -238,6 +265,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Sets the licId
+     *
      * @param string $licId
      */
     public function setLicId($licId)
@@ -246,6 +275,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Gets the licNo
+     *
      * @return string
      */
     public function getLicNo()
@@ -254,6 +285,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Sets the licNo
+     *
      * @param string $licNo
      */
     public function setLicNo($licNo)
@@ -262,6 +295,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Get licStatus
+     *
      * @return string
      */
     public function getLicStatus()
@@ -270,6 +305,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Sets the licStatus
+     *
      * @param string $licStatus
      */
     public function setLicStatus($licStatus)
@@ -278,6 +315,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Gets the organisationName
+     *
      * @return string
      */
     public function getOrganisationName()
@@ -294,6 +333,28 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Gets the localAuthorityId
+     *
+     * @return integer
+     */
+    public function getLocalAuthorityId()
+    {
+        return $this->localAuthorityId;
+    }
+
+    /**
+     * Sets the localAuthorityId
+     *
+     * @param integer $localAuthorityId
+     */
+    public function setLocalAuthorityId($localAuthorityId)
+    {
+        $this->localAuthorityId = $localAuthorityId;
+    }
+
+    /**
+     * Get startPoint
+     *
      * @return string
      */
     public function getStartPoint()
@@ -302,6 +363,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Sets start point
+     *
      * @param string $startPoint
      */
     public function setStartPoint($startPoint)
@@ -310,6 +373,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Get finish point
+     *
      * @return string
      */
     public function getFinishPoint()
@@ -318,6 +383,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Set finish point
+     *
      * @param string $finishPoint
      */
     public function setFinishPoint($finishPoint)
@@ -326,6 +393,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Get Bus Reg Status
+     *
      * @return string
      */
     public function getBusRegStatus()
@@ -334,6 +403,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Set Bus Reg Status
+     *
      * @param string $busRegStatus
      */
     public function setBusRegStatus($busRegStatus)
@@ -342,6 +413,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Get bus reg status description
+     *
      * @return string
      */
     public function getBusRegStatusDesc()
@@ -350,6 +423,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Set bus reg status description
+     *
      * @param string $busRegStatusDesc
      */
     public function setBusRegStatusDesc($busRegStatusDesc)
@@ -358,6 +433,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Get route no
+     *
      * @return string
      */
     public function getRouteNo()
@@ -366,6 +443,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Set route no
+     *
      * @param string $routeNo
      */
     public function setRouteNo($routeNo)
@@ -374,6 +453,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Get variation no
+     *
      * @return string
      */
     public function getVariationNo()
@@ -382,6 +463,8 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
+     * Set variation no
+     * 
      * @param string $variationNo
      */
     public function setVariationNo($variationNo)
