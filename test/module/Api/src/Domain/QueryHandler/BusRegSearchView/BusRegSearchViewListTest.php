@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BusRegSearchView\BusRegSearchViewList;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
-use Dvsa\Olcs\Transfer\Query\BusRegSearchView\BusRegSearchViewList as Qry;
+use Dvsa\Olcs\Api\Domain\Query\BusRegSearchView\BusRegSearchViewList as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
@@ -68,6 +68,9 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
         return $mockUser;
     }
 
+    /**
+     * Test handle query for Operator users
+     */
     public function testHandleQueryOperator()
     {
         $organisationId = 1;
@@ -83,13 +86,18 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
             ->shouldReceive('getIdentity')
             ->andReturn($currentUser);
 
-        $query = Qry::create(
-            [
-                'licNo' => 'UB1234567',
-                'status' => 'breg_s_cancellation',
-                'organisationName' => 'ORG1'
-            ]
-        );
+        $data = [
+            'licId' => 1234,
+            'busRegStatus' => 'breg_s_cancellation',
+            'organisationId' => $organisationId,
+            'localAuthorityId' => $localAuthorityId,
+            'page' => 4,
+            'limit' => 10,
+            'sort' => 'licId',
+            'order' => 'ASC'
+        ];
+
+        $query = Qry::create($data);
 
         $mockRecord = m::mock();
         $mockRecord->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
@@ -97,11 +105,11 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
         $this->repoMap['BusRegSearchView']
             ->shouldReceive('fetchList')
             ->once()
-            ->with($query, Query::HYDRATE_OBJECT)
+            ->with(m::type(Qry::class), Query::HYDRATE_OBJECT)
             ->andReturn([$mockRecord])
             ->shouldReceive('fetchCount')
             ->once()
-            ->with($query)
+            ->with(m::type(Qry::class))
             ->andReturn(1);
 
         $expected = [
@@ -113,8 +121,12 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
 
         $this->assertEquals($expected, $this->sut->handleQuery($query));
         $this->assertNotEmpty($query->getOrganisationId());
+        $this->assertEquals($data, $query->getArrayCopy());
     }
 
+    /**
+     * Test handle query for LA users
+     */
     public function testHandleQueryLocalAuthority()
     {
         $organisationId = null;
@@ -135,13 +147,17 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
             ->shouldReceive('getIdentity')
             ->andReturn($currentUser);
 
-        $query = Qry::create(
-            [
-                'licNo' => 'UB1234567',
-                'status' => 'breg_s_cancellation',
-                'organisationName' => 'ORG1'
-            ]
-        );
+        $data = [
+            'licId' => 1234,
+            'busRegStatus' => 'breg_s_cancellation',
+            'organisationId' => $organisationId,
+            'localAuthorityId' => $localAuthorityId,
+            'page' => 4,
+            'limit' => 10,
+            'sort' => 'licId',
+            'order' => 'ASC'
+        ];
+        $query = Qry::create($data);
 
         $mockRecord = m::mock();
         $mockRecord->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
@@ -164,6 +180,7 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
         ];
 
         $this->assertEquals($expected, $this->sut->handleQuery($query));
-        $this->assertEmpty($query->getOrganisationId());
+        $this->assertEmpty($query->getLocalAuthorityId());
+        $this->assertEquals($data, $query->getArrayCopy());
     }
 }

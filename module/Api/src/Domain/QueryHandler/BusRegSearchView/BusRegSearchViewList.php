@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as Repository;
 use Dvsa\Olcs\Transfer\Query\Bus\SearchViewList as ListQueryObject;
 use Doctrine\ORM\Query as DoctrineQuery;
 use Olcs\Logging\Log\Logger;
-use Dvsa\Olcs\Api\Domain\Query\BusRegSearchView\BusRegSearchViewList as ListDto;
+use Dvsa\Olcs\Api\Domain\Query\BusRegSearchView\BusRegSearchViewList as ListDtoQry;
 
 /**
  * BusReg Search View List
@@ -39,7 +39,7 @@ class BusRegSearchViewList extends AbstractQueryHandler implements \Dvsa\Olcs\Ap
     {
         /** @var Repository $repo */
         $repo = $this->getRepo();
-        
+
         // get data from transfer query
         $data = $query->getArrayCopy();
 
@@ -51,10 +51,9 @@ class BusRegSearchViewList extends AbstractQueryHandler implements \Dvsa\Olcs\Ap
         }
 
         // create new query with extra data
-        $listDto = ListDto::create($data);
-        
-        return [
+        $listDto = ListDtoQry::create($data);
 
+        return [
             'result' => $this->resultList(
                 $repo->fetchList($listDto, DoctrineQuery::HYDRATE_OBJECT)
             ),
