@@ -69,6 +69,7 @@ return [
     TransferQuery\Application\LicenceHistory::class => QueryHandler\Application\LicenceHistory::class,
     TransferQuery\Application\TransportManagers::class => QueryHandler\Application\TransportManagers::class,
     TransferQuery\Application\GoodsVehicles::class => QueryHandler\Application\GoodsVehicles::class,
+    TransferQuery\Application\GoodsVehiclesExport::class => QueryHandler\Application\GoodsVehiclesExport::class,
     TransferQuery\Application\VehicleDeclaration::class => QueryHandler\Application\VehicleDeclaration::class,
     TransferQuery\Application\Review::class => QueryHandler\Application\Review::class,
     TransferQuery\Application\Overview::class => QueryHandler\Application\Overview::class,
@@ -98,6 +99,7 @@ return [
     TransferQuery\Licence\TransportManagers::class => QueryHandler\Licence\TransportManagers::class,
     TransferQuery\Licence\PsvDiscs::class => QueryHandler\Licence\PsvDiscs::class,
     TransferQuery\Licence\GoodsVehicles::class => QueryHandler\Licence\GoodsVehicles::class,
+    TransferQuery\Licence\GoodsVehiclesExport::class => QueryHandler\Licence\GoodsVehiclesExport::class,
     TransferQuery\Licence\OtherActiveLicences::class => QueryHandler\Licence\OtherActiveLicences::class,
     TransferQuery\Licence\LicenceDecisions::class => QueryHandler\Licence\LicenceDecisions::class,
     TransferQuery\Licence\Overview::class => QueryHandler\Licence\Overview::class,
@@ -135,6 +137,7 @@ return [
     TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
     TransferQuery\Variation\TypeOfLicence::class => QueryHandler\Variation\TypeOfLicence::class,
     TransferQuery\Variation\GoodsVehicles::class => QueryHandler\Variation\GoodsVehicles::class,
+    TransferQuery\Variation\GoodsVehiclesExport::class => QueryHandler\Variation\GoodsVehiclesExport::class,
     TransferQuery\Variation\PsvVehicles::class => QueryHandler\Variation\PsvVehicles::class,
 
     // Cases
