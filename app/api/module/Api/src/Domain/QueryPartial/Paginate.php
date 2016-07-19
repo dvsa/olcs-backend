@@ -22,9 +22,6 @@ final class Paginate implements QueryPartialInterface
         list($page, $limit) = array_map('intval', $arguments);
 
         $qb->setFirstResult(max($page -1, 0) * $limit);
-
-        if ($limit > 0) {
-            $qb->setMaxResults((int) $limit);
-        }
+        $qb->setMaxResults((int) $limit);
     }
 }
