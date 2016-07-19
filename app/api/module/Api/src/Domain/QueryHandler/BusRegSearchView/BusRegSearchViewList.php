@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as Repository;
 use Dvsa\Olcs\Transfer\Query\Bus\SearchViewList as ListQueryObject;
 use Doctrine\ORM\Query as DoctrineQuery;
 use Olcs\Logging\Log\Logger;
+use Dvsa\Olcs\Api\Domain\Query\BusRegSearchView\BusRegSearchViewList as ListDto;
 
 /**
  * BusReg Search View List
@@ -38,18 +39,26 @@ class BusRegSearchViewList extends AbstractQueryHandler implements \Dvsa\Olcs\Ap
     {
         /** @var Repository $repo */
         $repo = $this->getRepo();
+        
+        // get data from transfer query
+        $data = $query->getArrayCopy();
 
-        if ($this->isOperator()) {
-            $query->setOrganisationId($this->getCurrentOrganisation()->getId());
+        if ($this->isOperator() ) {
+            // fetch for Organisation
+            $data['organisationId'] = $this->getCurrentOrganisation()->getId();
         } elseif ($this->isLocalAuthority()) {
-            $query->setLocalAuthorityId($this->getCurrentUser()->getLocalAuthority()->getId());
+            $data['localAuthorityId'] = $this->getCurrentUser()->getLocalAuthority()->getId();
         }
 
+        // create new query with extra data
+        $listDto = ListDto::create($data);
+        
         return [
+
             'result' => $this->resultList(
-                $repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT)
+                $repo->fetchList($listDto, DoctrineQuery::HYDRATE_OBJECT)
             ),
-            'count' => $repo->fetchCount($query)
+            'count' => $repo->fetchCount($listDto)
         ];
     }
 }
