@@ -1,16 +1,11 @@
 <?php
 
-/**
- * Query Partial Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryPartial;
 
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\QueryPartial\QueryPartialInterface;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Query Partial Test
@@ -25,7 +20,7 @@ class QueryPartialTestCase extends MockeryTestCase
     protected $sut;
 
     /**
-     * @var QueryBuilder
+     * @var m\MockInterface|QueryBuilder
      */
     protected $qb;
 
