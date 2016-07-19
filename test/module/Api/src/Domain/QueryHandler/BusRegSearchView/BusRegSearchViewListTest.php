@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Domain\Query\BusRegSearchView\BusRegSearchViewList as Qry;
+use \Dvsa\Olcs\Transfer\Query\BusRegSearchView\BusRegSearchViewList as BusRegSearchViewTransferQry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
@@ -184,5 +185,64 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
         $this->assertNotEmpty($query->getLocalAuthorityId());
         $this->assertEmpty($query->getOrganisationId());
         $this->assertEquals($data, $query->getArrayCopy());
+    }
+
+    /**
+     * Test handle query converts query
+     */
+    public function testHandleQueryConversion()
+    {
+        $organisationId = null;
+        $localAuthorityId = 1;
+        $currentUser = $this->getCurrentUser($localAuthorityId, $organisationId);
+
+        // checks for operator before local authority so we mock these first
+        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::OPERATOR_ADMIN, null)->andReturn(false);
+        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::OPERATOR_USER, null)->andReturn(false);
+        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::LOCAL_AUTHORITY_USER, null)->andReturn(true);
+        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::LOCAL_AUTHORITY_ADMIN, null)->andReturn(true);
+
+        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
+            ->shouldReceive('getIdentity')
+            ->andReturn($currentUser);
+
+        $data = [
+            'licId' => 1234,
+            'busRegStatus' => 'breg_s_cancellation',
+            'page' => 4,
+            'limit' => 10,
+            'sort' => 'licId',
+            'order' => 'ASC'
+        ];
+        $query = BusRegSearchViewTransferQry::create($data);
+
+        $mockRecord = m::mock();
+        $mockRecord->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
+
+        $this->repoMap['BusRegSearchView']
+            ->shouldReceive('fetchList')
+            ->once()
+            ->with(m::type(Qry::class), Query::HYDRATE_OBJECT)
+            ->andReturn([$mockRecord])
+            ->shouldReceive('fetchCount')
+            ->once()
+            ->with(m::type(Qry::class))
+            ->andReturn(1);
+
+        $expected = [
+            'result' => [
+                ['foo' => 'bar']
+            ],
+            'count' => 1
+        ];
+
+        $this->assertEquals($expected, $this->sut->handleQuery($query));
+        $this->assertEquals($data, $query->getArrayCopy());
+        $this->assertArrayNotHasKey('localAuthorityId', $query->getArrayCopy());
+        $this->assertArrayNotHasKey('organisationId', $query->getArrayCopy());
     }
 }
