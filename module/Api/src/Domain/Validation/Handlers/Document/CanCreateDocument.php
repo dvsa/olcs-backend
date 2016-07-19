@@ -5,12 +5,16 @@ namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\Document;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
 use Dvsa\Olcs\Transfer\Command\Document\CreateDocument as CreateDocumentDto;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadDto;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Can Create a Document
  */
-class CanCreateDocument extends AbstractHandler
+class CanCreateDocument extends AbstractHandler implements AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     /**
      * @var bool
      */
@@ -25,15 +29,9 @@ class CanCreateDocument extends AbstractHandler
      */
     public function isValid($dto)
     {
-        /**
-         * @todo OLCS-13189
-         *
-         * The validator doesn't work properly for EBSR documents, this is a temporary fix.
-         * A permanent fix will be done as part of OLCS-13189. A note has been added to the ticket to ensure
-         * this code is removed once the permanent fix is in place
-         */
+        //only the upload version of the DTO is used for EBSR packs, so we need a method_exists here
         if (method_exists($dto, 'getIsEbsrPack') && $dto->getIsEbsrPack()) {
-            $this->setIsValid(true);
+            $this->setIsValid($this->canUploadEbsr($this->getCurrentOrganisation()));
         }
 
         if ($dto->getLicence()) {
@@ -75,6 +73,8 @@ class CanCreateDocument extends AbstractHandler
      * Set whether the result of the validation
      *
      * @param bool $valid The result of one of the validations
+     *
+     * @return bool
      */
     private function setIsValid($valid)
     {

@@ -36,6 +36,13 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
     const PSV_CONTINUATION_CHECKLIST = 1302;
     const PSV_CONTINUATION_CHECKLIST_SR = 1303;
 
+    /**
+     * Document constructor.
+     *
+     * @param string $identifier document identifier
+     *
+     * @return void
+     */
     public function __construct($identifier)
     {
         parent::__construct();
@@ -98,6 +105,10 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
 
         if ($this->getStatement()) {
             return $this->getStatement()->getRelatedOrganisation();
+        }
+
+        if ($this->getEbsrSubmission()) {
+            return $this->getEbsrSubmission()->getRelatedOrganisation();
         }
 
         return null;
