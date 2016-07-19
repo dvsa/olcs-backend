@@ -115,9 +115,13 @@ class BusRegSearchView extends AbstractRepository
     }
 
     /**
-     * @param QueryInterface $query
-     * @param null $organisationId
-     * @param null $localAuthorityId
+     * Fetch a distinct list of record columns based on a context passed in query.
+     * For example context = 'organisation' returns all unique organisation IDs and names
+     * 
+     * @param   QueryInterface  $query
+     * @param   null            $organisationId
+     * @param   null            $localAuthorityId
+     *
      * @return array
      */
     public function fetchDistinctList(

@@ -152,7 +152,7 @@ class BusRegSearchViewTest extends RepositoryTestCase
 
     /**
      * @dataProvider provideContextGroupBys
-     * @param $context
+     * @param string $context to determine what data to return
      */
     public function testFetchDistinctListWithLocalAuthorityId($context, $expected)
     {
@@ -180,7 +180,7 @@ class BusRegSearchViewTest extends RepositoryTestCase
     }
 
     /**
-     * Data provider maps the relevent group by clauses that should be applied to the query given a certain context
+     * Data provider maps the relevant group by clauses that should be applied to the query given a certain context
      *
      * @return array
      */
@@ -199,6 +199,9 @@ class BusRegSearchViewTest extends RepositoryTestCase
         ];
     }
 
+    /**
+     * Test applyListFilters when logged in as an Operator
+     */
     public function testApplyListFiltersOperator()
     {
         $this->setUpSut(Repo::class, true);
@@ -241,6 +244,9 @@ class BusRegSearchViewTest extends RepositoryTestCase
         $this->sut->applyListFilters($mockQb, $mockQ);
     }
 
+    /**
+     * Test applyListFilters when not logged in as either Operator or LA
+     */
     public function testApplyListFiltersAlternativeStatus()
     {
         $this->setUpSut(Repo::class, true);
@@ -262,7 +268,9 @@ class BusRegSearchViewTest extends RepositoryTestCase
         $this->sut->applyListFilters($mockQb, $mockQ);
     }
 
-
+    /**
+     * Test applyListFilters when logged in as an LA
+     */
     public function testApplyListFiltersLocalAuthority()
     {
         $this->setUpSut(Repo::class, true);

@@ -27,7 +27,10 @@ class BusRegSearchViewList extends AbstractQueryHandler implements \Dvsa\Olcs\Ap
     protected $repoServiceName = 'BusRegSearchView';
 
     /**
-     * @param QueryInterface $query
+     * Handle query for Bus Reg Search View lists
+     *
+     * @param QueryInterface $query DTO query
+     *
      * @return array
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
