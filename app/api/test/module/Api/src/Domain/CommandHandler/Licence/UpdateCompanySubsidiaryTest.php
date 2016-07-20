@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateCompanySubsidiary;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
-use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -31,7 +30,7 @@ class UpdateCompanySubsidiaryTest extends CommandHandlerTestCase
 
     public function setUp()
     {
-        $this->sut = m::mock(UpdateCompanySubsidiary::class . '[update]')
+        $this->sut = m::mock(UpdateCompanySubsidiary::class . '[update, createTask]')
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -60,27 +59,27 @@ class UpdateCompanySubsidiaryTest extends CommandHandlerTestCase
         $this->mockIsGranted(Permission::SELFSERVE_USER, $isGranted);
 
         //  mock update result
-        $result = new Result();
-        $result->setFlag('hasChanged', $hasChanged);
-
-        $this->sut->shouldReceive('update')->once()->with($command)->andReturn($result);
+        $this->sut->shouldReceive('update')
+            ->once()
+            ->with($command)
+            ->andReturn(
+                (new Result())
+                    ->setFlag('hasChanged', $hasChanged)
+                    ->addMessage('Unit Company Subsidiary Updated')
+            );
 
         //  mock create task
         if ($expectTask === true) {
-            $expectedData = [
-                'category' => Category::CATEGORY_APPLICATION,
-                'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SUBSIDIARY_DIGITAL,
-                'description' => 'Subsidiary company updated - unit_Name',
-                'licence' => self::LICENCE_ID,
-            ];
-
-            $resultTask = new Result();
-            $resultTask->addId('task', self::TASK_ID);
-            $resultTask->addMessage('Task created');
-
-            $this->expectedSideEffect(DomainCmd\Task\CreateTask::class, $expectedData, $resultTask);
+            $this->sut->shouldReceive('createTask')
+                ->once()
+                ->with(self::LICENCE_ID, 'Subsidiary company updated - unit_Name')
+                ->andReturn(
+                    (new Result())
+                        ->addId('task', self::TASK_ID)
+                        ->addMessage('Task created')
+                );
         } else {
-            $this->sut->shouldReceive('handleSideEffect')->never();
+            $this->sut->shouldReceive('createTask')->never();
         }
 
         //  call
@@ -95,6 +94,7 @@ class UpdateCompanySubsidiaryTest extends CommandHandlerTestCase
                     'task' => self::TASK_ID,
                 ],
                 'messages' => [
+                    'Unit Company Subsidiary Updated',
                     'Task created',
                 ],
             ];
