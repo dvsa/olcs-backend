@@ -122,8 +122,8 @@ class TxcInbox extends AbstractRepository
                 ->setParameter('localAuthority', $query->getLocalAuthority());
         }
         if (method_exists($query, 'getStatus') && !empty($query->getStatus())) {
-            $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionStatus', ':ebsrSubmissionStatus'))
-                ->setParameter('ebsrSubmissionStatus', $query->getStatus());
+            $qb->andWhere($qb->expr()->eq('b.status', ':status'))
+                ->setParameter('status', $query->getStatus());
         }
         if (method_exists($query, 'getSubType') && !empty($query->getSubType())) {
             $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionType', ':ebsrSubmissionType'))
