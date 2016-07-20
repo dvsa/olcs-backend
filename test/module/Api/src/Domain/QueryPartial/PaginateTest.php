@@ -43,7 +43,7 @@ class PaginateTest extends QueryPartialTestCase
                 'page' => -1,
                 'limit' => 'aaaa',
                 'expect' => [
-                    'setFirstResult' => 0,
+                    // 'setFirstResult' not call
                     //  setMaxResults not call,
                 ],
             ],
@@ -61,6 +61,24 @@ class PaginateTest extends QueryPartialTestCase
                 'expect' => [
                     'setFirstResult' => 200,
                     'setMaxResults' => 100,
+                ],
+            ],
+            [
+                'page' => null,
+                'limit' => null,
+                'expect' => [],
+            ],
+            [
+                'page' => 1,
+                'limit' => null,
+                'expect' => [],
+            ],
+            [
+                'page' => null,
+                'limit' => 33,
+                'expect' => [
+                    'setFirstResult' => 0,
+                    'setMaxResults' => 33,
                 ],
             ],
         ];
