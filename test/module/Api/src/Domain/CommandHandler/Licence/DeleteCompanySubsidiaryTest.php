@@ -1,188 +1,139 @@
 <?php
 
-/**
- * Delete Company Subsidiary Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
-use Dvsa\Olcs\Api\Domain\Repository\CompanySubsidiary;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\DeleteCompanySubsidiary;
-use Dvsa\Olcs\Transfer\Command\Licence\DeleteCompanySubsidiary as Cmd;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary as CompanySubsidiaryEntity;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\User\Permission;
-use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
- * Delete Company Subsidiary Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers Dvsa\Olcs\Api\Domain\CommandHandler\Licence\DeleteCompanySubsidiary
  */
 class DeleteCompanySubsidiaryTest extends CommandHandlerTestCase
 {
+    const LICENCE_ID = 1111;
+    const TASK_ID = 877;
+    const VERSION = 99;
+
+    /** @var  DeleteCompanySubsidiary|m\MockInterface */
+    protected $sut;
+    /** @var  m\MockInterface */
+    private $mockAuthSrv;
+
     public function setUp()
     {
-        $this->sut = new DeleteCompanySubsidiary();
-        $this->mockRepo('CompanySubsidiary', CompanySubsidiary::class);
+        $this->sut = m::mock(DeleteCompanySubsidiary::class . '[delete, createTask]')
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
-        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
+        $this->mockRepo('CompanySubsidiary', Repository\CompanySubsidiary::class);
+
+        //  mock services
+        $this->mockAuthSrv = m::mock(AuthorizationService::class);
+        $this->mockedSmServices[AuthorizationService::class] = $this->mockAuthSrv;
 
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [
-
-        ];
-
-        parent::initReferences();
-    }
-
-    public function testHandleCommand()
+    /**
+     * @dataProvider dpTestHandleCommand
+     */
+    public function testHandleCommand($isGranted, $expectTask)
     {
         $data = [
-            'licence' => 111,
-            'ids' => [11, 22]
+            'licence' => self::LICENCE_ID,
+            'ids' => [111, 222, 333],
         ];
+        $command = TransferCmd\Licence\DeleteCompanySubsidiary::create($data);
 
-        $command = Cmd::create($data);
+        //  mock is granted
+        $this->mockIsGranted(Permission::SELFSERVE_USER, $isGranted);
 
-        /** @var CompanySubsidiaryEntity $companySubsidiary11 */
-        $companySubsidiary11 = m::mock(CompanySubsidiaryEntity::class)->makePartial();
-        $companySubsidiary11->setName('Foo');
-
-        /** @var CompanySubsidiaryEntity $companySubsidiary22 */
-        $companySubsidiary22 = m::mock(CompanySubsidiaryEntity::class)->makePartial();
-        $companySubsidiary22->setName('Bar');
-
-        $this->repoMap['CompanySubsidiary']->shouldReceive('fetchById')
-            ->once()
-            ->with(11)
-            ->andReturn($companySubsidiary11)
-            ->shouldReceive('fetchById')
-            ->once()
-            ->with(22)
-            ->andReturn($companySubsidiary22)
+        //  mock update result
+        $this->sut
             ->shouldReceive('delete')
             ->once()
-            ->with($companySubsidiary11)
-            ->shouldReceive('delete')
-            ->once()
-            ->with($companySubsidiary22);
+            ->with($command)
+            ->andReturn(
+                (new Result())
+                    ->addMessage('Unit delete result')
+            );
 
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->with(Permission::SELFSERVE_USER, null)
-            ->andReturn(true);
+        //  mock create task
+        if ($expectTask === true) {
+            $mockEntity = m::mock(Repository\CompanySubsidiary::class)
+                ->shouldReceive('getName')->times(3)->andReturn('Unit_EntityName')
+                ->getMock();
 
-        $expectedData1 = [
-            'category' => Category::CATEGORY_APPLICATION,
-            'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SUBSIDIARY_DIGITAL,
-            'description' => 'Subsidiary company deleted - Foo',
-            'licence' => 111,
-            'actionDate' => null,
-            'assignedToUser' => null,
-            'assignedToTeam' => null,
-            'isClosed' => false,
-            'urgent' => false,
-            'application' => null,
-            'busReg' => null,
-            'case' => null,
-            'transportManager' => null,
-            'irfoOrganisation' => null,
-        ];
+            $this->repoMap['CompanySubsidiary']
+                ->shouldReceive('fetchByIds')
+                ->once()
+                ->with([111, 222, 333])
+                ->andReturn([$mockEntity, clone $mockEntity, clone $mockEntity]);
 
-        $expectedData2 = [
-            'category' => Category::CATEGORY_APPLICATION,
-            'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SUBSIDIARY_DIGITAL,
-            'description' => 'Subsidiary company deleted - Bar',
-            'licence' => 111,
-            'actionDate' => null,
-            'assignedToUser' => null,
-            'assignedToTeam' => null,
-            'isClosed' => false,
-            'urgent' => false,
-            'application' => null,
-            'busReg' => null,
-            'case' => null,
-            'transportManager' => null,
-            'irfoOrganisation' => null,
-        ];
+            $this->sut
+                ->shouldReceive('createTask')
+                ->times(3)
+                ->with(self::LICENCE_ID, 'Subsidiary company removed - Unit_EntityName')
+                ->andReturn(
+                    (new Result())
+                        ->addId('task', self::TASK_ID)
+                        ->addMessage('Unit Task created')
+                );
 
-        $result1 = new Result();
-        $result1->addId('task', 123);
-        $result1->addMessage('Task created');
+        } else {
+            $this->repoMap['CompanySubsidiary']
+                ->shouldReceive('fetchByIds')->never();
+        }
 
-        $this->expectedSideEffect(CreateTask::class, $expectedData1, $result1);
-        $this->expectedSideEffect(CreateTask::class, $expectedData2, $result1);
+        //  call
+        $actual = $this->sut->handleCommand($command);
 
-        $result = $this->sut->handleCommand($command);
+        static::assertInstanceOf(Result::class, $actual);
 
-        $expected = [
-            'id' => [
-                'task' => 123
+        if ($expectTask === true) {
+            $expected = [
+                'id' => [
+                    'task' => self::TASK_ID,
+                ],
+                'messages' => [
+                    'Unit Task created',
+                    'Unit Task created',
+                    'Unit Task created',
+                    'Unit delete result',
+                ],
+            ];
+            static::assertEquals($expected, $actual->toArray());
+        }
+    }
+
+    public function dpTestHandleCommand()
+    {
+        return [
+            [
+                'isGranted' => true,
+                'expectTask' => true,
             ],
-            'messages' => [
-                'Task created',
-                'Task created',
-                '2 Company Subsidiaries removed'
-            ]
+            [
+                'isGranted' => false,
+                'expectTask' => false,
+            ],
         ];
-
-        $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testHandleCommandInternal()
+    private function mockIsGranted($permission, $result)
     {
-        $data = [
-            'licence' => 111,
-            'ids' => [11, 22]
-        ];
-
-        $command = Cmd::create($data);
-
-        /** @var CompanySubsidiaryEntity $companySubsidiary11 */
-        $companySubsidiary11 = m::mock(CompanySubsidiaryEntity::class)->makePartial();
-        $companySubsidiary11->setName('Foo');
-
-        /** @var CompanySubsidiaryEntity $companySubsidiary22 */
-        $companySubsidiary22 = m::mock(CompanySubsidiaryEntity::class)->makePartial();
-        $companySubsidiary22->setName('Bar');
-
-        $this->repoMap['CompanySubsidiary']->shouldReceive('fetchById')
-            ->once()
-            ->with(11)
-            ->andReturn($companySubsidiary11)
-            ->shouldReceive('fetchById')
-            ->once()
-            ->with(22)
-            ->andReturn($companySubsidiary22)
-            ->shouldReceive('delete')
-            ->once()
-            ->with($companySubsidiary11)
-            ->shouldReceive('delete')
-            ->once()
-            ->with($companySubsidiary22);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->with(Permission::SELFSERVE_USER, null)
-            ->andReturn(false);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [],
-            'messages' => [
-                '2 Company Subsidiaries removed'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
+        $this->mockAuthSrv
+            ->shouldReceive('isGranted')
+            ->with($permission, null)
+            ->andReturn($result);
     }
 }
