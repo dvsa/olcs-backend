@@ -320,6 +320,7 @@ return [
     TransferQuery\Document\Letter::class => QueryHandler\Document\Letter::class,
     TransferQuery\Document\DocumentList::class => QueryHandler\Document\DocumentList::class,
     TransferQuery\Document\Download::class => QueryHandler\Document\Download::class,
+    TransferQuery\Document\DownloadGuide::class => QueryHandler\Document\DownloadGuide::class,
 
     // Transport Manager Application
     TransferQuery\TransportManagerApplication\GetDetails::class
