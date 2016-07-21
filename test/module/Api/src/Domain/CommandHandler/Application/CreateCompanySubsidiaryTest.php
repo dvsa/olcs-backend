@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateCompanySubsidiary;
 use Dvsa\Olcs\Api\Domain\Repository;
@@ -25,7 +24,7 @@ class CreateCompanySubsidiaryTest extends CommandHandlerTestCase
 
     public function setUp()
     {
-        $this->sut = m::mock(CreateCompanySubsidiary::class . '[create]')
+        $this->sut = m::mock(CreateCompanySubsidiary::class . '[create, updateApplicationCompetition]')
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -69,15 +68,14 @@ class CreateCompanySubsidiaryTest extends CommandHandlerTestCase
             ->andReturn($result);
 
         //  mock Application completion
-        $dataAppComplete = [
-            'id' => self::APP_ID,
-            'section' => 'businessDetails',
-        ];
-
-        $resultAppComplete = (new Result())
-            ->addMessage('Section updated');
-
-        $this->expectedSideEffect(UpdateApplicationCompletion::class, $dataAppComplete, $resultAppComplete);
+        $this->sut->shouldReceive('updateApplicationCompetition')
+            ->once()
+            ->with(self::APP_ID, true)
+            ->andReturn(
+                (new Result())
+                    ->addId('companySubsidiary', self::ID)
+                    ->addMessage('Section updated')
+            );
 
         //  call & check
         $actual = $this->sut->handleCommand($command);

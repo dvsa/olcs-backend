@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Lva\SaveCompanySubsidiary;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Lva\AbstractCompanySubsidiary;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
@@ -13,14 +12,14 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateCompanySubsidiary extends SaveCompanySubsidiary
+class CreateCompanySubsidiary extends AbstractCompanySubsidiary
 {
     /**
      * Command Handler
      *
      * @param \Dvsa\Olcs\Transfer\Command\Application\CreateCompanySubsidiary $command Command
      *
-     * @return DomainCmd\Result
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleCommand(CommandInterface $command)
@@ -33,17 +32,7 @@ class CreateCompanySubsidiary extends SaveCompanySubsidiary
 
         //  update Application Completion
         $this->result->merge(
-            $this->handleSideEffect(
-                DomainCmd\Application\UpdateApplicationCompletion::create(
-                    [
-                        'id' => $command->getApplication(),
-                        'section' => 'businessDetails',
-                        'data' => [
-                            'hasChanged' => true,
-                        ],
-                    ]
-                )
-            )
+            $this->updateApplicationCompetition($command->getApplication(), true)
         );
 
         return $this->result;
