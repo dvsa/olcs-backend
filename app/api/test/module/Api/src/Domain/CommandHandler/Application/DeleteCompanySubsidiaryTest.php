@@ -1,99 +1,71 @@
 <?php
 
-/**
- * Delete Company Subsidiary Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\DeleteCompanySubsidiary;
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
-use Dvsa\Olcs\Transfer\Command\Licence\DeleteCompanySubsidiary as LicenceCmd;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Transfer\Command\Application\DeleteCompanySubsidiary as Cmd;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\Application;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Mockery as m;
 
 /**
- * Delete Company Subsidiary Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers Dvsa\Olcs\Api\Domain\CommandHandler\Application\DeleteCompanySubsidiary
  */
 class DeleteCompanySubsidiaryTest extends CommandHandlerTestCase
 {
+    const APP_ID = 9999;
+
+    /** @var DeleteCompanySubsidiary|m\MockInterface */
+    protected $sut;
+
     public function setUp()
     {
-        $this->sut = new DeleteCompanySubsidiary();
-        $this->mockRepo('Application', Application::class);
+        $this->sut = m::mock(DeleteCompanySubsidiary::class . '[delete, updateApplicationCompetition]')
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $this->mockRepo('CompanySubsidiary', Repository\CompanySubsidiary::class);
 
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [
-
-        ];
-
-        $this->references = [
-
-        ];
-
-        parent::initReferences();
-    }
-
     public function testHandleCommand()
     {
-        /** @var LicenceEntity $application */
-        $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->setId(222);
-
-        /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setLicence($licence);
-
         $data = [
-            'application' => 111,
-            'ids' => [1, 2, 3]
+            'application' => self::APP_ID,
+            'ids' => [1, 2, 3],
         ];
+        $command = TransferCmd\Application\DeleteCompanySubsidiary::create($data);
 
-        $command = Cmd::create($data);
+        $this->sut
+            ->shouldReceive('delete')
+            ->once()
+            ->with($command)
+            ->andReturn(
+                (new Result())
+                    ->addMessage('Company Subsidiary Removed')
+            )
+            //
+            ->shouldReceive('updateApplicationCompetition')
+            ->once()
+            ->with(self::APP_ID, true)
+            ->andReturn(
+                (new Result())
+                    ->addMessage('Section updated')
+            );
 
-        $this->repoMap['Application']->shouldReceive('fetchById')
-            ->with(111)
-            ->andReturn($application);
-
-        $licenceCmdData = [
-            'licence' => 222,
-            'ids' => [1, 2, 3]
-        ];
-
-        $result1 = new Result();
-        $result1->addMessage('Company Subsidiary deleted');
-
-        $this->expectedSideEffect(LicenceCmd::class, $licenceCmdData, $result1);
-
-        $updateData = ['id' => 111, 'section' => 'businessDetails'];
-
-        $result2 = new Result();
-        $result2->addMessage('Section updated');
-
-        $this->expectedSideEffect(UpdateApplicationCompletion::class, $updateData, $result2);
-
-        $result = $this->sut->handleCommand($command);
+        //  call & check
+        $actual = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
-                'Company Subsidiary deleted',
-                'Section updated'
+                'Company Subsidiary Removed',
+                'Section updated',
             ]
         ];
-
-        $this->assertEquals($expected, $result->toArray());
+        static::assertEquals($expected, $actual->toArray());
+        static::assertInstanceOf(Result::class, $actual);
     }
 }

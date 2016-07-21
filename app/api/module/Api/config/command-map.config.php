@@ -31,12 +31,12 @@ return [
         CommandHandler\Application\UpdatePreviousConvictions::class,
     TransferCommand\Application\UpdateDeclaration::class => CommandHandler\Application\UpdateDeclaration::class,
     TransferCommand\Application\UpdateBusinessDetails::class => CommandHandler\Application\UpdateBusinessDetails::class,
-    TransferCommand\Application\UpdateCompanySubsidiary::class
-        => CommandHandler\Application\UpdateCompanySubsidiary::class,
-    TransferCommand\Application\CreateCompanySubsidiary::class
-        => CommandHandler\Application\CreateCompanySubsidiary::class,
-    TransferCommand\Application\DeleteCompanySubsidiary::class
-        => CommandHandler\Application\DeleteCompanySubsidiary::class,
+    TransferCommand\Application\UpdateCompanySubsidiary::class =>
+        CommandHandler\Application\UpdateCompanySubsidiary::class,
+    TransferCommand\Application\CreateCompanySubsidiary::class =>
+        CommandHandler\Application\CreateCompanySubsidiary::class,
+    TransferCommand\Application\DeleteCompanySubsidiary::class =>
+        CommandHandler\Application\DeleteCompanySubsidiary::class,
     TransferCommand\Application\UpdateAddresses::class => CommandHandler\Application\UpdateAddresses::class,
     TransferCommand\Application\UpdateSafety::class => CommandHandler\Application\UpdateSafety::class,
     TransferCommand\Application\DeleteWorkshop::class => CommandHandler\Application\DeleteWorkshop::class,

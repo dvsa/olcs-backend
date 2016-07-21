@@ -24,7 +24,7 @@ class UpdateCompanySubsidiaryTest extends CommandHandlerTestCase
 
     public function setUp()
     {
-        $this->sut = m::mock(UpdateCompanySubsidiary::class . '[update]')
+        $this->sut = m::mock(UpdateCompanySubsidiary::class . '[update, updateApplicationCompetition]')
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -51,20 +51,14 @@ class UpdateCompanySubsidiaryTest extends CommandHandlerTestCase
         $this->sut->shouldReceive('update')->once()->with($command)->andReturn($result);
 
         //  mock Application completion
-        $dataAppComplete = [
-            'id' => self::APP_ID,
-            'section' => 'businessDetails',
-            'data' => [
-                'hasChanged' => true,
-            ],
-        ];
-
-        $resultAppComplete = (new Result())
-            ->addMessage('Section updated');
-
-        $this->expectedSideEffect(
-            DomainCmd\Application\UpdateApplicationCompletion::class, $dataAppComplete, $resultAppComplete
-        );
+        $this->sut->shouldReceive('updateApplicationCompetition')
+            ->once()
+            ->with(self::APP_ID, true)
+            ->andReturn(
+                (new Result())
+                    ->addId('companySubsidiary', self::ID)
+                    ->addMessage('Section updated')
+            );
 
         //  call & check
         $actual = $this->sut->handleCommand($command);
@@ -72,7 +66,9 @@ class UpdateCompanySubsidiaryTest extends CommandHandlerTestCase
         static::assertInstanceOf(Result::class, $actual);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'companySubsidiary' => self::ID,
+            ],
             'messages' => [
                 'Company Subsidiary updated',
                 'Section updated',
