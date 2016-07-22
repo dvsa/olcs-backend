@@ -38,7 +38,7 @@ final class PreviousPublicationNo extends AbstractContext
         /** @var PublicationLink $previousPublication */
         $previousPublication = $this->handleQuery($query);
 
-        if (!$previousPublication->isEmpty()) {
+        if (!empty($previousPublication)) {
             $pp = $previousPublication->serialize();
             $context->offsetSet('previousPublication', $pp['publication']['publicationNo']);
         }
