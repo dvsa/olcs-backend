@@ -19,6 +19,8 @@ class People extends AbstractQueryHandler
         /* @var $organisation \Dvsa\Olcs\Api\Entity\Organisation\Organisation */
         $organisation =  $this->getRepo()->fetchUsingId($query);
 
+        $this->auditRead($organisation);
+
         $licence = null;
         if ($organisation->isUnlicensed()) {
             $licence = $this->result($organisation->getLicences()->first())->serialize();
