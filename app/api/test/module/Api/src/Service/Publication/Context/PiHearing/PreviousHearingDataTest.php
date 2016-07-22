@@ -40,10 +40,7 @@ class PreviousHearingDataTest extends MockeryTestCase
         $publication->shouldReceive('getPi->getId')->once()->andReturn($pi);
 
         $piHearingResult = m::mock();
-        $piHearingResult->shouldReceive('isEmpty')
-            ->andReturn(false)
-            ->once()
-            ->shouldReceive('serialize')
+        $piHearingResult->shouldReceive('serialize')
             ->andReturn(['adjournedDate' => $adjournedDate])
             ->once()
             ->getMock();
