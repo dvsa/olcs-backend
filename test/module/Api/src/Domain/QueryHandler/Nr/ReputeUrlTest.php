@@ -36,23 +36,11 @@ class ReputeUrlTest extends QueryHandlerTestCase
         $this->sut = new ReputeUrl();
         $this->mockRepo('TransportManager', TransportManagerRepo::class);
 
-        $this->repoManager = m::mock(RepositoryServiceManager::class);
+        $this->mockedSmServices = [
+            'Config' => $this->nationalRegisterConfig,
+        ];
 
-        foreach ($this->repoMap as $alias => $service) {
-            $this->repoManager
-                ->shouldReceive('get')
-                ->with($alias)
-                ->andReturn($service);
-        }
-
-        $sm = m::mock(ServiceLocatorInterface::class);
-        $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
-        $sm->shouldReceive('get')->with('Config')->andReturn($this->nationalRegisterConfig);
-
-        $this->queryHandler = m::mock(QueryHandlerManager::class);
-        $this->queryHandler->shouldReceive('getServiceLocator')->andReturn($sm);
-
-        $this->sut = $this->sut->createService($this->queryHandler);
+        parent::setUp();
     }
 
     /**

@@ -5,13 +5,9 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr;
 
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as Repository;
 use Doctrine\ORM\Query as DoctrineQuery;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Query\Bus\TxcInboxList as ListDto;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Doctrine\ORM\Query;
@@ -21,10 +17,8 @@ use Doctrine\ORM\Query;
  * This QueryHandler will query one of two tables.
  * Either the TxcInbox table (for LAs) or the EbsrSubmission table (operators/organisation users).
  */
-class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
+class TxcInboxList extends AbstractQueryHandler
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'TxcInbox';
 
     /**
