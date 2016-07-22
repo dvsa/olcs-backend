@@ -39,9 +39,6 @@ class PreviousPublicationNoTest extends MockeryTestCase
         $publication->shouldReceive('getTrafficArea')->once()->andReturn($trafficArea);
 
         $previousPublicationResult = m::mock()
-            ->shouldReceive('isEmpty')
-            ->andReturn(false)
-            ->once()
             ->shouldReceive('serialize')
             ->andReturn(['publication' => ['publicationNo' => $previousPublicationNo]])
             ->once()
