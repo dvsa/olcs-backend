@@ -237,6 +237,14 @@ return [
                 'full' => [
                     'options' => [
                         'stream' => '/var/tmp/backend.log'
+                        'filters' => [
+                            'priority' => [
+                                'name' => 'priority',
+                                'options' => [
+                                    'priority' => \Zend\Log\Logger::DEBUG
+                                ]
+                            ],
+                        ]
                     ],
                 ]
             ]
@@ -246,6 +254,14 @@ return [
                 'full' => [
                     'options' => [
                         'stream' => '/var/tmp/backend.log'
+                        'filters' => [
+                            'priority' => [
+                                'name' => 'priority',
+                                'options' => [
+                                    'priority' => \Zend\Log\Logger::DEBUG
+                                ]
+                            ],
+                        ]
                     ],
                 ]
             ]
