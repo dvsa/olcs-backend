@@ -24,6 +24,8 @@ final class Cases extends AbstractQueryHandler
         /** @var CasesEntity $case */
         $case = $this->getRepo()->fetchUsingId($query);
 
+        $this->auditRead($case);
+
         $latestNote = $this->getLatestNoteByCase($case);
 
         $criteria = Criteria::create();

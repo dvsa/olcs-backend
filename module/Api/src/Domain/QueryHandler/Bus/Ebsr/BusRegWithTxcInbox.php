@@ -10,8 +10,6 @@ use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as Repository;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
@@ -19,10 +17,8 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 /**
  * BusRegWithTxcInbox
  */
-class BusRegWithTxcInbox extends AbstractQueryHandler implements AuthAwareInterface
+class BusRegWithTxcInbox extends AbstractQueryHandler
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'Bus';
 
     /**

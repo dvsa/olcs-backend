@@ -17,14 +17,18 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\NationalRegisterAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
+use Dvsa\Olcs\Transfer\Command\Audit as AuditCommand;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Abstract Query Handler
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInterface
+abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     /**
      * The name of the default repo
      */
@@ -48,6 +52,11 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     private $queryHandler;
 
     private $repoManager;
+
+    /**
+     * @var \Dvsa\Olcs\Api\Domain\CommandHandlerManager
+     */
+    private $commandHandler;
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -86,6 +95,8 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
         $this->extraRepos[] = $this->repoServiceName;
 
         $this->queryHandler = $serviceLocator;
+
+        $this->commandHandler = $mainServiceLocator->get('CommandHandlerManager');
 
         return $this;
     }
@@ -127,5 +138,38 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     protected function result($object, array $bundle = [], $values = [])
     {
         return new Result($object, $bundle, $values);
+    }
+
+    /**
+     * Create a read audit for an entity
+     *
+     * @param $entity The entity which has been read
+     *
+     * @return void
+     * @throws RuntimeException
+     */
+    protected function auditRead($entity)
+    {
+        if (!$this->isInternalUser()) {
+            // if not an internal user then do nothing
+            return;
+        }
+
+        $entityToDtoMap = [
+            \Dvsa\Olcs\Api\Entity\Organisation\Organisation::class => AuditCommand\ReadOrganisation::class,
+            \Dvsa\Olcs\Api\Entity\Licence\Licence::class => AuditCommand\ReadLicence::class,
+            \Dvsa\Olcs\Api\Entity\Cases\Cases::class => AuditCommand\ReadCase::class,
+            \Dvsa\Olcs\Api\Entity\Application\Application::class => AuditCommand\ReadApplication::class,
+            \Dvsa\Olcs\Api\Entity\Bus\BusReg::class => AuditCommand\ReadBusReg::class,
+            \Dvsa\Olcs\Api\Entity\Tm\TransportManager::class => AuditCommand\ReadTransportManager::class,
+        ];
+
+        if (!isset($entityToDtoMap[get_class($entity)])) {
+            throw new \RuntimeException('Cannot create audit read for entity, no DTO is defined');
+        }
+
+        $dto = $entityToDtoMap[get_class($entity)]::create(['id' => $entity->getId()]);
+
+        $this->commandHandler->handleCommand($dto);
     }
 }
