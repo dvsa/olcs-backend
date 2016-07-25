@@ -82,7 +82,6 @@ TRUNCATE TABLE `impounding`;
 TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
-TRUNCATE TABLE `txc_inbox`;
 TRUNCATE TABLE `scan`;
 TRUNCATE TABLE `serious_infringement`;
 TRUNCATE TABLE `si_category`;
@@ -150,18 +149,6 @@ issued_date,document_store_id) VALUES
     (807,110,2,'Test bus transxchange PDF for LA 1','transxchange_LA1.pdf',1,3,108,
     '2014-08-28 14:03:00',''),
     (808,110,2,'Test bus route for LA 1','route_LA1.jpg',1,3,36,'2014-08-28 14:03:00','');
-
-INSERT INTO txc_inbox (id, pdf_document_id, route_document_id, zip_document_id, bus_reg_id, created_by,
-local_authority_id, organisation_id, file_read, variation_no, created_on) VALUES
-(1, 801, 802, 800, 2, 1, NULL, 1, 0, 13, '2014-03-24 16:53:00'),
-(2, 804, 805, 803, 2, 1, 2, 1, 0, 14, '2014-03-24 16:53:00'),
-(3, 807, 808, 806, 2, 1, 1, 1, 0, 15, '2014-03-24 16:53:00'),
-(4, 807, 808, 806, 20, 1, 1, 1, 0, 16, '2014-03-24 16:53:00'),
-(5, 807, 808, 806, 20, 1, 1, 1, 0, 17, '2014-03-24 16:53:00'),
-(6, 807, 808, 806, 20, 1, 1, 1, 0, 18, '2014-03-24 16:53:00'),
-(7, 807, 808, 806, 19, 1, 1, 1, 0, 19, '2014-03-24 16:53:00'),
-(8, 807, 808, 806, 19, 1, 1, 1, 0, 20, '2014-03-24 16:53:00'),
-(9, 807, 808, 806, 19, 1, 1, 1, 0, 21, '2014-03-24 16:53:00');
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
