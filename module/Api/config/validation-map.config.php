@@ -11,10 +11,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Standard;
 // @codingStandardsIgnoreStart
 $map = [
     CommandHandler\Bus\Ebsr\UpdateTxcInbox::class => Standard::class, // @todo
-    CommandHandler\ConditionUndertaking\Create::class => Standard::class, // @todo
-    CommandHandler\ConditionUndertaking\DeleteList::class => Standard::class, // @todo
-    CommandHandler\ConditionUndertaking\Update::class => Standard::class, // @todo
-    CommandHandler\Organisation\UpdateBusinessType::class => Standard::class, // @todo
     CommandHandler\Variation\DeleteListConditionUndertaking::class => Standard::class, // @todo
     CommandHandler\Variation\UpdateAddresses::class => Standard::class, // @todo
     CommandHandler\Variation\UpdateConditionUndertaking::class => Standard::class, // @todo
@@ -24,11 +20,6 @@ $map = [
     QueryHandler\Bus\RegistrationHistoryList::class => Standard::class, // @todo
     QueryHandler\Bus\SearchViewList::class => Standard::class, // @todo
     QueryHandler\CompaniesHouse\GetList::class => Standard::class, // @todo
-    QueryHandler\ConditionUndertaking\Get::class => Standard::class, // @todo
-    QueryHandler\ConditionUndertaking\GetList::class => Standard::class, // @todo
-    QueryHandler\Organisation\Dashboard::class => Standard::class, // @todo
-    QueryHandler\Organisation\Organisation::class => Standard::class, // @todo
-    QueryHandler\Organisation\OutstandingFees::class => Standard::class, // @todo
     QueryHandler\Search\Licence::class => Standard::class, // @todo
     QueryHandler\Variation\TypeOfLicence::class => Standard::class, // @todo
 ];
