@@ -19,6 +19,8 @@ class Bus extends AbstractQueryHandler
     {
         $busReg = $this->getRepo()->fetchUsingId($query);
 
+        $this->auditRead($busReg);
+
         return $this->result(
             $busReg,
             [

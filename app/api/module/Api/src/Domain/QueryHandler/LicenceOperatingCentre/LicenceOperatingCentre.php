@@ -7,8 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\LicenceOperatingCentre;
 
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre as LicenceOperatingCentreEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -19,10 +17,8 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class LicenceOperatingCentre extends AbstractQueryHandler implements AuthAwareInterface
+class LicenceOperatingCentre extends AbstractQueryHandler
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'LicenceOperatingCentre';
 
     public function handleQuery(QueryInterface $query)

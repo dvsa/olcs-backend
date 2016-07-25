@@ -28,6 +28,8 @@ class TransportManager extends AbstractQueryHandler
         /* @var $transportManager \Dvsa\Olcs\Api\Entity\Tm\TransportManager */
         $transportManager = $repo->fetchUsingId($query);
 
+        $this->auditRead($transportManager);
+
         $latestNote = $this->getRepo('Note')->fetchForOverview(null, null, $transportManager->getId());
 
         return $this->result(
