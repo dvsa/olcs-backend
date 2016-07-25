@@ -115,7 +115,7 @@ class EbsrSubmission extends AbstractRepository
             ->setParameter('organisation', $query->getOrganisation());
 
         if (method_exists($query, 'getStatus') && !empty($query->getStatus())) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.ebsrSubmissionStatus', ':ebsrSubmissionStatus'))
+            $qb->andWhere($qb->expr()->in($this->alias . '.ebsrSubmissionStatus', ':ebsrSubmissionStatus'))
                 ->setParameter('ebsrSubmissionStatus', $query->getStatus());
         }
         if (method_exists($query, 'getSubType') && !empty($query->getSubType())) {
