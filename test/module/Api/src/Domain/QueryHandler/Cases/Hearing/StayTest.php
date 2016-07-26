@@ -34,7 +34,7 @@ class StayTest extends QueryHandlerTestCase
 
         $mockResult = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
 
-        $this->repoMap['Stay']->shouldReceive('fetchUsingCaseId')
+        $this->repoMap['Stay']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($mockResult);
 
