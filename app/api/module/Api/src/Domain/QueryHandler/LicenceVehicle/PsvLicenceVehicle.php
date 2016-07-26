@@ -9,8 +9,6 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\LicenceVehicle;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
@@ -18,10 +16,8 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class PsvLicenceVehicle extends AbstractQueryHandler implements AuthAwareInterface
+class PsvLicenceVehicle extends AbstractQueryHandler
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'LicenceVehicle';
 
     public function handleQuery(QueryInterface $query)

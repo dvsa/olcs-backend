@@ -16,10 +16,8 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class GetDetails extends AbstractQueryHandler implements \Dvsa\Olcs\Api\Domain\AuthAwareInterface
+class GetDetails extends AbstractQueryHandler
 {
-    use \Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-
     protected $repoServiceName = 'TransportManagerApplication';
 
     protected $extraRepos = [

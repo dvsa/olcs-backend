@@ -7,8 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -19,10 +17,8 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class TypeOfLicence extends AbstractQueryHandler implements AuthAwareInterface
+class TypeOfLicence extends AbstractQueryHandler
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'Licence';
 
     public function handleQuery(QueryInterface $query)

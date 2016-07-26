@@ -108,7 +108,6 @@ return [
     TransferQuery\Licence\People::class => QueryHandler\Licence\People::class,
     TransferQuery\Licence\OperatingCentre::class => QueryHandler\Licence\OperatingCentre::class,
     TransferQuery\Licence\TaxiPhv::class => QueryHandler\Licence\TaxiPhv::class,
-    TransferQuery\Licence\Markers::class => QueryHandler\Licence\Markers::class,
     TransferQuery\Licence\ContinuationDetail::class => QueryHandler\Licence\ContinuationDetail::class,
     TransferQuery\Licence\GetList::class => QueryHandler\Licence\GetList::class,
     TransferQuery\Licence\OperatingCentres::class => QueryHandler\Licence\OperatingCentres::class,

@@ -22,6 +22,8 @@ class Licence extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
 
+    protected $extraRepos = ['ContinuationDetail', 'Note'];
+
     /**
      * @var \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
      */
@@ -39,6 +41,14 @@ class Licence extends AbstractQueryHandler
     public function handleQuery(QueryInterface $query)
     {
         $licence = $this->getRepo()->fetchUsingId($query);
+
+        $this->auditRead($licence);
+
+        $continuationDetail = $this->getContinuationDetail($licence);
+        $continuationDetailResponse = ($continuationDetail) ?
+            $this->result($continuationDetail, ['continuation', 'licence'])->serialize() :
+            null;
+        $latestNote = $this->getRepo('Note')->fetchForOverview($query->getId());
 
         return $this->result(
             $licence,
@@ -62,17 +72,38 @@ class Licence extends AbstractQueryHandler
                 'trafficArea',
                 'organisation' => [
                     'organisationPersons' => [
-                        'person'
+                        'person' => ['disqualifications']
                     ],
                     'tradingNames',
-                    'type'
+                    'type',
+                    'disqualifications',
                 ],
+                'licenceStatusRules' => ['licenceStatus'],
             ],
             [
                 'sections' => $this->sectionAccessService->getAccessibleSectionsForLicence($licence),
                 'niFlag' => $licence->getNiFlag(),
-                'isMlh' => $licence->getOrganisation()->isMlh()
+                'isMlh' => $licence->getOrganisation()->isMlh(),
+                'continuationMarker' => $continuationDetailResponse,
+                'latestNote' => $latestNote
             ]
         );
+    }
+
+    /**
+     * Get a Continuation Detail for the marker
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail|null
+     */
+    private function getContinuationDetail(\Dvsa\Olcs\Api\Entity\Licence\Licence $licence)
+    {
+        $continuationDetails = $this->getRepo('ContinuationDetail')->fetchForLicence($licence->getId());
+        if (count($continuationDetails) > 0) {
+            return $continuationDetails[0];
+        }
+
+        return null;
     }
 }

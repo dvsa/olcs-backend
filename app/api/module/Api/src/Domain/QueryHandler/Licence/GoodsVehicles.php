@@ -3,8 +3,6 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -16,10 +14,8 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class GoodsVehicles extends AbstractQueryHandler implements AuthAwareInterface
+class GoodsVehicles extends AbstractQueryHandler
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'Licence';
     protected $extraRepos = ['LicenceVehicle'];
 

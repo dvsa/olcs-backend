@@ -5,8 +5,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\MyAccount;
 
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -14,10 +12,8 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 /**
  * MyAccount
  */
-class MyAccount extends AbstractQueryHandler implements AuthAwareInterface
+class MyAccount extends AbstractQueryHandler
 {
-    use AuthAwareTrait;
-
     public function handleQuery(QueryInterface $query)
     {
         $user = $this->getCurrentUser();
