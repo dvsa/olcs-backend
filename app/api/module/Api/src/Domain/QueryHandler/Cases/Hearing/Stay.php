@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Hearing;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -15,6 +14,9 @@ final class Stay extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        return $this->result($this->getRepo()->fetchUsingCaseId($query), ['case']);
+        return $this->result(
+            $this->getRepo()->fetchUsingId($query),
+            ['case']
+        );
     }
 }
