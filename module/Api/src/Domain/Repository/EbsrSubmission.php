@@ -19,10 +19,11 @@ class EbsrSubmission extends AbstractRepository
     /**
      * Fetch a list for an organisation, searchable on ebsrSubmissionType and ebsrSubmissionStatus
      *
-     * @param $organisation
-     * @param null $ebsrSubmissionType
-     * @param null $ebsrSubmissionStatus
-     * @param int $hydrateMode
+     * @param int         $organisation         organisation id
+     * @param string|null $ebsrSubmissionType   ebsr submission type
+     * @param string|null $ebsrSubmissionStatus ebsr submission status
+     * @param int         $hydrateMode          doctrine hydrate mode
+     *
      * @return array
      */
     public function fetchByOrganisation(
@@ -63,9 +64,10 @@ class EbsrSubmission extends AbstractRepository
      * This is only used to bring back newly submitted documents and therefore doesn't bring back extra
      * information for efficiency reasons
      *
-     * @param int $organisation
-     * @param string $ebsrSubmissionStatus
-     * @param int $hydrateMode
+     * @param int    $organisation         organisation id
+     * @param string $ebsrSubmissionStatus ebsr submission status
+     * @param int    $hydrateMode          doctrine hydrate mode
+     *
      * @return array
      */
     public function fetchForOrganisationByStatus(
@@ -88,9 +90,13 @@ class EbsrSubmission extends AbstractRepository
     }
 
     /**
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
-     * @param array $compositeFields
+     * Builds the default list query
+     *
+     * @param QueryBuilder   $qb              doctrine query builder
+     * @param QueryInterface $query           query
+     * @param array          $compositeFields composite fields
+     *
+     * @return void
      */
     protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query, $compositeFields = [])
     {
@@ -106,8 +112,10 @@ class EbsrSubmission extends AbstractRepository
     /**
      * Applies filters to list queries. Note we always ignore newly uploaded files until they've been fully submitted
      *
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
+     * @param QueryBuilder   $qb    doctrine query builder
+     * @param QueryInterface $query the query
+     *
+     * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {

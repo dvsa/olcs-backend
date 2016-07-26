@@ -5,9 +5,6 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as Entity;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
-use Dvsa\Olcs\Transfer\Query\OrderedQueryInterface;
-use Dvsa\Olcs\Transfer\Query\PagedQueryInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -22,7 +19,7 @@ class TxcInbox extends AbstractRepository
     /**
      * Fetch a list for an organisation
      *
-     * @param int|\Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     * @param int $organisation organisation id
      *
      * @return array
      */
@@ -39,9 +36,10 @@ class TxcInbox extends AbstractRepository
     /**
      * Fetch a list of unread docs filtered by local authority, submission type and status for a given bus reg id
      *
-     * @param $busReg
-     * @param $organisationId
-     * @param int $hydrateMode
+     * @param int $busReg         bus reg id
+     * @param int $organisationId organisation id
+     * @param int $hydrateMode    doctrine hydrate mode
+     *
      * @return array
      */
     public function fetchListForOrganisationByBusReg($busReg, $organisationId, $hydrateMode = Query::HYDRATE_OBJECT)
@@ -66,9 +64,10 @@ class TxcInbox extends AbstractRepository
     /**
      * Fetch a list of unread docs filtered by local authority, submission type and status for a given bus reg id
      *
-     * @param int $busReg
-     * @param int $localAuthorityId
-     * @param int $hydrateMode
+     * @param int $busReg           bus reg id
+     * @param int $localAuthorityId local authority id
+     * @param int $hydrateMode      doctrine hydrate mode
+     *
      * @return array
      */
     public function fetchListForLocalAuthorityByBusReg($busReg, $localAuthorityId, $hydrateMode = Query::HYDRATE_OBJECT)
@@ -95,9 +94,13 @@ class TxcInbox extends AbstractRepository
     }
 
     /**
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
-     * @param array $compositeFields
+     * Applies list filters
+     *
+     * @param QueryBuilder   $qb              doctrine query builder
+     * @param QueryInterface $query           the query
+     * @param array          $compositeFields composite fields
+     *
+     * @return void
      */
     protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query, $compositeFields = [])
     {
@@ -112,8 +115,12 @@ class TxcInbox extends AbstractRepository
     }
 
     /**
-     * @param QueryBuilder   $qb
-     * @param QueryInterface $query
+     * Applies list filters
+     *
+     * @param QueryBuilder   $qb    doctrine query builder
+     * @param QueryInterface $query the query
+     *
+     * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
