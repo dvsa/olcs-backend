@@ -5,8 +5,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\User;
 
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Query\User\UserListSelfserve as ListDto;
@@ -17,10 +15,8 @@ use Doctrine\ORM\Query;
 /**
  * User List Selfserve
  */
-class UserListSelfserve extends AbstractQueryHandler implements AuthAwareInterface
+class UserListSelfserve extends AbstractQueryHandler
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'User';
 
     /**

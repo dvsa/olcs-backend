@@ -5,13 +5,10 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr;
 
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as Repository;
 use Doctrine\ORM\Query as DoctrineQuery;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Query\Bus\EbsrSubmissionList as ListDto;
 use Doctrine\ORM\Query;
 
@@ -20,10 +17,8 @@ use Doctrine\ORM\Query;
  * This QueryHandler will query one of two tables.
  * Either the EbsrSubmission table (for LAs) or the EbsrSubmission table (operators/organisation users).
  */
-class EbsrSubmissionList extends AbstractQueryHandler implements AuthAwareInterface
+class EbsrSubmissionList extends AbstractQueryHandler
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'EbsrSubmission';
 
     /**

@@ -43,7 +43,6 @@ return [
     QueryHandler\Licence\EnforcementArea::class => IsInternalUser::class,
     QueryHandler\Licence\GetList::class => IsInternalUser::class,
     QueryHandler\Licence\LicenceDecisions::class => IsInternalUser::class,
-    QueryHandler\Licence\Markers::class => IsInternalUser::class,
     QueryHandler\Licence\Overview::class => IsInternalUser::class,
     QueryHandler\Operator\BusinessDetails::class => IsInternalUser::class,
     QueryHandler\Operator\UnlicensedBusinessDetails::class => IsInternalUser::class,

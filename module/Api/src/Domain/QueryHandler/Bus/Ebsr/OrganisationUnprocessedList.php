@@ -7,9 +7,6 @@ use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
@@ -17,10 +14,8 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  *
  * Brings back a list of unprocessed ebsr submissions for an organisation
  */
-class OrganisationUnprocessedList extends AbstractQueryHandler implements AuthAwareInterface
+class OrganisationUnprocessedList extends AbstractQueryHandler
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'EbsrSubmission';
 
     /**

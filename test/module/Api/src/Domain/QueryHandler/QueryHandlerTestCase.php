@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Query Handler Test Case
@@ -54,9 +55,18 @@ class QueryHandlerTestCase extends MockeryTestCase
 
         $sm = m::mock(ServiceLocatorInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
+        $sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn(null);
 
         foreach ($this->mockedSmServices as $serviceName => $service) {
             $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
+        }
+
+        // if not already mocked AuthorizationService then do it
+        if (!isset($this->mockedSmServices[AuthorizationService::class])) {
+            $sm->shouldReceive('get')->with(AuthorizationService::class)
+                ->andReturn(
+                    m::mock(AuthorizationService::class)->shouldReceive('isGranted')->andReturn(false)->getMock()
+                );
         }
 
         $this->queryHandler = m::mock(QueryHandlerManager::class);

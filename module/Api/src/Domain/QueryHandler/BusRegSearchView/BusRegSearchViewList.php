@@ -21,10 +21,8 @@ use Dvsa\Olcs\Api\Domain\Query\BusRegSearchView\BusRegSearchViewList as ListDtoQ
  * @author Craig R <uk@valtech.co.uk>
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class BusRegSearchViewList extends AbstractQueryHandler implements \Dvsa\Olcs\Api\Domain\AuthAwareInterface
+class BusRegSearchViewList extends AbstractQueryHandler
 {
-    use \Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-
     protected $repoServiceName = 'BusRegSearchView';
 
     /**
