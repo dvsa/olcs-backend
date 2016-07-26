@@ -1,12 +1,9 @@
 <?php
 
-/**
- * Stay
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Cases\Stay as Entity;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Entity\Cases\Stay as Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -17,9 +14,12 @@ class Stay extends AbstractRepository
     protected $entity = Entity::class;
 
     /**
+     * Apply list filters
      *
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
+     * @param QueryBuilder   $qb    Query builder
+     * @param QueryInterface $query Query
+     *
+     * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
@@ -28,8 +28,11 @@ class Stay extends AbstractRepository
     }
 
     /**
+     * Apply list joins
      *
-     * @param QueryBuilder $qb
+     * @param QueryBuilder $qb Query builder
+     *
+     * @return void
      */
     protected function applyListJoins(QueryBuilder $qb)
     {
