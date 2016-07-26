@@ -76,7 +76,6 @@ return [
     QueryHandler\Cases\Conviction\Conviction::class                         => IsInternalUser::class,
     QueryHandler\Cases\Conviction\ConvictionList::class                     => IsInternalUser::class,
     QueryHandler\Cases\Hearing\Appeal::class                                => IsInternalUser::class,
-    QueryHandler\Cases\Hearing\AppealList::class                            => IsInternalUser::class,
     QueryHandler\Cases\Hearing\Stay::class                                  => IsInternalUser::class,
     QueryHandler\Cases\Hearing\StayList::class                              => IsInternalUser::class,
     QueryHandler\Cases\Impounding\Impounding::class                         => IsInternalUser::class,
