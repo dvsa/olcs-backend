@@ -35,8 +35,6 @@ class Stay extends AbstractRepository
     {
         $this->getQueryBuilder()->modifyQuery($qb)
             ->withRefData()
-            ->with('case')
-            ->with('createdBy')
-            ->with('lastModifiedBy');
+            ->with('case');
     }
 }
