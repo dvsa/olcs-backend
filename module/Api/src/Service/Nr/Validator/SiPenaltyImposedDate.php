@@ -21,14 +21,15 @@ class SiPenaltyImposedDate extends ZendAbstractValidator
      */
     protected $messageTemplates = [
         self::IMPOSED_PENALTY_INCORRECT_DECISION_START_DATE => 'Imposed penalty decision date later than start date',
-        self::IMPOSED_PENALTY_INCORRECT_DECISION_END_DATE => 'Imposed penalty decision date later then end date',
+        self::IMPOSED_PENALTY_INCORRECT_DECISION_END_DATE => 'Imposed penalty decision date later than end date',
         self::IMPOSED_PENALTY_INCORRECT_START_DATE => 'Imposed penalty start date must be before end date',
     ];
 
     /**
      * Checks the imposed penalty types exist and that dates are in the correct order
      *
-     * @param  array $value
+     * @param array $value value being tested
+     *
      * @return bool
      */
     public function isValid($value)
