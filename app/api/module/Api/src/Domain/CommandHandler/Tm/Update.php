@@ -14,7 +14,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Tm\UpdateNysiisName as UpdateNysiisNameCmd;
 use Zend\Serializer\Adapter\Json as ZendJson;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
@@ -150,7 +149,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
      * Returns a command to queue a NYSIIS name request and update
      *
      * @param array $params
-     * @return UpdateNysiisNameCmd
+     * @return CreateQueue
      */
     private function getNysiisNameUpdateQueueCmd($params)
     {

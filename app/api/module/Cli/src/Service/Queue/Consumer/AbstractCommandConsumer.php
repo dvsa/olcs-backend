@@ -70,11 +70,7 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
         $command = $commandClass::create($commandData);
 
         try {
-            // @todo These commands should be validated, see OLCS-13145
-            // Temporarily treat them as side effects, which aren't validated
-            // As the Send class allows any command to be injected, we currently don't have the correct
-            // validators setup as we don;t know which commands it could run
-            $result = $this->handleSideEffectCommand($command);
+            $result = $this->handleCommand($command);
         } catch (NotReadyException $e) {
             return $this->retry($item, $e->getRetryAfter(), $e->getMessage());
         } catch (EmailNotSentException $e) {
