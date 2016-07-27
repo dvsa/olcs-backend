@@ -3,13 +3,12 @@
 
      *
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
-     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatParamName($item); ?>
+     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatParamName($item); ?> collection being set as the value
 <?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
-     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatParamName($item) . ' ' . $this->formatParamName($item); ?> entity
+     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatParamName($item); ?> entity being set as the value
 <?php else: ?>
-     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatParamName($item) . ' ' . $this->formatParamName($item); ?>
+     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatParamName($item); ?> new value being set
 <?php endif; ?>
-
      *
      * @return <?php echo $fluidReturn; ?>
 
@@ -44,13 +43,12 @@
 
      *
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
-     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatPropertyName($item); ?> collection
+     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatPropertyName($item); ?> collection being added
 <?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
-     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatPropertyName($item); ?> entity
+     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatPropertyName($item); ?> entity being added
 <?php else: ?>
-     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatPropertyName($item) . ' ' . $this->formatPropertyName($item); ?>
+     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatPropertyName($item); ?> value being added
 <?php endif; ?>
-
      *
      * @return <?php echo $fluidReturn; ?>
 
@@ -76,13 +74,12 @@
 
      *
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
-     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatPropertyName($item); ?>
+     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatPropertyName($item); ?> collection being removed
 <?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
-     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatPropertyName($item) . ' ' . $this->formatPropertyName($item); ?> entity
+     * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatPropertyName($item); ?> entity being removed
 <?php else: ?>
-     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatPropertyName($item) . ' ' . $this->formatPropertyName($item); ?> property
+     * @param <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?> $<?php echo $this->formatPropertyName($item); ?> value being removed
 <?php endif; ?>
-
      *
      * @return <?php echo $fluidReturn; ?>
 
