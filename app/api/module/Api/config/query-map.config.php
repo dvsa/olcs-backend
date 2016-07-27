@@ -162,10 +162,8 @@ return [
 
     TransferQuery\Cases\Hearing\Appeal::class => QueryHandler\Cases\Hearing\Appeal::class,
     TransferQuery\Cases\Hearing\AppealByCase::class => QueryHandler\Cases\Hearing\Appeal::class,
-    TransferQuery\Cases\Hearing\AppealList::class => QueryHandler\Cases\Hearing\AppealList::class,
 
     TransferQuery\Cases\Hearing\Stay::class => QueryHandler\Cases\Hearing\Stay::class,
-    TransferQuery\Cases\Hearing\StayByCase::class => QueryHandler\Cases\Hearing\Stay::class,
     TransferQuery\Cases\Hearing\StayList::class => QueryHandler\Cases\Hearing\StayList::class,
 
     TransferQuery\Cases\Statement\Statement::class => QueryHandler\Cases\Statement\Statement::class,
