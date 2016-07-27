@@ -82,7 +82,6 @@ TRUNCATE TABLE `impounding`;
 TRUNCATE TABLE `impounding_legislation_type`;
 TRUNCATE TABLE `team`;
 TRUNCATE TABLE `task`;
-TRUNCATE TABLE `txc_inbox`;
 TRUNCATE TABLE `scan`;
 TRUNCATE TABLE `serious_infringement`;
 TRUNCATE TABLE `si_category`;
@@ -150,18 +149,6 @@ issued_date,document_store_id) VALUES
     (807,110,2,'Test bus transxchange PDF for LA 1','transxchange_LA1.pdf',1,3,108,
     '2014-08-28 14:03:00',''),
     (808,110,2,'Test bus route for LA 1','route_LA1.jpg',1,3,36,'2014-08-28 14:03:00','');
-
-INSERT INTO txc_inbox (id, pdf_document_id, route_document_id, zip_document_id, bus_reg_id, created_by,
-local_authority_id, organisation_id, file_read, variation_no, created_on) VALUES
-(1, 801, 802, 800, 2, 1, NULL, 1, 0, 13, '2014-03-24 16:53:00'),
-(2, 804, 805, 803, 2, 1, 2, 1, 0, 14, '2014-03-24 16:53:00'),
-(3, 807, 808, 806, 2, 1, 1, 1, 0, 15, '2014-03-24 16:53:00'),
-(4, 807, 808, 806, 20, 1, 1, 1, 0, 16, '2014-03-24 16:53:00'),
-(5, 807, 808, 806, 20, 1, 1, 1, 0, 17, '2014-03-24 16:53:00'),
-(6, 807, 808, 806, 20, 1, 1, 1, 0, 18, '2014-03-24 16:53:00'),
-(7, 807, 808, 806, 19, 1, 1, 1, 0, 19, '2014-03-24 16:53:00'),
-(8, 807, 808, 806, 19, 1, 1, 1, 0, 20, '2014-03-24 16:53:00'),
-(9, 807, 808, 806, 19, 1, 1, 1, 0, 21, '2014-03-24 16:53:00');
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -549,44 +536,6 @@ VALUES
     'Some Position', 'Some Offence Type', 'Some Notes for Offence (case 24)', 'VRM12', NOW(), NOW(), 1),
     (2, 29,1, 1, 'Some different definition', 1, 1, 'Authority 2', '2012-05-12', '2012-05-26', 'Al Capone', 3,
     'Some Position', 'Some Offence Type', 'Some Notes for Offence (case 29)', 'VRM12', NOW(), NOW(), 1);
-
-INSERT INTO `ebsr_submission` (`id`, `document_id`, `ebsr_submission_type_id`,
-    `ebsr_submission_status_id`, `bus_reg_id`, `submitted_date`, `licence_no`, `organisation_email_address`,
-    `application_classification`, `variation_no`, `registration_no`, `validation_start`, `validation_end`,
-    `publish_start`, `publish_end`, `process_start`, `process_end`, `distribute_start`, `distribute_end`,
-    `distribute_expire`, `is_from_ftp`, `organisation_id`) VALUES
-  (1, null, 'ebsrt_new', 'ebsrs_processing', 1, '2015-04-11 15:25:34', 'PB12351', null, null, 1, '1111', null,
-  null, null, null, null, null, null, null,null, 0, null),
-  (2, null, 'ebsrt_new', 'ebsrs_processing', 2, '2015-04-15 23:25:34', 'PB12352', null, null, 2, '1112', null, null, null, null, null,
-  null, null, null,null, 0, null),
-  (3, null, 'ebsrt_refresh', 'ebsrs_submitted', 3, '2015-03-11 15:25:34', 'PB12353', null, null, 3, '1113',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (4, null, 'ebsrt_refresh', 'ebsrs_expired', 4, '2015-02-21 12:35:34', 'PB12354', null, null, 4, '1114', null,
-  null, null, null, null, null, null, null,null, 0, null),
-  (5, null, 'ebsrt_unknown', 'ebsrs_validated', 5, '2015-02-14 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (6, null, 'ebsrt_new', 'ebsrs_processing', 6, '2013-01-14 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (7, null, 'ebsrt_refresh', 'ebsrs_validated', 7, '2013-08-24 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (8, null, 'ebsrt_unknown', 'ebsrs_expired', 99, '2011-09-14 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (9, null, 'ebsrt_new', 'ebsrs_processing', 99, '2009-11-14 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (10, null, 'ebsrt_refresh', 'ebsrs_validated', 5, '2015-01-04 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (11, null, 'ebsrt_unknown', 'ebsrs_validated', 3, '2014-09-30 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (12, null, 'ebsrt_refresh', 'ebsrs_processing', 3, '2006-06-07 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (13, null, 'ebsrt_new', 'ebsrs_validated', 1, '2010-05-05 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null),
-  (14, null, 'ebsrt_new', 'ebsrs_validated', 20, '2010-05-05 11:55:32', 'PB12355', null, null, 5, '1115',
-   null, null, null, null, null, null, null, null,null, 0, null),
-  (15, null, 'ebsrt_new', 'ebsrs_validated', 19, '2010-05-05 11:55:32', 'PB12355', null, null, 5, '1115',
-   null, null, null, null, null, null, null, null,null, 0, null)
-
-  ;
 
 INSERT INTO `fee` (
 `id`,

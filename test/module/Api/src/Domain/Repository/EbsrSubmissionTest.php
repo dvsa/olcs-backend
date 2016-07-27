@@ -142,7 +142,7 @@ class EbsrSubmissionTest extends RepositoryTestCase
         // status clause
         $mockQb->shouldReceive('expr')
             ->andReturnSelf()
-            ->shouldReceive('eq')
+            ->shouldReceive('in')
             ->with('m.ebsrSubmissionStatus', ':ebsrSubmissionStatus')
             ->andReturnSelf()
             ->shouldReceive('andWhere')
