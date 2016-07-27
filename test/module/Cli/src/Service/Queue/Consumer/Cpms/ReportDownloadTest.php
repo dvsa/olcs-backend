@@ -70,7 +70,8 @@ class ReportDownloadTest extends AbstractConsumerTestCase
         $this->expectCommand(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Complete::class,
             ['item' => $item],
-            new Result()
+            new Result(),
+            false
         );
 
         $result = $this->sut->processMessage($item);
@@ -96,7 +97,8 @@ class ReportDownloadTest extends AbstractConsumerTestCase
         $this->expectCommand(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
             ['item' => $item],
-            new Result()
+            new Result(),
+            false
         );
 
         $result = $this->sut->processMessage($item);
@@ -129,7 +131,8 @@ class ReportDownloadTest extends AbstractConsumerTestCase
         $this->expectCommand(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Retry::class,
             ['item' => $item, 'retryAfter' => 60],
-            new Result()
+            new Result(),
+            false
         );
 
         $result = $this->sut->processMessage($item);
@@ -160,7 +163,8 @@ class ReportDownloadTest extends AbstractConsumerTestCase
         $this->expectCommand(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
             ['item' => $item],
-            new Result()
+            new Result(),
+            false
         );
 
         $result = $this->sut->processMessage($item);
@@ -208,7 +212,8 @@ class ReportDownloadTest extends AbstractConsumerTestCase
         $this->expectCommand(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
             ['item' => $item],
-            new Result()
+            new Result(),
+            false
         );
 
         $result = $this->sut->processMessage($item);

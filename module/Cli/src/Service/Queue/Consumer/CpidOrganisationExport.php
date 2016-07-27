@@ -98,7 +98,7 @@ class CpidOrganisationExport implements MessageConsumerInterface
     private function success(QueueEntity $item, $message = null)
     {
         $command = CompleteCmd::create(['item' => $item]);
-        $this->commandHandler->handleCommand($command);
+        $this->commandHandler->handleCommand($command, false);
 
         return 'Successfully processed message: ' . $item->getId() . ' ' . $item->getOptions()
             . ($message ? ' ' . $message : '');
@@ -107,7 +107,7 @@ class CpidOrganisationExport implements MessageConsumerInterface
     public function failed(QueueEntity $item, $reason = null)
     {
         $command = FailedCmd::create(['item' => $item]);
-        $this->commandHandler->handleCommand($command);
+        $this->commandHandler->handleCommand($command, false);
 
         return 'Failed to process message: ' . $item->getId() . ' ' . $item->getOptions() . ' ' .  $reason;
     }

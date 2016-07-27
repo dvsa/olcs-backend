@@ -111,4 +111,16 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
     {
         return $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command, false);
     }
+
+    /**
+     * Run a DTO command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\CommandInterface $command the command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
+    protected function handleCommand(\Dvsa\Olcs\Transfer\Command\CommandInterface $command)
+    {
+        return $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command);
+    }
 }

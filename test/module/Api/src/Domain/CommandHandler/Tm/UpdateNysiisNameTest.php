@@ -7,7 +7,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Tm\UpdateNysiisName as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Tm\UpdateNysiisName as Cmd;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;

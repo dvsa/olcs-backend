@@ -63,7 +63,7 @@ class RequestMap extends AbstractCommandConsumer
 
         $command = CreateTaskCmd::create($data);
 
-        $this->handleSideEffectCommand($command);
+        $this->handleCommand($command);
 
         return parent::failed($item, $reason);
     }

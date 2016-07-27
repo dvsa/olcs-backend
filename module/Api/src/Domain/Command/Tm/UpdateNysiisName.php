@@ -5,9 +5,9 @@ namespace Dvsa\Olcs\Api\Domain\Command\Tm;
 use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
 
 /**
- * Process Nysiis TM Name request
+ * Process Nysiis TM Name
  *
  */
-class UpdateNysiisNameRequest extends AbstractIdOnlyCommand
+class UpdateNysiisName extends AbstractIdOnlyCommand
 {
 }

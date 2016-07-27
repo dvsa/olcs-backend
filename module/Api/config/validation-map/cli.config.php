@@ -43,5 +43,4 @@ return [
     CommandHandler\Cases\Si\SendResponse::class => IsSystemUser::class,
     CommandHandler\PrintScheduler\PrintJob::class => IsSystemUser::class,
     CommandHandler\TransportManagerApplication\Snapshot::class => IsSystemUser::class,
-    CommandHandler\Tm\UpdateNysiisName::class => IsSideEffect::class
 ];

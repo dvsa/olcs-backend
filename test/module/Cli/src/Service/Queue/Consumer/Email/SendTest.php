@@ -50,7 +50,8 @@ class SendTest extends AbstractConsumerTestCase
         $this->expectCommand(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Complete::class,
             ['item' => $item],
-            new Result()
+            new Result(),
+            false
         );
 
         $result = $this->sut->processMessage($item);
@@ -81,7 +82,7 @@ class SendTest extends AbstractConsumerTestCase
 
         $this->chm
             ->shouldReceive('handleCommand')
-            ->with(SampleEmail::class, false)
+            ->with(SampleEmail::class)
             ->andThrow(new EmailNotSentException($message));
 
         $this->expectCommand(
@@ -90,7 +91,8 @@ class SendTest extends AbstractConsumerTestCase
                 'item' => $item,
                 'retryAfter' => 900
             ],
-            new Result()
+            new Result(),
+            false
         );
 
         $result = $this->sut->processMessage($item);
