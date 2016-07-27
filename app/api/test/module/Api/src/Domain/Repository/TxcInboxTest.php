@@ -152,12 +152,12 @@ class TxcInboxTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr')
             ->andReturnSelf()
             ->shouldReceive('eq')
-            ->with('e.ebsrSubmissionStatus', ':ebsrSubmissionStatus')
+            ->with('b.status', ':status')
             ->andReturnSelf()
             ->shouldReceive('andWhere')
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with('ebsrSubmissionStatus', 'foo')
+            ->with('status', 'foo')
             ->andReturnSelf();
 
         // subType clause

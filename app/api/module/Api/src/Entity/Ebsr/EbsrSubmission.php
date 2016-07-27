@@ -39,6 +39,36 @@ class EbsrSubmission extends AbstractEbsrSubmission implements OrganisationProvi
     const NEW_SUBMISSION_TYPE = 'ebsrt_new';
     const UNKNOWN_SUBMISSION_TYPE = 'ebsrt_unknown';
 
+    const PROCESSING_DISPLAY_TYPE = 'ebsrd_processing';
+    const PROCESSED_DISPLAY_TYPE = 'ebsrd_processed';
+    const FAILED_DISPLAY_TYPE = 'ebsrd_failed';
+
+    /**
+     * A map of system ebsr statuses against the status that is displayed to the user
+     *
+     * @var array
+     */
+    public static $displayStatus = [
+        self::PROCESSING_DISPLAY_TYPE => [
+            self::SUBMITTED_STATUS,
+            self::VALIDATING_STATUS,
+            self::PROCESSING_STATUS
+        ],
+        self::PROCESSED_DISPLAY_TYPE => [
+            self::PROCESSED_STATUS
+        ],
+        self::FAILED_DISPLAY_TYPE => [
+            self::FAILED_STATUS
+        ],
+        'all_valid' => [
+            self::SUBMITTED_STATUS,
+            self::VALIDATING_STATUS,
+            self::PROCESSING_STATUS,
+            self::PROCESSED_STATUS,
+            self::FAILED_STATUS
+        ]
+    ];
+
     /**
      * Creates EBSR submission
      *
