@@ -65,7 +65,8 @@ final class ComplianceEpisodeDocument extends AbstractCommandHandler
             'category' => CategoryEntity::CATEGORY_COMPLIANCE,
             'subCategory' => CategoryEntity::DOC_SUB_CATEGORY_NR,
             'filename' => 'compliance-episode.xml',
-            'description' => 'ERRU incoming compliance episode'
+            'description' => 'ERRU incoming compliance episode',
+            'isExternal' => true
         ];
 
         return UploadCmd::create($data);
