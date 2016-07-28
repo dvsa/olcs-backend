@@ -5,7 +5,6 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
-use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Zend\Serializer\Adapter\Json as ZendJson;
 

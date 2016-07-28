@@ -48,7 +48,7 @@ class ContinuationChecklist extends AbstractCommandConsumer
         $command = UpdateContinuationDetail::create($dtoData);
 
         try {
-            $this->handleSideEffectCommand($command);
+            $this->handleCommand($command);
         } catch (DomainException $e) {
             $message = !empty($e->getMessages()) ? implode(', ', $e->getMessages()) : $e->getMessage();
             $reason .= ", " . $message;

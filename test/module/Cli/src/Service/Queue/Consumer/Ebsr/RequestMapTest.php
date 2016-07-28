@@ -80,7 +80,7 @@ class RequestMapTest extends AbstractConsumerTestCase
 
         $cmd = CreateTaskCmd::create($taskData);
 
-        $this->expectCommand(FailedCmd::class, ['item' => $item], new Result());
+        $this->expectCommand(FailedCmd::class, ['item' => $item], new Result(), false);
         $this->expectCommand(CreateTaskCmd::class, $cmd->getArrayCopy(), new Result());
 
         $this->sut->failed($item, null);
@@ -105,7 +105,7 @@ class RequestMapTest extends AbstractConsumerTestCase
 
         $this->chm
             ->shouldReceive('handleCommand')
-            ->with(ProcessRequestMapCmd::class, false)
+            ->with(ProcessRequestMapCmd::class)
             ->andThrow(new TransxchangeException($message));
 
         $this->expectCommand(
@@ -114,7 +114,8 @@ class RequestMapTest extends AbstractConsumerTestCase
                 'item' => $item,
                 'retryAfter' => 900
             ],
-            new Result()
+            new Result(),
+            false
         );
 
         $result = $this->sut->processMessage($item);

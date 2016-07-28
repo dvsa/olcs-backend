@@ -63,7 +63,7 @@ class ReportDownload extends AbstractConsumer
             ]
         );
         try {
-            $downloadResult = $this->handleSideEffectCommand($command);
+            $downloadResult = $this->handleCommand($command);
         } catch (\Exception $e) {
             return $this->handleException($e, $item);
         }

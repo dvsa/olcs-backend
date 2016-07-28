@@ -68,7 +68,7 @@ class CpidOrganisationExportTest extends MockeryTestCase
 
             $commandHandlerManager->shouldReceive('handleCommand')
                 ->once()
-                ->with(m::type(Failed::class));
+                ->with(m::type(Failed::class), false);
         } else {
             $commandHandlerManager->shouldReceive('handleCommand')
                 ->once()
@@ -76,7 +76,7 @@ class CpidOrganisationExportTest extends MockeryTestCase
 
             $commandHandlerManager->shouldReceive('handleCommand')
                 ->once()
-                ->with(m::type(Complete::class));
+                ->with(m::type(Complete::class), false);
         }
 
         $cpidOrganisationExport = new CpidOrganisationExport($organisation, $commandHandlerManager);
