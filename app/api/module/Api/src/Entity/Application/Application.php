@@ -990,7 +990,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             // It is a goods variation and 0 operating centres have been added; AND
             // It is a goods variation and 0 operating centres have been updated with an increase
             // of vehicles or trailers
-            if ($this->getOperatingCentresAdded()->count() === 0 && !$this->hasIncreaseInOperatingCentre()) {
+            if (
+                $this->getOperatingCentresAdded()->count() === 0 &&
+                !$this->hasIncreaseInOperatingCentre() &&
+                !$this->isRealUpgrade()
+            ) {
                 return self::NOT_APPLICABLE;
             }
         }
