@@ -6,7 +6,7 @@ $ni = array_merge(
     $gb,
     [
         'application-review-financial-history-insolvencyConfirmation' => 'Confirm you are aware that you must tell
-            the DOE immediately of any insolvency proceedings that occur between the submission of your application and
+            the Dfl immediately of any insolvency proceedings that occur between the submission of your application and
             a decision being made on the application',
         'application-review-licence-history-public-inquiry-question' => 'Has anyone you’ve named in this application (including partners, directors and Transport Managers) ever attended a Public Inquiry before a Traffic Commissioner?',
         'application-review-licence-history-disqualified-question' => 'Has anyone you’ve named in this application (including partners, directors and Transport Managers) been disqualified from holding or obtaining an operator’s licence by any Traffic Commissioner?',

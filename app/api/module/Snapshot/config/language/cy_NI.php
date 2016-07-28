@@ -6,14 +6,14 @@ $ni = array_merge(
     $gb,
     [
         'application-review-financial-history-insolvencyConfirmation' => '{WELSH} Confirm that you are aware that you
-            must tell the DOE immediately of any insolvency proceedings that occur between the submission of your
+            must tell the Dfl immediately of any insolvency proceedings that occur between the submission of your
             application and a decision being made on the application',
         'application-review-licence-history-public-inquiry-question' => '{WELSH} Has any person named in the application
-            (including partners, directors or transport managers) ever attended a Public Inquiry before the DOE or a GB
+            (including partners, directors or transport managers) ever attended a Public Inquiry before the Dfl or a GB
             traffic commissioner?',
         'application-review-licence-history-disqualified-question' => '{WELSH} Has any person named in the application
             (including partners, directors or transport managers) been disqualified from holding or obtaining an
-            operator\'s licence by DOE or a GB traffic commissioner?',
+            operator\'s licence by Dfl or a GB traffic commissioner?',
         'application-review-convictions-penalties-question' => '{WELSH} Has any person named in this application,
             (including partners, directors and transport managers); any company of which a person named on this
             application is or has been a director; any parent company if you are a limited company; received any
