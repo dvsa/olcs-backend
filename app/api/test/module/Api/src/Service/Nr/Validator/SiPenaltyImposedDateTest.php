@@ -68,7 +68,7 @@ class SiPenaltyImposedDateTest extends TestCase
                     'endDate' => new \DateTime('2014-05-16 00:00:00'),
                 ],
                 false,
-                'Imposed penalty decision date later then end date'
+                'Imposed penalty decision date later than end date'
             ],
         ];
     }
