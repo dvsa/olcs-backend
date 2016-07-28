@@ -44,25 +44,44 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
      * @param array $expectedDtoData
      * @param mixed $result
      */
-    protected function expectCommand($class, $expectedDtoData, $result)
+    protected function expectCommand($class, $expectedDtoData, $result, $validate = true)
     {
-        $this->chm
-            ->shouldReceive('handleCommand')
-            ->with(
-                m::on(
-                    function ($cmd) use ($expectedDtoData, $class) {
-                        $matched = (
-                            is_a($cmd, $class)
-                            &&
-                            $cmd->getArrayCopy() == $expectedDtoData
-                        );
-                        return $matched;
-                    }
-                ),
-                false
-            )
-            ->once()
-            ->andReturn($result);
+        if ($validate) {
+            $this->chm
+                ->shouldReceive('handleCommand')
+                ->with(
+                    m::on(
+                        function ($cmd) use ($expectedDtoData, $class) {
+                            $matched = (
+                                is_a($cmd, $class)
+                                &&
+                                $cmd->getArrayCopy() == $expectedDtoData
+                            );
+                            return $matched;
+                        }
+                    )
+                )
+                ->once()
+                ->andReturn($result);
+        } else {
+            $this->chm
+                ->shouldReceive('handleCommand')
+                ->with(
+                    m::on(
+                        function ($cmd) use ($expectedDtoData, $class) {
+                            $matched = (
+                                is_a($cmd, $class)
+                                &&
+                                $cmd->getArrayCopy() == $expectedDtoData
+                            );
+                            return $matched;
+                        }
+                    ),
+                    false
+                )
+                ->once()
+                ->andReturn($result);
+        }
     }
 
     /**
@@ -77,7 +96,8 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
         $expectedDtoData,
         $exceptionClass,
         $exceptionMsg = '',
-        $retryAfter = 900
+        $retryAfter = 900,
+        $validate = true
     ) {
         $exception = new $exceptionClass($exceptionMsg);
 
@@ -86,23 +106,42 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
             $exception->setRetryAfter($retryAfter);
         }
 
-        $this->chm
-            ->shouldReceive('handleCommand')
-            ->with(
-                m::on(
-                    function ($cmd) use ($expectedDtoData, $class) {
-                        $matched = (
-                            is_a($cmd, $class)
-                            &&
-                            $cmd->getArrayCopy() == $expectedDtoData
-                        );
-                        return $matched;
-                    }
-                ),
-                false
-            )
-            ->once()
-            ->andThrow($exception);
+        if ($validate) {
+            $this->chm
+                ->shouldReceive('handleCommand')
+                ->with(
+                    m::on(
+                        function ($cmd) use ($expectedDtoData, $class) {
+                            $matched = (
+                                is_a($cmd, $class)
+                                &&
+                                $cmd->getArrayCopy() == $expectedDtoData
+                            );
+                            return $matched;
+                        }
+                    )
+                )
+                ->once()
+                ->andThrow($exception);
+        } else {
+            $this->chm
+                ->shouldReceive('handleCommand')
+                ->with(
+                    m::on(
+                        function ($cmd) use ($expectedDtoData, $class) {
+                            $matched = (
+                                is_a($cmd, $class)
+                                &&
+                                $cmd->getArrayCopy() == $expectedDtoData
+                            );
+                            return $matched;
+                        }
+                    ),
+                    false
+                )
+                ->once()
+                ->andThrow($exception);
+        }
     }
 
     /**

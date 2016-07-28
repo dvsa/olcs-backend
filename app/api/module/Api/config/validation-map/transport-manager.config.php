@@ -40,7 +40,7 @@ return [
     CommandHandler\Variation\TransportManagerDeleteDelta::class     => Misc\CanAccessApplicationWithId::class,
 
     CommandHandler\Tm\CreateNewUser::class                          => Misc\CanAccessApplicationWithApplication::class,
-    CommandHandler\Tm\UpdateNysiisName::class                       => Misc\IsInternalUser::class,
+    CommandHandler\Tm\UpdateNysiisName::class                       => Misc\IsSystemUser::class,
 
     CommandHandler\Email\SendTmApplication::class     => Misc\CanAccessTmaWithId::class,
     CommandHandler\TmEmployment\Create::class         => Handler\TmEmployment\Create::class,

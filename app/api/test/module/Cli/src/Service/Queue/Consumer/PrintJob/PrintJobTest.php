@@ -66,7 +66,8 @@ class PrintJobTest extends AbstractConsumerTestCase
                 'item' => $item,
                 'retryAfter' => $retryAfter
             ],
-            new Result()
+            new Result(),
+            false
         );
 
         $result = $this->sut->processMessage($item);

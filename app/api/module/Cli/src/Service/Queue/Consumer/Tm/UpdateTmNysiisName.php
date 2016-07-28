@@ -7,7 +7,7 @@ namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm;
 
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
-use Dvsa\Olcs\Api\Domain\Command\Tm\UpdateNysiisNameRequest as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Tm\UpdateNysiisName as Cmd;
 
 use Zend\Serializer\Adapter\Json as ZendJson;
 

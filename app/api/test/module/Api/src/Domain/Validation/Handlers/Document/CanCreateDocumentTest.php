@@ -26,6 +26,14 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
 
     public function testIsValid()
     {
+        $this->auth->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->andReturn(false);
+        $this->mockUser()->shouldReceive('isSystemUser')
+            ->andReturn(false)
+            ->once()
+            ->getMock();
+
         /** @var CommandInterface $dto */
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getLicence')->andReturn(176);
@@ -51,6 +59,14 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
 
     public function testIsValidOnFalse()
     {
+        $this->auth->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->andReturn(false);
+        $this->mockUser()->shouldReceive('isSystemUser')
+            ->andReturn(false)
+            ->once()
+            ->getMock();
+
         /** @var CommandInterface $dto */
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getLicence')->andReturn(176);
@@ -76,6 +92,14 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
 
     public function testIsValidNoChecks()
     {
+        $this->auth->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->andReturn(false);
+        $this->mockUser()->shouldReceive('isSystemUser')
+            ->andReturn(false)
+            ->once()
+            ->getMock();
+
         /** @var CommandInterface $dto */
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getLicence')->andReturn(null);
@@ -88,5 +112,14 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
         $dto->shouldReceive('getSubmission')->andReturn(null);
 
         $this->assertFalse($this->sut->isValid($dto));
+    }
+
+    public function testIsInternalUser()
+    {
+        $this->auth->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->andReturn(true);
+        $dto = m::mock(CommandInterface::class);
+        $this->assertTrue($this->sut->isValid($dto));
     }
 }
