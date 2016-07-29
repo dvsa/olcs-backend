@@ -179,7 +179,8 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     /**
      * Set the checklist document
      *
-     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $checklistDocument
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $checklistDocument entity being set as the value
+     *
      * @return ContinuationDetail
      */
     public function setChecklistDocument($checklistDocument)
@@ -202,7 +203,8 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     /**
      * Set the continuation
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Continuation $continuation
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Continuation $continuation entity being set as the value
+     *
      * @return ContinuationDetail
      */
     public function setContinuation($continuation)
@@ -225,7 +227,8 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return ContinuationDetail
      */
     public function setCreatedBy($createdBy)
@@ -248,7 +251,8 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return ContinuationDetail
      */
     public function setCreatedOn($createdOn)
@@ -271,7 +275,8 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return ContinuationDetail
      */
     public function setId($id)
@@ -294,7 +299,8 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return ContinuationDetail
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -317,7 +323,8 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return ContinuationDetail
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -340,7 +347,8 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return ContinuationDetail
      */
     public function setLicence($licence)
@@ -363,7 +371,8 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     /**
      * Set the received
      *
-     * @param string $received
+     * @param string $received new value being set
+     *
      * @return ContinuationDetail
      */
     public function setReceived($received)
@@ -386,7 +395,8 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     /**
      * Set the status
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status entity being set as the value
+     *
      * @return ContinuationDetail
      */
     public function setStatus($status)
@@ -409,7 +419,8 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     /**
      * Set the tot auth vehicles
      *
-     * @param int $totAuthVehicles
+     * @param int $totAuthVehicles new value being set
+     *
      * @return ContinuationDetail
      */
     public function setTotAuthVehicles($totAuthVehicles)
@@ -432,7 +443,8 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     /**
      * Set the tot community licences
      *
-     * @param int $totCommunityLicences
+     * @param int $totCommunityLicences new value being set
+     *
      * @return ContinuationDetail
      */
     public function setTotCommunityLicences($totCommunityLicences)
@@ -455,7 +467,8 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     /**
      * Set the tot psv discs
      *
-     * @param int $totPsvDiscs
+     * @param int $totPsvDiscs new value being set
+     *
      * @return ContinuationDetail
      */
     public function setTotPsvDiscs($totPsvDiscs)
@@ -478,7 +491,8 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return ContinuationDetail
      */
     public function setVersion($version)
@@ -502,6 +516,8 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -512,6 +528,8 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -521,7 +539,9 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

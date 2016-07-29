@@ -65,12 +65,19 @@ abstract class AbstractBusServiceType implements BundleSerializableInterface, Js
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->busRegs = new ArrayCollection();
@@ -79,7 +86,8 @@ abstract class AbstractBusServiceType implements BundleSerializableInterface, Js
     /**
      * Set the bus reg
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs collection being set as the value
+     *
      * @return BusServiceType
      */
     public function setBusRegs($busRegs)
@@ -102,7 +110,8 @@ abstract class AbstractBusServiceType implements BundleSerializableInterface, Js
     /**
      * Add a bus regs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs collection being added
+     *
      * @return BusServiceType
      */
     public function addBusRegs($busRegs)
@@ -124,7 +133,8 @@ abstract class AbstractBusServiceType implements BundleSerializableInterface, Js
     /**
      * Remove a bus regs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs collection being removed
+     *
      * @return BusServiceType
      */
     public function removeBusRegs($busRegs)
@@ -139,7 +149,8 @@ abstract class AbstractBusServiceType implements BundleSerializableInterface, Js
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return BusServiceType
      */
     public function setDescription($description)
@@ -162,7 +173,8 @@ abstract class AbstractBusServiceType implements BundleSerializableInterface, Js
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return BusServiceType
      */
     public function setId($id)
@@ -185,7 +197,8 @@ abstract class AbstractBusServiceType implements BundleSerializableInterface, Js
     /**
      * Set the txc name
      *
-     * @param string $txcName
+     * @param string $txcName new value being set
+     *
      * @return BusServiceType
      */
     public function setTxcName($txcName)
@@ -210,7 +223,9 @@ abstract class AbstractBusServiceType implements BundleSerializableInterface, Js
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

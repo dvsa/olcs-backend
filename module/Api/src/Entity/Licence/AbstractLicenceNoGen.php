@@ -47,7 +47,8 @@ abstract class AbstractLicenceNoGen implements BundleSerializableInterface, Json
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return LicenceNoGen
      */
     public function setId($id)
@@ -70,7 +71,8 @@ abstract class AbstractLicenceNoGen implements BundleSerializableInterface, Json
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return LicenceNoGen
      */
     public function setLicence($licence)
@@ -95,7 +97,9 @@ abstract class AbstractLicenceNoGen implements BundleSerializableInterface, Json
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

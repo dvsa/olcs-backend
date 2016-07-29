@@ -228,12 +228,19 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->applicationOrganisationPersons = new ArrayCollection();
@@ -245,7 +252,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the birth date
      *
-     * @param \DateTime $birthDate
+     * @param \DateTime $birthDate new value being set
+     *
      * @return Person
      */
     public function setBirthDate($birthDate)
@@ -268,7 +276,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the birth place
      *
-     * @param string $birthPlace
+     * @param string $birthPlace new value being set
+     *
      * @return Person
      */
     public function setBirthPlace($birthPlace)
@@ -291,7 +300,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Person
      */
     public function setCreatedBy($createdBy)
@@ -314,7 +324,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Person
      */
     public function setCreatedOn($createdOn)
@@ -337,7 +348,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return Person
      */
     public function setDeletedDate($deletedDate)
@@ -360,7 +372,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the family name
      *
-     * @param string $familyName
+     * @param string $familyName new value being set
+     *
      * @return Person
      */
     public function setFamilyName($familyName)
@@ -383,7 +396,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the forename
      *
-     * @param string $forename
+     * @param string $forename new value being set
+     *
      * @return Person
      */
     public function setForename($forename)
@@ -406,7 +420,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Person
      */
     public function setId($id)
@@ -429,7 +444,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Person
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -452,7 +468,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Person
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -475,7 +492,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return Person
      */
     public function setOlbsKey($olbsKey)
@@ -498,7 +516,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the olbs type
      *
-     * @param string $olbsType
+     * @param string $olbsType new value being set
+     *
      * @return Person
      */
     public function setOlbsType($olbsType)
@@ -521,7 +540,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the other name
      *
-     * @param string $otherName
+     * @param string $otherName new value being set
+     *
      * @return Person
      */
     public function setOtherName($otherName)
@@ -544,7 +564,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the title
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $title
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $title entity being set as the value
+     *
      * @return Person
      */
     public function setTitle($title)
@@ -567,7 +588,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Person
      */
     public function setVersion($version)
@@ -590,7 +612,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the application organisation person
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons collection being set as the value
+     *
      * @return Person
      */
     public function setApplicationOrganisationPersons($applicationOrganisationPersons)
@@ -613,7 +636,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Add a application organisation persons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons collection being added
+     *
      * @return Person
      */
     public function addApplicationOrganisationPersons($applicationOrganisationPersons)
@@ -635,7 +659,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a application organisation persons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons collection being removed
+     *
      * @return Person
      */
     public function removeApplicationOrganisationPersons($applicationOrganisationPersons)
@@ -650,7 +675,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the contact detail
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails collection being set as the value
+     *
      * @return Person
      */
     public function setContactDetails($contactDetails)
@@ -673,7 +699,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Add a contact details
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails collection being added
+     *
      * @return Person
      */
     public function addContactDetails($contactDetails)
@@ -695,7 +722,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a contact details
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails collection being removed
+     *
      * @return Person
      */
     public function removeContactDetails($contactDetails)
@@ -710,7 +738,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the disqualification
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications
+     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications collection being set as the value
+     *
      * @return Person
      */
     public function setDisqualifications($disqualifications)
@@ -733,7 +762,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Add a disqualifications
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications
+     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications collection being added
+     *
      * @return Person
      */
     public function addDisqualifications($disqualifications)
@@ -755,7 +785,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a disqualifications
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications
+     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications collection being removed
+     *
      * @return Person
      */
     public function removeDisqualifications($disqualifications)
@@ -770,7 +801,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the organisation person
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons collection being set as the value
+     *
      * @return Person
      */
     public function setOrganisationPersons($organisationPersons)
@@ -793,7 +825,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Add a organisation persons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons collection being added
+     *
      * @return Person
      */
     public function addOrganisationPersons($organisationPersons)
@@ -815,7 +848,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a organisation persons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons collection being removed
+     *
      * @return Person
      */
     public function removeOrganisationPersons($organisationPersons)
@@ -831,6 +865,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -841,6 +877,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -850,7 +888,9 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

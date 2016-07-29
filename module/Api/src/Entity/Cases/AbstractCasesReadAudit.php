@@ -77,7 +77,8 @@ abstract class AbstractCasesReadAudit implements BundleSerializableInterface, Js
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return CasesReadAudit
      */
     public function setCase($case)
@@ -100,7 +101,8 @@ abstract class AbstractCasesReadAudit implements BundleSerializableInterface, Js
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return CasesReadAudit
      */
     public function setCreatedOn($createdOn)
@@ -123,7 +125,8 @@ abstract class AbstractCasesReadAudit implements BundleSerializableInterface, Js
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return CasesReadAudit
      */
     public function setId($id)
@@ -146,7 +149,8 @@ abstract class AbstractCasesReadAudit implements BundleSerializableInterface, Js
     /**
      * Set the user
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $user
+     * @param \Dvsa\Olcs\Api\Entity\User\User $user entity being set as the value
+     *
      * @return CasesReadAudit
      */
     public function setUser($user)
@@ -170,6 +174,8 @@ abstract class AbstractCasesReadAudit implements BundleSerializableInterface, Js
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -180,7 +186,9 @@ abstract class AbstractCasesReadAudit implements BundleSerializableInterface, Js
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

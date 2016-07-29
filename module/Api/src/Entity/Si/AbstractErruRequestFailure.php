@@ -121,7 +121,8 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return ErruRequestFailure
      */
     public function setCreatedBy($createdBy)
@@ -144,7 +145,8 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return ErruRequestFailure
      */
     public function setCreatedOn($createdOn)
@@ -167,7 +169,8 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
     /**
      * Set the document
      *
-     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $document
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $document entity being set as the value
+     *
      * @return ErruRequestFailure
      */
     public function setDocument($document)
@@ -190,7 +193,8 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
     /**
      * Set the errors
      *
-     * @param string $errors
+     * @param string $errors new value being set
+     *
      * @return ErruRequestFailure
      */
     public function setErrors($errors)
@@ -213,7 +217,8 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return ErruRequestFailure
      */
     public function setId($id)
@@ -236,7 +241,8 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
     /**
      * Set the input
      *
-     * @param string $input
+     * @param string $input new value being set
+     *
      * @return ErruRequestFailure
      */
     public function setInput($input)
@@ -259,7 +265,8 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return ErruRequestFailure
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -282,7 +289,8 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return ErruRequestFailure
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -305,7 +313,8 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return ErruRequestFailure
      */
     public function setVersion($version)
@@ -329,6 +338,8 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -339,6 +350,8 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -348,7 +361,9 @@ abstract class AbstractErruRequestFailure implements BundleSerializableInterface
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

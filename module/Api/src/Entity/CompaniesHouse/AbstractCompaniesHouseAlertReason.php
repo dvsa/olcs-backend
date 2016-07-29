@@ -73,7 +73,8 @@ abstract class AbstractCompaniesHouseAlertReason implements BundleSerializableIn
     /**
      * Set the companies house alert
      *
-     * @param \Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert $companiesHouseAlert
+     * @param \Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert $companiesHouseAlert entity being set as the value
+     *
      * @return CompaniesHouseAlertReason
      */
     public function setCompaniesHouseAlert($companiesHouseAlert)
@@ -96,7 +97,8 @@ abstract class AbstractCompaniesHouseAlertReason implements BundleSerializableIn
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return CompaniesHouseAlertReason
      */
     public function setId($id)
@@ -119,7 +121,8 @@ abstract class AbstractCompaniesHouseAlertReason implements BundleSerializableIn
     /**
      * Set the reason type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $reasonType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $reasonType entity being set as the value
+     *
      * @return CompaniesHouseAlertReason
      */
     public function setReasonType($reasonType)
@@ -142,7 +145,8 @@ abstract class AbstractCompaniesHouseAlertReason implements BundleSerializableIn
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return CompaniesHouseAlertReason
      */
     public function setVersion($version)
@@ -167,7 +171,9 @@ abstract class AbstractCompaniesHouseAlertReason implements BundleSerializableIn
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

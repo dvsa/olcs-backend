@@ -133,12 +133,19 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->reasons = new ArrayCollection();
@@ -147,7 +154,8 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Set the company or llp no
      *
-     * @param string $companyOrLlpNo
+     * @param string $companyOrLlpNo new value being set
+     *
      * @return CompaniesHouseAlert
      */
     public function setCompanyOrLlpNo($companyOrLlpNo)
@@ -170,7 +178,8 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return CompaniesHouseAlert
      */
     public function setCreatedBy($createdBy)
@@ -193,7 +202,8 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return CompaniesHouseAlert
      */
     public function setCreatedOn($createdOn)
@@ -216,7 +226,8 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return CompaniesHouseAlert
      */
     public function setId($id)
@@ -239,7 +250,8 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Set the is closed
      *
-     * @param string $isClosed
+     * @param string $isClosed new value being set
+     *
      * @return CompaniesHouseAlert
      */
     public function setIsClosed($isClosed)
@@ -262,7 +274,8 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return CompaniesHouseAlert
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -285,7 +298,8 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return CompaniesHouseAlert
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -308,7 +322,8 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Set the organisation
      *
-     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation entity being set as the value
+     *
      * @return CompaniesHouseAlert
      */
     public function setOrganisation($organisation)
@@ -331,7 +346,8 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return CompaniesHouseAlert
      */
     public function setVersion($version)
@@ -354,7 +370,8 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Set the reason
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being set as the value
+     *
      * @return CompaniesHouseAlert
      */
     public function setReasons($reasons)
@@ -377,7 +394,8 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Add a reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being added
+     *
      * @return CompaniesHouseAlert
      */
     public function addReasons($reasons)
@@ -399,7 +417,8 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Remove a reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being removed
+     *
      * @return CompaniesHouseAlert
      */
     public function removeReasons($reasons)
@@ -415,6 +434,8 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -425,6 +446,8 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -434,7 +457,9 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

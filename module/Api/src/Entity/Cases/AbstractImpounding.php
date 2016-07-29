@@ -230,12 +230,19 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->impoundingLegislationTypes = new ArrayCollection();
@@ -244,7 +251,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the application receipt date
      *
-     * @param \DateTime $applicationReceiptDate
+     * @param \DateTime $applicationReceiptDate new value being set
+     *
      * @return Impounding
      */
     public function setApplicationReceiptDate($applicationReceiptDate)
@@ -267,7 +275,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return Impounding
      */
     public function setCase($case)
@@ -290,7 +299,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the close date
      *
-     * @param \DateTime $closeDate
+     * @param \DateTime $closeDate new value being set
+     *
      * @return Impounding
      */
     public function setCloseDate($closeDate)
@@ -313,7 +323,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Impounding
      */
     public function setCreatedBy($createdBy)
@@ -336,7 +347,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Impounding
      */
     public function setCreatedOn($createdOn)
@@ -359,7 +371,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the hearing date
      *
-     * @param \DateTime $hearingDate
+     * @param \DateTime $hearingDate new value being set
+     *
      * @return Impounding
      */
     public function setHearingDate($hearingDate)
@@ -382,7 +395,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Impounding
      */
     public function setId($id)
@@ -405,7 +419,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the impounding legislation type
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes
+     * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes collection being set as the value
+     *
      * @return Impounding
      */
     public function setImpoundingLegislationTypes($impoundingLegislationTypes)
@@ -428,7 +443,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Add a impounding legislation types
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes
+     * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes collection being added
+     *
      * @return Impounding
      */
     public function addImpoundingLegislationTypes($impoundingLegislationTypes)
@@ -450,7 +466,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Remove a impounding legislation types
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes
+     * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes collection being removed
+     *
      * @return Impounding
      */
     public function removeImpoundingLegislationTypes($impoundingLegislationTypes)
@@ -465,7 +482,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the impounding type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $impoundingType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $impoundingType entity being set as the value
+     *
      * @return Impounding
      */
     public function setImpoundingType($impoundingType)
@@ -488,7 +506,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Impounding
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -511,7 +530,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Impounding
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -534,7 +554,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the notes
      *
-     * @param string $notes
+     * @param string $notes new value being set
+     *
      * @return Impounding
      */
     public function setNotes($notes)
@@ -557,7 +578,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the outcome
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $outcome
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $outcome entity being set as the value
+     *
      * @return Impounding
      */
     public function setOutcome($outcome)
@@ -580,7 +602,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the outcome sent date
      *
-     * @param \DateTime $outcomeSentDate
+     * @param \DateTime $outcomeSentDate new value being set
+     *
      * @return Impounding
      */
     public function setOutcomeSentDate($outcomeSentDate)
@@ -603,7 +626,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the presiding tc
      *
-     * @param \Dvsa\Olcs\Api\Entity\Pi\PresidingTc $presidingTc
+     * @param \Dvsa\Olcs\Api\Entity\Pi\PresidingTc $presidingTc entity being set as the value
+     *
      * @return Impounding
      */
     public function setPresidingTc($presidingTc)
@@ -626,7 +650,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the venue
      *
-     * @param \Dvsa\Olcs\Api\Entity\Venue $venue
+     * @param \Dvsa\Olcs\Api\Entity\Venue $venue entity being set as the value
+     *
      * @return Impounding
      */
     public function setVenue($venue)
@@ -649,7 +674,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the venue other
      *
-     * @param string $venueOther
+     * @param string $venueOther new value being set
+     *
      * @return Impounding
      */
     public function setVenueOther($venueOther)
@@ -672,7 +698,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Impounding
      */
     public function setVersion($version)
@@ -695,7 +722,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the vrm
      *
-     * @param string $vrm
+     * @param string $vrm new value being set
+     *
      * @return Impounding
      */
     public function setVrm($vrm)
@@ -719,6 +747,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -729,6 +759,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -738,7 +770,9 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

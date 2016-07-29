@@ -109,7 +109,8 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return TeamPrinter
      */
     public function setDeletedDate($deletedDate)
@@ -132,7 +133,8 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return TeamPrinter
      */
     public function setId($id)
@@ -155,7 +157,8 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
     /**
      * Set the printer
      *
-     * @param \Dvsa\Olcs\Api\Entity\PrintScan\Printer $printer
+     * @param \Dvsa\Olcs\Api\Entity\PrintScan\Printer $printer entity being set as the value
+     *
      * @return TeamPrinter
      */
     public function setPrinter($printer)
@@ -178,7 +181,8 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
     /**
      * Set the sub category
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory
+     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory entity being set as the value
+     *
      * @return TeamPrinter
      */
     public function setSubCategory($subCategory)
@@ -201,7 +205,8 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
     /**
      * Set the team
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\Team $team
+     * @param \Dvsa\Olcs\Api\Entity\User\Team $team entity being set as the value
+     *
      * @return TeamPrinter
      */
     public function setTeam($team)
@@ -224,7 +229,8 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
     /**
      * Set the user
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $user
+     * @param \Dvsa\Olcs\Api\Entity\User\User $user entity being set as the value
+     *
      * @return TeamPrinter
      */
     public function setUser($user)
@@ -247,7 +253,8 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return TeamPrinter
      */
     public function setVersion($version)
@@ -272,7 +279,9 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

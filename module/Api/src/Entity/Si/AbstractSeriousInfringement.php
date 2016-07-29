@@ -239,12 +239,19 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->appliedPenalties = new ArrayCollection();
@@ -255,7 +262,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return SeriousInfringement
      */
     public function setCase($case)
@@ -278,7 +286,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the check date
      *
-     * @param \DateTime $checkDate
+     * @param \DateTime $checkDate new value being set
+     *
      * @return SeriousInfringement
      */
     public function setCheckDate($checkDate)
@@ -301,7 +310,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return SeriousInfringement
      */
     public function setCreatedBy($createdBy)
@@ -324,7 +334,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return SeriousInfringement
      */
     public function setCreatedOn($createdOn)
@@ -347,7 +358,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return SeriousInfringement
      */
     public function setDeletedDate($deletedDate)
@@ -370,7 +382,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return SeriousInfringement
      */
     public function setId($id)
@@ -393,7 +406,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the infringement date
      *
-     * @param \DateTime $infringementDate
+     * @param \DateTime $infringementDate new value being set
+     *
      * @return SeriousInfringement
      */
     public function setInfringementDate($infringementDate)
@@ -416,7 +430,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return SeriousInfringement
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -439,7 +454,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return SeriousInfringement
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -462,7 +478,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the member state code
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $memberStateCode
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $memberStateCode entity being set as the value
+     *
      * @return SeriousInfringement
      */
     public function setMemberStateCode($memberStateCode)
@@ -485,7 +502,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the notification number
      *
-     * @param string $notificationNumber
+     * @param string $notificationNumber new value being set
+     *
      * @return SeriousInfringement
      */
     public function setNotificationNumber($notificationNumber)
@@ -508,7 +526,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return SeriousInfringement
      */
     public function setOlbsKey($olbsKey)
@@ -531,7 +550,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the olbs type
      *
-     * @param string $olbsType
+     * @param string $olbsType new value being set
+     *
      * @return SeriousInfringement
      */
     public function setOlbsType($olbsType)
@@ -554,7 +574,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the reason
      *
-     * @param string $reason
+     * @param string $reason new value being set
+     *
      * @return SeriousInfringement
      */
     public function setReason($reason)
@@ -577,7 +598,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the si category
      *
-     * @param \Dvsa\Olcs\Api\Entity\Si\SiCategory $siCategory
+     * @param \Dvsa\Olcs\Api\Entity\Si\SiCategory $siCategory entity being set as the value
+     *
      * @return SeriousInfringement
      */
     public function setSiCategory($siCategory)
@@ -600,7 +622,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the si category type
      *
-     * @param \Dvsa\Olcs\Api\Entity\Si\SiCategoryType $siCategoryType
+     * @param \Dvsa\Olcs\Api\Entity\Si\SiCategoryType $siCategoryType entity being set as the value
+     *
      * @return SeriousInfringement
      */
     public function setSiCategoryType($siCategoryType)
@@ -623,7 +646,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return SeriousInfringement
      */
     public function setVersion($version)
@@ -646,7 +670,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the applied penaltie
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $appliedPenalties
+     * @param \Doctrine\Common\Collections\ArrayCollection $appliedPenalties collection being set as the value
+     *
      * @return SeriousInfringement
      */
     public function setAppliedPenalties($appliedPenalties)
@@ -669,7 +694,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Add a applied penalties
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $appliedPenalties
+     * @param \Doctrine\Common\Collections\ArrayCollection $appliedPenalties collection being added
+     *
      * @return SeriousInfringement
      */
     public function addAppliedPenalties($appliedPenalties)
@@ -691,7 +717,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Remove a applied penalties
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $appliedPenalties
+     * @param \Doctrine\Common\Collections\ArrayCollection $appliedPenalties collection being removed
+     *
      * @return SeriousInfringement
      */
     public function removeAppliedPenalties($appliedPenalties)
@@ -706,7 +733,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the imposed erru
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $imposedErrus
+     * @param \Doctrine\Common\Collections\ArrayCollection $imposedErrus collection being set as the value
+     *
      * @return SeriousInfringement
      */
     public function setImposedErrus($imposedErrus)
@@ -729,7 +757,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Add a imposed errus
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $imposedErrus
+     * @param \Doctrine\Common\Collections\ArrayCollection $imposedErrus collection being added
+     *
      * @return SeriousInfringement
      */
     public function addImposedErrus($imposedErrus)
@@ -751,7 +780,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Remove a imposed errus
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $imposedErrus
+     * @param \Doctrine\Common\Collections\ArrayCollection $imposedErrus collection being removed
+     *
      * @return SeriousInfringement
      */
     public function removeImposedErrus($imposedErrus)
@@ -766,7 +796,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the requested erru
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $requestedErrus
+     * @param \Doctrine\Common\Collections\ArrayCollection $requestedErrus collection being set as the value
+     *
      * @return SeriousInfringement
      */
     public function setRequestedErrus($requestedErrus)
@@ -789,7 +820,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Add a requested errus
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $requestedErrus
+     * @param \Doctrine\Common\Collections\ArrayCollection $requestedErrus collection being added
+     *
      * @return SeriousInfringement
      */
     public function addRequestedErrus($requestedErrus)
@@ -811,7 +843,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Remove a requested errus
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $requestedErrus
+     * @param \Doctrine\Common\Collections\ArrayCollection $requestedErrus collection being removed
+     *
      * @return SeriousInfringement
      */
     public function removeRequestedErrus($requestedErrus)
@@ -827,6 +860,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -837,6 +872,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -846,7 +883,9 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

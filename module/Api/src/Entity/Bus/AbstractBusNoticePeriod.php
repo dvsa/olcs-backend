@@ -117,7 +117,8 @@ abstract class AbstractBusNoticePeriod implements BundleSerializableInterface, J
     /**
      * Set the cancellation period
      *
-     * @param int $cancellationPeriod
+     * @param int $cancellationPeriod new value being set
+     *
      * @return BusNoticePeriod
      */
     public function setCancellationPeriod($cancellationPeriod)
@@ -140,7 +141,8 @@ abstract class AbstractBusNoticePeriod implements BundleSerializableInterface, J
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return BusNoticePeriod
      */
     public function setCreatedBy($createdBy)
@@ -163,7 +165,8 @@ abstract class AbstractBusNoticePeriod implements BundleSerializableInterface, J
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return BusNoticePeriod
      */
     public function setCreatedOn($createdOn)
@@ -186,7 +189,8 @@ abstract class AbstractBusNoticePeriod implements BundleSerializableInterface, J
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return BusNoticePeriod
      */
     public function setId($id)
@@ -209,7 +213,8 @@ abstract class AbstractBusNoticePeriod implements BundleSerializableInterface, J
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return BusNoticePeriod
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -232,7 +237,8 @@ abstract class AbstractBusNoticePeriod implements BundleSerializableInterface, J
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return BusNoticePeriod
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -255,7 +261,8 @@ abstract class AbstractBusNoticePeriod implements BundleSerializableInterface, J
     /**
      * Set the notice area
      *
-     * @param string $noticeArea
+     * @param string $noticeArea new value being set
+     *
      * @return BusNoticePeriod
      */
     public function setNoticeArea($noticeArea)
@@ -278,7 +285,8 @@ abstract class AbstractBusNoticePeriod implements BundleSerializableInterface, J
     /**
      * Set the standard period
      *
-     * @param int $standardPeriod
+     * @param int $standardPeriod new value being set
+     *
      * @return BusNoticePeriod
      */
     public function setStandardPeriod($standardPeriod)
@@ -301,7 +309,8 @@ abstract class AbstractBusNoticePeriod implements BundleSerializableInterface, J
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return BusNoticePeriod
      */
     public function setVersion($version)
@@ -325,6 +334,8 @@ abstract class AbstractBusNoticePeriod implements BundleSerializableInterface, J
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -335,6 +346,8 @@ abstract class AbstractBusNoticePeriod implements BundleSerializableInterface, J
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -344,7 +357,9 @@ abstract class AbstractBusNoticePeriod implements BundleSerializableInterface, J
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

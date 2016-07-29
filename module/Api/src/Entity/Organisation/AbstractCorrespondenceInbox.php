@@ -160,7 +160,8 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
     /**
      * Set the accessed
      *
-     * @param string $accessed
+     * @param string $accessed new value being set
+     *
      * @return CorrespondenceInbox
      */
     public function setAccessed($accessed)
@@ -183,7 +184,8 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
     /**
      * Set the archived
      *
-     * @param string $archived
+     * @param string $archived new value being set
+     *
      * @return CorrespondenceInbox
      */
     public function setArchived($archived)
@@ -206,7 +208,8 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return CorrespondenceInbox
      */
     public function setCreatedBy($createdBy)
@@ -229,7 +232,8 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return CorrespondenceInbox
      */
     public function setCreatedOn($createdOn)
@@ -252,7 +256,8 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
     /**
      * Set the document
      *
-     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $document
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $document entity being set as the value
+     *
      * @return CorrespondenceInbox
      */
     public function setDocument($document)
@@ -275,7 +280,8 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
     /**
      * Set the email reminder sent
      *
-     * @param string $emailReminderSent
+     * @param string $emailReminderSent new value being set
+     *
      * @return CorrespondenceInbox
      */
     public function setEmailReminderSent($emailReminderSent)
@@ -298,7 +304,8 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return CorrespondenceInbox
      */
     public function setId($id)
@@ -321,7 +328,8 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return CorrespondenceInbox
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -344,7 +352,8 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return CorrespondenceInbox
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -367,7 +376,8 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return CorrespondenceInbox
      */
     public function setLicence($licence)
@@ -390,7 +400,8 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return CorrespondenceInbox
      */
     public function setOlbsKey($olbsKey)
@@ -413,7 +424,8 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
     /**
      * Set the printed
      *
-     * @param string $printed
+     * @param string $printed new value being set
+     *
      * @return CorrespondenceInbox
      */
     public function setPrinted($printed)
@@ -436,7 +448,8 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return CorrespondenceInbox
      */
     public function setVersion($version)
@@ -460,6 +473,8 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -470,6 +485,8 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -479,7 +496,9 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -112,7 +112,8 @@ abstract class AbstractInspectionEmail implements BundleSerializableInterface, J
     /**
      * Set the email status
      *
-     * @param string $emailStatus
+     * @param string $emailStatus new value being set
+     *
      * @return InspectionEmail
      */
     public function setEmailStatus($emailStatus)
@@ -135,7 +136,8 @@ abstract class AbstractInspectionEmail implements BundleSerializableInterface, J
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return InspectionEmail
      */
     public function setId($id)
@@ -158,7 +160,8 @@ abstract class AbstractInspectionEmail implements BundleSerializableInterface, J
     /**
      * Set the inspection request
      *
-     * @param \Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest $inspectionRequest
+     * @param \Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest $inspectionRequest entity being set as the value
+     *
      * @return InspectionEmail
      */
     public function setInspectionRequest($inspectionRequest)
@@ -181,7 +184,8 @@ abstract class AbstractInspectionEmail implements BundleSerializableInterface, J
     /**
      * Set the message body
      *
-     * @param string $messageBody
+     * @param string $messageBody new value being set
+     *
      * @return InspectionEmail
      */
     public function setMessageBody($messageBody)
@@ -204,7 +208,8 @@ abstract class AbstractInspectionEmail implements BundleSerializableInterface, J
     /**
      * Set the processed
      *
-     * @param string $processed
+     * @param string $processed new value being set
+     *
      * @return InspectionEmail
      */
     public function setProcessed($processed)
@@ -227,7 +232,8 @@ abstract class AbstractInspectionEmail implements BundleSerializableInterface, J
     /**
      * Set the received date
      *
-     * @param \DateTime $receivedDate
+     * @param \DateTime $receivedDate new value being set
+     *
      * @return InspectionEmail
      */
     public function setReceivedDate($receivedDate)
@@ -250,7 +256,8 @@ abstract class AbstractInspectionEmail implements BundleSerializableInterface, J
     /**
      * Set the sender email address
      *
-     * @param string $senderEmailAddress
+     * @param string $senderEmailAddress new value being set
+     *
      * @return InspectionEmail
      */
     public function setSenderEmailAddress($senderEmailAddress)
@@ -273,7 +280,8 @@ abstract class AbstractInspectionEmail implements BundleSerializableInterface, J
     /**
      * Set the subject
      *
-     * @param string $subject
+     * @param string $subject new value being set
+     *
      * @return InspectionEmail
      */
     public function setSubject($subject)
@@ -296,7 +304,8 @@ abstract class AbstractInspectionEmail implements BundleSerializableInterface, J
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return InspectionEmail
      */
     public function setVersion($version)
@@ -321,7 +330,9 @@ abstract class AbstractInspectionEmail implements BundleSerializableInterface, J
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

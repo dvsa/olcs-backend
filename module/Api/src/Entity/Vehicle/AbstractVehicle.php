@@ -214,12 +214,19 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->licenceVehicles = new ArrayCollection();
@@ -228,7 +235,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the certificate no
      *
-     * @param string $certificateNo
+     * @param string $certificateNo new value being set
+     *
      * @return Vehicle
      */
     public function setCertificateNo($certificateNo)
@@ -251,7 +259,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Vehicle
      */
     public function setCreatedBy($createdBy)
@@ -274,7 +283,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Vehicle
      */
     public function setCreatedOn($createdOn)
@@ -297,7 +307,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return Vehicle
      */
     public function setDeletedDate($deletedDate)
@@ -320,7 +331,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Vehicle
      */
     public function setId($id)
@@ -343,7 +355,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Vehicle
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -366,7 +379,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Vehicle
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -389,7 +403,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the make model
      *
-     * @param string $makeModel
+     * @param string $makeModel new value being set
+     *
      * @return Vehicle
      */
     public function setMakeModel($makeModel)
@@ -412,7 +427,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return Vehicle
      */
     public function setOlbsKey($olbsKey)
@@ -435,7 +451,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the plated weight
      *
-     * @param int $platedWeight
+     * @param int $platedWeight new value being set
+     *
      * @return Vehicle
      */
     public function setPlatedWeight($platedWeight)
@@ -458,7 +475,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the section26
      *
-     * @param boolean $section26
+     * @param boolean $section26 new value being set
+     *
      * @return Vehicle
      */
     public function setSection26($section26)
@@ -481,7 +499,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the section26 curtail
      *
-     * @param boolean $section26Curtail
+     * @param boolean $section26Curtail new value being set
+     *
      * @return Vehicle
      */
     public function setSection26Curtail($section26Curtail)
@@ -504,7 +523,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the section26 revoked
      *
-     * @param boolean $section26Revoked
+     * @param boolean $section26Revoked new value being set
+     *
      * @return Vehicle
      */
     public function setSection26Revoked($section26Revoked)
@@ -527,7 +547,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the section26 suspend
      *
-     * @param boolean $section26Suspend
+     * @param boolean $section26Suspend new value being set
+     *
      * @return Vehicle
      */
     public function setSection26Suspend($section26Suspend)
@@ -550,7 +571,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Vehicle
      */
     public function setVersion($version)
@@ -573,7 +595,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the vi action
      *
-     * @param string $viAction
+     * @param string $viAction new value being set
+     *
      * @return Vehicle
      */
     public function setViAction($viAction)
@@ -596,7 +619,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the vrm
      *
-     * @param string $vrm
+     * @param string $vrm new value being set
+     *
      * @return Vehicle
      */
     public function setVrm($vrm)
@@ -619,7 +643,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the licence vehicle
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles collection being set as the value
+     *
      * @return Vehicle
      */
     public function setLicenceVehicles($licenceVehicles)
@@ -642,7 +667,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Add a licence vehicles
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles collection being added
+     *
      * @return Vehicle
      */
     public function addLicenceVehicles($licenceVehicles)
@@ -664,7 +690,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Remove a licence vehicles
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles collection being removed
+     *
      * @return Vehicle
      */
     public function removeLicenceVehicles($licenceVehicles)
@@ -680,6 +707,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -690,6 +719,8 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -699,7 +730,9 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -202,7 +202,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return DiscSequence
      */
     public function setCreatedBy($createdBy)
@@ -225,7 +226,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return DiscSequence
      */
     public function setCreatedOn($createdOn)
@@ -248,7 +250,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the goods or psv
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $goodsOrPsv
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $goodsOrPsv entity being set as the value
+     *
      * @return DiscSequence
      */
     public function setGoodsOrPsv($goodsOrPsv)
@@ -271,7 +274,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return DiscSequence
      */
     public function setId($id)
@@ -294,7 +298,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the is ni self serve
      *
-     * @param string $isNiSelfServe
+     * @param string $isNiSelfServe new value being set
+     *
      * @return DiscSequence
      */
     public function setIsNiSelfServe($isNiSelfServe)
@@ -317,7 +322,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the is self serve
      *
-     * @param string $isSelfServe
+     * @param string $isSelfServe new value being set
+     *
      * @return DiscSequence
      */
     public function setIsSelfServe($isSelfServe)
@@ -340,7 +346,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return DiscSequence
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -363,7 +370,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return DiscSequence
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -386,7 +394,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the r prefix
      *
-     * @param string $rPrefix
+     * @param string $rPrefix new value being set
+     *
      * @return DiscSequence
      */
     public function setRPrefix($rPrefix)
@@ -409,7 +418,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the restricted
      *
-     * @param int $restricted
+     * @param int $restricted new value being set
+     *
      * @return DiscSequence
      */
     public function setRestricted($restricted)
@@ -432,7 +442,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the si prefix
      *
-     * @param string $siPrefix
+     * @param string $siPrefix new value being set
+     *
      * @return DiscSequence
      */
     public function setSiPrefix($siPrefix)
@@ -455,7 +466,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the sn prefix
      *
-     * @param string $snPrefix
+     * @param string $snPrefix new value being set
+     *
      * @return DiscSequence
      */
     public function setSnPrefix($snPrefix)
@@ -478,7 +490,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the special restricted
      *
-     * @param int $specialRestricted
+     * @param int $specialRestricted new value being set
+     *
      * @return DiscSequence
      */
     public function setSpecialRestricted($specialRestricted)
@@ -501,7 +514,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the sr prefix
      *
-     * @param string $srPrefix
+     * @param string $srPrefix new value being set
+     *
      * @return DiscSequence
      */
     public function setSrPrefix($srPrefix)
@@ -524,7 +538,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the standard international
      *
-     * @param int $standardInternational
+     * @param int $standardInternational new value being set
+     *
      * @return DiscSequence
      */
     public function setStandardInternational($standardInternational)
@@ -547,7 +562,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the standard national
      *
-     * @param int $standardNational
+     * @param int $standardNational new value being set
+     *
      * @return DiscSequence
      */
     public function setStandardNational($standardNational)
@@ -570,7 +586,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the traffic area
      *
-     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $trafficArea
+     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $trafficArea entity being set as the value
+     *
      * @return DiscSequence
      */
     public function setTrafficArea($trafficArea)
@@ -593,7 +610,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return DiscSequence
      */
     public function setVersion($version)
@@ -617,6 +635,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -627,6 +647,8 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -636,7 +658,9 @@ abstract class AbstractDiscSequence implements BundleSerializableInterface, Json
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

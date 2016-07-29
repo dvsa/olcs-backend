@@ -171,7 +171,8 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Set the application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application entity being set as the value
+     *
      * @return PreviousConviction
      */
     public function setApplication($application)
@@ -194,7 +195,8 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Set the birth date
      *
-     * @param \DateTime $birthDate
+     * @param \DateTime $birthDate new value being set
+     *
      * @return PreviousConviction
      */
     public function setBirthDate($birthDate)
@@ -217,7 +219,8 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Set the category text
      *
-     * @param string $categoryText
+     * @param string $categoryText new value being set
+     *
      * @return PreviousConviction
      */
     public function setCategoryText($categoryText)
@@ -240,7 +243,8 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Set the conviction date
      *
-     * @param \DateTime $convictionDate
+     * @param \DateTime $convictionDate new value being set
+     *
      * @return PreviousConviction
      */
     public function setConvictionDate($convictionDate)
@@ -263,7 +267,8 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Set the court fpn
      *
-     * @param string $courtFpn
+     * @param string $courtFpn new value being set
+     *
      * @return PreviousConviction
      */
     public function setCourtFpn($courtFpn)
@@ -286,7 +291,8 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return PreviousConviction
      */
     public function setDeletedDate($deletedDate)
@@ -309,7 +315,8 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Set the family name
      *
-     * @param string $familyName
+     * @param string $familyName new value being set
+     *
      * @return PreviousConviction
      */
     public function setFamilyName($familyName)
@@ -332,7 +339,8 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Set the forename
      *
-     * @param string $forename
+     * @param string $forename new value being set
+     *
      * @return PreviousConviction
      */
     public function setForename($forename)
@@ -355,7 +363,8 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return PreviousConviction
      */
     public function setId($id)
@@ -378,7 +387,8 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Set the notes
      *
-     * @param string $notes
+     * @param string $notes new value being set
+     *
      * @return PreviousConviction
      */
     public function setNotes($notes)
@@ -401,7 +411,8 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Set the penalty
      *
-     * @param string $penalty
+     * @param string $penalty new value being set
+     *
      * @return PreviousConviction
      */
     public function setPenalty($penalty)
@@ -424,7 +435,8 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Set the title
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $title
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $title entity being set as the value
+     *
      * @return PreviousConviction
      */
     public function setTitle($title)
@@ -447,7 +459,8 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Set the transport manager
      *
-     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager entity being set as the value
+     *
      * @return PreviousConviction
      */
     public function setTransportManager($transportManager)
@@ -470,7 +483,8 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return PreviousConviction
      */
     public function setVersion($version)
@@ -495,7 +509,9 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

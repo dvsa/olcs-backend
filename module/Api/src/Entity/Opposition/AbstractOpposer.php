@@ -137,7 +137,8 @@ abstract class AbstractOpposer implements BundleSerializableInterface, JsonSeria
     /**
      * Set the contact details
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $contactDetails
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $contactDetails entity being set as the value
+     *
      * @return Opposer
      */
     public function setContactDetails($contactDetails)
@@ -160,7 +161,8 @@ abstract class AbstractOpposer implements BundleSerializableInterface, JsonSeria
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Opposer
      */
     public function setCreatedBy($createdBy)
@@ -183,7 +185,8 @@ abstract class AbstractOpposer implements BundleSerializableInterface, JsonSeria
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Opposer
      */
     public function setCreatedOn($createdOn)
@@ -206,7 +209,8 @@ abstract class AbstractOpposer implements BundleSerializableInterface, JsonSeria
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Opposer
      */
     public function setId($id)
@@ -229,7 +233,8 @@ abstract class AbstractOpposer implements BundleSerializableInterface, JsonSeria
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Opposer
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -252,7 +257,8 @@ abstract class AbstractOpposer implements BundleSerializableInterface, JsonSeria
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Opposer
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -275,7 +281,8 @@ abstract class AbstractOpposer implements BundleSerializableInterface, JsonSeria
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return Opposer
      */
     public function setOlbsKey($olbsKey)
@@ -298,7 +305,8 @@ abstract class AbstractOpposer implements BundleSerializableInterface, JsonSeria
     /**
      * Set the olbs type
      *
-     * @param string $olbsType
+     * @param string $olbsType new value being set
+     *
      * @return Opposer
      */
     public function setOlbsType($olbsType)
@@ -321,7 +329,8 @@ abstract class AbstractOpposer implements BundleSerializableInterface, JsonSeria
     /**
      * Set the opposer type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $opposerType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $opposerType entity being set as the value
+     *
      * @return Opposer
      */
     public function setOpposerType($opposerType)
@@ -344,7 +353,8 @@ abstract class AbstractOpposer implements BundleSerializableInterface, JsonSeria
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Opposer
      */
     public function setVersion($version)
@@ -368,6 +378,8 @@ abstract class AbstractOpposer implements BundleSerializableInterface, JsonSeria
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -378,6 +390,8 @@ abstract class AbstractOpposer implements BundleSerializableInterface, JsonSeria
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -387,7 +401,9 @@ abstract class AbstractOpposer implements BundleSerializableInterface, JsonSeria
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

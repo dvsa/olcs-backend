@@ -244,7 +244,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return ErruRequest
      */
     public function setCase($case)
@@ -267,7 +268,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return ErruRequest
      */
     public function setCreatedBy($createdBy)
@@ -290,7 +292,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return ErruRequest
      */
     public function setCreatedOn($createdOn)
@@ -313,7 +316,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return ErruRequest
      */
     public function setDeletedDate($deletedDate)
@@ -336,7 +340,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return ErruRequest
      */
     public function setId($id)
@@ -359,7 +364,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return ErruRequest
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -382,7 +388,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return ErruRequest
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -405,7 +412,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the member state code
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $memberStateCode
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $memberStateCode entity being set as the value
+     *
      * @return ErruRequest
      */
     public function setMemberStateCode($memberStateCode)
@@ -428,7 +436,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the msi type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $msiType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $msiType entity being set as the value
+     *
      * @return ErruRequest
      */
     public function setMsiType($msiType)
@@ -451,7 +460,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the notification number
      *
-     * @param string $notificationNumber
+     * @param string $notificationNumber new value being set
+     *
      * @return ErruRequest
      */
     public function setNotificationNumber($notificationNumber)
@@ -474,7 +484,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the originating authority
      *
-     * @param string $originatingAuthority
+     * @param string $originatingAuthority new value being set
+     *
      * @return ErruRequest
      */
     public function setOriginatingAuthority($originatingAuthority)
@@ -497,7 +508,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the request document
      *
-     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $requestDocument
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $requestDocument entity being set as the value
+     *
      * @return ErruRequest
      */
     public function setRequestDocument($requestDocument)
@@ -520,7 +532,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the response document
      *
-     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $responseDocument
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $responseDocument entity being set as the value
+     *
      * @return ErruRequest
      */
     public function setResponseDocument($responseDocument)
@@ -543,7 +556,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the response sent
      *
-     * @param string $responseSent
+     * @param string $responseSent new value being set
+     *
      * @return ErruRequest
      */
     public function setResponseSent($responseSent)
@@ -566,7 +580,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the response time
      *
-     * @param \DateTime $responseTime
+     * @param \DateTime $responseTime new value being set
+     *
      * @return ErruRequest
      */
     public function setResponseTime($responseTime)
@@ -589,7 +604,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the response user
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $responseUser
+     * @param \Dvsa\Olcs\Api\Entity\User\User $responseUser entity being set as the value
+     *
      * @return ErruRequest
      */
     public function setResponseUser($responseUser)
@@ -612,7 +628,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the transport undertaking name
      *
-     * @param string $transportUndertakingName
+     * @param string $transportUndertakingName new value being set
+     *
      * @return ErruRequest
      */
     public function setTransportUndertakingName($transportUndertakingName)
@@ -635,7 +652,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return ErruRequest
      */
     public function setVersion($version)
@@ -658,7 +676,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the vrm
      *
-     * @param string $vrm
+     * @param string $vrm new value being set
+     *
      * @return ErruRequest
      */
     public function setVrm($vrm)
@@ -681,7 +700,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Set the workflow id
      *
-     * @param string $workflowId
+     * @param string $workflowId new value being set
+     *
      * @return ErruRequest
      */
     public function setWorkflowId($workflowId)
@@ -705,6 +725,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -715,6 +737,8 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -724,7 +748,9 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -67,7 +67,8 @@ abstract class AbstractPrintQueue implements BundleSerializableInterface, JsonSe
     /**
      * Set the added datetime
      *
-     * @param \DateTime $addedDatetime
+     * @param \DateTime $addedDatetime new value being set
+     *
      * @return PrintQueue
      */
     public function setAddedDatetime($addedDatetime)
@@ -90,7 +91,8 @@ abstract class AbstractPrintQueue implements BundleSerializableInterface, JsonSe
     /**
      * Set the document
      *
-     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $document
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $document entity being set as the value
+     *
      * @return PrintQueue
      */
     public function setDocument($document)
@@ -113,7 +115,8 @@ abstract class AbstractPrintQueue implements BundleSerializableInterface, JsonSe
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return PrintQueue
      */
     public function setId($id)
@@ -136,7 +139,8 @@ abstract class AbstractPrintQueue implements BundleSerializableInterface, JsonSe
     /**
      * Set the team printer
      *
-     * @param \Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter $teamPrinter
+     * @param \Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter $teamPrinter entity being set as the value
+     *
      * @return PrintQueue
      */
     public function setTeamPrinter($teamPrinter)
@@ -161,7 +165,9 @@ abstract class AbstractPrintQueue implements BundleSerializableInterface, JsonSe
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

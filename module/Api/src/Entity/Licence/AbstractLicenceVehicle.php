@@ -249,12 +249,19 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->goodsDiscs = new ArrayCollection();
@@ -263,7 +270,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application entity being set as the value
+     *
      * @return LicenceVehicle
      */
     public function setApplication($application)
@@ -286,7 +294,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return LicenceVehicle
      */
     public function setCreatedBy($createdBy)
@@ -309,7 +318,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return LicenceVehicle
      */
     public function setCreatedOn($createdOn)
@@ -332,7 +342,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return LicenceVehicle
      */
     public function setDeletedDate($deletedDate)
@@ -355,7 +366,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return LicenceVehicle
      */
     public function setId($id)
@@ -378,7 +390,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the interim application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $interimApplication
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $interimApplication entity being set as the value
+     *
      * @return LicenceVehicle
      */
     public function setInterimApplication($interimApplication)
@@ -401,7 +414,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return LicenceVehicle
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -424,7 +438,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return LicenceVehicle
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -447,7 +462,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return LicenceVehicle
      */
     public function setLicence($licence)
@@ -470,7 +486,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return LicenceVehicle
      */
     public function setOlbsKey($olbsKey)
@@ -493,7 +510,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the received date
      *
-     * @param \DateTime $receivedDate
+     * @param \DateTime $receivedDate new value being set
+     *
      * @return LicenceVehicle
      */
     public function setReceivedDate($receivedDate)
@@ -516,7 +534,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the removal date
      *
-     * @param \DateTime $removalDate
+     * @param \DateTime $removalDate new value being set
+     *
      * @return LicenceVehicle
      */
     public function setRemovalDate($removalDate)
@@ -539,7 +558,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the removal letter seed date
      *
-     * @param \DateTime $removalLetterSeedDate
+     * @param \DateTime $removalLetterSeedDate new value being set
+     *
      * @return LicenceVehicle
      */
     public function setRemovalLetterSeedDate($removalLetterSeedDate)
@@ -562,7 +582,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the specified date
      *
-     * @param \DateTime $specifiedDate
+     * @param \DateTime $specifiedDate new value being set
+     *
      * @return LicenceVehicle
      */
     public function setSpecifiedDate($specifiedDate)
@@ -585,7 +606,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the vehicle
      *
-     * @param \Dvsa\Olcs\Api\Entity\Vehicle\Vehicle $vehicle
+     * @param \Dvsa\Olcs\Api\Entity\Vehicle\Vehicle $vehicle entity being set as the value
+     *
      * @return LicenceVehicle
      */
     public function setVehicle($vehicle)
@@ -608,7 +630,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return LicenceVehicle
      */
     public function setVersion($version)
@@ -631,7 +654,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the vi action
      *
-     * @param string $viAction
+     * @param string $viAction new value being set
+     *
      * @return LicenceVehicle
      */
     public function setViAction($viAction)
@@ -654,7 +678,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the warning letter seed date
      *
-     * @param \DateTime $warningLetterSeedDate
+     * @param \DateTime $warningLetterSeedDate new value being set
+     *
      * @return LicenceVehicle
      */
     public function setWarningLetterSeedDate($warningLetterSeedDate)
@@ -677,7 +702,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the warning letter sent date
      *
-     * @param \DateTime $warningLetterSentDate
+     * @param \DateTime $warningLetterSentDate new value being set
+     *
      * @return LicenceVehicle
      */
     public function setWarningLetterSentDate($warningLetterSentDate)
@@ -700,7 +726,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the goods disc
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $goodsDiscs
+     * @param \Doctrine\Common\Collections\ArrayCollection $goodsDiscs collection being set as the value
+     *
      * @return LicenceVehicle
      */
     public function setGoodsDiscs($goodsDiscs)
@@ -723,7 +750,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Add a goods discs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $goodsDiscs
+     * @param \Doctrine\Common\Collections\ArrayCollection $goodsDiscs collection being added
+     *
      * @return LicenceVehicle
      */
     public function addGoodsDiscs($goodsDiscs)
@@ -745,7 +773,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Remove a goods discs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $goodsDiscs
+     * @param \Doctrine\Common\Collections\ArrayCollection $goodsDiscs collection being removed
+     *
      * @return LicenceVehicle
      */
     public function removeGoodsDiscs($goodsDiscs)
@@ -761,6 +790,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -771,6 +802,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -780,7 +813,9 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

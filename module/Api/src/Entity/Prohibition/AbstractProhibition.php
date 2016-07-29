@@ -196,12 +196,19 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->defects = new ArrayCollection();
@@ -210,7 +217,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return Prohibition
      */
     public function setCase($case)
@@ -233,7 +241,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the cleared date
      *
-     * @param \DateTime $clearedDate
+     * @param \DateTime $clearedDate new value being set
+     *
      * @return Prohibition
      */
     public function setClearedDate($clearedDate)
@@ -256,7 +265,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Prohibition
      */
     public function setCreatedBy($createdBy)
@@ -279,7 +289,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Prohibition
      */
     public function setCreatedOn($createdOn)
@@ -302,7 +313,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return Prohibition
      */
     public function setDeletedDate($deletedDate)
@@ -325,7 +337,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Prohibition
      */
     public function setId($id)
@@ -348,7 +361,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the imposed at
      *
-     * @param string $imposedAt
+     * @param string $imposedAt new value being set
+     *
      * @return Prohibition
      */
     public function setImposedAt($imposedAt)
@@ -371,7 +385,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the is trailer
      *
-     * @param string $isTrailer
+     * @param string $isTrailer new value being set
+     *
      * @return Prohibition
      */
     public function setIsTrailer($isTrailer)
@@ -394,7 +409,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Prohibition
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -417,7 +433,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Prohibition
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -440,7 +457,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return Prohibition
      */
     public function setOlbsKey($olbsKey)
@@ -463,7 +481,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the prohibition date
      *
-     * @param \DateTime $prohibitionDate
+     * @param \DateTime $prohibitionDate new value being set
+     *
      * @return Prohibition
      */
     public function setProhibitionDate($prohibitionDate)
@@ -486,7 +505,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the prohibition type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $prohibitionType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $prohibitionType entity being set as the value
+     *
      * @return Prohibition
      */
     public function setProhibitionType($prohibitionType)
@@ -509,7 +529,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Prohibition
      */
     public function setVersion($version)
@@ -532,7 +553,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the vrm
      *
-     * @param string $vrm
+     * @param string $vrm new value being set
+     *
      * @return Prohibition
      */
     public function setVrm($vrm)
@@ -555,7 +577,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the defect
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $defects
+     * @param \Doctrine\Common\Collections\ArrayCollection $defects collection being set as the value
+     *
      * @return Prohibition
      */
     public function setDefects($defects)
@@ -578,7 +601,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Add a defects
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $defects
+     * @param \Doctrine\Common\Collections\ArrayCollection $defects collection being added
+     *
      * @return Prohibition
      */
     public function addDefects($defects)
@@ -600,7 +624,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Remove a defects
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $defects
+     * @param \Doctrine\Common\Collections\ArrayCollection $defects collection being removed
+     *
      * @return Prohibition
      */
     public function removeDefects($defects)
@@ -616,6 +641,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -626,6 +653,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -635,7 +664,9 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

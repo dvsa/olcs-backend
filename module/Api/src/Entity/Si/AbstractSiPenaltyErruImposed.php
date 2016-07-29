@@ -175,7 +175,8 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return SiPenaltyErruImposed
      */
     public function setCreatedBy($createdBy)
@@ -198,7 +199,8 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return SiPenaltyErruImposed
      */
     public function setCreatedOn($createdOn)
@@ -221,7 +223,8 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return SiPenaltyErruImposed
      */
     public function setDeletedDate($deletedDate)
@@ -244,7 +247,8 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
     /**
      * Set the end date
      *
-     * @param \DateTime $endDate
+     * @param \DateTime $endDate new value being set
+     *
      * @return SiPenaltyErruImposed
      */
     public function setEndDate($endDate)
@@ -267,7 +271,8 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
     /**
      * Set the executed
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $executed
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $executed entity being set as the value
+     *
      * @return SiPenaltyErruImposed
      */
     public function setExecuted($executed)
@@ -290,7 +295,8 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
     /**
      * Set the final decision date
      *
-     * @param \DateTime $finalDecisionDate
+     * @param \DateTime $finalDecisionDate new value being set
+     *
      * @return SiPenaltyErruImposed
      */
     public function setFinalDecisionDate($finalDecisionDate)
@@ -313,7 +319,8 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return SiPenaltyErruImposed
      */
     public function setId($id)
@@ -336,7 +343,8 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return SiPenaltyErruImposed
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -359,7 +367,8 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return SiPenaltyErruImposed
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -382,7 +391,8 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return SiPenaltyErruImposed
      */
     public function setOlbsKey($olbsKey)
@@ -405,7 +415,8 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
     /**
      * Set the serious infringement
      *
-     * @param \Dvsa\Olcs\Api\Entity\Si\SeriousInfringement $seriousInfringement
+     * @param \Dvsa\Olcs\Api\Entity\Si\SeriousInfringement $seriousInfringement entity being set as the value
+     *
      * @return SiPenaltyErruImposed
      */
     public function setSeriousInfringement($seriousInfringement)
@@ -428,7 +439,8 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
     /**
      * Set the si penalty imposed type
      *
-     * @param \Dvsa\Olcs\Api\Entity\Si\SiPenaltyImposedType $siPenaltyImposedType
+     * @param \Dvsa\Olcs\Api\Entity\Si\SiPenaltyImposedType $siPenaltyImposedType entity being set as the value
+     *
      * @return SiPenaltyErruImposed
      */
     public function setSiPenaltyImposedType($siPenaltyImposedType)
@@ -451,7 +463,8 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
     /**
      * Set the start date
      *
-     * @param \DateTime $startDate
+     * @param \DateTime $startDate new value being set
+     *
      * @return SiPenaltyErruImposed
      */
     public function setStartDate($startDate)
@@ -474,7 +487,8 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return SiPenaltyErruImposed
      */
     public function setVersion($version)
@@ -498,6 +512,8 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -508,6 +524,8 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -517,7 +535,9 @@ abstract class AbstractSiPenaltyErruImposed implements BundleSerializableInterfa
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

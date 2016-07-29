@@ -108,7 +108,8 @@ abstract class AbstractSiPenaltyType implements BundleSerializableInterface, Jso
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return SiPenaltyType
      */
     public function setCreatedBy($createdBy)
@@ -131,7 +132,8 @@ abstract class AbstractSiPenaltyType implements BundleSerializableInterface, Jso
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return SiPenaltyType
      */
     public function setCreatedOn($createdOn)
@@ -154,7 +156,8 @@ abstract class AbstractSiPenaltyType implements BundleSerializableInterface, Jso
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return SiPenaltyType
      */
     public function setDeletedDate($deletedDate)
@@ -177,7 +180,8 @@ abstract class AbstractSiPenaltyType implements BundleSerializableInterface, Jso
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return SiPenaltyType
      */
     public function setDescription($description)
@@ -200,7 +204,8 @@ abstract class AbstractSiPenaltyType implements BundleSerializableInterface, Jso
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return SiPenaltyType
      */
     public function setId($id)
@@ -223,7 +228,8 @@ abstract class AbstractSiPenaltyType implements BundleSerializableInterface, Jso
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return SiPenaltyType
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -246,7 +252,8 @@ abstract class AbstractSiPenaltyType implements BundleSerializableInterface, Jso
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return SiPenaltyType
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -269,7 +276,8 @@ abstract class AbstractSiPenaltyType implements BundleSerializableInterface, Jso
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return SiPenaltyType
      */
     public function setVersion($version)
@@ -293,6 +301,8 @@ abstract class AbstractSiPenaltyType implements BundleSerializableInterface, Jso
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -303,6 +313,8 @@ abstract class AbstractSiPenaltyType implements BundleSerializableInterface, Jso
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -312,7 +324,9 @@ abstract class AbstractSiPenaltyType implements BundleSerializableInterface, Jso
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

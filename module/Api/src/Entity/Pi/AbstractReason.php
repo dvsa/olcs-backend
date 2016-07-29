@@ -192,12 +192,19 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->submissionActions = new ArrayCollection();
@@ -208,7 +215,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Reason
      */
     public function setCreatedBy($createdBy)
@@ -231,7 +239,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Reason
      */
     public function setCreatedOn($createdOn)
@@ -254,7 +263,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return Reason
      */
     public function setDeletedDate($deletedDate)
@@ -277,7 +287,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return Reason
      */
     public function setDescription($description)
@@ -300,7 +311,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the goods or psv
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $goodsOrPsv
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $goodsOrPsv entity being set as the value
+     *
      * @return Reason
      */
     public function setGoodsOrPsv($goodsOrPsv)
@@ -323,7 +335,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Reason
      */
     public function setId($id)
@@ -346,7 +359,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the is ni
      *
-     * @param string $isNi
+     * @param string $isNi new value being set
+     *
      * @return Reason
      */
     public function setIsNi($isNi)
@@ -369,7 +383,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the is propose to revoke
      *
-     * @param string $isProposeToRevoke
+     * @param string $isProposeToRevoke new value being set
+     *
      * @return Reason
      */
     public function setIsProposeToRevoke($isProposeToRevoke)
@@ -392,7 +407,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the is read only
      *
-     * @param string $isReadOnly
+     * @param string $isReadOnly new value being set
+     *
      * @return Reason
      */
     public function setIsReadOnly($isReadOnly)
@@ -415,7 +431,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Reason
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -438,7 +455,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Reason
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -461,7 +479,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the pi
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $pis
+     * @param \Doctrine\Common\Collections\ArrayCollection $pis collection being set as the value
+     *
      * @return Reason
      */
     public function setPis($pis)
@@ -484,7 +503,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Add a pis
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $pis
+     * @param \Doctrine\Common\Collections\ArrayCollection $pis collection being added
+     *
      * @return Reason
      */
     public function addPis($pis)
@@ -506,7 +526,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a pis
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $pis
+     * @param \Doctrine\Common\Collections\ArrayCollection $pis collection being removed
+     *
      * @return Reason
      */
     public function removePis($pis)
@@ -521,7 +542,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the propose to revoke
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes
+     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes collection being set as the value
+     *
      * @return Reason
      */
     public function setProposeToRevokes($proposeToRevokes)
@@ -544,7 +566,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Add a propose to revokes
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes
+     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes collection being added
+     *
      * @return Reason
      */
     public function addProposeToRevokes($proposeToRevokes)
@@ -566,7 +589,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a propose to revokes
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes
+     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes collection being removed
+     *
      * @return Reason
      */
     public function removeProposeToRevokes($proposeToRevokes)
@@ -581,7 +605,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the section code
      *
-     * @param string $sectionCode
+     * @param string $sectionCode new value being set
+     *
      * @return Reason
      */
     public function setSectionCode($sectionCode)
@@ -604,7 +629,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the submission action
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions collection being set as the value
+     *
      * @return Reason
      */
     public function setSubmissionActions($submissionActions)
@@ -627,7 +653,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Add a submission actions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions collection being added
+     *
      * @return Reason
      */
     public function addSubmissionActions($submissionActions)
@@ -649,7 +676,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a submission actions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions collection being removed
+     *
      * @return Reason
      */
     public function removeSubmissionActions($submissionActions)
@@ -664,7 +692,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Reason
      */
     public function setVersion($version)
@@ -688,6 +717,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -698,6 +729,8 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -707,7 +740,9 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

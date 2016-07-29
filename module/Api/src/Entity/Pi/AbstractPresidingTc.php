@@ -53,7 +53,8 @@ abstract class AbstractPresidingTc implements BundleSerializableInterface, JsonS
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return PresidingTc
      */
     public function setDeletedDate($deletedDate)
@@ -76,7 +77,8 @@ abstract class AbstractPresidingTc implements BundleSerializableInterface, JsonS
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return PresidingTc
      */
     public function setId($id)
@@ -99,7 +101,8 @@ abstract class AbstractPresidingTc implements BundleSerializableInterface, JsonS
     /**
      * Set the name
      *
-     * @param string $name
+     * @param string $name new value being set
+     *
      * @return PresidingTc
      */
     public function setName($name)
@@ -124,7 +127,9 @@ abstract class AbstractPresidingTc implements BundleSerializableInterface, JsonS
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -153,7 +153,8 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     /**
      * Set the contact details
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $contactDetails
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $contactDetails entity being set as the value
+     *
      * @return TmEmployment
      */
     public function setContactDetails($contactDetails)
@@ -176,7 +177,8 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return TmEmployment
      */
     public function setCreatedBy($createdBy)
@@ -199,7 +201,8 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return TmEmployment
      */
     public function setCreatedOn($createdOn)
@@ -222,7 +225,8 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return TmEmployment
      */
     public function setDeletedDate($deletedDate)
@@ -245,7 +249,8 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     /**
      * Set the employer name
      *
-     * @param string $employerName
+     * @param string $employerName new value being set
+     *
      * @return TmEmployment
      */
     public function setEmployerName($employerName)
@@ -268,7 +273,8 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     /**
      * Set the hours per week
      *
-     * @param string $hoursPerWeek
+     * @param string $hoursPerWeek new value being set
+     *
      * @return TmEmployment
      */
     public function setHoursPerWeek($hoursPerWeek)
@@ -291,7 +297,8 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return TmEmployment
      */
     public function setId($id)
@@ -314,7 +321,8 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return TmEmployment
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -337,7 +345,8 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return TmEmployment
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -360,7 +369,8 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     /**
      * Set the position
      *
-     * @param string $position
+     * @param string $position new value being set
+     *
      * @return TmEmployment
      */
     public function setPosition($position)
@@ -383,7 +393,8 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     /**
      * Set the transport manager
      *
-     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager entity being set as the value
+     *
      * @return TmEmployment
      */
     public function setTransportManager($transportManager)
@@ -406,7 +417,8 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return TmEmployment
      */
     public function setVersion($version)
@@ -430,6 +442,8 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -440,6 +454,8 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -449,7 +465,9 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -148,7 +148,8 @@ abstract class AbstractPrivateHireLicence implements BundleSerializableInterface
     /**
      * Set the contact details
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $contactDetails
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $contactDetails entity being set as the value
+     *
      * @return PrivateHireLicence
      */
     public function setContactDetails($contactDetails)
@@ -171,7 +172,8 @@ abstract class AbstractPrivateHireLicence implements BundleSerializableInterface
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return PrivateHireLicence
      */
     public function setCreatedBy($createdBy)
@@ -194,7 +196,8 @@ abstract class AbstractPrivateHireLicence implements BundleSerializableInterface
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return PrivateHireLicence
      */
     public function setCreatedOn($createdOn)
@@ -217,7 +220,8 @@ abstract class AbstractPrivateHireLicence implements BundleSerializableInterface
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return PrivateHireLicence
      */
     public function setDeletedDate($deletedDate)
@@ -240,7 +244,8 @@ abstract class AbstractPrivateHireLicence implements BundleSerializableInterface
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return PrivateHireLicence
      */
     public function setId($id)
@@ -263,7 +268,8 @@ abstract class AbstractPrivateHireLicence implements BundleSerializableInterface
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return PrivateHireLicence
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -286,7 +292,8 @@ abstract class AbstractPrivateHireLicence implements BundleSerializableInterface
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return PrivateHireLicence
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -309,7 +316,8 @@ abstract class AbstractPrivateHireLicence implements BundleSerializableInterface
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return PrivateHireLicence
      */
     public function setLicence($licence)
@@ -332,7 +340,8 @@ abstract class AbstractPrivateHireLicence implements BundleSerializableInterface
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return PrivateHireLicence
      */
     public function setOlbsKey($olbsKey)
@@ -355,7 +364,8 @@ abstract class AbstractPrivateHireLicence implements BundleSerializableInterface
     /**
      * Set the private hire licence no
      *
-     * @param string $privateHireLicenceNo
+     * @param string $privateHireLicenceNo new value being set
+     *
      * @return PrivateHireLicence
      */
     public function setPrivateHireLicenceNo($privateHireLicenceNo)
@@ -378,7 +388,8 @@ abstract class AbstractPrivateHireLicence implements BundleSerializableInterface
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return PrivateHireLicence
      */
     public function setVersion($version)
@@ -402,6 +413,8 @@ abstract class AbstractPrivateHireLicence implements BundleSerializableInterface
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -412,6 +425,8 @@ abstract class AbstractPrivateHireLicence implements BundleSerializableInterface
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -421,7 +436,9 @@ abstract class AbstractPrivateHireLicence implements BundleSerializableInterface
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

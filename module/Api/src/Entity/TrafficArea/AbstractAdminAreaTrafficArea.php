@@ -100,7 +100,8 @@ abstract class AbstractAdminAreaTrafficArea implements BundleSerializableInterfa
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return AdminAreaTrafficArea
      */
     public function setCreatedBy($createdBy)
@@ -123,7 +124,8 @@ abstract class AbstractAdminAreaTrafficArea implements BundleSerializableInterfa
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return AdminAreaTrafficArea
      */
     public function setCreatedOn($createdOn)
@@ -146,7 +148,8 @@ abstract class AbstractAdminAreaTrafficArea implements BundleSerializableInterfa
     /**
      * Set the id
      *
-     * @param string $id
+     * @param string $id new value being set
+     *
      * @return AdminAreaTrafficArea
      */
     public function setId($id)
@@ -169,7 +172,8 @@ abstract class AbstractAdminAreaTrafficArea implements BundleSerializableInterfa
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return AdminAreaTrafficArea
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -192,7 +196,8 @@ abstract class AbstractAdminAreaTrafficArea implements BundleSerializableInterfa
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return AdminAreaTrafficArea
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -215,7 +220,8 @@ abstract class AbstractAdminAreaTrafficArea implements BundleSerializableInterfa
     /**
      * Set the traffic area
      *
-     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $trafficArea
+     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $trafficArea entity being set as the value
+     *
      * @return AdminAreaTrafficArea
      */
     public function setTrafficArea($trafficArea)
@@ -238,7 +244,8 @@ abstract class AbstractAdminAreaTrafficArea implements BundleSerializableInterfa
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return AdminAreaTrafficArea
      */
     public function setVersion($version)
@@ -262,6 +269,8 @@ abstract class AbstractAdminAreaTrafficArea implements BundleSerializableInterfa
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -272,6 +281,8 @@ abstract class AbstractAdminAreaTrafficArea implements BundleSerializableInterfa
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -281,7 +292,9 @@ abstract class AbstractAdminAreaTrafficArea implements BundleSerializableInterfa
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

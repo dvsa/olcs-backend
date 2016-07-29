@@ -99,7 +99,8 @@ abstract class AbstractRefData implements BundleSerializableInterface, JsonSeria
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return RefData
      */
     public function setDescription($description)
@@ -122,7 +123,8 @@ abstract class AbstractRefData implements BundleSerializableInterface, JsonSeria
     /**
      * Set the display order
      *
-     * @param int $displayOrder
+     * @param int $displayOrder new value being set
+     *
      * @return RefData
      */
     public function setDisplayOrder($displayOrder)
@@ -145,7 +147,8 @@ abstract class AbstractRefData implements BundleSerializableInterface, JsonSeria
     /**
      * Set the id
      *
-     * @param string $id
+     * @param string $id new value being set
+     *
      * @return RefData
      */
     public function setId($id)
@@ -168,7 +171,8 @@ abstract class AbstractRefData implements BundleSerializableInterface, JsonSeria
     /**
      * Set the olbs key
      *
-     * @param string $olbsKey
+     * @param string $olbsKey new value being set
+     *
      * @return RefData
      */
     public function setOlbsKey($olbsKey)
@@ -191,7 +195,8 @@ abstract class AbstractRefData implements BundleSerializableInterface, JsonSeria
     /**
      * Set the parent
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $parent
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $parent entity being set as the value
+     *
      * @return RefData
      */
     public function setParent($parent)
@@ -214,7 +219,8 @@ abstract class AbstractRefData implements BundleSerializableInterface, JsonSeria
     /**
      * Set the ref data category id
      *
-     * @param string $refDataCategoryId
+     * @param string $refDataCategoryId new value being set
+     *
      * @return RefData
      */
     public function setRefDataCategoryId($refDataCategoryId)
@@ -237,7 +243,8 @@ abstract class AbstractRefData implements BundleSerializableInterface, JsonSeria
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return RefData
      */
     public function setVersion($version)
@@ -262,7 +269,9 @@ abstract class AbstractRefData implements BundleSerializableInterface, JsonSeria
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {
