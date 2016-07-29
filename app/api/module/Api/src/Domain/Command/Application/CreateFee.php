@@ -27,6 +27,8 @@ final class CreateFee extends AbstractCommand
 
     protected $task;
 
+    protected $optional;
+
     public function getFeeTypeFeeType()
     {
         return $this->feeTypeFeeType;
@@ -38,5 +40,13 @@ final class CreateFee extends AbstractCommand
     public function getTask()
     {
         return $this->task;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOptional()
+    {
+        return $this->optional;
     }
 }

@@ -71,13 +71,21 @@ final class CreateFee extends AbstractCommandHandler implements TransactionedInt
             $date = new \DateTime($date);
         }
 
+        $optional = $command->getOptional();
+
         $feeType = $this->getRepo('FeeType')->fetchLatest(
             $this->getRepo()->getRefdataReference($command->getFeeTypeFeeType()),
             $application->getGoodsOrPsv(),
             $application->getLicenceType(),
             $date,
-            $trafficArea
+            $trafficArea,
+            $optional
         );
+
+        if ($feeType === null) {
+            $this->result->addMessage([Application::ERROR_FEE_NOT_CREATED => 'The interim fee is not created']);
+            return $this->result;
+        }
 
         $data = [
             'application' => $application->getId(),
