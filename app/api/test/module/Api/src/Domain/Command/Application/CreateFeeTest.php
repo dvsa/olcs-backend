@@ -24,10 +24,12 @@ class CreateFeeTest extends PHPUnit_Framework_TestCase
                 'id' => 111,
                 'foo' => 'bar',
                 'feeTypeFeeType' => 'feetype',
+                'optional' => true
             ]
         );
 
         $this->assertEquals(111, $command->getId());
         $this->assertEquals('feetype', $command->getFeeTypeFeeType());
+        $this->assertTrue($command->getOptional());
     }
 }

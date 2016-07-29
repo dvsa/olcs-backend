@@ -81,6 +81,7 @@ class CreateFeeTest extends CommandHandlerTestCase
             $this->mapRefData('GOODS_OR_PSV'),
             $this->mapRefData('LICENCE_TYPE'),
             m::type('\DateTime'),
+            null,
             null
         )->once()->andReturn($feeType);
 
@@ -132,6 +133,7 @@ class CreateFeeTest extends CommandHandlerTestCase
             $this->mapRefData('GOODS_OR_PSV'),
             $this->mapRefData('LICENCE_TYPE'),
             m::type('\DateTime'),
+            null,
             null
         )->once()->andReturn($feeType);
 
@@ -184,7 +186,8 @@ class CreateFeeTest extends CommandHandlerTestCase
             $this->mapRefData('GOODS_OR_PSV'),
             $this->mapRefData('LICENCE_TYPE'),
             m::type('\DateTime'),
-            $this->mapReference(TrafficArea::class, TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE)
+            $this->mapReference(TrafficArea::class, TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE),
+            null
         )->once()->andReturn($feeType);
 
         $this->expectedSideEffect(
@@ -235,7 +238,8 @@ class CreateFeeTest extends CommandHandlerTestCase
             $this->mapRefData('GOODS_OR_PSV'),
             $this->mapRefData('LICENCE_TYPE'),
             m::type('\DateTime'),
-            $this->mapReference(TrafficArea::class, TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE)
+            $this->mapReference(TrafficArea::class, TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE),
+            null
         )->once()->andReturn($feeType);
 
         $this->expectedSideEffect(
@@ -254,6 +258,41 @@ class CreateFeeTest extends CommandHandlerTestCase
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
         );
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandWithOptinal()
+    {
+        $command = Cmd::create(['id' => 834, 'feeTypeFeeType' => 'FEE_TYPE', 'optional' => true]);
+
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setId(32);
+
+        $application = m::mock(Application::class)->makePartial();
+        $application->setId(834);
+        $application->setLicence($licence);
+        $application->setNiFlag('N');
+        $application->setGoodsOrPsv($this->mapRefData('GOODS_OR_PSV'));
+        $application->setLicenceType($this->mapRefData('LICENCE_TYPE'));
+        $application->setReceivedDate('2015-06-01');
+
+        $feeType = new FeeType();
+        $feeType->setId(223);
+        $feeType->setDescription('DESCRIPTION');
+        $feeType->setFixedValue(123.33);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()
+            ->andReturn($application);
+
+        $this->repoMap['FeeType']->shouldReceive('fetchLatest')->with(
+            $this->mapRefData('FEE_TYPE'),
+            $this->mapRefData('GOODS_OR_PSV'),
+            $this->mapRefData('LICENCE_TYPE'),
+            m::type('\DateTime'),
+            null,
+            true
+        )->once()->andReturn(null);
 
         $this->sut->handleCommand($command);
     }
