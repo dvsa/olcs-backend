@@ -49,11 +49,20 @@ class Nysiis
     public function getNysiisSearchKeys($params)
     {
         $result = $this->getSoapClient()->GetNYSIISSearchKeys(
-            $params['nysiisForename'],
-            $params['nysiisFamilyname']
+            [
+                'firstName' => $params['nysiisForename'],
+                'familyName' => $params['nysiisFamilyname']
+            ]
         );
 
-        return $result;
+        if (!isset($result->GetNYSIISSearchKeysResult)) {
+            throw new NysiisException(
+                'Call to GetNYSIISSearchKeys failed with firstName => ' .
+                $params['nysiisForename'] . ', familyName => ' . $params['nysiisFamilyname']
+            );
+        }
+
+        return $result->GetNYSIISSearchKeysResult;
     }
 
     /**
