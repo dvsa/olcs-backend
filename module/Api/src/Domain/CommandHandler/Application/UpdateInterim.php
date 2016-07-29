@@ -327,7 +327,8 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
 
             $data = [
                 'id' => $application->getId(),
-                'feeTypeFeeType' => FeeType::FEE_TYPE_GRANTINT
+                'feeTypeFeeType' => FeeType::FEE_TYPE_GRANTINT,
+                'optional' => true
             ];
 
             $this->result->merge($this->handleSideEffect(CreateApplicationFeeCmd::create($data)));

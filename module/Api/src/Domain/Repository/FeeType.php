@@ -33,11 +33,12 @@ class FeeType extends AbstractRepository
     protected $alias = 'ft';
 
     /**
-     * @param RefDataEntity $feeType
-     * @param RefDataEntity $goodsOrPsv
-     * @param RefDataEntity $licenceType
-     * @param \DateTime $date
-     * @param mixed $trafficArea traffic area entity or id
+     * @param RefDataEntity $feeType     fee type
+     * @param RefDataEntity $goodsOrPsv  operator type
+     * @param RefDataEntity $licenceType licence type
+     * @param \DateTime $date            date
+     * @param mixed $trafficArea         traffic area entity or id
+     * @param bool $optional             optional
      *
      * @return \Dvsa\Olcs\Api\Entity\Fee\FeeType
      * @throws Exception\NotFoundException
@@ -47,7 +48,8 @@ class FeeType extends AbstractRepository
         RefDataEntity $goodsOrPsv,
         RefDataEntity $licenceType = null,
         \DateTime $date = null,
-        $trafficArea = null
+        $trafficArea = null,
+        $optional = false
     ) {
         $qb = $this->createQueryBuilder();
 
@@ -97,6 +99,9 @@ class FeeType extends AbstractRepository
         $results = $qb->getQuery()->execute();
 
         if (empty($results)) {
+            if ($optional) {
+                return null;
+            }
             throw new Exception\NotFoundException('FeeType not found');
         }
 

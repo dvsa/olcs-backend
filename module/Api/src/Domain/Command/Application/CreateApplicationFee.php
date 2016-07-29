@@ -20,6 +20,8 @@ final class CreateApplicationFee extends AbstractIdOnlyCommand
 
     protected $description;
 
+    protected $optional;
+
     /**
      * @return mixed
      */
@@ -34,5 +36,13 @@ final class CreateApplicationFee extends AbstractIdOnlyCommand
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOptional()
+    {
+        return $this->optional;
     }
 }
