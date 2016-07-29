@@ -98,7 +98,8 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
         $data = [
             'id' => $command->getId(),
             'feeTypeFeeType' => $feeType,
-            'task' => $taskId
+            'task' => $taskId,
+            'optional' => $command->getOptional()
         ];
 
         return CreateFeeCmd::create($data);
