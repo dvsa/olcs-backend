@@ -279,4 +279,18 @@ return [
     'ch-vs-olcs-export' => [
         'path' => '/var/tmp/companyHouse_vs_Olcs',
     ],
+
+    // Nysiis SOAP configuration
+    'nysiis' => [
+        'wsdl' => [
+            'uri' => 'http://nysiis.localhost:8081/nysiis/nysiis?WSDL',
+            'soap' => [
+                'options' => [
+                    'cache_wsdl' => 0,
+                    'location' => 'http://nysiis.localhost:8081/nysiis/nysiis',
+                    'uri' => 'http://nysiis.localhost:8081/nysiis/nysiis'
+                ]
+            ]
+        ]
+    ]
 ];
