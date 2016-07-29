@@ -308,12 +308,19 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->feeTransactions = new ArrayCollection();
@@ -322,7 +329,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the cheque po date
      *
-     * @param \DateTime $chequePoDate
+     * @param \DateTime $chequePoDate new value being set
+     *
      * @return Transaction
      */
     public function setChequePoDate($chequePoDate)
@@ -345,7 +353,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the cheque po number
      *
-     * @param string $chequePoNumber
+     * @param string $chequePoNumber new value being set
+     *
      * @return Transaction
      */
     public function setChequePoNumber($chequePoNumber)
@@ -368,7 +377,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the comment
      *
-     * @param string $comment
+     * @param string $comment new value being set
+     *
      * @return Transaction
      */
     public function setComment($comment)
@@ -391,7 +401,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the completed date
      *
-     * @param \DateTime $completedDate
+     * @param \DateTime $completedDate new value being set
+     *
      * @return Transaction
      */
     public function setCompletedDate($completedDate)
@@ -414,7 +425,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Transaction
      */
     public function setCreatedBy($createdBy)
@@ -437,7 +449,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Transaction
      */
     public function setCreatedOn($createdOn)
@@ -460,7 +473,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the gateway url
      *
-     * @param string $gatewayUrl
+     * @param string $gatewayUrl new value being set
+     *
      * @return Transaction
      */
     public function setGatewayUrl($gatewayUrl)
@@ -483,7 +497,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Transaction
      */
     public function setId($id)
@@ -506,7 +521,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Transaction
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -529,7 +545,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Transaction
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -552,7 +569,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the legacy choice
      *
-     * @param int $legacyChoice
+     * @param int $legacyChoice new value being set
+     *
      * @return Transaction
      */
     public function setLegacyChoice($legacyChoice)
@@ -575,7 +593,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the legacy guid
      *
-     * @param string $legacyGuid
+     * @param string $legacyGuid new value being set
+     *
      * @return Transaction
      */
     public function setLegacyGuid($legacyGuid)
@@ -598,7 +617,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the legacy method
      *
-     * @param int $legacyMethod
+     * @param int $legacyMethod new value being set
+     *
      * @return Transaction
      */
     public function setLegacyMethod($legacyMethod)
@@ -621,7 +641,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the legacy status
      *
-     * @param int $legacyStatus
+     * @param int $legacyStatus new value being set
+     *
      * @return Transaction
      */
     public function setLegacyStatus($legacyStatus)
@@ -644,7 +665,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return Transaction
      */
     public function setOlbsKey($olbsKey)
@@ -667,7 +689,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the olbs type
      *
-     * @param string $olbsType
+     * @param string $olbsType new value being set
+     *
      * @return Transaction
      */
     public function setOlbsType($olbsType)
@@ -690,7 +713,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the payer name
      *
-     * @param string $payerName
+     * @param string $payerName new value being set
+     *
      * @return Transaction
      */
     public function setPayerName($payerName)
@@ -713,7 +737,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the paying in slip number
      *
-     * @param string $payingInSlipNumber
+     * @param string $payingInSlipNumber new value being set
+     *
      * @return Transaction
      */
     public function setPayingInSlipNumber($payingInSlipNumber)
@@ -736,7 +761,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the payment method
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $paymentMethod
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $paymentMethod entity being set as the value
+     *
      * @return Transaction
      */
     public function setPaymentMethod($paymentMethod)
@@ -759,7 +785,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the processed by user
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $processedByUser
+     * @param \Dvsa\Olcs\Api\Entity\User\User $processedByUser entity being set as the value
+     *
      * @return Transaction
      */
     public function setProcessedByUser($processedByUser)
@@ -782,7 +809,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the receipt document
      *
-     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $receiptDocument
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $receiptDocument entity being set as the value
+     *
      * @return Transaction
      */
     public function setReceiptDocument($receiptDocument)
@@ -805,7 +833,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the reference
      *
-     * @param string $reference
+     * @param string $reference new value being set
+     *
      * @return Transaction
      */
     public function setReference($reference)
@@ -828,7 +857,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the status
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status entity being set as the value
+     *
      * @return Transaction
      */
     public function setStatus($status)
@@ -851,7 +881,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $type
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $type entity being set as the value
+     *
      * @return Transaction
      */
     public function setType($type)
@@ -874,7 +905,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Transaction
      */
     public function setVersion($version)
@@ -897,7 +929,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the waive recommendation date
      *
-     * @param \DateTime $waiveRecommendationDate
+     * @param \DateTime $waiveRecommendationDate new value being set
+     *
      * @return Transaction
      */
     public function setWaiveRecommendationDate($waiveRecommendationDate)
@@ -920,7 +953,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the waive recommender user
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $waiveRecommenderUser
+     * @param \Dvsa\Olcs\Api\Entity\User\User $waiveRecommenderUser entity being set as the value
+     *
      * @return Transaction
      */
     public function setWaiveRecommenderUser($waiveRecommenderUser)
@@ -943,7 +977,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the fee transaction
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions
+     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions collection being set as the value
+     *
      * @return Transaction
      */
     public function setFeeTransactions($feeTransactions)
@@ -966,7 +1001,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Add a fee transactions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions
+     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions collection being added
+     *
      * @return Transaction
      */
     public function addFeeTransactions($feeTransactions)
@@ -988,7 +1024,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Remove a fee transactions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions
+     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions collection being removed
+     *
      * @return Transaction
      */
     public function removeFeeTransactions($feeTransactions)
@@ -1004,6 +1041,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -1014,6 +1053,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -1023,7 +1064,9 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

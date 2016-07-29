@@ -164,12 +164,19 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->reasons = new ArrayCollection();
@@ -178,7 +185,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return ProposeToRevoke
      */
     public function setCase($case)
@@ -201,7 +209,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Set the closed date
      *
-     * @param \DateTime $closedDate
+     * @param \DateTime $closedDate new value being set
+     *
      * @return ProposeToRevoke
      */
     public function setClosedDate($closedDate)
@@ -224,7 +233,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Set the comment
      *
-     * @param string $comment
+     * @param string $comment new value being set
+     *
      * @return ProposeToRevoke
      */
     public function setComment($comment)
@@ -247,7 +257,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return ProposeToRevoke
      */
     public function setCreatedBy($createdBy)
@@ -270,7 +281,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return ProposeToRevoke
      */
     public function setCreatedOn($createdOn)
@@ -293,7 +305,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return ProposeToRevoke
      */
     public function setId($id)
@@ -316,7 +329,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return ProposeToRevoke
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -339,7 +353,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return ProposeToRevoke
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -362,7 +377,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Set the presiding tc
      *
-     * @param \Dvsa\Olcs\Api\Entity\Pi\PresidingTc $presidingTc
+     * @param \Dvsa\Olcs\Api\Entity\Pi\PresidingTc $presidingTc entity being set as the value
+     *
      * @return ProposeToRevoke
      */
     public function setPresidingTc($presidingTc)
@@ -385,7 +401,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Set the ptr agreed date
      *
-     * @param \DateTime $ptrAgreedDate
+     * @param \DateTime $ptrAgreedDate new value being set
+     *
      * @return ProposeToRevoke
      */
     public function setPtrAgreedDate($ptrAgreedDate)
@@ -408,7 +425,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Set the reason
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being set as the value
+     *
      * @return ProposeToRevoke
      */
     public function setReasons($reasons)
@@ -431,7 +449,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Add a reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being added
+     *
      * @return ProposeToRevoke
      */
     public function addReasons($reasons)
@@ -453,7 +472,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Remove a reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being removed
+     *
      * @return ProposeToRevoke
      */
     public function removeReasons($reasons)
@@ -468,7 +488,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return ProposeToRevoke
      */
     public function setVersion($version)
@@ -492,6 +513,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -502,6 +525,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -511,7 +536,9 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

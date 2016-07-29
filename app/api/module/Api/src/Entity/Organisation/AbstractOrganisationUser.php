@@ -142,7 +142,8 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return OrganisationUser
      */
     public function setCreatedBy($createdBy)
@@ -165,7 +166,8 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return OrganisationUser
      */
     public function setCreatedOn($createdOn)
@@ -188,7 +190,8 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return OrganisationUser
      */
     public function setId($id)
@@ -211,7 +214,8 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     /**
      * Set the is administrator
      *
-     * @param string $isAdministrator
+     * @param string $isAdministrator new value being set
+     *
      * @return OrganisationUser
      */
     public function setIsAdministrator($isAdministrator)
@@ -234,7 +238,8 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return OrganisationUser
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -257,7 +262,8 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return OrganisationUser
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -280,7 +286,8 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     /**
      * Set the organisation
      *
-     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation entity being set as the value
+     *
      * @return OrganisationUser
      */
     public function setOrganisation($organisation)
@@ -303,7 +310,8 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     /**
      * Set the sftp access
      *
-     * @param string $sftpAccess
+     * @param string $sftpAccess new value being set
+     *
      * @return OrganisationUser
      */
     public function setSftpAccess($sftpAccess)
@@ -326,7 +334,8 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     /**
      * Set the user
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $user
+     * @param \Dvsa\Olcs\Api\Entity\User\User $user entity being set as the value
+     *
      * @return OrganisationUser
      */
     public function setUser($user)
@@ -349,7 +358,8 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return OrganisationUser
      */
     public function setVersion($version)
@@ -373,6 +383,8 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -383,6 +395,8 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -392,7 +406,9 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

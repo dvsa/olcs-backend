@@ -188,12 +188,19 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->trafficAreas = new ArrayCollection();
@@ -202,7 +209,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Set the contact name
      *
-     * @param string $contactName
+     * @param string $contactName new value being set
+     *
      * @return Recipient
      */
     public function setContactName($contactName)
@@ -225,7 +233,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Recipient
      */
     public function setCreatedBy($createdBy)
@@ -248,7 +257,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Recipient
      */
     public function setCreatedOn($createdOn)
@@ -271,7 +281,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return Recipient
      */
     public function setDeletedDate($deletedDate)
@@ -294,7 +305,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Set the email address
      *
-     * @param string $emailAddress
+     * @param string $emailAddress new value being set
+     *
      * @return Recipient
      */
     public function setEmailAddress($emailAddress)
@@ -317,7 +329,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Recipient
      */
     public function setId($id)
@@ -340,7 +353,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Set the is objector
      *
-     * @param string $isObjector
+     * @param string $isObjector new value being set
+     *
      * @return Recipient
      */
     public function setIsObjector($isObjector)
@@ -363,7 +377,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Set the is police
      *
-     * @param string $isPolice
+     * @param string $isPolice new value being set
+     *
      * @return Recipient
      */
     public function setIsPolice($isPolice)
@@ -386,7 +401,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Recipient
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -409,7 +425,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Recipient
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -432,7 +449,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return Recipient
      */
     public function setOlbsKey($olbsKey)
@@ -455,7 +473,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Set the send app decision
      *
-     * @param string $sendAppDecision
+     * @param string $sendAppDecision new value being set
+     *
      * @return Recipient
      */
     public function setSendAppDecision($sendAppDecision)
@@ -478,7 +497,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Set the send notices procs
      *
-     * @param string $sendNoticesProcs
+     * @param string $sendNoticesProcs new value being set
+     *
      * @return Recipient
      */
     public function setSendNoticesProcs($sendNoticesProcs)
@@ -501,7 +521,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Set the traffic area
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas collection being set as the value
+     *
      * @return Recipient
      */
     public function setTrafficAreas($trafficAreas)
@@ -524,7 +545,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Add a traffic areas
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas collection being added
+     *
      * @return Recipient
      */
     public function addTrafficAreas($trafficAreas)
@@ -546,7 +568,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Remove a traffic areas
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas collection being removed
+     *
      * @return Recipient
      */
     public function removeTrafficAreas($trafficAreas)
@@ -561,7 +584,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Recipient
      */
     public function setVersion($version)
@@ -585,6 +609,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -595,6 +621,8 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -604,7 +632,9 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

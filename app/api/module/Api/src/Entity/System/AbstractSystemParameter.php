@@ -50,7 +50,8 @@ abstract class AbstractSystemParameter implements BundleSerializableInterface, J
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return SystemParameter
      */
     public function setDescription($description)
@@ -73,7 +74,8 @@ abstract class AbstractSystemParameter implements BundleSerializableInterface, J
     /**
      * Set the id
      *
-     * @param string $id
+     * @param string $id new value being set
+     *
      * @return SystemParameter
      */
     public function setId($id)
@@ -96,7 +98,8 @@ abstract class AbstractSystemParameter implements BundleSerializableInterface, J
     /**
      * Set the param value
      *
-     * @param string $paramValue
+     * @param string $paramValue new value being set
+     *
      * @return SystemParameter
      */
     public function setParamValue($paramValue)
@@ -121,7 +124,9 @@ abstract class AbstractSystemParameter implements BundleSerializableInterface, J
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

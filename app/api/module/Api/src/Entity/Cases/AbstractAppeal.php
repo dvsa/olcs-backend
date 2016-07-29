@@ -265,7 +265,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the appeal date
      *
-     * @param \DateTime $appealDate
+     * @param \DateTime $appealDate new value being set
+     *
      * @return Appeal
      */
     public function setAppealDate($appealDate)
@@ -288,7 +289,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the appeal no
      *
-     * @param string $appealNo
+     * @param string $appealNo new value being set
+     *
      * @return Appeal
      */
     public function setAppealNo($appealNo)
@@ -311,7 +313,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return Appeal
      */
     public function setCase($case)
@@ -334,7 +337,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the comment
      *
-     * @param string $comment
+     * @param string $comment new value being set
+     *
      * @return Appeal
      */
     public function setComment($comment)
@@ -357,7 +361,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Appeal
      */
     public function setCreatedBy($createdBy)
@@ -380,7 +385,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Appeal
      */
     public function setCreatedOn($createdOn)
@@ -403,7 +409,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the deadline date
      *
-     * @param \DateTime $deadlineDate
+     * @param \DateTime $deadlineDate new value being set
+     *
      * @return Appeal
      */
     public function setDeadlineDate($deadlineDate)
@@ -426,7 +433,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the decision date
      *
-     * @param \DateTime $decisionDate
+     * @param \DateTime $decisionDate new value being set
+     *
      * @return Appeal
      */
     public function setDecisionDate($decisionDate)
@@ -449,7 +457,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the dvsa notified
      *
-     * @param string $dvsaNotified
+     * @param string $dvsaNotified new value being set
+     *
      * @return Appeal
      */
     public function setDvsaNotified($dvsaNotified)
@@ -472,7 +481,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the hearing date
      *
-     * @param \DateTime $hearingDate
+     * @param \DateTime $hearingDate new value being set
+     *
      * @return Appeal
      */
     public function setHearingDate($hearingDate)
@@ -495,7 +505,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Appeal
      */
     public function setId($id)
@@ -518,7 +529,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Appeal
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -541,7 +553,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Appeal
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -564,7 +577,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return Appeal
      */
     public function setOlbsKey($olbsKey)
@@ -587,7 +601,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the olbs type
      *
-     * @param string $olbsType
+     * @param string $olbsType new value being set
+     *
      * @return Appeal
      */
     public function setOlbsType($olbsType)
@@ -610,7 +625,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the outcome
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $outcome
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $outcome entity being set as the value
+     *
      * @return Appeal
      */
     public function setOutcome($outcome)
@@ -633,7 +649,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the outline ground
      *
-     * @param string $outlineGround
+     * @param string $outlineGround new value being set
+     *
      * @return Appeal
      */
     public function setOutlineGround($outlineGround)
@@ -656,7 +673,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the papers due date
      *
-     * @param \DateTime $papersDueDate
+     * @param \DateTime $papersDueDate new value being set
+     *
      * @return Appeal
      */
     public function setPapersDueDate($papersDueDate)
@@ -679,7 +697,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the papers due tc date
      *
-     * @param \DateTime $papersDueTcDate
+     * @param \DateTime $papersDueTcDate new value being set
+     *
      * @return Appeal
      */
     public function setPapersDueTcDate($papersDueTcDate)
@@ -702,7 +721,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the papers sent date
      *
-     * @param \DateTime $papersSentDate
+     * @param \DateTime $papersSentDate new value being set
+     *
      * @return Appeal
      */
     public function setPapersSentDate($papersSentDate)
@@ -725,7 +745,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the papers sent tc date
      *
-     * @param \DateTime $papersSentTcDate
+     * @param \DateTime $papersSentTcDate new value being set
+     *
      * @return Appeal
      */
     public function setPapersSentTcDate($papersSentTcDate)
@@ -748,7 +769,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the reason
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $reason
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $reason entity being set as the value
+     *
      * @return Appeal
      */
     public function setReason($reason)
@@ -771,7 +793,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Appeal
      */
     public function setVersion($version)
@@ -794,7 +817,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the withdrawn date
      *
-     * @param \DateTime $withdrawnDate
+     * @param \DateTime $withdrawnDate new value being set
+     *
      * @return Appeal
      */
     public function setWithdrawnDate($withdrawnDate)
@@ -818,6 +842,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -828,6 +854,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -837,7 +865,9 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

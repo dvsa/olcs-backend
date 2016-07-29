@@ -146,7 +146,8 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
     /**
      * Set the category
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\Category $category
+     * @param \Dvsa\Olcs\Api\Entity\System\Category $category entity being set as the value
+     *
      * @return SubCategory
      */
     public function setCategory($category)
@@ -169,7 +170,8 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return SubCategory
      */
     public function setCreatedBy($createdBy)
@@ -192,7 +194,8 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return SubCategory
      */
     public function setCreatedOn($createdOn)
@@ -215,7 +218,8 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return SubCategory
      */
     public function setId($id)
@@ -238,7 +242,8 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
     /**
      * Set the is doc
      *
-     * @param boolean $isDoc
+     * @param boolean $isDoc new value being set
+     *
      * @return SubCategory
      */
     public function setIsDoc($isDoc)
@@ -261,7 +266,8 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
     /**
      * Set the is free text
      *
-     * @param boolean $isFreeText
+     * @param boolean $isFreeText new value being set
+     *
      * @return SubCategory
      */
     public function setIsFreeText($isFreeText)
@@ -284,7 +290,8 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
     /**
      * Set the is scan
      *
-     * @param boolean $isScan
+     * @param boolean $isScan new value being set
+     *
      * @return SubCategory
      */
     public function setIsScan($isScan)
@@ -307,7 +314,8 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
     /**
      * Set the is task
      *
-     * @param boolean $isTask
+     * @param boolean $isTask new value being set
+     *
      * @return SubCategory
      */
     public function setIsTask($isTask)
@@ -330,7 +338,8 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return SubCategory
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -353,7 +362,8 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return SubCategory
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -376,7 +386,8 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
     /**
      * Set the sub category name
      *
-     * @param string $subCategoryName
+     * @param string $subCategoryName new value being set
+     *
      * @return SubCategory
      */
     public function setSubCategoryName($subCategoryName)
@@ -399,7 +410,8 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return SubCategory
      */
     public function setVersion($version)
@@ -423,6 +435,8 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -433,6 +447,8 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -442,7 +458,9 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

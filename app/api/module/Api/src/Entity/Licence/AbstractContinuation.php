@@ -100,7 +100,8 @@ abstract class AbstractContinuation implements BundleSerializableInterface, Json
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Continuation
      */
     public function setCreatedBy($createdBy)
@@ -123,7 +124,8 @@ abstract class AbstractContinuation implements BundleSerializableInterface, Json
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Continuation
      */
     public function setCreatedOn($createdOn)
@@ -146,7 +148,8 @@ abstract class AbstractContinuation implements BundleSerializableInterface, Json
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Continuation
      */
     public function setId($id)
@@ -169,7 +172,8 @@ abstract class AbstractContinuation implements BundleSerializableInterface, Json
     /**
      * Set the month
      *
-     * @param int $month
+     * @param int $month new value being set
+     *
      * @return Continuation
      */
     public function setMonth($month)
@@ -192,7 +196,8 @@ abstract class AbstractContinuation implements BundleSerializableInterface, Json
     /**
      * Set the traffic area
      *
-     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $trafficArea
+     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $trafficArea entity being set as the value
+     *
      * @return Continuation
      */
     public function setTrafficArea($trafficArea)
@@ -215,7 +220,8 @@ abstract class AbstractContinuation implements BundleSerializableInterface, Json
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Continuation
      */
     public function setVersion($version)
@@ -238,7 +244,8 @@ abstract class AbstractContinuation implements BundleSerializableInterface, Json
     /**
      * Set the year
      *
-     * @param int $year
+     * @param int $year new value being set
+     *
      * @return Continuation
      */
     public function setYear($year)
@@ -262,6 +269,8 @@ abstract class AbstractContinuation implements BundleSerializableInterface, Json
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -272,7 +281,9 @@ abstract class AbstractContinuation implements BundleSerializableInterface, Json
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

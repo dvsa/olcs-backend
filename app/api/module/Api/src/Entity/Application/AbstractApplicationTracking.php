@@ -288,7 +288,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the addresses status
      *
-     * @param int $addressesStatus
+     * @param int $addressesStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setAddressesStatus($addressesStatus)
@@ -311,7 +312,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application entity being set as the value
+     *
      * @return ApplicationTracking
      */
     public function setApplication($application)
@@ -334,7 +336,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the business details status
      *
-     * @param int $businessDetailsStatus
+     * @param int $businessDetailsStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setBusinessDetailsStatus($businessDetailsStatus)
@@ -357,7 +360,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the business type status
      *
-     * @param int $businessTypeStatus
+     * @param int $businessTypeStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setBusinessTypeStatus($businessTypeStatus)
@@ -380,7 +384,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the community licences status
      *
-     * @param int $communityLicencesStatus
+     * @param int $communityLicencesStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setCommunityLicencesStatus($communityLicencesStatus)
@@ -403,7 +408,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the conditions undertakings status
      *
-     * @param int $conditionsUndertakingsStatus
+     * @param int $conditionsUndertakingsStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setConditionsUndertakingsStatus($conditionsUndertakingsStatus)
@@ -426,7 +432,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the convictions penalties status
      *
-     * @param int $convictionsPenaltiesStatus
+     * @param int $convictionsPenaltiesStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setConvictionsPenaltiesStatus($convictionsPenaltiesStatus)
@@ -449,7 +456,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return ApplicationTracking
      */
     public function setCreatedBy($createdBy)
@@ -472,7 +480,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return ApplicationTracking
      */
     public function setCreatedOn($createdOn)
@@ -495,7 +504,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the declarations internal status
      *
-     * @param int $declarationsInternalStatus
+     * @param int $declarationsInternalStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setDeclarationsInternalStatus($declarationsInternalStatus)
@@ -518,7 +528,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the discs status
      *
-     * @param int $discsStatus
+     * @param int $discsStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setDiscsStatus($discsStatus)
@@ -541,7 +552,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the financial evidence status
      *
-     * @param int $financialEvidenceStatus
+     * @param int $financialEvidenceStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setFinancialEvidenceStatus($financialEvidenceStatus)
@@ -564,7 +576,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the financial history status
      *
-     * @param int $financialHistoryStatus
+     * @param int $financialHistoryStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setFinancialHistoryStatus($financialHistoryStatus)
@@ -587,7 +600,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return ApplicationTracking
      */
     public function setId($id)
@@ -610,7 +624,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return ApplicationTracking
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -633,7 +648,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return ApplicationTracking
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -656,7 +672,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the licence history status
      *
-     * @param int $licenceHistoryStatus
+     * @param int $licenceHistoryStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setLicenceHistoryStatus($licenceHistoryStatus)
@@ -679,7 +696,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the operating centres status
      *
-     * @param int $operatingCentresStatus
+     * @param int $operatingCentresStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setOperatingCentresStatus($operatingCentresStatus)
@@ -702,7 +720,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the people status
      *
-     * @param int $peopleStatus
+     * @param int $peopleStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setPeopleStatus($peopleStatus)
@@ -725,7 +744,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the safety status
      *
-     * @param int $safetyStatus
+     * @param int $safetyStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setSafetyStatus($safetyStatus)
@@ -748,7 +768,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the taxi phv status
      *
-     * @param int $taxiPhvStatus
+     * @param int $taxiPhvStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setTaxiPhvStatus($taxiPhvStatus)
@@ -771,7 +792,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the transport managers status
      *
-     * @param int $transportManagersStatus
+     * @param int $transportManagersStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setTransportManagersStatus($transportManagersStatus)
@@ -794,7 +816,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the type of licence status
      *
-     * @param int $typeOfLicenceStatus
+     * @param int $typeOfLicenceStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setTypeOfLicenceStatus($typeOfLicenceStatus)
@@ -817,7 +840,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the vehicles declarations status
      *
-     * @param int $vehiclesDeclarationsStatus
+     * @param int $vehiclesDeclarationsStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setVehiclesDeclarationsStatus($vehiclesDeclarationsStatus)
@@ -840,7 +864,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the vehicles psv status
      *
-     * @param int $vehiclesPsvStatus
+     * @param int $vehiclesPsvStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setVehiclesPsvStatus($vehiclesPsvStatus)
@@ -863,7 +888,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the vehicles status
      *
-     * @param int $vehiclesStatus
+     * @param int $vehiclesStatus new value being set
+     *
      * @return ApplicationTracking
      */
     public function setVehiclesStatus($vehiclesStatus)
@@ -886,7 +912,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return ApplicationTracking
      */
     public function setVersion($version)
@@ -910,6 +937,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -920,6 +949,8 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -929,7 +960,9 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

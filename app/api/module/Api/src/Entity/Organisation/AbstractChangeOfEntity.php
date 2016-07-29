@@ -145,7 +145,8 @@ abstract class AbstractChangeOfEntity implements BundleSerializableInterface, Js
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return ChangeOfEntity
      */
     public function setCreatedBy($createdBy)
@@ -168,7 +169,8 @@ abstract class AbstractChangeOfEntity implements BundleSerializableInterface, Js
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return ChangeOfEntity
      */
     public function setCreatedOn($createdOn)
@@ -191,7 +193,8 @@ abstract class AbstractChangeOfEntity implements BundleSerializableInterface, Js
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return ChangeOfEntity
      */
     public function setDeletedDate($deletedDate)
@@ -214,7 +217,8 @@ abstract class AbstractChangeOfEntity implements BundleSerializableInterface, Js
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return ChangeOfEntity
      */
     public function setId($id)
@@ -237,7 +241,8 @@ abstract class AbstractChangeOfEntity implements BundleSerializableInterface, Js
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return ChangeOfEntity
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -260,7 +265,8 @@ abstract class AbstractChangeOfEntity implements BundleSerializableInterface, Js
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return ChangeOfEntity
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -283,7 +289,8 @@ abstract class AbstractChangeOfEntity implements BundleSerializableInterface, Js
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return ChangeOfEntity
      */
     public function setLicence($licence)
@@ -306,7 +313,8 @@ abstract class AbstractChangeOfEntity implements BundleSerializableInterface, Js
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return ChangeOfEntity
      */
     public function setOlbsKey($olbsKey)
@@ -329,7 +337,8 @@ abstract class AbstractChangeOfEntity implements BundleSerializableInterface, Js
     /**
      * Set the old licence no
      *
-     * @param string $oldLicenceNo
+     * @param string $oldLicenceNo new value being set
+     *
      * @return ChangeOfEntity
      */
     public function setOldLicenceNo($oldLicenceNo)
@@ -352,7 +361,8 @@ abstract class AbstractChangeOfEntity implements BundleSerializableInterface, Js
     /**
      * Set the old organisation name
      *
-     * @param string $oldOrganisationName
+     * @param string $oldOrganisationName new value being set
+     *
      * @return ChangeOfEntity
      */
     public function setOldOrganisationName($oldOrganisationName)
@@ -375,7 +385,8 @@ abstract class AbstractChangeOfEntity implements BundleSerializableInterface, Js
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return ChangeOfEntity
      */
     public function setVersion($version)
@@ -399,6 +410,8 @@ abstract class AbstractChangeOfEntity implements BundleSerializableInterface, Js
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -409,6 +422,8 @@ abstract class AbstractChangeOfEntity implements BundleSerializableInterface, Js
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -418,7 +433,9 @@ abstract class AbstractChangeOfEntity implements BundleSerializableInterface, Js
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

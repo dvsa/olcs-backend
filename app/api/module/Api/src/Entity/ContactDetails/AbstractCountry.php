@@ -107,7 +107,8 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Set the country desc
      *
-     * @param string $countryDesc
+     * @param string $countryDesc new value being set
+     *
      * @return Country
      */
     public function setCountryDesc($countryDesc)
@@ -130,7 +131,8 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Country
      */
     public function setCreatedBy($createdBy)
@@ -153,7 +155,8 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Country
      */
     public function setCreatedOn($createdOn)
@@ -176,7 +179,8 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Set the id
      *
-     * @param string $id
+     * @param string $id new value being set
+     *
      * @return Country
      */
     public function setId($id)
@@ -199,7 +203,8 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Set the is member state
      *
-     * @param string $isMemberState
+     * @param string $isMemberState new value being set
+     *
      * @return Country
      */
     public function setIsMemberState($isMemberState)
@@ -222,7 +227,8 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Country
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -245,7 +251,8 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Country
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -268,7 +275,8 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Country
      */
     public function setVersion($version)
@@ -292,6 +300,8 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -302,6 +312,8 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -311,7 +323,9 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

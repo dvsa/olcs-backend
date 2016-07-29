@@ -124,7 +124,8 @@ abstract class AbstractLegacyRecommendationPiReason implements BundleSerializabl
     /**
      * Set the comment
      *
-     * @param string $comment
+     * @param string $comment new value being set
+     *
      * @return LegacyRecommendationPiReason
      */
     public function setComment($comment)
@@ -147,7 +148,8 @@ abstract class AbstractLegacyRecommendationPiReason implements BundleSerializabl
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return LegacyRecommendationPiReason
      */
     public function setCreatedBy($createdBy)
@@ -170,7 +172,8 @@ abstract class AbstractLegacyRecommendationPiReason implements BundleSerializabl
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return LegacyRecommendationPiReason
      */
     public function setCreatedOn($createdOn)
@@ -193,7 +196,8 @@ abstract class AbstractLegacyRecommendationPiReason implements BundleSerializabl
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return LegacyRecommendationPiReason
      */
     public function setId($id)
@@ -216,7 +220,8 @@ abstract class AbstractLegacyRecommendationPiReason implements BundleSerializabl
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return LegacyRecommendationPiReason
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -239,7 +244,8 @@ abstract class AbstractLegacyRecommendationPiReason implements BundleSerializabl
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return LegacyRecommendationPiReason
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -262,7 +268,8 @@ abstract class AbstractLegacyRecommendationPiReason implements BundleSerializabl
     /**
      * Set the legacy pi reason
      *
-     * @param \Dvsa\Olcs\Api\Entity\Legacy\LegacyPiReason $legacyPiReason
+     * @param \Dvsa\Olcs\Api\Entity\Legacy\LegacyPiReason $legacyPiReason entity being set as the value
+     *
      * @return LegacyRecommendationPiReason
      */
     public function setLegacyPiReason($legacyPiReason)
@@ -285,7 +292,8 @@ abstract class AbstractLegacyRecommendationPiReason implements BundleSerializabl
     /**
      * Set the legacy recommendation
      *
-     * @param \Dvsa\Olcs\Api\Entity\Legacy\LegacyRecommendation $legacyRecommendation
+     * @param \Dvsa\Olcs\Api\Entity\Legacy\LegacyRecommendation $legacyRecommendation entity being set as the value
+     *
      * @return LegacyRecommendationPiReason
      */
     public function setLegacyRecommendation($legacyRecommendation)
@@ -308,7 +316,8 @@ abstract class AbstractLegacyRecommendationPiReason implements BundleSerializabl
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return LegacyRecommendationPiReason
      */
     public function setVersion($version)
@@ -332,6 +341,8 @@ abstract class AbstractLegacyRecommendationPiReason implements BundleSerializabl
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -342,6 +353,8 @@ abstract class AbstractLegacyRecommendationPiReason implements BundleSerializabl
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -351,7 +364,9 @@ abstract class AbstractLegacyRecommendationPiReason implements BundleSerializabl
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

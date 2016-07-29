@@ -127,12 +127,19 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->users = new ArrayCollection();
@@ -142,7 +149,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Role
      */
     public function setCreatedBy($createdBy)
@@ -165,7 +173,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Role
      */
     public function setCreatedOn($createdOn)
@@ -188,7 +197,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return Role
      */
     public function setDescription($description)
@@ -211,7 +221,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Role
      */
     public function setId($id)
@@ -234,7 +245,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Role
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -257,7 +269,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Role
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -280,7 +293,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the role
      *
-     * @param string $role
+     * @param string $role new value being set
+     *
      * @return Role
      */
     public function setRole($role)
@@ -303,7 +317,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the user
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $users
+     * @param \Doctrine\Common\Collections\ArrayCollection $users collection being set as the value
+     *
      * @return Role
      */
     public function setUsers($users)
@@ -326,7 +341,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Add a users
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $users
+     * @param \Doctrine\Common\Collections\ArrayCollection $users collection being added
+     *
      * @return Role
      */
     public function addUsers($users)
@@ -348,7 +364,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Remove a users
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $users
+     * @param \Doctrine\Common\Collections\ArrayCollection $users collection being removed
+     *
      * @return Role
      */
     public function removeUsers($users)
@@ -363,7 +380,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Role
      */
     public function setVersion($version)
@@ -386,7 +404,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the role permission
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $rolePermissions
+     * @param \Doctrine\Common\Collections\ArrayCollection $rolePermissions collection being set as the value
+     *
      * @return Role
      */
     public function setRolePermissions($rolePermissions)
@@ -409,7 +428,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Add a role permissions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $rolePermissions
+     * @param \Doctrine\Common\Collections\ArrayCollection $rolePermissions collection being added
+     *
      * @return Role
      */
     public function addRolePermissions($rolePermissions)
@@ -431,7 +451,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Remove a role permissions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $rolePermissions
+     * @param \Doctrine\Common\Collections\ArrayCollection $rolePermissions collection being removed
+     *
      * @return Role
      */
     public function removeRolePermissions($rolePermissions)
@@ -447,6 +468,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -457,6 +480,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -466,7 +491,9 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

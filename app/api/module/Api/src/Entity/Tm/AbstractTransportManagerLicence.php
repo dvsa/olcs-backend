@@ -270,12 +270,19 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->operatingCentres = new ArrayCollection();
@@ -285,7 +292,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the additional information
      *
-     * @param string $additionalInformation
+     * @param string $additionalInformation new value being set
+     *
      * @return TransportManagerLicence
      */
     public function setAdditionalInformation($additionalInformation)
@@ -308,7 +316,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return TransportManagerLicence
      */
     public function setCreatedBy($createdBy)
@@ -331,7 +340,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return TransportManagerLicence
      */
     public function setCreatedOn($createdOn)
@@ -354,7 +364,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return TransportManagerLicence
      */
     public function setDeletedDate($deletedDate)
@@ -377,7 +388,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the hours fri
      *
-     * @param float $hoursFri
+     * @param float $hoursFri new value being set
+     *
      * @return TransportManagerLicence
      */
     public function setHoursFri($hoursFri)
@@ -400,7 +412,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the hours mon
      *
-     * @param float $hoursMon
+     * @param float $hoursMon new value being set
+     *
      * @return TransportManagerLicence
      */
     public function setHoursMon($hoursMon)
@@ -423,7 +436,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the hours sat
      *
-     * @param float $hoursSat
+     * @param float $hoursSat new value being set
+     *
      * @return TransportManagerLicence
      */
     public function setHoursSat($hoursSat)
@@ -446,7 +460,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the hours sun
      *
-     * @param float $hoursSun
+     * @param float $hoursSun new value being set
+     *
      * @return TransportManagerLicence
      */
     public function setHoursSun($hoursSun)
@@ -469,7 +484,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the hours thu
      *
-     * @param float $hoursThu
+     * @param float $hoursThu new value being set
+     *
      * @return TransportManagerLicence
      */
     public function setHoursThu($hoursThu)
@@ -492,7 +508,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the hours tue
      *
-     * @param float $hoursTue
+     * @param float $hoursTue new value being set
+     *
      * @return TransportManagerLicence
      */
     public function setHoursTue($hoursTue)
@@ -515,7 +532,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the hours wed
      *
-     * @param float $hoursWed
+     * @param float $hoursWed new value being set
+     *
      * @return TransportManagerLicence
      */
     public function setHoursWed($hoursWed)
@@ -538,7 +556,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return TransportManagerLicence
      */
     public function setId($id)
@@ -561,7 +580,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the is owner
      *
-     * @param string $isOwner
+     * @param string $isOwner new value being set
+     *
      * @return TransportManagerLicence
      */
     public function setIsOwner($isOwner)
@@ -584,7 +604,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return TransportManagerLicence
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -607,7 +628,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return TransportManagerLicence
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -630,7 +652,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return TransportManagerLicence
      */
     public function setLicence($licence)
@@ -653,7 +676,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return TransportManagerLicence
      */
     public function setOlbsKey($olbsKey)
@@ -676,7 +700,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the operating centre
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being set as the value
+     *
      * @return TransportManagerLicence
      */
     public function setOperatingCentres($operatingCentres)
@@ -699,7 +724,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Add a operating centres
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being added
+     *
      * @return TransportManagerLicence
      */
     public function addOperatingCentres($operatingCentres)
@@ -721,7 +747,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Remove a operating centres
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being removed
+     *
      * @return TransportManagerLicence
      */
     public function removeOperatingCentres($operatingCentres)
@@ -736,7 +763,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the tm type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $tmType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $tmType entity being set as the value
+     *
      * @return TransportManagerLicence
      */
     public function setTmType($tmType)
@@ -759,7 +787,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the transport manager
      *
-     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager entity being set as the value
+     *
      * @return TransportManagerLicence
      */
     public function setTransportManager($transportManager)
@@ -782,7 +811,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return TransportManagerLicence
      */
     public function setVersion($version)
@@ -805,7 +835,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the other licence
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences collection being set as the value
+     *
      * @return TransportManagerLicence
      */
     public function setOtherLicences($otherLicences)
@@ -828,7 +859,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Add a other licences
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences collection being added
+     *
      * @return TransportManagerLicence
      */
     public function addOtherLicences($otherLicences)
@@ -850,7 +882,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Remove a other licences
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences collection being removed
+     *
      * @return TransportManagerLicence
      */
     public function removeOtherLicences($otherLicences)
@@ -866,6 +899,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -876,6 +911,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -885,7 +922,9 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

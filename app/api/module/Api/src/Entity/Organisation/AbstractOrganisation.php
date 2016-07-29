@@ -343,12 +343,19 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->disqualifications = new ArrayCollection();
@@ -363,7 +370,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the allow email
      *
-     * @param string $allowEmail
+     * @param string $allowEmail new value being set
+     *
      * @return Organisation
      */
     public function setAllowEmail($allowEmail)
@@ -386,7 +394,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the company cert seen
      *
-     * @param string $companyCertSeen
+     * @param string $companyCertSeen new value being set
+     *
      * @return Organisation
      */
     public function setCompanyCertSeen($companyCertSeen)
@@ -409,7 +418,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the company or llp no
      *
-     * @param string $companyOrLlpNo
+     * @param string $companyOrLlpNo new value being set
+     *
      * @return Organisation
      */
     public function setCompanyOrLlpNo($companyOrLlpNo)
@@ -432,7 +442,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the confirm share trailer info
      *
-     * @param string $confirmShareTrailerInfo
+     * @param string $confirmShareTrailerInfo new value being set
+     *
      * @return Organisation
      */
     public function setConfirmShareTrailerInfo($confirmShareTrailerInfo)
@@ -455,7 +466,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the confirm share vehicle info
      *
-     * @param string $confirmShareVehicleInfo
+     * @param string $confirmShareVehicleInfo new value being set
+     *
      * @return Organisation
      */
     public function setConfirmShareVehicleInfo($confirmShareVehicleInfo)
@@ -478,7 +490,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the contact details
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $contactDetails
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $contactDetails entity being set as the value
+     *
      * @return Organisation
      */
     public function setContactDetails($contactDetails)
@@ -501,7 +514,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the cpid
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $cpid
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $cpid entity being set as the value
+     *
      * @return Organisation
      */
     public function setCpid($cpid)
@@ -524,7 +538,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Organisation
      */
     public function setCreatedBy($createdBy)
@@ -547,7 +562,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Organisation
      */
     public function setCreatedOn($createdOn)
@@ -570,7 +586,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return Organisation
      */
     public function setDeletedDate($deletedDate)
@@ -593,7 +610,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Organisation
      */
     public function setId($id)
@@ -616,7 +634,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the irfo contact details
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $irfoContactDetails
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $irfoContactDetails entity being set as the value
+     *
      * @return Organisation
      */
     public function setIrfoContactDetails($irfoContactDetails)
@@ -639,7 +658,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the irfo nationality
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $irfoNationality
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $irfoNationality entity being set as the value
+     *
      * @return Organisation
      */
     public function setIrfoNationality($irfoNationality)
@@ -662,7 +682,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the is irfo
      *
-     * @param string $isIrfo
+     * @param string $isIrfo new value being set
+     *
      * @return Organisation
      */
     public function setIsIrfo($isIrfo)
@@ -685,7 +706,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the is unlicensed
      *
-     * @param boolean $isUnlicensed
+     * @param boolean $isUnlicensed new value being set
+     *
      * @return Organisation
      */
     public function setIsUnlicensed($isUnlicensed)
@@ -708,7 +730,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Organisation
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -731,7 +754,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Organisation
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -754,7 +778,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the lead tc area
      *
-     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $leadTcArea
+     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $leadTcArea entity being set as the value
+     *
      * @return Organisation
      */
     public function setLeadTcArea($leadTcArea)
@@ -777,7 +802,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the name
      *
-     * @param string $name
+     * @param string $name new value being set
+     *
      * @return Organisation
      */
     public function setName($name)
@@ -800,7 +826,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the nature of business
      *
-     * @param string $natureOfBusiness
+     * @param string $natureOfBusiness new value being set
+     *
      * @return Organisation
      */
     public function setNatureOfBusiness($natureOfBusiness)
@@ -823,7 +850,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $type
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $type entity being set as the value
+     *
      * @return Organisation
      */
     public function setType($type)
@@ -846,7 +874,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Organisation
      */
     public function setVersion($version)
@@ -869,7 +898,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the disqualification
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications
+     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications collection being set as the value
+     *
      * @return Organisation
      */
     public function setDisqualifications($disqualifications)
@@ -892,7 +922,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Add a disqualifications
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications
+     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications collection being added
+     *
      * @return Organisation
      */
     public function addDisqualifications($disqualifications)
@@ -914,7 +945,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Remove a disqualifications
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications
+     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications collection being removed
+     *
      * @return Organisation
      */
     public function removeDisqualifications($disqualifications)
@@ -929,7 +961,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the irfo partner
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPartners
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPartners collection being set as the value
+     *
      * @return Organisation
      */
     public function setIrfoPartners($irfoPartners)
@@ -952,7 +985,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Add a irfo partners
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPartners
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPartners collection being added
+     *
      * @return Organisation
      */
     public function addIrfoPartners($irfoPartners)
@@ -974,7 +1008,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Remove a irfo partners
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPartners
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPartners collection being removed
+     *
      * @return Organisation
      */
     public function removeIrfoPartners($irfoPartners)
@@ -989,7 +1024,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the licence
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licences
+     * @param \Doctrine\Common\Collections\ArrayCollection $licences collection being set as the value
+     *
      * @return Organisation
      */
     public function setLicences($licences)
@@ -1012,7 +1048,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Add a licences
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licences
+     * @param \Doctrine\Common\Collections\ArrayCollection $licences collection being added
+     *
      * @return Organisation
      */
     public function addLicences($licences)
@@ -1034,7 +1071,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Remove a licences
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licences
+     * @param \Doctrine\Common\Collections\ArrayCollection $licences collection being removed
+     *
      * @return Organisation
      */
     public function removeLicences($licences)
@@ -1049,7 +1087,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the organisation person
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons collection being set as the value
+     *
      * @return Organisation
      */
     public function setOrganisationPersons($organisationPersons)
@@ -1072,7 +1111,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Add a organisation persons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons collection being added
+     *
      * @return Organisation
      */
     public function addOrganisationPersons($organisationPersons)
@@ -1094,7 +1134,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Remove a organisation persons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons collection being removed
+     *
      * @return Organisation
      */
     public function removeOrganisationPersons($organisationPersons)
@@ -1109,7 +1150,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the read audit
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being set as the value
+     *
      * @return Organisation
      */
     public function setReadAudits($readAudits)
@@ -1132,7 +1174,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Add a read audits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being added
+     *
      * @return Organisation
      */
     public function addReadAudits($readAudits)
@@ -1154,7 +1197,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Remove a read audits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being removed
+     *
      * @return Organisation
      */
     public function removeReadAudits($readAudits)
@@ -1169,7 +1213,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the organisation user
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers collection being set as the value
+     *
      * @return Organisation
      */
     public function setOrganisationUsers($organisationUsers)
@@ -1192,7 +1237,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Add a organisation users
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers collection being added
+     *
      * @return Organisation
      */
     public function addOrganisationUsers($organisationUsers)
@@ -1214,7 +1260,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Remove a organisation users
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers collection being removed
+     *
      * @return Organisation
      */
     public function removeOrganisationUsers($organisationUsers)
@@ -1229,7 +1276,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the trading name
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
+     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames collection being set as the value
+     *
      * @return Organisation
      */
     public function setTradingNames($tradingNames)
@@ -1252,7 +1300,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Add a trading names
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
+     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames collection being added
+     *
      * @return Organisation
      */
     public function addTradingNames($tradingNames)
@@ -1274,7 +1323,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Remove a trading names
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames
+     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames collection being removed
+     *
      * @return Organisation
      */
     public function removeTradingNames($tradingNames)
@@ -1290,6 +1340,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -1300,6 +1352,8 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -1309,7 +1363,9 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

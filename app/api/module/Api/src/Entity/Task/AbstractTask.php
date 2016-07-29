@@ -276,7 +276,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the action date
      *
-     * @param \DateTime $actionDate
+     * @param \DateTime $actionDate new value being set
+     *
      * @return Task
      */
     public function setActionDate($actionDate)
@@ -299,7 +300,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application entity being set as the value
+     *
      * @return Task
      */
     public function setApplication($application)
@@ -322,7 +324,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the assigned by user
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $assignedByUser
+     * @param \Dvsa\Olcs\Api\Entity\User\User $assignedByUser entity being set as the value
+     *
      * @return Task
      */
     public function setAssignedByUser($assignedByUser)
@@ -345,7 +348,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the assigned to team
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\Team $assignedToTeam
+     * @param \Dvsa\Olcs\Api\Entity\User\Team $assignedToTeam entity being set as the value
+     *
      * @return Task
      */
     public function setAssignedToTeam($assignedToTeam)
@@ -368,7 +372,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the assigned to user
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $assignedToUser
+     * @param \Dvsa\Olcs\Api\Entity\User\User $assignedToUser entity being set as the value
+     *
      * @return Task
      */
     public function setAssignedToUser($assignedToUser)
@@ -391,7 +396,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the bus reg
      *
-     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg
+     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg entity being set as the value
+     *
      * @return Task
      */
     public function setBusReg($busReg)
@@ -414,7 +420,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return Task
      */
     public function setCase($case)
@@ -437,7 +444,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the category
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\Category $category
+     * @param \Dvsa\Olcs\Api\Entity\System\Category $category entity being set as the value
+     *
      * @return Task
      */
     public function setCategory($category)
@@ -460,7 +468,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Task
      */
     public function setCreatedBy($createdBy)
@@ -483,7 +492,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Task
      */
     public function setCreatedOn($createdOn)
@@ -506,7 +516,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return Task
      */
     public function setDescription($description)
@@ -529,7 +540,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Task
      */
     public function setId($id)
@@ -552,7 +564,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the irfo organisation
      *
-     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $irfoOrganisation
+     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $irfoOrganisation entity being set as the value
+     *
      * @return Task
      */
     public function setIrfoOrganisation($irfoOrganisation)
@@ -575,7 +588,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the is closed
      *
-     * @param string $isClosed
+     * @param string $isClosed new value being set
+     *
      * @return Task
      */
     public function setIsClosed($isClosed)
@@ -598,7 +612,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Task
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -621,7 +636,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Task
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -644,7 +660,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return Task
      */
     public function setLicence($licence)
@@ -667,7 +684,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return Task
      */
     public function setOlbsKey($olbsKey)
@@ -690,7 +708,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the sub category
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory
+     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory entity being set as the value
+     *
      * @return Task
      */
     public function setSubCategory($subCategory)
@@ -713,7 +732,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the submission
      *
-     * @param \Dvsa\Olcs\Api\Entity\Submission\Submission $submission
+     * @param \Dvsa\Olcs\Api\Entity\Submission\Submission $submission entity being set as the value
+     *
      * @return Task
      */
     public function setSubmission($submission)
@@ -736,7 +756,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the transport manager
      *
-     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager entity being set as the value
+     *
      * @return Task
      */
     public function setTransportManager($transportManager)
@@ -759,7 +780,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the urgent
      *
-     * @param string $urgent
+     * @param string $urgent new value being set
+     *
      * @return Task
      */
     public function setUrgent($urgent)
@@ -782,7 +804,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Task
      */
     public function setVersion($version)
@@ -806,6 +829,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -816,6 +841,8 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -825,7 +852,9 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

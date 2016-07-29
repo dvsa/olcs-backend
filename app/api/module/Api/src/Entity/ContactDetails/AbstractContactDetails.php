@@ -219,12 +219,19 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->phoneContacts = new ArrayCollection();
@@ -233,7 +240,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the address
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Address $address
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Address $address entity being set as the value
+     *
      * @return ContactDetails
      */
     public function setAddress($address)
@@ -256,7 +264,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the contact type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $contactType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $contactType entity being set as the value
+     *
      * @return ContactDetails
      */
     public function setContactType($contactType)
@@ -279,7 +288,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return ContactDetails
      */
     public function setCreatedBy($createdBy)
@@ -302,7 +312,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return ContactDetails
      */
     public function setCreatedOn($createdOn)
@@ -325,7 +336,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return ContactDetails
      */
     public function setDeletedDate($deletedDate)
@@ -348,7 +360,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return ContactDetails
      */
     public function setDescription($description)
@@ -371,7 +384,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the email address
      *
-     * @param string $emailAddress
+     * @param string $emailAddress new value being set
+     *
      * @return ContactDetails
      */
     public function setEmailAddress($emailAddress)
@@ -394,7 +408,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the fao
      *
-     * @param string $fao
+     * @param string $fao new value being set
+     *
      * @return ContactDetails
      */
     public function setFao($fao)
@@ -417,7 +432,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return ContactDetails
      */
     public function setId($id)
@@ -440,7 +456,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return ContactDetails
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -463,7 +480,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return ContactDetails
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -486,7 +504,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return ContactDetails
      */
     public function setOlbsKey($olbsKey)
@@ -509,7 +528,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the olbs type
      *
-     * @param string $olbsType
+     * @param string $olbsType new value being set
+     *
      * @return ContactDetails
      */
     public function setOlbsType($olbsType)
@@ -532,7 +552,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the person
      *
-     * @param \Dvsa\Olcs\Api\Entity\Person\Person $person
+     * @param \Dvsa\Olcs\Api\Entity\Person\Person $person entity being set as the value
+     *
      * @return ContactDetails
      */
     public function setPerson($person)
@@ -555,7 +576,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return ContactDetails
      */
     public function setVersion($version)
@@ -578,7 +600,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the written permission to engage
      *
-     * @param string $writtenPermissionToEngage
+     * @param string $writtenPermissionToEngage new value being set
+     *
      * @return ContactDetails
      */
     public function setWrittenPermissionToEngage($writtenPermissionToEngage)
@@ -601,7 +624,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the phone contact
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $phoneContacts
+     * @param \Doctrine\Common\Collections\ArrayCollection $phoneContacts collection being set as the value
+     *
      * @return ContactDetails
      */
     public function setPhoneContacts($phoneContacts)
@@ -624,7 +648,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Add a phone contacts
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $phoneContacts
+     * @param \Doctrine\Common\Collections\ArrayCollection $phoneContacts collection being added
+     *
      * @return ContactDetails
      */
     public function addPhoneContacts($phoneContacts)
@@ -646,7 +671,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Remove a phone contacts
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $phoneContacts
+     * @param \Doctrine\Common\Collections\ArrayCollection $phoneContacts collection being removed
+     *
      * @return ContactDetails
      */
     public function removePhoneContacts($phoneContacts)
@@ -662,6 +688,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -672,6 +700,8 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -681,7 +711,9 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

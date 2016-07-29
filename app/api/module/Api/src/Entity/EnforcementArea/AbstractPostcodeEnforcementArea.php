@@ -119,7 +119,8 @@ abstract class AbstractPostcodeEnforcementArea implements BundleSerializableInte
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return PostcodeEnforcementArea
      */
     public function setCreatedBy($createdBy)
@@ -142,7 +143,8 @@ abstract class AbstractPostcodeEnforcementArea implements BundleSerializableInte
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return PostcodeEnforcementArea
      */
     public function setCreatedOn($createdOn)
@@ -165,7 +167,8 @@ abstract class AbstractPostcodeEnforcementArea implements BundleSerializableInte
     /**
      * Set the enforcement area
      *
-     * @param \Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea $enforcementArea
+     * @param \Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea $enforcementArea entity being set as the value
+     *
      * @return PostcodeEnforcementArea
      */
     public function setEnforcementArea($enforcementArea)
@@ -188,7 +191,8 @@ abstract class AbstractPostcodeEnforcementArea implements BundleSerializableInte
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return PostcodeEnforcementArea
      */
     public function setId($id)
@@ -211,7 +215,8 @@ abstract class AbstractPostcodeEnforcementArea implements BundleSerializableInte
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return PostcodeEnforcementArea
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -234,7 +239,8 @@ abstract class AbstractPostcodeEnforcementArea implements BundleSerializableInte
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return PostcodeEnforcementArea
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -257,7 +263,8 @@ abstract class AbstractPostcodeEnforcementArea implements BundleSerializableInte
     /**
      * Set the postcode id
      *
-     * @param string $postcodeId
+     * @param string $postcodeId new value being set
+     *
      * @return PostcodeEnforcementArea
      */
     public function setPostcodeId($postcodeId)
@@ -280,7 +287,8 @@ abstract class AbstractPostcodeEnforcementArea implements BundleSerializableInte
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return PostcodeEnforcementArea
      */
     public function setVersion($version)
@@ -304,6 +312,8 @@ abstract class AbstractPostcodeEnforcementArea implements BundleSerializableInte
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -314,6 +324,8 @@ abstract class AbstractPostcodeEnforcementArea implements BundleSerializableInte
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -323,7 +335,9 @@ abstract class AbstractPostcodeEnforcementArea implements BundleSerializableInte
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -162,7 +162,8 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return IrfoPermitStock
      */
     public function setCreatedBy($createdBy)
@@ -185,7 +186,8 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return IrfoPermitStock
      */
     public function setCreatedOn($createdOn)
@@ -208,7 +210,8 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return IrfoPermitStock
      */
     public function setId($id)
@@ -231,7 +234,8 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
     /**
      * Set the irfo country
      *
-     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoCountry $irfoCountry
+     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoCountry $irfoCountry entity being set as the value
+     *
      * @return IrfoPermitStock
      */
     public function setIrfoCountry($irfoCountry)
@@ -254,7 +258,8 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
     /**
      * Set the irfo gv permit
      *
-     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit $irfoGvPermit
+     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit $irfoGvPermit entity being set as the value
+     *
      * @return IrfoPermitStock
      */
     public function setIrfoGvPermit($irfoGvPermit)
@@ -277,7 +282,8 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return IrfoPermitStock
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -300,7 +306,8 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return IrfoPermitStock
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -323,7 +330,8 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return IrfoPermitStock
      */
     public function setOlbsKey($olbsKey)
@@ -346,7 +354,8 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
     /**
      * Set the serial no
      *
-     * @param int $serialNo
+     * @param int $serialNo new value being set
+     *
      * @return IrfoPermitStock
      */
     public function setSerialNo($serialNo)
@@ -369,7 +378,8 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
     /**
      * Set the status
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status entity being set as the value
+     *
      * @return IrfoPermitStock
      */
     public function setStatus($status)
@@ -392,7 +402,8 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
     /**
      * Set the valid for year
      *
-     * @param int $validForYear
+     * @param int $validForYear new value being set
+     *
      * @return IrfoPermitStock
      */
     public function setValidForYear($validForYear)
@@ -415,7 +426,8 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return IrfoPermitStock
      */
     public function setVersion($version)
@@ -438,7 +450,8 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
     /**
      * Set the void return date
      *
-     * @param \DateTime $voidReturnDate
+     * @param \DateTime $voidReturnDate new value being set
+     *
      * @return IrfoPermitStock
      */
     public function setVoidReturnDate($voidReturnDate)
@@ -462,6 +475,8 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -472,6 +487,8 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -481,7 +498,9 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -206,7 +206,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application entity being set as the value
+     *
      * @return Note
      */
     public function setApplication($application)
@@ -229,7 +230,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the bus reg
      *
-     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg
+     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg entity being set as the value
+     *
      * @return Note
      */
     public function setBusReg($busReg)
@@ -252,7 +254,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return Note
      */
     public function setCase($case)
@@ -275,7 +278,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the comment
      *
-     * @param string $comment
+     * @param string $comment new value being set
+     *
      * @return Note
      */
     public function setComment($comment)
@@ -298,7 +302,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Note
      */
     public function setCreatedBy($createdBy)
@@ -321,7 +326,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Note
      */
     public function setCreatedOn($createdOn)
@@ -344,7 +350,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Note
      */
     public function setId($id)
@@ -367,7 +374,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Note
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -390,7 +398,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Note
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -413,7 +422,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return Note
      */
     public function setLicence($licence)
@@ -436,7 +446,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the note type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $noteType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $noteType entity being set as the value
+     *
      * @return Note
      */
     public function setNoteType($noteType)
@@ -459,7 +470,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return Note
      */
     public function setOlbsKey($olbsKey)
@@ -482,7 +494,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the olbs type
      *
-     * @param string $olbsType
+     * @param string $olbsType new value being set
+     *
      * @return Note
      */
     public function setOlbsType($olbsType)
@@ -505,7 +518,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the organisation
      *
-     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation entity being set as the value
+     *
      * @return Note
      */
     public function setOrganisation($organisation)
@@ -528,7 +542,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the priority
      *
-     * @param string $priority
+     * @param string $priority new value being set
+     *
      * @return Note
      */
     public function setPriority($priority)
@@ -551,7 +566,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the transport manager
      *
-     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager entity being set as the value
+     *
      * @return Note
      */
     public function setTransportManager($transportManager)
@@ -574,7 +590,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Note
      */
     public function setVersion($version)
@@ -598,6 +615,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -608,6 +627,8 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -617,7 +638,9 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

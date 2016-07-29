@@ -77,7 +77,8 @@ abstract class AbstractLicenceReadAudit implements BundleSerializableInterface, 
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return LicenceReadAudit
      */
     public function setCreatedOn($createdOn)
@@ -100,7 +101,8 @@ abstract class AbstractLicenceReadAudit implements BundleSerializableInterface, 
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return LicenceReadAudit
      */
     public function setId($id)
@@ -123,7 +125,8 @@ abstract class AbstractLicenceReadAudit implements BundleSerializableInterface, 
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return LicenceReadAudit
      */
     public function setLicence($licence)
@@ -146,7 +149,8 @@ abstract class AbstractLicenceReadAudit implements BundleSerializableInterface, 
     /**
      * Set the user
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $user
+     * @param \Dvsa\Olcs\Api\Entity\User\User $user entity being set as the value
+     *
      * @return LicenceReadAudit
      */
     public function setUser($user)
@@ -170,6 +174,8 @@ abstract class AbstractLicenceReadAudit implements BundleSerializableInterface, 
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -180,7 +186,9 @@ abstract class AbstractLicenceReadAudit implements BundleSerializableInterface, 
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -55,7 +55,8 @@ abstract class AbstractEventHistoryType implements BundleSerializableInterface, 
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return EventHistoryType
      */
     public function setDescription($description)
@@ -78,7 +79,8 @@ abstract class AbstractEventHistoryType implements BundleSerializableInterface, 
     /**
      * Set the event code
      *
-     * @param string $eventCode
+     * @param string $eventCode new value being set
+     *
      * @return EventHistoryType
      */
     public function setEventCode($eventCode)
@@ -101,7 +103,8 @@ abstract class AbstractEventHistoryType implements BundleSerializableInterface, 
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return EventHistoryType
      */
     public function setId($id)
@@ -126,7 +129,9 @@ abstract class AbstractEventHistoryType implements BundleSerializableInterface, 
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

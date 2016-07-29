@@ -238,12 +238,19 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->documents = new ArrayCollection();
@@ -255,7 +262,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the assigned date
      *
-     * @param \DateTime $assignedDate
+     * @param \DateTime $assignedDate new value being set
+     *
      * @return Submission
      */
     public function setAssignedDate($assignedDate)
@@ -278,7 +286,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return Submission
      */
     public function setCase($case)
@@ -301,7 +310,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the closed date
      *
-     * @param \DateTime $closedDate
+     * @param \DateTime $closedDate new value being set
+     *
      * @return Submission
      */
     public function setClosedDate($closedDate)
@@ -324,7 +334,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Submission
      */
     public function setCreatedBy($createdBy)
@@ -347,7 +358,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Submission
      */
     public function setCreatedOn($createdOn)
@@ -370,7 +382,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the data snapshot
      *
-     * @param string $dataSnapshot
+     * @param string $dataSnapshot new value being set
+     *
      * @return Submission
      */
     public function setDataSnapshot($dataSnapshot)
@@ -393,7 +406,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return Submission
      */
     public function setDeletedDate($deletedDate)
@@ -416,7 +430,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Submission
      */
     public function setId($id)
@@ -439,7 +454,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the information complete date
      *
-     * @param \DateTime $informationCompleteDate
+     * @param \DateTime $informationCompleteDate new value being set
+     *
      * @return Submission
      */
     public function setInformationCompleteDate($informationCompleteDate)
@@ -462,7 +478,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Submission
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -485,7 +502,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Submission
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -508,7 +526,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the recipient user
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $recipientUser
+     * @param \Dvsa\Olcs\Api\Entity\User\User $recipientUser entity being set as the value
+     *
      * @return Submission
      */
     public function setRecipientUser($recipientUser)
@@ -531,7 +550,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the sender user
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $senderUser
+     * @param \Dvsa\Olcs\Api\Entity\User\User $senderUser entity being set as the value
+     *
      * @return Submission
      */
     public function setSenderUser($senderUser)
@@ -554,7 +574,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the submission type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $submissionType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $submissionType entity being set as the value
+     *
      * @return Submission
      */
     public function setSubmissionType($submissionType)
@@ -577,7 +598,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the urgent
      *
-     * @param string $urgent
+     * @param string $urgent new value being set
+     *
      * @return Submission
      */
     public function setUrgent($urgent)
@@ -600,7 +622,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Submission
      */
     public function setVersion($version)
@@ -623,7 +646,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the document
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being set as the value
+     *
      * @return Submission
      */
     public function setDocuments($documents)
@@ -646,7 +670,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Add a documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being added
+     *
      * @return Submission
      */
     public function addDocuments($documents)
@@ -668,7 +693,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Remove a documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being removed
+     *
      * @return Submission
      */
     public function removeDocuments($documents)
@@ -683,7 +709,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the sla target date
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being set as the value
+     *
      * @return Submission
      */
     public function setSlaTargetDates($slaTargetDates)
@@ -706,7 +733,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Add a sla target dates
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being added
+     *
      * @return Submission
      */
     public function addSlaTargetDates($slaTargetDates)
@@ -728,7 +756,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Remove a sla target dates
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being removed
+     *
      * @return Submission
      */
     public function removeSlaTargetDates($slaTargetDates)
@@ -743,7 +772,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the submission action
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions collection being set as the value
+     *
      * @return Submission
      */
     public function setSubmissionActions($submissionActions)
@@ -766,7 +796,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Add a submission actions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions collection being added
+     *
      * @return Submission
      */
     public function addSubmissionActions($submissionActions)
@@ -788,7 +819,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Remove a submission actions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions collection being removed
+     *
      * @return Submission
      */
     public function removeSubmissionActions($submissionActions)
@@ -803,7 +835,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the submission section comment
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSectionComments
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSectionComments collection being set as the value
+     *
      * @return Submission
      */
     public function setSubmissionSectionComments($submissionSectionComments)
@@ -826,7 +859,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Add a submission section comments
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSectionComments
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSectionComments collection being added
+     *
      * @return Submission
      */
     public function addSubmissionSectionComments($submissionSectionComments)
@@ -848,7 +882,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Remove a submission section comments
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSectionComments
+     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSectionComments collection being removed
+     *
      * @return Submission
      */
     public function removeSubmissionSectionComments($submissionSectionComments)
@@ -864,6 +899,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -874,6 +911,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -883,7 +922,9 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

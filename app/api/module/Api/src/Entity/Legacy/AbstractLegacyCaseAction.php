@@ -51,7 +51,8 @@ abstract class AbstractLegacyCaseAction implements BundleSerializableInterface, 
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return LegacyCaseAction
      */
     public function setDescription($description)
@@ -74,7 +75,8 @@ abstract class AbstractLegacyCaseAction implements BundleSerializableInterface, 
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return LegacyCaseAction
      */
     public function setId($id)
@@ -97,7 +99,8 @@ abstract class AbstractLegacyCaseAction implements BundleSerializableInterface, 
     /**
      * Set the is driver
      *
-     * @param string $isDriver
+     * @param string $isDriver new value being set
+     *
      * @return LegacyCaseAction
      */
     public function setIsDriver($isDriver)
@@ -122,7 +125,9 @@ abstract class AbstractLegacyCaseAction implements BundleSerializableInterface, 
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {
