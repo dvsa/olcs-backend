@@ -8,7 +8,7 @@ use PHPUnit_Framework_TestCase;
 /**
  * CreateApplicationFee test
  *
- * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 class CreateApplicationFeeTest extends PHPUnit_Framework_TestCase
 {
