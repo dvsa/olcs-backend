@@ -176,12 +176,19 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->aocs = new ArrayCollection();
@@ -190,7 +197,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the agreed date
      *
-     * @param \DateTime $agreedDate
+     * @param \DateTime $agreedDate new value being set
+     *
      * @return S4
      */
     public function setAgreedDate($agreedDate)
@@ -213,7 +221,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application entity being set as the value
+     *
      * @return S4
      */
     public function setApplication($application)
@@ -236,7 +245,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return S4
      */
     public function setCreatedBy($createdBy)
@@ -259,7 +269,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return S4
      */
     public function setCreatedOn($createdOn)
@@ -282,7 +293,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return S4
      */
     public function setId($id)
@@ -305,7 +317,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the is true s4
      *
-     * @param string $isTrueS4
+     * @param string $isTrueS4 new value being set
+     *
      * @return S4
      */
     public function setIsTrueS4($isTrueS4)
@@ -328,7 +341,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return S4
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -351,7 +365,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return S4
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -374,7 +389,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return S4
      */
     public function setLicence($licence)
@@ -397,7 +413,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the outcome
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $outcome
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $outcome entity being set as the value
+     *
      * @return S4
      */
     public function setOutcome($outcome)
@@ -420,7 +437,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the received date
      *
-     * @param \DateTime $receivedDate
+     * @param \DateTime $receivedDate new value being set
+     *
      * @return S4
      */
     public function setReceivedDate($receivedDate)
@@ -443,7 +461,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the surrender licence
      *
-     * @param string $surrenderLicence
+     * @param string $surrenderLicence new value being set
+     *
      * @return S4
      */
     public function setSurrenderLicence($surrenderLicence)
@@ -466,7 +485,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return S4
      */
     public function setVersion($version)
@@ -489,7 +509,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the aoc
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $aocs
+     * @param \Doctrine\Common\Collections\ArrayCollection $aocs collection being set as the value
+     *
      * @return S4
      */
     public function setAocs($aocs)
@@ -512,7 +533,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Add a aocs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $aocs
+     * @param \Doctrine\Common\Collections\ArrayCollection $aocs collection being added
+     *
      * @return S4
      */
     public function addAocs($aocs)
@@ -534,7 +556,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Remove a aocs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $aocs
+     * @param \Doctrine\Common\Collections\ArrayCollection $aocs collection being removed
+     *
      * @return S4
      */
     public function removeAocs($aocs)
@@ -550,6 +573,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -560,6 +585,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -569,7 +596,9 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

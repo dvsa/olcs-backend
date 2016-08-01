@@ -126,7 +126,8 @@ abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, Js
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return TaskAlphaSplit
      */
     public function setCreatedBy($createdBy)
@@ -149,7 +150,8 @@ abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, Js
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return TaskAlphaSplit
      */
     public function setCreatedOn($createdOn)
@@ -172,7 +174,8 @@ abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, Js
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return TaskAlphaSplit
      */
     public function setId($id)
@@ -195,7 +198,8 @@ abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, Js
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return TaskAlphaSplit
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -218,7 +222,8 @@ abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, Js
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return TaskAlphaSplit
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -241,7 +246,8 @@ abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, Js
     /**
      * Set the letters
      *
-     * @param string $letters
+     * @param string $letters new value being set
+     *
      * @return TaskAlphaSplit
      */
     public function setLetters($letters)
@@ -264,7 +270,8 @@ abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, Js
     /**
      * Set the task allocation rule
      *
-     * @param \Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule $taskAllocationRule
+     * @param \Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule $taskAllocationRule entity being set as the value
+     *
      * @return TaskAlphaSplit
      */
     public function setTaskAllocationRule($taskAllocationRule)
@@ -287,7 +294,8 @@ abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, Js
     /**
      * Set the user
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $user
+     * @param \Dvsa\Olcs\Api\Entity\User\User $user entity being set as the value
+     *
      * @return TaskAlphaSplit
      */
     public function setUser($user)
@@ -310,7 +318,8 @@ abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, Js
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return TaskAlphaSplit
      */
     public function setVersion($version)
@@ -334,6 +343,8 @@ abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, Js
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -344,6 +355,8 @@ abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, Js
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -353,7 +366,9 @@ abstract class AbstractTaskAlphaSplit implements BundleSerializableInterface, Js
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

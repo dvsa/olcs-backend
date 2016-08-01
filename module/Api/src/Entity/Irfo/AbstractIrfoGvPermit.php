@@ -216,7 +216,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return IrfoGvPermit
      */
     public function setCreatedBy($createdBy)
@@ -239,7 +240,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return IrfoGvPermit
      */
     public function setCreatedOn($createdOn)
@@ -262,7 +264,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the exemption details
      *
-     * @param string $exemptionDetails
+     * @param string $exemptionDetails new value being set
+     *
      * @return IrfoGvPermit
      */
     public function setExemptionDetails($exemptionDetails)
@@ -285,7 +288,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the expiry date
      *
-     * @param \DateTime $expiryDate
+     * @param \DateTime $expiryDate new value being set
+     *
      * @return IrfoGvPermit
      */
     public function setExpiryDate($expiryDate)
@@ -308,7 +312,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return IrfoGvPermit
      */
     public function setId($id)
@@ -331,7 +336,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the in force date
      *
-     * @param \DateTime $inForceDate
+     * @param \DateTime $inForceDate new value being set
+     *
      * @return IrfoGvPermit
      */
     public function setInForceDate($inForceDate)
@@ -354,7 +360,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the irfo fee id
      *
-     * @param string $irfoFeeId
+     * @param string $irfoFeeId new value being set
+     *
      * @return IrfoGvPermit
      */
     public function setIrfoFeeId($irfoFeeId)
@@ -377,7 +384,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the irfo gv permit type
      *
-     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermitType $irfoGvPermitType
+     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermitType $irfoGvPermitType entity being set as the value
+     *
      * @return IrfoGvPermit
      */
     public function setIrfoGvPermitType($irfoGvPermitType)
@@ -400,7 +408,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the irfo permit status
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $irfoPermitStatus
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $irfoPermitStatus entity being set as the value
+     *
      * @return IrfoGvPermit
      */
     public function setIrfoPermitStatus($irfoPermitStatus)
@@ -423,7 +432,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the is fee exempt
      *
-     * @param string $isFeeExempt
+     * @param string $isFeeExempt new value being set
+     *
      * @return IrfoGvPermit
      */
     public function setIsFeeExempt($isFeeExempt)
@@ -446,7 +456,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return IrfoGvPermit
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -469,7 +480,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return IrfoGvPermit
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -492,7 +504,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the no of copies
      *
-     * @param int $noOfCopies
+     * @param int $noOfCopies new value being set
+     *
      * @return IrfoGvPermit
      */
     public function setNoOfCopies($noOfCopies)
@@ -515,7 +528,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the note
      *
-     * @param string $note
+     * @param string $note new value being set
+     *
      * @return IrfoGvPermit
      */
     public function setNote($note)
@@ -538,7 +552,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the organisation
      *
-     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation entity being set as the value
+     *
      * @return IrfoGvPermit
      */
     public function setOrganisation($organisation)
@@ -561,7 +576,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the permit printed
      *
-     * @param string $permitPrinted
+     * @param string $permitPrinted new value being set
+     *
      * @return IrfoGvPermit
      */
     public function setPermitPrinted($permitPrinted)
@@ -584,7 +600,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return IrfoGvPermit
      */
     public function setVersion($version)
@@ -607,7 +624,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the withdrawn reason
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $withdrawnReason
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $withdrawnReason entity being set as the value
+     *
      * @return IrfoGvPermit
      */
     public function setWithdrawnReason($withdrawnReason)
@@ -630,7 +648,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Set the year required
      *
-     * @param int $yearRequired
+     * @param int $yearRequired new value being set
+     *
      * @return IrfoGvPermit
      */
     public function setYearRequired($yearRequired)
@@ -654,6 +673,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -664,6 +685,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -673,7 +696,9 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

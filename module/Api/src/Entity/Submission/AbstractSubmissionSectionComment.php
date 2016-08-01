@@ -127,7 +127,8 @@ abstract class AbstractSubmissionSectionComment implements BundleSerializableInt
     /**
      * Set the comment
      *
-     * @param string $comment
+     * @param string $comment new value being set
+     *
      * @return SubmissionSectionComment
      */
     public function setComment($comment)
@@ -150,7 +151,8 @@ abstract class AbstractSubmissionSectionComment implements BundleSerializableInt
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return SubmissionSectionComment
      */
     public function setCreatedBy($createdBy)
@@ -173,7 +175,8 @@ abstract class AbstractSubmissionSectionComment implements BundleSerializableInt
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return SubmissionSectionComment
      */
     public function setCreatedOn($createdOn)
@@ -196,7 +199,8 @@ abstract class AbstractSubmissionSectionComment implements BundleSerializableInt
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return SubmissionSectionComment
      */
     public function setId($id)
@@ -219,7 +223,8 @@ abstract class AbstractSubmissionSectionComment implements BundleSerializableInt
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return SubmissionSectionComment
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -242,7 +247,8 @@ abstract class AbstractSubmissionSectionComment implements BundleSerializableInt
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return SubmissionSectionComment
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -265,7 +271,8 @@ abstract class AbstractSubmissionSectionComment implements BundleSerializableInt
     /**
      * Set the submission
      *
-     * @param \Dvsa\Olcs\Api\Entity\Submission\Submission $submission
+     * @param \Dvsa\Olcs\Api\Entity\Submission\Submission $submission entity being set as the value
+     *
      * @return SubmissionSectionComment
      */
     public function setSubmission($submission)
@@ -288,7 +295,8 @@ abstract class AbstractSubmissionSectionComment implements BundleSerializableInt
     /**
      * Set the submission section
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $submissionSection
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $submissionSection entity being set as the value
+     *
      * @return SubmissionSectionComment
      */
     public function setSubmissionSection($submissionSection)
@@ -311,7 +319,8 @@ abstract class AbstractSubmissionSectionComment implements BundleSerializableInt
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return SubmissionSectionComment
      */
     public function setVersion($version)
@@ -335,6 +344,8 @@ abstract class AbstractSubmissionSectionComment implements BundleSerializableInt
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -345,6 +356,8 @@ abstract class AbstractSubmissionSectionComment implements BundleSerializableInt
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -354,7 +367,9 @@ abstract class AbstractSubmissionSectionComment implements BundleSerializableInt
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

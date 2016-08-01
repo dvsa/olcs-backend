@@ -105,7 +105,8 @@ abstract class AbstractSla implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the category
      *
-     * @param string $category
+     * @param string $category new value being set
+     *
      * @return Sla
      */
     public function setCategory($category)
@@ -128,7 +129,8 @@ abstract class AbstractSla implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the compare to
      *
-     * @param string $compareTo
+     * @param string $compareTo new value being set
+     *
      * @return Sla
      */
     public function setCompareTo($compareTo)
@@ -151,7 +153,8 @@ abstract class AbstractSla implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the days
      *
-     * @param int $days
+     * @param int $days new value being set
+     *
      * @return Sla
      */
     public function setDays($days)
@@ -174,7 +177,8 @@ abstract class AbstractSla implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the effective from
      *
-     * @param \DateTime $effectiveFrom
+     * @param \DateTime $effectiveFrom new value being set
+     *
      * @return Sla
      */
     public function setEffectiveFrom($effectiveFrom)
@@ -197,7 +201,8 @@ abstract class AbstractSla implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the effective to
      *
-     * @param \DateTime $effectiveTo
+     * @param \DateTime $effectiveTo new value being set
+     *
      * @return Sla
      */
     public function setEffectiveTo($effectiveTo)
@@ -220,7 +225,8 @@ abstract class AbstractSla implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the field
      *
-     * @param string $field
+     * @param string $field new value being set
+     *
      * @return Sla
      */
     public function setField($field)
@@ -243,7 +249,8 @@ abstract class AbstractSla implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Sla
      */
     public function setId($id)
@@ -266,7 +273,8 @@ abstract class AbstractSla implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the public holiday
      *
-     * @param boolean $publicHoliday
+     * @param boolean $publicHoliday new value being set
+     *
      * @return Sla
      */
     public function setPublicHoliday($publicHoliday)
@@ -289,7 +297,8 @@ abstract class AbstractSla implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the weekend
      *
-     * @param boolean $weekend
+     * @param boolean $weekend new value being set
+     *
      * @return Sla
      */
     public function setWeekend($weekend)
@@ -314,7 +323,9 @@ abstract class AbstractSla implements BundleSerializableInterface, JsonSerializa
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

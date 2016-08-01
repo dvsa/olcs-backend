@@ -293,12 +293,19 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->policeDatas = new ArrayCollection();
@@ -307,7 +314,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application entity being set as the value
+     *
      * @return PublicationLink
      */
     public function setApplication($application)
@@ -330,7 +338,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the bus reg
      *
-     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg
+     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg entity being set as the value
+     *
      * @return PublicationLink
      */
     public function setBusReg($busReg)
@@ -353,7 +362,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return PublicationLink
      */
     public function setCreatedBy($createdBy)
@@ -376,7 +386,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return PublicationLink
      */
     public function setCreatedOn($createdOn)
@@ -399,7 +410,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return PublicationLink
      */
     public function setDeletedDate($deletedDate)
@@ -422,7 +434,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return PublicationLink
      */
     public function setId($id)
@@ -445,7 +458,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the impounding
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Impounding $impounding
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Impounding $impounding entity being set as the value
+     *
      * @return PublicationLink
      */
     public function setImpounding($impounding)
@@ -468,7 +482,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return PublicationLink
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -491,7 +506,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return PublicationLink
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -514,7 +530,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return PublicationLink
      */
     public function setLicence($licence)
@@ -537,7 +554,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return PublicationLink
      */
     public function setOlbsKey($olbsKey)
@@ -560,7 +578,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the olbs type
      *
-     * @param string $olbsType
+     * @param string $olbsType new value being set
+     *
      * @return PublicationLink
      */
     public function setOlbsType($olbsType)
@@ -583,7 +602,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the orig pub date
      *
-     * @param \DateTime $origPubDate
+     * @param \DateTime $origPubDate new value being set
+     *
      * @return PublicationLink
      */
     public function setOrigPubDate($origPubDate)
@@ -606,7 +626,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the pi
      *
-     * @param \Dvsa\Olcs\Api\Entity\Pi\Pi $pi
+     * @param \Dvsa\Olcs\Api\Entity\Pi\Pi $pi entity being set as the value
+     *
      * @return PublicationLink
      */
     public function setPi($pi)
@@ -629,7 +650,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the publication
      *
-     * @param \Dvsa\Olcs\Api\Entity\Publication\Publication $publication
+     * @param \Dvsa\Olcs\Api\Entity\Publication\Publication $publication entity being set as the value
+     *
      * @return PublicationLink
      */
     public function setPublication($publication)
@@ -652,7 +674,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the publication section
      *
-     * @param \Dvsa\Olcs\Api\Entity\Publication\PublicationSection $publicationSection
+     * @param \Dvsa\Olcs\Api\Entity\Publication\PublicationSection $publicationSection entity being set as the value
+     *
      * @return PublicationLink
      */
     public function setPublicationSection($publicationSection)
@@ -675,7 +698,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the text1
      *
-     * @param string $text1
+     * @param string $text1 new value being set
+     *
      * @return PublicationLink
      */
     public function setText1($text1)
@@ -698,7 +722,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the text2
      *
-     * @param string $text2
+     * @param string $text2 new value being set
+     *
      * @return PublicationLink
      */
     public function setText2($text2)
@@ -721,7 +746,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the text3
      *
-     * @param string $text3
+     * @param string $text3 new value being set
+     *
      * @return PublicationLink
      */
     public function setText3($text3)
@@ -744,7 +770,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the traffic area
      *
-     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $trafficArea
+     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $trafficArea entity being set as the value
+     *
      * @return PublicationLink
      */
     public function setTrafficArea($trafficArea)
@@ -767,7 +794,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the transport manager
      *
-     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager entity being set as the value
+     *
      * @return PublicationLink
      */
     public function setTransportManager($transportManager)
@@ -790,7 +818,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return PublicationLink
      */
     public function setVersion($version)
@@ -813,7 +842,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the police data
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $policeDatas
+     * @param \Doctrine\Common\Collections\ArrayCollection $policeDatas collection being set as the value
+     *
      * @return PublicationLink
      */
     public function setPoliceDatas($policeDatas)
@@ -836,7 +866,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Add a police datas
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $policeDatas
+     * @param \Doctrine\Common\Collections\ArrayCollection $policeDatas collection being added
+     *
      * @return PublicationLink
      */
     public function addPoliceDatas($policeDatas)
@@ -858,7 +889,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Remove a police datas
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $policeDatas
+     * @param \Doctrine\Common\Collections\ArrayCollection $policeDatas collection being removed
+     *
      * @return PublicationLink
      */
     public function removePoliceDatas($policeDatas)
@@ -874,6 +906,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -884,6 +918,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -893,7 +929,9 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -160,7 +160,8 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the attempts
      *
-     * @param int $attempts
+     * @param int $attempts new value being set
+     *
      * @return Queue
      */
     public function setAttempts($attempts)
@@ -183,7 +184,8 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Queue
      */
     public function setCreatedBy($createdBy)
@@ -206,7 +208,8 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Queue
      */
     public function setCreatedOn($createdOn)
@@ -229,7 +232,8 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return Queue
      */
     public function setDeletedDate($deletedDate)
@@ -252,7 +256,8 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the entity id
      *
-     * @param int $entityId
+     * @param int $entityId new value being set
+     *
      * @return Queue
      */
     public function setEntityId($entityId)
@@ -275,7 +280,8 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Queue
      */
     public function setId($id)
@@ -298,7 +304,8 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Queue
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -321,7 +328,8 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Queue
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -344,7 +352,8 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the options
      *
-     * @param string $options
+     * @param string $options new value being set
+     *
      * @return Queue
      */
     public function setOptions($options)
@@ -367,7 +376,8 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the process after date
      *
-     * @param \DateTime $processAfterDate
+     * @param \DateTime $processAfterDate new value being set
+     *
      * @return Queue
      */
     public function setProcessAfterDate($processAfterDate)
@@ -390,7 +400,8 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the status
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status entity being set as the value
+     *
      * @return Queue
      */
     public function setStatus($status)
@@ -413,7 +424,8 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $type
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $type entity being set as the value
+     *
      * @return Queue
      */
     public function setType($type)
@@ -436,7 +448,8 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Queue
      */
     public function setVersion($version)
@@ -460,6 +473,8 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -470,6 +485,8 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -479,7 +496,9 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -149,7 +149,8 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Set the additional vehicle rate
      *
-     * @param int $additionalVehicleRate
+     * @param int $additionalVehicleRate new value being set
+     *
      * @return FinancialStandingRate
      */
     public function setAdditionalVehicleRate($additionalVehicleRate)
@@ -172,7 +173,8 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return FinancialStandingRate
      */
     public function setCreatedBy($createdBy)
@@ -195,7 +197,8 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return FinancialStandingRate
      */
     public function setCreatedOn($createdOn)
@@ -218,7 +221,8 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return FinancialStandingRate
      */
     public function setDeletedDate($deletedDate)
@@ -241,7 +245,8 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Set the effective from
      *
-     * @param \DateTime $effectiveFrom
+     * @param \DateTime $effectiveFrom new value being set
+     *
      * @return FinancialStandingRate
      */
     public function setEffectiveFrom($effectiveFrom)
@@ -264,7 +269,8 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Set the first vehicle rate
      *
-     * @param int $firstVehicleRate
+     * @param int $firstVehicleRate new value being set
+     *
      * @return FinancialStandingRate
      */
     public function setFirstVehicleRate($firstVehicleRate)
@@ -287,7 +293,8 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Set the goods or psv
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $goodsOrPsv
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $goodsOrPsv entity being set as the value
+     *
      * @return FinancialStandingRate
      */
     public function setGoodsOrPsv($goodsOrPsv)
@@ -310,7 +317,8 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return FinancialStandingRate
      */
     public function setId($id)
@@ -333,7 +341,8 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return FinancialStandingRate
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -356,7 +365,8 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return FinancialStandingRate
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -379,7 +389,8 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Set the licence type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $licenceType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $licenceType entity being set as the value
+     *
      * @return FinancialStandingRate
      */
     public function setLicenceType($licenceType)
@@ -402,7 +413,8 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return FinancialStandingRate
      */
     public function setVersion($version)
@@ -426,6 +438,8 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -436,6 +450,8 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -445,7 +461,9 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

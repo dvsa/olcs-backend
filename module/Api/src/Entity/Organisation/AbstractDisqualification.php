@@ -177,7 +177,8 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Disqualification
      */
     public function setCreatedBy($createdBy)
@@ -200,7 +201,8 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Disqualification
      */
     public function setCreatedOn($createdOn)
@@ -223,7 +225,8 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Disqualification
      */
     public function setId($id)
@@ -246,7 +249,8 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     /**
      * Set the is disqualified
      *
-     * @param string $isDisqualified
+     * @param string $isDisqualified new value being set
+     *
      * @return Disqualification
      */
     public function setIsDisqualified($isDisqualified)
@@ -269,7 +273,8 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Disqualification
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -292,7 +297,8 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Disqualification
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -315,7 +321,8 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     /**
      * Set the notes
      *
-     * @param string $notes
+     * @param string $notes new value being set
+     *
      * @return Disqualification
      */
     public function setNotes($notes)
@@ -338,7 +345,8 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return Disqualification
      */
     public function setOlbsKey($olbsKey)
@@ -361,7 +369,8 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     /**
      * Set the olbs type
      *
-     * @param string $olbsType
+     * @param string $olbsType new value being set
+     *
      * @return Disqualification
      */
     public function setOlbsType($olbsType)
@@ -384,7 +393,8 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     /**
      * Set the organisation
      *
-     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation entity being set as the value
+     *
      * @return Disqualification
      */
     public function setOrganisation($organisation)
@@ -407,7 +417,8 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     /**
      * Set the period
      *
-     * @param int $period
+     * @param int $period new value being set
+     *
      * @return Disqualification
      */
     public function setPeriod($period)
@@ -430,7 +441,8 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     /**
      * Set the person
      *
-     * @param \Dvsa\Olcs\Api\Entity\Person\Person $person
+     * @param \Dvsa\Olcs\Api\Entity\Person\Person $person entity being set as the value
+     *
      * @return Disqualification
      */
     public function setPerson($person)
@@ -453,7 +465,8 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     /**
      * Set the start date
      *
-     * @param \DateTime $startDate
+     * @param \DateTime $startDate new value being set
+     *
      * @return Disqualification
      */
     public function setStartDate($startDate)
@@ -476,7 +489,8 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Disqualification
      */
     public function setVersion($version)
@@ -500,6 +514,8 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -510,6 +526,8 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -519,7 +537,9 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

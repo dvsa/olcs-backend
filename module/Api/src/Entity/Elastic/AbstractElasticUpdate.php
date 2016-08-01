@@ -60,7 +60,8 @@ abstract class AbstractElasticUpdate implements BundleSerializableInterface, Jso
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return ElasticUpdate
      */
     public function setId($id)
@@ -83,7 +84,8 @@ abstract class AbstractElasticUpdate implements BundleSerializableInterface, Jso
     /**
      * Set the index name
      *
-     * @param string $indexName
+     * @param string $indexName new value being set
+     *
      * @return ElasticUpdate
      */
     public function setIndexName($indexName)
@@ -106,7 +108,8 @@ abstract class AbstractElasticUpdate implements BundleSerializableInterface, Jso
     /**
      * Set the previous runtime
      *
-     * @param int $previousRuntime
+     * @param int $previousRuntime new value being set
+     *
      * @return ElasticUpdate
      */
     public function setPreviousRuntime($previousRuntime)
@@ -129,7 +132,8 @@ abstract class AbstractElasticUpdate implements BundleSerializableInterface, Jso
     /**
      * Set the runtime
      *
-     * @param int $runtime
+     * @param int $runtime new value being set
+     *
      * @return ElasticUpdate
      */
     public function setRuntime($runtime)
@@ -154,7 +158,9 @@ abstract class AbstractElasticUpdate implements BundleSerializableInterface, Jso
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

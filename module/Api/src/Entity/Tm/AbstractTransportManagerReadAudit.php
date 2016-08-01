@@ -78,7 +78,8 @@ abstract class AbstractTransportManagerReadAudit implements BundleSerializableIn
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return TransportManagerReadAudit
      */
     public function setCreatedOn($createdOn)
@@ -101,7 +102,8 @@ abstract class AbstractTransportManagerReadAudit implements BundleSerializableIn
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return TransportManagerReadAudit
      */
     public function setId($id)
@@ -124,7 +126,8 @@ abstract class AbstractTransportManagerReadAudit implements BundleSerializableIn
     /**
      * Set the transport manager
      *
-     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager entity being set as the value
+     *
      * @return TransportManagerReadAudit
      */
     public function setTransportManager($transportManager)
@@ -147,7 +150,8 @@ abstract class AbstractTransportManagerReadAudit implements BundleSerializableIn
     /**
      * Set the user
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $user
+     * @param \Dvsa\Olcs\Api\Entity\User\User $user entity being set as the value
+     *
      * @return TransportManagerReadAudit
      */
     public function setUser($user)
@@ -171,6 +175,8 @@ abstract class AbstractTransportManagerReadAudit implements BundleSerializableIn
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -181,7 +187,9 @@ abstract class AbstractTransportManagerReadAudit implements BundleSerializableIn
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

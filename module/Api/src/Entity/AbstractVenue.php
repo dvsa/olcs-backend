@@ -151,7 +151,8 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the address
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Address $address
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Address $address entity being set as the value
+     *
      * @return Venue
      */
     public function setAddress($address)
@@ -174,7 +175,8 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Venue
      */
     public function setCreatedBy($createdBy)
@@ -197,7 +199,8 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Venue
      */
     public function setCreatedOn($createdOn)
@@ -220,7 +223,8 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the end date
      *
-     * @param \DateTime $endDate
+     * @param \DateTime $endDate new value being set
+     *
      * @return Venue
      */
     public function setEndDate($endDate)
@@ -243,7 +247,8 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Venue
      */
     public function setId($id)
@@ -266,7 +271,8 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Venue
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -289,7 +295,8 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Venue
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -312,7 +319,8 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the name
      *
-     * @param string $name
+     * @param string $name new value being set
+     *
      * @return Venue
      */
     public function setName($name)
@@ -335,7 +343,8 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return Venue
      */
     public function setOlbsKey($olbsKey)
@@ -358,7 +367,8 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the start date
      *
-     * @param \DateTime $startDate
+     * @param \DateTime $startDate new value being set
+     *
      * @return Venue
      */
     public function setStartDate($startDate)
@@ -381,7 +391,8 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the traffic area
      *
-     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $trafficArea
+     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $trafficArea entity being set as the value
+     *
      * @return Venue
      */
     public function setTrafficArea($trafficArea)
@@ -404,7 +415,8 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Venue
      */
     public function setVersion($version)
@@ -428,6 +440,8 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -438,6 +452,8 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -447,7 +463,9 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

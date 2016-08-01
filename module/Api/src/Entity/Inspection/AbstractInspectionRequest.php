@@ -304,7 +304,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application entity being set as the value
+     *
      * @return InspectionRequest
      */
     public function setApplication($application)
@@ -327,7 +328,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return InspectionRequest
      */
     public function setCase($case)
@@ -350,7 +352,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return InspectionRequest
      */
     public function setCreatedBy($createdBy)
@@ -373,7 +376,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return InspectionRequest
      */
     public function setCreatedOn($createdOn)
@@ -396,7 +400,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the deferred date
      *
-     * @param \DateTime $deferredDate
+     * @param \DateTime $deferredDate new value being set
+     *
      * @return InspectionRequest
      */
     public function setDeferredDate($deferredDate)
@@ -419,7 +424,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the due date
      *
-     * @param \DateTime $dueDate
+     * @param \DateTime $dueDate new value being set
+     *
      * @return InspectionRequest
      */
     public function setDueDate($dueDate)
@@ -442,7 +448,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the from date
      *
-     * @param \DateTime $fromDate
+     * @param \DateTime $fromDate new value being set
+     *
      * @return InspectionRequest
      */
     public function setFromDate($fromDate)
@@ -465,7 +472,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return InspectionRequest
      */
     public function setId($id)
@@ -488,7 +496,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the inspector name
      *
-     * @param string $inspectorName
+     * @param string $inspectorName new value being set
+     *
      * @return InspectionRequest
      */
     public function setInspectorName($inspectorName)
@@ -511,7 +520,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the inspector notes
      *
-     * @param string $inspectorNotes
+     * @param string $inspectorNotes new value being set
+     *
      * @return InspectionRequest
      */
     public function setInspectorNotes($inspectorNotes)
@@ -534,7 +544,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return InspectionRequest
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -557,7 +568,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return InspectionRequest
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -580,7 +592,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return InspectionRequest
      */
     public function setLicence($licence)
@@ -603,7 +616,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return InspectionRequest
      */
     public function setOlbsKey($olbsKey)
@@ -626,7 +640,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the operating centre
      *
-     * @param \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre $operatingCentre
+     * @param \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre $operatingCentre entity being set as the value
+     *
      * @return InspectionRequest
      */
     public function setOperatingCentre($operatingCentre)
@@ -649,7 +664,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the report type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $reportType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $reportType entity being set as the value
+     *
      * @return InspectionRequest
      */
     public function setReportType($reportType)
@@ -672,7 +688,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the request date
      *
-     * @param \DateTime $requestDate
+     * @param \DateTime $requestDate new value being set
+     *
      * @return InspectionRequest
      */
     public function setRequestDate($requestDate)
@@ -695,7 +712,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the request type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $requestType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $requestType entity being set as the value
+     *
      * @return InspectionRequest
      */
     public function setRequestType($requestType)
@@ -718,7 +736,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the requestor notes
      *
-     * @param string $requestorNotes
+     * @param string $requestorNotes new value being set
+     *
      * @return InspectionRequest
      */
     public function setRequestorNotes($requestorNotes)
@@ -741,7 +760,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the requestor user
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $requestorUser
+     * @param \Dvsa\Olcs\Api\Entity\User\User $requestorUser entity being set as the value
+     *
      * @return InspectionRequest
      */
     public function setRequestorUser($requestorUser)
@@ -764,7 +784,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the result type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $resultType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $resultType entity being set as the value
+     *
      * @return InspectionRequest
      */
     public function setResultType($resultType)
@@ -787,7 +808,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the return date
      *
-     * @param \DateTime $returnDate
+     * @param \DateTime $returnDate new value being set
+     *
      * @return InspectionRequest
      */
     public function setReturnDate($returnDate)
@@ -810,7 +832,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the task
      *
-     * @param \Dvsa\Olcs\Api\Entity\Task\Task $task
+     * @param \Dvsa\Olcs\Api\Entity\Task\Task $task entity being set as the value
+     *
      * @return InspectionRequest
      */
     public function setTask($task)
@@ -833,7 +856,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the to date
      *
-     * @param \DateTime $toDate
+     * @param \DateTime $toDate new value being set
+     *
      * @return InspectionRequest
      */
     public function setToDate($toDate)
@@ -856,7 +880,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the trailers examined no
      *
-     * @param int $trailersExaminedNo
+     * @param int $trailersExaminedNo new value being set
+     *
      * @return InspectionRequest
      */
     public function setTrailersExaminedNo($trailersExaminedNo)
@@ -879,7 +904,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the vehicles examined no
      *
-     * @param int $vehiclesExaminedNo
+     * @param int $vehiclesExaminedNo new value being set
+     *
      * @return InspectionRequest
      */
     public function setVehiclesExaminedNo($vehiclesExaminedNo)
@@ -902,7 +928,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return InspectionRequest
      */
     public function setVersion($version)
@@ -926,6 +953,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -936,6 +965,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -945,7 +976,9 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

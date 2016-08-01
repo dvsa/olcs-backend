@@ -287,7 +287,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the application classification
      *
-     * @param string $applicationClassification
+     * @param string $applicationClassification new value being set
+     *
      * @return EbsrSubmission
      */
     public function setApplicationClassification($applicationClassification)
@@ -310,7 +311,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the bus reg
      *
-     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg
+     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg entity being set as the value
+     *
      * @return EbsrSubmission
      */
     public function setBusReg($busReg)
@@ -333,7 +335,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return EbsrSubmission
      */
     public function setDeletedDate($deletedDate)
@@ -356,7 +359,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the distribute end
      *
-     * @param \DateTime $distributeEnd
+     * @param \DateTime $distributeEnd new value being set
+     *
      * @return EbsrSubmission
      */
     public function setDistributeEnd($distributeEnd)
@@ -379,7 +383,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the distribute expire
      *
-     * @param \DateTime $distributeExpire
+     * @param \DateTime $distributeExpire new value being set
+     *
      * @return EbsrSubmission
      */
     public function setDistributeExpire($distributeExpire)
@@ -402,7 +407,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the distribute start
      *
-     * @param \DateTime $distributeStart
+     * @param \DateTime $distributeStart new value being set
+     *
      * @return EbsrSubmission
      */
     public function setDistributeStart($distributeStart)
@@ -425,7 +431,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the document
      *
-     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $document
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $document entity being set as the value
+     *
      * @return EbsrSubmission
      */
     public function setDocument($document)
@@ -448,7 +455,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the ebsr submission result
      *
-     * @param string $ebsrSubmissionResult
+     * @param string $ebsrSubmissionResult new value being set
+     *
      * @return EbsrSubmission
      */
     public function setEbsrSubmissionResult($ebsrSubmissionResult)
@@ -471,7 +479,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the ebsr submission status
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $ebsrSubmissionStatus
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $ebsrSubmissionStatus entity being set as the value
+     *
      * @return EbsrSubmission
      */
     public function setEbsrSubmissionStatus($ebsrSubmissionStatus)
@@ -494,7 +503,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the ebsr submission type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $ebsrSubmissionType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $ebsrSubmissionType entity being set as the value
+     *
      * @return EbsrSubmission
      */
     public function setEbsrSubmissionType($ebsrSubmissionType)
@@ -517,7 +527,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return EbsrSubmission
      */
     public function setId($id)
@@ -540,7 +551,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the is from ftp
      *
-     * @param string $isFromFtp
+     * @param string $isFromFtp new value being set
+     *
      * @return EbsrSubmission
      */
     public function setIsFromFtp($isFromFtp)
@@ -563,7 +575,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the licence no
      *
-     * @param string $licenceNo
+     * @param string $licenceNo new value being set
+     *
      * @return EbsrSubmission
      */
     public function setLicenceNo($licenceNo)
@@ -586,7 +599,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return EbsrSubmission
      */
     public function setOlbsKey($olbsKey)
@@ -609,7 +623,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the organisation
      *
-     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation entity being set as the value
+     *
      * @return EbsrSubmission
      */
     public function setOrganisation($organisation)
@@ -632,7 +647,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the organisation email address
      *
-     * @param string $organisationEmailAddress
+     * @param string $organisationEmailAddress new value being set
+     *
      * @return EbsrSubmission
      */
     public function setOrganisationEmailAddress($organisationEmailAddress)
@@ -655,7 +671,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the process end
      *
-     * @param \DateTime $processEnd
+     * @param \DateTime $processEnd new value being set
+     *
      * @return EbsrSubmission
      */
     public function setProcessEnd($processEnd)
@@ -678,7 +695,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the process start
      *
-     * @param \DateTime $processStart
+     * @param \DateTime $processStart new value being set
+     *
      * @return EbsrSubmission
      */
     public function setProcessStart($processStart)
@@ -701,7 +719,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the publish end
      *
-     * @param \DateTime $publishEnd
+     * @param \DateTime $publishEnd new value being set
+     *
      * @return EbsrSubmission
      */
     public function setPublishEnd($publishEnd)
@@ -724,7 +743,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the publish start
      *
-     * @param \DateTime $publishStart
+     * @param \DateTime $publishStart new value being set
+     *
      * @return EbsrSubmission
      */
     public function setPublishStart($publishStart)
@@ -747,7 +767,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the registration no
      *
-     * @param string $registrationNo
+     * @param string $registrationNo new value being set
+     *
      * @return EbsrSubmission
      */
     public function setRegistrationNo($registrationNo)
@@ -770,7 +791,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the submitted date
      *
-     * @param \DateTime $submittedDate
+     * @param \DateTime $submittedDate new value being set
+     *
      * @return EbsrSubmission
      */
     public function setSubmittedDate($submittedDate)
@@ -793,7 +815,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the validation end
      *
-     * @param \DateTime $validationEnd
+     * @param \DateTime $validationEnd new value being set
+     *
      * @return EbsrSubmission
      */
     public function setValidationEnd($validationEnd)
@@ -816,7 +839,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the validation start
      *
-     * @param \DateTime $validationStart
+     * @param \DateTime $validationStart new value being set
+     *
      * @return EbsrSubmission
      */
     public function setValidationStart($validationStart)
@@ -839,7 +863,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the variation no
      *
-     * @param int $variationNo
+     * @param int $variationNo new value being set
+     *
      * @return EbsrSubmission
      */
     public function setVariationNo($variationNo)
@@ -862,7 +887,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return EbsrSubmission
      */
     public function setVersion($version)
@@ -887,7 +913,9 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

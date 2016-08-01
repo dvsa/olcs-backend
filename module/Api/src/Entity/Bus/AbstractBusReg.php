@@ -764,12 +764,19 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->variationReasons = new ArrayCollection();
@@ -787,7 +794,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the application signed
      *
-     * @param string $applicationSigned
+     * @param string $applicationSigned new value being set
+     *
      * @return BusReg
      */
     public function setApplicationSigned($applicationSigned)
@@ -810,7 +818,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the bus notice period
      *
-     * @param \Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod $busNoticePeriod
+     * @param \Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod $busNoticePeriod entity being set as the value
+     *
      * @return BusReg
      */
     public function setBusNoticePeriod($busNoticePeriod)
@@ -833,7 +842,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the bus service type
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
+     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes collection being set as the value
+     *
      * @return BusReg
      */
     public function setBusServiceTypes($busServiceTypes)
@@ -856,7 +866,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a bus service types
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
+     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes collection being added
+     *
      * @return BusReg
      */
     public function addBusServiceTypes($busServiceTypes)
@@ -878,7 +889,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a bus service types
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes
+     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes collection being removed
+     *
      * @return BusReg
      */
     public function removeBusServiceTypes($busServiceTypes)
@@ -893,7 +905,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the copied to la pte
      *
-     * @param string $copiedToLaPte
+     * @param string $copiedToLaPte new value being set
+     *
      * @return BusReg
      */
     public function setCopiedToLaPte($copiedToLaPte)
@@ -916,7 +929,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return BusReg
      */
     public function setCreatedBy($createdBy)
@@ -939,7 +953,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return BusReg
      */
     public function setCreatedOn($createdOn)
@@ -962,7 +977,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return BusReg
      */
     public function setDeletedDate($deletedDate)
@@ -985,7 +1001,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the ebsr refresh
      *
-     * @param string $ebsrRefresh
+     * @param string $ebsrRefresh new value being set
+     *
      * @return BusReg
      */
     public function setEbsrRefresh($ebsrRefresh)
@@ -1008,7 +1025,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the effective date
      *
-     * @param \DateTime $effectiveDate
+     * @param \DateTime $effectiveDate new value being set
+     *
      * @return BusReg
      */
     public function setEffectiveDate($effectiveDate)
@@ -1031,7 +1049,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the end date
      *
-     * @param \DateTime $endDate
+     * @param \DateTime $endDate new value being set
+     *
      * @return BusReg
      */
     public function setEndDate($endDate)
@@ -1054,7 +1073,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the finish point
      *
-     * @param string $finishPoint
+     * @param string $finishPoint new value being set
+     *
      * @return BusReg
      */
     public function setFinishPoint($finishPoint)
@@ -1077,7 +1097,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the has manoeuvre
      *
-     * @param string $hasManoeuvre
+     * @param string $hasManoeuvre new value being set
+     *
      * @return BusReg
      */
     public function setHasManoeuvre($hasManoeuvre)
@@ -1100,7 +1121,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the has not fixed stop
      *
-     * @param string $hasNotFixedStop
+     * @param string $hasNotFixedStop new value being set
+     *
      * @return BusReg
      */
     public function setHasNotFixedStop($hasNotFixedStop)
@@ -1123,7 +1145,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return BusReg
      */
     public function setId($id)
@@ -1146,7 +1169,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the is quality contract
      *
-     * @param string $isQualityContract
+     * @param string $isQualityContract new value being set
+     *
      * @return BusReg
      */
     public function setIsQualityContract($isQualityContract)
@@ -1169,7 +1193,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the is quality partnership
      *
-     * @param string $isQualityPartnership
+     * @param string $isQualityPartnership new value being set
+     *
      * @return BusReg
      */
     public function setIsQualityPartnership($isQualityPartnership)
@@ -1192,7 +1217,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the is short notice
      *
-     * @param string $isShortNotice
+     * @param string $isShortNotice new value being set
+     *
      * @return BusReg
      */
     public function setIsShortNotice($isShortNotice)
@@ -1215,7 +1241,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the is txc app
      *
-     * @param string $isTxcApp
+     * @param string $isTxcApp new value being set
+     *
      * @return BusReg
      */
     public function setIsTxcApp($isTxcApp)
@@ -1238,7 +1265,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the la short note
      *
-     * @param string $laShortNote
+     * @param string $laShortNote new value being set
+     *
      * @return BusReg
      */
     public function setLaShortNote($laShortNote)
@@ -1261,7 +1289,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return BusReg
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -1284,7 +1313,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return BusReg
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -1307,7 +1337,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return BusReg
      */
     public function setLicence($licence)
@@ -1330,7 +1361,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the local authority
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys
+     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys collection being set as the value
+     *
      * @return BusReg
      */
     public function setLocalAuthoritys($localAuthoritys)
@@ -1353,7 +1385,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a local authoritys
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys
+     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys collection being added
+     *
      * @return BusReg
      */
     public function addLocalAuthoritys($localAuthoritys)
@@ -1375,7 +1408,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a local authoritys
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys
+     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys collection being removed
+     *
      * @return BusReg
      */
     public function removeLocalAuthoritys($localAuthoritys)
@@ -1390,7 +1424,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the manoeuvre detail
      *
-     * @param string $manoeuvreDetail
+     * @param string $manoeuvreDetail new value being set
+     *
      * @return BusReg
      */
     public function setManoeuvreDetail($manoeuvreDetail)
@@ -1413,7 +1448,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the map supplied
      *
-     * @param string $mapSupplied
+     * @param string $mapSupplied new value being set
+     *
      * @return BusReg
      */
     public function setMapSupplied($mapSupplied)
@@ -1436,7 +1472,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the need new stop
      *
-     * @param string $needNewStop
+     * @param string $needNewStop new value being set
+     *
      * @return BusReg
      */
     public function setNeedNewStop($needNewStop)
@@ -1459,7 +1496,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the new stop detail
      *
-     * @param string $newStopDetail
+     * @param string $newStopDetail new value being set
+     *
      * @return BusReg
      */
     public function setNewStopDetail($newStopDetail)
@@ -1482,7 +1520,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the not fixed stop detail
      *
-     * @param string $notFixedStopDetail
+     * @param string $notFixedStopDetail new value being set
+     *
      * @return BusReg
      */
     public function setNotFixedStopDetail($notFixedStopDetail)
@@ -1505,7 +1544,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return BusReg
      */
     public function setOlbsKey($olbsKey)
@@ -1528,7 +1568,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the op notified la pte
      *
-     * @param string $opNotifiedLaPte
+     * @param string $opNotifiedLaPte new value being set
+     *
      * @return BusReg
      */
     public function setOpNotifiedLaPte($opNotifiedLaPte)
@@ -1551,7 +1592,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the organisation email
      *
-     * @param string $organisationEmail
+     * @param string $organisationEmail new value being set
+     *
      * @return BusReg
      */
     public function setOrganisationEmail($organisationEmail)
@@ -1574,7 +1616,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the other details
      *
-     * @param string $otherDetails
+     * @param string $otherDetails new value being set
+     *
      * @return BusReg
      */
     public function setOtherDetails($otherDetails)
@@ -1597,7 +1640,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the parent
      *
-     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $parent
+     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $parent entity being set as the value
+     *
      * @return BusReg
      */
     public function setParent($parent)
@@ -1620,7 +1664,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the quality contract details
      *
-     * @param string $qualityContractDetails
+     * @param string $qualityContractDetails new value being set
+     *
      * @return BusReg
      */
     public function setQualityContractDetails($qualityContractDetails)
@@ -1643,7 +1688,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the quality partnership details
      *
-     * @param string $qualityPartnershipDetails
+     * @param string $qualityPartnershipDetails new value being set
+     *
      * @return BusReg
      */
     public function setQualityPartnershipDetails($qualityPartnershipDetails)
@@ -1666,7 +1712,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the quality partnership facilities used
      *
-     * @param string $qualityPartnershipFacilitiesUsed
+     * @param string $qualityPartnershipFacilitiesUsed new value being set
+     *
      * @return BusReg
      */
     public function setQualityPartnershipFacilitiesUsed($qualityPartnershipFacilitiesUsed)
@@ -1689,7 +1736,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the reason cancelled
      *
-     * @param string $reasonCancelled
+     * @param string $reasonCancelled new value being set
+     *
      * @return BusReg
      */
     public function setReasonCancelled($reasonCancelled)
@@ -1712,7 +1760,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the reason refused
      *
-     * @param string $reasonRefused
+     * @param string $reasonRefused new value being set
+     *
      * @return BusReg
      */
     public function setReasonRefused($reasonRefused)
@@ -1735,7 +1784,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the reason sn refused
      *
-     * @param string $reasonSnRefused
+     * @param string $reasonSnRefused new value being set
+     *
      * @return BusReg
      */
     public function setReasonSnRefused($reasonSnRefused)
@@ -1758,7 +1808,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the received date
      *
-     * @param \DateTime $receivedDate
+     * @param \DateTime $receivedDate new value being set
+     *
      * @return BusReg
      */
     public function setReceivedDate($receivedDate)
@@ -1781,7 +1832,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the reg no
      *
-     * @param string $regNo
+     * @param string $regNo new value being set
+     *
      * @return BusReg
      */
     public function setRegNo($regNo)
@@ -1804,7 +1856,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the revert status
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $revertStatus
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $revertStatus entity being set as the value
+     *
      * @return BusReg
      */
     public function setRevertStatus($revertStatus)
@@ -1827,7 +1880,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the route description
      *
-     * @param string $routeDescription
+     * @param string $routeDescription new value being set
+     *
      * @return BusReg
      */
     public function setRouteDescription($routeDescription)
@@ -1850,7 +1904,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the route no
      *
-     * @param int $routeNo
+     * @param int $routeNo new value being set
+     *
      * @return BusReg
      */
     public function setRouteNo($routeNo)
@@ -1873,7 +1928,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the service no
      *
-     * @param string $serviceNo
+     * @param string $serviceNo new value being set
+     *
      * @return BusReg
      */
     public function setServiceNo($serviceNo)
@@ -1896,7 +1952,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the short notice refused
      *
-     * @param string $shortNoticeRefused
+     * @param string $shortNoticeRefused new value being set
+     *
      * @return BusReg
      */
     public function setShortNoticeRefused($shortNoticeRefused)
@@ -1919,7 +1976,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the start point
      *
-     * @param string $startPoint
+     * @param string $startPoint new value being set
+     *
      * @return BusReg
      */
     public function setStartPoint($startPoint)
@@ -1942,7 +2000,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the status
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status entity being set as the value
+     *
      * @return BusReg
      */
     public function setStatus($status)
@@ -1965,7 +2024,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the status change date
      *
-     * @param \DateTime $statusChangeDate
+     * @param \DateTime $statusChangeDate new value being set
+     *
      * @return BusReg
      */
     public function setStatusChangeDate($statusChangeDate)
@@ -1988,7 +2048,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the stopping arrangements
      *
-     * @param string $stoppingArrangements
+     * @param string $stoppingArrangements new value being set
+     *
      * @return BusReg
      */
     public function setStoppingArrangements($stoppingArrangements)
@@ -2011,7 +2072,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the subsidised
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $subsidised
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $subsidised entity being set as the value
+     *
      * @return BusReg
      */
     public function setSubsidised($subsidised)
@@ -2034,7 +2096,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the subsidy detail
      *
-     * @param string $subsidyDetail
+     * @param string $subsidyDetail new value being set
+     *
      * @return BusReg
      */
     public function setSubsidyDetail($subsidyDetail)
@@ -2057,7 +2120,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the timetable acceptable
      *
-     * @param string $timetableAcceptable
+     * @param string $timetableAcceptable new value being set
+     *
      * @return BusReg
      */
     public function setTimetableAcceptable($timetableAcceptable)
@@ -2080,7 +2144,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the traffic area
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas collection being set as the value
+     *
      * @return BusReg
      */
     public function setTrafficAreas($trafficAreas)
@@ -2103,7 +2168,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a traffic areas
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas collection being added
+     *
      * @return BusReg
      */
     public function addTrafficAreas($trafficAreas)
@@ -2125,7 +2191,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a traffic areas
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas collection being removed
+     *
      * @return BusReg
      */
     public function removeTrafficAreas($trafficAreas)
@@ -2140,7 +2207,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the trc condition checked
      *
-     * @param string $trcConditionChecked
+     * @param string $trcConditionChecked new value being set
+     *
      * @return BusReg
      */
     public function setTrcConditionChecked($trcConditionChecked)
@@ -2163,7 +2231,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the trc notes
      *
-     * @param string $trcNotes
+     * @param string $trcNotes new value being set
+     *
      * @return BusReg
      */
     public function setTrcNotes($trcNotes)
@@ -2186,7 +2255,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the txc app type
      *
-     * @param string $txcAppType
+     * @param string $txcAppType new value being set
+     *
      * @return BusReg
      */
     public function setTxcAppType($txcAppType)
@@ -2209,7 +2279,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the use all stops
      *
-     * @param string $useAllStops
+     * @param string $useAllStops new value being set
+     *
      * @return BusReg
      */
     public function setUseAllStops($useAllStops)
@@ -2232,7 +2303,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the variation no
      *
-     * @param int $variationNo
+     * @param int $variationNo new value being set
+     *
      * @return BusReg
      */
     public function setVariationNo($variationNo)
@@ -2255,7 +2327,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the variation reason
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons collection being set as the value
+     *
      * @return BusReg
      */
     public function setVariationReasons($variationReasons)
@@ -2278,7 +2351,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a variation reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons collection being added
+     *
      * @return BusReg
      */
     public function addVariationReasons($variationReasons)
@@ -2300,7 +2374,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a variation reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons collection being removed
+     *
      * @return BusReg
      */
     public function removeVariationReasons($variationReasons)
@@ -2315,7 +2390,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return BusReg
      */
     public function setVersion($version)
@@ -2338,7 +2414,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the via
      *
-     * @param string $via
+     * @param string $via new value being set
+     *
      * @return BusReg
      */
     public function setVia($via)
@@ -2361,7 +2438,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the withdrawn reason
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $withdrawnReason
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $withdrawnReason entity being set as the value
+     *
      * @return BusReg
      */
     public function setWithdrawnReason($withdrawnReason)
@@ -2384,7 +2462,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the other service
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherServices
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherServices collection being set as the value
+     *
      * @return BusReg
      */
     public function setOtherServices($otherServices)
@@ -2407,7 +2486,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a other services
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherServices
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherServices collection being added
+     *
      * @return BusReg
      */
     public function addOtherServices($otherServices)
@@ -2429,7 +2509,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a other services
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherServices
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherServices collection being removed
+     *
      * @return BusReg
      */
     public function removeOtherServices($otherServices)
@@ -2444,7 +2525,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the read audit
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being set as the value
+     *
      * @return BusReg
      */
     public function setReadAudits($readAudits)
@@ -2467,7 +2549,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a read audits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being added
+     *
      * @return BusReg
      */
     public function addReadAudits($readAudits)
@@ -2489,7 +2572,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a read audits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being removed
+     *
      * @return BusReg
      */
     public function removeReadAudits($readAudits)
@@ -2504,7 +2588,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the short notice
      *
-     * @param \Dvsa\Olcs\Api\Entity\Bus\BusShortNotice $shortNotice
+     * @param \Dvsa\Olcs\Api\Entity\Bus\BusShortNotice $shortNotice entity being set as the value
+     *
      * @return BusReg
      */
     public function setShortNotice($shortNotice)
@@ -2527,7 +2612,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the document
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being set as the value
+     *
      * @return BusReg
      */
     public function setDocuments($documents)
@@ -2550,7 +2636,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being added
+     *
      * @return BusReg
      */
     public function addDocuments($documents)
@@ -2572,7 +2659,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being removed
+     *
      * @return BusReg
      */
     public function removeDocuments($documents)
@@ -2587,7 +2675,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the ebsr submission
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions
+     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions collection being set as the value
+     *
      * @return BusReg
      */
     public function setEbsrSubmissions($ebsrSubmissions)
@@ -2610,7 +2699,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a ebsr submissions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions
+     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions collection being added
+     *
      * @return BusReg
      */
     public function addEbsrSubmissions($ebsrSubmissions)
@@ -2632,7 +2722,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a ebsr submissions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions
+     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions collection being removed
+     *
      * @return BusReg
      */
     public function removeEbsrSubmissions($ebsrSubmissions)
@@ -2647,7 +2738,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the publication link
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being set as the value
+     *
      * @return BusReg
      */
     public function setPublicationLinks($publicationLinks)
@@ -2670,7 +2762,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a publication links
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being added
+     *
      * @return BusReg
      */
     public function addPublicationLinks($publicationLinks)
@@ -2692,7 +2785,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a publication links
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being removed
+     *
      * @return BusReg
      */
     public function removePublicationLinks($publicationLinks)
@@ -2707,7 +2801,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the txc inbox
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $txcInboxs
+     * @param \Doctrine\Common\Collections\ArrayCollection $txcInboxs collection being set as the value
+     *
      * @return BusReg
      */
     public function setTxcInboxs($txcInboxs)
@@ -2730,7 +2825,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a txc inboxs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $txcInboxs
+     * @param \Doctrine\Common\Collections\ArrayCollection $txcInboxs collection being added
+     *
      * @return BusReg
      */
     public function addTxcInboxs($txcInboxs)
@@ -2752,7 +2848,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Remove a txc inboxs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $txcInboxs
+     * @param \Doctrine\Common\Collections\ArrayCollection $txcInboxs collection being removed
+     *
      * @return BusReg
      */
     public function removeTxcInboxs($txcInboxs)
@@ -2768,6 +2865,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -2778,6 +2877,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -2787,7 +2888,9 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

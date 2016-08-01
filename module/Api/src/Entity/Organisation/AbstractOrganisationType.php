@@ -62,7 +62,8 @@ abstract class AbstractOrganisationType implements BundleSerializableInterface, 
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return OrganisationType
      */
     public function setId($id)
@@ -85,7 +86,8 @@ abstract class AbstractOrganisationType implements BundleSerializableInterface, 
     /**
      * Set the org person type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $orgPersonType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $orgPersonType entity being set as the value
+     *
      * @return OrganisationType
      */
     public function setOrgPersonType($orgPersonType)
@@ -108,7 +110,8 @@ abstract class AbstractOrganisationType implements BundleSerializableInterface, 
     /**
      * Set the org type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $orgType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $orgType entity being set as the value
+     *
      * @return OrganisationType
      */
     public function setOrgType($orgType)
@@ -133,7 +136,9 @@ abstract class AbstractOrganisationType implements BundleSerializableInterface, 
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

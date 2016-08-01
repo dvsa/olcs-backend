@@ -515,12 +515,19 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->piTypes = new ArrayCollection();
@@ -535,7 +542,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the agreed by tc
      *
-     * @param \Dvsa\Olcs\Api\Entity\Pi\PresidingTc $agreedByTc
+     * @param \Dvsa\Olcs\Api\Entity\Pi\PresidingTc $agreedByTc entity being set as the value
+     *
      * @return Pi
      */
     public function setAgreedByTc($agreedByTc)
@@ -558,7 +566,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the agreed by tc role
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $agreedByTcRole
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $agreedByTcRole entity being set as the value
+     *
      * @return Pi
      */
     public function setAgreedByTcRole($agreedByTcRole)
@@ -581,7 +590,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the agreed date
      *
-     * @param \DateTime $agreedDate
+     * @param \DateTime $agreedDate new value being set
+     *
      * @return Pi
      */
     public function setAgreedDate($agreedDate)
@@ -604,7 +614,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the assigned to
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $assignedTo
+     * @param \Dvsa\Olcs\Api\Entity\User\User $assignedTo entity being set as the value
+     *
      * @return Pi
      */
     public function setAssignedTo($assignedTo)
@@ -627,7 +638,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the brief to tc date
      *
-     * @param \DateTime $briefToTcDate
+     * @param \DateTime $briefToTcDate new value being set
+     *
      * @return Pi
      */
     public function setBriefToTcDate($briefToTcDate)
@@ -650,7 +662,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the call up letter date
      *
-     * @param \DateTime $callUpLetterDate
+     * @param \DateTime $callUpLetterDate new value being set
+     *
      * @return Pi
      */
     public function setCallUpLetterDate($callUpLetterDate)
@@ -673,7 +686,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return Pi
      */
     public function setCase($case)
@@ -696,7 +710,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the closed date
      *
-     * @param \DateTime $closedDate
+     * @param \DateTime $closedDate new value being set
+     *
      * @return Pi
      */
     public function setClosedDate($closedDate)
@@ -719,7 +734,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the comment
      *
-     * @param string $comment
+     * @param string $comment new value being set
+     *
      * @return Pi
      */
     public function setComment($comment)
@@ -742,7 +758,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Pi
      */
     public function setCreatedBy($createdBy)
@@ -765,7 +782,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Pi
      */
     public function setCreatedOn($createdOn)
@@ -788,7 +806,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the decided by tc
      *
-     * @param \Dvsa\Olcs\Api\Entity\Pi\PresidingTc $decidedByTc
+     * @param \Dvsa\Olcs\Api\Entity\Pi\PresidingTc $decidedByTc entity being set as the value
+     *
      * @return Pi
      */
     public function setDecidedByTc($decidedByTc)
@@ -811,7 +830,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the decided by tc role
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $decidedByTcRole
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $decidedByTcRole entity being set as the value
+     *
      * @return Pi
      */
     public function setDecidedByTcRole($decidedByTcRole)
@@ -834,7 +854,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the decision date
      *
-     * @param \DateTime $decisionDate
+     * @param \DateTime $decisionDate new value being set
+     *
      * @return Pi
      */
     public function setDecisionDate($decisionDate)
@@ -857,7 +878,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the decision letter sent date
      *
-     * @param \DateTime $decisionLetterSentDate
+     * @param \DateTime $decisionLetterSentDate new value being set
+     *
      * @return Pi
      */
     public function setDecisionLetterSentDate($decisionLetterSentDate)
@@ -880,7 +902,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the decision notes
      *
-     * @param string $decisionNotes
+     * @param string $decisionNotes new value being set
+     *
      * @return Pi
      */
     public function setDecisionNotes($decisionNotes)
@@ -903,7 +926,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the decision
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $decisions
+     * @param \Doctrine\Common\Collections\ArrayCollection $decisions collection being set as the value
+     *
      * @return Pi
      */
     public function setDecisions($decisions)
@@ -926,7 +950,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Add a decisions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $decisions
+     * @param \Doctrine\Common\Collections\ArrayCollection $decisions collection being added
+     *
      * @return Pi
      */
     public function addDecisions($decisions)
@@ -948,7 +973,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Remove a decisions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $decisions
+     * @param \Doctrine\Common\Collections\ArrayCollection $decisions collection being removed
+     *
      * @return Pi
      */
     public function removeDecisions($decisions)
@@ -963,7 +989,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return Pi
      */
     public function setDeletedDate($deletedDate)
@@ -986,7 +1013,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Pi
      */
     public function setId($id)
@@ -1009,7 +1037,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the is cancelled
      *
-     * @param string $isCancelled
+     * @param string $isCancelled new value being set
+     *
      * @return Pi
      */
     public function setIsCancelled($isCancelled)
@@ -1032,7 +1061,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Pi
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -1055,7 +1085,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Pi
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -1078,7 +1109,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the licence curtailed at pi
      *
-     * @param string $licenceCurtailedAtPi
+     * @param string $licenceCurtailedAtPi new value being set
+     *
      * @return Pi
      */
     public function setLicenceCurtailedAtPi($licenceCurtailedAtPi)
@@ -1101,7 +1133,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the licence revoked at pi
      *
-     * @param string $licenceRevokedAtPi
+     * @param string $licenceRevokedAtPi new value being set
+     *
      * @return Pi
      */
     public function setLicenceRevokedAtPi($licenceRevokedAtPi)
@@ -1124,7 +1157,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the licence suspended at pi
      *
-     * @param string $licenceSuspendedAtPi
+     * @param string $licenceSuspendedAtPi new value being set
+     *
      * @return Pi
      */
     public function setLicenceSuspendedAtPi($licenceSuspendedAtPi)
@@ -1147,7 +1181,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the notification date
      *
-     * @param \DateTime $notificationDate
+     * @param \DateTime $notificationDate new value being set
+     *
      * @return Pi
      */
     public function setNotificationDate($notificationDate)
@@ -1170,7 +1205,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return Pi
      */
     public function setOlbsKey($olbsKey)
@@ -1193,7 +1229,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the olbs type
      *
-     * @param string $olbsType
+     * @param string $olbsType new value being set
+     *
      * @return Pi
      */
     public function setOlbsType($olbsType)
@@ -1216,7 +1253,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the pi status
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $piStatus
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $piStatus entity being set as the value
+     *
      * @return Pi
      */
     public function setPiStatus($piStatus)
@@ -1239,7 +1277,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the pi type
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $piTypes
+     * @param \Doctrine\Common\Collections\ArrayCollection $piTypes collection being set as the value
+     *
      * @return Pi
      */
     public function setPiTypes($piTypes)
@@ -1262,7 +1301,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Add a pi types
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $piTypes
+     * @param \Doctrine\Common\Collections\ArrayCollection $piTypes collection being added
+     *
      * @return Pi
      */
     public function addPiTypes($piTypes)
@@ -1284,7 +1324,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Remove a pi types
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $piTypes
+     * @param \Doctrine\Common\Collections\ArrayCollection $piTypes collection being removed
+     *
      * @return Pi
      */
     public function removePiTypes($piTypes)
@@ -1299,7 +1340,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the reason
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being set as the value
+     *
      * @return Pi
      */
     public function setReasons($reasons)
@@ -1322,7 +1364,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Add a reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being added
+     *
      * @return Pi
      */
     public function addReasons($reasons)
@@ -1344,7 +1387,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Remove a reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being removed
+     *
      * @return Pi
      */
     public function removeReasons($reasons)
@@ -1359,7 +1403,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the tc written decision date
      *
-     * @param \DateTime $tcWrittenDecisionDate
+     * @param \DateTime $tcWrittenDecisionDate new value being set
+     *
      * @return Pi
      */
     public function setTcWrittenDecisionDate($tcWrittenDecisionDate)
@@ -1382,7 +1427,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the tc written reason date
      *
-     * @param \DateTime $tcWrittenReasonDate
+     * @param \DateTime $tcWrittenReasonDate new value being set
+     *
      * @return Pi
      */
     public function setTcWrittenReasonDate($tcWrittenReasonDate)
@@ -1405,7 +1451,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the tm called with operator
      *
-     * @param string $tmCalledWithOperator
+     * @param string $tmCalledWithOperator new value being set
+     *
      * @return Pi
      */
     public function setTmCalledWithOperator($tmCalledWithOperator)
@@ -1428,7 +1475,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the tm decision
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions collection being set as the value
+     *
      * @return Pi
      */
     public function setTmDecisions($tmDecisions)
@@ -1451,7 +1499,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Add a tm decisions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions collection being added
+     *
      * @return Pi
      */
     public function addTmDecisions($tmDecisions)
@@ -1473,7 +1522,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Remove a tm decisions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions collection being removed
+     *
      * @return Pi
      */
     public function removeTmDecisions($tmDecisions)
@@ -1488,7 +1538,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Pi
      */
     public function setVersion($version)
@@ -1511,7 +1562,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the witnesses
      *
-     * @param int $witnesses
+     * @param int $witnesses new value being set
+     *
      * @return Pi
      */
     public function setWitnesses($witnesses)
@@ -1534,7 +1586,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the written decision letter date
      *
-     * @param \DateTime $writtenDecisionLetterDate
+     * @param \DateTime $writtenDecisionLetterDate new value being set
+     *
      * @return Pi
      */
     public function setWrittenDecisionLetterDate($writtenDecisionLetterDate)
@@ -1557,7 +1610,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the written outcome
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $writtenOutcome
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $writtenOutcome entity being set as the value
+     *
      * @return Pi
      */
     public function setWrittenOutcome($writtenOutcome)
@@ -1580,7 +1634,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the written reason date
      *
-     * @param \DateTime $writtenReasonDate
+     * @param \DateTime $writtenReasonDate new value being set
+     *
      * @return Pi
      */
     public function setWrittenReasonDate($writtenReasonDate)
@@ -1603,7 +1658,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the written reason letter date
      *
-     * @param \DateTime $writtenReasonLetterDate
+     * @param \DateTime $writtenReasonLetterDate new value being set
+     *
      * @return Pi
      */
     public function setWrittenReasonLetterDate($writtenReasonLetterDate)
@@ -1626,7 +1682,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the pi hearing
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $piHearings
+     * @param \Doctrine\Common\Collections\ArrayCollection $piHearings collection being set as the value
+     *
      * @return Pi
      */
     public function setPiHearings($piHearings)
@@ -1649,7 +1706,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Add a pi hearings
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $piHearings
+     * @param \Doctrine\Common\Collections\ArrayCollection $piHearings collection being added
+     *
      * @return Pi
      */
     public function addPiHearings($piHearings)
@@ -1671,7 +1729,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Remove a pi hearings
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $piHearings
+     * @param \Doctrine\Common\Collections\ArrayCollection $piHearings collection being removed
+     *
      * @return Pi
      */
     public function removePiHearings($piHearings)
@@ -1686,7 +1745,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the publication link
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being set as the value
+     *
      * @return Pi
      */
     public function setPublicationLinks($publicationLinks)
@@ -1709,7 +1769,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Add a publication links
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being added
+     *
      * @return Pi
      */
     public function addPublicationLinks($publicationLinks)
@@ -1731,7 +1792,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Remove a publication links
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being removed
+     *
      * @return Pi
      */
     public function removePublicationLinks($publicationLinks)
@@ -1746,7 +1808,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the sla target date
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being set as the value
+     *
      * @return Pi
      */
     public function setSlaTargetDates($slaTargetDates)
@@ -1769,7 +1832,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Add a sla target dates
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being added
+     *
      * @return Pi
      */
     public function addSlaTargetDates($slaTargetDates)
@@ -1791,7 +1855,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Remove a sla target dates
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being removed
+     *
      * @return Pi
      */
     public function removeSlaTargetDates($slaTargetDates)
@@ -1807,6 +1872,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -1817,6 +1884,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -1826,7 +1895,9 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

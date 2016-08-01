@@ -246,12 +246,19 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->roles = new ArrayCollection();
@@ -261,7 +268,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the account disabled
      *
-     * @param string $accountDisabled
+     * @param string $accountDisabled new value being set
+     *
      * @return User
      */
     public function setAccountDisabled($accountDisabled)
@@ -284,7 +292,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the contact details
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $contactDetails
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $contactDetails entity being set as the value
+     *
      * @return User
      */
     public function setContactDetails($contactDetails)
@@ -307,7 +316,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return User
      */
     public function setCreatedBy($createdBy)
@@ -330,7 +340,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return User
      */
     public function setCreatedOn($createdOn)
@@ -353,7 +364,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return User
      */
     public function setDeletedDate($deletedDate)
@@ -376,7 +388,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the disabled date
      *
-     * @param \DateTime $disabledDate
+     * @param \DateTime $disabledDate new value being set
+     *
      * @return User
      */
     public function setDisabledDate($disabledDate)
@@ -399,7 +412,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return User
      */
     public function setId($id)
@@ -422,7 +436,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return User
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -445,7 +460,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return User
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -468,7 +484,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the local authority
      *
-     * @param \Dvsa\Olcs\Api\Entity\Bus\LocalAuthority $localAuthority
+     * @param \Dvsa\Olcs\Api\Entity\Bus\LocalAuthority $localAuthority entity being set as the value
+     *
      * @return User
      */
     public function setLocalAuthority($localAuthority)
@@ -491,7 +508,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the login id
      *
-     * @param string $loginId
+     * @param string $loginId new value being set
+     *
      * @return User
      */
     public function setLoginId($loginId)
@@ -514,7 +532,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the partner contact details
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $partnerContactDetails
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $partnerContactDetails entity being set as the value
+     *
      * @return User
      */
     public function setPartnerContactDetails($partnerContactDetails)
@@ -537,7 +556,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the pid
      *
-     * @param string $pid
+     * @param string $pid new value being set
+     *
      * @return User
      */
     public function setPid($pid)
@@ -560,7 +580,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the role
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $roles
+     * @param \Doctrine\Common\Collections\ArrayCollection $roles collection being set as the value
+     *
      * @return User
      */
     public function setRoles($roles)
@@ -583,7 +604,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Add a roles
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $roles
+     * @param \Doctrine\Common\Collections\ArrayCollection $roles collection being added
+     *
      * @return User
      */
     public function addRoles($roles)
@@ -605,7 +627,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Remove a roles
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $roles
+     * @param \Doctrine\Common\Collections\ArrayCollection $roles collection being removed
+     *
      * @return User
      */
     public function removeRoles($roles)
@@ -620,7 +643,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the team
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\Team $team
+     * @param \Dvsa\Olcs\Api\Entity\User\Team $team entity being set as the value
+     *
      * @return User
      */
     public function setTeam($team)
@@ -643,7 +667,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the translate to welsh
      *
-     * @param string $translateToWelsh
+     * @param string $translateToWelsh new value being set
+     *
      * @return User
      */
     public function setTranslateToWelsh($translateToWelsh)
@@ -666,7 +691,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the transport manager
      *
-     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager entity being set as the value
+     *
      * @return User
      */
     public function setTransportManager($transportManager)
@@ -689,7 +715,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return User
      */
     public function setVersion($version)
@@ -712,7 +739,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the organisation user
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers collection being set as the value
+     *
      * @return User
      */
     public function setOrganisationUsers($organisationUsers)
@@ -735,7 +763,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Add a organisation users
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers collection being added
+     *
      * @return User
      */
     public function addOrganisationUsers($organisationUsers)
@@ -757,7 +786,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Remove a organisation users
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers collection being removed
+     *
      * @return User
      */
     public function removeOrganisationUsers($organisationUsers)
@@ -773,6 +803,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -783,6 +815,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -792,7 +826,9 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

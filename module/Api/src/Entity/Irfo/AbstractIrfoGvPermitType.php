@@ -121,7 +121,8 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return IrfoGvPermitType
      */
     public function setCreatedBy($createdBy)
@@ -144,7 +145,8 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return IrfoGvPermitType
      */
     public function setCreatedOn($createdOn)
@@ -167,7 +169,8 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return IrfoGvPermitType
      */
     public function setDescription($description)
@@ -190,7 +193,8 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return IrfoGvPermitType
      */
     public function setId($id)
@@ -213,7 +217,8 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
     /**
      * Set the irfo country
      *
-     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoCountry $irfoCountry
+     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoCountry $irfoCountry entity being set as the value
+     *
      * @return IrfoGvPermitType
      */
     public function setIrfoCountry($irfoCountry)
@@ -236,7 +241,8 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
     /**
      * Set the irfo fee type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $irfoFeeType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $irfoFeeType entity being set as the value
+     *
      * @return IrfoGvPermitType
      */
     public function setIrfoFeeType($irfoFeeType)
@@ -259,7 +265,8 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return IrfoGvPermitType
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -282,7 +289,8 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return IrfoGvPermitType
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -305,7 +313,8 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return IrfoGvPermitType
      */
     public function setVersion($version)
@@ -329,6 +338,8 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -339,6 +350,8 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -348,7 +361,9 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

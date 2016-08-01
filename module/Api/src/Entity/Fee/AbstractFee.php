@@ -279,12 +279,19 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->feeTransactions = new ArrayCollection();
@@ -293,7 +300,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application entity being set as the value
+     *
      * @return Fee
      */
     public function setApplication($application)
@@ -316,7 +324,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the bus reg
      *
-     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg
+     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg entity being set as the value
+     *
      * @return Fee
      */
     public function setBusReg($busReg)
@@ -339,7 +348,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Fee
      */
     public function setCreatedBy($createdBy)
@@ -362,7 +372,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Fee
      */
     public function setCreatedOn($createdOn)
@@ -385,7 +396,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return Fee
      */
     public function setDescription($description)
@@ -408,7 +420,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the fee status
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $feeStatus
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $feeStatus entity being set as the value
+     *
      * @return Fee
      */
     public function setFeeStatus($feeStatus)
@@ -431,7 +444,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the fee type
      *
-     * @param \Dvsa\Olcs\Api\Entity\Fee\FeeType $feeType
+     * @param \Dvsa\Olcs\Api\Entity\Fee\FeeType $feeType entity being set as the value
+     *
      * @return Fee
      */
     public function setFeeType($feeType)
@@ -454,7 +468,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the gross amount
      *
-     * @param float $grossAmount
+     * @param float $grossAmount new value being set
+     *
      * @return Fee
      */
     public function setGrossAmount($grossAmount)
@@ -477,7 +492,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Fee
      */
     public function setId($id)
@@ -500,7 +516,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the invoice line no
      *
-     * @param int $invoiceLineNo
+     * @param int $invoiceLineNo new value being set
+     *
      * @return Fee
      */
     public function setInvoiceLineNo($invoiceLineNo)
@@ -523,7 +540,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the invoiced date
      *
-     * @param \DateTime $invoicedDate
+     * @param \DateTime $invoicedDate new value being set
+     *
      * @return Fee
      */
     public function setInvoicedDate($invoicedDate)
@@ -546,7 +564,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the irfo fee exempt
      *
-     * @param string $irfoFeeExempt
+     * @param string $irfoFeeExempt new value being set
+     *
      * @return Fee
      */
     public function setIrfoFeeExempt($irfoFeeExempt)
@@ -569,7 +588,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the irfo gv permit
      *
-     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit $irfoGvPermit
+     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit $irfoGvPermit entity being set as the value
+     *
      * @return Fee
      */
     public function setIrfoGvPermit($irfoGvPermit)
@@ -592,7 +612,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the irfo psv auth
      *
-     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth $irfoPsvAuth
+     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth $irfoPsvAuth entity being set as the value
+     *
      * @return Fee
      */
     public function setIrfoPsvAuth($irfoPsvAuth)
@@ -615,7 +636,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Fee
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -638,7 +660,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Fee
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -661,7 +684,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return Fee
      */
     public function setLicence($licence)
@@ -684,7 +708,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the net amount
      *
-     * @param float $netAmount
+     * @param float $netAmount new value being set
+     *
      * @return Fee
      */
     public function setNetAmount($netAmount)
@@ -707,7 +732,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the parent fee
      *
-     * @param \Dvsa\Olcs\Api\Entity\Fee\Fee $parentFee
+     * @param \Dvsa\Olcs\Api\Entity\Fee\Fee $parentFee entity being set as the value
+     *
      * @return Fee
      */
     public function setParentFee($parentFee)
@@ -730,7 +756,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the task
      *
-     * @param \Dvsa\Olcs\Api\Entity\Task\Task $task
+     * @param \Dvsa\Olcs\Api\Entity\Task\Task $task entity being set as the value
+     *
      * @return Fee
      */
     public function setTask($task)
@@ -753,7 +780,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the vat amount
      *
-     * @param float $vatAmount
+     * @param float $vatAmount new value being set
+     *
      * @return Fee
      */
     public function setVatAmount($vatAmount)
@@ -776,7 +804,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Fee
      */
     public function setVersion($version)
@@ -799,7 +828,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Set the fee transaction
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions
+     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions collection being set as the value
+     *
      * @return Fee
      */
     public function setFeeTransactions($feeTransactions)
@@ -822,7 +852,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Add a fee transactions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions
+     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions collection being added
+     *
      * @return Fee
      */
     public function addFeeTransactions($feeTransactions)
@@ -844,7 +875,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Remove a fee transactions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions
+     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions collection being removed
+     *
      * @return Fee
      */
     public function removeFeeTransactions($feeTransactions)
@@ -860,6 +892,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -870,6 +904,8 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -879,7 +915,9 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

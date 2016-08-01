@@ -166,12 +166,19 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->actionTypes = new ArrayCollection();
@@ -181,7 +188,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Set the action type
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $actionTypes
+     * @param \Doctrine\Common\Collections\ArrayCollection $actionTypes collection being set as the value
+     *
      * @return SubmissionAction
      */
     public function setActionTypes($actionTypes)
@@ -204,7 +212,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Add a action types
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $actionTypes
+     * @param \Doctrine\Common\Collections\ArrayCollection $actionTypes collection being added
+     *
      * @return SubmissionAction
      */
     public function addActionTypes($actionTypes)
@@ -226,7 +235,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Remove a action types
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $actionTypes
+     * @param \Doctrine\Common\Collections\ArrayCollection $actionTypes collection being removed
+     *
      * @return SubmissionAction
      */
     public function removeActionTypes($actionTypes)
@@ -241,7 +251,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Set the comment
      *
-     * @param string $comment
+     * @param string $comment new value being set
+     *
      * @return SubmissionAction
      */
     public function setComment($comment)
@@ -264,7 +275,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return SubmissionAction
      */
     public function setCreatedBy($createdBy)
@@ -287,7 +299,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return SubmissionAction
      */
     public function setCreatedOn($createdOn)
@@ -310,7 +323,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return SubmissionAction
      */
     public function setId($id)
@@ -333,7 +347,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Set the is decision
      *
-     * @param string $isDecision
+     * @param string $isDecision new value being set
+     *
      * @return SubmissionAction
      */
     public function setIsDecision($isDecision)
@@ -356,7 +371,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return SubmissionAction
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -379,7 +395,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return SubmissionAction
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -402,7 +419,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Set the reason
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being set as the value
+     *
      * @return SubmissionAction
      */
     public function setReasons($reasons)
@@ -425,7 +443,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Add a reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being added
+     *
      * @return SubmissionAction
      */
     public function addReasons($reasons)
@@ -447,7 +466,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Remove a reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being removed
+     *
      * @return SubmissionAction
      */
     public function removeReasons($reasons)
@@ -462,7 +482,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Set the submission
      *
-     * @param \Dvsa\Olcs\Api\Entity\Submission\Submission $submission
+     * @param \Dvsa\Olcs\Api\Entity\Submission\Submission $submission entity being set as the value
+     *
      * @return SubmissionAction
      */
     public function setSubmission($submission)
@@ -485,7 +506,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return SubmissionAction
      */
     public function setVersion($version)
@@ -509,6 +531,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -519,6 +543,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -528,7 +554,9 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

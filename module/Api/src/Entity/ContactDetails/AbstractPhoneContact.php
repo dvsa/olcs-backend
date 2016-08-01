@@ -156,7 +156,8 @@ abstract class AbstractPhoneContact implements BundleSerializableInterface, Json
     /**
      * Set the contact details
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $contactDetails
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $contactDetails entity being set as the value
+     *
      * @return PhoneContact
      */
     public function setContactDetails($contactDetails)
@@ -179,7 +180,8 @@ abstract class AbstractPhoneContact implements BundleSerializableInterface, Json
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return PhoneContact
      */
     public function setCreatedBy($createdBy)
@@ -202,7 +204,8 @@ abstract class AbstractPhoneContact implements BundleSerializableInterface, Json
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return PhoneContact
      */
     public function setCreatedOn($createdOn)
@@ -225,7 +228,8 @@ abstract class AbstractPhoneContact implements BundleSerializableInterface, Json
     /**
      * Set the details
      *
-     * @param string $details
+     * @param string $details new value being set
+     *
      * @return PhoneContact
      */
     public function setDetails($details)
@@ -248,7 +252,8 @@ abstract class AbstractPhoneContact implements BundleSerializableInterface, Json
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return PhoneContact
      */
     public function setId($id)
@@ -271,7 +276,8 @@ abstract class AbstractPhoneContact implements BundleSerializableInterface, Json
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return PhoneContact
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -294,7 +300,8 @@ abstract class AbstractPhoneContact implements BundleSerializableInterface, Json
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return PhoneContact
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -317,7 +324,8 @@ abstract class AbstractPhoneContact implements BundleSerializableInterface, Json
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return PhoneContact
      */
     public function setOlbsKey($olbsKey)
@@ -340,7 +348,8 @@ abstract class AbstractPhoneContact implements BundleSerializableInterface, Json
     /**
      * Set the olbs type
      *
-     * @param string $olbsType
+     * @param string $olbsType new value being set
+     *
      * @return PhoneContact
      */
     public function setOlbsType($olbsType)
@@ -363,7 +372,8 @@ abstract class AbstractPhoneContact implements BundleSerializableInterface, Json
     /**
      * Set the phone contact type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $phoneContactType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $phoneContactType entity being set as the value
+     *
      * @return PhoneContact
      */
     public function setPhoneContactType($phoneContactType)
@@ -386,7 +396,8 @@ abstract class AbstractPhoneContact implements BundleSerializableInterface, Json
     /**
      * Set the phone number
      *
-     * @param string $phoneNumber
+     * @param string $phoneNumber new value being set
+     *
      * @return PhoneContact
      */
     public function setPhoneNumber($phoneNumber)
@@ -409,7 +420,8 @@ abstract class AbstractPhoneContact implements BundleSerializableInterface, Json
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return PhoneContact
      */
     public function setVersion($version)
@@ -433,6 +445,8 @@ abstract class AbstractPhoneContact implements BundleSerializableInterface, Json
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -443,6 +457,8 @@ abstract class AbstractPhoneContact implements BundleSerializableInterface, Json
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -452,7 +468,9 @@ abstract class AbstractPhoneContact implements BundleSerializableInterface, Json
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

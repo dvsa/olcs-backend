@@ -165,7 +165,8 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Set the birth date
      *
-     * @param \DateTime $birthDate
+     * @param \DateTime $birthDate new value being set
+     *
      * @return PublicationPoliceData
      */
     public function setBirthDate($birthDate)
@@ -188,7 +189,8 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return PublicationPoliceData
      */
     public function setCreatedBy($createdBy)
@@ -211,7 +213,8 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return PublicationPoliceData
      */
     public function setCreatedOn($createdOn)
@@ -234,7 +237,8 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Set the family name
      *
-     * @param string $familyName
+     * @param string $familyName new value being set
+     *
      * @return PublicationPoliceData
      */
     public function setFamilyName($familyName)
@@ -257,7 +261,8 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Set the forename
      *
-     * @param string $forename
+     * @param string $forename new value being set
+     *
      * @return PublicationPoliceData
      */
     public function setForename($forename)
@@ -280,7 +285,8 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return PublicationPoliceData
      */
     public function setId($id)
@@ -303,7 +309,8 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return PublicationPoliceData
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -326,7 +333,8 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return PublicationPoliceData
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -349,7 +357,8 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Set the olbs dob
      *
-     * @param string $olbsDob
+     * @param string $olbsDob new value being set
+     *
      * @return PublicationPoliceData
      */
     public function setOlbsDob($olbsDob)
@@ -372,7 +381,8 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return PublicationPoliceData
      */
     public function setOlbsKey($olbsKey)
@@ -395,7 +405,8 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Set the person
      *
-     * @param \Dvsa\Olcs\Api\Entity\Person\Person $person
+     * @param \Dvsa\Olcs\Api\Entity\Person\Person $person entity being set as the value
+     *
      * @return PublicationPoliceData
      */
     public function setPerson($person)
@@ -418,7 +429,8 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Set the publication link
      *
-     * @param \Dvsa\Olcs\Api\Entity\Publication\PublicationLink $publicationLink
+     * @param \Dvsa\Olcs\Api\Entity\Publication\PublicationLink $publicationLink entity being set as the value
+     *
      * @return PublicationPoliceData
      */
     public function setPublicationLink($publicationLink)
@@ -441,7 +453,8 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return PublicationPoliceData
      */
     public function setVersion($version)
@@ -465,6 +478,8 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -475,6 +490,8 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -484,7 +501,9 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

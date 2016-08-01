@@ -68,12 +68,19 @@ abstract class Abstract<?php echo $details['name']; ?> implements BundleSerializ
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
 <?php foreach ($details['collections'] as $collection): ?>
@@ -95,6 +102,8 @@ if ($details['hasCreatedOn']) {
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -111,6 +120,8 @@ if ($details['hasModifiedOn']) {
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -123,7 +134,9 @@ if ($details['hasModifiedOn']) {
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {
