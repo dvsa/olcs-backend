@@ -345,12 +345,19 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->countrys = new ArrayCollection();
@@ -360,7 +367,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the application sent date
      *
-     * @param \DateTime $applicationSentDate
+     * @param \DateTime $applicationSentDate new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setApplicationSentDate($applicationSentDate)
@@ -383,7 +391,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the copies issued
      *
-     * @param int $copiesIssued
+     * @param int $copiesIssued new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setCopiesIssued($copiesIssued)
@@ -406,7 +415,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the copies issued total
      *
-     * @param int $copiesIssuedTotal
+     * @param int $copiesIssuedTotal new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setCopiesIssuedTotal($copiesIssuedTotal)
@@ -429,7 +439,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the copies required
      *
-     * @param int $copiesRequired
+     * @param int $copiesRequired new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setCopiesRequired($copiesRequired)
@@ -452,7 +463,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the copies required total
      *
-     * @param int $copiesRequiredTotal
+     * @param int $copiesRequiredTotal new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setCopiesRequiredTotal($copiesRequiredTotal)
@@ -475,7 +487,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the country
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $countrys
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being set as the value
+     *
      * @return IrfoPsvAuth
      */
     public function setCountrys($countrys)
@@ -498,7 +511,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Add a countrys
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $countrys
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being added
+     *
      * @return IrfoPsvAuth
      */
     public function addCountrys($countrys)
@@ -520,7 +534,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Remove a countrys
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $countrys
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being removed
+     *
      * @return IrfoPsvAuth
      */
     public function removeCountrys($countrys)
@@ -535,7 +550,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return IrfoPsvAuth
      */
     public function setCreatedBy($createdBy)
@@ -558,7 +574,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setCreatedOn($createdOn)
@@ -581,7 +598,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the exemption details
      *
-     * @param string $exemptionDetails
+     * @param string $exemptionDetails new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setExemptionDetails($exemptionDetails)
@@ -604,7 +622,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the expiry date
      *
-     * @param \DateTime $expiryDate
+     * @param \DateTime $expiryDate new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setExpiryDate($expiryDate)
@@ -627,7 +646,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setId($id)
@@ -650,7 +670,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the in force date
      *
-     * @param \DateTime $inForceDate
+     * @param \DateTime $inForceDate new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setInForceDate($inForceDate)
@@ -673,7 +694,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the irfo fee id
      *
-     * @param string $irfoFeeId
+     * @param string $irfoFeeId new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setIrfoFeeId($irfoFeeId)
@@ -696,7 +718,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the irfo file no
      *
-     * @param string $irfoFileNo
+     * @param string $irfoFileNo new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setIrfoFileNo($irfoFileNo)
@@ -719,7 +742,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the irfo psv auth type
      *
-     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType $irfoPsvAuthType
+     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType $irfoPsvAuthType entity being set as the value
+     *
      * @return IrfoPsvAuth
      */
     public function setIrfoPsvAuthType($irfoPsvAuthType)
@@ -742,7 +766,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the is fee exempt annual
      *
-     * @param string $isFeeExemptAnnual
+     * @param string $isFeeExemptAnnual new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setIsFeeExemptAnnual($isFeeExemptAnnual)
@@ -765,7 +790,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the is fee exempt application
      *
-     * @param string $isFeeExemptApplication
+     * @param string $isFeeExemptApplication new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setIsFeeExemptApplication($isFeeExemptApplication)
@@ -788,7 +814,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the journey frequency
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $journeyFrequency
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $journeyFrequency entity being set as the value
+     *
      * @return IrfoPsvAuth
      */
     public function setJourneyFrequency($journeyFrequency)
@@ -811,7 +838,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the last date copies req
      *
-     * @param \DateTime $lastDateCopiesReq
+     * @param \DateTime $lastDateCopiesReq new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setLastDateCopiesReq($lastDateCopiesReq)
@@ -834,7 +862,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return IrfoPsvAuth
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -857,7 +886,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -880,7 +910,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the organisation
      *
-     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation entity being set as the value
+     *
      * @return IrfoPsvAuth
      */
     public function setOrganisation($organisation)
@@ -903,7 +934,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the renewal date
      *
-     * @param \DateTime $renewalDate
+     * @param \DateTime $renewalDate new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setRenewalDate($renewalDate)
@@ -926,7 +958,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the service route from
      *
-     * @param string $serviceRouteFrom
+     * @param string $serviceRouteFrom new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setServiceRouteFrom($serviceRouteFrom)
@@ -949,7 +982,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the service route to
      *
-     * @param string $serviceRouteTo
+     * @param string $serviceRouteTo new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setServiceRouteTo($serviceRouteTo)
@@ -972,7 +1006,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the status
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status entity being set as the value
+     *
      * @return IrfoPsvAuth
      */
     public function setStatus($status)
@@ -995,7 +1030,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the validity period
      *
-     * @param int $validityPeriod
+     * @param int $validityPeriod new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setValidityPeriod($validityPeriod)
@@ -1018,7 +1054,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return IrfoPsvAuth
      */
     public function setVersion($version)
@@ -1041,7 +1078,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the withdrawn reason
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $withdrawnReason
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $withdrawnReason entity being set as the value
+     *
      * @return IrfoPsvAuth
      */
     public function setWithdrawnReason($withdrawnReason)
@@ -1064,7 +1102,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the irfo psv auth number
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuthNumbers
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuthNumbers collection being set as the value
+     *
      * @return IrfoPsvAuth
      */
     public function setIrfoPsvAuthNumbers($irfoPsvAuthNumbers)
@@ -1087,7 +1126,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Add a irfo psv auth numbers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuthNumbers
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuthNumbers collection being added
+     *
      * @return IrfoPsvAuth
      */
     public function addIrfoPsvAuthNumbers($irfoPsvAuthNumbers)
@@ -1109,7 +1149,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Remove a irfo psv auth numbers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuthNumbers
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuthNumbers collection being removed
+     *
      * @return IrfoPsvAuth
      */
     public function removeIrfoPsvAuthNumbers($irfoPsvAuthNumbers)
@@ -1125,6 +1166,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -1135,6 +1178,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -1144,7 +1189,9 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

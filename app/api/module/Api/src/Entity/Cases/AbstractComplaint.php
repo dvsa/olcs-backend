@@ -248,12 +248,19 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->operatingCentres = new ArrayCollection();
@@ -262,7 +269,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return Complaint
      */
     public function setCase($case)
@@ -285,7 +293,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the closed date
      *
-     * @param \DateTime $closedDate
+     * @param \DateTime $closedDate new value being set
+     *
      * @return Complaint
      */
     public function setClosedDate($closedDate)
@@ -308,7 +317,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the complainant contact details
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $complainantContactDetails
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $complainantContactDetails entity being set as the value
+     *
      * @return Complaint
      */
     public function setComplainantContactDetails($complainantContactDetails)
@@ -331,7 +341,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the complaint date
      *
-     * @param \DateTime $complaintDate
+     * @param \DateTime $complaintDate new value being set
+     *
      * @return Complaint
      */
     public function setComplaintDate($complaintDate)
@@ -354,7 +365,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the complaint type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $complaintType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $complaintType entity being set as the value
+     *
      * @return Complaint
      */
     public function setComplaintType($complaintType)
@@ -377,7 +389,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Complaint
      */
     public function setCreatedBy($createdBy)
@@ -400,7 +413,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Complaint
      */
     public function setCreatedOn($createdOn)
@@ -423,7 +437,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return Complaint
      */
     public function setDeletedDate($deletedDate)
@@ -446,7 +461,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return Complaint
      */
     public function setDescription($description)
@@ -469,7 +485,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the driver family name
      *
-     * @param string $driverFamilyName
+     * @param string $driverFamilyName new value being set
+     *
      * @return Complaint
      */
     public function setDriverFamilyName($driverFamilyName)
@@ -492,7 +509,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the driver forename
      *
-     * @param string $driverForename
+     * @param string $driverForename new value being set
+     *
      * @return Complaint
      */
     public function setDriverForename($driverForename)
@@ -515,7 +533,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Complaint
      */
     public function setId($id)
@@ -538,7 +557,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the is compliance
      *
-     * @param boolean $isCompliance
+     * @param boolean $isCompliance new value being set
+     *
      * @return Complaint
      */
     public function setIsCompliance($isCompliance)
@@ -561,7 +581,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Complaint
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -584,7 +605,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Complaint
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -607,7 +629,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return Complaint
      */
     public function setOlbsKey($olbsKey)
@@ -630,7 +653,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the operating centre
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being set as the value
+     *
      * @return Complaint
      */
     public function setOperatingCentres($operatingCentres)
@@ -653,7 +677,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Add a operating centres
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being added
+     *
      * @return Complaint
      */
     public function addOperatingCentres($operatingCentres)
@@ -675,7 +700,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Remove a operating centres
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being removed
+     *
      * @return Complaint
      */
     public function removeOperatingCentres($operatingCentres)
@@ -690,7 +716,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the status
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status entity being set as the value
+     *
      * @return Complaint
      */
     public function setStatus($status)
@@ -713,7 +740,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Complaint
      */
     public function setVersion($version)
@@ -736,7 +764,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the vrm
      *
-     * @param string $vrm
+     * @param string $vrm new value being set
+     *
      * @return Complaint
      */
     public function setVrm($vrm)
@@ -760,6 +789,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -770,6 +801,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -779,7 +812,9 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

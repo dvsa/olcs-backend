@@ -850,12 +850,19 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->operatingCentres = new ArrayCollection();
@@ -878,7 +885,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the administration
      *
-     * @param string $administration
+     * @param string $administration new value being set
+     *
      * @return Application
      */
     public function setAdministration($administration)
@@ -901,7 +909,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the applied via
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $appliedVia
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $appliedVia entity being set as the value
+     *
      * @return Application
      */
     public function setAppliedVia($appliedVia)
@@ -924,7 +933,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the auth signature
      *
-     * @param boolean $authSignature
+     * @param boolean $authSignature new value being set
+     *
      * @return Application
      */
     public function setAuthSignature($authSignature)
@@ -947,7 +957,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the bankrupt
      *
-     * @param string $bankrupt
+     * @param string $bankrupt new value being set
+     *
      * @return Application
      */
     public function setBankrupt($bankrupt)
@@ -970,7 +981,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the convictions confirmation
      *
-     * @param string $convictionsConfirmation
+     * @param string $convictionsConfirmation new value being set
+     *
      * @return Application
      */
     public function setConvictionsConfirmation($convictionsConfirmation)
@@ -993,7 +1005,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Application
      */
     public function setCreatedBy($createdBy)
@@ -1016,7 +1029,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Application
      */
     public function setCreatedOn($createdOn)
@@ -1039,7 +1053,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the declaration confirmation
      *
-     * @param string $declarationConfirmation
+     * @param string $declarationConfirmation new value being set
+     *
      * @return Application
      */
     public function setDeclarationConfirmation($declarationConfirmation)
@@ -1062,7 +1077,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return Application
      */
     public function setDeletedDate($deletedDate)
@@ -1085,7 +1101,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the disqualified
      *
-     * @param string $disqualified
+     * @param string $disqualified new value being set
+     *
      * @return Application
      */
     public function setDisqualified($disqualified)
@@ -1108,7 +1125,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the financial evidence uploaded
      *
-     * @param string $financialEvidenceUploaded
+     * @param string $financialEvidenceUploaded new value being set
+     *
      * @return Application
      */
     public function setFinancialEvidenceUploaded($financialEvidenceUploaded)
@@ -1131,7 +1149,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the goods or psv
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $goodsOrPsv
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $goodsOrPsv entity being set as the value
+     *
      * @return Application
      */
     public function setGoodsOrPsv($goodsOrPsv)
@@ -1154,7 +1173,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the granted date
      *
-     * @param \DateTime $grantedDate
+     * @param \DateTime $grantedDate new value being set
+     *
      * @return Application
      */
     public function setGrantedDate($grantedDate)
@@ -1177,7 +1197,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the has entered reg
      *
-     * @param string $hasEnteredReg
+     * @param string $hasEnteredReg new value being set
+     *
      * @return Application
      */
     public function setHasEnteredReg($hasEnteredReg)
@@ -1200,7 +1221,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Application
      */
     public function setId($id)
@@ -1223,7 +1245,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the insolvency confirmation
      *
-     * @param string $insolvencyConfirmation
+     * @param string $insolvencyConfirmation new value being set
+     *
      * @return Application
      */
     public function setInsolvencyConfirmation($insolvencyConfirmation)
@@ -1246,7 +1269,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the insolvency details
      *
-     * @param string $insolvencyDetails
+     * @param string $insolvencyDetails new value being set
+     *
      * @return Application
      */
     public function setInsolvencyDetails($insolvencyDetails)
@@ -1269,7 +1293,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the interim auth trailers
      *
-     * @param int $interimAuthTrailers
+     * @param int $interimAuthTrailers new value being set
+     *
      * @return Application
      */
     public function setInterimAuthTrailers($interimAuthTrailers)
@@ -1292,7 +1317,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the interim auth vehicles
      *
-     * @param int $interimAuthVehicles
+     * @param int $interimAuthVehicles new value being set
+     *
      * @return Application
      */
     public function setInterimAuthVehicles($interimAuthVehicles)
@@ -1315,7 +1341,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the interim end
      *
-     * @param \DateTime $interimEnd
+     * @param \DateTime $interimEnd new value being set
+     *
      * @return Application
      */
     public function setInterimEnd($interimEnd)
@@ -1338,7 +1365,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the interim reason
      *
-     * @param string $interimReason
+     * @param string $interimReason new value being set
+     *
      * @return Application
      */
     public function setInterimReason($interimReason)
@@ -1361,7 +1389,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the interim start
      *
-     * @param \DateTime $interimStart
+     * @param \DateTime $interimStart new value being set
+     *
      * @return Application
      */
     public function setInterimStart($interimStart)
@@ -1384,7 +1413,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the interim status
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $interimStatus
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $interimStatus entity being set as the value
+     *
      * @return Application
      */
     public function setInterimStatus($interimStatus)
@@ -1407,7 +1437,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the is maintenance suitable
      *
-     * @param string $isMaintenanceSuitable
+     * @param string $isMaintenanceSuitable new value being set
+     *
      * @return Application
      */
     public function setIsMaintenanceSuitable($isMaintenanceSuitable)
@@ -1430,7 +1461,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the is variation
      *
-     * @param boolean $isVariation
+     * @param boolean $isVariation new value being set
+     *
      * @return Application
      */
     public function setIsVariation($isVariation)
@@ -1453,7 +1485,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Application
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -1476,7 +1509,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Application
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -1499,7 +1533,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return Application
      */
     public function setLicence($licence)
@@ -1522,7 +1557,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the licence type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $licenceType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $licenceType entity being set as the value
+     *
      * @return Application
      */
     public function setLicenceType($licenceType)
@@ -1545,7 +1581,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the liquidation
      *
-     * @param string $liquidation
+     * @param string $liquidation new value being set
+     *
      * @return Application
      */
     public function setLiquidation($liquidation)
@@ -1568,7 +1605,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the ni flag
      *
-     * @param string $niFlag
+     * @param string $niFlag new value being set
+     *
      * @return Application
      */
     public function setNiFlag($niFlag)
@@ -1591,7 +1629,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the override ooo
      *
-     * @param string $overrideOoo
+     * @param string $overrideOoo new value being set
+     *
      * @return Application
      */
     public function setOverrideOoo($overrideOoo)
@@ -1614,7 +1653,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the prev been at pi
      *
-     * @param string $prevBeenAtPi
+     * @param string $prevBeenAtPi new value being set
+     *
      * @return Application
      */
     public function setPrevBeenAtPi($prevBeenAtPi)
@@ -1637,7 +1677,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the prev been disqualified tc
      *
-     * @param string $prevBeenDisqualifiedTc
+     * @param string $prevBeenDisqualifiedTc new value being set
+     *
      * @return Application
      */
     public function setPrevBeenDisqualifiedTc($prevBeenDisqualifiedTc)
@@ -1660,7 +1701,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the prev been refused
      *
-     * @param string $prevBeenRefused
+     * @param string $prevBeenRefused new value being set
+     *
      * @return Application
      */
     public function setPrevBeenRefused($prevBeenRefused)
@@ -1683,7 +1725,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the prev been revoked
      *
-     * @param string $prevBeenRevoked
+     * @param string $prevBeenRevoked new value being set
+     *
      * @return Application
      */
     public function setPrevBeenRevoked($prevBeenRevoked)
@@ -1706,7 +1749,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the prev conviction
      *
-     * @param string $prevConviction
+     * @param string $prevConviction new value being set
+     *
      * @return Application
      */
     public function setPrevConviction($prevConviction)
@@ -1729,7 +1773,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the prev had licence
      *
-     * @param string $prevHadLicence
+     * @param string $prevHadLicence new value being set
+     *
      * @return Application
      */
     public function setPrevHadLicence($prevHadLicence)
@@ -1752,7 +1797,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the prev has licence
      *
-     * @param string $prevHasLicence
+     * @param string $prevHasLicence new value being set
+     *
      * @return Application
      */
     public function setPrevHasLicence($prevHasLicence)
@@ -1775,7 +1821,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the prev purchased assets
      *
-     * @param string $prevPurchasedAssets
+     * @param string $prevPurchasedAssets new value being set
+     *
      * @return Application
      */
     public function setPrevPurchasedAssets($prevPurchasedAssets)
@@ -1798,7 +1845,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the psv limousines
      *
-     * @param string $psvLimousines
+     * @param string $psvLimousines new value being set
+     *
      * @return Application
      */
     public function setPsvLimousines($psvLimousines)
@@ -1821,7 +1869,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the psv medium vhl confirmation
      *
-     * @param string $psvMediumVhlConfirmation
+     * @param string $psvMediumVhlConfirmation new value being set
+     *
      * @return Application
      */
     public function setPsvMediumVhlConfirmation($psvMediumVhlConfirmation)
@@ -1844,7 +1893,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the psv medium vhl notes
      *
-     * @param string $psvMediumVhlNotes
+     * @param string $psvMediumVhlNotes new value being set
+     *
      * @return Application
      */
     public function setPsvMediumVhlNotes($psvMediumVhlNotes)
@@ -1867,7 +1917,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the psv no limousine confirmation
      *
-     * @param string $psvNoLimousineConfirmation
+     * @param string $psvNoLimousineConfirmation new value being set
+     *
      * @return Application
      */
     public function setPsvNoLimousineConfirmation($psvNoLimousineConfirmation)
@@ -1890,7 +1941,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the psv no small vhl confirmation
      *
-     * @param string $psvNoSmallVhlConfirmation
+     * @param string $psvNoSmallVhlConfirmation new value being set
+     *
      * @return Application
      */
     public function setPsvNoSmallVhlConfirmation($psvNoSmallVhlConfirmation)
@@ -1913,7 +1965,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the psv only limousines confirmation
      *
-     * @param string $psvOnlyLimousinesConfirmation
+     * @param string $psvOnlyLimousinesConfirmation new value being set
+     *
      * @return Application
      */
     public function setPsvOnlyLimousinesConfirmation($psvOnlyLimousinesConfirmation)
@@ -1936,7 +1989,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the psv operate small vhl
      *
-     * @param string $psvOperateSmallVhl
+     * @param string $psvOperateSmallVhl new value being set
+     *
      * @return Application
      */
     public function setPsvOperateSmallVhl($psvOperateSmallVhl)
@@ -1959,7 +2013,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the psv small vhl confirmation
      *
-     * @param string $psvSmallVhlConfirmation
+     * @param string $psvSmallVhlConfirmation new value being set
+     *
      * @return Application
      */
     public function setPsvSmallVhlConfirmation($psvSmallVhlConfirmation)
@@ -1982,7 +2037,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the psv small vhl notes
      *
-     * @param string $psvSmallVhlNotes
+     * @param string $psvSmallVhlNotes new value being set
+     *
      * @return Application
      */
     public function setPsvSmallVhlNotes($psvSmallVhlNotes)
@@ -2005,7 +2061,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the psv which vehicle sizes
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $psvWhichVehicleSizes
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $psvWhichVehicleSizes entity being set as the value
+     *
      * @return Application
      */
     public function setPsvWhichVehicleSizes($psvWhichVehicleSizes)
@@ -2028,7 +2085,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the received date
      *
-     * @param \DateTime $receivedDate
+     * @param \DateTime $receivedDate new value being set
+     *
      * @return Application
      */
     public function setReceivedDate($receivedDate)
@@ -2051,7 +2109,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the receivership
      *
-     * @param string $receivership
+     * @param string $receivership new value being set
+     *
      * @return Application
      */
     public function setReceivership($receivership)
@@ -2074,7 +2133,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the refused date
      *
-     * @param \DateTime $refusedDate
+     * @param \DateTime $refusedDate new value being set
+     *
      * @return Application
      */
     public function setRefusedDate($refusedDate)
@@ -2097,7 +2157,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the request inspection
      *
-     * @param int $requestInspection
+     * @param int $requestInspection new value being set
+     *
      * @return Application
      */
     public function setRequestInspection($requestInspection)
@@ -2120,7 +2181,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the request inspection comment
      *
-     * @param string $requestInspectionComment
+     * @param string $requestInspectionComment new value being set
+     *
      * @return Application
      */
     public function setRequestInspectionComment($requestInspectionComment)
@@ -2143,7 +2205,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the request inspection delay
      *
-     * @param int $requestInspectionDelay
+     * @param int $requestInspectionDelay new value being set
+     *
      * @return Application
      */
     public function setRequestInspectionDelay($requestInspectionDelay)
@@ -2166,7 +2229,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the safety confirmation
      *
-     * @param string $safetyConfirmation
+     * @param string $safetyConfirmation new value being set
+     *
      * @return Application
      */
     public function setSafetyConfirmation($safetyConfirmation)
@@ -2189,7 +2253,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the status
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status entity being set as the value
+     *
      * @return Application
      */
     public function setStatus($status)
@@ -2212,7 +2277,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the target completion date
      *
-     * @param \DateTime $targetCompletionDate
+     * @param \DateTime $targetCompletionDate new value being set
+     *
      * @return Application
      */
     public function setTargetCompletionDate($targetCompletionDate)
@@ -2235,7 +2301,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the tot auth trailers
      *
-     * @param int $totAuthTrailers
+     * @param int $totAuthTrailers new value being set
+     *
      * @return Application
      */
     public function setTotAuthTrailers($totAuthTrailers)
@@ -2258,7 +2325,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the tot auth vehicles
      *
-     * @param int $totAuthVehicles
+     * @param int $totAuthVehicles new value being set
+     *
      * @return Application
      */
     public function setTotAuthVehicles($totAuthVehicles)
@@ -2281,7 +2349,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the tot community licences
      *
-     * @param int $totCommunityLicences
+     * @param int $totCommunityLicences new value being set
+     *
      * @return Application
      */
     public function setTotCommunityLicences($totCommunityLicences)
@@ -2304,7 +2373,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Application
      */
     public function setVersion($version)
@@ -2327,7 +2397,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the withdrawn date
      *
-     * @param \DateTime $withdrawnDate
+     * @param \DateTime $withdrawnDate new value being set
+     *
      * @return Application
      */
     public function setWithdrawnDate($withdrawnDate)
@@ -2350,7 +2421,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the withdrawn reason
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $withdrawnReason
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $withdrawnReason entity being set as the value
+     *
      * @return Application
      */
     public function setWithdrawnReason($withdrawnReason)
@@ -2373,7 +2445,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the application completion
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion $applicationCompletion
+     * @param \Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion $applicationCompletion entity being set as the value
+     *
      * @return Application
      */
     public function setApplicationCompletion($applicationCompletion)
@@ -2396,7 +2469,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the operating centre
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being set as the value
+     *
      * @return Application
      */
     public function setOperatingCentres($operatingCentres)
@@ -2419,7 +2493,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a operating centres
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being added
+     *
      * @return Application
      */
     public function addOperatingCentres($operatingCentres)
@@ -2441,7 +2516,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Remove a operating centres
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres
+     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being removed
+     *
      * @return Application
      */
     public function removeOperatingCentres($operatingCentres)
@@ -2456,7 +2532,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the application organisation person
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons collection being set as the value
+     *
      * @return Application
      */
     public function setApplicationOrganisationPersons($applicationOrganisationPersons)
@@ -2479,7 +2556,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a application organisation persons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons collection being added
+     *
      * @return Application
      */
     public function addApplicationOrganisationPersons($applicationOrganisationPersons)
@@ -2501,7 +2579,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Remove a application organisation persons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons collection being removed
+     *
      * @return Application
      */
     public function removeApplicationOrganisationPersons($applicationOrganisationPersons)
@@ -2516,7 +2595,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the read audit
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being set as the value
+     *
      * @return Application
      */
     public function setReadAudits($readAudits)
@@ -2539,7 +2619,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a read audits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being added
+     *
      * @return Application
      */
     public function addReadAudits($readAudits)
@@ -2561,7 +2642,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Remove a read audits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being removed
+     *
      * @return Application
      */
     public function removeReadAudits($readAudits)
@@ -2576,7 +2658,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the application tracking
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\ApplicationTracking $applicationTracking
+     * @param \Dvsa\Olcs\Api\Entity\Application\ApplicationTracking $applicationTracking entity being set as the value
+     *
      * @return Application
      */
     public function setApplicationTracking($applicationTracking)
@@ -2599,7 +2682,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the case
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases collection being set as the value
+     *
      * @return Application
      */
     public function setCases($cases)
@@ -2622,7 +2706,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a cases
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases collection being added
+     *
      * @return Application
      */
     public function addCases($cases)
@@ -2644,7 +2729,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Remove a cases
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases collection being removed
+     *
      * @return Application
      */
     public function removeCases($cases)
@@ -2659,7 +2745,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the condition undertaking
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings collection being set as the value
+     *
      * @return Application
      */
     public function setConditionUndertakings($conditionUndertakings)
@@ -2682,7 +2769,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a condition undertakings
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings collection being added
+     *
      * @return Application
      */
     public function addConditionUndertakings($conditionUndertakings)
@@ -2704,7 +2792,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Remove a condition undertakings
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings collection being removed
+     *
      * @return Application
      */
     public function removeConditionUndertakings($conditionUndertakings)
@@ -2719,7 +2808,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the document
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being set as the value
+     *
      * @return Application
      */
     public function setDocuments($documents)
@@ -2742,7 +2832,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being added
+     *
      * @return Application
      */
     public function addDocuments($documents)
@@ -2764,7 +2855,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Remove a documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being removed
+     *
      * @return Application
      */
     public function removeDocuments($documents)
@@ -2779,7 +2871,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the fee
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $fees
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being set as the value
+     *
      * @return Application
      */
     public function setFees($fees)
@@ -2802,7 +2895,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a fees
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $fees
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being added
+     *
      * @return Application
      */
     public function addFees($fees)
@@ -2824,7 +2918,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Remove a fees
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $fees
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being removed
+     *
      * @return Application
      */
     public function removeFees($fees)
@@ -2839,7 +2934,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the interim licence vehicle
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles
+     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles collection being set as the value
+     *
      * @return Application
      */
     public function setInterimLicenceVehicles($interimLicenceVehicles)
@@ -2862,7 +2958,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a interim licence vehicles
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles
+     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles collection being added
+     *
      * @return Application
      */
     public function addInterimLicenceVehicles($interimLicenceVehicles)
@@ -2884,7 +2981,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Remove a interim licence vehicles
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles
+     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles collection being removed
+     *
      * @return Application
      */
     public function removeInterimLicenceVehicles($interimLicenceVehicles)
@@ -2899,7 +2997,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the licence vehicle
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles collection being set as the value
+     *
      * @return Application
      */
     public function setLicenceVehicles($licenceVehicles)
@@ -2922,7 +3021,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a licence vehicles
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles collection being added
+     *
      * @return Application
      */
     public function addLicenceVehicles($licenceVehicles)
@@ -2944,7 +3044,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Remove a licence vehicles
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles
+     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles collection being removed
+     *
      * @return Application
      */
     public function removeLicenceVehicles($licenceVehicles)
@@ -2959,7 +3060,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the other licence
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences collection being set as the value
+     *
      * @return Application
      */
     public function setOtherLicences($otherLicences)
@@ -2982,7 +3084,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a other licences
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences collection being added
+     *
      * @return Application
      */
     public function addOtherLicences($otherLicences)
@@ -3004,7 +3107,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Remove a other licences
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences
+     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences collection being removed
+     *
      * @return Application
      */
     public function removeOtherLicences($otherLicences)
@@ -3019,7 +3123,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the previous conviction
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions collection being set as the value
+     *
      * @return Application
      */
     public function setPreviousConvictions($previousConvictions)
@@ -3042,7 +3147,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a previous convictions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions collection being added
+     *
      * @return Application
      */
     public function addPreviousConvictions($previousConvictions)
@@ -3064,7 +3170,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Remove a previous convictions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions
+     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions collection being removed
+     *
      * @return Application
      */
     public function removePreviousConvictions($previousConvictions)
@@ -3079,7 +3186,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the publication link
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being set as the value
+     *
      * @return Application
      */
     public function setPublicationLinks($publicationLinks)
@@ -3102,7 +3210,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a publication links
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being added
+     *
      * @return Application
      */
     public function addPublicationLinks($publicationLinks)
@@ -3124,7 +3233,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Remove a publication links
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being removed
+     *
      * @return Application
      */
     public function removePublicationLinks($publicationLinks)
@@ -3139,7 +3249,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the s4
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
+     * @param \Doctrine\Common\Collections\ArrayCollection $s4s collection being set as the value
+     *
      * @return Application
      */
     public function setS4s($s4s)
@@ -3162,7 +3273,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a s4s
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
+     * @param \Doctrine\Common\Collections\ArrayCollection $s4s collection being added
+     *
      * @return Application
      */
     public function addS4s($s4s)
@@ -3184,7 +3296,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Remove a s4s
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
+     * @param \Doctrine\Common\Collections\ArrayCollection $s4s collection being removed
+     *
      * @return Application
      */
     public function removeS4s($s4s)
@@ -3199,7 +3312,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the task
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tasks
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being set as the value
+     *
      * @return Application
      */
     public function setTasks($tasks)
@@ -3222,7 +3336,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a tasks
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tasks
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being added
+     *
      * @return Application
      */
     public function addTasks($tasks)
@@ -3244,7 +3359,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Remove a tasks
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tasks
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being removed
+     *
      * @return Application
      */
     public function removeTasks($tasks)
@@ -3259,7 +3375,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the transport manager
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagers
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagers collection being set as the value
+     *
      * @return Application
      */
     public function setTransportManagers($transportManagers)
@@ -3282,7 +3399,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a transport managers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagers
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagers collection being added
+     *
      * @return Application
      */
     public function addTransportManagers($transportManagers)
@@ -3304,7 +3422,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Remove a transport managers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagers
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagers collection being removed
+     *
      * @return Application
      */
     public function removeTransportManagers($transportManagers)
@@ -3320,6 +3439,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -3330,6 +3451,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -3339,7 +3462,9 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

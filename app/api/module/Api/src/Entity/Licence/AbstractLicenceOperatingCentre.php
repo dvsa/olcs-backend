@@ -262,7 +262,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the ad placed
      *
-     * @param string $adPlaced
+     * @param string $adPlaced new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setAdPlaced($adPlaced)
@@ -285,7 +286,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the ad placed date
      *
-     * @param \DateTime $adPlacedDate
+     * @param \DateTime $adPlacedDate new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setAdPlacedDate($adPlacedDate)
@@ -308,7 +310,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the ad placed in
      *
-     * @param string $adPlacedIn
+     * @param string $adPlacedIn new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setAdPlacedIn($adPlacedIn)
@@ -331,7 +334,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return LicenceOperatingCentre
      */
     public function setCreatedBy($createdBy)
@@ -354,7 +358,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setCreatedOn($createdOn)
@@ -377,7 +382,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setDeletedDate($deletedDate)
@@ -400,7 +406,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setId($id)
@@ -423,7 +430,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the is interim
      *
-     * @param string $isInterim
+     * @param string $isInterim new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setIsInterim($isInterim)
@@ -446,7 +454,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return LicenceOperatingCentre
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -469,7 +478,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -492,7 +502,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return LicenceOperatingCentre
      */
     public function setLicence($licence)
@@ -515,7 +526,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the no of trailers possessed
      *
-     * @param int $noOfTrailersPossessed
+     * @param int $noOfTrailersPossessed new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setNoOfTrailersPossessed($noOfTrailersPossessed)
@@ -538,7 +550,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the no of trailers required
      *
-     * @param int $noOfTrailersRequired
+     * @param int $noOfTrailersRequired new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setNoOfTrailersRequired($noOfTrailersRequired)
@@ -561,7 +574,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the no of vehicles possessed
      *
-     * @param int $noOfVehiclesPossessed
+     * @param int $noOfVehiclesPossessed new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setNoOfVehiclesPossessed($noOfVehiclesPossessed)
@@ -584,7 +598,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the no of vehicles required
      *
-     * @param int $noOfVehiclesRequired
+     * @param int $noOfVehiclesRequired new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setNoOfVehiclesRequired($noOfVehiclesRequired)
@@ -607,7 +622,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setOlbsKey($olbsKey)
@@ -630,7 +646,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the operating centre
      *
-     * @param \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre $operatingCentre
+     * @param \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre $operatingCentre entity being set as the value
+     *
      * @return LicenceOperatingCentre
      */
     public function setOperatingCentre($operatingCentre)
@@ -653,7 +670,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the permission
      *
-     * @param string $permission
+     * @param string $permission new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setPermission($permission)
@@ -676,7 +694,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the publication appropriate
      *
-     * @param string $publicationAppropriate
+     * @param string $publicationAppropriate new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setPublicationAppropriate($publicationAppropriate)
@@ -699,7 +718,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the s4
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\S4 $s4
+     * @param \Dvsa\Olcs\Api\Entity\Application\S4 $s4 entity being set as the value
+     *
      * @return LicenceOperatingCentre
      */
     public function setS4($s4)
@@ -722,7 +742,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the sufficient parking
      *
-     * @param string $sufficientParking
+     * @param string $sufficientParking new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setSufficientParking($sufficientParking)
@@ -745,7 +766,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setVersion($version)
@@ -768,7 +790,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Set the vi action
      *
-     * @param string $viAction
+     * @param string $viAction new value being set
+     *
      * @return LicenceOperatingCentre
      */
     public function setViAction($viAction)
@@ -792,6 +815,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -802,6 +827,8 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -811,7 +838,9 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

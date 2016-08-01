@@ -108,7 +108,8 @@ abstract class AbstractSiCategory implements BundleSerializableInterface, JsonSe
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return SiCategory
      */
     public function setCreatedBy($createdBy)
@@ -131,7 +132,8 @@ abstract class AbstractSiCategory implements BundleSerializableInterface, JsonSe
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return SiCategory
      */
     public function setCreatedOn($createdOn)
@@ -154,7 +156,8 @@ abstract class AbstractSiCategory implements BundleSerializableInterface, JsonSe
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return SiCategory
      */
     public function setDeletedDate($deletedDate)
@@ -177,7 +180,8 @@ abstract class AbstractSiCategory implements BundleSerializableInterface, JsonSe
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return SiCategory
      */
     public function setDescription($description)
@@ -200,7 +204,8 @@ abstract class AbstractSiCategory implements BundleSerializableInterface, JsonSe
     /**
      * Set the id
      *
-     * @param string $id
+     * @param string $id new value being set
+     *
      * @return SiCategory
      */
     public function setId($id)
@@ -223,7 +228,8 @@ abstract class AbstractSiCategory implements BundleSerializableInterface, JsonSe
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return SiCategory
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -246,7 +252,8 @@ abstract class AbstractSiCategory implements BundleSerializableInterface, JsonSe
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return SiCategory
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -269,7 +276,8 @@ abstract class AbstractSiCategory implements BundleSerializableInterface, JsonSe
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return SiCategory
      */
     public function setVersion($version)
@@ -293,6 +301,8 @@ abstract class AbstractSiCategory implements BundleSerializableInterface, JsonSe
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -303,6 +313,8 @@ abstract class AbstractSiCategory implements BundleSerializableInterface, JsonSe
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -312,7 +324,9 @@ abstract class AbstractSiCategory implements BundleSerializableInterface, JsonSe
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

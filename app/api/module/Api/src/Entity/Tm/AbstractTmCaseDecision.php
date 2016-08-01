@@ -244,12 +244,19 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->unfitnessReasons = new ArrayCollection();
@@ -259,7 +266,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return TmCaseDecision
      */
     public function setCase($case)
@@ -282,7 +290,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return TmCaseDecision
      */
     public function setCreatedBy($createdBy)
@@ -305,7 +314,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return TmCaseDecision
      */
     public function setCreatedOn($createdOn)
@@ -328,7 +338,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the decision
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $decision
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $decision entity being set as the value
+     *
      * @return TmCaseDecision
      */
     public function setDecision($decision)
@@ -351,7 +362,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the decision date
      *
-     * @param \DateTime $decisionDate
+     * @param \DateTime $decisionDate new value being set
+     *
      * @return TmCaseDecision
      */
     public function setDecisionDate($decisionDate)
@@ -374,7 +386,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return TmCaseDecision
      */
     public function setDeletedDate($deletedDate)
@@ -397,7 +410,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return TmCaseDecision
      */
     public function setId($id)
@@ -420,7 +434,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the is msi
      *
-     * @param string $isMsi
+     * @param string $isMsi new value being set
+     *
      * @return TmCaseDecision
      */
     public function setIsMsi($isMsi)
@@ -443,7 +458,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return TmCaseDecision
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -466,7 +482,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return TmCaseDecision
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -489,7 +506,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the no further action reason
      *
-     * @param string $noFurtherActionReason
+     * @param string $noFurtherActionReason new value being set
+     *
      * @return TmCaseDecision
      */
     public function setNoFurtherActionReason($noFurtherActionReason)
@@ -512,7 +530,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the notified date
      *
-     * @param \DateTime $notifiedDate
+     * @param \DateTime $notifiedDate new value being set
+     *
      * @return TmCaseDecision
      */
     public function setNotifiedDate($notifiedDate)
@@ -535,7 +554,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return TmCaseDecision
      */
     public function setOlbsKey($olbsKey)
@@ -558,7 +578,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the rehab measure
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $rehabMeasures
+     * @param \Doctrine\Common\Collections\ArrayCollection $rehabMeasures collection being set as the value
+     *
      * @return TmCaseDecision
      */
     public function setRehabMeasures($rehabMeasures)
@@ -581,7 +602,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Add a rehab measures
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $rehabMeasures
+     * @param \Doctrine\Common\Collections\ArrayCollection $rehabMeasures collection being added
+     *
      * @return TmCaseDecision
      */
     public function addRehabMeasures($rehabMeasures)
@@ -603,7 +625,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Remove a rehab measures
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $rehabMeasures
+     * @param \Doctrine\Common\Collections\ArrayCollection $rehabMeasures collection being removed
+     *
      * @return TmCaseDecision
      */
     public function removeRehabMeasures($rehabMeasures)
@@ -618,7 +641,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the repute not lost reason
      *
-     * @param string $reputeNotLostReason
+     * @param string $reputeNotLostReason new value being set
+     *
      * @return TmCaseDecision
      */
     public function setReputeNotLostReason($reputeNotLostReason)
@@ -641,7 +665,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the unfitness end date
      *
-     * @param \DateTime $unfitnessEndDate
+     * @param \DateTime $unfitnessEndDate new value being set
+     *
      * @return TmCaseDecision
      */
     public function setUnfitnessEndDate($unfitnessEndDate)
@@ -664,7 +689,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the unfitness reason
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $unfitnessReasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $unfitnessReasons collection being set as the value
+     *
      * @return TmCaseDecision
      */
     public function setUnfitnessReasons($unfitnessReasons)
@@ -687,7 +713,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Add a unfitness reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $unfitnessReasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $unfitnessReasons collection being added
+     *
      * @return TmCaseDecision
      */
     public function addUnfitnessReasons($unfitnessReasons)
@@ -709,7 +736,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Remove a unfitness reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $unfitnessReasons
+     * @param \Doctrine\Common\Collections\ArrayCollection $unfitnessReasons collection being removed
+     *
      * @return TmCaseDecision
      */
     public function removeUnfitnessReasons($unfitnessReasons)
@@ -724,7 +752,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the unfitness start date
      *
-     * @param \DateTime $unfitnessStartDate
+     * @param \DateTime $unfitnessStartDate new value being set
+     *
      * @return TmCaseDecision
      */
     public function setUnfitnessStartDate($unfitnessStartDate)
@@ -747,7 +776,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return TmCaseDecision
      */
     public function setVersion($version)
@@ -771,6 +801,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -781,6 +813,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -790,7 +824,9 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -121,7 +121,8 @@ abstract class AbstractIrfoPsvAuthType implements BundleSerializableInterface, J
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return IrfoPsvAuthType
      */
     public function setCreatedBy($createdBy)
@@ -144,7 +145,8 @@ abstract class AbstractIrfoPsvAuthType implements BundleSerializableInterface, J
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return IrfoPsvAuthType
      */
     public function setCreatedOn($createdOn)
@@ -167,7 +169,8 @@ abstract class AbstractIrfoPsvAuthType implements BundleSerializableInterface, J
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return IrfoPsvAuthType
      */
     public function setDescription($description)
@@ -190,7 +193,8 @@ abstract class AbstractIrfoPsvAuthType implements BundleSerializableInterface, J
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return IrfoPsvAuthType
      */
     public function setId($id)
@@ -213,7 +217,8 @@ abstract class AbstractIrfoPsvAuthType implements BundleSerializableInterface, J
     /**
      * Set the irfo fee type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $irfoFeeType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $irfoFeeType entity being set as the value
+     *
      * @return IrfoPsvAuthType
      */
     public function setIrfoFeeType($irfoFeeType)
@@ -236,7 +241,8 @@ abstract class AbstractIrfoPsvAuthType implements BundleSerializableInterface, J
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return IrfoPsvAuthType
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -259,7 +265,8 @@ abstract class AbstractIrfoPsvAuthType implements BundleSerializableInterface, J
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return IrfoPsvAuthType
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -282,7 +289,8 @@ abstract class AbstractIrfoPsvAuthType implements BundleSerializableInterface, J
     /**
      * Set the section code
      *
-     * @param string $sectionCode
+     * @param string $sectionCode new value being set
+     *
      * @return IrfoPsvAuthType
      */
     public function setSectionCode($sectionCode)
@@ -305,7 +313,8 @@ abstract class AbstractIrfoPsvAuthType implements BundleSerializableInterface, J
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return IrfoPsvAuthType
      */
     public function setVersion($version)
@@ -329,6 +338,8 @@ abstract class AbstractIrfoPsvAuthType implements BundleSerializableInterface, J
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -339,6 +350,8 @@ abstract class AbstractIrfoPsvAuthType implements BundleSerializableInterface, J
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -348,7 +361,9 @@ abstract class AbstractIrfoPsvAuthType implements BundleSerializableInterface, J
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -121,12 +121,19 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->docParagraphBookmarks = new ArrayCollection();
@@ -135,7 +142,8 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return DocBookmark
      */
     public function setCreatedBy($createdBy)
@@ -158,7 +166,8 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return DocBookmark
      */
     public function setCreatedOn($createdOn)
@@ -181,7 +190,8 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return DocBookmark
      */
     public function setDescription($description)
@@ -204,7 +214,8 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return DocBookmark
      */
     public function setId($id)
@@ -227,7 +238,8 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return DocBookmark
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -250,7 +262,8 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return DocBookmark
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -273,7 +286,8 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
     /**
      * Set the name
      *
-     * @param string $name
+     * @param string $name new value being set
+     *
      * @return DocBookmark
      */
     public function setName($name)
@@ -296,7 +310,8 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return DocBookmark
      */
     public function setVersion($version)
@@ -319,7 +334,8 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
     /**
      * Set the doc paragraph bookmark
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $docParagraphBookmarks
+     * @param \Doctrine\Common\Collections\ArrayCollection $docParagraphBookmarks collection being set as the value
+     *
      * @return DocBookmark
      */
     public function setDocParagraphBookmarks($docParagraphBookmarks)
@@ -342,7 +358,8 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
     /**
      * Add a doc paragraph bookmarks
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $docParagraphBookmarks
+     * @param \Doctrine\Common\Collections\ArrayCollection $docParagraphBookmarks collection being added
+     *
      * @return DocBookmark
      */
     public function addDocParagraphBookmarks($docParagraphBookmarks)
@@ -364,7 +381,8 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
     /**
      * Remove a doc paragraph bookmarks
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $docParagraphBookmarks
+     * @param \Doctrine\Common\Collections\ArrayCollection $docParagraphBookmarks collection being removed
+     *
      * @return DocBookmark
      */
     public function removeDocParagraphBookmarks($docParagraphBookmarks)
@@ -380,6 +398,8 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -390,6 +410,8 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -399,7 +421,9 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

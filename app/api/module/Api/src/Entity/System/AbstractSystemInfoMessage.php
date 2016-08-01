@@ -147,7 +147,8 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return SystemInfoMessage
      */
     public function setCreatedBy($createdBy)
@@ -170,7 +171,8 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return SystemInfoMessage
      */
     public function setCreatedOn($createdOn)
@@ -193,7 +195,8 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return SystemInfoMessage
      */
     public function setDeletedDate($deletedDate)
@@ -216,7 +219,8 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return SystemInfoMessage
      */
     public function setDescription($description)
@@ -239,7 +243,8 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     /**
      * Set the end date
      *
-     * @param \DateTime $endDate
+     * @param \DateTime $endDate new value being set
+     *
      * @return SystemInfoMessage
      */
     public function setEndDate($endDate)
@@ -262,7 +267,8 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return SystemInfoMessage
      */
     public function setId($id)
@@ -285,7 +291,8 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     /**
      * Set the importance
      *
-     * @param boolean $importance
+     * @param boolean $importance new value being set
+     *
      * @return SystemInfoMessage
      */
     public function setImportance($importance)
@@ -308,7 +315,8 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     /**
      * Set the is internal
      *
-     * @param string $isInternal
+     * @param string $isInternal new value being set
+     *
      * @return SystemInfoMessage
      */
     public function setIsInternal($isInternal)
@@ -331,7 +339,8 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return SystemInfoMessage
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -354,7 +363,8 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return SystemInfoMessage
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -377,7 +387,8 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     /**
      * Set the start date
      *
-     * @param \DateTime $startDate
+     * @param \DateTime $startDate new value being set
+     *
      * @return SystemInfoMessage
      */
     public function setStartDate($startDate)
@@ -400,7 +411,8 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return SystemInfoMessage
      */
     public function setVersion($version)
@@ -424,6 +436,8 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -434,6 +448,8 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -443,7 +459,9 @@ abstract class AbstractSystemInfoMessage implements BundleSerializableInterface,
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

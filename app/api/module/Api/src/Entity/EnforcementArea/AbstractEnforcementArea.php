@@ -107,7 +107,8 @@ abstract class AbstractEnforcementArea implements BundleSerializableInterface, J
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return EnforcementArea
      */
     public function setCreatedBy($createdBy)
@@ -130,7 +131,8 @@ abstract class AbstractEnforcementArea implements BundleSerializableInterface, J
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return EnforcementArea
      */
     public function setCreatedOn($createdOn)
@@ -153,7 +155,8 @@ abstract class AbstractEnforcementArea implements BundleSerializableInterface, J
     /**
      * Set the email address
      *
-     * @param string $emailAddress
+     * @param string $emailAddress new value being set
+     *
      * @return EnforcementArea
      */
     public function setEmailAddress($emailAddress)
@@ -176,7 +179,8 @@ abstract class AbstractEnforcementArea implements BundleSerializableInterface, J
     /**
      * Set the id
      *
-     * @param string $id
+     * @param string $id new value being set
+     *
      * @return EnforcementArea
      */
     public function setId($id)
@@ -199,7 +203,8 @@ abstract class AbstractEnforcementArea implements BundleSerializableInterface, J
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return EnforcementArea
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -222,7 +227,8 @@ abstract class AbstractEnforcementArea implements BundleSerializableInterface, J
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return EnforcementArea
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -245,7 +251,8 @@ abstract class AbstractEnforcementArea implements BundleSerializableInterface, J
     /**
      * Set the name
      *
-     * @param string $name
+     * @param string $name new value being set
+     *
      * @return EnforcementArea
      */
     public function setName($name)
@@ -268,7 +275,8 @@ abstract class AbstractEnforcementArea implements BundleSerializableInterface, J
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return EnforcementArea
      */
     public function setVersion($version)
@@ -292,6 +300,8 @@ abstract class AbstractEnforcementArea implements BundleSerializableInterface, J
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -302,6 +312,8 @@ abstract class AbstractEnforcementArea implements BundleSerializableInterface, J
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -311,7 +323,9 @@ abstract class AbstractEnforcementArea implements BundleSerializableInterface, J
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

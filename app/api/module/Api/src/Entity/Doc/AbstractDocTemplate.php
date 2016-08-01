@@ -177,12 +177,19 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->docTemplateBookmarks = new ArrayCollection();
@@ -191,7 +198,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Set the category
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\Category $category
+     * @param \Dvsa\Olcs\Api\Entity\System\Category $category entity being set as the value
+     *
      * @return DocTemplate
      */
     public function setCategory($category)
@@ -214,7 +222,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return DocTemplate
      */
     public function setCreatedBy($createdBy)
@@ -237,7 +246,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return DocTemplate
      */
     public function setCreatedOn($createdOn)
@@ -260,7 +270,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return DocTemplate
      */
     public function setDeletedDate($deletedDate)
@@ -283,7 +294,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return DocTemplate
      */
     public function setDescription($description)
@@ -306,7 +318,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Set the document
      *
-     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $document
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $document entity being set as the value
+     *
      * @return DocTemplate
      */
     public function setDocument($document)
@@ -329,7 +342,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return DocTemplate
      */
     public function setId($id)
@@ -352,7 +366,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Set the is ni
      *
-     * @param string $isNi
+     * @param string $isNi new value being set
+     *
      * @return DocTemplate
      */
     public function setIsNi($isNi)
@@ -375,7 +390,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return DocTemplate
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -398,7 +414,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return DocTemplate
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -421,7 +438,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Set the sub category
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory
+     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory entity being set as the value
+     *
      * @return DocTemplate
      */
     public function setSubCategory($subCategory)
@@ -444,7 +462,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Set the suppress from op
      *
-     * @param string $suppressFromOp
+     * @param string $suppressFromOp new value being set
+     *
      * @return DocTemplate
      */
     public function setSuppressFromOp($suppressFromOp)
@@ -467,7 +486,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return DocTemplate
      */
     public function setVersion($version)
@@ -490,7 +510,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Set the doc template bookmark
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $docTemplateBookmarks
+     * @param \Doctrine\Common\Collections\ArrayCollection $docTemplateBookmarks collection being set as the value
+     *
      * @return DocTemplate
      */
     public function setDocTemplateBookmarks($docTemplateBookmarks)
@@ -513,7 +534,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Add a doc template bookmarks
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $docTemplateBookmarks
+     * @param \Doctrine\Common\Collections\ArrayCollection $docTemplateBookmarks collection being added
+     *
      * @return DocTemplate
      */
     public function addDocTemplateBookmarks($docTemplateBookmarks)
@@ -535,7 +557,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Remove a doc template bookmarks
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $docTemplateBookmarks
+     * @param \Doctrine\Common\Collections\ArrayCollection $docTemplateBookmarks collection being removed
+     *
      * @return DocTemplate
      */
     public function removeDocTemplateBookmarks($docTemplateBookmarks)
@@ -551,6 +574,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -561,6 +586,8 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -570,7 +597,9 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -193,7 +193,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Set the agreed date
      *
-     * @param \DateTime $agreedDate
+     * @param \DateTime $agreedDate new value being set
+     *
      * @return SlaTargetDate
      */
     public function setAgreedDate($agreedDate)
@@ -216,7 +217,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return SlaTargetDate
      */
     public function setCreatedBy($createdBy)
@@ -239,7 +241,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return SlaTargetDate
      */
     public function setCreatedOn($createdOn)
@@ -262,7 +265,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Set the document
      *
-     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $document
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $document entity being set as the value
+     *
      * @return SlaTargetDate
      */
     public function setDocument($document)
@@ -285,7 +289,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return SlaTargetDate
      */
     public function setId($id)
@@ -308,7 +313,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return SlaTargetDate
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -331,7 +337,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return SlaTargetDate
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -354,7 +361,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Set the notes
      *
-     * @param string $notes
+     * @param string $notes new value being set
+     *
      * @return SlaTargetDate
      */
     public function setNotes($notes)
@@ -377,7 +385,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Set the pi
      *
-     * @param \Dvsa\Olcs\Api\Entity\Pi\Pi $pi
+     * @param \Dvsa\Olcs\Api\Entity\Pi\Pi $pi entity being set as the value
+     *
      * @return SlaTargetDate
      */
     public function setPi($pi)
@@ -400,7 +409,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Set the sent date
      *
-     * @param \DateTime $sentDate
+     * @param \DateTime $sentDate new value being set
+     *
      * @return SlaTargetDate
      */
     public function setSentDate($sentDate)
@@ -423,7 +433,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Set the sla
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\Sla $sla
+     * @param \Dvsa\Olcs\Api\Entity\System\Sla $sla entity being set as the value
+     *
      * @return SlaTargetDate
      */
     public function setSla($sla)
@@ -446,7 +457,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Set the submission
      *
-     * @param \Dvsa\Olcs\Api\Entity\Submission\Submission $submission
+     * @param \Dvsa\Olcs\Api\Entity\Submission\Submission $submission entity being set as the value
+     *
      * @return SlaTargetDate
      */
     public function setSubmission($submission)
@@ -469,7 +481,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Set the target date
      *
-     * @param \DateTime $targetDate
+     * @param \DateTime $targetDate new value being set
+     *
      * @return SlaTargetDate
      */
     public function setTargetDate($targetDate)
@@ -492,7 +505,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Set the under delegation
      *
-     * @param string $underDelegation
+     * @param string $underDelegation new value being set
+     *
      * @return SlaTargetDate
      */
     public function setUnderDelegation($underDelegation)
@@ -515,7 +529,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return SlaTargetDate
      */
     public function setVersion($version)
@@ -539,6 +554,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -549,6 +566,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -558,7 +577,9 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

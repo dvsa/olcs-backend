@@ -144,7 +144,8 @@ abstract class AbstractLegacyPiReason implements BundleSerializableInterface, Js
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return LegacyPiReason
      */
     public function setCreatedBy($createdBy)
@@ -167,7 +168,8 @@ abstract class AbstractLegacyPiReason implements BundleSerializableInterface, Js
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return LegacyPiReason
      */
     public function setCreatedOn($createdOn)
@@ -190,7 +192,8 @@ abstract class AbstractLegacyPiReason implements BundleSerializableInterface, Js
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return LegacyPiReason
      */
     public function setDescription($description)
@@ -213,7 +216,8 @@ abstract class AbstractLegacyPiReason implements BundleSerializableInterface, Js
     /**
      * Set the goods or psv
      *
-     * @param string $goodsOrPsv
+     * @param string $goodsOrPsv new value being set
+     *
      * @return LegacyPiReason
      */
     public function setGoodsOrPsv($goodsOrPsv)
@@ -236,7 +240,8 @@ abstract class AbstractLegacyPiReason implements BundleSerializableInterface, Js
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return LegacyPiReason
      */
     public function setId($id)
@@ -259,7 +264,8 @@ abstract class AbstractLegacyPiReason implements BundleSerializableInterface, Js
     /**
      * Set the is decision
      *
-     * @param boolean $isDecision
+     * @param boolean $isDecision new value being set
+     *
      * @return LegacyPiReason
      */
     public function setIsDecision($isDecision)
@@ -282,7 +288,8 @@ abstract class AbstractLegacyPiReason implements BundleSerializableInterface, Js
     /**
      * Set the is ni
      *
-     * @param boolean $isNi
+     * @param boolean $isNi new value being set
+     *
      * @return LegacyPiReason
      */
     public function setIsNi($isNi)
@@ -305,7 +312,8 @@ abstract class AbstractLegacyPiReason implements BundleSerializableInterface, Js
     /**
      * Set the is read only
      *
-     * @param boolean $isReadOnly
+     * @param boolean $isReadOnly new value being set
+     *
      * @return LegacyPiReason
      */
     public function setIsReadOnly($isReadOnly)
@@ -328,7 +336,8 @@ abstract class AbstractLegacyPiReason implements BundleSerializableInterface, Js
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return LegacyPiReason
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -351,7 +360,8 @@ abstract class AbstractLegacyPiReason implements BundleSerializableInterface, Js
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return LegacyPiReason
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -374,7 +384,8 @@ abstract class AbstractLegacyPiReason implements BundleSerializableInterface, Js
     /**
      * Set the section code
      *
-     * @param string $sectionCode
+     * @param string $sectionCode new value being set
+     *
      * @return LegacyPiReason
      */
     public function setSectionCode($sectionCode)
@@ -397,7 +408,8 @@ abstract class AbstractLegacyPiReason implements BundleSerializableInterface, Js
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return LegacyPiReason
      */
     public function setVersion($version)
@@ -421,6 +433,8 @@ abstract class AbstractLegacyPiReason implements BundleSerializableInterface, Js
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -431,6 +445,8 @@ abstract class AbstractLegacyPiReason implements BundleSerializableInterface, Js
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -440,7 +456,9 @@ abstract class AbstractLegacyPiReason implements BundleSerializableInterface, Js
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

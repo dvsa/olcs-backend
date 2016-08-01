@@ -178,7 +178,8 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
     /**
      * Set the bus reg
      *
-     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg
+     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg entity being set as the value
+     *
      * @return TxcInbox
      */
     public function setBusReg($busReg)
@@ -201,7 +202,8 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return TxcInbox
      */
     public function setCreatedBy($createdBy)
@@ -224,7 +226,8 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return TxcInbox
      */
     public function setCreatedOn($createdOn)
@@ -247,7 +250,8 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
     /**
      * Set the file read
      *
-     * @param string $fileRead
+     * @param string $fileRead new value being set
+     *
      * @return TxcInbox
      */
     public function setFileRead($fileRead)
@@ -270,7 +274,8 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return TxcInbox
      */
     public function setId($id)
@@ -293,7 +298,8 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return TxcInbox
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -316,7 +322,8 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return TxcInbox
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -339,7 +346,8 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
     /**
      * Set the local authority
      *
-     * @param \Dvsa\Olcs\Api\Entity\Bus\LocalAuthority $localAuthority
+     * @param \Dvsa\Olcs\Api\Entity\Bus\LocalAuthority $localAuthority entity being set as the value
+     *
      * @return TxcInbox
      */
     public function setLocalAuthority($localAuthority)
@@ -362,7 +370,8 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
     /**
      * Set the organisation
      *
-     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation entity being set as the value
+     *
      * @return TxcInbox
      */
     public function setOrganisation($organisation)
@@ -385,7 +394,8 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
     /**
      * Set the pdf document
      *
-     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $pdfDocument
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $pdfDocument entity being set as the value
+     *
      * @return TxcInbox
      */
     public function setPdfDocument($pdfDocument)
@@ -408,7 +418,8 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
     /**
      * Set the route document
      *
-     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $routeDocument
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $routeDocument entity being set as the value
+     *
      * @return TxcInbox
      */
     public function setRouteDocument($routeDocument)
@@ -431,7 +442,8 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
     /**
      * Set the variation no
      *
-     * @param int $variationNo
+     * @param int $variationNo new value being set
+     *
      * @return TxcInbox
      */
     public function setVariationNo($variationNo)
@@ -454,7 +466,8 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return TxcInbox
      */
     public function setVersion($version)
@@ -477,7 +490,8 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
     /**
      * Set the zip document
      *
-     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $zipDocument
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $zipDocument entity being set as the value
+     *
      * @return TxcInbox
      */
     public function setZipDocument($zipDocument)
@@ -501,6 +515,8 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -511,6 +527,8 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -520,7 +538,9 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

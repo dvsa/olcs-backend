@@ -229,7 +229,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the authorisers decision
      *
-     * @param string $authorisersDecision
+     * @param string $authorisersDecision new value being set
+     *
      * @return Statement
      */
     public function setAuthorisersDecision($authorisersDecision)
@@ -252,7 +253,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return Statement
      */
     public function setCase($case)
@@ -275,7 +277,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the contact type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $contactType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $contactType entity being set as the value
+     *
      * @return Statement
      */
     public function setContactType($contactType)
@@ -298,7 +301,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Statement
      */
     public function setCreatedBy($createdBy)
@@ -321,7 +325,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Statement
      */
     public function setCreatedOn($createdOn)
@@ -344,7 +349,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Statement
      */
     public function setId($id)
@@ -367,7 +373,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the issued date
      *
-     * @param \DateTime $issuedDate
+     * @param \DateTime $issuedDate new value being set
+     *
      * @return Statement
      */
     public function setIssuedDate($issuedDate)
@@ -390,7 +397,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Statement
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -413,7 +421,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Statement
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -436,7 +445,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the licence no
      *
-     * @param string $licenceNo
+     * @param string $licenceNo new value being set
+     *
      * @return Statement
      */
     public function setLicenceNo($licenceNo)
@@ -459,7 +469,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the licence type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $licenceType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $licenceType entity being set as the value
+     *
      * @return Statement
      */
     public function setLicenceType($licenceType)
@@ -482,7 +493,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return Statement
      */
     public function setOlbsKey($olbsKey)
@@ -505,7 +517,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the requested date
      *
-     * @param \DateTime $requestedDate
+     * @param \DateTime $requestedDate new value being set
+     *
      * @return Statement
      */
     public function setRequestedDate($requestedDate)
@@ -528,7 +541,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the requestors body
      *
-     * @param string $requestorsBody
+     * @param string $requestorsBody new value being set
+     *
      * @return Statement
      */
     public function setRequestorsBody($requestorsBody)
@@ -551,7 +565,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the requestors contact details
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $requestorsContactDetails
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $requestorsContactDetails entity being set as the value
+     *
      * @return Statement
      */
     public function setRequestorsContactDetails($requestorsContactDetails)
@@ -574,7 +589,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the statement type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $statementType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $statementType entity being set as the value
+     *
      * @return Statement
      */
     public function setStatementType($statementType)
@@ -597,7 +613,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the stopped date
      *
-     * @param \DateTime $stoppedDate
+     * @param \DateTime $stoppedDate new value being set
+     *
      * @return Statement
      */
     public function setStoppedDate($stoppedDate)
@@ -620,7 +637,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Statement
      */
     public function setVersion($version)
@@ -643,7 +661,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the vrm
      *
-     * @param string $vrm
+     * @param string $vrm new value being set
+     *
      * @return Statement
      */
     public function setVrm($vrm)
@@ -667,6 +686,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -677,6 +698,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -686,7 +709,9 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

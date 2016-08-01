@@ -199,12 +199,19 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->transportManagerLicences = new ArrayCollection();
@@ -219,7 +226,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the address
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Address $address
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Address $address entity being set as the value
+     *
      * @return OperatingCentre
      */
     public function setAddress($address)
@@ -242,7 +250,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the complaint
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $complaints
+     * @param \Doctrine\Common\Collections\ArrayCollection $complaints collection being set as the value
+     *
      * @return OperatingCentre
      */
     public function setComplaints($complaints)
@@ -265,7 +274,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Add a complaints
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $complaints
+     * @param \Doctrine\Common\Collections\ArrayCollection $complaints collection being added
+     *
      * @return OperatingCentre
      */
     public function addComplaints($complaints)
@@ -287,7 +297,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Remove a complaints
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $complaints
+     * @param \Doctrine\Common\Collections\ArrayCollection $complaints collection being removed
+     *
      * @return OperatingCentre
      */
     public function removeComplaints($complaints)
@@ -302,7 +313,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return OperatingCentre
      */
     public function setCreatedBy($createdBy)
@@ -325,7 +337,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return OperatingCentre
      */
     public function setCreatedOn($createdOn)
@@ -348,7 +361,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return OperatingCentre
      */
     public function setId($id)
@@ -371,7 +385,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return OperatingCentre
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -394,7 +409,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return OperatingCentre
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -417,7 +433,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return OperatingCentre
      */
     public function setOlbsKey($olbsKey)
@@ -440,7 +457,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the opposition
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
+     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions collection being set as the value
+     *
      * @return OperatingCentre
      */
     public function setOppositions($oppositions)
@@ -463,7 +481,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Add a oppositions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
+     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions collection being added
+     *
      * @return OperatingCentre
      */
     public function addOppositions($oppositions)
@@ -485,7 +504,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Remove a oppositions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
+     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions collection being removed
+     *
      * @return OperatingCentre
      */
     public function removeOppositions($oppositions)
@@ -500,7 +520,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the transport manager application
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerApplications
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerApplications collection being set as the value
+     *
      * @return OperatingCentre
      */
     public function setTransportManagerApplications($transportManagerApplications)
@@ -523,7 +544,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Add a transport manager applications
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerApplications
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerApplications collection being added
+     *
      * @return OperatingCentre
      */
     public function addTransportManagerApplications($transportManagerApplications)
@@ -545,7 +567,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Remove a transport manager applications
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerApplications
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerApplications collection being removed
+     *
      * @return OperatingCentre
      */
     public function removeTransportManagerApplications($transportManagerApplications)
@@ -560,7 +583,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the transport manager licence
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerLicences
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerLicences collection being set as the value
+     *
      * @return OperatingCentre
      */
     public function setTransportManagerLicences($transportManagerLicences)
@@ -583,7 +607,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Add a transport manager licences
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerLicences
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerLicences collection being added
+     *
      * @return OperatingCentre
      */
     public function addTransportManagerLicences($transportManagerLicences)
@@ -605,7 +630,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Remove a transport manager licences
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerLicences
+     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerLicences collection being removed
+     *
      * @return OperatingCentre
      */
     public function removeTransportManagerLicences($transportManagerLicences)
@@ -620,7 +646,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return OperatingCentre
      */
     public function setVersion($version)
@@ -643,7 +670,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the application
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applications
+     * @param \Doctrine\Common\Collections\ArrayCollection $applications collection being set as the value
+     *
      * @return OperatingCentre
      */
     public function setApplications($applications)
@@ -666,7 +694,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Add a applications
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applications
+     * @param \Doctrine\Common\Collections\ArrayCollection $applications collection being added
+     *
      * @return OperatingCentre
      */
     public function addApplications($applications)
@@ -688,7 +717,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Remove a applications
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applications
+     * @param \Doctrine\Common\Collections\ArrayCollection $applications collection being removed
+     *
      * @return OperatingCentre
      */
     public function removeApplications($applications)
@@ -703,7 +733,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the condition undertaking
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings collection being set as the value
+     *
      * @return OperatingCentre
      */
     public function setConditionUndertakings($conditionUndertakings)
@@ -726,7 +757,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Add a condition undertakings
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings collection being added
+     *
      * @return OperatingCentre
      */
     public function addConditionUndertakings($conditionUndertakings)
@@ -748,7 +780,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Remove a condition undertakings
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings
+     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings collection being removed
+     *
      * @return OperatingCentre
      */
     public function removeConditionUndertakings($conditionUndertakings)
@@ -763,7 +796,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the ad document
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $adDocuments
+     * @param \Doctrine\Common\Collections\ArrayCollection $adDocuments collection being set as the value
+     *
      * @return OperatingCentre
      */
     public function setAdDocuments($adDocuments)
@@ -786,7 +820,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Add a ad documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $adDocuments
+     * @param \Doctrine\Common\Collections\ArrayCollection $adDocuments collection being added
+     *
      * @return OperatingCentre
      */
     public function addAdDocuments($adDocuments)
@@ -808,7 +843,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Remove a ad documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $adDocuments
+     * @param \Doctrine\Common\Collections\ArrayCollection $adDocuments collection being removed
+     *
      * @return OperatingCentre
      */
     public function removeAdDocuments($adDocuments)
@@ -824,6 +860,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -834,6 +872,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -843,7 +883,9 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

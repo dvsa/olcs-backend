@@ -164,7 +164,8 @@ abstract class AbstractApplicationOrganisationPerson implements BundleSerializab
     /**
      * Set the action
      *
-     * @param string $action
+     * @param string $action new value being set
+     *
      * @return ApplicationOrganisationPerson
      */
     public function setAction($action)
@@ -187,7 +188,8 @@ abstract class AbstractApplicationOrganisationPerson implements BundleSerializab
     /**
      * Set the application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application entity being set as the value
+     *
      * @return ApplicationOrganisationPerson
      */
     public function setApplication($application)
@@ -210,7 +212,8 @@ abstract class AbstractApplicationOrganisationPerson implements BundleSerializab
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return ApplicationOrganisationPerson
      */
     public function setCreatedBy($createdBy)
@@ -233,7 +236,8 @@ abstract class AbstractApplicationOrganisationPerson implements BundleSerializab
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return ApplicationOrganisationPerson
      */
     public function setCreatedOn($createdOn)
@@ -256,7 +260,8 @@ abstract class AbstractApplicationOrganisationPerson implements BundleSerializab
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return ApplicationOrganisationPerson
      */
     public function setId($id)
@@ -279,7 +284,8 @@ abstract class AbstractApplicationOrganisationPerson implements BundleSerializab
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return ApplicationOrganisationPerson
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -302,7 +308,8 @@ abstract class AbstractApplicationOrganisationPerson implements BundleSerializab
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return ApplicationOrganisationPerson
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -325,7 +332,8 @@ abstract class AbstractApplicationOrganisationPerson implements BundleSerializab
     /**
      * Set the organisation
      *
-     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation entity being set as the value
+     *
      * @return ApplicationOrganisationPerson
      */
     public function setOrganisation($organisation)
@@ -348,7 +356,8 @@ abstract class AbstractApplicationOrganisationPerson implements BundleSerializab
     /**
      * Set the original person
      *
-     * @param \Dvsa\Olcs\Api\Entity\Person\Person $originalPerson
+     * @param \Dvsa\Olcs\Api\Entity\Person\Person $originalPerson entity being set as the value
+     *
      * @return ApplicationOrganisationPerson
      */
     public function setOriginalPerson($originalPerson)
@@ -371,7 +380,8 @@ abstract class AbstractApplicationOrganisationPerson implements BundleSerializab
     /**
      * Set the person
      *
-     * @param \Dvsa\Olcs\Api\Entity\Person\Person $person
+     * @param \Dvsa\Olcs\Api\Entity\Person\Person $person entity being set as the value
+     *
      * @return ApplicationOrganisationPerson
      */
     public function setPerson($person)
@@ -394,7 +404,8 @@ abstract class AbstractApplicationOrganisationPerson implements BundleSerializab
     /**
      * Set the position
      *
-     * @param string $position
+     * @param string $position new value being set
+     *
      * @return ApplicationOrganisationPerson
      */
     public function setPosition($position)
@@ -417,7 +428,8 @@ abstract class AbstractApplicationOrganisationPerson implements BundleSerializab
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return ApplicationOrganisationPerson
      */
     public function setVersion($version)
@@ -441,6 +453,8 @@ abstract class AbstractApplicationOrganisationPerson implements BundleSerializab
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -451,6 +465,8 @@ abstract class AbstractApplicationOrganisationPerson implements BundleSerializab
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -460,7 +476,9 @@ abstract class AbstractApplicationOrganisationPerson implements BundleSerializab
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

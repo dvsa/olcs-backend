@@ -60,7 +60,8 @@ abstract class AbstractSubCategoryDescription implements BundleSerializableInter
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return SubCategoryDescription
      */
     public function setDescription($description)
@@ -83,7 +84,8 @@ abstract class AbstractSubCategoryDescription implements BundleSerializableInter
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return SubCategoryDescription
      */
     public function setId($id)
@@ -106,7 +108,8 @@ abstract class AbstractSubCategoryDescription implements BundleSerializableInter
     /**
      * Set the sub category
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory
+     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory entity being set as the value
+     *
      * @return SubCategoryDescription
      */
     public function setSubCategory($subCategory)
@@ -131,7 +134,9 @@ abstract class AbstractSubCategoryDescription implements BundleSerializableInter
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

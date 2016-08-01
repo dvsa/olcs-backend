@@ -272,7 +272,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the accrual rule
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $accrualRule
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $accrualRule entity being set as the value
+     *
      * @return FeeType
      */
     public function setAccrualRule($accrualRule)
@@ -295,7 +296,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the annual value
      *
-     * @param float $annualValue
+     * @param float $annualValue new value being set
+     *
      * @return FeeType
      */
     public function setAnnualValue($annualValue)
@@ -318,7 +320,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the cost centre ref
      *
-     * @param string $costCentreRef
+     * @param string $costCentreRef new value being set
+     *
      * @return FeeType
      */
     public function setCostCentreRef($costCentreRef)
@@ -341,7 +344,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return FeeType
      */
     public function setCreatedBy($createdBy)
@@ -364,7 +368,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return FeeType
      */
     public function setCreatedOn($createdOn)
@@ -387,7 +392,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return FeeType
      */
     public function setDescription($description)
@@ -410,7 +416,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the effective from
      *
-     * @param \DateTime $effectiveFrom
+     * @param \DateTime $effectiveFrom new value being set
+     *
      * @return FeeType
      */
     public function setEffectiveFrom($effectiveFrom)
@@ -433,7 +440,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the expire fee with licence
      *
-     * @param string $expireFeeWithLicence
+     * @param string $expireFeeWithLicence new value being set
+     *
      * @return FeeType
      */
     public function setExpireFeeWithLicence($expireFeeWithLicence)
@@ -456,7 +464,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the fee type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $feeType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $feeType entity being set as the value
+     *
      * @return FeeType
      */
     public function setFeeType($feeType)
@@ -479,7 +488,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the five year value
      *
-     * @param float $fiveYearValue
+     * @param float $fiveYearValue new value being set
+     *
      * @return FeeType
      */
     public function setFiveYearValue($fiveYearValue)
@@ -502,7 +512,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the fixed value
      *
-     * @param float $fixedValue
+     * @param float $fixedValue new value being set
+     *
      * @return FeeType
      */
     public function setFixedValue($fixedValue)
@@ -525,7 +536,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the goods or psv
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $goodsOrPsv
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $goodsOrPsv entity being set as the value
+     *
      * @return FeeType
      */
     public function setGoodsOrPsv($goodsOrPsv)
@@ -548,7 +560,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return FeeType
      */
     public function setId($id)
@@ -571,7 +584,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the irfo fee type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $irfoFeeType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $irfoFeeType entity being set as the value
+     *
      * @return FeeType
      */
     public function setIrfoFeeType($irfoFeeType)
@@ -594,7 +608,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the is miscellaneous
      *
-     * @param boolean $isMiscellaneous
+     * @param boolean $isMiscellaneous new value being set
+     *
      * @return FeeType
      */
     public function setIsMiscellaneous($isMiscellaneous)
@@ -617,7 +632,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the is ni
      *
-     * @param string $isNi
+     * @param string $isNi new value being set
+     *
      * @return FeeType
      */
     public function setIsNi($isNi)
@@ -640,7 +656,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return FeeType
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -663,7 +680,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return FeeType
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -686,7 +704,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the licence type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $licenceType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $licenceType entity being set as the value
+     *
      * @return FeeType
      */
     public function setLicenceType($licenceType)
@@ -709,7 +728,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the product reference
      *
-     * @param string $productReference
+     * @param string $productReference new value being set
+     *
      * @return FeeType
      */
     public function setProductReference($productReference)
@@ -732,7 +752,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the traffic area
      *
-     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $trafficArea
+     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $trafficArea entity being set as the value
+     *
      * @return FeeType
      */
     public function setTrafficArea($trafficArea)
@@ -755,7 +776,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the vat code
      *
-     * @param string $vatCode
+     * @param string $vatCode new value being set
+     *
      * @return FeeType
      */
     public function setVatCode($vatCode)
@@ -778,7 +800,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the vat rate
      *
-     * @param float $vatRate
+     * @param float $vatRate new value being set
+     *
      * @return FeeType
      */
     public function setVatRate($vatRate)
@@ -801,7 +824,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return FeeType
      */
     public function setVersion($version)
@@ -825,6 +849,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -835,6 +861,8 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -844,7 +872,9 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

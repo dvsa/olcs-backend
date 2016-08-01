@@ -248,12 +248,19 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->contactDetails = new ArrayCollection();
@@ -262,7 +269,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the address line1
      *
-     * @param string $addressLine1
+     * @param string $addressLine1 new value being set
+     *
      * @return Address
      */
     public function setAddressLine1($addressLine1)
@@ -285,7 +293,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the address line2
      *
-     * @param string $addressLine2
+     * @param string $addressLine2 new value being set
+     *
      * @return Address
      */
     public function setAddressLine2($addressLine2)
@@ -308,7 +317,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the address line3
      *
-     * @param string $addressLine3
+     * @param string $addressLine3 new value being set
+     *
      * @return Address
      */
     public function setAddressLine3($addressLine3)
@@ -331,7 +341,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the address line4
      *
-     * @param string $addressLine4
+     * @param string $addressLine4 new value being set
+     *
      * @return Address
      */
     public function setAddressLine4($addressLine4)
@@ -354,7 +365,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the admin area
      *
-     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\AdminAreaTrafficArea $adminArea
+     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\AdminAreaTrafficArea $adminArea entity being set as the value
+     *
      * @return Address
      */
     public function setAdminArea($adminArea)
@@ -377,7 +389,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the country code
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $countryCode
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $countryCode entity being set as the value
+     *
      * @return Address
      */
     public function setCountryCode($countryCode)
@@ -400,7 +413,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Address
      */
     public function setCreatedBy($createdBy)
@@ -423,7 +437,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Address
      */
     public function setCreatedOn($createdOn)
@@ -446,7 +461,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Address
      */
     public function setId($id)
@@ -469,7 +485,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Address
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -492,7 +509,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Address
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -515,7 +533,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return Address
      */
     public function setOlbsKey($olbsKey)
@@ -538,7 +557,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the olbs type
      *
-     * @param string $olbsType
+     * @param string $olbsType new value being set
+     *
      * @return Address
      */
     public function setOlbsType($olbsType)
@@ -561,7 +581,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the paon end
      *
-     * @param string $paonEnd
+     * @param string $paonEnd new value being set
+     *
      * @return Address
      */
     public function setPaonEnd($paonEnd)
@@ -584,7 +605,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the paon start
      *
-     * @param string $paonStart
+     * @param string $paonStart new value being set
+     *
      * @return Address
      */
     public function setPaonStart($paonStart)
@@ -607,7 +629,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the postcode
      *
-     * @param string $postcode
+     * @param string $postcode new value being set
+     *
      * @return Address
      */
     public function setPostcode($postcode)
@@ -630,7 +653,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the saon end
      *
-     * @param string $saonEnd
+     * @param string $saonEnd new value being set
+     *
      * @return Address
      */
     public function setSaonEnd($saonEnd)
@@ -653,7 +677,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the saon start
      *
-     * @param string $saonStart
+     * @param string $saonStart new value being set
+     *
      * @return Address
      */
     public function setSaonStart($saonStart)
@@ -676,7 +701,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the town
      *
-     * @param string $town
+     * @param string $town new value being set
+     *
      * @return Address
      */
     public function setTown($town)
@@ -699,7 +725,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the uprn
      *
-     * @param int $uprn
+     * @param int $uprn new value being set
+     *
      * @return Address
      */
     public function setUprn($uprn)
@@ -722,7 +749,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Address
      */
     public function setVersion($version)
@@ -745,7 +773,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the contact detail
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails collection being set as the value
+     *
      * @return Address
      */
     public function setContactDetails($contactDetails)
@@ -768,7 +797,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Add a contact details
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails collection being added
+     *
      * @return Address
      */
     public function addContactDetails($contactDetails)
@@ -790,7 +820,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Remove a contact details
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails
+     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails collection being removed
+     *
      * @return Address
      */
     public function removeContactDetails($contactDetails)
@@ -806,6 +837,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -816,6 +849,8 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -825,7 +860,9 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

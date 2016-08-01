@@ -16,7 +16,11 @@ use Doctrine\Common\Collections\Collection;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="companies_house_company")
+ * @ORM\Table(name="companies_house_company",
+ *    indexes={
+ *        @ORM\Index(name="ix_companies_house_company_company_number", columns={"company_number"})
+ *    }
+ * )
  */
 abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterface, JsonSerializable
 {
@@ -175,12 +179,19 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->officers = new ArrayCollection();
@@ -189,7 +200,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the address line1
      *
-     * @param string $addressLine1
+     * @param string $addressLine1 new value being set
+     *
      * @return CompaniesHouseCompany
      */
     public function setAddressLine1($addressLine1)
@@ -212,7 +224,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the address line2
      *
-     * @param string $addressLine2
+     * @param string $addressLine2 new value being set
+     *
      * @return CompaniesHouseCompany
      */
     public function setAddressLine2($addressLine2)
@@ -235,7 +248,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the company name
      *
-     * @param string $companyName
+     * @param string $companyName new value being set
+     *
      * @return CompaniesHouseCompany
      */
     public function setCompanyName($companyName)
@@ -258,7 +272,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the company number
      *
-     * @param string $companyNumber
+     * @param string $companyNumber new value being set
+     *
      * @return CompaniesHouseCompany
      */
     public function setCompanyNumber($companyNumber)
@@ -281,7 +296,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the company status
      *
-     * @param string $companyStatus
+     * @param string $companyStatus new value being set
+     *
      * @return CompaniesHouseCompany
      */
     public function setCompanyStatus($companyStatus)
@@ -304,7 +320,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the country
      *
-     * @param string $country
+     * @param string $country new value being set
+     *
      * @return CompaniesHouseCompany
      */
     public function setCountry($country)
@@ -327,7 +344,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return CompaniesHouseCompany
      */
     public function setCreatedOn($createdOn)
@@ -350,7 +368,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return CompaniesHouseCompany
      */
     public function setId($id)
@@ -373,7 +392,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return CompaniesHouseCompany
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -396,7 +416,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the locality
      *
-     * @param string $locality
+     * @param string $locality new value being set
+     *
      * @return CompaniesHouseCompany
      */
     public function setLocality($locality)
@@ -419,7 +440,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the po box
      *
-     * @param string $poBox
+     * @param string $poBox new value being set
+     *
      * @return CompaniesHouseCompany
      */
     public function setPoBox($poBox)
@@ -442,7 +464,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the postal code
      *
-     * @param string $postalCode
+     * @param string $postalCode new value being set
+     *
      * @return CompaniesHouseCompany
      */
     public function setPostalCode($postalCode)
@@ -465,7 +488,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the premises
      *
-     * @param string $premises
+     * @param string $premises new value being set
+     *
      * @return CompaniesHouseCompany
      */
     public function setPremises($premises)
@@ -488,7 +512,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the region
      *
-     * @param string $region
+     * @param string $region new value being set
+     *
      * @return CompaniesHouseCompany
      */
     public function setRegion($region)
@@ -511,7 +536,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return CompaniesHouseCompany
      */
     public function setVersion($version)
@@ -534,7 +560,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the officer
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $officers
+     * @param \Doctrine\Common\Collections\ArrayCollection $officers collection being set as the value
+     *
      * @return CompaniesHouseCompany
      */
     public function setOfficers($officers)
@@ -557,7 +584,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Add a officers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $officers
+     * @param \Doctrine\Common\Collections\ArrayCollection $officers collection being added
+     *
      * @return CompaniesHouseCompany
      */
     public function addOfficers($officers)
@@ -579,7 +607,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Remove a officers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $officers
+     * @param \Doctrine\Common\Collections\ArrayCollection $officers collection being removed
+     *
      * @return CompaniesHouseCompany
      */
     public function removeOfficers($officers)
@@ -595,6 +624,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -605,6 +636,8 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -614,7 +647,9 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -136,7 +136,8 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return PublicHoliday
      */
     public function setCreatedBy($createdBy)
@@ -159,7 +160,8 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return PublicHoliday
      */
     public function setCreatedOn($createdOn)
@@ -182,7 +184,8 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return PublicHoliday
      */
     public function setId($id)
@@ -205,7 +208,8 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
     /**
      * Set the is england
      *
-     * @param string $isEngland
+     * @param string $isEngland new value being set
+     *
      * @return PublicHoliday
      */
     public function setIsEngland($isEngland)
@@ -228,7 +232,8 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
     /**
      * Set the is ni
      *
-     * @param string $isNi
+     * @param string $isNi new value being set
+     *
      * @return PublicHoliday
      */
     public function setIsNi($isNi)
@@ -251,7 +256,8 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
     /**
      * Set the is scotland
      *
-     * @param string $isScotland
+     * @param string $isScotland new value being set
+     *
      * @return PublicHoliday
      */
     public function setIsScotland($isScotland)
@@ -274,7 +280,8 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
     /**
      * Set the is wales
      *
-     * @param string $isWales
+     * @param string $isWales new value being set
+     *
      * @return PublicHoliday
      */
     public function setIsWales($isWales)
@@ -297,7 +304,8 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return PublicHoliday
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -320,7 +328,8 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return PublicHoliday
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -343,7 +352,8 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
     /**
      * Set the public holiday date
      *
-     * @param \DateTime $publicHolidayDate
+     * @param \DateTime $publicHolidayDate new value being set
+     *
      * @return PublicHoliday
      */
     public function setPublicHolidayDate($publicHolidayDate)
@@ -366,7 +376,8 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return PublicHoliday
      */
     public function setVersion($version)
@@ -390,6 +401,8 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -400,6 +413,8 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -409,7 +424,9 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

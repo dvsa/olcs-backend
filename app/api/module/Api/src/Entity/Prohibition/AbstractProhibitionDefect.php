@@ -135,7 +135,8 @@ abstract class AbstractProhibitionDefect implements BundleSerializableInterface,
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return ProhibitionDefect
      */
     public function setCreatedBy($createdBy)
@@ -158,7 +159,8 @@ abstract class AbstractProhibitionDefect implements BundleSerializableInterface,
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return ProhibitionDefect
      */
     public function setCreatedOn($createdOn)
@@ -181,7 +183,8 @@ abstract class AbstractProhibitionDefect implements BundleSerializableInterface,
     /**
      * Set the defect type
      *
-     * @param string $defectType
+     * @param string $defectType new value being set
+     *
      * @return ProhibitionDefect
      */
     public function setDefectType($defectType)
@@ -204,7 +207,8 @@ abstract class AbstractProhibitionDefect implements BundleSerializableInterface,
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return ProhibitionDefect
      */
     public function setId($id)
@@ -227,7 +231,8 @@ abstract class AbstractProhibitionDefect implements BundleSerializableInterface,
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return ProhibitionDefect
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -250,7 +255,8 @@ abstract class AbstractProhibitionDefect implements BundleSerializableInterface,
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return ProhibitionDefect
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -273,7 +279,8 @@ abstract class AbstractProhibitionDefect implements BundleSerializableInterface,
     /**
      * Set the notes
      *
-     * @param string $notes
+     * @param string $notes new value being set
+     *
      * @return ProhibitionDefect
      */
     public function setNotes($notes)
@@ -296,7 +303,8 @@ abstract class AbstractProhibitionDefect implements BundleSerializableInterface,
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return ProhibitionDefect
      */
     public function setOlbsKey($olbsKey)
@@ -319,7 +327,8 @@ abstract class AbstractProhibitionDefect implements BundleSerializableInterface,
     /**
      * Set the prohibition
      *
-     * @param \Dvsa\Olcs\Api\Entity\Prohibition\Prohibition $prohibition
+     * @param \Dvsa\Olcs\Api\Entity\Prohibition\Prohibition $prohibition entity being set as the value
+     *
      * @return ProhibitionDefect
      */
     public function setProhibition($prohibition)
@@ -342,7 +351,8 @@ abstract class AbstractProhibitionDefect implements BundleSerializableInterface,
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return ProhibitionDefect
      */
     public function setVersion($version)
@@ -366,6 +376,8 @@ abstract class AbstractProhibitionDefect implements BundleSerializableInterface,
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -376,6 +388,8 @@ abstract class AbstractProhibitionDefect implements BundleSerializableInterface,
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -385,7 +399,9 @@ abstract class AbstractProhibitionDefect implements BundleSerializableInterface,
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -167,7 +167,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the application id
      *
-     * @param int $applicationId
+     * @param int $applicationId new value being set
+     *
      * @return HistoricTm
      */
     public function setApplicationId($applicationId)
@@ -190,7 +191,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the birth date
      *
-     * @param \DateTime $birthDate
+     * @param \DateTime $birthDate new value being set
+     *
      * @return HistoricTm
      */
     public function setBirthDate($birthDate)
@@ -213,7 +215,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the certificate no
      *
-     * @param string $certificateNo
+     * @param string $certificateNo new value being set
+     *
      * @return HistoricTm
      */
     public function setCertificateNo($certificateNo)
@@ -236,7 +239,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the date added
      *
-     * @param \DateTime $dateAdded
+     * @param \DateTime $dateAdded new value being set
+     *
      * @return HistoricTm
      */
     public function setDateAdded($dateAdded)
@@ -259,7 +263,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the date removed
      *
-     * @param \DateTime $dateRemoved
+     * @param \DateTime $dateRemoved new value being set
+     *
      * @return HistoricTm
      */
     public function setDateRemoved($dateRemoved)
@@ -282,7 +287,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the family name
      *
-     * @param string $familyName
+     * @param string $familyName new value being set
+     *
      * @return HistoricTm
      */
     public function setFamilyName($familyName)
@@ -305,7 +311,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the forename
      *
-     * @param string $forename
+     * @param string $forename new value being set
+     *
      * @return HistoricTm
      */
     public function setForename($forename)
@@ -328,7 +335,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the historic id
      *
-     * @param int $historicId
+     * @param int $historicId new value being set
+     *
      * @return HistoricTm
      */
     public function setHistoricId($historicId)
@@ -351,7 +359,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the hours per week
      *
-     * @param int $hoursPerWeek
+     * @param int $hoursPerWeek new value being set
+     *
      * @return HistoricTm
      */
     public function setHoursPerWeek($hoursPerWeek)
@@ -374,7 +383,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return HistoricTm
      */
     public function setId($id)
@@ -397,7 +407,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the lic no
      *
-     * @param string $licNo
+     * @param string $licNo new value being set
+     *
      * @return HistoricTm
      */
     public function setLicNo($licNo)
@@ -420,7 +431,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the lic or app
      *
-     * @param string $licOrApp
+     * @param string $licOrApp new value being set
+     *
      * @return HistoricTm
      */
     public function setLicOrApp($licOrApp)
@@ -443,7 +455,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the qualification type
      *
-     * @param string $qualificationType
+     * @param string $qualificationType new value being set
+     *
      * @return HistoricTm
      */
     public function setQualificationType($qualificationType)
@@ -466,7 +479,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the seen contract
      *
-     * @param string $seenContract
+     * @param string $seenContract new value being set
+     *
      * @return HistoricTm
      */
     public function setSeenContract($seenContract)
@@ -489,7 +503,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Set the seen qualification
      *
-     * @param string $seenQualification
+     * @param string $seenQualification new value being set
+     *
      * @return HistoricTm
      */
     public function setSeenQualification($seenQualification)
@@ -514,7 +529,9 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

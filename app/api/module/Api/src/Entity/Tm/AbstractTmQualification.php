@@ -168,7 +168,8 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
     /**
      * Set the country code
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $countryCode
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $countryCode entity being set as the value
+     *
      * @return TmQualification
      */
     public function setCountryCode($countryCode)
@@ -191,7 +192,8 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return TmQualification
      */
     public function setCreatedBy($createdBy)
@@ -214,7 +216,8 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return TmQualification
      */
     public function setCreatedOn($createdOn)
@@ -237,7 +240,8 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return TmQualification
      */
     public function setDeletedDate($deletedDate)
@@ -260,7 +264,8 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return TmQualification
      */
     public function setId($id)
@@ -283,7 +288,8 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
     /**
      * Set the issued date
      *
-     * @param \DateTime $issuedDate
+     * @param \DateTime $issuedDate new value being set
+     *
      * @return TmQualification
      */
     public function setIssuedDate($issuedDate)
@@ -306,7 +312,8 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return TmQualification
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -329,7 +336,8 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return TmQualification
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -352,7 +360,8 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return TmQualification
      */
     public function setOlbsKey($olbsKey)
@@ -375,7 +384,8 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
     /**
      * Set the qualification type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $qualificationType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $qualificationType entity being set as the value
+     *
      * @return TmQualification
      */
     public function setQualificationType($qualificationType)
@@ -398,7 +408,8 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
     /**
      * Set the serial no
      *
-     * @param string $serialNo
+     * @param string $serialNo new value being set
+     *
      * @return TmQualification
      */
     public function setSerialNo($serialNo)
@@ -421,7 +432,8 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
     /**
      * Set the transport manager
      *
-     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager entity being set as the value
+     *
      * @return TmQualification
      */
     public function setTransportManager($transportManager)
@@ -444,7 +456,8 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return TmQualification
      */
     public function setVersion($version)
@@ -468,6 +481,8 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -478,6 +493,8 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -487,7 +504,9 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

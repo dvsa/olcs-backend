@@ -211,12 +211,19 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->recipients = new ArrayCollection();
@@ -228,7 +235,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the bus reg
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs collection being set as the value
+     *
      * @return TrafficArea
      */
     public function setBusRegs($busRegs)
@@ -251,7 +259,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Add a bus regs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs collection being added
+     *
      * @return TrafficArea
      */
     public function addBusRegs($busRegs)
@@ -273,7 +282,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Remove a bus regs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs
+     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs collection being removed
+     *
      * @return TrafficArea
      */
     public function removeBusRegs($busRegs)
@@ -288,7 +298,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the contact details
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $contactDetails
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $contactDetails entity being set as the value
+     *
      * @return TrafficArea
      */
     public function setContactDetails($contactDetails)
@@ -311,7 +322,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return TrafficArea
      */
     public function setCreatedBy($createdBy)
@@ -334,7 +346,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return TrafficArea
      */
     public function setCreatedOn($createdOn)
@@ -357,7 +370,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the id
      *
-     * @param string $id
+     * @param string $id new value being set
+     *
      * @return TrafficArea
      */
     public function setId($id)
@@ -380,7 +394,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the is england
      *
-     * @param boolean $isEngland
+     * @param boolean $isEngland new value being set
+     *
      * @return TrafficArea
      */
     public function setIsEngland($isEngland)
@@ -403,7 +418,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the is ni
      *
-     * @param boolean $isNi
+     * @param boolean $isNi new value being set
+     *
      * @return TrafficArea
      */
     public function setIsNi($isNi)
@@ -426,7 +442,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the is scotland
      *
-     * @param boolean $isScotland
+     * @param boolean $isScotland new value being set
+     *
      * @return TrafficArea
      */
     public function setIsScotland($isScotland)
@@ -449,7 +466,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the is wales
      *
-     * @param boolean $isWales
+     * @param boolean $isWales new value being set
+     *
      * @return TrafficArea
      */
     public function setIsWales($isWales)
@@ -472,7 +490,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return TrafficArea
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -495,7 +514,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return TrafficArea
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -518,7 +538,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the name
      *
-     * @param string $name
+     * @param string $name new value being set
+     *
      * @return TrafficArea
      */
     public function setName($name)
@@ -541,7 +562,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the recipient
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $recipients
+     * @param \Doctrine\Common\Collections\ArrayCollection $recipients collection being set as the value
+     *
      * @return TrafficArea
      */
     public function setRecipients($recipients)
@@ -564,7 +586,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Add a recipients
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $recipients
+     * @param \Doctrine\Common\Collections\ArrayCollection $recipients collection being added
+     *
      * @return TrafficArea
      */
     public function addRecipients($recipients)
@@ -586,7 +609,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Remove a recipients
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $recipients
+     * @param \Doctrine\Common\Collections\ArrayCollection $recipients collection being removed
+     *
      * @return TrafficArea
      */
     public function removeRecipients($recipients)
@@ -601,7 +625,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the sales person reference
      *
-     * @param string $salesPersonReference
+     * @param string $salesPersonReference new value being set
+     *
      * @return TrafficArea
      */
     public function setSalesPersonReference($salesPersonReference)
@@ -624,7 +649,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the txc name
      *
-     * @param string $txcName
+     * @param string $txcName new value being set
+     *
      * @return TrafficArea
      */
     public function setTxcName($txcName)
@@ -647,7 +673,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return TrafficArea
      */
     public function setVersion($version)
@@ -670,7 +697,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the document
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being set as the value
+     *
      * @return TrafficArea
      */
     public function setDocuments($documents)
@@ -693,7 +721,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Add a documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being added
+     *
      * @return TrafficArea
      */
     public function addDocuments($documents)
@@ -715,7 +744,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Remove a documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being removed
+     *
      * @return TrafficArea
      */
     public function removeDocuments($documents)
@@ -730,7 +760,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the traffic area enforcement area
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreaEnforcementAreas
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreaEnforcementAreas collection being set as the value
+     *
      * @return TrafficArea
      */
     public function setTrafficAreaEnforcementAreas($trafficAreaEnforcementAreas)
@@ -753,7 +784,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Add a traffic area enforcement areas
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreaEnforcementAreas
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreaEnforcementAreas collection being added
+     *
      * @return TrafficArea
      */
     public function addTrafficAreaEnforcementAreas($trafficAreaEnforcementAreas)
@@ -775,7 +807,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Remove a traffic area enforcement areas
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreaEnforcementAreas
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreaEnforcementAreas collection being removed
+     *
      * @return TrafficArea
      */
     public function removeTrafficAreaEnforcementAreas($trafficAreaEnforcementAreas)
@@ -791,6 +824,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -801,6 +836,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -810,7 +847,9 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

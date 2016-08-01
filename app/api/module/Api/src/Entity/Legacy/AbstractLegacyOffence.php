@@ -213,7 +213,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return LegacyOffence
      */
     public function setCase($case)
@@ -236,7 +237,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return LegacyOffence
      */
     public function setCreatedBy($createdBy)
@@ -259,7 +261,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return LegacyOffence
      */
     public function setCreatedOn($createdOn)
@@ -282,7 +285,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the definition
      *
-     * @param string $definition
+     * @param string $definition new value being set
+     *
      * @return LegacyOffence
      */
     public function setDefinition($definition)
@@ -305,7 +309,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return LegacyOffence
      */
     public function setId($id)
@@ -328,7 +333,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the is trailer
      *
-     * @param string $isTrailer
+     * @param string $isTrailer new value being set
+     *
      * @return LegacyOffence
      */
     public function setIsTrailer($isTrailer)
@@ -351,7 +357,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return LegacyOffence
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -374,7 +381,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return LegacyOffence
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -397,7 +405,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the notes
      *
-     * @param string $notes
+     * @param string $notes new value being set
+     *
      * @return LegacyOffence
      */
     public function setNotes($notes)
@@ -420,7 +429,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the num of offences
      *
-     * @param int $numOfOffences
+     * @param int $numOfOffences new value being set
+     *
      * @return LegacyOffence
      */
     public function setNumOfOffences($numOfOffences)
@@ -443,7 +453,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the offence authority
      *
-     * @param string $offenceAuthority
+     * @param string $offenceAuthority new value being set
+     *
      * @return LegacyOffence
      */
     public function setOffenceAuthority($offenceAuthority)
@@ -466,7 +477,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the offence date
      *
-     * @param \DateTime $offenceDate
+     * @param \DateTime $offenceDate new value being set
+     *
      * @return LegacyOffence
      */
     public function setOffenceDate($offenceDate)
@@ -489,7 +501,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the offence to date
      *
-     * @param \DateTime $offenceToDate
+     * @param \DateTime $offenceToDate new value being set
+     *
      * @return LegacyOffence
      */
     public function setOffenceToDate($offenceToDate)
@@ -512,7 +525,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the offence type
      *
-     * @param string $offenceType
+     * @param string $offenceType new value being set
+     *
      * @return LegacyOffence
      */
     public function setOffenceType($offenceType)
@@ -535,7 +549,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the offender name
      *
-     * @param string $offenderName
+     * @param string $offenderName new value being set
+     *
      * @return LegacyOffence
      */
     public function setOffenderName($offenderName)
@@ -558,7 +573,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the points
      *
-     * @param int $points
+     * @param int $points new value being set
+     *
      * @return LegacyOffence
      */
     public function setPoints($points)
@@ -581,7 +597,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the position
      *
-     * @param string $position
+     * @param string $position new value being set
+     *
      * @return LegacyOffence
      */
     public function setPosition($position)
@@ -604,7 +621,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return LegacyOffence
      */
     public function setVersion($version)
@@ -627,7 +645,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Set the vrm
      *
-     * @param string $vrm
+     * @param string $vrm new value being set
+     *
      * @return LegacyOffence
      */
     public function setVrm($vrm)
@@ -651,6 +670,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -661,6 +682,8 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -670,7 +693,9 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

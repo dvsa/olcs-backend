@@ -108,7 +108,8 @@ abstract class AbstractCompaniesHouseOfficer implements BundleSerializableInterf
     /**
      * Set the companies house company
      *
-     * @param \Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany $companiesHouseCompany
+     * @param \Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany $companiesHouseCompany entity being set as the value
+     *
      * @return CompaniesHouseOfficer
      */
     public function setCompaniesHouseCompany($companiesHouseCompany)
@@ -131,7 +132,8 @@ abstract class AbstractCompaniesHouseOfficer implements BundleSerializableInterf
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return CompaniesHouseOfficer
      */
     public function setCreatedOn($createdOn)
@@ -154,7 +156,8 @@ abstract class AbstractCompaniesHouseOfficer implements BundleSerializableInterf
     /**
      * Set the date of birth
      *
-     * @param \DateTime $dateOfBirth
+     * @param \DateTime $dateOfBirth new value being set
+     *
      * @return CompaniesHouseOfficer
      */
     public function setDateOfBirth($dateOfBirth)
@@ -177,7 +180,8 @@ abstract class AbstractCompaniesHouseOfficer implements BundleSerializableInterf
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return CompaniesHouseOfficer
      */
     public function setId($id)
@@ -200,7 +204,8 @@ abstract class AbstractCompaniesHouseOfficer implements BundleSerializableInterf
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return CompaniesHouseOfficer
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -223,7 +228,8 @@ abstract class AbstractCompaniesHouseOfficer implements BundleSerializableInterf
     /**
      * Set the name
      *
-     * @param string $name
+     * @param string $name new value being set
+     *
      * @return CompaniesHouseOfficer
      */
     public function setName($name)
@@ -246,7 +252,8 @@ abstract class AbstractCompaniesHouseOfficer implements BundleSerializableInterf
     /**
      * Set the role
      *
-     * @param string $role
+     * @param string $role new value being set
+     *
      * @return CompaniesHouseOfficer
      */
     public function setRole($role)
@@ -269,7 +276,8 @@ abstract class AbstractCompaniesHouseOfficer implements BundleSerializableInterf
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return CompaniesHouseOfficer
      */
     public function setVersion($version)
@@ -293,6 +301,8 @@ abstract class AbstractCompaniesHouseOfficer implements BundleSerializableInterf
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -303,6 +313,8 @@ abstract class AbstractCompaniesHouseOfficer implements BundleSerializableInterf
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -312,7 +324,9 @@ abstract class AbstractCompaniesHouseOfficer implements BundleSerializableInterf
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -306,7 +306,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the addresses status
      *
-     * @param int $addressesStatus
+     * @param int $addressesStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setAddressesStatus($addressesStatus)
@@ -329,7 +330,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application entity being set as the value
+     *
      * @return ApplicationCompletion
      */
     public function setApplication($application)
@@ -352,7 +354,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the business details status
      *
-     * @param int $businessDetailsStatus
+     * @param int $businessDetailsStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setBusinessDetailsStatus($businessDetailsStatus)
@@ -375,7 +378,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the business type status
      *
-     * @param int $businessTypeStatus
+     * @param int $businessTypeStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setBusinessTypeStatus($businessTypeStatus)
@@ -398,7 +402,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the community licences status
      *
-     * @param int $communityLicencesStatus
+     * @param int $communityLicencesStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setCommunityLicencesStatus($communityLicencesStatus)
@@ -421,7 +426,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the conditions undertakings status
      *
-     * @param int $conditionsUndertakingsStatus
+     * @param int $conditionsUndertakingsStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setConditionsUndertakingsStatus($conditionsUndertakingsStatus)
@@ -444,7 +450,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the convictions penalties status
      *
-     * @param int $convictionsPenaltiesStatus
+     * @param int $convictionsPenaltiesStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setConvictionsPenaltiesStatus($convictionsPenaltiesStatus)
@@ -467,7 +474,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return ApplicationCompletion
      */
     public function setCreatedBy($createdBy)
@@ -490,7 +498,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setCreatedOn($createdOn)
@@ -513,7 +522,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the declarations internal status
      *
-     * @param int $declarationsInternalStatus
+     * @param int $declarationsInternalStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setDeclarationsInternalStatus($declarationsInternalStatus)
@@ -536,7 +546,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the discs status
      *
-     * @param int $discsStatus
+     * @param int $discsStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setDiscsStatus($discsStatus)
@@ -559,7 +570,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the financial evidence status
      *
-     * @param int $financialEvidenceStatus
+     * @param int $financialEvidenceStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setFinancialEvidenceStatus($financialEvidenceStatus)
@@ -582,7 +594,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the financial history status
      *
-     * @param int $financialHistoryStatus
+     * @param int $financialHistoryStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setFinancialHistoryStatus($financialHistoryStatus)
@@ -605,7 +618,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setId($id)
@@ -628,7 +642,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return ApplicationCompletion
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -651,7 +666,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -674,7 +690,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the last section
      *
-     * @param string $lastSection
+     * @param string $lastSection new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setLastSection($lastSection)
@@ -697,7 +714,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the licence history status
      *
-     * @param int $licenceHistoryStatus
+     * @param int $licenceHistoryStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setLicenceHistoryStatus($licenceHistoryStatus)
@@ -720,7 +738,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the operating centres status
      *
-     * @param int $operatingCentresStatus
+     * @param int $operatingCentresStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setOperatingCentresStatus($operatingCentresStatus)
@@ -743,7 +762,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the people status
      *
-     * @param int $peopleStatus
+     * @param int $peopleStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setPeopleStatus($peopleStatus)
@@ -766,7 +786,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the safety status
      *
-     * @param int $safetyStatus
+     * @param int $safetyStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setSafetyStatus($safetyStatus)
@@ -789,7 +810,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the taxi phv status
      *
-     * @param int $taxiPhvStatus
+     * @param int $taxiPhvStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setTaxiPhvStatus($taxiPhvStatus)
@@ -812,7 +834,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the transport managers status
      *
-     * @param int $transportManagersStatus
+     * @param int $transportManagersStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setTransportManagersStatus($transportManagersStatus)
@@ -835,7 +858,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the type of licence status
      *
-     * @param int $typeOfLicenceStatus
+     * @param int $typeOfLicenceStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setTypeOfLicenceStatus($typeOfLicenceStatus)
@@ -858,7 +882,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the undertakings status
      *
-     * @param int $undertakingsStatus
+     * @param int $undertakingsStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setUndertakingsStatus($undertakingsStatus)
@@ -881,7 +906,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the vehicles declarations status
      *
-     * @param int $vehiclesDeclarationsStatus
+     * @param int $vehiclesDeclarationsStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setVehiclesDeclarationsStatus($vehiclesDeclarationsStatus)
@@ -904,7 +930,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the vehicles psv status
      *
-     * @param int $vehiclesPsvStatus
+     * @param int $vehiclesPsvStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setVehiclesPsvStatus($vehiclesPsvStatus)
@@ -927,7 +954,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the vehicles status
      *
-     * @param int $vehiclesStatus
+     * @param int $vehiclesStatus new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setVehiclesStatus($vehiclesStatus)
@@ -950,7 +978,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return ApplicationCompletion
      */
     public function setVersion($version)
@@ -974,6 +1003,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -984,6 +1015,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -993,7 +1026,9 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

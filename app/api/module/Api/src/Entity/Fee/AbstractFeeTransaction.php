@@ -159,12 +159,19 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->reversingFeeTransactions = new ArrayCollection();
@@ -173,7 +180,8 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Set the amount
      *
-     * @param float $amount
+     * @param float $amount new value being set
+     *
      * @return FeeTransaction
      */
     public function setAmount($amount)
@@ -196,7 +204,8 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return FeeTransaction
      */
     public function setCreatedBy($createdBy)
@@ -219,7 +228,8 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return FeeTransaction
      */
     public function setCreatedOn($createdOn)
@@ -242,7 +252,8 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Set the fee
      *
-     * @param \Dvsa\Olcs\Api\Entity\Fee\Fee $fee
+     * @param \Dvsa\Olcs\Api\Entity\Fee\Fee $fee entity being set as the value
+     *
      * @return FeeTransaction
      */
     public function setFee($fee)
@@ -265,7 +276,8 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return FeeTransaction
      */
     public function setId($id)
@@ -288,7 +300,8 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return FeeTransaction
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -311,7 +324,8 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return FeeTransaction
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -334,7 +348,8 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Set the reversed fee transaction
      *
-     * @param \Dvsa\Olcs\Api\Entity\Fee\FeeTransaction $reversedFeeTransaction
+     * @param \Dvsa\Olcs\Api\Entity\Fee\FeeTransaction $reversedFeeTransaction entity being set as the value
+     *
      * @return FeeTransaction
      */
     public function setReversedFeeTransaction($reversedFeeTransaction)
@@ -357,7 +372,8 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Set the transaction
      *
-     * @param \Dvsa\Olcs\Api\Entity\Fee\Transaction $transaction
+     * @param \Dvsa\Olcs\Api\Entity\Fee\Transaction $transaction entity being set as the value
+     *
      * @return FeeTransaction
      */
     public function setTransaction($transaction)
@@ -380,7 +396,8 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return FeeTransaction
      */
     public function setVersion($version)
@@ -403,7 +420,8 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Set the reversing fee transaction
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reversingFeeTransactions
+     * @param \Doctrine\Common\Collections\ArrayCollection $reversingFeeTransactions collection being set as the value
+     *
      * @return FeeTransaction
      */
     public function setReversingFeeTransactions($reversingFeeTransactions)
@@ -426,7 +444,8 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Add a reversing fee transactions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reversingFeeTransactions
+     * @param \Doctrine\Common\Collections\ArrayCollection $reversingFeeTransactions collection being added
+     *
      * @return FeeTransaction
      */
     public function addReversingFeeTransactions($reversingFeeTransactions)
@@ -448,7 +467,8 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Remove a reversing fee transactions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reversingFeeTransactions
+     * @param \Doctrine\Common\Collections\ArrayCollection $reversingFeeTransactions collection being removed
+     *
      * @return FeeTransaction
      */
     public function removeReversingFeeTransactions($reversingFeeTransactions)
@@ -464,6 +484,8 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -474,6 +496,8 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -483,7 +507,9 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

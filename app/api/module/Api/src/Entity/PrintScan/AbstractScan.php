@@ -187,7 +187,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application entity being set as the value
+     *
      * @return Scan
      */
     public function setApplication($application)
@@ -210,7 +211,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the bus reg
      *
-     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg
+     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg entity being set as the value
+     *
      * @return Scan
      */
     public function setBusReg($busReg)
@@ -233,7 +235,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case entity being set as the value
+     *
      * @return Scan
      */
     public function setCase($case)
@@ -256,7 +259,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the category
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\Category $category
+     * @param \Dvsa\Olcs\Api\Entity\System\Category $category entity being set as the value
+     *
      * @return Scan
      */
     public function setCategory($category)
@@ -279,7 +283,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return Scan
      */
     public function setCreatedBy($createdBy)
@@ -302,7 +307,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return Scan
      */
     public function setCreatedOn($createdOn)
@@ -325,7 +331,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return Scan
      */
     public function setDescription($description)
@@ -348,7 +355,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Scan
      */
     public function setId($id)
@@ -371,7 +379,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the irfo organisation
      *
-     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $irfoOrganisation
+     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $irfoOrganisation entity being set as the value
+     *
      * @return Scan
      */
     public function setIrfoOrganisation($irfoOrganisation)
@@ -394,7 +403,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return Scan
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -417,7 +427,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return Scan
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -440,7 +451,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
      * @return Scan
      */
     public function setLicence($licence)
@@ -463,7 +475,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the sub category
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory
+     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory entity being set as the value
+     *
      * @return Scan
      */
     public function setSubCategory($subCategory)
@@ -486,7 +499,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the transport manager
      *
-     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager entity being set as the value
+     *
      * @return Scan
      */
     public function setTransportManager($transportManager)
@@ -509,7 +523,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return Scan
      */
     public function setVersion($version)
@@ -533,6 +548,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -543,6 +560,8 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -552,7 +571,9 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

@@ -276,7 +276,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the additional information
      *
-     * @param string $additionalInformation
+     * @param string $additionalInformation new value being set
+     *
      * @return OtherLicence
      */
     public function setAdditionalInformation($additionalInformation)
@@ -299,7 +300,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
+     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application entity being set as the value
+     *
      * @return OtherLicence
      */
     public function setApplication($application)
@@ -322,7 +324,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return OtherLicence
      */
     public function setCreatedBy($createdBy)
@@ -345,7 +348,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return OtherLicence
      */
     public function setCreatedOn($createdOn)
@@ -368,7 +372,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return OtherLicence
      */
     public function setDeletedDate($deletedDate)
@@ -391,7 +396,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the disqualification date
      *
-     * @param \DateTime $disqualificationDate
+     * @param \DateTime $disqualificationDate new value being set
+     *
      * @return OtherLicence
      */
     public function setDisqualificationDate($disqualificationDate)
@@ -414,7 +420,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the disqualification length
      *
-     * @param string $disqualificationLength
+     * @param string $disqualificationLength new value being set
+     *
      * @return OtherLicence
      */
     public function setDisqualificationLength($disqualificationLength)
@@ -437,7 +444,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the holder name
      *
-     * @param string $holderName
+     * @param string $holderName new value being set
+     *
      * @return OtherLicence
      */
     public function setHolderName($holderName)
@@ -460,7 +468,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the hours per week
      *
-     * @param float $hoursPerWeek
+     * @param float $hoursPerWeek new value being set
+     *
      * @return OtherLicence
      */
     public function setHoursPerWeek($hoursPerWeek)
@@ -483,7 +492,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return OtherLicence
      */
     public function setId($id)
@@ -506,7 +516,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return OtherLicence
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -529,7 +540,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return OtherLicence
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -552,7 +564,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the lic no
      *
-     * @param string $licNo
+     * @param string $licNo new value being set
+     *
      * @return OtherLicence
      */
     public function setLicNo($licNo)
@@ -575,7 +588,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the operating centres
      *
-     * @param string $operatingCentres
+     * @param string $operatingCentres new value being set
+     *
      * @return OtherLicence
      */
     public function setOperatingCentres($operatingCentres)
@@ -598,7 +612,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the previous licence type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $previousLicenceType
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $previousLicenceType entity being set as the value
+     *
      * @return OtherLicence
      */
     public function setPreviousLicenceType($previousLicenceType)
@@ -621,7 +636,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the purchase date
      *
-     * @param \DateTime $purchaseDate
+     * @param \DateTime $purchaseDate new value being set
+     *
      * @return OtherLicence
      */
     public function setPurchaseDate($purchaseDate)
@@ -644,7 +660,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the role
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $role
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $role entity being set as the value
+     *
      * @return OtherLicence
      */
     public function setRole($role)
@@ -667,7 +684,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the total auth vehicles
      *
-     * @param int $totalAuthVehicles
+     * @param int $totalAuthVehicles new value being set
+     *
      * @return OtherLicence
      */
     public function setTotalAuthVehicles($totalAuthVehicles)
@@ -690,7 +708,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the transport manager
      *
-     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager entity being set as the value
+     *
      * @return OtherLicence
      */
     public function setTransportManager($transportManager)
@@ -713,7 +732,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the transport manager application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication $transportManagerApplication
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication $transportManagerApplication entity being set as the value
+     *
      * @return OtherLicence
      */
     public function setTransportManagerApplication($transportManagerApplication)
@@ -736,7 +756,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the transport manager licence
      *
-     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence $transportManagerLicence
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence $transportManagerLicence entity being set as the value
+     *
      * @return OtherLicence
      */
     public function setTransportManagerLicence($transportManagerLicence)
@@ -759,7 +780,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return OtherLicence
      */
     public function setVersion($version)
@@ -782,7 +804,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Set the will surrender
      *
-     * @param string $willSurrender
+     * @param string $willSurrender new value being set
+     *
      * @return OtherLicence
      */
     public function setWillSurrender($willSurrender)
@@ -806,6 +829,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -816,6 +841,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -825,7 +852,9 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

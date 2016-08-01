@@ -77,7 +77,8 @@ abstract class AbstractBusRegReadAudit implements BundleSerializableInterface, J
     /**
      * Set the bus reg
      *
-     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg
+     * @param \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg entity being set as the value
+     *
      * @return BusRegReadAudit
      */
     public function setBusReg($busReg)
@@ -100,7 +101,8 @@ abstract class AbstractBusRegReadAudit implements BundleSerializableInterface, J
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return BusRegReadAudit
      */
     public function setCreatedOn($createdOn)
@@ -123,7 +125,8 @@ abstract class AbstractBusRegReadAudit implements BundleSerializableInterface, J
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return BusRegReadAudit
      */
     public function setId($id)
@@ -146,7 +149,8 @@ abstract class AbstractBusRegReadAudit implements BundleSerializableInterface, J
     /**
      * Set the user
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $user
+     * @param \Dvsa\Olcs\Api\Entity\User\User $user entity being set as the value
+     *
      * @return BusRegReadAudit
      */
     public function setUser($user)
@@ -170,6 +174,8 @@ abstract class AbstractBusRegReadAudit implements BundleSerializableInterface, J
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -180,7 +186,9 @@ abstract class AbstractBusRegReadAudit implements BundleSerializableInterface, J
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

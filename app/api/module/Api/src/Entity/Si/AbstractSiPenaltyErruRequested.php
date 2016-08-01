@@ -147,7 +147,8 @@ abstract class AbstractSiPenaltyErruRequested implements BundleSerializableInter
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return SiPenaltyErruRequested
      */
     public function setCreatedBy($createdBy)
@@ -170,7 +171,8 @@ abstract class AbstractSiPenaltyErruRequested implements BundleSerializableInter
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return SiPenaltyErruRequested
      */
     public function setCreatedOn($createdOn)
@@ -193,7 +195,8 @@ abstract class AbstractSiPenaltyErruRequested implements BundleSerializableInter
     /**
      * Set the deleted date
      *
-     * @param \DateTime $deletedDate
+     * @param \DateTime $deletedDate new value being set
+     *
      * @return SiPenaltyErruRequested
      */
     public function setDeletedDate($deletedDate)
@@ -216,7 +219,8 @@ abstract class AbstractSiPenaltyErruRequested implements BundleSerializableInter
     /**
      * Set the duration
      *
-     * @param int $duration
+     * @param int $duration new value being set
+     *
      * @return SiPenaltyErruRequested
      */
     public function setDuration($duration)
@@ -239,7 +243,8 @@ abstract class AbstractSiPenaltyErruRequested implements BundleSerializableInter
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return SiPenaltyErruRequested
      */
     public function setId($id)
@@ -262,7 +267,8 @@ abstract class AbstractSiPenaltyErruRequested implements BundleSerializableInter
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return SiPenaltyErruRequested
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -285,7 +291,8 @@ abstract class AbstractSiPenaltyErruRequested implements BundleSerializableInter
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return SiPenaltyErruRequested
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -308,7 +315,8 @@ abstract class AbstractSiPenaltyErruRequested implements BundleSerializableInter
     /**
      * Set the olbs key
      *
-     * @param int $olbsKey
+     * @param int $olbsKey new value being set
+     *
      * @return SiPenaltyErruRequested
      */
     public function setOlbsKey($olbsKey)
@@ -331,7 +339,8 @@ abstract class AbstractSiPenaltyErruRequested implements BundleSerializableInter
     /**
      * Set the serious infringement
      *
-     * @param \Dvsa\Olcs\Api\Entity\Si\SeriousInfringement $seriousInfringement
+     * @param \Dvsa\Olcs\Api\Entity\Si\SeriousInfringement $seriousInfringement entity being set as the value
+     *
      * @return SiPenaltyErruRequested
      */
     public function setSeriousInfringement($seriousInfringement)
@@ -354,7 +363,8 @@ abstract class AbstractSiPenaltyErruRequested implements BundleSerializableInter
     /**
      * Set the si penalty requested type
      *
-     * @param \Dvsa\Olcs\Api\Entity\Si\SiPenaltyRequestedType $siPenaltyRequestedType
+     * @param \Dvsa\Olcs\Api\Entity\Si\SiPenaltyRequestedType $siPenaltyRequestedType entity being set as the value
+     *
      * @return SiPenaltyErruRequested
      */
     public function setSiPenaltyRequestedType($siPenaltyRequestedType)
@@ -377,7 +387,8 @@ abstract class AbstractSiPenaltyErruRequested implements BundleSerializableInter
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return SiPenaltyErruRequested
      */
     public function setVersion($version)
@@ -401,6 +412,8 @@ abstract class AbstractSiPenaltyErruRequested implements BundleSerializableInter
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -411,6 +424,8 @@ abstract class AbstractSiPenaltyErruRequested implements BundleSerializableInter
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -420,7 +435,9 @@ abstract class AbstractSiPenaltyErruRequested implements BundleSerializableInter
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

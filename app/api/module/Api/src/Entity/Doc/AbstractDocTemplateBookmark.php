@@ -120,7 +120,8 @@ abstract class AbstractDocTemplateBookmark implements BundleSerializableInterfac
     /**
      * Set the created by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
+     *
      * @return DocTemplateBookmark
      */
     public function setCreatedBy($createdBy)
@@ -143,7 +144,8 @@ abstract class AbstractDocTemplateBookmark implements BundleSerializableInterfac
     /**
      * Set the created on
      *
-     * @param \DateTime $createdOn
+     * @param \DateTime $createdOn new value being set
+     *
      * @return DocTemplateBookmark
      */
     public function setCreatedOn($createdOn)
@@ -166,7 +168,8 @@ abstract class AbstractDocTemplateBookmark implements BundleSerializableInterfac
     /**
      * Set the doc bookmark
      *
-     * @param \Dvsa\Olcs\Api\Entity\Doc\DocBookmark $docBookmark
+     * @param \Dvsa\Olcs\Api\Entity\Doc\DocBookmark $docBookmark entity being set as the value
+     *
      * @return DocTemplateBookmark
      */
     public function setDocBookmark($docBookmark)
@@ -189,7 +192,8 @@ abstract class AbstractDocTemplateBookmark implements BundleSerializableInterfac
     /**
      * Set the doc template
      *
-     * @param \Dvsa\Olcs\Api\Entity\Doc\DocTemplate $docTemplate
+     * @param \Dvsa\Olcs\Api\Entity\Doc\DocTemplate $docTemplate entity being set as the value
+     *
      * @return DocTemplateBookmark
      */
     public function setDocTemplate($docTemplate)
@@ -212,7 +216,8 @@ abstract class AbstractDocTemplateBookmark implements BundleSerializableInterfac
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return DocTemplateBookmark
      */
     public function setId($id)
@@ -235,7 +240,8 @@ abstract class AbstractDocTemplateBookmark implements BundleSerializableInterfac
     /**
      * Set the last modified by
      *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
+     *
      * @return DocTemplateBookmark
      */
     public function setLastModifiedBy($lastModifiedBy)
@@ -258,7 +264,8 @@ abstract class AbstractDocTemplateBookmark implements BundleSerializableInterfac
     /**
      * Set the last modified on
      *
-     * @param \DateTime $lastModifiedOn
+     * @param \DateTime $lastModifiedOn new value being set
+     *
      * @return DocTemplateBookmark
      */
     public function setLastModifiedOn($lastModifiedOn)
@@ -281,7 +288,8 @@ abstract class AbstractDocTemplateBookmark implements BundleSerializableInterfac
     /**
      * Set the version
      *
-     * @param int $version
+     * @param int $version new value being set
+     *
      * @return DocTemplateBookmark
      */
     public function setVersion($version)
@@ -305,6 +313,8 @@ abstract class AbstractDocTemplateBookmark implements BundleSerializableInterfac
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
@@ -315,6 +325,8 @@ abstract class AbstractDocTemplateBookmark implements BundleSerializableInterfac
      * Set the lastModifiedOn field on persist
      *
      * @ORM\PreUpdate
+     *
+     * @return void
      */
     public function setLastModifiedOnBeforeUpdate()
     {
@@ -324,7 +336,9 @@ abstract class AbstractDocTemplateBookmark implements BundleSerializableInterfac
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {

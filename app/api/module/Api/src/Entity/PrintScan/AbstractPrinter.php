@@ -70,12 +70,19 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
 
     /**
      * Initialise the collections
+     *
+     * @return void
      */
     public function __construct()
     {
         $this->initCollections();
     }
 
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
     public function initCollections()
     {
         $this->teamPrinters = new ArrayCollection();
@@ -84,7 +91,8 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
     /**
      * Set the description
      *
-     * @param string $description
+     * @param string $description new value being set
+     *
      * @return Printer
      */
     public function setDescription($description)
@@ -107,7 +115,8 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
     /**
      * Set the id
      *
-     * @param int $id
+     * @param int $id new value being set
+     *
      * @return Printer
      */
     public function setId($id)
@@ -130,7 +139,8 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
     /**
      * Set the printer name
      *
-     * @param string $printerName
+     * @param string $printerName new value being set
+     *
      * @return Printer
      */
     public function setPrinterName($printerName)
@@ -153,7 +163,8 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
     /**
      * Set the printer tray
      *
-     * @param string $printerTray
+     * @param string $printerTray new value being set
+     *
      * @return Printer
      */
     public function setPrinterTray($printerTray)
@@ -176,7 +187,8 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
     /**
      * Set the team printer
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $teamPrinters
+     * @param \Doctrine\Common\Collections\ArrayCollection $teamPrinters collection being set as the value
+     *
      * @return Printer
      */
     public function setTeamPrinters($teamPrinters)
@@ -199,7 +211,8 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
     /**
      * Add a team printers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $teamPrinters
+     * @param \Doctrine\Common\Collections\ArrayCollection $teamPrinters collection being added
+     *
      * @return Printer
      */
     public function addTeamPrinters($teamPrinters)
@@ -221,7 +234,8 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
     /**
      * Remove a team printers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $teamPrinters
+     * @param \Doctrine\Common\Collections\ArrayCollection $teamPrinters collection being removed
+     *
      * @return Printer
      */
     public function removeTeamPrinters($teamPrinters)
@@ -238,7 +252,9 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
     /**
      * Clear properties
      *
-     * @param type $properties
+     * @param array $properties array of properties
+     *
+     * @return void
      */
     public function clearProperties($properties = array())
     {
