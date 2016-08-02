@@ -3,71 +3,60 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
-use Dvsa\Olcs\Api\Entity\Doc\Document;
-use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Document\DownloadGuide;
+use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
-use Dvsa\Olcs\Transfer\Query\Document\Document as Qry;
+use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\QueryHandler\Document\DownloadGuide
  */
 class DownloadGuideTest extends QueryHandlerTestCase
 {
+    /** @var  m\MockInterface */
+    protected $sut;
+
     public function setUp()
     {
-        $this->sut = new DownloadGuide();
-        $this->mockedSmServices['FileUploader'] = m::mock(ContentStoreFileUploader::class);
-
-        parent::setUp();
+        $this->sut = m::mock(DownloadGuide::class . '[download, setIsInline]')
+            ->shouldAllowMockingProtectedMethods();
     }
 
     public function testHandleQueryTryingToGetIntoParent()
     {
         $this->setExpectedException(NotFoundException::class);
 
-        $query = \Dvsa\Olcs\Transfer\Query\Document\DownloadGuide::create(['identifier' => '../file1.pdf']);
-        $this->sut->handleQuery($query);
-    }
+        $this->sut->shouldReceive('setIsInline')->once()->with(true);
 
-    public function testHandleQueryNotFoundInStore()
-    {
-        $this->setExpectedException(NotFoundException::class);
-
-        $query = \Dvsa\Olcs\Transfer\Query\Document\Download::create(['identifier' => 'file1.pdf']);
-
-        $file = null;
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')
-            ->once()
-            ->with('/guides/file1.pdf')
-            ->andReturn($file);
+        $query = TransferQry\Document\DownloadGuide::create(
+            [
+                'identifier' => '../file1.pdf',
+                'isInline' => true,
+            ]
+        );
 
         $this->sut->handleQuery($query);
     }
 
     public function testHandleQuery()
     {
-        $query = \Dvsa\Olcs\Transfer\Query\Document\DownloadGuide::create(['identifier' => 'file1.pdf']);
+        $fileName = 'unit_file1.pdf';
 
-        $file = m::mock();
-        $file->shouldReceive('getContent')
-            ->andReturn('<foo>');
-
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')
+        $this->sut
+            ->shouldReceive('setIsInline')->once()->with(false)
+            ->shouldReceive('download')
             ->once()
-            ->with('/guides/file1.pdf')
-            ->andReturn($file);
+            ->with($fileName, '/guides/' . $fileName)
+            ->andReturn('EXPECTED');
 
-        $result = $this->sut->handleQuery($query);
+        $query = TransferQry\Document\DownloadGuide::create(
+            [
+                'identifier' => $fileName,
+                'isInline' => false,
+            ]
+        );
+        $actual = $this->sut->handleQuery($query);
 
-        $expected = [
-            'fileName' => 'file1.pdf',
-            'content' => base64_encode('<foo>')
-        ];
-
-        $this->assertEquals($expected, $result);
+        static::assertEquals('EXPECTED', $actual);
     }
 }

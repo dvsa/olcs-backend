@@ -1,11 +1,8 @@
 <?php
 
-/**
- * File Upload Interface
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Service\File;
+
+use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 
 /**
  * File Upload Interface
@@ -17,9 +14,11 @@ interface FileUploaderInterface
     /**
      * Set the file
      *
-     * @param array $file
+     * @param File $file File
+     *
+     * @return $this
      */
-    public function setFile($file);
+    public function setFile(File $file);
 
     /**
      * Get the file
@@ -29,17 +28,29 @@ interface FileUploaderInterface
     public function getFile();
 
     /**
-     * Process the file upload
+     * Upload file by identifier
+     *
+     * @param string $identifier File identifier
+     *
+     * @return ContentStoreFile
      */
     public function upload($identifier);
 
     /**
      * Process the file download
+     *
+     * @param string $identifier File identifier
+     *
+     * @return ContentStoreFile
      */
     public function download($identifier);
 
     /**
      * Process the file removal
+     *
+     * @param string $identifier File identifier
+     *
+     * @return ContentStoreFile
      */
     public function remove($identifier);
 }

@@ -7,57 +7,101 @@ namespace Dvsa\Olcs\DocumentShare\Data\Object;
  */
 class File
 {
-    /**
-     * @var string
-     */
-    protected $content;
+    /** @var  string */
+    protected $file;
+    /** @var  string */
+    private $mimeType;
 
-    public function getRealType()
+    /**
+     * Descructor
+     */
+    public function __destruct()
     {
-        $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        return $finfo->buffer($this->getContent());
+        if (is_file($this->file)) {
+            unlink($this->file);
+        }
     }
 
     /**
-     * @return array
+     * Return mime type of file content
+     *
+     * @return string
      */
-    public function getArrayCopy()
+    public function getMimeType()
     {
-        return array(
-            'content' => $this->getContent()
-        );
+        if ($this->mimeType === null) {
+            $this->mimeType = (new \finfo(FILEINFO_MIME_TYPE))->file($this->file);
+        }
+
+        return $this->mimeType;
     }
 
     /**
-     * @param array $data
-     * @return $this
-     */
-    public function exchangeArray(array $data)
-    {
-        $this->setContent($data['content']);
-
-        return $this;
-    }
-
-    /**
-     * @param string $content
+     * Store content and define mime type
+     *
+     * @param string $content Content
+     *
      * @return $this
      */
     public function setContent($content)
     {
-        $this->content = $content;
+        if ($this->file === null) {
+            $this->setResource(tempnam(sys_get_temp_dir(), 'ds'));
+        }
+
+        file_put_contents($this->file, $content);
+
+        //  reset dependant properties
+        $this->mimeType = null;
+
         return $this;
     }
 
     /**
+     * Get content
+     *
      * @return string
      */
     public function getContent()
     {
-        if ($this->content === null) {
-            return null;
+        return file_get_contents($this->file);
+    }
+
+    /**
+     * Return content size
+     *
+     * @return int
+     */
+    public function getSize()
+    {
+        return filesize($this->file);
+    }
+
+    /**
+     * Set name of temp file which hold content
+     *
+     * @param string $file File name
+     *
+     * @return $this
+     */
+    public function setResource($file)
+    {
+        if (is_file($this->file)) {
+            unlink($this->file);
         }
 
-        return $this->content;
+        $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * Get name of temp file which hold content
+     *
+     * @return string
+     */
+    public function getResource()
+    {
+        return $this->file;
     }
 }

@@ -1,158 +1,135 @@
 <?php
 
-/**
- * Content Store File Uploader Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Service\File;
 
+use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Api\Service\File\Exception;
 use Dvsa\Olcs\Api\Service\File\File;
 use Dvsa\Olcs\Api\Service\File\MimeNotAllowedException;
-use Dvsa\Olcs\DocumentShare\Service\Client;
+use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
+use Dvsa\Olcs\DocumentShare\Service\Client as ContentStoreClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use OlcsTest\Bootstrap;
 use Zend\Http\Response;
-use Zend\ServiceManager\ServiceManager;
 
 /**
- * Content Store File Uploader Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader
  */
 class ContentStoreFileUploaderTest extends MockeryTestCase
 {
+    const IDENTIFIER = 'unit_Identifier';
+
     /**
      * @var ContentStoreFileUploader
      */
     protected $sut;
 
-    protected $contentStore;
+    /** @var m\MockInterface  */
+    protected $mockContentStoreCli;
 
     public function setUp()
     {
         $this->sut = new ContentStoreFileUploader();
 
-        $this->contentStore = m::mock(Client::class);
+        $this->mockContentStoreCli = m::mock(ContentStoreClient::class);
 
         $sm = Bootstrap::getServiceManager();
-        $sm->setService('ContentStore', $this->contentStore);
+        $sm->setService('ContentStore', $this->mockContentStoreCli);
 
-        $this->assertSame($this->sut, $this->sut->createService($sm));
+        static::assertSame($this->sut, $this->sut->createService($sm));
+    }
+
+    public function testSetGet()
+    {
+        $file = new  File();
+
+        $this->sut->setFile($file);
+
+        static::assertSame($file, $this->sut->getFile());
     }
 
     public function testDownload()
     {
-        $this->contentStore->shouldReceive('read')
+        $this->mockContentStoreCli->shouldReceive('read')
             ->once()
-            ->with('12345')
-            ->andReturn('file content');
+            ->with(self::IDENTIFIER)
+            ->andReturn('EXPECT');
 
-        $this->assertEquals('file content', $this->sut->download('12345'));
+        static::assertEquals('EXPECT', $this->sut->download(self::IDENTIFIER));
     }
 
     public function testRemove()
     {
-        $this->contentStore->shouldReceive('remove')
+        $this->mockContentStoreCli->shouldReceive('remove')
             ->once()
-            ->with('12345')
-            ->andReturn(true);
+            ->with(self::IDENTIFIER)
+            ->andReturn('EXPECT');
 
-        $this->assertTrue($this->sut->remove('12345'));
+        static::assertEquals('EXPECT', $this->sut->remove(self::IDENTIFIER));
     }
 
     public function testUpload()
     {
-        $file = [
-            'content' => 'foo'
-        ];
+        $expectContent = 'unit_content';
+
+        $file = new  File();
+        $file->setContent($expectContent);
 
         $this->sut->setFile($file);
-
-        $fileObject = $this->sut->getFile();
-
-        $this->assertInstanceOf(File::class, $fileObject);
-        $this->assertEquals('foo', $fileObject->getContent());
 
         $response = m::mock(Response::class);
         $response->shouldReceive('isSuccess')
             ->andReturn(true);
 
-        $this->contentStore->shouldReceive('write')
+        $this->mockContentStoreCli->shouldReceive('write')
             ->once()
-            ->with('12345', m::type(\Dvsa\Olcs\DocumentShare\Data\Object\File::class))
+            ->with(self::IDENTIFIER, m::type(ContentStoreFile::class))
             ->andReturn($response);
 
-        $savedFile = $this->sut->upload('12345');
+        //  call & check
+        $actual = $this->sut->upload(self::IDENTIFIER);
 
-        $this->assertSame($fileObject, $savedFile);
-        $this->assertEquals('foo', $savedFile->getContent());
-        $this->assertEquals('12345', $savedFile->getIdentifier());
-        $this->assertEquals('12345', $savedFile->getPath());
+        static::assertSame($file, $actual);
+        static::assertEquals($expectContent, $actual->getContent());
+        static::assertEquals(self::IDENTIFIER, $actual->getIdentifier());
+        static::assertEquals(self::IDENTIFIER, $actual->getPath());
     }
 
     public function testUploadFail()
     {
-        $this->setExpectedException(Exception::class);
+        $respBody = 'unit_RespBody';
 
-        $file = [
-            'content' => 'foo'
-        ];
-
-        $this->sut->setFile($file);
-
-        $fileObject = $this->sut->getFile();
-
-        $this->assertInstanceOf(File::class, $fileObject);
-        $this->assertEquals('foo', $fileObject->getContent());
+        $this->setExpectedException(Exception::class, sprintf(ContentStoreFileUploader::ERR_UNABLE_UPLOAD, $respBody));
 
         $response = m::mock(Response::class);
-        $response->shouldReceive('isSuccess')
-            ->andReturn(false)
-            ->shouldReceive('getStatusCode')
-            ->andReturn(500)
-            ->shouldReceive('getBody')
-            ->andReturn('body');
+        $response
+            ->shouldReceive('isSuccess')->once()->andReturn(false)
+            ->shouldReceive('getStatusCode')->once()->andReturn(Response::STATUS_CODE_500)
+            ->shouldReceive('getBody')->once()->andReturn($respBody);
 
-        $this->contentStore->shouldReceive('write')
+        $this->mockContentStoreCli->shouldReceive('write')
             ->once()
-            ->with('12345', m::type(\Dvsa\Olcs\DocumentShare\Data\Object\File::class))
             ->andReturn($response);
 
-        $this->sut->upload('12345');
+        $this->sut->setFile(new File());
+        $this->sut->upload(self::IDENTIFIER);
     }
 
     public function testUploadFailMime()
     {
         $this->setExpectedException(MimeNotAllowedException::class);
 
-        $file = [
-            'content' => 'foo'
-        ];
-
-        $this->sut->setFile($file);
-
-        $fileObject = $this->sut->getFile();
-
-        $this->assertInstanceOf(File::class, $fileObject);
-        $this->assertEquals('foo', $fileObject->getContent());
-
         $response = m::mock(Response::class);
-        $response->shouldReceive('isSuccess')
-            ->andReturn(false)
-            ->shouldReceive('getStatusCode')
-            ->andReturn(415)
-            ->shouldReceive('getBody')
-            ->andReturn('body');
+        $response
+            ->shouldReceive('isSuccess')->once()->andReturn(false)
+            ->shouldReceive('getStatusCode')->once()->andReturn(Response::STATUS_CODE_415);
 
-        $this->contentStore->shouldReceive('write')
+        $this->mockContentStoreCli->shouldReceive('write')
             ->once()
-            ->with('12345', m::type(\Dvsa\Olcs\DocumentShare\Data\Object\File::class))
             ->andReturn($response);
 
-        $this->sut->upload('12345');
+        $this->sut->setFile(new File());
+        $this->sut->upload(self::IDENTIFIER);
     }
 }

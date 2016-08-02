@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Abstract Queue Consumer
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
 use Dvsa\Olcs\Api\Domain\Command\Queue\Complete as CompleteCmd;

@@ -3,43 +3,35 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Zend\Http\Response;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
-use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 
 /**
  * Download
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class Download extends AbstractQueryHandler implements UploaderAwareInterface
+class Download extends AbstractDownload
 {
-    use UploaderAwareTrait;
-
-    protected $repoServiceName = 'Document';
-
     /**
-     * @param \Dvsa\Olcs\Transfer\Query\Document\Download $query
+     * Process download
      *
-     * @return array
+     * @param \Dvsa\Olcs\Transfer\Query\Document\Download $query Download File Query
+     *
+     * @return Response\Stream
      * @throws NotFoundException
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleQuery(QueryInterface $query)
     {
+        $this->setIsInline($query->isInline());
+
         /* @var \Dvsa\Olcs\Api\Entity\Doc\Document $document */
         $document = $this->getRepo()->fetchById($query->getIdentifier());
 
-        $file = $this->getUploader()->download($document->getIdentifier());
+        $dentifier = $document->getIdentifier();
 
-        if ($file === null) {
-            throw new NotFoundException();
-        }
-
-        return [
-            'fileName' => basename($document->getIdentifier()),
-            'content' => base64_encode($file->getContent()),
-        ];
+        return $this->download($dentifier);
     }
 }

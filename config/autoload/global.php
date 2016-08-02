@@ -23,21 +23,24 @@ return array(
             ),
         )
     ),
-    'document_share' => array(
-        'http' => array(
-            'adapter' => 'Zend\Http\Client\Adapter\Curl'
-        ),
+    'document_share' => [
+        'http' => [
+            'adapter' => Zend\Http\Client\Adapter\Curl::class,
+            'curloptions' => [
+                CURLOPT_TIMEOUT => 180,
+            ],
+        ],
         'path' => 'documents/'
             . '{Category}/{SubCategory}/{Date:Y}/{Date:m}/{Date:YmdHisu}_{Context}_{Description}.{Extension}'
-    ),
+    ],
     'email' => array(
         'http' => array(
-            'adapter' => 'Zend\Http\Client\Adapter\Curl'
+            'adapter' => Zend\Http\Client\Adapter\Curl::class,
         ),
     ),
     'companies_house' => array(
         'http' => array(
-            'adapter' => 'Zend\Http\Client\Adapter\Curl',
+            'adapter' => Zend\Http\Client\Adapter\Curl::class,
         ),
     ),
     'soflomo_purifier' => array(

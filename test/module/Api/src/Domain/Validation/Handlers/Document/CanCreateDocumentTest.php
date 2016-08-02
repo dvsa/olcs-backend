@@ -8,7 +8,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Document\CanCreateDocument;
 
 /**
- * @covers CanCreateDocumentTest
+ * @covers Dvsa\Olcs\Api\Domain\Validation\Handlers\Document\CanCreateDocument
  */
 class CanCreateDocumentTest extends AbstractHandlerTestCase
 {
@@ -34,7 +34,7 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
             ->once()
             ->getMock();
 
-        /** @var CommandInterface $dto */
+        /** @var CommandInterface|m\MockInterface $dto */
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getLicence')->andReturn(176);
         $dto->shouldReceive('getApplication')->andReturn(276);
@@ -67,7 +67,7 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
             ->once()
             ->getMock();
 
-        /** @var CommandInterface $dto */
+        /** @var CommandInterface|m\MockInterface $dto */
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getLicence')->andReturn(176);
         $dto->shouldReceive('getApplication')->andReturn(276);
@@ -95,12 +95,9 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
         $this->auth->shouldReceive('isGranted')
             ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
             ->andReturn(false);
-        $this->mockUser()->shouldReceive('isSystemUser')
-            ->andReturn(false)
-            ->once()
-            ->getMock();
+        $this->mockUser()->shouldReceive('isSystemUser')->once()->andReturn(false);
 
-        /** @var CommandInterface $dto */
+        /** @var CommandInterface|m\MockInterface $dto */
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getLicence')->andReturn(null);
         $dto->shouldReceive('getApplication')->andReturn(null);
