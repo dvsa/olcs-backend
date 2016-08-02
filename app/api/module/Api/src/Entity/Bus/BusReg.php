@@ -57,6 +57,11 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
 
     const FORBIDDEN_ERROR = 'This bus reg can\'t be edited. It must be the latest variation, and not from EBSR';
 
+    public static $ebsrExistingRecordExcluded = [
+        self::STATUS_REFUSED,
+        self::STATUS_WITHDRAWN
+    ];
+
     /**
      * @var array
      */
