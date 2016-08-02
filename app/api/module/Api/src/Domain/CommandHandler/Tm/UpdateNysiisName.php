@@ -42,7 +42,11 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->nysiisService = $mainServiceLocator->get(NysiisService::class);
+        try {
+            $this->nysiisService = $mainServiceLocator->get(NysiisService::class);
+        } catch (\Exception $e) {
+            // do nothing, let the queue handle the Nysiis exception in order to trigger a message requeue
+        }
 
         return parent::createService($serviceLocator);
     }
@@ -90,13 +94,16 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
     private function requestNyiisData($nysiisParams)
     {
         try {
-            $nysiisData = $this->nysiisService->getNysiisSearchKeys($nysiisParams);
+            if ($this->nysiisService instanceof NysiisService) {
+                $nysiisData = $this->nysiisService->getNysiisSearchKeys($nysiisParams);
 
-            // connect to Nysiis here and return whatever Nysiis returns
-            return [
-                'forename' => $nysiisData->FirstName,
-                'familyName' => $nysiisData->FamilyName
-            ];
+                // connect to Nysiis here and return whatever Nysiis returns
+                return [
+                    'forename' => $nysiisData->FirstName,
+                    'familyName' => $nysiisData->FamilyName
+                ];
+            }
+            throw new NysiisException('Failed to instantiate SOAP Client. Service Down.');
         } catch (\Exception $e) {
             throw new NysiisException('Failed SOAP call to getNysiisSearchKeys(): ' . $e->getMessage());
         }
