@@ -59,9 +59,6 @@ class SubmissionSectionTest extends MockeryTestCase
 
     /**
      * @dataProvider sectionTestProvider
-     *
-     * @param $section
-     * @param $expectedString
      */
     public function testGenerateSection($input = null, $expectedResult = null)
     {
@@ -72,7 +69,7 @@ class SubmissionSectionTest extends MockeryTestCase
 
             $this->assertEquals($expectedResult, $sut->generateSection($input));
         } else {
-            $this->markTestSkipped();
+            $this->markTestSkipped('Skipping, no input');
         }
     }
 
