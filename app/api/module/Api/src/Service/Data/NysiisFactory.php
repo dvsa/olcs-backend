@@ -27,22 +27,18 @@ class NysiisFactory implements FactoryInterface
             throw new NysiisException('Unable to create soap client: WSDL not found');
         }
 
-        set_error_handler([$this, 'my_custom_soap_wsdl_error_handler']);
         try {
+            set_error_handler([$this, 'my_custom_soap_wsdl_error_handler']);
             $soapClient = @new \SoapClient(
                 $config['nysiis']['wsdl']['uri'],
                 $config['nysiis']['wsdl']['soap']['options']
             );
+
             restore_error_handler();
-
             return new Nysiis($soapClient, $config);
-
-        } catch (\SoapFault $e) {
-            throw new NysiisException('Unable to create soap client: ' . $e->getMessage());
-        } catch (\Exception $e) {
-            throw new NysiisException('Unable to create soap client: ' . $e->getMessage());
         } finally {
-            // do nothing
+            // Catch all exceptions and ensure a Nysiis exception is thrown to trigger a requeue
+            throw new NysiisException('Unable to create connection to Nysiis service.');
         }
     }
 
@@ -76,8 +72,7 @@ class NysiisFactory implements FactoryInterface
             "' : failed to load external entity \"" . $wsdl_url . "\"";
         if (class_exists('SoapFault')) {
             $e = new \SoapFault('WSDL', $msg);
-        }
-        else {
+        } else {
             $e = new \Exception($msg, 0);
         }
         throw $e;
