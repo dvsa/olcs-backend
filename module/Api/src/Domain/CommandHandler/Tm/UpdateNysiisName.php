@@ -93,19 +93,16 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
      */
     private function requestNyiisData($nysiisParams)
     {
-        try {
-            if ($this->nysiisService instanceof NysiisService) {
-                $nysiisData = $this->nysiisService->getNysiisSearchKeys($nysiisParams);
+        if ($this->nysiisService instanceof NysiisService) {
+            $nysiisData = $this->nysiisService->getNysiisSearchKeys($nysiisParams);
 
-                // connect to Nysiis here and return whatever Nysiis returns
-                return [
-                    'forename' => $nysiisData->FirstName,
-                    'familyName' => $nysiisData->FamilyName
-                ];
-            }
-            throw new NysiisException('Failed to instantiate SOAP Client. Service Down.');
-        } catch (\Exception $e) {
-            throw new NysiisException('Failed SOAP call to getNysiisSearchKeys(): ' . $e->getMessage());
+            // connect to Nysiis here and return whatever Nysiis returns
+            return [
+                'forename' => $nysiisData->FirstName,
+                'familyName' => $nysiisData->FamilyName
+            ];
         }
+
+        throw new NysiisException('Failed to instantiate SOAP Client. Service Down.');
     }
 }
