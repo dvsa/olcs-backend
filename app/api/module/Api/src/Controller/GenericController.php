@@ -2,10 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Controller;
 
-use Olcs\Logging\Log\Logger;
-use Zend\Mvc\Controller\AbstractRestfulController;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
+use Olcs\Logging\Log\Logger;
+use Zend\Http\Response;
+use Zend\Mvc\Controller\AbstractRestfulController;
 
 /**
  * Generic Controller
@@ -14,7 +15,11 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 class GenericController extends AbstractRestfulController
 {
     /**
-     * @inheritdoc
+     * Get data by passed Query Fqcl
+     *
+     * @param int $id Identifier (ignorred)
+     *
+     * @return \Zend\View\Model\JsonModel
      */
     public function get($id)
     {
@@ -39,6 +44,11 @@ class GenericController extends AbstractRestfulController
         }
     }
 
+    /**
+     * Get list of data by passed Query Fqcl
+     *
+     * @return \Zend\View\Model\JsonModel
+     */
     public function getList()
     {
         $dto = $this->params('dto');
@@ -46,7 +56,9 @@ class GenericController extends AbstractRestfulController
         try {
             $result = $this->handleQuery($dto);
 
-            if ($result instanceof Result || !isset($result['result'])) {
+            if ($result instanceof Response\Stream) {
+                return $result;
+            } elseif ($result instanceof Result || !isset($result['result'])) {
                 // we sometimes still get a single result if we're not retrieving by id
                 return $this->response()->singleResult($result);
             }
@@ -73,7 +85,13 @@ class GenericController extends AbstractRestfulController
     }
 
     /**
+     * Update by passed Command Fqcl
+     *
+     * @param null $id   Ignored
+     * @param null $data Ignored
+     *
      * @inheritdoc
+     * @return \Zend\View\Model\JsonModel
      */
     public function update($id, $data)
     {
@@ -99,7 +117,12 @@ class GenericController extends AbstractRestfulController
     }
 
     /**
+     * Replace an entire resource collection by passed Command Fqcl
+     *
+     * @param null $data Ignored
+     *
      * @inheritdoc
+     * @return \Zend\View\Model\JsonModel
      */
     public function replaceList($data)
     {
@@ -121,7 +144,12 @@ class GenericController extends AbstractRestfulController
     }
 
     /**
+     * Create a new resource by passed Command Fqcl
+     *
+     * @param null $data Ignored
+     *
      * @inheritdoc
+     * @return \Zend\View\Model\JsonModel
      */
     public function create($data)
     {
@@ -143,7 +171,12 @@ class GenericController extends AbstractRestfulController
     }
 
     /**
+     * Delete a resource by passed Command Fqcl
+     *
+     * @param null $id Ignored
+     *
      * @inheritdoc
+     * @return \Zend\View\Model\JsonModel
      */
     public function delete($id)
     {
@@ -164,6 +197,12 @@ class GenericController extends AbstractRestfulController
         }
     }
 
+    /**
+     * Delete a resources by passed Command Fqcl
+     *
+     * @inheritdoc
+     * @return \Zend\View\Model\JsonModel
+     */
     public function deleteList()
     {
         $dto = $this->params('dto');
@@ -184,7 +223,11 @@ class GenericController extends AbstractRestfulController
     }
 
     /**
-     * @return mixed
+     * Execute Query
+     *
+     * @param string $dto Query Fqcl
+     *
+     * @return Result|array
      */
     protected function handleQuery($dto)
     {
@@ -192,8 +235,11 @@ class GenericController extends AbstractRestfulController
     }
 
     /**
-     * @param $dto
-     * @return mixed
+     * Execute Query
+     *
+     * @param string $dto Command Fqcl
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     protected function handleCommand($dto)
     {

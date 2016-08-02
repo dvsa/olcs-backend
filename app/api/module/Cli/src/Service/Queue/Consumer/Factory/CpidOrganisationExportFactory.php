@@ -1,16 +1,10 @@
 <?php
 
-/**
- * Cpid Organisation Export Factory
- *
- * @author Josh Curtis <josh@josh-curtis.co.uk>
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory;
 
+use Dvsa\Olcs\Cli\Service\Queue\Consumer\CpidOrganisationExport;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Cli\Service\Queue\Consumer\CpidOrganisationExport;
 
 /**
  * Cpid Organisation Export Factory
@@ -20,11 +14,20 @@ use Dvsa\Olcs\Cli\Service\Queue\Consumer\CpidOrganisationExport;
  */
 class CpidOrganisationExportFactory implements FactoryInterface
 {
+    /**
+     * Factory
+     *
+     * @param \Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager $serviceLocator Manager
+     *
+     * @return CpidOrganisationExport
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        /** @var \Zend\ServiceManager\ServiceManager $sl */
         $sl = $serviceLocator->getServiceLocator();
 
         $repo = $sl->get('RepositoryServiceManager')->get('Organisation');
+        /** @var \Dvsa\Olcs\Api\Domain\CommandHandlerManager $commandHandler */
         $commandHandler = $sl->get('CommandHandlerManager');
 
         return new CpidOrganisationExport($repo, $commandHandler);

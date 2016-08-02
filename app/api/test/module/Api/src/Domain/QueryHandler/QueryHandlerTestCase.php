@@ -40,6 +40,7 @@ class QueryHandlerTestCase extends MockeryTestCase
     /** @var m\MockInterface[]  */
     protected $repoMap = [];
 
+    /** @var m\MockInterface[]  */
     protected $mockedSmServices = [];
 
     public function setUp()

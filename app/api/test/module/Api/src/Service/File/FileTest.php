@@ -1,129 +1,96 @@
 <?php
 
-/**
- * Test File class
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Service\File;
 
 use Dvsa\Olcs\Api\Service\File\File;
+use org\bovigo\vfs\vfsStream;
 
 /**
- * Test File class
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers Dvsa\Olcs\Api\Service\File\File
  */
 class FileTest extends \PHPUnit_Framework_TestCase
 {
-    public function testFromData()
+    /** @var  File */
+    private $sut;
+
+    public function setUp()
     {
-        $data = array(
-            'name' => 'Bob',
-            'tmp_name' => '/sdflkajdsf/asdfjasldf',
-            'size' => 45646,
-            'content' => 'foo'
-        );
-
-        $expected = array(
-            'identifier' => null,
-            'name' => 'Bob',
-            'path' => '/sdflkajdsf/asdfjasldf',
-            'size' => 45646,
-            'content' => 'foo'
-        );
-
-        $file = new File();
-        $file->fromData($data);
-        $this->assertEquals($expected, $file->toArray());
+        $this->sut = new File();
     }
 
-    public function testFromDataWithIdentifier()
+    public function testGetSet()
     {
-        $data = array(
-            'name' => 'Bob',
-            'tmp_name' => '/sdflkajdsf/asdfjasldf',
-            'size' => 45646
-        );
+        $identifier = 'unit_Identifier';
+        static::assertEquals($this->sut, $this->sut->setIdentifier($identifier));
+        static::assertEquals($identifier, $this->sut->getIdentifier());
 
-        $expected = array(
-            'identifier' => 'dfghjkl',
-            'name' => 'Bob',
-            'path' => '/sdflkajdsf/asdfjasldf',
-            'size' => 45646,
-            'content' => null
-        );
+        $path = 'unit_Path';
+        static::assertEquals($this->sut, $this->sut->setPath($path));
+        static::assertEquals($path, $this->sut->getPath());
 
-        $file = new File();
-        $file->setIdentifier('dfghjkl');
-        $file->fromData($data);
-        $this->assertEquals($expected, $file->toArray());
+        $name = 'unit_Name.extX';
+        static::assertEquals($this->sut, $this->sut->setName($name));
+        static::assertEquals($name, $this->sut->getName());
+        static::assertEquals('extX', $this->sut->getExtension());
+
+        $content = '<html></html>';
+        static::assertEquals(
+            $this->sut,
+            $this->sut->setContent($content)
+        );
+        static::assertEquals($content, $this->sut->getContent());
+        static::assertEquals('text/html', $this->sut->getMimeType());
+        static::assertEquals(13, $this->sut->getSize());
     }
 
     /**
-     * @dataProvider extensionProvider
+     * @dataProvider dpTestGetExtention
      */
-    public function testGetExtension($name, $extension)
+    public function testGetExtention($name, $expect)
     {
-        $file = new File();
-        $file->setName($name);
-
-        $this->assertEquals(
-            $extension,
-            $file->getExtension()
-        );
+        $this->sut->setName($name);
+        static::assertEquals($expect, $this->sut->getExtension());
     }
 
-    public function extensionProvider()
+    public function dpTestGetExtention()
     {
-        return array(
-            array('', ''),
-            array('A file with no extension', ''),
-            array('Another file.txt', 'txt'),
-            array('article.jpg.doc', 'doc')
-        );
-    }
-
-    public function testGetRealType()
-    {
-        $file = new File();
-        $file->setContent('plain text');
-
-        $this->assertEquals(
-            'text/plain',
-            $file->getRealType()
-        );
-    }
-
-    public function testFluentInterface()
-    {
-        $file = new File();
-
-        $this->assertSame($file, $file->setIdentifier('foo'));
-        $this->assertSame($file, $file->setPath('foo'));
-        $this->assertSame($file, $file->setSize('foo'));
-    }
-
-    public function testSetContentAndSizeFromString()
-    {
-        $file = new File();
-        $file->setContentAndSize(base64_encode('<foo>'));
-
-        $this->assertEquals('<foo>', $file->getContent());
-        $this->assertEquals(5, $file->getSize());
-    }
-
-    public function testSetContentAndSizeFromFileData()
-    {
-        $file = new File();
-        $file->setContentAndSize(
+        return [
             [
-                'size' => 22,
-                'tmp_name' => __DIR__ . '/Resources/TestFile.txt'
+                'name'=> '',
+                'expect' => '',
+            ],
+            [
+                'name'=> 'A file with no extension',
+                'expect' => '',
+            ],
+            [
+                'name'=> 'Another file.txt',
+                'expect' => 'txt',
+            ],
+            [
+                'name'=> 'article.jpg.doc',
+                'expect' => 'doc',
+            ],
+        ];
+    }
+
+    public function testSetContentFromFileData()
+    {
+        $content = 'test content inside test file';
+
+        $vfs = vfsStream::setup('temp');
+        $fsFilePath = vfsStream::newFile('unitTemp')
+            ->withContent($content)
+            ->at($vfs)
+            ->url();
+
+        $file = new File();
+        $file->setContent(
+            [
+                'tmp_name' => $fsFilePath,
             ]
         );
 
-        $this->assertEquals('Don\'t modify this file', $file->getContent());
-        $this->assertEquals(22, $file->getSize());
+        static::assertEquals($content, $file->getContent());
     }
 }

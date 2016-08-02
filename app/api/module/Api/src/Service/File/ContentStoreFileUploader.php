@@ -1,18 +1,12 @@
 <?php
 
-/**
- * Content Store File Uploader
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Service\File;
 
-use Zend\Http\Response;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
+use Dvsa\Olcs\DocumentShare\Service\Client as ContentStoreClient;
+use Zend\Http\Response;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\DocumentShare\Service\Client as ContentStoreClient;
 
 /**
  * Content Store File Uploader
@@ -22,42 +16,25 @@ use Dvsa\Olcs\DocumentShare\Service\Client as ContentStoreClient;
  */
 class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterface
 {
-    /**
-     * Holds the file
-     *
-     * @var File
-     */
+    const ERR_UNABLE_UPLOAD = 'Unable to store uploaded file: %s';
+
+    /** @var File */
     private $file;
+    /** @var ContentStoreClient */
+    private $contentStoreClient;
 
     /**
-     * @var ContentStoreClient
-     */
-    private $contentStore;
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * Method-factory
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service manager
+     *
+     * @return $this
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->setContentStore($serviceLocator->get('ContentStore'));
+        $this->contentStoreClient = $serviceLocator->get('ContentStore');
 
         return $this;
-    }
-
-    /**
-     * @return ContentStoreClient
-     */
-    public function getContentStore()
-    {
-        return $this->contentStore;
-    }
-
-    /**
-     * @param ContentStoreClient $contentStore
-     */
-    public function setContentStore($contentStore)
-    {
-        $this->contentStore = $contentStore;
     }
 
     /**
@@ -73,27 +50,29 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
     /**
      * Setter for file
      *
-     * @param mixed $file
+     * @param File $file File
+     *
+     * @return $this
      */
-    public function setFile($file)
+    public function setFile(File $file)
     {
-        if (is_array($file)) {
-            $file = $this->createFileFromData($file);
-        }
-
         $this->file = $file;
 
         return $this;
     }
 
     /**
-     * @param $identifier
-     * @return File
+     * Upload file to remote storage
+     *
+     * @param string $identifier File name on Storage
+     *
+     * @return \Dvsa\Olcs\Api\Service\File\File
      * @throws Exception
+     * @throws MimeNotAllowedException
      */
     public function upload($identifier)
     {
-        $file = $this->getFile();
+        $file = $this->file;
 
         $storeFile = new ContentStoreFile();
         $storeFile->setContent($file->getContent());
@@ -111,45 +90,43 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
             throw new MimeNotAllowedException();
         }
 
-        throw new Exception('Unable to store uploaded file: ' . $response->getBody());
+        throw new Exception(sprintf(self::ERR_UNABLE_UPLOAD, $response->getBody()));
     }
 
     /**
-     * Download the file
+     * Download file from remote storage
+     *
+     * @param string $identifier File name on storage
+     *
+     * @return ContentStoreFile|null
      */
     public function download($identifier)
     {
-        return $this->getContentStore()->read($identifier);
+        return $this->contentStoreClient->read($identifier);
     }
 
     /**
-     * Remove the file
+     * Remove the file from remote storage
+     *
+     * @param string $identifier File name on storage
+     *
+     * @return Response
      */
     public function remove($identifier)
     {
-        return $this->getContentStore()->remove($identifier);
+        return $this->contentStoreClient->remove($identifier);
     }
 
     /**
-     * @param $identifier
-     * @param $file
+     * Write file to remote storage
+     *
+     * @param string           $identifier File name of storage
+     * @param ContentStoreFile $file       File
+     *
      * @return Response
      */
-    private function write($identifier, $file)
+    private function write($identifier, ContentStoreFile $file)
     {
-        return $this->getContentStore()->write($identifier, $file);
-    }
-
-    /**
-     * Create a file object
-     *
-     * @param array $data
-     * @return \Dvsa\Olcs\Api\Service\File\File
-     */
-    private function createFileFromData(array $data = [])
-    {
-        $file = new File();
-        $file->fromData($data);
-        return $file;
+        return $this->contentStoreClient->write($identifier, $file);
     }
 }

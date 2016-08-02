@@ -91,6 +91,11 @@ return [
 
     // Document service
     'document_share' => [
+        'http' => [
+            'curloptions' => [
+                CURLOPT_TIMEOUT => 600,
+            ],
+        ],
         'client' => [
             // Document service URI *Environment specific*
             'baseuri' => 'http://fs01.olcs.mgt.mtpdvsa:8080/hfs/',
@@ -236,7 +241,7 @@ return [
             'writers' => [
                 'full' => [
                     'options' => [
-                        'stream' => '/var/tmp/backend.log'
+                        'stream' => '/var/tmp/backend.log',
                         'filters' => [
                             'priority' => [
                                 'name' => 'priority',
@@ -253,7 +258,7 @@ return [
             'writers' => [
                 'full' => [
                     'options' => [
-                        'stream' => '/var/tmp/backend.log'
+                        'stream' => '/var/tmp/backend.log',
                         'filters' => [
                             'priority' => [
                                 'name' => 'priority',

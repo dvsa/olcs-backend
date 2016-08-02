@@ -1,79 +1,59 @@
 <?php
 
-/**
- * Download Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Document;
 
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Document\Download;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Document\Download;
+use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
-use Dvsa\Olcs\Transfer\Query\Document\Document as Qry;
+use Mockery as m;
 
 /**
- * Download Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers Dvsa\Olcs\Api\Domain\QueryHandler\Document\Download
  */
 class DownloadTest extends QueryHandlerTestCase
 {
+    /** @var  m\MockInterface */
+    protected $sut;
+
     public function setUp()
     {
-        $this->sut = new Download();
+        $this->sut = m::mock(Download::class . '[download, setIsInline]')
+            ->shouldAllowMockingProtectedMethods();
+
         $this->mockRepo('Document', \Dvsa\Olcs\Api\Domain\Repository\Document::class);
+
         $this->mockedSmServices['FileUploader'] = m::mock(ContentStoreFileUploader::class);
 
         parent::setUp();
     }
 
-    public function testHandleQueryNotFoundInStore()
-    {
-        $this->setExpectedException(NotFoundException::class);
-
-        $query = \Dvsa\Olcs\Transfer\Query\Document\Download::create(['identifier' => 20062016]);
-
-        $document = new Document('foo/bar/12345.pdf');
-        $this->repoMap['Document']->shouldReceive('fetchById')->with(20062016)->once()->andReturn($document);
-
-        $file = null;
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')
-            ->once()
-            ->with('foo/bar/12345.pdf')
-            ->andReturn($file);
-
-        $this->sut->handleQuery($query);
-    }
-
     public function testHandleQuery()
     {
-        $query = \Dvsa\Olcs\Transfer\Query\Document\Download::create(['identifier' => 20062016]);
+        $identifier = 20062016;
 
-        $document = new Document('foo/bar/12345.pdf');
-        $this->repoMap['Document']->shouldReceive('fetchById')->with(20062016)->once()->andReturn($document);
+        $query = TransferQry\Document\Download::create(
+            [
+                'identifier' => $identifier,
+                'isInline' => true,
+            ]
+        );
 
-        $file = m::mock();
-        $file->shouldReceive('getContent')
-            ->andReturn('<foo>');
+        $fileName = 'foo/bar/12345.pdf';
 
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')
+        $this->repoMap['Document']
+            ->shouldReceive('fetchById')
+            ->with($identifier)
             ->once()
-            ->with('foo/bar/12345.pdf')
-            ->andReturn($file);
+            ->andReturn(new Document($fileName));
 
-        $result = $this->sut->handleQuery($query);
+        $this->sut
+            ->shouldReceive('setIsInline')->once()->with(true)
+            ->shouldReceive('download')->once()->with($fileName)->andReturn('EXPECTED');
 
-        $expected = [
-            'fileName' => '12345.pdf',
-            'content' => base64_encode('<foo>')
-        ];
+        $actual = $this->sut->handleQuery($query);
 
-        $this->assertEquals($expected, $result);
+        static::assertEquals('EXPECTED', $actual);
     }
 }
