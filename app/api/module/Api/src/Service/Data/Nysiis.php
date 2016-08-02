@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Data;
 
 use Common\Service\Entity\Exceptions\UnexpectedResponseException;
+use Dvsa\Olcs\Api\Service\Exception;
 use Olcs\Logging\Log\Logger;
 use Zend\Server\Client as ServerClient;
 use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
@@ -32,7 +33,7 @@ class Nysiis
     {
         $this->soapClient = $soapClient;
         $this->nysiisConfig = $config;
-        if (!$this->soapClient instanceof ServerClient) {
+        if (!$this->soapClient instanceof \SoapClient) {
             throw new NysiisException('Unable to make soap request : Invalid SOAP client');
         }
     }
@@ -48,18 +49,22 @@ class Nysiis
      */
     public function getNysiisSearchKeys($params)
     {
-        $result = $this->getSoapClient()->GetNYSIISSearchKeys(
-            [
-                'firstName' => $params['nysiisForename'],
-                'familyName' => $params['nysiisFamilyname']
-            ]
-        );
-
-        if (!isset($result->GetNYSIISSearchKeysResult)) {
-            throw new NysiisException(
-                'Call to GetNYSIISSearchKeys failed with firstName => ' .
-                $params['nysiisForename'] . ', familyName => ' . $params['nysiisFamilyname']
+        try {
+            $result = $this->getSoapClient()->GetNYSIISSearchKeys(
+                [
+                    'firstName' => $params['nysiisForename'],
+                    'familyName' => $params['nysiisFamilyname']
+                ]
             );
+
+            if (!isset($result->GetNYSIISSearchKeysResult)) {
+                throw new NysiisException(
+                    'Call to GetNYSIISSearchKeys failed with firstName => ' .
+                    $params['nysiisForename'] . ', familyName => ' . $params['nysiisFamilyname']
+                );
+            }
+        } catch (\Exception $e) {
+            // do nothing
         }
 
         return $result->GetNYSIISSearchKeysResult;
