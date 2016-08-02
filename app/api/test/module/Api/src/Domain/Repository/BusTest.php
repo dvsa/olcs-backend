@@ -360,4 +360,56 @@ class BusTest extends RepositoryTestCase
 
         $this->sut->fetchWithTxcInboxListForLocalAuthority($query, null, Query::HYDRATE_OBJECT);
     }
+
+    /**
+     * @dataProvider testLatestUsingRegNoProvider
+     *
+     * @param $queryResult
+     * @param $returnedResult
+     */
+    public function testLatestUsingRegNo($queryResult, $returnedResult)
+    {
+        $regNo = 'OB1234567/12786';
+        $hydrateMode = Query::HYDRATE_OBJECT;
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr->eq')->with('m.regNo', ':byRegNo')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('byRegNo', $regNo)->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->notIn')->with('m.status', ':byStatus')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('byStatus', BusReg::$ebsrExistingRecordExcluded)
+            ->once()
+            ->andReturnSelf();
+        $mockQb->shouldReceive('addOrderBy')->with('m.id', 'DESC')->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')
+            ->with($hydrateMode)
+            ->andReturn($queryResult);
+
+        $repo = $this->getMockRepo($mockQb);
+        $this->em->shouldReceive('getRepository')
+            ->with(BusReg::class)
+            ->andReturn($repo);
+
+        $this->assertEquals($returnedResult, $this->sut->fetchLatestUsingRegNo($regNo, $hydrateMode));
+    }
+
+    /**
+     * data provider for testLatestUsingRegNo
+     *
+     * @return array
+     */
+    public function testLatestUsingRegNoProvider()
+    {
+        $withResult = [
+            0 => m::mock(BusReg::class)
+        ];
+
+        return [
+            [$withResult, $withResult[0]],
+            [[], []]
+        ];
+    }
 }

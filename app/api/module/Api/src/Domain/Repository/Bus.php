@@ -23,10 +23,11 @@ class Bus extends AbstractRepository
     /**
      * Fetch the default record by it's id
      *
-     * @param Query|QryCmd $query
-     * @param int $hydrateMode
-     * @param null $version
-     * @return mixed
+     * @param QryCmd   $query       the query
+     * @param int      $hydrateMode doctrine hydrate mode
+     * @param null|int $version     the version
+     *
+     * @return Entity
      * @throws Exception\NotFoundException
      * @throws Exception\VersionConflictException
      */
@@ -58,12 +59,22 @@ class Bus extends AbstractRepository
         return $results[0];
     }
 
+    /**
+     * fetch the latest bus reg variation by registration number
+     *
+     * @param string $regNo       registration number
+     * @param int    $hydrateMode doctrine hydrate mode
+     *
+     * @return Entity|array
+     */
     public function fetchLatestUsingRegNo($regNo, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         $qb = $this->createQueryBuilder();
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.regNo', ':byRegNo'))
             ->setParameter('byRegNo', $regNo);
+        $qb->andWhere($qb->expr()->notIn($this->alias . '.status', ':byStatus'))
+            ->setParameter('byStatus', Entity::$ebsrExistingRecordExcluded);
         $qb->addOrderBy($this->alias . '.id', 'DESC');
 
         $results = $qb->getQuery()->getResult($hydrateMode);
@@ -75,6 +86,16 @@ class Bus extends AbstractRepository
         return $results;
     }
 
+    /**
+     * fetch with txc inbox list for organisation
+     *
+     * @param QueryInterface $query          the query
+     * @param int            $organisationId organisation id
+     * @param int            $hydrateMode    doctrine hydrate mode
+     *
+     * @return Entity
+     * @throws Exception\NotFoundException
+     */
     public function fetchWithTxcInboxListForOrganisation($query, $organisationId, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
@@ -105,12 +126,12 @@ class Bus extends AbstractRepository
     /**
      * Fetch a list of unread docs filtered by local authority, submission type and status for a given bus reg id
      *
-     * @param QryCmd $query
-     * @param int $localAuthorityId
-     * @param int $hydrateMode
+     * @param QryCmd $query         query
+     * @param int $localAuthorityId local authority id
+     * @param int $hydrateMode      doctrine hydrate mode
      *
      * @throws Exception\NotFoundException
-     * @return array
+     * @return Entity
      */
     public function fetchWithTxcInboxListForLocalAuthority(
         $query,
@@ -148,8 +169,11 @@ class Bus extends AbstractRepository
 
     /**
      * Applies filters
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
+     *
+     * @param QueryBuilder   $qb    doctrine query builder
+     * @param QueryInterface $query query being run
+     *
+     * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
@@ -169,7 +193,10 @@ class Bus extends AbstractRepository
 
     /**
      * Applies list joins
-     * @param QueryBuilder $qb
+     *
+     * @param QueryBuilder $qb query builder
+     *
+     * @return void
      */
     protected function applyListJoins(QueryBuilder $qb)
     {
