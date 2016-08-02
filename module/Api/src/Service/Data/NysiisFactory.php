@@ -29,17 +29,27 @@ class NysiisFactory implements FactoryInterface
         }
 
         try {
-            $soapClient = new SoapClient(
-                $config['nysiis']['wsdl']['uri'],
-                array_merge(
-                    $config['nysiis']['wsdl']['soap']['options'],
-                    []
-                )
-            );
+            /**
+             * This is requesting the wsdl twice because setting the SOAP client directly causes PHP Fatal error,
+             * when service is down. When the service is up, reusing the $wsdl string by calling setWSDL($wsdl); also
+             * causes a Fatal error - unable to parse document.
+             */
+            $wsdl = file_get_contents($config['nysiis']['wsdl']['uri']);
+
+            if (!empty($wsdl)) {
+                $soapClient = new SoapClient($config['nysiis']['wsdl']['uri']);
+                $soapClient->setOptions(
+                    array_merge(
+                        $config['nysiis']['wsdl']['soap']['options'],
+                        []
+                    )
+                );
+                return new Nysiis($soapClient, $config);
+            }
+        } catch (\SoapFault $e) {
+            throw new NysiisException('Unable to create soap client: ' . $e->getMessage());
         } catch (\Exception $e) {
             throw new NysiisException('Unable to create soap client: ' . $e->getMessage());
         }
-
-        return new Nysiis($soapClient, $config);
     }
 }

@@ -286,6 +286,7 @@ return [
             'uri' => 'http://nysiis.localhost:8081/nysiis/nysiis?WSDL',
             'soap' => [
                 'options' => [
+                    'soap_version' => SOAP_1_2,
                     'cache_wsdl' => 0,
                     'location' => 'http://nysiis.localhost:8081/nysiis/nysiis',
                     'uri' => 'http://nysiis.localhost:8081/nysiis/nysiis'
