@@ -28,11 +28,12 @@ class BrLogoTest extends \PHPUnit_Framework_TestCase
         $bookmark = new BrLogo();
         $bookmark->setData($data);
 
-        // to test BrLogo bookmark we need to mock the image,
-        // to create the image we need to use imagecreate method which is
-        // a part of gdlib and not on skyscape env.
-        // so marking this test as skipped for now
-        $this->markTestSkipped();
+        if (!function_exists('imagecreate')) {
+            // to test BrLogo bookmark we need to mock the image,
+            // to create the image we need to use imagecreate method (part of gdlib)
+            $this->markTestSkipped('imagecreate, part of gdlib, required for the test to run');
+        }
+
         $mockImage = imagecreate(100, 100);
         ob_start();
         imagejpeg($mockImage);

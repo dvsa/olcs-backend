@@ -859,7 +859,6 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateValidDataOptimisticLocking()
     {
-        $this->markTestIncomplete();
         $id = 1;
         $data = array('foo' => 'bar');
         $formattedDate = array('foo' => 'cake');
@@ -905,7 +904,6 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testPatchValidDataOptimisticLocking()
     {
-        $this->markTestIncomplete();
         $id = 1;
         $data = array('foo' => 'bar');
         $formattedDate = array('foo' => 'cake');
@@ -1190,47 +1188,6 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test getService with name that doesn't exists
-     */
-    public function testGetServiceWithNameThatDoesntExist()
-    {
-        $this->markTestIncomplete();
-        $this->getMockController(array('getServiceLocator', 'serviceExists'));
-
-        $serviceMock = $this->getMock('\stdClass', array('setEntityName'));
-
-        $serviceMock->expects($this->once())
-            ->method('setEntityName')
-            ->with('\Olcs\Db\Entity\Bob')
-            ->will($this->returnValue('Service'));
-
-        $serviceFactoryMock = $this->getMock('\stdClass', array('getService'));
-
-        $serviceFactoryMock->expects($this->once())
-            ->method('getService')
-            ->with('Generic')
-            ->will($this->returnValue($serviceMock));
-
-        $serviceLocatorMock = $this->getMock('\stdClass', array('get'));
-
-        $serviceLocatorMock->expects($this->once())
-            ->method('get')
-            ->with('serviceFactory')
-            ->will($this->returnValue($serviceFactoryMock));
-
-        $this->controller->expects($this->once())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($serviceLocatorMock));
-
-        $this->controller->expects($this->once())
-            ->method('serviceExists')
-            ->with('Bob')
-            ->will($this->returnValue(false));
-
-        $this->assertEquals('Service', $this->controller->getService('Bob'));
-    }
-
-    /**
      * Test getService without name
      */
     public function testGetServiceWithoutNameWithSetServiceName()
@@ -1274,49 +1231,6 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
         $this->controller->setServiceName('Bob');
 
         $this->assertEquals($serviceMock, $this->controller->getService());
-    }
-
-    /**
-     * Test getService with name that doesn't exists, setServiceName
-     */
-    public function testGetServiceWithNameThatDoesntExistWithSetServiceName()
-    {
-        $this->markTestIncomplete();
-        $this->getMockController(array('getServiceLocator', 'serviceExists'));
-
-        $serviceMock = $this->getMock('\stdClass', array('setEntityName'));
-
-        $serviceMock->expects($this->once())
-            ->method('setEntityName')
-            ->with('\Olcs\Db\Entity\Bob')
-            ->will($this->returnValue('Service'));
-
-        $serviceFactoryMock = $this->getMock('\stdClass', array('getService'));
-
-        $serviceFactoryMock->expects($this->once())
-            ->method('getService')
-            ->with('Generic')
-            ->will($this->returnValue($serviceMock));
-
-        $serviceLocatorMock = $this->getMock('\stdClass', array('get'));
-
-        $serviceLocatorMock->expects($this->once())
-            ->method('get')
-            ->with('serviceFactory')
-            ->will($this->returnValue($serviceFactoryMock));
-
-        $this->controller->expects($this->once())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($serviceLocatorMock));
-
-        $this->controller->expects($this->once())
-            ->method('serviceExists')
-            ->with('Bob')
-            ->will($this->returnValue(false));
-
-        $this->controller->setServiceName('Bob');
-
-        $this->assertEquals('Service', $this->controller->getService());
     }
 
     /**
@@ -1364,50 +1278,5 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue('Bob'));
 
         $this->assertEquals($serviceMock, $this->controller->getService());
-    }
-
-    /**
-     * Test getService with name that doesn't exists, getControllerName
-     */
-    public function testGetServiceWithNameThatDoesntExistWithGetControllerName()
-    {
-        $this->markTestIncomplete();
-        $this->getMockController(array('getServiceLocator', 'serviceExists', 'getControllerName'));
-
-        $serviceMock = $this->getMock('\stdClass', array('setEntityName'));
-
-        $serviceMock->expects($this->once())
-            ->method('setEntityName')
-            ->with('\Olcs\Db\Entity\Bob')
-            ->will($this->returnValue('Service'));
-
-        $serviceFactoryMock = $this->getMock('\stdClass', array('getService'));
-
-        $serviceFactoryMock->expects($this->once())
-            ->method('getService')
-            ->with('Generic')
-            ->will($this->returnValue($serviceMock));
-
-        $serviceLocatorMock = $this->getMock('\stdClass', array('get'));
-
-        $serviceLocatorMock->expects($this->once())
-            ->method('get')
-            ->with('serviceFactory')
-            ->will($this->returnValue($serviceFactoryMock));
-
-        $this->controller->expects($this->once())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($serviceLocatorMock));
-
-        $this->controller->expects($this->once())
-            ->method('serviceExists')
-            ->with('Bob')
-            ->will($this->returnValue(false));
-
-        $this->controller->expects($this->once())
-            ->method('getControllerName')
-            ->will($this->returnValue('Bob'));
-
-        $this->assertEquals('Service', $this->controller->getService());
     }
 }
