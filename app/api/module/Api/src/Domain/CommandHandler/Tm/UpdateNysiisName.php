@@ -46,6 +46,7 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
             $this->nysiisService = $mainServiceLocator->get(NysiisService::class);
         } catch (\Exception $e) {
             // do nothing, let the queue handle the Nysiis exception in order to trigger a message requeue
+            throw new NysiisException('Failed to create Nysiis service: ' . $e->getMessage());
         }
 
         return parent::createService($serviceLocator);
@@ -68,13 +69,12 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
         $transportManager = $this->getRepo()->fetchUsingId($command);
         $person = $transportManager->getHomeCd()->getPerson();
 
-        $nysiisData = $this->requestNyiisData(
+        $nysiisData = $this->requestNysiisData(
             [
                 'nysiisForename' => $person->getForename(),
                 'nysiisFamilyname' => $person->getFamilyName()
             ]
         );
-
         $transportManager->setNysiisForename($nysiisData['forename']);
         $transportManager->setNysiisFamilyName($nysiisData['familyName']);
 
@@ -91,7 +91,7 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
      * @return array
      * @throws NysiisException
      */
-    private function requestNyiisData($nysiisParams)
+    private function requestNysiisData($nysiisParams)
     {
         if ($this->nysiisService instanceof NysiisService) {
             $nysiisData = $this->nysiisService->getNysiisSearchKeys($nysiisParams);
