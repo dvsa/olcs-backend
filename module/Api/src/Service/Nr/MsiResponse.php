@@ -41,12 +41,21 @@ class MsiResponse
      */
     private $xmlBuilder;
 
+    /**
+     * MsiResponse constructor
+     *
+     * @param XmlNodeBuilder $xmlBuilder xml node builder
+     *
+     * @return MsiResponse
+     */
     public function __construct(XmlNodeBuilder $xmlBuilder)
     {
         $this->xmlBuilder = $xmlBuilder;
     }
 
     /**
+     * Gets xml node builder
+     *
      * @return XmlNodeBuilder
      */
     public function getXmlBuilder()
@@ -55,6 +64,8 @@ class MsiResponse
     }
 
     /**
+     * Gets the response date and time
+     *
      * @return mixed
      */
     public function getResponseDateTime()
@@ -63,7 +74,11 @@ class MsiResponse
     }
 
     /**
-     * @param mixed $responseDateTime
+     * Sets the response date and time
+     *
+     * @param string $responseDateTime response date and time
+     *
+     * @return void
      */
     public function setResponseDateTime($responseDateTime)
     {
@@ -71,6 +86,8 @@ class MsiResponse
     }
 
     /**
+     * Gets the technical id
+     *
      * @return String
      */
     public function getTechnicalId()
@@ -79,7 +96,11 @@ class MsiResponse
     }
 
     /**
-     * @param String $technicalId
+     * Sets the technical id
+     *
+     * @param String $technicalId technical id
+     *
+     * @return void
      */
     public function setTechnicalId($technicalId)
     {
@@ -87,6 +108,8 @@ class MsiResponse
     }
 
     /**
+     * Gets the originating authority
+     *
      * @return String
      */
     public function getAuthority()
@@ -95,7 +118,11 @@ class MsiResponse
     }
 
     /**
-     * @param String $authority
+     * Sets the originating authority
+     *
+     * @param String $authority originating authority
+     *
+     * @return void
      */
     public function setAuthority($authority)
     {
@@ -173,7 +200,7 @@ class MsiResponse
     /**
      * Fetches array of information for the xml body
      *
-     * @param CasesEntity $cases             case entity
+     * @param CasesEntity       $cases       case entity
      * @param ErruRequestEntity $erruRequest erru request entity
      *
      * @return array
