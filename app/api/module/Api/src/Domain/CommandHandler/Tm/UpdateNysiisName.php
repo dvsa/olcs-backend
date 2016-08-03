@@ -42,12 +42,7 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        try {
-            $this->nysiisService = $mainServiceLocator->get(NysiisService::class);
-        } catch (\Exception $e) {
-            // do nothing, let the queue handle the Nysiis exception in order to trigger a message requeue
-            throw new NysiisException('Failed to create Nysiis service: ' . $e->getMessage());
-        }
+        $this->nysiisService = $mainServiceLocator->get(NysiisService::class);
 
         return parent::createService($serviceLocator);
     }
@@ -62,27 +57,38 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
      */
     public function handleCommand(CommandInterface $command)
     {
-        /**
-         * @var TransportManager $transportManager
-         * @var UpdateNysiisNameCmd $command
-         */
-        $transportManager = $this->getRepo()->fetchUsingId($command);
-        $person = $transportManager->getHomeCd()->getPerson();
+        try {
+            /**
+             * @var TransportManager $transportManager
+             * @var UpdateNysiisNameCmd $command
+             */
+            $transportManager = $this->getRepo()->fetchUsingId($command);
+            $person = $transportManager->getHomeCd()->getPerson();
 
-        $nysiisData = $this->requestNysiisData(
-            [
-                'nysiisForename' => $person->getForename(),
-                'nysiisFamilyname' => $person->getFamilyName()
-            ]
-        );
-        $transportManager->setNysiisForename($nysiisData['forename']);
-        $transportManager->setNysiisFamilyName($nysiisData['familyName']);
+            $nysiisData = $this->requestNysiisData(
+                [
+                    'nysiisForename' => $person->getForename(),
+                    'nysiisFamilyname' => $person->getFamilyName()
+                ]
+            );
+            $transportManager->setNysiisForename($nysiisData['forename']);
+            $transportManager->setNysiisFamilyName($nysiisData['familyName']);
 
-        $this->getRepo('TransportManager')->save($transportManager);
+            $this->getRepo('TransportManager')->save($transportManager);
 
-        $this->result->addMessage('TM NYIIS name was requested and updated');
+            $this->result->addMessage('TM NYIIS name was requested and updated');
 
-        return $this->result;
+            return $this->result;
+        } catch (\SoapFault $e) {
+            // Catch SoapFault exceptions and ensure a Nysiis exception is thrown to trigger a requeue
+            throw new NysiisException('Unable to create connection to Nysiis service: ' . $e->getMessage());
+        } catch (NysiisException $e) {
+            // Just return the Nysiis exception to trigger a requeue
+            throw $e;
+        } catch (\Exception $e) {
+            // Catch all other exceptions and ensure a Nysiis exception is thrown to trigger a requeue
+            throw new NysiisException('Unable to create connection to Nysiis service.' . $e->getMessage());
+        }
     }
 
     /**
