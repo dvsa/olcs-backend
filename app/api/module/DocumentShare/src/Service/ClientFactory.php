@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\DocumentShare\Service;
 
+use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
@@ -22,9 +23,10 @@ class ClientFactory implements FactoryInterface
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @throws \RuntimeException
+     * @param ServiceLocatorInterface $serviceLocator Service manager
+     *
      * @return \Dvsa\Olcs\DocumentShare\Service\Client
+     * @throws \RuntimeException
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -41,38 +43,35 @@ class ClientFactory implements FactoryInterface
             $request->getHeaders()->addHeaderLine('uuid', $clientOptions['uuid']);
         }
 
-        $client = new Client();
-
         $wrapper = new ClientAdapterLoggingWrapper();
         $wrapper->wrapAdapter($httpClient);
         $wrapper->setShouldLogData(false);
-
-        $client->setHttpClient($httpClient);
-        $client->setRequestTemplate($request);
 
         if (!isset($clientOptions['baseuri']) || empty($clientOptions['baseuri'])) {
             throw new RuntimeException('Missing required option document_share.client.baseuri');
         }
 
-        $client->setBaseUri($clientOptions['baseuri']);
-
         if (!isset($clientOptions['workspace']) || empty($clientOptions['workspace'])) {
             throw new RuntimeException('Missing required option document_share.client.workspace');
         }
 
-        $client->setWorkspace($clientOptions['workspace']);
-
-        return $client;
-
+        return new Client(
+            $httpClient,
+            $request,
+            new Filesystem(),
+            $clientOptions['baseuri'],
+            $clientOptions['workspace']
+        );
     }
 
     /**
      * Gets options from configuration based on name.
      *
-     * @param ServiceLocatorInterface $sl
-     * @param string $key
-     * @throws \RuntimeException
+     * @param ServiceLocatorInterface $sl  Service Manager
+     * @param string                  $key Key
+     *
      * @return \Zend\Stdlib\AbstractOptions
+     * @throws \RuntimeException
      */
     public function getOptions(ServiceLocatorInterface $sl, $key)
     {

@@ -1,29 +1,20 @@
 <?php
 
-/**
- * CpidOrganisationExportTest.php
- *
- * @author Josh Curtis <josh.curtis@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer;
 
-use Dvsa\Olcs\Api\Domain\Command\Queue\Complete;
-use Dvsa\Olcs\Api\Domain\Command\Queue\Failed;
-use Dvsa\Olcs\Transfer\Command\Document\Upload;
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
-use Dvsa\Olcs\Cli\Service\Queue\Consumer\CpidOrganisationExport;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
-use Dvsa\Olcs\Api\Domain\Repository\Organisation;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Cli\Service\Queue\Consumer\CpidOrganisationExport;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
- * Class CpidOrganisationExportTest
- * @package Dvsa\OlcsTest\Cli\Service\Queue\Consumer
- * @author Josh Curtis <josh.curtis@valtech.co.uk>
+ * @covers Dvsa\Olcs\Cli\Service\Queue\Consumer\CpidOrganisationExport
  */
 class CpidOrganisationExportTest extends MockeryTestCase
 {
@@ -31,76 +22,88 @@ class CpidOrganisationExportTest extends MockeryTestCase
 
     public function setUp()
     {
-        $user = new User('pid', 'type');
+        $user = new Entity\User\User('pid', 'type');
         $user->setId(1);
-        $queueEntity = new Queue(new RefData(Queue::TYPE_CPID_EXPORT_CSV));
-        $queueEntity->setStatus(Queue::STATUS_QUEUED);
-        $queueEntity->setCreatedBy($user);
 
-        $this->queueEntity = $queueEntity;
+        $this->queueEntity = (new Queue())
+            ->setType(new RefData(Queue::TYPE_CPID_EXPORT_CSV))
+            ->setStatus(new RefData(Queue::STATUS_QUEUED))
+            ->setCreatedBy($user)
+            ->setOptions(json_encode(['status' => 'unit_Status']));
     }
 
     /**
-     * @dataProvider processMessageProvider
+     * @dataProvider dpTestMessageProvider
      */
-    public function testProcessMessage($shouldThrowException, $message)
+    public function testProcessMessage($shouldThrowException)
     {
-        $organisation = m::mock(Organisation::class)
+        $row = ['A1', 'B1', 'C1'];
+
+        /** @var Repository\Organisation $organisation */
+        $organisation = m::mock(Repository\Organisation::class)
             ->shouldReceive('fetchAllByStatusForCpidExport')
-            ->with(null)
+            ->with('unit_Status')
             ->andReturn(
                 m::mock(IterableResult::class)
                     ->makePartial()
                     ->shouldReceive('next')
                     ->twice()
-                    ->andReturn([1 => [1, 2, 3]], false)
+                    ->andReturn([$row], false)
                     ->getMock()
             )
             ->getMock();
 
-        $commandHandlerManager = m::mock(CommandHandlerManager::class);
+        /** @var m\MockInterface $mockCmdHandlerMngr */
+        $mockCmdHandlerMngr = m::mock(CommandHandlerManager::class);
+
+        /** @var m\MockInterface $sut */
+        $sut = m::mock(CpidOrganisationExport::class . '[success, failed]', [$organisation, $mockCmdHandlerMngr])
+            ->shouldAllowMockingProtectedMethods();
 
         if ($shouldThrowException) {
-            $commandHandlerManager->shouldReceive('handleCommand')
+            $mockCmdHandlerMngr->shouldReceive('handleCommand')
                 ->once()
-                ->with(m::type(Upload::class))
                 ->andThrow(new \Exception('AN EXCEPTION'));
 
-            $commandHandlerManager->shouldReceive('handleCommand')
-                ->once()
-                ->with(m::type(Failed::class), false);
-        } else {
-            $commandHandlerManager->shouldReceive('handleCommand')
-                ->once()
-                ->with(m::type(Upload::class));
+            $expectResult = 'failed';
 
-            $commandHandlerManager->shouldReceive('handleCommand')
+            $sut->shouldReceive('failed')
                 ->once()
-                ->with(m::type(Complete::class), false);
+                ->with($this->queueEntity, 'Unable to export list. AN EXCEPTION')
+                ->andReturn($expectResult);
+
+        } else {
+            $mockCmdHandlerMngr->shouldReceive('handleCommand')
+                ->once()
+                ->andReturnUsing(
+                    function (TransferCmd\Document\Upload $cmd) {
+                        static::assertEquals(base64_encode("A1,B1,C1\n"), $cmd->getContent());
+                    }
+                );
+
+            $expectResult = 'success';
+
+            $sut->shouldReceive('success')
+                ->once()
+                ->with($this->queueEntity, 'Organisation list exported.')
+                ->andReturn($expectResult);
         }
 
-        $cpidOrganisationExport = new CpidOrganisationExport($organisation, $commandHandlerManager);
-
-        $this->queueEntity->setStatus(Queue::STATUS_QUEUED);
-        $this->queueEntity->setOptions(json_encode(['status' => null]));
-
-        $this->assertEquals(
-            $cpidOrganisationExport->processMessage($this->queueEntity),
-            $message
+        static::assertEquals(
+            $sut->processMessage($this->queueEntity),
+            $expectResult
         );
     }
 
-    public function processMessageProvider()
+    public function dpTestMessageProvider()
     {
         return [
             [
-                false,
-                'Successfully processed message:  {"status":null} Organisation list exported.'
+                'shouldThrowException' => false,
             ],
             [
-                true,
-                'Failed to process message:  {"status":null} Unable to export list. AN EXCEPTION'
-            ]
+                'shouldThrowException' => true,
+            ],
         ];
     }
 }

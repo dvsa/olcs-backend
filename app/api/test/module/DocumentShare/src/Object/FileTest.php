@@ -3,53 +3,54 @@
 namespace Dvsa\OlcsTest\DocumentShare\Data\Object;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use org\bovigo\vfs\vfsStream;
 
 /**
- * File Test
+ * @covers Dvsa\Olcs\DocumentShare\Data\Object\File
  */
 class FileTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetRealType()
+    public function testSetGet()
     {
         $sut = new File();
-        $sut->setContent('<html></html>');
 
-        $this->assertEquals('text/html', $sut->getRealType());
+        //  check set/get content
+        $content = '<html></html>';
+
+        static::assertEquals($sut, $sut->setContent($content));
+        static::assertEquals($content, $sut->getContent());
+
+        //  check mime
+        static::assertEquals('text/html', $sut->getMimeType());
+
+        //  check size
+        static::assertEquals(strlen($content), $sut->getSize());
     }
 
-    public function testGetContent()
+    public function testSetResource()
     {
-        $sut = new File();
-        $this->assertEmpty($sut->getContent());
-    }
+        $vfs = vfsStream::setup('tmp');
 
-    public function testSetContent()
-    {
-        $sut = new File();
-        $sut->setContent('testing');
-        $this->assertEquals('testing', $sut->getContent());
-    }
-
-    public function testGetArrayCopy()
-    {
-        $data = array(
-            'content' => 'testing'
-        );
+        $fsFilePath1 = vfsStream::newFile('unitTemp1')->at($vfs)->url();
+        $fsFilePath2 = vfsStream::newFile('unitTemp2')->at($vfs)->url();
 
         $sut = new File();
-        $sut->setContent($data['content']);
 
-        $this->assertEquals($data, $sut->getArrayCopy());
-    }
+        //  assing resource
+        static::assertEquals($sut, $sut->setResource($fsFilePath1));
+        static::assertEquals($fsFilePath1, $sut->getResource());
 
-    public function testExchangeArray()
-    {
-        $data = array(
-            'content' => 'testing'
-        );
+        static::assertTrue(is_file($fsFilePath1));
+        static::assertTrue(is_file($fsFilePath2));
 
-        $sut = new File();
-        $sut->exchangeArray($data);
-        $this->assertEquals($data['content'], $sut->getContent());
+        //  set other resource, previous one should be removed
+        $sut->setResource($fsFilePath2);
+        static::assertEquals($fsFilePath2, $sut->getResource());
+        static::assertFalse(is_file($fsFilePath1));
+        static::assertTrue(is_file($fsFilePath2));
+
+        //  check file removed when destroy object
+        unset($sut);
+        static::assertFalse(is_file($fsFilePath2));
     }
 }

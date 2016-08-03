@@ -5,12 +5,12 @@ return [
         'http' => [],
         'client' => [
             'baseuri' => '',
-            'workspace' => ''
+            'workspace' => '',
         ]
     ],
     'service_manager' => [
         'factories' => [
-            'Dvsa\Olcs\DocumentShare\Service\Client' => 'Dvsa\Olcs\DocumentShare\Service\ClientFactory',
+            Dvsa\Olcs\DocumentShare\Service\Client::class => Dvsa\Olcs\DocumentShare\Service\ClientFactory::class,
         ]
     ]
 ];

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Document Generation Helper Service test
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Service\Document;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle;
@@ -17,19 +12,24 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
 
 /**
- * Document Generation Helper Service test
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
+ * @covers Dvsa\Olcs\Api\Service\Document\DocumentGenerator
  */
 class DocumentGeneratorTest extends MockeryTestCase
 {
+    /** @var  DocumentGenerator */
     protected $sut;
 
+    /** @var  m\MockInterface */
     protected $contentStore;
+    /** @var  m\MockInterface */
     protected $document;
+    /** @var  m\MockInterface */
     protected $queryHandlerManager;
+    /** @var  m\MockInterface */
     protected $fileUploader;
+    /** @var  m\MockInterface */
     protected $namingService;
+    /** @var  m\MockInterface */
     protected $documentRepo;
 
     public function setUp()
@@ -43,25 +43,14 @@ class DocumentGeneratorTest extends MockeryTestCase
         $this->namingService = m::mock(NamingService::class);
         $this->documentRepo = m::mock();
 
-        $sm = m::mock('Zend\ServiceManager\ServiceLocatorInterface')
-            ->shouldReceive('get')
-            ->with('ContentStore')
-            ->andReturn($this->contentStore)
-            ->shouldReceive('get')
-            ->with('Document')
-            ->andReturn($this->document)
-            ->shouldReceive('get')
-            ->with('QueryHandlerManager')
-            ->andReturn($this->queryHandlerManager)
-            ->shouldReceive('get')
-            ->with('FileUploader')
-            ->andReturn($this->fileUploader)
-            ->shouldReceive('get')
-            ->with('DocumentNamingService')
-            ->andReturn($this->namingService)
-            ->shouldReceive('get')
-            ->with('RepositoryServiceManager')
-            ->andReturn(
+        /** @var \Zend\ServiceManager\ServiceLocatorInterface $sm */
+        $sm = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class)
+            ->shouldReceive('get')->with('ContentStore')->andReturn($this->contentStore)
+            ->shouldReceive('get')->with('Document')->andReturn($this->document)
+            ->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandlerManager)
+            ->shouldReceive('get')->with('FileUploader')->andReturn($this->fileUploader)
+            ->shouldReceive('get')->with('DocumentNamingService')->andReturn($this->namingService)
+            ->shouldReceive('get')->with('RepositoryServiceManager')->andReturn(
                 m::mock()->shouldReceive('get')->with('Document')->andReturn($this->documentRepo)->getMock()
             )
             ->getMock();

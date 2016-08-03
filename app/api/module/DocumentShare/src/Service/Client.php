@@ -2,51 +2,58 @@
 
 namespace Dvsa\Olcs\DocumentShare\Service;
 
+use Dvsa\Olcs\Api\Filesystem\Filesystem;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Zend\Http\Client as HttpClient;
 use Zend\Http\Request;
-use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Zend\Http\Response;
+use Zend\Mime\Mime;
 
 /**
  * Class Client
  */
 class Client
 {
-    /**
-     * @var HttpClient
-     */
+    /** @var HttpClient */
     protected $httpClient;
-
-    /**
-     * @var Request
-     */
+    /** @var Request */
     protected $requestTemplate;
-
-    /**
-     * @var string
-     */
+    /** @var  Filesystem */
+    private $fileSystem;
+    /** @var string */
     protected $baseUri;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $workspace;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $cache = [];
 
     /**
-     * @param string $baseUri
-     * @return $this
+     * Client constructor.
+     *
+     * @param HttpClient $httpClient      Http Client
+     * @param Request    $requestTemplate Request
+     * @param Filesystem $fileSystem      Filesystem
+     * @param string     $baseUri         base uri path to storage
+     * @param string     $workspace       path
      */
-    public function setBaseUri($baseUri)
-    {
-        $this->baseUri = rtrim($baseUri, '/');
-        return $this;
+    public function __construct(
+        HttpClient $httpClient,
+        Request $requestTemplate,
+        Filesystem $fileSystem,
+        $baseUri,
+        $workspace
+    ) {
+        $this->httpClient = $httpClient;
+        $this->requestTemplate = $requestTemplate;
+        $this->fileSystem = $fileSystem;
+        $this->baseUri = trim($baseUri);
+        $this->workspace = trim($workspace);
     }
 
     /**
+     * Return base url
+     *
      * @return string
      */
     public function getBaseUri()
@@ -55,16 +62,8 @@ class Client
     }
 
     /**
-     * @param \Zend\Http\Client $httpClient
-     * @return $this
-     */
-    public function setHttpClient(HttpClient $httpClient)
-    {
-        $this->httpClient = $httpClient;
-        return $this;
-    }
-
-    /**
+     * Return Http Client
+     *
      * @return \Zend\Http\Client
      */
     public function getHttpClient()
@@ -73,6 +72,8 @@ class Client
     }
 
     /**
+     * Return Templace of Request object
+     *
      * @return Request
      */
     public function getRequestTemplate()
@@ -81,24 +82,8 @@ class Client
     }
 
     /**
-     * @param Request $requestTemplate
-     */
-    public function setRequestTemplate(Request $requestTemplate)
-    {
-        $this->requestTemplate = $requestTemplate;
-    }
-
-    /**
-     * @param string $workspace
-     * @return $this
-     */
-    public function setWorkspace($workspace)
-    {
-        $this->workspace = trim($workspace, '/');
-        return $this;
-    }
-
-    /**
+     * Returns workspace
+     *
      * @return string
      */
     public function getWorkspace()
@@ -107,74 +92,101 @@ class Client
     }
 
     /**
-     * @param $path
+     * Read content from document store
+     *
+     * @param string $path Path
+     *
      * @return File|null
      */
     public function read($path)
     {
-        if (!isset($this->cache[$path])) {
-
-            $request = clone $this->requestTemplate;
-
-            $request->setUri($this->getContentUri($path))
-                ->setMethod('GET');
-
-            $response = $this->getHttpClient()->setRequest($request)->send();
-
-            if ($response->getStatusCode() == 200) {
-                $data = (array) json_decode($response->getBody());
-                $data['content'] = base64_decode($data['content']);
-                $file = new File();
-                $file->exchangeArray($data);
-                $this->cache[$path] = $file;
-            } else {
-                $this->cache[$path] = null;
-            }
+        if (isset($this->cache[$path])) {
+            return $this->cache[$path];
         }
 
-        return $this->cache[$path];
+        $tmpFileName = $this->fileSystem->createTmpFile(sys_get_temp_dir(), 'download');
+
+        $request = clone $this->requestTemplate;
+        $request->setUri($this->getContentUri($path))
+            ->setMethod(Request::METHOD_GET);
+
+        /** @var  \Zend\Http\Response\Stream $response */
+        $response = $this->getHttpClient()
+            ->setStream($tmpFileName)
+            ->setRequest($request)
+            ->send();
+
+        if ($response->isSuccess()) {
+            $data = (array)json_decode($response->getBody());
+            //  reuse file used for download
+            file_put_contents($tmpFileName, base64_decode($data['content']));
+
+            $file = new File();
+            $file->setResource($tmpFileName);
+
+            unset($data);
+
+            return $this->cache[$path] = $file;
+        }
+
+        return null;
     }
 
     /**
-     * @param $path
-     * @param $hard
-     * @return \Zend\Http\Response
+     * Remove file on storage
+     *
+     * @param string $path Path to file on storage
+     * @param bool   $hard Something
+     *
+     * @return Response
      */
     public function remove($path, $hard = false)
     {
         $request = clone $this->requestTemplate;
         $request->setUri($this->getContentUri($path, $hard))
-            ->setMethod('DELETE');
+            ->setMethod(Request::METHOD_DELETE);
 
         return $this->getHttpClient()->setRequest($request)->send();
     }
 
     /**
-     * @param $path
-     * @param File $file
-     * @return \Zend\Http\Response
+     * Store file on remote storage
+     *
+     * @param string $path File Path on storage
+     * @param File   $file File
+     *
+     * @return Response
+     * @throws \Exception
      */
     public function write($path, File $file)
     {
-        $data = $file->getArrayCopy();
-        $data['hubPath'] = $path;
-        $data['mime'] = $file->getRealType();
-        $data['content'] = base64_encode($data['content']);
-        $requestJson = json_encode($data, JSON_UNESCAPED_SLASHES);
+        //  don't use here json_encode it consume too much memory
+        $requestJson =
+            '{' .
+                '"hubPath": "' . $path . '",' .
+                '"mime": "' . $file->getMimeType() . '",' .
+                '"content": "' . base64_encode($file->getContent()) . '"' .
+            '}';
 
         $request = clone $this->requestTemplate;
-        $request->setUri($this->getContentUri(''))
-            ->setMethod('POST')
+        $request
+            ->setUri($this->getContentUri(''))
+            ->setMethod(Request::METHOD_POST)
             ->setContent($requestJson);
 
         $request->getHeaders()
+            ->addHeaderLine('Content-Length', strlen($requestJson))
             ->addHeaderLine('Content-Type', 'application/json');
 
         return $this->getHttpClient()->setRequest($request)->send();
     }
 
     /**
-     * @param $path
+     * Return path to content
+     *
+     * @param string $path   Path to file
+     * @param bool   $prefix Add Version folder
+     *
      * @return string
      */
     protected function getContentUri($path, $prefix = false)
@@ -183,7 +195,12 @@ class Client
     }
 
     /**
-     * @param $path
+     * Returns full path at Doc Store
+     *
+     * @param string $path   File Path
+     * @param string $prefix isPrefix
+     * @param string $folder Folder
+     *
      * @return string
      */
     protected function getUri($path, $prefix, $folder)
@@ -191,10 +208,9 @@ class Client
         if ($prefix) {
             $folder = 'version/' . $folder;
         }
-        if ($path) {
-            return $this->getBaseUri() . '/' . $folder . '/' . $this->getWorkspace() . '/' . ltrim($path, '/');
-        } else {
-            return $this->getBaseUri() . '/' . $folder . '/' . $this->getWorkspace();
-        }
+
+        $path = (!empty($path) ? '/' . ltrim($path, '/') : '');
+
+        return $this->baseUri . '/' . $folder . '/' . $this->workspace . $path;
     }
 }

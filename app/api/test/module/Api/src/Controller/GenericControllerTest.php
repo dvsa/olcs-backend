@@ -1,24 +1,22 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Controller;
 
 use Dvsa\Olcs\Api\Controller\GenericController;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
+use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response;
+use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence;
 use Dvsa\Olcs\Transfer\Query\Application\Application;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as testCase;
 use Zend\Mvc\Controller\Plugin\Params;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\View\Model\JsonModel;
-use Dvsa\Olcs\Api\Domain\Exception;
 
 /**
- * Class GenericControllerTest
+ * @covers Dvsa\Olcs\Api\Controller\GenericController
  */
 class GenericControllerTest extends TestCase
 {
@@ -159,6 +157,32 @@ class GenericControllerTest extends TestCase
         $response = $sut->getList();
 
         $this->assertSame($viewModel, $response);
+    }
+
+    public function testGetListStream()
+    {
+        $dto = new Application();
+
+        $mockStream = m::mock(\Zend\Http\Response\Stream::class);
+
+        $mockParams = m::mock(Params::class)
+            ->shouldReceive('__invoke')->with('dto')->andReturn($dto)
+            ->getMock();
+
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class)
+            ->shouldReceive('handleQuery')->with($dto)->andReturn($mockStream)
+            ->getMock();
+
+        $mockSl = m::mock(PluginManager::class)
+            ->shouldReceive('get')->with('params', null)->andReturn($mockParams)
+            ->shouldReceive('get')->with('QueryHandlerManager')->andReturn($mockQueryHandler)
+            ->shouldReceive('setController')
+            ->getMock();
+
+        //  call & check
+        $actual = $this->setupSut($mockSl)->getList();
+
+        static::assertSame($mockStream, $actual);
     }
 
     public function testGetListNotFound()
@@ -395,7 +419,7 @@ class GenericControllerTest extends TestCase
 
         $sut = $this->setupSut($mockSl);
 
-        $response = $sut->replaceList(25, []);
+        $response = $sut->replaceList(25);
 
         $this->assertSame($viewModel, $response);
     }
@@ -420,7 +444,7 @@ class GenericControllerTest extends TestCase
 
         $sut = $this->setupSut($mockSl);
 
-        $response = $sut->replaceList(25, []);
+        $response = $sut->replaceList(25);
 
         $this->assertSame($viewModel, $response);
     }
@@ -446,7 +470,7 @@ class GenericControllerTest extends TestCase
 
         $sut = $this->setupSut($mockSl);
 
-        $response = $sut->replaceList(25, []);
+        $response = $sut->replaceList(25);
 
         $this->assertSame($viewModel, $response);
     }
@@ -476,7 +500,7 @@ class GenericControllerTest extends TestCase
 
         $sut = $this->setupSut($mockSl);
 
-        $response = $sut->replaceList(25, []);
+        $response = $sut->replaceList(25);
 
         $this->assertSame($viewModel, $response);
     }
@@ -503,7 +527,7 @@ class GenericControllerTest extends TestCase
 
         $sut = $this->setupSut($mockSl);
 
-        $response = $sut->replaceList(25, []);
+        $response = $sut->replaceList(25);
 
         $this->assertSame($viewModel, $response);
     }

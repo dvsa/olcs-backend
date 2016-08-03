@@ -2,222 +2,185 @@
 
 namespace Dvsa\OlcsTest\DocumentShare\Service;
 
-use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Dvsa\Olcs\Api\Filesystem\Filesystem;
+use Dvsa\Olcs\Api\Service\File\File;
+use Dvsa\Olcs\DocumentShare\Data\Object\File as DocShareFile;
 use Dvsa\Olcs\DocumentShare\Service\Client;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use org\bovigo\vfs\vfsStream;
+use PHPUnit_Framework_MockObject_MockObject as MockObj;
+use Zend\Http\Headers;
+use Zend\Http\Request;
 
 /**
- * Client Test
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
+ * @covers Dvsa\Olcs\DocumentShare\Service\Client
  */
-class ClientTest extends \PHPUnit_Framework_TestCase
+class ClientTest extends MockeryTestCase
 {
-    public function testGetBaseUri()
+    const BASE_URI = 'http://testing';
+    const WORKSPACE = 'unit_Workspace';
+
+    /** @var  Client */
+    protected $sut;
+
+    /** @var  MockObj | \Zend\Http\Client */
+    private $mockClient;
+    /** @var  MockObj | \Zend\Http\Request */
+    private $mockRequest;
+    /** @var  m\MockInterface | Filesystem */
+    private $mockFs;
+    /** @var  m\MockInterface|File */
+    private $mockFile;
+
+    public function setUp()
     {
-        $sut = new Client();
-        $this->assertEmpty($sut->getBaseUri());
-    }
+        $this->mockClient = $this->getMock(\Zend\Http\Client::class);
+        $this->mockRequest = $this->getMock(\Zend\Http\Request::class);
+        $this->mockFs = m::mock(Filesystem::class);
 
-    public function testSetBaseUri()
-    {
-        $sut = new Client();
-        $baseUri = 'http://testing';
-        $sut->setBaseUri($baseUri);
-        $this->assertEquals($baseUri, $sut->getBaseUri());
-    }
-
-    public function testGetHttpClient()
-    {
-        $sut = new Client();
-        $this->assertNull($sut->getHttpClient());
-    }
-
-    public function testSetHttpClient()
-    {
-        $sut = new Client();
-        $mockClient = $this->getMock('Zend\Http\Client');
-        $sut->setHttpClient($mockClient);
-
-        $this->assertSame($mockClient, $sut->getHttpClient());
-    }
-
-    public function testGetRequestTemplate()
-    {
-        $sut = new Client();
-        $this->assertNull($sut->getRequestTemplate());
-    }
-
-    public function testSetRequestTemplate()
-    {
-        $sut = new Client();
-        $mockRequest = $this->getMock('Zend\Http\Request');
-        $sut->setRequestTemplate($mockRequest);
-
-        $this->assertSame($mockRequest, $sut->getRequestTemplate());
-    }
-
-    public function testGetWorkspace()
-    {
-        $sut = new Client();
-        $this->assertEmpty($sut->getWorkspace());
-    }
-
-    public function testSetWorkspace()
-    {
-        $sut = new Client();
-        $workspace = 'test';
-        $sut->setWorkspace($workspace);
-
-        $this->assertEquals($workspace, $sut->getWorkspace());
-    }
-
-    /**
-     * @dataProvider provideRead
-     * @param $code
-     * @param $content
-     * @param $expected
-     */
-    public function testRead($code, $content, $expected)
-    {
-        $mockRequest = $this->getMock('Zend\Http\Request');
-        $mockRequest->expects($this->once())
-            ->method('setUri')
-            ->with('http://testing/content/testing/test')
-            ->willReturnSelf();
-
-        $mockRequest->expects($this->once())
-            ->method('setMethod')
-            ->with('GET')
-            ->willReturnSelf();
-
-        $mockResponse = $this->getMock('Zend\Http\Response');
-        $mockResponse->expects($this->once())->method('getStatusCode')->will($this->returnValue($code));
-        $mockResponse->expects($this->any())->method('getBody')->willReturn($content);
-
-        $mockClient = $this->getMock('Zend\Http\Client');
-        $mockClient
-            ->expects($this->once())
-            ->method('setRequest')
-            ->with($mockRequest)
-            ->willReturnSelf();
-
-        $mockClient->expects($this->once())->method('send')->willReturn($mockResponse);
-
-        $sut = new Client();
-        $sut->setRequestTemplate($mockRequest);
-        $sut->setWorkspace('testing');
-        $sut->setBaseUri('http://testing/');
-        $sut->setHttpClient($mockClient);
-        $data = $sut->read('test');
-
-        $this->assertEquals($expected, $data);
-
-    }
-
-    public function provideRead()
-    {
-        $f = new File();
-        $f->setContent(base64_encode('testing'));
-
-        $expected = new File();
-        $expected->setContent('testing');
-
-        return array(
-            array(404, '', null),
-            array(200, json_encode($f->getArrayCopy()), $expected)
+        $this->sut = new Client(
+            $this->mockClient,
+            $this->mockRequest,
+            $this->mockFs,
+            self::BASE_URI,
+            self::WORKSPACE
         );
+
+        $this->mockFile = m::mock(File::class);
+    }
+
+    public function testGet()
+    {
+        static::assertEquals(self::BASE_URI, $this->sut->getBaseUri());
+        static::assertEquals(self::WORKSPACE, $this->sut->getWorkspace());
+        static::assertEquals($this->mockRequest, $this->sut->getRequestTemplate());
+    }
+
+    public function testReadOk()
+    {
+        //  mock config
+        vfsStream::setup();
+        $mockFilePath = vfsStream::url('root/unit.xxx');
+
+        $this->mockFs->shouldReceive('createTmpFile')
+            ->once()
+            ->with(sys_get_temp_dir(), 'download')
+            ->andReturn($mockFilePath);
+
+        $this->mockRequest->expects(static::once())
+            ->method('setUri')
+            ->with(self::BASE_URI . '/content/' . self::WORKSPACE . '/test')
+            ->willReturnSelf();
+        $this->mockRequest->expects(static::once())->method('setMethod')->with(Request::METHOD_GET);
+
+        $expectContent = 'unit_ABCD1234';
+        $content = '{"content": "' . base64_encode($expectContent) . '"}';
+
+        $mockResponse = m::mock(\Zend\Http\Response::class)
+            ->shouldReceive('getBody')->once()->andReturn($content)
+            ->shouldReceive('isSuccess')->once()->andReturn(true)
+            ->getMock();
+
+        $this->mockClient->expects(static::once())->method('setRequest')->with($this->mockRequest)->willReturnSelf();
+        $this->mockClient->expects(static::once())->method('setStream')->with($mockFilePath)->willReturnSelf();
+        $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
+
+        //  call & check
+        $actual = $this->sut->read('test');
+
+        static::assertInstanceOf(DocShareFile::class, $actual);
+        static::assertEquals($expectContent, file_get_contents($actual->getResource()));
+
+        //  second call
+        static::assertSame($actual, $this->sut->read('test'));
+    }
+
+    public function testReadNull()
+    {
+        $this->mockFs->shouldReceive('createTmpFile');
+
+        $this->mockRequest->expects(static::once())->method('setUri')->willReturnSelf();
+        $this->mockRequest->expects(static::once())->method('setMethod');
+
+        $mockResponse = m::mock(\Zend\Http\Response::class)
+            ->shouldReceive('isSuccess')->once()->andReturn(false)
+            ->getMock();
+
+        $this->mockClient->expects(static::once())->method('setRequest')->with($this->mockRequest)->willReturnSelf();
+        $this->mockClient->expects(static::once())->method('setStream')->willReturnSelf();
+        $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
+
+        //  call & check
+        $actual = $this->sut->read('test');
+
+        static::assertEquals(null, $actual);
     }
 
     public function testWrite()
     {
-        $mockRequest = $this->getMock('Zend\Http\Request');
-        $mockRequest->expects($this->once())
+        $expectPath = 'unit_Path';
+        $expectMime = 'unit_Mime';
+        $expectContent = 'unit_ABCDE123';
+
+        /** @var DocShareFile $mockFile */
+        $mockFile = m::mock(DocShareFile::class)
+            ->shouldReceive('getMimeType')->once()->andReturn($expectMime)
+            ->shouldReceive('getContent')->once()->andReturn($expectContent)
+            ->getMock();
+
+        $expectJson = '{"hubPath": "unit_Path","mime": "unit_Mime","content": "dW5pdF9BQkNERTEyMw=="}';
+
+        $mockHeaders = m::mock(Headers::class)
+            ->makePartial()
+            ->shouldReceive('addHeaderLine')->once()->with('Content-Length', strlen($expectJson))->andReturnSelf()
+            ->shouldReceive('addHeaderLine')->once()->with('Content-Type', 'application/json')
+            ->getMock();
+
+        $this->mockRequest->expects(static::once())
             ->method('setUri')
-            ->with('http://testing/content/testing')
+            ->with(self::BASE_URI . '/content/' . self::WORKSPACE)
             ->willReturnSelf();
 
-        $mockRequest->expects($this->once())
-            ->method('setMethod')
-            ->with('POST')
-            ->willReturnSelf();
+        $this->mockRequest->expects(static::once())->method('setMethod')->with(Request::METHOD_POST)->willReturnSelf();
+        $this->mockRequest->expects(static::once())->method('setContent')->with($expectJson)->willReturnSelf();
+        $this->mockRequest->expects(static::once())->method('getHeaders')->willReturn($mockHeaders);
 
-        $mockRequest->expects($this->once())
-            ->method('setContent')
-            ->with('{"content":"dGVzdA==","hubPath":"test","mime":"foo"}')
-            ->willReturnSelf();
+        $this->mockClient->expects(static::once())->method('setRequest')->with($this->mockRequest)->willReturnSelf();
+        $this->mockClient->expects(static::once())->method('send')->willReturn('EXPECTED');
 
-        $mockHeaders = $this->getMock('\stdClass', ['addHeaderLine']);
+        $actual = $this->sut->write($expectPath, $mockFile);
 
-        $mockHeaders->expects($this->once())
-            ->method('addHeaderLine')
-            ->with('Content-Type', 'application/json');
-
-        $mockRequest->expects($this->once())
-            ->method('getHeaders')
-            ->will($this->returnValue($mockHeaders));
-
-        $mockFile = $this->getMock('Dvsa\Olcs\DocumentShare\Data\Object\File');
-        $mockFile->expects($this->once())->method('getArrayCopy')->willReturn(array('content'=>'test'));
-        $mockFile->expects($this->once())->method('getRealType')->willReturn('foo');
-
-        $mockHttpClient = $this->getMock('Zend\Http\Client');
-        $mockHttpClient
-            ->expects($this->once())
-            ->method('setRequest')
-            ->with($mockRequest)
-            ->willReturnSelf();
-
-        $mockHttpClient->expects($this->once())->method('send')->willReturn('response');
-
-        $sut = new Client();
-        $sut->setRequestTemplate($mockRequest);
-        $sut->setHttpClient($mockHttpClient);
-        $sut->setWorkspace('testing');
-        $sut->setBaseUri('http://testing/');
-        $response = $sut->write('test', $mockFile);
-
-        $this->assertEquals('response', $response);
+        static::assertEquals('EXPECTED', $actual);
     }
 
     /**
-     * @dataProvider provideRemove
+     * @dataProvider dpRemove
      */
     public function testRemove($uri, $hard)
     {
-        $mockRequest = $this->getMock('Zend\Http\Request');
-        $mockRequest->expects($this->once())
-            ->method('setUri')
-            ->with($uri)
-            ->willReturnSelf();
+        $this->mockRequest->expects(static::once())->method('setUri')->with($uri)->willReturnSelf();
+        $this->mockRequest->expects(static::once())->method('setMethod')->with(Request::METHOD_DELETE);
 
-        $mockRequest->expects($this->once())
-            ->method('setMethod')
-            ->with('DELETE');
+        $this->mockClient->expects(static::once())->method('setRequest')->with($this->mockRequest)->willReturnSelf();
+        $this->mockClient->expects(static::once())->method('send')->willReturn('EXPECTED');
 
-        $mockClient = $this->getMock('Zend\Http\Client');
-        $mockClient
-            ->expects($this->once())
-            ->method('setRequest')
-            ->with($mockRequest)
-            ->willReturnSelf();
+        $result = $this->sut->remove('test', $hard);
 
-        $mockClient->expects($this->once())->method('send')->willReturn('fake response');
-
-        $sut = new Client();
-        $sut->setRequestTemplate($mockRequest);
-        $sut->setWorkspace('testing');
-        $sut->setBaseUri('http://testing/');
-        $sut->setHttpClient($mockClient);
-        $result = $sut->remove('test', $hard);
-
-        $this->assertEquals('fake response', $result);
+        static::assertEquals('EXPECTED', $result);
     }
 
-    public function provideRemove()
+    public function dpRemove()
     {
-        return array(
-            array('http://testing/content/testing/test', false),
-            array('http://testing/version/content/testing/test', true)
-        );
+        return [
+            [
+                'uri' => 'http://testing/content/' . self::WORKSPACE . '/test',
+                'hard' => false,
+            ],
+            [
+                'uri' => 'http://testing/version/content/' . self::WORKSPACE . '/test',
+                'hard' => true,
+            ],
+        ];
     }
 }
