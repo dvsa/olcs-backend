@@ -56,6 +56,7 @@ class CreateResponseTest extends CommandHandlerTestCase
         $xml = 'xml string';
         $userId = 111;
         $caseId = 333;
+        $licenceId = 444;
         $documentId = 555;
         $erruRequestId = 777;
         $command = CreateErruResponseCmd::create(['case' => $caseId]);
@@ -74,7 +75,9 @@ class CreateResponseTest extends CommandHandlerTestCase
             'category' => CategoryEntity::CATEGORY_COMPLIANCE,
             'subCategory' => CategoryEntity::DOC_SUB_CATEGORY_NR,
             'filename' => 'msiresponse.xml',
-            'description' => sprintf(CreateResponse::RESPONSE_DOCUMENT_DESCRIPTION, $notificationNumber)
+            'description' => sprintf(CreateResponse::RESPONSE_DOCUMENT_DESCRIPTION, $notificationNumber),
+            'case' => $caseId,
+            'licence' => $licenceId
         ];
 
         $this->expectedSideEffect(UploadCmd::class, $documentData, $documentResult);
@@ -93,8 +96,9 @@ class CreateResponseTest extends CommandHandlerTestCase
         $erruRequest->shouldReceive('getId')->andReturn($erruRequestId);
 
         $case = m::mock(CasesEntity::class);
-        $case->shouldReceive('getId')->once()->andReturn($caseId);
+        $case->shouldReceive('getId')->times(2)->andReturn($caseId);
         $case->shouldReceive('getErruRequest')->once()->andReturn($erruRequest);
+        $case->shouldReceive('getLicence->getId')->once()->andReturn($licenceId);
 
         $this->repoMap['Cases']->shouldReceive('fetchById')->once()->with($caseId)->andReturn($case);
         $this->repoMap['ErruRequest']->shouldReceive('save')->once()->with(m::type(ErruRequestEntity::class));

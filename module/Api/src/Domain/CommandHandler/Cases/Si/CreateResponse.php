@@ -4,8 +4,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -46,8 +46,9 @@ final class CreateResponse extends AbstractCommandHandler implements AuthAwareIn
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return $this
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
+     * @return TransactioningCommandHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -58,9 +59,10 @@ final class CreateResponse extends AbstractCommandHandler implements AuthAwareIn
     }
 
     /**
-     * SendResponse
+     * Create the erru response
      *
-     * @param CommandInterface $command
+     * @param CommandInterface $command the command
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -77,7 +79,8 @@ final class CreateResponse extends AbstractCommandHandler implements AuthAwareIn
         $erruRequest = $case->getErruRequest();
 
         //save the xml into the document store
-        $result = $this->handleSideEffect($this->createDocumentCommand($xml, $erruRequest->getNotificationNumber()));
+        $xmlDocumentCmd = $this->createDocumentCommand($xml, $erruRequest->getNotificationNumber(), $case);
+        $result = $this->handleSideEffect($xmlDocumentCmd);
 
         //get the document record so we can link it to the erru request
         $docRepo = $this->getRepo('Document');
@@ -106,19 +109,22 @@ final class CreateResponse extends AbstractCommandHandler implements AuthAwareIn
     /**
      * Returns an upload command to add the response XML to the doc store
      *
-     * @param string $content this will be xml
-     * @param string $notificationNumber this will be a GUID
+     * @param string      $content            this will be xml
+     * @param string      $notificationNumber this will be a GUID
+     * @param CasesEntity $case               case entity
      *
      * @return UploadCmd
      */
-    private function createDocumentCommand($content, $notificationNumber)
+    private function createDocumentCommand($content, $notificationNumber, CasesEntity $case)
     {
         $data = [
             'content' => base64_encode($content),
             'category' => CategoryEntity::CATEGORY_COMPLIANCE,
             'subCategory' => CategoryEntity::DOC_SUB_CATEGORY_NR,
             'filename' => 'msiresponse.xml',
-            'description' => sprintf(CreateResponse::RESPONSE_DOCUMENT_DESCRIPTION, $notificationNumber)
+            'description' => sprintf(CreateResponse::RESPONSE_DOCUMENT_DESCRIPTION, $notificationNumber),
+            'case' => $case->getId(),
+            'licence' => $case->getLicence()->getId()
         ];
 
         return UploadCmd::create($data);
