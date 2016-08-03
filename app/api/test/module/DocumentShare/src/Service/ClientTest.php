@@ -172,9 +172,15 @@ class ClientTest extends MockeryTestCase
 
     public function dpRemove()
     {
-        return array(
-            array('http://testing/content/' . self::WORKSPACE . '/test', false),
-            array('http://testing/version/content/' . self::WORKSPACE . '/test', true)
-        );
+        return [
+            [
+                'uri' => 'http://testing/content/' . self::WORKSPACE . '/test',
+                'hard' => false,
+            ],
+            [
+                'uri' => 'http://testing/version/content/' . self::WORKSPACE . '/test',
+                'hard' => true,
+            ],
+        ];
     }
 }

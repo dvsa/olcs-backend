@@ -8,7 +8,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Document\CanAccessDocumentWithId;
 
 /**
- * @covers CanAccessDocumentWithIdTest
+ * @covers Dvsa\Olcs\Api\Domain\Validation\Handlers\Document\CanAccessDocumentWithId
  */
 class CanAccessDocumentWithIdTest extends AbstractHandlerTestCase
 {
