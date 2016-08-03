@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\Tm\UpdateNysiisName as Cmd;
 use Zend\Serializer\Adapter\Json as ZendJson;
 use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
+
 /**
  * Update TM name with Nysiis data
  */

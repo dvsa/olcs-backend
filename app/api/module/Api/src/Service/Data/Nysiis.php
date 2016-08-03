@@ -62,7 +62,7 @@ class Nysiis
                 $params['nysiisForename'] . ', familyName => ' . $params['nysiisFamilyname']
             );
         }
-        
+
         return $result->GetNYSIISSearchKeysResult;
     }
 
