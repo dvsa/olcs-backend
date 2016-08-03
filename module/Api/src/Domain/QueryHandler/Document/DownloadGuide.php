@@ -3,18 +3,13 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
-use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 
 /**
  * Download a guide document, these are located in a "/guides/" directory in the content store
  */
-class DownloadGuide extends AbstractQueryHandler implements UploaderAwareInterface
+class DownloadGuide extends AbstractDownload
 {
-    use UploaderAwareTrait;
-
     /**
      * Handle query
      *
@@ -25,20 +20,15 @@ class DownloadGuide extends AbstractQueryHandler implements UploaderAwareInterfa
      */
     public function handleQuery(QueryInterface $query)
     {
+        $this->setIsInline($query->isInline());
+
+        $identifier = $query->getIdentifier();
+
         // make sure that the file identifier cannot go up directory structure to secure documents
-        if (strpos($query->getIdentifier(), '..') !== false) {
+        if (strpos($identifier, '..') !== false) {
             throw new NotFoundException();
         }
 
-        $filePath = '/guides/'. $query->getIdentifier();
-        $file = $this->getUploader()->download($filePath);
-        if ($file === null) {
-            throw new NotFoundException();
-        }
-
-        return [
-            'fileName' => $query->getIdentifier(),
-            'content' => base64_encode($file->getContent()),
-        ];
+        return $this->download($identifier, '/guides/' . $identifier);
     }
 }

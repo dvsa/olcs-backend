@@ -1,16 +1,11 @@
 <?php
 
-/**
- * Organisation
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
-use Doctrine\ORM\Query;
 
 /**
  * Organisation
@@ -23,11 +18,29 @@ class Organisation extends AbstractRepository
 
     protected $alias = 'o';
 
+    /**
+     * Fetch business details by Id
+     *
+     * @param QryCmd $query       Query or Command
+     * @param int    $hydrateMode Hydrate mode
+     *
+     * @return Entity
+     * @throws NotFoundException
+     */
     public function fetchBusinessDetailsUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         return $this->fetchBusinessDetailsById($query->getId(), $hydrateMode);
     }
 
+    /**
+     * Fetch business details by Id
+     *
+     * @param int $id          Identifier
+     * @param int $hydrateMode Hydrate mode
+     *
+     * @return Entity
+     * @throws NotFoundException
+     */
     public function fetchBusinessDetailsById($id, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         $qb = $this->createQueryBuilder();
@@ -43,11 +56,29 @@ class Organisation extends AbstractRepository
         return $results[0];
     }
 
+    /**
+     * Fetch Ifro details by Id
+     *
+     * @param QryCmd $query       Command or Query
+     * @param int    $hydrateMode Hydrate mode
+     *
+     * @return Entity
+     * @throws NotFoundException
+     */
     public function fetchIrfoDetailsUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         return $this->fetchIrfoDetailsById($query->getId(), $hydrateMode);
     }
 
+    /**
+     * Fetch Ifro details by Id
+     *
+     * @param int $id          Identifier
+     * @param int $hydrateMode Hydrate mode
+     *
+     * @return Entity
+     * @throws NotFoundException
+     */
     public function fetchIrfoDetailsById($id, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         $qb = $this->createQueryBuilder();
@@ -69,6 +100,14 @@ class Organisation extends AbstractRepository
         return $results[0];
     }
 
+    /**
+     * Get organisations by company number
+     *
+     * @param string $companyNumber Company number
+     *
+     * @return Entity[]
+     * @throws NotFoundException
+     */
     public function getByCompanyOrLlpNo($companyNumber)
     {
         $qb = $this->createQueryBuilder();
@@ -89,6 +128,13 @@ class Organisation extends AbstractRepository
         return $results;
     }
 
+    /**
+     * Get organisations by status
+     *
+     * @param \Dvsa\Olcs\Transfer\Query\Organisation\CpidOrganisation $query Query
+     *
+     * @return array
+     */
     public function fetchByStatusPaginated($query)
     {
         $qb = $this->createQueryBuilder();
@@ -116,9 +162,16 @@ class Organisation extends AbstractRepository
         ];
     }
 
+    /**
+     * Get organisations data data for export
+     *
+     * @param string $status Status
+     *
+     * @return \Doctrine\ORM\Internal\Hydration\IterableResult
+     */
     public function fetchAllByStatusForCpidExport($status = null)
     {
-        $qb = $this->createQueryBuilder('o');
+        $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($qb)
             ->with('cpid', 'r');
@@ -140,6 +193,6 @@ class Organisation extends AbstractRepository
 
         $query = $qb->getQuery();
 
-        return $query->iterate(null, Query::HYDRATE_ARRAY);
+        return $query->iterate();
     }
 }

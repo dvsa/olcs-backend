@@ -1,10 +1,5 @@
 <?php
 
-/**
- * File
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Service\File;
 
 /**
@@ -14,45 +9,25 @@ namespace Dvsa\Olcs\Api\Service\File;
  */
 class File
 {
-    /**
-     * Holds the identifier
-     *
-     * @var string
-     */
+    /** @var string */
     protected $identifier;
-
-    /**
-     * Holds the name
-     *
-     * @var string
-     */
+    /** @var string */
     protected $name;
-
-    /**
-     * Holds the path
-     *
-     * @var string
-     */
+    /** @var string */
     protected $path;
-
-    /**
-     * Holds the file size
-     *
-     * @var int
-     */
+    /** @var  string */
+    private $mimeType;
+    /** @var  int */
     protected $size;
-
-    /**
-     * Holds the actual file content
-     *
-     * @var string
-     */
+    /** @var string */
     protected $content;
 
     /**
      * Setter for identifier
      *
-     * @param string $identifier
+     * @param string $identifier Identifier
+     *
+     * @return $this
      */
     public function setIdentifier($identifier)
     {
@@ -74,7 +49,9 @@ class File
     /**
      * Setter for name
      *
-     * @param string $name
+     * @param string $name Name
+     *
+     * @return $this
      */
     public function setName($name)
     {
@@ -96,7 +73,9 @@ class File
     /**
      * Setter for path
      *
-     * @param string $path
+     * @param string $path Path
+     *
+     * @return $this
      */
     public function setPath($path)
     {
@@ -116,49 +95,38 @@ class File
     }
 
     /**
-     * Setter for size
-     *
-     * @param int $size
-     */
-    public function setSize($size)
-    {
-        $this->size = $size;
-
-        return $this;
-    }
-
-    /**
      * Getter for size
      *
      * @return int
      */
     public function getSize()
     {
+        if ($this->size === null) {
+            $this->size = strlen($this->content);
+        }
+
         return $this->size;
     }
 
     /**
      * Setter for content
      *
-     * @param int $content
+     * @param string|array $content Content
+     *
+     * @return $this
      */
     public function setContent($content)
     {
-        $this->content = $content;
+        $this->size = null;
+        $this->mimeType = null;
 
-        return $this;
-    }
-
-    public function setContentAndSize($content)
-    {
         if (is_array($content)) {
             $this->content = file_get_contents($content['tmp_name']);
-            $this->size = $content['size'];
-            return;
+        } else {
+            $this->content = $content;
         }
 
-        $this->content = base64_decode($content);
-        $this->size = strlen($this->content);
+        return $this;
     }
 
     /**
@@ -171,6 +139,11 @@ class File
         return $this->content;
     }
 
+    /**
+     * Get file extention
+     *
+     * @return string
+     */
     public function getExtension()
     {
         if (empty($this->name)) {
@@ -186,50 +159,31 @@ class File
         return substr($this->name, $extPos + 1);
     }
 
-    public function getRealType()
-    {
-        $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        return $finfo->buffer($this->getContent());
-    }
-
     /**
-     * Populate properties from data
+     * Get Mime type
      *
-     * @param array $data
+     * @return null|string
+     * @throws \Exception
      */
-    public function fromData($data)
+    public function getMimeType()
     {
-        $propertyMap = [
-            'name' => ['name', 'filename'],
-            'path' => ['tmp_name'],
-            'size' => ['size'],
-            'content' => ['content'],
-            'identifier' => ['identifier']
-        ];
+        if ($this->mimeType === null) {
+            $tmpFile = tempnam(sys_get_temp_dir(), 'temp');
+            try {
+                file_put_contents($tmpFile, $this->content);
 
-        foreach ($data as $key => $value) {
-            foreach ($propertyMap as $name => $map) {
-                if (in_array($key, $map)) {
-                    $this->{'set' . ucwords($name)}($value);
-                    break;
+                $this->mimeType = (new \finfo(FILEINFO_MIME_TYPE))->file($tmpFile);
+
+            } catch (\Exception $e) {
+                throw $e;
+
+            } finally {
+                if (is_file($tmpFile)) {
+                    unlink($tmpFile);
                 }
             }
         }
-    }
 
-    /**
-     * Export properties as array
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return [
-            'identifier' => $this->getIdentifier(),
-            'name' => $this->getName(),
-            'path' => $this->getPath(),
-            'size' => $this->getSize(),
-            'content' => $this->getContent()
-        ];
+        return $this->mimeType;
     }
 }

@@ -1,16 +1,11 @@
 <?php
 
-/**
- * Upload
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument as CreateDocumentCmd;
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as CreateDocumentSpecificCmd;
+use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
@@ -18,9 +13,8 @@ use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait;
 use Dvsa\Olcs\Api\Service\File\File;
 use Dvsa\Olcs\Api\Service\File\MimeNotAllowedException;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Transfer\Command\Document\Upload as Cmd;
 
 /**
  * Upload
@@ -41,8 +35,12 @@ final class Upload extends AbstractCommandHandler implements
     protected $repoServiceName = 'Document';
 
     /**
-     * @param CommandInterface $command
+     * Execute command
+     *
+     * @param TransferCmd\Document\Upload $command Command
+     *
      * @return Result
+     * @throws ValidationException
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -55,7 +53,15 @@ final class Upload extends AbstractCommandHandler implements
         return $this->result;
     }
 
-    protected function determineIdentifier(Cmd $command)
+    /**
+     * Define file name(path)
+     *
+     * @param TransferCmd\Document\Upload $command Upload command
+     *
+     * @return string
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function determineIdentifier(TransferCmd\Document\Upload $command)
     {
         $description = $this->getDescriptionFromCommand($command);
 
@@ -78,19 +84,33 @@ final class Upload extends AbstractCommandHandler implements
         return $this->getNamingService()->generateName($description, $extension, $category, $subCategory, $entity);
     }
 
-    protected function uploadFile(Cmd $command, $identifier)
+    /**
+     * Upload file to Document storage
+     *
+     * @param TransferCmd\Document\Upload $command    Upload Command
+     * @param string                      $identifier File name (path)
+     *
+     * @return File
+     * @throws ValidationException
+     * @throws \Dvsa\Olcs\Api\Service\File\Exception
+     * @throws \Exception
+     */
+    protected function uploadFile(TransferCmd\Document\Upload $command, $identifier)
     {
         $file = new File();
         $file->setName($command->getFilename());
-        $file->setContentAndSize($command->getContent());
 
-        if ($command->getIsEbsrPack() && $file->getRealType() !== 'application/zip') {
+        $content = $command->getContent();
+        $file->setContent(!is_array($content) ? base64_decode($content) : $content);
+
+        if ($command->getIsEbsrPack() && $file->getMimeType() !== 'application/zip') {
             throw new ValidationException([self::ERR_EBSR_MIME => self::ERR_EBSR_MIME]);
         }
 
         try {
             $this->getUploader()->setFile($file);
             $file = $this->getUploader()->upload($identifier);
+
         } catch (MimeNotAllowedException $ex) {
             throw new ValidationException([self::ERR_MIME => self::ERR_MIME]);
         }
@@ -101,7 +121,16 @@ final class Upload extends AbstractCommandHandler implements
         return $file;
     }
 
-    protected function createDocument(Cmd $command, File $file, $identifier)
+    /**
+     * Create document
+     *
+     * @param TransferCmd\Document\Upload $command    Upload command
+     * @param File                        $file       File
+     * @param string                      $identifier File name (path)
+     *
+     * @return Result
+     */
+    protected function createDocument(TransferCmd\Document\Upload $command, File $file, $identifier)
     {
         $data = $command->getArrayCopy();
         unset($data['content']);
@@ -113,13 +142,22 @@ final class Upload extends AbstractCommandHandler implements
         $data['user'] = $command->getUser();
 
         if ($data['isExternal'] === null) {
-            return $this->handleSideEffect(CreateDocumentCmd::create($data));
+            $cmd = DomainCmd\Document\CreateDocument::create($data);
         } else {
-            return $this->handleSideEffect(CreateDocumentSpecificCmd::create($data));
+            $cmd = DomainCmd\Document\CreateDocumentSpecific::create($data);
         }
+
+        return $this->handleSideEffect($cmd);
     }
 
-    protected function getDescriptionFromCommand($command)
+    /**
+     * Get description from command data
+     *
+     * @param TransferCmd\Document\Upload $command Upload command
+     *
+     * @return string
+     */
+    protected function getDescriptionFromCommand(TransferCmd\Document\Upload $command)
     {
         $description = $command->getDescription();
 

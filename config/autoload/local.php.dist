@@ -236,7 +236,7 @@ return [
             'writers' => [
                 'full' => [
                     'options' => [
-                        'stream' => '/var/tmp/backend.log'
+                        'stream' => '/var/tmp/backend.log',
                         'filters' => [
                             'priority' => [
                                 'name' => 'priority',
@@ -253,7 +253,7 @@ return [
             'writers' => [
                 'full' => [
                     'options' => [
-                        'stream' => '/var/tmp/backend.log'
+                        'stream' => '/var/tmp/backend.log',
                         'filters' => [
                             'priority' => [
                                 'name' => 'priority',
