@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
 use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
+use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
 
 /**
  * Abstract Command Queue Consumer
@@ -82,6 +83,8 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
         } catch (DomainException $e) {
             $message = !empty($e->getMessages()) ? implode(', ', $e->getMessages()) : $e->getMessage();
             return $this->failed($item, $message);
+        } catch (ZendServiceException $e) {
+            return $this->handleZendServiceException($item, $e);
         } catch (\Exception $e) {
             return $this->failed($item, $e->getMessage());
         }
@@ -91,5 +94,17 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
             $message = implode(', ', $result->getMessages());
         }
         return $this->success($item, $message);
+    }
+
+    /**
+     * Method to handle the Service Manager exception. Default to failed.
+     * 
+     * @param QueueEntity $item
+     * @param \Exception $e
+     * @return string
+     */
+    protected function handleZendServiceException(QueueEntity $item, \Exception $e)
+    {
+        return $this->failed($item, $e->getMessage());
     }
 }
