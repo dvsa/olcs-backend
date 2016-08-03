@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime as DateTimeExtended;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as CollectionInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Olcs\XmlTools\Xml\XmlNodeBuilder;
 
@@ -103,12 +103,12 @@ class MsiResponse
     }
 
     /**
-     * Returns the result of filtering $value
+     * Creates the Msi response, returns xml string
      *
-     * @param CasesEntity $case
+     * @param CasesEntity $case the case
+     *
+     * @return string
      * @throws ForbiddenException
-     *
-     * @return array
      */
     public function create(CasesEntity $case)
     {
@@ -138,7 +138,10 @@ class MsiResponse
     }
 
     /**
-     * @param ErruRequestEntity $erruRequest
+     * Fetches array of header information for the XML
+     *
+     * @param ErruRequestEntity $erruRequest erru request
+     *
      * @return array
      */
     private function getHeader(ErruRequestEntity $erruRequest)
@@ -168,8 +171,11 @@ class MsiResponse
     }
 
     /**
-     * @param CasesEntity $cases
-     * @param ErruRequestEntity $erruRequest
+     * Fetches array of information for the xml body
+     *
+     * @param CasesEntity $cases             case entity
+     * @param ErruRequestEntity $erruRequest erru request entity
+     *
      * @return array
      */
     private function getBody(CasesEntity $cases, ErruRequestEntity $erruRequest)
@@ -197,10 +203,11 @@ class MsiResponse
     /**
      * Formats penalty information into something usable by xml node builder
      *
-     * @param ArrayCollection $seriousInfringements
+     * @param CollectionInterface $seriousInfringements collection of serious infringements
+     *
      * @return array
      */
-    private function formatPenalties(ArrayCollection $seriousInfringements)
+    private function formatPenalties(CollectionInterface $seriousInfringements)
     {
         $formattedPenalties = [];
 
