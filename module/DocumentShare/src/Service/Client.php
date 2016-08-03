@@ -47,8 +47,8 @@ class Client
         $this->httpClient = $httpClient;
         $this->requestTemplate = $requestTemplate;
         $this->fileSystem = $fileSystem;
-        $this->baseUri = $baseUri;
-        $this->workspace = $workspace;
+        $this->baseUri = trim($baseUri);
+        $this->workspace = trim($workspace);
     }
 
     /**

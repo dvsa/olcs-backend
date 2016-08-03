@@ -30,8 +30,8 @@ class Download extends AbstractDownload
         /* @var \Dvsa\Olcs\Api\Entity\Doc\Document $document */
         $document = $this->getRepo()->fetchById($query->getIdentifier());
 
-        $dentifier = $document->getIdentifier();
-
-        return $this->download($dentifier);
+        return $this->download(
+            $document->getIdentifier()
+        );
     }
 }

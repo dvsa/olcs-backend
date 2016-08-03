@@ -91,11 +91,6 @@ return [
 
     // Document service
     'document_share' => [
-        'http' => [
-            'curloptions' => [
-                CURLOPT_TIMEOUT => 600,
-            ],
-        ],
         'client' => [
             // Document service URI *Environment specific*
             'baseuri' => 'http://fs01.olcs.mgt.mtpdvsa:8080/hfs/',

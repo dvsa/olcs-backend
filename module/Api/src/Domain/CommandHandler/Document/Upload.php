@@ -61,7 +61,7 @@ final class Upload extends AbstractCommandHandler implements
      * @return string
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
-    protected function determineIdentifier(TransferCmd\Document\Upload $command)
+    private function determineIdentifier(TransferCmd\Document\Upload $command)
     {
         $description = $this->getDescriptionFromCommand($command);
 

@@ -18,7 +18,7 @@ use Zend\View\Model\JsonModel;
 /**
  * @covers Dvsa\Olcs\Api\Controller\GenericController
  */
-class GenericControllerTest extends testCase
+class GenericControllerTest extends TestCase
 {
     public function testGet()
     {
