@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
@@ -37,23 +38,29 @@ final class TransportManagers extends AbstractSection
     public function generateSection(CasesEntity $case)
     {
         $caseLicence = $case->getLicence();
+        $caseApplication = $case->getApplication();
 
         // Attach all TMs on licence applications
-        $licenceApplicationsUnderConsideration = $caseLicence->getApplicationsByStatus(
+        /** @var ArrayCollection $licenceApplications */
+        $licenceApplications = $caseLicence->getApplicationsByStatus(
             [Application::APPLICATION_STATUS_UNDER_CONSIDERATION]
         );
 
-        /** @var Application $application */
-        foreach ($licenceApplicationsUnderConsideration as $application) {
-            /** @var TransportManagerApplication $transportManagerApplication */
+        // add the single application for the case regardless of status
+        if (!$licenceApplications->contains($caseApplication)) {
+            $licenceApplications->add($caseApplication);
+        }
 
-            foreach ($application->getTransportManagers() as $transportManagerApplication) {
+        /** @var Application $application */
+        foreach ($licenceApplications as $application) {
+            $transportManagerApplications = $application->getTransportManagers();
+            /** @var TransportManagerApplication $transportManagerApplication */
+            foreach ($transportManagerApplications as $transportManagerApplication) {
                 $this->extractTmData(
                     $transportManagerApplication->getTransportManager(),
                     $application->getLicence()->getLicNo()
                 );
             }
-
         }
 
         // Attach all TMs associated with the licence
