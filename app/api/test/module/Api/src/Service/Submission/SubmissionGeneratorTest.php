@@ -111,7 +111,7 @@ class SubmissionGeneratorTest extends MockeryTestCase
     }
 
     /**
-     * Branch test for TM submisions that remove sections
+     * Branch test for TM submissions that remove sections
      *
      * @param $submissionType
      * @param $expectedSections
