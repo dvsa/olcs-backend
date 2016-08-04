@@ -8,8 +8,8 @@ namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\Tm\UpdateNysiisName as Cmd;
-
 use Zend\Serializer\Adapter\Json as ZendJson;
+use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
 
 /**
  * Update TM name with Nysiis data
@@ -41,5 +41,18 @@ class UpdateTmNysiisName extends AbstractCommandConsumer
             ],
             $json->unserialize($item->getOptions())
         );
+    }
+
+    /**
+     * Method to handle the Service Manager exception. Default to failed.
+     *
+     * @param QueueEntity $item
+     * @param \Exception $e
+     * @return string
+     */
+    protected function handleZendServiceException(QueueEntity $item, \Exception $e)
+    {
+        $ni = new NysiisException();
+        return $this->retry($item, $ni->getRetryAfter(), $e->getMessage());
     }
 }
