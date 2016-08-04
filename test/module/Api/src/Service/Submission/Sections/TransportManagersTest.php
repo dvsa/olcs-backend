@@ -44,6 +44,21 @@ class TransportManagersTest extends SubmissionSectionTest
                             ],
                             'birthDate' => '22/01/1977',
                             'birthPlace' => 'bp'
+                        ],
+                        216 => [
+                            'id' => 216,
+                            'version' => 226,
+                            'licNo' => 'OB12345',
+                            'tmType' => 'tmType-desc',
+                            'title' => 'title-desc',
+                            'forename' => 'fn22',
+                            'familyName' => 'sn22',
+                            'qualifications' => [
+                                0 => 'tm-qual-desc'
+                            ],
+                            'otherLicences' => [],
+                            'birthDate' => '22/01/1977',
+                            'birthPlace' => 'bp'
                         ]
                     ]
                 ]

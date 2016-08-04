@@ -117,18 +117,21 @@ class SubmissionSectionTest extends MockeryTestCase
         $licence = $this->generateLicence($organisation, 7);
 
         $application = $this->generateApplication(344, $licence, Application::APPLICATION_STATUS_GRANTED);
-        $tmApplications = new ArrayCollection();
-        $tmApplications->add(
-            [
-                $this->generateTransportManagerApplication(522, Application::APPLICATION_STATUS_GRANTED),
-                $this->generateTransportManagerApplication(263, Application::APPLICATION_STATUS_UNDER_CONSIDERATION)
-            ]
-        );
-        $application->setTransportManagers($tmApplications);
 
         $ecmsNo = 'ecms1234';
         $description = 'case description';
         $transportManager = $this->generateTransportManager(43);
+
+        $tmApplications = new ArrayCollection();
+        $tmApplications->add(
+            $this->generateTransportManagerApplication(
+                522,
+                $this->generateTransportManager(216),
+                Application::APPLICATION_STATUS_GRANTED
+            )
+        );
+
+        $application->setTransportManagers($tmApplications);
 
         $tmLicences = new ArrayCollection();
         $tmLicences->add(
@@ -140,7 +143,7 @@ class SubmissionSectionTest extends MockeryTestCase
         );
         $licence->setTmLicences($tmLicences);
 
-        $transportManager->setTmApplications($this->generateArrayCollection('TransportManagerApplication'));
+        $transportManager->setTmApplications($tmApplications);
         $transportManager->setTmLicences($tmLicences);
         $transportManager->setEmployments($this->generateArrayCollection('TmEmployment'));
         $transportManager->setOtherLicences($this->generateArrayCollection('OtherLicence'));
@@ -217,10 +220,12 @@ class SubmissionSectionTest extends MockeryTestCase
 
     protected function generateTransportManagerApplication(
         $id,
+        $transportManager,
         $applicationStatus = Application::APPLICATION_STATUS_UNDER_CONSIDERATION
     ) {
         $entity = new TransportManagerApplication($id);
         $entity->setId($id);
+        $entity->setTransportManager($transportManager);
         $entity->setOperatingCentres($this->generateArrayCollection('OperatingCentre', 2));
         $entity->setHoursMon(1);
         $entity->setHoursTue(2);

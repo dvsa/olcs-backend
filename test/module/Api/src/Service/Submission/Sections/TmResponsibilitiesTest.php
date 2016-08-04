@@ -26,14 +26,14 @@ class TmResponsibilitiesTest extends SubmissionSectionTest
                 'tables' => [
                     'applications' => [
                         0 => [
-                            'id' => 1,
+                            'id' => 522,
                             'version' => 1,
                             'managerType' => 'tmType-desc',
                             'noOpCentres' => 2,
                             'hrsPerWeek' => 28,
                             'applicationId' => 852,
                             'organisationName' => 'Org name',
-                            'status' => 'apsts_consideration-desc',
+                            'status' => 'apsts_granted-desc',
                             'licNo' => 'OB12345'
                         ]
                     ],
