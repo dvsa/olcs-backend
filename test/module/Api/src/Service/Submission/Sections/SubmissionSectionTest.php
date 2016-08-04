@@ -116,7 +116,15 @@ class SubmissionSectionTest extends MockeryTestCase
         $organisation = $this->generateOrganisation();
         $licence = $this->generateLicence($organisation, 7);
 
-        $application = null;
+        $application = $this->generateApplication(344, $licence, Application::APPLICATION_STATUS_GRANTED);
+        $tmApplications = new ArrayCollection();
+        $tmApplications->add(
+            [
+                $this->generateTransportManagerApplication(522, Application::APPLICATION_STATUS_GRANTED),
+                $this->generateTransportManagerApplication(263, Application::APPLICATION_STATUS_UNDER_CONSIDERATION)
+            ]
+        );
+        $application->setTransportManagers($tmApplications);
 
         $ecmsNo = 'ecms1234';
         $description = 'case description';
@@ -130,10 +138,10 @@ class SubmissionSectionTest extends MockeryTestCase
                 $transportManager
             )
         );
+        $licence->setTmLicences($tmLicences);
 
         $transportManager->setTmApplications($this->generateArrayCollection('TransportManagerApplication'));
         $transportManager->setTmLicences($tmLicences);
-
         $transportManager->setEmployments($this->generateArrayCollection('TmEmployment'));
         $transportManager->setOtherLicences($this->generateArrayCollection('OtherLicence'));
         $transportManager->setPreviousConvictions($this->generateArrayCollection('PreviousConviction'));
@@ -207,8 +215,10 @@ class SubmissionSectionTest extends MockeryTestCase
         return $tm;
     }
 
-    protected function generateTransportManagerApplication($id)
-    {
+    protected function generateTransportManagerApplication(
+        $id,
+        $applicationStatus = Application::APPLICATION_STATUS_UNDER_CONSIDERATION
+    ) {
         $entity = new TransportManagerApplication($id);
         $entity->setId($id);
         $entity->setOperatingCentres($this->generateArrayCollection('OperatingCentre', 2));
@@ -228,7 +238,7 @@ class SubmissionSectionTest extends MockeryTestCase
         $licence = $this->generateLicence($organisation, 55);
 
         $entity->setApplication(
-            $this->generateApplication(852, $licence, Application::APPLICATION_STATUS_UNDER_CONSIDERATION, false)
+            $this->generateApplication(852, $licence, $applicationStatus, false)
         );
 
         return $entity;
