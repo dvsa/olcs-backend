@@ -25,11 +25,11 @@ class TransportManagersTest extends SubmissionSectionTest
             'data' => [
                 'tables' => [
                     'transport-managers' => [
-                        153 => [
-                            'id' => 153,
-                            'version' => 306,
+                        43 => [
+                            'id' => 43,
+                            'version' => 53,
                             'licNo' => 'OB12345',
-                            'tmType' => 'tm_type1-desc',
+                            'tmType' => 'tmType-desc',
                             'title' => 'title-desc',
                             'forename' => 'fn22',
                             'familyName' => 'sn22',
