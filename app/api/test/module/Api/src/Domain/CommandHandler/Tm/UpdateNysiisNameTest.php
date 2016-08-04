@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Tm;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\UpdateNysiisName;
+use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
@@ -28,7 +29,7 @@ class UpdateNysiisNameTest extends CommandHandlerTestCase
         $this->mockRepo('TransportManager', TransportManagerRepo::class);
         $this->mockRepo('ContactDetails', ContactDetailsRepo::class);
 
-        $this->mockedSmServices[NysiisService::class] = m::mock(NysiisService::class);
+        $this->mockedSmServices[NysiisService::class] = m::mock(NysiisService::class)->makePartial();
         $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
 
         parent::setUp();
@@ -65,14 +66,15 @@ class UpdateNysiisNameTest extends CommandHandlerTestCase
         );
         $transportManager->getHomeCd()->setPerson($person);
 
+        $nysiisResult = new \stdClass();
+        $nysiisResult->FirstName = 'nysiis fn';
+        $nysiisResult->FamilyName = 'nysiis ln';
+
         $this->mockedSmServices[NysiisService::class]
             ->shouldReceive('getNysiisSearchKeys')
             ->once()
             ->andReturn(
-                [
-                    'nysiisForename' => 'nysiis fn',
-                    'nysiisFamilyname' => 'nysiis ln'
-                ]
+                $nysiisResult
             );
 
         $this->repoMap['TransportManager']
@@ -92,5 +94,117 @@ class UpdateNysiisNameTest extends CommandHandlerTestCase
         $this->assertEquals('nysiis fn', $transportManager->getNysiisForename());
         $this->assertEquals('ln', $transportManager->getHomeCd()->getPerson()->getFamilyName());
         $this->assertEquals('nysiis ln', $transportManager->getNysiisFamilyName());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NysiisException
+     */
+    public function testHandleCommandServiceDown()
+    {
+        $id = 1;
+        $data = [
+            'id' => $id
+        ];
+
+        $command = Cmd::create($data);
+
+        $nysiisResult = new \stdClass();
+        $nysiisResult->FirstName = 'nysiis fn';
+        $nysiisResult->FamilyName = 'nysiis ln';
+
+        // Service down
+        $this->mockedSmServices[NysiisService::class] = null;
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NysiisException
+     */
+    public function testHandleCommandGeneratesSoapFault()
+    {
+        $id = 1;
+        $data = [
+            'id' => $id
+        ];
+
+        $command = Cmd::create($data);
+
+        $person = new PersonEntity();
+        $person->setForename('fn');
+        $person->setFamilyName('ln');
+
+        $transportManager = new TransportManagerEntity();
+        $transportManager->setHomeCd(
+            new ContactDetailsEntity(
+                m::mock(\Dvsa\Olcs\Api\Entity\System\RefData::class)
+            )
+        );
+        $transportManager->getHomeCd()->setPerson($person);
+
+        $nysiisResult = new \stdClass();
+        $nysiisResult->FirstName = 'nysiis fn';
+        $nysiisResult->FamilyName = 'nysiis ln';
+
+        $this->mockedSmServices[NysiisService::class]
+            ->shouldReceive('getNysiisSearchKeys')
+            ->once()
+            ->andThrow(
+                'SoapFault', 'soap fault'
+            );
+
+        $this->repoMap['TransportManager']
+            ->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($transportManager)
+            ->once()
+            ->getMock();
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NysiisException
+     */
+    public function testHandleCommandGeneratesNysiisException()
+    {
+        $id = 1;
+        $data = [
+            'id' => $id
+        ];
+
+        $command = Cmd::create($data);
+
+        $person = new PersonEntity();
+        $person->setForename('fn');
+        $person->setFamilyName('ln');
+
+        $transportManager = new TransportManagerEntity();
+        $transportManager->setHomeCd(
+            new ContactDetailsEntity(
+                m::mock(\Dvsa\Olcs\Api\Entity\System\RefData::class)
+            )
+        );
+        $transportManager->getHomeCd()->setPerson($person);
+
+        $nysiisResult = new \stdClass();
+        $nysiisResult->FirstName = 'nysiis fn';
+        $nysiisResult->FamilyName = 'nysiis ln';
+
+        $this->mockedSmServices[NysiisService::class]
+            ->shouldReceive('getNysiisSearchKeys')
+            ->once()
+            ->andThrow(
+                'Dvsa\Olcs\Api\Domain\Exception\NysiisException', 'Nysiis Exception'
+            );
+
+        $this->repoMap['TransportManager']
+            ->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($transportManager)
+            ->once()
+            ->getMock();
+
+        $this->sut->handleCommand($command);
     }
 }

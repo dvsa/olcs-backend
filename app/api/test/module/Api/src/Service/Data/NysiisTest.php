@@ -24,11 +24,20 @@ class NysiisTest extends MockeryTestCase
             'nysiisForename' => 'fn',
             'nysiisFamilyname' => 'ln'
         ];
-        $soapClient = m::mock(ServerClient::class);
+
+        $nysiisResult = new \StdClass();
+        $nysiisResult->GetNYSIISSearchKeysResult = 'nysiis_result';
+
+        $soapClient = m::mock(\SoapClient::class);
         $soapClient->shouldReceive('GetNYSIISSearchKeys')
-            ->with('fn', 'ln')
+            ->with(
+                [
+                    'firstName' => $source['nysiisForename'],
+                    'familyName' => $source['nysiisFamilyname']
+                ]
+            )
             ->andReturn(
-                'nysiis_result'
+                $nysiisResult
             );
 
         $config = ['foo' => 'bar'];
@@ -50,6 +59,42 @@ class NysiisTest extends MockeryTestCase
 
         $this->setExpectedException(NysiisException::class);
 
+        $service = new Nysiis($soapClient, $config);
+    }
+
+    /**
+     * testGetNysiisSearchKeys returns bad result
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NysiisException
+     */
+    public function testGetNysiisSearchKeysReturnsBadResult()
+    {
+        $source = [
+            'nysiisForename' => 'fn',
+            'nysiisFamilyname' => 'ln'
+        ];
+
+        $nysiisResult = new \StdClass();
+        $nysiisResult->SomeBadResult = 'nysiis_result';
+
+        $soapClient = m::mock(\SoapClient::class);
+        $soapClient->shouldReceive('GetNYSIISSearchKeys')
+            ->with(
+                [
+                    'firstName' => $source['nysiisForename'],
+                    'familyName' => $source['nysiisFamilyname']
+                ]
+            )
+            ->andReturn(
+                $nysiisResult
+            );
+
+        $config = ['foo' => 'bar'];
+
         $sut = new Nysiis($soapClient, $config);
+
+        $this->assertEquals('nysiis_result', $sut->getNysiisSearchKeys($source));
+        $this->assertEquals($soapClient, $sut->getSoapClient());
+        $this->assertEquals($config, $sut->getNysiisConfig());
     }
 }

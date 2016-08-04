@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\Serializer\Adapter\Json as ZendJson;
 use Dvsa\Olcs\Api\Domain\Command\Tm\UpdateNysiisName as UpdateNysiisNameCmd;
@@ -51,34 +50,43 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
      * Command to queue a request to update TM with Nysiis data
      *
      * @param CommandInterface $command
-     *
      * @return Result
-     * @throws NotFoundException
+     * @throws NysiisException
      */
     public function handleCommand(CommandInterface $command)
     {
-        /**
-         * @var TransportManager $transportManager
-         * @var UpdateNysiisNameCmd $command
-         */
-        $transportManager = $this->getRepo()->fetchUsingId($command);
-        $person = $transportManager->getHomeCd()->getPerson();
+        try {
+            /**
+             * @var TransportManager $transportManager
+             * @var UpdateNysiisNameCmd $command
+             */
+            $transportManager = $this->getRepo()->fetchUsingId($command);
+            $person = $transportManager->getHomeCd()->getPerson();
 
-        $nysiisData = $this->requestNyiisData(
-            [
-                'nysiisForename' => $person->getForename(),
-                'nysiisFamilyname' => $person->getFamilyName()
-            ]
-        );
+            $nysiisData = $this->requestNysiisData(
+                [
+                    'nysiisForename' => $person->getForename(),
+                    'nysiisFamilyname' => $person->getFamilyName()
+                ]
+            );
+            $transportManager->setNysiisForename($nysiisData['forename']);
+            $transportManager->setNysiisFamilyName($nysiisData['familyName']);
 
-        $transportManager->setNysiisForename($nysiisData['forename']);
-        $transportManager->setNysiisFamilyName($nysiisData['familyName']);
+            $this->getRepo('TransportManager')->save($transportManager);
 
-        $this->getRepo('TransportManager')->save($transportManager);
+            $this->result->addMessage('TM NYIIS name was requested and updated');
 
-        $this->result->addMessage('TM NYIIS name was requested and updated');
-
-        return $this->result;
+            return $this->result;
+        } catch (\SoapFault $e) {
+            // Catch SoapFault exceptions and ensure a Nysiis exception is thrown to trigger a requeue
+            throw new NysiisException('SOAP Fault connecting to Nysiis service: ' . $e->getMessage());
+        } catch (NysiisException $e) {
+            // Just return the Nysiis exception to trigger a requeue
+            throw $e;
+        } catch (\Exception $e) {
+            // Catch all other exceptions and ensure a Nysiis exception is thrown to trigger a requeue
+            throw new NysiisException('There was a problem requesting the Nysiis data: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -87,18 +95,19 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
      * @return array
      * @throws NysiisException
      */
-    private function requestNyiisData($nysiisParams)
+    private function requestNysiisData($nysiisParams)
     {
-        try {
+        if ($this->nysiisService instanceof NysiisService) {
+
             $nysiisData = $this->nysiisService->getNysiisSearchKeys($nysiisParams);
 
             // connect to Nysiis here and return whatever Nysiis returns
             return [
-                'forename' => $nysiisData['nysiisForename'],
-                'familyName' => $nysiisData['nysiisFamilyname']
+                'forename' => $nysiisData->FirstName,
+                'familyName' => $nysiisData->FamilyName
             ];
-        } catch (\Exception $e) {
-            throw new NysiisException('Failed SOAP call to getNysiisSearchKeys(): ' . $e->getMessage());
         }
+
+        throw new NysiisException('Failed to instantiate SOAP Client. Service Down.');
     }
 }
