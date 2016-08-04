@@ -51,9 +51,8 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
      * Command to queue a request to update TM with Nysiis data
      *
      * @param CommandInterface $command
-     *
      * @return Result
-     * @throws NotFoundException
+     * @throws NysiisException
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -100,6 +99,7 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
     private function requestNysiisData($nysiisParams)
     {
         if ($this->nysiisService instanceof NysiisService) {
+
             $nysiisData = $this->nysiisService->getNysiisSearchKeys($nysiisParams);
 
             // connect to Nysiis here and return whatever Nysiis returns
