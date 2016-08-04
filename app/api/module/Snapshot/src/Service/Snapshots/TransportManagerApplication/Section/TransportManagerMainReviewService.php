@@ -1,15 +1,9 @@
 <?php
 
-/**
- * Transport Manager Main Review Service
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section;
 
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
-use Dvsa\Olcs\Api\Entity\Doc\Document;
 
 /**
  * Transport Manager Main Review Service
@@ -21,7 +15,8 @@ class TransportManagerMainReviewService extends AbstractReviewService
     /**
      * Format the readonly config from the given data
      *
-     * @param array $data
+     * @param TransportManagerApplication $tma Transport Manager Application Entity
+     *
      * @return array
      */
     public function getConfig(TransportManagerApplication $tma)
@@ -72,8 +67,16 @@ class TransportManagerMainReviewService extends AbstractReviewService
         ];
     }
 
+    /**
+     * Get files and format output
+     *
+     * @param TransportManagerApplication $tma TMA Entity
+     *
+     * @return string
+     */
     private function formatCertificateFiles(TransportManagerApplication $tma)
     {
+        /** @var \Doctrine\Common\Collections\ArrayCollection $files */
         $files = $this->findFiles(
             $tma->getTransportManager()->getDocuments(),
             Category::CATEGORY_TRANSPORT_MANAGER,
@@ -86,9 +89,9 @@ class TransportManagerMainReviewService extends AbstractReviewService
 
         $fileNames = [];
 
-        /** @var Document $file */
+        /** @var \Dvsa\Olcs\Api\Entity\Doc\Document $file */
         foreach ($files as $file) {
-            $fileNames[] = $file->getFilename();
+            $fileNames[] = $this->formatFileNameOnly($file->getFilename());
         }
 
         return implode('<br>', $fileNames);

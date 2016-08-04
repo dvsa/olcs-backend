@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Transport Manager Responsibility Review Service
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section;
 
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -158,6 +153,7 @@ class TransportManagerResponsibilityReviewService extends AbstractReviewService
      */
     private function formatFiles(TransportManagerApplication $tma)
     {
+        /** @var \Doctrine\Common\Collections\ArrayCollection $files */
         $files = $this->findFiles(
             $tma->getTransportManager()->getDocuments(),
             Category::CATEGORY_TRANSPORT_MANAGER,
@@ -170,8 +166,9 @@ class TransportManagerResponsibilityReviewService extends AbstractReviewService
 
         $fileNames = [];
 
+        /** @var \Dvsa\Olcs\Api\Entity\Doc\Document $file */
         foreach ($files as $file) {
-            $fileNames[] = $file->getFilename();
+            $fileNames[] = $this->formatFileNameOnly($file->getFilename());
         }
 
         return implode('<br>', $fileNames);
