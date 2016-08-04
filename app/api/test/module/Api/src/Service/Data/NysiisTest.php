@@ -59,7 +59,7 @@ class NysiisTest extends MockeryTestCase
 
         $this->setExpectedException(NysiisException::class);
 
-        $sut = new Nysiis($soapClient, $config);
+        $service = new Nysiis($soapClient, $config);
     }
 
     /**

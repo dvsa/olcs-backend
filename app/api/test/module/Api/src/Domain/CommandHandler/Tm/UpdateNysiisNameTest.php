@@ -205,6 +205,6 @@ class UpdateNysiisNameTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $result = $this->sut->handleCommand($command);
+        $this->sut->handleCommand($command);
     }
 }
