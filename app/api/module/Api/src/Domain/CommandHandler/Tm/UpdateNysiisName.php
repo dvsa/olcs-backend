@@ -79,13 +79,13 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
             return $this->result;
         } catch (\SoapFault $e) {
             // Catch SoapFault exceptions and ensure a Nysiis exception is thrown to trigger a requeue
-            throw new NysiisException('Unable to create connection to Nysiis service: ' . $e->getMessage());
+            throw new NysiisException('SOAP Fault connecting to Nysiis service: ' . $e->getMessage());
         } catch (NysiisException $e) {
             // Just return the Nysiis exception to trigger a requeue
             throw $e;
         } catch (\Exception $e) {
             // Catch all other exceptions and ensure a Nysiis exception is thrown to trigger a requeue
-            throw new NysiisException('Unable to create connection to Nysiis service.' . $e->getMessage());
+            throw new NysiisException('There was a problem requesting the Nysiis data: ' . $e->getMessage());
         }
     }
 
