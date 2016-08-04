@@ -25,38 +25,48 @@ final class TransportManagers extends AbstractSection
      */
     private $dataToReturnArray = array();
 
+    /**
+     * Generates the TransportManagers section for submissions.
+     *
+     * All the Transport managers listed on the operator's applications for that licence which have a status of under
+     * consideration and the operator's licence that is relevant to the case.
+     *
+     * @param CasesEntity $case
+     * @return array
+     */
     public function generateSection(CasesEntity $case)
     {
         $caseLicence = $case->getLicence();
 
+        // Attach all TMs on licence applications
+        $licenceApplicationsUnderConsideration = $caseLicence->getApplicationsByStatus(
+            [Application::APPLICATION_STATUS_UNDER_CONSIDERATION]
+        );
+
+        /** @var Application $application */
+        foreach ($licenceApplicationsUnderConsideration as $application) {
+            /** @var TransportManagerApplication $transportManagerApplication */
+
+            foreach ($application->getTransportManagers() as $transportManagerApplication) {
+                $this->extractTmData(
+                    $transportManagerApplication->getTransportManager(),
+                    $application->getLicence()->getLicNo()
+                );
+            }
+
+        }
+
+        // Attach all TMs associated with the licence
+        $licenceTms = $caseLicence->getTmLicences();
+
         // extract case licence TM data
-        if (!empty($caseLicence->getTmLicences())) {
+        if (!empty($licenceTms)) {
             /** @var TransportManagerLicence $tmLicence */
-            foreach ($caseLicence->getTmLicences() as $tmLicence) {
+            foreach ($licenceTms as $tmLicence) {
                 $this->extractTmData(
                     $tmLicence->getTransportManager(),
                     $caseLicence->getLicNo()
                 );
-            }
-        }
-
-        // extract all TMs associated with the organisation
-        $organisation = !empty($caseLicence) ? $caseLicence->getOrganisation() : '';
-        $licences = !empty($organisation) ? $organisation->getLicences() : [];
-
-        foreach ($licences as $licence) {
-            /** @var Application $application */
-
-            foreach ($licence->getApplications() as $application) {
-                /** @var TransportManagerApplication $transportManagerApplication */
-
-                foreach ($application->getTransportManagers() as $transportManagerApplication) {
-                    $this->extractTmData(
-                        $transportManagerApplication->getTransportManager(),
-                        $application->getLicence()->getLicNo()
-                    );
-                }
-
             }
         }
 
