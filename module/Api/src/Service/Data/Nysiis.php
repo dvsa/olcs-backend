@@ -57,6 +57,7 @@ class Nysiis
         );
 
         if (!isset($result->GetNYSIISSearchKeysResult)) {
+
             throw new NysiisException(
                 'Call to GetNYSIISSearchKeys failed with firstName => ' .
                 $params['nysiisForename'] . ', familyName => ' . $params['nysiisFamilyname']

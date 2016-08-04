@@ -49,32 +49,4 @@ class NysiisFactoryTest extends MockeryTestCase
         $this->assertFalse($service->getSoapClient());
         $this->assertEquals($config, $service->getNysiisConfig());
     }
-
-    /**
-     *
-     */
-    public function testCreateServiceValidWsdl()
-    {
-        $config = [
-            'nysiis' => [
-                'wsdl' => [
-                    'uri' => __DIR__ . '/../../../../../../module/Nysiis/config/nysiis.svc.wsdl',
-                    'soap' => [
-                        'options' => []
-                    ]
-                ]
-            ]
-        ];
-
-        $this->sm->shouldReceive('get')
-            ->with('Config')
-            ->andReturn($config);
-
-        $sut = new NysiisFactory();
-
-        $service = $sut->createService($this->sm);
-
-        $this->assertinstanceOf(ZendSoapClient::class, $service->getSoapClient());
-        $this->assertEquals($config, $service->getNysiisConfig());
-    }
 }
