@@ -42,7 +42,7 @@ class NysiisFactoryTest extends MockeryTestCase
 
         $sut = new NysiisFactory();
 
-        $this->setExpectedException(NysiisException::class);
+        $this->setExpectedException('SoapFault');
 
         $service = $sut->createService($this->sm);
 
