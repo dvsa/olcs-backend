@@ -16,7 +16,8 @@ class NysiisFactory implements FactoryInterface
     /**
      * Create service.
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator ServiceLocator
+     *
      * @return Nysiis
      * @throws NysiisException
      */
@@ -46,7 +47,8 @@ class NysiisFactory implements FactoryInterface
     /**
      * Method to generate the SOAP client.
      *
-     * @param   array       $config
+     * @param array $config Nysiis configuration
+     *
      * @return  \SoapClient
      * @throws  \SoapFault
      * @throws  \Exception
@@ -71,21 +73,25 @@ class NysiisFactory implements FactoryInterface
 
         return $soapClient;
     }
+
     /**
      * Error handler for instantiation of SOAP client. This is necessary due to PHP Fatal errors being generated when
      * the service is down and no connection to Nysiis is available.
      * This error handler ensures that a PHP SoapFault exception is raised rather than a PHP Fatal error. The
      * exception can then be caught and handled correctly.
      * Fixes possible bug with WSDL and SOAP.
+     *
+     * @param int         $errno      Error number
+     * @param string      $errstr     Error string
+     * @param null|string $errfile    File in error
+     * @param null|int    $errline    Error Line
+     * @param null|string $errcontext Error Context
+     *
+     * @throws \SoapFault Soap Fault
+     *
+     * @return void
      * @see http://php.net/manual/en/class.soapclient.php
      * @see https://bugs.php.net/bug.php?id=47584
-     * 
-     * @param   int         $errno
-     * @param   string      $errstr
-     * @param   null|string $errfile
-     * @param   null|int    $errline
-     * @param   null|string $errcontext
-     * @throws \SoapFault
      */
     public function nysiisCustomSoapWsdlErrorHandler(
         $errno,
