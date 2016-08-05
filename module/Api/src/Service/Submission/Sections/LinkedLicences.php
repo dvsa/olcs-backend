@@ -8,17 +8,18 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
  * Class LinkedLicences
+ *
  * @package Dvsa\Olcs\Api\Service\Submission\Sections
  * @author Shaun Lizzio <shaun.lizzio@valtech.co.uk>
  */
 final class LinkedLicences extends AbstractSection
 {
     /**
-     * Generate associated licences
+     * Generate LinkedLicences Submission Section
      *
-     * @param CasesEntity $case
-     * @param \ArrayObject|null $context
-     * @return array
+     * @param CasesEntity $case Case relating to the submission
+     *
+     * @return array Data array containing information for the submission section
      */
     public function generateSection(CasesEntity $case)
     {

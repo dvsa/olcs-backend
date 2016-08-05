@@ -12,10 +12,11 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 final class NoDataCommentsOnly extends AbstractSection
 {
     /**
-     * Generate only the section data required.
+     * Generate No data for this section, allowing only comments
      *
-     * @param CasesEntity $case
-     * @return array
+     * @param CasesEntity $case Case relating to the submission
+     *
+     * @return array Data array containing information for the submission section
      */
     public function generateSection(CasesEntity $case)
     {

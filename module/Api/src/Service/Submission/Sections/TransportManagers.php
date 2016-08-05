@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
 
 /**
  * Class TransportManagers
+ *
  * @package Dvsa\Olcs\Api\Service\Submission\Sections
  * @author Shaun Lizzio <shaun.lizzio@valtech.co.uk>
  */
@@ -32,7 +33,8 @@ final class TransportManagers extends AbstractSection
      * All the Transport managers listed on the operator's applications for that licence which have a status of under
      * consideration and the operator's licence that is relevant to the case.
      *
-     * @param CasesEntity $case
+     * @param CasesEntity $case Case relating to the submission
+     *
      * @return array
      */
     public function generateSection(CasesEntity $case)
@@ -88,8 +90,11 @@ final class TransportManagers extends AbstractSection
 
     /**
      * Method to extract the required data for a transport manager array
-     * @param TransportManager $transportManager
-     * @param $licenceNo
+     *
+     * @param TransportManager $transportManager Transport Manager
+     * @param string           $licenceNo        Licence no
+     *
+     * @return void
      */
     private function extractTmData(TransportManager $transportManager, $licenceNo)
     {
@@ -111,7 +116,9 @@ final class TransportManagers extends AbstractSection
 
     /**
      * Extract qualification descriptions as array
-     * @param TransportManager $transportManager
+     *
+     * @param TransportManager $transportManager Transport Manager Entity
+     *
      * @return array
      */
     private function extractQualificationsData(TransportManager $transportManager)
@@ -127,7 +134,9 @@ final class TransportManagers extends AbstractSection
 
     /**
      * Extract other licence data as array
-     * @param TransportManager $transportManager
+     *
+     * @param TransportManager $transportManager Transport Manager
+     *
      * @return array
      */
     private function extractOtherLicenceData(TransportManager $transportManager)

@@ -16,10 +16,11 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 final class Oppositions extends AbstractSection
 {
     /**
-     * Generate only the section data required.
+     * Generate Oppositions Submission Section
      *
-     * @param CasesEntity $case
-     * @return array
+     * @param CasesEntity $case Case relating to the submission
+     *
+     * @return array Data array containing information for the submission section
      */
     public function generateSection(CasesEntity $case)
     {

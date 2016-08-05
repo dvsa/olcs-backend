@@ -11,6 +11,13 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
  */
 final class ApplicantsComments extends AbstractSection
 {
+    /**
+     * Generate ApplicantsComments Submission Section
+     *
+     * @param CasesEntity $case Case relating to the submission
+     *
+     * @return array Data array containing information for the submission section
+     */
     public function generateSection(CasesEntity $case)
     {
         $defaultText = $this->getViewRenderer()->render('/sections/applicants-comments.phtml');

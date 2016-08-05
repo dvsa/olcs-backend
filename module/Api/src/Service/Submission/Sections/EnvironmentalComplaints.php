@@ -9,16 +9,18 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 
 /**
  * Class EnvironmentalComplaints
+ *
  * @package Dvsa\Olcs\Api\Service\Submission\Sections
  * @author Shaun Lizzio <shaun.lizzio@valtech.co.uk>
  */
 final class EnvironmentalComplaints extends AbstractSection
 {
     /**
-     * Generate only the section data required.
+     * Generate EnvironmentalComplaints Submission Section
      *
-     * @param CasesEntity $case
-     * @return array
+     * @param CasesEntity $case Case relating to the submission
+     *
+     * @return array Data array containing information for the submission section
      */
     public function generateSection(CasesEntity $case)
     {
@@ -66,6 +68,13 @@ final class EnvironmentalComplaints extends AbstractSection
         ];
     }
 
+    /**
+     * Extract Operating centre data
+     *
+     * @param array $operatingCentres Array of operating centre entities
+     *
+     * @return array
+     */
     private function extractOperatingCentreData($operatingCentres = [])
     {
         $operatingCentreData = [];
