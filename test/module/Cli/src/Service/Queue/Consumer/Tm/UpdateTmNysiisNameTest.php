@@ -67,7 +67,9 @@ class UpdateTmNysiisNameTest extends AbstractConsumerTestCase
             'id' => $entityId
         ];
 
-        $this->expectCommandException(UpdateNysiisCmd::class, $cmdData, ZendServiceException::class, $message, $retryAfter);
+        $this->expectCommandException(
+            UpdateNysiisCmd::class, $cmdData, ZendServiceException::class, $message, $retryAfter
+        );
 
         $this->expectCommand(
             RetryCmd::class,
@@ -121,7 +123,9 @@ class UpdateTmNysiisNameTest extends AbstractConsumerTestCase
             'id' => $entityId
         ];
 
-        $this->expectCommandException(UpdateNysiisCmd::class, $cmdData, NysiisException::class, $message, $retryAfter);
+        $this->expectCommandException(
+            UpdateNysiisCmd::class, $cmdData, NysiisException::class, $message, $retryAfter
+        );
 
         $this->expectCommand(
             RetryCmd::class,
