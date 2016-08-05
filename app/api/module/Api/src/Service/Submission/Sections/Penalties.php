@@ -18,7 +18,8 @@ final class Penalties extends AbstractSection
     /**
      * Generate only the section data required.
      *
-     * @param CasesEntity $case
+     * @param CasesEntity $case Case relating to the submission
+     *
      * @return array
      */
     public function generateSection(CasesEntity $case)
@@ -79,7 +80,9 @@ final class Penalties extends AbstractSection
 
     /**
      * Method to extract SI Overview data
-     * @param CasesEntity $case
+     *
+     * @param CasesEntity $case Cases Entity
+     * 
      * @return array
      */
     private function extractOverview(CasesEntity $case)

@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
@@ -15,10 +16,11 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
 final class TmResponsibilities extends AbstractSection
 {
     /**
-     * Generate only the section data required.
+     * Generate TmResponsibilities Submission Section
      *
-     * @param CasesEntity $case
-     * @return array
+     * @param CasesEntity $case Case relating to the submission
+     *
+     * @return array Data array containing information for the submission section
      */
     public function generateSection(CasesEntity $case)
     {
@@ -54,11 +56,12 @@ final class TmResponsibilities extends AbstractSection
     /**
      * Method to extract the row data. Most is common to both tmApplications and tmLicence
      *
-     * @param $case
-     * @param $entity
+     * @param CasesEntity                                         $case   Case entity
+     * @param TransportManagerLicence|TransportManagerApplication $entity Tm Licence or TM Application entity
+     *
      * @return array
      */
-    private function extractResponsibilityData($case, $entity)
+    private function extractResponsibilityData(CasesEntity $case, $entity)
     {
         $thisRow = array();
 

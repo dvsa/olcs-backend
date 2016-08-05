@@ -13,6 +13,13 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  */
 final class TmDetails extends AbstractSection
 {
+    /**
+     * Generate TmDetails Submission Section
+     *
+     * @param CasesEntity $case Case relating to the submission
+     *
+     * @return array Data array containing information for the submission section
+     */
     public function generateSection(CasesEntity $case)
     {
         $data = array();
