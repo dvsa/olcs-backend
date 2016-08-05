@@ -9,9 +9,9 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 
 /**
  * Class ConditionsAndUndertakings
- * @to-do unit test for section
  *
  * @package Dvsa\Olcs\Api\Service\Submission\Sections
+ *
  * @author Shaun Lizzio <shaun.lizzio@valtech.co.uk>
  */
 final class ConditionsAndUndertakings extends AbstractSection
@@ -19,9 +19,9 @@ final class ConditionsAndUndertakings extends AbstractSection
     /**
      * Generate C's and U's attached to both licence and application. Sorted.
      *
-     * @param CasesEntity $case
-     * @param \ArrayObject|null $context
-     * @return array
+     * @param CasesEntity $case Case relating to the submission
+     *
+     * @return array Data array containing information for the submission section
      */
     public function generateSection(CasesEntity $case)
     {
@@ -80,12 +80,27 @@ final class ConditionsAndUndertakings extends AbstractSection
         return $dataToReturnArray;
     }
 
-    private function determineTableName($entity)
+    /**
+     * Determine table name
+     *
+     * @param ConditionUndertaking $entity ConditionUndertaking entity being processed
+     *
+     * @return string
+     */
+    private function determineTableName(ConditionUndertaking $entity)
     {
         return $entity->getConditionType()->getId() == 'cdt_und' ? 'undertakings' : 'conditions';
     }
 
-    private function generateTableRow($entity, $parentId = '')
+    /**
+     * Generate a table row for this section
+     *
+     * @param ConditionUndertaking $entity   Entity being processed
+     * @param string               $parentId Parent Id
+     *
+     * @return array
+     */
+    private function generateTableRow(ConditionUndertaking $entity, $parentId = '')
     {
         /** @var ConditionUndertaking $entity */
         $thisEntity = array();

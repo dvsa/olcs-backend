@@ -13,6 +13,13 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  */
 final class CaseSummary extends AbstractSection
 {
+    /**
+     * Generate CaseSummary Submission Section
+     *
+     * @param CasesEntity $case Case relating to the submission
+     *
+     * @return array Data array containing information for the submission section
+     */
     public function generateSection(CasesEntity $case)
     {
         $licence = $case->getLicence();
@@ -40,8 +47,10 @@ final class CaseSummary extends AbstractSection
     }
 
     /**
-     * @param $data
-     * @param null $licence
+     * Extract licence data required for submission section from the licence
+     *
+     * @param null|Licence $licence Licence or null
+     *
      * @return array
      */
     private function extractLicenceData($licence = null)
@@ -78,8 +87,10 @@ final class CaseSummary extends AbstractSection
     }
 
     /**
-     * @param $data
-     * @param null $licence
+     * Extract organisation data required for submission section
+     *
+     * @param null|Organisation $organisation Organisation entity
+     *
      * @return array
      */
     private function extractOrganisationData($organisation = null)

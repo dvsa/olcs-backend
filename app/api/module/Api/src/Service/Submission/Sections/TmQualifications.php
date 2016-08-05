@@ -13,10 +13,11 @@ use Dvsa\Olcs\Api\Entity\Tm\TmQualification;
 final class TmQualifications extends AbstractSection
 {
     /**
-     * Generate only the section data required.
+     * Generate TmQualifications Submission Section
      *
-     * @param CasesEntity $case
-     * @return array
+     * @param CasesEntity $case Case relating to the submission
+     *
+     * @return array Data array containing information for the submission section
      */
     public function generateSection(CasesEntity $case)
     {

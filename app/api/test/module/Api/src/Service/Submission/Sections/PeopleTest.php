@@ -25,7 +25,7 @@ class PeopleTest extends SubmissionSectionTest
             'data' => [
                 'tables' => [
                     'people' => [
-                        0 => [
+                        1 => [
                             'id' => 1,
                             'title' => 'title-desc',
                             'forename' => 'fn1',

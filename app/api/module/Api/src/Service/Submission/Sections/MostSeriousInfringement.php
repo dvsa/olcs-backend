@@ -12,6 +12,13 @@ use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SeriousInfringmentEntity;
  */
 final class MostSeriousInfringement extends AbstractSection
 {
+    /**
+     * Generate LeadTcArea section of submission
+     *
+     * @param CasesEntity $case Case relating to the submission
+     *
+     * @return array Data array containing information for the submission section
+     */
     public function generateSection(CasesEntity $case)
     {
         $seriousInfringements = $case->getSeriousInfringements();

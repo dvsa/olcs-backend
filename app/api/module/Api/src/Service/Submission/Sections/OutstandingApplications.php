@@ -12,6 +12,13 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
  */
 final class OutstandingApplications extends AbstractSection
 {
+    /**
+     * Generate OutstandingApplications Submission Section
+     *
+     * @param CasesEntity $case Case relating to the submission
+     *
+     * @return array Data array containing information for the submission section
+     */
     public function generateSection(CasesEntity $case)
     {
         $licence = $case->getLicence();

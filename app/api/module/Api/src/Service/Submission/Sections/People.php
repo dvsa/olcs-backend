@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefdataEntity;
@@ -13,27 +15,44 @@ use Dvsa\Olcs\Api\Entity\System\RefData as RefdataEntity;
  */
 final class People extends AbstractSection
 {
+    /**
+     * Generate People section of submission
+     *
+     * @param CasesEntity $case Case relating to the submission
+     *
+     * @return array Data array containing information for the submission section
+     */
     public function generateSection(CasesEntity $case)
     {
+        // get Application Persons
+        /** @var Application $caseApplication */
+        $caseApplication = $case->getApplication();
+        $applicationPersons = $caseApplication->getApplicationOrganisationPersons();
+
+        // get all other persons associated with the licence
         $licence = $case->getLicence();
         $organisation = !empty($licence) ? $licence->getOrganisation() : '';
+        $organisationPersons = !empty($organisation) ? $organisation->getOrganisationPersons() : [];
 
-        $persons = !empty($organisation) ? $organisation->getOrganisationPersons() : [];
+        $persons = new ArrayCollection(
+            array_merge($applicationPersons->toArray(), $organisationPersons->toArray())
+        );
 
         $data = [];
         for ($i=0; $i<count($persons); $i++) {
             /** @var PersonEntity $personEntity */
             $personEntity = $persons->current()->getPerson();
 
-            $data[$i]['id'] = $personEntity->getId();
-            $data[$i]['title'] = '';
+            $personId = $personEntity->getId();
+            $data[$personId]['id'] = $personEntity->getId();
+            $data[$personId]['title'] = '';
             if ($personEntity->getTitle() instanceof RefdataEntity) {
-                $data[$i]['title'] = $personEntity->getTitle()->getDescription();
+                $data[$personId]['title'] = $personEntity->getTitle()->getDescription();
             }
-            $data[$i]['familyName'] = $personEntity->getFamilyName();
-            $data[$i]['forename'] = $personEntity->getForename();
-            $data[$i]['disqualificationStatus'] = $personEntity->getDisqualificationStatus();
-            $data[$i]['birthDate'] = $this->formatDate($personEntity->getBirthDate());
+            $data[$personId]['familyName'] = $personEntity->getFamilyName();
+            $data[$personId]['forename'] = $personEntity->getForename();
+            $data[$personId]['disqualificationStatus'] = $personEntity->getDisqualificationStatus();
+            $data[$personId]['birthDate'] = $this->formatDate($personEntity->getBirthDate());
 
             $persons->next();
         }
