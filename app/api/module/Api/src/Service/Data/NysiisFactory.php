@@ -46,8 +46,10 @@ class NysiisFactory implements FactoryInterface
     /**
      * Method to generate the SOAP client.
      *
-     * @param $config array
-     * @return \SoapClient
+     * @param   array       $config
+     * @return  \SoapClient
+     * @throws  \SoapFault
+     * @throws  \Exception
      */
     protected function generateSoapClient($config)
     {
