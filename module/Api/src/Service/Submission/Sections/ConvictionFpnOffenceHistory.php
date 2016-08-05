@@ -13,10 +13,11 @@ use Dvsa\Olcs\Api\Entity\Cases\Conviction;
 final class ConvictionFpnOffenceHistory extends AbstractSection
 {
     /**
-     * Generate only the section data required.
+     * Generate ConvictionFpnOffenceHistory Submission Section
      *
-     * @param CasesEntity $case
-     * @return array
+     * @param CasesEntity $case Case relating to the submission
+     *
+     * @return array Data array containing information for the submission section
      */
     public function generateSection(CasesEntity $case)
     {
@@ -55,7 +56,9 @@ final class ConvictionFpnOffenceHistory extends AbstractSection
 
     /**
      * Method to extract the name depending on Conviction defendant
-     * @param Conviction $entity
+     *
+     * @param Conviction $entity Conviction Entity
+     * 
      * @return string
      */
     private function determineName(Conviction $entity)

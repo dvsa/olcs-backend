@@ -17,10 +17,10 @@ final class OperatingCentres extends AbstractSection
 {
     /**
      * Generate licence operating centres with sorted address
-     * 
-     * @param CasesEntity $case
-     * @param \ArrayObject|null $context
-     * @return array
+     *
+     * @param CasesEntity $case Case relating to the submission
+     *
+     * @return array Data array containing information for the submission section
      */
     public function generateSection(CasesEntity $case)
     {
@@ -77,7 +77,8 @@ final class OperatingCentres extends AbstractSection
     /**
      * Sorted operating centres by address postcode
      *
-     * @param $licence
+     * @param ArrayCollection $ocArray Array of Operating Centres
+     *
      * @return ArrayCollection
      */
     private function extractSortedOperatingCentres(ArrayCollection $ocArray)
