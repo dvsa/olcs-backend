@@ -30,8 +30,8 @@ use Dvsa\Olcs\Api\Domain\FileProcessorAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Olcs\XmlTools\Xml\TemplateBuilder;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
+use Zend\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeException;
 
 /**
  * Request new Ebsr map
@@ -110,7 +110,11 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
 
         $template = $this->createRequestMapTemplate($command->getTemplate(), $xmlFilename, $command->getScale());
 
-        $documents = $this->getTransExchange()->makeRequest($template);
+        try {
+            $documents = $this->getTransExchange()->makeRequest($template);
+        } catch (AdapterRuntimeException $e) {
+            throw new TransxchangeException($e->getMessage());
+        }
 
         if (!isset($documents['files'])) {
             throw new TransxchangeException('Invalid response from transXchange publisher');
@@ -197,7 +201,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     /**
      * Creates a command to add a task
      *
-     * @param BusRegEntity $busReg
+     * @param BusRegEntity $busReg      bus reg entity
      * @param string       $description task description
      *
      * @return CreateTaskCmd
