@@ -6,8 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
-use Dvsa\Olcs\Api\Entity\Person\Person;
-use Dvsa\Olcs\Api\Entity\Tm\AbstractTmQualification;
 use Dvsa\Olcs\Api\Entity\Tm\TmQualification;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
@@ -40,7 +38,6 @@ final class TransportManagers extends AbstractSection
     public function generateSection(CasesEntity $case)
     {
         $caseLicence = $case->getLicence();
-        $caseApplication = $case->getApplication();
 
         // Attach all TMs on licence applications
         /** @var ArrayCollection $licenceApplications */
@@ -48,9 +45,16 @@ final class TransportManagers extends AbstractSection
             [Application::APPLICATION_STATUS_UNDER_CONSIDERATION]
         );
 
-        // add the single application for the case regardless of status
-        if (!$licenceApplications->contains($caseApplication)) {
-            $licenceApplications->add($caseApplication);
+        // If case type is application, add application persons to list
+        if ($case->getCaseType()->getId() === CasesEntity::APP_CASE_TYPE) {
+            $caseApplication = $case->getApplication();
+
+            if ($caseApplication instanceof Application) {
+                // add the single application for the case regardless of status
+                if (!$licenceApplications->contains($caseApplication)) {
+                    $licenceApplications->add($caseApplication);
+                }
+            }
         }
 
         /** @var Application $application */
