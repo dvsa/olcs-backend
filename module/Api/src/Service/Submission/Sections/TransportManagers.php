@@ -40,7 +40,6 @@ final class TransportManagers extends AbstractSection
     public function generateSection(CasesEntity $case)
     {
         $caseLicence = $case->getLicence();
-        $caseApplication = $case->getApplication();
 
         // Attach all TMs on licence applications
         /** @var ArrayCollection $licenceApplications */
@@ -48,9 +47,14 @@ final class TransportManagers extends AbstractSection
             [Application::APPLICATION_STATUS_UNDER_CONSIDERATION]
         );
 
-        // add the single application for the case regardless of status
-        if (!$licenceApplications->contains($caseApplication)) {
-            $licenceApplications->add($caseApplication);
+        // If case type is application, add application persons to list
+        if ($case->getCaseType()->getId() === CasesEntity::APP_CASE_TYPE) {
+            $caseApplication = $case->getApplication();
+
+            // add the single application for the case regardless of status
+            if (!$licenceApplications->contains($caseApplication)) {
+                $licenceApplications->add($caseApplication);
+            }
         }
 
         /** @var Application $application */
