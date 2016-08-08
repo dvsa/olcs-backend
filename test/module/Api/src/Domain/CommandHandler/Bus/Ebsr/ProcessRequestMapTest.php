@@ -6,7 +6,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus\Ebsr;
 
-use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessRequestMap as ProcessRequestMapCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\ProcessRequestMap;
@@ -26,10 +25,9 @@ use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Doctrine\Common\Collections\ArrayCollection;
-use Zend\Http\Header\ContentSecurityPolicy;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use org\bovigo\vfs\vfsStream;
+use Zend\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeException;
 
 /**
  * ProcessRequestMap Test
@@ -235,6 +233,67 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
             ->once()
             ->with($xmlTemplate)
             ->andReturn(false);
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertInstanceOf(Result::class, $result);
+    }
+
+    /**
+     * test handleCommand throws an exception when transxchange throws a runtime exception
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\TransxchangeException
+     */
+    public function testHandleCommandTransxchangeRuntimeException()
+    {
+        $id = 99;
+        $licenceId = 77;
+        $submissionId = 55;
+        $scale = 'small';
+        $xmlFilename = 'filename.xml';
+        $documentIdentifier = 'identifier';
+        $busRegNo = 'PB8593040/4896';
+        $xmlTemplate = '<xml></xml>';
+
+        $command = ProcessRequestMapCmd::Create(
+            [
+                'id' => $id,
+                'template' => $this->template,
+                'scale' => $scale,
+                'user' => 1
+            ]
+        );
+
+        $submission = m::mock(EbsrSubmissionEntity::class);
+        $submission->shouldReceive('getDocument->getIdentifier')->andReturn($documentIdentifier);
+        $submission->shouldReceive('getId')->andReturn($submissionId);
+
+        $busReg = m::mock(BusRegEntity::class);
+        $busReg->shouldReceive('getId')->andReturn($id);
+        $busReg->shouldReceive('getRegNo')->andReturn($busRegNo);
+        $busReg->shouldReceive('getLicence->getId')->andReturn($licenceId);
+        $busReg->shouldReceive('getEbsrSubmissions')->once()->andReturn(new ArrayCollection([$submission]));
+
+        $this->repoMap['Bus']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command)
+            ->andReturn($busReg);
+
+        $this->mockedSmServices[FileProcessorInterface::class]
+            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
+            ->once()
+            ->with($documentIdentifier, true)
+            ->andReturn($xmlFilename);
+
+        $this->mockedSmServices[TemplateBuilder::class]
+            ->shouldReceive('buildTemplate')
+            ->once()
+            ->andReturn($xmlTemplate);
+
+        $this->mockedSmServices[TransExchangeClient::class]
+            ->shouldReceive('makeRequest')
+            ->once()
+            ->andThrow(AdapterRuntimeException::class, 'exception message');
 
         $result = $this->sut->handleCommand($command);
 
