@@ -6,8 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
-use Dvsa\Olcs\Api\Entity\Person\Person;
-use Dvsa\Olcs\Api\Entity\Tm\AbstractTmQualification;
 use Dvsa\Olcs\Api\Entity\Tm\TmQualification;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
@@ -51,9 +49,11 @@ final class TransportManagers extends AbstractSection
         if ($case->getCaseType()->getId() === CasesEntity::APP_CASE_TYPE) {
             $caseApplication = $case->getApplication();
 
-            // add the single application for the case regardless of status
-            if (!$licenceApplications->contains($caseApplication)) {
-                $licenceApplications->add($caseApplication);
+            if ($caseApplication instanceof Application) {
+                // add the single application for the case regardless of status
+                if (!$licenceApplications->contains($caseApplication)) {
+                    $licenceApplications->add($caseApplication);
+                }
             }
         }
 

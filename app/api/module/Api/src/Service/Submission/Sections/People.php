@@ -37,10 +37,12 @@ final class People extends AbstractSection
             /** @var Application $caseApplication */
             $caseApplication = $case->getApplication();
 
-            $applicationPersons = $caseApplication->getApplicationOrganisationPersons();
-            $persons = new ArrayCollection(
-                array_merge($applicationPersons->toArray(), $organisationPersons->toArray())
-            );
+            if ($caseApplication instanceof Application) {
+                $applicationPersons = $caseApplication->getApplicationOrganisationPersons();
+                $persons = new ArrayCollection(
+                    array_merge($applicationPersons->toArray(), $organisationPersons->toArray())
+                );
+            }
         }
 
         $data = [];
