@@ -1,35 +1,31 @@
 <?php
 
-/**
- * Transport Manager Responsibility Review Service Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\TransportManagerApplication\Section;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication;
 use OlcsTest\Bootstrap;
-use Dvsa\Olcs\Api\Entity;
 
 /**
- * Transport Manager Responsibility Review Service Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers
+ * Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerResponsibilityReviewService
  */
 class TransportManagerResponsibilityReviewServiceTest extends MockeryTestCase
 {
+    /** @var  TransportManagerApplication\Section\TransportManagerResponsibilityReviewService */
     protected $sut;
 
+    /** @var  \Zend\ServiceManager\ServiceManager */
     protected $sm;
 
     public function setUp()
     {
-        $this->sut = new TransportManagerApplication\Section\TransportManagerResponsibilityReviewService();
-
         $this->sm = Bootstrap::getServiceManager();
+
+        $this->sut = new TransportManagerApplication\Section\TransportManagerResponsibilityReviewService();
         $this->sut->setServiceLocator($this->sm);
     }
 
@@ -107,16 +103,17 @@ class TransportManagerResponsibilityReviewServiceTest extends MockeryTestCase
 
         /** @var Entity\Doc\Document $document1 */
         $document1 = m::mock(Entity\Doc\Document::class)->makePartial();
-        $document1->setFilename('File1');
+        $document1->setDescription('unit_File1Desc');
         $document1->setCategory($cat1);
         $document1->setSubCategory($subCat1);
 
         /** @var Entity\Doc\Document $document2 */
         $document2 = m::mock(Entity\Doc\Document::class)->makePartial();
-        $document2->setFilename('File3');
+        $document2->setDescription('unit_File2Desc');
         $document2->setCategory($cat1);
         $document2->setSubCategory($subCat1);
 
+        /** @var  ArrayCollection|m\MockInterface $documents */
         $documents = m::mock(ArrayCollection::class)->makePartial();
         $documents->add($document1);
         $documents->add($document2);
@@ -334,7 +331,7 @@ class TransportManagerResponsibilityReviewServiceTest extends MockeryTestCase
                                             [
                                                 'label' => 'tm-review-responsibility-additional-info-files',
                                                 'noEscape' => true,
-                                                'value' => 'File1<br>File3'
+                                                'value' => 'unit_File1Desc<br>unit_File2Desc',
                                             ]
                                         ]
                                     ]
@@ -470,7 +467,7 @@ class TransportManagerResponsibilityReviewServiceTest extends MockeryTestCase
                                             [
                                                 'label' => 'tm-review-responsibility-additional-info-files',
                                                 'noEscape' => true,
-                                                'value' => 'File1<br>File3'
+                                                'value' => 'unit_File1Desc<br>unit_File2Desc',
                                             ]
                                         ]
                                     ]

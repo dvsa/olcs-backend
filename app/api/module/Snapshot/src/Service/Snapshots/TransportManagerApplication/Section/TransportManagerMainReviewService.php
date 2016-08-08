@@ -91,7 +91,7 @@ class TransportManagerMainReviewService extends AbstractReviewService
 
         /** @var \Dvsa\Olcs\Api\Entity\Doc\Document $file */
         foreach ($files as $file) {
-            $fileNames[] = $this->formatFileNameOnly($file->getFilename());
+            $fileNames[] = $file->getDescription();
         }
 
         return implode('<br>', $fileNames);
