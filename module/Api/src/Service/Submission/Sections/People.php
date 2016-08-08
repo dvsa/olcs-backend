@@ -26,8 +26,8 @@ final class People extends AbstractSection
     {
         // get all other persons associated with the licence
         $licence = $case->getLicence();
-        $organisation = !empty($licence) ? $licence->getOrganisation() : '';
-        $organisationPersons = !empty($organisation) ? $organisation->getOrganisationPersons() : [];
+        $organisation = !empty($licence) ? $licence->getOrganisation() : null;
+        $organisationPersons = !empty($organisation) ? $organisation->getOrganisationPersons() : new ArrayCollection();
 
         $persons = new ArrayCollection($organisationPersons->toArray());
 
