@@ -24,19 +24,24 @@ final class People extends AbstractSection
      */
     public function generateSection(CasesEntity $case)
     {
-        // get Application Persons
-        /** @var Application $caseApplication */
-        $caseApplication = $case->getApplication();
-        $applicationPersons = $caseApplication->getApplicationOrganisationPersons();
-
         // get all other persons associated with the licence
         $licence = $case->getLicence();
         $organisation = !empty($licence) ? $licence->getOrganisation() : '';
         $organisationPersons = !empty($organisation) ? $organisation->getOrganisationPersons() : [];
 
-        $persons = new ArrayCollection(
-            array_merge($applicationPersons->toArray(), $organisationPersons->toArray())
-        );
+        $persons = new ArrayCollection($organisationPersons->toArray());
+
+        // If case type is application, add application persons to list
+        if ($case->getCaseType()->getId() === CasesEntity::APP_CASE_TYPE) {
+            // get Application Persons
+            /** @var Application $caseApplication */
+            $caseApplication = $case->getApplication();
+
+            $applicationPersons = $caseApplication->getApplicationOrganisationPersons();
+            $persons = new ArrayCollection(
+                array_merge($applicationPersons->toArray(), $organisationPersons->toArray())
+            );
+        }
 
         $data = [];
         for ($i=0; $i<count($persons); $i++) {
