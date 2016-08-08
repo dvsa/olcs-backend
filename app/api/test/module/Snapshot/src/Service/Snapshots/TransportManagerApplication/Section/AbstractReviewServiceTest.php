@@ -2,8 +2,7 @@
 
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\TransportManagerApplication\Section;
 
-use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
-use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\AbstractReviewService;
+use Dvsa\OlcsTest\Snapshot\Service\Snapshots\TransportManagerApplication\Section\Stub\AbstractReviewServiceStub;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -23,16 +22,6 @@ class AbstractReviewServiceTest extends MockeryTestCase
     }
 
     public function test()
-    {
-    }
-}
-
-/**
- * Stub class for testing AbstractReviewService
- */
-class AbstractReviewServiceStub extends AbstractReviewService
-{
-    public function getConfig(TransportManagerApplication $tma)
     {
     }
 }
