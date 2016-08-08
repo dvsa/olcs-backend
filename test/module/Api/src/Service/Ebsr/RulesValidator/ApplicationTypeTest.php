@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator;
 
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType;
 use PHPUnit_Framework_TestCase as TestCase;
+use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission;
 
 /**
  * Class ApplicationTypeTest
@@ -24,25 +25,62 @@ class ApplicationTypeTest extends TestCase
         $this->assertEquals($valid, $sut->isValid($input, $context));
 
         if ($error != '') {
-            $message = current($sut->getMessages());
-            $this->assertEquals($error, $message);
+            $this->assertEquals($error, key($sut->getMessages()));
         }
     }
 
+    /**
+     * Data provider for testIsValid
+     *
+     * @return array
+     */
     public function provideIsValid()
     {
         return [
             [
                 ['txcAppType' => 'new'],
-                ['submissionType' => 'ebsrt_refresh'],
+                ['submissionType' => EbsrSubmission::DATA_REFRESH_SUBMISSION_TYPE],
                 false,
-                'Application type for a data refresh must be Non chargeable change'
+                ApplicationType::REFRESH_SUBMISSION_ERROR
+            ],
+            [
+                ['txcAppType' => 'new'],
+                ['submissionType' => EbsrSubmission::NEW_SUBMISSION_TYPE],
+                true
             ],
             [
                 ['txcAppType' => 'nonChargeableChange'],
-                ['submissionType' => 'ebsrt_refresh'],
-                true,
+                ['submissionType' => EbsrSubmission::DATA_REFRESH_SUBMISSION_TYPE],
+                true
             ],
+            [
+                ['txcAppType' => 'nonChargeableChange'],
+                ['submissionType' => EbsrSubmission::NEW_SUBMISSION_TYPE],
+                false,
+                ApplicationType::NEW_SUBMISSION_ERROR
+            ],
+            [
+                ['txcAppType' => 'chargeableChange'],
+                ['submissionType' => EbsrSubmission::DATA_REFRESH_SUBMISSION_TYPE],
+                false,
+                ApplicationType::REFRESH_SUBMISSION_ERROR
+            ],
+            [
+                ['txcAppType' => 'chargeableChange'],
+                ['submissionType' => EbsrSubmission::NEW_SUBMISSION_TYPE],
+                true
+            ],
+            [
+                ['txcAppType' => 'cancel'],
+                ['submissionType' => EbsrSubmission::DATA_REFRESH_SUBMISSION_TYPE],
+                false,
+                ApplicationType::REFRESH_SUBMISSION_ERROR
+            ],
+            [
+                ['txcAppType' => 'cancel'],
+                ['submissionType' => EbsrSubmission::NEW_SUBMISSION_TYPE],
+                true
+            ]
         ];
     }
 }
