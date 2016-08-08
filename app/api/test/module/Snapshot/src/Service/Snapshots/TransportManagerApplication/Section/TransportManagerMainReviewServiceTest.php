@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Transport Manager Main Review Service Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\TransportManagerApplication\Section;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,27 +13,27 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerMainReviewService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerMainReviewService;
 use OlcsTest\Bootstrap;
 
 /**
- * Transport Manager Main Review Service Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerMainReviewService
  */
 class TransportManagerMainReviewServiceTest extends MockeryTestCase
 {
+    /** @var  TransportManagerMainReviewService */
     protected $sut;
 
+    /** @var  \Zend\ServiceManager\ServiceManager */
     protected $sm;
 
     public function setUp()
     {
-        $this->sut = new TransportManagerMainReviewService();
-
         $this->sm = Bootstrap::getServiceManager();
+
+        $this->sut = new TransportManagerMainReviewService();
         $this->sut->setServiceLocator($this->sm);
     }
 
@@ -102,16 +97,17 @@ class TransportManagerMainReviewServiceTest extends MockeryTestCase
 
         /** @var Document $document1 */
         $document1 = m::mock(Document::class)->makePartial();
-        $document1->setFilename('File1');
-        $document1->setCategory($cat1);
-        $document1->setSubCategory($subCat1);
+        $document1->setDescription('unit_File1Desc')
+            ->setCategory($cat1)
+            ->setSubCategory($subCat1);
 
         /** @var Document $document2 */
         $document2 = m::mock(Document::class)->makePartial();
-        $document2->setFilename('File3');
-        $document2->setCategory($cat1);
-        $document2->setSubCategory($subCat1);
+        $document2->setDescription('unit_File2Desc')
+            ->setCategory($cat1)
+            ->setSubCategory($subCat1);
 
+        /** @var ArrayCollection|m\MockInterface $documents */
         $documents = m::mock(ArrayCollection::class)->makePartial();
         $documents->add($document1);
         $documents->add($document2);
@@ -164,7 +160,7 @@ class TransportManagerMainReviewServiceTest extends MockeryTestCase
                             [
                                 'label' => 'tm-review-main-certificate',
                                 'noEscape' => true,
-                                'value' => 'File1<br>File3'
+                                'value' => 'unit_File1Desc<br>unit_File2Desc',
                             ],
                             [
                                 'label' => 'tm-review-main-home-address',
