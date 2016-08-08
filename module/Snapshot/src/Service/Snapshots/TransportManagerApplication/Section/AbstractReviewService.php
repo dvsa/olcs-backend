@@ -134,18 +134,4 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
     {
         return $value === 'Y' ? 'Yes' : 'No';
     }
-
-    /**
-     * Take file name only form file path
-     *
-     * @param string $filePath File path
-     *
-     * @return string
-     */
-    protected function formatFileNameOnly($filePath)
-    {
-        $parts = preg_split('~[\\\\/]~', $filePath);
-
-        return end($parts) ?: '';
-    }
 }
