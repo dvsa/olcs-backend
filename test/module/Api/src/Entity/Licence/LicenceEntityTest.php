@@ -1055,7 +1055,7 @@ class LicenceEntityTest extends EntityTester
                     ->twice()
                     ->getMock()
             )
-            ->times(3)
+            ->once()
             ->getMock();
 
         $this->assertEquals('B', $licence->getTrafficAreaForTaskAllocation());
@@ -1078,7 +1078,7 @@ class LicenceEntityTest extends EntityTester
                     ->once()
                     ->getMock()
             )
-            ->twice()
+            ->once()
             ->shouldReceive('getTrafficArea')
             ->andReturn('B')
             ->once()
