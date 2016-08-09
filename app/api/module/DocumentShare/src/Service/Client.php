@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\DocumentShare\Service;
 
 use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Olcs\Logging\Log\Logger;
 use Zend\Http\Client as HttpClient;
 use Zend\Http\Request;
 use Zend\Http\Response;
@@ -14,6 +15,8 @@ use Zend\Mime\Mime;
  */
 class Client
 {
+    const ERR_RESP_FAIL = 'Document store returns invalid response';
+
     /** @var HttpClient */
     protected $httpClient;
     /** @var Request */
@@ -104,22 +107,33 @@ class Client
             return $this->cache[$path];
         }
 
+        //  get file content from storage
         $tmpFileName = $this->fileSystem->createTmpFile(sys_get_temp_dir(), 'download');
-
-        $request = clone $this->requestTemplate;
-        $request->setUri($this->getContentUri($path))
-            ->setMethod(Request::METHOD_GET);
 
         /** @var  \Zend\Http\Response\Stream $response */
         $response = $this->getHttpClient()
+            ->setRequest(clone $this->requestTemplate)
+            ->setUri($this->getContentUri($path))
+            ->setMethod(Request::METHOD_GET)
             ->setStream($tmpFileName)
-            ->setRequest($request)
             ->send();
 
-        if ($response->isSuccess()) {
-            $data = (array)json_decode($response->getBody());
+        if (!$response->isSuccess()) {
+            Logger::logResponse($response->getStatusCode(), self::ERR_RESP_FAIL);
+
+            return null;
+        }
+
+        //  process response
+        $data = (array)json_decode(
+            file_get_contents($tmpFileName)
+        );
+
+        //  process file content
+        $content = (isset($data['content']) ? $data['content'] : false);
+        if ($content !== false) {
             //  reuse file used for download
-            file_put_contents($tmpFileName, base64_decode($data['content']));
+            file_put_contents($tmpFileName, base64_decode($content));
 
             $file = new File();
             $file->setResource($tmpFileName);
@@ -127,6 +141,12 @@ class Client
             unset($data);
 
             return $this->cache[$path] = $file;
+        }
+
+        //  process error message
+        $errMssg = (isset($data['message']) ? $data['message'] : false);
+        if ($errMssg !== false) {
+            Logger::logResponse(Response::STATUS_CODE_404, $errMssg);
         }
 
         return null;
@@ -182,7 +202,7 @@ class Client
     }
 
     /**
-     * Return path to content
+     * Returns path to get content of file on remote storage
      *
      * @param string $path   Path to file
      * @param bool   $prefix Add Version folder
