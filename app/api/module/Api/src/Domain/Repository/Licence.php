@@ -260,13 +260,14 @@ class Licence extends AbstractRepository
     }
 
     /**
-     * fetch by vehicle VRM
+     * Fetch by vehicle VRM
      *
-     * @param string $vrm the vrm
+     * @param string $vrm           the vrm
+     * @param bool   $checkByStatus check by status
      *
      * @return mixed
      */
-    public function fetchByVrm($vrm)
+    public function fetchByVrm($vrm, $checkByStatus = false)
     {
         $qb = $this->createQueryBuilder();
 
@@ -275,6 +276,21 @@ class Licence extends AbstractRepository
             ->andWhere($qb->expr()->isNull('lv.removalDate'))
             ->andWhere($qb->expr()->eq('v.vrm', ':vrm'))
             ->setParameter('vrm', $vrm);
+
+        if ($checkByStatus) {
+            $qb->innerJoin('lv.application', 'a')
+                ->andWhere(
+                    $qb->expr()->notIn(
+                        'a.status',
+                        [
+                            ApplicationEntity::APPLICATION_STATUS_CANCELLED,
+                            ApplicationEntity::APPLICATION_STATUS_REFUSED,
+                            ApplicationEntity::APPLICATION_STATUS_WITHDRAWN,
+                            ApplicationEntity::APPLICATION_STATUS_NOT_TAKEN_UP
+                        ]
+                    )
+                );
+        }
 
         $query = $qb->getQuery();
 
