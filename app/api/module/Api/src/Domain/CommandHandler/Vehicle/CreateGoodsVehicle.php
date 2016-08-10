@@ -106,7 +106,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
      */
     protected function checkForConfirmation(LicenceEntity $licence, Cmd $command)
     {
-        $licences = $this->getRepo()->fetchByVrm($command->getVrm());
+        $licences = $this->getRepo()->fetchByVrm($command->getVrm(), true);
 
         if (empty($licences)) {
             return;
