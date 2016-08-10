@@ -402,9 +402,10 @@ class LicenceTest extends RepositoryTestCase
         );
         $this->assertEquals(['RESULTS'], $this->sut->fetchByVrm('ABC123', true));
 
-        $expectedQuery = '[QUERY] INNER JOIN m.licenceVehicles lv INNER JOIN lv.vehicle v'
-            . ' AND lv.removalDate IS NULL AND v.vrm = [[ABC123]] INNER JOIN lv.application a'
-            . ' AND a.status NOT IN ["apsts_cancelled","apsts_refused","apsts_withdrawn","apsts_ntu"]';
+        $expectedQuery = '[QUERY] INNER JOIN m.licenceVehicles lv ' .
+            'INNER JOIN lv.vehicle v AND lv.removalDate IS NULL AND v.vrm = [[ABC123]] ' .
+            'INNER JOIN lv.application a AND a.status NOT IN ' .
+            '["apsts_cancelled","apsts_refused","apsts_withdrawn","apsts_ntu"]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
