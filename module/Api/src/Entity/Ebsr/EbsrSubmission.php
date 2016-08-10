@@ -8,6 +8,8 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Zend\Json\Json as ZendJson;
+use Zend\Json\Exception\RuntimeException as JsonException;
 
 /**
  * EbsrSubmission Entity
@@ -133,7 +135,7 @@ class EbsrSubmission extends AbstractEbsrSubmission implements OrganisationProvi
     public function finishValidating(RefData $ebsrSubmissionStatus, $ebsrSubmissionResult)
     {
         $this->ebsrSubmissionStatus = $ebsrSubmissionStatus;
-        $this->ebsrSubmissionResult = $ebsrSubmissionResult;
+        $this->ebsrSubmissionResult = ZendJson::encode($ebsrSubmissionResult);
         $this->validationEnd = new \DateTime();
 
         //if the submission hasn't failed (so far - this isn't yet a success) then also populate processStart timestamp
@@ -212,6 +214,22 @@ class EbsrSubmission extends AbstractEbsrSubmission implements OrganisationProvi
     }
 
     /**
+     * Decode the submission result saved as json. We use a try/catch here so that legacy non-json data is dealt with
+     *
+     * @return array
+     */
+    public function getDecodedSubmissionResult()
+    {
+        try {
+            $errorInfo = ZendJson::decode($this->ebsrSubmissionResult, ZendJson::TYPE_ARRAY);
+        } catch(JsonException $e) {
+            $errorInfo = [];
+        }
+
+        return $errorInfo;
+    }
+
+    /**
      * Gets the array of errors for the EBSR submission
      *
      * @return array
@@ -222,7 +240,7 @@ class EbsrSubmission extends AbstractEbsrSubmission implements OrganisationProvi
             return [];
         }
 
-        $errorInfo = @unserialize($this->ebsrSubmissionResult);
+        $errorInfo = $this->getDecodedSubmissionResult();
 
         return isset($errorInfo['errors']) ? $errorInfo['errors'] : [];
     }
