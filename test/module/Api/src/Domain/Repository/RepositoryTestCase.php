@@ -97,6 +97,9 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('expr->in')
             ->andReturnUsing([$this, 'mockExprIn']);
 
+        $this->qb->shouldReceive('expr->notIn')
+            ->andReturnUsing([$this, 'mockExprNotIn']);
+
         $this->qb->shouldReceive('expr->isNotNull')
             ->andReturnUsing([$this, 'mockExprIsNotNull']);
 
@@ -261,6 +264,13 @@ class RepositoryTestCase extends MockeryTestCase
         $value = $this->formatValue($value);
 
         return $field . ' IN ' . $value;
+    }
+
+    public function mockExprNotIn($field, $value)
+    {
+        $value = $this->formatValue($value);
+
+        return $field . ' NOT IN ' . $value;
     }
 
     public function mockExprIsNull($field)

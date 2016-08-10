@@ -137,7 +137,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             ->andReturn($licence);
 
         $this->repoMap['Licence']->shouldReceive('fetchByVrm')
-            ->with('ABC123')
+            ->with('ABC123', true)
             ->andReturn($otherLicences);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
@@ -235,7 +235,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             ->andReturn($licence);
 
         $this->repoMap['Licence']->shouldReceive('fetchByVrm')
-            ->with('ABC123')
+            ->with('ABC123', true)
             ->andReturn($otherLicences);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
@@ -344,7 +344,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             ->with(111)
             ->andReturn($licence)
             ->shouldReceive('fetchByVrm')
-            ->with('ABC123')
+            ->with('ABC123', true)
             ->andReturn($otherLicences);
 
         /** @var LicenceVehicle $savedLicenceVehicle */
@@ -486,7 +486,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             ->with(111)
             ->andReturn($licence)
             ->shouldReceive('fetchByVrm')
-            ->with('ABC123')
+            ->with('ABC123', true)
             ->andReturn($otherLicences);
 
         /** @var Vehicle $savedVehicle */
