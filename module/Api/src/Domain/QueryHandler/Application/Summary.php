@@ -25,7 +25,7 @@ class Summary extends AbstractQueryHandler
     const ACTION_APPROVE_TM = 'APPROVE_TM';
 
     const MISSING_EVIDENCE_OC = 'MISSING_EVIDENCE_OC';
-    const MISSING_EVIDENCE_FINANCIAL = 'MISSING_EVIDENCE_FINANCIAL';
+    const MISSING_EVIDENCE_FINANCIAL = 'markup-financial-standing-proof';
 
     protected $repoServiceName = 'Application';
 
