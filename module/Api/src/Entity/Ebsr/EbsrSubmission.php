@@ -222,7 +222,7 @@ class EbsrSubmission extends AbstractEbsrSubmission implements OrganisationProvi
     {
         try {
             $errorInfo = ZendJson::decode($this->ebsrSubmissionResult, ZendJson::TYPE_ARRAY);
-        } catch(JsonException $e) {
+        } catch (JsonException $e) {
             $errorInfo = [];
         }
 
