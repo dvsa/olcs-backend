@@ -101,7 +101,7 @@ class SummaryTest extends QueryHandlerTestCase
                     'PRINT_SIGN_RETURN' => 'PRINT_SIGN_RETURN',
                     'SUPPLY_SUPPORTING_EVIDENCE' => [
                         'MISSING_EVIDENCE_OC',
-                        'MISSING_EVIDENCE_FINANCIAL'
+                        'markup-financial-standing-proof'
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
                 ],
@@ -373,7 +373,7 @@ class SummaryTest extends QueryHandlerTestCase
                 'actions' => [
                     'SUPPLY_SUPPORTING_EVIDENCE' => [
                         'MISSING_EVIDENCE_OC',
-                        'MISSING_EVIDENCE_FINANCIAL'
+                        'markup-financial-standing-proof'
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
                 ],
@@ -434,7 +434,7 @@ class SummaryTest extends QueryHandlerTestCase
                 'actions' => [
                     'SUPPLY_SUPPORTING_EVIDENCE' => [
                         'MISSING_EVIDENCE_OC',
-                        'MISSING_EVIDENCE_FINANCIAL'
+                        'markup-financial-standing-proof'
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
                 ],
