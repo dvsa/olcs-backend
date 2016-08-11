@@ -16,10 +16,8 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrAbstract;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrErrors;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrErrors as Cmd;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\ProcessPack;
 
 /**
  * Send Ebsr Errors Test
