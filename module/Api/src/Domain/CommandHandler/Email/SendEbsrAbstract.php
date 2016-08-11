@@ -23,6 +23,9 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrReceived as ReceivedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefreshed as RefreshedCmd;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
 use Dvsa\Olcs\Email\Data\Message;
+use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
+use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
+use Doctrine\Common\Collections\Collection as CollectionInterface;
 
 /**
  * Send Ebsr Email Abstract
@@ -30,17 +33,13 @@ use Dvsa\Olcs\Email\Data\Message;
  * @author Craig R <uk@valtech.co.uk>
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\Olcs\Api\Domain\EmailAwareInterface
+abstract class SendEbsrAbstract extends AbstractCommandHandler implements EmailAwareInterface
 {
-    use \Dvsa\Olcs\Api\Domain\EmailAwareTrait;
+    use EmailAwareTrait;
 
     const DATE_FORMAT = 'l F jS Y';
 
     const UNKNOWN_REG_NO = 'unknown reg no';
-    const UNKNOWN_SERVICE_NO = 'unknown service no';
-    const UNKNOWN_START_POINT = 'unknown start point';
-    const UNKNOWN_FINISH_POINT = 'unknown finish point';
-    const UNKNOWN_START_DATE = 'unknown start date';
 
     protected $repoServiceName = 'EbsrSubmission';
 
@@ -59,7 +58,7 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
     protected $busReg;
 
     /**
-     * @var BusRegEntity
+     * @var array
      */
     protected $submissionResult;
 
@@ -69,12 +68,15 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
     protected $emailData;
 
     /**
-     * @var
+     * @var string
      */
     protected $regNo;
 
     /**
-     * @param CommandInterface|CancelCmd|RegCmd|WithdrawnCmd|RefusedCmd|ReceivedCmd|RefreshedCmd $command
+     * Handles the command
+     *
+     * @param CommandInterface|CancelCmd|RegCmd|WithdrawnCmd|RefusedCmd|ReceivedCmd|RefreshedCmd $command command
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -83,7 +85,7 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
         $repo = $this->getRepo();
         $this->ebsr = $repo->fetchUsingId($command, Query::HYDRATE_OBJECT, null);
         $this->busReg = $this->ebsr->getBusReg();
-        $this->submissionResult = $this->decodeEbsrSubmissionResult($this->ebsr->getEbsrSubmissionResult());
+        $this->submissionResult = $this->ebsr->getDecodedSubmissionResult();
 
         //get template variables
         $this->emailData = $this->getTemplateVariables($command);
@@ -120,6 +122,8 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
     }
 
     /**
+     * Gets the email message
+     *
      * @return Message
      */
     private function getMessage()
@@ -188,17 +192,23 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
     }
 
     /**
-     * Gets template variables. If we have no busReg, then will proxy to getTemplateVariablesNoBusReg
+     * Gets template variables. If we have no busReg, then we use the extra_bus_data field instead
      *
-     * @param CommandInterface $command
+     * @param CommandInterface $command the command
+     *
      * @return array
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     private function getTemplateVariables($command)
     {
-        //if the submission failed, we probably won't have a bus reg
+        $submissionErrors = isset($this->submissionResult['errors']) ? $this->submissionResult['errors'] : [];
+
+        //if the submission failed, we won't have a bus reg, so use any data the pack processor was able to extract
         if (!$this->busReg instanceof BusRegEntity) {
-            return $this->getTemplateVariablesNoBusReg();
+            $emailData = $this->submissionResult['extra_bus_data'];
+            $emailData['submissionErrors'] = $submissionErrors;
+
+            return $emailData;
         }
 
         $emailData = [
@@ -209,7 +219,7 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
             'lineName' => $this->busReg->getFormattedServiceNumbers(),
             'startDate' => $this->formatDate($this->busReg->getEffectiveDate()),
             'localAuthoritys' => $this->getLocalAuthString($this->busReg->getLocalAuthoritys()),
-            'submissionErrors' => isset($this->submissionResult['errors']) ? $this->submissionResult['errors'] : [],
+            'submissionErrors' => $submissionErrors,
             'hasBusData' => true,
             'publicationId' => null
         ];
@@ -228,89 +238,13 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
     }
 
     /**
-     * Get template variables when we have no bus reg
-     *
-     * @return array
-     */
-    private function getTemplateVariablesNoBusReg()
-    {
-        $rawData = $this->submissionResult['raw_data'];
-
-        //set some defaults
-        $hasBusData = false;
-        $regNo = self::UNKNOWN_REG_NO;
-        $serviceNo = self::UNKNOWN_SERVICE_NO;
-        $origin = self::UNKNOWN_START_POINT;
-        $destination = self::UNKNOWN_FINISH_POINT;
-        $startDate = self::UNKNOWN_START_DATE;
-
-        //if the submission progressed far enough (i.e. beyond xml schema errors), then we will have a data array
-        if (is_array($rawData)) {
-            //check for a reg no
-            if (isset($rawData['licNo']) && isset($rawData['routeNo'])) {
-                $hasBusData = true;
-                $regNo = $rawData['licNo'] . '/' . $rawData['routeNo'];
-            }
-
-            //check service no
-            if (isset($rawData['serviceNo'])) {
-                $hasBusData = true;
-                $serviceNo = $rawData['serviceNo'];
-
-                if (isset($rawData['otherServiceNumbers']) && is_array($rawData['otherServiceNumbers'])) {
-                    $serviceNo .= '(' . implode(',', $rawData['otherServiceNumbers']) .')';
-                }
-            }
-
-            //check start point
-            if (isset($rawData['startPoint'])) {
-                $hasBusData = true;
-                $origin = $rawData['startPoint'];
-            }
-
-            //check finish point
-            if (isset($rawData['finishPoint'])) {
-                $hasBusData = true;
-                $destination = $rawData['finishPoint'];
-            }
-
-            //check effective date
-            if (isset($rawData['effectiveDate'])) {
-                $hasBusData = true;
-                $startDate = $this->formatDate($rawData['effectiveDate']);
-            }
-        }
-
-        return [
-            'submissionDate' => $this->formatDate($this->ebsr->getSubmittedDate()),
-            'submissionErrors' => $this->submissionResult['errors'],
-            'registrationNumber' => $regNo,
-            'origin' => $origin,
-            'destination' => $destination,
-            'lineName' => $serviceNo,
-            'startDate' => $startDate,
-            'hasBusData' => $hasBusData
-        ];
-    }
-
-    /**
-     * returns the unserialized version of $ebsrSubmissionResult
-     *
-     * @param string $ebsrSubmissionResult
-     * @return array
-     */
-    private function decodeEbsrSubmissionResult($ebsrSubmissionResult)
-    {
-        return unserialize($ebsrSubmissionResult);
-    }
-
-    /**
      * Returns array of local authority emails to cc
      *
-     * @param $localAuths
+     * @param CollectionInterface $localAuths local authorities
+     *
      * @return array
      */
-    private function getLocalAuthEmails($localAuths)
+    private function getLocalAuthEmails(CollectionInterface $localAuths)
     {
         $localAuthoritiesCc = [];
 
@@ -325,10 +259,11 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
     /**
      * Returns a comma separated list of local authorities
      *
-     * @param $localAuths
+     * @param CollectionInterface $localAuths local authorities
+     *
      * @return string
      */
-    private function getLocalAuthString($localAuths)
+    private function getLocalAuthString(CollectionInterface $localAuths)
     {
         $localAuthoritiesList = [];
 
@@ -341,7 +276,10 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
     }
 
     /**
-     * @param string|\DateTime $date
+     * Formats the date according to the specified format
+     *
+     * @param string|\DateTime $date the date
+     *
      * @return string
      */
     private function formatDate($date)
