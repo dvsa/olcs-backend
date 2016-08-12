@@ -10,8 +10,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
 
 /**
- * @covers
- * Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerResponsibilityReviewService
+ * @covers Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerResponsibilityReviewService
  */
 class TransportManagerResponsibilityReviewServiceTest extends MockeryTestCase
 {

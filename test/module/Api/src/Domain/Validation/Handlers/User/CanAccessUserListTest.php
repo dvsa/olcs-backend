@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 
 /**
- * @covers CanAccessUserList
+ * @covers Dvsa\Olcs\Api\Domain\Validation\Handlers\User\CanAccessUserList
  */
 class CanAccessUserListTest extends AbstractHandlerTestCase
 {

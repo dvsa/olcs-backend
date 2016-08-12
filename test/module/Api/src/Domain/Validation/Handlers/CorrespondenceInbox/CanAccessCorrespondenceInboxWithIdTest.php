@@ -13,7 +13,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\CorrespondenceInbox\CanAccessCorrespondenceInboxWithId;
 
 /**
- * @covers CanAccessCorrespondenceInboxWithId
+ * @covers Dvsa\Olcs\Api\Domain\Validation\Handlers\CorrespondenceInbox\CanAccessCorrespondenceInboxWithId
  */
 class CanAccessCorrespondenceInboxWithIdTest extends AbstractHandlerTestCase
 {

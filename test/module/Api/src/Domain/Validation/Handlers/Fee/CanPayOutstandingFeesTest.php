@@ -8,7 +8,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Fee\CanPayOutstandingFees;
 
 /**
- * @covers CanPayOutstandingFees
+ * @covers Dvsa\Olcs\Api\Domain\Validation\Handlers\Fee\CanPayOutstandingFees
  */
 class CanPayOutstandingFeesTest extends AbstractHandlerTestCase
 {

@@ -8,7 +8,7 @@ use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 
 /**
- * @covers CanReadUser
+ * @covers Dvsa\Olcs\Api\Domain\Validation\Handlers\User\CanReadUser
  */
 class CanReadUserTest extends AbstractHandlerTestCase
 {
