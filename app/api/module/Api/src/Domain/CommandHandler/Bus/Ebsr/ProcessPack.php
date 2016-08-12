@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\RequestMap as RequestMapQueueCmd;
-use Zend\Filter\Decompress;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
@@ -48,8 +47,7 @@ use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Doctrine\ORM\Query;
-use Doctrine\Common\Util\Debug as DoctrineDebug;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\SubmissionResult as SubmissionResultFilter;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 
 /**
@@ -67,18 +65,6 @@ final class ProcessPack extends AbstractCommandHandler implements
     use QueueAwareTrait;
     use FileProcessorAwareTrait;
     use ConfigAwareTrait;
-
-    /**
-     * @var int
-     *
-     * @note We save audit data to the ebsr_submission_result column in the DB. For convenience we've re-used a small
-     * amount of this data when creating our error emails. If it is ever decided that we no longer need to store the
-     * info, set this value to 1. This will reduce the data stored to a very small amount, without the need for extra
-     * work on the emails
-     *
-     * How many levels of doctrine entities we recurse when saving the audit info
-     */
-    const DOCTRINE_DEBUG_LEVEL = 2;
 
     protected $repoServiceName = 'Bus';
 
@@ -101,6 +87,11 @@ final class ProcessPack extends AbstractCommandHandler implements
     protected $shortNoticeInput;
 
     /**
+     * @var SubmissionResultFilter
+     */
+    protected $submissionResultFilter;
+
+    /**
      * @var Result
      */
     protected $result;
@@ -120,6 +111,7 @@ final class ProcessPack extends AbstractCommandHandler implements
         $this->busRegInput = $mainServiceLocator->get('EbsrBusRegInput');
         $this->processedDataInput = $mainServiceLocator->get('EbsrProcessedDataInput');
         $this->shortNoticeInput = $mainServiceLocator->get('EbsrShortNoticeInput');
+        $this->submissionResultFilter = $mainServiceLocator->get('FilterManager')->get(SubmissionResultFilter::class);
         $this->result = new Result();
 
         return parent::createService($serviceLocator);
@@ -220,7 +212,7 @@ final class ProcessPack extends AbstractCommandHandler implements
         //we've finished validating
         $ebsrSub->finishValidating(
             $this->getRepo()->getRefdataReference(EbsrSubmissionEntity::PROCESSING_STATUS),
-            $this->getSubmissionResultData([], $ebsrData)
+            $this->getSubmissionResultData([], $ebsrData, $ebsrSub)
         );
 
         //save the submission and the bus reg
@@ -308,7 +300,7 @@ final class ProcessPack extends AbstractCommandHandler implements
         $this->addErrorMessages($doc, $messages, $xmlName);
 
         //save submission result data, used for error messages in emails, and possible debugging later
-        $resultData = $this->getSubmissionResultData($messages, $inputValue);
+        $resultData = $this->getSubmissionResultData($messages, $inputValue, $ebsrSub);
         $this->setEbsrSubmissionFailed($ebsrSub, $resultData);
 
         //trigger ebsr failure email for the user
@@ -318,19 +310,21 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Creates a serialized string consisting of error messages and input data, saved to ebsrSubmissionResult DB field
      *
-     * @param array $errorMessages array of error messages
-     * @param mixed $rawData       the raw data
+     * @param array                $errorMessages array of error messages
+     * @param mixed                $rawData       the raw data
+     * @param EbsrSubmissionEntity $ebsrSub       ebsr submission entity
      *
      * @return string
      */
-    private function getSubmissionResultData(array $errorMessages, $rawData)
+    private function getSubmissionResultData(array $errorMessages, $rawData, EbsrSubmissionEntity $ebsrSub)
     {
-        $errorData = [
-            'errors' => $errorMessages,
-            'raw_data' => DoctrineDebug::export($rawData, self::DOCTRINE_DEBUG_LEVEL)
+        $input = [
+            'rawData' => $rawData,
+            'errorMessages' => $errorMessages,
+            'ebsrSub' => $ebsrSub
         ];
 
-        return serialize($errorData);
+        return $this->submissionResultFilter->filter($input);
     }
 
     /**
