@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Mockery as m;
 
 /**
- * @covers CanAccessTransaction
+ * @covers Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessTransaction
  */
 class CanAccessTransactionTest extends AbstractValidatorsTestCase
 {

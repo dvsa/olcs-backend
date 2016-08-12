@@ -10,7 +10,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * @covers  Dvsa\Olcs\Api\Domain\Repository\Factory\CompanyHouseVsOlcsDiffsFactory
+ * @covers Dvsa\Olcs\Api\Domain\Repository\Factory\CompaniesHouseVsOlcsDiffsFactory
  */
 class CompanyHouseVsOlcsDiffsFactoryTest extends MockeryTestCase
 {

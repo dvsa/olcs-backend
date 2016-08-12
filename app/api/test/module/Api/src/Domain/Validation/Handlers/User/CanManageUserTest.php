@@ -7,7 +7,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 
 /**
- * @covers CanManageUser
+ * @covers Dvsa\Olcs\Api\Domain\Validation\Handlers\User\CanManageUser
  */
 class CanManageUserTest extends AbstractHandlerTestCase
 {

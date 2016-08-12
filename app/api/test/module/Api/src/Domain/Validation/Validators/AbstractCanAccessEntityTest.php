@@ -7,7 +7,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
 /**
- * @covers AbstractCanAccessEntity
+ * @covers Dvsa\Olcs\Api\Domain\Validation\Validators\AbstractCanAccessEntity
  */
 class AbstractCanAccessEntityTest extends MockeryTestCase
 {

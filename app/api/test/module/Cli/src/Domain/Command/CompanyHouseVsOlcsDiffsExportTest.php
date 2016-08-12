@@ -3,11 +3,10 @@
 namespace Dvsa\OlcsTest\Cli\Domain\Command;
 
 use Dvsa\Olcs\Cli\Domain\Command\CompaniesHouseVsOlcsDiffsExport;
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
- * @covers Dvsa\Olcs\Cli\Domain\Command\CompanyHouseVsOlcsDiffsExport
+ * @covers Dvsa\Olcs\Cli\Domain\Command\CompaniesHouseVsOlcsDiffsExport
  */
 class CompanyHouseVsOlcsDiffsExportTest extends MockeryTestCase
 {
