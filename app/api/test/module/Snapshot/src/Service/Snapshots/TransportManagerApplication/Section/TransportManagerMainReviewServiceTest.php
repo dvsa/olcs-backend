@@ -19,7 +19,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
 
 /**
- * @covers Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerMainReviewService
+ * Transport Manager Main Review Service Test
  */
 class TransportManagerMainReviewServiceTest extends MockeryTestCase
 {
@@ -66,7 +66,7 @@ class TransportManagerMainReviewServiceTest extends MockeryTestCase
         $person->setTitle($title);
         $person->setForename('Foo');
         $person->setFamilyName('Bar');
-        $person->setBirthDate(new DateTime('1989-08-23'));
+        $person->setBirthDate('1989-08-23');
         $person->setBirthPlace('Footown');
 
         /** @var Address $address1 */

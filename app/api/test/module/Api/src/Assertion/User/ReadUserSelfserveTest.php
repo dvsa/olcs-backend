@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Assertion\Licence;
+namespace Dvsa\OlcsTest\Api\Assertion\User;
 
 use Dvsa\Olcs\Api\Assertion\User\ReadUserSelfserve as Sut;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;

@@ -77,7 +77,7 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
             'epic fail'
         );
 
-        $this->expectCommand(
+        $this->expectCommandException(
             \Dvsa\Olcs\Transfer\Command\ContinuationDetail\Update::class,
             [
                 'id' => 69,
@@ -88,7 +88,8 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
                 'totPsvDiscs' => null,
                 'totCommunityLicences' => null,
             ],
-            new Result()
+            \Dvsa\Olcs\Api\Domain\Exception\Exception::class,
+            'marking as fail failed'
         );
 
         $this->expectCommand(
@@ -101,7 +102,7 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
         $result = $this->sut->processMessage($item);
 
         $this->assertEquals(
-            'Failed to process message: 99  epic fail',
+            'Failed to process message: 99  epic fail, marking as fail failed',
             $result
         );
     }
