@@ -112,7 +112,9 @@ return [
             // Set the following if you need to go via a proxy to get to Companies House RESTful API
             // *Environment specific*
             // 'curloptions' => [
-            //     CURLOPT_PROXY => 'http://fp01.inf.mgt.mtpdvsa:3128',
+            //     CURLOPT_PROXY => "http://<%= scope.function_hiera(['shd_proxy']) %>",
+            //     // Companies House API key followed by a colon
+            //     CURLOPT_USERPWD => "<%= olcs_companieshouseapikey %>:",
             // ],
         ],
         'auth' => [
@@ -227,9 +229,11 @@ return [
             'uri' => 'https://r-inr-01.corp.vosa.gov.uk:444/INR.BackofficeWeb/Repute/SubmitCheck.aspx?'
         ]
     ],
+
     'print' => [
         'server' => 'print01.olcs.mgt.mtpdvsa:631'
     ],
+
     /**
      * Configure the location of the application log
      */
@@ -269,14 +273,17 @@ return [
             ]
         ]
     ],
+
     // Path to VI extract data
     'vi_extract_files' => [
         'export_path' => '/tmp/ViExtract'
     ],
+
     // Path to export CSV data for data.gov.uk
     'data-gov-uk-export' => [
         'path' => '/var/tmp/dataGovUk',
     ],
+
     // Path to export CSV data for Companies House differences
     'ch-vs-olcs-export' => [
         'path' => '/var/tmp/companyHouse_vs_Olcs',
@@ -292,10 +299,7 @@ return [
                     'cache_wsdl' => 0,
                     'location' => 'http://nysiis.localhost:8081/nysiis/nysiis',
                     'uri' => 'http://nysiis.localhost:8081/nysiis/nysiis'
-                    'cache_wsdl' => 0,
                     'encoding' => 'UTF-8',
-                    'verifypeer' => true,
-                    'verifyhost' => true,
                     'exceptions' => true
                 ]
             ]
