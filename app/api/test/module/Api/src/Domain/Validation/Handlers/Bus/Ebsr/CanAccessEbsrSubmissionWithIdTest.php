@@ -8,7 +8,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Bus\Ebsr\CanAccessEbsrSubmissionWithId;
 
 /**
- * @covers CanAccessEbsrSubmissionWithId
+ * @covers Dvsa\Olcs\Api\Domain\Validation\Handlers\Bus\Ebsr\CanAccessEbsrSubmissionWithId
  */
 class CanAccessEbsrSubmissionWithIdTest extends AbstractHandlerTestCase
 {

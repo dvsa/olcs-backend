@@ -8,7 +8,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessTransactionWithRef;
 
 /**
- * @covers CanAccessTransactionWithRef
+ * @covers Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessTransactionWithRef
  */
 class CanAccessTransactionWithRefTest extends AbstractHandlerTestCase
 {

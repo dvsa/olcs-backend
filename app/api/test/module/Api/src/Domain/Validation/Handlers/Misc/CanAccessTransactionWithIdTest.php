@@ -8,7 +8,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessTransactionWithId;
 
 /**
- * @covers CanAccessTransactionWithId
+ * @covers Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessTransactionWithId
  */
 class CanAccessTransactionWithIdTest extends AbstractHandlerTestCase
 {
