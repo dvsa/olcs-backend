@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
+use Zend\Json\Json as ZendJson;
 
 /**
  * EbsrSubmission Entity Unit Tests
@@ -131,13 +132,14 @@ class EbsrSubmissionEntityTest extends EntityTester
         $ebsrSubmissionStatus->setId(Entity::FAILED_STATUS);
 
         $ebsrSubmissionResult = ['submission result'];
+        $encodedSubmissionResult = ZendJson::encode($ebsrSubmissionResult);
 
         $entity = $this->instantiate(Entity::class);
 
         $entity->finishValidating($ebsrSubmissionStatus, $ebsrSubmissionResult);
 
         $this->assertEquals($ebsrSubmissionStatus, $entity->getEbsrSubmissionStatus());
-        $this->assertEquals($ebsrSubmissionResult, $entity->getEbsrSubmissionResult());
+        $this->assertEquals($encodedSubmissionResult, $entity->getEbsrSubmissionResult());
         $this->assertInstanceOf(\DateTime::class, $entity->getValidationEnd());
         $this->assertNull($entity->getProcessStart());
     }
@@ -149,13 +151,14 @@ class EbsrSubmissionEntityTest extends EntityTester
     {
         $ebsrSubmissionStatus = m::mock(RefData::class)->makePartial();
         $ebsrSubmissionResult = ['submission result'];
+        $encodedSubmissionResult = ZendJson::encode($ebsrSubmissionResult);
 
         $entity = $this->instantiate(Entity::class);
 
         $entity->finishValidating($ebsrSubmissionStatus, $ebsrSubmissionResult);
 
         $this->assertEquals($ebsrSubmissionStatus, $entity->getEbsrSubmissionStatus());
-        $this->assertEquals($ebsrSubmissionResult, $entity->getEbsrSubmissionResult());
+        $this->assertEquals($encodedSubmissionResult, $entity->getEbsrSubmissionResult());
         $this->assertInstanceOf(\DateTime::class, $entity->getValidationEnd());
         $this->assertEquals($entity->getProcessStart(), $entity->getValidationEnd());
     }
@@ -369,7 +372,7 @@ class EbsrSubmissionEntityTest extends EntityTester
         $ebsrSubmissionStatus->shouldReceive('getId')->once()->andReturn(Entity::FAILED_STATUS);
 
         $entity->setEbsrSubmissionStatus($ebsrSubmissionStatus);
-        $entity->setEbsrSubmissionResult(serialize($errors));
+        $entity->setEbsrSubmissionResult(ZendJson::encode($errors));
 
         $this->assertEquals($errorArray, $entity->getErrors());
     }

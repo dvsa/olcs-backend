@@ -729,7 +729,9 @@ return [
             \Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber::class =>
                 \Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification::class
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\SubmissionResult::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\SubmissionResult::class
         ],
         'factories' => [
             \Dvsa\Olcs\Api\Service\Nr\Filter\Vrm::class => \Dvsa\Olcs\Api\Service\Nr\Filter\VrmFactory::class

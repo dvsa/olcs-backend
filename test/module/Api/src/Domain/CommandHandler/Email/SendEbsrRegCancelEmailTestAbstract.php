@@ -65,8 +65,7 @@ abstract class SendEbsrRegCancelEmailTestAbstract extends CommandHandlerTestCase
         $serviceNumbers = '99999 (12345,567910)';
         $orgEmail = 'foo@bar.com';
         $publicationInfo = 'publicationInfo';
-        $submissionResultArray = [];
-        $submissionResult = serialize($submissionResultArray);
+        $submissionResult = [];
         $orgAdminEmails = [0 => 'terry.valtech@gmail.com'];
 
         $submittedDate = '2015-01-15';
@@ -92,7 +91,7 @@ abstract class SendEbsrRegCancelEmailTestAbstract extends CommandHandlerTestCase
         $ebsrSubmissionEntity->shouldReceive('getSubmittedDate')->andReturn($submittedDate);
         $ebsrSubmissionEntity->shouldReceive('getOrganisationEmailAddress')->once()->andReturn($orgEmail);
         $ebsrSubmissionEntity->shouldReceive('getBusReg')->once()->andReturn($busRegEntity);
-        $ebsrSubmissionEntity->shouldReceive('getEbsrSubmissionResult')->andReturn($submissionResult);
+        $ebsrSubmissionEntity->shouldReceive('getDecodedSubmissionResult')->andReturn($submissionResult);
         $ebsrSubmissionEntity->shouldReceive('getOrganisation->getAdminEmailAddresses')->andReturn($orgAdminEmails);
 
         $this->repoMap['EbsrSubmission']
@@ -112,7 +111,7 @@ abstract class SendEbsrRegCancelEmailTestAbstract extends CommandHandlerTestCase
                 'lineName' => $serviceNumbers,
                 'startDate' => $formattedEffectiveDate,
                 'localAuthoritys' => '',
-                'submissionErrors' => $submissionResultArray,
+                'submissionErrors' => $submissionResult,
                 'hasBusData' => true,
                 'publicationId' => $publicationInfo,
             ],
