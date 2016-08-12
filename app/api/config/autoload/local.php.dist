@@ -67,6 +67,8 @@ return [
         'configuration' => [
             'orm_default' => [
                 'metadata_cache' => 'apc'
+                // Log SQL queries to the OLCS application log file
+                //'sql_logger' => 'DoctrineLogger',
 
                 // NOT used in production as may be causing issues
                 //'query_cache' => 'apc',
