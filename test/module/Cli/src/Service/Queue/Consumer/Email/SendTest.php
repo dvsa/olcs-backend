@@ -12,6 +12,7 @@ use Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send as Sut;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
 use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
 use Zend\Serializer\Adapter\Json as ZendJson;
+use Zend\ServiceManager\Exception\RuntimeException as ZendServiceException;
 
 /**
  * Email Send Queue Consumer Test
@@ -99,6 +100,124 @@ class SendTest extends AbstractConsumerTestCase
 
         $this->assertEquals(
             'Requeued message: 99 ' . $options . ' for retry in 900 ' . $message,
+            $result
+        );
+    }
+
+    public function testProcessMessageHandlesZendServiceException()
+    {
+        $json = new ZendJson();
+        $options = $json->serialize(
+            [
+                'commandClass' => SampleEmail::class,
+                'commandData' => [
+                    'user' => 1,
+                ]
+            ]
+        );
+
+        $item = new QueueEntity();
+        $item->setId(99);
+        $item->setOptions($options);
+
+        $message = 'Email not sent';
+
+        $this->chm
+            ->shouldReceive('handleCommand')
+            ->with(SampleEmail::class)
+            ->andThrow(new ZendServiceException($message));
+
+        $this->expectCommand(
+            \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
+            [
+                'item' => $item,
+            ],
+            new Result(),
+            false
+        );
+
+        $result = $this->sut->processMessage($item);
+
+        $this->assertEquals(
+            'Failed to process message: 99 ' . $options . ' ' . $message,
+            $result
+        );
+    }
+
+    public function testProcessMessageHandlesException()
+    {
+        $json = new ZendJson();
+        $options = $json->serialize(
+            [
+                'commandClass' => SampleEmail::class,
+                'commandData' => [
+                    'user' => 1,
+                ]
+            ]
+        );
+
+        $item = new QueueEntity();
+        $item->setId(99);
+        $item->setOptions($options);
+
+        $message = 'Email not sent';
+
+        $this->chm
+            ->shouldReceive('handleCommand')
+            ->with(SampleEmail::class)
+            ->andThrow(new \Exception($message));
+
+        $this->expectCommand(
+            \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
+            [
+                'item' => $item,
+            ],
+            new Result(),
+            false
+        );
+
+        $result = $this->sut->processMessage($item);
+
+        $this->assertEquals(
+            'Failed to process message: 99 ' . $options . ' ' . $message,
+            $result
+        );
+    }
+
+    public function testProcessMessageHandlesMaxAttempts()
+    {
+        $json = new ZendJson();
+        $options = $json->serialize(
+            [
+                'commandClass' => SampleEmail::class,
+                'commandData' => [
+                    'user' => 1,
+                ]
+            ]
+        );
+
+        $item = new QueueEntity();
+        $item->setId(99);
+        $item->setAttempts(100);
+        $item->setOptions($options);
+
+        $this->chm
+            ->shouldReceive('handleCommand')
+            ->never();
+
+        $this->expectCommand(
+            \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
+            [
+                'item' => $item,
+            ],
+            new Result(),
+            false
+        );
+
+        $result = $this->sut->processMessage($item);
+
+        $this->assertEquals(
+            'Failed to process message: 99 ' . $options . ' Maximum attempts exceeded',
             $result
         );
     }

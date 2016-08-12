@@ -48,12 +48,15 @@
                 <file>../module/DocumentShare/src/Module.php</file>
                 <file>../module/Email/src/Module.php</file>
                 <file>../module/CompaniesHouse/src/Module.php</file>
+                <file>../module/Scanning/src/Module.php</file>
                 <file>../module/Snapshot/src/Module.php</file>
                 <file>../module/Address/src/Module.php</file>
                 <directory>../module/Email/config</directory>
                 <directory>../module/Cli/config</directory>
+                <directory>../module/Cli/src/Session/NullSaveHandler.php</directory>
                 <directory>../module/DocumentShare/config</directory>
                 <directory>../module/CompaniesHouse/config</directory>
+                <directory>../module/Scanning/config</directory>
                 <directory>../module/Snapshot/config</directory>
                 <directory>../module/Address/config</directory>
                 <directory>../module/Olcs/Db/config</directory>

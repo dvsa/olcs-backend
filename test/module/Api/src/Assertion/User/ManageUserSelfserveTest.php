@@ -1,11 +1,10 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Assertion\Licence;
+namespace Dvsa\OlcsTest\Api\Assertion\User;
 
 use Dvsa\Olcs\Api\Assertion\User\ManageUserSelfserve as Sut;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use ZfcRbac\Service\AuthorizationService;
@@ -153,5 +152,13 @@ class ManageUserSelfserveTest extends MockeryTestCase
             [true, User::USER_TYPE_OPERATOR, User::USER_TYPE_TRANSPORT_MANAGER, false, false],
             [false, User::USER_TYPE_OPERATOR, User::USER_TYPE_TRANSPORT_MANAGER, false, true],
         ];
+    }
+
+    public function testAssertForInternal()
+    {
+        $user = m::mock(User::class)->makePartial();
+        $user->shouldReceive('getUserType')->andReturn(User::USER_TYPE_INTERNAL);
+
+        $this->assertFalse($this->sut->assert($this->auth, $user));
     }
 }
