@@ -22,6 +22,7 @@ return [
             'AddressFormatter' => \Dvsa\Olcs\Api\Service\Helper\FormatAddress::class,
             'VariationPublishValidationService' =>
                 \Dvsa\Olcs\Api\Service\Lva\Variation\PublishValidationService::class,
+            'DoctrineLogger' => Util\DoctrineExtension\Logger::class,
         ],
         'factories' => [
             'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
