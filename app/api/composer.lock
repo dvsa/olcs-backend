@@ -1096,7 +1096,7 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-logging.git",
-                "reference": "b8f6d683bdce67bfd7ee8261766cb260bd30a6cb"
+                "reference": "d106712c54f2fc06ae2b378467b77d8a8df517db"
             },
             "require": {
                 "php": ">=5.4",
@@ -1122,7 +1122,7 @@
                 }
             },
             "description": "Logging Module for Olcs",
-            "time": "2016-08-11 16:08:17"
+            "time": "2016-08-15 13:02:19"
         },
         {
             "name": "olcs/olcs-transfer",
