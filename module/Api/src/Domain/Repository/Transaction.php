@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Transaction
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
@@ -25,15 +20,20 @@ class Transaction extends AbstractRepository
     protected $alias = 't';
 
     /**
-     * @param string $reference
-     * @param int $hydrateMode
-     * @param null $version
+     * Fetch data by reference
+     *
+     * @param string $reference   Reference Nu
+     * @param int    $hydrateMode Hydration mode
+     * @param null   $version     Version Nr
+     *
+     * @return Entity
      */
     public function fetchByReference($reference, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
     {
         $qb = $this->createQueryBuilder();
 
-        $this->getQueryBuilder()->modifyQuery($qb)
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
             ->withRefdata()
             ->with('feeTransactions', 'ft')
             ->with('ft.fee', 'f')
@@ -59,7 +59,11 @@ class Transaction extends AbstractRepository
     }
 
     /**
+     * Fetch outstanding card payments
+     *
      * @param int $minAge minimum age in minutes
+     *
+     * @return array
      */
     public function fetchOutstandingCardPayments($minAge)
     {

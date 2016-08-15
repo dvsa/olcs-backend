@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Transaction test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\DBAL\LockMode;
@@ -14,16 +9,16 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\Transaction as TransactionRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 
 /**
- * Transaction test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
+ * @covers Dvsa\Olcs\Api\Domain\Repository\Transaction
  */
 class TransactionTest extends RepositoryTestCase
 {
+    /** @var  TransactionRepo */
+    protected $sut;
+
     public function setUp()
     {
         $this->setUpSut(TransactionRepo::class);
@@ -36,10 +31,11 @@ class TransactionTest extends RepositoryTestCase
         $result = m::mock(Transaction::class);
         $results = [$result];
 
-        /** @var QueryBuilder $qb */
+        /** @var m\MockInterface $qb */
         $qb = m::mock(QueryBuilder::class);
         $qb->shouldReceive('getQuery->getResult')
             ->with(Query::HYDRATE_OBJECT)
+            ->once()
             ->andReturn($results);
 
         $where = m::mock();
@@ -66,10 +62,11 @@ class TransactionTest extends RepositoryTestCase
             ->shouldReceive('with')
             ->andReturnSelf();
 
-        /** @var EntityRepository $repo */
+        /** @var m\MockInterface $repo */
         $repo = m::mock(EntityRepository::class);
         $repo->shouldReceive('createQueryBuilder')
             ->with('t')
+            ->once()
             ->andReturn($qb);
 
         $this->em->shouldReceive('getRepository')
