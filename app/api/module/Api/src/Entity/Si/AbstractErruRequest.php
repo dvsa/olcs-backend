@@ -177,15 +177,6 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     protected $responseDocument;
 
     /**
-     * Response sent
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="response_sent", nullable=true)
-     */
-    protected $responseSent;
-
-    /**
      * Response time
      *
      * @var \DateTime
@@ -551,30 +542,6 @@ abstract class AbstractErruRequest implements BundleSerializableInterface, JsonS
     public function getResponseDocument()
     {
         return $this->responseDocument;
-    }
-
-    /**
-     * Set the response sent
-     *
-     * @param string $responseSent new value being set
-     *
-     * @return ErruRequest
-     */
-    public function setResponseSent($responseSent)
-    {
-        $this->responseSent = $responseSent;
-
-        return $this;
-    }
-
-    /**
-     * Get the response sent
-     *
-     * @return string
-     */
-    public function getResponseSent()
-    {
-        return $this->responseSent;
     }
 
     /**
