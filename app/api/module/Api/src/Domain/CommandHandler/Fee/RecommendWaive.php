@@ -1,20 +1,13 @@
 <?php
 
-/**
- * Recommend Waive
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
@@ -30,10 +23,18 @@ final class RecommendWaive extends AbstractCommandHandler implements Transaction
 {
     use AuthAwareTrait;
 
-    const WAIVE_REFERENCE = 'Waive'; // string to go in transaction.reference
+    const WAIVE_REFERENCE = 'WAIVE'; // string to go in transaction.reference
 
     protected $repoServiceName = 'Fee';
 
+    /**
+     * Process handler
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Fee\RecommendWaive $command Command
+     *
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -50,7 +51,14 @@ final class RecommendWaive extends AbstractCommandHandler implements Transaction
             ->setComment($command->getWaiveReason())
             ->setWaiveRecommendationDate($now)
             ->setWaiveRecommenderUser($this->getCurrentUser())
-            ->setReference(self::WAIVE_REFERENCE);
+            ->setReference(
+                //  format refernce in format WAIVE-7777-8888-9999999
+                preg_replace(
+                    '~([\d\w]{0,4})([\d\w]{0,4})([\d\w]+)~',
+                    self::WAIVE_REFERENCE . '-$1-$2-$3',
+                    strtoupper(uniqid('', false))
+                )
+            );
 
         $feeTransaction = new FeeTransactionEntity();
         $feeTransaction

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Query Builder
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain;
 
 use Doctrine\ORM\QueryBuilder as DoctrineQueryBuilder;
@@ -24,10 +19,12 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @method QueryBuilder withCreatedBy()
  * @method QueryBuilder withUser()
  * @method QueryBuilder paginate($page, $limit)
- * @method QueryBuilder order($sort, $order, $compositeFields)
+ * @method QueryBuilder order($sort, $order, $compositeFields = null)
  */
 class QueryBuilder implements QueryBuilderInterface
 {
+    const ERR_QB_NOT_SET = 'Doctrine Query Builder is not set';
+
     /**
      * @var DoctrineQueryBuilder
      */
@@ -38,13 +35,22 @@ class QueryBuilder implements QueryBuilderInterface
      */
     private $queryPartialServiceManager;
 
+    /**
+     * QueryBuilder constructor.
+     *
+     * @param QueryPartialServiceManager $queryPartialServiceManager Service manager
+     */
     public function __construct(ServiceLocatorInterface $queryPartialServiceManager)
     {
         $this->queryPartialServiceManager = $queryPartialServiceManager;
     }
 
     /**
-     * @return QueryBuilder
+     * Set Query Builder
+     *
+     * @param DoctrineQueryBuilder $qb Doctrine Query Builder
+     *
+     * @return $this
      */
     public function modifyQuery(DoctrineQueryBuilder $qb)
     {
@@ -54,10 +60,19 @@ class QueryBuilder implements QueryBuilderInterface
     }
 
     /**
-     * @return QueryBuilder
+     * Call partial
+     *
+     * @param string $name      Query Partial name (method name)
+     * @param array  $arguments Partial arguments (method argument)
+     *
+     * @return $this
      */
     public function __call($name, $arguments)
     {
+        if (!$this->qb instanceof DoctrineQueryBuilder) {
+            throw new \RuntimeException(self::ERR_QB_NOT_SET);
+        }
+
         $this->queryPartialServiceManager->get(ucfirst($name))->modifyQuery($this->qb, $arguments);
 
         return $this;
