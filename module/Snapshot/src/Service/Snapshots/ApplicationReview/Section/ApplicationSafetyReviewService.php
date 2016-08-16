@@ -64,10 +64,12 @@ class ApplicationSafetyReviewService extends AbstractReviewService
         ];
 
         if (!$this->isPsv($data)) {
-            $multiItems['safetyIns'][] = [
-                'label' => 'application-review-safety-safetyInsTrailers',
-                'value' => $this->formatDuration($data['licence']['safetyInsTrailers'])
-            ];
+            if ($data['totAuthTrailers'] !== 0) {
+                $multiItems['safetyIns'][] = [
+                    'label' => 'application-review-safety-safetyInsTrailers',
+                    'value' => $this->formatDuration($data['licence']['safetyInsTrailers'])
+                ];
+            }
         } else {
             $multiItems['safetyInsVaries'][0]['label'] .= '-psv';
         }
