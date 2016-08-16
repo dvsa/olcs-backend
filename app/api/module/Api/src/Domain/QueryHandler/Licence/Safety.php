@@ -43,6 +43,7 @@ class Safety extends AbstractQueryHandler
 
         $goodsOrPsv = $licence->getGoodsOrPsv()->getId();
 
+        $totalTrailers = $licence->getTotAuthTrailers();
         return $this->result(
             $licence,
             [
@@ -55,7 +56,7 @@ class Safety extends AbstractQueryHandler
             [
                 'safetyDocuments' => $this->resultList($safetyDocuments),
                 'canHaveTrailers' => ($goodsOrPsv === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE),
-                'hasTrailers' => $licence->getTotAuthTrailers() > 0
+                'showTrailers' => $totalTrailers > 0 || $totalTrailers === null
             ]
         );
     }
