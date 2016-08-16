@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Email\Data;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Email\Data\Message;
+use Dvsa\Olcs\Email\Domain\Command\SendEmail as SendEmailCmd;
 
 /**
  * Message Test
@@ -131,5 +132,38 @@ class MessageTest extends MockeryTestCase
         $this->sut->setSubjectVariables(['Billy', 82]);
 
         $this->assertSame('My name is Billy and I am 82 years old', $this->sut->getSubjectReplaceVariables());
+    }
+
+    public function testBuildCommand()
+    {
+        $this->sut->setFromName('from name');
+        $this->sut->setFromEmail('from@test.me');
+        $this->sut->setCc(['cc']);
+        $this->sut->setBcc(['bcc1', 'bcc2']);
+        $this->sut->setDocs(['doc1', 'doc2']);
+        $this->sut->setSubject('subject');
+        $this->sut->setSubjectVariables(['subVar']);
+        $this->sut->setPlainBody('plain body');
+        $this->sut->setHtmlBody('html body');
+
+        $result = $this->sut->buildCommand();
+
+        $this->assertInstanceOf(SendEmailCmd::class, $result);
+        $this->assertEquals(
+            [
+                'fromName' => 'from name',
+                'fromEmail' => 'from@test.me',
+                'to' => 'TO',
+                'cc' => ['cc'],
+                'bcc' => ['bcc1', 'bcc2'],
+                'subject' => 'subject',
+                'subjectVariables' => ['subVar'],
+                'docs' => ['doc1', 'doc2'],
+                'plainBody' => 'plain body',
+                'htmlBody' => 'html body',
+                'locale' => 'en_GB'
+            ],
+            $result->getArrayCopy()
+        );
     }
 }

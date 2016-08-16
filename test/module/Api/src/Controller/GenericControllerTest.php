@@ -10,7 +10,8 @@ use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence;
 use Dvsa\Olcs\Transfer\Query\Application\Application;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase as testCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
+use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\Controller\Plugin\Params;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\View\Model\JsonModel;
@@ -69,6 +70,31 @@ class GenericControllerTest extends TestCase
         $this->assertSame($viewModel, $response);
     }
 
+    public function testGetNotReady()
+    {
+        $viewModel = new JsonModel();
+        $application = new Application();
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('notReady')->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
+        $mockQueryHandler->shouldReceive('handleQuery')
+            ->with($application)
+            ->andThrow(new Exception\NotReadyException());
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->get(25);
+
+        $this->assertSame($viewModel, $response);
+    }
+
     public function testGetClientError()
     {
         $viewModel = new JsonModel();
@@ -76,7 +102,7 @@ class GenericControllerTest extends TestCase
         $errors = ['foo' => 'is not bar'];
 
         $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('error')->with(400, $errors)->andReturn($viewModel);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_400, $errors)->andReturn($viewModel);
 
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
@@ -103,7 +129,59 @@ class GenericControllerTest extends TestCase
         $errors = ['blargle'];
 
         $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('error')->with(500, $errors)->andReturn($viewModel);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_500, $errors)->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
+        $mockQueryHandler->shouldReceive('handleQuery')
+            ->with($application)
+            ->andThrow($ex);
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->get(25);
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testGetRestResponseError()
+    {
+        $viewModel = new JsonModel();
+        $application = new Application();
+        $ex = new Exception\RestResponseException('blargle', HttpResponse::STATUS_CODE_500);
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_500, ['blargle'])->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
+        $mockQueryHandler->shouldReceive('handleQuery')
+            ->with($application)
+            ->andThrow($ex);
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->get(25);
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testGetForbiddenError()
+    {
+        $viewModel = new JsonModel();
+        $application = new Application();
+        $ex = new Exception\ForbiddenException('blargle');
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_403, ['blargle'])->andReturn($viewModel);
 
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
@@ -185,6 +263,38 @@ class GenericControllerTest extends TestCase
         static::assertSame($mockStream, $actual);
     }
 
+    public function testGetListSingle()
+    {
+        $singleData = ['id' => 100];
+
+        $dto = new Application();
+
+        $mockResult = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\Result::class);
+
+        $mockParams = m::mock(Params::class)
+            ->shouldReceive('__invoke')->with('dto')->andReturn($dto)
+            ->getMock();
+
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class)
+            ->shouldReceive('handleQuery')->with($dto)->andReturn($mockResult)
+            ->getMock();
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('singleResult')->with($mockResult)->andReturn($singleData);
+
+        $mockSl = m::mock(PluginManager::class)
+            ->shouldReceive('get')->with('params', null)->andReturn($mockParams)
+            ->shouldReceive('get')->with('QueryHandlerManager')->andReturn($mockQueryHandler)
+            ->shouldReceive('get')->with('response', null)->andReturn($mockResponse)
+            ->shouldReceive('setController')
+            ->getMock();
+
+        //  call & check
+        $actual = $this->setupSut($mockSl)->getList();
+
+        static::assertSame($singleData, $actual);
+    }
+
     public function testGetListNotFound()
     {
         $viewModel = new JsonModel();
@@ -217,7 +327,7 @@ class GenericControllerTest extends TestCase
         $errors = ['foo' => 'is not bar'];
 
         $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('error')->with(400, $errors)->andReturn($viewModel);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_400, $errors)->andReturn($viewModel);
 
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
@@ -244,7 +354,60 @@ class GenericControllerTest extends TestCase
         $errors = ['blargle'];
 
         $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('error')->with(500, $errors)->andReturn($viewModel);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_500, $errors)->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
+        $mockQueryHandler->shouldReceive('handleQuery')
+            ->with($application)
+            ->andThrow($ex);
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->getList();
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testGetListNotReadyError()
+    {
+        $viewModel = new JsonModel();
+        $application = new Application();
+        $ex = new Exception\NotReadyException('blargle');
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('notReady')->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
+        $mockQueryHandler->shouldReceive('handleQuery')
+            ->with($application)
+            ->andThrow($ex);
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->getList();
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testGetListForbiddenExceptionError()
+    {
+        $viewModel = new JsonModel();
+        $application = new Application();
+        $ex = new Exception\ForbiddenException('blargle');
+        $errors = ['blargle'];
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_403, $errors)->andReturn($viewModel);
 
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
@@ -321,7 +484,7 @@ class GenericControllerTest extends TestCase
         $errors = ['foo' => 'is not bar'];
 
         $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('error')->with(400, $errors)->andReturn($viewModel);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_400, $errors)->andReturn($viewModel);
 
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
@@ -378,7 +541,7 @@ class GenericControllerTest extends TestCase
         $errors = ['blargle'];
 
         $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('error')->with(500, $errors)->andReturn($viewModel);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_500, $errors)->andReturn($viewModel);
 
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
@@ -397,6 +560,59 @@ class GenericControllerTest extends TestCase
         $this->assertSame($viewModel, $response);
     }
 
+    public function testUpdateRestResponseError()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+        $ex = new Exception\RestResponseException('blargle');
+        $errors = ['blargle'];
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_500, $errors)->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow($ex);
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->update(25, []);
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testUpdateForbiddenError()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+        $ex = new Exception\ForbiddenException('blargle');
+        $errors = ['blargle'];
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_403, $errors)->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow($ex);
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->update(25, []);
+
+        $this->assertSame($viewModel, $response);
+    }
 
     public function testReplaceList()
     {
@@ -456,7 +672,7 @@ class GenericControllerTest extends TestCase
         $errors = ['foo' => 'is not bar'];
 
         $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('error')->with(400, $errors)->andReturn($viewModel);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_400, $errors)->andReturn($viewModel);
 
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
@@ -513,7 +729,7 @@ class GenericControllerTest extends TestCase
         $errors = ['blargle'];
 
         $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('error')->with(500, $errors)->andReturn($viewModel);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_500, $errors)->andReturn($viewModel);
 
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
@@ -565,7 +781,7 @@ class GenericControllerTest extends TestCase
         $errors = ['foo' => 'is not bar'];
 
         $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('error')->with(400, $errors)->andReturn($viewModel);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_400, $errors)->andReturn($viewModel);
 
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
@@ -592,7 +808,61 @@ class GenericControllerTest extends TestCase
         $errors = ['blargle'];
 
         $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('error')->with(500, $errors)->andReturn($viewModel);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_500, $errors)->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow($ex);
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->create([]);
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testCreateRestResponseError()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+        $ex = new Exception\RestResponseException('blargle');
+        $errors = ['blargle'];
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_500, $errors)->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow($ex);
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->create([]);
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testCreateForbiddenError()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+        $ex = new Exception\ForbiddenException('blargle');
+        $errors = ['blargle'];
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_403, $errors)->andReturn($viewModel);
 
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
@@ -669,7 +939,7 @@ class GenericControllerTest extends TestCase
         $errors = ['foo' => 'is not bar'];
 
         $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('error')->with(400, $errors)->andReturn($viewModel);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_400, $errors)->andReturn($viewModel);
 
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
@@ -696,7 +966,7 @@ class GenericControllerTest extends TestCase
         $errors = ['blargle'];
 
         $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('error')->with(500, $errors)->andReturn($viewModel);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_500, $errors)->andReturn($viewModel);
 
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
@@ -715,6 +985,32 @@ class GenericControllerTest extends TestCase
         $this->assertSame($viewModel, $response);
     }
 
+    public function testDeleteForbiddenError()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+        $ex = new Exception\ForbiddenException('blargle');
+        $errors = ['blargle'];
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_403, $errors)->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow($ex);
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->delete(25);
+
+        $this->assertSame($viewModel, $response);
+    }
 
     public function testDeleteList()
     {
@@ -774,7 +1070,7 @@ class GenericControllerTest extends TestCase
         $errors = ['foo' => 'is not bar'];
 
         $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('error')->with(400, $errors)->andReturn($viewModel);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_400, $errors)->andReturn($viewModel);
 
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
@@ -801,7 +1097,34 @@ class GenericControllerTest extends TestCase
         $errors = ['blargle'];
 
         $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('error')->with(500, $errors)->andReturn($viewModel);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_500, $errors)->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow($ex);
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->deleteList();
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testDeleteListForbiddenError()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+        $ex = new Exception\ForbiddenException('blargle');
+        $errors = ['blargle'];
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(HttpResponse::STATUS_CODE_403, $errors)->andReturn($viewModel);
 
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);

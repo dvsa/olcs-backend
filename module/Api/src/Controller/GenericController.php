@@ -33,7 +33,7 @@ class GenericController extends AbstractRestfulController
         } catch (Exception\NotReadyException $ex) {
             return $this->response()->notReady($ex->getRetryAfter());
         } catch (Exception\RestResponseException $ex) {
-            return $this->response()->error($ex->getCode(), $ex->getMessage());
+            return $this->response()->error($ex->getCode(), $ex->getMessages());
         } catch (Exception\ForbiddenException $ex) {
             return $this->response()->error(403, $ex->getMessages());
         } catch (Exception\Exception $ex) {
@@ -105,7 +105,7 @@ class GenericController extends AbstractRestfulController
         } catch (Exception\NotFoundException $ex) {
             return $this->response()->notFound();
         } catch (Exception\RestResponseException $ex) {
-            return $this->response()->error($ex->getCode(), $ex->getMessage());
+            return $this->response()->error($ex->getCode(), $ex->getMessages());
         } catch (Exception\ForbiddenException $ex) {
             return $this->response()->error(403, $ex->getMessages());
         } catch (Exception\Exception $ex) {
