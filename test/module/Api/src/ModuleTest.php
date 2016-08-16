@@ -2,15 +2,64 @@
 
 namespace OlcsTest\Api;
 
-use Olcs\Logging\Log\Logger;
+use Dvsa\Olcs\Api\Module as Sut;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Olcs\Logging\Log\Logger;
+use Zend\EventManager\Event;
+use Zend\Mvc\Application;
+use Zend\Mvc\ResponseSender\SendResponseEvent;
+use Zend\ServiceManager\ServiceManager;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Tests the Api Module php
  */
 class ModuleTest extends MockeryTestCase
 {
+    public function testOnBootstrap()
+    {
+        $loginId = 123;
+
+        $sut = m::mock(Sut::class)->makePartial();
+
+        $mockShm = m::mock();
+        $mockShm->shouldReceive('attach')->once()
+            ->with(
+                'Zend\Mvc\SendResponseListener',
+                SendResponseEvent::EVENT_SEND_RESPONSE,
+                m::type('callable')
+            );
+
+        $mockEm = m::mock();
+        $mockEm->shouldReceive('getSharedManager')->andReturn($mockShm);
+
+        $mockPvl = m::mock();
+        $mockPvl->shouldReceive('attach')->with($mockEm, 1)->once();
+
+        $mockAuth = m::mock(AuthorizationService::class);
+        $mockAuth->shouldReceive('getIdentity->getUser->getLoginId')->once()->andReturn($loginId);
+
+        $mockLog = m::mock();
+        $mockLog->shouldReceive('get')->with(\Olcs\Logging\Log\Processor\UserId::class)->once()->andReturnSelf();
+        $mockLog->shouldReceive('setUserId')->with($loginId)->once();
+
+        $mockSm = m::mock(ServiceManager::class);
+        $mockSm->shouldReceive('get')->with('PayloadValidationListener')->andReturn($mockPvl);
+        $mockSm->shouldReceive('get')->with(AuthorizationService::class)->andReturn($mockAuth);
+        $mockSm->shouldReceive('get')->with('LogProcessorManager')->andReturn($mockLog);
+
+        $mockApp = m::mock(Application::class);
+        $mockApp->shouldReceive('getServiceManager')->andReturn($mockSm);
+        $mockApp->shouldReceive('getEventManager')->andReturn($mockEm);
+
+        $mockEvent = m::mock(Event::class);
+        $mockEvent->shouldReceive('getApplication')->andReturn($mockApp);
+
+        $sut->onBootstrap($mockEvent);
+
+    }
+
     public function testLogResponseHttp()
     {
         $sut = m::mock(\Dvsa\Olcs\Api\Module::class)->makePartial()->shouldAllowMockingProtectedMethods();

@@ -1,16 +1,11 @@
 <?php
 
-/**
- * Response
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Mvc\Controller\Plugin;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result as QueryResult;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\Http\Response as HttpResponse;
+use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -20,6 +15,11 @@ use Zend\View\Model\JsonModel;
  */
 class Response extends AbstractPlugin
 {
+    /**
+     * Not found
+     *
+     * @return HttpResponse
+     */
     public function notFound()
     {
         $response = $this->getController()->getResponse();
@@ -29,12 +29,17 @@ class Response extends AbstractPlugin
     }
 
     /**
-     * @param string $retryAfter number of seconds
+     * Not ready
+     *
+     * @param int $retryAfter Number of seconds
+     *
+     * @return HttpResponse
      */
     public function notReady($retryAfter = null)
     {
         $response = $this->getController()->getResponse();
         $response->setStatusCode(HttpResponse::STATUS_CODE_503);
+
         if ($retryAfter) {
             $response->getHeaders()->addHeaders(['Retry-After' => $retryAfter]);
         }
@@ -42,6 +47,14 @@ class Response extends AbstractPlugin
         return $response;
     }
 
+    /**
+     * Error
+     *
+     * @param int   $code     Status code
+     * @param array $messages Messages
+     *
+     * @return JsonModel|HttpResponse
+     */
     public function error($code, array $messages = [])
     {
         $response = $this->getController()->getResponse();
@@ -54,6 +67,13 @@ class Response extends AbstractPlugin
         return new JsonModel(['messages' => $messages]);
     }
 
+    /**
+     * Single result
+     *
+     * @param QueryResult|Result $result Result
+     *
+     * @return JsonModel
+     */
     public function singleResult($result)
     {
         $response = $this->getController()->getResponse();
@@ -70,6 +90,16 @@ class Response extends AbstractPlugin
         return new JsonModel($result);
     }
 
+    /**
+     * Multiple results
+     *
+     * @param int   $count           Count
+     * @param array $results         Results
+     * @param int   $countUnfiltered Unfiltered count
+     * @param array $extra           Extra values
+     *
+     * @return JsonModel
+     */
     public function multipleResults($count, $results, $countUnfiltered = 0, array $extra = [])
     {
         $response = $this->getController()->getResponse();
@@ -85,6 +115,13 @@ class Response extends AbstractPlugin
         );
     }
 
+    /**
+     * Successful update
+     *
+     * @param QueryResult|Result $result Result
+     *
+     * @return JsonModel
+     */
     public function successfulUpdate(Result $result)
     {
         $response = $this->getController()->getResponse();
@@ -93,6 +130,13 @@ class Response extends AbstractPlugin
         return new JsonModel($result->toArray());
     }
 
+    /**
+     * Successful create
+     *
+     * @param QueryResult|Result $result Result
+     *
+     * @return JsonModel
+     */
     public function successfulCreate(Result $result)
     {
         $response = $this->getController()->getResponse();
