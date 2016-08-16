@@ -174,6 +174,7 @@ class ApplicationSafetyReviewServiceTest extends MockeryTestCase
                     'goodsOrPsv' => [
                         'id' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE
                     ],
+                    'totAuthTrailers' => 1,
                     'licence' => [
                         'safetyInsVehicles' => 2,
                         'safetyInsTrailers' => 0,

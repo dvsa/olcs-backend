@@ -37,6 +37,7 @@ class Safety extends AbstractQueryHandler
             $this->getRepo()->getSubCategoryReference(SubCategory::DOC_SUB_CATEGORY_MAINT_OTHER_DIGITAL)
         );
 
+        $totalTrailers = $application->getTotAuthTrailers();
         return $this->result(
             $application,
             [
@@ -52,7 +53,7 @@ class Safety extends AbstractQueryHandler
             [
                 'safetyDocuments' => $this->resultList($safetyDocuments),
                 'canHaveTrailers' => ($goodsOrPsv === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE),
-                'hasTrailers' => $application->getTotAuthTrailers() > 0
+                'isShowTrailers' => ($totalTrailers > 0 || $totalTrailers === null)
             ]
         );
     }
