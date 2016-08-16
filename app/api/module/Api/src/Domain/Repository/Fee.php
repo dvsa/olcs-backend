@@ -1,21 +1,17 @@
 <?php
 
-/**
- * Fee
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Doctrine\ORM\Query;
 
 /**
  * Fee
@@ -31,7 +27,8 @@ class Fee extends AbstractRepository
     /**
      * Gets the latest bus reg fee
      *
-     * @param $busRegId
+     * @param int $busRegId Bus Reg Id
+     *
      * @return Fee|null
      */
     public function getLatestFeeForBusReg($busRegId)
@@ -51,8 +48,8 @@ class Fee extends AbstractRepository
      * Fetch application interim fees
      *
      * @param int  $applicationId Application ID
-     * @param bool $outstanding Include fees that are outstanding
-     * @param bool $paid Include fees that are paid
+     * @param bool $outstanding   Include fees that are outstanding
+     * @param bool $paid          Include fees that are paid
      *
      * @return array
      */
@@ -77,8 +74,9 @@ class Fee extends AbstractRepository
      * Fetch outstanding fees for an organisation
      * (only those associated to a valid licence or in progress application)
      *
-     * @param int $organisationId Organisation ID
-     * @param bool $hideExpired
+     * @param int  $organisationId Organisation ID
+     * @param bool $hideExpired    If True, then hide expired
+     *
      * @return array
      */
     public function fetchOutstandingFeesByOrganisationId($organisationId, $hideExpired = false)
@@ -104,7 +102,11 @@ class Fee extends AbstractRepository
     }
 
     /**
-     * @param int $organisationId
+     * Get Outstanding Fee Count
+     *
+     * @param int  $organisationId Organisation Id
+     * @param bool $hideExpired    If True, then hide expired
+     *
      * @return int
      */
     public function getOutstandingFeeCountByOrganisationId($organisationId, $hideExpired = false)
@@ -128,7 +130,9 @@ class Fee extends AbstractRepository
     /**
      * Add a check to hide expired fees
      *
-     * @param QueryBuilder $doctrineQb
+     * @param QueryBuilder $doctrineQb Doctrin Query Builder
+     *
+     * @return void
      */
     protected function hideExpired($doctrineQb)
     {
@@ -186,9 +190,8 @@ class Fee extends AbstractRepository
     /**
      * Fetch outstanding continuation fees for a licence
      *
-     * @param int $licenceId
-     * @param DateTime $after if specified, only return fees with invoicedDate
-     * after this value
+     * @param int      $licenceId Licence Id
+     * @param DateTime $after     if specified, only return fees with invoicedDate after this value
      *
      * @return array
      */
@@ -217,7 +220,7 @@ class Fee extends AbstractRepository
     /**
      * Fetch outstanding fees by IDs
      *
-     * @param array $ids
+     * @param array $ids List of Fees identifiers
      *
      * @return array
      */
@@ -247,7 +250,7 @@ class Fee extends AbstractRepository
     /**
      * Fetch fees by irfoGvPermitId
      *
-     * @param int $irfoGvPermitId
+     * @param int $irfoGvPermitId Irfo Gv Permit Id
      *
      * @return array
      */
@@ -270,8 +273,8 @@ class Fee extends AbstractRepository
     /**
      * Fetch all fees by irfoPsvAuthId
      *
-     * @param int $irfoPsvAuthId
-     * @param bool $outstanding Only get fees that are outstanding
+     * @param int  $irfoPsvAuthId Irfo Psv Auth Id
+     * @param bool $outstanding   Only get fees that are outstanding
      *
      * @return array
      */
@@ -298,7 +301,7 @@ class Fee extends AbstractRepository
     /**
      * Fetch Application fee by irfoPsvAuthId
      *
-     * @param int $irfoPsvAuthId
+     * @param int $irfoPsvAuthId Irfo Psv Auth Id
      *
      * @return array
      */
@@ -315,34 +318,43 @@ class Fee extends AbstractRepository
     /**
      * Fetch fees by irfoPsvAuthId
      *
-     * @param int $irfoPsvAuthId
-     * @param $feeTypeFeeType
+     * @param int    $irfoPsvAuthId  Irfo Psv Auth Id
+     * @param string $feeTypeFeeType Fee type
+     *
      * @return array
      */
     public function fetchFeesByPsvAuthIdAndType($irfoPsvAuthId, $feeTypeFeeType)
     {
         $doctrineQb = $this->createQueryBuilder();
-
-        $this->getQueryBuilder()
-            ->modifyQuery($doctrineQb)
-            ->withRefdata();
-        $this->getQueryBuilder()->order('invoicedDate', 'DESC');
         $doctrineQb->join($this->alias . '.feeType', 'ft')
             ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeTypeFeeType'))
             ->andWhere($doctrineQb->expr()->eq($this->alias . '.irfoPsvAuth', ':irfoPsvAuthId'))
             ->setParameter('irfoPsvAuthId', $irfoPsvAuthId)
             ->setParameter('feeTypeFeeType', $this->getRefdataReference($feeTypeFeeType));
 
+        $this->getQueryBuilder()
+            ->modifyQuery($doctrineQb)
+            ->withRefdata()
+            ->order('invoicedDate', 'DESC');
+
         return $doctrineQb->getQuery()->getResult();
     }
 
+    /**
+     * Fetch Latest Fee By Type Statuses And Application Id
+     *
+     * @param string $feeType       Fee type
+     * @param string $feeStatuses   Fee status
+     * @param int    $applicationId Application Id
+     *
+     * @return null
+     */
     public function fetchLatestFeeByTypeStatusesAndApplicationId(
         $feeType,
         $feeStatuses,
         $applicationId
     ) {
         $doctrineQb = $this->createQueryBuilder();
-        $this->getQueryBuilder()->withRefdata()->order('invoicedDate', 'DESC');
         $doctrineQb
             ->andWhere($doctrineQb->expr()->eq($this->alias . '.application', ':application'))
             ->andWhere($doctrineQb->expr()->in($this->alias . '.feeStatus', ':feeStatuses'))
@@ -352,11 +364,18 @@ class Fee extends AbstractRepository
             ->setParameter('feeType', $feeType)
             ->setMaxResults(1);
 
+        $this->getQueryBuilder()
+            ->modifyQuery($doctrineQb)
+            ->withRefdata()
+            ->order('invoicedDate', 'DESC');
+
         $results = $doctrineQb->getQuery()->getResult();
 
         if (!empty($results)) {
             return $results[0];
         }
+
+        return null;
     }
 
     /**
@@ -385,25 +404,29 @@ class Fee extends AbstractRepository
     /**
      * Add conditions to the query builder to only select fees that are outstanding
      *
-     * @param \Doctrine\ORM\QueryBuilder $doctrineQb
+     * @param \Doctrine\ORM\QueryBuilder $doctrineQb Doctrine Query Builder
+     *
+     * @return void
      */
-    private function whereOutstandingFee($doctrineQb)
+    private function whereOutstandingFee(\Doctrine\ORM\QueryBuilder $doctrineQb)
     {
-        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias.'.feeStatus', ':feeStatus'));
-
-        $doctrineQb->setParameter('feeStatus', $this->getRefdataReference(Entity::STATUS_OUTSTANDING));
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->eq($this->alias.'.feeStatus', ':feeStatus'))
+            ->setParameter('feeStatus', $this->getRefdataReference(Entity::STATUS_OUTSTANDING));
     }
 
     /**
      * Add conditions to the query builder to only select fees that are paid
      *
-     * @param \Doctrine\ORM\QueryBuilder $doctrineQb
+     * @param \Doctrine\ORM\QueryBuilder $doctrineQb Doctrine Query Builder
+     *
+     * @return void
      */
-    private function wherePaidFee($doctrineQb)
+    private function wherePaidFee(\Doctrine\ORM\QueryBuilder $doctrineQb)
     {
-        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias.'.feeStatus', ':feeStatus'));
-
-        $doctrineQb->setParameter('feeStatus', $this->getRefdataReference(Entity::STATUS_PAID));
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->eq($this->alias.'.feeStatus', ':feeStatus'))
+            ->setParameter('feeStatus', $this->getRefdataReference(Entity::STATUS_PAID));
     }
 
     /**
@@ -414,10 +437,12 @@ class Fee extends AbstractRepository
      *  b) an under consideration/granted application
      * for the given organisation
      *
-     * @param \Doctrine\ORM\QueryBuilder $doctrineQb
-     * @param int $organisationId
+     * @param \Doctrine\ORM\QueryBuilder $doctrineQb     Doctrine Query Builder
+     * @param int                        $organisationId Organisation id
+     *
+     * @return void
      */
-    private function whereCurrentLicenceOrApplicationFee($doctrineQb, $organisationId)
+    private function whereCurrentLicenceOrApplicationFee(\Doctrine\ORM\QueryBuilder $doctrineQb, $organisationId)
     {
         $doctrineQb
             ->leftJoin($this->alias.'.application', 'a')
@@ -460,8 +485,12 @@ class Fee extends AbstractRepository
     }
 
     /**
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
+     * Apply Filters
+     *
+     * @param QueryBuilder                          $qb    Query Builder
+     * @param \Dvsa\Olcs\Transfer\Query\Fee\FeeList $query Query
+     *
+     * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
@@ -523,10 +552,14 @@ class Fee extends AbstractRepository
     }
 
     /**
-     * @param \Doctrine\ORM\QueryBuilder $qb
-     * @param string $status
+     * Add Status criteria to query
+     *
+     * @param \Doctrine\ORM\QueryBuilder $qb     Doctrine Query Builder
+     * @param string                     $status Status
+     *
+     * @return void
      */
-    private function filterByStatus($qb, $status)
+    private function filterByStatus(\Doctrine\ORM\QueryBuilder $qb, $status)
     {
         switch ($status) {
             case 'historical':
@@ -556,11 +589,13 @@ class Fee extends AbstractRepository
     /**
      * Get all bus reg ids for a route no
      *
-     * @param int $busRegId
+     * @param int $busRegId Bus Registration Id
+     *
      * @return array
      */
     protected function getBusRegIdsForRouteFromBusRegId($busRegId)
     {
+        /** @var \Doctrine\ORM\QueryBuilder $qb */
         $qb = $this->getEntityManager()
             ->getRepository(BusRegEntity::class)
             ->createQueryBuilder('br');
@@ -575,20 +610,26 @@ class Fee extends AbstractRepository
         return $qb->getQuery()->getArrayResult();
     }
 
+    /**
+     *  Get latest Fee
+     *
+     * @param int $applicationId App id
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Fee\Fee
+     */
     public function fetchLatestFeeByApplicationId($applicationId)
     {
-        $qb = $this->createQueryBuilder();
-        $this->getQueryBuilder()
-            ->withRefdata()
-            ->with('feeTransactions', 'ft')
-            ->with('ft.transaction', 't')
-            ->order('invoicedDate', 'DESC');
+        $qb = $this->createQueryBuilder()
+            ->innerJoin($this->alias . '.feeTransactions', 'ft')
+            ->innerJoin('ft.transaction', 't')
+            ->addOrderBy('t.id', 'DESC');
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.application', ':application'))
             ->setParameter('application', $applicationId)
             ->setMaxResults(1);
 
         $results = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
-        return count($results) ? $results[0] : [];
+
+        return count($results) ? current($results) : [];
     }
 }
