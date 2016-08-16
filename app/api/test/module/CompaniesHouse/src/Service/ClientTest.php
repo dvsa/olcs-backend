@@ -153,7 +153,7 @@ class ClientTest extends MockeryTestCase
             ],
             [
                 'statusCode' => Response::STATUS_CODE_200,
-                'content' => '',
+                'content' => 'non-json content',
                 'errClass' => Exception::class,
                 'errMsg' => Client::ERR_INVALID_JSON,
             ],

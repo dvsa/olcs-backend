@@ -15,10 +15,8 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\Console\Adapter\AdapterInterface;
 use Zend\Http\Response;
-use Zend\Mvc\Controller\Plugin\Params;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\ServiceManager\ServiceManager;
-use Zend\View\Model\JsonModel;
 
 /**
  * Batch Controller Test
@@ -275,6 +273,64 @@ class BatchControllerTest extends MockeryTestCase
                     ];
                 }
             );
+
+        $this->mockConsole->shouldReceive('writeLine')->times(2);
+
+        $this->sut->continuationNotSoughtAction();
+    }
+
+    public function testContinuationNotSoughtActionDryRun()
+    {
+        $this->mockParamsPlugin(
+            [
+                'dryrun' => true,
+                'verbose' => true,
+            ]
+        );
+
+        $now = new DateTime();
+
+        $licences = [
+            [
+                'id' => 1,
+                'version' => 1,
+                'licNo' => 'OB001',
+                'trafficArea' => [
+                    'id' => 'B',
+                    'name' => 'North East',
+                ],
+            ],
+            [
+                'id' => 2,
+                'version' => 1,
+                'licNo' => 'OB002',
+                'trafficArea' => [
+                    'id' => 'B',
+                    'name' => 'North East',
+                ],
+            ],
+        ];
+
+        $this->mockQueryHandler
+            ->shouldReceive('handleQuery')
+            ->with(m::type(Query\Licence\ContinuationNotSoughtList::class))
+            ->andReturnUsing(
+                function (Query\Licence\ContinuationNotSoughtList $qry) use ($licences, $now) {
+                    static::assertEquals(
+                        $now->format('Y-m-d'),
+                        $qry->getDate()->format('Y-m-d')
+                    );
+                    return [
+                        'result' => $licences,
+                        'count' => 2,
+                    ];
+                }
+            );
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\Licence\EnqueueContinuationNotSought::class))
+            ->never();
 
         $this->mockConsole->shouldReceive('writeLine')->times(2);
 
@@ -642,5 +698,57 @@ class BatchControllerTest extends MockeryTestCase
             ->shouldReceive('get')
             ->with('params', null)
             ->andReturn($mockParams);
+    }
+
+    public function testRemoveReadAuditAction()
+    {
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(\Dvsa\Olcs\Cli\Domain\Command\RemoveReadAudit::class))
+            ->once()
+            ->andReturn(new Command\Result());
+
+        $this->sut->removeReadAuditAction();
+    }
+
+    public function testInspectionRequestEmailAction()
+    {
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(\Dvsa\Olcs\Email\Domain\Command\ProcessInspectionRequestEmail::class))
+            ->once()
+            ->andReturn(new Command\Result());
+
+        $this->sut->inspectionRequestEmailAction();
+    }
+
+    public function testProcessInboxDocumentsAction()
+    {
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\Correspondence\ProcessInboxDocuments::class))
+            ->once()
+            ->andReturn(new Command\Result());
+
+        $this->sut->processInboxDocumentsAction();
+    }
+
+    public function testResolvePaymentsAction()
+    {
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\Transaction\ResolveOutstandingPayments::class))
+            ->once()
+            ->andReturn(new Command\Result());
+
+        $this->sut->resolvePaymentsAction();
     }
 }
