@@ -87,7 +87,7 @@ class SafetyTest extends QueryHandlerTestCase
             [
                 'foo' => 'bar',
                 'canHaveTrailers' => $canHaveTrailers,
-                'showTrailers' => false,
+                'isShowTrailers' => false,
                 'safetyDocuments' => [['DOCUMENT']]
             ],
             $this->sut->handleQuery($query)->serialize()
