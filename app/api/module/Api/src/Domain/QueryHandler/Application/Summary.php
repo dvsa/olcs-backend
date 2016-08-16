@@ -1,14 +1,10 @@
 <?php
 
-/**
- * Summary
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Utils\Helper\ValueHelper;
@@ -29,8 +25,16 @@ class Summary extends AbstractQueryHandler
 
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['Fee', 'SystemParameter'];
+    protected $extraRepos = ['Fee'];
 
+    /**
+     * Handle query
+     *
+     * @param \Dvsa\Olcs\Transfer\Query\Application\Summary $query Query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
         /** @var Entity\Application\Application $application */
@@ -69,19 +73,24 @@ class Summary extends AbstractQueryHandler
             }
         }
 
-        $reference = $this->getLatestReference($application->getId());
-
         return $this->result(
             $application,
             $bundle,
             [
                 'actions' => $actions,
-                'reference' => $reference,
+                'reference' => $this->getLatestPaymentReference($application->getId()),
                 'outstandingFee' => $application->getLatestOutstandingApplicationFee() !== null,
             ]
         );
     }
 
+    /**
+     * Determine Actions
+     *
+     * @param Entity\Application\Application $application Application object
+     *
+     * @return array
+     */
     protected function determineActions(Entity\Application\Application $application)
     {
         $actions = [];
@@ -102,6 +111,13 @@ class Summary extends AbstractQueryHandler
         return $actions;
     }
 
+    /**
+     * Define is application need to be signed
+     *
+     * @param Entity\Application\Application $application Application object
+     *
+     * @return bool
+     */
     protected function needsToSign(Entity\Application\Application $application)
     {
         if ($application->isVariation()) {
@@ -115,6 +131,13 @@ class Summary extends AbstractQueryHandler
         return true;
     }
 
+    /**
+     * Determine missing Evidence
+     *
+     * @param Entity\Application\Application $application Application object
+     *
+     * @return array
+     */
     protected function determineMissingEvidence(Entity\Application\Application $application)
     {
         if ($application->getLicenceType()->getId() === Entity\Licence\Licence::LICENCE_TYPE_SPECIAL_RESTRICTED) {
@@ -133,6 +156,13 @@ class Summary extends AbstractQueryHandler
         return $evidence;
     }
 
+    /**
+     * Define is application not have required for operation center documetns
+     *
+     * @param Entity\Application\Application $application Application object
+     *
+     * @return bool
+     */
     protected function isMissingOcDocuments(Entity\Application\Application $application)
     {
         if ($application->isPsv()) {
@@ -151,7 +181,6 @@ class Summary extends AbstractQueryHandler
 
         /** @var Entity\Application\ApplicationOperatingCentre $aoc */
         foreach ($ocs as $aoc) {
-
             if (ValueHelper::isOn($aoc->getAdPlaced())) {
                 continue;
             }
@@ -164,6 +193,14 @@ class Summary extends AbstractQueryHandler
         return false;
     }
 
+    /**
+     * Define is Operation center required a documents
+     *
+     * @param Entity\Application\Application                $application Application object
+     * @param Entity\Application\ApplicationOperatingCentre $aoc         Operation Center object
+     *
+     * @return bool
+     */
     protected function doesAocRequireDocs(
         Entity\Application\Application $application,
         Entity\Application\ApplicationOperatingCentre $aoc
@@ -183,8 +220,11 @@ class Summary extends AbstractQueryHandler
     }
 
     /**
-     * @param Entity\Application\Application $application
-     * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection|static
+     * Get Operation Centers to check
+     *
+     * @param Entity\Application\Application $application Application object
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     protected function getAocsToCheck(Entity\Application\Application $application)
     {
@@ -201,6 +241,14 @@ class Summary extends AbstractQueryHandler
         return $ocs;
     }
 
+    /**
+     * Define is Missing Financial Evidence
+     *
+     * @param Entity\Application\Application $application Application object
+     *
+     * @return bool
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     protected function isMissingFinancialEvidence(Entity\Application\Application $application)
     {
         $updated = Entity\Application\Application::VARIATION_STATUS_UPDATED;
@@ -236,7 +284,14 @@ class Summary extends AbstractQueryHandler
         return true;
     }
 
-    protected function needsToApproveTms(Entity\Application\Application $application)
+    /**
+     * Define is Needs To Approve Tms
+     *
+     * @param Entity\Application\Application $application Application object
+     *
+     * @return bool
+     */
+    private function needsToApproveTms(Entity\Application\Application $application)
     {
         if ($application->getLicenceType()->getId() === Entity\Licence\Licence::LICENCE_TYPE_SPECIAL_RESTRICTED) {
             return false;
@@ -261,12 +316,25 @@ class Summary extends AbstractQueryHandler
         return $tms->isEmpty() === false;
     }
 
-    protected function getLatestReference($applicationId)
+    /**
+     * Return reference number of latest payment
+     * 
+     * @param int $appId Application Id
+     *
+     * @return null|string
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function getLatestPaymentReference($appId)
     {
-        $latestFee = $this->getRepo('Fee')->fetchLatestFeeByApplicationId($applicationId);
+        /** @var Repository\Fee $repo */
+        $repo = $this->getRepo('Fee');
+
+        /** @var Entity\Fee\Fee $latestFee */
+        $latestFee = $repo->fetchLatestPaidFeeByApplicationId($appId);
         if ($latestFee) {
             return $latestFee->getLatestPaymentRef();
         }
+
         return '';
     }
 }

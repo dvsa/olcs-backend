@@ -611,17 +611,18 @@ class Fee extends AbstractRepository
     }
 
     /**
-     *  Get latest Fee
+     * Returns Fee with latest paid transaction
      *
      * @param int $applicationId App id
      *
      * @return \Dvsa\Olcs\Api\Entity\Fee\Fee
      */
-    public function fetchLatestFeeByApplicationId($applicationId)
+    public function fetchLatestPaidFeeByApplicationId($applicationId)
     {
         $qb = $this->createQueryBuilder()
             ->innerJoin($this->alias . '.feeTransactions', 'ft')
             ->innerJoin('ft.transaction', 't')
+            ->addOrderBy('t.completedDate', 'DESC')
             ->addOrderBy('t.id', 'DESC');
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.application', ':application'))
