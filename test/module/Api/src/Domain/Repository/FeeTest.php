@@ -110,19 +110,11 @@ class FeeTest extends RepositoryTestCase
             ->once()
             ->andReturn($mockQb);
 
-        $this->queryBuilder->shouldReceive('modifyQuery')
-            ->once()
-            ->with($mockQb)
-            ->andReturnSelf()
-            ->shouldReceive('withRefdata')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('with')
-            ->andReturnSelf()
-            ->shouldReceive('order')
-            ->with('invoicedDate', 'ASC')
-            ->once()
-            ->andReturnSelf();
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->once()->with($mockQb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->zeroOrMoreTimes()->andReturnSelf()
+            ->shouldReceive('order')->with('invoicedDate', 'ASC')->once()->andReturnSelf();
 
         $this->mockWhereOutstandingFee($mockQb);
 
@@ -254,19 +246,11 @@ class FeeTest extends RepositoryTestCase
             ->once()
             ->andReturn($mockQb);
 
-        $this->queryBuilder->shouldReceive('modifyQuery')
-            ->once()
-            ->with($mockQb)
-            ->andReturnSelf()
-            ->shouldReceive('withRefdata')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('with')
-            ->andReturnSelf()
-            ->shouldReceive('order')
-            ->with('invoicedDate', 'ASC')
-            ->once()
-            ->andReturnSelf();
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->once()->with($mockQb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->zeroOrMoreTimes()->andReturnSelf()
+            ->shouldReceive('order')->with('invoicedDate', 'ASC')->once()->andReturnSelf();
 
         $this->mockWhereOutstandingFee($mockQb);
 
@@ -358,19 +342,14 @@ class FeeTest extends RepositoryTestCase
             ->with('br')
             ->once()
             ->andReturn($busRegQb);
+
         $busRegQb
-            ->shouldReceive('select')
-            ->andReturnSelf()
-            ->shouldReceive('join')
-            ->andReturnSelf()
-            ->shouldReceive('where')
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->once()
-            ->with('id', 14)
-            ->andReturnSelf();
+            ->shouldReceive('select')->once()->andReturnSelf()
+            ->shouldReceive('join')->once()->andReturnSelf()
+            ->shouldReceive('where')->once()->andReturnSelf()
+            ->shouldReceive('andWhere')->once()->andReturnSelf()
+            ->shouldReceive('setParameter')->once()->with('id', 14)->andReturnSelf();
+
         $busRegIds = [14, 15, 16];
         $busRegQb
             ->shouldReceive('getQuery->getArrayResult')
@@ -379,15 +358,10 @@ class FeeTest extends RepositoryTestCase
 
         // we *could* assert all the conditions here, but just stub the methods for now
         $mockQb
-            ->shouldReceive('andWhere')
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->andReturnSelf()
-            ->shouldReceive('leftJoin')
-            ->times(2)
-            ->andReturnSelf();
+            ->shouldReceive('andWhere')->zeroOrMoreTimes()->andReturnSelf()
+            ->shouldReceive('setParameter')->zeroOrMoreTimes()->andReturnSelf()
+            ->shouldReceive('innerJoin')->once()->andReturnSelf()
+            ->shouldReceive('leftJoin')->times(2)->andReturnSelf();
 
         $mockQb->shouldReceive('expr->orX')->times(2);
         $mockQb->shouldReceive('expr->eq')->times(2);
@@ -442,8 +416,7 @@ class FeeTest extends RepositoryTestCase
         $mockQb
             ->shouldReceive('expr->eq');
         $mockQb
-            ->shouldReceive('andWhere')
-            ->andReturnSelf()
+            ->shouldReceive('andWhere')->zeroOrMoreTimes()->andReturnSelf()
             ->shouldReceive('setParameter')
             ->with('application', $applicationId)
             ->once()
@@ -562,7 +535,7 @@ class FeeTest extends RepositoryTestCase
             ->shouldReceive('getReference');
     }
 
-    private function mockWhereCurrentLicenceOrApplicationFee($mockQb, $organisationId)
+    private function mockWhereCurrentLicenceOrApplicationFee(m\MockInterface $mockQb, $organisationId)
     {
         $mockQb
             ->shouldReceive('leftJoin')
@@ -645,10 +618,9 @@ class FeeTest extends RepositoryTestCase
         )->once()->andReturn('ot');
 
         $qb->shouldReceive('getQuery')->andReturn(
-            m::mock()->shouldReceive('execute')
-                ->shouldReceive('getResult')
-                ->andReturn(['RESULTS'])
-                ->getMock()
+            m::mock()
+                ->shouldReceive('execute')->zeroOrMoreTimes()->andReturnNull()
+                ->shouldReceive('getResult')->andReturn(['RESULTS'])->getMock()
         );
 
         $after = new \DateTime('2015-09-22');
@@ -664,7 +636,7 @@ class FeeTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
-    public function testFetchLatestFeeByApplicationId()
+    public function testFetchLatestPaidFeeByApplicationId()
     {
         $applicationId = 69;
 
@@ -683,6 +655,7 @@ class FeeTest extends RepositoryTestCase
         $mockQb
             ->shouldReceive('innerJoin')->with('f.feeTransactions', 'ft')->once()->andReturnSelf()
             ->shouldReceive('innerJoin')->with('ft.transaction', 't')->once()->andReturnSelf()
+            ->shouldReceive('addOrderBy')->with('t.completedDate', 'DESC')->once()->andReturnSelf()
             ->shouldReceive('addOrderBy')->with('t.id', 'DESC')->once()->andReturnSelf()
             ->shouldReceive('andWhere')->with('cond1')->andReturnSelf()
             ->shouldReceive('setParameter')->with('application', $applicationId)->once()->andReturnSelf()
@@ -690,7 +663,7 @@ class FeeTest extends RepositoryTestCase
 
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['result']);
 
-        $this->assertSame('result', $this->sut->fetchLatestFeeByApplicationId($applicationId));
+        $this->assertSame('result', $this->sut->fetchLatestPaidFeeByApplicationId($applicationId));
     }
 
     public function testFetchFeesByPsvAuthIdAndType()
