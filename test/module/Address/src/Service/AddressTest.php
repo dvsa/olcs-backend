@@ -91,6 +91,15 @@ class AddressTest extends MockeryTestCase
         $this->sut->fetchAdminAreaByPostcode($postcode);
     }
 
+    public function testFetchAdminAreaByPostcodeWithEmptyResults()
+    {
+        $postcode = 'AB1 1AB';
+
+        $this->mockClientLookup($postcode);
+
+        $this->assertNull($this->sut->fetchAdminAreaByPostcode($postcode));
+    }
+
     public function testFetchTrafficAreaByPostcode()
     {
         $ta = m::mock();
@@ -125,6 +134,18 @@ class AddressTest extends MockeryTestCase
         $this->mockClientLookup($postcode, '', Response::STATUS_CODE_404);
 
         $this->sut->fetchTrafficAreaByPostcode($postcode, $repo);
+    }
+
+    public function testFetchTrafficAreaByPostcodeWithEmptyResults()
+    {
+        $postcode = 'AB1 1AB';
+
+        /** @var AdminAreaTrafficArea $repo */
+        $repo = m::mock(AdminAreaTrafficArea::class);
+
+        $this->mockClientLookup($postcode);
+
+        $this->assertNull($this->sut->fetchTrafficAreaByPostcode($postcode, $repo));
     }
 
     public function testFetchEnforcementAreaByPostcodeNoPostcode()
