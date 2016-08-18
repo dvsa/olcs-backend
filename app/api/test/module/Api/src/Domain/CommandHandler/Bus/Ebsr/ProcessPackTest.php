@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus\Ebsr;
 
+use Dvsa\Olcs\Api\Entity\Bus\BusServiceType as BusServiceTypeEntity;
+use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
@@ -9,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -120,7 +123,7 @@ class ProcessPackTest extends CommandHandlerTestCase
      */
     public function testHandleCommandNewApplication()
     {
-        $xmlName = 'xml file name';
+        $xmlName = 'tmp/directory/path/xml-file-name.xml';
         $xmlDocument = "<xml></xml>";
         $ebsrSubId = 1234;
         $organisationId = 5678;
@@ -130,6 +133,55 @@ class ProcessPackTest extends CommandHandlerTestCase
         $savedBusRegId = 151617;
         $submissionTypeId = 'submission type id';
         $organisation = m::mock(OrganisationEntity::class);
+
+        $busServiceTypes = [
+            'type1_key' => 'service type 1',
+            'type2_key' => 'service type 2'
+        ];
+
+        $busServiceTypeKeys = array_keys($busServiceTypes);
+
+        $busServiceType1 = m::mock(BusServiceTypeEntity::class);
+        $busServiceType2 = m::mock(BusServiceTypeEntity::class);
+
+        $busServiceTypeResult = [
+            0 => $busServiceType1,
+            1 => $busServiceType2
+        ];
+
+        $busServiceTypeCollection = new ArrayCollection([$busServiceType1, $busServiceType2]);
+
+        $naptanCodes = ['naptan codes'];
+        $naptanAuthority1 = m::mock(LocalAuthorityEntity::class);
+        $naptanAuthority2 = m::mock(LocalAuthorityEntity::class);
+        $naptanAuthorities = [
+            0 => $naptanAuthority1,
+            1 => $naptanAuthority2,
+        ];
+        $naptanAuthorityCollection = new ArrayCollection([$naptanAuthority1, $naptanAuthority2]);
+
+        $trafficArea1 = m::mock(TrafficAreaEntity::class);
+        $trafficArea2 = m::mock(TrafficAreaEntity::class);
+        $trafficArea3 = m::mock(TrafficAreaEntity::class);
+
+        $parsedTrafficAreas = ['parsed traffic areas'];
+
+        $trafficAreas = [
+            0 => $trafficArea1
+        ];
+
+        $trafficAreaCollection = new ArrayCollection([$trafficArea1, $trafficArea2, $trafficArea3]);
+
+        $parsedLocalAuthorities = ['parsed local authorities'];
+        $localAuthority3 = m::mock(LocalAuthorityEntity::class);
+        $localAuthority3->shouldReceive('getTrafficArea')->andReturn($trafficArea2);
+        $localAuthority4 = m::mock(LocalAuthorityEntity::class);
+        $localAuthority4->shouldReceive('getTrafficArea')->andReturn($trafficArea3);
+        $localAuthorities = [
+            0 => $localAuthority3,
+            1 => $localAuthority4,
+        ];
+        $localAuthorityCollection = new ArrayCollection([$localAuthority3, $localAuthority4]);
 
         $docIdentifier = 'doc/identifier';
         $document = m::mock(DocumentEntity::class);
@@ -161,24 +213,14 @@ class ProcessPackTest extends CommandHandlerTestCase
             'subsidised' => 'bs_in_part',
             'busNoticePeriod' => 1,
             'txcAppType' => 'new',
-            'serviceClassifications' => [
-
-            ],
-            'trafficAreas' => [
-
-            ],
-            'localAuthorities' => [
-
-            ],
-            'naptan' => [
-
-            ],
+            'serviceClassifications' => $busServiceTypes,
+            'trafficAreas' => $parsedTrafficAreas,
+            'localAuthorities' => $parsedLocalAuthorities,
+            'naptan' => $naptanCodes,
             'documents' => [
 
             ],
-            'otherServiceNumbers' => [
-
-            ]
+            'otherServiceNumbers' => ['123', '456']
         ];
 
         $ebsrSubmission = m::mock(EbsrSubmissionEntity::class);
@@ -234,6 +276,26 @@ class ProcessPackTest extends CommandHandlerTestCase
             ->with($existingRegNo)
             ->andReturnNull();
 
+        $this->repoMap['LocalAuthority']->shouldReceive('fetchByNaptan')
+            ->once()
+            ->with($naptanCodes)
+            ->andReturn($naptanAuthorities);
+
+        $this->repoMap['LocalAuthority']->shouldReceive('fetchByTxcName')
+            ->once()
+            ->with($parsedLocalAuthorities)
+            ->andReturn($localAuthorities);
+
+        $this->repoMap['TrafficArea']->shouldReceive('fetchByTxcName')
+            ->once()
+            ->with($parsedTrafficAreas)
+            ->andReturn($trafficAreas);
+
+        $this->repoMap['BusServiceType']->shouldReceive('fetchByTxcName')
+            ->once()
+            ->with($busServiceTypeKeys)
+            ->andReturn($busServiceTypeResult);
+
         $this->mockInput('EbsrBusRegInput', $xmlDocument, $busRegInputContext, true, $parsedEbsrData);
 
         $this->mockedSmServices[FileProcessorInterface::class]
@@ -258,11 +320,11 @@ class ProcessPackTest extends CommandHandlerTestCase
 
         $extraProcessedEbsrData = [
             'subsidised' => $this->refData['bs_in_part'],
-            'trafficAreas' => new ArrayCollection(),
-            'naptanAuthorities' => new ArrayCollection(),
+            'trafficAreas' => $trafficAreaCollection,
+            'naptanAuthorities' => $naptanAuthorityCollection,
             'busNoticePeriod' => $this->references[BusNoticePeriodEntity::class][1],
-            'localAuthoritys' => new ArrayCollection(),
-            'busServiceTypes' => new ArrayCollection()
+            'localAuthoritys' => $localAuthorityCollection,
+            'busServiceTypes' => $busServiceTypeCollection
         ];
 
         $processedDataOutput = array_merge($parsedEbsrData, $extraProcessedEbsrData);
@@ -300,7 +362,7 @@ class ProcessPackTest extends CommandHandlerTestCase
      * @param $isValid
      * @param $outputValue
      */
-    public function mockInput($inputName, $inputValue, $context, $isValid, $outputValue)
+    private function mockInput($inputName, $inputValue, $context, $isValid, $outputValue)
     {
         $this->mockedSmServices[$inputName]
             ->shouldReceive('setValue')
@@ -396,5 +458,4 @@ class ProcessPackTest extends CommandHandlerTestCase
     {
         $this->expectedSideEffect(CreateTxcInboxCmd::class, ['id' => $savedBusRegId], new Result());
     }
-
 }
