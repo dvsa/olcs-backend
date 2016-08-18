@@ -85,7 +85,7 @@ final class UpdateSafety extends AbstractCommandHandler implements Transactioned
 
         $licence->updateSafetyDetails(
             (int) $data['safetyInsVehicles'],
-            ((int) $application->getTotAuthTrailers() < 1) ? 0 : (int) $data['safetyInsTrailers'],
+            ($application->getTotAuthTrailers() === 0) ? 0 : (int) $data['safetyInsTrailers'],
             $tachoIns,
             $data['tachographInsName'],
             $data['safetyInsVaries']
