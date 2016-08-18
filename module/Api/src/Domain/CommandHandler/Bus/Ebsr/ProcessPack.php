@@ -129,6 +129,12 @@ final class ProcessPack extends AbstractCommandHandler implements
         $ebsrSub->beginValidating($this->getRepo()->getRefdataReference(EbsrSubmissionEntity::VALIDATING_STATUS));
         $this->getRepo('EbsrSubmission')->save($ebsrSub);
 
+        $config = $this->getConfig();
+
+        if (!isset($config['ebsr']['tmp_extra_path'])) {
+            throw new \RuntimeException('No tmp directory specified in config');
+        }
+
         $this->result->addId('ebsrSubmission', $ebsrSub->getId());
 
         /** @var OrganisationEntity $organisation */
@@ -136,12 +142,6 @@ final class ProcessPack extends AbstractCommandHandler implements
 
         /** @var DocumentEntity $doc */
         $doc = $ebsrSub->getDocument();
-
-        $config = $this->getConfig();
-
-        if (!isset($config['ebsr']['tmp_extra_path'])) {
-            throw new \RuntimeException('No tmp directory specified in config');
-        }
 
         //set the sub directory of /tmp where we extract the EBSR files
         $this->getFileProcessor()->setSubDirPath($config['ebsr']['tmp_extra_path']);
