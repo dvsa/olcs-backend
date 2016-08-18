@@ -139,26 +139,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'type2_key' => 'service type 2'
         ];
 
-        $busServiceTypeKeys = array_keys($busServiceTypes);
-
-        $busServiceType1 = m::mock(BusServiceTypeEntity::class);
-        $busServiceType2 = m::mock(BusServiceTypeEntity::class);
-
-        $busServiceTypeResult = [
-            0 => $busServiceType1,
-            1 => $busServiceType2
-        ];
-
-        $busServiceTypeCollection = new ArrayCollection([$busServiceType1, $busServiceType2]);
-
         $naptanCodes = ['naptan codes'];
-        $naptanAuthority1 = m::mock(LocalAuthorityEntity::class);
-        $naptanAuthority2 = m::mock(LocalAuthorityEntity::class);
-        $naptanAuthorities = [
-            0 => $naptanAuthority1,
-            1 => $naptanAuthority2,
-        ];
-        $naptanAuthorityCollection = new ArrayCollection([$naptanAuthority1, $naptanAuthority2]);
 
         $trafficArea1 = m::mock(TrafficAreaEntity::class);
         $trafficArea2 = m::mock(TrafficAreaEntity::class);
@@ -166,22 +147,7 @@ class ProcessPackTest extends CommandHandlerTestCase
 
         $parsedTrafficAreas = ['parsed traffic areas'];
 
-        $trafficAreas = [
-            0 => $trafficArea1
-        ];
-
-        $trafficAreaCollection = new ArrayCollection([$trafficArea1, $trafficArea2, $trafficArea3]);
-
         $parsedLocalAuthorities = ['parsed local authorities'];
-        $localAuthority3 = m::mock(LocalAuthorityEntity::class);
-        $localAuthority3->shouldReceive('getTrafficArea')->andReturn($trafficArea2);
-        $localAuthority4 = m::mock(LocalAuthorityEntity::class);
-        $localAuthority4->shouldReceive('getTrafficArea')->andReturn($trafficArea3);
-        $localAuthorities = [
-            0 => $localAuthority3,
-            1 => $localAuthority4,
-        ];
-        $localAuthorityCollection = new ArrayCollection([$localAuthority3, $localAuthority4]);
 
         $docIdentifier = 'doc/identifier';
         $document = m::mock(DocumentEntity::class);
@@ -276,26 +242,6 @@ class ProcessPackTest extends CommandHandlerTestCase
             ->with($existingRegNo)
             ->andReturnNull();
 
-        $this->repoMap['LocalAuthority']->shouldReceive('fetchByNaptan')
-            ->once()
-            ->with($naptanCodes)
-            ->andReturn($naptanAuthorities);
-
-        $this->repoMap['LocalAuthority']->shouldReceive('fetchByTxcName')
-            ->once()
-            ->with($parsedLocalAuthorities)
-            ->andReturn($localAuthorities);
-
-        $this->repoMap['TrafficArea']->shouldReceive('fetchByTxcName')
-            ->once()
-            ->with($parsedTrafficAreas)
-            ->andReturn($trafficAreas);
-
-        $this->repoMap['BusServiceType']->shouldReceive('fetchByTxcName')
-            ->once()
-            ->with($busServiceTypeKeys)
-            ->andReturn($busServiceTypeResult);
-
         $this->mockInput('EbsrBusRegInput', $xmlDocument, $busRegInputContext, true, $parsedEbsrData);
 
         $this->mockedSmServices[FileProcessorInterface::class]
@@ -320,11 +266,11 @@ class ProcessPackTest extends CommandHandlerTestCase
 
         $extraProcessedEbsrData = [
             'subsidised' => $this->refData['bs_in_part'],
-            'trafficAreas' => $trafficAreaCollection,
-            'naptanAuthorities' => $naptanAuthorityCollection,
+            'trafficAreas' => $this->trafficAreas($parsedTrafficAreas, $trafficArea1, $trafficArea2, $trafficArea3),
+            'naptanAuthorities' => $this->naptan($naptanCodes),
             'busNoticePeriod' => $this->references[BusNoticePeriodEntity::class][1],
-            'localAuthoritys' => $localAuthorityCollection,
-            'busServiceTypes' => $busServiceTypeCollection
+            'localAuthoritys' => $this->localAuthorities($parsedLocalAuthorities, $trafficArea2, $trafficArea3),
+            'busServiceTypes' => $this->busServiceTypes($busServiceTypes)
         ];
 
         $processedDataOutput = array_merge($parsedEbsrData, $extraProcessedEbsrData);
@@ -353,6 +299,104 @@ class ProcessPackTest extends CommandHandlerTestCase
         $this->successSideEffects($existingRegNo, $savedBusRegId, $licenceId, $documentId);
 
         $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @param $parsedTrafficAreas
+     * @param $trafficArea1
+     * @param $trafficArea2
+     * @param $trafficArea3
+     *
+     * @return ArrayCollection
+     */
+    private function trafficAreas($parsedTrafficAreas, $trafficArea1, $trafficArea2, $trafficArea3)
+    {
+        $trafficAreas = [
+            0 => $trafficArea1
+        ];
+
+        $this->repoMap['TrafficArea']->shouldReceive('fetchByTxcName')
+            ->once()
+            ->with($parsedTrafficAreas)
+            ->andReturn($trafficAreas);
+
+        //includes traffic areas from the local authorities
+        return new ArrayCollection([$trafficArea1, $trafficArea2, $trafficArea3]);
+    }
+
+    /**
+     * @param $parsedLocalAuthorities
+     * @param $firstTa
+     * @param $secondTa
+     *
+     * @return ArrayCollection
+     */
+    private function localAuthorities($parsedLocalAuthorities, $firstTa, $secondTa)
+    {
+        $localAuthority1 = m::mock(LocalAuthorityEntity::class);
+        $localAuthority1->shouldReceive('getTrafficArea')->andReturn($firstTa);
+        $localAuthority2 = m::mock(LocalAuthorityEntity::class);
+        $localAuthority2->shouldReceive('getTrafficArea')->andReturn($secondTa);
+
+        $localAuthorities = [
+            0 => $localAuthority1,
+            1 => $localAuthority2,
+        ];
+
+        $this->repoMap['LocalAuthority']->shouldReceive('fetchByTxcName')
+            ->once()
+            ->with($parsedLocalAuthorities)
+            ->andReturn($localAuthorities);
+
+        return new ArrayCollection([$localAuthority1, $localAuthority2]);
+    }
+
+    /**
+     * @param array $busServiceTypes
+     *
+     * @return ArrayCollection
+     */
+    private function busServiceTypes($busServiceTypes)
+    {
+        $busServiceTypeKeys = array_keys($busServiceTypes);
+
+        $busServiceType1 = m::mock(BusServiceTypeEntity::class);
+        $busServiceType2 = m::mock(BusServiceTypeEntity::class);
+
+        $busServiceTypeResult = [
+            0 => $busServiceType1,
+            1 => $busServiceType2
+        ];
+
+        $this->repoMap['BusServiceType']->shouldReceive('fetchByTxcName')
+            ->once()
+            ->with($busServiceTypeKeys)
+            ->andReturn($busServiceTypeResult);
+
+        return new ArrayCollection([$busServiceType1, $busServiceType2]);
+    }
+
+    /**
+     * @param $naptanCodes
+     *
+     * @return ArrayCollection
+     */
+    private function naptan($naptanCodes)
+    {
+        $naptanAuthority1 = m::mock(LocalAuthorityEntity::class);
+        $naptanAuthority2 = m::mock(LocalAuthorityEntity::class);
+
+        $naptanAuthorities = [
+            0 => $naptanAuthority1,
+            1 => $naptanAuthority2,
+        ];
+
+        $this->repoMap['LocalAuthority']->shouldReceive('fetchByNaptan')
+            ->once()
+            ->with($naptanCodes)
+            ->andReturn($naptanAuthorities);
+
+        return new ArrayCollection([$naptanAuthority1, $naptanAuthority2]);
     }
 
     /**
