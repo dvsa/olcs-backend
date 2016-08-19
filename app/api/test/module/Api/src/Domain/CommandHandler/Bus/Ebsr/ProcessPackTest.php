@@ -152,10 +152,8 @@ class ProcessPackTest extends CommandHandlerTestCase
         $parsedLocalAuthorities = ['parsed local authorities'];
 
         $docIdentifier = 'doc/identifier';
-        $document = m::mock(DocumentEntity::class);
-        $document->shouldReceive('getIdentifier')->once()->andReturn($docIdentifier);
+        $document = $this->basicDocument($docIdentifier, $documentDescription);
         $document->shouldReceive('getId')->once()->andReturn($documentId);
-        $document->shouldReceive('getDescription')->once()->andReturn($documentDescription);
 
         $cmdData = [
             'organisation' => $organisationId,
@@ -213,14 +211,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             ->once()
             ->andReturnSelf();
 
-        $this->repoMap['EbsrSubmission']->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command)
-            ->andReturn($ebsrSubmission);
-
-        $this->repoMap['EbsrSubmission']->shouldReceive('save')
-            ->times(3)
-            ->with(m::type(EbsrSubmissionEntity::class));
+        $this->ebsrSubmissionRepo($command, $ebsrSubmission, 3);
 
         $this->repoMap['Bus']->shouldReceive('save')
             ->once()
@@ -246,15 +237,7 @@ class ProcessPackTest extends CommandHandlerTestCase
 
         $this->mockInput('EbsrBusRegInput', $xmlDocument, $busRegInputContext, $parsedEbsrData);
 
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('setSubDirPath')
-            ->with('tmp/directory/path')
-            ->once();
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
-            ->with($docIdentifier)
-            ->once()
-            ->andReturn($xmlName);
+        $this->fileProcessor($docIdentifier, $xmlName);
 
         $licence = m::mock(LicenceEntity::class);
         $licence->shouldReceive('getLicNo')->twice()->andReturn($parsedLicenceNumber);
@@ -328,14 +311,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             ->with($this->refData[EbsrSubmissionEntity::VALIDATING_STATUS])
             ->andReturnSelf();
 
-        $this->repoMap['EbsrSubmission']->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command)
-            ->andReturn($ebsrSubmission);
-
-        $this->repoMap['EbsrSubmission']->shouldReceive('save')
-            ->once()
-            ->with(m::type(EbsrSubmissionEntity::class));
+        $this->ebsrSubmissionRepo($command, $ebsrSubmission, 1);
 
         $this->sut->handleCommand($command);
     }
@@ -351,9 +327,7 @@ class ProcessPackTest extends CommandHandlerTestCase
 
         $docIdentifier = 'doc/identifier';
         $documentDescription = 'document description';
-        $document = m::mock(DocumentEntity::class);
-        $document->shouldReceive('getIdentifier')->once()->andReturn($docIdentifier);
-        $document->shouldReceive('getDescription')->once()->andReturn($documentDescription);
+        $document = $this->basicDocument($docIdentifier, $documentDescription);
 
         $cmdData = [
             'organisation' => $organisationId,
@@ -362,29 +336,9 @@ class ProcessPackTest extends CommandHandlerTestCase
 
         $command = ProcessPackCmd::create($cmdData);
 
-        $ebsrSubmission = m::mock(EbsrSubmissionEntity::class);
-        $ebsrSubmission->shouldReceive('beginValidating')
-            ->once()
-            ->with($this->refData[EbsrSubmissionEntity::VALIDATING_STATUS])
-            ->andReturnSelf();
+        $ebsrSubmission = $this->failedEbsrSubmission($ebsrSubId, $organisation, $document);
 
-        $ebsrSubmission->shouldReceive('finishValidating')
-            ->once()
-            ->with($this->refData[EbsrSubmissionEntity::FAILED_STATUS], 'json string')
-            ->andReturnSelf();
-
-        $ebsrSubmission->shouldReceive('getId')->andReturn($ebsrSubId);
-        $ebsrSubmission->shouldReceive('getOrganisation')->once()->andReturn($organisation);
-        $ebsrSubmission->shouldReceive('getDocument')->once()->andReturn($document);
-
-        $this->repoMap['EbsrSubmission']->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command)
-            ->andReturn($ebsrSubmission);
-
-        $this->repoMap['EbsrSubmission']->shouldReceive('save')
-            ->twice()
-            ->with(m::type(EbsrSubmissionEntity::class));
+        $this->ebsrSubmissionRepo($command, $ebsrSubmission, 2);
 
         $this->mockedSmServices[FileProcessorInterface::class]
             ->shouldReceive('setSubDirPath')
@@ -415,9 +369,7 @@ class ProcessPackTest extends CommandHandlerTestCase
         $organisation = m::mock(OrganisationEntity::class);
 
         $docIdentifier = 'doc/identifier';
-        $document = m::mock(DocumentEntity::class);
-        $document->shouldReceive('getIdentifier')->once()->andReturn($docIdentifier);
-        $document->shouldReceive('getDescription')->once()->andReturn($documentDescription);
+        $document = $this->basicDocument($docIdentifier, $documentDescription);
 
         $cmdData = [
             'organisation' => $organisationId,
@@ -428,40 +380,13 @@ class ProcessPackTest extends CommandHandlerTestCase
 
         $xmlDocContext = ['xml_filename' => $xmlName];
 
-        $ebsrSubmission = m::mock(EbsrSubmissionEntity::class);
-        $ebsrSubmission->shouldReceive('beginValidating')
-            ->once()
-            ->with($this->refData[EbsrSubmissionEntity::VALIDATING_STATUS])
-            ->andReturnSelf();
-        $ebsrSubmission->shouldReceive('getId')->andReturn($ebsrSubId);
-        $ebsrSubmission->shouldReceive('getOrganisation')->once()->andReturn($organisation);
-        $ebsrSubmission->shouldReceive('getDocument')->once()->andReturn($document);
+        $ebsrSubmission = $this->failedEbsrSubmission($ebsrSubId, $organisation, $document);
 
-        $this->repoMap['EbsrSubmission']->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command)
-            ->andReturn($ebsrSubmission);
-
-        $this->repoMap['EbsrSubmission']->shouldReceive('save')
-            ->times(2)
-            ->with(m::type(EbsrSubmissionEntity::class));
+        $this->ebsrSubmissionRepo($command, $ebsrSubmission, 2);
 
         $this->mockInputFailure('EbsrXmlStructure', $xmlName, $xmlDocContext, ['message']);
 
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('setSubDirPath')
-            ->with('tmp/directory/path')
-            ->once();
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
-            ->with($docIdentifier)
-            ->once()
-            ->andReturn($xmlName);
-
-        $ebsrSubmission->shouldReceive('finishValidating')
-            ->once()
-            ->with($this->refData[EbsrSubmissionEntity::FAILED_STATUS], 'json string')
-            ->andReturnSelf();
+        $this->fileProcessor($docIdentifier, $xmlName);
 
         $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
 
@@ -482,9 +407,7 @@ class ProcessPackTest extends CommandHandlerTestCase
         $organisation = m::mock(OrganisationEntity::class);
 
         $docIdentifier = 'doc/identifier';
-        $document = m::mock(DocumentEntity::class);
-        $document->shouldReceive('getIdentifier')->once()->andReturn($docIdentifier);
-        $document->shouldReceive('getDescription')->once()->andReturn($documentDescription);
+        $document = $this->basicDocument($docIdentifier, $documentDescription);
 
         $cmdData = [
             'organisation' => $organisationId,
@@ -495,24 +418,10 @@ class ProcessPackTest extends CommandHandlerTestCase
 
         $xmlDocContext = ['xml_filename' => $xmlName];
 
-        $ebsrSubmission = m::mock(EbsrSubmissionEntity::class);
-        $ebsrSubmission->shouldReceive('beginValidating')
-            ->once()
-            ->with($this->refData[EbsrSubmissionEntity::VALIDATING_STATUS])
-            ->andReturnSelf();
-        $ebsrSubmission->shouldReceive('getId')->andReturn($ebsrSubId);
-        $ebsrSubmission->shouldReceive('getOrganisation')->once()->andReturn($organisation);
-        $ebsrSubmission->shouldReceive('getDocument')->once()->andReturn($document);
+        $ebsrSubmission = $this->failedEbsrSubmission($ebsrSubId, $organisation, $document);
         $ebsrSubmission->shouldReceive('getEbsrSubmissionType->getId')->once()->andReturn($submissionTypeId);
 
-        $this->repoMap['EbsrSubmission']->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command)
-            ->andReturn($ebsrSubmission);
-
-        $this->repoMap['EbsrSubmission']->shouldReceive('save')
-            ->times(2)
-            ->with(m::type(EbsrSubmissionEntity::class));
+        $this->ebsrSubmissionRepo($command, $ebsrSubmission, 2);
 
         $this->mockInput('EbsrXmlStructure', $xmlName, $xmlDocContext, $xmlDocument);
 
@@ -523,20 +432,7 @@ class ProcessPackTest extends CommandHandlerTestCase
 
         $this->mockInputFailure('EbsrBusRegInput', $xmlDocument, $busRegInputContext, ['messages']);
 
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('setSubDirPath')
-            ->with('tmp/directory/path')
-            ->once();
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
-            ->with($docIdentifier)
-            ->once()
-            ->andReturn($xmlName);
-
-        $ebsrSubmission->shouldReceive('finishValidating')
-            ->once()
-            ->with($this->refData[EbsrSubmissionEntity::FAILED_STATUS], 'json string')
-            ->andReturnSelf();
+        $this->fileProcessor($docIdentifier, $xmlName);
 
         $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
 
@@ -572,9 +468,7 @@ class ProcessPackTest extends CommandHandlerTestCase
         $parsedLocalAuthorities = ['parsed local authorities'];
 
         $docIdentifier = 'doc/identifier';
-        $document = m::mock(DocumentEntity::class);
-        $document->shouldReceive('getIdentifier')->once()->andReturn($docIdentifier);
-        $document->shouldReceive('getDescription')->once()->andReturn($documentDescription);
+        $document = $this->basicDocument($docIdentifier, $documentDescription);
 
         $cmdData = [
             'organisation' => $organisationId,
@@ -610,14 +504,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'otherServiceNumbers' => ['123', '456']
         ];
 
-        $ebsrSubmission = m::mock(EbsrSubmissionEntity::class);
-        $ebsrSubmission->shouldReceive('beginValidating')
-            ->once()
-            ->with($this->refData[EbsrSubmissionEntity::VALIDATING_STATUS])
-            ->andReturnSelf();
-        $ebsrSubmission->shouldReceive('getId')->andReturn($ebsrSubId);
-        $ebsrSubmission->shouldReceive('getOrganisation')->once()->andReturn($organisation);
-        $ebsrSubmission->shouldReceive('getDocument')->once()->andReturn($document);
+        $ebsrSubmission = $this->failedEbsrSubmission($ebsrSubId, $organisation, $document);
         $ebsrSubmission->shouldReceive('getEbsrSubmissionType->getId')->once()->andReturn($submissionTypeId);
         $ebsrSubmission->shouldReceive('setLicenceNo')->with($parsedLicenceNumber)->once()->andReturnSelf();
         $ebsrSubmission->shouldReceive('setVariationNo')->with($parsedVariationNumber)->once()->andReturnSelf();
@@ -627,14 +514,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             ->once()
             ->andReturnSelf();
 
-        $this->repoMap['EbsrSubmission']->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command)
-            ->andReturn($ebsrSubmission);
-
-        $this->repoMap['EbsrSubmission']->shouldReceive('save')
-            ->times(2)
-            ->with(m::type(EbsrSubmissionEntity::class));
+        $this->ebsrSubmissionRepo($command, $ebsrSubmission, 2);
 
         $this->mockInput('EbsrXmlStructure', $xmlName, $xmlDocContext, $xmlDocument);
 
@@ -650,16 +530,6 @@ class ProcessPackTest extends CommandHandlerTestCase
 
         $this->mockInput('EbsrBusRegInput', $xmlDocument, $busRegInputContext, $parsedEbsrData);
 
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('setSubDirPath')
-            ->with('tmp/directory/path')
-            ->once();
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
-            ->with($docIdentifier)
-            ->once()
-            ->andReturn($xmlName);
-
         $extraProcessedEbsrData = [
             'subsidised' => $this->refData['bs_in_part'],
             'trafficAreas' => $this->trafficAreas($parsedTrafficAreas, $trafficArea1, $trafficArea2, $trafficArea3),
@@ -674,14 +544,88 @@ class ProcessPackTest extends CommandHandlerTestCase
 
         $this->mockInputFailure('EbsrProcessedDataInput', $processedDataInput, $processedContext, ['messages']);
 
+        $this->fileProcessor($docIdentifier, $xmlName);
+
+        $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @param $ebsrSubId
+     * @param $organisation
+     * @param $document
+     *
+     * @return m\MockInterface
+     */
+    private function failedEbsrSubmission($ebsrSubId, $organisation, $document)
+    {
+        $ebsrSubmission = m::mock(EbsrSubmissionEntity::class);
+
+        $ebsrSubmission->shouldReceive('getId')->andReturn($ebsrSubId);
+        $ebsrSubmission->shouldReceive('getOrganisation')->once()->andReturn($organisation);
+        $ebsrSubmission->shouldReceive('getDocument')->once()->andReturn($document);
+
+        $ebsrSubmission->shouldReceive('beginValidating')
+            ->once()
+            ->with($this->refData[EbsrSubmissionEntity::VALIDATING_STATUS])
+            ->andReturnSelf();
+
         $ebsrSubmission->shouldReceive('finishValidating')
             ->once()
             ->with($this->refData[EbsrSubmissionEntity::FAILED_STATUS], 'json string')
             ->andReturnSelf();
 
-        $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
+        return $ebsrSubmission;
+    }
 
-        $this->sut->handleCommand($command);
+    /**
+     * @param $command
+     * @param $ebsrSubmission
+     * @param $timesSaved
+     */
+    private function ebsrSubmissionRepo($command, $ebsrSubmission, $timesSaved)
+    {
+        $this->repoMap['EbsrSubmission']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command)
+            ->andReturn($ebsrSubmission);
+
+        $this->repoMap['EbsrSubmission']->shouldReceive('save')
+            ->times($timesSaved)
+            ->with(m::type(EbsrSubmissionEntity::class));
+    }
+
+    /**
+     * @param $docIdentifier
+     * @param $documentDescription
+     *
+     * @return m\MockInterface
+     */
+    private function basicDocument($docIdentifier, $documentDescription)
+    {
+        $document = m::mock(DocumentEntity::class);
+        $document->shouldReceive('getIdentifier')->once()->andReturn($docIdentifier);
+        $document->shouldReceive('getDescription')->once()->andReturn($documentDescription);
+
+        return $document;
+    }
+
+    /**
+     * @param $docIdentifier
+     * @param $xmlName
+     */
+    private function fileProcessor($docIdentifier, $xmlName)
+    {
+        $this->mockedSmServices[FileProcessorInterface::class]
+            ->shouldReceive('setSubDirPath')
+            ->with('tmp/directory/path')
+            ->once();
+        $this->mockedSmServices[FileProcessorInterface::class]
+            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
+            ->with($docIdentifier)
+            ->once()
+            ->andReturn($xmlName);
     }
 
     /**
