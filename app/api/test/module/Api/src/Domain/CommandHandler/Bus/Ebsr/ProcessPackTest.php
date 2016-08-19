@@ -544,6 +544,147 @@ class ProcessPackTest extends CommandHandlerTestCase
     }
 
     /**
+     * Tests a failure from processed data input filter
+     */
+    public function testFailedProcessDataInput()
+    {
+        $xmlName = 'tmp/directory/path/xml-file-name.xml';
+        $xmlDocument = "<xml></xml>";
+        $ebsrSubId = 1234;
+        $organisationId = 5678;
+        $documentDescription = 'document description';
+        $submissionTypeId = 'submission type id';
+        $organisation = m::mock(OrganisationEntity::class);
+
+        $busServiceTypes = [
+            'type1_key' => 'service type 1',
+            'type2_key' => 'service type 2'
+        ];
+
+        $naptanCodes = ['naptan codes'];
+
+        $trafficArea1 = m::mock(TrafficAreaEntity::class);
+        $trafficArea2 = m::mock(TrafficAreaEntity::class);
+        $trafficArea3 = m::mock(TrafficAreaEntity::class);
+
+        $parsedTrafficAreas = ['parsed traffic areas'];
+
+        $parsedLocalAuthorities = ['parsed local authorities'];
+
+        $docIdentifier = 'doc/identifier';
+        $document = m::mock(DocumentEntity::class);
+        $document->shouldReceive('getIdentifier')->once()->andReturn($docIdentifier);
+        $document->shouldReceive('getDescription')->once()->andReturn($documentDescription);
+
+        $cmdData = [
+            'organisation' => $organisationId,
+            'id' => $ebsrSubId
+        ];
+
+        $command = ProcessPackCmd::create($cmdData);
+
+        $xmlDocContext = ['xml_filename' => $xmlName];
+
+        $parsedLicenceNumber = 'OB1234567';
+        $parsedVariationNumber = 666;
+        $parsedRouteNumber = '12345';
+        $parsedOrganisationEmail = 'foo@bar.com';
+        $existingRegNo = 'OB1234567/12345';
+
+        $parsedEbsrData = [
+            'licNo' => $parsedLicenceNumber,
+            'variationNo' => $parsedVariationNumber,
+            'routeNo' => $parsedRouteNumber,
+            'organisationEmail' => $parsedOrganisationEmail,
+            'existingRegNo' => $existingRegNo,
+            'subsidised' => 'bs_in_part',
+            'busNoticePeriod' => 1,
+            'txcAppType' => 'new',
+            'serviceClassifications' => $busServiceTypes,
+            'trafficAreas' => $parsedTrafficAreas,
+            'localAuthorities' => $parsedLocalAuthorities,
+            'naptan' => $naptanCodes,
+            'documents' => [
+
+            ],
+            'otherServiceNumbers' => ['123', '456']
+        ];
+
+        $ebsrSubmission = m::mock(EbsrSubmissionEntity::class);
+        $ebsrSubmission->shouldReceive('beginValidating')
+            ->once()
+            ->with($this->refData[EbsrSubmissionEntity::VALIDATING_STATUS])
+            ->andReturnSelf();
+        $ebsrSubmission->shouldReceive('getId')->andReturn($ebsrSubId);
+        $ebsrSubmission->shouldReceive('getOrganisation')->once()->andReturn($organisation);
+        $ebsrSubmission->shouldReceive('getDocument')->once()->andReturn($document);
+        $ebsrSubmission->shouldReceive('getEbsrSubmissionType->getId')->once()->andReturn($submissionTypeId);
+        $ebsrSubmission->shouldReceive('setLicenceNo')->with($parsedLicenceNumber)->once()->andReturnSelf();
+        $ebsrSubmission->shouldReceive('setVariationNo')->with($parsedVariationNumber)->once()->andReturnSelf();
+        $ebsrSubmission->shouldReceive('setRegistrationNo')->with($parsedRouteNumber)->once()->andReturnSelf();
+        $ebsrSubmission->shouldReceive('setOrganisationEmailAddress')
+            ->with($parsedOrganisationEmail)
+            ->once()
+            ->andReturnSelf();
+
+        $this->repoMap['EbsrSubmission']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command)
+            ->andReturn($ebsrSubmission);
+
+        $this->repoMap['EbsrSubmission']->shouldReceive('save')
+            ->times(2)
+            ->with(m::type(EbsrSubmissionEntity::class));
+
+        $this->mockInput('EbsrXmlStructure', $xmlName, $xmlDocContext, $xmlDocument);
+
+        $busRegInputContext = [
+            'submissionType' => $submissionTypeId,
+            'organisation' => $organisation
+        ];
+
+        $this->repoMap['Bus']->shouldReceive('fetchLatestUsingRegNo')
+            ->once()
+            ->with($existingRegNo)
+            ->andReturnNull();
+
+        $this->mockInput('EbsrBusRegInput', $xmlDocument, $busRegInputContext, $parsedEbsrData);
+
+        $this->mockedSmServices[FileProcessorInterface::class]
+            ->shouldReceive('setSubDirPath')
+            ->with('tmp/directory/path')
+            ->once();
+        $this->mockedSmServices[FileProcessorInterface::class]
+            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
+            ->with($docIdentifier)
+            ->once()
+            ->andReturn($xmlName);
+
+        $extraProcessedEbsrData = [
+            'subsidised' => $this->refData['bs_in_part'],
+            'trafficAreas' => $this->trafficAreas($parsedTrafficAreas, $trafficArea1, $trafficArea2, $trafficArea3),
+            'naptanAuthorities' => $this->naptan($naptanCodes),
+            'busNoticePeriod' => $this->references[BusNoticePeriodEntity::class][1],
+            'localAuthoritys' => $this->localAuthorities($parsedLocalAuthorities, $trafficArea2, $trafficArea3),
+            'busServiceTypes' => $this->busServiceTypes($busServiceTypes)
+        ];
+
+        $processedDataInput = array_merge($parsedEbsrData, $extraProcessedEbsrData);
+        $processedContext = ['busReg' => null];
+
+        $this->mockInputFailure('EbsrProcessedDataInput', $processedDataInput, $processedContext, ['messages']);
+
+        $ebsrSubmission->shouldReceive('finishValidating')
+            ->once()
+            ->with($this->refData[EbsrSubmissionEntity::FAILED_STATUS], 'json string')
+            ->andReturnSelf();
+
+        $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
      * @param $parsedTrafficAreas
      * @param $trafficArea1
      * @param $trafficArea2
