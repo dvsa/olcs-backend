@@ -447,15 +447,16 @@ final class ProcessPack extends AbstractCommandHandler implements
      */
     private function getSideEffects(array $ebsrData, BusRegEntity $busReg, EbsrSubmissionEntity $ebsrSub, $docPath)
     {
+        $busRegId = $busReg->getId();
         $sideEffects = $this->persistDocuments($ebsrData, $busReg, $ebsrSub, $docPath);
-        $sideEffects[] = $this->createTxcInboxCmd($busReg->getId());
+        $sideEffects[] = $this->createTxcInboxCmd($busRegId);
         $sideEffects[] = $this->createTaskCommand($busReg);
         $sideEffects[] = $this->getRequestMapQueueCmd($busReg->getId());
 
         $busStatus = $busReg->getStatus()->getId();
 
         if ($busStatus === BusRegEntity::STATUS_NEW || $busStatus === BusRegEntity::STATUS_VAR) {
-            $sideEffects[] = CreateBusFeeCmd::create(['id' => $busReg->getId()]);
+            $sideEffects[] = CreateBusFeeCmd::create(['id' => $busRegId]);
         }
 
         /** @var EbsrSubmissionEntity $ebsrSub */
