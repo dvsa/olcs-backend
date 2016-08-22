@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
@@ -39,8 +40,10 @@ use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks as UpdateDocumentLin
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\RequestMap as RequestMapQueueCmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateBusFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrErrors as SendEbsrErrorsCmd;
+use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * ProcessPack Test
@@ -63,7 +66,7 @@ class ProcessPackTest extends CommandHandlerTestCase
 
         $config = [
             'ebsr' => [
-                'tmp_extra_path' => 'tmp/directory/path'
+                'tmp_extra_path' => 'root'
             ]
         ];
 
@@ -129,7 +132,8 @@ class ProcessPackTest extends CommandHandlerTestCase
      */
     public function testHandleCommandVariation($txcAppType, $busRegStatus, $taskMessage, $fee)
     {
-        $xmlName = 'tmp/directory/path/xml-file-name.xml';
+        $filePath = 'vfs://root';
+        $xmlName = $filePath . '/xml-file-name.xml';
         $xmlDocument = "<xml></xml>";
         $ebsrSubId = 1234;
         $organisationId = 5678;
@@ -139,6 +143,37 @@ class ProcessPackTest extends CommandHandlerTestCase
         $variationBusRegId = 151617;
         $submissionTypeId = 'submission type id';
         $organisation = m::mock(OrganisationEntity::class);
+
+        $fileSystem = vfsStream::setup();
+        $supportingDocName = 'supporting.doc';
+        $supportingDocFilename = vfsStream::url('root/' . $supportingDocName);
+        $supportingDocContent = 'doc content';
+        $file = vfsStream::newFile($supportingDocName);
+        $file->setContent($supportingDocContent);
+        $fileSystem->addChild($file);
+
+        $this->supportingDocSideEffect(
+            $supportingDocFilename,
+            $variationBusRegId,
+            $licenceId,
+            $supportingDocName,
+            'Supporting document'
+        );
+
+        $supportingMapName = 'map.doc';
+        $supportingMapFilename = vfsStream::url('root/' . $supportingMapName);
+        $supportingMapContent = 'map content';
+        $file = vfsStream::newFile($supportingMapName);
+        $file->setContent($supportingMapContent);
+        $fileSystem->addChild($file);
+
+        $this->supportingDocSideEffect(
+            $supportingMapFilename,
+            $variationBusRegId,
+            $licenceId,
+            $supportingMapName,
+            'Schematic map'
+        );
 
         $busServiceTypes = [
             'type1_key' => 'service type 1',
@@ -193,8 +228,9 @@ class ProcessPackTest extends CommandHandlerTestCase
             'localAuthorities' => $parsedLocalAuthorities,
             'naptan' => $naptanCodes,
             'documents' => [
-
+                0 => $supportingDocName
             ],
+            'map' => $supportingMapName,
             'otherServiceNumbers' => [$otherServiceNumber1, $otherServiceNumber2],
             'busShortNotice' => $busShortNotice
         ];
@@ -251,8 +287,8 @@ class ProcessPackTest extends CommandHandlerTestCase
         $variationBusReg->shouldReceive('addOtherServiceNumber')->once()->with($otherServiceNumber1);
         $variationBusReg->shouldReceive('addOtherServiceNumber')->once()->with($otherServiceNumber2);
         $variationBusReg->shouldReceive('getRegNo')->once()->andReturn($existingRegNo);
-        $variationBusReg->shouldReceive('getId')->times(4)->andReturn($variationBusRegId);
-        $variationBusReg->shouldReceive('getLicence->getId')->times(2)->andReturn($licenceId);
+        $variationBusReg->shouldReceive('getId')->times(6)->andReturn($variationBusRegId);
+        $variationBusReg->shouldReceive('getLicence->getId')->times(4)->andReturn($licenceId);
         $variationBusReg->shouldReceive('getIsShortNotice')->once()->andReturn('Y');
         $variationBusReg->shouldReceive('getShortNotice->fromData')->once()->with($busShortNotice);
         $variationBusReg->shouldReceive('setEbsrSubmissions')->once()->with(m::type(ArrayCollection::class));
@@ -560,7 +596,7 @@ class ProcessPackTest extends CommandHandlerTestCase
 
         $this->mockedSmServices[FileProcessorInterface::class]
             ->shouldReceive('setSubDirPath')
-            ->with('tmp/directory/path')
+            ->with('root')
             ->once();
         $this->mockedSmServices[FileProcessorInterface::class]
             ->shouldReceive('fetchXmlFileNameFromDocumentStore')
@@ -845,7 +881,7 @@ class ProcessPackTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[FileProcessorInterface::class]
             ->shouldReceive('setSubDirPath')
-            ->with('tmp/directory/path')
+            ->with('root')
             ->once();
         $this->mockedSmServices[FileProcessorInterface::class]
             ->shouldReceive('fetchXmlFileNameFromDocumentStore')
@@ -1035,6 +1071,31 @@ class ProcessPackTest extends CommandHandlerTestCase
         if ($fee) {
             $this->busFeeSideEffect($savedBusRegId);
         }
+    }
+
+    /**
+     * Common assertions for supporting document side effect
+     *
+     * @param $docPath
+     * @param $busRegId
+     * @param $licenceId
+     * @param $filename
+     * @param $description
+     */
+    private function supportingDocSideEffect($docPath, $busRegId, $licenceId, $filename, $description)
+    {
+        $documentData = [
+            'content' => base64_encode(file_get_contents($docPath)),
+            'busReg' => $busRegId,
+            'licence' => $licenceId,
+            'category' => CategoryEntity::CATEGORY_BUS_REGISTRATION,
+            'subCategory' => CategoryEntity::BUS_SUB_CATEGORY_OTHER_DOCUMENTS,
+            'filename' => $filename,
+            'description' => $description
+        ];
+
+        $this->expectedSideEffect(UploadCmd::class, $documentData, new Result());
+
     }
 
     /**
