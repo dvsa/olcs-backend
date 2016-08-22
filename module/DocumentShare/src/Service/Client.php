@@ -19,14 +19,14 @@ class Client
 
     /** @var HttpClient */
     protected $httpClient;
-    /** @var Request */
-    protected $requestTemplate;
     /** @var  Filesystem */
     private $fileSystem;
     /** @var string */
     protected $baseUri;
     /** @var string */
     protected $workspace;
+    /** @var string */
+    protected $uuid;
 
     /** @var array */
     protected $cache = [];
@@ -34,24 +34,43 @@ class Client
     /**
      * Client constructor.
      *
-     * @param HttpClient $httpClient      Http Client
-     * @param Request    $requestTemplate Request
-     * @param Filesystem $fileSystem      Filesystem
-     * @param string     $baseUri         base uri path to storage
-     * @param string     $workspace       path
+     * @param HttpClient $httpClient Http Client
+     * @param Filesystem $fileSystem Filesystem
+     * @param string     $baseUri    base uri path to storage
+     * @param string     $workspace  path
      */
     public function __construct(
         HttpClient $httpClient,
-        Request $requestTemplate,
         Filesystem $fileSystem,
         $baseUri,
         $workspace
     ) {
         $this->httpClient = $httpClient;
-        $this->requestTemplate = $requestTemplate;
         $this->fileSystem = $fileSystem;
         $this->baseUri = trim($baseUri);
         $this->workspace = trim($workspace);
+    }
+
+    /**
+     * Set the UUID
+     *
+     * @param string $uuid UUID
+     *
+     * @return @void
+     */
+    public function setUuid($uuid)
+    {
+        $this->uuid = $uuid;
+    }
+
+    /**
+     * Get the UID
+     *
+     * @return string
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
     }
 
     /**
@@ -75,13 +94,19 @@ class Client
     }
 
     /**
-     * Return Templace of Request object
+     * Get a Request object to send to the HFS service
      *
      * @return Request
      */
-    public function getRequestTemplate()
+    private function getRequest()
     {
-        return $this->requestTemplate;
+        $request = new Request();
+        if ($this->getUuid()) {
+            $request->getHeaders()->addHeaderLine('uuid', $this->getUuid());
+        }
+        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+
+        return $request;
     }
 
     /**
@@ -112,7 +137,7 @@ class Client
 
         /** @var  \Zend\Http\Response\Stream $response */
         $response = $this->getHttpClient()
-            ->setRequest(clone $this->requestTemplate)
+            ->setRequest($this->getRequest())
             ->setUri($this->getContentUri($path))
             ->setMethod(Request::METHOD_GET)
             ->setStream($tmpFileName)
@@ -162,7 +187,7 @@ class Client
      */
     public function remove($path, $hard = false)
     {
-        $request = clone $this->requestTemplate;
+        $request = $this->getRequest();
         $request->setUri($this->getContentUri($path, $hard))
             ->setMethod(Request::METHOD_DELETE);
 
@@ -188,15 +213,14 @@ class Client
                 '"content": "' . base64_encode($file->getContent()) . '"' .
             '}';
 
-        $request = clone $this->requestTemplate;
+        $request = $this->getRequest();
         $request
             ->setUri($this->getContentUri(''))
             ->setMethod(Request::METHOD_POST)
             ->setContent($requestJson);
 
         $request->getHeaders()
-            ->addHeaderLine('Content-Length', strlen($requestJson))
-            ->addHeaderLine('Content-Type', 'application/json');
+            ->addHeaderLine('Content-Length', strlen($requestJson));
 
         return $this->getHttpClient()->setRequest($request)->send();
     }
@@ -231,6 +255,6 @@ class Client
 
         $path = (!empty($path) ? '/' . ltrim($path, '/') : '');
 
-        return $this->baseUri . '/' . $folder . '/' . $this->workspace . $path;
+        return rtrim($this->baseUri, '/') . '/' . $folder . '/' . $this->workspace . $path;
     }
 }
