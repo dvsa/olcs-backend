@@ -95,7 +95,7 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
             ]
         ];
 
-        $command = ProcessRequestMapCmd::Create(
+        $command = ProcessRequestMapCmd::create(
             [
                 'id' => $id,
                 'template' => $this->template,
