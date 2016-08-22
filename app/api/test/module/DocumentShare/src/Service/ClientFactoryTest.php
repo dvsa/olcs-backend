@@ -102,7 +102,7 @@ class ClientFactoryTest extends \PHPUnit_Framework_TestCase
             if (isset($config['document_share']['client']['uuid'])) {
                 $this->assertEquals(
                     $config['document_share']['client']['uuid'],
-                    $service->getRequestTemplate()->getHeader('uuid')->getFieldValue()
+                    $service->getUuid()
                 );
             }
         }
