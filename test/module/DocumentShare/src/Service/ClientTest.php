@@ -41,16 +41,15 @@ class ClientTest extends MockeryTestCase
     public function setUp()
     {
         $this->mockClient = $this->getMock(\Zend\Http\Client::class);
-        $this->mockRequest = $this->getMock(\Zend\Http\Request::class);
         $this->mockFs = m::mock(Filesystem::class);
 
         $this->sut = new Client(
             $this->mockClient,
-            $this->mockRequest,
             $this->mockFs,
             self::BASE_URI,
             self::WORKSPACE
         );
+        $this->sut->setUuid('UUID1');
 
         $this->mockFile = m::mock(File::class);
 
@@ -67,7 +66,6 @@ class ClientTest extends MockeryTestCase
     {
         static::assertEquals(self::BASE_URI, $this->sut->getBaseUri());
         static::assertEquals(self::WORKSPACE, $this->sut->getWorkspace());
-        static::assertEquals($this->mockRequest, $this->sut->getRequestTemplate());
     }
 
     public function testReadOk()
@@ -90,7 +88,7 @@ class ClientTest extends MockeryTestCase
             ->shouldReceive('isSuccess')->once()->andReturn(true)
             ->getMock();
 
-        $this->mockClient->expects(static::once())->method('setRequest')->with($this->mockRequest)->willReturnSelf();
+        $this->mockClient->expects(static::once())->method('setRequest')->willReturnSelf();
         $this->mockClient
             ->expects(static::once())
             ->method('setMethod')->with(Request::METHOD_GET)
@@ -122,7 +120,7 @@ class ClientTest extends MockeryTestCase
             ->shouldReceive('getStatusCode')->once()->andReturn(600)
             ->getMock();
 
-        $this->mockClient->expects(static::once())->method('setRequest')->with($this->mockRequest)->willReturnSelf();
+        $this->mockClient->expects(static::once())->method('setRequest')->willReturnSelf();
         $this->mockClient->expects(static::once())->method('setUri')->willReturnSelf();
         $this->mockClient->expects(static::once())->method('setMethod')->willReturnSelf();
         $this->mockClient->expects(static::once())->method('setStream')->willReturnSelf();
@@ -155,7 +153,7 @@ class ClientTest extends MockeryTestCase
             ->shouldReceive('isSuccess')->once()->andReturn(true)
             ->getMock();
 
-        $this->mockClient->expects(static::once())->method('setRequest')->with($this->mockRequest)->willReturnSelf();
+        $this->mockClient->expects(static::once())->method('setRequest')->willReturnSelf();
         $this->mockClient->expects(static::once())->method('setUri')->willReturnSelf();
         $this->mockClient->expects(static::once())->method('setMethod')->willReturnSelf();
         $this->mockClient->expects(static::once())->method('setStream')->willReturnSelf();
@@ -184,24 +182,18 @@ class ClientTest extends MockeryTestCase
             ->shouldReceive('getContent')->once()->andReturn($expectContent)
             ->getMock();
 
-        $expectJson = '{"hubPath": "unit_Path","mime": "unit_Mime","content": "dW5pdF9BQkNERTEyMw=="}';
+        $this->mockClient->expects(static::once())->method('setRequest')->willReturnCallback(
+            function (Request $request) {
+                $expectJson = '{"hubPath": "unit_Path","mime": "unit_Mime","content": "dW5pdF9BQkNERTEyMw=="}';
 
-        $mockHeaders = m::mock(Headers::class)
-            ->makePartial()
-            ->shouldReceive('addHeaderLine')->once()->with('Content-Length', strlen($expectJson))->andReturnSelf()
-            ->shouldReceive('addHeaderLine')->once()->with('Content-Type', 'application/json')
-            ->getMock();
+                $this->assertSame(Request::METHOD_POST, $request->getMethod());
+                $this->assertEquals(strlen($expectJson), $request->getHeader('Content-Length')->getFieldValue());
+                $this->assertEquals('UUID1', $request->getHeader('uuid')->getFieldValue());
+                $this->assertEquals($expectJson, $request->getContent());
 
-        $this->mockRequest->expects(static::once())
-            ->method('setUri')
-            ->with(self::BASE_URI . '/content/' . self::WORKSPACE)
-            ->willReturnSelf();
-
-        $this->mockRequest->expects(static::once())->method('setMethod')->with(Request::METHOD_POST)->willReturnSelf();
-        $this->mockRequest->expects(static::once())->method('setContent')->with($expectJson)->willReturnSelf();
-        $this->mockRequest->expects(static::once())->method('getHeaders')->willReturn($mockHeaders);
-
-        $this->mockClient->expects(static::once())->method('setRequest')->with($this->mockRequest)->willReturnSelf();
+                return $this->mockClient;
+            }
+        );
         $this->mockClient->expects(static::once())->method('send')->willReturn('EXPECTED');
 
         $actual = $this->sut->write($expectPath, $mockFile);
@@ -214,10 +206,15 @@ class ClientTest extends MockeryTestCase
      */
     public function testRemove($uri, $hard)
     {
-        $this->mockRequest->expects(static::once())->method('setUri')->with($uri)->willReturnSelf();
-        $this->mockRequest->expects(static::once())->method('setMethod')->with(Request::METHOD_DELETE);
 
-        $this->mockClient->expects(static::once())->method('setRequest')->with($this->mockRequest)->willReturnSelf();
+        $this->mockClient->expects(static::once())->method('setRequest')->willReturnCallback(
+            function (Request $request) use ($uri) {
+                $this->assertSame($uri, $request->getUri()->toString());
+                $this->assertSame(Request::METHOD_DELETE, $request->getMethod());
+
+                return $this->mockClient;
+            }
+        );
         $this->mockClient->expects(static::once())->method('send')->willReturn('EXPECTED');
 
         $result = $this->sut->remove('test', $hard);
