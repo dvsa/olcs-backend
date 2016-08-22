@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
 
 /**
  * Print Licence
@@ -23,6 +24,13 @@ final class PrintLicence extends AbstractCommandHandler implements Transactioned
 {
     protected $repoServiceName = 'Licence';
 
+    /**
+     * Handle comment
+     *
+     * @param CommandInterface $command Command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         /** @var LicenceEntity $licence */
@@ -31,18 +39,21 @@ final class PrintLicence extends AbstractCommandHandler implements Transactioned
         return $this->generateDocument($licence);
     }
 
+    /**
+     * Generate the Licence print document
+     *
+     * @param LicenceEntity $licence Licence to print
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     protected function generateDocument(LicenceEntity $licence)
     {
-        $template = $this->getTemplateName($licence);
-
-        $description = $this->getDescription($licence);
-
         $dtoData = [
-            'template' => $template,
+            'template' => $this->getTemplateId($licence),
             'query' => [
                 'licence' => $licence->getId()
             ],
-            'description' => $description,
+            'description' => $this->getDescription($licence),
             'licence'     => $licence->getId(),
             'category'    => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
@@ -53,19 +64,45 @@ final class PrintLicence extends AbstractCommandHandler implements Transactioned
         return $this->handleSideEffect(GenerateAndStore::create($dtoData));
     }
 
-    private function getTemplateName(LicenceEntity $licence)
+    /**
+     * Get the Document ID for licence template
+     *
+     * @param LicenceEntity $licence The Licence to be printed
+     *
+     * @return int Document ID
+     */
+    private function getTemplateId(LicenceEntity $licence)
     {
+        if ($licence->getNiFlag() == 'Y') {
+            if ($licence->isGoods()) {
+                return Document::GV_LICENCE_NI;
+            }
+
+            if ($licence->isSpecialRestricted()) {
+                return Document::PSR_SR_LICENCE_NI;
+            }
+
+            return Document::PSV_LICENCE_NI;
+        }
+
         if ($licence->isGoods()) {
-            return 'GV_LICENCE_V1';
+            return Document::GV_LICENCE_GB;
         }
 
         if ($licence->isSpecialRestricted()) {
-            return 'PSVSRLicence';
+            return Document::PSR_SR_LICENCE_GB;
         }
 
-        return 'PSV_LICENCE_V1';
+        return Document::PSV_LICENCE_GB;
     }
 
+    /**
+     * Get the description/name for the document
+     *
+     * @param LicenceEntity $licence The Licence to be printed
+     *
+     * @return string
+     */
     private function getDescription(LicenceEntity $licence)
     {
         if ($licence->isGoods()) {

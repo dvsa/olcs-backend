@@ -32,23 +32,34 @@ class PrintLicenceTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleCommandGoods()
+    /**
+     * @dataProvider dataProvider
+     *
+     * @param $isGoods
+     * @param $isSpecialRestricted
+     * @param $niFlag
+     * @param $expectedDocumentId
+     * @param $expectedDesc
+     */
+    public function testHandleCommand($isGoods, $isSpecialRestricted, $niFlag, $expectedDocumentId, $expectedDesc)
     {
         $command = Cmd::create(['id' => 111]);
 
         /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setId(111);
-        $licence->shouldReceive('isGoods')->andReturn(true);
+        $licence->shouldReceive('isGoods')->andReturn($isGoods);
+        $licence->shouldReceive('isSpecialRestricted')->andReturn($isSpecialRestricted);
+        $licence->shouldReceive('getNiFlag')->andReturn($niFlag);
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($command)
             ->andReturn($licence);
 
         $data = [
-            'template' => 'GV_LICENCE_V1',
+            'template' => $expectedDocumentId,
             'query' => ['licence' => 111],
-            'description' => 'GV Licence',
+            'description' => $expectedDesc,
             'licence' => 111,
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
@@ -82,105 +93,18 @@ class PrintLicenceTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testHandleCommandPsvSr()
+    public function dataProvider()
     {
-        $command = Cmd::create(['id' => 111]);
-
-        /** @var LicenceEntity $licence */
-        $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->setId(111);
-        $licence->shouldReceive('isGoods')->andReturn(false);
-        $licence->shouldReceive('isSpecialRestricted')->andReturn(true);
-
-        $this->repoMap['Licence']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($licence);
-
-        $data = [
-            'template' => 'PSVSRLicence',
-            'query' => ['licence' => 111],
-            'description' => 'PSV-SR Licence',
-            'licence' => 111,
-            'category' => Category::CATEGORY_LICENSING,
-            'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
-            'isExternal' => false,
-            'application' => null,
-            'busReg' => null,
-            'case' => null,
-            'irfoOrganisation' => null,
-            'submission' => null,
-            'trafficArea' => null,
-            'transportManager' => null,
-            'operatingCentre' => null,
-            'opposition' => null,
-            'isScan' => 0,
-            'issuedDate' => null,
-            'dispatch' => true
+        return [
+            // isGoods, isSpecialRestricted, Ni flag 'N' or 'Y', expected document ID, expected description
+            [true,      false,             'N',                1254,                 'GV Licence'],
+            [false,     false,             'N',                1255,                 'PSV Licence'],
+            [true,      true,              'N',                1254,                 'GV Licence'],
+            [false,     true,              'N',                1310,                 'PSV-SR Licence'],
+            [true,      false,             'Y',                1512,                 'GV Licence'],
+            [false,     false,             'Y',                1516,                 'PSV Licence'],
+            [true,      true,              'Y',                1512,                 'GV Licence'],
+            [false,     true,              'Y',                1518,                 'PSV-SR Licence'],
         ];
-        $result1 = new Result();
-        $result1->addMessage('GenerateAndStore');
-        $this->expectedSideEffect(GenerateAndStore::class, $data, $result1);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [],
-            'messages' => [
-                'GenerateAndStore'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-    }
-
-    public function testHandleCommandPsv()
-    {
-        $command = Cmd::create(['id' => 111]);
-
-        /** @var LicenceEntity $licence */
-        $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->setId(111);
-        $licence->shouldReceive('isGoods')->andReturn(false);
-        $licence->shouldReceive('isSpecialRestricted')->andReturn(false);
-
-        $this->repoMap['Licence']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($licence);
-
-        $data = [
-            'template' => 'PSV_LICENCE_V1',
-            'query' => ['licence' => 111],
-            'description' => 'PSV Licence',
-            'licence' => 111,
-            'category' => Category::CATEGORY_LICENSING,
-            'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
-            'isExternal' => false,
-            'application' => null,
-            'busReg' => null,
-            'case' => null,
-            'irfoOrganisation' => null,
-            'submission' => null,
-            'trafficArea' => null,
-            'transportManager' => null,
-            'operatingCentre' => null,
-            'opposition' => null,
-            'isScan' => 0,
-            'issuedDate' => null,
-            'dispatch' => true
-        ];
-        $result1 = new Result();
-        $result1->addMessage('GenerateAndStore');
-        $this->expectedSideEffect(GenerateAndStore::class, $data, $result1);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [],
-            'messages' => [
-                'GenerateAndStore'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
     }
 }
