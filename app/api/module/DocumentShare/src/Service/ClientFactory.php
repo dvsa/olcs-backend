@@ -30,23 +30,7 @@ class ClientFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $options = $this->getOptions($serviceLocator, 'http');
-
-        $httpClient = new HttpClient();
-        $httpClient->setOptions($options);
-
         $clientOptions = $this->getOptions($serviceLocator, 'client');
-
-        $request = new Request();
-
-        if (isset($clientOptions['uuid'])) {
-            $request->getHeaders()->addHeaderLine('uuid', $clientOptions['uuid']);
-        }
-
-        $wrapper = new ClientAdapterLoggingWrapper();
-        $wrapper->wrapAdapter($httpClient);
-        $wrapper->setShouldLogData(false);
-
         if (!isset($clientOptions['baseuri']) || empty($clientOptions['baseuri'])) {
             throw new RuntimeException('Missing required option document_share.client.baseuri');
         }
@@ -55,13 +39,27 @@ class ClientFactory implements FactoryInterface
             throw new RuntimeException('Missing required option document_share.client.workspace');
         }
 
-        return new Client(
+        $options = $this->getOptions($serviceLocator, 'http');
+        $httpClient = new HttpClient();
+        $httpClient->setOptions($options);
+
+        $wrapper = new ClientAdapterLoggingWrapper();
+        $wrapper->wrapAdapter($httpClient);
+        $wrapper->setShouldLogData(false);
+
+        $client = new Client(
             $httpClient,
-            $request,
             new Filesystem(),
             $clientOptions['baseuri'],
             $clientOptions['workspace']
         );
+
+        if (isset($clientOptions['uuid'])) {
+            $client->setUuid($clientOptions['uuid']);
+        }
+
+        return $client;
+
     }
 
     /**
