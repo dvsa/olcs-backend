@@ -853,7 +853,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getTrafficAreaForTaskAllocation()
     {
         $organisation = $this->getOrganisation();
-        if ($this->isGoods() && $organisation->isMlh() && $organisation->getLeadTcArea() !== null) {
+        if ($organisation->isMlh() && $organisation->getLeadTcArea() !== null) {
             return $organisation->getLeadTcArea();
         }
         return $this->getTrafficArea();
