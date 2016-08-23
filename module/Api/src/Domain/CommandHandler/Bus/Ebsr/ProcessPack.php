@@ -39,8 +39,6 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrErrors as SendEbsrErrorsCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
@@ -54,13 +52,11 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
  * Process Ebsr pack
  */
 final class ProcessPack extends AbstractCommandHandler implements
-    AuthAwareInterface,
     TransactionedInterface,
     UploaderAwareInterface,
     FileProcessorAwareInterface,
     ConfigAwareInterface
 {
-    use AuthAwareTrait;
     use UploaderAwareTrait;
     use QueueAwareTrait;
     use FileProcessorAwareTrait;
@@ -133,6 +129,12 @@ final class ProcessPack extends AbstractCommandHandler implements
         $ebsrSub->beginValidating($this->getRepo()->getRefdataReference(EbsrSubmissionEntity::VALIDATING_STATUS));
         $this->getRepo('EbsrSubmission')->save($ebsrSub);
 
+        $config = $this->getConfig();
+
+        if (!isset($config['ebsr']['tmp_extra_path'])) {
+            throw new \RuntimeException('No tmp directory specified in config');
+        }
+
         $this->result->addId('ebsrSubmission', $ebsrSub->getId());
 
         /** @var OrganisationEntity $organisation */
@@ -140,12 +142,6 @@ final class ProcessPack extends AbstractCommandHandler implements
 
         /** @var DocumentEntity $doc */
         $doc = $ebsrSub->getDocument();
-
-        $config = $this->getConfig();
-
-        if (!isset($config['ebsr']['tmp_extra_path'])) {
-            throw new \RuntimeException('No tmp directory specified in config');
-        }
 
         //set the sub directory of /tmp where we extract the EBSR files
         $this->getFileProcessor()->setSubDirPath($config['ebsr']['tmp_extra_path']);
@@ -451,15 +447,16 @@ final class ProcessPack extends AbstractCommandHandler implements
      */
     private function getSideEffects(array $ebsrData, BusRegEntity $busReg, EbsrSubmissionEntity $ebsrSub, $docPath)
     {
+        $busRegId = $busReg->getId();
         $sideEffects = $this->persistDocuments($ebsrData, $busReg, $ebsrSub, $docPath);
-        $sideEffects[] = $this->createTxcInboxCmd($busReg->getId());
+        $sideEffects[] = $this->createTxcInboxCmd($busRegId);
         $sideEffects[] = $this->createTaskCommand($busReg);
         $sideEffects[] = $this->getRequestMapQueueCmd($busReg->getId());
 
         $busStatus = $busReg->getStatus()->getId();
 
         if ($busStatus === BusRegEntity::STATUS_NEW || $busStatus === BusRegEntity::STATUS_VAR) {
-            $sideEffects[] = CreateBusFeeCmd::create(['id' => $busReg->getId()]);
+            $sideEffects[] = CreateBusFeeCmd::create(['id' => $busRegId]);
         }
 
         /** @var EbsrSubmissionEntity $ebsrSub */
@@ -606,9 +603,9 @@ final class ProcessPack extends AbstractCommandHandler implements
      */
     private function createTaskCommand(BusRegEntity $busReg)
     {
-        $submissionType = $busReg->getEbsrSubmissions()->first()->getEbsrSubmissionType();
+        $ebsrSubmission = $busReg->getEbsrSubmissions()->first();
 
-        if ($submissionType === EbsrSubmissionEntity::DATA_REFRESH_SUBMISSION_TYPE) {
+        if ($ebsrSubmission->isDataRefresh()) {
             $description = 'Data refresh created';
         } else {
             $status = $busReg->getStatus()->getId();
@@ -631,7 +628,7 @@ final class ProcessPack extends AbstractCommandHandler implements
             'category' => TaskEntity::CATEGORY_BUS,
             'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
             'description' => $description . ': ' . $busReg->getRegNo(),
-            'actionDate' => date('Y-m-d H:i:s'),
+            'actionDate' => date('Y-m-d'),
             'busReg' => $busReg->getId(),
             'licence' => $busReg->getLicence()->getId(),
         ];
