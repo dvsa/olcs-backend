@@ -1001,26 +1001,9 @@ class LicenceEntityTest extends EntityTester
         $this->assertEquals($outstandingApplications, $licence->getApplicationsByStatus(['foo']));
     }
 
-    public function testGetTrafficAreaForTaskAllocationPsv()
-    {
-        $licence = m::mock(Entity::class)->makePartial()
-            ->shouldReceive('isGoods')
-            ->andReturn(false)
-            ->once()
-            ->shouldReceive('getTrafficArea')
-            ->andReturn('B')
-            ->once()
-            ->getMock();
-
-        $this->assertEquals('B', $licence->getTrafficAreaForTaskAllocation());
-    }
-
     public function testGetTrafficAreaForTaskAllocationNonMlh()
     {
         $licence = m::mock(Entity::class)->makePartial()
-            ->shouldReceive('isGoods')
-            ->andReturn(true)
-            ->once()
             ->shouldReceive('getOrganisation')
             ->andReturn(
                 m::mock()
@@ -1041,9 +1024,6 @@ class LicenceEntityTest extends EntityTester
     public function testGetTrafficAreaForTaskAllocationGoodsMlh()
     {
         $licence = m::mock(Entity::class)->makePartial()
-            ->shouldReceive('isGoods')
-            ->andReturn(true)
-            ->once()
             ->shouldReceive('getOrganisation')
             ->andReturn(
                 m::mock()
@@ -1064,9 +1044,6 @@ class LicenceEntityTest extends EntityTester
     public function testGetTrafficAreaForTaskAllocationGoodsMlhLeadTcEmpty()
     {
         $licence = m::mock(Entity::class)->makePartial()
-            ->shouldReceive('isGoods')
-            ->andReturn(true)
-            ->once()
             ->shouldReceive('getOrganisation')
             ->andReturn(
                 m::mock()
