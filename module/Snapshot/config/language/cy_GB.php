@@ -306,7 +306,7 @@ return [
     'undertakings_partners_signature' => "Partner's signature",
     'undertakings_owners_signature' => "Owner's signature",
     'undertakings_responsiblepersons_signature' => "A responsible person's signature",
-    'tm-review-return-address' => 'Office of the Traffic Commissioner, The Central Licensing Office, Hillcrest House '.
+    'tm-review-return-address' => 'Office of the Traffic Commissioner, Y Swyddfa Drwyddedu Ganolog, Hillcrest House '.
         '386 Harehills Lane, Leeds, LS9 6NF',
     'tm-review-declaration' => 'Declaration',
     'directors-signature' => 'Director\'s signature',
