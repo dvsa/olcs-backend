@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * TxcInbox Entity
@@ -27,7 +28,7 @@ use Dvsa\Olcs\Api\Entity\Doc\Document;
  *    }
  * )
  */
-class TxcInbox extends AbstractTxcInbox
+class TxcInbox extends AbstractTxcInbox implements OrganisationProviderInterface
 {
     const SUBCATEGORY_EBSR = 36; // to-do sub category is 'EBSR' TBC
     const SUBCATEGORY_TRANSXCHANGE_FILE = 107;
@@ -55,5 +56,15 @@ class TxcInbox extends AbstractTxcInbox
         $this->localAuthority = $localAuthority;
         $this->organisation = $organisation;
         $this->variationNo = $busReg->getVariationNo();
+    }
+
+    /**
+     * Get organisations this entity is linked to
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     */
+    public function getRelatedOrganisation()
+    {
+        return $this->getBusReg()->getRelatedOrganisation();
     }
 }

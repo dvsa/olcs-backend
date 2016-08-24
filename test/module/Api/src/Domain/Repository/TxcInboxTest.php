@@ -185,4 +185,26 @@ class TxcInboxTest extends RepositoryTestCase
 
         $this->sut->applyListFilters($mockQb, $query);
     }
+
+    public function testFetchLinkedToDocument()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('where')->with('m.zipDocument = :documentId')->andReturnSelf();
+        $qb->shouldReceive('where')->with('m.pdfDocument = :documentId')->andReturnSelf();
+        $qb->shouldReceive('where')->with('m.routeDocument = :documentId')->andReturnSelf();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchLinkedToDocument(23));
+
+        $expectedQuery = 'BLAH OR m.zipDocument = [[23]] OR m.routeDocument = [[23]] OR m.pdfDocument = [[23]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }
