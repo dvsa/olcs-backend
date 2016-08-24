@@ -104,4 +104,18 @@ class TxcInboxEntityTest extends EntityTester
             [null, null]
         ];
     }
+
+    public function testGetRelatedOrganisation()
+    {
+        $busReg = m::mock(BusRegEntity::class);
+        $busReg->shouldReceive('getRelatedOrganisation')->with()->once()->andReturn('ORG 1');
+        $busReg->shouldReceive('isFromEbsr')->with()->once()->andReturn(true);
+        $busReg->shouldReceive('getVariationNo')->with()->once()->andReturn(1);
+        $document = m::mock(DocumentEntity::class);
+        $localAuthority = new LocalAuthorityEntity();
+
+        $sut = new Entity($busReg, $document, $localAuthority);
+
+        $this->assertSame('ORG 1', $sut->getRelatedOrganisation());
+    }
 }

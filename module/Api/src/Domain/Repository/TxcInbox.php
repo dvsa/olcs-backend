@@ -138,4 +138,24 @@ class TxcInbox extends AbstractRepository
         }
         $qb->andWhere($qb->expr()->eq($this->alias . '.fileRead', '0'));
     }
+
+    /**
+     * Get a list of TxcInbox entities that are linked to a document
+     *
+     * @param int $documentId Document ID
+     *
+     * @return array
+     */
+    public function fetchLinkedToDocument($documentId)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $qb->orwhere($qb->expr()->eq($this->alias .'.zipDocument', ':documentId'))
+            ->orWhere($qb->expr()->eq($this->alias .'.routeDocument', ':documentId'))
+            ->orWhere($qb->expr()->eq($this->alias .'.pdfDocument', ':documentId'))
+            ->setParameter('documentId', $documentId);
+
+        return $qb->getQuery()->getResult();
+    }
 }
