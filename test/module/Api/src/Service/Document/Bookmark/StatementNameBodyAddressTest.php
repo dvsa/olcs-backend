@@ -1,17 +1,11 @@
 <?php
-/**
- * Class
- *
- * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
- */
+
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Service\Document\Bookmark\StatementNameBodyAddress as Sut;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\StatementNameBodyAddress;
 
 /**
- * Class
- *
- * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
+ * @covers Dvsa\Olcs\Api\Service\Document\Bookmark\StatementNameBodyAddress
  */
 class StatementNameBodyAddressTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,16 +13,24 @@ class StatementNameBodyAddressTest extends \PHPUnit_Framework_TestCase
     {
         $id = '123';
 
-        $bookmark = new Sut();
+        $bookmark = new StatementNameBodyAddress();
 
         $query = $bookmark->getQuery(['statement' => $id]);
 
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query);
     }
 
+    public function testGetQueryNull()
+    {
+        $sut = new StatementNameBodyAddress();
+        $actual = $sut->getQuery(['statement' => null]);
+
+        static::assertNull($actual);
+    }
+
     public function testRender()
     {
-        $bookmark = new Sut();
+        $bookmark = new StatementNameBodyAddress();
 
         $data = [
             'id' => '123',

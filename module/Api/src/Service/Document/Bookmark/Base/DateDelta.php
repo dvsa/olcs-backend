@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark\Base;
 
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+
 /**
  * Date Delta bookmark
  *
@@ -12,9 +14,14 @@ abstract class DateDelta extends StaticBookmark
     const FORMAT = "d/m/Y";
     const DELTA  = "+0";
 
+    /**
+     * Render 
+     * 
+     * @return string
+     */
     public function render()
     {
         $timestamp = strtotime(static::DELTA . " days");
-        return date(static::FORMAT, $timestamp);
+        return (new DateTime('@'.$timestamp))->format(self::FORMAT);
     }
 }
