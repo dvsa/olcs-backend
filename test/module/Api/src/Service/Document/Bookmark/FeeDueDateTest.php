@@ -7,9 +7,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\FeeDueDate;
 
 /**
- * Fee Due Date test
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
+ * @covers Dvsa\Olcs\Api\Service\Document\Bookmark\FeeDueDate
  */
 class FeeDueDateTest extends MockeryTestCase
 {
@@ -21,29 +19,40 @@ class FeeDueDateTest extends MockeryTestCase
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query);
     }
 
-    public function testRender()
+    /**
+     * @dataProvider dpTestRender
+     */
+    public function testRender($invoicedDate, $atCalculate)
     {
-        $bookmark = new FeeDueDate();
-        $bookmark->setData(
-            [
-                'invoicedDate' => '2015-01-01'
-            ]
-        );
+        $dateTime = new \DateTime('2001-02-03');
 
-        $dateTime = new \DateTime('2015-01-15');
-
-        $dateHelper = m::mock('\Dvsa\Olcs\Api\Service\Date');
-
-        $dateHelper->shouldReceive('calculateDate')
-            ->with(m::type(\DateTime::class), 15)
+        /** @var \Dvsa\Olcs\Api\Service\Date $dateHelper */
+        $dateHelper = m::mock(\Dvsa\Olcs\Api\Service\Date::class)
+            ->shouldReceive('calculateDate')
+            ->with(m::mustBe($atCalculate), FeeDueDate::TARGET_DAYS)
             ->once()
-            ->andReturn($dateTime);
+            ->andReturn($dateTime)
+            ->getMock();
 
+        $bookmark = new FeeDueDate();
+        $bookmark->setData(['invoicedDate' => $invoicedDate]);
         $bookmark->setDateHelper($dateHelper);
 
-        $this->assertEquals(
-            '15/01/2015',
-            $bookmark->render()
-        );
+        //  call
+        $this->assertEquals('03/02/2001', $bookmark->render());
+    }
+
+    public function dpTestRender()
+    {
+        return [
+            [
+                'invoicedDate' => '2003-02-01',
+                'atCalculate' => new \DateTime('2003-02-01'),
+            ],
+            [
+                'invoicedDate' => new \DateTime('2013-12-11'),
+                'atCalculate' => new \DateTime('2013-12-11'),
+            ],
+        ];
     }
 }

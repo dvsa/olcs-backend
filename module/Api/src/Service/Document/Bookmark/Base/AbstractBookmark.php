@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark\Base;
 
+use Dvsa\Olcs\Api\Service\Document\Parser\ParserInterface;
+
 /**
  * Abstract bookmark
  *
@@ -15,26 +17,54 @@ abstract class AbstractBookmark
      * such as newlines with its own representation (e.g. \par, <br>, etc)
      */
     const PREFORMATTED = false;
+    const TYPE = null;
 
+    /** @var string */
+    protected $snippedPath = __DIR__ . '/../Snippet';
+    /** @var string */
     protected $token = null;
-
+    /** @var ParserInterface */
     protected $parser = null;
 
+    /**
+     * Set Token
+     *
+     * @param string $token Token
+     *
+     * @return $this;
+     */
     public function setToken($token)
     {
         $this->token = $token;
     }
 
+    /**
+     * Is Static
+     *
+     * @return bool
+     */
     public function isStatic()
     {
         return static::TYPE === 'static';
     }
 
+    /**
+     * Is Preformatted
+     *
+     * @return bool
+     */
     public function isPreformatted()
     {
         return static::PREFORMATTED;
     }
 
+    /**
+     * Get Snippets
+     *
+     * @param string $className Class FQCN
+     *
+     * @return string
+     */
     public function getSnippet($className = null)
     {
         if ($className === null) {
@@ -43,20 +73,50 @@ abstract class AbstractBookmark
         }
 
         $fileExt = $this->getParser()->getFileExtension();
-        $path = __DIR__ . '/../Snippet/' . $className . '.' . $fileExt;
+        $path = $this->snippedPath . $className . '.' . $fileExt;
 
         return file_get_contents($path);
     }
 
+    /**
+     * Set Parser
+     *
+     * @param ParserInterface $parser Parser
+     *
+     * @return void
+     */
     public function setParser($parser)
     {
         $this->parser = $parser;
     }
 
+    /**
+     * Get Parser
+     *
+     * @return ParserInterface
+     */
     public function getParser()
     {
         return $this->parser;
     }
 
+    /**
+     * Set Snippet path
+     *
+     * @param string $path Path
+     *
+     * @return $this;
+     */
+    public function setSnippetPath($path)
+    {
+        $this->snippedPath = $path;
+        return $this;
+    }
+
+    /**
+     * Render
+     *
+     * @return string
+     */
     abstract public function render();
 }

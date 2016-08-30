@@ -5,9 +5,7 @@ namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\CaseworkerDetails;
 
 /**
- * Case worker details test
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
+ * @covers Dvsa\Olcs\Api\Service\Document\Bookmark\CaseworkerDetails
  */
 class CaseworkerDetailsTest extends \PHPUnit_Framework_TestCase
 {
@@ -82,7 +80,14 @@ class CaseworkerDetailsTest extends \PHPUnit_Framework_TestCase
                     'person' => [
                         'forename' => 'A',
                         'familyName' => 'User',
-                    ]
+                    ],
+                    'phoneContacts' => [
+                        [
+                            'phoneContactType' => [
+                                'id' => 'INVALID_TYPE',
+                            ],
+                        ]
+                    ],
                 ],
                 'team' => [
                     'trafficArea' => [

@@ -2,15 +2,51 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
+use Dvsa\Olcs\Api\Domain\Query as DomainQry;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\TextBlock;
 
 /**
- * Text block test
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
+ * @covers Dvsa\Olcs\Api\Service\Document\Bookmark\TextBlock
  */
 class TextBlockTest extends \PHPUnit_Framework_TestCase
 {
+    public function testGetQueryNull()
+    {
+        $sut = new TextBlock();
+        $sut->setToken('unit_Token');
+
+        static::assertNull(
+            $sut->getQuery(
+                [
+                    'bookmarks' => [
+                        'unit_Token' => null,
+                    ],
+                ]
+            )
+        );
+    }
+
+    public function testGetQuery()
+    {
+        $sut = new TextBlock();
+        $sut->setToken('unit_Token');
+
+        $actual = $sut->getQuery(
+            [
+                'bookmarks' => [
+                    'unit_Token' => [9999, 8888],
+                ],
+            ]
+        );
+
+        static::assertCount(2, $actual);
+        static::assertInstanceOf(DomainQry\Bookmark\DocParagraphBundle::class, reset($actual));
+
+        /** @var DomainQry\Bookmark\DocParagraphBundle $query */
+        $query = $actual[1];
+        static::assertEquals(8888, $query->getId());
+    }
+
     public function testRenderConcatenatesParagraphsWithNewlines()
     {
         $bookmark = new TextBlock();

@@ -1,17 +1,11 @@
 <?php
-/**
- * Class
- *
- * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
- */
+
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Service\Document\Bookmark\StatementContactType as Sut;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\StatementContactType;
 
 /**
- * Class
- *
- * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
+ * @covers Dvsa\Olcs\Api\Service\Document\Bookmark\StatementContactType
  */
 class StatementContactTypeTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,16 +13,24 @@ class StatementContactTypeTest extends \PHPUnit_Framework_TestCase
     {
         $id = '123';
 
-        $bookmark = new Sut();
+        $bookmark = new StatementContactType();
 
         $query = $bookmark->getQuery(['statement' => $id]);
 
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query);
     }
 
+    public function testGetQueryNull()
+    {
+        $sut = new StatementContactType();
+        $actual = $sut->getQuery(['statement' => null]);
+
+        static::assertNull($actual);
+    }
+
     public function testRender()
     {
-        $bookmark = new Sut();
+        $bookmark = new StatementContactType();
 
         $data = [
             'id' => '123',
