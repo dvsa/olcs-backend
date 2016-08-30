@@ -1,7 +1,10 @@
 <?php
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
+use Dvsa\Olcs\Api\Service\Document\Bookmark\AandDStoredPublicationDate;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\Alias\SpecificLicenceUndertakings;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\BookmarkFactory;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\TextBlock;
 
 /**
  * Bookmark Factory test
@@ -10,20 +13,36 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BookmarkFactory;
  */
 class BookmarkFactoryTest extends \PHPUnit_Framework_TestCase
 {
+    public function testLocate()
+    {
+        $sut = new BookmarkFactory();
+
+        static::assertInstanceOf(
+            AandDStoredPublicationDate::class,
+            $sut->locate('AandD_stored_publication_date')
+        );
+
+        static::assertInstanceOf(
+            SpecificLicenceUndertakings::class,
+            $sut->locate('SPECIFIC_LICENCE_UNDERTAKINGS')
+        );
+
+        static::assertInstanceOf(
+            TextBlock::class,
+            $sut->locate('invalid')
+        );
+    }
+
     /**
      * @dataProvider allBookmarksProvider
      */
     public function testGetClassNameFromToken($token, $expected)
     {
-        if (empty($expected)) {
-            $this->markTestSkipped('Skipping '. $token);
-        }
-
         $sut = new BookmarkFactory();
 
-        $className = $sut->getClassNameFromToken($token);
+        $actual = $sut->getClassNameFromToken($token);
 
-        $this->assertEquals($expected, $className);
+        static::assertEquals($expected, $actual);
     }
 
     /**
@@ -34,21 +53,21 @@ class BookmarkFactoryTest extends \PHPUnit_Framework_TestCase
     public function allBookmarksProvider()
     {
         return [
-            ['AandD_stored_publication_date', ''],
-            ['AandD_stored_publication_number', ''],
-            ['ADDITIONAL_UNDERTAKINGS', ''],
-            ['Address_1', ''],
+            ['AandD_stored_publication_date', 'AandDStoredPublicationDate'],
+            ['AandD_stored_publication_number', 'AandDStoredPublicationNumber'],
+            ['ADDITIONAL_UNDERTAKINGS', 'AdditionalUndertakings'],
+            ['Address_1', 'Address1'],
             ['ADDRESS_OF_ESTABLISHMENT', 'AddressOfEstablishment'],
             ['applicant_name', 'ApplicantName'],
-            ['application_type', ''],
-            ['application_type_NI', ''],
+            ['application_type', 'ApplicationType'],
+            ['application_type_NI', 'ApplicationTypeNi'],
             ['AUTHORISED_VEHICLES', 'AuthorisedVehicles'],
-            ['AuthorisedDecision', ''],
-            ['AuthorisorName2', ''],
-            ['AuthorisorName3', ''],
-            ['AuthorisorTeam', ''],
-            ['background_to_imposition_of_conditions', ''],
-            ['background_to_imposition_of_conditions_n', ''],
+            ['AuthorisedDecision', 'AuthorisedDecision'],
+            ['AuthorisorName2', 'AuthorisorName2'],
+            ['AuthorisorName3', 'AuthorisorName3'],
+            ['AuthorisorTeam', 'AuthorisorTeam'],
+            ['background_to_imposition_of_conditions', 'BackgroundToImpositionOfConditions'],
+            ['background_to_imposition_of_conditions_n', 'BackgroundToImpositionOfConditionsN'],
             ['BR_COUNCILS_NOTIFIED', 'BrCouncilsNotified'],
             ['BR_DATE_RECEIVED', 'BrDateReceived'],
             ['BR_EFFECTIVE_DATE', 'BrEffectiveDate'],
@@ -58,16 +77,16 @@ class BookmarkFactoryTest extends \PHPUnit_Framework_TestCase
             ['BR_OP_ADDRESS', 'BrOpAddress'],
             ['BR_REASON_FOR_VAR', 'BrReasonForVar'],
             ['BR_REG_NO_OUR_REF', 'BrRegNoOurRef'],
-            ['BR_REG_NOBR_FINISH_POINT', ''],
+            ['BR_REG_NOBR_FINISH_POINT', 'BrRegNobrFinishPoint'],
             ['BR_ROUTE_NUM', 'BrRouteNum'],
-            ['BR_ROUTE_NUMBR_EFFECTIVE_DATE', ''],
+            ['BR_ROUTE_NUMBR_EFFECTIVE_DATE', 'BrRouteNumbrEffectiveDate'],
             ['BR_START_POINT', 'BrStartPoint'],
             ['caseworker_details', 'CaseworkerDetails'],
             ['caseworker_name', 'CaseworkerName'],
             ['caseworker_name1', 'CaseworkerName1'],
             ['Company_Trading_Name', 'CompanyTradingName'],
             ['CONDITIONS', 'Conditions'],
-            ['Conditions', ''],
+            ['Conditions', 'Conditions'],
             ['Cont_Next_Exp_Date', 'ContNextExpDate'],
             ['CONTINUATION_DATE', 'ContinuationDate'],
             ['Continuation_Date1', 'ContinuationDate1'],
@@ -75,22 +94,22 @@ class BookmarkFactoryTest extends \PHPUnit_Framework_TestCase
             ['Continuation_Date3', 'ContinuationDate3'],
             ['Continuation_Date4', 'ContinuationDate4'],
             ['Continuation_Date6', 'ContinuationDate6'],
-            ['COPY_TYPE', ''],
+            ['COPY_TYPE', 'CopyType'],
             ['Date_From', 'DateFrom'],
             ['Date_To', 'DateTo'],
-            ['dear_sir_or_madam', ''],
+            ['dear_sir_or_madam', 'DearSirOrMadam'],
             ['Disc_List', 'DiscList'],
             ['DISCS_ISSUED', 'DiscsIssued'],
-            ['DOC_CATEGORY_ID_SCAN', ''],
-            ['DOC_CATEGORY_NAME_SCAN', ''],
-            ['DOC_DESCRIPTION_ID_SCAN', ''],
-            ['DOC_DESCRIPTION_NAME_SCAN', ''],
-            ['DOC_SUBCATEGORY_ID_SCAN', ''],
-            ['DOC_SUBCATEGORY_NAME_SCAN', ''],
-            ['ENTITY_ID_REPEAT_SCAN', ''],
-            ['ENTITY_ID_SCAN', ''],
-            ['ENTITY_ID_TYPE_SCAN', ''],
-            ['ERRATA_SECTION', ''],
+            ['DOC_CATEGORY_ID_SCAN', 'DocCategoryIdScan'],
+            ['DOC_CATEGORY_NAME_SCAN', 'DocCategoryNameScan'],
+            ['DOC_DESCRIPTION_ID_SCAN', 'DocDescriptionIdScan'],
+            ['DOC_DESCRIPTION_NAME_SCAN', 'DocDescriptionNameScan'],
+            ['DOC_SUBCATEGORY_ID_SCAN', 'DocSubcategoryIdScan'],
+            ['DOC_SUBCATEGORY_NAME_SCAN', 'DocSubcategoryNameScan'],
+            ['ENTITY_ID_REPEAT_SCAN', 'EntityIdRepeatScan'],
+            ['ENTITY_ID_SCAN', 'EntityIdScan'],
+            ['ENTITY_ID_TYPE_SCAN', 'EntityIdTypeScan'],
+            ['ERRATA_SECTION', 'ErrataSection'],
             ['European_Licence_Number', 'EuropeanLicenceNumber'],
             ['FEE_DUE_DATE', 'FeeDueDate'],
             ['FEE_REQ_GRANT_NUMBER', 'FeeReqGrantNumber'],
@@ -129,7 +148,7 @@ class BookmarkFactoryTest extends \PHPUnit_Framework_TestCase
             ['Licence_Number', 'LicenceNumber'],
             ['licence_number', 'LicenceNumber'],
             ['Licence_Number1', 'LicenceNumber1'],
-            ['Licence_Number2', ''],
+            ['Licence_Number2', 'LicenceNumber2'],
             ['Licence_Number3', 'LicenceNumber3'],
             ['Licence_Number4', 'LicenceNumber4'],
             ['Licence_Number5', 'LicenceNumber5'],
@@ -139,8 +158,8 @@ class BookmarkFactoryTest extends \PHPUnit_Framework_TestCase
             ['licence_number__01', 'LicenceNumber01'],
             ['LICENCE_NUMBER_REPEAT', 'LicenceNumberRepeat'],
             ['licence_number_repeat', 'LicenceNumberRepeat'],
-            ['LICENCE_NUMBER_REPEAT_SCAN', ''],
-            ['LICENCE_NUMBER_SCAN', ''],
+            ['LICENCE_NUMBER_REPEAT_SCAN', 'LicenceNumberRepeatScan'],
+            ['LICENCE_NUMBER_SCAN', 'LicenceNumberScan'],
             ['Licence_Operating_Centres', 'LicenceOperatingCentres'],
             ['Licence_Partners', 'LicencePartners'],
             ['licence_review_date', 'LicenceReviewDate'],
@@ -149,9 +168,9 @@ class BookmarkFactoryTest extends \PHPUnit_Framework_TestCase
             ['LICENCE_TYPE', 'LicenceType'],
             ['Licence_Type', 'LicenceType'],
             ['Licence_Vehicle_Limit', 'LicenceVehicleLimit'],
-            ['Name', ''],
-            ['NandP_stored_publication_date', ''],
-            ['NandP_stored_publication_number', ''],
+            ['Name', 'Name'],
+            ['NandP_stored_publication_date', 'NandPStoredPublicationDate'],
+            ['NandP_stored_publication_number', 'NandPStoredPublicationNumber'],
             ['NO_DISCS_PRINTED', 'NoDiscsPrinted'],
             ['OBJ_DEADLINE', 'ObjDeadline'],
             ['OP_ADDRESS', 'OpAddress'],
@@ -165,28 +184,28 @@ class BookmarkFactoryTest extends \PHPUnit_Framework_TestCase
             ['OPERATOR_NAME', 'OperatorName'],
             ['Operator_Name', 'OperatorName'],
             ['Original_Copy', 'OriginalCopy'],
-            ['p_GV_OR_PSV', ''],
-            ['p_GV_OR_PSV_NI', ''],
-            ['p_PI_S35_GV_PSV_S54', ''],
-            ['p_PI_S35_GV_PSV_S54_NI', ''],
-            ['p_unacceptable_advert', ''],
-            ['p_unacceptable_advert_NI', ''],
+            ['p_GV_OR_PSV', 'PGvOrPsv'],
+            ['p_GV_OR_PSV_NI', 'PGvOrPsvNi'],
+            ['p_PI_S35_GV_PSV_S54', 'PPiS35GvPsvS54'],
+            ['p_PI_S35_GV_PSV_S54_NI', 'PPiS35GvPsvS54Ni'],
+            ['p_unacceptable_advert', 'PUnacceptableAdvert'],
+            ['p_unacceptable_advert_NI', 'PUnacceptableAdvertNi'],
             ['Phone_Numbers', 'PhoneNumbers'],
             ['PI_HEARING_DATE', 'PiHearingDate'],
             ['PI_HEARING_VENUE', 'PiHearingVenue'],
-            ['POLICE_PEOPLE', ''],
-            ['POLICE_PERSON', ''],
+            ['POLICE_PEOPLE', 'PolicePeople'],
+            ['POLICE_PERSON', 'PolicePerson'],
             ['Psv_Disc_Page', 'PsvDiscPage'],
             ['PSV_STANDARD_CONDITIONS', 'PsvStandardConditions'],
             ['PUBLICATION_DATE', 'PublicationDate'],
             ['PUBLICATION_NUMBER', 'PublicationNumber'],
-            ['reason_for_closure', ''],
-            ['reason_for_closure_NI', ''],
-            ['reason_for_no_review', ''],
-            ['reason_for_no_review_NI', ''],
+            ['reason_for_closure', 'ReasonForClosure'],
+            ['reason_for_closure_NI', 'ReasonForClosureNi'],
+            ['reason_for_no_review', 'ReasonForNoReview'],
+            ['reason_for_no_review_NI', 'ReasonForNoReviewNi'],
             ['Registered_Number', 'RegisteredNumber'],
-            ['RequestDate', ''],
-            ['RequestMode', ''],
+            ['RequestDate', 'RequestDate'],
+            ['RequestMode', 'RequestMode'],
             ['REVIEW_DATE', 'ReviewDate'],
             ['Review_Date_Add_2_Months', 'ReviewDateAdd2Months'],
             ['S43_AUTHORISED_DECISION', 'S43AuthorisedDecision'],
@@ -196,12 +215,12 @@ class BookmarkFactoryTest extends \PHPUnit_Framework_TestCase
             ['S9_authorisors_age', 'S9AuthorisorsAge'],
             ['S9_REQUEST_MODE', 'S9RequestMode'],
             ['S9_Requestor_Name_Body_Address', 'S9RequestorNameBodyAddress'],
-            ['safety_insp_morefreq', ''],
+            ['safety_insp_morefreq', 'SafetyInspMorefreq'],
             ['SafetyAddresses', 'SafetyAddresses'],
             ['SECTION1_1', 'Section11'],
             ['SECTION1_2', 'Section12'],
             ['SECTION2_1', 'Section21'],
-            ['SECTION2_10', ''],
+            ['SECTION2_10', 'Section210'],
             ['SECTION2_2', 'Section22'],
             ['SECTION2_3', 'Section23'],
             ['SECTION2_4', 'Section24'],
@@ -231,14 +250,14 @@ class BookmarkFactoryTest extends \PHPUnit_Framework_TestCase
             ['SPECIFIC_LICENCE_UNDERTAKINGS', 'SpecificLicenceUndertakings'],
             ['subject_address', 'SubjectAddress'],
             ['subject_operating_centre_address', 'SubjectOperatingCentreAddress'],
-            ['TA_ADD1', ''],
+            ['TA_ADD1', 'TaAdd1'],
             ['TA_ADDRESS', 'TaAddress'],
             ['TA_ADDRESS_PHONE', 'TaAddressPhone'],
             ['TA_NAME', 'TaName'],
             ['TA_Name', 'TaName'],
             ['TA_NAME_UPPERCASE', 'TaNameUppercase'],
-            ['TAAddress_1', ''],
-            ['TAAddress_2', ''],
+            ['TAAddress_1', 'TaAddress1'],
+            ['TAAddress_2', 'TaAddress2'],
             ['tachograph_details', 'TachographDetails'],
             ['TAName', 'TaName'],
             ['TC_SIGNATURE', 'TcSignature'],
@@ -249,20 +268,20 @@ class BookmarkFactoryTest extends \PHPUnit_Framework_TestCase
             ['TODAYS_DATE', 'TodaysDate'],
             ['todays_date', 'TodaysDate'],
             ['TotalContFee', 'TotalContFee'],
-            ['TRADING_NAME', ''],
+            ['TRADING_NAME', 'TradingName'],
             ['Trading_Names', 'TradingNames'],
             ['TRAILERS', 'Trailers'],
             ['Transport_Managers', 'TransportManagers'],
             ['Two_Weeks_Before', 'TwoWeeksBefore'],
             ['UNDERTAKINGS', 'Undertakings'],
             ['UNLINKED_TM', 'UnlinkedTm'],
-            ['UserKnownAs', ''],
+            ['UserKnownAs', 'UserKnownAs'],
             ['VALID_DATE', 'ValidDate'],
             ['VEHICLE_ROW', 'VehicleRow'],
             ['VEHICLES', 'Vehicles'],
             ['Vehicles_Specified', 'VehiclesSpecified'],
-            ['warning_re_early_operating', ''],
-            ['warning_re_early_operating_NI', ''],
+            ['warning_re_early_operating', 'WarningReEarlyOperating'],
+            ['warning_re_early_operating_NI', 'WarningReEarlyOperatingNi'],
         ];
     }
 }

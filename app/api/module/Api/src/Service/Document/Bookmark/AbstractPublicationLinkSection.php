@@ -1,13 +1,10 @@
 <?php
-/**
- * AbstractPublicationLinkSection
- *
- * @author Ian Lindsay <ian@hemera-business-services.co.uk>
- */
+
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\PublicationBundle as Qry;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * AbstractPublicationLinkSection
@@ -23,6 +20,13 @@ abstract class AbstractPublicationLinkSection extends DynamicBookmark
     const TABLE_ROW_1 = 'TanTableRow1';
     const TABLE_ROW_2 = 'TanTableRow2';
     const TABLE_ROW_3 = 'TanTableRow3';
+
+    const PUB_SECTION_18 = 18;
+
+    /** @var array */
+    protected $pubTypeSection = [];
+    /** @var string */
+    protected $snippedPath = __DIR__ .'/Snippet';
 
     /**
      * Publication section bookmarks matched with the correct snippets
@@ -81,7 +85,8 @@ abstract class AbstractPublicationLinkSection extends DynamicBookmark
     /**
      * Gets the correct snippets based on the class name
      *
-     * @param string $className
+     * @param string $className Class FQCN
+     *                          
      * @return array
      */
     public function getBookmarkSnippetsByClass($className)
@@ -97,7 +102,7 @@ abstract class AbstractPublicationLinkSection extends DynamicBookmark
             $snippets[] = static::PUB_CONTENT_LINE;
 
             foreach ($snippets as $snippetName) {
-                $returnSnippets[] = file_get_contents(__DIR__ . '/Snippet/' . $snippetName . '.' . $fileExt);
+                $returnSnippets[] = file_get_contents($this->snippedPath . $snippetName . '.' . $fileExt);
             }
         }
 
@@ -107,8 +112,9 @@ abstract class AbstractPublicationLinkSection extends DynamicBookmark
     /**
      * Query to retrieve data
      *
-     * @param array $data
-     * @return array
+     * @param array $data Query parameters
+     *
+     * @return QueryInterface
      */
     public function getQuery(array $data)
     {
@@ -144,7 +150,7 @@ abstract class AbstractPublicationLinkSection extends DynamicBookmark
                  * Fixing properly requires ETL changes and the text for schedule 4/1 true (pub section 18) to go into
                  * text3 instead of text1. This will be done in olcs-12569
                  */
-                if ($entry['publicationSection']['id'] === 18) {
+                if ($entry['publicationSection']['id'] === self::PUB_SECTION_18) {
                     $entry['text3'] = $entry['text1'];
                     $entry['text1'] = null;
                 }
@@ -167,7 +173,8 @@ abstract class AbstractPublicationLinkSection extends DynamicBookmark
     /**
      * Renders individual snippets
      *
-     * @param $snippets
+     * @param array $snippets Snippets
+     *
      * @return string
      */
     protected function renderSnippets($snippets)

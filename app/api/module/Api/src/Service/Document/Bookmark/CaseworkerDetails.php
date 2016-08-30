@@ -15,6 +15,13 @@ class CaseworkerDetails extends DynamicBookmark
     // makes our ref data key a bit clearer in context
     const TEL_DIRECT_DIAL ='phone_t_tel';
 
+    /**
+     * Get Query
+     *
+     * @param array $data Query Parameters
+     *
+     * @return static
+     */
     public function getQuery(array $data)
     {
         $bundle = [
@@ -42,6 +49,11 @@ class CaseworkerDetails extends DynamicBookmark
         return Qry::create(['id' => $data['user'], 'bundle' => $bundle]);
     }
 
+    /**
+     * Render
+     *
+     * @return string
+     */
     public function render()
     {
         $directDial = $this->fetchDirectDial();
@@ -68,6 +80,11 @@ class CaseworkerDetails extends DynamicBookmark
         );
     }
 
+    /**
+     * Fetch Best Address
+     *
+     * @return string
+     */
     private function fetchBestAddress()
     {
         // we prefer an address directly linked against the user...
@@ -79,6 +96,11 @@ class CaseworkerDetails extends DynamicBookmark
         return $this->data['team']['trafficArea']['contactDetails']['address'];
     }
 
+    /**
+     * Fetch Direct Dial
+     *
+     * @return null|string
+     */
     private function fetchDirectDial()
     {
         if (empty($this->data['contactDetails']['phoneContacts'])) {
@@ -89,5 +111,6 @@ class CaseworkerDetails extends DynamicBookmark
                 return $phone['phoneNumber'];
             }
         }
+        return null;
     }
 }
