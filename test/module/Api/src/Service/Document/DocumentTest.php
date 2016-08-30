@@ -4,17 +4,20 @@ namespace Dvsa\OlcsTest\Api\Service\Document;
 
 use Dvsa\Olcs\Api\Service\Document\Document;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Mockery as m;
+use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
- * Document service test
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
+ * @covers Dvsa\Olcs\Api\Service\Document\Document
  */
 class DocumentTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var  Document */
+    private $sut;
+
     public function setUp()
     {
-        $this->service = new Document();
+        $this->sut = new Document();
     }
 
     public function testGetBookmarkQueriesForNoBookmarks()
@@ -22,7 +25,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $file = new File();
         $file->setContent('');
 
-        $queryData = $this->service->getBookmarkQueries($file, []);
+        $queryData = $this->sut->getBookmarkQueries($file, []);
         $this->assertEquals([], $queryData);
     }
 
@@ -35,7 +38,7 @@ TXT;
         $file = new File();
         $file->setContent($content);
 
-        $queryData = $this->service->getBookmarkQueries($file, []);
+        $queryData = $this->sut->getBookmarkQueries($file, []);
         $this->assertEquals([], $queryData);
     }
 
@@ -48,7 +51,7 @@ TXT;
         $file = new File();
         $file->setContent($content);
 
-        $queryData = $this->service->getBookmarkQueries(
+        $queryData = $this->sut->getBookmarkQueries(
             $file,
             [
                 'user' => 1,
@@ -70,7 +73,7 @@ TXT;
         $file = new File();
         $file->setContent($content);
 
-        $queryData = $this->service->getBookmarkQueries(
+        $queryData = $this->sut->getBookmarkQueries(
             $file,
             [
                 'bookmarks' => [
@@ -95,7 +98,7 @@ TXT;
         $file = new File();
         $file->setContent($content);
 
-        $replaced = $this->service->populateBookmarks(
+        $replaced = $this->sut->populateBookmarks(
             $file,
             []
         );
@@ -117,7 +120,7 @@ TXT;
         $file = new File();
         $file->setContent($content);
 
-        $replaced = $this->service->populateBookmarks(
+        $replaced = $this->sut->populateBookmarks(
             $file,
             [
                 'licence_number' => [
@@ -139,7 +142,7 @@ TXT;
         $file = new File();
         $file->setContent($content);
 
-        $replaced = $this->service->populateBookmarks(
+        $replaced = $this->sut->populateBookmarks(
             $file,
             []
         );
@@ -157,17 +160,18 @@ TXT;
         $file = new File();
         $file->setContent($content);
 
-        $helperMock = $this->getMock('Dvsa\Olcs\Api\Service\Date');
+        $helperMock = $this->getMock(\Dvsa\Olcs\Api\Service\Date::class);
 
-        $serviceLocator = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
+        /** @var \Zend\ServiceManager\ServiceLocatorInterface|MockObj $serviceLocator */
+        $serviceLocator = $this->getMock(\Zend\ServiceManager\ServiceLocatorInterface::class);
         $serviceLocator->expects($this->once())
             ->method('get')
             ->with('DateService')
             ->willReturn($helperMock);
 
-        $this->service->setServiceLocator($serviceLocator);
+        $this->sut->setServiceLocator($serviceLocator);
 
-        $this->service->populateBookmarks(
+        $this->sut->populateBookmarks(
             $file,
             []
         );
@@ -180,17 +184,18 @@ TXT;
         $file = new File();
         $file->setContent($content);
 
-        $helperMock = $this->getMock('\stdClass');
+        $helperMock = $this->getMock(\stdClass::class);
 
-        $serviceLocator = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
+        /** @var \Zend\ServiceManager\ServiceLocatorInterface|MockObj $serviceLocator */
+        $serviceLocator = $this->getMock(\Zend\ServiceManager\ServiceLocatorInterface::class);
         $serviceLocator->expects($this->once())
             ->method('get')
             ->with('ContentStore')
             ->willReturn($helperMock);
 
-        $this->service->setServiceLocator($serviceLocator);
+        $this->sut->setServiceLocator($serviceLocator);
 
-        $this->service->populateBookmarks(
+        $this->sut->populateBookmarks(
             $file,
             []
         );
