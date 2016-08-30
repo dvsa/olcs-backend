@@ -27,15 +27,20 @@ final class EnvironmentalComplaints extends AbstractSection
         $iterator = $case->getEnvironmentalComplaints()->getIterator();
 
         $iterator->uasort(
-            function ($a, $b) {
-                if (($a->getComplaintDate() instanceof \DateTime) &&
-                    ($b->getComplaintDate() instanceof \DateTime)) {
-                    return strtotime(
-                        $a->getComplaintDate()->format('Ymd') - strtotime(
-                            $b->getComplaintDate()->format('Ymd')
-                        )
-                    );
-                }
+            function (Complaint $a, Complaint $b) {
+                $aDate = (
+                    $a->getComplaintDate() instanceof \DateTime
+                    ? strtotime($a->getComplaintDate()->format('Ymd'))
+                    : 0
+                );
+
+                $bDate = (
+                    $b->getComplaintDate() instanceof \DateTime
+                    ? strtotime($b->getComplaintDate()->format('Ymd'))
+                    : 0
+                );
+
+                return $aDate - $bDate;
             }
         );
 
