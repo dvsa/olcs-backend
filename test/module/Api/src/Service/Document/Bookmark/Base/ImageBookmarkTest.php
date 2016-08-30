@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark\Base;
 
-use Dvsa\Olcs\Api\Service\Document\Parser\ParserInterface;
 use Dvsa\OlcsTest\Api\Service\Document\Bookmark\Base\Stub\ImageBookmarkStub;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -62,7 +61,7 @@ class ImageBookmarkTest extends MockeryTestCase
             ->andReturn($mockFile)
             ->getMock();
 
-        /** @var ParserInterface|m\MockInterface $mockParser */
+        /** @var \Dvsa\Olcs\Api\Service\Document\Parser\ParserInterface|m\MockInterface $mockParser */
         $mockParser = m::mock()
             ->shouldReceive('renderImage')
             ->with($expectContent, $expectWidth, $expectHeight, 'jpeg')
