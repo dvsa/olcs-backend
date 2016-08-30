@@ -298,6 +298,7 @@ return [
             'SiCategoryType' => RepositoryFactory::class,
             'SiPenaltyRequestedType' => RepositoryFactory::class,
             'SiPenaltyImposedType' => RepositoryFactory::class,
+            'SiPenaltyType' => RepositoryFactory::class,
             'Country' => RepositoryFactory::class,
             'PresidingTc' => RepositoryFactory::class,
             'RefData' => RepositoryFactory::class,

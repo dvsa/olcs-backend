@@ -525,4 +525,5 @@ return [
 
     // Si
     TransferQuery\Si\SiCategoryTypeListData::class => QueryHandler\Si\SiCategoryTypeListData::class,
+    TransferQuery\Si\SiPenaltyTypeListData::class => QueryHandler\Si\SiPenaltyTypeListData::class,
 ];
