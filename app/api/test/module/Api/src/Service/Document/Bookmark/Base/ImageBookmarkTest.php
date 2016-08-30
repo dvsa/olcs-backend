@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark\Base;
 
+use Dvsa\Olcs\Api\Service\Document\Parser\ParserInterface;
 use Dvsa\OlcsTest\Api\Service\Document\Bookmark\Base\Stub\ImageBookmarkStub;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -34,6 +35,10 @@ class ImageBookmarkTest extends MockeryTestCase
 
     public function testGetImageOk()
     {
+        if (!function_exists('imagecreate')) {
+            static::markTestSkipped('imagecreate, part of gdlib, required for the test to run');
+        }
+
         $name = 'unit_Name';
 
         $expectWidth = 21;
@@ -57,6 +62,7 @@ class ImageBookmarkTest extends MockeryTestCase
             ->andReturn($mockFile)
             ->getMock();
 
+        /** @var ParserInterface|m\MockInterface $mockParser */
         $mockParser = m::mock()
             ->shouldReceive('renderImage')
             ->with($expectContent, $expectWidth, $expectHeight, 'jpeg')
