@@ -10,7 +10,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
- * @covers Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait
+ * @covers \Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait
  */
 class NamingServiceAwareTraitTest extends MockeryTestCase
 {

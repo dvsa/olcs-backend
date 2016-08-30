@@ -1,12 +1,8 @@
 <?php
 
-/**
- * CPMS Version 2 Helper Service Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Api\Service;
 
+use CpmsClient\Service\ApiService;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
@@ -18,32 +14,26 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
-use Dvsa\Olcs\Api\Service\CpmsV2HelperService as Sut;
+use Dvsa\Olcs\Api\Service\CpmsV2HelperService;
 use Dvsa\Olcs\Api\Service\FeesHelperService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
- * CPMS Version 2 Helper Service Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
+ * @covers Dvsa\Olcs\Api\Service\CpmsV2HelperService
  */
 class CpmsV2HelperServiceTest extends MockeryTestCase
 {
-    /**
-     * @var \Mockery\MockInterface (CpmsClient\Service\ApiService)
-     */
-    protected $cpmsClient;
+    const CHEQUE_NR = 100001;
 
-    /**
-     * @var CpmsHelperService
-     */
+    /** @var CpmsV2HelperService */
     protected $sut;
 
-    /**
-     * @var \Dvsa\Olcs\Api\Service\FeesHelperService
-     */
+    /** @var \Mockery\MockInterface (CpmsClient\Service\ApiService) */
+    protected $cpmsClient;
+
+    /** @var \Dvsa\Olcs\Api\Service\FeesHelperService | m\MockInterface */
     protected $feesHelper;
 
     public function setUp()
@@ -69,7 +59,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     private function createService($api, $feesHelper, $config = [])
     {
-        $sm = m::mock('\Zend\ServiceManager\ServiceLocatorInterface');
+        /** @var \Zend\ServiceManager\ServiceLocatorInterface | m\MockInterface $sm */
+        $sm = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
         $sm
             ->shouldReceive('get')
             ->with('cpms\service\api')
@@ -81,8 +72,57 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->with('config')
             ->andReturn($config);
 
-        $sut = new Sut();
+        $sut = new CpmsV2HelperService();
         return $sut->createService($sm);
+    }
+
+    public function testHandleResponse()
+    {
+        $data = ['unit_data'];
+        $ref = 'unit_ref';
+
+        $this->cpmsClient
+            ->shouldReceive('put')
+            ->once()
+            ->with('/api/gateway/' . $ref . '/complete', ApiService::SCOPE_CARD, $data)
+            ->andReturn('EXPECTED');
+
+        static::assertEquals('EXPECTED', $this->sut->handleResponse($ref, $data));
+    }
+
+    /** @dataProvider dpTestGetPaymentStatus */
+    public function testGetPaymentStatus($response, $expect)
+    {
+        $ref = 'unit_Ref';
+
+        /** @var CpmsV2HelperService | m\MockInterface $sut */
+        $sut = m::mock(CpmsV2HelperService::class . '[send]')
+            ->shouldAllowMockingProtectedMethods()
+            ->shouldReceive('send')
+            ->with('get', '/api/payment/'.$ref, ApiService::SCOPE_QUERY_TXN, m::type('array'))
+            ->once()
+            ->andReturn($response)
+            ->getMock();
+
+        static::assertEquals($expect, $sut->getPaymentStatus($ref));
+    }
+
+    public function dpTestGetPaymentStatus()
+    {
+        return [
+            [
+                'response' => [
+                    'payment_status' => [
+                        'code' => 'EXPECT',
+                    ],
+                ],
+                'expect' => 'EXPECT',
+            ],
+            [
+                'response' => [],
+                'expect' => null,
+            ],
+        ];
     }
 
     /**
@@ -514,7 +554,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         );
 
          $response = [
-            'code' => Sut::RESPONSE_SUCCESS,
+            'code' => CpmsV2HelperService::RESPONSE_SUCCESS,
             'receipt_reference' => 'OLCS-1234-CASH',
         ];
 
@@ -621,7 +661,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         );
 
         $response = [
-            'code' => Sut::RESPONSE_SUCCESS,
+            'code' => CpmsV2HelperService::RESPONSE_SUCCESS,
             'receipt_reference' => 'OLCS-1234-CHEQUE',
         ];
 
@@ -732,7 +772,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         );
 
          $response = [
-            'code' => Sut::RESPONSE_SUCCESS,
+            'code' => CpmsV2HelperService::RESPONSE_SUCCESS,
             'receipt_reference' => 'OLCS-1234-PO',
         ];
 
@@ -802,7 +842,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $orgId = 99;
 
         $response = [
-            'code' => Sut::PAYMENT_PAYMENT_CHARGED_BACK,
+            'code' => CpmsV2HelperService::PAYMENT_PAYMENT_CHARGED_BACK,
             'message' => 'ok',
             'receipt_reference' => 'REVERSAL_REFERENCE',
         ];
@@ -1191,7 +1231,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         );
 
         $response = [
-            'code' => Sut::PAYMENT_REFUNDED,
+            'code' => CpmsV2HelperService::PAYMENT_REFUNDED,
             'receipt_reference' => 'RECEIPT_REF',
         ];
 
@@ -1445,7 +1485,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         );
 
         $response = [
-            'code' => Sut::RESPONSE_SUCCESS,
+            'code' => CpmsV2HelperService::RESPONSE_SUCCESS,
             'receipt_references' => [
                 'foo' => 'bar',
                 'baz' => 'bat',
@@ -1507,66 +1547,69 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->sut->batchRefund($fee);
     }
 
-    public function testAdjustTransaction()
+    /**
+     * @dataProvider dpTestAdjustTransaction
+     */
+    public function testAdjustTransaction($paymentMethod, $expectParams)
     {
         $response = [
-            'code' => Sut::RESPONSE_SUCCESS,
+            'code' => CpmsV2HelperService::RESPONSE_SUCCESS,
             'message' => 'ok',
             'receipt_reference' => 'ADJUSTMENT_REFERENCE',
         ];
 
-        $expectedParams = [
-            'customer_reference' => '99',
-            'payment_data' => [
-                [
-                    'line_identifier' => '100',
-                    'amount' => '100.00',
-                    'allocated_amount' => '10.00',
-                    'net_amount' => '100.00',
-                    'tax_amount' => '0.00',
-                    'tax_code' => 'Z',
-                    'tax_rate' => 0,
-                    'invoice_date' => null,
-                    'sales_reference' => '100',
-                    'product_reference' => 'fee type description',
-                    'product_description' => 'fee type description',
-                    'receiver_reference' => '99',
-                    'receiver_name' => 'some organisation',
-                    'receiver_address' => [
-                        'line_1' => 'Foo',
-                        'line_2' => null,
-                        'line_3' => null,
-                        'line_4' => null,
-                        'city' => 'Bar',
-                        'postcode' => 'LS9 6NF',
+        $expectedParams =
+            $expectParams +
+            [
+                'customer_reference' => '99',
+                'payment_data' => [
+                    [
+                        'line_identifier' => '100',
+                        'amount' => '100.00',
+                        'allocated_amount' => '10.00',
+                        'net_amount' => '100.00',
+                        'tax_amount' => '0.00',
+                        'tax_code' => 'Z',
+                        'tax_rate' => 0,
+                        'invoice_date' => null,
+                        'sales_reference' => '100',
+                        'product_reference' => 'fee type description',
+                        'product_description' => 'fee type description',
+                        'receiver_reference' => '99',
+                        'receiver_name' => 'some organisation',
+                        'receiver_address' => [
+                            'line_1' => 'Foo',
+                            'line_2' => null,
+                            'line_3' => null,
+                            'line_4' => null,
+                            'city' => 'Bar',
+                            'postcode' => 'LS9 6NF',
+                        ],
+                        'rule_start_date' => null,
+                        'deferment_period' => '',
+                        'country_code' => 'GB',
+                        'sales_person_reference' => 'Traffic Area Ref',
                     ],
-                    'rule_start_date' => null,
-                    'deferment_period' => '',
-                    'country_code' => 'GB',
-                    'sales_person_reference' => 'Traffic Area Ref',
                 ],
-            ],
-            'total_amount' => '10.00',
-            'customer_name' => 'some organisation',
-            'customer_manager_name' => 'some organisation',
-            'customer_address' => [
-                'line_1' => 'Foo',
-                'line_2' => null,
-                'line_3' => null,
-                'line_4' => null,
-                'city' => 'Bar',
-                'postcode' => 'LS9 6NF',
-            ],
-            'refund_overpayment' => false,
-            'country_code' => 'GB',
-            'cheque_date' => '2015-12-02',
-            'cheque_number' => '2346',
-            'postal_order_number' => '',
-            'slip_number' => '1235',
-            'batch_number' => '1235',
-            'name_on_cheque' => 'Dan2',
-            'scope' => 'ADJUSTMENT',
-        ];
+                'total_amount' => '10.00',
+                'customer_name' => 'some organisation',
+                'customer_manager_name' => 'some organisation',
+                'customer_address' => [
+                    'line_1' => 'Foo',
+                    'line_2' => null,
+                    'line_3' => null,
+                    'line_4' => null,
+                    'city' => 'Bar',
+                    'postcode' => 'LS9 6NF',
+                ],
+                'refund_overpayment' => true,
+                'country_code' => 'GB',
+                'cheque_date' => '2013-12-11',
+                'slip_number' => '1235',
+                'batch_number' => '1235',
+                'name_on_cheque' => 'Dan2',
+                'scope' => 'ADJUSTMENT',
+            ];
 
         $this->cpmsClient
             ->shouldReceive('post')
@@ -1576,33 +1619,24 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $fee1 = $this->getStubFee(100, '100.00', null, null, 99);
         $fee2 = $this->getStubFee(101, '100.00', null, null, 99);
-        $fees = [$fee1, $fee2];
+        $fee3 = $this->getStubFee(103, '9.99', null, null, 99, null, FeeTypeEntity::FEE_TYPE_ADJUSTMENT);
+        $fees = [$fee1, $fee2, $fee3];
 
         $originalTransaction = m::mock(TransactionEntity::class)
-            ->makePartial()
-            ->setReference('ORIGINAL_REFERENCE');
-
-        $newTransaction = m::mock(TransactionEntity::class)
-            ->makePartial()
-            ->setChequePoDate('2015-12-02')
-            ->setChequePoNumber('2346')
-            ->setPayingInSlipNumber('1235')
-            ->setPayerName('Dan2')
-            ->shouldReceive('getAmountAfterAdjustment')
-            ->andReturn('10.00')
-            ->shouldReceive('getFees')
-            ->andReturn($fees)
+            ->shouldReceive('getReference')->once()->andReturn('ORIGINAL_REFERENCE')
             ->getMock();
+
+        $newTransaction = m::mock(TransactionEntity::class);
         $newTransaction
-            ->shouldReceive('getPaymentMethod->getId')
-            ->andReturn(FeeEntity::METHOD_CHEQUE);
-        $newTransaction
-            ->shouldReceive('getAmountAllocatedToFeeId')
-            ->with(100)
-            ->andReturn('10.00')
-            ->shouldReceive('getAmountAllocatedToFeeId')
-            ->with(101)
-            ->andReturn('0.00');
+            ->shouldReceive('getChequePoDate')->once()->andReturn(new \DateTime('2013-12-11'))
+            ->shouldReceive('getPayingInSlipNumber')->times(2)->andReturn('1235')
+            ->shouldReceive('getPayerName')->once()->andReturn('Dan2')
+            ->shouldReceive('getAmountAfterAdjustment')->once()->andReturn('10.00')
+            ->shouldReceive('getFees')->once()->andReturn($fees)
+            ->shouldReceive('getAmountAllocatedToFeeId')->with(100)->andReturn('10.00')
+            ->shouldReceive('getAmountAllocatedToFeeId')->with(101)->andReturn('0.00')
+            ->shouldReceive('getChequePoNumber')->atMost(1)->andReturn(self::CHEQUE_NR)
+            ->shouldReceive('getPaymentMethod->getId')->once()->andReturn($paymentMethod);
 
         $this->feesHelper
             ->shouldReceive('allocatePayments')
@@ -1612,6 +1646,33 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $result = $this->sut->adjustTransaction($originalTransaction, $newTransaction);
 
         $this->assertSame($response, $result);
+    }
+
+    public function dpTestAdjustTransaction()
+    {
+        return [
+            [
+                'paymentMethod' => FeeEntity::METHOD_CHEQUE,
+                'expectedParams' => [
+                    'cheque_number' => self::CHEQUE_NR,
+                    'postal_order_number' => '',
+                ],
+            ],
+            [
+            'paymentMethod' => FeeEntity::METHOD_POSTAL_ORDER,
+                'expectedParams' => [
+                    'cheque_number' => '',
+                    'postal_order_number' => self::CHEQUE_NR,
+                ],
+            ],
+            [
+                'paymentMethod' => FeeEntity::METHOD_CASH,
+                'expectedParams' => [
+                    'cheque_number' => '',
+                    'postal_order_number' => '',
+                ],
+            ],
+        ];
     }
 
     public function testCreateServiceWithInvoicePrefix()

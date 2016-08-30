@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class OppositionsTest extends SubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\Oppositions';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\Oppositions::class;
 
     /**
      * Filter provider
@@ -26,9 +26,32 @@ class OppositionsTest extends SubmissionSectionTest
                 'tables' => [
                     'oppositions' => [
                         0  => [
+                            'id' => 263,
+                            'version' => 265,
+                            'dateReceived' => '11/12/2013',
+                            'oppositionType' => 'opposition_type263-desc',
+                            'contactName' => [
+                                'title' => 'title-desc',
+                                'forename' => 'fn22',
+                                'familyName' => 'sn22',
+                                'birthDate' => '22/01/1977',
+                                'birthPlace' => 'bp'
+
+                            ],
+                            'grounds' => [
+                                'g1-desc',
+                                'g2-desc'
+                            ],
+                            'isValid' => 1,
+                            'isCopied' => 1,
+                            'isInTime' => 1,
+                            'isPublicInquiry' => 0,
+                            'isWithdrawn' => 0
+                        ],
+                        [
                             'id' => 253,
                             'version' => 255,
-                            'dateReceived' => '11/08/2008',
+                            'dateReceived' => '10/12/2013',
                             'oppositionType' => 'opposition_type253-desc',
                             'contactName' => [
                                 'title' => 'title-desc',
@@ -48,11 +71,11 @@ class OppositionsTest extends SubmissionSectionTest
                             'isPublicInquiry' => 0,
                             'isWithdrawn' => 0
                         ],
-                        1 => [
-                            'id' => 263,
-                            'version' => 265,
-                            'dateReceived' => '11/08/2008',
-                            'oppositionType' => 'opposition_type263-desc',
+                        [
+                            'id' => 243,
+                            'version' => 245,
+                            'dateReceived' => '',
+                            'oppositionType' => 'opposition_type243-desc',
                             'contactName' => [
                                 'title' => 'title-desc',
                                 'forename' => 'fn22',
