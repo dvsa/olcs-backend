@@ -4,7 +4,6 @@ use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsExternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Bus\Ebsr\CanUpdateTxcInboxRecord;
 use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessBusReg;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Bus\Ebsr\CanAccessTxcInboxRecordWithId;

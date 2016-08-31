@@ -1,6 +1,7 @@
 <?php
 
 namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
+use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
 
 /**
  * Can Update TxcInbox record
@@ -21,14 +22,21 @@ class CanUpdateTxcInboxRecord extends AbstractDoesOwnEntity
         if ($entityId === null) {
             return false;
         }
-        
-        if ($this->isLocalAuthority() || $this->isInternalUser()) {
+
+        if ($this->isInternalUser()) {
             return true;
         }
 
-        return $this->isGranted(
-            \Dvsa\Olcs\Api\Entity\User\Permission::CAN_MANAGE_USER_SELFSERVE,
-            ($entityId !== null) ? $this->getEntity($entityId) : null
-        );
+        if ($this->isLocalAuthority()) {
+            // check the local authority matches
+            $entity = $this->getEntity($entityId);
+
+            if ($entity instanceOf TxcInbox && $entity->getLocalAuthority()->getId() ===
+                $this->getCurrentUser()->getLocalAuthority()->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
