@@ -846,6 +846,32 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * isGoods for the application for the new licence
+     *
+     * @return bool
+     */
+    public function isGoodsApplication()
+    {
+        $isGoods = false;
+        $statuses = [
+            self::LICENCE_STATUS_NOT_SUBMITTED,
+            self::LICENCE_STATUS_UNDER_CONSIDERATION,
+            self::LICENCE_STATUS_GRANTED,
+            self::LICENCE_STATUS_NOT_TAKEN_UP,
+            self::LICENCE_STATUS_WITHDRAWN,
+            self::LICENCE_STATUS_REFUSED
+        ];
+        if (in_array($this->getStatus()->getId(), $statuses)) {
+            $applications = $this->getApplications();
+            if ($applications->count()) {
+                $isGoods = $applications[0]->isGoods();
+            }
+        }
+
+        return $isGoods;
+    }
+
+    /**
      * Get traffic area for task allocation
      *
      * @return TrafficArea
@@ -853,7 +879,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getTrafficAreaForTaskAllocation()
     {
         $organisation = $this->getOrganisation();
-        if ($organisation->isMlh() && $organisation->getLeadTcArea() !== null) {
+        if ($this->isGoodsApplication() && $organisation->isMlh() && $organisation->getLeadTcArea() !== null) {
             return $organisation->getLeadTcArea();
         }
         return $this->getTrafficArea();
