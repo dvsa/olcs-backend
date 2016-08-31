@@ -4,11 +4,11 @@ namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
 
 /**
- * Can Update TxcInbox record
+ * Can access TxcInbox
  */
-class CanUpdateTxcInboxRecord extends AbstractDoesOwnEntity
+class CanAccessTxcInbox extends AbstractDoesOwnEntity
 {
-    protected $repo = 'User';
+    protected $repo = 'TxcInbox';
 
     /**
      * Is valid
@@ -28,11 +28,13 @@ class CanUpdateTxcInboxRecord extends AbstractDoesOwnEntity
         }
 
         if ($this->isLocalAuthority()) {
+
             // check the local authority matches
             $entity = $this->getEntity($entityId);
 
             if ($entity instanceOf TxcInbox && $entity->getLocalAuthority()->getId() ===
                 $this->getCurrentUser()->getLocalAuthority()->getId()) {
+
                 return true;
             }
         }

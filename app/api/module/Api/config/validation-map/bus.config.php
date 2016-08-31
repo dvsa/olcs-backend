@@ -18,6 +18,6 @@ return [
     // External users
     CommandHandler\Bus\Ebsr\UpdateTxcInbox::class                               => CanUpdateTxcInboxRecord::class,
     QueryHandler\Bus\Ebsr\BusRegWithTxcInbox::class                             => CanAccessTxcInboxRecordWithId::class,
-    QueryHandler\Bus\RegistrationHistoryList::class                             => CanAccessBusReg::class,
+    QueryHandler\Bus\RegistrationHistoryList::class                             => NoValidationRequired::class,
 
 ];
