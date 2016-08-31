@@ -20,6 +20,6 @@ class CanUpdateTxcInboxRecord extends AbstractHandler
      */
     public function isValid($dto)
     {
-        return $this->canUpdateTxcInboxRecord($dto->getId());
+        return $this->canUpdateTxcInbox($dto->getId());
     }
 }
