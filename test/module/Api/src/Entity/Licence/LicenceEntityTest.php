@@ -1016,6 +1016,9 @@ class LicenceEntityTest extends EntityTester
             ->shouldReceive('getTrafficArea')
             ->andReturn('B')
             ->once()
+            ->shouldReceive('isGoodsApplication')
+            ->andReturn(true)
+            ->once()
             ->getMock();
 
         $this->assertEquals('B', $licence->getTrafficAreaForTaskAllocation());
@@ -1035,6 +1038,9 @@ class LicenceEntityTest extends EntityTester
                     ->twice()
                     ->getMock()
             )
+            ->once()
+            ->shouldReceive('isGoodsApplication')
+            ->andReturn(true)
             ->once()
             ->getMock();
 
@@ -1059,8 +1065,39 @@ class LicenceEntityTest extends EntityTester
             ->shouldReceive('getTrafficArea')
             ->andReturn('B')
             ->once()
+            ->shouldReceive('isGoodsApplication')
+            ->andReturn(true)
+            ->once()
             ->getMock();
 
         $this->assertEquals('B', $licence->getTrafficAreaForTaskAllocation());
+    }
+
+    public function testIsGoodsApplication()
+    {
+        $application = m::mock()
+            ->shouldReceive('isGoods')
+            ->andReturn(true)
+            ->getMock();
+
+        $applications = new ArrayCollection();
+        $applications->add($application);
+
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getStatus')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->once()
+                    ->andReturn(Entity::LICENCE_STATUS_NOT_SUBMITTED)
+                    ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getApplications')
+            ->andReturn($applications)
+            ->once()
+            ->getMock();
+
+        $this->assertTrue($licence->isGoodsApplication());
     }
 }
