@@ -50,9 +50,8 @@ final class TxcInboxList extends AbstractQuery implements PagedQueryInterface, O
      *      "name":"Zend\Validator\InArray",
      *      "options": {
      *          "haystack": {
-     *              "ebsrs_expired", "ebsrs_expiring", "ebsrs_processed", "ebsrs_published", "ebsrs_expiring",
-     * "ebsrs_validated", "ebsrs_processing", "ebsrs_publishing", "ebsrs_submitted", "ebsrs_submitting",
-     * "ebsrs_validating",  "ebsrs_distributed", "ebsrs_distributing", "ebsrs_failed", "ebsrs_uploaded"
+     *              "ebsrs_processed", "ebsrs_processing", "ebsrs_submitted",
+     *              "ebsrs_validating", "ebsrs_failed", "ebsrs_uploaded"
      *          }
      *      }
      * })
