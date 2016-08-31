@@ -10,15 +10,11 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Standard;
  */
 // @codingStandardsIgnoreStart
 $map = [
-    CommandHandler\Bus\Ebsr\UpdateTxcInbox::class => Standard::class, // @todo
     CommandHandler\Variation\DeleteListConditionUndertaking::class => Standard::class, // @todo
     CommandHandler\Variation\UpdateAddresses::class => Standard::class, // @todo
     CommandHandler\Variation\UpdateConditionUndertaking::class => Standard::class, // @todo
     CommandHandler\Variation\UpdateTypeOfLicence::class => Standard::class, // @todo
     QueryHandler\ApplicationOperatingCentre\ApplicationOperatingCentre::class => Standard::class, // @todo
-    QueryHandler\Bus\Ebsr\BusRegWithTxcInbox::class => Standard::class, // @todo
-    QueryHandler\Bus\RegistrationHistoryList::class => Standard::class, // @todo
-    QueryHandler\Bus\SearchViewList::class => Standard::class, // @todo
     QueryHandler\CompaniesHouse\GetList::class => Standard::class, // @todo
     QueryHandler\Search\Licence::class => Standard::class, // @todo
     QueryHandler\Variation\TypeOfLicence::class => Standard::class, // @todo
