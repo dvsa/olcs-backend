@@ -26,7 +26,7 @@ abstract class AbstractPublicationLinkSection extends DynamicBookmark
     /** @var array */
     protected $pubTypeSection = [];
     /** @var string */
-    protected $snippedPath = __DIR__ .'/Snippet';
+    protected $snippedPath;
 
     /**
      * Publication section bookmarks matched with the correct snippets
@@ -102,7 +102,9 @@ abstract class AbstractPublicationLinkSection extends DynamicBookmark
             $snippets[] = static::PUB_CONTENT_LINE;
 
             foreach ($snippets as $snippetName) {
-                $returnSnippets[] = file_get_contents($this->snippedPath . $snippetName . '.' . $fileExt);
+                $returnSnippets[] = file_get_contents(
+                    ($this->snippedPath ?: __DIR__ . '/Snippet/') . $snippetName . '.' . $fileExt
+                );
             }
         }
 
