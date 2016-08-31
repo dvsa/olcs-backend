@@ -59,6 +59,8 @@ final class TxcInboxList extends AbstractQuery implements PagedQueryInterface, O
     protected $status;
 
     /**
+     * Gets subType
+     *
      * @return string
      */
     public function getSubType()
@@ -67,6 +69,8 @@ final class TxcInboxList extends AbstractQuery implements PagedQueryInterface, O
     }
 
     /**
+     * Gets status
+     *
      * @return string
      */
     public function getStatus()
@@ -75,6 +79,8 @@ final class TxcInboxList extends AbstractQuery implements PagedQueryInterface, O
     }
 
     /**
+     * Gets local authority
+     *
      * @return int
      */
     public function getLocalAuthority()

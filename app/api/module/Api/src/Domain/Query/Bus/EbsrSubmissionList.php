@@ -59,6 +59,8 @@ final class EbsrSubmissionList extends AbstractQuery implements PagedQueryInterf
     protected $status;
 
     /**
+     * Gets subType
+     *
      * @return string
      */
     public function getSubType()
@@ -67,6 +69,8 @@ final class EbsrSubmissionList extends AbstractQuery implements PagedQueryInterf
     }
 
     /**
+     * Gets status
+     *
      * @return string
      */
     public function getStatus()
@@ -75,6 +79,8 @@ final class EbsrSubmissionList extends AbstractQuery implements PagedQueryInterf
     }
 
     /**
+     * Gets organisation
+     *
      * @return int
      */
     public function getOrganisation()
