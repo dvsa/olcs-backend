@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsExternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Bus\Ebsr\CanUpdateTxcInboxRecord;
 use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessBusReg;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Bus\Ebsr\CanAccessTxcInboxRecordWithId;
 
 return [
     QueryHandler\Bus\BusNoticePeriodList::class                                         => IsInternalUser::class,
@@ -17,7 +18,7 @@ return [
 
     // External users
     CommandHandler\Bus\Ebsr\UpdateTxcInbox::class                               => CanUpdateTxcInboxRecord::class,
-    QueryHandler\Bus\Ebsr\BusRegWithTxcInbox::class                             => CanAccessTxcInboxRecord::class,
+    QueryHandler\Bus\Ebsr\BusRegWithTxcInbox::class                             => CanAccessTxcInboxRecordWithId::class,
     QueryHandler\Bus\RegistrationHistoryList::class                             => CanAccessBusReg::class,
 
 ];
