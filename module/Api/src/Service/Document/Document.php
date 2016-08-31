@@ -19,6 +19,14 @@ class Document implements ServiceLocatorAwareInterface
 
     const DOCUMENT_TIMESTAMP_FORMAT = 'YmdHi';
 
+    /**
+     * Get Bookmark Queries
+     *
+     * @param ContentStoreFile $file File object
+     * @param array            $data Query data
+     *
+     * @return array
+     */
     public function getBookmarkQueries(ContentStoreFile $file, $data)
     {
         $queryData = [];
@@ -32,7 +40,6 @@ class Document implements ServiceLocatorAwareInterface
         $bookmarks = $this->getBookmarks($tokens);
 
         foreach ($bookmarks as $token => $bookmark) {
-
             // we don't need to query if the bookmark is static (i.e.
             // doesn't rely on any backend information)
             if ($bookmark->isStatic()) {
@@ -52,6 +59,14 @@ class Document implements ServiceLocatorAwareInterface
         return $queryData;
     }
 
+    /**
+     * Populate Bookmarks
+     *
+     * @param ContentStoreFile $file File object
+     * @param array            $data Data
+     *
+     * @return mixed
+     */
     public function populateBookmarks(ContentStoreFile $file, $data)
     {
         $populatedData = [];
@@ -67,7 +82,6 @@ class Document implements ServiceLocatorAwareInterface
         $bookmarks = $this->getBookmarks($tokens);
 
         foreach ($bookmarks as $token => $bookmark) {
-
             /**
              * Let the bookmark know what parser is currently active;
              * some may use this for sub-bookmark processing
@@ -75,11 +89,9 @@ class Document implements ServiceLocatorAwareInterface
             $bookmark->setParser($parser);
 
             if ($bookmark->isStatic()) {
-
                 $result = $bookmark->render();
 
             } elseif (isset($data[$token])) {
-
                 $bookmark->setData($data[$token]);
                 $result = $bookmark->render();
 
@@ -103,12 +115,26 @@ class Document implements ServiceLocatorAwareInterface
         return $parser->replace($content, $populatedData);
     }
 
+    /**
+     * Returns Parser object
+     *
+     * @param string $type Parser Mime type
+     *
+     * @return Parser\RtfParser
+     */
     private function getParser($type)
     {
         $factory = new Parser\ParserFactory();
         return $factory->getParser($type);
     }
 
+    /**
+     * Get Bookmarks
+     *
+     * @param array $tokens Tokens
+     *
+     * @return array
+     */
     private function getBookmarks($tokens)
     {
         $bookmarks = [];
@@ -118,9 +144,9 @@ class Document implements ServiceLocatorAwareInterface
             $bookmark = $factory->locate($token);
 
             if ($bookmark instanceof DateHelperAwareInterface) {
-                $bookmark->setDateHelper(
-                    $this->getServiceLocator()->get('DateService')
-                );
+                /** @var \Dvsa\Olcs\Api\Service\Date $dateSrvHlpr */
+                $dateSrvHlpr = $this->getServiceLocator()->get('DateService');
+                $bookmark->setDateHelper($dateSrvHlpr);
             }
 
             if ($bookmark instanceof FileStoreAwareInterface) {
@@ -133,36 +159,5 @@ class Document implements ServiceLocatorAwareInterface
         }
 
         return $bookmarks;
-    }
-
-    /**
-     * Returns a document timestamp
-     *
-     * @return string
-     */
-    public function getTimestampFormat()
-    {
-        return self::DOCUMENT_TIMESTAMP_FORMAT;
-    }
-
-    /**
-     * Formats a document filename
-     *
-     * @param string $input
-     * @return string
-     */
-    public function formatFilename($input)
-    {
-        return str_replace([' ', '/'], '_', $input);
-    }
-
-    /**
-     * Get uploader
-     *
-     * @return \Dvsa\Olcs\Api\Service\File\FileUploaderInterface
-     */
-    protected function getUploader()
-    {
-        return $this->getServiceLocator()->get('FileUploader');
     }
 }

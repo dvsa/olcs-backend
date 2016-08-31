@@ -20,7 +20,7 @@ abstract class AbstractBookmark
     const TYPE = null;
 
     /** @var string */
-    protected $snippedPath = __DIR__ . '/../Snippet';
+    protected $snippedPath;
     /** @var string */
     protected $token = null;
     /** @var ParserInterface */
@@ -73,7 +73,8 @@ abstract class AbstractBookmark
         }
 
         $fileExt = $this->getParser()->getFileExtension();
-        $path = $this->snippedPath . $className . '.' . $fileExt;
+        /* #TODO when move to 5.6: move assigment __DIR__ . '/../Snippet' to 'snippedPath' property declaration */
+        $path = ($this->snippedPath ?: __DIR__ . '/../Snippet') . $className . '.' . $fileExt;
 
         return file_get_contents($path);
     }
