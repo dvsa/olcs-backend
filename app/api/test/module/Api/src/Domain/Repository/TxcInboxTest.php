@@ -243,8 +243,5 @@ class TxcInboxTest extends RepositoryTestCase
                 ->getMock()
         );
         $this->assertEquals([], $this->sut->fetchByIdsForLocalAuthority([], 4));
-
-        $expectedQuery = 'BLAH AND m.localAuthority = [[4]] AND m.id IN [2]';
-        $this->assertEquals($expectedQuery, $this->query);
     }
 }
