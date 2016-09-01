@@ -12,12 +12,16 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\UpdateTxcInbox as UpdateTxcInboxCmd;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Update TxcInbox
  */
-final class UpdateTxcInbox extends AbstractCommandHandler implements TransactionedInterface
+final class UpdateTxcInbox extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'TxcInbox';
 
     /**
@@ -31,7 +35,13 @@ final class UpdateTxcInbox extends AbstractCommandHandler implements Transaction
 
         $result = new Result();
 
-        $txcInboxRecords = $this->getRepo()->fetchByIds($command->getIds(), Query::HYDRATE_OBJECT);
+        $localAuthorityId = $this->getCurrentUser()->getLocalAuthority()->getId();
+
+        $txcInboxRecords = $this->getRepo()->fetchByIdsForLocalAuthority(
+            $command->getIds(),
+            $localAuthorityId,
+            Query::HYDRATE_OBJECT
+        );
 
         $count = 0;
         /** @var TxcInbox $txcInbox */

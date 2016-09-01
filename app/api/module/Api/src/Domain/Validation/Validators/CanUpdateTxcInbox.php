@@ -6,35 +6,23 @@ use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
 /**
  * Can Update TxcInbox record
  */
-class CanUpdateTxcInbox extends AbstractValidator
+class CanUpdateTxcInbox extends AbstractCanAccessEntity
 {
     protected $repo = 'User';
 
     /**
      * Is valid
-     *
-     * @param int|null $entityId Entity id
-     *
+     **
      * @return bool
      */
-    public function isValid($entityId)
+    public function isValid($entityIds)
     {
-        if ($entityId === null) {
+        if (empty($entityIds)) {
             return false;
         }
 
-        if ($this->isInternalUser()) {
+        if ($this->isInternalUser() || $this->isLocalAuthority()) {
             return true;
-        }
-
-        if ($this->isLocalAuthority()) {
-            // check the local authority matches
-            $entity = $this->getEntity($entityId);
-
-            if ($entity instanceOf TxcInbox && $entity->getLocalAuthority()->getId() ===
-                $this->getCurrentUser()->getLocalAuthority()->getId()) {
-                return true;
-            }
         }
 
         return false;
