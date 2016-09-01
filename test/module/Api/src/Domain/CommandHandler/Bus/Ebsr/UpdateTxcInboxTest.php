@@ -82,7 +82,6 @@ class UpdateTxcInboxTest extends CommandHandlerTestCase
     public function testHandleCommandNotLocalAuthority()
     {
         $id = 99;
-        $localAuthorityId = 888;
 
         $user = m::mock();
 

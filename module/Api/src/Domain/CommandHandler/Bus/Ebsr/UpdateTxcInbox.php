@@ -42,10 +42,10 @@ final class UpdateTxcInbox extends AbstractCommandHandler implements Transaction
 
         $currentUser = $this->getCurrentUser();
 
-        $localAuthority = $this->getCurrentUser()->getLocalAuthority();
+        $localAuthority = $currentUser->getLocalAuthority();
 
         if (!$localAuthority instanceof LocalAuthority) {
-            throw new ForbiddenException('User not local Authority');
+            throw new ForbiddenException('User not a local authority');
         }
 
         $txcInboxRecords = $this->getRepo()->fetchByIdsForLocalAuthority(
