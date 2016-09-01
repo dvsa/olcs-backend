@@ -96,9 +96,10 @@ class TxcInbox extends AbstractRepository
     /**
      * Fetch a group of records by id list and filter by Local authority ID to prevent the need for validation
      *
-     * @param array $ids                list of ids to return
-     * @param int   $localAuthorityId   local authority filter
-     * @param int   $hydrateMode        hydrate mode
+     * @param array $ids              list of ids to return
+     * @param int   $localAuthorityId local authority filter
+     * @param int   $hydrateMode      hydrate mode
+     *
      * @return array TxcInbox records
      */
     public function fetchByIdsForLocalAuthority(array $ids, $localAuthorityId, $hydrateMode = Query::HYDRATE_OBJECT)
@@ -118,7 +119,7 @@ class TxcInbox extends AbstractRepository
 
         return $qb->getQuery()->getResult($hydrateMode);
     }
-    
+
     /**
      * Applies list filters
      *

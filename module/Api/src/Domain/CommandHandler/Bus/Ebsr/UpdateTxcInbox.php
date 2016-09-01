@@ -25,7 +25,10 @@ final class UpdateTxcInbox extends AbstractCommandHandler implements Transaction
     protected $repoServiceName = 'TxcInbox';
 
     /**
-     * @param CommandInterface $command
+     * Handle command
+     * 
+     * @param CommandInterface $command Command to be handled
+     *
      * @return Result
      * @throws \Exception
      */
