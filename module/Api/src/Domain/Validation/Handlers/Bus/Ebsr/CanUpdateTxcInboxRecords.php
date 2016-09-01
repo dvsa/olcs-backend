@@ -9,7 +9,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 /**
  * Can update TxcInbox record with an ID
  */
-class CanUpdateTxcInboxRecord extends AbstractHandler
+class CanUpdateTxcInboxRecords extends AbstractHandler
 {
     /**
      * Validate DTO
@@ -20,6 +20,6 @@ class CanUpdateTxcInboxRecord extends AbstractHandler
      */
     public function isValid($dto)
     {
-        return $this->canUpdateTxcInbox($dto->getId());
+        return $this->canUpdateTxcInbox($dto->getIds());
     }
 }

@@ -94,6 +94,32 @@ class TxcInbox extends AbstractRepository
     }
 
     /**
+     * Fetch a group of records by id list and filter by Local authority ID to prevent the need for validation
+     *
+     * @param array $ids                list of ids to return
+     * @param int   $localAuthorityId   local authority filter
+     * @param int   $hydrateMode        hydrate mode
+     * @return array TxcInbox records
+     */
+    public function fetchByIdsForLocalAuthority(array $ids, $localAuthorityId, $hydrateMode = Query::HYDRATE_OBJECT)
+    {
+        if (empty($ids)) {
+            return [];
+        }
+
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb);
+
+        $qb->andWhere($qb->expr()->eq('m.localAuthority', ':localAuthority'))
+            ->setParameter('localAuthority', $localAuthorityId)
+        ->andWhere($qb->expr()->in('m.id', $ids));
+
+        return $qb->getQuery()->getResult($hydrateMode);
+    }
+    
+    /**
      * Applies list filters
      *
      * @param QueryBuilder   $qb              doctrine query builder
