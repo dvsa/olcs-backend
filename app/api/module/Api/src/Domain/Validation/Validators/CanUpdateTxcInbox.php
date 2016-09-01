@@ -1,7 +1,6 @@
 <?php
 
 namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
-use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
 
 /**
  * Can Update TxcInbox record
@@ -11,8 +10,10 @@ class CanUpdateTxcInbox extends AbstractCanAccessEntity
     protected $repo = 'User';
 
     /**
-     * Is valid
-     **
+     * Is Valid, yes for at least one integer indexed entity id array and internal users or local authorities
+     *
+     * @param array $entityIds Array of entity ids to update
+     *
      * @return bool
      */
     public function isValid($entityIds)
