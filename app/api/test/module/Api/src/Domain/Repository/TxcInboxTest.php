@@ -227,4 +227,24 @@ class TxcInboxTest extends RepositoryTestCase
         $expectedQuery = 'BLAH AND m.localAuthority = [[4]] AND m.id IN [2]';
         $this->assertEquals($expectedQuery, $this->query);
     }
+
+    public function testFetchByIdsForLocalAuthorityReturnsNothing()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn([])
+                ->getMock()
+        );
+        $this->assertEquals([], $this->sut->fetchByIdsForLocalAuthority([2], 4));
+
+        $expectedQuery = 'BLAH AND m.localAuthority = [[4]] AND m.id IN [2]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }
