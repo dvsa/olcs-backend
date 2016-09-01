@@ -101,7 +101,7 @@ class CanAccessTxcInboxTest extends AbstractValidatorsTestCase
         $this->auth->shouldReceive('isGranted')->with(Permission::LOCAL_AUTHORITY_ADMIN, null)
             ->andReturn(false);
 
-        $this->assertFalse($this->sut->isValid(null));
+        $this->assertFalse($this->sut->isValid(5));
     }
 
     public function provider()

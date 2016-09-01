@@ -230,18 +230,6 @@ class TxcInboxTest extends RepositoryTestCase
 
     public function testFetchByIdsForLocalAuthorityWithEmptyData()
     {
-        $qb = $this->createMockQb('BLAH');
-
-        $this->mockCreateQueryBuilder($qb);
-
-        $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
-
-        $qb->shouldReceive('getQuery')->andReturn(
-            m::mock()->shouldReceive('execute')
-                ->shouldReceive('getResult')
-                ->andReturn([])
-                ->getMock()
-        );
         $this->assertEquals([], $this->sut->fetchByIdsForLocalAuthority([], 4));
     }
 }
