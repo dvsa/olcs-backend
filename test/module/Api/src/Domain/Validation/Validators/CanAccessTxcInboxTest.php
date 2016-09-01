@@ -76,13 +76,20 @@ class CanAccessTxcInboxTest extends AbstractValidatorsTestCase
      */
     public function testIsValidInternal($canAccess, $expected)
     {
-        $this->setIsGranted(Permission::INTERNAL_USER, true);
+        $this->setIsGranted(Permission::INTERNAL_USER, $canAccess);
+
+        if (!$canAccess) {
+            $this->auth->shouldReceive('isGranted')->with(Permission::LOCAL_AUTHORITY_USER, null)
+                ->andReturn($canAccess);
+            $this->auth->shouldReceive('isGranted')->with(Permission::LOCAL_AUTHORITY_ADMIN, null)
+                ->andReturn($canAccess);
+        }
         $entity = m::mock(TxcInbox::class)->makePartial();
 
         $repo = $this->mockRepo('TxcInbox');
         $repo->shouldReceive('fetchById')->with(111)->andReturn($entity);
 
-        $this->assertEquals(true, $this->sut->isValid(111));
+        $this->assertEquals($expected, $this->sut->isValid(111));
     }
 
     public function testIsValidWithOtherUsers()
