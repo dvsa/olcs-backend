@@ -13,6 +13,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\UpdateTxcInbox as Cmd;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Update TxcInbox Test
@@ -23,6 +24,7 @@ class UpdateTxcInboxTest extends CommandHandlerTestCase
     {
         $this->sut = new UpdateTxcInbox();
         $this->mockRepo('TxcInbox', TxcInboxRepo::class);
+        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class)->makePartial();
 
         parent::setUp();
     }
@@ -33,6 +35,20 @@ class UpdateTxcInboxTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $id = 99;
+        $localAuthorityId = 888;
+
+        $user = m::mock();
+        $mockLocalAuthority = m::mock();
+
+        $mockLocalAuthority->shouldReceive('getId')
+            ->andReturn($localAuthorityId);
+
+        $user->shouldReceive('getLocalAuthority')
+            ->andReturn($mockLocalAuthority);
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('getIdentity->getUser')
+            ->andReturn($user);
 
         $command = Cmd::Create(
             [
@@ -48,8 +64,8 @@ class UpdateTxcInboxTest extends CommandHandlerTestCase
             ->shouldReceive('getId')
             ->andReturn($id);
 
-        $this->repoMap['TxcInbox']->shouldReceive('fetchByIds')
-            ->with($command->getIds(), Query::HYDRATE_OBJECT)
+        $this->repoMap['TxcInbox']->shouldReceive('fetchByIdsForLocalAuthority')
+            ->with($command->getIds(), $localAuthorityId, Query::HYDRATE_OBJECT)
             ->andReturn([$txcInbox])
             ->shouldReceive('save')
             ->with(m::type(TxcInboxEntity::class))
