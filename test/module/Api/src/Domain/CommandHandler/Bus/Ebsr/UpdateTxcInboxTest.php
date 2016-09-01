@@ -38,7 +38,7 @@ class UpdateTxcInboxTest extends CommandHandlerTestCase
         $localAuthorityId = 888;
 
         $user = m::mock();
-        $mockLocalAuthority = m::mock();
+        $mockLocalAuthority = m::mock('Dvsa\Olcs\Api\Entity\Bus\LocalAuthority')->makePartial();
 
         $mockLocalAuthority->shouldReceive('getId')
             ->andReturn($localAuthorityId);
@@ -74,5 +74,34 @@ class UpdateTxcInboxTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf(Result::class, $result);
+    }
+
+    /**
+     * testHandleCommand
+     */
+    public function testHandleCommandNotLocalAuthority()
+    {
+        $id = 99;
+        $localAuthorityId = 888;
+
+        $user = m::mock();
+
+        $user->shouldReceive('getLocalAuthority')
+            ->andReturnNull();
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('getIdentity->getUser')
+            ->andReturn($user);
+
+        $command = Cmd::Create(
+            [
+                'ids' => [$id]
+            ]
+        );
+
+        $this->setExpectedException('Dvsa\Olcs\Api\Domain\Exception\ForbiddenException', m::type('string'));
+
+        $this->sut->handleCommand($command);
+
     }
 }
