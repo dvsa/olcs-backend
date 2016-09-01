@@ -8,6 +8,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
@@ -26,7 +28,7 @@ final class UpdateTxcInbox extends AbstractCommandHandler implements Transaction
 
     /**
      * Handle command
-     * 
+     *
      * @param CommandInterface $command Command to be handled
      *
      * @return Result
@@ -38,11 +40,17 @@ final class UpdateTxcInbox extends AbstractCommandHandler implements Transaction
 
         $result = new Result();
 
-        $localAuthorityId = $this->getCurrentUser()->getLocalAuthority()->getId();
+        $currentUser = $this->getCurrentUser();
+
+        $localAuthority = $this->getCurrentUser()->getLocalAuthority();
+
+        if (!$localAuthority instanceof LocalAuthority) {
+            throw new ForbiddenException('User not local Authority');
+        }
 
         $txcInboxRecords = $this->getRepo()->fetchByIdsForLocalAuthority(
             $command->getIds(),
-            $localAuthorityId,
+            $localAuthority->getId(),
             Query::HYDRATE_OBJECT
         );
 
