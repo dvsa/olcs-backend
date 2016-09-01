@@ -3,91 +3,78 @@ return [
     'excluded-tm-sections' => ['case-summary', 'outstanding-applications', 'people'],
     'section-types' => [
         'submission_type_o_mlh_otc' => [
-            'introduction',
             'case-summary',
             'case-outline',
             'outstanding-applications',
             'people'
         ],
         'submission_type_o_mlh_clo' => [
-            'introduction',
             'case-summary',
             'case-outline',
             'outstanding-applications',
             'people'
         ],
         'submission_type_o_clo_g' => [
-            'introduction',
             'case-summary',
             'case-outline',
             'outstanding-applications',
             'people'
         ],
         'submission_type_o_clo_psv' => [
-            'introduction',
             'case-summary',
             'case-outline',
             'outstanding-applications',
             'people'
         ],
         'submission_type_o_clo_fep' => [
-            'introduction',
             'case-summary',
             'case-outline',
             'outstanding-applications',
             'people'
         ],
         'submission_type_o_otc' => [
-            'introduction',
             'case-summary',
             'case-outline',
             'outstanding-applications',
             'people'
         ],
         'submission_type_o_env' => [
-            'introduction',
             'case-summary',
             'case-outline',
             'outstanding-applications',
             'people'
         ],
         'submission_type_o_irfo' => [
-            'introduction',
             'case-summary',
             'case-outline',
             'outstanding-applications',
             'people'
         ],
         'submission_type_o_bus_reg' => [
-            'introduction',
             'case-summary',
             'case-outline',
             'outstanding-applications',
             'people'
         ],
         'submission_type_o_tm' => [
-            'introduction',
             'case-summary',
             'case-outline',
             'outstanding-applications',
             'people'
         ],
         'submission_type_o_schedule_41' => [
-            'introduction',
             'case-summary',
             'case-outline',
             'outstanding-applications',
             'people'
         ],
         'submission_type_o_impounding' => [
-            'introduction',
             'case-summary',
             'case-outline',
             'outstanding-applications',
             'people'
         ],
         'submission_type_o_ni_tru' => [
-            'introduction',
             'case-summary',
             'case-outline',
             'outstanding-applications',
@@ -152,7 +139,6 @@ return [
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
         ],
         'aliases' => [
-            'introduction' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
             'case-summary' => \Dvsa\Olcs\Api\Service\Submission\Sections\CaseSummary::class,
             'case-outline' => \Dvsa\Olcs\Api\Service\Submission\Sections\CaseOutline::class,
             'most-serious-infringement' => \Dvsa\Olcs\Api\Service\Submission\Sections\MostSeriousInfringement::class,
@@ -210,13 +196,6 @@ return [
             'tm-previous-history' => \Dvsa\Olcs\Api\Service\Submission\Sections\TmPreviousHistory::class,
         ],
         'configuration' => [
-            'introduction' => [
-                'subcategoryId' => 115,
-                'config' => [],
-                'section_type' => [],
-                'allow_comments' => true,
-                'allow_attachments' => true
-            ],
             'case-summary' => [
                 'subcategoryId' => 116,
                 'config' => [],
