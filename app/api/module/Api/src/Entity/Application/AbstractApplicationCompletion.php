@@ -2,11 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Entity\Application;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
-use JsonSerializable;
-use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JsonSerializable;
 
 /**
  * ApplicationCompletion Abstract Entity
@@ -1033,14 +1035,11 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     public function clearProperties($properties = array())
     {
         foreach ($properties as $property) {
-
             if (property_exists($this, $property)) {
                 if ($this->$property instanceof Collection) {
-
                     $this->$property = new ArrayCollection(array());
 
                 } else {
-
                     $this->$property = null;
                 }
             }
