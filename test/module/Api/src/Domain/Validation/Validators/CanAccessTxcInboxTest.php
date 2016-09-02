@@ -92,6 +92,36 @@ class CanAccessTxcInboxTest extends AbstractValidatorsTestCase
         $this->assertEquals($expected, $this->sut->isValid(111));
     }
 
+    public function testIsValidWithOtherLocalAuthority()
+    {
+        $this->setIsGranted(Permission::INTERNAL_USER, false);
+
+        $this->auth->shouldReceive('isGranted')->with(Permission::LOCAL_AUTHORITY_USER, null)
+            ->andReturn(true);
+
+        $mockLocalAuthority = m::mock(LocalAuthority::class)->makePartial();
+        $mockLocalAuthority->setId(999);
+
+        // mock other LA to test that 1 LA cannot update another LA's entities
+        $mockOtherLocalAuthority = m::mock(LocalAuthority::class)->makePartial();
+        $mockOtherLocalAuthority->setId(111);
+
+        $mockUser = m::mock(User::class)->makePartial();
+
+        $mockIdentity = m::mock();
+        $mockIdentity->shouldReceive('getUser')->andReturn($mockUser);
+        $this->auth->shouldReceive('getIdentity')->andReturn($mockIdentity);
+        $entity = m::mock(TxcInbox::class)->makePartial();
+
+        $mockUser->setLocalAuthority($mockLocalAuthority);
+        $entity->shouldReceive('getLocalAuthority')->once()->andReturn($mockOtherLocalAuthority);
+
+        $repo = $this->mockRepo('TxcInbox');
+        $repo->shouldReceive('fetchById')->with(111)->andReturn($entity);
+
+        $this->assertFalse($this->sut->isValid(111));
+    }
+
     public function testIsValidWithOtherUsers()
     {
         $this->auth->shouldReceive('isGranted')->with(Permission::INTERNAL_USER, null)
