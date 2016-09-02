@@ -2,15 +2,14 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Application;
 
-use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as Entity;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Mockery as m;
 
 /**
- * ApplicationCompletion Entity Unit Tests
- *
- * Initially auto-generated but won't be overridden
+ * @covers Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion
+ * @covers Dvsa\Olcs\Api\Entity\Application\AbstractApplicationCompletion
  */
 class ApplicationCompletionEntityTest extends EntityTester
 {

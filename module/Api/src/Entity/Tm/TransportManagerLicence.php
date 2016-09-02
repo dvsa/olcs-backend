@@ -34,6 +34,14 @@ class TransportManagerLicence extends AbstractTransportManagerLicence implements
     const ERROR_SAT = 'err_sat';
     const ERROR_SUN = 'err_sun';
 
+    /**
+     * TransportManagerLicence constructor.
+     *
+     * @param Licence          $licence          Licence
+     * @param TransportManager $transportManager Transport Manager
+     *
+     * @return void
+     */
     public function __construct(Licence $licence, TransportManager $transportManager)
     {
         parent::__construct();
@@ -42,6 +50,23 @@ class TransportManagerLicence extends AbstractTransportManagerLicence implements
         $this->setLicence($licence);
     }
 
+    /**
+     * Update Transport Manager Licence
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $tmType                TM Type
+     * @param int                                  $hoursMon              Hours Mon
+     * @param int                                  $hoursTue              Hours tue
+     * @param int                                  $hoursWed              Hours Wed
+     * @param int                                  $hoursThu              Hours Thu
+     * @param int                                  $hoursFri              Hours Fri
+     * @param int                                  $hoursSat              Hours Sat
+     * @param int                                  $hoursSun              Hours Sun
+     * @param string                               $additionalInformation Additional info
+     * @param boolean                              $isOwner               Is Owner
+     *
+     * @return void
+     * @throws ValidationException
+     */
     public function updateTransportManagerLicence(
         $tmType = null,
         $hoursMon = null,
@@ -75,6 +100,20 @@ class TransportManagerLicence extends AbstractTransportManagerLicence implements
         $this->setIsOwner($isOwner);
     }
 
+    /**
+     * Validate Transport Manager Licence
+     *
+     * @param int $hoursMon Hours Mon
+     * @param int $hoursTue Hours Tue
+     * @param int $hoursWed Hours Wed
+     * @param int $hoursThu Hours Thu
+     * @param int $hoursFri Hours Fri
+     * @param int $hoursSat Hours Sat
+     * @param int $hoursSun Hours Sun
+     *
+     * @return void
+     * @throws ValidationException
+     */
     protected function validateTransportManagerLicence(
         $hoursMon,
         $hoursTue,
@@ -102,22 +141,22 @@ class TransportManagerLicence extends AbstractTransportManagerLicence implements
         }
         if (!is_null($hoursThu)) {
             if ((float) $hoursThu < 0 || (float) $hoursThu > 24) {
-                $errors[] = ['hoursThu' => [self::ERROR_WED => 'Thu must be between 0 and 24, inclusively']];
+                $errors[] = ['hoursThu' => [self::ERROR_THU => 'Thu must be between 0 and 24, inclusively']];
             }
         }
         if (!is_null($hoursFri)) {
             if ((float) $hoursFri < 0 || (float) $hoursFri > 24) {
-                $errors[] = ['hoursFri' => [self::ERROR_WED => 'Fri must be between 0 and 24, inclusively']];
+                $errors[] = ['hoursFri' => [self::ERROR_FRI => 'Fri must be between 0 and 24, inclusively']];
             }
         }
         if (!is_null($hoursSat)) {
             if ((float) $hoursSat < 0 || (float) $hoursSat > 24) {
-                $errors[] = ['hoursSat' => [self::ERROR_WED => 'Sat must be between 0 and 24, inclusively']];
+                $errors[] = ['hoursSat' => [self::ERROR_SAT => 'Sat must be between 0 and 24, inclusively']];
             }
         }
         if (!is_null($hoursSun)) {
             if ((float) $hoursSun < 0 || (float) $hoursSun > 24) {
-                $errors[] = ['hoursSun' => [self::ERROR_WED => 'Sun must be between 0 and 24, inclusively']];
+                $errors[] = ['hoursSun' => [self::ERROR_SUN => 'Sun must be between 0 and 24, inclusively']];
             }
         }
         if ($errors) {
@@ -127,6 +166,7 @@ class TransportManagerLicence extends AbstractTransportManagerLicence implements
 
     /**
      * Simple method to sum all the daily hours to give a weekly total
+     *
      * @return int
      */
     public function getTotalWeeklyHours()
@@ -145,7 +185,9 @@ class TransportManagerLicence extends AbstractTransportManagerLicence implements
     }
 
     /**
-     * @inheritdoc
+     * Returns related Organisation
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation
      */
     public function getRelatedOrganisation()
     {

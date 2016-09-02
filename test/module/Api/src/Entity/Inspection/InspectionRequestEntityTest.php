@@ -27,6 +27,7 @@ class InspectionRequestEntityTest extends EntityTester
      */
     public function testUpdateInspectionRequest($dueDate, $duePeriod, $dueExpected, $requestDate, $requestDateExpected)
     {
+        /** @var Entity $sut */
         $sut = m::mock(Entity::class)->makePartial();
         $sut->updateInspectionRequest(
             'req_type',
@@ -77,105 +78,130 @@ class InspectionRequestEntityTest extends EntityTester
 
     public function testUpdateInspectionRequestNotValid()
     {
-        $this->setExpectedException(
-            ValidationException::class,
-            [
-                'reportType' => [Entity::ERROR_FIELD_IS_REQUIRED => 'Field is required'],
-                'resultType' => [Entity::ERROR_FIELD_IS_REQUIRED => 'Field is required'],
-                'requestorUser' => [Entity::ERROR_FIELD_IS_REQUIRED => 'Field is required'],
-                'dueDate' => [
-                    Entity::ERROR_FIELD_IS_REQUIRED => 'Field is required',
-                    Entity::ERROR_DUE_DATE => 'Due date should be the same or after date requested'
-                ]
-            ]
-        );
+        /** @var Entity $sut */
         $sut = m::mock(Entity::class)->makePartial();
-        $sut->updateInspectionRequest(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        );
+
+        try {
+            $sut->updateInspectionRequest(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            );
+        } catch (ValidationException $e) {
+            static::assertEquals(
+                $e->getMessages(),
+                [
+                    [
+                        'reportType' => [Entity::ERROR_FIELD_IS_REQUIRED => 'Field is required'],
+                    ],
+                    [
+                        'resultType' => [Entity::ERROR_FIELD_IS_REQUIRED => 'Field is required'],
+                    ],
+                    [
+                        'dueDate' => [Entity::ERROR_FIELD_IS_REQUIRED => 'Field is required'],
+                    ],
+                    [
+                        'dueDate' => [Entity::ERROR_DUE_DATE => 'Due date should be the same or after date requested'],
+                    ],
+                ]
+            );
+        }
     }
 
     public function testUpdateInspectionRequestDueDateNotInRange()
     {
-        $this->setExpectedException(
-            ValidationException::class,
-            [
-                'reportType' => [Entity::ERROR_FIELD_IS_REQUIRED => 'Field is required'],
-                'resultType' => [Entity::ERROR_FIELD_IS_REQUIRED => 'Field is required'],
-                'requestorUser' => [Entity::ERROR_FIELD_IS_REQUIRED => 'Field is required'],
-                'dueDate' => [
-                    Entity::ERROR_DUE_DATE_NOT_IN_RANGE => 'Due date not in range'
-                ]
-            ]
-        );
+        /** @var Entity $sut */
         $sut = m::mock(Entity::class)->makePartial();
-        $sut->updateInspectionRequest(
-            null,
-            null,
-            null,
-            1,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        );
+
+        try {
+            $sut->updateInspectionRequest(
+                null,
+                null,
+                null,
+                1,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            );
+        } catch (ValidationException $e) {
+            static::assertEquals(
+                $e->getMessages(),
+                [
+                    [
+                        'reportType' => [Entity::ERROR_FIELD_IS_REQUIRED => 'Field is required'],
+                    ],
+                    [
+                        'resultType' => [Entity::ERROR_FIELD_IS_REQUIRED => 'Field is required'],
+                    ],
+                    [
+                        'dueDate' => [Entity::ERROR_DUE_DATE_NOT_IN_RANGE => 'Due date not in range'],
+                    ],
+                ]
+            );
+        }
     }
 
     public function testUpdateInspectionRequestRequestDateInFuture()
     {
-        $this->setExpectedException(
-            ValidationException::class,
-            [
-                'requestDate' => [Entity::ERROR_REQUEST_DATE_IN_FUTURE => 'Request date should not be in future']
-            ]
-        );
+        /** @var Entity $sut */
         $sut = m::mock(Entity::class)->makePartial();
-        $sut->updateInspectionRequest(
-            'req_type',
-            '2222-01-01',
-            null,
-            3,
-            'res_type',
-            'requestor_notes',
-            'rep_type',
-            1,
-            2,
-            3,
-            4,
-            'insp_name',
-            '01/01/2015',
-            '01/01/2016',
-            '01/01/2017',
-            5,
-            6,
-            'inspector_notes'
-        );
+
+        try {
+            $sut->updateInspectionRequest(
+                'req_type',
+                '2222-01-01',
+                null,
+                3,
+                'res_type',
+                'requestor_notes',
+                'rep_type',
+                1,
+                2,
+                3,
+                4,
+                'insp_name',
+                '01/01/2015',
+                '01/01/2016',
+                '01/01/2017',
+                5,
+                6,
+                'inspector_notes'
+            );
+        } catch (ValidationException $e) {
+            static::assertEquals(
+                $e->getMessages(),
+                [
+                    'requestDate' => [
+                        Entity::ERROR_REQUEST_DATE_IN_FUTURE => 'Request date should not be in future',
+                    ],
+                ]
+            );
+        }
     }
 }
