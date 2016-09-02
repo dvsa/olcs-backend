@@ -2,15 +2,15 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Tm;
 
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as Entity;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
-use \Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity as Entities;
 
 /**
- * TransportManagerApplication Entity Unit Tests
- *
- * Initially auto-generated but won't be overridden
+ * @covers Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication
+ * @covers Dvsa\Olcs\Api\Entity\Tm\AbstractTransportManagerApplication
  */
 class TransportManagerApplicationEntityTest extends EntityTester
 {
@@ -21,21 +21,28 @@ class TransportManagerApplicationEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
+    /** @var  Entity */
+    private $sut;
+
+    public function setUp()
+    {
+        $this->sut = new Entity();
+
+        parent::setUp();
+    }
+
     public function testUpdateTransportManagerApplication()
     {
-        $sut = m::mock(Entity::class)->makePartial();
-
-        $sut->updateTransportManagerApplication(1, 2, 'A', 'st');
-        $this->assertEquals($sut->getApplication(), 1);
-        $this->assertEquals($sut->getTransportManager(), 2);
-        $this->assertEquals($sut->getAction(), 'A');
-        $this->assertEquals($sut->getTmApplicationStatus(), 'st');
+        $this->sut->updateTransportManagerApplication(1, 2, 'A', 'st');
+        $this->assertEquals($this->sut->getApplication(), 1);
+        $this->assertEquals($this->sut->getTransportManager(), 2);
+        $this->assertEquals($this->sut->getAction(), 'A');
+        $this->assertEquals($this->sut->getTmApplicationStatus(), 'st');
     }
 
     public function testUpdateTransportManagerApplicationFull()
     {
-        $sut = m::mock(Entity::class)->makePartial();
-        $sut->updateTransportManagerApplicationFull(
+        $this->sut->updateTransportManagerApplicationFull(
             'tmt',
             1,
             1,
@@ -48,53 +55,68 @@ class TransportManagerApplicationEntityTest extends EntityTester
             'ai',
             'tmas'
         );
-        $this->assertEquals($sut->getTmType(), 'tmt');
-        $this->assertEquals($sut->getIsOwner(), 1);
-        $this->assertEquals($sut->getHoursMon(), 1);
-        $this->assertEquals($sut->getHoursTue(), 2);
-        $this->assertEquals($sut->getHoursWed(), 3);
-        $this->assertEquals($sut->getHoursThu(), 4);
-        $this->assertEquals($sut->getHoursFri(), 5);
-        $this->assertEquals($sut->getHoursSat(), 6);
-        $this->assertEquals($sut->getHoursSun(), 7);
-        $this->assertEquals($sut->getAdditionalInformation(), 'ai');
-        $this->assertEquals($sut->getTmApplicationStatus(), 'tmas');
+        $this->assertEquals($this->sut->getTmType(), 'tmt');
+        $this->assertEquals($this->sut->getIsOwner(), 1);
+        $this->assertEquals($this->sut->getHoursMon(), 1);
+        $this->assertEquals($this->sut->getHoursTue(), 2);
+        $this->assertEquals($this->sut->getHoursWed(), 3);
+        $this->assertEquals($this->sut->getHoursThu(), 4);
+        $this->assertEquals($this->sut->getHoursFri(), 5);
+        $this->assertEquals($this->sut->getHoursSat(), 6);
+        $this->assertEquals($this->sut->getHoursSun(), 7);
+        $this->assertEquals($this->sut->getAdditionalInformation(), 'ai');
+        $this->assertEquals($this->sut->getTmApplicationStatus(), 'tmas');
     }
 
     public function testUpdateTransportManagerApplicationFullInvalid()
     {
-        $this->setExpectedException(
-            ValidationException::class,
-            [
-                'hoursMon' => [Entity::ERROR_MON => 'Mon must be between 0 and 24, inclusively'],
-                'hoursTue' => [Entity::ERROR_TUE => 'Tue must be between 0 and 24, inclusively'],
-                'hoursWed' => [Entity::ERROR_WED => 'Wed must be between 0 and 24, inclusively'],
-                'hoursThu' => [Entity::ERROR_THU => 'Thu must be between 0 and 24, inclusively'],
-                'hoursFri' => [Entity::ERROR_FRI => 'Fri must be between 0 and 24, inclusively'],
-                'hoursSat' => [Entity::ERROR_SAT => 'Mon must be between 0 and 24, inclusively'],
-                'hoursSun' => [Entity::ERROR_SUN => 'Sun must be between 0 and 24, inclusively']
-            ]
-        );
-        $sut = m::mock(Entity::class)->makePartial();
-        $sut->updateTransportManagerApplicationFull(
-            'tmt',
-            1,
-            25,
-            25,
-            25,
-            25,
-            25,
-            25,
-            25,
-            'ai',
-            'tmas'
-        );
+        try {
+            $this->sut->updateTransportManagerApplicationFull(
+                'tmt',
+                1,
+                25,
+                25,
+                25,
+                25,
+                25,
+                25,
+                25,
+                'ai',
+                'tmas'
+            );
+        } catch (ValidationException $e) {
+            static::assertEquals(
+                $e->getMessages(),
+                [
+                    [
+                        'hoursMon' => [Entity::ERROR_MON => 'Mon must be between 0 and 24, inclusively'],
+                    ],
+                    [
+                        'hoursTue' => [Entity::ERROR_TUE => 'Tue must be between 0 and 24, inclusively'],
+                    ],
+                    [
+                        'hoursWed' => [Entity::ERROR_WED => 'Wed must be between 0 and 24, inclusively'],
+                    ],
+                    [
+                        'hoursThu' => [Entity::ERROR_THU => 'Thu must be between 0 and 24, inclusively'],
+                    ],
+                    [
+                        'hoursFri' => [Entity::ERROR_FRI => 'Fri must be between 0 and 24, inclusively'],
+                    ],
+                    [
+                        'hoursSat' => [Entity::ERROR_SAT => 'Sat must be between 0 and 24, inclusively'],
+                    ],
+                    [
+                        'hoursSun' => [Entity::ERROR_SUN => 'Sun must be between 0 and 24, inclusively']
+                    ],
+                ]
+            );
+        }
     }
 
     public function testGetTotalWeeklyHours()
     {
-        $sut = m::mock(Entity::class)->makePartial();
-        $sut->updateTransportManagerApplicationFull(
+        $this->sut->updateTransportManagerApplicationFull(
             'tmt',
             1,
             1,
@@ -107,6 +129,6 @@ class TransportManagerApplicationEntityTest extends EntityTester
             'ai',
             'tmas'
         );
-        $this->assertEquals($sut->getTotalWeeklyHours(), 28);
+        $this->assertEquals($this->sut->getTotalWeeklyHours(), 28);
     }
 }
