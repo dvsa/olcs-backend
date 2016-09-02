@@ -46,15 +46,7 @@ final class EbsrSubmissionList extends AbstractQuery implements PagedQueryInterf
      * @var string
      * @Transfer\Optional
      * @Transfer\Filter({"name":"Zend\Filter\StringTrim"})
-     * @Transfer\Validator({
-     *      "name":"Zend\Validator\InArray",
-     *      "options": {
-     *          "haystack": {
-     *              "ebsrs_processed", "ebsrs_processing", "ebsrs_submitted",
-     *              "ebsrs_validating", "ebsrs_failed", "ebsrs_uploaded"
-     *          }
-     *      }
-     * })
+     * @Transfer\Validator({"name":"Dvsa\Olcs\Transfer\Validators\EbsrSubmissionStatus"})
      */
     protected $status;
 
