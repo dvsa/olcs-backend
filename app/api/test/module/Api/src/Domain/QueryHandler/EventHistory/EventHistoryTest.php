@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Event History Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\EventHistory;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\EventHistory\EventHistory as QueryHandler;
@@ -16,9 +11,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**
- * Event History Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @covers Dvsa\Olcs\Api\Domain\QueryHandler\EventHistory\EventHistory
  */
 class EventHistoryTest extends QueryHandlerTestCase
 {

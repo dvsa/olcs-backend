@@ -1,21 +1,14 @@
 <?php
 
-/**
- * Result Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 
 /**
- * Result Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers Dvsa\Olcs\Api\Domain\QueryHandler\Result
  */
 class ResultTest extends MockeryTestCase
 {
@@ -48,14 +41,36 @@ class ResultTest extends MockeryTestCase
 
     public function testResultWithEntityAndBundleAndData()
     {
-        $data = ['cake' => 'mix', 'stuff' => 'foo'];
-        $expected = ['foo' => 'bar', 'cake' => 'mix', 'stuff' => 'foo'];
+        $data = [
+            'cake' => [
+                'subcakeA' => 'expect',
+            ],
+            'stuff' => 'foo',
+        ];
+        $expected = [
+            'foo' => 'bar',
+            'cake' => [
+                'subcakeA' => 'expect',
+                'subcakeB' => 'shouldExists',
+            ],
+            'stuff' => 'foo',
+        ];
 
         /** @var BundleSerializableInterface $entity */
-        $entity = m::mock(BundleSerializableInterface::class);
-
-        $entity->shouldReceive('serialize')->once()->with(['blah' => 'blah'])
-            ->andReturn(['foo' => 'bar', 'cake' => 'bar']);
+        $entity = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->once()
+            ->with(['blah' => 'blah'])
+            ->andReturn(
+                [
+                    'foo' => 'bar',
+                    'cake' => [
+                        'subcakeA' => 'replaceMe',
+                        'subcakeB' => 'shouldExists',
+                    ],
+                ]
+            )
+            ->getMock();
 
         $result = new Result($entity, ['blah' => 'blah'], $data);
         $this->assertEquals($expected, $result->serialize());

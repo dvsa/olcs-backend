@@ -1,38 +1,35 @@
 <?php
 
-/**
- * Licence test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\EntityRepository;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\LockMode;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr\Comparison;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact as PhoneContactEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Query\Expr\Comparison;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Mockery as m;
 
 /**
- * Licence test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @covers Dvsa\Olcs\Api\Domain\Repository\Licence
+ * @covers Dvsa\Olcs\Api\Domain\Repository\AbstractRepository
+ * @covers Dvsa\Olcs\Api\Domain\Repository\AbstractReadonlyRepository
  */
 class LicenceTest extends RepositoryTestCase
 {
+    /** @var LicenceRepo | m\MockInterface */
+    protected $sut;
+
     public function setUp()
     {
         $this->setUpSut(LicenceRepo::class, true);
@@ -40,15 +37,14 @@ class LicenceTest extends RepositoryTestCase
 
     public function testFetchSafetyDetailsUsingId()
     {
+        /** @var QueryInterface | m\MockInterface $command */
         $command = m::mock(QueryInterface::class);
         $command->shouldReceive('getId')
             ->andReturn(111);
 
-        /** @var QueryBuilder $qb */
+        /** @var QueryBuilder | m\MockInterface $qb */
         $qb = m::mock(QueryBuilder::class);
-        $qb->shouldReceive('getQuery->getResult')
-            ->with(Query::HYDRATE_OBJECT)
-            ->andReturn(null);
+        $qb->shouldReceive('getQuery->getResult')->once()->with(Query::HYDRATE_OBJECT)->andReturn(null);
 
         $this->queryBuilder->shouldReceive('modifyQuery')
             ->once()
@@ -84,6 +80,7 @@ class LicenceTest extends RepositoryTestCase
 
     public function testFetchSafetyDetailsUsingIdWithResults()
     {
+        /** @var QueryInterface | m\MockInterface $command */
         $command = m::mock(QueryInterface::class);
         $command->shouldReceive('getId')
             ->andReturn(111);
@@ -666,5 +663,40 @@ class LicenceTest extends RepositoryTestCase
             ->andReturn($repo);
 
         $this->assertEquals(['result'], $this->sut->fetchWithVariationsAndInterimInforce($licenceId));
+    }
+
+    public function testFetchWithAddressesUsingId()
+    {
+        $id = 9999;
+
+        $mockQb = $this->createMockQb('[QUERY]');
+
+        $this->mockCreateQueryBuilder($mockQb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->once()->with($mockQb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('byId')->once()->with($id)->andReturnSelf()
+            ->shouldReceive('withContactDetails')->once()->with('correspondenceCd', 'c')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('c.phoneContacts', 'c_p')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('c_p.phoneContactType', 'c_p_pct')->andReturnSelf()
+            ->shouldReceive('withRefData')->once()->with(PhoneContactEntity::class, 'c_p')->andReturnSelf()
+            ->shouldReceive('withContactDetails')->once()->with('establishmentCd', 'e')->andReturnSelf()
+            ->shouldReceive('withContactDetails')->once()->with('transportConsultantCd', 't')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('t.phoneContacts', 't_p')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('t_p.phoneContactType', 't_p_pct')->andReturnSelf()
+            ->shouldReceive('withRefData')->once()->with(PhoneContactEntity::class, 't_p')->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getSingleResult')
+            ->with()
+            ->once()
+            ->andReturn(['EXPECT']);
+
+        /** @var QueryInterface $mockQuery */
+        $mockQuery = m::mock(QueryInterface::class)
+            ->shouldReceive('getId')->with()->andReturn($id)
+            ->getMock();
+
+        static::assertEquals(['EXPECT'], $this->sut->fetchWithAddressesUsingId($mockQuery));
     }
 }
