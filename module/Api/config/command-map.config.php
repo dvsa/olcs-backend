@@ -604,6 +604,14 @@ return [
     // Domain - ContactDetails
     Command\ContactDetails\SaveAddress::class => CommandHandler\ContactDetails\SaveAddress::class,
 
+    // Domain - ContactDetails
+    TransferCommand\ContactDetail\PhoneContact\Create::class =>
+        CommandHandler\ContactDetails\PhoneContact\Create::class,
+    TransferCommand\ContactDetail\PhoneContact\Update::class =>
+        CommandHandler\ContactDetails\PhoneContact\Update::class,
+    TransferCommand\ContactDetail\PhoneContact\Delete::class =>
+        CommandHandler\ContactDetails\PhoneContact\Delete::class,
+
     // Domain - Task
     Command\Task\CreateTask::class => CommandHandler\Task\CreateTask::class,
 

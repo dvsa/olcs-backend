@@ -62,7 +62,7 @@ class Result
     {
         $data = $this->object->serialize($this->bundle);
 
-        return array_merge($data, $this->values);
+        return array_replace_recursive($data, $this->values);
     }
 
     /**

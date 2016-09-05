@@ -1,13 +1,12 @@
 <?php
 
-/**
- * Phone Contact
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact as Entity;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Transfer\Query as TransferQry;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Phone Contact
@@ -16,5 +15,42 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact as Entity;
  */
 class PhoneContact extends AbstractRepository
 {
-    protected $entity = Entity::class;
+    protected $entity = Entity\ContactDetails\PhoneContact::class;
+    protected $alias = 'cd';
+
+    /**
+     * Build Default List Query
+     *
+     * @param QueryBuilder   $qb              QueryBuilder
+     * @param QueryInterface $query           Query
+     * @param array          $compositeFields Composite Fields
+     *
+     * @return void
+     */
+    public function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query, $compositeFields = [])
+    {
+        // add calculated columns to allow ordering by them
+        parent::buildDefaultListQuery($qb, $query, ['_type']);
+
+        $queryBuilderHelper = $this->getQueryBuilder();
+        $queryBuilderHelper->with('phoneContactType', 'pct');
+        $qb->addSelect('pct.description as HIDDEN _type');
+    }
+
+    /**
+     * Set custom criteria
+     *
+     * @param QueryBuilder                                   $qb    Query Builder
+     * @param TransferQry\ContactDetail\PhoneContact\GetList $query Query
+     *
+     * @return void
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        $contactDetailsId = $query->getContactDetailsId();
+        if ($contactDetailsId !== null) {
+            $qb->andWhere($this->alias . '.contactDetails = :CONTACT_DETAILS_ID');
+            $qb->setParameter('CONTACT_DETAILS_ID', $contactDetailsId);
+        }
+    }
 }
