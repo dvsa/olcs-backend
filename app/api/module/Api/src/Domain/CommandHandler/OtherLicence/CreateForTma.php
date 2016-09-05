@@ -36,7 +36,9 @@ final class CreateForTma extends AbstractCommandHandler implements Transactioned
         $otherLicence->setHoursPerWeek($command->getHoursPerWeek());
         $otherLicence->setLicNo($command->getLicNo());
         $otherLicence->setOperatingCentres($command->getOperatingCentres());
-        $otherLicence->setTotalAuthVehicles($command->getTotalAuthVehicles());
+        if ($command->getTotalAuthVehicles()) {
+            $otherLicence->setTotalAuthVehicles($command->getTotalAuthVehicles());
+        }
 
         $this->getRepo()->save($otherLicence);
 
