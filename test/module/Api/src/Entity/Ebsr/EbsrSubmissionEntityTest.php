@@ -115,7 +115,6 @@ class EbsrSubmissionEntityTest extends EntityTester
     {
         return [
             [Entity::UPLOADED_STATUS],
-            [Entity::SUBMITTING_STATUS],
             [Entity::VALIDATING_STATUS],
             [Entity::PROCESSING_STATUS],
             [Entity::PROCESSED_STATUS],
@@ -204,7 +203,6 @@ class EbsrSubmissionEntityTest extends EntityTester
     {
         return [
             [Entity::UPLOADED_STATUS, false],
-            [Entity::SUBMITTING_STATUS, false],
             [Entity::SUBMITTED_STATUS, false],
             [Entity::VALIDATING_STATUS, false],
             [Entity::PROCESSING_STATUS, false],
@@ -239,7 +237,6 @@ class EbsrSubmissionEntityTest extends EntityTester
     {
         return [
             [Entity::UPLOADED_STATUS, false],
-            [Entity::SUBMITTING_STATUS, false],
             [Entity::SUBMITTED_STATUS, true],
             [Entity::VALIDATING_STATUS, false],
             [Entity::PROCESSING_STATUS, false],
@@ -274,7 +271,6 @@ class EbsrSubmissionEntityTest extends EntityTester
     {
         return [
             [Entity::UPLOADED_STATUS, false],
-            [Entity::SUBMITTING_STATUS, false],
             [Entity::SUBMITTED_STATUS, false],
             [Entity::VALIDATING_STATUS, false],
             [Entity::PROCESSING_STATUS, false],
@@ -309,7 +305,6 @@ class EbsrSubmissionEntityTest extends EntityTester
     {
         return [
             [Entity::UPLOADED_STATUS, false],
-            [Entity::SUBMITTING_STATUS, false],
             [Entity::SUBMITTED_STATUS, true],
             [Entity::VALIDATING_STATUS, true],
             [Entity::PROCESSING_STATUS, true],
@@ -345,7 +340,6 @@ class EbsrSubmissionEntityTest extends EntityTester
     {
         return [
             [Entity::UPLOADED_STATUS],
-            [Entity::SUBMITTING_STATUS],
             [Entity::SUBMITTED_STATUS],
             [Entity::VALIDATING_STATUS],
             [Entity::PROCESSING_STATUS],
