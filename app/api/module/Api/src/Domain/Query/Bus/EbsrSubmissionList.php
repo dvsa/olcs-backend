@@ -46,20 +46,13 @@ final class EbsrSubmissionList extends AbstractQuery implements PagedQueryInterf
      * @var string
      * @Transfer\Optional
      * @Transfer\Filter({"name":"Zend\Filter\StringTrim"})
-     * @Transfer\Validator({
-     *      "name":"Zend\Validator\InArray",
-     *      "options": {
-     *          "haystack": {
-     *              "ebsrs_expired", "ebsrs_expiring", "ebsrs_processed", "ebsrs_published", "ebsrs_expiring",
-     * "ebsrs_validated", "ebsrs_processing", "ebsrs_publishing", "ebsrs_submitted", "ebsrs_submitting",
-     * "ebsrs_validating",  "ebsrs_distributed", "ebsrs_distributing", "ebsrs_failed", "ebsrs_uploaded"
-     *          }
-     *      }
-     * })
+     * @Transfer\Validator({"name":"Dvsa\Olcs\Transfer\Validators\EbsrSubmissionStatus"})
      */
     protected $status;
 
     /**
+     * Gets subType
+     *
      * @return string
      */
     public function getSubType()
@@ -68,6 +61,8 @@ final class EbsrSubmissionList extends AbstractQuery implements PagedQueryInterf
     }
 
     /**
+     * Gets status
+     *
      * @return string
      */
     public function getStatus()
@@ -76,6 +71,8 @@ final class EbsrSubmissionList extends AbstractQuery implements PagedQueryInterf
     }
 
     /**
+     * Gets organisation
+     *
      * @return int
      */
     public function getOrganisation()
