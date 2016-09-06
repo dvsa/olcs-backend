@@ -56,7 +56,7 @@ return [
                 ],
                 'process-queue' => [
                     'options' => [
-                        'route' => 'process-queue [--type=]',
+                        'route' => 'process-queue [--type=] [--exclude=]',
                         'defaults' => [
                             'controller' => Cli\Controller\QueueController::class,
                             'action' => 'index'

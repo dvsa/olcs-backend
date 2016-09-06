@@ -32,14 +32,13 @@ class NextItemTest extends QueryHandlerTestCase
 
     public function testHandleQueryWithItem()
     {
-        $typeId = 'foo';
         $item = m::mock(QueueEntity::class)->makePartial();
 
-        $query = Qry::create(['type' => $typeId]);
+        $query = Qry::create(['includeTypes' => ['foo'], 'excludeTypes' => ['bar']]);
 
         $this->repoMap['Queue']
             ->shouldReceive('getNextItem')
-            ->with($typeId)
+            ->with(['foo'], ['bar'])
             ->once()
             ->andReturn($item);
 
@@ -48,13 +47,11 @@ class NextItemTest extends QueryHandlerTestCase
 
     public function testHandleQueryNoItem()
     {
-        $typeId = 'foo';
-
-        $query = Qry::create(['type' => $typeId]);
+        $query = Qry::create(['includeTypes' => ['foo'], 'excludeTypes' => ['bar']]);
 
         $this->repoMap['Queue']
             ->shouldReceive('getNextItem')
-            ->with($typeId)
+            ->with(['foo'], ['bar'])
             ->once()
             ->andThrow(new NotFoundException());
 

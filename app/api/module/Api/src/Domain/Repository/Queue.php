@@ -93,12 +93,13 @@ SQL;
     /**
      * Get next item
      *
-     * @param string $type type
+     * @param array $includeTypes Types to include, default include all
+     * @param array $excludeTypes Types to exclude, default exclude none
      *
      * @return Entity
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
-    public function getNextItem($type = null)
+    public function getNextItem(array $includeTypes = [], array $excludeTypes = [])
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
@@ -119,10 +120,16 @@ SQL;
             ->setParameter('processAfter', $now)
             ->setMaxResults(1);
 
-        if ($type !== null) {
+        if (!empty($includeTypes)) {
             $qb
-                ->andWhere($qb->expr()->eq($this->alias . '.type', ':typeId'))
-                ->setParameter('typeId', $type);
+                ->andWhere($qb->expr()->in($this->alias . '.type', ':includeTypes'))
+                ->setParameter('includeTypes', $includeTypes);
+        }
+
+        if (!empty($excludeTypes)) {
+            $qb
+                ->andWhere($qb->expr()->notIn($this->alias . '.type', ':excludeTypes'))
+                ->setParameter('excludeTypes', $excludeTypes);
         }
 
         $results = $qb->getQuery()->getResult();
