@@ -12,6 +12,8 @@ use Symfony\Component\Filesystem\Exception\IOException;
  */
 class Filesystem extends BaseFileSystem
 {
+    const LOCK_TRIES = 3;
+
     /**
      * @param $path
      * @param string $prefix
@@ -56,7 +58,7 @@ class Filesystem extends BaseFileSystem
             try {
                 $locked = $lock->lock(true);
             } catch (IOException $e) {
-                if ($tryToLock === 3) {
+                if ($tryToLock === self::LOCK_TRIES) {
                     throw $e;
                 }
             }
@@ -65,7 +67,7 @@ class Filesystem extends BaseFileSystem
                 break;
             }
             usleep(500);
-        } while ($tryToLock++ < 3);
+        } while ($tryToLock++ < self::LOCK_TRIES);
 
         do {
             $filename = $path . DIRECTORY_SEPARATOR . uniqid($prefix);
