@@ -30,10 +30,15 @@ class QueueController extends AbstractConsoleController
     public function indexAction()
     {
         // Which message type to process, if null then we process any message type
-        $type = $this->getRequest()->getParam('type');
+        $includeTypes = $this->getIncludeTypes();
+        $excludeTypes = $this->getExcludeTypes();
+
+        $this->getConsole()->writeLine('Types = '. implode(',', $includeTypes));
+        $this->getConsole()->writeLine('Exclude types = '. implode(',', $excludeTypes));
 
         $config = $this->getServiceLocator()->get('Config')['queue'];
 
+        /** @var \Dvsa\Olcs\Cli\Service\Queue\QueueProcessor $service */
         $service = $this->getServiceLocator()->get('Queue');
 
         // Then we need to run for a given length of time
@@ -49,7 +54,7 @@ class QueueController extends AbstractConsoleController
         while ($this->shouldRunAgain()) {
             try {
                 // process next item
-                $response = $service->processNextItem($type);
+                $response = $service->processNextItem($includeTypes, $excludeTypes);
             } catch (\Exception $e) {
                 $this->getConsole()->writeLine('Error: '.$e->getMessage());
                 // continue with the next item
@@ -63,6 +68,30 @@ class QueueController extends AbstractConsoleController
                 $this->getConsole()->writeLine($response);
             }
         }
+    }
+
+    /**
+     * Get queue tyoe to include
+     *
+     * @return array
+     */
+    private function getIncludeTypes()
+    {
+        return $this->getRequest()->getParam('type') ?
+            explode(',', $this->getRequest()->getParam('type')) :
+            [];
+    }
+
+    /**
+     * Get queue tyoe to exclude
+     *
+     * @return array
+     */
+    private function getExcludeTypes()
+    {
+        return $this->getRequest()->getParam('exclude') ?
+            explode(',', $this->getRequest()->getParam('exclude')) :
+            [];
     }
 
     /**

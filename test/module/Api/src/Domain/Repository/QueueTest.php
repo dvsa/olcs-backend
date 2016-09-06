@@ -22,6 +22,11 @@ use Mockery as m;
  */
 class QueueTest extends RepositoryTestCase
 {
+    /**
+     * @var \Dvsa\Olcs\Api\Domain\Repository\Queue
+     */
+    protected $sut;
+
     public function setUp()
     {
         $this->setUpSut(QueueRepo::class, true);
@@ -29,89 +34,109 @@ class QueueTest extends RepositoryTestCase
 
     public function testGetNextItem()
     {
-        $typeId = 'foo';
-
         $item = m::mock(QueueEntity::class)->makePartial();
-        $results = [$item];
 
-        /** @var QueryBuilder $qb */
-        $qb = m::mock(QueryBuilder::class);
+        $qb = $this->createMockQb('[QUERY]');
+        $this->mockCreateQueryBuilder($qb);
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('order')->with('createdOn', 'ASC')->once()->andReturnSelf();
 
-        // stub out complext expression builder calls
-        $qb->shouldReceive('expr->eq');
-        $qb->shouldReceive('expr->orX');
-        $qb->shouldReceive('expr->lte');
-        $qb->shouldReceive('expr->isNull');
-
-        $now = new DateTime();
-        $qb
-            ->shouldReceive('andWhere')
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->once()
-            ->with('statusId', QueueEntity::STATUS_QUEUED)
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->with(
-                'processAfter',
-                m::on(
-                    function (DateTime $value) use ($now) {
-                        return $now == $value;
-                    }
-                )
-            )
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->once()
-            ->with('typeId', $typeId)
-            ->andReturnSelf()
-            ->shouldReceive('setMaxResults')
-            ->once()
-            ->with(1)
-            ->andReturnSelf();
-
-        $this->queryBuilder->shouldReceive('modifyQuery')
-            ->once()
-            ->with($qb)
-            ->andReturnSelf()
-            ->shouldReceive('order')
-            ->with('createdOn', 'ASC')
-            ->andReturnSelf();
-
-        $qb->shouldReceive('getQuery->getResult')
-            ->andReturn($results);
-
-        /** @var EntityRepository $repo */
-        $repo = m::mock(EntityRepository::class);
-        $repo->shouldReceive('createQueryBuilder')
-            ->andReturn($qb);
-
-        $this->em->shouldReceive('getRepository')
-            ->with(QueueEntity::class)
-            ->andReturn($repo);
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn([$item])
+                ->getMock()
+        );
 
         $ref = m::mock(RefData::class)->makePartial();
         $this->sut->shouldReceive('getRefdataReference')
             ->with(QueueEntity::STATUS_PROCESSING)
             ->once()
             ->andReturn($ref);
-
-        $item
-            ->shouldReceive('incrementAttempts')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('setStatus')
-            ->once()
-            ->with($ref)
-            ->andReturnSelf();
-
         $this->sut
             ->shouldReceive('save')
             ->with($item)
             ->once();
 
-        $this->sut->getNextItem($typeId);
+        $this->assertEquals($item, $this->sut->getNextItem());
+
+        $now = new DateTime();
+        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] AND '.
+            '(q.processAfterDate <= [['. $now->format(DateTime::W3C) .']] OR q.processAfterDate IS NULL) LIMIT 1';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testGetNextItemInclude()
+    {
+        $item = m::mock(QueueEntity::class)->makePartial();
+
+        $qb = $this->createMockQb('[QUERY]');
+        $this->mockCreateQueryBuilder($qb);
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('order')->with('createdOn', 'ASC')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn([$item])
+                ->getMock()
+        );
+
+        $ref = m::mock(RefData::class)->makePartial();
+        $this->sut->shouldReceive('getRefdataReference')
+            ->with(QueueEntity::STATUS_PROCESSING)
+            ->once()
+            ->andReturn($ref);
+        $this->sut
+            ->shouldReceive('save')
+            ->with($item)
+            ->once();
+
+        $this->assertEquals($item, $this->sut->getNextItem(['foo']));
+
+        $now = new DateTime();
+        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] AND'.
+            ' (q.processAfterDate <= [['. $now->format(DateTime::W3C) .']] OR q.processAfterDate IS NULL) LIMIT 1'.
+            ' AND q.type IN [[["foo"]]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testGetNextItemExclude()
+    {
+        $item = m::mock(QueueEntity::class)->makePartial();
+
+        $qb = $this->createMockQb('[QUERY]');
+        $this->mockCreateQueryBuilder($qb);
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('order')->with('createdOn', 'ASC')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn([$item])
+                ->getMock()
+        );
+
+        $ref = m::mock(RefData::class)->makePartial();
+        $this->sut->shouldReceive('getRefdataReference')
+            ->with(QueueEntity::STATUS_PROCESSING)
+            ->once()
+            ->andReturn($ref);
+        $this->sut
+            ->shouldReceive('save')
+            ->with($item)
+            ->once();
+
+        $this->assertEquals($item, $this->sut->getNextItem(['foo'], ['bar']));
+
+        $now = new DateTime();
+        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] AND'.
+            ' (q.processAfterDate <= [['. $now->format(DateTime::W3C) .']] OR q.processAfterDate IS NULL) LIMIT 1'.
+            ' AND q.type IN [[["foo"]]] AND q.type NOT IN [[["bar"]]]';
+        $this->assertEquals($expectedQuery, $this->query);
     }
 
     public function testEnqueueContinuationNotSought()
