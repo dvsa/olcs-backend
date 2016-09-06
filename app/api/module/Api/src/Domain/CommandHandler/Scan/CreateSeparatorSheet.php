@@ -25,8 +25,14 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class CreateSeparatorSheet extends AbstractCommandHandler implements TransactionedInterface
+class CreateSeparatorSheet extends AbstractCommandHandler implements TransactionedInterface
 {
+    const ERR_NO_ENTITY_FOR_CATEGORY = 'ERR_NO_ENTITY_FOR_CATEGORY';
+
+    const ERR_ENTITY_NAME_NOT_SETUP = 'ERR_ENTITY_NAME_NOT_SETUP';
+
+    const ERR_NO_DESCRIPTION = 'ERR_NO_DESCRIPTION';
+
     protected $repoServiceName = 'Scan';
 
     protected $extraRepos = [
@@ -45,7 +51,9 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements Trans
     public function handleCommand(CommandInterface $command)
     {
         if (empty($command->getDescription()) && empty($command->getDescriptionId())) {
-            throw new ValidationException(['description or descriptionId must be specified']);
+            throw new ValidationException(
+                [self::ERR_NO_DESCRIPTION => 'Description or descriptionId must be specified']
+            );
         }
 
         $entity = $this->getEntityForCategory($command->getCategoryId(), $command->getEntityIdentifier());
@@ -162,7 +170,9 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements Trans
                 $busRegSearch = $this->getRepo('BusRegSearchView')->fetchByRegNo($entityIdentifier);
                 return $this->getRepo('Bus')->fetchById($busRegSearch->getId());
             default:
-                throw new RuntimeException('Cannot get an entity for category Id ' . $categoryId);
+                throw new ValidationException(
+                    [self::ERR_NO_ENTITY_FOR_CATEGORY => 'Cannot get an entity for category Id ' . $categoryId]
+                );
         }
     }
 
@@ -187,7 +197,9 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements Trans
         ];
 
         if (!isset($names[$categoryId])) {
-            throw new RuntimeException('Entity name is not setup for category Id ' . $categoryId);
+            throw new ValidationException(
+                [self::ERR_ENTITY_NAME_NOT_SETUP => 'Entity name is not setup for category Id ' . $categoryId]
+            );
         }
 
         return $names[$categoryId];
