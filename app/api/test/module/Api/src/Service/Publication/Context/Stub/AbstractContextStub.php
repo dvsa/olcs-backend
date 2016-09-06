@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Service\Publication\Context\AbstractContext;
 
 class AbstractContextStub extends AbstractContext
 {
+    /** @SuppressWarnings("unused") */
     public function provide(PublicationLink $publication, \ArrayObject $context)
     {
     }

@@ -7,6 +7,7 @@ use Zend\ServiceManager\Exception;
 
 class ServiceManagerStub extends AbstractPluginManager
 {
+    /** @SuppressWarnings("unused") */
     public function validatePlugin($plugin)
     {
     }

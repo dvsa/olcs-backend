@@ -61,24 +61,27 @@ final class Oppositions extends AbstractSection
         $data = [];
         /** @var Opposition $entity */
         foreach ($oppositions as $entity) {
-            $thisRow = array();
-            $thisRow['id'] = $entity->getId();
-            $thisRow['version'] = $entity->getVersion();
+            $thisRow = [
+                'id' => $entity->getId(),
+                'version' => $entity->getVersion(),
 
-            $thisRow['dateReceived'] = $this->formatDate($entity->getRaisedDate());
-            $thisRow['oppositionType'] = $entity->getOppositionType()->getDescription();
-            $thisRow['contactName'] = $this->extractPerson($entity->getOpposer()->getContactDetails());
+                'dateReceived' => $this->formatDate($entity->getRaisedDate()),
+                'oppositionType' => $entity->getOppositionType()->getDescription(),
+                'contactName' => $this->extractPerson($entity->getOpposer()->getContactDetails()),
+
+                'grounds' => [],
+
+                'isValid' => $entity->getIsValid(),
+                'isCopied' => $entity->getIsCopied(),
+                'isInTime' => $entity->getIsInTime(),
+                'isPublicInquiry' => $entity->getIsPublicInquiry(),
+                'isWithdrawn' => $entity->getIsWithdrawn(),
+            ];
 
             /** @var RefData $ground */
             foreach ($entity->getGrounds() as $ground) {
                 $thisRow['grounds'][] = $ground->getDescription();
             }
-
-            $thisRow['isValid'] = $entity->getIsValid();
-            $thisRow['isCopied'] = $entity->getIsCopied();
-            $thisRow['isInTime'] = $entity->getIsInTime();
-            $thisRow['isPublicInquiry'] = $entity->getIsPublicInquiry();
-            $thisRow['isWithdrawn'] = $entity->getIsWithdrawn();
 
             $data[] = $thisRow;
         }
