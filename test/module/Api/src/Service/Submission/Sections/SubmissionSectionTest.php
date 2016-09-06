@@ -650,9 +650,14 @@ class SubmissionSectionTest extends MockeryTestCase
             $case,
             (bool) $isCompliance,
             $this->generateRefDataEntity(Complaint::COMPLAIN_STATUS_OPEN),
-            ($complaintDate ? new \DateTime($complaintDate) : null),
+            new \DateTime($complaintDate),
             $contactDetails
         );
+
+        if (!$complaintDate) {
+            $complaint->setComplaintDate(null);
+        }
+
         $complaint->setId($id);
         $complaint->setVersion(($id+2));
         $complaint->setIsCompliance($isCompliance);
@@ -679,7 +684,7 @@ class SubmissionSectionTest extends MockeryTestCase
         return $statements;
     }
 
-    protected function generateStatement($id, CasesEntity $case, ContactDetails $contactDetails, $isCompliance = 1)
+    protected function generateStatement($id, CasesEntity $case)
     {
         $entity = new Statement($case, $this->generateRefDataEntity('statement_type1'));
         $entity->setId($id);
@@ -763,7 +768,7 @@ class SubmissionSectionTest extends MockeryTestCase
         return $entity;
     }
 
-    protected function generateConvictions(CasesEntity $case)
+    protected function generateConvictions()
     {
         $convictions = new ArrayCollection();
 
@@ -837,8 +842,9 @@ class SubmissionSectionTest extends MockeryTestCase
         return $sis;
     }
 
-    protected function generateSeriousInfringement($id, CasesEntity $case)
+    protected function generateSeriousInfringement($id)
     {
+        /** @var SeriousInfringement $entity */
         $entity = m::mock(SeriousInfringement::class)->makePartial();
         $entity->setId($id);
         $entity->setVersion(($id+2));

@@ -42,8 +42,8 @@ class Complaint extends AbstractComplaint
         Cases $case,
         $isCompliance,
         RefData $status,
-        \DateTime $complaintDate = null,
-        ContactDetails $contactDetails = null
+        \DateTime $complaintDate,
+        ContactDetails $contactDetails
     ) {
         parent::__construct();
 

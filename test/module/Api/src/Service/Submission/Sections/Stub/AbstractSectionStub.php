@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Service\Submission\Sections\AbstractSection;
 
 class AbstractSectionStub extends AbstractSection
 {
+    /** @SuppressWarnings("unused") */
     public function generateSection(CasesEntity $casesEntity)
     {
     }
