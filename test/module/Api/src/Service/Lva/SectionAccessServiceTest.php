@@ -1,27 +1,21 @@
 <?php
 
-/**
- * Access Helper Tests
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Service\Lva;
 
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Service\Lva\RestrictionService;
+use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
-use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
- * Access Helper Tests
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
  */
 class SectionAccessServiceTest extends MockeryTestCase
 {
@@ -32,16 +26,13 @@ class SectionAccessServiceTest extends MockeryTestCase
      */
     private $sut;
 
-    /**
-     * Mock restriction helper
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
+    /** @var m\MockInterface */
     private $mockRestrictionHelper;
 
     private $serviceLocator;
-
+    /** @var  m\MockInterface */
     private $sectionConfig;
+    /** @var  m\MockInterface */
     private $authService;
 
     public function setUp()
@@ -87,7 +78,7 @@ class SectionAccessServiceTest extends MockeryTestCase
         $licenceType = m::mock(RefData::class)->makePartial();
         $licenceType->setId(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
 
-        /** @var Licence $licence */
+        /** @var Licence|m\MockInterface $licence */
         $licence = m::mock(Licence::class)->makePartial();
         $licence->shouldReceive('hasApprovedUnfulfilledConditions')
             ->andReturn(false);
@@ -129,6 +120,7 @@ class SectionAccessServiceTest extends MockeryTestCase
 
     public function testGetAccessibleSectionsVariation()
     {
+        /** @var ApplicationCompletion $appCompletion */
         $appCompletion = m::mock(ApplicationCompletion::class);
 
         /** @var RefData $goodsOrPsv */
@@ -139,7 +131,7 @@ class SectionAccessServiceTest extends MockeryTestCase
         $licenceType = m::mock(RefData::class)->makePartial();
         $licenceType->setId(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
 
-        /** @var Licence $licence */
+        /** @var Licence|m\MockInterface $licence */
         $licence = m::mock(Licence::class)->makePartial();
         $licence->shouldReceive('hasApprovedUnfulfilledConditions')
             ->andReturn(true);
@@ -181,6 +173,24 @@ class SectionAccessServiceTest extends MockeryTestCase
         ];
 
         $this->assertEquals($expected, $sections);
+    }
+
+    public function testGetAccessibleSectionsForLicence()
+    {
+        /** @var Licence $mockLic */
+        $mockLic = m::mock(Licence::class);
+
+        /** @var SectionAccessService|m\MockInterface $sut */
+        $sut = m::mock(SectionAccessService::class . '[getAccessibleSectionsForLva]')
+            ->shouldAllowMockingProtectedMethods();
+
+        $sut->shouldReceive('getAccessibleSectionsForLva')
+            ->with('licence', $mockLic, $mockLic)
+            ->once()
+            ->andReturn('EXPECTED')
+            ->getMock();
+
+        static::assertEquals('EXPECTED', $sut->getAccessibleSectionsForLicence($mockLic));
     }
 
     /**

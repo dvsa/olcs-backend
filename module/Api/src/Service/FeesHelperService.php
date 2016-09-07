@@ -1,23 +1,16 @@
 <?php
 
-/**
- * Fees Helper Service
- *
- * NOTE: Does calculations as integers/pence wherever possible in order to avoid
- * floating point rounding errors.
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Service;
 
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Fees Helper Service
+ *
+ * NOTE: Does calculations as integers/pence wherever possible in order to avoid
+ * floating point rounding errors.
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
@@ -38,6 +31,13 @@ class FeesHelperService implements FactoryInterface
      */
     protected $feeTypeRepo;
 
+    /**
+     * Create Service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $repoManager = $serviceLocator->get('RepositoryServiceManager');
@@ -56,7 +56,8 @@ class FeesHelperService implements FactoryInterface
      * AC specify we should only get the *latest* application and interim
      * fees in the event there are multiple fees outstanding.
      *
-     * @param int $applicationId
+     * @param int $applicationId Application Id
+     *
      * @return array
      */
     public function getOutstandingFeesForApplication($applicationId)
@@ -87,7 +88,8 @@ class FeesHelperService implements FactoryInterface
      * this prevents creating invalid payment attempts which would result
      * in a zero allocated amount
      *
-     * @param array $fees
+     * @param array $fees Fees
+     *
      * @return string formatted amount
      */
     public function getMinPaymentForFees(array $fees)
@@ -106,7 +108,8 @@ class FeesHelperService implements FactoryInterface
     /**
      * Gets the total outstanding payment amount for an array of fees
      *
-     * @param array $fees
+     * @param array $fees List of Fees
+     *
      * @return string formatted amount
      */
     public function getTotalOutstanding(array $fees)
@@ -127,7 +130,8 @@ class FeesHelperService implements FactoryInterface
      * Zero allocations are not returned
      *
      * @param string $amount payment amount
-     * @param array $fees array of FeeEntity
+     * @param array  $fees   array of FeeEntity
+     *
      * @return array ['feeId' => 'allocatedAmount'] e.g.
      * [
      *     97 => '12.34',
@@ -143,7 +147,6 @@ class FeesHelperService implements FactoryInterface
         $remaining = FeeEntity::amountToPence($amount);
 
         foreach ($fees as $fee) {
-
             if ($fee->isCancelled()) {
                 continue;
             }
@@ -170,14 +173,21 @@ class FeesHelperService implements FactoryInterface
         return $allocations;
     }
 
+    /**
+     * Sort Fees
+     *
+     * @param array $fees List of fees
+     *
+     * @return array
+     */
     public function sortFeesByInvoiceDate(array $fees)
     {
         $sorted = $fees;
         // sort fees in invoicedDate order
         usort(
             $sorted,
-            function ($a, $b) {
-                if ($a->getInvoicedDate() === $b->getInvoicedDate()) {
+            function (FeeEntity $a, FeeEntity $b) {
+                if ($a->getInvoicedDate()->getTimestamp() === $b->getInvoicedDate()->getTimestamp()) {
                     // if invoicedDate the same, use id as a tie-break
                     return $a->getId() < $b->getId() ? -1 : 1;
                 }
@@ -192,8 +202,9 @@ class FeesHelperService implements FactoryInterface
      * Calculate amount of any overpayment. Note, will return a negative value
      * for an underpayment, although not really expected to be used as such
      *
-     * @param string $amount payment amount
-     * @param array $fees array of FeeEntity
+     * @param string $receivedAmount payment amount
+     * @param array  $fees           array of FeeEntity
+     *
      * @return string formatted amount
      */
     public function getOverpaymentAmount($receivedAmount, $fees)
@@ -207,7 +218,10 @@ class FeesHelperService implements FactoryInterface
     }
 
     /**
-     * @param FeeEntity $existingFee
+     * Get Ids From Fee
+     *
+     * @param FeeEntity $existingFee Fee
+     *
      * @return array
      */
     public function getIdsFromFee($existingFee)

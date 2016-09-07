@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
-use Dvsa\Olcs\Api\Entity\Cases\Statement;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
@@ -28,15 +27,12 @@ final class Oppositions extends AbstractSection
 
         $iterator->uasort(
             function ($a, $b) {
-            /** @var Opposition $a */
-            /** @var Opposition $b */
-                if (null !== $a->getOppositionType() &&
-                    null !== $b->getOppositionType()) {
-                    return strnatcmp(
-                        $b->getOppositionType()->getDescription(),
-                        $a->getOppositionType()->getDescription()
-                    );
-                }
+                /** @var Opposition $a */
+                /** @var Opposition $b */
+                return strnatcmp(
+                    $b->getOppositionType()->getDescription(),
+                    $a->getOppositionType()->getDescription()
+                );
             }
         );
 
@@ -44,13 +40,19 @@ final class Oppositions extends AbstractSection
             function ($a, $b) {
                 /** @var Opposition $a */
                 /** @var Opposition $b */
-                if (
-                    ($a->getRaisedDate() instanceof \DateTime) &&
-                    ($b->getRaisedDate() instanceof \DateTime)
-                ) {
-                    return strtotime($b->getRaisedDate()->format('Ymd')) -
-                    strtotime($a->getRaisedDate()->format('Ymd'));
-                }
+                $aDate = (
+                    $a->getRaisedDate() instanceof \DateTime
+                    ? strtotime($a->getRaisedDate()->format('Ymd'))
+                    : 0
+                );
+
+                $bDate = (
+                    $b->getRaisedDate() instanceof \DateTime
+                    ? strtotime($b->getRaisedDate()->format('Ymd'))
+                    : 0
+                );
+
+                return $bDate - $aDate;
             }
         );
 
@@ -59,24 +61,27 @@ final class Oppositions extends AbstractSection
         $data = [];
         /** @var Opposition $entity */
         foreach ($oppositions as $entity) {
-            $thisRow = array();
-            $thisRow['id'] = $entity->getId();
-            $thisRow['version'] = $entity->getVersion();
+            $thisRow = [
+                'id' => $entity->getId(),
+                'version' => $entity->getVersion(),
 
-            $thisRow['dateReceived'] = $this->formatDate($entity->getRaisedDate());
-            $thisRow['oppositionType'] = $entity->getOppositionType()->getDescription();
-            $thisRow['contactName'] = $this->extractPerson($entity->getOpposer()->getContactDetails());
+                'dateReceived' => $this->formatDate($entity->getRaisedDate()),
+                'oppositionType' => $entity->getOppositionType()->getDescription(),
+                'contactName' => $this->extractPerson($entity->getOpposer()->getContactDetails()),
+
+                'grounds' => [],
+
+                'isValid' => $entity->getIsValid(),
+                'isCopied' => $entity->getIsCopied(),
+                'isInTime' => $entity->getIsInTime(),
+                'isPublicInquiry' => $entity->getIsPublicInquiry(),
+                'isWithdrawn' => $entity->getIsWithdrawn(),
+            ];
 
             /** @var RefData $ground */
             foreach ($entity->getGrounds() as $ground) {
                 $thisRow['grounds'][] = $ground->getDescription();
             }
-
-            $thisRow['isValid'] = $entity->getIsValid();
-            $thisRow['isCopied'] = $entity->getIsCopied();
-            $thisRow['isInTime'] = $entity->getIsInTime();
-            $thisRow['isPublicInquiry'] = $entity->getIsPublicInquiry();
-            $thisRow['isWithdrawn'] = $entity->getIsWithdrawn();
 
             $data[] = $thisRow;
         }

@@ -3,9 +3,8 @@
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 
 /**
@@ -42,7 +41,7 @@ final class OperatingCentres extends AbstractSection
         );
 
         $data = [];
-        for ($i=0; $i<count($allOperatingCentres); $i++) {
+        for ($i = 0, $n = count($allOperatingCentres); $i < $n; $i++) {
             /** @var OperatingCentre $operatingCentre */
             $operatingCentre = $allOperatingCentres->current()->getOperatingCentre();
 
@@ -89,13 +88,15 @@ final class OperatingCentres extends AbstractSection
 
             $iterator->uasort(
                 function ($a, $b) {
-                    if (null !== $a->getOperatingCentre()->getAddress()->getPostcode() &&
-                        null !== $b->getOperatingCentre()->getAddress()->getPostcode()) {
-                        return strcmp(
-                            $a->getOperatingCentre()->getAddress()->getPostcode(),
-                            $b->getOperatingCentre()->getAddress()->getPostcode()
-                        );
-                    }
+                    /** @var Entity\Application\ApplicationOperatingCentre | Entity\Licence\LicenceOperatingCentre $a */
+                    /** @var Entity\Application\ApplicationOperatingCentre | Entity\Licence\LicenceOperatingCentre $b */
+                    $aAddress = $a->getOperatingCentre()->getAddress();
+                    $aPostCode = ($aAddress !== null ? $aAddress->getPostcode() : '');
+
+                    $bAddress = $b->getOperatingCentre()->getAddress();
+                    $bPostCode = ($bAddress !== null ? $bAddress->getPostcode() : '');
+
+                    return strcmp($aPostCode, $bPostCode);
                 }
             );
             $sorted = iterator_to_array($iterator);

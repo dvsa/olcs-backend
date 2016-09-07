@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class ComplianceComplaintsTest extends SubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\ComplianceComplaints';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\ComplianceComplaints::class;
 
     /**
      * Filter provider
@@ -25,22 +25,30 @@ class ComplianceComplaintsTest extends SubmissionSectionTest
             'data' => [
                 'tables' => [
                     'compliance-complaints' => [
-                        0 => [
+                        [
+                            'id' => 563,
+                            'version' => 565,
+                            'complainantForename' => 'fn22',
+                            'complainantFamilyName' => 'sn22',
+                            'description' => null,
+                            'complaintDate' => '',
+                        ],
+                        [
                             'id' => 543,
                             'version' => 545,
                             'complainantForename' => 'fn22',
                             'complainantFamilyName' => 'sn22',
                             'description' => null,
-                            'complaintDate' => '03/06/2006'
+                            'complaintDate' => '03/05/2006'
                         ],
-                        1 => [
+                        [
                             'id' => 253,
                             'version' => 255,
                             'complainantForename' => 'fn22',
                             'complainantFamilyName' => 'sn22',
                             'description' => null,
-                            'complaintDate' => '03/06/2006'
-                        ]
+                            'complaintDate' => '04/05/2006'
+                        ],
                     ]
                 ]
             ]

@@ -466,7 +466,7 @@ class SubmissionSectionTest extends MockeryTestCase
     {
         $operatingCentres = new ArrayCollection();
 
-        for ($i=1; $i < 2; $i++) {
+        for ($i=1; $i <= 2; $i++) {
             $operatingCentre = $this->generateOperatingCentre($i);
             $loc = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $operatingCentre);
             $loc->setNoOfVehiclesRequired(6);
@@ -585,7 +585,8 @@ class SubmissionSectionTest extends MockeryTestCase
                 253,
                 $case,
                 $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
-                1
+                1,
+                '04-05-2006'
             )
         );
         $complaints->add(
@@ -593,7 +594,17 @@ class SubmissionSectionTest extends MockeryTestCase
                 543,
                 $case,
                 $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
-                1
+                1,
+                '03-05-2006'
+            )
+        );
+        $complaints->add(
+            $this->generateComplaint(
+                563,
+                $case,
+                $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
+                1,
+                null
             )
         );
 
@@ -603,7 +614,8 @@ class SubmissionSectionTest extends MockeryTestCase
                 253,
                 $case,
                 $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
-                0
+                0,
+                '04-05-2006'
             )
         );
         $complaints->add(
@@ -611,21 +623,41 @@ class SubmissionSectionTest extends MockeryTestCase
                 543,
                 $case,
                 $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
-                0
+                0,
+                '03-05-2006'
+            )
+        );
+        $complaints->add(
+            $this->generateComplaint(
+                563,
+                $case,
+                $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
+                0,
+                null
             )
         );
         return $complaints;
     }
 
-    protected function generateComplaint($id, CasesEntity $case, ContactDetails $contactDetails, $isCompliance = 1)
-    {
+    protected function generateComplaint(
+        $id,
+        CasesEntity $case,
+        ContactDetails $contactDetails,
+        $isCompliance = 1,
+        $complaintDate = null
+    ) {
         $complaint = new Complaint(
             $case,
             (bool) $isCompliance,
             $this->generateRefDataEntity(Complaint::COMPLAIN_STATUS_OPEN),
-            new \DateTime('2006-06-03'),
+            new \DateTime($complaintDate),
             $contactDetails
         );
+
+        if (!$complaintDate) {
+            $complaint->setComplaintDate(null);
+        }
+
         $complaint->setId($id);
         $complaint->setVersion(($id+2));
         $complaint->setIsCompliance($isCompliance);
@@ -652,7 +684,7 @@ class SubmissionSectionTest extends MockeryTestCase
         return $statements;
     }
 
-    protected function generateStatement($id, CasesEntity $case, ContactDetails $contactDetails, $isCompliance = 1)
+    protected function generateStatement($id, CasesEntity $case)
     {
         $entity = new Statement($case, $this->generateRefDataEntity('statement_type1'));
         $entity->setId($id);
@@ -677,28 +709,25 @@ class SubmissionSectionTest extends MockeryTestCase
         $oppositions = new ArrayCollection();
 
         $oppositions->add(
-            $this->generateOpposition(
-                253,
-                $case,
-                $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
-                1
-            )
+            $this->generateOpposition(243, $case, null)
         );
 
         $oppositions->add(
-            $this->generateOpposition(
-                263,
-                $case,
-                $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
-                1
-            )
+            $this->generateOpposition(263, $case, '11-12-2013')
+        );
+
+        $oppositions->add(
+            $this->generateOpposition(253, $case, '10-12-2013')
         );
 
         return $oppositions;
     }
 
-    protected function generateOpposition($id, CasesEntity $case, ContactDetails $contactDetails, $isCompliance = 1)
-    {
+    protected function generateOpposition(
+        $id,
+        CasesEntity $case,
+        $raisedDate = null
+    ) {
         $entity = new Opposition(
             $case,
             $this->generateOpposer(),
@@ -712,7 +741,7 @@ class SubmissionSectionTest extends MockeryTestCase
         );
         $entity->setId($id);
         $entity->setVersion(($id+2));
-        $entity->setRaisedDate(new \DateTime('2008-08-11'));
+        $entity->setRaisedDate($raisedDate ? new \DateTime($raisedDate) : null);
 
         $grounds = new ArrayCollection();
         $grounds->add($this->generateRefDataEntity('g1'));
@@ -739,7 +768,7 @@ class SubmissionSectionTest extends MockeryTestCase
         return $entity;
     }
 
-    protected function generateConvictions(CasesEntity $case)
+    protected function generateConvictions()
     {
         $convictions = new ArrayCollection();
 
@@ -790,12 +819,14 @@ class SubmissionSectionTest extends MockeryTestCase
 
     protected function generateErruRequest()
     {
+        /** @var ErruRequest $entity */
         $entity = m::mock(ErruRequest::class)->makePartial();
-        $entity->setNotificationNumber('notificationNo');
-        $entity->setMemberStateCode($this->generateCountry('GB'));
-        $entity->setVrm('erruVrm1');
-        $entity->setTransportUndertakingName('tun');
-        $entity->setOriginatingAuthority('erru_oa');
+        $entity
+            ->setNotificationNumber('notificationNo')
+            ->setMemberStateCode($this->generateCountry('GB'))
+            ->setVrm('erruVrm1')
+            ->setTransportUndertakingName('tun')
+            ->setOriginatingAuthority('erru_oa');
 
         return $entity;
     }
@@ -811,8 +842,9 @@ class SubmissionSectionTest extends MockeryTestCase
         return $sis;
     }
 
-    protected function generateSeriousInfringement($id, CasesEntity $case)
+    protected function generateSeriousInfringement($id)
     {
+        /** @var SeriousInfringement $entity */
         $entity = m::mock(SeriousInfringement::class)->makePartial();
         $entity->setId($id);
         $entity->setVersion(($id+2));

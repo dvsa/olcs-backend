@@ -29,11 +29,14 @@ class Complaint extends AbstractComplaint
 
     /**
      * Construct Complaint entity
-     * @param Cases $case
-     * @param bool $isCompliance
-     * @param RefData $status
-     * @param \DateTime $complaintDate
-     * @param ContactDetails $contactDetails
+     *
+     * @param Cases          $case           Case
+     * @param bool           $isCompliance   Is Compliance
+     * @param RefData        $status         Status
+     * @param \DateTime      $complaintDate  Compliance Date
+     * @param ContactDetails $contactDetails Contact Details Entity
+     *
+     * @return void
      */
     public function __construct(
         Cases $case,
@@ -51,16 +54,31 @@ class Complaint extends AbstractComplaint
         $this->setComplainantContactDetails($contactDetails);
     }
 
+    /**
+     * Is Open
+     *
+     * @return bool
+     */
     public function isOpen()
     {
         return ($this->getStatus() && $this->getStatus()->getId() === self::COMPLAIN_STATUS_OPEN);
     }
 
+    /**
+     * Is Environmental Complaint
+     *
+     * @return bool
+     */
     public function isEnvironmentalComplaint()
     {
         return ($this->isCompliance === false);
     }
 
+    /**
+     * Populate Closed Date
+     *
+     * @return $this
+     */
     public function populateClosedDate()
     {
         if ($this->isEnvironmentalComplaint()) {

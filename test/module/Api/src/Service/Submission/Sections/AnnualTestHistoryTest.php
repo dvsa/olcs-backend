@@ -3,12 +3,11 @@
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
 /**
- * Class AnnualTestHistoryTest
- * @author Shaun Lizzio <shaun@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Service\Submission\Sections\AnnualTestHistory
  */
 class AnnualTestHistoryTest extends SubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\AnnualTestHistory';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\AnnualTestHistory::class;
 
     /**
      * Filter provider

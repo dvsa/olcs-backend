@@ -1,8 +1,5 @@
 <?php
 
-/**
- * User Test
- */
 namespace Dvsa\OlcsTest\Api\Service;
 
 use Dvsa\Olcs\Api\Service\OpenAm\Client;
@@ -12,10 +9,32 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use RandomLib\Generator;
 
 /**
- * User Test
+ * @covers Dvsa\Olcs\Api\Service\OpenAm\User
  */
 class UserTest extends MockeryTestCase
 {
+    /** @var  Generator | m\MockInterface */
+    private $mockRandom;
+    /** @var  m\MockInterface */
+    private $mockClient;
+
+    /** @var  User */
+    private $sut;
+
+    public function setUp()
+    {
+        $this->mockRandom = m::mock(Generator::class)
+            ->shouldReceive('generateString')->with(1, Generator::CHAR_UPPER)->andReturn('A')
+            ->shouldReceive('generateString')->with(1, Generator::CHAR_LOWER)->andReturn('b')
+            ->shouldReceive('generateString')->with(1, Generator::CHAR_DIGITS)->andReturn('1')
+            ->shouldReceive('generateString')->with(9, Generator::EASY_TO_READ)->andReturn('password1')
+            ->getMock();
+
+        $this->mockClient = m::mock(Client::class);
+
+        $this->sut = new User($this->mockClient, $this->mockRandom);
+    }
+
     public function testRegisterUser()
     {
         $loginId = 'login_id';
@@ -23,30 +42,22 @@ class UserTest extends MockeryTestCase
         $emailAddress = 'email@test.com';
         $password = 'Ab1password1';
 
-        $mockRandom = m::mock(Generator::class);
-        $mockRandom
-            ->shouldReceive('generateString')->with(1, Generator::CHAR_UPPER)->andReturn('A')
-            ->shouldReceive('generateString')->with(1, Generator::CHAR_LOWER)->andReturn('b')
-            ->shouldReceive('generateString')->with(1, Generator::CHAR_DIGITS)->andReturn('1')
-            ->shouldReceive('generateString')->with(9, Generator::EASY_TO_READ)->andReturn('password1');
-
-        $mockClient = m::mock(Client::class);
-
-        $mockClient->shouldReceive('registerUser')->once()->with(
-            $loginId,
-            $pid,
-            $emailAddress,
-            $loginId,
-            $loginId,
-            Client::REALM_INTERNAL,
-            $password
-        );
-
-        $sut = new User($mockClient, $mockRandom);
+        $this->mockClient
+            ->shouldReceive('registerUser')
+            ->once()
+            ->with(
+                $loginId,
+                $pid,
+                $emailAddress,
+                $loginId,
+                $loginId,
+                Client::REALM_INTERNAL,
+                $password
+            );
 
         $callbackParams = null;
 
-        $sut->registerUser(
+        $this->sut->registerUser(
             $loginId,
             $emailAddress,
             Client::REALM_INTERNAL,
@@ -73,17 +84,11 @@ class UserTest extends MockeryTestCase
     {
         $pid = 'some-pid';
 
-        $mockRandom = m::mock(\RandomLib\Generator::class);
-
-        $mockClient = m::mock(Client::class);
-
         if ($expected !== null) {
-            $mockClient->shouldReceive('updateUser')->once()->with($pid, $expected);
+            $this->mockClient->shouldReceive('updateUser')->once()->with($pid, $expected);
         }
 
-        $sut = new User($mockClient, $mockRandom);
-
-        $sut->updateUser($pid, $loginId, $emailAddress, $enabled);
+        $this->sut->updateUser($pid, $loginId, $emailAddress, $enabled);
     }
 
     public function provideUpdateUser()
@@ -167,16 +172,11 @@ class UserTest extends MockeryTestCase
             ]
         ];
 
-        $mockRandom = m::mock(\RandomLib\Generator::class);
-
-        $mockClient = m::mock(Client::class);
-        $mockClient->shouldReceive('updateUser')
+        $this->mockClient->shouldReceive('updateUser')
             ->once()
             ->with($pid, $expected);
 
-        $sut = new User($mockClient, $mockRandom);
-
-        $sut->disableUser($pid);
+        $this->sut->disableUser($pid);
     }
 
     public function testResetPassword()
@@ -192,23 +192,13 @@ class UserTest extends MockeryTestCase
             ]
         ];
 
-        $mockRandom = m::mock(Generator::class);
-        $mockRandom
-            ->shouldReceive('generateString')->with(1, Generator::CHAR_UPPER)->andReturn('A')
-            ->shouldReceive('generateString')->with(1, Generator::CHAR_LOWER)->andReturn('b')
-            ->shouldReceive('generateString')->with(1, Generator::CHAR_DIGITS)->andReturn('1')
-            ->shouldReceive('generateString')->with(9, Generator::EASY_TO_READ)->andReturn('password1');
-
-        $mockClient = m::mock(Client::class);
-        $mockClient->shouldReceive('updateUser')
+        $this->mockClient->shouldReceive('updateUser')
             ->once()
             ->with($pid, $expected);
 
-        $sut = new User($mockClient, $mockRandom);
-
         $callbackParams = null;
 
-        $sut->resetPassword(
+        $this->sut->resetPassword(
             $pid,
             function ($params) use (&$callbackParams) {
                 $callbackParams = $params;
@@ -223,6 +213,17 @@ class UserTest extends MockeryTestCase
         );
     }
 
+    public function testResetPasswordFail()
+    {
+        $this->mockClient->shouldReceive('updateUser');
+
+        //  expect
+        $this->setExpectedException(\Exception::class, 'Invalid callback: unit_InvalidCallback');
+
+        //  call
+        $this->sut->resetPassword(9999, 'unit_InvalidCallback');
+    }
+
     /**
      * @dataProvider provideIsActiveUser
      * @param $userData
@@ -232,14 +233,9 @@ class UserTest extends MockeryTestCase
     {
         $pid = 'some-pid';
 
-        $mockRandom = m::mock(\RandomLib\Generator::class);
+        $this->mockClient->shouldReceive('fetchUser')->once()->with($pid)->andReturn($userData);
 
-        $mockClient = m::mock(Client::class);
-        $mockClient->shouldReceive('fetchUser')->once()->with($pid)->andReturn($userData);
-
-        $sut = new User($mockClient, $mockRandom);
-
-        $this->assertSame($expected, $sut->isActiveUser($pid));
+        $this->assertSame($expected, $this->sut->isActiveUser($pid));
     }
 
     public function provideIsActiveUser()

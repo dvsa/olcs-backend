@@ -1,27 +1,19 @@
 <?php
 
-/**
- * Fees Helper Service Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Api\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Service\FeesHelperService;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Service\FeesHelperService;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
- * Fees Helper Service Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
+ * @covers Dvsa\Olcs\Api\Service\FeesHelperService
  */
 class FeesHelperServiceTest extends MockeryTestCase
 {
@@ -176,21 +168,22 @@ class FeesHelperServiceTest extends MockeryTestCase
      * @param string $amount
      * @param array $fees array of FeeEntity
      * @param array $expected allocated amounts e.g. ['97' => '12.45', '98' => '0.05']
-     * @dataProvider allocateProvider()
+     *
+     * @dataProvider dpTestAllocatePayments()
      */
     public function testAllocatePayments($amount, $fees, $expected)
     {
         $this->assertSame($expected, $this->sut->allocatePayments($amount, $fees));
     }
 
-    public function allocateProvider()
+    public function dpTestAllocatePayments()
     {
         return [
             [
                 '0.00',
                 [
                     $this->getStubFee('10', '99.99'),
-                    $this->getStubFee('11', '100.01'),
+                    $this->getStubFee('11', '100.01', '2013-12-11', true),
                 ],
                 []
             ],
@@ -210,7 +203,7 @@ class FeesHelperServiceTest extends MockeryTestCase
                 [
                     $this->getStubFee('10', '99.99', '2015-09-04'),
                     $this->getStubFee('11', '50.01', '2015-09-02'),
-                    $this->getStubFee('12', '100.00', '2015-09-03'),
+                    $this->getStubFee('12', '100.00', '2015-09-02'),
                     $this->getStubFee('13', '100.00', '2015-09-05'),
                 ],
                 [
@@ -336,7 +329,7 @@ class FeesHelperServiceTest extends MockeryTestCase
      * @param string $amount
      * @return FeeEntity
      */
-    private function getStubFee($id, $amount, $invoicedDate = '2015-09-10')
+    private function getStubFee($id, $amount, $invoicedDate = '2015-09-10', $isCancelled = false)
     {
         $fee = m::mock(FeeEntity::class)->makePartial()
             ->setId($id)
@@ -347,7 +340,7 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->shouldReceive('getInvoicedDate')
             ->andReturn(new \DateTime($invoicedDate))
             ->shouldReceive('isCancelled')
-            ->andReturn(false);
+            ->andReturn($isCancelled);
 
         return $fee;
     }
