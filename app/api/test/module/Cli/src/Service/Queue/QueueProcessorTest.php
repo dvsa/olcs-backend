@@ -37,7 +37,8 @@ class QueueProcessorTest extends MockeryTestCase
 
     public function testProcessNextItemWithoutItem()
     {
-        $typeId = 'foo_bar';
+        $includeTypes = ['foo'];
+        $excludeTypes = ['bar'];
 
         // Mocks
         $mockQueryHandlerManager = m::mock();
@@ -47,19 +48,20 @@ class QueueProcessorTest extends MockeryTestCase
         $this->expectQuery(
             $mockQueryHandlerManager,
             NextQueueItemQry::class,
-            ['type' => $typeId],
+            ['includeTypes' => $includeTypes, 'excludeTypes' => $excludeTypes],
             null
         );
 
         // Assertions
-        $this->assertNull($this->sut->processNextItem($typeId));
+        $this->assertNull($this->sut->processNextItem($includeTypes, $excludeTypes));
     }
 
     public function testProcessNextItem()
     {
-        $typeId = 'foo_bar';
+        $includeTypes = ['foo'];
+        $excludeTypes = ['bar'];
 
-        $type = new RefData($typeId);
+        $type = new RefData($includeTypes[0]);
         $item = new QueueEntity($type);
 
         // Mocks
@@ -68,13 +70,13 @@ class QueueProcessorTest extends MockeryTestCase
         $this->sm->setService('QueryHandlerManager', $mockQueryHandlerManager);
         $this->sm->setService('MessageConsumerManager', $mockMsm);
         $mockConsumer = m::mock(MessageConsumerInterface::class);
-        $mockMsm->setService('foo_bar', $mockConsumer);
+        $mockMsm->setService('foo', $mockConsumer);
 
         // Expectations
         $this->expectQuery(
             $mockQueryHandlerManager,
             NextQueueItemQry::class,
-            ['type' => $typeId],
+            ['includeTypes' => $includeTypes, 'excludeTypes' => $excludeTypes],
             $item
         );
 
@@ -84,14 +86,15 @@ class QueueProcessorTest extends MockeryTestCase
             ->andReturn('foo');
 
         // Assertions
-        $this->assertEquals('foo', $this->sut->processNextItem($typeId));
+        $this->assertEquals('foo', $this->sut->processNextItem($includeTypes, $excludeTypes));
     }
 
     public function testProcessMessageHandlesException()
     {
-        $typeId = 'foo_bar';
+        $includeTypes = ['foo'];
+        $excludeTypes = ['bar'];
 
-        $type = new RefData($typeId);
+        $type = new RefData($includeTypes[0]);
         $item = new QueueEntity($type);
 
         // Mocks
@@ -100,13 +103,13 @@ class QueueProcessorTest extends MockeryTestCase
         $this->sm->setService('QueryHandlerManager', $mockQueryHandlerManager);
         $this->sm->setService('MessageConsumerManager', $mockMsm);
         $mockConsumer = m::mock(MessageConsumerInterface::class);
-        $mockMsm->setService('foo_bar', $mockConsumer);
+        $mockMsm->setService('foo', $mockConsumer);
 
         // Expectations
         $this->expectQuery(
             $mockQueryHandlerManager,
             NextQueueItemQry::class,
-            ['type' => $typeId],
+            ['includeTypes' => $includeTypes, 'excludeTypes' => $excludeTypes],
             $item
         );
 
@@ -121,7 +124,7 @@ class QueueProcessorTest extends MockeryTestCase
             ->andReturn('error message');
 
         // Assertions
-        $this->assertEquals('error message', $this->sut->processNextItem($typeId));
+        $this->assertEquals('error message', $this->sut->processNextItem($includeTypes, $excludeTypes));
     }
 
     /**

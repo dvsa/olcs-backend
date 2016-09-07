@@ -27,12 +27,14 @@ class QueueProcessor implements ServiceLocatorAwareInterface
     /**
      * Process next item
      *
-     * @param string $type
+     * @param array $includeTypes Types to include
+     * @param array $excludeTypes Types to exclude
+     *
      * @return string
      */
-    public function processNextItem($type = null)
+    public function processNextItem(array $includeTypes = [], $excludeTypes = [])
     {
-        $item = $this->getNextItem($type);
+        $item = $this->getNextItem($includeTypes, $excludeTypes);
 
         if ($item === null) {
             return null;
@@ -44,7 +46,8 @@ class QueueProcessor implements ServiceLocatorAwareInterface
     /**
      * Process message
      *
-     * @param QueueEntity $item
+     * @param QueueEntity $item Queue item to process
+     *
      * @return string
      */
     protected function processMessage($item)
@@ -62,19 +65,22 @@ class QueueProcessor implements ServiceLocatorAwareInterface
     /**
      * Grab the next message in the queue
      *
-     * @param string $type
+     * @param array $includeTypes Types to include
+     * @param array $excludeTypes Types to exclude
+     *
      * @return QueueEntity|null
      */
-    protected function getNextItem($type = null)
+    protected function getNextItem(array $includeTypes, array $excludeTypes)
     {
-        $query = NextQueueItemQry::create(['type' => $type]);
+        $query = NextQueueItemQry::create(['includeTypes' => $includeTypes, 'excludeTypes' => $excludeTypes]);
         return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($query);
     }
 
     /**
      * Get message consumer
      *
-     * @param QueueEntity $item
+     * @param QueueEntity $item Queue item
+     *
      * @return MessageConsumerInterface
      */
     protected function getMessageConsumer($item)

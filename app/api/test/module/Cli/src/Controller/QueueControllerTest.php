@@ -59,14 +59,15 @@ class QueueControllerTest extends MockeryTestCase
         $this->sm->setService('Queue', $mockQueue);
 
         // Expectations
-        $this->request->shouldReceive('getParam')
-            ->with('type')
-            ->andReturn('foo');
+        $this->request->shouldReceive('getParam')->with('type')->andReturn('foo');
+        $this->request->shouldReceive('getParam')->with('exclude')->andReturn('');
 
         $mockQueue->shouldReceive('processNextItem')
-            ->with('foo')
+            ->with(['foo'], [])
             ->andReturn(null);
 
+        $this->console->shouldReceive('writeLine')->with('Types = foo')->once();
+        $this->console->shouldReceive('writeLine')->with('Exclude types = ')->once();
         $this->console->shouldReceive('writeLine')
             ->with('No items queued, waiting for items');
 
@@ -89,14 +90,47 @@ class QueueControllerTest extends MockeryTestCase
         $this->sm->setService('Queue', $mockQueue);
 
         // Expectations
-        $this->request->shouldReceive('getParam')
-            ->with('type')
-            ->andReturn('foo');
+        $this->request->shouldReceive('getParam')->with('type')->andReturn('foo');
+        $this->request->shouldReceive('getParam')->with('exclude')->andReturn('');
 
         $mockQueue->shouldReceive('processNextItem')
-            ->with('foo')
+            ->with(['foo'], [])
             ->andReturn('Some output');
 
+        $this->console->shouldReceive('writeLine')->with('Types = foo')->once();
+        $this->console->shouldReceive('writeLine')->with('Exclude types = ')->once();
+        $this->console->shouldReceive('writeLine')
+            ->atLeast(100)
+            ->with('Some output');
+
+        // Assertions
+        $this->routeMatch->setParam('action', 'index');
+        $this->sut->dispatch($this->request);
+    }
+
+    public function testIndexActionIncludeExclude()
+    {
+        // Mocks
+        $mockConfig = [
+            'queue' => [
+                'runFor' => 0.1,
+                'sleepFor' => 50,
+            ]
+        ];
+        $mockQueue = m::mock();
+        $this->sm->setService('Config', $mockConfig);
+        $this->sm->setService('Queue', $mockQueue);
+
+        // Expectations
+        $this->request->shouldReceive('getParam')->with('type')->andReturn('foo,bar');
+        $this->request->shouldReceive('getParam')->with('exclude')->andReturn('aaa,bbb');
+
+        $mockQueue->shouldReceive('processNextItem')
+            ->with(['foo', 'bar'], ['aaa', 'bbb'])
+            ->andReturn('Some output');
+
+        $this->console->shouldReceive('writeLine')->with('Types = foo,bar')->once();
+        $this->console->shouldReceive('writeLine')->with('Exclude types = aaa,bbb')->once();
         $this->console->shouldReceive('writeLine')
             ->atLeast(100)
             ->with('Some output');
@@ -119,15 +153,16 @@ class QueueControllerTest extends MockeryTestCase
         $this->sm->setService('Queue', $mockQueue);
 
         // Expectations
-        $this->request->shouldReceive('getParam')
-            ->with('type')
-            ->andReturn('foo');
+        $this->request->shouldReceive('getParam')->with('type')->andReturn('foo');
+        $this->request->shouldReceive('getParam')->with('exclude')->andReturn('');
 
         $errorMessage = 'error message';
         $mockQueue->shouldReceive('processNextItem')
-            ->with('foo')
+            ->with(['foo'], [])
             ->andThrow(new \Exception($errorMessage));
 
+        $this->console->shouldReceive('writeLine')->with('Types = foo')->once();
+        $this->console->shouldReceive('writeLine')->with('Exclude types = ')->once();
         $this->console->shouldReceive('writeLine')
             ->atLeast(1)
             ->with('Error: '.$errorMessage);

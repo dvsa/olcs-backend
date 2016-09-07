@@ -24,7 +24,10 @@ class NextItem extends AbstractQueryHandler
     protected $repoServiceName = 'Queue';
 
     /**
-     * @param QueryInterface $query
+     * Handle query
+     *
+     * @param QueryInterface $query Query
+     *
      * @return QueueEntity|null
      */
     public function handleQuery(QueryInterface $query)
@@ -37,7 +40,7 @@ class NextItem extends AbstractQueryHandler
         $repo = $this->getRepo();
 
         try {
-            $entity = $repo->getNextItem($query->getType());
+            $entity = $repo->getNextItem($query->getIncludeTypes(), $query->getExcludeTypes());
         } catch (NotFoundException $ex) {
             return null;
         }

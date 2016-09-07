@@ -12,8 +12,9 @@ class NextItemTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {
-        $query = NextItem::create(['type' => 'foo']);
+        $query = NextItem::create(['includeTypes' => 'foo', 'excludeTypes' => 'bar']);
 
-        $this->assertEquals('foo', $query->getType());
+        $this->assertEquals('foo', $query->getIncludeTypes());
+        $this->assertEquals('bar', $query->getExcludeTypes());
     }
 }
