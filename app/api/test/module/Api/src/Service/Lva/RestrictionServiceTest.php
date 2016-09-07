@@ -1,22 +1,16 @@
 <?php
 
-/**
- * Restriction Service Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Service\Lva;
 
 use Dvsa\Olcs\Api\Service\Lva\RestrictionService;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Restriction Service Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers Dvsa\Olcs\Api\Service\Lva\RestrictionService
  */
 class RestrictionServiceTest extends PHPUnit_Framework_TestCase
 {
+    /** @var  RestrictionService */
     protected $helper;
 
     /**
@@ -30,13 +24,14 @@ class RestrictionServiceTest extends PHPUnit_Framework_TestCase
     /**
      * Test isRestrictionSatisfied
      *
-     * @dataProvider isRestrictionSatisfiedProvider
+     * @dataProvider dpTestIsRestrictionSatisfied
+     *
      * @group helper_service
      * @group restriction_helper_service
      */
-    public function testIsRestrictionSatisfied($restrictions, $accessKeys, $expected)
+    public function testIsRestrictionSatisfied($restrictions, $accessKeys, $expected, $ref = null)
     {
-        $this->assertEquals($expected, $this->helper->isRestrictionSatisfied($restrictions, $accessKeys));
+        $this->assertEquals($expected, $this->helper->isRestrictionSatisfied($restrictions, $accessKeys, $ref));
     }
 
     /**
@@ -44,9 +39,20 @@ class RestrictionServiceTest extends PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    public function isRestrictionSatisfiedProvider()
+    public function dpTestIsRestrictionSatisfied()
     {
         return array(
+            //  check callable
+            [
+                'restrictions' => function ($arg) {
+                    static::assertEquals($arg, 'unit_Ref');
+
+                    return 'EXPECTED';
+                },
+                'accessKeys' => [],
+                'expected' => 'EXPECTED',
+                'ref' => 'unit_Ref',
+            ],
             // Really simple restrictions
             array(
                 // We just need to match the string in the array
