@@ -11,13 +11,27 @@ use Dvsa\Olcs\Transfer\Query\AbstractQuery;
  */
 class NextItem extends AbstractQuery
 {
-    protected $type;
+    protected $includeTypes = [];
+
+    protected $excludeTypes = [];
 
     /**
-     * @return string
+     * Get types to Include
+     *
+     * @return array
      */
-    public function getType()
+    public function getIncludeTypes()
     {
-        return $this->type;
+        return $this->includeTypes;
+    }
+
+    /**
+     * Get types to exclude
+     *
+     * @return array
+     */
+    public function getExcludeTypes()
+    {
+        return $this->excludeTypes;
     }
 }

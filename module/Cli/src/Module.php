@@ -45,7 +45,8 @@ class Module implements ConsoleUsageProviderInterface
             ['--verbose|-v', '(optional) turn on verbose mode'],
             ['--dryrun|-d', '(optional) dryrun, nothing is actually changed'],
             'process-queue [--type=]' => 'Process the queue',
-            ['--type=<que_typ_xxx>', '(optional) queue message type to process'],
+            ['--type=<que_typ_xxx>', '(optional) queue message type to process can be a comma seperated list'],
+            ['--exclude=<que_typ_xxx>', '(optional) DON\'t process message type, can be a comma seperated list'],
 
             'data-gov-uk-export <report-name> [--verbose|-v] [--path=<exportPath>]' => 'Export to csv for data.gov.uk',
             ['<report-name>', 'export report name'],
