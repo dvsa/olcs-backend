@@ -70,7 +70,7 @@ class PrintJobTest extends CommandHandlerTestCase
         $this->sut->shouldReceive('createTmpFile')->with($mockFile, 'QUEUE_ID', 'FILENAME')->once()
             ->andReturn('TEMP_FILE.rtf');
 
-        $this->expectPrintFile(0, 0, 'Anonymous');
+        $this->expectPrintFile(0, true, 0, 'Anonymous');
 
         $this->sut->shouldReceive('deleteTempFiles')->with('TEMP_FILE.rtf')->once();
 
@@ -122,7 +122,33 @@ class PrintJobTest extends CommandHandlerTestCase
 
         $this->setExpectedException(
             \Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class,
-            'Print service not available: OUTPUT PDF'
+            'Error generating the PDF : OUTPUT PDF'
+        );
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandPdfMissing()
+    {
+        $command = Cmd::create(['id' => 'QUEUE_ID', 'document' => 'DOC_ID', 'title' => 'JOB', 'user' => 'USER_ID']);
+
+        $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
+            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
+
+        $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+            ->andReturn($mockFile);
+
+        $this->sut->shouldReceive('createTmpFile')->with($mockFile, 'QUEUE_ID', 'FILENAME')->once()
+            ->andReturn('TEMP_FILE.rtf');
+
+        $this->expectPrintFile(0, false);
+
+        $this->sut->shouldReceive('deleteTempFiles')->with('TEMP_FILE.rtf')->once();
+
+        $this->setExpectedException(
+            \Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class,
+            'PDF file does not exist : TEMP_FILE.pdf'
         );
 
         $this->sut->handleCommand($command);
@@ -142,13 +168,13 @@ class PrintJobTest extends CommandHandlerTestCase
         $this->sut->shouldReceive('createTmpFile')->with($mockFile, 'QUEUE_ID', 'FILENAME')->once()
             ->andReturn('TEMP_FILE.rtf');
 
-        $this->expectPrintFile(0, 1);
+        $this->expectPrintFile(0, true, 1);
 
         $this->sut->shouldReceive('deleteTempFiles')->with('TEMP_FILE.rtf')->once();
 
         $this->setExpectedException(
             \Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class,
-            'Print service not available: OUTPUT LPR'
+            'Error executing lpr command : OUTPUT LPR'
         );
 
         $this->sut->handleCommand($command);
@@ -234,10 +260,14 @@ class PrintJobTest extends CommandHandlerTestCase
         $this->assertSame(["Printed successfully (stub to licence 34)"], $result->getMessages());
     }
 
-    private function expectPrintFile($commandPdfResult = 0, $commandLprResult = 0, $userName = 'LOGIN_ID')
-    {
+    private function expectPrintFile(
+        $commandPdfResult = 0,
+        $fileExists = true,
+        $commandLprResult = 0,
+        $userName = 'LOGIN_ID'
+    ) {
         $this->sut->shouldReceive('executeCommand')
-            ->with("soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp 'TEMP_FILE.rtf'", [], null)
+            ->with("soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp 'TEMP_FILE.rtf' 2>&1", [], null)
             ->once()
             ->andReturnUsing(
                 function ($command, &$output, &$result) use ($commandPdfResult) {
@@ -245,14 +275,21 @@ class PrintJobTest extends CommandHandlerTestCase
                     $output = ['OUTPUT PDF'];
                 }
             );
-
         if ($commandPdfResult !== 0) {
             return;
         }
 
+        $this->sut->shouldReceive('fileExists')->with('TEMP_FILE.pdf')->once()->andReturn($fileExists);
+        if (!$fileExists) {
+            return;
+        }
+
         $this->sut->shouldReceive('executeCommand')
-            ->with("lpr 'TEMP_FILE.pdf' -H 'PRINT_SERVER' -C 'TEMP_FILE.rtf' -h -P 'QUEUE1' -U '{$userName}'", [], null)
-            ->once()
+            ->with(
+                "lpr 'TEMP_FILE.pdf' -H 'PRINT_SERVER' -C 'TEMP_FILE.rtf' -h -P 'QUEUE1' -U '{$userName}' 2>&1",
+                [],
+                null
+            )->once()
             ->andReturnUsing(
                 function ($command, &$output, &$result) use ($commandLprResult) {
                     $result = $commandLprResult;
