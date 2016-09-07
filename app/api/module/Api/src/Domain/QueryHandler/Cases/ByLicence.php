@@ -32,7 +32,7 @@ class ByLicence extends AbstractQueryHandler
             'result' => $this->resultList($repo->fetchList($query, Query::HYDRATE_OBJECT)),
             'count' => $repo->fetchCount($query),
             'licence' => $licence->serialize(),
-            'organisation' => $licence->getOrganisation(),
+            'organisation' => $licence->getOrganisation()->serialize(),
         ];
     }
 }
