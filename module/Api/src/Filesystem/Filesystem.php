@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Filesystem;
 
 use Symfony\Component\Filesystem\Filesystem as BaseFileSystem;
 use Symfony\Component\Filesystem\LockHandler;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
  * Class Filesystem
@@ -11,6 +12,8 @@ use Symfony\Component\Filesystem\LockHandler;
  */
 class Filesystem extends BaseFileSystem
 {
+    const LOCK_TRIES = 3;
+
     /**
      * @param $path
      * @param string $prefix
@@ -46,7 +49,25 @@ class Filesystem extends BaseFileSystem
     public function createTmpFile($path, $prefix = '', $cleanup = true)
     {
         $lock = new LockHandler(hash('sha256', $path));
-        $lock->lock(true);
+
+        // sometimes we are getting error trying to lock the file on pre-prod
+        // if the fix below will not work we can try to put new LockHandler inside the try/catch block
+        $tryToLock = 0;
+
+        do {
+            try {
+                $locked = $lock->lock(true);
+            } catch (IOException $e) {
+                if ($tryToLock === self::LOCK_TRIES) {
+                    throw $e;
+                }
+            }
+
+            if ($locked) {
+                break;
+            }
+            usleep(500);
+        } while ($tryToLock++ < self::LOCK_TRIES);
 
         do {
             $filename = $path . DIRECTORY_SEPARATOR . uniqid($prefix);
