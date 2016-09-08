@@ -1016,6 +1016,9 @@ class LicenceEntityTest extends EntityTester
             ->shouldReceive('getTrafficArea')
             ->andReturn('B')
             ->once()
+            ->shouldReceive('isGoods')
+            ->andReturn(null)
+            ->once()
             ->shouldReceive('isGoodsApplication')
             ->andReturn(true)
             ->once()
@@ -1039,9 +1042,9 @@ class LicenceEntityTest extends EntityTester
                     ->getMock()
             )
             ->once()
-            ->shouldReceive('isGoodsApplication')
+            ->shouldReceive('isGoods')
             ->andReturn(true)
-            ->once()
+            ->twice()
             ->getMock();
 
         $this->assertEquals('B', $licence->getTrafficAreaForTaskAllocation());
@@ -1064,6 +1067,9 @@ class LicenceEntityTest extends EntityTester
             ->once()
             ->shouldReceive('getTrafficArea')
             ->andReturn('B')
+            ->once()
+            ->shouldReceive('isGoods')
+            ->andReturn(null)
             ->once()
             ->shouldReceive('isGoodsApplication')
             ->andReturn(true)
