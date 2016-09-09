@@ -1,23 +1,98 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
+
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title></title>
-        <style></style>
+
+        <title>GOV.UK</title>
+
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <style>
+
+            html, body, button, input, table, td, th {
+                font-family: Arial, sans-serif;
+            }
+
+            .header {
+                background: black;
+                padding: 10px;
+                font-weight: bold;
+            }
+
+            .logo img,
+            .logo div {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .logo img {
+                width: 35px;
+                height: 31px;
+                margin-top: -1px;
+                margin-right: 5px;
+            }
+
+            .logo div {
+                font-size: 30px;
+                color: white;
+                text-decoration: none;
+            }
+
+        </style>
+
     </head>
-    <body>
-        <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
-            <tr>
-                <td align="center" valign="top">
-                    <table border="0" cellpadding="10" cellspacing="0" width="600" id="emailContainer">
-                        <tr>
-                            <td align="left" valign="top">
-                                <?php echo $this->content ?>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
+
+    <body class="email-template">
+
+        <div class="header" style="background: black; padding: 10px; font-weight: bold;">
+
+            <div class="wrapper logo">
+                <font face="arial, sans-serif">
+                    <img 
+                         width="35" 
+                         height="31" 
+                         src="https://www.carersallowance.service.gov.uk/assets/images/crown.png" 
+                         style="display: inline-block; 
+                                vertical-align: middle; 
+                                margin-right: 5px;" />
+                  
+                    <div 
+                         class="crown" 
+                         style="display: inline-block; 
+                                vertical-align: middle; 
+                                font-size: 30px; 
+                                color: white; 
+                                text-decoration: none;">
+                        GOV&#8203;.&#8203;UK
+                    </div>
+                </font>
+            </div>
+
+        </div>
+
+        <div class="main" style="max-width: 600px">
+
+            <font face="arial, sans-serif">
+
+                <br />
+
+                <h1 class="form-title heading-large">Vehicle Operator Licensing</h1>
+
+                <?php echo $this->content ?>
+
+                </div>
+
+            </font>
+
+        </div><!-- main -->
+
+        <div class="footer">
+            <p><b>Footer message</b></p>
+            <br />
+            <p style="font-size: 10px; color: #BFC1C3;">Copyright/reference</p>
+        </div>
+
     </body>
+
 </html>
