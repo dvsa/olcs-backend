@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Cases;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -13,7 +14,9 @@ use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Cases\Appeal as AppealEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Stay as StayEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Mockery as m;
+use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 
 /**
  * Cases Entity Unit Tests
@@ -117,13 +120,14 @@ class CasesEntityTest extends EntityTester
      */
     public function testUpdate()
     {
-        $caseType = m::mock(RefData::class);
+        $caseType = 'case_t_lic';
+
         $categorys = new ArrayCollection();
         $outcomes = new ArrayCollection();
         $ecmsNo = 'abcd123456';
         $description = 'description';
 
-        $this->entity->setCaseType('case_t_lic');
+        $this->entity->setCaseType($caseType);
 
         $this->entity->update(
             $caseType,
@@ -457,5 +461,67 @@ class CasesEntityTest extends EntityTester
         $this->entity->setId(111);
 
         $this->assertEquals(111, $this->entity->getContextValue());
+    }
+
+    /**
+     * Tests getNoteType for given case type
+     *
+     * @dataProvider caseTypeNoteTypeProvider
+     */
+    public function testGetNoteType($caseType, $expectedNoteType)
+    {
+        // check default
+        $this->assertEquals(NoteEntity::NOTE_TYPE_CASE, $this->entity->getNoteType());
+
+        $this->entity->setCaseType('case_t_lic');
+        $this->assertEquals(NoteEntity::NOTE_TYPE_LICENCE, $this->entity->getNoteType());
+
+        $this->entity->setCaseType('case_t_app');
+        $this->assertEquals(NoteEntity::NOTE_TYPE_APPLICATION, $this->entity->getNoteType());
+
+        $this->entity->setCaseType('case_t_tm');
+        $this->assertEquals(NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER, $this->entity->getNoteType());
+    }
+
+    public function caseTypeNoteTypeProvider()
+    {
+        return [
+            [
+                [null, NoteEntity::NOTE_TYPE_CASE], // default
+                ['case_t_lic', NoteEntity::NOTE_TYPE_LICENCE],
+                ['case_t_app', NoteEntity::NOTE_TYPE_APPLICATION],
+                ['case_t_tm', NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER],
+            ]
+        ];
+    }
+
+    /**
+     * Tests getRelatedOrgnisation
+     */
+    public function testGetRelatedOrganisationApplication()
+    {
+        $mockApplication = m::mock(ApplicationEntity::class);
+        $mockOrganisation1 = m::mock(OrganisationEntity::class);
+        $mockOrganisation2 = m::mock(OrganisationEntity::class);
+        $mockOrganisation3 = m::mock(OrganisationEntity::class);
+        $mockTm = m::mock(TransportManagerEntity::class);
+        $mockLicence = m::mock(LicenceEntity::class);
+
+        $this->assertNull($this->entity->getRelatedOrganisation());
+
+        // test TransportManager case type
+        $mockTm->shouldReceive('getRelatedOrganisation')->once()->andReturn($mockOrganisation1);
+        $this->entity->setTransportManager($mockTm);
+        $this->assertEquals($mockOrganisation1, $this->entity->getRelatedOrganisation());
+
+        // test Licence case type
+        $mockLicence->shouldReceive('getRelatedOrganisation')->once()->andReturn($mockOrganisation2);
+        $this->entity->setLicence($mockLicence);
+        $this->assertEquals($mockOrganisation2, $this->entity->getRelatedOrganisation());
+
+        // test application case type
+        $mockApplication->shouldReceive('getRelatedOrganisation')->once()->andReturn($mockOrganisation3);
+        $this->entity->setApplication($mockApplication);
+        $this->assertEquals($mockOrganisation3, $this->entity->getRelatedOrganisation());
     }
 }
