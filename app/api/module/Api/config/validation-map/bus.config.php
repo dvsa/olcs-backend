@@ -18,5 +18,5 @@ return [
     CommandHandler\Bus\Ebsr\UpdateTxcInbox::class                               => CanUpdateTxcInboxRecords::class,
     QueryHandler\Bus\Ebsr\BusRegWithTxcInbox::class                             => CanAccessTxcInboxRecordWithId::class,
     QueryHandler\Bus\RegistrationHistoryList::class                             => NoValidationRequired::class,
-
+    QueryHandler\Bus\Bus::class                                                 => NoValidationRequired::class,
 ];
