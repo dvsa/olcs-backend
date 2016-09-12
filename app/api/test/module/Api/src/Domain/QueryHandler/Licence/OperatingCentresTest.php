@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Licence\OperatingCentres as QueryHandler;
 use Dvsa\Olcs\Transfer\Query\Licence\OperatingCentres as Qry;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
 
 /**
  * Operating Centres Test
@@ -34,7 +35,17 @@ class OperatingCentresTest extends QueryHandlerTestCase
         $this->mockRepo('TrafficArea', Repository\TrafficArea::class);
         $this->mockRepo('Document', Repository\Document::class);
 
-        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
+        /** @var UserEntity $currentUser */
+        $currentUser = m::mock(UserEntity::class)->makePartial();
+        $currentUser->shouldReceive('isAnonymous')->andReturn(false);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+                ->shouldReceive('isGranted')->andReturn(false)->getMock(),
+        ];
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($currentUser);
 
         parent::setUp();
     }
@@ -80,7 +91,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
 
         $expected = [
             'foo' => 'bar',
-            'requiresVariation' => true,
+            'requiresVariation' => false,
             'operatingCentres' => ['a', 'b'],
             'isPsv' => false,
             'canHaveCommunityLicences' => true,
@@ -153,7 +164,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
 
         $expected = [
             'foo' => 'bar',
-            'requiresVariation' => true,
+            'requiresVariation' => false,
             'operatingCentres' => ['a', 'b'],
             'isPsv' => false,
             'canHaveCommunityLicences' => true,

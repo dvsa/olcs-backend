@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Transfer\Query\Bus\BusReg as Qry;
+use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Bus Test
@@ -21,6 +23,18 @@ class BusTest extends QueryHandlerTestCase
     {
         $this->sut = new Bus();
         $this->mockRepo('Bus', BusRepo::class);
+
+        /** @var UserEntity $currentUser */
+        $currentUser = m::mock(UserEntity::class)->makePartial();
+        $currentUser->shouldReceive('isAnonymous')->andReturn(true);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+                ->shouldReceive('isGranted')->andReturn(false)->getMock(),
+        ];
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($currentUser);
 
         parent::setUp();
     }

@@ -15,6 +15,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Transfer\Query\Licence\Licence as Qry;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
 
 /**
  * Licence Test
@@ -30,7 +31,18 @@ class LicenceTest extends QueryHandlerTestCase
         $this->mockRepo('ContinuationDetail', \Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail::class);
         $this->mockRepo('Note', \Dvsa\Olcs\Api\Domain\Repository\Note::class);
 
-        $this->mockedSmServices['SectionAccessService'] = m::mock();
+        /** @var UserEntity $currentUser */
+        $currentUser = m::mock(UserEntity::class)->makePartial();
+        $currentUser->shouldReceive('isAnonymous')->andReturn(false);
+
+        $this->mockedSmServices = [
+            'SectionAccessService' => m::mock(),
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+                ->shouldReceive('isGranted')->andReturn(false)->getMock(),
+        ];
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($currentUser);
 
         parent::setUp();
     }
