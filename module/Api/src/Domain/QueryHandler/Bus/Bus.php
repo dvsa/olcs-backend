@@ -15,6 +15,14 @@ class Bus extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Bus';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query Query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
         $busReg = $this->getRepo()->fetchUsingId($query);
@@ -25,7 +33,7 @@ class Bus extends AbstractQueryHandler
             $busReg,
             [
                 'licence' => [
-                    'organisation' => ['disqualifications'],
+                    'organisation' => $this->getOrganisationResultsBundle(),
                     'licenceType',
                     'status',
                 ],
@@ -38,5 +46,18 @@ class Bus extends AbstractQueryHandler
                 'variationReasons'
             ]
         );
+    }
+
+    /**
+     * Determine the organisation results bundle
+     *
+     * @return array
+     */
+    private function getOrganisationResultsBundle()
+    {
+        if ($this->getCurrentUser()->isAnonymous()) {
+            return [];
+        }
+        return ['disqualifications'];
     }
 }
