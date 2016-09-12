@@ -14,6 +14,8 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Note as NoteRepo;
+use ZfcRbac\Service\AuthorizationService;
+use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
 
 /**
  * Transport Manager Test
@@ -27,6 +29,18 @@ class TransportManagerTest extends QueryHandlerTestCase
         $this->sut = new QueryHandler();
         $this->mockRepo('TransportManager', TransportManagerRepo::class);
         $this->mockRepo('Note', NoteRepo::class);
+
+        /** @var UserEntity $currentUser */
+        $currentUser = m::mock(UserEntity::class)->makePartial();
+        $currentUser->shouldReceive('isAnonymous')->andReturn(false);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+                ->shouldReceive('isGranted')->andReturn(false)->getMock(),
+        ];
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($currentUser);
 
         parent::setUp();
     }

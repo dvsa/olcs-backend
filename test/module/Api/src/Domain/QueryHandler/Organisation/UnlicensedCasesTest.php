@@ -16,6 +16,8 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Query\Organisation\UnlicensedCases as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
+use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
 
 /**
  * Unlicensed Cases Test
@@ -29,6 +31,19 @@ class UnlicensedCasesTest extends QueryHandlerTestCase
         $this->sut = new UnlicensedCases();
         $this->mockRepo('Organisation', OrganisationRepo::class);
         $this->mockRepo('Cases', CasesRepo::class);
+
+        /** @var UserEntity $currentUser */
+        $currentUser = m::mock(UserEntity::class)->makePartial();
+        $currentUser->shouldReceive('isAnonymous')->andReturn(false);
+        $currentUser->shouldReceive('isSoleTrader')->andReturn(false);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+                ->shouldReceive('isGranted')->andReturn(false)->getMock(),
+        ];
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($currentUser);
 
         parent::setUp();
     }
