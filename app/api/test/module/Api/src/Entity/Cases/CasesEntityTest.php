@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Stay as StayEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Cases Entity Unit Tests
@@ -523,5 +524,122 @@ class CasesEntityTest extends EntityTester
         $mockApplication->shouldReceive('getRelatedOrganisation')->once()->andReturn($mockOrganisation3);
         $this->entity->setApplication($mockApplication);
         $this->assertEquals($mockOrganisation3, $this->entity->getRelatedOrganisation());
+    }
+
+    public function testHasStayType()
+    {
+        $stayType = m::mock(RefData::class);
+
+        $correctLicenceId = 7;
+        $incorrectLicenceId = 99;
+
+        $postedLicence = m::mock(LicenceEntity::class);
+        $postedLicence->shouldReceive('getId')->andReturn($incorrectLicenceId);
+
+        $applicationLicence = m::mock(LicenceEntity::class);
+        $applicationLicence->shouldReceive('getId')->andReturn($correctLicenceId);
+        $application = m::mock(ApplicationEntity::class);
+        $application->shouldReceive('canCreateCase')->andReturn(true);
+        $application->shouldReceive('getLicence')->andReturn($applicationLicence);
+        $transportManager = null;
+
+        $sut = m::mock(Entity::class)->makePartial();
+
+        $sut->shouldReceive('getStays->matching')
+            ->with(m::type(Criteria::class))
+            ->andReturnUsing(
+                function (Criteria $criteria) use ($stayType) {
+
+                    /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
+                    $expr = $criteria->getWhereExpression();
+
+                    $this->assertEquals('stayType', $expr->getField());
+                    $this->assertEquals('=', $expr->getOperator());
+                    $this->assertEquals($stayType, $expr->getValue()->getValue());
+
+                    $collection = m::mock();
+                    $collection->shouldReceive('isEmpty')
+                        ->andReturn(false);
+
+                    return $collection;
+                }
+            );
+        $this->assertTrue($sut->hasStayType($stayType));
+    }
+
+    public function testHasAppeal()
+    {
+        $caseType = m::mock(RefData::class);
+        $openDate = new \DateTime();
+        $categorys = new ArrayCollection();
+        $outcomes = new ArrayCollection();
+        $ecmsNo = 'abcd123456';
+        $description = 'description';
+        $correctLicenceId = 7;
+        $incorrectLicenceId = 99;
+
+        $postedLicence = m::mock(LicenceEntity::class);
+        $postedLicence->shouldReceive('getId')->andReturn($incorrectLicenceId);
+
+        $applicationLicence = m::mock(LicenceEntity::class);
+        $applicationLicence->shouldReceive('getId')->andReturn($correctLicenceId);
+        $application = m::mock(ApplicationEntity::class);
+        $application->shouldReceive('canCreateCase')->andReturn(true);
+        $application->shouldReceive('getLicence')->andReturn($applicationLicence);
+        $transportManager = null;
+
+        $sut = new Entity(
+            $openDate,
+            $caseType,
+            $categorys,
+            $outcomes,
+            $application,
+            $postedLicence,
+            $transportManager,
+            $ecmsNo,
+            $description
+        );
+
+        $this->assertFalse($sut->hasAppeal());
+        $sut->setAppeal(m::mock(AppealEntity::class));
+        $this->assertTrue($sut->hasAppeal());
+    }
+
+    public function testIsTm()
+    {
+        $caseType = m::mock(RefData::class);
+        $openDate = new \DateTime();
+        $categorys = new ArrayCollection();
+        $outcomes = new ArrayCollection();
+        $ecmsNo = 'abcd123456';
+        $description = 'description';
+        $correctLicenceId = 7;
+        $incorrectLicenceId = 99;
+
+        $postedLicence = m::mock(LicenceEntity::class);
+        $postedLicence->shouldReceive('getId')->andReturn($incorrectLicenceId);
+
+        $applicationLicence = m::mock(LicenceEntity::class);
+        $applicationLicence->shouldReceive('getId')->andReturn($correctLicenceId);
+        $application = m::mock(ApplicationEntity::class);
+        $application->shouldReceive('canCreateCase')->andReturn(true);
+        $application->shouldReceive('getLicence')->andReturn($applicationLicence);
+        $transportManager = null;
+
+        $sut = new Entity(
+            $openDate,
+            $caseType,
+            $categorys,
+            $outcomes,
+            $application,
+            $postedLicence,
+            $transportManager,
+            $ecmsNo,
+            $description
+        );
+
+        $this->assertFalse($sut->isTm());
+        $sut->setTransportManager(m::mock(TransportManagerEntity::class));
+        $this->assertTrue($sut->isTm());
     }
 }
