@@ -58,6 +58,7 @@ class Bus extends AbstractQueryHandler
         if ($this->getCurrentUser()->isAnonymous()) {
             return [];
         }
+        
         return ['disqualifications'];
     }
 }
