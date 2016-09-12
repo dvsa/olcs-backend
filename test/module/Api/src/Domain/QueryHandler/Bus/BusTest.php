@@ -29,8 +29,7 @@ class BusTest extends QueryHandlerTestCase
         $currentUser->shouldReceive('isAnonymous')->andReturn(true);
 
         $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
-                ->shouldReceive('isGranted')->andReturn(false)->getMock(),
+            AuthorizationService::class => m::mock(AuthorizationService::class),
         ];
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
