@@ -34,7 +34,7 @@ class VariationOperatingCentreTest extends QueryHandlerTestCase
             AuthorizationService::class => m::mock(AuthorizationService::class)
                 ->shouldReceive('isGranted')->andReturn(false)->getMock(),
         ];
-        
+
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($currentUser);
 

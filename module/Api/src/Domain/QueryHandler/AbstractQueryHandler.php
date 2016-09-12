@@ -58,6 +58,13 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
      */
     private $commandHandler;
 
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service locator
+     *
+     * @return $this
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
@@ -102,7 +109,13 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     }
 
     /**
+     * Get the repository
+     *
+     * @param null $name Repository name
+     *
      * @return RepositoryInterface
+     *
+     * @throws RuntimeException
      */
     protected function getRepo($name = null)
     {
@@ -123,6 +136,8 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     }
 
     /**
+     * Get query handler
+     *
      * @return \Dvsa\Olcs\Api\Domain\QueryHandlerManager
      */
     protected function getQueryHandler()
@@ -130,11 +145,28 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
         return $this->queryHandler;
     }
 
+    /**
+     * Get result list
+     *
+     * @param mixed $objects objects
+     * @param array $bundle  Result bundle to retrieve
+     *
+     * @return array
+     */
     protected function resultList($objects, array $bundle = [])
     {
         return (new ResultList($objects, $bundle))->serialize();
     }
 
+    /**
+     * Create result object
+     *
+     * @param mixed $object Result object
+     * @param array $bundle bundle array
+     * @param array $values values
+     *
+     * @return Result
+     */
     protected function result($object, array $bundle = [], $values = [])
     {
         return new Result($object, $bundle, $values);
@@ -143,7 +175,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     /**
      * Create a read audit for an entity
      *
-     * @param $entity The entity which has been read
+     * @param object $entity The entity which has been read
      *
      * @return void
      * @throws RuntimeException
