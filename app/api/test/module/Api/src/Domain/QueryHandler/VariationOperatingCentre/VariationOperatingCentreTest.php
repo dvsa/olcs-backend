@@ -13,6 +13,8 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Transfer\Query\VariationOperatingCentre\VariationOperatingCentre as Qry;
 use Dvsa\Olcs\Transfer\Query\ApplicationOperatingCentre\ApplicationOperatingCentre;
 use Dvsa\Olcs\Transfer\Query\LicenceOperatingCentre\LicenceOperatingCentre;
+use ZfcRbac\Service\AuthorizationService;
+use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
 
 /**
  * Variation Operating Centre Test
@@ -24,6 +26,17 @@ class VariationOperatingCentreTest extends QueryHandlerTestCase
     public function setUp()
     {
         $this->sut = new VariationOperatingCentre();
+
+        /** @var UserEntity $currentUser */
+        $currentUser = m::mock(UserEntity::class)->makePartial();
+        $currentUser->shouldReceive('isAnonymous')->andReturn(false);
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+                ->shouldReceive('isGranted')->andReturn(false)->getMock(),
+        ];
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($currentUser);
 
         parent::setUp();
     }
