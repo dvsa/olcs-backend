@@ -111,7 +111,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     /**
      * Get the repository
      *
-     * @param null $name Repository name
+     * @param string $name Repository name
      *
      * @return RepositoryInterface
      *
