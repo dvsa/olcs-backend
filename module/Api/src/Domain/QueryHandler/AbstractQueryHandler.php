@@ -150,7 +150,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
      */
     protected function auditRead($entity)
     {
-        if (!$this->isInternalUser()) {
+        if ($this->isAnonymousUser() || !$this->isInternalUser()) {
             // if not an internal user then do nothing
             return;
         }
