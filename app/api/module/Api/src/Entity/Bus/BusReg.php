@@ -1258,6 +1258,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
      *
      * @note Be careful where in the code this is called. The current status determines whether a fee is generated so
      * ensure it is called at the appropriate point in the code. ie. with the new status being applied.
+     *
+     * @return bool
      */
     public function isChargeableStatus()
     {
@@ -1266,6 +1268,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         if ($busStatus === self::STATUS_NEW || $busStatus === self::STATUS_VAR) {
             return true;
         }
+
         return false;
     }
 }

@@ -280,7 +280,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'organisation' => $organisation
         ];
 
-        $variationBusReg = m::mock(BusRegEntity::class);
+        $variationBusReg = m::mock(BusRegEntity::class)->makePartial();
         $variationBusReg->shouldReceive('fromData')->once()->with($busRegFromData);
         $variationBusReg->shouldReceive('populateShortNotice')->once();
         $variationBusReg->shouldReceive('setOtherServices')->once()->with(m::type(ArrayCollection::class));
