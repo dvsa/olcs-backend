@@ -108,7 +108,7 @@ class ClientTest extends MockeryTestCase
         static::assertEquals($expectContent, file_get_contents($actual->getResource()));
 
         //  second call
-        // @todo don't uncomment it, this need future investigation @see OLCS-13786
+        // @todo don't uncomment it, this needs future investigation @see OLCS-13786
         //static::assertSame($actual, $this->sut->read('test'));
     }
 
