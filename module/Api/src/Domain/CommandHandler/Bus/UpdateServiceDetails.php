@@ -64,7 +64,7 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
 
         $this->processServiceNumbers($busReg, $command->getOtherServices());
 
-        if ($busReg->getReceivedDate() !== null && $this->shouldCreateFee($busRegId)) {
+        if ($busReg->getReceivedDate() !== null && $this->shouldCreateFee($busReg)) {
             $result->merge($this->handleSideEffect($this->createBusFeeCommand($busRegId)));
         }
 
@@ -78,15 +78,15 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
      * Returns whether we should create a fee
      * (basically this is down to whether there's already a fee in place for this busReg)
      *
-     * @param int $busRegId Bus reg id
+     * @param BusReg $busReg Bus reg
      *
      * @return bool
      */
-    private function shouldCreateFee($busRegId)
+    private function shouldCreateFee($busReg)
     {
-        $latestFee = $this->getRepo('Fee')->getLatestFeeForBusReg($busRegId);
+        $latestFee = $this->getRepo('Fee')->getLatestFeeForBusReg($busReg->getId());
 
-        if (!empty($latestFee)) {
+        if (!empty($latestFee) || !($busReg->isChargeableStatus())) {
             return false;
         }
 
