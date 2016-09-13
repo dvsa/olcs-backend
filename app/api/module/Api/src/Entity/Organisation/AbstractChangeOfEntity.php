@@ -442,8 +442,7 @@ abstract class AbstractChangeOfEntity implements BundleSerializableInterface, Js
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
-
-                    $this->$property = null;
+                $this->$property = null;
             }
         }
     }

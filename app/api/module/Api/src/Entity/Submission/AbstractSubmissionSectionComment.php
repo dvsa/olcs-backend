@@ -376,8 +376,7 @@ abstract class AbstractSubmissionSectionComment implements BundleSerializableInt
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
-
-                    $this->$property = null;
+                $this->$property = null;
             }
         }
     }

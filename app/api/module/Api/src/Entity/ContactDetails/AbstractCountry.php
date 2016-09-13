@@ -332,8 +332,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
-
-                    $this->$property = null;
+                $this->$property = null;
             }
         }
     }

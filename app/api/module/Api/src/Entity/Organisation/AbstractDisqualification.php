@@ -546,8 +546,7 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
-
-                    $this->$property = null;
+                $this->$property = null;
             }
         }
     }

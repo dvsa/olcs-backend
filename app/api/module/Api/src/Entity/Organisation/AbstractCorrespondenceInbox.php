@@ -505,8 +505,7 @@ abstract class AbstractCorrespondenceInbox implements BundleSerializableInterfac
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
-
-                    $this->$property = null;
+                $this->$property = null;
             }
         }
     }

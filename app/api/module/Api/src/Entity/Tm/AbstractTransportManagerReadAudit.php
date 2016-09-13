@@ -196,8 +196,7 @@ abstract class AbstractTransportManagerReadAudit implements BundleSerializableIn
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
-
-                    $this->$property = null;
+                $this->$property = null;
             }
         }
     }
