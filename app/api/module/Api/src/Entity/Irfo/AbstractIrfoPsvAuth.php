@@ -1199,11 +1199,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
 
             if (property_exists($this, $property)) {
                 if ($this->$property instanceof Collection) {
-
                     $this->$property = new ArrayCollection(array());
-
                 } else {
-
                     $this->$property = null;
                 }
             }

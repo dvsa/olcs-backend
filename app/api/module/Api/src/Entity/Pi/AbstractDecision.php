@@ -640,11 +640,8 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
 
             if (property_exists($this, $property)) {
                 if ($this->$property instanceof Collection) {
-
                     $this->$property = new ArrayCollection(array());
-
                 } else {
-
                     $this->$property = null;
                 }
             }
