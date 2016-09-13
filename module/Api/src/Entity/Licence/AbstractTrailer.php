@@ -438,8 +438,7 @@ abstract class AbstractTrailer implements BundleSerializableInterface, JsonSeria
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
-
-                    $this->$property = null;
+                $this->$property = null;
             }
         }
     }
