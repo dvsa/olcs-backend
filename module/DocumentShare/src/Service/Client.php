@@ -128,9 +128,12 @@ class Client
      */
     public function read($path)
     {
+        // @todo don't uncomment it, this need future investigation @see OLCS-13786
+        /*
         if (isset($this->cache[$path])) {
             return $this->cache[$path];
         }
+        */
 
         //  get file content from storage
         $tmpFileName = $this->fileSystem->createTmpFile(sys_get_temp_dir(), 'download');
