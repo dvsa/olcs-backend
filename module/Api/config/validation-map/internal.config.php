@@ -10,7 +10,6 @@ return [
     QueryHandler\Application\Interim::class => IsInternalUser::class,
     QueryHandler\Application\Overview::class => IsInternalUser::class,
     QueryHandler\Application\Publish::class => IsInternalUser::class,
-    QueryHandler\Bus\Bus::class => IsInternalUser::class,
     QueryHandler\Bus\BusRegDecision::class => IsInternalUser::class,
     QueryHandler\Bus\HistoryList::class => IsInternalUser::class,
     QueryHandler\Bus\ShortNoticeByBusReg::class => IsInternalUser::class,
