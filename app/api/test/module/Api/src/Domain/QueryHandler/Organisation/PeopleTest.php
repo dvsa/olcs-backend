@@ -7,6 +7,8 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\People as QueryHandler;
 use Dvsa\Olcs\Transfer\Query\Organisation\People as Qry;
 use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
+use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
 
 /**
  * PeopleTest
@@ -19,6 +21,18 @@ class PeopleTest extends QueryHandlerTestCase
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('Organisation', \Dvsa\Olcs\Api\Domain\Repository\Organisation::class);
+
+        /** @var UserEntity $currentUser */
+        $currentUser = m::mock(UserEntity::class)->makePartial();
+        $currentUser->shouldReceive('isAnonymous')->andReturn(false);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+                ->shouldReceive('isGranted')->andReturn(false)->getMock(),
+        ];
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($currentUser);
 
         parent::setUp();
     }

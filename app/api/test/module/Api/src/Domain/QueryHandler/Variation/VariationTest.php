@@ -33,10 +33,19 @@ class VariationTest extends QueryHandlerTestCase
         $this->mockRepo('Note', NoteRepo::class);
         $this->mockRepo('SystemParameter', \Dvsa\Olcs\Api\Domain\Repository\SystemParameter::class);
 
+        /** @var UserEntity $currentUser */
+        $currentUser = m::mock(UserEntity::class)->makePartial();
+        $currentUser->shouldReceive('isAnonymous')->andReturn(false);
+
         $this->mockedSmServices = [
             'FeesHelperService' => m::mock(),
             'SectionAccessService' => m::mock(),
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+                ->shouldReceive('isGranted')->andReturn(false)->getMock(),
         ];
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($currentUser);
 
         parent::setUp();
     }
