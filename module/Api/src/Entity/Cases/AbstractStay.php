@@ -541,14 +541,7 @@ abstract class AbstractStay implements BundleSerializableInterface, JsonSerializ
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-
-                    $this->$property = new ArrayCollection(array());
-
-                } else {
-
-                    $this->$property = null;
-                }
+                $this->$property = null;
             }
         }
     }

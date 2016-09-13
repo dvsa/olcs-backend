@@ -143,14 +143,15 @@ if ($details['hasModifiedOn']) {
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
+<?php if ($details['hasCollections']) { ?>
                 if ($this->$property instanceof Collection) {
-
                     $this->$property = new ArrayCollection(array());
-
                 } else {
-
                     $this->$property = null;
                 }
+<?php } else { ?>
+                $this->$property = null;
+<?php } ?>
             }
         }
     }

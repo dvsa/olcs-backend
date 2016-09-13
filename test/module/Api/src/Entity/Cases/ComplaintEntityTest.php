@@ -4,7 +4,10 @@ namespace Dvsa\OlcsTest\Api\Entity\Cases;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint as Entity;
-use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Mockery as m;
 
 /**
  * Complaint Entity Unit Tests
@@ -29,7 +32,7 @@ class ComplaintEntityTest extends EntityTester
     {
         $sut = $this->instantiate($this->entityClass);
 
-        $status = new RefData();
+        $status = new RefDataEntity();
         $status->setId($statusId);
 
         $sut->setStatus($status);
@@ -87,7 +90,7 @@ class ComplaintEntityTest extends EntityTester
 
         $sut->setIsCompliance($isCompliance);
 
-        $status = new RefData();
+        $status = new RefDataEntity();
         $status->setId($statusId);
         $sut->setStatus($status);
 
@@ -119,5 +122,23 @@ class ComplaintEntityTest extends EntityTester
             // open - closed date already set
             [false, Entity::COMPLAIN_STATUS_OPEN, new \DateTime('2015-02-10'), null],
         ];
+    }
+
+    /**
+     * Test constructor
+     */
+    public function testConstructor()
+    {
+        $mockCase = m::mock(CasesEntity::class);
+        $mockStatus = m::mock(RefDataEntity::class);
+        $complaintDate = new \DateTime();
+        $mockContactDetails = m::mock(ContactDetailsEntity::class);
+
+        $entity = new Entity($mockCase, true, $mockStatus, $complaintDate, $mockContactDetails);
+
+        $this->assertEquals($mockCase, $entity->getCase());
+        $this->assertTrue($entity->getIsCompliance());
+        $this->assertInstanceOf(\DateTime::class, $entity->getComplaintDate());
+        $this->assertEquals($mockContactDetails, $entity->getComplainantContactDetails());
     }
 }
