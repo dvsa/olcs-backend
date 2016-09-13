@@ -128,7 +128,7 @@ class Client
      */
     public function read($path)
     {
-        // @todo don't uncomment it, this need future investigation @see OLCS-13786
+        // @todo don't uncomment it, this needs future investigation @see OLCS-13786
         /*
         if (isset($this->cache[$path])) {
             return $this->cache[$path];

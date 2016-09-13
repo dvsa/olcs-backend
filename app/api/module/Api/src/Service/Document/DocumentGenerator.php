@@ -222,7 +222,7 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
             if ($file !== null) {
                 return $file;
             }
-            // @todo don't uncomment it, this need future investigation @see OLCS-13786
+            // @todo don't uncomment it, this needs future investigation @see OLCS-13786
             /*
             if (!isset($this->templateCache[$template])) {
                 $this->templateCache[$template] = $this->contentStore->read($template);
