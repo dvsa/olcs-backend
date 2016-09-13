@@ -121,7 +121,7 @@ class CasesEntityTest extends EntityTester
      */
     public function testUpdate()
     {
-        $caseType = 'case_t_lic';
+        $caseType = Entity::LICENCE_CASE_TYPE;
 
         $categorys = new ArrayCollection();
         $outcomes = new ArrayCollection();
@@ -474,13 +474,13 @@ class CasesEntityTest extends EntityTester
         // check default
         $this->assertEquals(NoteEntity::NOTE_TYPE_CASE, $this->entity->getNoteType());
 
-        $this->entity->setCaseType('case_t_lic');
+        $this->entity->setCaseType(Entity::LICENCE_CASE_TYPE);
         $this->assertEquals(NoteEntity::NOTE_TYPE_LICENCE, $this->entity->getNoteType());
 
-        $this->entity->setCaseType('case_t_app');
+        $this->entity->setCaseType(Entity::APP_CASE_TYPE);
         $this->assertEquals(NoteEntity::NOTE_TYPE_APPLICATION, $this->entity->getNoteType());
 
-        $this->entity->setCaseType('case_t_tm');
+        $this->entity->setCaseType(Entity::TM_CASE_TYPE);
         $this->assertEquals(NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER, $this->entity->getNoteType());
     }
 
@@ -489,9 +489,9 @@ class CasesEntityTest extends EntityTester
         return [
             [
                 [null, NoteEntity::NOTE_TYPE_CASE], // default
-                ['case_t_lic', NoteEntity::NOTE_TYPE_LICENCE],
-                ['case_t_app', NoteEntity::NOTE_TYPE_APPLICATION],
-                ['case_t_tm', NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER],
+                [Entity::LICENCE_CASE_TYPE, NoteEntity::NOTE_TYPE_LICENCE],
+                [Entity::APP_CASE_TYPE, NoteEntity::NOTE_TYPE_APPLICATION],
+                [Entity::TM_CASE_TYPE, NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER],
             ]
         ];
     }
