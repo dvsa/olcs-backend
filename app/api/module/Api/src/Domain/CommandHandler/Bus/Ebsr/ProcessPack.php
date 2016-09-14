@@ -453,9 +453,7 @@ final class ProcessPack extends AbstractCommandHandler implements
         $sideEffects[] = $this->createTaskCommand($busReg);
         $sideEffects[] = $this->getRequestMapQueueCmd($busReg->getId());
 
-        $busStatus = $busReg->getStatus()->getId();
-
-        if ($busStatus === BusRegEntity::STATUS_NEW || $busStatus === BusRegEntity::STATUS_VAR) {
+        if ($busReg->isChargeableStatus()) {
             $sideEffects[] = CreateBusFeeCmd::create(['id' => $busRegId]);
         }
 

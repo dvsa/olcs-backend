@@ -6,6 +6,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\UpdateServiceDetails;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
@@ -21,6 +22,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusServiceType as BusServiceTypeEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 
 /**
  * Update Service DetailsTest
@@ -121,12 +123,18 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
         $mockBusRegObjectOtherServiceEntity = m::mock(BusRegOtherServiceEntity::class);
         $mockBusRegObjectOtherServiceEntity->shouldReceive('getId')->andReturn(123);
 
+        /** @var RefDataEntity $mockStatus */
+        $mockStatus = m::mock(RefDataEntity::class);
+        $mockStatus->shouldReceive('getId')->andReturn(BusRegEntity::STATUS_NEW);
+
         /** @var BusRegEntity $busReg */
         $busReg = m::mock(BusRegEntity::class)->makePartial();
         $busReg->shouldReceive('updateServiceDetails')
             ->once()
             ->shouldReceive('getId')
             ->andReturn($busRegId)
+            ->shouldReceive('getStatus')
+            ->andReturn($mockStatus)
             ->shouldReceive('setBusServiceTypes')
             ->with(m::type(ArrayCollection::class))
             ->once()
@@ -212,12 +220,18 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
             ]
         );
 
+        /** @var RefDataEntity $mockStatus */
+        $mockStatus = m::mock(RefDataEntity::class);
+        $mockStatus->shouldReceive('getId')->andReturn(BusRegEntity::STATUS_NEW);
+
         /** @var BusRegEntity $busReg */
         $busReg = m::mock(BusRegEntity::class)->makePartial();
         $busReg->shouldReceive('updateServiceDetails')
             ->once()
             ->shouldReceive('getId')
             ->andReturn($busRegId)
+            ->shouldReceive('getStatus')
+            ->andReturn($mockStatus)
             ->shouldReceive('setBusServiceTypes')
             ->with(m::type(ArrayCollection::class))
             ->once()
