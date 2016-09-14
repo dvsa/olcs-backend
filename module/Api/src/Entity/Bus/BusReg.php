@@ -1252,4 +1252,23 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
 
         return null;
     }
+
+    /**
+     * Flag for raising fees. Based on the current status.
+     *
+     * @note Be careful where in the code this is called. The current status determines whether a fee is generated so
+     * ensure it is called at the appropriate point in the code. ie. with the new status being applied.
+     *
+     * @return bool
+     */
+    public function isChargeableStatus()
+    {
+        $busStatus = $this->getStatus()->getId();
+
+        if ($busStatus === self::STATUS_NEW || $busStatus === self::STATUS_VAR) {
+            return true;
+        }
+
+        return false;
+    }
 }
