@@ -50,6 +50,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
 
         $this->maybeProcessApplicationFee($fee);
         $this->maybeProcessGrantingFee($fee);
+        $this->maybeProcessGrantInterimFee($fee);
         $this->maybeContinueLicence($fee);
         $this->maybeCancelApplicationTasks($fee);
         $this->maybeCloseFeeTask($fee);
@@ -156,7 +157,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
     }
 
     /**
-     * If the fee type is a interim, then check if we do need in-force processing
+     * If the fee type is a GRANT, then check if we do need in-force processing
      *
      * @param Fee $fee fee
      *
@@ -177,6 +178,27 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         }
 
         if ($application->getCurrentInterimStatus() !== ApplicationEntity::INTERIM_STATUS_GRANTED) {
+            return;
+        }
+
+        $this->result->merge($this->handleSideEffect(InForceInterim::create(['id' => $application->getId()])));
+    }
+
+    /**
+     * If the fee type is a GRANTINT, then check if we do need in-force processing
+     *
+     * @param Fee $fee fee
+     *
+     * @return void
+     */
+    protected function maybeProcessGrantInterimFee(Fee $fee)
+    {
+        $application = $fee->getApplication();
+
+        if (
+            $fee->getFeeType()->getFeeType()->getId() !== FeeType::FEE_TYPE_GRANTINT
+            || $application->getCurrentInterimStatus() !== ApplicationEntity::INTERIM_STATUS_GRANTED
+            ) {
             return;
         }
 

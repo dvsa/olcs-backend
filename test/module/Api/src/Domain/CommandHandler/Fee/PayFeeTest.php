@@ -559,4 +559,52 @@ class PayFeeTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
     }
+
+    public function testHandleCommandWithGrantInterimFee()
+    {
+        $command = PayFeeCommand::create(['id' => 111]);
+
+        $this->setupIsInternalUser(false);
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setId(222);
+        $application->setIsVariation(false);
+        $application->setStatus($this->refData[Application::APPLICATION_STATUS_UNDER_CONSIDERATION]);
+        $application->setInterimStatus($this->refData[Application::INTERIM_STATUS_GRANTED]);
+
+        $application
+            ->shouldReceive('isGoods')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+
+        /** @var FeeEntity $fee */
+        $fee = m::mock(FeeEntity::class)->makePartial();
+        $fee->setApplication($application);
+        $fee->shouldReceive('getFeeType->getFeeType->getId')
+            ->andReturn(FeeType::FEE_TYPE_GRANTINT);
+
+        $this->repoMap['Fee']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($fee);
+
+        $this->expectedSideEffect(
+            InForceInterim::class,
+            ['id' => 222],
+            (new Result())->addMessage('IN-FORCE-INTERIM')
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'IN-FORCE-INTERIM'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+    }
 }
