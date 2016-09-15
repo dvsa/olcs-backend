@@ -486,6 +486,8 @@ return [
 
     TransferQuery\ContactDetail\CountryList::class => QueryHandler\ContactDetail\CountryList::class,
     TransferQuery\ContactDetail\ContactDetailsList::class => QueryHandler\ContactDetail\ContactDetailsList::class,
+    TransferQuery\ContactDetail\PhoneContact\Get::class => QueryHandler\ContactDetail\PhoneContact\Get::class,
+    TransferQuery\ContactDetail\PhoneContact\GetList::class => QueryHandler\ContactDetail\PhoneContact\GetList::class,
     TransferQuery\TrafficArea\TrafficAreaList::class => QueryHandler\TrafficArea\TrafficAreaList::class,
     TransferQuery\TrafficArea\Get::class => QueryHandler\TrafficArea\Get::class,
 
