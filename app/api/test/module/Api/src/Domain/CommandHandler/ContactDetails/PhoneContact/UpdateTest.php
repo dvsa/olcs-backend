@@ -24,16 +24,18 @@ class UpdateTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function test()
+    public function testHandleCommand()
     {
         $id = 8888;
         $contactDetailsId = 999;
         $phoneContactType = Entity\ContactDetails\PhoneContact::TYPE_HOME;
+        $version = 222;
 
         $data = [
             'phoneNumber' => 'unit_PhoneNr',
             'phoneContactType' => $phoneContactType,
             'contactDetailsId' => $contactDetailsId,
+            'version' => $version,
         ];
         $command = Cmd::create($data);
 
@@ -61,6 +63,7 @@ class UpdateTest extends CommandHandlerTestCase
 
         $this->repoMap['PhoneContact']
             ->shouldReceive('fetchUsingId')->with($command, Query::HYDRATE_OBJECT)->once()->andReturn($mockEntity)
+            ->shouldReceive('lock')->once()->with($mockEntity, $version)
             ->shouldReceive('save')->once()->with($mockEntity);
 
         $actual = $this->sut->handleCommand($command);

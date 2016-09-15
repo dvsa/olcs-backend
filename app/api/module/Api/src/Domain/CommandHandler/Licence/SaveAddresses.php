@@ -59,7 +59,7 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
     }
 
     /**
-     * Handel side effect
+     * Handle side effect
      *
      * @param Result $result Temp result
      *

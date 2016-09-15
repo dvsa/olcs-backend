@@ -42,43 +42,17 @@ class AddressesTest extends QueryHandlerTestCase
             ->andReturn(
                 [
                     'correspondenceCd' => [
-                        'phoneContacts' => 'expect_be_replaced',
+                        'phoneContacts' => 'EXPECTED',
                     ],
                     'LicenceData' => 'EXPECTED',
                 ]
-            )
-            //
-            ->shouldReceive('getCorrespondenceCd->getId')
-            ->once()
-            ->andReturn(self::CONTACT_DETAILS_ID);
-
-        /** @var Entity\ContactDetails\PhoneContact | m\MockInterface $mockPhoneContact */
-        $mockPhoneContact = m::mock(Entity\ContactDetails\PhoneContact::class)
-            ->shouldReceive('serialize')
-            ->with(['phoneContactType'])
-            ->times(2)
-            ->andReturn('EXPECTED_PHONE_CONTACT')
-            ->getMock();
+            );
 
         $query = TransferQry\Licence\Addresses::create([]);
 
         $this->repoMap['Licence']->shouldReceive('fetchWithAddressesUsingId')
             ->with($query)
             ->andReturn($mockLicenceEntity);
-
-        $this->repoMap['PhoneContact']->shouldReceive('fetchList')
-            ->andReturnUsing(
-                function (
-                    TransferQry\ContactDetail\PhoneContact\GetList $qry,
-                    $hydrateMethod
-                ) use ($mockPhoneContact) {
-                    static::assertEquals(self::CONTACT_DETAILS_ID, $qry->getContactDetailsId());
-                    static::assertEquals('_type, phoneNumber', $qry->getSort());
-                    static::assertEquals(Query::HYDRATE_OBJECT, $hydrateMethod);
-
-                    return [$mockPhoneContact, clone $mockPhoneContact];
-                }
-            );
 
         //  call & check
         $result = $this->sut->handleQuery($query);
@@ -87,30 +61,11 @@ class AddressesTest extends QueryHandlerTestCase
 
         $expected = [
             'correspondenceCd' => [
-                'phoneContacts' => [
-                    'EXPECTED_PHONE_CONTACT',
-                    'EXPECTED_PHONE_CONTACT',
-                ],
+                'phoneContacts' => 'EXPECTED',
             ],
             'LicenceData' => 'EXPECTED',
         ];
 
         static::assertEquals($expected, $result->serialize());
-    }
-
-    public function testHandleQueryCdNull()
-    {
-        /** @var Entity\Licence\Licence $licence */
-        $mockLicenceEntity = m::mock(Entity\Licence\Licence::class)->makePartial();
-
-        $this->repoMap['Licence']
-            ->shouldReceive('fetchWithAddressesUsingId')->andReturn($mockLicenceEntity);
-
-        $this->repoMap['PhoneContact']->shouldNotReceive('fetchList');
-
-        //  call
-        $this->sut->handleQuery(
-            TransferQry\Licence\Addresses::create([])
-        );
     }
 }
