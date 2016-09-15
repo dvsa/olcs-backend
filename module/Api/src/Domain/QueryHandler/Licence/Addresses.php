@@ -1,13 +1,10 @@
 <?php
 
-/**
- * Addresses
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -19,12 +16,21 @@ class Addresses extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
 
+    /**
+     * Process query
+     *
+     * @param TransferQry\Licence\Addresses $query Query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
-        $licence = $this->getRepo()->fetchWithAddressesUsingId($query);
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\Licence $licenceRepo */
+        $licenceRepo = $this->getRepo();
 
         return $this->result(
-            $licence,
+            $licenceRepo->fetchWithAddressesUsingId($query),
             [
                 'correspondenceCd' => [
                     'address' => [
@@ -39,7 +45,7 @@ class Addresses extends AbstractQueryHandler
                     'address' => [
                         'countryCode',
                     ],
-                    'contactType'
+                    'contactType',
                 ],
                 'transportConsultantCd' => [
                     'address' => [

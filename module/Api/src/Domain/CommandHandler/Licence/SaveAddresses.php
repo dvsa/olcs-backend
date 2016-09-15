@@ -2,16 +2,15 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
-use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses as Cmd;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Save LVA Addresses
@@ -32,9 +31,12 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
     );
 
     /**
-     * @inheritdoc
+     * Handle command
      *
-     * @param \Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses $command
+     * @param DomainCmd\Licence\SaveAddresses $command Command
+     *
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -56,6 +58,13 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
         return $this->result;
     }
 
+    /**
+     * Handle side effect
+     *
+     * @param Result $result Temp result
+     *
+     * @return void
+     */
     private function handleSideEffectResult(Result $result)
     {
         $this->result->merge($result);
@@ -65,12 +74,21 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
         }
     }
 
-    private function saveCorrespondenceAddress(Cmd $command, Licence $licence)
+    /**
+     * Save Corr address
+     *
+     * @param DomainCmd\Licence\SaveAddresses $command Comman
+     * @param Licence                         $licence Licence entity
+     *
+     * @return void
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function saveCorrespondenceAddress(DomainCmd\Licence\SaveAddresses $command, Licence $licence)
     {
         $address = $command->getCorrespondenceAddress();
         $address['contactType'] = ContactDetails::CONTACT_TYPE_CORRESPONDENCE_ADDRESS;
         $result = $this->handleSideEffect(
-            SaveAddress::create($address)
+            DomainCmd\ContactDetails\SaveAddress::create($address)
         );
 
         if ($result->getId('contactDetails') !== null) {
@@ -95,7 +113,15 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
         $this->handleSideEffectResult($result);
     }
 
-    private function updateCorrespondencePhoneContacts(Cmd $command, Licence $licence)
+    /**
+     * Update Corr Phone contacts
+     *
+     * @param DomainCmd\Licence\SaveAddresses $command Comman
+     * @param Licence                         $licence Licence entity
+     *
+     * @return void
+     */
+    private function updateCorrespondencePhoneContacts(DomainCmd\Licence\SaveAddresses $command, Licence $licence)
     {
         $this->updatePhoneContacts(
             $command->getContact(),
@@ -103,31 +129,46 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
         );
     }
 
+    /**
+     * Common functionality to update phone contacts
+     *
+     * @param array          $data           Phone Contact data
+     * @param ContactDetails $contactDetails Contact Details entity
+     *
+     * @return void
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     private function updatePhoneContacts($data, ContactDetails $contactDetails)
     {
         foreach ($this->phoneTypes as $phoneType => $phoneRefName) {
-
             $result = new Result();
-            $version = null;
-
             $result->setFlag('hasChanged', false);
+
+            $version = null;
+            /** @var PhoneContact $contact */
+            $contact = null;
 
             if (!empty($data['phone_' . $phoneType . '_id'])) {
                 $version = $data['phone_' . $phoneType . '_version'];
+
                 $contact = $this->getRepo('PhoneContact')->fetchById(
                     $data['phone_' . $phoneType . '_id'],
                     Query::HYDRATE_OBJECT,
                     $version
                 );
-            } else {
-                $contact = new PhoneContact(
-                    $this->getRepo()->getRefdataReference($phoneRefName)
-                );
-                $contact->setContactDetails($contactDetails);
-                $contactDetails->getPhoneContacts()->add($contact);
             }
 
+            $hasContact = ($contact instanceof PhoneContact);
+
             if (!empty($data['phone_' . $phoneType])) {
+                if (!$hasContact) {
+                    $contact = new PhoneContact(
+                        $this->getRepo()->getRefdataReference($phoneRefName)
+                    );
+                    $contact->setContactDetails($contactDetails);
+
+                    $contactDetails->getPhoneContacts()->add($contact);
+                }
 
                 $contact->setPhoneNumber($data['phone_' . $phoneType]);
 
@@ -141,11 +182,11 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
                     $result->setFlag('hasChanged', true);
                 }
 
-            } elseif ($contact->getId() > 0) {
-
+            } elseif ($hasContact && $contact->getId() > 0) {
                 $contactDetails->getPhoneContacts()->removeElement($contact);
 
                 $this->getRepo('PhoneContact')->delete($contact);
+
                 $result->addMessage('Phone contact ' . $phoneType . ' deleted');
                 $result->setFlag('hasChanged', true);
             }
@@ -154,7 +195,16 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
         }
     }
 
-    private function maybeSaveEstablishmentAddress(Cmd $command, Licence $licence)
+    /**
+     * Save Establishment Address
+     *
+     * @param DomainCmd\Licence\SaveAddresses $command Comman
+     * @param Licence                         $licence Licence Entity
+     *
+     * @return void
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function maybeSaveEstablishmentAddress(DomainCmd\Licence\SaveAddresses $command, Licence $licence)
     {
         if (empty($command->getEstablishmentAddress())) {
             return;
@@ -162,7 +212,9 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
 
         $address = $command->getEstablishmentAddress();
         $address['contactType'] = ContactDetails::CONTACT_TYPE_ESTABLISHMENT_ADDRESS;
-        $result = $this->handleSideEffect(SaveAddress::create($address));
+        $result = $this->handleSideEffect(
+            DomainCmd\ContactDetails\SaveAddress::create($address)
+        );
 
         if ($result->getId('contactDetails') !== null) {
             $licence->setEstablishmentCd(
@@ -173,7 +225,16 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
         $this->handleSideEffectResult($result);
     }
 
-    private function maybeAddOrRemoveTransportConsultant(Cmd $command, Licence $licence)
+    /**
+     * Add or Remove Transport Consultant
+     *
+     * @param DomainCmd\Licence\SaveAddresses $command Command
+     * @param Licence                         $licence Licence Entity
+     *
+     * @return void
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function maybeAddOrRemoveTransportConsultant(DomainCmd\Licence\SaveAddresses $command, Licence $licence)
     {
         if (empty($command->getConsultant())) {
             return;
@@ -188,7 +249,9 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
         if ($params['add-transport-consultant'] === 'Y') {
             $address = $params['address'];
             $address['contactType'] = ContactDetails::CONTACT_TYPE_TRANSPORT_CONSULTANT;
-            $result = $this->handleSideEffect(SaveAddress::create($address));
+            $result = $this->handleSideEffect(
+                DomainCmd\ContactDetails\SaveAddress::create($address)
+            );
 
             $this->handleSideEffectResult($result);
 
