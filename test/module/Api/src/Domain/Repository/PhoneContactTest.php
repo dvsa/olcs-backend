@@ -37,7 +37,7 @@ class PhoneContactTest extends RepositoryTestCase
 
         $this->sut->buildDefaultListQuery($mockQb, $mockQry, []);
 
-        $expected = '{QUERY} SELECT pct.description as HIDDEN _type';
+        $expected = '{QUERY} SELECT pct.displayOrder as HIDDEN _type';
 
         $this->assertEquals($expected, $this->query);
     }
@@ -46,7 +46,7 @@ class PhoneContactTest extends RepositoryTestCase
     {
         /** @var QueryBuilder $mockQb */
         $mockQb = m::mock(QueryBuilder::class)
-            ->shouldReceive('andWhere')->with('cd.contactDetails = :CONTACT_DETAILS_ID')->once()->andReturnSelf()
+            ->shouldReceive('andWhere')->with('pc.contactDetails = :CONTACT_DETAILS_ID')->once()->andReturnSelf()
             ->shouldReceive('setParameter')->with('CONTACT_DETAILS_ID', self::CONTACT_DETAILS_ID)->once()->andReturn()
             ->getMock();
 

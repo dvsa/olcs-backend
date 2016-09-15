@@ -6,7 +6,6 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use \Dvsa\Olcs\Api\Entity;
 
 /**
  * Addresses
@@ -16,7 +15,6 @@ use \Dvsa\Olcs\Api\Entity;
 class Addresses extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
-    protected $extraRepos = ['PhoneContact'];
 
     /**
      * Process query
@@ -31,17 +29,17 @@ class Addresses extends AbstractQueryHandler
         /** @var \Dvsa\Olcs\Api\Domain\Repository\Licence $licenceRepo */
         $licenceRepo = $this->getRepo();
 
-        /** @var Entity\Licence\Licence $licence */
-        $licence = $licenceRepo->fetchWithAddressesUsingId($query);
-
         return $this->result(
-            $licence,
+            $licenceRepo->fetchWithAddressesUsingId($query),
             [
                 'correspondenceCd' => [
                     'address' => [
                         'countryCode',
                     ],
                     'contactType',
+                    'phoneContacts' => [
+                        'phoneContactType',
+                    ],
                 ],
                 'establishmentCd' => [
                     'address' => [
@@ -58,39 +56,7 @@ class Addresses extends AbstractQueryHandler
                         'phoneContactType',
                     ],
                 ],
-            ],
-            [
-                'correspondenceCd' => $this->corrCrValues($licence),
             ]
         );
-    }
-
-    /**
-     * Additional values of correspondence contact details
-     *
-     * @param Entity\Licence\Licence $licence Licence entity
-     *
-     * @return array
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
-    private function corrCrValues(Entity\Licence\Licence $licence)
-    {
-        if (null === $licence->getCorrespondenceCd()) {
-            return [];
-        }
-
-        //  get phone contacts
-        $qryPhoneContacts = TransferQry\ContactDetail\PhoneContact\GetList::create(
-            [
-                'contactDetailsId' => $licence->getCorrespondenceCd()->getId(),
-                'sort' => '_type, phoneNumber',
-            ]
-        );
-
-        $phoneContacts = $this->getRepo('PhoneContact')->fetchList($qryPhoneContacts, Query::HYDRATE_OBJECT);
-
-        return [
-            'phoneContacts' => $this->resultList($phoneContacts, ['phoneContactType']),
-        ];
     }
 }

@@ -23,7 +23,7 @@ class GetList extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        /* @var $repo \Dvsa\Olcs\Api\Domain\Repository\PhoneContact */
+        /** @var $repo \Dvsa\Olcs\Api\Domain\Repository\PhoneContact */
         $repo = $this->getRepo();
 
         return [

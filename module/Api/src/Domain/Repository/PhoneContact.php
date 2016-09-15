@@ -16,7 +16,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 class PhoneContact extends AbstractRepository
 {
     protected $entity = Entity\ContactDetails\PhoneContact::class;
-    protected $alias = 'cd';
+    protected $alias = 'pc';
 
     /**
      * Build Default List Query
@@ -34,7 +34,7 @@ class PhoneContact extends AbstractRepository
 
         $queryBuilderHelper = $this->getQueryBuilder();
         $queryBuilderHelper->with('phoneContactType', 'pct');
-        $qb->addSelect('pct.description as HIDDEN _type');
+        $qb->addSelect('pct.displayOrder as HIDDEN _type');
     }
 
     /**
@@ -47,10 +47,7 @@ class PhoneContact extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        $contactDetailsId = $query->getContactDetailsId();
-        if ($contactDetailsId !== null) {
-            $qb->andWhere($this->alias . '.contactDetails = :CONTACT_DETAILS_ID');
-            $qb->setParameter('CONTACT_DETAILS_ID', $contactDetailsId);
-        }
+        $qb->andWhere($this->alias . '.contactDetails = :CONTACT_DETAILS_ID');
+        $qb->setParameter('CONTACT_DETAILS_ID', $query->getContactDetailsId());
     }
 }

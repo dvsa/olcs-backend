@@ -39,12 +39,14 @@ class Update extends AbstractCommandHandler
         /** @var \Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact $entity */
         $entity = $phoneContactRepo->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
+        $phoneContactRepo->lock($entity, $command->getVersion());
+
         $entity
             ->setContactDetails($contactDetails)
             ->setPhoneContactType($phoneContactType)
             ->setPhoneNumber($command->getPhoneNumber());
 
-        $this->getRepo()->save($entity);
+        $phoneContactRepo->save($entity);
 
         return $this->result->addMessage("Phone contact '{$entity->getId()}' updated");
     }

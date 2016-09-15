@@ -1528,9 +1528,6 @@ return array(
         'is_cancelled' => array(
             'type' => 'yesno'
         ),
-        'is_adjourned' => array(
-            'type' => 'yesno'
-        ),
         'is_full_day' => array(
             'type' => 'yesnonull'
         ),
@@ -1586,7 +1583,11 @@ return array(
                     'persist'
                 ),
                 'indexBy' => 'id',
-                'orphanRemoval' => 'true'
+                'orphanRemoval' => 'true',
+                'orderBy' => array(
+                    'lastModifiedOn' => 'DESC',
+                    'id' => 'DESC',
+                ),
             )
         )
     ),
