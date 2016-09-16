@@ -4,12 +4,13 @@ namespace Dvsa\OlcsTest\Api\Entity\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity as Entities;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Application\S4;
-use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -51,6 +52,27 @@ class ApplicationEntityTest extends EntityTester
         $this->entity->setLicenceType($this->licence->getLicenceType());
     }
 
+    public function testSetGet()
+    {
+        /** @var Entity $sut */
+        $sut = $this->instantiate(Entity::class);
+
+        $sut->setPublicationNo('unit_PubNo');
+        static::assertEquals('unit_PubNo', $sut->getPublicationNo());
+
+        $sut->setOooDate('unit_OooDate');
+        static::assertEquals('unit_OooDate', $sut->getOooDate());
+
+        $sut->setOorDate('unit_OorDate');
+        static::assertEquals('unit_OorDate', $sut->getOorDate());
+
+        $sut->setIsOpposed('unit_IsOpposed');
+        static::assertEquals('unit_IsOpposed', $sut->getIsOpposed());
+
+        $sut->setPublishedDate('unit_PublDate');
+        static::assertEquals('unit_PublDate', $sut->getPublishedDate());
+    }
+
     /** @dataProvider dpTestUpdateTypeOfLicenceTrue */
     public function testUpdateTypeOfLicenceTrue($validateTolResult, $expect)
     {
@@ -81,6 +103,34 @@ class ApplicationEntityTest extends EntityTester
                 'expect' => null,
             ],
         ];
+    }
+
+    public function testIsValidTolReturnValue()
+    {
+        $niFlag = 'unit_niFlag';
+        $gop = 'unit_goodsOrPsv';
+        $licType = 'unit_licType';
+
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('validateTol')
+            ->once()
+            ->with($niFlag, $gop, $licType)
+            ->andReturn('EXPECTED')
+            ->getMock();
+
+        static::assertEquals('EXPECTED', $sut->isValidTol($niFlag, $gop, $licType));
+    }
+
+    public function testIsValidTolReturnNull()
+    {
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('validateTol')
+            ->andThrowExceptions([new ValidationException([])])
+            ->getMock();
+
+        static::assertFalse($sut->isValidTol('A', 'B', 'C'));
     }
 
     public function dataProviderTestHasUpgrade()
@@ -232,7 +282,6 @@ class ApplicationEntityTest extends EntityTester
         $insolvencyDetails,
         $insolvencyConfirmation
     ) {
-
         $this->entity->updateFinancialHistory(
             $bankrupt,
             $liquidation,
@@ -249,6 +298,61 @@ class ApplicationEntityTest extends EntityTester
         return [
             ['Y', 'N', 'N', 'N', 'N', '123', '1'],
             ['Y', 'N', 'N', 'N', 'N', '', '1'],
+        ];
+    }
+
+    /**
+     * @dataProvider validDataProvider
+     * @group        applicationEntity
+     */
+    public function testUpdateFinancialHistoryValid(
+        $bankrupt,
+        $liquidation,
+        $receivership,
+        $administration,
+        $disqualified,
+        $insolvencyDetails,
+        $insolvencyConfirmation
+    ) {
+        $this->assertTrue(
+            $this->entity->updateFinancialHistory(
+                $bankrupt,
+                $liquidation,
+                $receivership,
+                $administration,
+                $disqualified,
+                $insolvencyDetails,
+                $insolvencyConfirmation
+            )
+        );
+        $this->assertEquals($this->entity->getBankrupt(), $bankrupt);
+        $this->assertEquals($this->entity->getLiquidation(), $liquidation);
+        $this->assertEquals($this->entity->getReceivership(), $receivership);
+        $this->assertEquals($this->entity->getAdministration(), $administration);
+        $this->assertEquals($this->entity->getDisqualified(), $disqualified);
+        $this->assertEquals($this->entity->getInsolvencyDetails(), $insolvencyDetails);
+        $this->assertEquals($this->entity->getInsolvencyConfirmation(), 'Y');
+    }
+
+    /*
+     * Tested unreacable condition, just for coverage
+     */
+    public function testUpdateFinancialHistoryNull()
+    {
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()
+            ->shouldAllowMockingProtectedMethods()
+            ->shouldReceive('validateFinancialHistory')->once()->andReturn(false)
+            ->getMock();
+
+        static::assertNull($sut->updateFinancialHistory(0, 1, 2, 3, 4, 5, 6));
+    }
+
+    public function validDataProvider()
+    {
+        return [
+            ['N', 'N', 'N', 'N', 'N', '', '1'],
+            ['Y', 'N', 'N', 'N', 'N', str_repeat('X', 200), '1'],
         ];
     }
 
@@ -504,48 +608,6 @@ class ApplicationEntityTest extends EntityTester
         $sut->shouldReceive('getLicenceType->getId')->with()->once()->andReturn($applicationLicenceType);
 
         $this->assertSame($expected, $sut->isLicenceUpgrade());
-    }
-
-    /**
-     * @dataProvider validDataProvider
-     * @group applicationEntity
-     */
-    public function testUpdateFinancialHistoryValid(
-        $bankrupt,
-        $liquidation,
-        $receivership,
-        $administration,
-        $disqualified,
-        $insolvencyDetails,
-        $insolvencyConfirmation
-    ) {
-
-        $this->assertTrue(
-            $this->entity->updateFinancialHistory(
-                $bankrupt,
-                $liquidation,
-                $receivership,
-                $administration,
-                $disqualified,
-                $insolvencyDetails,
-                $insolvencyConfirmation
-            )
-        );
-        $this->assertEquals($this->entity->getBankrupt(), $bankrupt);
-        $this->assertEquals($this->entity->getLiquidation(), $liquidation);
-        $this->assertEquals($this->entity->getReceivership(), $receivership);
-        $this->assertEquals($this->entity->getAdministration(), $administration);
-        $this->assertEquals($this->entity->getDisqualified(), $disqualified);
-        $this->assertEquals($this->entity->getInsolvencyDetails(), $insolvencyDetails);
-        $this->assertEquals($this->entity->getInsolvencyConfirmation(), 'Y');
-    }
-
-    public function validDataProvider()
-    {
-        return [
-            ['N', 'N', 'N', 'N', 'N', '', '1'],
-            ['Y', 'N', 'N', 'N', 'N', str_repeat('X', 200), '1'],
-        ];
     }
 
     /**
@@ -1113,8 +1175,11 @@ class ApplicationEntityTest extends EntityTester
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
 
+        /** @var RefData $licenceType */
         $licenceType = m::mock(RefData::class);
+        /** @var RefData $goodsOrPsv */
         $goodsOrPsv = m::mock(RefData::class);
+        /** @var TrafficArea $trafficArea */
         $trafficArea = m::mock(TrafficArea::class)
             ->shouldReceive('getIsNi')
             ->andReturn(true)
@@ -1192,6 +1257,7 @@ class ApplicationEntityTest extends EntityTester
 
     public function testGetCurrentInterimStatus()
     {
+        /** @var RefData $status */
         $status = m::mock(RefData::class)->makePartial();
         $status->setId(123);
 
@@ -1786,10 +1852,12 @@ class ApplicationEntityTest extends EntityTester
         $publicationSection1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
         $publicationSection1->setId(1);
 
-        $publication1 = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
+        /** @var Entities\Publication\Publication $publication1 */
+        $publication1 = m::mock(Entities\Publication\Publication::class)->makePartial();
         $publication1->setPubDate('2015-10-05');
 
-        $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        /** @var Entities\Publication\PublicationLink $publicationLink1 */
+        $publicationLink1 = new Entities\Publication\PublicationLink();
         $publicationLink1->setPublicationSection($publicationSection1)
             ->setPublication($publication1);
 
@@ -1813,10 +1881,11 @@ class ApplicationEntityTest extends EntityTester
         $publicationSection1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
         $publicationSection1->setId(16);
 
-        $publication1 = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
+        /** @var Entities\Publication\Publication $publication1 */
+        $publication1 = m::mock(Entities\Publication\Publication::class)->makePartial();
         $publication1->setPubDate('2015-10-05');
 
-        $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink1 = new Entities\Publication\PublicationLink();
         $publicationLink1->setPublicationSection($publicationSection1)
             ->setPublication($publication1);
 
@@ -1868,10 +1937,11 @@ class ApplicationEntityTest extends EntityTester
         $publicationSection1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
         $publicationSection1->setId(3);
 
-        $publication1 = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
+        /** @var  Entities\Publication\Publication $publication1 */
+        $publication1 = m::mock(Entities\Publication\Publication::class)->makePartial();
         $publication1->setPubDate('2015-10-05');
 
-        $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink1 = new Entities\Publication\PublicationLink();
         $publicationLink1->setPublicationSection($publicationSection1)
             ->setPublication($publication1);
 
@@ -1928,10 +1998,11 @@ class ApplicationEntityTest extends EntityTester
         $publicationSection1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
         $publicationSection1->setId(17);
 
-        $publication1 = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
+        /** @var Entities\Publication\Publication $publication1 */
+        $publication1 = m::mock(Entities\Publication\Publication::class)->makePartial();
         $publication1->setPubDate('2015-10-05');
 
-        $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink1 = new Entities\Publication\PublicationLink();
         $publicationLink1->setPublicationSection($publicationSection1)
             ->setPublication($publication1);
 
@@ -1966,6 +2037,79 @@ class ApplicationEntityTest extends EntityTester
     }
 
     /**
+     * It test NOT REACHABLE condition, added for coverage
+     */
+    public function testGetOutOfOppositionDateGoodsVarNotAppl()
+    {
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()
+            ->shouldAllowMockingProtectedMethods()
+            ->shouldReceive('isGoods')->once()->andReturn(true)
+            ->shouldReceive('isVariation')->once()->andReturn(true)
+            ->shouldReceive('isPublishable')->once()->andReturn(true)
+            ->shouldReceive('hasApprovedTrueS4')->once()->andReturn(false)
+            ->shouldReceive('hasIncreaseInOperatingCentre')->once()->andReturn(false)
+            ->shouldReceive('isRealUpgrade')->once()->andReturn(false)
+            ->getMock();
+        $sut->shouldReceive('getOperatingCentresAdded->count')->andReturn(0);
+
+        static::assertEquals(Entity::NOT_APPLICABLE, $sut->getOutOfOppositionDate());
+    }
+
+    /**
+     * @dataProvider providerDatesAsString
+     */
+    public function testGetOutOfOppositionDateAsString($input, $expected)
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->shouldReceive('getOutOfOppositionDate')
+            ->andReturn($input);
+
+        $oooDate = $application->getOutOfOppositionDateAsString();
+        $this->assertEquals($expected, $oooDate);
+    }
+
+    /**
+     * @dataProvider providerDatesAsString
+     */
+    public function testGetOutOfRepresentationDateAsString($input, $expected)
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->shouldReceive('getOutOfRepresentationDate')
+            ->andReturn($input);
+
+        $oorDate = $application->getOutOfRepresentationDateAsString();
+        $this->assertEquals($expected, $oorDate);
+    }
+
+    public function providerDatesAsString()
+    {
+        return [
+            [Entity::NOT_APPLICABLE, Entity::NOT_APPLICABLE],
+            [new DateTime('2015-01-01'), '01 Jan 2015'],
+            [Entity::UNKNOWN, Entity::UNKNOWN],
+            ['', ''],
+            [null, ''],
+        ];
+    }
+
+    public function testHasActiveS4()
+    {
+        $mockS4 = m::mock(Entities\Application\S4::class);
+
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getActiveS4s')->once()->andReturn([$mockS4, clone $mockS4])
+            ->getMock();
+
+        static::assertTrue($sut->hasActiveS4());
+    }
+
+    /**
      * @dataProvider canHaveCommunityLicencesProvider
      */
     public function testCanHaveCommunityLicences($isStandardInternational, $isPsv, $isRestricted, $expected)
@@ -1984,7 +2128,9 @@ class ApplicationEntityTest extends EntityTester
 
     public function testGetDeltaAocByOc()
     {
+        /** @var OperatingCentre $oc */
         $oc = m::mock(OperatingCentre::class)->makePartial();
+        /** @var OperatingCentre $oc2 */
         $oc2 = m::mock(OperatingCentre::class)->makePartial();
 
         /** @var ApplicationOperatingCentre $aoc */
@@ -2003,6 +2149,7 @@ class ApplicationEntityTest extends EntityTester
         $application = $this->instantiate(Entity::class);
         $application->setOperatingCentres($ocs);
 
+        /** @var ArrayCollection $collection */
         $collection = $application->getDeltaAocByOc($oc);
 
         $this->assertEquals(1, $collection->count());
@@ -2041,9 +2188,9 @@ class ApplicationEntityTest extends EntityTester
         $active = $application->getActiveS4s();
 
         $this->assertCount(2, $active);
-        $this->assertTrue(in_array($s41, $active));
-        $this->assertTrue(in_array($s42, $active));
-        $this->assertfalse(in_array($s43, $active));
+        static::assertTrue(in_array($s42, $active, true));
+        static::assertFalse(in_array($s43, $active, true));
+        static::assertTrue(in_array($s41, $active, true));
     }
 
     public function testIsNew()
@@ -2060,9 +2207,11 @@ class ApplicationEntityTest extends EntityTester
 
     public function testIsRestricted()
     {
+        /** @var RefData $sr */
         $sr = m::mock(RefData::class)->makePartial();
         $sr->setId(Licence::LICENCE_TYPE_SPECIAL_RESTRICTED);
 
+        /** @var RefData $r */
         $r = m::mock(RefData::class)->makePartial();
         $r->setId(Licence::LICENCE_TYPE_RESTRICTED);
 
@@ -2095,9 +2244,11 @@ class ApplicationEntityTest extends EntityTester
 
     public function testIsStandardInternational()
     {
+        /** @var RefData $sn */
         $sn = m::mock(RefData::class)->makePartial();
         $sn->setId(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
 
+        /** @var RefData $si */
         $si = m::mock(RefData::class)->makePartial();
         $si->setId(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL);
 
@@ -2111,6 +2262,56 @@ class ApplicationEntityTest extends EntityTester
 
         $application->setLicenceType($si);
         $this->assertTrue($application->isStandardInternational());
+    }
+
+    public function testGetLatestPublication()
+    {
+        $publDate1 = '2010-11-12';
+        $publDate2 = '2011-12-13';
+
+        //  publication with invalid section
+        /** @var Entities\Publication\Publication $mockPub */
+        $mockPub = m::mock(Entities\Publication\Publication::class);
+        $pubLinkInvalicSection = (new Entities\Publication\PublicationLink())
+            ->setPublicationSection(
+                (new Entities\Publication\PublicationSection())
+                    ->setId('INVALID_SECTION')
+            )
+            ->setPublication($mockPub);
+
+        //  publication with lower date
+        /** @var Entities\Publication\Publication $mockPub1 */
+        $mockPub1 = m::mock(Entities\Publication\Publication::class)
+            ->shouldReceive('getPubDate')->once()->andReturn($publDate1)
+            ->getMock();
+
+        $pubLinkLose = new Entities\Publication\PublicationLink();
+        $pubLinkLose
+            ->setPublicationSection(
+                (new Entities\Publication\PublicationSection())
+                    ->setId(Entities\Publication\PublicationSection::APP_NEW_SECTION)
+            )
+            ->setPublication($mockPub1);
+
+        //  publication with higher date
+        /** @var Entities\Publication\Publication $mockWin */
+        $mockWin = m::mock(Entities\Publication\Publication::class)
+            ->shouldReceive('getPubDate')->times(2)->andReturn($publDate2)
+            ->getMock();
+
+        $pubLinkWin = (new Entities\Publication\PublicationLink())
+            ->setPublicationSection(
+                (new Entities\Publication\PublicationSection())
+                    ->setId(Entities\Publication\PublicationSection::APP_NEW_SECTION)
+            )
+            ->setPublication($mockWin);
+
+        //  check return value
+        /** @var Entity $sut */
+        $sut = $this->instantiate(Entity::class);
+        $sut->setPublicationLinks(new ArrayCollection([$pubLinkInvalicSection, $pubLinkLose, $pubLinkWin]));
+
+        static::assertEquals($publDate2, $sut->determinePublishedDate());
     }
 
     public function testGetActiveVehiclesCount()
@@ -2177,6 +2378,68 @@ class ApplicationEntityTest extends EntityTester
         ];
     }
 
+    public function testDeterminePublicationNrDateOk()
+    {
+        $publNo = 8888;
+        $publDate = '2010-11-12';
+
+        /** @var Entities\Publication\Publication $mockPub */
+        $mockPub = m::mock(Entities\Publication\Publication::class)
+            ->shouldReceive('getPublicationNo')->once()->andReturn($publNo)
+            ->shouldReceive('getPubDate')->once()->andReturn($publDate)
+            ->getMock();
+
+        $pubLink = new Entities\Publication\PublicationLink();
+        $pubLink
+            ->setPublicationSection(
+                (new Entities\Publication\PublicationSection())
+                    ->setId(Entities\Publication\PublicationSection::APP_NEW_SECTION)
+            )
+            ->setPublication($mockPub);
+
+        //  check return value
+        /** @var Entity $sut */
+        $sut = $this->instantiate(Entity::class);
+        $sut->setPublicationLinks(new ArrayCollection([$pubLink]));
+
+        static::assertEquals($publNo, $sut->determinePublicationNo());
+        static::assertEquals($publDate, $sut->determinePublishedDate());
+
+        //  check return null
+        $sut->setPublicationLinks(new ArrayCollection([]));
+
+        static::assertNull($sut->determinePublicationNo());
+        static::assertNull($sut->determinePublishedDate());
+    }
+
+    public function testHasOpposition()
+    {
+        $mockCase = m::mock(Entities\Cases\Cases::class)
+            ->shouldReceive('getOppositions')->once()->andReturn([1, 2])
+            ->getMock();
+
+        //  check true
+        /** @var Entity $sut */
+        $sut = $this->instantiate(Entity::class);
+        $sut->setCases(new ArrayCollection([$mockCase]));
+
+        static::assertTrue($sut->hasOpposition());
+
+        //  check False
+        $mockCase = m::mock(Entities\Cases\Cases::class)
+            ->shouldReceive('getOppositions')->once()->andReturn([])
+            ->getMock();
+
+        $sut->setCases(new ArrayCollection([$mockCase]));
+
+        static::assertFalse($sut->hasOpposition());
+
+        //  check False
+        $sut->setCases(new ArrayCollection([]));
+
+        static::assertFalse($sut->hasOpposition());
+    }
+
     public function testGetOtherActiveLicencesForOrganisation()
     {
         $licence1 = m::mock(Licence::class)->makePartial()->setId(7);
@@ -2196,6 +2459,40 @@ class ApplicationEntityTest extends EntityTester
         $application->setLicence($licence1);
 
         $this->assertEquals([$licence2], $application->getOtherActiveLicencesForOrganisation());
+    }
+
+    public function testGetOtherActiveLicencesForOrganisationNoActiveLics()
+    {
+        /** @var Entities\Licence\Licence $licence */
+        $licence = m::mock(Entities\Licence\Licence::class);
+        $licence->shouldReceive('getOrganisation->getActiveLicences')->once()->andReturn([]);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setLicence($licence);
+
+        static::assertEquals([], $application->getOtherActiveLicencesForOrganisation());
+    }
+
+    public function testGetOtherActiveLicencesForOrganisationNull()
+    {
+        /** @var Entity $sut */
+        $sut = $this->instantiate(Entity::class);
+        $sut->setLicence(null);
+
+        static::assertNull($sut->getOtherActiveLicencesForOrganisation());
+    }
+
+    public function testGetTrafficArea()
+    {
+        /** @var Entities\Licence\Licence $mockLic */
+        $mockLic = m::mock(Entities\Licence\Licence::class)
+            ->shouldReceive('getTrafficArea')->once()->andReturn('EXPECTED')
+            ->getMock();
+
+        $sut = new Entity($mockLic, new RefData(), false);
+
+        static::assertEquals('EXPECTED', $sut->getTrafficArea());
     }
 
     public function testGetOperatingCentresNetDelta()
@@ -2224,6 +2521,22 @@ class ApplicationEntityTest extends EntityTester
         $this->assertEquals(1, $application->getOperatingCentresNetDelta());
     }
 
+    public function testSetTargetCompletionDateFromReceivedDate()
+    {
+        /** @var Entity $sut */
+        $sut = $this->instantiate(Entity::class);
+
+        $date = new \DateTime('2001-02-03T04:05:06');
+        $sut->setReceivedDate($date);
+
+        $sut->setTargetCompletionDateFromReceivedDate();
+
+        static::assertEquals(
+            $date->modify('+9 week')->getTimestamp(),
+            $sut->getTargetCompletionDate()->getTimestamp()
+        );
+    }
+
     /**
      * @dataProvider allowFeePaymentsProvider
      */
@@ -2232,12 +2545,15 @@ class ApplicationEntityTest extends EntityTester
         /** @var Entity $application */
         $application = $this->instantiate(Entity::class);
 
+        /** @var Organisation $organisation */
         $organisation = m::mock(Organisation::class);
 
+        /** @var RefData $status */
         $status = m::mock(RefData::class)
             ->shouldReceive('getId')
             ->andReturn($statusId)
             ->getMock();
+        /** @var RefData $licenceStatus */
         $licenceStatus = m::mock(RefData::class)
             ->shouldReceive('getId')
             ->andReturn($licenceStatusId)
@@ -2392,48 +2708,6 @@ class ApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider providerDatesAsString
-     */
-    public function testGetOutOfOppositionDateAsString($input, $expected)
-    {
-        /** @var Entity $application */
-        $application = m::mock(Entity::class)->makePartial();
-
-        $application->shouldReceive('getOutOfOppositionDate')
-            ->andReturn($input);
-
-        $oooDate = $application->getOutOfOppositionDateAsString();
-        $this->assertEquals($expected, $oooDate);
-    }
-
-    /**
-     * @dataProvider providerDatesAsString
-     */
-    public function testGetOutOfRepresentationDateAsString($input, $expected)
-    {
-        /** @var Entity $application */
-        $application = m::mock(Entity::class)->makePartial();
-
-        $application->shouldReceive('getOutOfRepresentationDate')
-            ->andReturn($input);
-
-        $oorDate = $application->getOutOfRepresentationDateAsString();
-        $this->assertEquals($expected, $oorDate);
-
-    }
-
-    public function providerDatesAsString()
-    {
-        return [
-            [Entity::NOT_APPLICABLE, Entity::NOT_APPLICABLE],
-            [new DateTime('2015-01-01'), '01 Jan 2015'],
-            [Entity::UNKNOWN, Entity::UNKNOWN],
-            ['', ''],
-            [null, '']
-        ];
-    }
-
-    /**
      * @dataProvider dpTestGetLicenceTypeShortCode
      * @param string $licenceType
      * @param string $shortCode
@@ -2469,6 +2743,38 @@ class ApplicationEntityTest extends EntityTester
         $entity->setLicence($licence);
 
         $this->assertEquals(111, $entity->getContextValue());
+    }
+
+    public function testGetOpenTasksForCategory()
+    {
+        $catId = 9999;
+        $subCatId = 8888;
+
+        /** @var Entities\Task\Task $mockTaskNoCat */
+        $mockTaskNoCat = m::mock(Entities\Task\Task::class)->makePartial();
+        $mockTaskNoCat->setIsClosed('N');
+        $mockTaskNoCat->shouldReceive('getCategory->getId')->once()->andReturn('INVALID_CAT');
+
+        /** @var Entities\Task\Task $mockTaskNoSubCat */
+        $mockTaskNoSubCat = m::mock(Entities\Task\Task::class)->makePartial();
+        $mockTaskNoSubCat->setIsClosed('N');
+        $mockTaskNoSubCat->shouldReceive('getCategory->getId')->once()->andReturn($catId);
+        $mockTaskNoSubCat->shouldReceive('getSubCategory->getId')->once()->andReturn('INVALID_SUB_CAT');
+
+        /** @var Entities\Task\Task $mockTask */
+        $mockTask = m::mock(Entities\Task\Task::class)->makePartial();
+        $mockTask->setIsClosed('N');
+        $mockTask->shouldReceive('getCategory->getId')->once()->andReturn($catId);
+        $mockTask->shouldReceive('getSubCategory->getId')->once()->andReturn($subCatId);
+
+        $mockTasks = new ArrayCollection([$mockTaskNoCat, $mockTaskNoSubCat, $mockTask]);
+
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getTasks')->once()->andReturn($mockTasks)
+            ->getMock();
+
+        static::assertEquals([$mockTask], $sut->getOpenTasksForCategory($catId, $subCatId)->toArray());
     }
 
     public function testIsPublishableNewApplication()
@@ -2539,6 +2845,205 @@ class ApplicationEntityTest extends EntityTester
         $application->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL));
 
         $this->assertTrue($application->isPublishable());
+    }
+
+    public function testIsPublishableIsNewPsvSpecRestrict()
+    {
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('isNew')->once()->andReturn(true)
+            ->shouldReceive('isPsv')->once()->andReturn(true)
+            ->shouldReceive('isSpecialRestricted')->once()->andReturn(true)
+            ->getMock();
+
+        static::assertFalse($sut->isPublishable());
+    }
+
+    /**
+     * @dataProvider dpTestIsPsvVehicleSizeSmall
+     */
+    public function testIsPsvVehicleSizeSmall($type, $expect)
+    {
+        $mockRefData = (new RefData())->setId($type);
+
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getPsvWhichVehicleSizes')->times(2)->andReturn($mockRefData)
+            ->getMock();
+
+        static::assertEquals($expect, $sut->isPsvVehicleSizeSmall());
+    }
+
+    public function dpTestIsPsvVehicleSizeSmall()
+    {
+        return [
+            [
+                'type' => Entity::PSV_VEHICLE_SIZE_SMALL,
+                'expect' => true,
+            ],
+            [
+                'type' => 'INVALID_TYPE',
+                'expect' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestIsPsvVehicleSizeMediumLarge
+     */
+    public function testIsPsvVehicleSizeMediumLarge($type, $expect)
+    {
+        $mockRefData = (new RefData())->setId($type);
+
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getPsvWhichVehicleSizes')->times(2)->andReturn($mockRefData)
+            ->getMock();
+
+        static::assertEquals($expect, $sut->isPsvVehicleSizeMediumLarge());
+    }
+
+    public function dpTestIsPsvVehicleSizeMediumLarge()
+    {
+        return [
+            [
+                'type' => Entity::PSV_VEHICLE_SIZE_MEDIUM_LARGE,
+                'expect' => true,
+            ],
+            [
+                'type' => 'INVALID_TYPE',
+                'expect' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestIsPsvVehicleSizeBoth
+     */
+    public function testIsPsvVehicleSizeBoth($type, $expect)
+    {
+        $refData = (new RefData())->setId($type);
+
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getPsvWhichVehicleSizes')->times(2)->andReturn($refData)
+            ->getMock();
+
+        static::assertEquals($expect, $sut->isPsvVehicleSizeBoth());
+    }
+
+    public function dpTestIsPsvVehicleSizeBoth()
+    {
+        return [
+            [
+                'type' => Entity::PSV_VEHICLE_SIZE_BOTH,
+                'expect' => true,
+            ],
+            [
+                'type' => 'INVALID_TYPE',
+                'expect' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestGetLatestOutstandingApplicationFeeOk
+     */
+    public function testGetLatestOutstandingApplicationFeeOk($isOutstanding, $isVariation, $expectFeeType, $expect)
+    {
+        $mockFee = m::mock(Entities\Fee\Fee::class);
+        $mockFee
+            ->shouldReceive('isOutstanding')->once()->andReturn($isOutstanding)
+            ->shouldReceive('getFeeType->getFeeType->getId')
+            ->times($isOutstanding ? 1 : 0)
+            ->andReturn($expectFeeType);
+
+        $mockFees = m::mock(ArrayCollection::class)
+            ->shouldReceive('matching')->once()->andReturnUsing(
+                function (Criteria $item) use ($mockFee) {
+                    static::assertEquals(['invoicedDate' => 'DESC'], $item->getOrderings());
+
+                    return new \ArrayIterator([$mockFee]);
+                }
+            )
+            ->getMock();
+
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('isVariation')->once()->andReturn($isVariation)
+            ->shouldReceive('getFees')->once()->andReturn($mockFees)
+            ->getMock();
+
+        static::assertEquals(
+            ($expect === null ? null : $mockFee),
+            $sut->getLatestOutstandingApplicationFee()
+        );
+    }
+
+    public function dpTestGetLatestOutstandingApplicationFeeOk()
+    {
+        return [
+            [
+                'isOutstanding' => true,
+                'isVariation' => true,
+                'expectFeeType' => Entities\Fee\FeeType::FEE_TYPE_VAR,
+                'expect' => 'MOCK',
+            ],
+            [
+                'isOutstanding' => true,
+                'isVariation' => false,
+                'expectFeeType' => Entities\Fee\FeeType::FEE_TYPE_APP,
+                'expect' => 'MOCK',
+            ],
+            [
+                'isOutstanding' => false,
+                'isVariation' => false,
+                'expectFeeType' => Entities\Fee\FeeType::FEE_TYPE_APP,
+                'expect' => null,
+            ],
+            [
+                'isOutstanding' => true,
+                'isVariation' => false,
+                'expectFeeType' => 'INVALID_TYPE',
+                'expect' => null,
+            ],
+        ];
+    }
+
+    public function testGetLatestOutstandingInterimFeeOk()
+    {
+        $mockFee = m::mock(Entities\Fee\Fee::class);
+        $mockFee
+            ->shouldReceive('isOutstanding')->once()->andReturn(true)
+            ->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
+            ->andReturn(Entities\Fee\FeeType::FEE_TYPE_GRANTINT);
+
+        $mockFees = m::mock(ArrayCollection::class)
+            ->shouldReceive('matching')->once()->andReturnUsing(
+                function (Criteria $item) use ($mockFee) {
+                    static::assertEquals(['invoicedDate' => 'DESC'], $item->getOrderings());
+
+                    return new \ArrayIterator([$mockFee]);
+                }
+            )
+            ->getMock();
+
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getFees')->once()->andReturn($mockFees)
+            ->getMock();
+
+        static::assertEquals($mockFee, $sut->getLatestOutstandingInterimFee());
+    }
+
+    public function testGetLatestOutstandingInterimFeeNull()
+    {
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('getFees->matching')->once()->andReturn([]);
+
+        static::assertNull($sut->getLatestOutstandingInterimFee());
     }
 
     public function testHasOutstandingGrantFee()
@@ -2693,10 +3198,11 @@ class ApplicationEntityTest extends EntityTester
         $currentGoodsOrPsv,
         $currentNiFlag
     ) {
+        /** @var Entity $sut */
         $sut = m::mock(Entity::class)->makePartial();
-        $sut->setIsVariation($isVariation);
-        $sut->setGoodsOrPsv($currentGoodsOrPsv);
-        $sut->setNiFlag($currentNiFlag);
+        $sut->setIsVariation($isVariation)
+            ->setGoodsOrPsv($currentGoodsOrPsv)
+            ->setNiFlag($currentNiFlag);
 
         $mockGoodsOrPsv = $goodsOrPsv ? m::mock()->shouldReceive('getId')->andReturn($goodsOrPsv)->getMock() : null;
         $mockLicenceType = $licenceType ? m::mock()->shouldReceive('getId')->andReturn($licenceType)->getMock() : null;
@@ -2731,6 +3237,7 @@ class ApplicationEntityTest extends EntityTester
 
     public function testValidateTolValid()
     {
+        /** @var Entity $sut */
         $sut = m::mock(Entity::class)->makePartial();
 
         $mockGoodsOrPsv = m::mock()
@@ -2747,8 +3254,33 @@ class ApplicationEntityTest extends EntityTester
 
     public function testGetAllVehiclesCount()
     {
+        /** @var Entity $sut */
         $sut = m::mock(Entity::class)->makePartial();
         $sut->shouldReceive('getLicence->getLicenceVehicles->count')->once()->andReturn(23);
         $this->assertEquals(23, $sut->getAllVehiclesCount());
+    }
+
+    public function testGetCalculatedBundleValues()
+    {
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getApplicationReference')->once()->andReturn('EXPECTED')
+            ->getMock();
+
+        static::assertEquals(
+            [
+                'applicationReference' => 'EXPECTED',
+            ],
+            $sut->getCalculatedBundleValues()
+        );
+    }
+
+    public function testGetRelatedOrganisation()
+    {
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('getLicence->getOrganisation')->once()->andReturn('EXPECTED');
+
+        static::assertEquals('EXPECTED', $sut->getRelatedOrganisation());
     }
 }
