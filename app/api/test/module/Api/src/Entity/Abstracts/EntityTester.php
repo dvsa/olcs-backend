@@ -1,14 +1,10 @@
 <?php
 
-/**
- * Abstract entity tester
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Entity\Abstracts;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Instantiator\Instantiator;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -16,7 +12,7 @@ use PHPUnit_Framework_TestCase;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class EntityTester extends PHPUnit_Framework_TestCase
+abstract class EntityTester extends MockeryTestCase
 {
     /**
      * Holds the entity
