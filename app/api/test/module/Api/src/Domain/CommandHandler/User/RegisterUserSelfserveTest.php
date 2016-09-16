@@ -134,7 +134,7 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
                     $this->expectedSideEffect(
                         SendUserRegisteredDto::class,
                         [
-                            'user' => $savedUser
+                            'user' => $userId
                         ],
                         new Result()
                     );
@@ -142,7 +142,7 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
                     $this->expectedSideEffect(
                         SendUserTemporaryPasswordDto::class,
                         [
-                            'user' => $savedUser,
+                            'user' => $userId,
                             'password' => 'GENERATED_PASSWORD',
                         ],
                         new Result()
