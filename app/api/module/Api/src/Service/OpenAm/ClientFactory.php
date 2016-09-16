@@ -10,6 +10,7 @@ use Zend\Http\Request;
 use Zend\ServiceManager\Exception\RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 
 /**
  * Client Factory
@@ -40,6 +41,9 @@ class ClientFactory implements FactoryInterface
         }
 
         $httpClient = new HttpClient('', $options);
+
+        $httpClientWrapper = new ClientAdapterLoggingWrapper();
+        $httpClientWrapper->wrapAdapter($httpClient);
 
         $request = new Request();
         $headers = $request->getHeaders();
