@@ -105,7 +105,7 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
                 $this->handleSideEffect(
                     SendUserRegisteredDto::create(
                         [
-                            'user' => $user,
+                            'user' => $user->getId(),
                         ]
                     )
                 );
@@ -114,7 +114,7 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
                 $this->handleSideEffect(
                     SendUserTemporaryPasswordDto::create(
                         [
-                            'user' => $user,
+                            'user' => $user->getId(),
                             'password' => $password,
                         ]
                     )
