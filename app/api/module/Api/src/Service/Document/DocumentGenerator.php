@@ -218,20 +218,17 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
     private function getTemplate(array $possibleTemplatePaths)
     {
         foreach ($possibleTemplatePaths as $template) {
-            $file = $this->contentStore->read($template);
-            if ($file !== null) {
-                return $file;
-            }
-            // @todo don't uncomment it, this needs future investigation @see OLCS-13786
-            /*
-            if (!isset($this->templateCache[$template])) {
-                $this->templateCache[$template] = $this->contentStore->read($template);
-            }
 
-            if ($this->templateCache[$template] !== null) {
+            if (!isset($this->templateCache[$template])) {
+                $file = $this->contentStore->read($template);
+                if ($file !== null) {
+                    $this->templateCache[$template] = $file;
+                    return $this->templateCache[$template];
+                }
+            } else {
                 return $this->templateCache[$template];
             }
-            */        }
+        }
 
         return null;
     }
