@@ -1,0 +1,5 @@
+{
+  "query": {
+    "query": "%SEARCH_TERM%"
+  }
+}
