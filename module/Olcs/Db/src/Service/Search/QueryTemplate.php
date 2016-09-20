@@ -17,7 +17,7 @@ class QueryTemplate extends Query
             throw new \RuntimeException("Query template file '". $filename ."' is missing");
         }
 
-        $template = str_replace('%SEARCH_TERM%', $searchTerm, file_get_contents($filename));
+        $template = str_replace('"%SEARCH_TERM%"', json_encode($searchTerm), file_get_contents($filename));
 
         $this->_params = json_decode($template, true);
     }

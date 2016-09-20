@@ -112,8 +112,9 @@ class Search implements AuthAwareInterface
 
         // First check to see if the index should use the new query templates
         // @todo Once all searches are using the new query templates, a lot of this code can be removed
-        if ($this->getQueryTemplate($indexes)) {
-            $elasticaQuery = new QueryTemplate($this->getQueryTemplate($indexes), $query);
+        $queryTemplate = $this->getQueryTemplate($indexes);
+        if ($queryTemplate !== false) {
+            $elasticaQuery = new QueryTemplate($queryTemplate, $query);
         } elseif ($query == '*' ) {
             /*
              * Check for a single asterisk to allow the query to run with no params.
@@ -213,14 +214,12 @@ class Search implements AuthAwareInterface
     {
         if ($this->isAnonymousUser() || $this->isExternalUser()) {
             $file = __DIR__ . '/templates/selfserve/' . $indexes[0] . '.json';
-            if (file_exists($file)) {
-                return $file;
-            }
         } else {
             $file = __DIR__ . '/templates/' . $indexes[0] . '.json';
-            if (file_exists($file)) {
-                return $file;
-            }
+        }
+
+        if (file_exists($file)) {
+            return $file;
         }
 
         return false;

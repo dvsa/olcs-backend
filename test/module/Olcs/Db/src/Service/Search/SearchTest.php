@@ -833,8 +833,6 @@ class SearchTest extends MockeryTestCase
                 $this->assertSame('/_search', $path);
                 $this->assertSame('GET', $method);
                 $this->assertArrayHasKey('query', $query);
-                $this->assertArrayHasKey('query', $query);
-                $this->assertArrayHasKey('query', $query);
                 $this->assertSame([], $params);
 
                 $searchResponse = m::mock(\Elastica\Response::class);
