@@ -187,11 +187,13 @@ class FeesHelperService implements FactoryInterface
         usort(
             $sorted,
             function (FeeEntity $a, FeeEntity $b) {
-                if ($a->getInvoicedDate()->getTimestamp() === $b->getInvoicedDate()->getTimestamp()) {
+                $aDateTs = $a->getInvoicedDateTime()->getTimestamp();
+                $bDateTs = $b->getInvoicedDateTime()->getTimestamp();
+                if ($aDateTs === $bDateTs) {
                     // if invoicedDate the same, use id as a tie-break
                     return $a->getId() < $b->getId() ? -1 : 1;
                 }
-                return $a->getInvoicedDate() < $b->getInvoicedDate() ? -1 : 1;
+                return $aDateTs < $bDateTs ? -1 : 1;
             }
         );
 
