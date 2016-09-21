@@ -805,4 +805,45 @@ class SearchTest extends MockeryTestCase
             ]
         ];
     }
+
+    public function testInternalQueryTemplate()
+    {
+        $sut = new SearchService();
+
+        $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
+        $mockUser->shouldReceive('getUser')->andReturnSelf();
+        $mockUser->shouldReceive('isAnonymous')->zeroOrMoreTimes()->andReturn(false);
+
+        $authService = m::mock(AuthorizationService::class);
+        $authService->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
+            ->zeroOrMoreTimes()
+            ->andReturn(true);
+        $authService->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::SELFSERVE_USER, null)
+            ->zeroOrMoreTimes()
+            ->andReturn(false);
+        $authService->shouldReceive('getIdentity->getUser')->andReturn($mockUser);
+
+        $sut->setAuthService($authService);
+
+        $mockClient = m::mock(\Elastica\Client::class);
+        $mockClient->shouldReceive('request')->once()->andReturnUsing(
+            function ($path, $method, $query, $params) {
+                $this->assertSame('/_search', $path);
+                $this->assertSame('GET', $method);
+                $this->assertArrayHasKey('query', $query);
+                $this->assertSame([], $params);
+
+                $searchResponse = m::mock(\Elastica\Response::class);
+                $searchResponse->shouldReceive('getData')->andReturn([]);
+                return $searchResponse;
+            }
+        );
+
+        $sut->setClient($mockClient);
+
+        $sut->search('foo', ['licence']);
+
+    }
 }
