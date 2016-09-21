@@ -110,13 +110,17 @@ class Search implements AuthAwareInterface
 
         $elasticaQueryBool = new Query\Bool();
 
-        /*
-         * Check for a single asterisk to allow the query to run with no params.
-         * Just returns everything for instances where landing on a search page
-         */
-        if ($query == '*' ) {
-            // ignore all query params and just search index for everything
-            $elasticaQuery        = new Query();
+        // First check to see if the index should use the new query templates
+        // @todo Once all searches are using the new query templates, a lot of this code can be removed
+        $queryTemplate = $this->getQueryTemplate($indexes);
+        if ($queryTemplate !== false) {
+            $elasticaQuery = new QueryTemplate($queryTemplate, $query);
+        } elseif ($query == '*' ) {
+            /*
+             * Check for a single asterisk to allow the query to run with no params.
+             * Just returns everything for instances where landing on a search page
+             */
+            $elasticaQuery = new Query();
         } else {
             // Generate _all_search as logical OR
             $elasticaQueryString  = new Query\Match();
@@ -179,8 +183,11 @@ class Search implements AuthAwareInterface
         //Search on the index.
         $es = new \Elastica\Search($this->getClient());
 
-        foreach ($indexes as $index) {
-            $es->addIndex($index);
+        // If not using QueryTemplate then need to add indexes
+        if (!$elasticaQuery instanceof QueryTemplate) {
+            foreach ($indexes as $index) {
+                $es->addIndex($index);
+            }
         }
 
         $response = [];
@@ -194,6 +201,28 @@ class Search implements AuthAwareInterface
         $response['Filters'] = $this->processFilters($resultSet->getAggregations());
 
         return $response;
+    }
+
+    /**
+     * Get the query template if it exists
+     *
+     * @param array $indexes Indexes
+     *
+     * @return string|bool Path and file of the template, or false if doesn't exist
+     */
+    private function getQueryTemplate($indexes)
+    {
+        if ($this->isAnonymousUser() || $this->isExternalUser()) {
+            $file = __DIR__ . '/templates/selfserve/' . $indexes[0] . '.json';
+        } else {
+            $file = __DIR__ . '/templates/' . $indexes[0] . '.json';
+        }
+
+        if (file_exists($file)) {
+            return $file;
+        }
+
+        return false;
     }
 
     /**
