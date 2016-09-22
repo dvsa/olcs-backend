@@ -66,7 +66,7 @@ class Client
      */
     public function getCompanyProfile($companyNumber, $includeOfficers = true)
     {
-        $companyProfile = $this->getData('/company/' . $companyNumber);
+        $companyProfile = $this->getData('/company/' . strtoupper($companyNumber));
 
         if (!isset($companyProfile['company_number'])) {
             throw new ServiceException(self::ERR_INVALID_JSON);
@@ -109,7 +109,7 @@ class Client
      */
     public function getOfficers($companyNumber)
     {
-        return $this->getData('/company/' . $companyNumber . '/officers');
+        return $this->getData('/company/' . strtoupper($companyNumber) . '/officers');
     }
 
     /**
