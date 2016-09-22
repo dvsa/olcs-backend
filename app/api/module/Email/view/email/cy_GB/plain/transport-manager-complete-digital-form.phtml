@@ -1,18 +1,19 @@
-WELSH
-Hello,
+Helô,
 
-<?php echo $this->organisation ?> has named you as a Transport Manager on Vehicle Operator Licence <?php echo $this->reference ?>.
+Mae <?php echo $this->organisation; ?> wedi'ch enwi fel Rheolwr Trafnidiaeth ar Drwydded Gweithredwr Cerbydau <?php echo $this->reference; ?>.
 
-Before we can consider their application, you’ll need to submit your details to us.
+Cyn gallwn ystyried eu cais, bydd angen ichi gylwyno'ch manylion inni.
 
-To do that sign in online at <?php echo $this->signInLink ?> with your username (<?php echo $this->username ?>) and password.
+I wneud hynny mewngofnodwch ar-lein <?php echo $this->signInLink; ?> gyda'ch enw defnyddiwr (<?php echo $this->username; ?>) a'ch cyfrinair.
 
-Having problems?
+Profi problemau?
 
 <?php
-$url = ($this->isNi) ?
-    'http://www.doeni.gov.uk/index/information/foi/recent-releases/publications-details.htm?docid=9994' :
-    'https://www.gov.uk/government/publications/application-to-add-a-transport-manager-to-a-licence-tm1';
+$url = (
+    $this->isNi
+    ? 'http://www.doeni.gov.uk/index/information/foi/recent-releases/publications-details.htm?docid=9994'
+    : 'https://www.gov.uk/government/publications/application-to-add-a-transport-manager-to-a-licence-tm1'
+);
 ?>
 
-For advice see the Transport Manager help guide at <?php echo $url ?> or email us at operatorlicensing@otc.gsi.gov.uk.
+Am gyngor gwelwch y Canllaw cymorth ar gyfer Rheolwyr Trafnidiaeth <?php echo $url; ?> neu e-bostiwch ni operatorlicensing@otc.gsi.gov.uk.
