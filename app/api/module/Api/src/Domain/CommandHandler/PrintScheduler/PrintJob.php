@@ -8,7 +8,6 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler;
 
 use Doctrine\Common\Collections\Criteria;
-use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\PrintJob as Cmd;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\Exception;
@@ -200,21 +199,9 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
             throw new RuntimeException('print.server is not set in config');
         }
 
-        // convert to PDF using open office
-        // 2>&1 redirect STDERR to STDOUT so that any errors are included in $outputPrint
-        $commandPdf = sprintf(
-            'soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp %s 2>&1',
-            escapeshellarg($fileName)
-        );
-        $this->executeCommand($commandPdf, $outputPdf, $resultPdf);
-        if ($resultPdf !== 0) {
-            $exception = new NotReadyException('Error generating the PDF : ' . implode("\n", $outputPdf));
-            $exception->setRetryAfter(60);
-            throw $exception;
-        }
+        $pdfFile = $this->convertToPdf($fileName);
 
-        // If soffice has a problem with the RTF it can appear to have worked but it does actually create the PDF file
-        $pdfFile = str_replace('.rtf', '.pdf', $fileName);
+        // Check the PDF file was created
         if (!$this->fileExists($pdfFile)) {
             $exception = new NotReadyException('PDF file does not exist : ' . $pdfFile);
             $exception->setRetryAfter(60);
@@ -327,13 +314,63 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
     }
 
     /**
+     * Use the webservice to convert to PDF?
+     *
+     * @return bool
+     */
+    private function useWebService()
+    {
+        $config = $this->getConfig();
+
+        return isset($config['convert_to_pdf']['uri']) && !empty($config['convert_to_pdf']['uri']);
+    }
+
+    /**
+     * Convert a document to a PDF so it can be printed
+     *
+     * @param string $fileName File to convert to PDF
+     *
+     * @return string PDF file name
+     * @throws NotReadyException
+     * @throws RuntimeException
+     */
+    private function convertToPdf($fileName)
+    {
+        $pdfFileName = str_replace('.rtf', '.pdf', $fileName);
+        if ($this->useWebService()) {
+            /** @var \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClient $convertToPdfService */
+            $convertToPdfService = $this->getCommandHandler()->getServiceLocator()->get('ConvertToPdf');
+            try {
+                $convertToPdfService->convert($fileName, $pdfFileName);
+            } catch (\Dvsa\Olcs\Api\Domain\Exception\RestResponseException $e) {
+                $exception = new RuntimeException('Error generating the PDF : ' . $e->getMessage());
+                throw $exception;
+            }
+        } else {
+            // convert to PDF using open office
+            // 2>&1 redirect STDERR to STDOUT so that any errors are included in $outputPrint
+            $commandPdf = sprintf(
+                'soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp %s 2>&1',
+                escapeshellarg($fileName)
+            );
+            $this->executeCommand($commandPdf, $outputPdf, $resultPdf);
+            if ($resultPdf !== 0) {
+                $exception = new NotReadyException('Error generating the PDF : ' . implode("\n", $outputPdf));
+                $exception->setRetryAfter(60);
+                throw $exception;
+            }
+        }
+
+        return $pdfFileName;
+    }
+
+    /**
      * Stub printing by add a document to licence 7
      *
      * @param Document $document  Document to be printed
      * @param int      $licenceId Licence to attach to
      *
      * @return void
-     * @todo remove this method when stubbing no longer required
      * @codeCoverageIgnore
      */
     private function stubPrint(Document $document, $licenceId = 7)

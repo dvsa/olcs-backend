@@ -16,6 +16,8 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
  */
 class PrintJobTest extends CommandHandlerTestCase
 {
+    private $convertToPdfService;
+
     public function setUp()
     {
         $this->sut = m::mock(CommandHandler::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -28,6 +30,8 @@ class PrintJobTest extends CommandHandlerTestCase
         $this->mockedSmServices['FileUploader'] = $mockFileUploader;
 
         $this->mockedSmServices['Config'] = ['print' => ['server' => 'PRINT_SERVER']];
+        $this->convertToPdfService = m::mock();
+        $this->mockedSmServices['ConvertToPdf'] = $this->convertToPdfService;
 
         $this->mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $this->mockUser->setLoginId('LOGIN_ID');
@@ -77,6 +81,68 @@ class PrintJobTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Printed successfully"], $result->getMessages());
+    }
+
+    public function testHandleCommandConvertUsingWebService()
+    {
+        $this->sut->setConfig(
+            [
+                'print' => ['server' => 'PRINT_SERVER'],
+                'convert_to_pdf' => ['uri' => 'http://web.com:8080/foo']
+            ]
+        );
+
+        $command = Cmd::create(['id' => 'QUEUE_ID', 'document' => 'DOC_ID', 'title' => 'JOB', 'user' => '']);
+
+        $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
+            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
+
+        $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+            ->andReturn($mockFile);
+
+        $this->sut->shouldReceive('createTmpFile')->with($mockFile, 'QUEUE_ID', 'FILENAME')->once()
+            ->andReturn('TEMP_FILE.rtf');
+
+        $this->convertToPdfService->shouldReceive('convert')->with('TEMP_FILE.rtf', 'TEMP_FILE.pdf')->once();
+
+        $this->expectLpr('Anonymous', 0, true);
+
+        $this->sut->shouldReceive('deleteTempFiles')->with('TEMP_FILE.rtf')->once();
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(["Printed successfully"], $result->getMessages());
+    }
+
+    public function testHandleCommandConvertUsingWebServiceError()
+    {
+        $this->sut->setConfig(
+            [
+                'print' => ['server' => 'PRINT_SERVER'],
+                'convert_to_pdf' => ['uri' => 'http://web.com:8080/foo']
+            ]
+        );
+
+        $command = Cmd::create(['id' => 'QUEUE_ID', 'document' => 'DOC_ID', 'title' => 'JOB', 'user' => '']);
+
+        $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
+            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
+
+        $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+            ->andReturn($mockFile);
+
+        $this->sut->shouldReceive('createTmpFile')->with($mockFile, 'QUEUE_ID', 'FILENAME')->once()
+            ->andReturn('TEMP_FILE.rtf');
+
+        $this->convertToPdfService->shouldReceive('convert')->with('TEMP_FILE.rtf', 'TEMP_FILE.pdf')->once()
+            ->andThrow(\Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class, 'TEST MESSAGE');
+
+        $this->sut->shouldReceive('deleteTempFiles')->with('TEMP_FILE.rtf')->once();
+
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $result = $this->sut->handleCommand($command);
     }
 
     public function testHandleCommandSelfserveUser()
@@ -279,6 +345,11 @@ class PrintJobTest extends CommandHandlerTestCase
             return;
         }
 
+        $this->expectLpr($userName, $commandLprResult, $fileExists);
+    }
+
+    private function expectLpr($userName, $commandLprResult, $fileExists)
+    {
         $this->sut->shouldReceive('fileExists')->with('TEMP_FILE.pdf')->once()->andReturn($fileExists);
         if (!$fileExists) {
             return;
