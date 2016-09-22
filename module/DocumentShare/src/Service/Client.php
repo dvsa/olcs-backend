@@ -19,8 +19,6 @@ class Client
 
     /** @var HttpClient */
     protected $httpClient;
-    /** @var  Filesystem */
-    private $fileSystem;
     /** @var string */
     protected $baseUri;
     /** @var string */
@@ -35,18 +33,15 @@ class Client
      * Client constructor.
      *
      * @param HttpClient $httpClient Http Client
-     * @param Filesystem $fileSystem Filesystem
      * @param string     $baseUri    base uri path to storage
      * @param string     $workspace  path
      */
     public function __construct(
         HttpClient $httpClient,
-        Filesystem $fileSystem,
         $baseUri,
         $workspace
     ) {
         $this->httpClient = $httpClient;
-        $this->fileSystem = $fileSystem;
         $this->baseUri = trim($baseUri);
         $this->workspace = trim($workspace);
     }
