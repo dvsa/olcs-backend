@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\DocumentShare\Service;
 
-use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
@@ -49,7 +48,6 @@ class ClientFactory implements FactoryInterface
 
         $client = new Client(
             $httpClient,
-            new Filesystem(),
             $clientOptions['baseuri'],
             $clientOptions['workspace']
         );

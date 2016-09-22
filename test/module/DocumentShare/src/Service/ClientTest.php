@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\DocumentShare\Service;
 
-use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Dvsa\Olcs\Api\Service\File\File;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DocShareFile;
 use Dvsa\Olcs\DocumentShare\Service\Client;
@@ -30,8 +29,6 @@ class ClientTest extends MockeryTestCase
     private $mockClient;
     /** @var  MockObj | \Zend\Http\Request */
     private $mockRequest;
-    /** @var  m\MockInterface | Filesystem */
-    private $mockFs;
     /** @var  m\MockInterface|File */
     private $mockFile;
 
@@ -41,11 +38,9 @@ class ClientTest extends MockeryTestCase
     public function setUp()
     {
         $this->mockClient = $this->getMock(\Zend\Http\Client::class);
-        $this->mockFs = m::mock(Filesystem::class);
 
         $this->sut = new Client(
             $this->mockClient,
-            $this->mockFs,
             self::BASE_URI,
             self::WORKSPACE
         );
