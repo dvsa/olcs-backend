@@ -19,8 +19,6 @@ class Client
 
     /** @var HttpClient */
     protected $httpClient;
-    /** @var  Filesystem */
-    private $fileSystem;
     /** @var string */
     protected $baseUri;
     /** @var string */
@@ -35,18 +33,15 @@ class Client
      * Client constructor.
      *
      * @param HttpClient $httpClient Http Client
-     * @param Filesystem $fileSystem Filesystem
      * @param string     $baseUri    base uri path to storage
      * @param string     $workspace  path
      */
     public function __construct(
         HttpClient $httpClient,
-        Filesystem $fileSystem,
         $baseUri,
         $workspace
     ) {
         $this->httpClient = $httpClient;
-        $this->fileSystem = $fileSystem;
         $this->baseUri = trim($baseUri);
         $this->workspace = trim($workspace);
     }
@@ -128,22 +123,11 @@ class Client
      */
     public function read($path)
     {
-        // @todo don't uncomment it, this needs future investigation @see OLCS-13786
-        /*
-        if (isset($this->cache[$path])) {
-            return $this->cache[$path];
-        }
-        */
-
-        //  get file content from storage
-        $tmpFileName = $this->fileSystem->createTmpFile(sys_get_temp_dir(), 'download');
-
         /** @var  \Zend\Http\Response\Stream $response */
         $response = $this->getHttpClient()
             ->setRequest($this->getRequest())
             ->setUri($this->getContentUri($path))
             ->setMethod(Request::METHOD_GET)
-            ->setStream($tmpFileName)
             ->send();
 
         if (!$response->isSuccess()) {
@@ -152,23 +136,14 @@ class Client
             return null;
         }
 
-        //  process response
-        $data = (array)json_decode(
-            file_get_contents($tmpFileName)
-        );
+        $data = (array) json_decode($response->getContent());
 
         //  process file content
-        $content = (isset($data['content']) ? $data['content'] : false);
+        $content = (isset($data['content']) ? base64_decode($data['content']) : false);
         if ($content !== false) {
-            //  reuse file used for download
-            file_put_contents($tmpFileName, base64_decode($content));
-
             $file = new File();
-            $file->setResource($tmpFileName);
-
-            unset($data);
-
-            return $this->cache[$path] = $file;
+            $file->setContent($content);
+            return $file;
         }
 
         //  process error message
