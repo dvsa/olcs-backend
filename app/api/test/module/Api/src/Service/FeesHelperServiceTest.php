@@ -337,7 +337,7 @@ class FeesHelperServiceTest extends MockeryTestCase
         $fee
             ->shouldReceive('getOutstandingAmount')
             ->andReturn($amount)
-            ->shouldReceive('getInvoicedDate')
+            ->shouldReceive('getInvoicedDateTime')
             ->andReturn(new \DateTime($invoicedDate))
             ->shouldReceive('isCancelled')
             ->andReturn($isCancelled);
