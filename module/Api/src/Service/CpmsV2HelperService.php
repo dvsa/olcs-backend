@@ -15,6 +15,8 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Transfer\Query\Fee\FeeType;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -831,6 +833,53 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * Gets Receiver Reference based on the fees details
+     *
+     * @param Fee $fee fee
+     *
+     * @return string|null
+     */
+    protected function getReceiverReference($fee)
+    {
+        $feeLicence = $fee->getLicence();
+        $feeType = $fee->getFeeType();
+        $feeOrg = $fee->getOrganisation();
+
+        if ($feeType->isMiscellaneous()) {
+            return null;
+        }
+
+        // IRFO fees
+        if ($feeType->getIrfoFeeType() !== null && $feeOrg !== null) {
+            $orgId = $feeOrg->getId();
+            return 'IR' . str_pad($orgId, 7, '0', STR_PAD_LEFT);
+        }
+
+        // All bus fees linked to a licence
+        if (
+            in_array(
+                $feeType->getFeeType()->getId(),
+                [FeeTypeEntity::FEE_TYPE_BUSAPP, FeeTypeEntity::FEE_TYPE_BUSVAR]
+            )
+            && $feeLicence !== null
+        ) {
+            return $feeLicence->getLicNo() . 'B';
+        }
+
+        // All other fees linked to a licence
+        if ($feeLicence !== null) {
+            return $feeLicence->getLicNo();
+        }
+
+        // All fees not linked to a licence
+        if ($feeOrg !== null) {
+            return $feeOrg->getId();
+        }
+
+        return null;
+    }
+
+    /**
      * Get data for 'payment_data' elements of a payment request
      *
      * @param Fee   $fee              fee
@@ -848,7 +897,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $receiverReference = isset($miscExtraParams['customer_reference'])
             ? (string) $miscExtraParams['customer_reference']
-            : (string) $this->getCustomerReference([$fee]);
+            : (string) $this->getReceiverReference($fee);
 
         $receiverName = $this->truncate(
             isset($miscExtraParams['customer_name'])
