@@ -219,15 +219,17 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
     {
         foreach ($possibleTemplatePaths as $template) {
 
-            if (!isset($this->templateCache[$template])) {
-                $file = $this->contentStore->read($template);
-                if ($file !== null) {
-                    $this->templateCache[$template] = $file;
-                    return $this->templateCache[$template];
-                }
-            } else {
+            if (isset($this->templateCache[$template])) {
                 return $this->templateCache[$template];
             }
+
+            $file = $this->contentStore->read($template);
+            if ($file === null) {
+                continue;
+            }
+
+            $this->templateCache[$template] = $file;
+            return $this->templateCache[$template];
         }
 
         return null;
