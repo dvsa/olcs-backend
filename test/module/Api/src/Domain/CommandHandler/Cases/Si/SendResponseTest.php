@@ -136,7 +136,7 @@ class SendResponseTest extends CommandHandlerTestCase
      * Tests sending the Msi response when the inr client throws an exception
      *
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\InrClientException
-     * @expectedExceptionMessage There was an error sending the INR response
+     * @expectedExceptionMessage There was an error sending the INR response adapter exception message
      */
     public function testHandleCommandAdapterException()
     {
@@ -168,7 +168,7 @@ class SendResponseTest extends CommandHandlerTestCase
             ->shouldReceive('makeRequest')
             ->once()
             ->with($xml)
-            ->andThrow(AdapterRuntimeException::class);
+            ->andThrow(AdapterRuntimeException::class, 'adapter exception message');
 
         $this->sut->handleCommand($command);
     }
