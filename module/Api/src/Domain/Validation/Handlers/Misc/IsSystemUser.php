@@ -10,6 +10,8 @@ namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Is System User
@@ -21,7 +23,11 @@ class IsSystemUser extends AbstractHandler implements AuthAwareInterface
     use AuthAwareTrait;
 
     /**
-     * @inheritdoc
+     * Is System User
+     *
+     * @param CommandInterface|QueryInterface $dto Dto
+     *
+     * @return boolean
      */
     public function isValid($dto)
     {
