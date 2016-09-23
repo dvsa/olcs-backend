@@ -36,7 +36,7 @@ class Queue extends AbstractRepository
 INSERT INTO `queue` (`status`, `type`, `options`)
 SELECT DISTINCT 'que_sts_queued',
                 ?,
-                CONCAT('{"companyNumber":"', o.company_or_llp_no, '"}')
+                CONCAT('{"companyNumber":"', UPPER(o.company_or_llp_no), '"}')
 FROM organisation o
 INNER JOIN licence l ON o.id=l.organisation_id
 WHERE l.status IN ('lsts_consideration',
