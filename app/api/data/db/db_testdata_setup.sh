@@ -16,7 +16,7 @@ mysql -uroot -ppassword olcs_be < ../../../olcs-etl/olcs_schema.sql
 for sqlFile in ../../../olcs-etl/views_procs/*.sql
 do
   echo "Executing $sqlFile"
-  mysql $connection -e "use olcs_be;\. $sqlFile"
+  mysql -uroot -ppassword -e "use olcs_be;\. $sqlFile"
 done
 
 # refdata
