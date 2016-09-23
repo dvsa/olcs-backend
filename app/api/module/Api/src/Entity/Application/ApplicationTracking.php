@@ -50,16 +50,34 @@ class ApplicationTracking extends AbstractApplicationTracking
         'Vehicles',
     ];
 
+    /**
+     * ApplicationTracking constructor.
+     *
+     * @param Application $application Application
+     *
+     * @return void
+     */
     public function __construct(Application $application)
     {
         $this->setApplication($application);
     }
 
+    /**
+     * Get Calculated Values
+     *
+     * @return array
+     * @deprecated
+     */
     protected function getCalculatedValues()
     {
         return ['application' => null];
     }
 
+    /**
+     * Get Value options
+     *
+     * @return array
+     */
     public static function getValueOptions()
     {
         return [
@@ -70,6 +88,13 @@ class ApplicationTracking extends AbstractApplicationTracking
         ];
     }
 
+    /**
+     * Apply section status from data
+     *
+     * @param array $data Data
+     *
+     * @return $this
+     */
     public function exchangeStatusArray(array $data)
     {
         foreach ($this->sections as $section) {
@@ -82,6 +107,13 @@ class ApplicationTracking extends AbstractApplicationTracking
         return $this;
     }
 
+    /**
+     * Is Valid
+     *
+     * @param array $sections Sections
+     *
+     * @return bool
+     */
     public function isValid($sections)
     {
         $filter = new UnderscoreToCamelCase();

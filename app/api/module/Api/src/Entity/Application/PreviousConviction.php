@@ -19,6 +19,12 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
  */
 class PreviousConviction extends AbstractPreviousConviction implements OrganisationProviderInterface
 {
+    /**
+     * Get Calculated values
+     *
+     * @return array
+     * @deprecated
+     */
     protected function getCalculatedValues()
     {
         return [
@@ -27,7 +33,10 @@ class PreviousConviction extends AbstractPreviousConviction implements Organisat
     }
 
     /**
+     * Get Related Organisation
+     *
      * @inheritdoc
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation|null
      */
     public function getRelatedOrganisation()
     {

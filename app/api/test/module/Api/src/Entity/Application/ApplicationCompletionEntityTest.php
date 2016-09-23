@@ -29,6 +29,15 @@ class ApplicationCompletionEntityTest extends EntityTester
         $this->assertSame($application, $ac->getApplication());
     }
 
+    public function testGetCalculatedValues()
+    {
+        /** @var Application $mockApp */
+        $mockApp = m::mock(Application::class);
+
+        $actual = (new Entity($mockApp))->jsonSerialize();
+        static::assertEquals(null, $actual['application']);
+    }
+
     public function testIsCompleteEmpty()
     {
         $required = [];
