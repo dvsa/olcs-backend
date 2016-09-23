@@ -12,8 +12,12 @@ echo "olcs_schema.sql"
 mysql -uroot -ppassword olcs_be < ../../../olcs-etl/olcs_schema.sql
 
 # schema
-echo "olcs_views_stored_procedures.sql"
-mysql -uroot -ppassword olcs_be < ../../../olcs-etl/olcs_views_stored_procedures.sql
+# Add manual Views and Stored Procs
+for sqlFile in ../../../olcs-etl/views_procs/*.sql
+do
+  echo "Executing $sqlFile"
+  mysql $connection -e "use olcs_be;\. $sqlFile"
+done
 
 # refdata
 echo "ref_data.sql"
