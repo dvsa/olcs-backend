@@ -2,6 +2,7 @@
 
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalOrSystemUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 
 return [
@@ -108,7 +109,7 @@ return [
     CommandHandler\ConditionUndertaking\Delete::class => IsInternalUser::class,
     CommandHandler\ContinuationDetail\PrepareContinuations::class => IsInternalUser::class,
     CommandHandler\ContinuationDetail\Queue::class => IsInternalUser::class,
-    CommandHandler\ContinuationDetail\Update::class => IsInternalUser::class,
+    CommandHandler\ContinuationDetail\Update::class => IsInternalOrSystemUser::class,
     CommandHandler\Continuation\Create::class => IsInternalUser::class,
     CommandHandler\Cpms\RequestReport::class => IsInternalUser::class,
     CommandHandler\Disqualification\Create::class => IsInternalUser::class,
@@ -173,7 +174,7 @@ return [
     CommandHandler\Scan\CreateContinuationSeparatorSheet::class => IsInternalUser::class,
     CommandHandler\Scan\CreateSeparatorSheet::class => IsInternalUser::class,
     CommandHandler\Task\CloseTasks::class => IsInternalUser::class,
-    CommandHandler\Task\CreateTask::class => IsInternalUser::class,
+    CommandHandler\Task\CreateTask::class => IsInternalOrSystemUser::class,
     CommandHandler\Task\ReassignTasks::class => IsInternalUser::class,
     CommandHandler\Task\UpdateTask::class => IsInternalUser::class,
     CommandHandler\TmQualification\Create::class => IsInternalUser::class,
