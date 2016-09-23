@@ -25,15 +25,18 @@ class InrClientTest extends MockeryTestCase
         $requestBody = 'xml';
 
         $mockRequest = m::mock(Request::class);
-        $mockRequest->shouldReceive('setContent')->with($requestBody);
-        $mockRequest->shouldReceive('setMethod')->with(Request::METHOD_POST);
+        $mockRequest->shouldReceive('setContent')->once()->with($requestBody);
+        $mockRequest->shouldReceive('setMethod')->once()->with(Request::METHOD_POST);
+        $mockRequest->shouldReceive('toString')->once();
 
         $mockResponse = m::mock(Response::class);
         $mockResponse->shouldReceive('getStatusCode')->andReturn($statusCode);
+        $mockResponse->shouldReceive('toString')->once();
 
         $mockClient = m::mock(RestClient::class);
-        $mockClient->shouldReceive('getRequest')->andReturn($mockRequest);
-        $mockClient->shouldReceive('send')->andReturn($mockResponse);
+        $mockClient->shouldReceive('setEncType')->once()->with('text/xml');
+        $mockClient->shouldReceive('getRequest')->times(3)->andReturn($mockRequest);
+        $mockClient->shouldReceive('send')->once()->andReturn($mockResponse);
 
         $sut = new InrClient($mockClient);
 

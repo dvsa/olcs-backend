@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Service\Nr\InrClient;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Nr\InrClientInterface;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
@@ -41,7 +40,8 @@ final class SendResponse extends AbstractCommandHandler implements UploaderAware
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
      * @return $this
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -55,7 +55,8 @@ final class SendResponse extends AbstractCommandHandler implements UploaderAware
     /**
      * SendResponse
      *
-     * @param CommandInterface $command
+     * @param CommandInterface $command the command
+     *
      * @throws InrClientException
      * @return Result
      */
@@ -75,7 +76,7 @@ final class SendResponse extends AbstractCommandHandler implements UploaderAware
             $responseCode = $this->inrClient->makeRequest($xmlFile->getContent());
         } catch (AdapterRuntimeException $e) {
             $this->updateStatus($erruRequest, ErruRequestEntity::FAILED_CASE_TYPE);
-            throw new InrClientException('There was an error sending the INR response');
+            throw new InrClientException('There was an error sending the INR response ' . $e->getMessage());
         }
 
         if ($responseCode !== Response::STATUS_CODE_202) {
@@ -95,8 +96,9 @@ final class SendResponse extends AbstractCommandHandler implements UploaderAware
     /**
      * Sets the erru request status to the specified status key
      *
-     * @param ErruRequestEntity $erruRequest
-     * @param string $statusKey
+     * @param ErruRequestEntity $erruRequest erru request entity
+     * @param string            $statusKey   erru request status key
+     *
      * @return ErruRequestEntity
      */
     private function updateStatus(ErruRequestEntity $erruRequest, $statusKey)
