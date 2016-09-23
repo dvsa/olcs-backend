@@ -1,17 +1,10 @@
 <?php
 
-/**
- * Companies House Abstract Command Handler
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler as DomainAbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseClient;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -27,10 +20,17 @@ abstract class AbstractCommandHandler extends DomainAbstractCommandHandler imple
     protected $api;
 
     /**
-     * @var Zend\Filter\Word\UnderscoreToCamelCase
+     * @var \Zend\Filter\Word\UnderscoreToCamelCase
      */
     protected $wordFilter;
 
+    /**
+     * Create Service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service manager
+     *
+     * @return $this
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         parent::createService($serviceLocator);
@@ -40,11 +40,18 @@ abstract class AbstractCommandHandler extends DomainAbstractCommandHandler imple
         return $this;
     }
 
+    /**
+     * Normalise Profile Data
+     *
+     * @param array $data Profile Data
+     *
+     * @return array
+     */
     protected function normaliseProfileData($data)
     {
         $companyDetails = [
             'companyName' => $data['company_name'],
-            'companyNumber' => $data['company_number'],
+            'companyNumber' => strtoupper($data['company_number']),
             'companyStatus' => $data['company_status'],
         ];
 
@@ -56,7 +63,10 @@ abstract class AbstractCommandHandler extends DomainAbstractCommandHandler imple
     }
 
     /**
-     * @param array $data
+     * Normalize Address Data
+     *
+     * @param array $data Address Data
+     *
      * @return array
      * @see https://developer.companieshouse.gov.uk/api/docs/company/company_number/
      * registered-office-address/registeredOfficeAddress-resource.html
@@ -85,6 +95,13 @@ abstract class AbstractCommandHandler extends DomainAbstractCommandHandler imple
         return $addressDetails;
     }
 
+    /**
+     * Normalize Field Name
+     *
+     * @param string $fieldName Field Name
+     *
+     * @return string
+     */
     protected function normaliseFieldName($fieldName)
     {
         $newFieldName = lcfirst($this->wordFilter->filter($fieldName));
@@ -92,7 +109,10 @@ abstract class AbstractCommandHandler extends DomainAbstractCommandHandler imple
     }
 
     /**
-     * @param array $data
+     * Filter officers
+     *
+     * @param array $data Company data
+     *
      * @return array
      */
     protected function getOfficers($data)
