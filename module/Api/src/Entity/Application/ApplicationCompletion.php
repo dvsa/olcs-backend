@@ -26,21 +26,48 @@ class ApplicationCompletion extends AbstractApplicationCompletion
     const STATUS_INCOMPLETE = 1;
     const STATUS_COMPLETE = 2;
 
+    /**
+     * ApplicationCompletion constructor.
+     *
+     * @param Application $application Application
+     *
+     * @return void
+     */
     public function __construct(Application $application)
     {
         $this->setApplication($application);
     }
 
+    /**
+     * Get Calculated Values
+     *
+     * @return array
+     * @deprecated
+     */
     protected function getCalculatedValues()
     {
         return ['application' => null];
     }
 
+    /**
+     * Is Complete
+     *
+     * @param array $required Sections
+     *
+     * @return bool
+     */
     public function isComplete($required)
     {
         return count($this->getIncompleteSections($required)) < 1;
     }
 
+    /**
+     * Get Incomplete sections
+     *
+     * @param array $required Sections
+     *
+     * @return array
+     */
     public function getIncompleteSections($required)
     {
         $incompleteSections = [];

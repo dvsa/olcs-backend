@@ -3,14 +3,13 @@
 namespace Dvsa\OlcsTest\Api\Entity\Application;
 
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationTracking as Entity;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
 
 /**
- * ApplicationTracking Entity Unit Tests
- *
- * Initially auto-generated but won't be overridden
+ * @covers Dvsa\Olcs\Api\Entity\Application\ApplicationTracking
+ * @covers Dvsa\Olcs\Api\Entity\Application\AbstractApplicationTracking
  */
 class ApplicationTrackingEntityTest extends EntityTester
 {
@@ -28,6 +27,15 @@ class ApplicationTrackingEntityTest extends EntityTester
         $at = new Entity($application);
 
         $this->assertSame($application, $at->getApplication());
+    }
+
+    public function testGetCalculatedValues()
+    {
+        /** @var Application $mockApp */
+        $mockApp = m::mock(Application::class);
+
+        $actual = (new Entity($mockApp))->jsonSerialize();
+        static::assertEquals(null, $actual['application']);
     }
 
     public function testGetValueOptions()
