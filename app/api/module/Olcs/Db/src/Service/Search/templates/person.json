@@ -2,7 +2,7 @@
   "query": {
     "indices": {
       "indices": [
-        "person_v2"
+        "person"
       ],
       "query": {
         "bool": {

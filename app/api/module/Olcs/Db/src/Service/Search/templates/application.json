@@ -2,7 +2,7 @@
   "query": {
     "indices": {
       "indices": [
-        "application_v2"
+        "application"
       ],
       "query": {
         "bool": {

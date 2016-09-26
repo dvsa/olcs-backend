@@ -2,7 +2,7 @@
   "query": {
     "indices": {
       "indices": [
-        "user_v2"
+        "user"
       ],
       "query": {
         "bool": {
