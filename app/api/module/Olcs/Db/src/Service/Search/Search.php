@@ -103,25 +103,27 @@ class Search implements AuthAwareInterface
      */
     public function search($query, $indexes = [], $page = 1, $limit = 10)
     {
-        /** @var  $elasticaQueryBoolMain Query/Bool
-         * Main query boolean that allows any filters to work as Logical ANDs with the main
-         * search query string. */
-        $elasticaQueryBoolMain = new Query\Bool();
-
-        $elasticaQueryBool = new Query\Bool();
-
-        // First check to see if the index should use the new query templates
-        // @todo Once all searches are using the new query templates, a lot of this code can be removed
-        $queryTemplate = $this->getQueryTemplate($indexes);
-        if ($queryTemplate !== false) {
-            $elasticaQuery = new QueryTemplate($queryTemplate, $query);
-        } elseif ($query == '*' ) {
+        if ($query === '*' ) {
             /*
              * Check for a single asterisk to allow the query to run with no params.
              * Just returns everything for instances where landing on a search page
              */
             $elasticaQuery = new Query();
+
+        } elseif (($queryTemplate = $this->getQueryTemplate($indexes)) !== false) {
+            // Query template exists
+            $elasticaQuery = new QueryTemplate($queryTemplate, $query, $this->getFilters(), $this->getDateRanges());
+
         } else {
+            // @todo Once all searches are using the new query templates, a lot of this code can be removed
+
+            /** @var  $elasticaQueryBoolMain Query/Bool
+             * Main query boolean that allows any filters to work as Logical ANDs with the main
+             * search query string. */
+            $elasticaQueryBoolMain = new Query\Bool();
+
+            $elasticaQueryBool = new Query\Bool();
+
             // Generate _all_search as logical OR
             $elasticaQueryString  = new Query\Match();
             $elasticaQueryString->setField('_all', $query);
@@ -154,12 +156,11 @@ class Search implements AuthAwareInterface
             $elasticaQueryBoolMain->addMust($elasticaQueryBool);
 
             $elasticaQuery = new Query();
-
             $elasticaQuery->setQuery($elasticaQueryBoolMain);
+        }
 
-            if (!empty($this->getSort()) && !empty($this->getOrder())) {
-                $elasticaQuery->setSort([$this->getSort() => strtolower($this->getOrder())]);
-            }
+        if (!empty($this->getSort()) && !empty($this->getOrder())) {
+            $elasticaQuery->setSort([$this->getSort() => strtolower($this->getOrder())]);
         }
 
         $elasticaQuery->setSize($limit);
