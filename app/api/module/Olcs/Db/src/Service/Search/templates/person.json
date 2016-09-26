@@ -1,0 +1,55 @@
+{
+  "query": {
+    "indices": {
+      "indices": [
+        "person"
+      ],
+      "query": {
+        "bool": {
+          "should": [
+            {
+              "multi_match": {
+                "query": "%SEARCH_TERM%",
+                "fuzziness": 2,
+                "prefix_length": 1,
+                "fields": [
+                  "person_family_name",
+                  "person_forename"
+                ]
+              }
+            },
+            {
+              "multi_match": {
+                "query": "%SEARCH_TERM%",
+                "fields": [
+                  "person_forename",
+                  "person_family_name"
+                ]
+              }
+            },
+            {
+              "match": {
+                "lic_no": "%SEARCH_TERM%"
+              }
+            },
+            {
+              "match": {
+                "tm_id": "%SEARCH_TERM%"
+              }
+            },
+            {
+              "match": {
+                "person_fullname": {
+                  "query": "%SEARCH_TERM%",
+                  "boost": 2
+                }
+              }
+            }
+          ]
+        }
+      },
+      "no_match_query": "none"
+    }
+  },
+  "min_score": 0.2
+}

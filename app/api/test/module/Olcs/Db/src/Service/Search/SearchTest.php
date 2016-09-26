@@ -4,10 +4,9 @@ namespace OlcsTest\Db\Service\Search;
 
 use Olcs\Db\Service\Search\Search as SearchService;
 use Mockery as m;
-use PHPUnit_Framework_TestCase as TestCase;
-use Elastica\Query as Query;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use ZfcRbac\Service\AuthorizationService;
+use \Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * Class Search Test
@@ -23,46 +22,6 @@ class SearchTest extends MockeryTestCase
         ];
 
         parent::setUp();
-    }
-
-    public function testProcessDateRanges()
-    {
-        $bool = new Query\Bool();
-
-        $service = $this->getMock(SearchService::class, null);
-        $service->setDateRanges(
-            [
-                'dateOneFrom' => ['year' => '2015', 'month' => '01', 'day' => '02'],
-                'dateOneTo'   => '2015-03-01',
-                'dateTwoFrom' => '2015-02-01',
-                'dateTwoTo'   => '2015-04-01'
-            ]
-        );
-
-        $result = array (
-            'bool' => array (
-                'must' => array (
-                    0 => array (
-                        'range' => array (
-                            'date_one' => array (
-                                'from' => '2015-01-02',
-                                'to' => '2015-03-01',
-                            ),
-                        ),
-                    ),
-                    1 => array (
-                        'range' => array (
-                            'date_two' => array (
-                                'from' => '2015-02-01',
-                                'to' => '2015-04-01',
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        );
-
-        $this->assertSame($result, $service->processDateRanges($bool)->toArray());
     }
 
     /**
@@ -194,14 +153,7 @@ class SearchTest extends MockeryTestCase
         $sut->updateVehicleSection26($ids, $section26Value);
     }
 
-    /**
-     * @dataProvider searchIndexProvider
-     *
-     * @param $index
-     * @param $expectedQuery
-     * @param string $userType
-     */
-    public function testSearchIndex($index, $expectedQuery, $userType = 'external', $searchString = 'FOO BAR')
+    public function testSearchIndexInternal()
     {
         $sut = new SearchService();
 
@@ -209,622 +161,12 @@ class SearchTest extends MockeryTestCase
         $sut->setOrder('desc');
 
         $authService = m::mock(AuthorizationService::class);
-
-        $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
-        $mockUser->shouldReceive('getUser')
-            ->andReturnSelf();
-
-        if ($userType === 'internal') {
-            $mockUser->shouldReceive('isAnonymous')
-                ->zeroOrMoreTimes()
-                ->andReturn(false);
-            $authService->shouldReceive('isGranted')
-                ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
-                ->zeroOrMoreTimes()
-                ->andReturn(true);
-            $authService->shouldReceive('isGranted')
-                ->zeroOrMoreTimes()
-                ->with(\Dvsa\Olcs\Api\Entity\User\Permission::SELFSERVE_USER, null)
-                ->andReturn(false);
-        } else {
-            $authService->shouldReceive('isGranted')->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
-                ->andReturn(false);
-        }
-
-        $authService->shouldReceive('getIdentity->getUser')
-            ->andReturn($mockUser);
-
-        $sut->setAuthService($authService);
-
-        $mockClient = m::mock(\Elastica\Client::class);
-        $mockClient->shouldReceive('request')->once()->andReturnUsing(
-            function ($path, $method, $query, $params) use ($index, $expectedQuery) {
-                $this->assertSame($index . '/_search', $path);
-                $this->assertSame('GET', $method);
-                $this->assertSame($expectedQuery, $query);
-                $this->assertSame([], $params);
-
-                $searchResponse = m::mock(\Elastica\Response::class);
-                $searchResponse->shouldReceive('getData')->andReturn([]);
-                return $searchResponse;
-            }
-        );
-
-        $sut->setClient($mockClient);
-
-        $sut->search($searchString, [$index]);
-    }
-
-    public function searchIndexProvider()
-    {
-        return [
-            $this->getExpectedAddressSearch(),
-            $this->getExpectedApplicationSearch(),
-            $this->getExpectedCaseSearch(),
-            $this->getExpectedOperatorSearch(),
-            $this->getExpectedIrfoSearch(),
-            $this->getExpectedLicenceSearch(),
-            $this->getExpectedPsvDiscSearch(),
-            $this->getExpectedPublicationSearch(),
-            $this->getExpectedUserSearch(),
-            $this->getExpectedVehicleCurrentSearch(),
-            $this->getExpectedVehicleRemovedSearch(),
-            $this->getExpectedPersonSearchForInternalUser(),
-            $this->getExpectedPersonSearchForInternalUserIdLookup(),
-            $this->getExpectedPersonSearchForExternalUser(),
-            $this->getExpectedBusRegSearch()
-        ];
-    }
-
-    private function getExpectedAddressSearch()
-    {
-        return [
-            'address',
-            [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            0 => [
-                                'bool' => [
-                                    'should' => [
-                                        $this->generateMatch('_all', 'FOO BAR'),
-                                        $this->generateMatch('postcode', 'FOO BAR'),
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                'sort' => [
-                    'foo' => 'desc'
-                ],
-                'size' => 10,
-                'from' => 0
-            ],
-            'external',
-            'FOO BAR'
-        ];
-    }
-
-    private function getExpectedApplicationSearch()
-    {
-        return [
-            'application',
-            [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            0 => [
-                                'bool' => [
-                                    'should' => [
-                                        $this->generateMatch('_all', 'FOO BAR'),
-                                        $this->generateMatch('correspondence_postcode', 'FOO BAR'),
-                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', 2.0)
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                'sort' => [
-                    'foo' => 'desc'
-                ],
-                'size' => 10,
-                'from' => 0
-            ],
-            'external',
-            'FOO BAR'
-        ];
-    }
-
-    private function getExpectedCaseSearch()
-    {
-        return [
-            'case',
-            [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            0 => [
-                                'bool' => [
-                                    'should' => [
-                                        $this->generateMatch('_all', 'FOO BAR'),
-                                        $this->generateMatch('correspondence_postcode', 'FOO BAR'),
-                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                'sort' => [
-                    'foo' => 'desc'
-                ],
-                'size' => 10,
-                'from' => 0
-            ],
-            'external',
-            'FOO BAR'
-        ];
-    }
-
-    private function getExpectedOperatorSearch()
-    {
-        return [
-            'operator',
-            [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            0 => [
-                                'bool' => [
-                                    'should' => [
-                                        $this->generateMatch('_all', 'FOO BAR'),
-                                        $this->generateMatch('postcode', 'FOO BAR'),
-                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                'sort' => [
-                    'foo' => 'desc'
-                ],
-                'size' => 10,
-                'from' => 0
-            ],
-            'external',
-            'FOO BAR'
-        ];
-    }
-
-    private function getExpectedIrfoSearch()
-    {
-        return [
-            'irfo',
-            [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            0 => [
-                                'bool' => [
-                                    'should' => [
-                                        $this->generateMatch('_all', 'FOO BAR'),
-                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                'sort' => [
-                    'foo' => 'desc'
-                ],
-                'size' => 10,
-                'from' => 0
-            ],
-            'external',
-            'FOO BAR'
-        ];
-    }
-
-    private function getExpectedLicenceSearch()
-    {
-        return [
-            'licence',
-            [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            0 => [
-                                'bool' => [
-                                    'should' => [
-                                        $this->generateMatch('_all', 'FOO BAR'),
-                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                'sort' => [
-                    'foo' => 'desc'
-                ],
-                'size' => 10,
-                'from' => 0
-            ],
-            'external',
-            'FOO BAR'
-        ];
-    }
-
-    private function getExpectedPsvDiscSearch()
-    {
-        return [
-            'psv_disc',
-            [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            0 => [
-                                'bool' => [
-                                    'should' => [
-                                        $this->generateMatch('_all', 'FOO BAR'),
-                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                'sort' => [
-                    'foo' => 'desc'
-                ],
-                'size' => 10,
-                'from' => 0
-            ],
-            'external',
-            'FOO BAR'
-        ];
-    }
-
-    private function getExpectedPublicationSearch()
-    {
-        return [
-            'publication',
-            [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            0 => [
-                                'bool' => [
-                                    'should' => [
-                                        $this->generateMatch('_all', 'FOO BAR'),
-                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
-                                    ],
-                                    'must' => [
-                                        0 => $this->generateMatch('pub_status', 'pub_s_printed')
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                'sort' => [
-                    'foo' => 'desc'
-                ],
-                'size' => 10,
-                'from' => 0
-            ],
-            'external',
-            'FOO BAR'
-        ];
-    }
-
-    private function getExpectedUserSearch()
-    {
-        return [
-            'user',
-            [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            0 => [
-                                'bool' => [
-                                    'should' => [
-                                        $this->generateMatch('_all', 'FOO BAR'),
-                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0'),
-                                        $this->generateMatch(
-                                            'login_id',
-                                            ['query' => 'FOO BAR', 'boost' => 2.0]
-                                        ),
-                                        $this->generateMatch(
-                                            'lic_nos',
-                                            ['query' => 'FOO BAR']
-                                        )
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                'sort' => [
-                    'foo' => 'desc'
-                ],
-                'size' => 10,
-                'from' => 0
-            ],
-            'internal',
-            'FOO BAR'
-        ];
-    }
-
-    private function getExpectedVehicleCurrentSearch()
-    {
-        return [
-            'vehicle_current',
-            [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            0 => [
-                                'bool' => [
-                                    'should' => [
-                                        $this->generateMatch('_all', 'FOO BAR'),
-                                        $this->generateMatch('vrm', 'FOO BAR'),
-                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                'sort' => [
-                    'foo' => 'desc'
-                ],
-                'size' => 10,
-                'from' => 0
-            ],
-            'external',
-            'FOO BAR'
-        ];
-    }
-
-    private function getExpectedVehicleRemovedSearch()
-    {
-        return [
-            'vehicle_removed',
-            [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            0 => [
-                                'bool' => [
-                                    'should' => [
-                                        $this->generateMatch('_all', 'FOO BAR'),
-                                        $this->generateMatch('vrm', 'FOO BAR'),
-                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                'sort' => [
-                    'foo' => 'desc'
-                ],
-                'size' => 10,
-                'from' => 0
-            ],
-            'external',
-            'FOO BAR'
-        ];
-    }
-
-    private function getExpectedPersonSearchForExternalUser()
-    {
-        return [
-            'person',
-            [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            0 => [
-                                'bool' => [
-                                    'should' => [
-                                        $this->generateMatch('_all', 'FOO BAR'),
-                                        $this->generateWildcard('person_family_name_wildcard', '*foo bar*', '2.0'),
-                                        $this->generateWildcard('person_forename_wildcard', '*foo bar*', '1.0'),
-                                        $this->generateWildcard('person_family_name_wildcard', '*foo*', '2.0'),
-                                        $this->generateWildcard('person_forename_wildcard', '*foo*', '1.0'),
-                                        $this->generateWildcard('person_family_name_wildcard', '*bar*', '2.0'),
-                                        $this->generateWildcard('person_forename_wildcard', '*bar*', '1.0'),
-                                    ],
-                                    'must_not' => [
-                                        $this->generateMatch('tm_status_id', 'tm_s_rem'),
-                                    ],
-                                    'must' => [
-                                        0 => [
-                                            'filtered' => [
-                                                'filter' => [
-                                                    'exists' => [
-                                                        'field' => 'lic_id'
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                'sort' => [
-                    'foo' => 'desc'
-                ],
-                'size' => 10,
-                'from' => 0
-            ],
-            'external',
-            'FOO BAR'
-        ];
-    }
-
-    private function getExpectedPersonSearchForInternalUser()
-    {
-        return [
-            'person',
-            [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            0 => [
-                                'bool' => [
-                                    'should' => [
-                                        $this->generateMatch('_all', 'FOO BAR'),
-                                        $this->generateWildcard('person_family_name_wildcard', '*foo bar*', '2.0'),
-                                        $this->generateWildcard('person_forename_wildcard', '*foo bar*', '1.0'),
-                                        $this->generateWildcard('person_family_name_wildcard', '*foo*', '2.0'),
-                                        $this->generateWildcard('person_forename_wildcard', '*foo*', '1.0'),
-                                        $this->generateWildcard('person_family_name_wildcard', '*bar*', '2.0'),
-                                        $this->generateWildcard('person_forename_wildcard', '*bar*', '1.0'),
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                'sort' => [
-                    'foo' => 'desc'
-                ],
-                'size' => 10,
-                'from' => 0
-            ],
-            'internal',
-            'FOO BAR'
-        ];
-    }
-
-    private function getExpectedPersonSearchForInternalUserIdLookup()
-    {
-        return [
-            'person',
-            [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            0 => [
-                                'bool' => [
-                                    'should' => [
-                                        $this->generateMatch('_all', '123'),
-                                        $this->generateBoostedMatch('person_id', '123', 2.0),
-                                        $this->generateBoostedMatch('tm_id', '123', 2.0),
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                'sort' => [
-                    'foo' => 'desc'
-                ],
-                'size' => 10,
-                'from' => 0
-            ],
-            'internal',
-            '123'
-        ];
-    }
-
-    private function getExpectedBusRegSearch()
-    {
-        return [
-            'busreg',
-            [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            0 => [
-                                'bool' => [
-                                    'should' => [
-                                        $this->generateMatch('_all', 'FOO BAR'),
-                                        $this->generateMatch(
-                                            'reg_no',
-                                            [
-                                                'query' => 'FOO BAR',
-                                                'boost' => 2.0,
-                                            ]
-                                        ),
-                                        $this->generateWildcard('org_name_wildcard', 'foo bar*', '2.0')
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                'sort' => [
-                    'foo' => 'desc'
-                ],
-                'size' => 10,
-                'from' => 0
-            ],
-            'external',
-            'FOO BAR'
-        ];
-    }
-
-    private function generateBoostedMatch($field, $value, $boost)
-    {
-        return $this->generateMatch(
-            $field,
-            [
-                'query' => $value,
-                'boost' => (float) $boost,
-            ]
-        );
-    }
-
-    private function generateMatch($field, $value)
-    {
-        return [
-            'match' => [
-                $field => $value,
-            ]
-        ];
-    }
-
-    private function generateWildcard($name, $value, $boost)
-    {
-        return [
-            'wildcard' => [
-                $name => [
-                    'value' => $value,
-                    'boost' => (float) $boost,
-                ]
-            ]
-        ];
-    }
-
-    public function testInternalQueryTemplate()
-    {
-        $sut = new SearchService();
-
         $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $mockUser->shouldReceive('getUser')->andReturnSelf();
         $mockUser->shouldReceive('isAnonymous')->zeroOrMoreTimes()->andReturn(false);
-
-        $authService = m::mock(AuthorizationService::class);
-        $authService->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
-            ->zeroOrMoreTimes()
-            ->andReturn(true);
-        $authService->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::SELFSERVE_USER, null)
-            ->zeroOrMoreTimes()
-            ->andReturn(false);
+        $authService->shouldReceive('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(true);
+        $authService->shouldReceive('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(false);
         $authService->shouldReceive('getIdentity->getUser')->andReturn($mockUser);
-
         $sut->setAuthService($authService);
 
         $mockClient = m::mock(\Elastica\Client::class);
@@ -832,7 +174,11 @@ class SearchTest extends MockeryTestCase
             function ($path, $method, $query, $params) {
                 $this->assertSame('/_search', $path);
                 $this->assertSame('GET', $method);
+
                 $this->assertArrayHasKey('query', $query);
+                $this->assertSame(['foo' => 'desc'], $query['sort']);
+                $this->assertSame(0, $query['from']);
+                $this->assertSame(10, $query['size']);
                 $this->assertSame([], $params);
 
                 $searchResponse = m::mock(\Elastica\Response::class);
@@ -843,7 +189,107 @@ class SearchTest extends MockeryTestCase
 
         $sut->setClient($mockClient);
 
-        $sut->search('foo', ['licence']);
+        $sut->search('FOO', ['licence']);
+    }
 
+    public function testSearchIndexExternal()
+    {
+        $sut = new SearchService();
+
+        $sut->setSort('foo');
+        $sut->setOrder('desc');
+
+        $authService = m::mock(AuthorizationService::class);
+        $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
+        $mockUser->shouldReceive('getUser')->andReturnSelf();
+        $mockUser->shouldReceive('isAnonymous')->zeroOrMoreTimes()->andReturn(false);
+        $authService->shouldReceive('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(false);
+        $authService->shouldReceive('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(true);
+        $authService->shouldReceive('getIdentity->getUser')->andReturn($mockUser);
+        $sut->setAuthService($authService);
+
+        $mockClient = m::mock(\Elastica\Client::class);
+        $mockClient->shouldReceive('request')->once()->andReturnUsing(
+            function ($path, $method, $query, $params) {
+                $this->assertSame('/_search', $path);
+                $this->assertSame('GET', $method);
+
+                $this->assertArrayHasKey('query', $query);
+                $this->assertSame(['foo' => 'desc'], $query['sort']);
+                $this->assertSame(0, $query['from']);
+                $this->assertSame(10, $query['size']);
+                $this->assertSame([], $params);
+
+                $searchResponse = m::mock(\Elastica\Response::class);
+                $searchResponse->shouldReceive('getData')->andReturn([]);
+                return $searchResponse;
+            }
+        );
+
+        $sut->setClient($mockClient);
+
+        $sut->search('FOO', ['licence']);
+    }
+
+    public function testSearchIndexAnon()
+    {
+        $sut = new SearchService();
+
+        $sut->setSort('foo');
+        $sut->setOrder('desc');
+
+        $authService = m::mock(AuthorizationService::class);
+        $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
+        $mockUser->shouldReceive('getUser')->andReturnSelf();
+        $mockUser->shouldReceive('isAnonymous')->zeroOrMoreTimes()->andReturn(true);
+        $authService->shouldReceive('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(false);
+        $authService->shouldReceive('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(false);
+        $authService->shouldReceive('getIdentity->getUser')->andReturn($mockUser);
+        $sut->setAuthService($authService);
+
+        $mockClient = m::mock(\Elastica\Client::class);
+        $mockClient->shouldReceive('request')->once()->andReturnUsing(
+            function ($path, $method, $query, $params) {
+                $this->assertSame('/_search', $path);
+                $this->assertSame('GET', $method);
+
+                $this->assertArrayHasKey('query', $query);
+                $this->assertSame(['foo' => 'desc'], $query['sort']);
+                $this->assertSame(0, $query['from']);
+                $this->assertSame(10, $query['size']);
+                $this->assertSame([], $params);
+
+                $searchResponse = m::mock(\Elastica\Response::class);
+                $searchResponse->shouldReceive('getData')->andReturn([]);
+                return $searchResponse;
+            }
+        );
+
+        $sut->setClient($mockClient);
+
+        $sut->search('FOO', ['licence']);
+    }
+
+    public function testSearchIndexQueryTemplateNotFound()
+    {
+        $sut = new SearchService();
+
+        $sut->setSort('foo');
+        $sut->setOrder('desc');
+
+        $authService = m::mock(AuthorizationService::class);
+        $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
+        $mockUser->shouldReceive('getUser')->andReturnSelf();
+        $mockUser->shouldReceive('isAnonymous')->zeroOrMoreTimes()->andReturn(false);
+        $authService->shouldReceive('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(true);
+        $authService->shouldReceive('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(true);
+        $authService->shouldReceive('getIdentity->getUser')->andReturn($mockUser);
+        $sut->setAuthService($authService);
+
+        $this->setExpectedException(
+            \RuntimeException::class,
+            'Cannot generate an elasticsearch query, is the template missing'
+        );
+        $sut->search('FOO', ['MISSING']);
     }
 }
