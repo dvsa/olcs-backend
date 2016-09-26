@@ -2,11 +2,8 @@
 
 namespace Olcs\Db\Service\Search;
 
-use Dvsa\Olcs\Api\Entity\Publication\Publication;
-use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Elastica\Aggregation\Terms;
 use Elastica\Query;
-use Elastica\Filter;
 use Elastica\ResultSet;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
@@ -22,7 +19,7 @@ class Search implements AuthAwareInterface
     use AuthAwareTrait;
 
     /**
-     * @var
+     * @var \Elastica\Client
      */
     protected $client;
 
@@ -47,15 +44,19 @@ class Search implements AuthAwareInterface
     protected $order = '';
 
     /**
-     * @param mixed $client
+     * Elastic client to use for making requests
+     *
+     * @param \Elastica\Client $client
      */
-    public function setClient($client)
+    public function setClient(\Elastica\Client $client)
     {
         $this->client = $client;
     }
 
     /**
-     * @return mixed
+     * Get the Elastic client
+     *
+     * @return \Elastica\Client
      */
     public function getClient()
     {
@@ -95,69 +96,22 @@ class Search implements AuthAwareInterface
     }
 
     /**
-     * @param $query
-     * @param array $indexes
-     * @param int $page
-     * @param int $limit
+     * Submit a search request to elastic
+     *
+     * @param string $query  The string you are searching for
+     * @param array $indexes The indexes to search, this is now only used to idenitify which query template to use
+     * @param int $page      Starting page, for pagination
+     * @param int $limit     Number of results to return
+     *
      * @return array
      */
     public function search($query, $indexes = [], $page = 1, $limit = 10)
     {
-        if ($query === '*' ) {
-            /*
-             * Check for a single asterisk to allow the query to run with no params.
-             * Just returns everything for instances where landing on a search page
-             */
-            $elasticaQuery = new Query();
-
-        } elseif (($queryTemplate = $this->getQueryTemplate($indexes)) !== false) {
-            // Query template exists
-            $elasticaQuery = new QueryTemplate($queryTemplate, $query, $this->getFilters(), $this->getDateRanges());
-
-        } else {
-            // @todo Once all searches are using the new query templates, a lot of this code can be removed
-
-            /** @var  $elasticaQueryBoolMain Query/Bool
-             * Main query boolean that allows any filters to work as Logical ANDs with the main
-             * search query string. */
-            $elasticaQueryBoolMain = new Query\Bool();
-
-            $elasticaQueryBool = new Query\Bool();
-
-            // Generate _all_search as logical OR
-            $elasticaQueryString  = new Query\Match();
-            $elasticaQueryString->setField('_all', $query);
-            $elasticaQueryBool->addShould($elasticaQueryString);
-
-            // add date ranges as logical AND
-            $elasticaQueryBoolMain = $this->processDateRanges($elasticaQueryBoolMain);
-
-            foreach ($indexes as $index) {
-                // amend query depending on index
-                $this->modifyQueryForIndex($index, $query, $elasticaQueryBool);
-            }
-
-            /**
-             * Here we send the filters as logical AND.
-             */
-            $filters = $this->getFilters();
-            foreach ($filters as $field => $value) {
-
-                if (!empty($value)) {
-
-                    $elasticaQueryString = new Query\Match();
-                    $elasticaQueryString->setField($field, $value);
-
-                    // Add filter as logical AND
-                    $elasticaQueryBoolMain->addMust($elasticaQueryString);
-                }
-            }
-
-            $elasticaQueryBoolMain->addMust($elasticaQueryBool);
-
-            $elasticaQuery = new Query();
-            $elasticaQuery->setQuery($elasticaQueryBoolMain);
+        $queryTemplate = $this->getQueryTemplate($indexes);
+        if ($queryTemplate === false) {
+            throw new \RuntimeException('Cannot generate an elasticsearch query, is the template missing');
         }
+        $elasticaQuery = new QueryTemplate($queryTemplate, $query, $this->getFilters(), $this->getDateRanges());
 
         if (!empty($this->getSort()) && !empty($this->getOrder())) {
             $elasticaQuery->setSort([$this->getSort() => strtolower($this->getOrder())]);
@@ -207,7 +161,7 @@ class Search implements AuthAwareInterface
     /**
      * Get the query template if it exists
      *
-     * @param array $indexes Indexes
+     * @param array $indexes Indexes, used to identify which query template to use
      *
      * @return string|bool Path and file of the template, or false if doesn't exist
      */
@@ -224,242 +178,6 @@ class Search implements AuthAwareInterface
         }
 
         return false;
-    }
-
-    /**
-     * Modify the query dependant on the index
-     *
-     * @param string $index
-     * @param string $search
-     * @param \Elastica\Query\Bool $queryBool
-     */
-    private function modifyQueryForIndex($index, $search, Query\Bool $queryBool)
-    {
-        switch ($index) {
-            case 'address':
-                $postcodeQuery = new Query\Match();
-                $postcodeQuery->setField('postcode', $search);
-                $queryBool->addShould($postcodeQuery);
-                break;
-            case 'application':
-                $correspondencePostcodeQuery = new Query\Match();
-                $correspondencePostcodeQuery->setField('correspondence_postcode', $search);
-                $queryBool->addShould($correspondencePostcodeQuery);
-
-                if (is_numeric($search)) {
-                    // searching for empty string causes exception
-                    $applicationIdQuery = new Query\Match();
-                    $applicationIdQuery->setField('app_id', $search);
-                    $queryBool->addShould($applicationIdQuery);
-                }
-                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
-                break;
-            case 'case':
-                $correspondencePostcodeQuery = new Query\Match();
-                $correspondencePostcodeQuery->setField('correspondence_postcode', $search);
-                $queryBool->addShould($correspondencePostcodeQuery);
-
-                if (is_numeric($search)) {
-                    // searching for empty string causes exception
-                    $caseIdQuery = new Query\Match();
-                    $caseIdQuery->setField('case_id', $search);
-                    $queryBool->addShould($caseIdQuery);
-                }
-                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
-                break;
-            case 'operator':
-                $postcodeQuery = new Query\Match();
-                $postcodeQuery->setField('postcode', $search);
-                $queryBool->addShould($postcodeQuery);
-                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
-                break;
-            case 'publication':
-                if ($this->isAnonymousUser() || !$this->isInternalUser()) {
-                    $statusQuery = new Query\Match();
-                    $statusQuery->setField('pub_status', Publication::PUB_PRINTED_STATUS);
-                    $queryBool->addMust($statusQuery);
-                }
-                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
-                break;
-            case 'irfo':
-                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
-                break;
-            case 'psv_disc':
-                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
-                break;
-            case 'licence':
-                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
-                break;
-            case 'user':
-                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
-
-                // OLCS-12130
-                if ($this->isInternalUser()) {
-                    $loginMatch = new Query\Match();
-                    $loginMatch->setFieldQuery('login_id', $search);
-                    $loginMatch->setFieldBoost('login_id', 2.0);
-                    $queryBool->addShould($loginMatch);
-
-                    $licNosMatch = new Query\Match();
-                    $licNosMatch->setFieldQuery('lic_nos', $search);
-                    $queryBool->addShould($licNosMatch);
-                }
-
-                break;
-            case 'vehicle_current':
-            case 'vehicle_removed':
-                $vrmQuery = new Query\Match();
-                $vrmQuery->setField('vrm', $search);
-                $queryBool->addShould($vrmQuery);
-
-                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
-
-                break;
-            case 'person':
-                if (is_numeric($search)) {
-                    // OLCS-12934 look up by single ID
-                    $queryBool->addShould($this->addQueryMatch('person_id', $search, 2.0));
-                    $queryBool->addShould($this->addQueryMatch('tm_id', $search, 2.0));
-                } else {
-                    // apply search term to forename and family name wildcards
-                    $wildcardQuery = '*' . strtolower(trim($search, '*')) . '*';
-                    $queryBool->addShould(
-                        new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
-                    );
-                    $queryBool->addShould(
-                        new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 1.0)
-                    );
-                }
-
-                /*
-                 * Hide Removed TMs from SS and Anonymous users
-                 *
-                 * The permission check below first checks for anonymous users. This is because isInternalUser()
-                 * method doesnt handle anon users (yet).
-                 *
-                 * Use of Filtered Query will be deprecated in the future.
-                 * @see https://www.elastic.co/blog/better-query-execution-coming-elasticsearch-2-0
-                 */
-                if ($this->isAnonymousUser() || !$this->isInternalUser()) {
-                    $statusQuery = new Query\Match();
-                    $statusQuery->setField('tm_status_id', TransportManager::TRANSPORT_MANAGER_STATUS_REMOVED);
-                    $queryBool->addMustNot($statusQuery);
-
-                    // Add must have licence no
-                    $licenceQuery = new Query\Filtered();
-                    $licenceFilter = new Filter\Exists('lic_id');
-                    $licenceQuery->setFilter($licenceFilter);
-                    $queryBool->addMust($licenceQuery);
-                }
-
-                // separate search into words
-                $search = preg_replace('/\s{2,}/', ' ', $search);
-                $parts = explode(' ', $search);
-
-                if (count($parts) > 1) {
-                    // apply wildcard to each search term
-                    foreach ($parts as $part_search) {
-                        // only search if valid
-                        if (!empty($part_search)) {
-                            $wildcardQuery = '*' . strtolower(trim($part_search, '*')) . '*';
-                            $queryBool->addShould(
-                                new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
-                            );
-                            $queryBool->addShould(
-                                new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 1.0)
-                            );
-                        }
-                    }
-                }
-
-                break;
-            case 'busreg':
-                $queryMatch = new Query\Match();
-                $queryMatch->setFieldQuery('reg_no', $search);
-                $queryMatch->setFieldBoost('reg_no', 2);
-                $queryBool->addShould($queryMatch);
-
-                $queryBool->addShould($this->generateOrgNameWildcardQuery($search));
-
-                break;
-        }
-    }
-
-    /**
-     * Generates and returns the wildcard query for Org Name
-     *
-     * @param $search
-     * @return Query\Wildcard
-     */
-    private function generateOrgNameWildcardQuery($search)
-    {
-        $wildcardQuery = strtolower(rtrim($search, '*') . '*');
-        $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
-
-        return $elasticaQueryWildcard;
-    }
-
-    /**
-     * Wrapper function to generate a simple field match
-     *
-     * @param $field
-     * @param $search
-     * @return Query\Match
-     */
-    private function addQueryMatch($field, $search, $boost = null)
-    {
-        $queryMatch = new Query\Match();
-        $queryMatch->setFieldQuery($field, $search);
-        $queryMatch->setFieldBoost($field, $boost);
-        return $queryMatch;
-    }
-
-    /**
-     * Process the date ranges against the query.
-     *
-     * @param Query\Bool $bool
-     * @return Query\Bool
-     */
-    public function processDateRanges(Query\Bool $bool)
-    {
-        /**
-         * Here we send the filter values selected to the search query
-         */
-        $dates = $this->getDateRanges();
-
-        foreach ($dates as $fieldName => $value) {
-            $lcFieldName = strtolower($fieldName);
-
-            if (substr($lcFieldName, -11) === 'from_and_to') {
-                /* from_and_to allows a single date field to be used as a terms filter whilst keeping the
-                 * individual Day/Month/Year input fields. The 'from_and_to' is identified and a single date is
-                 * added as a query match rather than a range (for efficiency)
-                 */
-                $fieldName = substr($fieldName, 0, -12);
-
-                $queryMatch = new Query\Match();
-                $queryMatch->setFieldQuery($fieldName, $value);
-                $bool->addMust($queryMatch);
-
-            } elseif (substr($lcFieldName, -4) === 'from') {
-                $criteria = [];
-
-                $fieldName = substr($fieldName, 0, -5);
-                $criteria['from'] = $value;
-
-                // Let's now look for the to field.
-                $toFieldName = $fieldName . '_to';
-                if (!empty($dates[$toFieldName])) {
-                    $criteria['to'] = $dates[$toFieldName];
-                }
-
-                $range = new Query\Range();
-                $range->addField($fieldName, $criteria);
-                $bool->addMust($range);
-            }
-        }
-
-        return $bool;
     }
 
     protected function processResults(ResultSet $resultSet)
