@@ -330,6 +330,10 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
         if (!empty($this->getIrfoGvPermit())) {
             return $this->getIrfoGvPermit()->getOrganisation();
         }
+
+        if (!empty($this->getIrfoPsvAuth())) {
+            return $this->getIrfoPsvAuth()->getOrganisation();
+        }
     }
 
     /**

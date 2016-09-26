@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -502,10 +503,11 @@ class FeeEntityTest extends EntityTester
     /**
      * @dataProvider getOrganisationProvider
      */
-    public function testGetOrganisation($licence, $irfoGvPermit, $expected)
+    public function testGetOrganisation($licence, $irfoGvPermit, $irfoPsvAuth, $expected)
     {
         $this->sut->setLicence($licence);
         $this->sut->setIrfoGvPermit($irfoGvPermit);
+        $this->sut->setIrfoPsvAuth($irfoPsvAuth);
         $this->assertSame($expected, $this->sut->getOrganisation());
     }
 
@@ -517,14 +519,23 @@ class FeeEntityTest extends EntityTester
             'licence' => [
                 m::mock(Licence::class)->makePartial()->setOrganisation($organisation),
                 null,
+                null,
                 $organisation,
             ],
-            'irfo' => [
+            'irfo gv permit' => [
                 null,
                 m::mock(IrfoGvPermit::class)->makePartial()->setOrganisation($organisation),
+                null,
+                $organisation,
+            ],
+            'irfo psv auth' => [
+                null,
+                null,
+                m::mock(IrfoPsvAuth::class)->makePartial()->setOrganisation($organisation),
                 $organisation,
             ],
             'neither' => [
+                null,
                 null,
                 null,
                 null,
