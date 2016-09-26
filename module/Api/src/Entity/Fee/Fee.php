@@ -330,6 +330,10 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
         if (!empty($this->getIrfoGvPermit())) {
             return $this->getIrfoGvPermit()->getOrganisation();
         }
+
+        if (!empty($this->getIrfoPsvAuth())) {
+            return $this->getIrfoPsvAuth()->getOrganisation();
+        }
     }
 
     /**
@@ -362,13 +366,20 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
             }
         }
 
+        $organisation = null;
+
         if (!empty($this->getIrfoGvPermit())) {
             $organisation = $this->getIrfoGvPermit()->getOrganisation();
-            if (!empty($organisation)) {
-                $contactDetails = $organisation->getIrfoContactDetails();
-                if (!empty($contactDetails)) {
-                    return $contactDetails->getAddress();
-                }
+        }
+
+        if (!empty($this->getIrfoPsvAuth())) {
+            $organisation = $this->getIrfoPsvAuth()->getOrganisation();
+        }
+
+        if (!empty($organisation)) {
+            $contactDetails = $organisation->getIrfoContactDetails();
+            if (!empty($contactDetails)) {
+                return $contactDetails->getAddress();
             }
         }
 
