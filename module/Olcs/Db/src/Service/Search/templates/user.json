@@ -1,0 +1,71 @@
+{
+  "query": {
+    "indices": {
+      "indices": [
+        "user_v2"
+      ],
+      "query": {
+        "bool": {
+          "should": [
+            {
+              "multi_match": {
+                "query": "%SEARCH_TERM%",
+                "fuzziness": 2,
+                "prefix_length": 1,
+                "fields": [
+                  "entity", 
+                  "forename",
+                  "family_name"
+                ]
+              }
+            },
+            {
+              "multi_match": {
+                "query": "%SEARCH_TERM%",
+                "fields": [
+                  "forename",
+                  "family_name"
+                ]
+              }
+            },
+             {
+              "match": {
+                "lic_nos": {
+                  "query": "%SEARCH_TERM%",
+                  "boost": 2
+                }
+              }
+            },
+            {
+              "match": {
+                "email_address": "%SEARCH_TERM%"
+              }
+            },
+            {
+              "match": {
+                "full_name": {
+                  "query": "%SEARCH_TERM%",
+                  "boost": 2
+                }
+              }
+            },
+            {
+              "match": {
+                "entity": "%SEARCH_TERM%"
+              }
+            },
+            {
+              "match": {
+                "login_id": {
+                  "query": "%SEARCH_TERM%"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "no_match_query": "none"
+    }
+  },
+  "min_score":0.2
+}
