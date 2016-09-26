@@ -1,5 +1,17 @@
 {
   "query": {
-    "query": "%SEARCH_TERM%"
+    "indices": {
+      "query": {
+        "bool": {
+          "should": [
+            {
+              "match": {
+                "field_1": "%SEARCH_TERM%"
+              }
+            }
+          ]
+        }
+      }
+    }
   }
 }
