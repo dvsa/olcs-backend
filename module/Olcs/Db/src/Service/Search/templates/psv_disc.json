@@ -2,7 +2,7 @@
   "query": {
     "indices": {
       "indices": [
-        "psv_disc_v2"
+        "psv_disc"
       ],
       "query": {
         "bool": {

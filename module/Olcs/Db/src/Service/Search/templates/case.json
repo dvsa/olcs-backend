@@ -2,7 +2,7 @@
   "query": {
     "indices": {
       "indices": [
-        "case_v2"
+        "case"
       ],
       "query": {
         "bool": {

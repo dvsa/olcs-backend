@@ -2,7 +2,7 @@
   "query": {
     "indices": {
       "indices": [
-        "licence_v2"
+        "licence"
       ],
       "query": {
         "bool": {

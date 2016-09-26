@@ -2,7 +2,7 @@
   "query": {
     "indices": {
       "indices": [
-        "publication_v2"
+        "publication"
       ],
       "query": {
         "bool": {

@@ -2,7 +2,7 @@
   "query": {
     "indices": {
       "indices": [
-        "address_v2"
+        "address"
       ],
       "query": {
         "bool": {

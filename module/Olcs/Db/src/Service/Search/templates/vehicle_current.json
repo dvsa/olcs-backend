@@ -2,8 +2,8 @@
   "query": {
     "indices": {
       "indices": [
-        "vehicle_current_v2",
-        "vehicle_removed_v2"
+        "vehicle_current",
+        "vehicle_removed"
       ],
       "query": {
         "bool": {
