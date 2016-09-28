@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Cpms\RequestReport as Cmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Request Cpms Report
@@ -35,6 +36,12 @@ final class RequestReport extends AbstractCommandHandler implements CpmsAwareInt
 
         $start = new \DateTime($command->getStart());
         $end = new \DateTime($command->getEnd());
+        $now = new DateTime('now');
+        if ($end->format('Y-m-d') === $now->format('Y-m-d')) {
+            $end->setTime($now->format('H'), $now->format('i'), $now->format('s'));
+        } else {
+            $end->setTime(23, 59, 59);
+        }
 
         $data = $this->getCpmsService()->requestReport($command->getReportCode(), $start, $end);
 
