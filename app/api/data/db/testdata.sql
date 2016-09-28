@@ -113,8 +113,6 @@ TRUNCATE TABLE `inspection_request`;
 TRUNCATE TABLE `user_role`;
 TRUNCATE TABLE `correspondence_inbox`; -- no inserts, not sure we need to truncate?
 TRUNCATE TABLE `grace_period`;
-TRUNCATE TABLE `printer`;
-TRUNCATE TABLE `team_printer`;
 TRUNCATE TABLE `historic_tm`;
 TRUNCATE TABLE `sla_target_date`;
 
@@ -2564,9 +2562,6 @@ COMMIT;
 
 INSERT INTO `printer` (`id`, `printer_name`, `description`) VALUES (1, 'TESTING-STUB-LICENCE:7','Test Default Printer');
 INSERT INTO `printer` (`id`, `printer_name`) VALUES (2, 'Test Printer');
-
-INSERT INTO `team_printer` (`id`, `version`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (1, 1, 13, 1, NULL, NULL);
-INSERT INTO `team_printer` (`id`, `version`, `team_id`, `printer_id`, `sub_category_id`, `user_id`) VALUES (2, 1, 13, 2, 1, 1);
 
 
 /* Test document sla target dates */
