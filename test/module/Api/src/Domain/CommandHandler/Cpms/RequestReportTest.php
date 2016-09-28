@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
 use Dvsa\Olcs\Transfer\Command\Cpms\RequestReport as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  *  Cpms Request Report Command Handler Test
@@ -41,8 +42,10 @@ class RequestReportTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $reportCode = 'FOO';
-        $start = '2015-10-07 12:34:56';
-        $end = '2015-10-08 12:34:55';
+        $start = '2015-10-07 00:00:00';
+        $endDate = new DateTime('now');
+        $end = $endDate->format('Y-m-d H:i:s');
+
         $filename = 'FILENAME';
 
         // expectations
@@ -94,8 +97,8 @@ class RequestReportTest extends CommandHandlerTestCase
     public function testHandleCommandErrorFromCpms()
     {
         $reportCode = 'FOO';
-        $start = '2015-10-07 12:34:56';
-        $end = '2015-10-08 12:34:55';
+        $start = '2015-10-07 00:00:00';
+        $end = '2015-10-08 23:59:59';
         $filename = 'FILENAME';
 
         // expectations
