@@ -43,9 +43,7 @@ class RequestReportTest extends CommandHandlerTestCase
     {
         $reportCode = 'FOO';
         $start = '2015-10-07 00:00:00';
-        $now = new DateTime('now');
-        $endDate = new DateTime('2015-10-08 00:00:00');
-        $endDate->setTime($now->format('H'), $now->format('i'), $now->format('s'));
+        $endDate = new DateTime('now');
         $end = $endDate->format('Y-m-d H:i:s');
 
         $filename = 'FILENAME';
@@ -100,10 +98,7 @@ class RequestReportTest extends CommandHandlerTestCase
     {
         $reportCode = 'FOO';
         $start = '2015-10-07 00:00:00';
-        $now = new DateTime('now');
-        $endDate = new DateTime('2015-10-08 00:00:00');
-        $endDate->setTime($now->format('H'), $now->format('i'), $now->format('s'));
-        $end = $endDate->format('Y-m-d H:i:s');
+        $end = '2015-10-08 23:59:59';
         $filename = 'FILENAME';
 
         // expectations
