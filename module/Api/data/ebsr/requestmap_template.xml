@@ -35,6 +35,7 @@
         </RouteTrackMapOptions>
         <Rendering>
             <OutputFormat>pdf</OutputFormat>
+            <Background>official</Background>
         </Rendering>
     </PublishDocumentRequest>
 </TransXChangePublisherTransport>
