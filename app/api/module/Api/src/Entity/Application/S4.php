@@ -24,9 +24,19 @@ class S4 extends AbstractS4
     const STATUS_REFUSED = 's4_sts_refused';
     const STATUS_CANCELLED = 's4_sts_cancelled';
 
+    /**
+     * S4 constructor.
+     *
+     * @param Application $application Application
+     * @param Licence     $licence     Licence
+     *
+     * @return void
+     */
     public function __construct(Application $application, Licence $licence)
     {
         $this->application = $application;
         $this->licence = $licence;
+
+        parent::__construct();
     }
 }

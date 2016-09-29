@@ -2,16 +2,16 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Application;
 
-use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre as Entity;
 use Dvsa\Olcs\Api\Entity\Application\S4;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Mockery as m;
 
 /**
- * ApplicationOperatingCentre Entity Unit Tests
- *
- * Initially auto-generated but won't be overridden
+ * @covers Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre
+ * @covers Dvsa\Olcs\Api\Entity\Application\AbstractApplicationOperatingCentre
  */
 class ApplicationOperatingCentreEntityTest extends EntityTester
 {
@@ -39,6 +39,19 @@ class ApplicationOperatingCentreEntityTest extends EntityTester
         }
 
         return $s4;
+    }
+
+    public function testConstructor()
+    {
+        /** @var Application $mockApp */
+        $mockApp = m::mock(Application::class);
+        /** @var OperatingCentre $mockOc */
+        $mockOc = m::mock(OperatingCentre::class);
+
+        $sut = new Entity($mockApp, $mockOc);
+
+        static::assertSame($mockApp, $sut->getApplication());
+        static::assertSame($mockOc, $sut->getOperatingCentre());
     }
 
     public function testCanDeleteNoS4()
