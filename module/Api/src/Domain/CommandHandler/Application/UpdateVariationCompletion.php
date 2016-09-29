@@ -97,7 +97,6 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         'people' => 'updateRelatedPeopleSections',
         'transport_managers' => 'updateRelatedTmSections',
         'vehicles' => 'updateRelatedVehiclesSections',
-        'vehicles_psv' => 'updateRelatedVehiclesSections',
         'discs' => 'updateRelatedDiscSections',
         'community_licences' => 'updateRelatedCommunityLicencesSections'
     ];

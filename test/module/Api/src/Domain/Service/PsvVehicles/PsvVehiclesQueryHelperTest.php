@@ -83,7 +83,6 @@ class PsvVehiclesQueryHelperTest extends MockeryTestCase
                 ['VEHICLE1'],
                 ['VEHICLE2']
             ],
-            'availableSpaces' => 1,
             'total' => 2
         ];
 
@@ -130,7 +129,6 @@ class PsvVehiclesQueryHelperTest extends MockeryTestCase
                 ['VEHICLE1'],
                 ['VEHICLE2']
             ],
-            'availableSpaces' => 8,
             'total' => 2
         ];
 
