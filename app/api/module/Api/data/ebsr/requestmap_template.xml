@@ -11,7 +11,7 @@
         <ProcessingOptions>
             <ValidateXml>false</ValidateXml>
             <IncludeDiagnostics>false</IncludeDiagnostics>
-            <StopData>webService</StopData>
+            <StopData>localOnly</StopData>
             <MapData>webService</MapData>
         </ProcessingOptions>
         <OutputOptions>
