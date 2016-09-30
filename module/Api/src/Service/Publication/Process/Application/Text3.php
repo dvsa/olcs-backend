@@ -41,7 +41,7 @@ final class Text3 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
             /* @var $aoc \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre */
 
             // don't include OC's that are part of an S4
-            if (!empty($aoc->getS4())) {
+            if (!empty($aoc->getS4()) && !$publicationLink->getPublicationSection()->isDecisionSection()) {
                 continue;
             }
 
