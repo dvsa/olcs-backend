@@ -48,4 +48,34 @@ class PublicationSectionEntityTest extends EntityTester
 
         return $params;
     }
+
+    /**
+     * @dataProvider dataProviderTestIsDecision
+     *
+     * @param bool $isDecisionSection
+     * @param int  $section
+     */
+    public function testIsDecision($isDecisionSection, $section)
+    {
+        $sut = new Entity();
+        $sut->setId($section);
+
+        $this->assertSame($isDecisionSection, $sut->isDecisionSection());
+    }
+
+    public function dataProviderTestIsDecision()
+    {
+        for ($i = 1; $i < 35; $i++) {
+            $params[$i] = [false, $i];
+        }
+
+        $params[Entity::APP_GRANTED_SECTION] = [true, Entity::APP_GRANTED_SECTION];
+        $params[Entity::APP_REFUSED_SECTION] = [true, Entity::APP_REFUSED_SECTION];
+        $params[Entity::APP_WITHDRAWN_SECTION] = [true, Entity::APP_WITHDRAWN_SECTION];
+        $params[Entity::APP_GRANT_NOT_TAKEN_SECTION] = [true, Entity::APP_GRANT_NOT_TAKEN_SECTION];
+        $params[Entity::VAR_GRANTED_SECTION] = [true, Entity::VAR_GRANTED_SECTION];
+        $params[Entity::VAR_REFUSED_SECTION] = [true, Entity::VAR_REFUSED_SECTION];
+
+        return $params;
+    }
 }
