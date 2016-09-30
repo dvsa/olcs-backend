@@ -70,4 +70,23 @@ class PublicationSection extends AbstractPublicationSection
 
         return in_array($this->getId(), $section3Sections);
     }
+
+    /**
+     * Is this section a Decision section
+     *
+     * @return bool
+     */
+    public function isDecisionSection()
+    {
+        $sections = [
+            self::APP_GRANTED_SECTION,
+            self::APP_REFUSED_SECTION,
+            self::APP_WITHDRAWN_SECTION,
+            self::APP_GRANT_NOT_TAKEN_SECTION,
+            self::VAR_GRANTED_SECTION,
+            self::VAR_REFUSED_SECTION,
+        ];
+
+        return in_array($this->getId(), $sections);
+    }
 }
