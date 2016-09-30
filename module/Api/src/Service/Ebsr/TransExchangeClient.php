@@ -16,7 +16,8 @@ use Olcs\Logging\Log\Logger;
 class TransExchangeClient implements TransExchangeClientInterface
 {
     const REQUEST_MAP_TEMPLATE = 'RequestMap';
-    const GENERATE_DOCS_TEMPLATE = 'Standard';
+    const TIMETABLE_TEMPLATE = 'Timetable';
+    const DVSA_RECORD_TEMPLATE = 'DvsaRecord';
     const TRANSXCHANGE_INVALID_XML = 'TransXchange response did not validate against the schema';
 
     /**
