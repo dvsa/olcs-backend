@@ -36,6 +36,7 @@
         <Rendering>
             <OutputFormat>pdf</OutputFormat>
             <Background>official</Background>
+            <Rubric>official</Rubric>
         </Rendering>
     </PublishDocumentRequest>
 </TransXChangePublisherTransport>
