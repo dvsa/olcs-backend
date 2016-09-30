@@ -322,6 +322,31 @@ class FeesHelperServiceTest extends MockeryTestCase
         );
     }
 
+    public function testGetTotalOutstandingFeeAmountForApplication()
+    {
+        $sut = m::mock(FeesHelperService::class)->makePartial();
+
+        $mockFee1 = m::mock()
+            ->shouldReceive('getOutstandingAmount')
+            ->andReturn(123.00)
+            ->once()
+            ->getMock();
+
+        $mockFee2 = m::mock()
+            ->shouldReceive('getOutstandingAmount')
+            ->andReturn(0.45)
+            ->once()
+            ->getMock();
+
+        $sut->shouldReceive('getOutstandingFeesForApplication')
+            ->with(1)
+            ->andReturn([$mockFee1, $mockFee2])
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(123.45, $sut->getTotalOutstandingFeeAmountForApplication(1));
+    }
+
     /**
      * Helper function to generate a stub fee entity
      *
