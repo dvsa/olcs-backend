@@ -117,7 +117,7 @@ class Text3Test extends MockeryTestCase
         $application->addOperatingCentres($aoc);
 
         $publicationSection = new PublicationSection();
-        $publicationSection->setId(PublicationSection::APP_GRANTED_SECTION);
+        $publicationSection->setId(PublicationSection::APP_NEW_SECTION);
 
         $publicationLink = new PublicationLink();
         $publicationLink->setApplication($application);
