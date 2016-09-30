@@ -73,7 +73,9 @@ class Application extends AbstractQueryHandler
             ],
             [
                 'sections' => $this->sectionAccessService->getAccessibleSections($application),
-                'outstandingFeeTotal' => $this->getOutstandingFeeTotal($application),
+                'outstandingFeeTotal' => $this->feesHelper->getTotalOutstandingFeeAmountForApplication(
+                    $application->getId()
+                ),
                 'variationCompletion' => $application->getVariationCompletion(),
                 'canCreateCase' => $application->canCreateCase(),
                 'existingPublication' => !$application->getPublicationLinks()->isEmpty(),
@@ -84,20 +86,5 @@ class Application extends AbstractQueryHandler
                 'allowedOperatorLocation' => $application->getLicence()->getOrganisation()->getAllowedOperatorLocation()
             ]
         );
-    }
-
-    protected function getOutstandingFeeTotal($application)
-    {
-        $outstandingFees = $this->feesHelper->getOutstandingFeesForApplication($application->getId());
-
-        $total = 0;
-
-        if (is_array($outstandingFees)) {
-            foreach ($outstandingFees as $fee) {
-                $total += $fee->getOutstandingAmount();
-            }
-        }
-
-        return number_format($total, 2, '.', null);
     }
 }
