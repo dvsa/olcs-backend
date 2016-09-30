@@ -32,9 +32,6 @@ class DeclarationTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    /**
-     * @group test123
-     */
     public function testHandleQuery()
     {
         $query = Qry::create(['id' => 111]);

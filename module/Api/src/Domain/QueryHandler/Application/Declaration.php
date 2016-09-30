@@ -30,6 +30,13 @@ class Declaration extends AbstractQueryHandler
      */
     private $feesHelper;
 
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
+     * @return $this
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
@@ -40,6 +47,14 @@ class Declaration extends AbstractQueryHandler
         return parent::createService($serviceLocator);
     }
 
+    /**
+     * Handle query
+     * 
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
         /* @var $application \Dvsa\Olcs\Api\Entity\Application\Application */
