@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Application\Declaration;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Transfer\Query\Application\Declaration as Qry;
+use Dvsa\Olcs\Api\Service\FeesHelperService;
+use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
 use Mockery as m;
 
 /**
@@ -25,8 +27,8 @@ class DeclarationTest extends QueryHandlerTestCase
         $this->sut = new Declaration();
         $this->mockRepo('Application', ApplicationRepo::class);
         $this->mockedSmServices = [
-            'FeesHelperService' => m::mock(),
-            'SectionAccessService' => m::mock(),
+            'FeesHelperService' => m::mock(FeesHelperService::class),
+            'SectionAccessService' => m::mock(SectionAccessService::class),
         ];
 
         parent::setUp();
