@@ -63,6 +63,35 @@ class AddressEntityTest extends EntityTester
         $this->assertNull($address->getCountryCode());
     }
 
+    public function testToArray()
+    {
+        $country = new Country();
+        $country->setId(9999);
+
+        $sut = new Address();
+
+        // check with country code
+        $sut->updateAddress('address 1', 'address 2', 'address 3', 'address 4', 'unit_town', 'unit_postCode', $country);
+
+        static::assertEquals(
+            [
+                'addressLine1' => 'address 1',
+                'addressLine2' => 'address 2',
+                'addressLine3' => 'address 3',
+                'addressLine4' => 'address 4',
+                'town' => 'unit_town',
+                'postcode' => 'unit_postCode',
+                'countryCode' => 9999,
+            ],
+            $sut->toArray()
+        );
+
+        // check with country code is null
+        $sut->updateAddress('address 1', 'address 2', 'address 3', 'address 4', 'unit_town', 'unit_postcode', null);
+
+        static::assertNull($sut->toArray()['countryCode']);
+    }
+
     public function testIsEmpty()
     {
         $address = new Address();
