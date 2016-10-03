@@ -631,10 +631,12 @@ return [
     'ebsr' => [
         'transexchange_publisher' => [
             'templates' => [
-                \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::GENERATE_DOCS_TEMPLATE =>
-                    __DIR__ . '/../data/ebsr/txc_template.xml',
                 \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::REQUEST_MAP_TEMPLATE =>
-                    __DIR__ . '/../data/ebsr/requestmap_template.xml'
+                    __DIR__ . '/../data/ebsr/requestmap_template.xml',
+                \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::TIMETABLE_TEMPLATE =>
+                    __DIR__ . '/../data/ebsr/timetable_template.xml',
+                \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::DVSA_RECORD_TEMPLATE =>
+                    __DIR__ . '/../data/ebsr/dvsarecord_template.xml'
             ]
         ],
     ],
