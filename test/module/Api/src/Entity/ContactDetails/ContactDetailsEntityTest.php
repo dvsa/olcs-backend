@@ -2,15 +2,16 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\ContactDetails;
 
-use Mockery as m;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as Entity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 use Dvsa\Olcs\Api\Entity\Person\Person;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Mockery as m;
 
 /**
  * ContactDetails Entity Unit Tests
@@ -19,6 +20,13 @@ use Dvsa\Olcs\Api\Entity\Person\Person;
  */
 class ContactDetailsEntityTest extends EntityTester
 {
+    const DEF_ADDRESS_ID = 8888;
+    const DEF_PHONE_ID = 9999;
+    const DEF_PHONE_NR = 'unit_PhoneNr';
+    const DEF_PHONE_TYPE = PhoneContact::TYPE_BUSINESS;
+    const DEF_COUNTRY_CODE = 'unit_CountryCode';
+    const DEF_PERSON_ID = 77777;
+
     /**
      * Define the entity to test
      *
@@ -35,398 +43,6 @@ class ContactDetailsEntityTest extends EntityTester
         $this->assertSame($contactType, $entity->getContactType());
     }
 
-    public function testCreateForIrfoOperator()
-    {
-        $data = [
-            'emailAddress' => 'test1@test.me',
-            'address' => [
-                'addressLine1' => 'a12',
-                'addressLine2' => 'a23',
-                'addressLine3' => 'a34',
-                'addressLine4' => 'a45',
-                'town' => 'town',
-                'postcode' => 'LS1 2AB',
-                'countryCode' => m::mock(Country::class),
-            ],
-            'phoneContacts' => [
-                [
-                    'phoneContactType' => m::mock(RefData::class),
-                    'phoneNumber' => '111',
-                ],
-                [
-                    'phoneContactType' => m::mock(RefData::class),
-                    'phoneNumber' => '222',
-                ]
-            ],
-        ];
-
-        $contactType = m::mock(RefData::class)->makePartial();
-        $contactType->setId(ContactDetails::CONTACT_TYPE_IRFO_OPERATOR);
-
-        $entity = ContactDetails::create($contactType, $data);
-
-        $this->assertSame($contactType, $entity->getContactType());
-        $this->assertEquals($data['emailAddress'], $entity->getEmailAddress());
-
-        $this->assertInstanceOf(Address::class, $entity->getAddress());
-        $this->assertEquals($data['address']['addressLine1'], $entity->getAddress()->getAddressLine1());
-        $this->assertEquals($data['address']['addressLine2'], $entity->getAddress()->getAddressLine2());
-        $this->assertEquals($data['address']['addressLine3'], $entity->getAddress()->getAddressLine3());
-        $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
-        $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
-        $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
-        $this->assertEquals($data['address']['countryCode'], $entity->getAddress()->getCountryCode());
-
-        $this->assertEquals(2, count($entity->getPhoneContacts()));
-    }
-
-    public function testUpdateForIrfoOperator()
-    {
-        $data = [
-            'emailAddress' => 'updated@test.me',
-            'address' => [
-                'addressLine1' => 'updated a1',
-                'addressLine2' => 'updated a2',
-                'addressLine3' => 'updated a3',
-                'addressLine4' => 'updated a4',
-                'town' => 'updated town',
-                'postcode' => 'LS1 2AB',
-                'countryCode' => m::mock(Country::class),
-            ],
-            'phoneContacts' => [
-                [
-                    'phoneContactType' => m::mock(RefData::class),
-                    'phoneNumber' => 'updated pn1',
-                ],
-                [
-                    'id' => 302,
-                    'phoneContactType' => m::mock(RefData::class),
-                    'phoneNumber' => 'updated pn2',
-                ],
-                [
-                    'phoneContactType' => m::mock(RefData::class),
-                    'phoneNumber' => '',
-                ],
-            ],
-        ];
-
-        $contactType = m::mock(RefData::class)->makePartial();
-        $contactType->setId(ContactDetails::CONTACT_TYPE_IRFO_OPERATOR);
-
-        $entity = new ContactDetails($contactType);
-
-        // set existing data on the entity before update
-        $entity->setEmailAddress('existing@test.me');
-
-        $addressEntity = new Address();
-        $addressEntity->setId(200);
-        $addressEntity->setAddressLine1('existing a1');
-        $addressEntity->setAddressLine2('existing a2');
-        $addressEntity->setAddressLine3('existing a3');
-        $addressEntity->setAddressLine4('existing a4');
-        $addressEntity->setTown('existing town');
-        $addressEntity->setPostcode('LS2 9AA');
-        $entity->setAddress($addressEntity);
-
-        $phoneContactType = m::mock(RefData::class)->makePartial();
-
-        $phoneContact1Entity = new PhoneContact($phoneContactType);
-        $phoneContact1Entity->setId(301);
-        $entity->addPhoneContacts($phoneContact1Entity);
-
-        $phoneContact2Entity = new PhoneContact($phoneContactType);
-        $phoneContact2Entity->setId(302);
-        $entity->addPhoneContacts($phoneContact2Entity);
-
-        $phoneContact3Entity = new PhoneContact($phoneContactType);
-        $phoneContact3Entity->setId(303);
-        $entity->addPhoneContacts($phoneContact3Entity);
-
-        // update the entity
-        $entity->update($data);
-
-        $this->assertSame($contactType, $entity->getContactType());
-        $this->assertEquals($data['emailAddress'], $entity->getEmailAddress());
-
-        $this->assertInstanceOf(Address::class, $entity->getAddress());
-        $this->assertEquals(200, $entity->getAddress()->getId());
-        $this->assertEquals($data['address']['addressLine1'], $entity->getAddress()->getAddressLine1());
-        $this->assertEquals($data['address']['addressLine2'], $entity->getAddress()->getAddressLine2());
-        $this->assertEquals($data['address']['addressLine3'], $entity->getAddress()->getAddressLine3());
-        $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
-        $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
-        $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
-        $this->assertEquals($data['address']['countryCode'], $entity->getAddress()->getCountryCode());
-
-        $phoneContacts = $entity->getPhoneContacts()->toArray();
-        $this->assertEquals(2, count($phoneContacts));
-
-        $this->assertEquals(
-            $data['phoneContacts'][0]['phoneNumber'],
-            $entity->getPhoneContacts()->first()->getPhoneNumber()
-        );
-
-        $this->assertEquals(
-            $data['phoneContacts'][1]['phoneNumber'],
-            $entity->getPhoneContacts()->last()->getPhoneNumber()
-        );
-    }
-
-    public function testCreateForPartner()
-    {
-        $data = [
-            'description' => 'description',
-            'address' => [
-                'addressLine1' => 'a12',
-                'addressLine2' => 'a23',
-                'addressLine3' => 'a34',
-                'addressLine4' => 'a45',
-                'town' => 'town',
-                'postcode' => 'LS1 2AB',
-                'countryCode' => m::mock(Country::class),
-            ],
-        ];
-
-        $contactType = m::mock(RefData::class)->makePartial();
-        $contactType->setId(ContactDetails::CONTACT_TYPE_PARTNER);
-
-        $entity = ContactDetails::create($contactType, $data);
-
-        $this->assertSame($contactType, $entity->getContactType());
-        $this->assertEquals($data['description'], $entity->getDescription());
-
-        $this->assertInstanceOf(Address::class, $entity->getAddress());
-        $this->assertEquals($data['address']['addressLine1'], $entity->getAddress()->getAddressLine1());
-        $this->assertEquals($data['address']['addressLine2'], $entity->getAddress()->getAddressLine2());
-        $this->assertEquals($data['address']['addressLine3'], $entity->getAddress()->getAddressLine3());
-        $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
-        $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
-        $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
-        $this->assertEquals($data['address']['countryCode'], $entity->getAddress()->getCountryCode());
-
-        $this->assertEquals(0, $entity->getPhoneContacts()->count());
-    }
-
-    public function testUpdateForPartner()
-    {
-        $data = [
-            'description' => 'updated description',
-            'address' => [
-                'addressLine1' => 'updated a1',
-                'addressLine2' => 'updated a2',
-                'addressLine3' => 'updated a3',
-                'addressLine4' => 'updated a4',
-                'town' => 'updated town',
-                'postcode' => 'LS1 2AB',
-                'countryCode' => m::mock(Country::class),
-            ],
-        ];
-
-        $contactType = m::mock(RefData::class)->makePartial();
-        $contactType->setId(ContactDetails::CONTACT_TYPE_PARTNER);
-
-        $entity = new ContactDetails($contactType);
-
-        // set existing data on the entity before update
-        $entity->setDescription('existing description');
-
-        $addressEntity = new Address();
-        $addressEntity->setId(200);
-        $addressEntity->setAddressLine1('existing a1');
-        $addressEntity->setAddressLine2('existing a2');
-        $addressEntity->setAddressLine3('existing a3');
-        $addressEntity->setAddressLine4('existing a4');
-        $addressEntity->setTown('existing town');
-        $addressEntity->setPostcode('LS2 9AA');
-        $entity->setAddress($addressEntity);
-
-        // update the entity
-        $entity->update($data);
-
-        $this->assertSame($contactType, $entity->getContactType());
-        $this->assertEquals($data['description'], $entity->getDescription());
-
-        $this->assertInstanceOf(Address::class, $entity->getAddress());
-        $this->assertEquals(200, $entity->getAddress()->getId());
-        $this->assertEquals($data['address']['addressLine1'], $entity->getAddress()->getAddressLine1());
-        $this->assertEquals($data['address']['addressLine2'], $entity->getAddress()->getAddressLine2());
-        $this->assertEquals($data['address']['addressLine3'], $entity->getAddress()->getAddressLine3());
-        $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
-        $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
-        $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
-        $this->assertEquals($data['address']['countryCode'], $entity->getAddress()->getCountryCode());
-
-        $this->assertEquals(0, $entity->getPhoneContacts()->count());
-    }
-
-    public function testCreateForUser()
-    {
-        $data = [
-            'emailAddress' => 'test1@test.me',
-            'person' => [
-                'title' => m::mock(RefData::class),
-                'forename' => 'forename',
-                'familyName' => 'familyName',
-                'birthDate' => '1960-02-01',
-            ],
-            'address' => [
-                'addressLine1' => 'a12',
-                'addressLine2' => 'a23',
-                'addressLine3' => 'a34',
-                'addressLine4' => 'a45',
-                'town' => 'town',
-                'postcode' => 'LS1 2AB',
-                'countryCode' => m::mock(Country::class),
-            ],
-            'phoneContacts' => [
-                [
-                    'phoneContactType' => m::mock(RefData::class),
-                    'phoneNumber' => '111',
-                ],
-                [
-                    'phoneContactType' => m::mock(RefData::class),
-                    'phoneNumber' => '222',
-                ]
-            ],
-        ];
-
-        $contactType = m::mock(RefData::class)->makePartial();
-        $contactType->setId(ContactDetails::CONTACT_TYPE_USER);
-
-        $entity = ContactDetails::create($contactType, $data);
-
-        $this->assertSame($contactType, $entity->getContactType());
-        $this->assertEquals($data['emailAddress'], $entity->getEmailAddress());
-
-        $this->assertInstanceOf(Person::class, $entity->getPerson());
-        $this->assertEquals($data['person']['forename'], $entity->getPerson()->getForename());
-        $this->assertEquals($data['person']['familyName'], $entity->getPerson()->getFamilyName());
-        $this->assertEquals($data['person']['birthDate'], $entity->getPerson()->getBirthDate()->format('Y-m-d'));
-
-        $this->assertInstanceOf(Address::class, $entity->getAddress());
-        $this->assertEquals($data['address']['addressLine1'], $entity->getAddress()->getAddressLine1());
-        $this->assertEquals($data['address']['addressLine2'], $entity->getAddress()->getAddressLine2());
-        $this->assertEquals($data['address']['addressLine3'], $entity->getAddress()->getAddressLine3());
-        $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
-        $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
-        $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
-        $this->assertEquals($data['address']['countryCode'], $entity->getAddress()->getCountryCode());
-
-        $this->assertEquals(2, count($entity->getPhoneContacts()));
-    }
-
-    public function testUpdateForUser()
-    {
-        $data = [
-            'emailAddress' => 'updated@test.me',
-            'person' => [
-                'title' => m::mock(RefData::class),
-                'forename' => 'updated forename',
-                'familyName' => 'updated familyName',
-                'birthDate' => '1975-12-12',
-            ],
-            'address' => [
-                'addressLine1' => 'updated a1',
-                'addressLine2' => 'updated a2',
-                'addressLine3' => 'updated a3',
-                'addressLine4' => 'updated a4',
-                'town' => 'updated town',
-                'postcode' => 'LS1 2AB',
-                'countryCode' => '',
-            ],
-            'phoneContacts' => [
-                [
-                    'phoneContactType' => m::mock(RefData::class),
-                    'phoneNumber' => 'updated pn1',
-                ],
-                [
-                    'id' => 302,
-                    'phoneContactType' => m::mock(RefData::class),
-                    'phoneNumber' => 'updated pn2',
-                ],
-                [
-                    'phoneContactType' => m::mock(RefData::class),
-                    'phoneNumber' => '',
-                ],
-            ],
-        ];
-
-        $contactType = m::mock(RefData::class)->makePartial();
-        $contactType->setId(ContactDetails::CONTACT_TYPE_USER);
-
-        $entity = new ContactDetails($contactType);
-
-        // set existing data on the entity before update
-        $entity->setEmailAddress('existing@test.me');
-
-        $personEntity = new Person();
-        $personEntity->setId(100);
-        $personEntity->setForename('existing forename');
-        $personEntity->setFamilyName('existing familyName');
-        $personEntity->setBirthDate(new \DateTime('1960-02-01'));
-        $entity->setPerson($personEntity);
-
-        $addressEntity = new Address();
-        $addressEntity->setId(200);
-        $addressEntity->setAddressLine1('existing a1');
-        $addressEntity->setAddressLine2('existing a2');
-        $addressEntity->setAddressLine3('existing a3');
-        $addressEntity->setAddressLine4('existing a4');
-        $addressEntity->setTown('existing town');
-        $addressEntity->setPostcode('LS2 9AA');
-        $addressEntity->setCountryCode(m::mock(Country::class));
-        $entity->setAddress($addressEntity);
-
-        $phoneContactType = m::mock(RefData::class)->makePartial();
-
-        $phoneContact1Entity = new PhoneContact($phoneContactType);
-        $phoneContact1Entity->setId(301);
-        $entity->addPhoneContacts($phoneContact1Entity);
-
-        $phoneContact2Entity = new PhoneContact($phoneContactType);
-        $phoneContact2Entity->setId(302);
-        $entity->addPhoneContacts($phoneContact2Entity);
-
-        $phoneContact3Entity = new PhoneContact($phoneContactType);
-        $phoneContact3Entity->setId(303);
-        $entity->addPhoneContacts($phoneContact3Entity);
-
-        // update the entity
-        $entity->update($data);
-
-        $this->assertSame($contactType, $entity->getContactType());
-        $this->assertEquals($data['emailAddress'], $entity->getEmailAddress());
-
-        $this->assertInstanceOf(Person::class, $entity->getPerson());
-        $this->assertEquals(100, $entity->getPerson()->getId());
-        $this->assertEquals($data['person']['forename'], $entity->getPerson()->getForename());
-        $this->assertEquals($data['person']['familyName'], $entity->getPerson()->getFamilyName());
-        $this->assertEquals($data['person']['birthDate'], $entity->getPerson()->getBirthDate()->format('Y-m-d'));
-
-        $this->assertInstanceOf(Address::class, $entity->getAddress());
-        $this->assertEquals(200, $entity->getAddress()->getId());
-        $this->assertEquals($data['address']['addressLine1'], $entity->getAddress()->getAddressLine1());
-        $this->assertEquals($data['address']['addressLine2'], $entity->getAddress()->getAddressLine2());
-        $this->assertEquals($data['address']['addressLine3'], $entity->getAddress()->getAddressLine3());
-        $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
-        $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
-        $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
-        $this->assertNull($entity->getAddress()->getCountryCode());
-
-        $phoneContacts = $entity->getPhoneContacts()->toArray();
-        $this->assertEquals(2, count($phoneContacts));
-
-        $this->assertEquals(
-            $data['phoneContacts'][0]['phoneNumber'],
-            $entity->getPhoneContacts()->first()->getPhoneNumber()
-        );
-
-        $this->assertEquals(
-            $data['phoneContacts'][1]['phoneNumber'],
-            $entity->getPhoneContacts()->last()->getPhoneNumber()
-        );
-    }
-
     public function testUpdateContactDetailsWithPersonAndEmailAddress()
     {
         $contactType = m::mock(RefData::class);
@@ -438,136 +54,564 @@ class ContactDetailsEntityTest extends EntityTester
         $this->assertEquals('email@address.com', $entity->getEmailAddress());
     }
 
-    public function testCreateForCorrespondenceAddress()
+    /**
+     * @dataProvider dpTestCreate
+     */
+    public function testCreate($contactType, $data = [], $expect = [])
     {
-        $data = [
-            'emailAddress' => 'test1@test.me',
-            'address' => [
-                'addressLine1' => 'a12',
-                'addressLine2' => 'a23',
-                'addressLine3' => 'a34',
-                'addressLine4' => 'a45',
-                'town' => 'town',
-                'postcode' => 'LS1 2AB',
-                'countryCode' => m::mock(Country::class),
-            ],
-            'businessPhoneContact' => [
-                'phoneContactType' => m::mock(RefData::class),
-                'phoneNumber' => '111',
-            ],
-            'homePhoneContact' => [
-                'phoneContactType' => m::mock(RefData::class),
-                'phoneNumber' => '222',
-            ],
-        ];
+        $cdTypeEntity = (new RefData())->setId($contactType);
 
-        $contactType = m::mock(RefData::class)->makePartial();
-        $contactType->setId(ContactDetails::CONTACT_TYPE_CORRESPONDENCE_ADDRESS);
+        //  call
+        $sut = ContactDetails::create($cdTypeEntity, $data);
 
-        $entity = ContactDetails::create($contactType, $data);
+        //  check
+        static::assertSame($cdTypeEntity, $sut->getContactType());
 
-        $this->assertSame($contactType, $entity->getContactType());
-        $this->assertEquals($data['emailAddress'], $entity->getEmailAddress());
+        if (isset($expect['address'])) {
+            static::assertEquals($expect['address'], $sut->getAddress());
+        } else {
+            static::assertNull($sut->getAddress());
+        }
 
-        $this->assertInstanceOf(Address::class, $entity->getAddress());
-        $this->assertEquals($data['address']['addressLine1'], $entity->getAddress()->getAddressLine1());
-        $this->assertEquals($data['address']['addressLine2'], $entity->getAddress()->getAddressLine2());
-        $this->assertEquals($data['address']['addressLine3'], $entity->getAddress()->getAddressLine3());
-        $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
-        $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
-        $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
-        $this->assertEquals($data['address']['countryCode'], $entity->getAddress()->getCountryCode());
+        static::assertEquals(isset($expect['email']) ? $expect['email'] : null, $sut->getEmailAddress());
+        static::assertEquals(isset($expect['desc']) ? $expect['desc'] : null, $sut->getDescription());
 
-        $this->assertEquals(2, count($entity->getPhoneContacts()));
+        if (isset($expect['person'])) {
+            static::assertEquals($expect['person'], $sut->getPerson());
+        } else {
+            static::assertNull($sut->getPerson());
+        }
+
+        $phoneContacts = $sut->getPhoneContacts();
+        static::assertInstanceOf(ArrayCollection::class, $phoneContacts);
+        static::assertEmpty($phoneContacts);
     }
 
-    public function testUpdateForCorrespondenceAddress()
+    public function dpTestCreate()
     {
-        $data = [
-            'emailAddress' => 'updated@test.me',
-            'address' => [
-                'addressLine1' => 'updated a1',
-                'addressLine2' => 'updated a2',
-                'addressLine3' => 'updated a3',
-                'addressLine4' => 'updated a4',
-                'town' => 'updated town',
-                'postcode' => 'LS1 2AB',
-                'countryCode' => m::mock(Country::class),
+        return [
+            [
+                'contactType' => ContactDetails::CONTACT_TYPE_IRFO_OPERATOR,
             ],
-            'businessPhoneContact' => [
-                'phoneContactType' => m::mock(RefData::class),
-                'phoneNumber' => 'updated pn1',
+            [
+                'contactType' => ContactDetails::CONTACT_TYPE_PARTNER,
+                'data' => [
+                    'description' => null,
+                    'address' => [
+                        'addressLine1' => null,
+                        'addressLine2' => null,
+                        'addressLine3' => null,
+                        'addressLine4' => null,
+                        'town' => null,
+                        'postcode' => null,
+                        'countryCode' => null,
+                    ],
+                ],
+                'expect' => [
+                    'desc' => null,
+                    'address' => new Address(),
+                ],
             ],
-            'homePhoneContact' => [
-                'id' => 302,
-                'phoneContactType' => m::mock(RefData::class),
-                'phoneNumber' => 'updated pn2',
+            [
+                'contactType' => ContactDetails::CONTACT_TYPE_OBJECTOR,
             ],
-            'faxPhoneContact' => [
-                'phoneContactType' => m::mock(RefData::class),
-                'phoneNumber' => '',
+            [
+                'contactType' => ContactDetails::CONTACT_TYPE_STATEMENT_REQUESTOR,
+                'data' => [
+                    'person' => [
+                        'title' => null,
+                        'forename' => null,
+                        'familyName' => null,
+                        'birthDate' => null,
+                    ],
+                    'address' => [
+                        'addressLine1' => null,
+                        'addressLine2' => null,
+                        'addressLine3' => null,
+                        'addressLine4' => null,
+                        'town' => null,
+                        'postcode' => null,
+                        'countryCode' => null,
+                    ],
+                ],
+                'expect' => [
+                    'person' => new Person(),
+                    'address' => new Address(),
+                ],
+            ],
+            [
+                'contactType' => ContactDetails::CONTACT_TYPE_USER,
+                'data' => [
+                    'emailAddress' => null,
+                    'person' => [
+                        'title' => null,
+                        'forename' => null,
+                        'familyName' => null,
+                        'birthDate' => null,
+                    ],
+                ],
+                'expect' => [
+                    'email' => null,
+                    'person' => new Person(),
+                ],
+            ],
+            [
+                'contactType' => ContactDetails::CONTACT_TYPE_COMPLAINANT,
+                'data' => [
+                    'person' => [
+                        'title' => null,
+                        'forename' => null,
+                        'familyName' => null,
+                        'birthDate' => null,
+                    ],
+                    'address' => [
+                        'addressLine1' => null,
+                        'addressLine2' => null,
+                        'addressLine3' => null,
+                        'addressLine4' => null,
+                        'town' => null,
+                        'postcode' => null,
+                        'countryCode' => null,
+                    ],
+                ],
+                'expect' => [
+                    'person' => new Person(),
+                    'address' => new Address(),
+                ],
+            ],
+            [
+                'contactType' => ContactDetails::CONTACT_TYPE_CORRESPONDENCE_ADDRESS,
             ],
         ];
+    }
 
-        $contactType = m::mock(RefData::class)->makePartial();
-        $contactType->setId(ContactDetails::CONTACT_TYPE_CORRESPONDENCE_ADDRESS);
+    /**
+     * @dataProvider dpTestUpdate
+     */
+    public function testUpdate($contactType, $data, $expect)
+    {
+        $cdTypeEntity = (new RefData())->setId($contactType);
 
-        $entity = new ContactDetails($contactType);
+        $sut = new ContactDetails($cdTypeEntity);
+        $sut->setAddress((new Address())->setId(self::DEF_ADDRESS_ID));
+        $sut->setPerson((new Person())->setId(self::DEF_PERSON_ID));
 
-        // set existing data on the entity before update
-        $entity->setEmailAddress('existing@test.me');
+        /** @var \Doctrine\Common\Collections\ArrayCollection $mockPhoneCollection */
+        $mockPhoneCollection = new \Doctrine\Common\Collections\ArrayCollection;
+        $mockPhoneCollection->offsetSet(
+            self::DEF_PHONE_ID,
+            (new PhoneContact(new RefData(self::DEF_PHONE_TYPE)))
+                ->setId(self::DEF_PHONE_ID)
+                ->setPhoneNumber(self::DEF_PHONE_NR)
+        );
 
-        $addressEntity = new Address();
-        $addressEntity->setId(200);
-        $addressEntity->setAddressLine1('existing a1');
-        $addressEntity->setAddressLine2('existing a2');
-        $addressEntity->setAddressLine3('existing a3');
-        $addressEntity->setAddressLine4('existing a4');
-        $addressEntity->setTown('existing town');
-        $addressEntity->setPostcode('LS2 9AA');
-        $entity->setAddress($addressEntity);
-
-        $phoneContactType = m::mock(RefData::class)->makePartial();
-
-        $phoneContact1Entity = new PhoneContact($phoneContactType);
-        $phoneContact1Entity->setId(301);
-        $entity->addPhoneContacts($phoneContact1Entity);
-
-        $phoneContact2Entity = new PhoneContact($phoneContactType);
-        $phoneContact2Entity->setId(302);
-        $entity->addPhoneContacts($phoneContact2Entity);
-
-        $phoneContact3Entity = new PhoneContact($phoneContactType);
-        $phoneContact3Entity->setId(303);
-        $entity->addPhoneContacts($phoneContact3Entity);
+        $sut->setPhoneContacts($mockPhoneCollection);
 
         // update the entity
-        $entity->update($data);
+        $sut->update($data);
 
-        $this->assertSame($contactType, $entity->getContactType());
-        $this->assertEquals($data['emailAddress'], $entity->getEmailAddress());
+        //  check
+        static::assertSame($cdTypeEntity, $sut->getContactType());
 
-        $this->assertInstanceOf(Address::class, $entity->getAddress());
-        $this->assertEquals(200, $entity->getAddress()->getId());
-        $this->assertEquals($data['address']['addressLine1'], $entity->getAddress()->getAddressLine1());
-        $this->assertEquals($data['address']['addressLine2'], $entity->getAddress()->getAddressLine2());
-        $this->assertEquals($data['address']['addressLine3'], $entity->getAddress()->getAddressLine3());
-        $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
-        $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
-        $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
-        $this->assertEquals($data['address']['countryCode'], $entity->getAddress()->getCountryCode());
+        $checkPhones = [];
+        /** @var PhoneContact $phone */
+        foreach ($sut->getPhoneContacts() as $phone) {
+            $checkPhones[] = [
+                'id' => $phone->getId(),
+                'type' => $phone->getPhoneContactType()->getId(),
+                'number' => $phone->getPhoneNumber(),
+            ];
+        }
 
-        $phoneContacts = $entity->getPhoneContacts()->toArray();
-        $this->assertEquals(2, count($phoneContacts));
+        $person = $sut->getPerson();
 
-        $this->assertEquals(
-            $data['businessPhoneContact']['phoneNumber'],
-            $entity->getPhoneContacts()->first()->getPhoneNumber()
+        static::assertEquals(self::DEF_ADDRESS_ID, $sut->getAddress()->getId());
+        static::assertEquals(self::DEF_PERSON_ID, $person->getId());
+
+        static::assertEquals(
+            $expect,
+            array_filter(
+                [
+                    'desc' => $sut->getDescription(),
+                    'email' => $sut->getEmailAddress(),
+                    'address' => $sut->getAddress()->toArray(),
+                    'person' => array_filter(
+                        [
+                            'title' => $person->getTitle(),
+                            'fullName' => $person->getFullName(),
+                            'dob' => ($person->getBirthDate() ? $person->getBirthDate()->format('Y-m-d') : null),
+                        ]
+                    ),
+                    'phones' => $checkPhones,
+                ]
+            )
         );
+    }
 
-        $this->assertEquals(
-            $data['homePhoneContact']['phoneNumber'],
-            $entity->getPhoneContacts()->last()->getPhoneNumber()
-        );
+    public function dpTestUpdate()
+    {
+        return [
+            //  test CONTACT_TYPE_IRFO_OPERATOR
+            [
+                'contactType' => ContactDetails::CONTACT_TYPE_IRFO_OPERATOR,
+                'data' => [
+                    'emailAddress' => 'unit_Email',
+                    'address' => [
+                        'addressLine1' => 'unit_Addr1',
+                        'addressLine2' => 'unit_Addr2',
+                        'addressLine3' => 'unit_Addr3',
+                        'addressLine4' => 'unit_Addr4',
+                        'town' => 'unit_Town',
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => (new Country())->setId('Unit_Other_CountryCode'),
+                    ],
+                    'phoneContacts' => [
+                        [
+                            'id' => null,
+                            'phoneContactType' => new RefData('unit_PhoneContactType1'),
+                            'phoneNumber' => 'unit_Phone1',
+                        ],
+                        [
+                            'id' => self::DEF_PHONE_ID,
+                            'phoneContactType' => new RefData('unit_Other_PhoneContactType'),
+                            'phoneNumber' => 'unit_Phone2',
+                        ],
+                        [
+                            'phoneContactType' => new RefData('unit_PhoneContactType2'),
+                            'phoneNumber' => '',
+                        ],
+                    ],
+                ],
+                'expect' => [
+                    'email' => 'unit_Email',
+                    'address' => [
+                        'addressLine1' => 'unit_Addr1',
+                        'addressLine2' => 'unit_Addr2',
+                        'addressLine3' => 'unit_Addr3',
+                        'addressLine4' => 'unit_Addr4',
+                        'town' => 'unit_Town',
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => 'Unit_Other_CountryCode',
+                    ],
+                    'phones' => [
+                        [
+                            'id' => self::DEF_PHONE_ID,
+                            'type' => self::DEF_PHONE_TYPE,
+                            'number' => 'unit_Phone2',
+                        ],
+                        [
+                            'id' => null,
+                            'type' => 'unit_PhoneContactType1',
+                            'number' => 'unit_Phone1',
+                        ],
+                    ],
+                ],
+            ],
+            //  test update of CONTACT_TYPE_PARTNER
+            [
+                'contactType' => ContactDetails::CONTACT_TYPE_PARTNER,
+                'data' => [
+                    'description' => 'unit_Desc',
+                    'address' => [
+                        'addressLine1' => 'unit_Addr1',
+                        'addressLine2' => 'unit_Addr2',
+                        'addressLine3' => 'unit_Addr3',
+                        'addressLine4' => 'unit_Addr4',
+                        'town' => 'unit_Town',
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => null,
+                    ],
+                ],
+                'expect' => [
+                    'desc' => 'unit_Desc',
+                    'address' => [
+                        'addressLine1' => 'unit_Addr1',
+                        'addressLine2' => 'unit_Addr2',
+                        'addressLine3' => 'unit_Addr3',
+                        'addressLine4' => 'unit_Addr4',
+                        'town' => 'unit_Town',
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => null,
+                    ],
+                    'phones' => [
+                        [
+                            'id' => self::DEF_PHONE_ID,
+                            'type' => self::DEF_PHONE_TYPE,
+                            'number' => self::DEF_PHONE_NR,
+                        ],
+                    ],
+                ],
+            ],
+            //  test update of CONTACT_TYPE_OBJECTOR
+            [
+                'contactType' => ContactDetails::CONTACT_TYPE_OBJECTOR,
+                'data' => [
+                    'emailAddress' => 'unit_Email',
+                    'description' => 'unit_Desc',
+                    'person' => [
+                        'title' => null,
+                        'forename' => 'unit_ForeName',
+                        'familyName' => 'unit_FamilyName',
+                        'birthDate' => '1976-05-04',
+                    ],
+                    'address' => [
+                        'addressLine1' => 'unit_Addr1',
+                        'addressLine2' => null,
+                        'addressLine3' => null,
+                        'addressLine4' => null,
+                        'town' => 'unit_Town',
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => (new Country())->setId(self::DEF_COUNTRY_CODE),
+                    ],
+                    'phoneContacts' => [
+                        [
+                            'id' => self::DEF_PHONE_ID,
+                            'phoneContactType' => new RefData('unit_Other_PhoneContactType'),
+                            'phoneNumber' => 'unit_PhoneNumber',
+                        ],
+                    ],
+                ],
+                'expect' => [
+                    'email' => 'unit_Email',
+                    'desc' => 'unit_Desc',
+                    'person' => [
+                        'fullName' => 'unit_ForeName unit_FamilyName',
+                        'dob' => '1976-05-04',
+                    ],
+                    'address' => [
+                        'addressLine1' => 'unit_Addr1',
+                        'addressLine2' => null,
+                        'addressLine3' => null,
+                        'addressLine4' => null,
+                        'town' => 'unit_Town',
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => self::DEF_COUNTRY_CODE,
+                    ],
+                    'phones' => [
+                        [
+                            'id' => self::DEF_PHONE_ID,
+                            'type' => self::DEF_PHONE_TYPE,
+                            'number' => 'unit_PhoneNumber',
+                        ],
+                    ],
+                ],
+            ],
+            //  test update of CONTACT_TYPE_STATEMENT_REQUESTOR
+            [
+                'contactType' => ContactDetails::CONTACT_TYPE_STATEMENT_REQUESTOR,
+                'data' => [
+                    'person' => [
+                        'title' => new RefData('unit_Title'),
+                        'forename' => null,
+                        'familyName' => 'unit_FamilyName',
+                        'birthDate' => '1977-06-05',
+                    ],
+                    'address' => [
+                        'addressLine1' => null,
+                        'addressLine2' => 'unit_Addr2',
+                        'addressLine3' => null,
+                        'addressLine4' => null,
+                        'town' => null,
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => null,
+                    ],
+                ],
+                'expect' => [
+                    'person' => [
+                        'title' => 'unit_Title',
+                        'fullName' => 'unit_FamilyName',
+                        'dob' => '1977-06-05',
+                    ],
+                    'address' => [
+                        'addressLine1' => null,
+                        'addressLine2' => 'unit_Addr2',
+                        'addressLine3' => null,
+                        'addressLine4' => null,
+                        'town' => null,
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => null,
+                    ],
+                    'phones' => [
+                        [
+                            'id' => self::DEF_PHONE_ID,
+                            'type' => self::DEF_PHONE_TYPE,
+                            'number' => self::DEF_PHONE_NR,
+                        ],
+                    ],
+                ],
+            ],
+            //  test update of CONTACT_TYPE_USER
+            [
+                'contactType' => ContactDetails::CONTACT_TYPE_USER,
+                'data' => [
+                    'emailAddress' => 'unit_Email',
+                    'person' => [
+                        'title' => new RefData('unit_PersonTitle'),
+                        'forename' => 'unit_ForeName',
+                        'familyName' => 'unit_FamilyName',
+                        'birthDate' => '1975-04-03',
+                    ],
+                    'address' => [
+                        'addressLine1' => 'unit_Addr1',
+                        'addressLine2' => 'unit_Addr2',
+                        'addressLine3' => null,
+                        'addressLine4' => null,
+                        'town' => null,
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => (new Country())->setId('unit_CountryCodeUser'),
+                    ],
+                    'phoneContacts' => [
+                        [
+                            'id' => null,
+                            'phoneContactType' => new RefData('unit_PhoneContactType1'),
+                            'phoneNumber' => 'unit_Phone1',
+                        ],
+                        [
+                            'id' => self::DEF_PHONE_ID,
+                            'phoneContactType' => new RefData('unit_Other_PhoneContactType'),
+                            'phoneNumber' => '',
+                        ],
+                    ],
+                ],
+                'expect' => [
+                    'email' => 'unit_Email',
+                    'person' => [
+                        'title' => 'unit_PersonTitle',
+                        'fullName' => 'unit_ForeName unit_FamilyName',
+                        'dob' => '1975-04-03',
+                    ],
+                    'address' => [
+                        'addressLine1' => 'unit_Addr1',
+                        'addressLine2' => 'unit_Addr2',
+                        'addressLine3' => null,
+                        'addressLine4' => null,
+                        'town' => null,
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => 'unit_CountryCodeUser',
+                    ],
+                    'phones' => [
+                        [
+                            'id' => null,
+                            'type' => 'unit_PhoneContactType1',
+                            'number' => 'unit_Phone1',
+                        ],
+                    ],
+                ],
+            ],
+            //  test update of CONTACT_TYPE_COMPLAINANT
+            [
+                'contactType' => ContactDetails::CONTACT_TYPE_COMPLAINANT,
+                'data' => [
+                    'person' => [
+                        'title' => new RefData('unit_PersonTitle'),
+                        'forename' => 'unit_ForeName',
+                        'familyName' => 'unit_FamilyName',
+                        'birthDate' => '1978-07-06',
+                    ],
+                    'address' => [
+                        'addressLine1' => 'unit_Addr1',
+                        'addressLine2' => 'unit_Addr2',
+                        'addressLine3' => 'unit_Addr3',
+                        'addressLine4' => 'unit_Addr4',
+                        'town' => 'unit_Town',
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => (new Country())->setId(self::DEF_COUNTRY_CODE),
+                    ],
+                ],
+                'expect' => [
+                    'person' => [
+                        'title' => 'unit_PersonTitle',
+                        'fullName' => 'unit_ForeName unit_FamilyName',
+                        'dob' => '1978-07-06',
+                    ],
+                    'address' => [
+                        'addressLine1' => 'unit_Addr1',
+                        'addressLine2' => 'unit_Addr2',
+                        'addressLine3' => 'unit_Addr3',
+                        'addressLine4' => 'unit_Addr4',
+                        'town' => 'unit_Town',
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => self::DEF_COUNTRY_CODE,
+                    ],
+                    'phones' => [
+                        [
+                            'id' => self::DEF_PHONE_ID,
+                            'type' => self::DEF_PHONE_TYPE,
+                            'number' => self::DEF_PHONE_NR,
+                        ],
+                    ],
+                ],
+            ],
+            //  test update of CONTACT_TYPE_
+            [
+                'contactType' => ContactDetails::CONTACT_TYPE_CORRESPONDENCE_ADDRESS,
+                'data' => [
+                    'emailAddress' => 'unit_Email',
+                    'address' => [
+                        'addressLine1' => null,
+                        'addressLine2' => null,
+                        'addressLine3' => null,
+                        'addressLine4' => 'unit_Addr4',
+                        'town' => null,
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => (new Country())->setId(self::DEF_COUNTRY_CODE),
+                    ],
+                    'businessPhoneContact' => [
+                        'id' => self::DEF_PHONE_ID,
+                        'phoneContactType' => new RefData('unit_Other_PhoneContactType'),
+                        'phoneNumber' => 'unit_Phone1',
+                    ],
+                    'mobilePhoneContact' => [
+                        'id' => null,
+                        'phoneContactType' => new RefData(PhoneContact::TYPE_MOBILE),
+                        'phoneNumber' => 'unit_Phone2',
+                    ],
+                    'homePhoneContact' => [
+                        'id' => 666,
+                        'phoneContactType' => new RefData(PhoneContact::TYPE_HOME),
+                        'phoneNumber' => 'unit_Phone3',
+                    ],
+                    'faxPhoneContact' => [
+                        'id' => null,
+                        'phoneContactType' => new RefData(PhoneContact::TYPE_FAX),
+                        'phoneNumber' => 'unit_Phone4',
+                    ],
+                ],
+                'expect' => [
+                    'email' => 'unit_Email',
+                    'address' => [
+                        'addressLine1' => null,
+                        'addressLine2' => null,
+                        'addressLine3' => null,
+                        'addressLine4' => 'unit_Addr4',
+                        'town' => null,
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => self::DEF_COUNTRY_CODE,
+                    ],
+                    'phones' => [
+                        [
+                            'id' => self::DEF_PHONE_ID,
+                            'type' => self::DEF_PHONE_TYPE,
+                            'number' => 'unit_Phone1',
+                        ],
+                        [
+                            'id' => null,
+                            'type' => PhoneContact::TYPE_MOBILE,
+                            'number' => 'unit_Phone2',
+                        ],
+                        [
+                            'id' => null,
+                            'type' => PhoneContact::TYPE_HOME,
+                            'number' => 'unit_Phone3',
+                        ],
+                        [
+                            'id' => null,
+                            'type' => PhoneContact::TYPE_FAX,
+                            'number' => 'unit_Phone4',
+                        ],
+                    ],
+                ],
+            ],
+        ];
     }
 }
