@@ -9,6 +9,15 @@ return [
     'console' => [
         'router' => [
             'routes' => [
+                'diagnostic' => [
+                    'options' => [
+                        'route' => 'diagnostic',
+                        'defaults' => [
+                            'controller' => Cli\Controller\DiagnosticController::class,
+                            'action' => 'index'
+                        ],
+                    ],
+                ],
                 'licence-status-rules' => [
                     'options' => [
                         'route' => 'licence-status-rules [--verbose|-v]',
@@ -154,6 +163,7 @@ return [
         'invokables' => [
             Cli\Controller\BatchController::class => Cli\Controller\BatchController::class,
             Cli\Controller\QueueController::class => Cli\Controller\QueueController::class,
+            Cli\Controller\DiagnosticController::class => Cli\Controller\DiagnosticController::class,
         ]
     ],
     'cache' => [
