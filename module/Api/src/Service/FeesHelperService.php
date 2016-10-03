@@ -84,6 +84,28 @@ class FeesHelperService implements FactoryInterface
     }
 
     /**
+     * Get total outstanding fee amount for application
+     *
+     * @param int $applicationId application id
+     *
+     * @return string
+     */
+    public function getTotalOutstandingFeeAmountForApplication($applicationId)
+    {
+        $outstandingFees = $this->getOutstandingFeesForApplication($applicationId);
+
+        $total = 0;
+
+        if (is_array($outstandingFees)) {
+            foreach ($outstandingFees as $fee) {
+                $total += $fee->getOutstandingAmount();
+            }
+        }
+
+        return number_format($total, 2, '.', null);
+    }
+
+    /**
      * Gets the minimum allowable payment amount for an array of fees,
      * this prevents creating invalid payment attempts which would result
      * in a zero allocated amount

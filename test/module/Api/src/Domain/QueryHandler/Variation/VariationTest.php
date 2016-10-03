@@ -103,17 +103,17 @@ class VariationTest extends QueryHandlerTestCase
         $applicationFee = $this->getMockFee('100');
         $fees = [$applicationFee];
         $this->mockedSmServices['FeesHelperService']
-            ->shouldReceive('getOutstandingFeesForApplication')
+            ->shouldReceive('getTotalOutstandingFeeAmountForApplication')
             ->with($applicationId)
             ->once()
-            ->andReturn($fees);
+            ->andReturn(100.00);
 
         $result = $this->sut->handleQuery($query);
 
         $expected = [
             'foo' => 'bar',
             'sections' => ['bar', 'cake'],
-            'outstandingFeeTotal' => '100.00',
+            'outstandingFeeTotal' => 100.00,
             'variationCompletion' => null,
             'canCreateCase' => false,
             'existingPublication' => false,

@@ -104,10 +104,10 @@ class ApplicationTest extends QueryHandlerTestCase
         $interimFee =  $this->getMockFee('66.70');
         $fees = [$applicationFee, $interimFee];
         $this->mockedSmServices['FeesHelperService']
-            ->shouldReceive('getOutstandingFeesForApplication')
+            ->shouldReceive('getTotalOutstandingFeeAmountForApplication')
             ->with($applicationId)
             ->once()
-            ->andReturn($fees);
+            ->andReturn(166.70);
 
         $result = $this->sut->handleQuery($query);
 
