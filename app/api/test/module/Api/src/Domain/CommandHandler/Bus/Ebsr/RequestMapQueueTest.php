@@ -77,11 +77,16 @@ class RequestMapQueueTest extends CommandHandlerTestCase
             'id' => $busRegId,
             'regNo' => $regNo,
             'licence' => $licenceId,
-            'user' => $userId,
-            'template' => TransExchangeClient::REQUEST_MAP_TEMPLATE
+            'user' => $userId
         ];
 
-        $this->expectedQueueSideEffect($busRegId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData);
+        $mapTemplate = ['template' => TransExchangeClient::REQUEST_MAP_TEMPLATE];
+        $timetableTemplate = ['template' => TransExchangeClient::TIMETABLE_TEMPLATE];
+        $recordTemplate = ['template' => TransExchangeClient::DVSA_RECORD_TEMPLATE];
+
+        $this->expectedQueueSideEffect($busRegId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData + $mapTemplate);
+        $this->expectedQueueSideEffect($busRegId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData + $timetableTemplate);
+        $this->expectedQueueSideEffect($busRegId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData + $recordTemplate);
 
         $result = $this->sut->handleCommand($cmd);
 
