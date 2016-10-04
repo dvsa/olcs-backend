@@ -42,10 +42,11 @@ class TransExchangeClient implements TransExchangeClientInterface
 
     /**
      * TransExchangeClient constructor.
-     * @param RestClient $restClient
-     * @param MapXmlFile $xmlFilter
-     * @param ParseXmlString $xmlParser
-     * @param Xsd $xsdValidator
+     *
+     * @param RestClient     $restClient   zend rest client
+     * @param MapXmlFile     $xmlFilter    olcs-xmltools xml filter
+     * @param ParseXmlString $xmlParser    olcs-xmltools xml parser
+     * @param Xsd            $xsdValidator olcs-xmltools xml validator
      */
     public function __construct(
         RestClient $restClient,
@@ -60,7 +61,10 @@ class TransExchangeClient implements TransExchangeClientInterface
     }
 
     /**
-     * @param string $content
+     * Makes the transxchange request
+     *
+     * @param string $content content of the request
+     *
      * @throws TransxchangeException
      * @return array
      */
