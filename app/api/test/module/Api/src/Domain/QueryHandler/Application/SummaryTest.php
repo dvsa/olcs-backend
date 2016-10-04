@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Summary Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,12 +11,18 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**
- * Summary Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers Dvsa\Olcs\Api\Domain\QueryHandler\Application\Summary
  */
 class SummaryTest extends QueryHandlerTestCase
 {
+    /** @var  Summary */
+    protected $sut;
+
+    /** @var m\MockInterface  */
+    private $mockAppRepo;
+    /** @var m\MockInterface  */
+    private $mockFeeRepo;
+
     public function setUp()
     {
         $this->sut = new Summary();
@@ -30,7 +31,12 @@ class SummaryTest extends QueryHandlerTestCase
 
         parent::setUp();
 
-        $this->repoMap['Application']->shouldReceive('getCategoryReference')
+        $this->mockFeeRepo = $this->repoMap['Fee'];
+        $this->mockAppRepo = $this->repoMap['Application'];
+
+        $this->mockAppRepo
+            ->shouldReceive('getCategoryReference')
+            ->zeroOrMoreTimes()
             ->andReturnUsing(
                 function ($category) {
                     return $category;
@@ -48,7 +54,7 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
-        /** @var Entity\Application\Application $mockApplication */
+        /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
 
@@ -57,10 +63,12 @@ class SummaryTest extends QueryHandlerTestCase
 
         $adDocs2 = new ArrayCollection();
 
+        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
         $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
         $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs1);
         $aoc1->setAction('A');
 
+        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc2 */
         $aoc2 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
         $aoc2->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs2);
         $aoc2->setAction('A');
@@ -84,13 +92,13 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(new \stdClass());
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+        $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
-        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
         $result = $this->sut->handleQuery($query);
 
@@ -116,7 +124,7 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
-        /** @var Entity\Application\Application $mockApplication */
+        /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
 
@@ -125,10 +133,12 @@ class SummaryTest extends QueryHandlerTestCase
 
         $adDocs2 = new ArrayCollection();
 
+        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
         $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
         $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs1);
         $aoc1->setAction('A');
 
+        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc2 */
         $aoc2 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
         $aoc2->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs2);
         $aoc2->setAction('A');
@@ -161,12 +171,12 @@ class SummaryTest extends QueryHandlerTestCase
             )
             ->andReturn($docs);
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+        $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
 
-        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn([])->once();
+        $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn([])->once();
 
         $result = $this->sut->handleQuery($query);
 
@@ -191,7 +201,7 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
-        /** @var Entity\Application\Application $mockApplication */
+        /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('isPsv')->andReturn(true);
@@ -219,12 +229,12 @@ class SummaryTest extends QueryHandlerTestCase
             )
             ->andReturn($docs);
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+        $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
 
-        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn([])->once();
+        $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn([])->once();
 
         $result = $this->sut->handleQuery($query);
 
@@ -246,7 +256,7 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
-        /** @var Entity\Application\Application $mockApplication */
+        /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
 
@@ -255,10 +265,12 @@ class SummaryTest extends QueryHandlerTestCase
 
         $adDocs2 = new ArrayCollection();
 
+        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
         $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
         $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs1);
         $aoc1->setAction('A');
 
+        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc2 */
         $aoc2 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
         $aoc2->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs2);
         $aoc2->setAction('A');
@@ -298,13 +310,13 @@ class SummaryTest extends QueryHandlerTestCase
             )
             ->andReturn($docs);
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+        $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
-        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
         $result = $this->sut->handleQuery($query);
 
@@ -329,12 +341,13 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
-        /** @var Entity\Application\Application $mockApplication */
+        /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
 
         $adDocs = new ArrayCollection();
 
+        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
         $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
         $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs);
         $aoc1->setAction('A');
@@ -357,13 +370,13 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+        $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
-        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
         $result = $this->sut->handleQuery($query);
 
@@ -388,7 +401,7 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
-        /** @var Entity\Application\Application $mockApplication */
+        /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('getApplicationCompletion->getFinancialEvidenceStatus')
@@ -396,6 +409,7 @@ class SummaryTest extends QueryHandlerTestCase
 
         $adDocs = new ArrayCollection();
 
+        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
         $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
         $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs);
         $aoc1->setAction('A');
@@ -418,13 +432,13 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+        $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
-        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
         $result = $this->sut->handleQuery($query);
 
@@ -449,7 +463,7 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
-        /** @var Entity\Application\Application $mockApplication */
+        /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('getApplicationCompletion->getFinancialEvidenceStatus')
@@ -457,6 +471,7 @@ class SummaryTest extends QueryHandlerTestCase
 
         $adDocs = new ArrayCollection();
 
+        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
         $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
         $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs);
         $aoc1->setAction('A');
@@ -480,9 +495,9 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
-        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+        $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
@@ -509,7 +524,7 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
-        /** @var Entity\Application\Application $mockApplication */
+        /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('getApplicationCompletion->getFinancialEvidenceStatus')
@@ -523,6 +538,7 @@ class SummaryTest extends QueryHandlerTestCase
 
         $adDocs = new ArrayCollection();
 
+        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
         $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
         $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs);
         $aoc1->setAction('U');
@@ -546,13 +562,13 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+        $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
-        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
         $result = $this->sut->handleQuery($query);
 
@@ -576,7 +592,7 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
-        /** @var Entity\Application\Application $mockApplication */
+        /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('getApplicationCompletion->getFinancialEvidenceStatus')
@@ -591,6 +607,7 @@ class SummaryTest extends QueryHandlerTestCase
 
         $adDocs = new ArrayCollection();
 
+        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
         $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
         $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs);
         $aoc1->setAction('U');
@@ -615,13 +632,13 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+        $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
-        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
         $result = $this->sut->handleQuery($query);
 
@@ -642,7 +659,7 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
-        /** @var Entity\Application\Application $mockApplication */
+        /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->with(['licence', 'status'])->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('getApplicationCompletion->getFinancialEvidenceStatus')
@@ -657,13 +674,13 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+        $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
-        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
         $result = $this->sut->handleQuery($query);
 
@@ -682,7 +699,7 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
-        /** @var Entity\Application\Application $mockApplication */
+        /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
 
@@ -691,10 +708,12 @@ class SummaryTest extends QueryHandlerTestCase
 
         $adDocs2 = new ArrayCollection();
 
+        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
         $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
         $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs1);
         $aoc1->setAction('A');
 
+        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc2 */
         $aoc2 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
         $aoc2->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs2);
         $aoc2->setAction('A');
@@ -718,13 +737,13 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(new \stdClass());
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+        $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
-        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
         $result = $this->sut->handleQuery($query);
 
