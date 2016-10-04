@@ -26,6 +26,8 @@ class TransExchangeClientTest extends TestCase
     {
         $requestBody = 'body';
         $responseContent = '<success></success>';
+        $responseStringContent = 'string<success></success>string';
+
         $result = [
             'success' => true
         ];
@@ -37,6 +39,7 @@ class TransExchangeClientTest extends TestCase
 
         $mockResponse = m::mock(Response::class);
         $mockResponse->shouldReceive('getContent')->andReturn($responseContent);
+        $mockResponse->shouldReceive('toString')->andReturn($responseStringContent);
 
         $mockClient = m::mock(RestClient::class);
         $mockClient->shouldReceive('getRequest')->andReturn($mockRequest);
@@ -60,13 +63,21 @@ class TransExchangeClientTest extends TestCase
      * Tests exception thrown when request not valid
      *
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\TransxchangeException
+     * @expectedExceptionMessage TransXchange response did not validate against the schema: message 1, message 2
      */
     public function testMakeRequestThrowsException()
     {
         $requestBody = 'body';
         $responseContent = '<success></success>';
+        $responseStringContent = 'string<success></success>string';
+
         $result = [
             'success' => true
+        ];
+
+        $errorMessages = [
+            'message 1',
+            'message 2'
         ];
 
         $domDocument = new \DOMDocument();
@@ -76,6 +87,7 @@ class TransExchangeClientTest extends TestCase
 
         $mockResponse = m::mock(Response::class);
         $mockResponse->shouldReceive('getContent')->andReturn($responseContent);
+        $mockResponse->shouldReceive('toString')->andReturn($responseStringContent);
 
         $mockClient = m::mock(RestClient::class);
         $mockClient->shouldReceive('getRequest')->andReturn($mockRequest);
@@ -86,6 +98,7 @@ class TransExchangeClientTest extends TestCase
 
         $mockXsd = m::mock(Xsd::class);
         $mockXsd->shouldReceive('isValid')->once()->with($domDocument)->andReturn(false);
+        $mockXsd->shouldReceive('getMessages')->once()->andReturn($errorMessages);
 
         $mockFilter = m::mock(MapXmlFile::class);
 
