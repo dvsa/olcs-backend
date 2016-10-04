@@ -5,6 +5,8 @@ namespace Dvsa\OlcsTest\Api\Entity\Fee;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity as Entities;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
@@ -32,6 +34,7 @@ class FeeEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
+    /** @var  Entity */
     protected $sut;
 
     public function setUp()
@@ -55,8 +58,8 @@ class FeeEntityTest extends EntityTester
     }
 
     /**
-     * @param array $feeTransactions
-     * @param boolean $expected
+     * @param ArrayCollection $feeTransactions
+     * @param boolean         $expected
      *
      * @dataProvider outstandingPaymentProvider
      */
@@ -283,6 +286,19 @@ class FeeEntityTest extends EntityTester
         $this->assertEquals('OLCS-1234', $this->sut->getLatestPaymentRef());
     }
 
+    public function testGetProcessedByNullNoTransaction()
+    {
+        static::assertNull($this->sut->getProcessedBy());
+    }
+
+    public function testGetProcessedByNullNoTransactionUser()
+    {
+        $ft1 = $this->getStubFeeTransaction('1234.56', '2015-09-01', '2015-09-02 12:34:56');
+        $this->sut->getFeeTransactions()->add($ft1);
+
+        static::assertNull($this->sut->getProcessedBy());
+    }
+
     private function getStubFeeTransaction(
         $amount,
         $completedDate,
@@ -500,6 +516,44 @@ class FeeEntityTest extends EntityTester
         ];
     }
 
+    public function testGetLatestFeeTransactionNull()
+    {
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods()
+            ->shouldReceive('getTransaction')->never()
+            ->getMock();
+
+        $feeTr1 = $this->getStubFeeTransaction(5, '2017-06-05', null, null, null, '', 9001);
+        $sut->setFeeTransactions(new ArrayCollection([$feeTr1]));
+
+        //  call
+        static::assertNull($sut->getPaymentMethod());
+    }
+
+    public function testGetCalculatedBundleValues()
+    {
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)
+            ->makePartial()
+            ->shouldReceive('getOutstandingAmount')->once()->andReturn('unit_Outstanding')
+            ->shouldReceive('getLatestPaymentRef')->once()->andReturn('unit_receiptNo')
+            ->shouldReceive('getGrossAmount')->once()->andReturn('unit_Amount')
+            ->shouldReceive('isRuleBeforeInvoiceDate')->once()->andReturn('unit_RuleDateBeforeInvoice')
+            ->getMock();
+
+        static::assertEquals(
+            [
+                'outstanding' => 'unit_Outstanding',
+                'receiptNo' => 'unit_receiptNo',
+                'amount' => 'unit_Amount',
+                'ruleDateBeforeInvoice' => 'unit_RuleDateBeforeInvoice',
+            ],
+            $sut->getCalculatedBundleValues()
+        );
+    }
+
     /**
      * @dataProvider getOrganisationProvider
      */
@@ -588,7 +642,8 @@ class FeeEntityTest extends EntityTester
         $this->sut->setIrfoGvPermit($irfoGvPermit);
         $this->sut->setIrfoPsvAuth($irfoPsvAuth);
 
-        $this->assertEquals($expected, $this->sut->getCustomerAddressForInvoice()->toArray());
+        $actual = $this->sut->getCustomerAddressForInvoice();
+        $this->assertEquals($expected, ($actual ? $actual->toArray() : $actual));
     }
 
     public function testGetCustomerAddressForInvoiceEmpty()
@@ -665,7 +720,18 @@ class FeeEntityTest extends EntityTester
                     'postcode' =>'FooPostcode',
                     'countryCode' => 'FooCountry',
                 ],
-            ]
+            ],
+            //  licence and organisation - have not corr details
+            [
+                'licence' => m::mock(Licence::class)->makePartial(),
+                'irfoGvPermit' => null,
+                'irfoPsvAuth' => new IrfoPsvAuth(
+                    new Organisation(),
+                    new Entities\Irfo\IrfoPsvAuthType(),
+                    new RefData()
+                ),
+                'expected' => null,
+            ],
         ];
     }
 
@@ -677,9 +743,7 @@ class FeeEntityTest extends EntityTester
      */
     public function testIsPaid($status, $expected)
     {
-        $feeStatus = m::mock(RefData::class)->makePartial();
-        $feeStatus->setId($status);
-        $this->sut->setFeeStatus($feeStatus);
+        $this->sut->setFeeStatus(new RefData($status));
 
         $this->assertEquals($expected, $this->sut->isPaid());
     }
@@ -702,9 +766,7 @@ class FeeEntityTest extends EntityTester
      */
     public function testIsOutstanding($status, $expected)
     {
-        $feeStatus = m::mock(RefData::class)->makePartial();
-        $feeStatus->setId($status);
-        $this->sut->setFeeStatus($feeStatus);
+        $this->sut->setFeeStatus(new RefData($status));
 
         $this->assertEquals($expected, $this->sut->isOutstanding());
     }
@@ -727,9 +789,7 @@ class FeeEntityTest extends EntityTester
      */
     public function testIsCancelled($status, $expected)
     {
-        $feeStatus = m::mock(RefData::class)->makePartial();
-        $feeStatus->setId($status);
-        $this->sut->setFeeStatus($feeStatus);
+        $this->sut->setFeeStatus(new RefData($status));
 
         $this->assertEquals($expected, $this->sut->isCancelled());
     }
@@ -754,9 +814,7 @@ class FeeEntityTest extends EntityTester
      */
     public function testIsFullyOutstanding($feeAmount, $status, $feeTransactions, $expected)
     {
-        $feeStatus = m::mock(RefData::class)->makePartial();
-        $feeStatus->setId($status);
-        $this->sut->setFeeStatus($feeStatus);
+        $this->sut->setFeeStatus(new RefData($status));
         $this->sut->setFeeTransactions(new ArrayCollection($feeTransactions));
         $this->sut->setGrossAmount($feeAmount);
 
@@ -1197,7 +1255,7 @@ class FeeEntityTest extends EntityTester
      */
     public function testAmountToPence($input, $expected)
     {
-        $this->assertSame($expected, Entity::AmountToPence($input));
+        $this->assertSame($expected, Entity::amountToPence($input));
     }
 
     public function amountToPenceProvider()
@@ -1223,7 +1281,7 @@ class FeeEntityTest extends EntityTester
      */
     public function testAmountToPounds($input, $expected)
     {
-        $this->assertSame($expected, Entity::AmountToPounds($input));
+        $this->assertSame($expected, Entity::amountToPounds($input));
     }
 
     public function amountToPoundsProvider()
@@ -1317,6 +1375,7 @@ class FeeEntityTest extends EntityTester
             [false, new DateTime()],
             [false, (new DateTime())->modify('-1 day')],
             [false, (new DateTime())->modify('-1 second')],
+            [false, null],
         ];
     }
 
@@ -1335,6 +1394,59 @@ class FeeEntityTest extends EntityTester
             [new DateTime('2016-01-25'), new DateTime('2016-01-25')],
             [new DateTime('2016-01-25'), '2016-01-25'],
             [null, null],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestGetRelatedOrganisation
+     */
+    public function testGetRelatedOrganisation(Entity $sut, $expect)
+    {
+        static::assertSame($expect, $sut->getRelatedOrganisation());
+    }
+
+    public function dpTestGetRelatedOrganisation()
+    {
+        /** @var Organisation $mockOrg */
+        $mockOrg = m::mock(Organisation::class);
+        /** @var RefData $mockRef */
+        $mockRef = m::mock(RefData::class);
+
+        $licence = new Licence($mockOrg, $mockRef);
+
+        return [
+            [
+                'sut' => $this->instantiate(Entity::class)->setApplication(
+                    new Entities\Application\Application($licence, $mockRef, false)
+                ),
+                'expect' => $mockOrg,
+            ],
+            [
+                'sut' => $this->instantiate(Entity::class)->setBusReg(
+                    (new Entities\Bus\BusReg())->setLicence($licence)
+                ),
+                'expect' => $mockOrg,
+            ],
+            [
+                'sut' => $this->instantiate(Entity::class)->setLicence($licence),
+                'expect' => $mockOrg,
+            ],
+            [
+                'sut' => $this->instantiate(Entity::class)->setIrfoGvPermit(
+                    new IrfoGvPermit($mockOrg, new Entities\Irfo\IrfoGvPermitType(), $mockRef)
+                ),
+                'expect' => $mockOrg,
+            ],
+            [
+                'sut' => $this->instantiate(Entity::class)->setIrfoPsvAuth(
+                    new IrfoPsvAuth($mockOrg, new Entities\Irfo\IrfoPsvAuthType(), $mockRef)
+                ),
+                'expect' => $mockOrg,
+            ],
+            [
+                'sut' => $this->instantiate(Entity::class),
+                'expect' => null,
+            ],
         ];
     }
 }
