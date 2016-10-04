@@ -30,7 +30,7 @@ final class RequestMapQueue extends AbstractCommandHandler implements AuthAwareI
     /**
      * Command to queue an EBSR map request
      *
-     * @param CommandInterface $command
+     * @param CommandInterface $command command
      *
      * @return Result
      * @throws NotFoundException

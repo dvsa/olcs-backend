@@ -15,6 +15,8 @@ final class UpdateTxcInboxPdf extends AbstractIdOnlyCommand
     protected $document;
 
     /**
+     * Gets document id
+     *
      * @return int
      */
     public function getDocument()
