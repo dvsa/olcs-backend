@@ -588,27 +588,6 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     }
 
     /**
-     * Adjust a transaction amount. We wouldn't normally persist this change
-     * (we would create negative fee transactions and then add new positive ones)
-     * but this is useful for calculating the adjusted amounts we need to pass to
-     * CPMS
-     */
-    public function adjustTransactionAmount($transactionId, $adjustment)
-    {
-        $this->getFeeTransactions()->forAll(
-            function ($key, $feeTransaction) use ($transactionId, &$adjustment) {
-                unset($key); // unused
-                if ($feeTransaction->getTransaction()->getId() == $transactionId) {
-                    $amount = $feeTransaction->getAmount();
-                    $feeTransaction->setAmount($amount + $adjustment);
-                    return false;
-                }
-                return true;
-            }
-        );
-    }
-
-    /**
      * Get InvoicedDate as a DateTime
      *
      * @return \DateTime!null
