@@ -11,7 +11,7 @@
         <ProcessingOptions>
             <ValidateXml>false</ValidateXml>
             <IncludeDiagnostics>false</IncludeDiagnostics>
-            <StopData>webService</StopData>
+            <StopData>localOnly</StopData>
             <MapData>webService</MapData>
         </ProcessingOptions>
         <OutputOptions>
@@ -36,6 +36,7 @@
         <Rendering>
             <OutputFormat>pdf</OutputFormat>
             <Background>official</Background>
+            <Rubric>official</Rubric>
         </Rendering>
     </PublishDocumentRequest>
 </TransXChangePublisherTransport>

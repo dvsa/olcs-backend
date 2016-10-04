@@ -68,14 +68,29 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
 
     /**
      * testHandleCommand
+     *
+     * @dataProvider handleCommandProvider
      */
-    public function testHandleCommand()
+    public function testHandleCommand($template, $pdfType, $scale, $extraDocumentDesc)
     {
+        //use different config from the rest of the tests
+        $config = [
+            'ebsr' => [
+                'transexchange_publisher' => [
+                    'templates' => [
+                        $template => 'template path'
+                    ],
+                ],
+                'tmp_extra_path' => '/tmp/file/path'
+            ]
+        ];
+
+        $this->sut->setConfig($config);
+
         $id = 99;
         $licenceId = 77;
         $submissionId = 55;
         $emailParams = ['id' => $submissionId];
-        $scale = 'small';
         $xmlFilename = 'filename.xml';
         $documentIdentifier = 'identifier';
         $uploadedDocumentId = 55;
@@ -98,7 +113,7 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
         $command = ProcessRequestMapCmd::create(
             [
                 'id' => $id,
-                'template' => $this->template,
+                'template' => $template,
                 'scale' => $scale,
                 'user' => 1
             ]
@@ -139,30 +154,27 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
         $docUploadResult = new Result();
         $docUploadResult->addId('document', $uploadedDocumentId);
 
+        $documentDesc = $this->sut->getDocumentDescriptions()[$template] . $extraDocumentDesc;
+
         $documentData = [
             'content' => base64_encode(file_get_contents($transxchangeFilename)),
             'busReg' => $busReg->getId(),
             'licence' => $busReg->getLicence()->getId(),
             'category' => CategoryEntity::CATEGORY_BUS_REGISTRATION,
-            'subCategory' => CategoryEntity::BUS_SUB_CATEGORY_OTHER_DOCUMENTS,
+            'subCategory' => CategoryEntity::BUS_SUB_CATEGORY_TRANSXCHANGE_PDF,
             'filename' => basename($transxchangeFilename),
-            'description' => 'TransXchange file',
+            'description' => $documentDesc,
             'user' => 1
         ];
 
         $this->expectedSideEffect(UploadCmd::class, $documentData, $docUploadResult);
 
-        $txcPdfData = [
-            'id' => $id,
-            'document' => $uploadedDocumentId
-        ];
-
-        $this->expectedSideEffect(UpdateTxcInboxPdfCmd::class, $txcPdfData, new Result());
+        $this->txcInboxSideEffect($id, $uploadedDocumentId, $pdfType);
 
         $taskData = [
             'category' => TaskEntity::CATEGORY_BUS,
             'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
-            'description' => sprintf(ProcessRequestMap::TASK_SUCCESS_DESC, $busRegNo),
+            'description' => sprintf(ProcessRequestMap::TASK_SUCCESS_DESC, $documentDesc, $busRegNo),
             'actionDate' => date('Y-m-d'),
             'busReg' => $id,
             'licence' => $licenceId,
@@ -175,6 +187,55 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf(Result::class, $result);
+    }
+
+    /**
+     * data provider for testHandleCommand
+     */
+    public function handleCommandProvider()
+    {
+        return [
+            [
+                TransExchangeClient::REQUEST_MAP_TEMPLATE,
+                ProcessRequestMap::TXC_INBOX_TYPE_ROUTE,
+                'auto',
+                ' (Auto Scale)'
+            ],
+            [
+                TransExchangeClient::REQUEST_MAP_TEMPLATE,
+                ProcessRequestMap::TXC_INBOX_TYPE_ROUTE,
+                'small',
+                ' (Small Scale)'
+            ],
+            [
+                TransExchangeClient::REQUEST_MAP_TEMPLATE,
+                ProcessRequestMap::TXC_INBOX_TYPE_ROUTE,
+                'large',
+                ' (Large Scale)'
+            ],
+            [TransExchangeClient::DVSA_RECORD_TEMPLATE, ProcessRequestMap::TXC_INBOX_TYPE_PDF, '', ''],
+            [TransExchangeClient::TIMETABLE_TEMPLATE, '', '', '']
+        ];
+    }
+
+    /**
+     * creates a txc inbox side effect (avoids doing so for timetables)
+     *
+     * @param $id
+     * @param $uploadedDocumentId
+     * @param $pdfType
+     */
+    private function txcInboxSideEffect($id, $uploadedDocumentId, $pdfType)
+    {
+        if ($pdfType !== '') {
+            $txcPdfData = [
+                'id' => $id,
+                'document' => $uploadedDocumentId,
+                'pdfType' => $pdfType
+            ];
+
+            $this->expectedSideEffect(UpdateTxcInboxPdfCmd::class, $txcPdfData, new Result());
+        }
     }
 
     /**
