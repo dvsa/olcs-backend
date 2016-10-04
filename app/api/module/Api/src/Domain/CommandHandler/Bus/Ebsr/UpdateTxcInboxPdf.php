@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\UpdateTxcInboxPdf as UpdateTxcInboxPdfCmd;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
@@ -25,7 +24,10 @@ final class UpdateTxcInboxPdf extends AbstractCommandHandler implements Transact
     protected $extraRepos = ['Bus'];
 
     /**
-     * @param CommandInterface|UpdateTxcInboxPdfCmd $command
+     * Updates the txc inbox record with either timetable or dvsa route pdfs
+     *
+     * @param CommandInterface|UpdateTxcInboxPdfCmd $command the update command
+     *
      * @return Result
      * @throws \Exception
      */
@@ -41,9 +43,12 @@ final class UpdateTxcInboxPdf extends AbstractCommandHandler implements Transact
 
         $count = 0;
 
+        //the format of pdf type is enforced by the command, but we'll also make sure of it in here
+        $method = 'set' . ucwords(strtolower($command->getPdfType())) . 'Document';
+
         /** @var TxcInbox $txcInbox */
         foreach ($txcInboxRecords as $txcInbox) {
-            $txcInbox->setPdfDocument($pdfDocument);
+            $txcInbox->$method($pdfDocument);
             $this->getRepo()->save($txcInbox);
             $count++;
         }

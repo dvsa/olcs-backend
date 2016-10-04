@@ -32,6 +32,7 @@ use Olcs\XmlTools\Xml\TemplateBuilder;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Zend\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeException;
+use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 
 /**
  * Request new Ebsr map
@@ -49,11 +50,21 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     use FileProcessorAwareTrait;
     use QueueAwareTrait;
 
-    const TASK_SUCCESS_DESC = 'New route map available: %s';
+    const TASK_SUCCESS_DESC = 'New %s available: %s';
+    const SCALE_DESC = ' (%s Scale)';
+
+    const TXC_INBOX_TYPE_ROUTE = 'Route';
+    const TXC_INBOX_TYPE_PDF = 'Pdf';
 
     protected $repoServiceName = 'Bus';
 
     protected $templatePaths;
+
+    protected $documentDescriptions = [
+        TransExchangeClient::REQUEST_MAP_TEMPLATE => "Route Track Map PDF",
+        TransExchangeClient::TIMETABLE_TEMPLATE => "Timetable PDF",
+        TransExchangeClient::DVSA_RECORD_TEMPLATE => "DVSA Record PDF",
+    ];
 
     /**
      * @var TemplateBuilder
@@ -108,7 +119,10 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
             true
         );
 
-        $template = $this->createRequestMapTemplate($command->getTemplate(), $xmlFilename, $command->getScale());
+        $templateFile = $command->getTemplate();
+        $scale = $command->getScale();
+
+        $template = $this->createRequestMapTemplate($templateFile, $xmlFilename, $scale);
 
         try {
             $documents = $this->getTransExchange()->makeRequest($template);
@@ -120,9 +134,13 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
             throw new TransxchangeException('Invalid response from transXchange publisher');
         }
 
+        $documentDesc = $this->getDocumentDescription($templateFile, $scale);
+
         foreach ($documents['files'] as $document) {
             $result->merge(
-                $this->handleSideEffect($this->generateDocumentCmd($document, $busReg, $command->getUser()))
+                $this->handleSideEffect(
+                    $this->generateDocumentCmd($document, $busReg, $command->getUser(), $documentDesc)
+                )
             );
         }
 
@@ -131,15 +149,37 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
         //update txc inbox records with the new document id, create a task and send confirmation email
         $result->merge(
             $this->handleSideEffects(
-                [
-                    $this->createUpdateTxcInboxPdfCmd($busReg->getId(), $result->getId('document')),
-                    $this->createTaskCmd($busReg, self::TASK_SUCCESS_DESC),
-                    $this->emailQueue(SendEbsrRequestMapCmd::class, ['id' => $ebsrId], $ebsrId)
-                ]
+                $this->createSideEffects($busReg, $result->getId('document'), $templateFile, $ebsrId, $documentDesc)
             )
         );
 
         return $result;
+    }
+
+    /**
+     * Creates side effects, these are slightly different depending on which PDF we're generating
+     *
+     * @param BusRegEntity $busReg       Bus reg entity
+     * @param int          $documentId   Document id
+     * @param string       $templateFile Template file
+     * @param int          $ebsrId       EBSR submission id
+     * @param string       $documentDesc document description
+     *
+     * @return array
+     */
+    private function createSideEffects(BusRegEntity $busReg, $documentId, $templateFile, $ebsrId, $documentDesc)
+    {
+        $sideEffects = [
+            $this->createTaskCmd($busReg, $documentDesc),
+            $this->emailQueue(SendEbsrRequestMapCmd::class, ['id' => $ebsrId], $ebsrId)
+        ];
+
+        //add txc inbox pdf for all except timetables
+        if ($templateFile !== TransExchangeClient::TIMETABLE_TEMPLATE) {
+            $sideEffects[] = $this->createUpdateTxcInboxPdfCmd($busReg->getId(), $documentId, $templateFile);
+        }
+
+        return $sideEffects;
     }
 
     /**
@@ -176,22 +216,23 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     /**
      * Creates a command to upload the transxchange map
      *
-     * @param string       $document document content
-     * @param BusRegEntity $busReg   bus reg entity
-     * @param int          $user     user id
+     * @param string       $document     document content
+     * @param BusRegEntity $busReg       bus reg entity
+     * @param int          $user         user id
+     * @param string       $documentDesc document description
      *
      * @return UploadCmd
      */
-    private function generateDocumentCmd($document, BusRegEntity $busReg, $user)
+    private function generateDocumentCmd($document, BusRegEntity $busReg, $user, $documentDesc)
     {
         $data = [
             'content' => base64_encode(file_get_contents($document)),
             'busReg' => $busReg->getId(),
             'licence' => $busReg->getLicence()->getId(),
             'category' => CategoryEntity::CATEGORY_BUS_REGISTRATION,
-            'subCategory' => CategoryEntity::BUS_SUB_CATEGORY_OTHER_DOCUMENTS,
+            'subCategory' => CategoryEntity::BUS_SUB_CATEGORY_TRANSXCHANGE_PDF,
             'filename' => basename($document),
-            'description' => 'TransXchange file',
+            'description' => $documentDesc,
             'user' => $user
         ];
 
@@ -201,17 +242,19 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     /**
      * Creates a command to add a task
      *
-     * @param BusRegEntity $busReg      bus reg entity
-     * @param string       $description task description
+     * @param BusRegEntity $busReg       bus reg entity
+     * @param string       $documentDesc document description
      *
      * @return CreateTaskCmd
      */
-    private function createTaskCmd(BusRegEntity $busReg, $description)
+    private function createTaskCmd(BusRegEntity $busReg, $documentDesc)
     {
+        $desc = sprintf(self::TASK_SUCCESS_DESC, $documentDesc, $busReg->getRegNo());
+
         $data = [
             'category' => TaskEntity::CATEGORY_BUS,
             'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
-            'description' => sprintf($description, $busReg->getRegNo()),
+            'description' => $desc,
             'actionDate' => date('Y-m-d'),
             'busReg' => $busReg->getId(),
             'licence' => $busReg->getLicence()->getId(),
@@ -222,19 +265,55 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
 
     /**
      * Creates a command to update TxcInbox records with the new document id
+     * We don't do this for timetable pdfs
      *
-     * @param int $busRegId   bus reg id
-     * @param int $documentId document id
+     * @param int $busRegId     bus reg id
+     * @param int $documentId   document id
+     * @param int $templateFile the template file
      *
      * @return UpdateTxcInboxPdfCmd
      */
-    private function createUpdateTxcInboxPdfCmd($busRegId, $documentId)
+    private function createUpdateTxcInboxPdfCmd($busRegId, $documentId, $templateFile)
     {
+        $pdfType = $templateFile === TransExchangeClient::REQUEST_MAP_TEMPLATE
+                    ? self::TXC_INBOX_TYPE_ROUTE
+                    : self::TXC_INBOX_TYPE_PDF;
+
         $data = [
             'id' => $busRegId,
-            'document' => $documentId
+            'document' => $documentId,
+            'pdfType' => $pdfType
         ];
 
         return UpdateTxcInboxPdfCmd::create($data);
+    }
+
+    /**
+     * Works out the document description (route maps also have a scale)
+     *
+     * @param string $templateFile template file
+     * @param string $scale        scale of the route map
+     *
+     * @return string
+     */
+    public function getDocumentDescription($templateFile, $scale)
+    {
+        $scaleString = '';
+
+        if ($templateFile ===  TransExchangeClient::REQUEST_MAP_TEMPLATE) {
+            $scaleString = sprintf(self::SCALE_DESC, ucwords(strtolower($scale)));
+        }
+
+        return $this->documentDescriptions[$templateFile] . $scaleString;
+    }
+
+    /**
+     * Returns the array of document descriptions
+     *
+     * @return array
+     */
+    public function getDocumentDescriptions()
+    {
+        return $this->documentDescriptions;
     }
 }

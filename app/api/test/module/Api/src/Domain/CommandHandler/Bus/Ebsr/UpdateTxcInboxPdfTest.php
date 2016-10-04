@@ -44,9 +44,11 @@ class UpdateTxcInboxPdfTest extends CommandHandlerTestCase
     }
 
     /**
-     * testHandleCommand
+     * Tests that the correct method is called for each PDF type
+     *
+     * @dataProvider handleCommandProvider
      */
-    public function testHandleCommand()
+    public function testHandleCommand($pdfType, $method)
     {
         $id = 99;
         $document = 77;
@@ -54,13 +56,14 @@ class UpdateTxcInboxPdfTest extends CommandHandlerTestCase
         $command = Cmd::Create(
             [
                 'id' => $id,
-                'document' => $document
+                'document' => $document,
+                'pdfType' => $pdfType
             ]
         );
 
         /** @var TxcInboxEntity $txcInbox */
         $txcInbox = m::mock(TxcInboxEntity::class);
-        $txcInbox->shouldReceive('setPdfDocument')
+        $txcInbox->shouldReceive($method)
             ->once()
             ->andReturnSelf();
 
@@ -82,5 +85,20 @@ class UpdateTxcInboxPdfTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf(Result::class, $result);
+    }
+
+    /**
+     * data provider for handleCommand
+     */
+    public function handleCommandProvider()
+    {
+        return [
+            ['Pdf', 'setPdfDocument'],
+            ['pdf', 'setPdfDocument'],
+            ['pDF', 'setPdfDocument'],
+            ['Route', 'setRouteDocument'],
+            ['route', 'setRouteDocument'],
+            ['rOUTE', 'setRouteDocument']
+        ];
     }
 }
