@@ -2,8 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\ContactDetails;
 
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact as Entity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Mockery as m;
 
 /**
  * PhoneContact Entity Unit Tests
@@ -18,4 +20,12 @@ class PhoneContactEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testGetCalculatedValues()
+    {
+        $mockType = new RefData();
+
+        $actual = (new Entity($mockType))->jsonSerialize();
+        static::assertNull($actual['contactDetails']);
+    }
 }
