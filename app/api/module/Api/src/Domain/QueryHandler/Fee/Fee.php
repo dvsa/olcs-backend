@@ -78,6 +78,7 @@ class Fee extends AbstractQueryHandler
     {
         $displayData = [];
 
+        /** @var $ft \Dvsa\Olcs\Api\Entity\Fee\FeeTransaction */
         foreach ($fee->getFeeTransactions() as $ft) {
             $transaction = $ft->getTransaction();
             $id = $transaction->getId();
@@ -95,6 +96,7 @@ class Fee extends AbstractQueryHandler
                 'method' => $this->getMethod($transaction),
                 'processedBy' => $transaction->getProcessedByFullName(),
                 'amount' => $ft->getAmount(),
+                'migratedFromOlbs' => $transaction->isMigrated(),
                 'status' => $transaction->getStatus(),
             ];
         }
