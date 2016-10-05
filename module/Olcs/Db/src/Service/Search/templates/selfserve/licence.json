@@ -44,6 +44,23 @@
                 "licence_trading_names": "%SEARCH_TERM%"
               }
             }
+          ],
+          "must_not": [
+            {
+              "filtered": {
+                "filter": {
+                  "or": [
+                    {
+                      "terms": {
+                        "lic_status": [
+                          "lsts_unlicenced","lsts_withdrawn"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           ]
         }
       },
