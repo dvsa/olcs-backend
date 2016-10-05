@@ -17,10 +17,13 @@ use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
  */
 class TransExchangeClientFactory implements FactoryInterface
 {
+    const PUBLISH_XSD = 'http://naptan.dft.gov.uk/transxchange/publisher/schema/3.1.2/TransXChangePublisherService.xsd';
+
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
      * @return mixed
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -52,9 +55,7 @@ class TransExchangeClientFactory implements FactoryInterface
         $xmlFilter->setMapping($serviceLocator->get('TransExchangePublisherXmlMapping'));
 
         $xsdValidator = $serviceLocator->get('ValidatorManager')->get(Xsd::class);
-        $xsdValidator->setXsd(
-            'http://www.transxchange.org.uk/schema/2.1/publisher/3.1.2/TransXChangePublisherService.xsd'
-        );
+        $xsdValidator->setXsd(self::PUBLISH_XSD);
 
         return new TransExchangeClient($httpClient, $xmlFilter, $xmlParser, $xsdValidator);
     }
