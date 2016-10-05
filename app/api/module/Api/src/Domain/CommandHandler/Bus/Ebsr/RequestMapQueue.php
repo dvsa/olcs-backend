@@ -10,13 +10,12 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\RequestMap as RequestMapCmd;
-use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
-use Zend\Serializer\Adapter\Json as ZendJson;
 
 /**
  * Request new Ebsr map
@@ -24,13 +23,14 @@ use Zend\Serializer\Adapter\Json as ZendJson;
 final class RequestMapQueue extends AbstractCommandHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
+    use QueueAwareTrait;
 
     protected $repoServiceName = 'Bus';
 
     /**
      * Command to queue an EBSR map request
      *
-     * @param CommandInterface $command
+     * @param CommandInterface $command command
      *
      * @return Result
      * @throws NotFoundException
@@ -49,25 +49,29 @@ final class RequestMapQueue extends AbstractCommandHandler implements AuthAwareI
 
         $result = new Result();
 
-        $jsonSerializer = new ZendJson();
+        $entityId = $command->getId();
 
         $optionData = [
             'scale' => $command->getScale(),
-            'id' => $command->getId(),
+            'id' => $entityId,
             'regNo' => $busReg->getRegNo(),
             'licence' => $busReg->getLicence()->getId(),
-            'user' => $this->getCurrentUser()->getId(),
-            'template' => TransExchangeClient::REQUEST_MAP_TEMPLATE
+            'user' => $this->getCurrentUser()->getId()
         ];
 
-        $dtoData = [
-            'entityId' => $command->getId(),
-            'type' => Queue::TYPE_EBSR_REQUEST_MAP,
-            'status' => Queue::STATUS_QUEUED,
-            'options' => $jsonSerializer->serialize($optionData)
-        ];
+        $mapTemplate = ['template' => TransExchangeClient::REQUEST_MAP_TEMPLATE];
+        $timetableTemplate = ['template' => TransExchangeClient::TIMETABLE_TEMPLATE];
+        $recordTemplate = ['template' => TransExchangeClient::DVSA_RECORD_TEMPLATE];
 
-        $this->handleSideEffect(CreateQueue::create($dtoData));
+        $this->createQueue($entityId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData);
+
+        $this->handleSideEffects(
+            [
+                $this->createQueue($entityId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData + $mapTemplate),
+                $this->createQueue($entityId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData + $timetableTemplate),
+                $this->createQueue($entityId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData + $recordTemplate)
+            ]
+        );
 
         $result->addMessage('New map was requested');
 

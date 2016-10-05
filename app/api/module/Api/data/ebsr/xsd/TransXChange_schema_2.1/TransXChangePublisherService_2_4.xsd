@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2006 sp2 U (http://www.altova.com) by Nick js knowles (Kizoom Ltd.) -->
-<!-- "V3.03  2007 01 17 -->
-<!-- (c) Kizoom 2006-2007   -->
-<xsd:schema xmlns="http://www.transxchange.org.uk/publisher" xmlns:tpi="http://www.transxchange.org.uk/publisher" xmlns:txc="http://www.transxchange.org.uk/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.transxchange.org.uk/publisher" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.0" id="TransXChangePublisherInputParameters">
+<!--  TransXChange Publisher Call API 
+
+2010.04.05 Updated for 2.4a  3.1.2
+		 Add StopLiustOrder parameter to route map options values timetable/map
+        Internal renames to types change to follow namign conventions
+(C)  -->
+<!-- (c) Kizoom 2006-2010   -->
+<xsd:schema xmlns="http://www.transxchange.org.uk/publisher" xmlns:tpi="http://www.transxchange.org.uk/publisher" xmlns:txc="http://www.transxchange.org.uk/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.transxchange.org.uk/publisher" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.1.2" id="TransXChangePublisherInputParameters">
 	<xsd:annotation>
-		<xsd:appinfo xmlns:gms="http://www.govtalk.gov.uk/CM/gms">
+		<xsd:appinfo>
 			<Metadata xmlns="http://www.govtalk.gov.uk/CM/gms-xs">
 				<Aggregation>main schema</Aggregation>
 				<Audience>e-service developers</Audience>
@@ -24,7 +28,7 @@
 					<Syntax>http://www.w3.org/2001/XMLSchema</Syntax>
 					<Description>XML schema, W3C Recommendation 2001</Description>
 				</Format>
-				<Identifier>{http://www.transxchange.org.uk/schema/2.1/publisher/3.0}TransXChangePublisherService.xsd</Identifier>
+				<Identifier>{http://www.transxchange.org.uk/publisher/schema/3.1.1}TransXChangePublisherService.xsd</Identifier>
 				<Language>[ISO 639-2/B] ENG</Language>
 				<Publisher>Kizoom Ltd. 109-123 Clifton Street, London. EC2A 4LD. UK</Publisher>
 				<Rights>Unclassified
@@ -35,7 +39,7 @@
 						<li>Originally developed as Version 2.1_3 by Kizoom Ltd in Nov 2006</li>
 					</ul>
 				</Source>
-				<Status>Version 3.0</Status>
+				<Status>Version 3.1.1</Status>
 				<Subject>
 					<Category>Arts, recreation and travel, Tourism, Travel (tourism), Transport,
 Public transport,
@@ -56,19 +60,27 @@ Roads and road transport</Category>
 		</xsd:annotation>
 		<xsd:complexType>
 			<xsd:choice>
-				<xsd:element ref="PublishDocumentRequest"/>
+				<xsd:element ref="PublishDocumentRequest">
+					<xsd:annotation>
+						<xsd:documentation>Request to publish a document with the TransXChange publisher.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
 				<xsd:element ref="PublicationStatusRequest"/>
-				<xsd:element ref="PublisherResponse"/>
+				<xsd:element ref="PublisherResponse">
+					<xsd:annotation>
+						<xsd:documentation>Response from a TransXChange publisher Request.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
 			</xsd:choice>
 		</xsd:complexType>
 	</xsd:element>
 	<!-- ======================================================================= -->
-	<xsd:element name="PublishDocumentRequest" type="PublishDocumentRequest">
+	<xsd:element name="PublishDocumentRequest" type="PublishDocumentRequestStructure">
 		<xsd:annotation>
-			<xsd:documentation>Synchronous Request to publish a document with the TransXChange publisher.</xsd:documentation>
+			<xsd:documentation>Request to publish a document with the TransXChange publisher.</xsd:documentation>
 		</xsd:annotation>
 	</xsd:element>
-	<xsd:complexType name="PublishDocumentRequest">
+	<xsd:complexType name="PublishDocumentRequestStructure">
 		<xsd:annotation>
 			<xsd:documentation>Type for Request to publish a document with the TransXChange publisher.</xsd:documentation>
 		</xsd:annotation>
@@ -122,14 +134,14 @@ Roads and road transport</Category>
 								<xsd:documentation>Whether to perform validation of business rules and output diagnostics.</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element name="StopData" type="StopData" default="webService" minOccurs="0">
+						<xsd:element name="StopData" type="StopDataEnumeration" default="webService" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>Source of stop coordinates.  Only used if RouteTrackMap specified.
 - webService: Values for stops not provided locally will be fetched from the NaPTAN web service, as configured. Note that any locally declared values will still be used in preference to the retrieved values. Default.
 - localOnly:  All values are supplied in input document. No attempt will be made to invoke web service.</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element name="MapData" type="MapData" default="webService" minOccurs="0">
+						<xsd:element name="MapData" type="MapDataEnumeration" default="webService" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>Source of map tiles. Only used if RouteTrackMap specified.
 - webService: Map tiles will be fetched from the map web service, as configured. 
@@ -145,7 +157,7 @@ Roads and road transport</Category>
 				</xsd:annotation>
 				<xsd:complexType>
 					<xsd:choice>
-						<xsd:element name="Auto" type="Auto">
+						<xsd:element name="Auto" type="AutoEnumeration">
 							<xsd:annotation>
 								<xsd:documentation>Use predefined combinations of output.
 - Xvosa: Particulars-full, Embedded-full, Timetable-full
@@ -164,7 +176,7 @@ Roads and road transport</Category>
 								</xsd:annotation>
 								<xsd:complexType>
 									<xsd:sequence>
-										<xsd:element name="Particulars" type="Particulars" default="auto">
+										<xsd:element name="Particulars" type="ParticularsEnumeration" default="auto">
 											<xsd:annotation>
 												<xsd:documentation>Options for including the particulars in output. (auto|none|basic|full)</xsd:documentation>
 											</xsd:annotation>
@@ -174,17 +186,17 @@ Roads and road transport</Category>
 												<xsd:documentation>Whether to include any embedded image content in output of particulars. Default is true</xsd:documentation>
 											</xsd:annotation>
 										</xsd:element>
-										<xsd:element name="Timetable" type="Timetable" default="auto">
+										<xsd:element name="Timetable" type="TimetableEnumeration" default="auto">
 											<xsd:annotation>
 												<xsd:documentation>Options for including the timetable matrix in output (auto|none|basic|full|extra)</xsd:documentation>
 											</xsd:annotation>
 										</xsd:element>
-										<xsd:element name="RouteTrack" type="RouteTrack" default="auto">
+										<xsd:element name="RouteTrack" type="RouteTrackEnumeration" default="auto">
 											<xsd:annotation>
 												<xsd:documentation>Options for including the route track map in output. (auto|none|plain|basic|full)</xsd:documentation>
 											</xsd:annotation>
 										</xsd:element>
-										<xsd:element name="Diagnostics" type="Diagnostics">
+										<xsd:element name="Diagnostics" type="DiagnosticsEnumeration">
 											<xsd:annotation>
 												<xsd:documentation>Publish a diagnostic section.
  (auto|none|basic|full)</xsd:documentation>
@@ -203,7 +215,7 @@ Roads and road transport</Category>
 				</xsd:annotation>
 				<xsd:complexType>
 					<xsd:sequence>
-						<xsd:element name="TimingPointTypes" type="TimingPointTypes" minOccurs="0">
+						<xsd:element name="TimingPointTypes" type="TimingPointTypeEnumeration" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>Include timing points of this type in route map.
 - auto: select by type.  (Default).
@@ -225,7 +237,7 @@ Roads and road transport</Category>
 				</xsd:annotation>
 				<xsd:complexType>
 					<xsd:sequence>
-						<xsd:element name="RouteScale" type="RouteScale" default="auto" minOccurs="0">
+						<xsd:element name="RouteScale" type="RouteScaleEnumeration" default="auto" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>Scale to use when tiling map.
 - auto:  scale to size (Default).
@@ -233,7 +245,7 @@ Roads and road transport</Category>
 - large: 1:50,000.</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element name="RouteGrouping" type="RouteGrouping" default="byDirection" minOccurs="0">
+						<xsd:element name="RouteGrouping" type="RouteGroupingEnumeration" default="byDirection" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>Options for grouping route tracks on map. 
 - byDirection: show a separate map for each direction (Default).
@@ -241,11 +253,18 @@ Roads and road transport</Category>
 </xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element name="RouteTiling" type="RouteTiling" default="A4" minOccurs="0">
+						<xsd:element name="RouteTiling" type="RouteTilingEnumeration" default="A4" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>How to paginate:
 - A4: paginate as multiple A4 tiles  (Default)
 - none: output as single image</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="StopListOrder" type="RouteTrackStopListOrderEnumeration" default="timetable" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>Order to shop stop list with maps
+- timetable: list in order as shown for matrix bed.
+- map : list in north south spatial order. (+TXC v2.4)</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
 					</xsd:sequence>
@@ -257,13 +276,13 @@ Roads and road transport</Category>
 				</xsd:annotation>
 				<xsd:complexType>
 					<xsd:sequence>
-						<xsd:element name="OutputFormat" type="OutputFormat" default="pdf" minOccurs="0">
+						<xsd:element name="OutputFormat" type="OutputFormatEnumeration" default="pdf" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>Format in which to render output.
 - pdf: Output as pdf (Default).</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element name="Background" type="Background" default="auto" minOccurs="0">
+						<xsd:element name="Background" type="BackgroundEnumeration" default="auto" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>Backgound image to use as watermark.
 - auto: if section output is XVosa or XVosaAll, make vosa otherwise other (Default).
@@ -273,7 +292,7 @@ Roads and road transport</Category>
 </xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element name="Rubric" type="Rubric" default="auto" minOccurs="0">
+						<xsd:element name="Rubric" type="RubricEnumeration" default="auto" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>Whether to use Vosa Titles
 - auto: if section output is XVosa or XVosaAll, make vosa otherwise other. (Default)
@@ -288,7 +307,12 @@ Roads and road transport</Category>
 		</xsd:sequence>
 	</xsd:complexType>
 	<!-- ======================================================================= -->
-	<xsd:complexType name="PublicationStatusRequest">
+	<xsd:element name="PublicationStatusRequest" type="PublicationStatusRequestStructure">
+		<xsd:annotation>
+			<xsd:documentation>Status Request to TransXChange publisher to determine if a publication has completed.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="PublicationStatusRequestStructure">
 		<xsd:annotation>
 			<xsd:documentation>Type for Task Status Request to TransXChange publisher.</xsd:documentation>
 		</xsd:annotation>
@@ -300,18 +324,13 @@ Roads and road transport</Category>
 			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-	<xsd:element name="PublicationStatusRequest" type="PublicationStatusRequest">
-		<xsd:annotation>
-			<xsd:documentation>Status Request to TransXChange publisher to determine if a publication has completed.</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
 	<!-- ======================================================================= -->
-	<xsd:element name="PublisherResponse" type="PublisherResponse">
+	<xsd:element name="PublisherResponse" type="PublisherResponseStructure">
 		<xsd:annotation>
 			<xsd:documentation>Response to a TransXChange publisher Request.</xsd:documentation>
 		</xsd:annotation>
 	</xsd:element>
-	<xsd:complexType name="PublisherResponse">
+	<xsd:complexType name="PublisherResponseStructure">
 		<xsd:annotation>
 			<xsd:documentation>Type for Response to a TransXChange publisher Request.</xsd:documentation>
 		</xsd:annotation>
@@ -332,7 +351,7 @@ Roads and road transport</Category>
 						<xsd:documentation>Processing of the Publish Document Request has not been completed.</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
-				<xsd:element name="Completed" type="Completed">
+				<xsd:element name="Completed" type="CompletedStructure">
 					<xsd:annotation>
 						<xsd:documentation>Document has been succesfully processed and output file(s) created. If any diagnostic errors occured they are given within this element.</xsd:documentation>
 					</xsd:annotation>
@@ -356,11 +375,14 @@ Roads and road transport</Category>
 			<xsd:documentation>A type with no allowed content, used when simply the presence of an element is significant.</xsd:documentation>
 		</xsd:annotation>
 	</xsd:complexType>
-	<xsd:complexType name="Completed">
+	<xsd:complexType name="CompletedStructure">
+		<xsd:annotation>
+			<xsd:documentation>Type for completion status </xsd:documentation>
+		</xsd:annotation>
 		<xsd:sequence>
-			<xsd:element name="OutputFiles" type="OutputFiles">
+			<xsd:element name="OutputFiles" type="OutputFilesStructure" minOccurs="0">
 				<xsd:annotation>
-					<xsd:documentation>List of files published.</xsd:documentation>
+					<xsd:documentation>List of files published. There are no output files if the service is just being used for validation or reporting diagnostic errors.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="DiagnosticErrors" type="xsd:string" minOccurs="0">
@@ -368,26 +390,43 @@ Roads and road transport</Category>
 					<xsd:documentation>Plain text representation of any diagnostic errors for the published document.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
+			<xsd:element name="Warnings" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Plain text representation of any non fatal warnings for the published document.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-	<xsd:complexType name="OutputFiles">
+	<xsd:complexType name="OutputFilesStructure">
+		<xsd:annotation>
+			<xsd:documentation>Type for Output file names</xsd:documentation>
+		</xsd:annotation>
 		<xsd:sequence>
 			<xsd:element name="OutputFile" type="xsd:anyURI" maxOccurs="unbounded"/>
 		</xsd:sequence>
 	</xsd:complexType>
-	<xsd:simpleType name="StopData">
+	<xsd:simpleType name="StopDataEnumeration">
+		<xsd:annotation>
+			<xsd:documentation>Allowed values for Stop Data</xsd:documentation>
+		</xsd:annotation>
 		<xsd:restriction base="xsd:NMTOKEN">
 			<xsd:enumeration value="localOnly"/>
 			<xsd:enumeration value="webService"/>
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:simpleType name="MapData">
+	<xsd:simpleType name="MapDataEnumeration">
+		<xsd:annotation>
+			<xsd:documentation>Allowed values for Map Data</xsd:documentation>
+		</xsd:annotation>
 		<xsd:restriction base="xsd:NMTOKEN">
 			<xsd:enumeration value="webService"/>
 			<xsd:enumeration value="none"/>
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:simpleType name="Auto">
+	<xsd:simpleType name="AutoEnumeration">
+		<xsd:annotation>
+			<xsd:documentation>Allowed values for Auto</xsd:documentation>
+		</xsd:annotation>
 		<xsd:restriction base="xsd:NMTOKEN">
 			<xsd:enumeration value="full"/>
 			<xsd:enumeration value="timetableOnly"/>
@@ -396,7 +435,10 @@ Roads and road transport</Category>
 			<xsd:enumeration value="XvosaAll"/>
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:simpleType name="Particulars">
+	<xsd:simpleType name="ParticularsEnumeration">
+		<xsd:annotation>
+			<xsd:documentation>Allowed values for Particulars</xsd:documentation>
+		</xsd:annotation>
 		<xsd:restriction base="xsd:NMTOKEN">
 			<xsd:enumeration value="auto"/>
 			<xsd:enumeration value="none"/>
@@ -404,7 +446,10 @@ Roads and road transport</Category>
 			<xsd:enumeration value="full"/>
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:simpleType name="Timetable">
+	<xsd:simpleType name="TimetableEnumeration">
+		<xsd:annotation>
+			<xsd:documentation>Allowed values for Matrix details</xsd:documentation>
+		</xsd:annotation>
 		<xsd:restriction base="xsd:NMTOKEN">
 			<xsd:enumeration value="auto"/>
 			<xsd:enumeration value="none"/>
@@ -413,7 +458,10 @@ Roads and road transport</Category>
 			<xsd:enumeration value="extra"/>
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:simpleType name="RouteTrack">
+	<xsd:simpleType name="RouteTrackEnumeration">
+		<xsd:annotation>
+			<xsd:documentation>Allowed values for RouteTrack</xsd:documentation>
+		</xsd:annotation>
 		<xsd:restriction base="xsd:NMTOKEN">
 			<xsd:enumeration value="auto"/>
 			<xsd:enumeration value="none"/>
@@ -421,46 +469,76 @@ Roads and road transport</Category>
 			<xsd:enumeration value="full"/>
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:simpleType name="Diagnostics">
+	<xsd:simpleType name="RouteTrackStopListOrderEnumeration">
+		<xsd:annotation>
+			<xsd:documentation>Allowed values for Matrix details</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="timetable"/>
+			<xsd:enumeration value="map"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="DiagnosticsEnumeration">
+		<xsd:annotation>
+			<xsd:documentation>Allowed values for Diagnostics</xsd:documentation>
+		</xsd:annotation>
 		<xsd:restriction base="xsd:NMTOKEN">
 			<xsd:enumeration value="auto"/>
 			<xsd:enumeration value="none"/>
 			<xsd:enumeration value="full"/>
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:simpleType name="TimingPointTypes">
+	<xsd:simpleType name="TimingPointTypeEnumeration">
+		<xsd:annotation>
+			<xsd:documentation>Allowed values forTiming Point Types</xsd:documentation>
+		</xsd:annotation>
 		<xsd:restriction base="xsd:NMTOKEN">
 			<xsd:enumeration value="auto"/>
 			<xsd:enumeration value="all"/>
 			<xsd:enumeration value="PTP"/>
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:simpleType name="RouteScale">
+	<xsd:simpleType name="RouteScaleEnumeration">
+		<xsd:annotation>
+			<xsd:documentation>Allowed values for Route  Scale</xsd:documentation>
+		</xsd:annotation>
 		<xsd:restriction base="xsd:NMTOKEN">
 			<xsd:enumeration value="auto"/>
 			<xsd:enumeration value="small"/>
 			<xsd:enumeration value="large"/>
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:simpleType name="RouteGrouping">
+	<xsd:simpleType name="RouteGroupingEnumeration">
+		<xsd:annotation>
+			<xsd:documentation>Allowed values for Route Grouping</xsd:documentation>
+		</xsd:annotation>
 		<xsd:restriction base="xsd:NMTOKEN">
 			<xsd:enumeration value="allTogether"/>
 			<xsd:enumeration value="byDirection"/>
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:simpleType name="RouteTiling">
+	<xsd:simpleType name="RouteTilingEnumeration">
+		<xsd:annotation>
+			<xsd:documentation>Allowed values for Route Tiling</xsd:documentation>
+		</xsd:annotation>
 		<xsd:restriction base="xsd:NMTOKEN">
 			<xsd:enumeration value="A4"/>
 			<xsd:enumeration value="none"/>
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:simpleType name="OutputFormat">
+	<xsd:simpleType name="OutputFormatEnumeration">
+		<xsd:annotation>
+			<xsd:documentation>Allowed values for Output Format</xsd:documentation>
+		</xsd:annotation>
 		<xsd:restriction base="xsd:NMTOKEN">
 			<xsd:enumeration value="html"/>
 			<xsd:enumeration value="pdf"/>
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:simpleType name="Background">
+	<xsd:simpleType name="BackgroundEnumeration">
+		<xsd:annotation>
+			<xsd:documentation>Allowed values for Background</xsd:documentation>
+		</xsd:annotation>
 		<xsd:restriction base="xsd:NMTOKEN">
 			<xsd:enumeration value="auto"/>
 			<xsd:enumeration value="official"/>
@@ -468,7 +546,10 @@ Roads and road transport</Category>
 			<xsd:enumeration value="other"/>
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:simpleType name="Rubric">
+	<xsd:simpleType name="RubricEnumeration">
+		<xsd:annotation>
+			<xsd:documentation>Allowed values for Rubric</xsd:documentation>
+		</xsd:annotation>
 		<xsd:restriction base="xsd:NMTOKEN">
 			<xsd:enumeration value="auto"/>
 			<xsd:enumeration value="official"/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<TransXChangePublisherTransport xsi:schemaLocation="http://www.transxchange.org.uk/publisher http://www.transxchange.org.uk/schema/2.1/publisher/3.1.2/TransXChangePublisherService.xsd" xmlns="http://www.transxchange.org.uk/publisher" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<TransXChangePublisherTransport xsi:schemaLocation="http://www.transxchange.org.uk/publisher http://naptan.dft.gov.uk/transxchange/publisher/schema/3.1.2/TransXChangePublisherService.xsd" xmlns="http://www.transxchange.org.uk/publisher" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <PublishDocumentRequest>
         <InputOperands>
             <DocumentPath></DocumentPath>
@@ -11,7 +11,7 @@
         <ProcessingOptions>
             <ValidateXml>false</ValidateXml>
             <IncludeDiagnostics>false</IncludeDiagnostics>
-            <StopData>webService</StopData>
+            <StopData>localOnly</StopData>
             <MapData>webService</MapData>
         </ProcessingOptions>
         <OutputOptions>
@@ -35,6 +35,8 @@
         </RouteTrackMapOptions>
         <Rendering>
             <OutputFormat>pdf</OutputFormat>
+            <Background>official</Background>
+            <Rubric>official</Rubric>
         </Rendering>
     </PublishDocumentRequest>
 </TransXChangePublisherTransport>

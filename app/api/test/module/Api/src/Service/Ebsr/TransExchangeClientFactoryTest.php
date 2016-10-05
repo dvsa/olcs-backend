@@ -10,9 +10,6 @@ use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Validator\Xsd;
 use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
-use Zend\Http\Client as RestClient;
-use Zend\Http\Request;
-use Zend\Http\Response;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -54,7 +51,7 @@ class TransExchangeClientFactoryTest extends TestCase
         $mockXsdValidator = m::mock(Xsd::class);
         $mockXsdValidator->shouldReceive('setXsd')
             ->once()
-            ->with('http://www.transxchange.org.uk/schema/2.1/publisher/3.1.2/TransXChangePublisherService.xsd');
+            ->with(TransExchangeClientFactory::PUBLISH_XSD);
 
         $mockSl = m::mock(ServiceLocatorInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn(['ebsr'=>$config]);
