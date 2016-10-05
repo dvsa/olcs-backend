@@ -2,59 +2,113 @@
 
 namespace Dvsa\Olcs\Cli\Controller;
 
-use Dvsa\Olcs\Api\Domain\Command;
-use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Api\Domain\Query;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
-use Dvsa\Olcs\Cli\Domain\Query as CliQuery;
-use Dvsa\Olcs\Transfer\Command as TransferCommand;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Olcs\Logging\Log\Logger;
-use Zend\Http\Response;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Zend\Mvc\Controller\AbstractConsoleController;
 use Zend\View\Model\ConsoleModel;
+use Zend\Http\Client;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Dvsa\Olcs\Transfer\Query\Document\DownloadGuide;
+use Dvsa\Olcs\Transfer\Query\Document\Download;
+use Dvsa\Olcs\Transfer\Query\ContactDetail\CountryList;
+use Dvsa\Olcs\Transfer\Query\CompaniesHouse\GetList as ChGetList;
+use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 
 /**
  * DiagnosticController
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 class DiagnosticController extends AbstractConsoleController
 {
     const COLOR_FAIL = 10;
-    const COLOR_PASS = 12;
+    const COLOR_PASS = 11;
+    const COLOR_SKIP = 12;
+    const TEMPLATE_TO_DOWNLOAD = 'GV_LICENCE_GB';
+    const TEMPLATE_TO_DOWNLOAD_ID = Document::GV_LICENCE_GB;
+    const GUIDE_TO_DOWNLOAD = 'Advert_Template_GB_New.pdf';
+    const SYSTEM_USER_NAME ='system';
+    const POSTCODE_TO_FETCH = 'LS9 6NF';
+    const LICENCE_SEARCH = 'smith';
+    const NYSIIS_FORENAME = 'John';
+    const NYSIIS_FAMILYNAME = 'Smith';
+    const COMPANIES_HOUSE_SEARCH_VALUE = 'next';
+    const COMPANIES_HOUSE_SEARCH_NUMBER = '02275780';
+    const EMAIL_ADDRESS_FOR_TEST_EMAIL = 'terry.valtech@gmail.com';
+    const SUBJECT_FOR_TEST_EMAIL = 'test email';
+    const BODY_FOR_TEST_EMAIL = 'test email sent from the diagnostic command';
+    const NAME_FROM_FOR_TEST_EMAIL = 'System';
+    const EMAIL_FROM_FOR_TEST_EMAIL = 'terry.valtech@gmail.com';
+    const MAILBOX_ID = 'inspection_request';
 
     /**
      * @var array
      */
     private $config;
 
+    private $configKeys = [
+        'CPMS' => 'cpms_api->rest_client->options->domain',
+        'DOCUMENT_SHARE' => 'document_share->client->baseuri',
+        'DOCTRINE_HOST' => 'doctrine->connection->orm_default->params->host',
+        'DOCTRINE_PORT' => 'doctrine->connection->orm_default->params->port',
+        'PRINT' => 'print->server',
+        'ELASTIC_HOST' => 'elastic_search->host',
+        'ELASTIC_PORT' => 'elastic_search->port',
+        'TRANSXCHANGE' => 'ebsr->transexchange_publisher->uri',
+        'NYSIIS' => 'nysiis->wsdl->uri',
+        'CH_XML_USERID' => 'companies_house_credentials->userId',
+        'CH_XML_PASSWORD' => 'companies_house_credentials->password',
+        'CH_REST_URI' => 'companies_house->client->baseuri',
+        'CH_REST_USERNAME' => 'companies_house->auth->username',
+        'EMAIL_CLIENT' => 'email->client->baseuri',
+        'IR_MAILBOX_HOST' => 'mailboxes->inspection_request->host',
+        'IR_MAILBOX_PORT' => 'mailboxes->inspection_request->port',
+        'NR_URI' => 'nr->inr_service->uri',
+        'NR_REPUTE_URI' => 'nr->repute_url->uri',
+    ];
+
+    private $sections = [
+        'openam' => 'OpenAM',
+        'database' => 'Database',
+        'print' => 'Print',
+        'documentStore' => 'Document Store',
+        'cpms' => 'CPMS',
+        'elastic' => 'Elastic',
+        'transxchange' => 'Transxchange',
+        'nysiis' => 'NYSIIS',
+        'address' => 'Address Lookup',
+        'companiesHouseXml' => 'Companies House XML API',
+        'companiesHouseRest' => 'Companies House REST API',
+        'sendEmail' => 'Send email',
+        'checkMailbox' => 'Check inspection request mailbox',
+        'nr' => 'NR'
+    ];
+
     /**
-     * Remove read audit action
+     * Index action
      *
      * @return \Zend\View\Model\ConsoleModel
      */
     public function indexAction()
     {
-        $this->openamSection();
-        $this->databaseSection();
-        $this->printSection();
-        $this->documentStoreSection();
-        $this->cpmsSection();
-        $this->elasticSection();
-        $this->transxchangeSection();
-        $this->nysiisSection();
-        $this->addressSection();
-
-        // Connect to openam
-        // Address postcode lookup
-//        companies house XML
-//        Companies house Rest
-//        Send an email (id cli param is present
-//        NR
+        $skipSections = explode(',', $this->params('skip', ''));
+        foreach ($this->sections as $section => $header) {
+            $this->outputHeading($header);
+            if (!in_array($section, $skipSections)) {
+                $this->{$section . 'Section'}();
+            } else {
+                $this->outputSkip($section);
+            }
+        }
     }
 
+    /**
+     * Get config
+     *
+     * @return array
+     */
     private function getConfig()
     {
         if ($this->config === null) {
@@ -64,86 +118,131 @@ class DiagnosticController extends AbstractConsoleController
         return $this->config;
     }
 
+    /**
+     * Database section
+     *
+     * @return void
+     */
     private function databaseSection()
     {
-        $this->outputHeading('DATABASE');
-        $this->getConsole()->write(
-            sprintf(
-                "Connect to host = '%s', dbname = '%s' : ",
-                $this->getConfig()['doctrine']['connection']['orm_default']['params']['host'],
-                $this->getConfig()['doctrine']['connection']['orm_default']['params']['dbname']
-            )
-        );
+        $host = $this->getValueFromConfig('DOCTRINE_HOST');
+        $port = $this->getValueFromConfig('DOCTRINE_PORT');
+        if ($host === false || $port === false) {
+            return;
+        }
 
-        $this->handleQuery(\Dvsa\Olcs\Transfer\Query\Application\Application::create(['id' => 7]));
-        $this->outputPass();
+        $this->outputMessage(sprintf("Connect to host = '%s', dbname = '%s' : ", $host, $port));
+
+        try {
+            $this->handleQuery(CountryList::create([]));
+            $this->outputPass();
+        } catch (\Exception $e) {
+            $this->outputFailEx($e);
+        }
     }
 
+    /**
+     * Print section
+     *
+     * @return void
+     */
     private function printSection()
     {
-        $this->outputHeading('PRINT');
-        // @todo prepend http as it not in the config?
-        $host = 'http://'. $this->getConfig()['print']['server'];
-        $this->isReachable($host);
+        $host = $this->getValueFromConfig('PRINT');
+        if ($host === false) {
+            return;
+        }
 
-        // @todo if a cli parameter is present then do an actual print
+        $this->isReachable($host);
     }
 
+    /**
+     * Document store section
+     *
+     * @return void
+     */
     private function documentStoreSection()
     {
-        $this->outputHeading('DOC STORE');
-        $host = $this->getConfig()['document_share']['client']['baseuri'];
-
-        $this->isReachable($host);
-
-        $this->getConsole()->write('Download template GV_LICENCE_GB : ');
-        try {
-            $this->handleQuery(\Dvsa\Olcs\Transfer\Query\Document\Download::create(
-                ['identifier' => \Dvsa\Olcs\Api\Entity\Doc\Document::GV_LICENCE_GB])
-            );
-            $this->outputPass();
-        } catch (\Exception $e) {
-            $this->outputFail(get_class($e) .' '. $e->getMessage());
+        $host = $this->getValueFromConfig('DOCUMENT_SHARE');
+        if ($host === false) {
+            return;
         }
 
-        $this->getConsole()->write('Download guide Advert_Template_GB_New.pdf : ');
+        if (!$this->isReachable($host)) {
+            return;
+        }
+
+        $this->outputMessage('Download template ' . self::TEMPLATE_TO_DOWNLOAD . ' : ');
         try {
-            $this->handleQuery(\Dvsa\Olcs\Transfer\Query\Document\DownloadGuide::create(
-                ['identifier' => 'Advert_Template_GB_New.pdf'])
-            );
+            $this->handleQuery(Download::create(['identifier' => self::TEMPLATE_TO_DOWNLOAD_ID]));
             $this->outputPass();
         } catch (\Exception $e) {
-            $this->outputFail(get_class($e) .' '. $e->getMessage());
+            $this->outputFailEx($e);
+        }
+
+        $this->outputMessage('Download guide ' . self::GUIDE_TO_DOWNLOAD . ' : ');
+        try {
+            $this->handleQuery(DownloadGuide::create(['identifier' => self::GUIDE_TO_DOWNLOAD]));
+            $this->outputPass();
+        } catch (\Exception $e) {
+            $this->outputFailEx($e);
         }
     }
 
+    /**
+     * CPMS section
+     *
+     * @return void
+     */
     private function cpmsSection()
     {
-        $this->outputHeading('CPMS');
-        $host = 'http://'. $this->getConfig()['cpms_api']['rest_client']['options']['domain'];
-        $this->isReachable($host);
+        $host = $this->getValueFromConfig('CPMS');
+        if ($host === false) {
+            return;
+        }
 
-        $this->getConsole()->write('Get Report List : ');
+        if (!$this->isReachable($host)) {
+            return;
+        }
+
+        $this->outputMessage('Get Report List : ');
         /** @var \Dvsa\Olcs\Api\Service\CpmsV2HelperService $cpms */
         $cpms = $this->getServiceLocator()->get('CpmsHelperService');
-        $response = $cpms->getReportList();
-        if (isset($response['items']) && isset($response['page'])) {
-            $this->outputPass();
-        } else {
-            $this->outputFail($response);
+
+        try {
+            $response = $cpms->getReportList();
+            if (isset($response['items']) && isset($response['page'])) {
+                $this->outputPass();
+            } else {
+                $this->outputFail($response);
+            }
+        } catch (\Exception $e) {
+            $this->outputFailEx($e);
         }
     }
 
+    /**
+     * Elastic section
+     *
+     * @return void
+     */
     private function elasticSection()
     {
-        $this->outputHeading('Elastic');
-        $host = 'http://'. $this->getConfig()['elastic_search']['host'] .':'. $this->getConfig()['elastic_search']['port'];
-        $this->isReachable($host);
+        $host = $this->getValueFromConfig('ELASTIC_HOST');
+        $port = $this->getValueFromConfig('ELASTIC_PORT');
+        if ($host === false || $port === false) {
+            return;
+        }
 
-        $this->getConsole()->write("Serach licence index for 'smith' : ");
+        if (!$this->isReachable($host, $port)) {
+            return;
+        }
+
+        $this->outputMessage("Serach licence index for '" . self::LICENCE_SEARCH . "' : ");
         /** @var \Olcs\Db\Service\Search\Search $es */
         $es = $this->getServiceLocator()->get('ElasticSearch\Search');
-        $result = $es->search('smith', ['licence']);
+        $result = $es->search(self::LICENCE_SEARCH, ['licence']);
+
         if (isset($result['Count']) && $result['Count'] > 1 && isset($result['Results'])) {
             $this->outputPass();
         } else {
@@ -151,112 +250,414 @@ class DiagnosticController extends AbstractConsoleController
         }
     }
 
+    /**
+     * Transxchange section
+     *
+     * @return void
+     */
     private function transxchangeSection()
     {
-        $this->outputHeading('transexchange');
-        $host = $this->getConfig()['ebsr']['transexchange_publisher']['uri'];
+        //@todo: need to test and fix if needed on different envinronments, unable to test locally
+
+        $host = $this->getValueFromConfig('TRANSXCHANGE');
+        if ($host === false) {
+            return;
+        }
         $this->isReachable($host);
     }
 
+    /**
+     * NYSIIS section
+     *
+     * @return void
+     */
     private function nysiisSection()
     {
-        $this->outputHeading('nysiis');
-        if (!isset($this->getConfig()['nysiis']['wsdl']['uri'])) {
-            $this->outputFail('Not configured');
+        // @todo: need to test and fix if needed on different envinronments, unable to test locally
+
+        $host = $this->getValueFromConfig('NYSIIS');
+        if ($host === false) {
             return;
         }
-        $host = $this->getConfig()['nysiis']['wsdl']['uri'];
-        $this->isReachable($host);
 
-        $this->getConsole()->write('Make request: ');
+        if (!$this->isReachable($host)) {
+            return;
+        }
 
+        $this->outputMessage('Make request: ');
         try {
             /** @var \Dvsa\Olcs\Api\Service\Data\Nysiis $nysiisService */
             $nysiisService = $this->getServiceLocator()->get(\Dvsa\Olcs\Api\Service\Data\Nysiis::class);
 
-            $r = $nysiisService->getNysiisSearchKeys(
+            $nysiisService->getNysiisSearchKeys(
                 [
-                    'nysiisForename' => 'John',
-                    'nysiisFamilyname' => 'Smith'
+                    'nysiisForename' => self::NYSIIS_FORENAME,
+                    'nysiisFamilyname' => self::NYSIIS_FAMILYNAME
                 ]
             );
 
-            var_dump($r);
-
             $this->outputPass();
         } catch (\Exception $e) {
-            $this->outputFail($e->getMessage());
+            $this->outputFailEx($e);
         }
     }
 
+    /**
+     * OpenAM section
+     *
+     * @return void
+     */
     private function openamSection()
     {
-        $this->outputHeading('openam');
-        $this->getConsole()->write('Fetch system user : ');
+        $this->outputMessage('Fetch system user : ');
         try {
             /** @var \Dvsa\Olcs\Api\Service\OpenAm\Client $service */
             $service = $this->getServiceLocator()->get(\Dvsa\Olcs\Api\Service\OpenAm\ClientInterface::class);
 
-            $service->fetchUser(hash('sha256', 'system'));
+            $service->fetchUser(hash('sha256', self::SYSTEM_USER_NAME));
 
             $this->outputPass();
         } catch (\Exception $e) {
-            $this->outputFail($e->getMessage());
+            $this->outputFailEx($e);
         }
     }
 
+    /**
+     * Address section
+     *
+     * @return void
+     */
     private function addressSection()
     {
-        $this->outputHeading('address lookup');
-        $postcode = 'LS9 6NF';
-        $this->getConsole()->write('Fetch postcode '. $postcode .' : ');
+        $this->outputMessage('Fetch postcode '. self::POSTCODE_TO_FETCH .' : ');
         try {
             /** @var \Dvsa\Olcs\Address\Service\Address */
             $service = $this->getServiceLocator()->get('AddressService');
-            $service->fetchByPostcode($postcode);
-
-            $this->outputPass();
+            $address = $service->fetchByPostcode(self::POSTCODE_TO_FETCH);
+            if (count($address) === 0) {
+                $this->outputFail('No results for ' . self::POSTCODE_TO_FETCH);
+            } else {
+                $this->outputPass();
+            }
         } catch (\Exception $e) {
-            $this->outputFail($e->getMessage());
+            $this->outputFailEx($e);
         }
     }
 
-    private function isReachable($host)
+    /**
+     * Companies house XML section
+     *
+     * @return void
+     */
+    private function companiesHouseXmlSection()
     {
-        $this->getConsole()->write('Connect to '. $host .' : ');
+        if (
+            $this->getValueFromConfig('CH_XML_USERID') === false
+            || $this->getValueFromConfig('CH_XML_PASSWORD') === false
+        ) {
+            return;
+        }
+
         try {
-            $client = new \Zend\Http\Client($host);
+            $params = [
+                'type' => 'nameSearch',
+                'value' => self::COMPANIES_HOUSE_SEARCH_VALUE,
+            ];
+            $this->outputMessage('Fetch companies by name contains "' . self::COMPANIES_HOUSE_SEARCH_VALUE . '" : ');
+            $result = $this->handleQuery(ChGetList::create($params));
+            if (!is_array($result) || !array_key_exists('result', $result) || count($result) === 0) {
+                $this->outputFail('No results found for search term: ' . self::COMPANIES_HOUSE_SEARCH_VALUE);
+            } else {
+                $this->outputPass();
+            }
+
+        } catch (\Exception $e) {
+            $this->outputFailEx($e);
+        }
+    }
+
+    /**
+     * Companies house REST section
+     *
+     * @return void
+     */
+    private function companiesHouseRestSection()
+    {
+        if ($this->getValueFromConfig('CH_REST_URI') === false
+            || $this->getValueFromConfig('CH_REST_USERNAME') === false) {
+            return;
+        }
+
+        try {
+            /** @var \Dvsa\Olcs\CompaniesHouse\Service\Client $service */
+            $service = $this->getServiceLocator()->get(\Dvsa\Olcs\CompaniesHouse\Service\Client::class);
+
+            $this->outputMessage('Fetch company by number ' . self::COMPANIES_HOUSE_SEARCH_NUMBER . ' : ');
+            $result = $service->getCompanyProfile(self::COMPANIES_HOUSE_SEARCH_NUMBER, true);
+            if (!is_array($result) || count($result) === 0) {
+                $this->outputFail('No results found for search term: ' . self::COMPANIES_HOUSE_SEARCH_NAME);
+            } else {
+                $this->outputPass();
+            }
+
+        } catch (\Exception $e) {
+            $this->outputFailEx($e);
+        }
+    }
+
+    /**
+     * Send email section
+     *
+     * @return void
+     */
+    private function sendEmailSection()
+    {
+        // @todo: need to test and fix if needed on different envinronments, unable to test locally
+
+        $host = $this->getValueFromConfig('EMAIL_CLIENT');
+        if ($host === false) {
+            return;
+        }
+
+        if (!$this->isReachable($host)) {
+            return;
+        }
+
+        $toEmail = $this->params('email', null) === null
+            ? self::EMAIL_ADDRESS_FOR_TEST_EMAIL
+            : $this->params('email', null);
+
+        try {
+            $this->outputMessage('Send email to ' . $toEmail . ' : ');
+            $data = [
+                'fromName' => self::NAME_FROM_FOR_TEST_EMAIL,
+                'fromEmail' => self::EMAIL_ADDRESS_FOR_TEST_EMAIL,
+                'to' => $toEmail,
+                'subject' => self::SUBJECT_FOR_TEST_EMAIL,
+                'plainBody' => self::BODY_FOR_TEST_EMAIL,
+                'htmlBody' => self::BODY_FOR_TEST_EMAIL,
+                'locale' => 'en_GB',
+            ];
+            $cmd = SendEmail::create($data);
+            $result = $this->handleCommand($cmd, false);
+            $messages = $result->getMessages();
+            if (is_array($messages) && count($messages) === 1 || $messages[0] === 'Email sent') {
+                $this->outputPass();
+            } else {
+                $this->outputFail();
+            }
+
+        } catch (\Exception $e) {
+            $this->outputFailEx($e);
+        }
+    }
+
+    /**
+     * Check inspection request mailbox section
+     *
+     * @return void
+     */
+    private function checkMailboxSection()
+    {
+        // @todo: need to test and fix if needed on different envinronments, unable to test locally
+
+        $host = $this->getValueFromConfig('IR_MAILBOX_HOST');
+        $port = $this->getValueFromConfig('IR_MAILBOX_PORT');
+        if ($host === false || $port === false) {
+            return;
+        }
+
+        try {
+            $this->outputMessage('Connecting to ' . self::MAILBOX_ID . ' mailbox : ');
+
+            /** @var \Dvsa\Olcs\Email\Service\Imap::class $service */
+            $service = $this->getServiceLocator()->get('ImapService');
+
+            $service->connect(self::MAILBOX_ID);
+            $messages = $service->getMessages();
+            $total = count($messages);
+            $this->outputPass(' (found ' . $total . 'messages)');
+
+        } catch (\Exception $e) {
+            $this->outputFailEx($e);
+        }
+
+    }
+
+    /**
+     * NR section
+     *
+     * @return void
+     */
+    private function nrSection()
+    {
+        // @todo: need to test and fix if needed on different envinronments, unable to test locally
+
+        $nrUri = $this->getValueFromConfig('NR_URI');
+        $nrReputeUri = $this->getValueFromConfig('NR_REPUTE_URI');
+
+        if ($nrUri === false || $nrReputeUri === false) {
+            return;
+        }
+
+        $this->isReachable($nrUri);
+        $this->isReachable($nrReputeUri);
+    }
+
+    /**
+     * Is reachable
+     *
+     * @param string $host host
+     * @param string $port port
+     *
+     * @throws \Exception
+     *
+     * @return bool
+     */
+    private function isReachable($host, $port = null)
+    {
+        if (substr($host, 0, 7) !== 'http://' && substr($host, 0, 8) !== 'https://') {
+            $host = 'http://' . $host;
+        }
+        $this->outputMessage('Connect to ' . $host . ' : ');
+
+        try {
+            $client = new Client($host . ($port ? ':' . $port : ''));
+
             if (!$client->send()->isOk()) {
                 throw new \Exception($client->getResponse()->getReasonPhrase());
             }
             $this->outputPass();
         } catch (\Exception $e) {
-            $this->outputFail($e->getMessage());
+            $this->outputFailEx($e);
+            return false;
         }
-    }
-
-    private function outputHeading($text)
-    {
-        $this->getConsole()->writeLine();
-        $this->getConsole()->writeLine('=== '. strtoupper($text) .' ===');
-    }
-
-    private function outputPass($text = '')
-    {
-        $this->getConsole()->writeLine('PASS '. $text, 11);
-    }
-
-    private function outputFail($text = '')
-    {
-        $this->getConsole()->writeLine('FAIL '. $text, 10);
+        return true;
     }
 
     /**
-     * @param $dto
-     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * Output heading
+     *
+     * @param string $text text
+     *
+     * @return void
+     */
+    private function outputHeading($text)
+    {
+        $this->getConsole()->writeLine();
+        $this->getConsole()->writeLine('====== ' . $text . ' ======');
+    }
+
+    /**
+     * Output pass
+     *
+     * @param string $text text
+     *
+     * @return void
+     */
+    private function outputPass($text = '')
+    {
+        $this->getConsole()->writeLine('PASS ' . $text, self::COLOR_PASS);
+    }
+
+    /**
+     * Output fail
+     *
+     * @param string $text text
+     *
+     * @return void
+     */
+    private function outputFail($text = '')
+    {
+        $this->getConsole()->writeLine('FAIL' . PHP_EOL . $text, self::COLOR_FAIL);
+    }
+
+    /**
+     * Output fail (from catch block)
+     *
+     * @param \Exception $e exception
+     *
+     * @return void
+     */
+    private function outputFailEx(\Exception $e)
+    {
+        $this->getConsole()->writeLine('FAIL' . PHP_EOL . get_class($e) . ' ' . $e->getMessage(), self::COLOR_FAIL);
+    }
+
+    /**
+     * Output skip
+     *
+     * @param string $section section
+     *
+     * @return void
+     */
+    private function outputSkip($section = '')
+    {
+        $this->getConsole()->writeLine('SKIP ' . $section . ' section', self::COLOR_SKIP);
+    }
+
+    /**
+     * Output message
+     *
+     * @param string $text text
+     *
+     * @return void
+     */
+    private function outputMessage($text = '')
+    {
+        $this->getConsole()->write($text);
+    }
+
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $dto dto
+     *
+     * @return Result
      */
     private function handleQuery($dto)
     {
         return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
+    }
+
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $dto            dto
+     * @param bool             $shouldValidate should we validate command
+     *
+     * @return Result
+     */
+    private function handleCommand($dto, $shouldValidate = true)
+    {
+        return $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto, $shouldValidate);
+    }
+
+    /**
+     * Get value from config
+     *
+     * @param string $type type
+     *
+     * @return array|bool
+     */
+    private function getValueFromConfig($type = null)
+    {
+        if (!$type) {
+            return false;
+        }
+        $path = $this->configKeys[$type];
+
+        $keys = explode('->', $path);
+        $value = $this->getConfig();
+
+        foreach ($keys as $key) {
+            if (!isset($value[$key])) {
+                $this->outputFail($type . ' not configured: ' . $key . ' key not found.');
+                return false;
+            }
+            $value = $value[$key];
+        }
+
+        return $value;
     }
 }
