@@ -99,6 +99,8 @@ class FeeTest extends QueryHandlerTestCase
                     ->andReturn(true)
                     ->shouldReceive('isWaive')
                     ->andReturn(true)
+                    ->shouldReceive('isMigrated')
+                    ->andReturn(true)
                     ->getMock()
             )
             ->getMock();
@@ -148,6 +150,7 @@ class FeeTest extends QueryHandlerTestCase
                     'processedBy' => 'someuser',
                     'amount' => '10.00',
                     'status' => $status,
+                    'migratedFromOlbs' => false,
                 ],
                 6 => [
                     'transactionId' => 6,
@@ -157,6 +160,7 @@ class FeeTest extends QueryHandlerTestCase
                     'processedBy' => 'someuser',
                     'amount' => '20.00',
                     'status' => $status,
+                    'migratedFromOlbs' => false,
                 ],
                 // multiple feeTransaction records with the same transaction id
                 // should group for display, summing the amounts
@@ -168,6 +172,7 @@ class FeeTest extends QueryHandlerTestCase
                     'processedBy' => 'someuser',
                     'amount' => '-30.00',
                     'status' => $status,
+                    'migratedFromOlbs' => false,
                 ],
             ],
             'vatInfo' => '20% (S)',
@@ -194,6 +199,8 @@ class FeeTest extends QueryHandlerTestCase
         if (is_null($transaction)) {
             $transaction = m::mock(TransactionEntity::class);
             $transaction
+                ->shouldReceive('isMigrated')
+                ->andReturn(false)
                 ->shouldReceive('getId')
                 ->andReturn($id)
                 ->shouldReceive('isOutstanding')

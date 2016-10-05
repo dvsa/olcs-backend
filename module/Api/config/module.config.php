@@ -631,10 +631,12 @@ return [
     'ebsr' => [
         'transexchange_publisher' => [
             'templates' => [
-                \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::GENERATE_DOCS_TEMPLATE =>
-                    __DIR__ . '/../data/ebsr/txc_template.xml',
                 \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::REQUEST_MAP_TEMPLATE =>
-                    __DIR__ . '/../data/ebsr/requestmap_template.xml'
+                    __DIR__ . '/../data/ebsr/requestmap_template.xml',
+                \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::TIMETABLE_TEMPLATE =>
+                    __DIR__ . '/../data/ebsr/timetable_template.xml',
+                \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::DVSA_RECORD_TEMPLATE =>
+                    __DIR__ . '/../data/ebsr/dvsarecord_template.xml'
             ]
         ],
     ],
@@ -642,8 +644,8 @@ return [
         'http://www.w3.org/2001/xml.xsd' => __DIR__ . '/../data/ebsr/xsd/xml.xsd',
         'http://www.transxchange.org.uk/schema/2.1/TransXChange_registration.xsd' =>
             __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.1/TransXChange_registration.xsd',
-        'http://www.transxchange.org.uk/schema/2.1/publisher/3.1.2/TransXChangePublisherService.xsd' =>
-            __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.1/TransXChangePublisherService.xsd',
+        'http://naptan.dft.gov.uk/transxchange/publisher/schema/3.1.2/TransXChangePublisherService.xsd' =>
+            __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.1/TransXChangePublisherService_2_4.xsd',
         'https://webgate.ec.testa.eu/erru/1.0' => __DIR__ . '/../data/nr/xsd/ERRU2MS_Infringement_Req.xsd'
     ],
     'validators' => [
