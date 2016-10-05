@@ -53,7 +53,8 @@
                     {
                       "terms": {
                         "lic_status": [
-                          "lsts_unlicenced","lsts_withdrawn"
+                          "lsts_unlicenced",
+                          "lsts_withdrawn"
                         ]
                       }
                     }

@@ -65,7 +65,11 @@
                     {
                       "terms": {
                         "lic_status": [
-                          "lsts_consideration","lsts_granted","lsts_withdrawn","lsts_refused","lsts_ntu"
+                          "lsts_consideration",
+                          "lsts_granted",
+                          "lsts_withdrawn",
+                          "lsts_refused",
+                          "lsts_ntu"
                         ]
                       }
                     }
