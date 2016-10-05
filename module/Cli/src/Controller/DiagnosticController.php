@@ -42,6 +42,7 @@ class DiagnosticController extends AbstractConsoleController
     const NAME_FROM_FOR_TEST_EMAIL = 'System';
     const EMAIL_FROM_FOR_TEST_EMAIL = 'terry.valtech@gmail.com';
     const MAILBOX_ID = 'inspection_request';
+    const XML_EXAMPLE = '<?xml version="1.0" encoding="UTF-8"?><foo></foo>';
 
     /**
      * @var array
@@ -470,7 +471,7 @@ class DiagnosticController extends AbstractConsoleController
         try {
             $this->outputMessage('Connecting to ' . self::MAILBOX_ID . ' mailbox : ');
 
-            /** @var \Dvsa\Olcs\Email\Service\Imap::class $service */
+            /** @var \Dvsa\Olcs\Email\Service\Imap $service */
             $service = $this->getServiceLocator()->get('ImapService');
 
             $service->connect(self::MAILBOX_ID);
@@ -500,8 +501,15 @@ class DiagnosticController extends AbstractConsoleController
             return;
         }
 
-        $this->isReachable($nrUri);
-        $this->isReachable($nrReputeUri);
+        try {
+            $this->outputMessage('Sending empty request to NR service : ');
+            /** @var \Dvsa\Olcs\Api\Service\Nr\InrClientInterface $service */
+            $service = $this->getServiceLocator()->get(\Dvsa\Olcs\Api\Service\Nr\InrClientInterface::class);
+            $responseCode = $service->makeRequest(self::XML_EXAMPLE);
+            $this->outputPass(' response code was ' . $responseCode);
+        } catch (\Exception $e) {
+            $this->outputFailEx($e);
+        }
     }
 
     /**
