@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Goods Vehicles
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -26,15 +21,27 @@ class GoodsVehicles extends AbstractQueryHandler
 
     protected $licenceVehicleMethod = 'createPaginatedVehiclesDataForApplicationQuery';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($query);
+        $licenceId = $application->getLicence()->getId();
 
-        $lvQuery = $this->getRepo('LicenceVehicle')->{$this->licenceVehicleMethod}(
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle $lvRepo */
+        $lvRepo = $this->getRepo('LicenceVehicle');
+
+        $lvQuery = $lvRepo->{$this->licenceVehicleMethod}(
             $query,
             $application->getId(),
-            $application->getLicence()->getId()
+            $licenceId
         );
 
         return $this->result(
@@ -47,22 +54,29 @@ class GoodsVehicles extends AbstractQueryHandler
                 'canPrintVehicle' => $this->isGranted(Permission::INTERNAL_USER),
                 'licenceVehicles' => [
                     'results' => $this->resultList(
-                        $this->getRepo('LicenceVehicle')->fetchPaginatedList($lvQuery, Query::HYDRATE_OBJECT),
+                        $lvRepo->fetchPaginatedList($lvQuery, Query::HYDRATE_OBJECT),
                         [
                             'vehicle',
                             'goodsDiscs',
                             'interimApplication'
                         ]
                     ),
-                    'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery)
+                    'count' => $lvRepo->fetchPaginatedCount($lvQuery)
                 ],
                 'spacesRemaining' => $application->getRemainingSpaces(),
                 'activeVehicleCount' => $application->getActiveVehiclesCount(),
-                'allVehicleCount' => $application->getAllVehiclesCount()
+                'allVehicleCount' => $lvRepo->fetchAllVehiclesCount($licenceId),
             ]
         );
     }
 
+    /**
+     * Can reprint
+     *
+     * @param ApplicationEntity $application application
+     *
+     * @return bool
+     */
     private function canReprint(ApplicationEntity $application)
     {
         return $application->getStatus()->getId() !== ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED;

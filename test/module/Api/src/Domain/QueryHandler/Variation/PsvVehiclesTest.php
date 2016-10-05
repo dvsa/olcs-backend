@@ -65,9 +65,6 @@ class PsvVehiclesTest extends QueryHandlerTestCase
             ->shouldReceive('getTotAuthVehicles')
             ->andReturn(0)
             ->once()
-            ->shouldReceive('getAllVehiclesCount')
-            ->andReturn(3)
-            ->once()
             ->getMock();
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
@@ -113,7 +110,12 @@ class PsvVehiclesTest extends QueryHandlerTestCase
             ->shouldReceive('fetchPaginatedCount')
             ->andReturn(1)
             ->with($mockQb)
-            ->once();
+            ->once()
+            ->shouldReceive('fetchAllVehiclesCount')
+            ->with(222)
+            ->andReturn(3)
+            ->once()
+            ->getMock();
 
         $this->mockedSmServices['PsvVehiclesQueryHelper']->shouldReceive('getCommonQueryFlags')
             ->with($application, $query)
