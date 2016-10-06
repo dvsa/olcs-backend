@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Psv Vehicles
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -29,6 +24,13 @@ class PsvVehicles extends AbstractQueryHandler
      */
     protected $helper;
 
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Application\PsvVehicles
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->helper = $serviceLocator->getServiceLocator()->get('PsvVehiclesQueryHelper');
@@ -36,15 +38,27 @@ class PsvVehicles extends AbstractQueryHandler
         return parent::createService($serviceLocator);
     }
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
         /* @var $application Entity\Application\Application */
         $application = $this->getRepo()->fetchUsingId($query);
+        $licenceId = $application->getLicence()->getId();
 
-        $lvQuery = $this->getRepo('LicenceVehicle')->createPaginatedVehiclesDataForApplicationQueryPsv(
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle $lvRepo */
+        $lvRepo = $this->getRepo('LicenceVehicle');
+
+        $lvQuery = $lvRepo->createPaginatedVehiclesDataForApplicationQueryPsv(
             $query,
             $application->getId(),
-            $application->getLicence()->getId()
+            $licenceId
         );
 
         $flags = $this->helper->getCommonQueryFlags($application, $query);
@@ -53,14 +67,14 @@ class PsvVehicles extends AbstractQueryHandler
         $flags['hasBreakdown'] = (int) $application->getTotAuthVehicles() > 0;
         $flags['licenceVehicles'] = [
             'results' => $this->resultList(
-                $this->getRepo('LicenceVehicle')->fetchPaginatedList($lvQuery, Query::HYDRATE_OBJECT),
+                $lvRepo->fetchPaginatedList($lvQuery, Query::HYDRATE_OBJECT),
                 [
                     'vehicle'
                 ]
             ),
-            'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery)
+            'count' => $lvRepo->fetchPaginatedCount($lvQuery)
         ];
-        $flags['allVehicleCount'] = $application->getAllVehiclesCount();
+        $flags['allVehicleCount'] = $lvRepo->fetchAllVehiclesCount($licenceId);
 
         return $this->result($application, [], $flags);
     }
