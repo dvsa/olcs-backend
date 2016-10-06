@@ -43,6 +43,8 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
     const CURRENCY_SYMBOL = '£';
 
     /**
+     * Is Outstanding
+     *
      * @return boolean
      */
     public function isOutstanding()
@@ -51,6 +53,8 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
     }
 
     /**
+     * Is Paid
+     *
      * @return boolean
      * @deprecated
      */
@@ -60,6 +64,8 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
     }
 
     /**
+     * Is Complete
+     *
      * @return boolean
      */
     public function isComplete()
@@ -70,6 +76,8 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
     /**
      * Gets the NET amount of any positive/negative feeTransactions
      *
+     * @param bool $absolute Take only absolute value
+     *
      * @return string
      */
     public function getTotalAmount($absolute = false)
@@ -78,6 +86,7 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
 
         $this->getFeeTransactions()->forAll(
             function ($key, $ft) use (&$total) {
+                /** @var FeeTransaction $ft */
                 unset($key); // unused
                 $total += Fee::amountToPence($ft->getAmount());
                 return true;
@@ -91,6 +100,11 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
         return Fee::amountToPounds($total);
     }
 
+    /**
+     * Get Calculated Bundle Values
+     *
+     * @return array
+     */
     public function getCalculatedBundleValues()
     {
         return [
@@ -107,6 +121,8 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
     /**
      * Work out the amount prior to adjustment by summing the reversed
      * feeTransaction amounts
+     *
+     * @return string
      */
     public function getAmountBeforeAdjustment()
     {
@@ -114,6 +130,7 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
 
         $this->getFeeTransactions()->forAll(
             function ($key, $ft) use (&$total) {
+                /** @var FeeTransaction $ft */
                 unset($key); // unused
                 if ($ft->getReversedFeeTransaction()) {
                     $total += Fee::amountToPence($ft->getAmount());
@@ -128,6 +145,8 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
     /**
      * Work out the amount after adjustment by summing the positive
      * feeTransaction amounts
+     *
+     * @return string
      */
     public function getAmountAfterAdjustment()
     {
@@ -135,6 +154,7 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
 
         $this->getFeeTransactions()->forAll(
             function ($key, $ft) use (&$total) {
+                /** @var FeeTransaction $ft */
                 unset($key); // unused
                 if (is_null($ft->getReversedFeeTransaction())) {
                     $total += Fee::amountToPence($ft->getAmount());
@@ -148,6 +168,8 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
 
     /**
      * Small helper to get array of feeTransaction IDs, useful for logging
+     *
+     * @return array
      */
     public function getFeeTransactionIds()
     {
@@ -156,6 +178,7 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
         if (!empty($this->getFeeTransactions())) {
             $ftIds = array_map(
                 function ($ft) {
+                    /** @var FeeTransaction $ft */
                     return $ft->getId();
                 },
                 $this->getFeeTransactions()->toArray()
@@ -166,6 +189,8 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
     }
 
     /**
+     * Is Waive
+     *
      * @return boolean
      */
     public function isWaive()
@@ -174,6 +199,8 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
     }
 
     /**
+     * Is Payment
+     *
      * @return boolean
      */
     public function isPayment()
@@ -182,6 +209,8 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
     }
 
     /**
+     * Is Adjustment
+     *
      * @return boolean
      */
     public function isAdjustment()
@@ -190,6 +219,8 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
     }
 
     /**
+     * Is Reversal
+     *
      * @return boolean
      */
     public function isReversal()
@@ -198,6 +229,8 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
     }
 
     /**
+     * Is Card
+     *
      * @return boolean
      */
     public function isCard()
@@ -207,11 +240,14 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
             [
                 Fee::METHOD_CARD_ONLINE,
                 Fee::METHOD_CARD_OFFLINE,
-            ]
+            ],
+            true
         );
     }
 
     /**
+     * Returns Fee Transactions For Reversal
+     *
      * @return array
      */
     public function getFeeTransactionsForReversal()
@@ -229,6 +265,8 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
     }
 
     /**
+     * Returns Fee Transactions For Adjustment
+     *
      * @return array
      */
     public function getFeeTransactionsForAdjustment()
@@ -237,6 +275,7 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
 
         $this->getFeeTransactions()->forAll(
             function ($key, $ft) use (&$feeTransactions) {
+                /** @var FeeTransaction $ft */
                 unset($key); // unused
                 if (is_null($ft->getReversedFeeTransaction())) {
                     $feeTransactions[] = $ft;
@@ -251,9 +290,11 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
     /**
      * Determine whether to show the 'Reverse' option for a transaction
      *
+     * @see canReverse()
      * Note: there are additional checks for whether a transaction can
      * ultimately be reversed
-     * @see canReverse()
+     *
+     * @return bool
      */
     public function displayReversalOption()
     {
@@ -292,7 +333,10 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
 
     /**
      * Determine whether to show the 'Adjust' option for a transaction
+     *
      * @see canAdjust()
+     *
+     * @return bool
      */
     public function displayAdjustmentOption()
     {
@@ -315,8 +359,9 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
         );
     }
 
-
     /**
+     * Is Reversed
+     *
      * @return bool
      */
     public function isReversed()
@@ -331,16 +376,8 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
     }
 
     /**
-     * @return string|null
-     */
-    public function getProcessedByLoginId()
-    {
-        if ($this->getProcessedByUser()) {
-            return $this->getProcessedByUser()->getLoginId();
-        }
-    }
-
-    /**
+     * Get Processed By Full Name
+     *
      * @return string|null
      */
     public function getProcessedByFullName()
@@ -348,6 +385,8 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
         if ($this->getProcessedByUser()) {
             return $this->getProcessedByUser()->getContactDetails()->getPerson()->getFullName();
         }
+
+        return null;
     }
 
     /**
@@ -395,6 +434,7 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
         if ($this->isAdjustment() || $this->isReversal()) {
             $this->getFeeTransactions()->forAll(
                 function ($key, $ft) use (&$transaction) {
+                    /** @var FeeTransaction $ft */
                     unset($key); // unused
                     if ($ft->getReversedFeeTransaction()) {
                         $transaction = $ft->getReversedFeeTransaction()->getTransaction();
@@ -409,6 +449,10 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
     }
 
     /**
+     * Get Amount Allocated for specified FeeId
+     *
+     * @param int $feeId Fee Id
+     *
      * @return string formatted amount
      */
     public function getAmountAllocatedToFeeId($feeId)
@@ -417,6 +461,7 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
 
         $this->getFeeTransactions()->forAll(
             function ($key, $feeTransaction) use ($feeId, &$amount) {
+                /** @var FeeTransaction $feeTransaction */
                 unset($key); // unused
                 if ($feeTransaction->getFee()->getId() == $feeId && !$feeTransaction->getReversedFeeTransaction()) {
                     $amount = $feeTransaction->getAmount();
@@ -429,10 +474,15 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
         return $amount;
     }
 
+    /**
+     * Is Mirgated
+     *
+     * @return bool
+     */
     public function isMigrated()
     {
         if ($this->getPaymentMethod() !== null
-            && in_array($this->getPaymentMethod()->getId(), [Fee::METHOD_RECEIPT, Fee::METHOD_MIGRATED])
+            && in_array($this->getPaymentMethod()->getId(), [Fee::METHOD_RECEIPT, Fee::METHOD_MIGRATED], true)
         ) {
             return true;
         }
