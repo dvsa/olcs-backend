@@ -6,6 +6,8 @@
         "licence"
       ],
       "query": {
+"filtered": {
+    "query": {
         "bool": {
           "should": [
             {
@@ -56,11 +58,13 @@
                 "company_or_llp_no": "%SEARCH_TERM%"
               }
             }
-          ],
+          ]
+        }
+    },
+    "filter": {
+        "bool": {
           "must_not": [
             {
-              "filtered": {
-                "filter": {
                   "or": [
                     {
                       "terms": {
@@ -74,11 +78,11 @@
                       }
                     }
                   ]
-                }
-              }
             }
           ]
         }
+    }
+}
       },
       "no_match_query": "none"
     }

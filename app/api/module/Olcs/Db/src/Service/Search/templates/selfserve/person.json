@@ -5,6 +5,8 @@
         "person"
       ],
       "query": {
+"filtered": {
+    "query": {
         "bool": {
           "should": [
             {
@@ -45,11 +47,13 @@
                 }
               }
             }
-          ],
+          ]
+        }
+    },
+    "filter": {
+        "bool": {
           "must_not": [
             {
-              "filtered": {
-                "filter": {
                   "or": [
                     {
                       "terms": {
@@ -80,11 +84,11 @@
                       }
                     }
                   ]
-                }
-              }
             }
           ]
         }
+    }
+}
       },
       "no_match_query": "none"
     }

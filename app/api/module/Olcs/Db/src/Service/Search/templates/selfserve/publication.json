@@ -5,6 +5,8 @@
         "publication"
       ],
       "query": {
+"filtered": {
+    "query": {
         "bool": {
           "should": [
             {
@@ -54,15 +56,20 @@
               }
             }
           ]
-          ,
+        }
+    },
+    "filter": {
+        "bool": {
             "must": [
               {
-                "match": {
+                "term": {
                   "pub_status": "pub_s_printed"
                 }
               }
             ]
         }
+    }
+}
       },
       "no_match_query": "none"
     }
