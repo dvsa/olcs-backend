@@ -5,6 +5,8 @@
         "licence"
       ],
       "query": {
+"filtered": {
+    "query": {
         "bool": {
           "should": [
             {
@@ -44,11 +46,13 @@
                 "licence_trading_names": "%SEARCH_TERM%"
               }
             }
-          ],
+          ]
+        }
+    },
+    "filter": {
+        "bool": {
           "must_not": [
             {
-              "filtered": {
-                "filter": {
                   "or": [
                     {
                       "terms": {
@@ -59,11 +63,11 @@
                       }
                     }
                   ]
-                }
-              }
             }
           ]
         }
+    }
+}
       },
       "no_match_query": "none"
     }

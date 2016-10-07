@@ -38,11 +38,15 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 [
                     'indices' => [
                         'query' => [
-                            'bool' => [
-                                'should' => [
-                                    [
-                                        'match' => [
-                                            'field_1' => 'SMITH'
+                            'filtered' => [
+                                'query' => [
+                                    'bool' => [
+                                        'should' => [
+                                            [
+                                                'match' => [
+                                                    'field_1' => 'SMITH'
+                                                ]
+                                            ]
                                         ]
                                     ]
                                 ]
@@ -59,11 +63,15 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 [
                     'indices' => [
                         'query' => [
-                            'bool' => [
-                                'should' => [
-                                    [
-                                        'match' => [
-                                            'field_1' => 'SM"\das\'[]{}ITH'
+                            'filtered' => [
+                                'query' => [
+                                    'bool' => [
+                                        'should' => [
+                                            [
+                                                'match' => [
+                                                    'field_1' => 'SM"\das\'[]{}ITH'
+                                                ]
+                                            ]
                                         ]
                                     ]
                                 ]
@@ -82,18 +90,26 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 [
                     'indices' => [
                         'query' => [
-                            'bool' => [
-                                'should' => [
-                                    [
-                                        'match' => [
-                                            'field_1' => 'SMITH'
+                            'filtered' => [
+                                'query' => [
+                                    'bool' => [
+                                        'should' => [
+                                            [
+                                                'match' => [
+                                                    'field_1' => 'SMITH'
+                                                ]
+                                            ]
                                         ]
                                     ]
                                 ],
-                                'must' => [
-                                    [
-                                        'match' => [
-                                            'field_1' => 'value1'
+                                'filter' => [
+                                    'bool' => [
+                                        'must' => [
+                                            [
+                                                'term' => [
+                                                    'field_1' => 'value1'
+                                                ]
+                                            ]
                                         ]
                                     ]
                                 ]
@@ -114,28 +130,36 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 [
                     'indices' => [
                         'query' => [
-                            'bool' => [
-                                'should' => [
-                                    [
-                                        'match' => [
-                                            'field_1' => 'SMITH'
+                            'filtered' => [
+                                'query' => [
+                                    'bool' => [
+                                        'should' => [
+                                            [
+                                                'match' => [
+                                                    'field_1' => 'SMITH'
+                                                ]
+                                            ]
                                         ]
                                     ]
                                 ],
-                                'must' => [
-                                    [
-                                        'match' => [
-                                            'field_1' => 'value1'
-                                        ]
-                                    ],
-                                    [
-                                        'match' => [
-                                            'field_2' => 'value2'
-                                        ]
-                                    ],
-                                    [
-                                        'match' => [
-                                            'field_3' => 'value3'
+                                'filter' => [
+                                    'bool' => [
+                                        'must' => [
+                                            [
+                                                'term' => [
+                                                    'field_1' => 'value1'
+                                                ]
+                                            ],
+                                            [
+                                                'term' => [
+                                                    'field_2' => 'value2'
+                                                ]
+                                            ],
+                                            [
+                                                'term' => [
+                                                    'field_3' => 'value3'
+                                                ]
+                                            ]
                                         ]
                                     ]
                                 ]
@@ -154,18 +178,26 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 [
                     'indices' => [
                         'query' => [
-                            'bool' => [
-                                'should' => [
-                                    [
-                                        'match' => [
-                                            'field_1' => 'SMITH'
+                            'filtered' => [
+                                'query' => [
+                                    'bool' => [
+                                        'should' => [
+                                            [
+                                                'match' => [
+                                                    'field_1' => 'SMITH'
+                                                ]
+                                            ]
                                         ]
                                     ]
                                 ],
-                                'must' => [
-                                    [
-                                        'match' => [
-                                            'field_1' => '2010-09-30'
+                                'filter' => [
+                                    'bool' => [
+                                        'must' => [
+                                            [
+                                                'term' => [
+                                                    'field_1' => '2010-09-30'
+                                                ]
+                                            ]
                                         ]
                                     ]
                                 ]
@@ -184,18 +216,26 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 [
                     'indices' => [
                         'query' => [
-                            'bool' => [
-                                'should' => [
-                                    [
-                                        'match' => [
-                                            'field_1' => 'SMITH'
+                            'filtered' => [
+                                'query' => [
+                                    'bool' => [
+                                        'should' => [
+                                            [
+                                                'match' => [
+                                                    'field_1' => 'SMITH'
+                                                ]
+                                            ]
                                         ]
                                     ]
                                 ],
-                                'must' => [
-                                    [
-                                        'range' => [
-                                            'field_1' => ['from' => '2010-09-30']
+                                'filter' => [
+                                    'bool' => [
+                                        'must' => [
+                                            [
+                                                'range' => [
+                                                    'field_1' => ['from' => '2010-09-30']
+                                                ]
+                                            ]
                                         ]
                                     ]
                                 ]
@@ -215,18 +255,26 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 [
                     'indices' => [
                         'query' => [
-                            'bool' => [
-                                'should' => [
-                                    [
-                                        'match' => [
-                                            'field_1' => 'SMITH'
+                            'filtered' => [
+                                'query' => [
+                                    'bool' => [
+                                        'should' => [
+                                            [
+                                                'match' => [
+                                                    'field_1' => 'SMITH'
+                                                ]
+                                            ]
                                         ]
                                     ]
                                 ],
-                                'must' => [
-                                    [
-                                        'range' => [
-                                            'field_1' => ['from' => '2010-09-30', 'to' => '2010-10-30']
+                                'filter' => [
+                                    'bool' => [
+                                        'must' => [
+                                            [
+                                                'range' => [
+                                                    'field_1' => ['from' => '2010-09-30', 'to' => '2010-10-30']
+                                                ]
+                                            ]
                                         ]
                                     ]
                                 ]
@@ -252,43 +300,51 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 [
                     'indices' => [
                         'query' => [
-                            'bool' => [
-                                'should' => [
-                                    [
-                                        'match' => [
-                                            'field_1' => 'SMITH'
+                            'filtered' => [
+                                'query' => [
+                                    'bool' => [
+                                        'should' => [
+                                            [
+                                                'match' => [
+                                                    'field_1' => 'SMITH'
+                                                ]
+                                            ]
                                         ]
                                     ]
                                 ],
-                                'must' => [
-                                    [
-                                        'match' => [
-                                            'field_1' => 'value1'
-                                        ]
-                                    ],
-                                    [
-                                        'match' => [
-                                            'field_2' => 'value2'
-                                        ]
-                                    ],
-                                    [
-                                        'match' => [
-                                            'field_3' => 'value3'
-                                        ]
-                                    ],
-                                    [
-                                        'match' => [
-                                            'field_1' => '2010-09-30'
-                                        ]
-                                    ],
-                                    [
-                                        'range' => [
-                                            'field_2' => ['from' => '2010-09-30']
-                                        ]
-                                    ],
-                                    [
-                                        'range' => [
-                                            'field_3' => ['from' => '2010-09-30', 'to' => '2010-10-30']
+                                'filter' => [
+                                    'bool' => [
+                                        'must' => [
+                                            [
+                                                'term' => [
+                                                    'field_1' => 'value1'
+                                                ]
+                                            ],
+                                            [
+                                                'term' => [
+                                                    'field_2' => 'value2'
+                                                ]
+                                            ],
+                                            [
+                                                'term' => [
+                                                    'field_3' => 'value3'
+                                                ]
+                                            ],
+                                            [
+                                                'term' => [
+                                                    'field_1' => '2010-09-30'
+                                                ]
+                                            ],
+                                            [
+                                                'range' => [
+                                                    'field_2' => ['from' => '2010-09-30']
+                                                ]
+                                            ],
+                                            [
+                                                'range' => [
+                                                    'field_3' => ['from' => '2010-09-30', 'to' => '2010-10-30']
+                                                ]
+                                            ]
                                         ]
                                     ]
                                 ]

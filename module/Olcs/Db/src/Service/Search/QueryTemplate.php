@@ -51,24 +51,14 @@ class QueryTemplate extends Query
             return $this;
         }
 
-        $boolQuery = $this->_params['query']['indices']['query']['bool'];
-
-        if (!isset($boolQuery['must'])) {
-            $boolQuery['must'] = [];
-        }
-
         foreach ($filters as $field => $value) {
             if (!empty($field) && !empty($value)) {
-                $boolQuery['must'][] = [
-                    'match' => [
+                $this->_params['query']['indices']['query']['filtered']['filter']['bool']['must'][] = [
+                    'term' => [
                         $field => $value
                     ]
                 ];
             }
-        }
-
-        if (!empty($boolQuery['must'])) {
-            $this->_params['query']['indices']['query']['bool'] = $boolQuery;
         }
 
         return $this;
@@ -87,12 +77,6 @@ class QueryTemplate extends Query
             return $this;
         }
 
-        $boolQuery = $this->_params['query']['indices']['query']['bool'];
-
-        if (!isset($boolQuery['must'])) {
-            $boolQuery['must'] = [];
-        }
-
         foreach ($dates as $fieldName => $value) {
             $lcFieldName = strtolower($fieldName);
 
@@ -103,8 +87,8 @@ class QueryTemplate extends Query
                  */
                 $fieldName = substr($fieldName, 0, -12);
 
-                $boolQuery['must'][] = [
-                    'match' => [
+                $this->_params['query']['indices']['query']['filtered']['filter']['bool']['must'][] = [
+                    'term' => [
                         $fieldName => $value
                     ]
                 ];
@@ -122,16 +106,12 @@ class QueryTemplate extends Query
                     $criteria['to'] = $dates[$toFieldName];
                 }
 
-                $boolQuery['must'][] = [
+                $this->_params['query']['indices']['query']['filtered']['filter']['bool']['must'][] = [
                     'range' => [
                         $fieldName => $criteria
                     ]
                 ];
             }
-        }
-
-        if (!empty($boolQuery['must'])) {
-            $this->_params['query']['indices']['query']['bool'] = $boolQuery;
         }
 
         return $this;

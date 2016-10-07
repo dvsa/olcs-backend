@@ -6,6 +6,8 @@
         "vehicle_removed"
       ],
       "query": {
+"filtered": {
+    "query": {
         "bool": {
           "should": [
             {
@@ -51,6 +53,8 @@
             }
           ]
         }
+    }
+}
       },
       "no_match_query": "none"
     }
