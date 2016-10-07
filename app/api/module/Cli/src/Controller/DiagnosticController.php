@@ -29,7 +29,7 @@ class DiagnosticController extends AbstractConsoleController
     const TEMPLATE_TO_DOWNLOAD = 'GV_LICENCE_GB';
     const TEMPLATE_TO_DOWNLOAD_ID = Document::GV_LICENCE_GB;
     const GUIDE_TO_DOWNLOAD = 'Advert_Template_GB_New.pdf';
-    const SYSTEM_USER_NAME ='system';
+    const SYSTEM_USER_NAME ='usr291';
     const POSTCODE_TO_FETCH = 'LS9 6NF';
     const LICENCE_SEARCH = 'smith';
     const NYSIIS_FORENAME = 'John';
@@ -310,12 +310,14 @@ class DiagnosticController extends AbstractConsoleController
      */
     private function openamSection()
     {
-        $this->outputMessage('Fetch system user : ');
+        $user = $this->params('openam-user', '');
+        $userToFetch = $user ? $user : self::SYSTEM_USER_NAME;
+        $this->outputMessage('Fetch ' . $userToFetch . ' user : ');
         try {
             /** @var \Dvsa\Olcs\Api\Service\OpenAm\Client $service */
             $service = $this->getServiceLocator()->get(\Dvsa\Olcs\Api\Service\OpenAm\ClientInterface::class);
 
-            $service->fetchUser(hash('sha256', self::SYSTEM_USER_NAME));
+            $service->fetchUser(hash('sha256', $userToFetch));
 
             $this->outputPass();
         } catch (\Exception $e) {

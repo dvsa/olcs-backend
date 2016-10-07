@@ -11,7 +11,7 @@ return [
             'routes' => [
                 'diagnostic' => [
                     'options' => [
-                        'route' => 'diagnostic [--skip=] [--email=]',
+                        'route' => 'diagnostic [--skip=] [--openam-user=] [--email=] [--verbose|-v]',
                         'defaults' => [
                             'controller' => Cli\Controller\DiagnosticController::class,
                             'action' => 'index'
