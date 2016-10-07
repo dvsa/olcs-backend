@@ -29,7 +29,7 @@ class DiagnosticController extends AbstractConsoleController
     const TEMPLATE_TO_DOWNLOAD = 'GV_LICENCE_GB';
     const TEMPLATE_TO_DOWNLOAD_ID = Document::GV_LICENCE_GB;
     const GUIDE_TO_DOWNLOAD = 'Advert_Template_GB_New.pdf';
-    const SYSTEM_USER_NAME ='system';
+    const SYSTEM_USER_NAME ='usr291';
     const POSTCODE_TO_FETCH = 'LS9 6NF';
     const LICENCE_SEARCH = 'smith';
     const NYSIIS_FORENAME = 'John';
@@ -63,7 +63,8 @@ class DiagnosticController extends AbstractConsoleController
         'CH_XML_PASSWORD' => 'companies_house_credentials->password',
         'CH_REST_URI' => 'companies_house->client->baseuri',
         'CH_REST_USERNAME' => 'companies_house->auth->username',
-        'EMAIL_CLIENT' => 'email->client->baseuri',
+        'EMAIL_CLIENT_SS' => 'email->selfserve_uri',
+        'EMAIL_CLIENT_INT' => 'email->internal_uri',
         'IR_MAILBOX_HOST' => 'mailboxes->inspection_request->host',
         'IR_MAILBOX_PORT' => 'mailboxes->inspection_request->port',
         'NR_URI' => 'nr->inr_service->uri',
@@ -258,8 +259,6 @@ class DiagnosticController extends AbstractConsoleController
      */
     private function transxchangeSection()
     {
-        //@todo: need to test and fix if needed on different envinronments, unable to test locally
-
         $host = $this->getValueFromConfig('TRANSXCHANGE');
         if ($host === false) {
             return;
@@ -310,12 +309,14 @@ class DiagnosticController extends AbstractConsoleController
      */
     private function openamSection()
     {
-        $this->outputMessage('Fetch system user : ');
+        $user = $this->params('openam-user', '');
+        $userToFetch = $user ? $user : self::SYSTEM_USER_NAME;
+        $this->outputMessage('Fetch ' . $userToFetch . ' user : ');
         try {
             /** @var \Dvsa\Olcs\Api\Service\OpenAm\Client $service */
             $service = $this->getServiceLocator()->get(\Dvsa\Olcs\Api\Service\OpenAm\ClientInterface::class);
 
-            $service->fetchUser(hash('sha256', self::SYSTEM_USER_NAME));
+            $service->fetchUser(hash('sha256', $userToFetch));
 
             $this->outputPass();
         } catch (\Exception $e) {
@@ -415,12 +416,9 @@ class DiagnosticController extends AbstractConsoleController
     {
         // @todo: need to test and fix if needed on different envinronments, unable to test locally
 
-        $host = $this->getValueFromConfig('EMAIL_CLIENT');
-        if ($host === false) {
-            return;
-        }
-
-        if (!$this->isReachable($host)) {
+        $ss = $this->getValueFromConfig('EMAIL_CLIENT_SS');
+        $int = $this->getValueFromConfig('EMAIL_CLIENT_INT');
+        if ($ss === false || $int === false) {
             return;
         }
 
