@@ -63,7 +63,8 @@ class DiagnosticController extends AbstractConsoleController
         'CH_XML_PASSWORD' => 'companies_house_credentials->password',
         'CH_REST_URI' => 'companies_house->client->baseuri',
         'CH_REST_USERNAME' => 'companies_house->auth->username',
-        'EMAIL_CLIENT' => 'email->client->baseuri',
+        'EMAIL_CLIENT_SS' => 'email->selfserve_uri',
+        'EMAIL_CLIENT_INT' => 'email->internal_uri',
         'IR_MAILBOX_HOST' => 'mailboxes->inspection_request->host',
         'IR_MAILBOX_PORT' => 'mailboxes->inspection_request->port',
         'NR_URI' => 'nr->inr_service->uri',
@@ -258,8 +259,6 @@ class DiagnosticController extends AbstractConsoleController
      */
     private function transxchangeSection()
     {
-        //@todo: need to test and fix if needed on different envinronments, unable to test locally
-
         $host = $this->getValueFromConfig('TRANSXCHANGE');
         if ($host === false) {
             return;
@@ -417,12 +416,9 @@ class DiagnosticController extends AbstractConsoleController
     {
         // @todo: need to test and fix if needed on different envinronments, unable to test locally
 
-        $host = $this->getValueFromConfig('EMAIL_CLIENT');
-        if ($host === false) {
-            return;
-        }
-
-        if (!$this->isReachable($host)) {
+        $ss = $this->getValueFromConfig('EMAIL_CLIENT_SS');
+        $int = $this->getValueFromConfig('EMAIL_CLIENT_INT');
+        if ($ss === false || $int === false) {
             return;
         }
 
