@@ -125,6 +125,42 @@ class BusRegEntityTest extends EntityTester
     }
 
     /**
+     * Test isCancellation
+     *
+     * @param string $status
+     * @param bool   $expected
+     *
+     * @dataProvider isCancellationProvider
+     */
+    public function testIsCancellation($status, $expected)
+    {
+        $busRegStatus = new RefDataEntity($status);
+
+        $busReg = m::mock(Entity::class)->makePartial();
+        $busReg->setStatus($busRegStatus);
+
+        $this->assertEquals($expected, $busReg->isCancellation());
+    }
+
+    /**
+     * @return array
+     */
+    public function isCancellationProvider()
+    {
+        return [
+            [Entity::STATUS_NEW, false],
+            [Entity::STATUS_VAR, false],
+            [Entity::STATUS_CANCEL, true],
+            [Entity::STATUS_ADMIN, false],
+            [Entity::STATUS_REGISTERED, false],
+            [Entity::STATUS_REFUSED, false],
+            [Entity::STATUS_WITHDRAWN, false],
+            [Entity::STATUS_CNS, false],
+            [Entity::STATUS_CANCELLED, false]
+        ];
+    }
+
+    /**
      * Test isFromEbsr
      *
      * @param string $isTxcApp

@@ -34,8 +34,10 @@ class RequestMapQueueTest extends CommandHandlerTestCase
 
     /**
      * Tests EBSR packs are queued correctly
+     *
+     * @dataProvider handleCommandProvider
      */
-    public function testHandleCommand()
+    public function testHandleCommand($isCancellation, $numGenerated)
     {
         $busRegId = 123;
         $userId = 456;
@@ -54,6 +56,7 @@ class RequestMapQueueTest extends CommandHandlerTestCase
         $busRegEntity->shouldReceive('getRegNo')->once()->andReturn($regNo);
         $busRegEntity->shouldReceive('getLicence->getId')->once()->andReturn($licenceId);
         $busRegEntity->shouldReceive('getEbsrSubmissions->isEmpty')->once()->andReturn(false);
+        $busRegEntity->shouldReceive('isCancellation')->once()->andReturn($isCancellation);
 
         $user = m::mock(UserEntity::class);
         $user->shouldReceive('getId')->andReturn($userId);
@@ -72,6 +75,24 @@ class RequestMapQueueTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($busRegEntity);
 
+        $this->generateSideEffects($scale, $busRegId, $regNo, $licenceId, $userId, $isCancellation);
+
+        $result = $this->sut->handleCommand($cmd);
+
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertEquals($result->getMessages()[0], $numGenerated . ' new PDF(s) requested');
+    }
+
+    /**
+     * @param $scale
+     * @param $busRegId
+     * @param $regNo
+     * @param $licenceId
+     * @param $userId
+     * @param $isCancellation
+     */
+    private function generateSideEffects($scale, $busRegId, $regNo, $licenceId, $userId, $isCancellation)
+    {
         $optionData = [
             'scale' => $scale,
             'id' => $busRegId,
@@ -80,18 +101,27 @@ class RequestMapQueueTest extends CommandHandlerTestCase
             'user' => $userId
         ];
 
-        $mapTemplate = ['template' => TransExchangeClient::REQUEST_MAP_TEMPLATE];
-        $timetableTemplate = ['template' => TransExchangeClient::TIMETABLE_TEMPLATE];
         $recordTemplate = ['template' => TransExchangeClient::DVSA_RECORD_TEMPLATE];
-
-        $this->expectedQueueSideEffect($busRegId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData + $mapTemplate);
-        $this->expectedQueueSideEffect($busRegId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData + $timetableTemplate);
         $this->expectedQueueSideEffect($busRegId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData + $recordTemplate);
 
-        $result = $this->sut->handleCommand($cmd);
+        if (!$isCancellation) {
+            $mapTemplate = ['template' => TransExchangeClient::REQUEST_MAP_TEMPLATE];
+            $timetableTemplate = ['template' => TransExchangeClient::TIMETABLE_TEMPLATE];
 
-        $this->assertInstanceOf(Result::class, $result);
-        $this->assertEquals($result->getMessages()[0], 'New map was requested');
+            $this->expectedQueueSideEffect($busRegId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData + $mapTemplate);
+            $this->expectedQueueSideEffect($busRegId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData + $timetableTemplate);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function handleCommandProvider()
+    {
+        return [
+            [true, 1],
+            [false, 3]
+        ];
     }
 
     /**
