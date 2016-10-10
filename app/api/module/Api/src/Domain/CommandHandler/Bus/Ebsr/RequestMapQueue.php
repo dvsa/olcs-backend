@@ -76,7 +76,7 @@ final class RequestMapQueue extends AbstractCommandHandler implements AuthAwareI
 
         $this->handleSideEffects($sideEffects);
 
-        $result->addMessage(sprintf(count($sideEffects), self::CONFIRM_MESSAGE));
+        $result->addMessage(sprintf(self::CONFIRM_MESSAGE, count($sideEffects)));
 
         return $result;
     }

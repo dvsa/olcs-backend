@@ -80,7 +80,7 @@ class RequestMapQueueTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($cmd);
 
         $this->assertInstanceOf(Result::class, $result);
-        $this->assertEquals($result->getMessages()[0], sprintf($numGenerated, RequestMapQueue::CONFIRM_MESSAGE));
+        $this->assertEquals($result->getMessages()[0], $numGenerated . ' new PDF(s) requested');
     }
 
     /**
