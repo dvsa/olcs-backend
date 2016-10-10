@@ -101,7 +101,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $application->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection());
 
         $expectedTargetCompletionDate = clone $now;
-        $expectedTargetCompletionDate->modify('+9 week');
+        $expectedTargetCompletionDate->modify('+7 week');
         $application
             ->shouldReceive('setStatus')
             ->with($this->mapRefdata(ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION))
@@ -215,7 +215,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $application->setGoodsOrPsv(new RefData(LicenceEntity::LICENCE_CATEGORY_PSV));
 
         $expectedTargetCompletionDate = clone $now;
-        $expectedTargetCompletionDate->modify('+9 week');
+        $expectedTargetCompletionDate->modify('+7 week');
         $application
             ->shouldReceive('setStatus')
             ->with($this->mapRefdata(ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION))
@@ -333,7 +333,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $application->setGoodsOrPsv($this->mapRefdata(LicenceEntity::LICENCE_CATEGORY_PSV));
 
         $expectedTargetCompletionDate = clone $now;
-        $expectedTargetCompletionDate->modify('+9 week');
+        $expectedTargetCompletionDate->modify('+7 week');
         $application
             ->shouldReceive('setStatus')
             ->with($this->mapRefdata(ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION))
@@ -432,7 +432,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $application->setS4s(new \Doctrine\Common\Collections\ArrayCollection([$s4]));
 
         $expectedTargetCompletionDate = clone $now;
-        $expectedTargetCompletionDate->modify('+9 week');
+        $expectedTargetCompletionDate->modify('+7 week');
         $application
             ->shouldReceive('setStatus')
             ->with($this->mapRefdata(ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION))
