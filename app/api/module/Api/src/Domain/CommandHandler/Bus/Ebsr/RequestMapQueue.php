@@ -25,6 +25,8 @@ final class RequestMapQueue extends AbstractCommandHandler implements AuthAwareI
     use AuthAwareTrait;
     use QueueAwareTrait;
 
+    const CONFIRM_MESSAGE = '%s new PDF(s) requested';
+
     protected $repoServiceName = 'Bus';
 
     /**
@@ -59,21 +61,22 @@ final class RequestMapQueue extends AbstractCommandHandler implements AuthAwareI
             'user' => $this->getCurrentUser()->getId()
         ];
 
-        $mapTemplate = ['template' => TransExchangeClient::REQUEST_MAP_TEMPLATE];
-        $timetableTemplate = ['template' => TransExchangeClient::TIMETABLE_TEMPLATE];
-        $recordTemplate = ['template' => TransExchangeClient::DVSA_RECORD_TEMPLATE];
+        $recordData = $optionData + ['template' => TransExchangeClient::DVSA_RECORD_TEMPLATE];
 
-        $this->createQueue($entityId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData);
+        $sideEffects[] = $this->createQueue($entityId, Queue::TYPE_EBSR_REQUEST_MAP, $recordData);
 
-        $this->handleSideEffects(
-            [
-                $this->createQueue($entityId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData + $mapTemplate),
-                $this->createQueue($entityId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData + $timetableTemplate),
-                $this->createQueue($entityId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData + $recordTemplate)
-            ]
-        );
+        //we only create the dvsa record pdf for cancellations, otherwise create all three
+        if (!$busReg->isCancellation()) {
+            $mapData = $optionData + ['template' => TransExchangeClient::REQUEST_MAP_TEMPLATE];
+            $timeTableData = $optionData + ['template' => TransExchangeClient::TIMETABLE_TEMPLATE];
 
-        $result->addMessage('New map was requested');
+            $sideEffects[] = $this->createQueue($entityId, Queue::TYPE_EBSR_REQUEST_MAP, $mapData);
+            $sideEffects[] = $this->createQueue($entityId, Queue::TYPE_EBSR_REQUEST_MAP, $timeTableData);
+        }
+
+        $this->handleSideEffects($sideEffects);
+
+        $result->addMessage(sprintf(self::CONFIRM_MESSAGE, count($sideEffects)));
 
         return $result;
     }
