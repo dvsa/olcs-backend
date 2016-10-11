@@ -261,7 +261,6 @@ class ProcessPackTest extends CommandHandlerTestCase
         $ebsrSubmission->shouldReceive('setLicenceNo')->with($parsedLicenceNumber)->once()->andReturnSelf();
         $ebsrSubmission->shouldReceive('setVariationNo')->with($parsedVariationNumber)->once()->andReturnSelf();
         $ebsrSubmission->shouldReceive('setRegistrationNo')->with($parsedRouteNumber)->once()->andReturnSelf();
-        $ebsrSubmission->shouldReceive('isDataRefresh')->twice()->andReturn(false);
         $ebsrSubmission->shouldReceive('setOrganisationEmailAddress')
             ->with($parsedOrganisationEmail)
             ->once()
@@ -292,9 +291,7 @@ class ProcessPackTest extends CommandHandlerTestCase
         $variationBusReg->shouldReceive('getIsShortNotice')->once()->andReturn('Y');
         $variationBusReg->shouldReceive('getShortNotice->fromData')->once()->with($busShortNotice);
         $variationBusReg->shouldReceive('setEbsrSubmissions')->once()->with(m::type(ArrayCollection::class));
-        $variationBusReg->shouldReceive('getEbsrSubmissions')
-            ->times(2)
-            ->andReturn(new ArrayCollection([$ebsrSubmission]));
+        $variationBusReg->shouldReceive('isEbsrRefresh')->twice()->andReturn(false);
         $variationBusReg->shouldReceive('getStatus->getId')->times(2)->andReturn($busRegStatus);
 
         $previousBusReg = m::mock(BusRegEntity::class);
