@@ -50,6 +50,7 @@ class CaseworkerDetails extends DynamicBookmark
         $licenceBundle = [
             'trafficArea',
         ];
+
         return [
             Qry::create(['id' => $data['user'], 'bundle' => $bundle]),
             QryLic::create(['id' => $data['licence'], 'bundle' => $licenceBundle])
