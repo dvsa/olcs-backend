@@ -54,6 +54,8 @@ class OpposerEntityTest extends EntityTester
                 'oppositionType' => $this->oppositionType,
             ]
         );
+
+        static::assertSame($this->opposerType, $this->sut->getOpposerType());
     }
 
     public function testUpdateException()
