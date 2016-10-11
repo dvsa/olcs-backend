@@ -2,12 +2,14 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\OperatingCentre;
 
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as Entity;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Doctrine\Common\Collections\ArrayCollection as ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition as OppositionEntity;
 use Dvsa\Olcs\Api\Entity\Application as ApplicationEntity;
+use Mockery as m;
 
 /**
  * OperatingCentre Entity Unit Tests
@@ -149,5 +151,30 @@ class OperatingCentreEntityTest extends EntityTester
         $entity->setOppositions(new ArrayCollection($oppositions));
 
         $this->assertEquals('N', $entity->getHasOpposition());
+    }
+
+    public function testGetRelatedOrganisationNull()
+    {
+        $sut = (new Entity())
+            ->setApplications(new ArrayCollection([]));
+
+        static::assertNull($sut->getRelatedOrganisation());
+    }
+
+    public function testGetRelatedOrganisation()
+    {
+        $expectOrg = new Organisation();
+        $mockApp = m::mock(ApplicationEntity\Application::class)
+            ->shouldReceive('getRelatedOrganisation')->once()->andReturn($expectOrg)
+            ->getMock();
+
+        $mockApp2 = m::mock(ApplicationEntity\Application::class)
+            ->shouldReceive('getRelatedOrganisation')->never()
+            ->getMock();
+
+        $sut = (new Entity())
+         ->setApplications(new ArrayCollection([$mockApp, $mockApp2]));
+
+        static::assertSame($expectOrg, $sut->getRelatedOrganisation());
     }
 }
