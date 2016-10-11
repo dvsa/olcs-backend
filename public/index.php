@@ -10,7 +10,11 @@ function handleFatal()
     $error = error_get_last();
     if ($error) {
         http_response_code(500);
-        ob_clean();
+
+        if (ob_get_length() !== false) {
+            ob_clean();
+        }
+
         echo json_encode(
             [
                 'messages' => [
