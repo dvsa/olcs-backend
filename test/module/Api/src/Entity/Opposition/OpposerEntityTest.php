@@ -48,14 +48,16 @@ class OpposerEntityTest extends EntityTester
 
     public function testUpdateOk()
     {
+        $opposerType = new RefData('OPPOSER_TYPE_2');
+
         $this->sut->update(
             [
-                'opposerType' => $this->opposerType,
+                'opposerType' => $opposerType,
                 'oppositionType' => $this->oppositionType,
             ]
         );
 
-        static::assertSame($this->opposerType, $this->sut->getOpposerType());
+        static::assertSame($opposerType, $this->sut->getOpposerType());
     }
 
     public function testUpdateException()
