@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\UserBundle as Qry;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as QryLic;
 
 /**
  * Caseworker details bookmark
@@ -46,7 +47,13 @@ class CaseworkerDetails extends DynamicBookmark
                 ]
             ]
         ];
-        return Qry::create(['id' => $data['user'], 'bundle' => $bundle]);
+        $licenceBundle = [
+            'trafficArea',
+        ];
+        return [
+            Qry::create(['id' => $data['user'], 'bundle' => $bundle]),
+            QryLic::create(['id' => $data['licence'], 'bundle' => $licenceBundle])
+        ];
     }
 
     /**
@@ -56,15 +63,18 @@ class CaseworkerDetails extends DynamicBookmark
      */
     public function render()
     {
+        $licData = $this->data[1];
+        $userData = $this->data[0];
+
         $directDial = $this->fetchDirectDial();
 
         $address = $this->fetchBestAddress();
 
-        $taName = isset($this->data['team']['trafficArea']['name'])
-            ? $this->data['team']['trafficArea']['name']
+        $taName = isset($licData['trafficArea']['name'])
+            ? $licData['trafficArea']['name']
             : '';
 
-        $details = $this->data['contactDetails'];
+        $details = $userData['contactDetails'];
 
         return implode(
             "\n",
@@ -87,13 +97,15 @@ class CaseworkerDetails extends DynamicBookmark
      */
     private function fetchBestAddress()
     {
+        $userData = $this->data[0];
+
         // we prefer an address directly linked against the user...
-        if (!empty($this->data['contactDetails']['address'])) {
-            return $this->data['contactDetails']['address'];
+        if (!empty($userData['contactDetails']['address'])) {
+            return $userData['contactDetails']['address'];
         }
 
         // but if not, fall back to the one against the team's TA
-        return $this->data['team']['trafficArea']['contactDetails']['address'];
+        return $userData['team']['trafficArea']['contactDetails']['address'];
     }
 
     /**
@@ -103,10 +115,11 @@ class CaseworkerDetails extends DynamicBookmark
      */
     private function fetchDirectDial()
     {
-        if (empty($this->data['contactDetails']['phoneContacts'])) {
+        $userData = $this->data[0];
+        if (empty($userData['contactDetails']['phoneContacts'])) {
             return '';
         }
-        foreach ($this->data['contactDetails']['phoneContacts'] as $phone) {
+        foreach ($userData['contactDetails']['phoneContacts'] as $phone) {
             if ($phone['phoneContactType']['id'] === self::TEL_DIRECT_DIAL) {
                 return $phone['phoneNumber'];
             }
