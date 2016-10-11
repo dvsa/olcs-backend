@@ -13,7 +13,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateSubmission as CreateEbsrSubmissionCmd;
-use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks;
+use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks as UpdateDocumentLinksCommand;
 
 /**
  * Create Document
@@ -25,7 +25,10 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
     protected $repoServiceName = 'Document';
 
     /**
-     * @param CommandInterface $command
+     * Handle command
+     *
+     * @param CommandInterface $command the command
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -39,7 +42,7 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
         $data = $command->getArrayCopy();
         $data['id'] = $document->getId();
 
-        $result->merge($this->handleSideEffect(UpdateDocumentLinks::create($data)));
+        $result->merge($this->handleSideEffect(UpdateDocumentLinksCommand::create($data)));
 
         //if the document is an EBSR pack, create a corresponding EBSR submission
         if ($data['isEbsrPack']) {
@@ -53,7 +56,10 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
     }
 
     /**
-     * @param Cmd $command
+     * Create a document entity
+     *
+     * @param Cmd $command the command
+     *
      * @return Document
      */
     private function createDocumentEntity(Cmd $command)
@@ -68,8 +74,12 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
     }
 
     /**
-     * @param Document $document
-     * @param Cmd $command
+     * Set document flags
+     *
+     * @param Document $document document entity
+     * @param Cmd      $command  the command
+     *
+     * @return void
      */
     private function setDocumentFlags(Document $document, Cmd $command)
     {
@@ -78,8 +88,12 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
     }
 
     /**
-     * @param Document $document
-     * @param Cmd $command
+     * Set document details
+     *
+     * @param Document $document document entity
+     * @param Cmd      $command  the command
+     *
+     * @return void
      */
     private function setDocumentDetails(Document $document, Cmd $command)
     {
@@ -97,9 +111,13 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
     }
 
     /**
-     * @param Document $document
-     * @param Cmd $command
+     * Set document flags
+     *
+     * @param Document $document document entity
+     * @param Cmd      $command  the command
+     *
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return void
      */
     private function categoriseDocument(Document $document, Cmd $command)
     {
