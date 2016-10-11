@@ -8,6 +8,7 @@ use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 
 /**
  * @covers Dvsa\Olcs\Api\Entity\System\PublicHoliday
+ * @covers Dvsa\Olcs\Api\Entity\System\AbstractPublicHoliday
  */
 class PublicHolidayEntityTest extends EntityTester
 {

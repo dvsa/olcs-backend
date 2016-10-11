@@ -8,6 +8,7 @@ use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 
 /**
  * @covers Dvsa\Olcs\Api\Entity\System\SystemInfoMessage
+ * @covers Dvsa\Olcs\Api\Entity\System\AbstractSystemInfoMessage
  */
 class SystemInfoMessageEntityTest extends EntityTester
 {
