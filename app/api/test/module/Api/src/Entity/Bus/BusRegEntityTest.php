@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Bus;
 
+use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection;
@@ -186,6 +187,37 @@ class BusRegEntityTest extends EntityTester
         return [
             ['Y', true],
             ['N', false]
+        ];
+    }
+
+    /**
+     * Tests whether bus reg is from a data refresh
+     *
+     * @param $isDataRefresh
+     *
+     * @dataProvider isEbsrRefreshProvider
+     */
+    public function testIsEbsrRefresh($isDataRefresh)
+    {
+        $ebsrSubmission = m::mock(EbsrSubmission::class);
+        $ebsrSubmission->shouldReceive('isDataRefresh')->once()->andReturn($isDataRefresh);
+
+        $submissions = new ArrayCollection([$ebsrSubmission]);
+
+        $busReg = new Entity();
+        $busReg->setEbsrSubmissions($submissions);
+
+        $this->assertEquals($isDataRefresh, $busReg->isEbsrRefresh());
+    }
+
+    /**
+     * @return array
+     */
+    public function isEbsrRefreshProvider()
+    {
+        return [
+            [true],
+            [false]
         ];
     }
 

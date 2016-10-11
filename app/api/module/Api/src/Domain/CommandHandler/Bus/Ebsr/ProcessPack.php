@@ -457,10 +457,7 @@ final class ProcessPack extends AbstractCommandHandler implements
             $sideEffects[] = CreateBusFeeCmd::create(['id' => $busRegId]);
         }
 
-        /** @var EbsrSubmissionEntity $ebsrSub */
-        $ebsrSub = $busReg->getEbsrSubmissions()->first();
-
-        if ($ebsrSub->isDataRefresh()) {
+        if ($busReg->isEbsrRefresh()) {
             $sideEffects[] = $this->getEbsrRefreshedEmailCmd($ebsrSub->getId());
         } else {
             $sideEffects[] = $this->getEbsrReceivedEmailCmd($ebsrSub->getId());
@@ -601,9 +598,7 @@ final class ProcessPack extends AbstractCommandHandler implements
      */
     private function createTaskCommand(BusRegEntity $busReg)
     {
-        $ebsrSubmission = $busReg->getEbsrSubmissions()->first();
-
-        if ($ebsrSubmission->isDataRefresh()) {
+        if ($busReg->isEbsrRefresh()) {
             $description = 'Data refresh created';
         } else {
             $status = $busReg->getStatus()->getId();

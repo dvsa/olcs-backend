@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusShortNotice as BusShortNoticeEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService as BusRegOtherServiceEntity;
+use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
@@ -365,6 +366,23 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     public function isFromEbsr()
     {
         return ($this->isTxcApp === 'Y' ? true : false);
+    }
+
+    /**
+     * Returns whether the bus reg came from EBSR data refresh
+     *
+     * @return bool
+     */
+    public function isEbsrRefresh()
+    {
+        if ($this->ebsrSubmissions->isEmpty()) {
+            return false;
+        }
+
+        /** @var EbsrSubmission $ebsrSubmission */
+        $ebsrSubmission = $this->ebsrSubmissions->first();
+
+        return $ebsrSubmission->isDataRefresh();
     }
 
     /**
