@@ -59,8 +59,10 @@ class WebServiceClient
      */
     public function convert($fileName, $destination)
     {
+        $this->getHttpClient()->reset();
         $this->getHttpClient()->setMethod(\Zend\Http\Request::METHOD_POST);
         $this->getHttpClient()->setFileUpload($fileName, 'file');
+
         $response = $this->getHttpClient()->send();
         if (!$response->isOk()) {
             $body = json_decode($response->getBody());
