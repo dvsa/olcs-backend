@@ -119,7 +119,8 @@ class ProcessPackTest extends CommandHandlerTestCase
             'bs_in_part',
             BusRegEntity::STATUS_NEW,
             BusRegEntity::STATUS_CANCEL,
-            BusRegEntity::STATUS_VAR
+            BusRegEntity::STATUS_VAR,
+            BusRegEntity::STATUS_REGISTERED
         ];
 
         parent::initReferences();
@@ -130,8 +131,15 @@ class ProcessPackTest extends CommandHandlerTestCase
      *
      * @dataProvider handleVariationProvider
      */
-    public function testHandleCommandVariation($txcAppType, $busRegStatus, $taskMessage, $fee)
-    {
+    public function testHandleCommandVariation(
+        $txcAppType,
+        $busRegStatus,
+        $taskMessage,
+        $fee,
+        $isEbsrRefresh,
+        $busStatusTimes,
+        $emailCmdClass
+    ) {
         $filePath = 'vfs://root';
         $xmlName = $filePath . '/xml-file-name.xml';
         $xmlDocument = "<xml></xml>";
@@ -291,8 +299,8 @@ class ProcessPackTest extends CommandHandlerTestCase
         $variationBusReg->shouldReceive('getIsShortNotice')->once()->andReturn('Y');
         $variationBusReg->shouldReceive('getShortNotice->fromData')->once()->with($busShortNotice);
         $variationBusReg->shouldReceive('setEbsrSubmissions')->once()->with(m::type(ArrayCollection::class));
-        $variationBusReg->shouldReceive('isEbsrRefresh')->twice()->andReturn(false);
-        $variationBusReg->shouldReceive('getStatus->getId')->times(2)->andReturn($busRegStatus);
+        $variationBusReg->shouldReceive('isEbsrRefresh')->twice()->andReturn($isEbsrRefresh);
+        $variationBusReg->shouldReceive('getStatus->getId')->times($busStatusTimes)->andReturn($busRegStatus);
 
         $previousBusReg = m::mock(BusRegEntity::class);
         $previousBusReg->shouldReceive('createVariation')
@@ -334,7 +342,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             ->with($this->refData[EbsrSubmissionEntity::PROCESSED_STATUS])
             ->andReturnSelf();
 
-        $this->expectedEmailQueueSideEffect(SendEbsrReceivedCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
+        $this->expectedEmailQueueSideEffect($emailCmdClass, ['id' => $ebsrSubId], $ebsrSubId, new Result());
 
         $this->successSideEffects($existingRegNo, $variationBusRegId, $licenceId, $documentId, $taskMessage, $fee);
 
@@ -347,21 +355,16 @@ class ProcessPackTest extends CommandHandlerTestCase
     public function handleVariationProvider()
     {
         return [
-            ['cancel', BusRegEntity::STATUS_CANCEL, 'New cancellation created: ', false],
-            ['chargeableChange', BusRegEntity::STATUS_VAR, 'New variation created: ', true]
+            ['cancel', BusRegEntity::STATUS_CANCEL, 'New cancellation created: ', false, false, 2, SendEbsrReceivedCmd::class],
+            ['chargeableChange', BusRegEntity::STATUS_VAR, 'New variation created: ', true, false, 2, SendEbsrReceivedCmd::class],
+            ['nonChargeableChange', BusRegEntity::STATUS_REGISTERED, 'Data refresh created: ', false, true, 1, SendEbsrRefreshedCmd::class]
         ];
     }
 
     /**
      * Tests successful creation of a new bus reg application through EBSR
-     *
-     * @param $isDataRefresh
-     * @param $emailCommandClass
-     * @param $taskMessage
-     *
-     * @dataProvider handleNewApplicationProvider
      */
-    public function testHandleCommandNewApplication($isDataRefresh, $emailCommandClass, $taskMessage)
+    public function testHandleCommandNewApplication()
     {
         $xmlName = 'tmp/directory/path/xml-file-name.xml';
         $xmlDocument = "<xml></xml>";
@@ -439,7 +442,7 @@ class ProcessPackTest extends CommandHandlerTestCase
         $ebsrSubmission->shouldReceive('setLicenceNo')->with($parsedLicenceNumber)->once()->andReturnSelf();
         $ebsrSubmission->shouldReceive('setVariationNo')->with($parsedVariationNumber)->once()->andReturnSelf();
         $ebsrSubmission->shouldReceive('setRegistrationNo')->with($parsedRouteNumber)->once()->andReturnSelf();
-        $ebsrSubmission->shouldReceive('isDataRefresh')->twice()->andReturn($isDataRefresh);
+        $ebsrSubmission->shouldReceive('isDataRefresh')->twice()->andReturn(false);
         $ebsrSubmission->shouldReceive('setOrganisationEmailAddress')
             ->with($parsedOrganisationEmail)
             ->once()
@@ -515,24 +518,18 @@ class ProcessPackTest extends CommandHandlerTestCase
             ->with($this->refData[EbsrSubmissionEntity::PROCESSED_STATUS])
             ->andReturnSelf();
 
-        $this->expectedEmailQueueSideEffect($emailCommandClass, ['id' => $ebsrSubId], $ebsrSubId, new Result());
+        $this->expectedEmailQueueSideEffect(SendEbsrReceivedCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
 
-        $this->successSideEffects($existingRegNo, $savedBusRegId, $licenceId, $documentId, $taskMessage, true);
+        $this->successSideEffects(
+            $existingRegNo,
+            $savedBusRegId,
+            $licenceId,
+            $documentId,
+            'New application created: ',
+            true
+        );
 
         $this->sut->handleCommand($command);
-    }
-
-    /**
-     * Data provider for handle new application
-     *
-     * @return array
-     */
-    public function handleNewApplicationProvider()
-    {
-        return [
-            [false, SendEbsrReceivedCmd::class, 'New application created: '],
-            [true, SendEbsrRefreshedCmd::class, 'Data refresh created: ']
-        ];
     }
 
     /**

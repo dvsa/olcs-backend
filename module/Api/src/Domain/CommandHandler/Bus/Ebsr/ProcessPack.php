@@ -402,6 +402,9 @@ final class ProcessPack extends AbstractCommandHandler implements
             case 'cancel':
                 $busReg = $this->createVariation($previousBusReg, BusRegEntity::STATUS_CANCEL);
                 break;
+            case 'nonChargeableChange':
+                $busReg = $this->createVariation($previousBusReg, BusRegEntity::STATUS_REGISTERED);
+                break;
             default:
                 $busReg = $this->createVariation($previousBusReg, BusRegEntity::STATUS_VAR);
         }
