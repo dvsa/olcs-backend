@@ -56,6 +56,11 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
 
     const SUBSIDY_NO = 'bs_no';
 
+    const TXC_APP_NEW = 'new';
+    const TXC_APP_CANCEL = 'cancel';
+    const TXC_APP_CHARGEABLE = 'chargeableChange';
+    const TXC_APP_NON_CHARGEABLE = 'nonChargeableChange';
+
     const FORBIDDEN_ERROR = 'This bus reg can\'t be edited. It must be the latest variation, and not from EBSR';
 
     public static $ebsrExistingRecordExcluded = [

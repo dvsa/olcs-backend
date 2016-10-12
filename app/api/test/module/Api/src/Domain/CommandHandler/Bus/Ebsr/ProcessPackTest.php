@@ -355,9 +355,33 @@ class ProcessPackTest extends CommandHandlerTestCase
     public function handleVariationProvider()
     {
         return [
-            ['cancel', BusRegEntity::STATUS_CANCEL, 'New cancellation created: ', false, false, 2, SendEbsrReceivedCmd::class],
-            ['chargeableChange', BusRegEntity::STATUS_VAR, 'New variation created: ', true, false, 2, SendEbsrReceivedCmd::class],
-            ['nonChargeableChange', BusRegEntity::STATUS_REGISTERED, 'Data refresh created: ', false, true, 1, SendEbsrRefreshedCmd::class]
+            [
+                BusRegEntity::TXC_APP_CANCEL,
+                BusRegEntity::STATUS_CANCEL,
+                'New cancellation created: ',
+                false,
+                false,
+                2,
+                SendEbsrReceivedCmd::class
+            ],
+            [
+                BusRegEntity::TXC_APP_CHARGEABLE,
+                BusRegEntity::STATUS_VAR,
+                'New variation created: ',
+                true,
+                false,
+                2,
+                SendEbsrReceivedCmd::class
+            ],
+            [
+                BusRegEntity::TXC_APP_NON_CHARGEABLE,
+                BusRegEntity::STATUS_REGISTERED,
+                'Data refresh created: ',
+                false,
+                true,
+                1,
+                SendEbsrRefreshedCmd::class
+            ]
         ];
     }
 
@@ -419,7 +443,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'existingRegNo' => $existingRegNo,
             'subsidised' => 'bs_in_part',
             'busNoticePeriod' => 1,
-            'txcAppType' => 'new',
+            'txcAppType' => BusRegEntity::TXC_APP_NEW,
             'serviceClassifications' => $busServiceTypes,
             'trafficAreas' => $parsedTrafficAreas,
             'localAuthorities' => $parsedLocalAuthorities,
@@ -737,7 +761,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'existingRegNo' => $existingRegNo,
             'subsidised' => 'bs_in_part',
             'busNoticePeriod' => 1,
-            'txcAppType' => 'new',
+            'txcAppType' => BusRegEntity::TXC_APP_NEW,
             'serviceClassifications' => $busServiceTypes,
             'trafficAreas' => $parsedTrafficAreas,
             'localAuthorities' => $parsedLocalAuthorities,
@@ -849,7 +873,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'existingRegNo' => $existingRegNo,
             'subsidised' => 'bs_in_part',
             'busNoticePeriod' => 1,
-            'txcAppType' => 'new',
+            'txcAppType' => BusRegEntity::TXC_APP_NEW,
             'serviceClassifications' => $busServiceTypes,
             'trafficAreas' => $parsedTrafficAreas,
             'localAuthorities' => $parsedLocalAuthorities,

@@ -46,14 +46,14 @@ class BusRegNotFoundTest extends MockeryTestCase
         $busMock = m::mock(BusRegEntity::class);
 
         return [
-            ['new', $busMock, true],
-            ['new', null, true],
-            ['cancel', $busMock, true],
-            ['cancel', null, false],
-            ['nonChargeableChange', $busMock, true],
-            ['nonChargeableChange', null, false],
-            ['chargeableChange', $busMock, true],
-            ['chargeableChange', null, false],
+            [BusRegEntity::TXC_APP_NEW, $busMock, true],
+            [BusRegEntity::TXC_APP_NEW, null, true],
+            [BusRegEntity::TXC_APP_CANCEL, $busMock, true],
+            [BusRegEntity::TXC_APP_CANCEL, null, false],
+            [BusRegEntity::TXC_APP_NON_CHARGEABLE, $busMock, true],
+            [BusRegEntity::TXC_APP_NON_CHARGEABLE, null, false],
+            [BusRegEntity::TXC_APP_CHARGEABLE, $busMock, true],
+            [BusRegEntity::TXC_APP_CHARGEABLE, null, false],
         ];
     }
 }

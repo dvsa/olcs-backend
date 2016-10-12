@@ -396,13 +396,13 @@ final class ProcessPack extends AbstractCommandHandler implements
     {
         //decide what to do based on txcAppType
         switch ($ebsrData['txcAppType']) {
-            case 'new':
+            case BusRegEntity::TXC_APP_NEW:
                 $busReg = $this->createNew($ebsrData);
                 break;
-            case 'cancel':
+            case BusRegEntity::TXC_APP_CANCEL:
                 $busReg = $this->createVariation($previousBusReg, BusRegEntity::STATUS_CANCEL);
                 break;
-            case 'nonChargeableChange':
+            case BusRegEntity::TXC_APP_NON_CHARGEABLE:
                 $busReg = $this->createVariation($previousBusReg, BusRegEntity::STATUS_REGISTERED);
                 break;
             default:
