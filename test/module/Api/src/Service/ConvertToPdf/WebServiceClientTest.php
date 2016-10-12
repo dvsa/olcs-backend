@@ -25,6 +25,7 @@ class WebServiceClientTest extends MockeryTestCase
         $mockResponse->shouldReceive('getStatusCode')->with()->once()->andReturn(500);
 
         $mockHttpClient = m::mock(HttpClient::class);
+        $mockHttpClient->shouldReceive('reset')->with()->once();
         $mockHttpClient->shouldReceive('setMethod')->with('POST')->once();
         $mockHttpClient->shouldReceive('setFileUpload')->with('foo.rtf', 'file')->once();
         $mockHttpClient->shouldReceive('send')->andReturn($mockResponse);
@@ -45,6 +46,7 @@ class WebServiceClientTest extends MockeryTestCase
         $mockResponse->shouldReceive('getStatusCode')->with()->once()->andReturn(500);
 
         $mockHttpClient = m::mock(HttpClient::class);
+        $mockHttpClient->shouldReceive('reset')->with()->once();
         $mockHttpClient->shouldReceive('setMethod')->with('POST')->once();
         $mockHttpClient->shouldReceive('setFileUpload')->with('foo.rtf', 'file')->once();
         $mockHttpClient->shouldReceive('send')->andReturn($mockResponse);
@@ -64,6 +66,7 @@ class WebServiceClientTest extends MockeryTestCase
         $mockResponse->shouldReceive('getBody')->with()->once()->andReturn('BODY');
 
         $mockHttpClient = m::mock(HttpClient::class);
+        $mockHttpClient->shouldReceive('reset')->with()->once();
         $mockHttpClient->shouldReceive('setMethod')->with('POST')->once();
         $mockHttpClient->shouldReceive('setFileUpload')->with('foo.rtf', 'file')->once();
         $mockHttpClient->shouldReceive('send')->andReturn($mockResponse);
