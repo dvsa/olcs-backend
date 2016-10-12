@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData;
 
 use Zend\Validator\AbstractValidator;
-use Zend\Validator\Exception;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**
@@ -34,7 +33,9 @@ class VariationNumber extends AbstractValidator
      * getMessages() will return an array of messages that explain why the
      * validation failed.
      *
-     * @param  mixed $value
+     * @param array $value   input value
+     * @param array $context context value
+     *
      * @return bool
      */
     public function isValid($value, $context = [])
@@ -42,12 +43,12 @@ class VariationNumber extends AbstractValidator
         /** @var BusRegEntity $busReg */
         $busReg = $context['busReg'];
 
-        if (strtolower($value['txcAppType']) === 'cancel') {
+        if ($value['txcAppType'] === BusRegEntity::TXC_APP_CANCEL) {
             if ($value['variationNo'] != $busReg->getVariationNo()) {
                 $this->error(self::CANCELLATION_VARIATION_NUMBER_ERROR);
                 return false;
             }
-        } elseif (strtolower($value['txcAppType']) === 'new') {
+        } elseif ($value['txcAppType'] === BusRegEntity::TXC_APP_NEW) {
             if ($value['variationNo'] != 0) {
                 $this->error(self::NEW_VARIATION_NUMBER_ERROR);
                 return false;

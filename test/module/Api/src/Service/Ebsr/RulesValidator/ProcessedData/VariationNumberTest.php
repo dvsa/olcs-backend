@@ -74,12 +74,12 @@ class VariationNumberTest extends \PHPUnit_Framework_TestCase
     public function isValidWhenValidProvider()
     {
         return [
-            ['new', 0, null],
-            ['cancel', 0, 0],
-            ['nonChargeableChange', 1, 0],
-            ['nonChargeableChange', 2, 1],
-            ['chargeableChange', 1, 0],
-            ['chargeableChange', 2, 1],
+            [BusRegEntity::TXC_APP_NEW, 0, null],
+            [BusRegEntity::TXC_APP_CANCEL, 0, 0],
+            [BusRegEntity::TXC_APP_NON_CHARGEABLE, 1, 0],
+            [BusRegEntity::TXC_APP_NON_CHARGEABLE, 2, 1],
+            [BusRegEntity::TXC_APP_CHARGEABLE, 1, 0],
+            [BusRegEntity::TXC_APP_CHARGEABLE, 2, 1],
         ];
     }
 
@@ -91,17 +91,17 @@ class VariationNumberTest extends \PHPUnit_Framework_TestCase
     public function isValidWhenNotValidProvider()
     {
         return [
-            ['new', 1, null, VariationNumber::NEW_VARIATION_NUMBER_ERROR],
-            ['cancel', 0, 1, VariationNumber::CANCELLATION_VARIATION_NUMBER_ERROR],
-            ['cancel', 1, 0, VariationNumber::CANCELLATION_VARIATION_NUMBER_ERROR],
-            ['nonChargeableChange', 2, 0, VariationNumber::VARIATION_VARIATION_NUMBER_ERROR],
-            ['nonChargeableChange', 0, 0, VariationNumber::VARIATION_VARIATION_NUMBER_ERROR],
-            ['nonChargeableChange', 0, 1, VariationNumber::VARIATION_VARIATION_NUMBER_ERROR],
-            ['nonChargeableChange', 0, 2, VariationNumber::VARIATION_VARIATION_NUMBER_ERROR],
-            ['chargeableChange', 2, 0, VariationNumber::VARIATION_VARIATION_NUMBER_ERROR],
-            ['chargeableChange', 0, 0, VariationNumber::VARIATION_VARIATION_NUMBER_ERROR],
-            ['chargeableChange', 0, 1, VariationNumber::VARIATION_VARIATION_NUMBER_ERROR],
-            ['chargeableChange', 0, 2, VariationNumber::VARIATION_VARIATION_NUMBER_ERROR]
+            [BusRegEntity::TXC_APP_NEW, 1, null, VariationNumber::NEW_VARIATION_NUMBER_ERROR],
+            [BusRegEntity::TXC_APP_CANCEL, 0, 1, VariationNumber::CANCELLATION_VARIATION_NUMBER_ERROR],
+            [BusRegEntity::TXC_APP_CANCEL, 1, 0, VariationNumber::CANCELLATION_VARIATION_NUMBER_ERROR],
+            [BusRegEntity::TXC_APP_NON_CHARGEABLE, 2, 0, VariationNumber::VARIATION_VARIATION_NUMBER_ERROR],
+            [BusRegEntity::TXC_APP_NON_CHARGEABLE, 0, 0, VariationNumber::VARIATION_VARIATION_NUMBER_ERROR],
+            [BusRegEntity::TXC_APP_NON_CHARGEABLE, 0, 1, VariationNumber::VARIATION_VARIATION_NUMBER_ERROR],
+            [BusRegEntity::TXC_APP_NON_CHARGEABLE, 0, 2, VariationNumber::VARIATION_VARIATION_NUMBER_ERROR],
+            [BusRegEntity::TXC_APP_CHARGEABLE, 2, 0, VariationNumber::VARIATION_VARIATION_NUMBER_ERROR],
+            [BusRegEntity::TXC_APP_CHARGEABLE, 0, 0, VariationNumber::VARIATION_VARIATION_NUMBER_ERROR],
+            [BusRegEntity::TXC_APP_CHARGEABLE, 0, 1, VariationNumber::VARIATION_VARIATION_NUMBER_ERROR],
+            [BusRegEntity::TXC_APP_CHARGEABLE, 0, 2, VariationNumber::VARIATION_VARIATION_NUMBER_ERROR]
         ];
     }
 }
