@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Document List Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Document;
 
 use Mockery as m;
@@ -16,9 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Doctrine\ORM\Query;
 
 /**
- * Document List Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\QueryHandler\Document\DocumentList
  */
 class DocumentListTest extends QueryHandlerTestCase
 {
@@ -40,21 +33,25 @@ class DocumentListTest extends QueryHandlerTestCase
             ->once()
             ->getMock();
 
-        $this->repoMap['DocumentSearchView']->shouldReceive('fetchList')
-            ->with($query, Query::HYDRATE_OBJECT)
-            ->andReturn([$mockDocument])
-            ->shouldReceive('fetchCount')
-            ->with($query)
-            ->andReturn(1)
-            ->shouldReceive('hasRows')
-            ->with(m::type(Qry::class))
-            ->andReturn(1);
+        $this->repoMap['DocumentSearchView']
+            ->shouldReceive('fetchList')->once()->with($query, Query::HYDRATE_OBJECT)->andReturn([$mockDocument])
+            ->shouldReceive('fetchCount')->once()->with($query)->andReturn(888)
+            ->shouldReceive('hasRows')->once()->andReturnUsing(
+                function (Qry $query) {
+                    static::assertNull($query->getCategory());
+                    static::assertEquals([], $query->getDocumentSubCategory());
+                    static::assertNull($query->getIsExternal());
+                    static::assertNull($query->getShowDocs());
+
+                    return 999;
+                }
+            );
 
         $this->assertEquals(
             [
                 'result' => [['foo' => 'bar']],
-                'count' => 1,
-                'count-unfiltered' => 1
+                'count' => 888,
+                'count-unfiltered' => 999,
             ],
             $this->sut->handleQuery($query)
         );
