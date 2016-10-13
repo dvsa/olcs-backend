@@ -2532,7 +2532,7 @@ class ApplicationEntityTest extends EntityTester
         $sut->setTargetCompletionDateFromReceivedDate();
 
         static::assertEquals(
-            $date->modify('+9 week')->getTimestamp(),
+            $date->modify('+7 week')->getTimestamp(),
             $sut->getTargetCompletionDate()->getTimestamp()
         );
     }

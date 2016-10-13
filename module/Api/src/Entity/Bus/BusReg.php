@@ -171,6 +171,16 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     }
 
     /**
+     * Returns whether the bus reg is an application for cancellation
+     *
+     * @return bool
+     */
+    public function isCancellation()
+    {
+        return $this->status->getId() === self::STATUS_CANCEL;
+    }
+
+    /**
      * Returns whether the bus reg is a registered bus route
      *
      * @return bool
