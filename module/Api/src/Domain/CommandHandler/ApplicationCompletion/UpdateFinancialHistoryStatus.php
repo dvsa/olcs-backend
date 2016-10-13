@@ -1,15 +1,10 @@
 <?php
 
-/**
- * Update FinancialHistory Status
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion;
 
 use Doctrine\ORM\Query;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Update FinancialHistory Status
@@ -22,6 +17,13 @@ final class UpdateFinancialHistoryStatus extends AbstractUpdateStatus
 
     protected $section = 'FinancialHistory';
 
+    /**
+     * Check is section valid
+     *
+     * @param Application $application Application Entity
+     *
+     * @return bool
+     */
     protected function isSectionValid(Application $application)
     {
         if ($application->getInsolvencyConfirmation() !== 'Y') {
@@ -37,11 +39,11 @@ final class UpdateFinancialHistoryStatus extends AbstractUpdateStatus
         ];
 
         foreach ($yesNos as $yesNo) {
-            if (!in_array($yesNo, ['Y', 'N'])) {
+            if (!in_array($yesNo, ['Y', 'N'], true)) {
                 return false;
             }
 
-            if ($yesNo === 'Y' && strlen($application->getInsolvencyDetails()) < 200) {
+            if ($yesNo === 'Y' && strlen(preg_replace('/\s+/', '', $application->getInsolvencyDetails())) < 150) {
                 return false;
             }
         }
