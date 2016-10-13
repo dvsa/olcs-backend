@@ -134,7 +134,8 @@ class ProcessPackTest extends CommandHandlerTestCase
      *
      * @dataProvider handleDataRefreshProvider
      */
-    public function testHandleCommandDataRefresh($busShortNotice, $shortNoticeSetTimes) {
+    public function testHandleCommandDataRefresh($busShortNotice, $shortNoticeSetTimes)
+    {
         $filePath = 'vfs://root';
         $xmlName = $filePath . '/xml-file-name.xml';
         $xmlDocument = "<xml></xml>";
@@ -353,7 +354,8 @@ class ProcessPackTest extends CommandHandlerTestCase
     /**
      * @return array
      */
-    public function handleDataRefreshProvider(){
+    public function handleDataRefreshProvider()
+    {
         return [
             [['short notice section'], 1],
             [[], 0]
