@@ -45,6 +45,7 @@ class DocumentSearchViewTest extends \PHPUnit_Framework_TestCase
             'tmId' => 7,
             'ciId' => 8,
             'irfoOrganisationId' => 10,
+            'applicationId' => 'unit_AppId',
         ];
         $this->entity = new DocumentSearchView();
 
