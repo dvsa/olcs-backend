@@ -7,6 +7,7 @@ use Dvsa\Olcs\Transfer\Command\Document\CreateDocument as CreateDocumentDto;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadDto;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Can Create a Document
@@ -20,15 +21,43 @@ class CanCreateDocument extends AbstractHandler implements AuthAwareInterface
      */
     private $valid;
 
+    private $allowedExtensions = [];
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service locator
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceManager = $serviceLocator->getServiceLocator();
+
+        $config = $mainServiceManager->get('config');
+        if (isset($config['allow_file_upload']['extensions'])) {
+            $this->setAllowedExtensions(explode(',', $config['allow_file_upload']['extensions']));
+        }
+
+        return parent::createService($serviceLocator);
+    }
+
     /**
      * Validate DTO
      *
      * @param CreateDocumentDto|UploadDto $dto The DTO being validated
      *
      * @return bool
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function isValid($dto)
     {
+        if ($this->validateExtension($dto->getFilename()) === false) {
+            throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
+                [\Dvsa\Olcs\Api\Domain\CommandHandler\Document\Upload::ERR_MIME => 'Invalid extension']
+            );
+        }
+
         if ($this->isInternalUser() || $this->isSystemUser()) {
             return true;
         }
@@ -97,5 +126,36 @@ class CanCreateDocument extends AbstractHandler implements AuthAwareInterface
     private function getIsValid()
     {
         return $this->valid === true;
+    }
+
+    /**
+     * Set allowed extensions
+     *
+     * @param array $extensions Array of allowed extensions
+     *
+     * @return void
+     */
+    public function setAllowedExtensions(array $extensions)
+    {
+        $this->allowedExtensions = $extensions;
+    }
+
+    /**
+     * Validate a filename extension against the configurable allow list
+     *
+     * @param string $filename File name to check
+     *
+     * @return bool
+     */
+    private function validateExtension($filename)
+    {
+        $extension = substr($filename, strrpos($filename, '.') + 1);
+        foreach ($this->allowedExtensions as $ext) {
+            if (trim(strtolower($ext)) == trim(strtolower($extension))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

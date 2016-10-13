@@ -49,6 +49,7 @@ trait ValidationHelperTestCaseTrait
         $sm->setService('RepositoryServiceManager', $this->repoManager);
         $sm->setService(AuthorizationService::class, $this->auth);
         $sm->setService('DomainValidatorManager', $this->validatorManager);
+        $sm->setService('config', ['config']);
 
         $this->sut->createService($sm);
     }
