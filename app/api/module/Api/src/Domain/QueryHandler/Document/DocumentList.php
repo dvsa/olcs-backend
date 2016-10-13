@@ -1,15 +1,10 @@
 <?php
 
-/**
- * Document List
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Document;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Doctrine\ORM\Query;
 
 /**
  * Document List
@@ -23,7 +18,7 @@ class DocumentList extends AbstractQueryHandler
     /**
      * Handle query
      *
-     * @param QueryInterface $query query
+     * @param \Dvsa\Olcs\Transfer\Query\Document\DocumentList $query Query
      *
      * @return array
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
@@ -35,13 +30,19 @@ class DocumentList extends AbstractQueryHandler
         unset($data['category']);
         unset($data['documentSubCategory']);
         unset($data['isExternal']);
+        unset($data['showDocs']);
 
         $unfilteredQuery = \Dvsa\Olcs\Transfer\Query\Document\DocumentList::create($data);
 
+        /** @var  \Dvsa\Olcs\Api\Domain\Repository\DocumentSearchView $repo */
+        $repo = $this->getRepo();
+
         return [
-            'result' => $this->resultList($this->getRepo()->fetchList($query, Query::HYDRATE_OBJECT)),
-            'count' => $this->getRepo()->fetchCount($query),
-            'count-unfiltered' => $this->getRepo()->hasRows($unfilteredQuery)
+            'result' => $this->resultList(
+                $repo->fetchList($query, Query::HYDRATE_OBJECT)
+            ),
+            'count' => $repo->fetchCount($query),
+            'count-unfiltered' => $repo->hasRows($unfilteredQuery),
         ];
     }
 }
