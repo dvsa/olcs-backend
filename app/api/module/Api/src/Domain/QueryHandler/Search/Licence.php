@@ -67,7 +67,7 @@ class Licence extends AbstractQueryHandler
                         ['phoneContactType']
                     ) : null,
                     'address' => !empty($licence->getCorrespondenceCd()) ?
-                        $licence->getCorrespondenceCd()->getAddress() : null,
+                        $this->result($licence->getCorrespondenceCd()->getAddress())->serialize() : null,
                     'emailAddress' => !empty($licence->getCorrespondenceCd()) ?
                         $licence->getCorrespondenceCd()->getEmailAddress() : null,
                 ],
