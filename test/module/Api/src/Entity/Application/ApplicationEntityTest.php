@@ -97,7 +97,7 @@ class ApplicationEntityTest extends EntityTester
             [
                 'validateTolResult' => true,
                 'expect' => true,
-            ]  ,
+            ],
             [
                 'validateTolResult' => false,
                 'expect' => null,
@@ -269,18 +269,17 @@ class ApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider notValidDataProvider
-     * @group applicationEntity
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     * @dataProvider dpTestUpdateFinancialHistory
      */
-    public function testUpdateFinancialHistoryNotValid(
+    public function testUpdateFinancialHistory(
         $bankrupt,
         $liquidation,
         $receivership,
         $administration,
         $disqualified,
         $insolvencyDetails,
-        $insolvencyConfirmation
+        $insolvencyConfirmation,
+        $expect
     ) {
         $this->entity->updateFinancialHistory(
             $bankrupt,
@@ -291,69 +290,60 @@ class ApplicationEntityTest extends EntityTester
             $insolvencyDetails,
             $insolvencyConfirmation
         );
+
+        static::assertEquals($this->entity->getBankrupt(), $bankrupt);
+        static::assertEquals($this->entity->getLiquidation(), $liquidation);
+        static::assertEquals($this->entity->getReceivership(), $receivership);
+        static::assertEquals($this->entity->getAdministration(), $administration);
+        static::assertEquals($this->entity->getDisqualified(), $disqualified);
+        static::assertEquals($this->entity->getInsolvencyDetails(), $insolvencyDetails);
+        static::assertEquals($this->entity->getInsolvencyConfirmation(), $expect['insolvencyConfirmation']);
     }
 
-    public function notValidDataProvider()
+    public function dpTestUpdateFinancialHistory()
     {
         return [
-            ['Y', 'N', 'N', 'N', 'N', '123', '1'],
-            ['Y', 'N', 'N', 'N', 'N', '', '1'],
+            [
+                'bankrupt' => 'N',
+                'liquidation' => 'N',
+                'receivership' => 'N',
+                'administration' => 'N',
+                'disqualified' => 'N',
+                'insolvencyDetails' => '',
+                'insolvencyConfirmation' => false,
+                'expect' => [
+                    'insolvencyConfirmation' => null,
+                ],
+            ],
+            [
+                'bankrupt' => 'Y',
+                'liquidation' => 'N',
+                'receivership' => 'N',
+                'administration' => 'N',
+                'disqualified' => 'N',
+                'insolvencyDetails' => str_repeat('X', 200),
+                'insolvencyConfirmation' => 1,
+                'expect' => [
+                    'insolvencyConfirmation' => 'Y',
+                ],
+            ],
         ];
     }
 
-    /**
-     * @dataProvider validDataProvider
-     * @group        applicationEntity
-     */
-    public function testUpdateFinancialHistoryValid(
-        $bankrupt,
-        $liquidation,
-        $receivership,
-        $administration,
-        $disqualified,
-        $insolvencyDetails,
-        $insolvencyConfirmation
-    ) {
-        $this->assertTrue(
-            $this->entity->updateFinancialHistory(
-                $bankrupt,
-                $liquidation,
-                $receivership,
-                $administration,
-                $disqualified,
-                $insolvencyDetails,
-                $insolvencyConfirmation
-            )
-        );
-        $this->assertEquals($this->entity->getBankrupt(), $bankrupt);
-        $this->assertEquals($this->entity->getLiquidation(), $liquidation);
-        $this->assertEquals($this->entity->getReceivership(), $receivership);
-        $this->assertEquals($this->entity->getAdministration(), $administration);
-        $this->assertEquals($this->entity->getDisqualified(), $disqualified);
-        $this->assertEquals($this->entity->getInsolvencyDetails(), $insolvencyDetails);
-        $this->assertEquals($this->entity->getInsolvencyConfirmation(), 'Y');
-    }
-
-    /*
-     * Tested unreacable condition, just for coverage
-     */
-    public function testUpdateFinancialHistoryNull()
+    public function testUpdateFinancialHistoryException()
     {
-        /** @var Entity $sut */
-        $sut = m::mock(Entity::class)->makePartial()
-            ->shouldAllowMockingProtectedMethods()
-            ->shouldReceive('validateFinancialHistory')->once()->andReturn(false)
-            ->getMock();
-
-        static::assertNull($sut->updateFinancialHistory(0, 1, 2, 3, 4, 5, 6));
-    }
-
-    public function validDataProvider()
-    {
-        return [
-            ['N', 'N', 'N', 'N', 'N', '', '1'],
-            ['Y', 'N', 'N', 'N', 'N', str_repeat('X', 200), '1'],
-        ];
+        try {
+            $this->entity->updateFinancialHistory('Y', 'N', 'N', 'N', 'N', 'less than required count', 1);
+        } catch (ValidationException $e) {
+            static::assertEquals(
+                [
+                    'insolvencyDetails' => [
+                        Entity::ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED => 'FHAdditionalInfo.api.validation.too_short',
+                    ],
+                ],
+                $e->getMessages()
+            );
+        }
     }
 
     /**
