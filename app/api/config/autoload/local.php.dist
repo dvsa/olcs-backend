@@ -311,5 +311,11 @@ return [
                 ]
             ]
         ]
-    ]
+    ],
+
+    'allow_file_upload' => [
+        // list of allowed file extensions that can be uploaded
+        'extensions' => 'doc,pdf,rtf,xls,xlsx,docx,xml,zip,jpeg,jpg,png,tiff,txt,rtf,xml',
+    ],
+
 ];

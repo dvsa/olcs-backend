@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator;
 
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate;
 use PHPUnit_Framework_TestCase as TestCase;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**
  * Class EffectiveDateTest
@@ -25,9 +26,32 @@ class EffectiveDateTest extends TestCase
         $today = strtotime(date('Y-m-d'));
 
         return [
-            [['txcAppType' => 'new', 'effectiveDate' => date('Y-m-d', $today - 86400)], false],
-            [['txcAppType' => 'new', 'effectiveDate' => date('Y-m-d', $today + 86400)], true],
-            [['txcAppType' => 'other', 'effectiveDate' => date('Y-m-d', $today - 86400)], true],
+            [['txcAppType' => BusRegEntity::TXC_APP_NEW, 'effectiveDate' => date('Y-m-d', $today - 86400)], false],
+            [['txcAppType' => BusRegEntity::TXC_APP_NEW, 'effectiveDate' => date('Y-m-d', $today + 86400)], true],
+            [['txcAppType' => BusRegEntity::TXC_APP_CANCEL, 'effectiveDate' => date('Y-m-d', $today - 86400)], true],
+            [['txcAppType' => BusRegEntity::TXC_APP_CANCEL, 'effectiveDate' => date('Y-m-d', $today + 86400)], true],
+            [
+                ['txcAppType' => BusRegEntity::TXC_APP_CHARGEABLE, 'effectiveDate' => date('Y-m-d', $today - 86400)],
+                true
+            ],
+            [
+                ['txcAppType' => BusRegEntity::TXC_APP_CHARGEABLE, 'effectiveDate' => date('Y-m-d', $today + 86400)],
+                true
+            ],
+            [
+                [
+                    'txcAppType' => BusRegEntity::TXC_APP_NON_CHARGEABLE,
+                    'effectiveDate' => date('Y-m-d', $today - 86400)
+                ],
+                true
+            ],
+            [
+                [
+                    'txcAppType' => BusRegEntity::TXC_APP_NON_CHARGEABLE,
+                    'effectiveDate' => date('Y-m-d', $today + 86400)
+                ],
+                true
+            ],
         ];
     }
 }

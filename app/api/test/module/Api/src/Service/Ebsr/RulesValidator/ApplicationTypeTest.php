@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType;
 use PHPUnit_Framework_TestCase as TestCase;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**
  * Class ApplicationTypeTest
@@ -38,46 +39,46 @@ class ApplicationTypeTest extends TestCase
     {
         return [
             [
-                ['txcAppType' => 'new'],
+                ['txcAppType' => BusRegEntity::TXC_APP_NEW],
                 ['submissionType' => EbsrSubmission::DATA_REFRESH_SUBMISSION_TYPE],
                 false,
                 ApplicationType::REFRESH_SUBMISSION_ERROR
             ],
             [
-                ['txcAppType' => 'new'],
+                ['txcAppType' => BusRegEntity::TXC_APP_NEW],
                 ['submissionType' => EbsrSubmission::NEW_SUBMISSION_TYPE],
                 true
             ],
             [
-                ['txcAppType' => 'nonChargeableChange'],
+                ['txcAppType' => BusRegEntity::TXC_APP_NON_CHARGEABLE],
                 ['submissionType' => EbsrSubmission::DATA_REFRESH_SUBMISSION_TYPE],
                 true
             ],
             [
-                ['txcAppType' => 'nonChargeableChange'],
+                ['txcAppType' => BusRegEntity::TXC_APP_NON_CHARGEABLE],
                 ['submissionType' => EbsrSubmission::NEW_SUBMISSION_TYPE],
                 false,
                 ApplicationType::NEW_SUBMISSION_ERROR
             ],
             [
-                ['txcAppType' => 'chargeableChange'],
+                ['txcAppType' => BusRegEntity::TXC_APP_CHARGEABLE],
                 ['submissionType' => EbsrSubmission::DATA_REFRESH_SUBMISSION_TYPE],
                 false,
                 ApplicationType::REFRESH_SUBMISSION_ERROR
             ],
             [
-                ['txcAppType' => 'chargeableChange'],
+                ['txcAppType' => BusRegEntity::TXC_APP_CHARGEABLE],
                 ['submissionType' => EbsrSubmission::NEW_SUBMISSION_TYPE],
                 true
             ],
             [
-                ['txcAppType' => 'cancel'],
+                ['txcAppType' => BusRegEntity::TXC_APP_CANCEL],
                 ['submissionType' => EbsrSubmission::DATA_REFRESH_SUBMISSION_TYPE],
                 false,
                 ApplicationType::REFRESH_SUBMISSION_ERROR
             ],
             [
-                ['txcAppType' => 'cancel'],
+                ['txcAppType' => BusRegEntity::TXC_APP_CANCEL],
                 ['submissionType' => EbsrSubmission::NEW_SUBMISSION_TYPE],
                 true
             ]
