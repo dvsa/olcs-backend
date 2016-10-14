@@ -1,15 +1,12 @@
 <?php
 
-/**
- * Document Search View
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\View\DocumentSearchView as Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Transfer\Query as TransferQry;
+use Dvsa\Olcs\Utils\Constants\FilterOptions;
 
 /**
  * Document Search View
@@ -28,6 +25,14 @@ class DocumentSearchView extends AbstractReadonlyRepository
 
     protected $entity = Entity::class;
 
+    /**
+     * Apply filters 
+     *
+     * @param QueryBuilder                      $qb    Query Builder
+     * @param TransferQry\Document\DocumentList $query Api Query
+     * 
+     * @return void
+     */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         if ($query->getIsExternal() !== null) {
@@ -49,6 +54,34 @@ class DocumentSearchView extends AbstractReadonlyRepository
             );
         }
 
+        //  check if should show only items related to current object
+        $isShowSelfOnly = ($query->getShowDocs() === FilterOptions::SHOW_SELF_ONLY);
+        if ($isShowSelfOnly) {
+            $appId = $query->getApplication();
+            if ($appId !== null) {
+                $qb->andWhere(
+                    $qb->expr()->eq($this->alias . '.applicationId', ':APP_ID')
+                );
+                $qb->setParameter('APP_ID', $appId);
+            }
+
+            $caseId = $query->getCase();
+            if ($caseId !== null) {
+                $qb->andWhere(
+                    $qb->expr()->eq($this->alias . '.caseId', ':CASE_ID')
+                );
+                $qb->setParameter('CASE_ID', $caseId);
+            }
+
+            $busRegId = $query->getBusReg();
+            if ($busRegId !== null) {
+                $qb->andWhere(
+                    $qb->expr()->eq($this->alias . '.busRegId', ':BUS_REG_ID')
+                );
+                $qb->setParameter('BUS_REG_ID', $busRegId);
+            }
+        }
+
         $idExpressions = [];
 
         if ($query->getLicence() !== null) {
@@ -65,7 +98,7 @@ class DocumentSearchView extends AbstractReadonlyRepository
             $qb->setParameter('tm', $query->getTransportManager());
         }
 
-        if ($query->getCase() !== null) {
+        if ($query->getCase() !== null && !$isShowSelfOnly) {
             $idExpressions[] = $qb->expr()->eq(
                 'm.caseId', ':case'
             );
