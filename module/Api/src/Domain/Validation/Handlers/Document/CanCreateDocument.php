@@ -149,7 +149,10 @@ class CanCreateDocument extends AbstractHandler implements AuthAwareInterface
      */
     private function validateExtension($filename)
     {
-        $extension = substr($filename, strrpos($filename, '.') + 1);
+        $extension = '';
+        if (strrpos($filename, '.') !== false) {
+            $extension = substr($filename, strrpos($filename, '.') + 1);
+        }
         foreach ($this->allowedExtensions as $ext) {
             if (trim(strtolower($ext)) == trim(strtolower($extension))) {
                 return true;
