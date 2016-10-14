@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Ebsr\RulesValidator;
 
 use Zend\Validator\AbstractValidator;
 use Zend\Validator\Exception;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**
  * Class EffectiveDate
@@ -27,13 +28,14 @@ class EffectiveDate extends AbstractValidator
      * getMessages() will return an array of messages that explain why the
      * validation failed.
      *
-     * @param  mixed $value
+     * @param array $value input value
+     *
      * @return bool
      * @throws Exception\RuntimeException If validation of $value is impossible
      */
     public function isValid($value)
     {
-        if ($value['txcAppType'] == 'new') {
+        if ($value['txcAppType'] === BusRegEntity::TXC_APP_NEW) {
             $date = strtotime($value['effectiveDate']);
             $today = strtotime(date('Y-m-d'));
 

@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData;
 
 use Zend\Validator\AbstractValidator;
-use Zend\Validator\Exception;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**
@@ -30,18 +29,22 @@ class RegisteredBusRoute extends AbstractValidator
      * getMessages() will return an array of messages that explain why the
      * validation failed.
      *
-     * @param  mixed $value
+     * @param array $value   input value
+     * @param array $context context value
+     *
      * @return bool
      */
     public function isValid($value, $context = [])
     {
         /** @var BusRegEntity $busReg */
         $busReg = $context['busReg'];
-        $txcAppType = strtolower($value['txcAppType']);
 
         //this check is not done for new applications
-        if ($txcAppType !== 'new' && !$busReg->isRegistered()) {
-            $type = ($txcAppType === 'cancel' ? self::TYPE_CANCELLATION : self::TYPE_VARIATION);
+        if ($value['txcAppType'] !== BusRegEntity::TXC_APP_NEW && !$busReg->isRegistered()) {
+            $type = $value['txcAppType'] === BusRegEntity::TXC_APP_CANCEL
+                    ? self::TYPE_CANCELLATION
+                    : self::TYPE_VARIATION;
+
             $this->error(self::REGISTERED_BUS_ROUTE_ERROR, $type);
             return false;
         }
