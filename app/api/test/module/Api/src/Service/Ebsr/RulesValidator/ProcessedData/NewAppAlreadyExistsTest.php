@@ -46,14 +46,14 @@ class NewAppAlreadyExistsTest extends MockeryTestCase
         $busMock = m::mock(BusRegEntity::class);
 
         return [
-            ['new', $busMock, false],
-            ['new', null, true],
-            ['cancel', $busMock, true],
-            ['cancel', null, true],
-            ['nonChargeableChange', $busMock, true],
-            ['nonChargeableChange', null, true],
-            ['chargeableChange', $busMock, true],
-            ['chargeableChange', null, true],
+            [BusRegEntity::TXC_APP_NEW, $busMock, false],
+            [BusRegEntity::TXC_APP_NEW, null, true],
+            [BusRegEntity::TXC_APP_CANCEL, $busMock, true],
+            [BusRegEntity::TXC_APP_CANCEL, null, true],
+            [BusRegEntity::TXC_APP_NON_CHARGEABLE, $busMock, true],
+            [BusRegEntity::TXC_APP_NON_CHARGEABLE, null, true],
+            [BusRegEntity::TXC_APP_CHARGEABLE, $busMock, true],
+            [BusRegEntity::TXC_APP_CHARGEABLE, null, true],
         ];
     }
 }

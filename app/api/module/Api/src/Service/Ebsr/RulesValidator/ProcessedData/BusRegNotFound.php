@@ -28,13 +28,15 @@ class BusRegNotFound extends AbstractValidator
      * getMessages() will return an array of messages that explain why the
      * validation failed.
      *
-     * @param  mixed $value
+     * @param array $value   input value
+     * @param array $context context value
+     *
      * @return bool
      */
     public function isValid($value, $context = [])
     {
         //this check is only done for records which are not new applications
-        if (strtolower($value['txcAppType']) !== 'new' && !$context['busReg'] instanceof BusRegEntity) {
+        if ($value['txcAppType'] !== BusRegEntity::TXC_APP_NEW && !$context['busReg'] instanceof BusRegEntity) {
             $this->error(self::BUS_REG_NOT_FOUND_ERROR, $value['existingRegNo']);
             return false;
         }

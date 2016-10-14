@@ -396,19 +396,31 @@ final class ProcessPack extends AbstractCommandHandler implements
     {
         //decide what to do based on txcAppType
         switch ($ebsrData['txcAppType']) {
-            case 'new':
+            case BusRegEntity::TXC_APP_NEW: //new application
                 $busReg = $this->createNew($ebsrData);
                 break;
-            case 'cancel':
+            case BusRegEntity::TXC_APP_CANCEL: //cancellation
                 $busReg = $this->createVariation($previousBusReg, BusRegEntity::STATUS_CANCEL);
                 break;
-            default:
+            case BusRegEntity::TXC_APP_NON_CHARGEABLE: //data refresh
+                $busReg = $this->createVariation($previousBusReg, BusRegEntity::STATUS_REGISTERED);
+                break;
+            default: //variation
                 $busReg = $this->createVariation($previousBusReg, BusRegEntity::STATUS_VAR);
         }
 
         $busReg->fromData($this->prepareBusRegData($ebsrData));
-        $busReg->populateShortNotice();
         $this->processServiceNumbers($busReg, $ebsrData['otherServiceNumbers']);
+
+        /**
+         * For most records we calculate short notice based on the dates.
+         * For data refreshes, we only validate short notice if the operator includes the information
+         */
+        if ($ebsrData['txcAppType'] !== BusRegEntity::TXC_APP_NON_CHARGEABLE) {
+            $busReg->populateShortNotice();
+        } elseif (!empty($ebsrData['busShortNotice'])) {
+            $busReg->setIsShortNotice('Y');
+        }
 
         return $busReg;
     }
@@ -457,10 +469,7 @@ final class ProcessPack extends AbstractCommandHandler implements
             $sideEffects[] = CreateBusFeeCmd::create(['id' => $busRegId]);
         }
 
-        /** @var EbsrSubmissionEntity $ebsrSub */
-        $ebsrSub = $busReg->getEbsrSubmissions()->first();
-
-        if ($ebsrSub->isDataRefresh()) {
+        if ($busReg->isEbsrRefresh()) {
             $sideEffects[] = $this->getEbsrRefreshedEmailCmd($ebsrSub->getId());
         } else {
             $sideEffects[] = $this->getEbsrReceivedEmailCmd($ebsrSub->getId());
@@ -601,9 +610,7 @@ final class ProcessPack extends AbstractCommandHandler implements
      */
     private function createTaskCommand(BusRegEntity $busReg)
     {
-        $ebsrSubmission = $busReg->getEbsrSubmissions()->first();
-
-        if ($ebsrSubmission->isDataRefresh()) {
+        if ($busReg->isEbsrRefresh()) {
             $description = 'Data refresh created';
         } else {
             $status = $busReg->getStatus()->getId();

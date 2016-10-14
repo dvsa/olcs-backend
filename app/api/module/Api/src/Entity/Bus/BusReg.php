@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusShortNotice as BusShortNoticeEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService as BusRegOtherServiceEntity;
+use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
@@ -54,6 +55,11 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     const STATUS_CANCELLED = 'breg_s_cancelled';
 
     const SUBSIDY_NO = 'bs_no';
+
+    const TXC_APP_NEW = 'new';
+    const TXC_APP_CANCEL = 'cancel';
+    const TXC_APP_CHARGEABLE = 'chargeableChange';
+    const TXC_APP_NON_CHARGEABLE = 'nonChargeableChange';
 
     const FORBIDDEN_ERROR = 'This bus reg can\'t be edited. It must be the latest variation, and not from EBSR';
 
@@ -365,6 +371,23 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     public function isFromEbsr()
     {
         return ($this->isTxcApp === 'Y' ? true : false);
+    }
+
+    /**
+     * Returns whether the bus reg came from EBSR data refresh
+     *
+     * @return bool
+     */
+    public function isEbsrRefresh()
+    {
+        if ($this->ebsrSubmissions->isEmpty()) {
+            return false;
+        }
+
+        /** @var EbsrSubmission $ebsrSubmission */
+        $ebsrSubmission = $this->ebsrSubmissions->first();
+
+        return $ebsrSubmission->isDataRefresh();
     }
 
     /**
