@@ -119,14 +119,257 @@ class ProcessPackTest extends CommandHandlerTestCase
             'bs_in_part',
             BusRegEntity::STATUS_NEW,
             BusRegEntity::STATUS_CANCEL,
-            BusRegEntity::STATUS_VAR
+            BusRegEntity::STATUS_VAR,
+            BusRegEntity::STATUS_REGISTERED
         ];
 
         parent::initReferences();
     }
 
     /**
+     * Tests successful creation of a data refresh through EBSR
+     *
+     * @param $busShortNotice
+     * @param $shortNoticeSetTimes
+     *
+     * @dataProvider handleDataRefreshProvider
+     */
+    public function testHandleCommandDataRefresh($busShortNotice, $shortNoticeSetTimes)
+    {
+        $filePath = 'vfs://root';
+        $xmlName = $filePath . '/xml-file-name.xml';
+        $xmlDocument = "<xml></xml>";
+        $ebsrSubId = 1234;
+        $organisationId = 5678;
+        $documentId = 91011;
+        $documentDescription = 'document description';
+        $licenceId = 121314;
+        $variationBusRegId = 151617;
+        $submissionTypeId = 'submission type id';
+        $organisation = m::mock(OrganisationEntity::class);
+        $busRegStatus = BusRegEntity::STATUS_REGISTERED;
+        $taskMessage = 'Data refresh created: ';
+
+        $fileSystem = vfsStream::setup();
+        $supportingDocName = 'supporting.doc';
+        $supportingDocFilename = vfsStream::url('root/' . $supportingDocName);
+        $supportingDocContent = 'doc content';
+        $file = vfsStream::newFile($supportingDocName);
+        $file->setContent($supportingDocContent);
+        $fileSystem->addChild($file);
+
+        $this->supportingDocSideEffect(
+            $supportingDocFilename,
+            $variationBusRegId,
+            $licenceId,
+            $supportingDocName,
+            'Supporting document'
+        );
+
+        $supportingMapName = 'map.doc';
+        $supportingMapFilename = vfsStream::url('root/' . $supportingMapName);
+        $supportingMapContent = 'map content';
+        $file = vfsStream::newFile($supportingMapName);
+        $file->setContent($supportingMapContent);
+        $fileSystem->addChild($file);
+
+        $this->supportingDocSideEffect(
+            $supportingMapFilename,
+            $variationBusRegId,
+            $licenceId,
+            $supportingMapName,
+            'Schematic map'
+        );
+
+        $busServiceTypes = [
+            'type1_key' => 'service type 1',
+            'type2_key' => 'service type 2'
+        ];
+
+        $naptanCodes = ['naptan codes'];
+
+        $trafficArea1 = m::mock(TrafficAreaEntity::class);
+        $trafficArea2 = m::mock(TrafficAreaEntity::class);
+        $trafficArea3 = m::mock(TrafficAreaEntity::class);
+
+        $parsedTrafficAreas = ['parsed traffic areas'];
+
+        $parsedLocalAuthorities = ['parsed local authorities'];
+
+        $docIdentifier = 'doc/identifier';
+        $document = $this->basicDocument($docIdentifier, $documentDescription);
+        $document->shouldReceive('getId')->once()->andReturn($documentId);
+
+        $cmdData = [
+            'organisation' => $organisationId,
+            'id' => $ebsrSubId
+        ];
+
+        $command = ProcessPackCmd::create($cmdData);
+
+        $xmlDocContext = ['xml_filename' => $xmlName];
+
+        $parsedLicenceNumber = 'OB1234567';
+        $parsedVariationNumber = 666;
+        $parsedRouteNumber = '12345';
+        $parsedOrganisationEmail = 'foo@bar.com';
+        $existingRegNo = 'OB1234567/12345';
+
+        $otherServiceNumber1 = '123';
+        $otherServiceNumber2 = '456';
+
+        $parsedEbsrData = [
+            'licNo' => $parsedLicenceNumber,
+            'variationNo' => $parsedVariationNumber,
+            'routeNo' => $parsedRouteNumber,
+            'organisationEmail' => $parsedOrganisationEmail,
+            'existingRegNo' => $existingRegNo,
+            'subsidised' => 'bs_in_part',
+            'busNoticePeriod' => 1,
+            'txcAppType' => BusRegEntity::TXC_APP_NON_CHARGEABLE,
+            'serviceClassifications' => $busServiceTypes,
+            'trafficAreas' => $parsedTrafficAreas,
+            'localAuthorities' => $parsedLocalAuthorities,
+            'naptan' => $naptanCodes,
+            'documents' => [
+                0 => $supportingDocName
+            ],
+            'map' => $supportingMapName,
+            'otherServiceNumbers' => [$otherServiceNumber1, $otherServiceNumber2],
+            'busShortNotice' => $busShortNotice
+        ];
+
+        $extraProcessedEbsrData = [
+            'subsidised' => $this->refData['bs_in_part'],
+            'trafficAreas' => $this->trafficAreas($parsedTrafficAreas, $trafficArea1, $trafficArea2, $trafficArea3),
+            'naptanAuthorities' => $this->naptan($naptanCodes),
+            'busNoticePeriod' => $this->references[BusNoticePeriodEntity::class][1],
+            'localAuthoritys' => $this->localAuthorities($parsedLocalAuthorities, $trafficArea2, $trafficArea3),
+            'busServiceTypes' => $this->busServiceTypes($busServiceTypes)
+        ];
+
+        $processedDataOutput = array_merge($parsedEbsrData, $extraProcessedEbsrData);
+        $busRegFromData = $processedDataOutput;
+        unset($busRegFromData['documents']);
+        unset($busRegFromData['variationNo']);
+
+        $ebsrSubmission = m::mock(EbsrSubmissionEntity::class);
+        $ebsrSubmission->shouldReceive('beginValidating')
+            ->once()
+            ->with($this->refData[EbsrSubmissionEntity::VALIDATING_STATUS])
+            ->andReturnSelf();
+        $ebsrSubmission->shouldReceive('getId')->andReturn($ebsrSubId);
+        $ebsrSubmission->shouldReceive('getOrganisation')->once()->andReturn($organisation);
+        $ebsrSubmission->shouldReceive('getDocument')->twice()->andReturn($document);
+        $ebsrSubmission->shouldReceive('getEbsrSubmissionType->getId')->once()->andReturn($submissionTypeId);
+        $ebsrSubmission->shouldReceive('setLicenceNo')->with($parsedLicenceNumber)->once()->andReturnSelf();
+        $ebsrSubmission->shouldReceive('setVariationNo')->with($parsedVariationNumber)->once()->andReturnSelf();
+        $ebsrSubmission->shouldReceive('setRegistrationNo')->with($parsedRouteNumber)->once()->andReturnSelf();
+        $ebsrSubmission->shouldReceive('setOrganisationEmailAddress')
+            ->with($parsedOrganisationEmail)
+            ->once()
+            ->andReturnSelf();
+        $ebsrSubmission->shouldReceive('setBusReg')
+            ->with(m::type(BusRegEntity::class))
+            ->once()
+            ->andReturnSelf();
+
+        $this->ebsrSubmissionRepo($command, $ebsrSubmission, 3);
+
+        $this->mockInput('EbsrXmlStructure', $xmlName, $xmlDocContext, $xmlDocument);
+
+        $busRegInputContext = [
+            'submissionType' => $submissionTypeId,
+            'organisation' => $organisation
+        ];
+
+        $variationBusReg = m::mock(BusRegEntity::class)->makePartial();
+        $variationBusReg->shouldReceive('fromData')->once()->with($busRegFromData);
+        $variationBusReg->shouldReceive('populateShortNotice')->never();
+        $variationBusReg->shouldReceive('setIsShortNotice')->with('Y')->times($shortNoticeSetTimes);
+        $variationBusReg->shouldReceive('setOtherServices')->once()->with(m::type(ArrayCollection::class));
+        $variationBusReg->shouldReceive('addOtherServiceNumber')->once()->with($otherServiceNumber1);
+        $variationBusReg->shouldReceive('addOtherServiceNumber')->once()->with($otherServiceNumber2);
+        $variationBusReg->shouldReceive('getRegNo')->once()->andReturn($existingRegNo);
+        $variationBusReg->shouldReceive('getId')->times(6)->andReturn($variationBusRegId);
+        $variationBusReg->shouldReceive('getLicence->getId')->times(4)->andReturn($licenceId);
+        $variationBusReg->shouldReceive('getIsShortNotice')->once()->andReturn('Y');
+        $variationBusReg->shouldReceive('getShortNotice->fromData')->once()->with($busShortNotice);
+        $variationBusReg->shouldReceive('setEbsrSubmissions')->once()->with(m::type(ArrayCollection::class));
+        $variationBusReg->shouldReceive('isEbsrRefresh')->twice()->andReturn(true);
+        $variationBusReg->shouldReceive('getStatus->getId')->once()->andReturn($busRegStatus);
+
+        $previousBusReg = m::mock(BusRegEntity::class);
+        $previousBusReg->shouldReceive('createVariation')
+            ->with($this->refData[$busRegStatus], $this->refData[$busRegStatus])
+            ->once()
+            ->andReturn($variationBusReg);
+
+        $this->repoMap['Bus']->shouldReceive('fetchLatestUsingRegNo')
+            ->once()
+            ->with($existingRegNo)
+            ->andReturn($previousBusReg);
+
+        $this->repoMap['Bus']->shouldReceive('save')
+            ->once()
+            ->with($variationBusReg)
+            ->andReturn($variationBusReg);
+
+        $this->mockInput('EbsrBusRegInput', $xmlDocument, $busRegInputContext, $parsedEbsrData);
+
+        $this->fileProcessor($docIdentifier, $xmlName);
+
+        $processedContext = ['busReg' => $previousBusReg];
+
+        //this is just validators for the data generated by doctrine, no data is filtered
+        $this->mockInput('EbsrProcessedDataInput', $processedDataOutput, $processedContext, $processedDataOutput);
+
+        $shortNoticeContext = ['busReg' => $variationBusReg];
+
+        //this is just validators for short notice information, no data is filtered
+        $this->mockInput('EbsrShortNoticeInput', $processedDataOutput, $shortNoticeContext, $processedDataOutput);
+
+        $ebsrSubmission->shouldReceive('finishValidating')
+            ->once()
+            ->with($this->refData[EbsrSubmissionEntity::PROCESSING_STATUS], 'json string')
+            ->andReturnSelf();
+
+        $ebsrSubmission->shouldReceive('finishProcessing')
+            ->once()
+            ->with($this->refData[EbsrSubmissionEntity::PROCESSED_STATUS])
+            ->andReturnSelf();
+
+        $this->expectedEmailQueueSideEffect(
+            SendEbsrRefreshedCmd::class,
+            ['id' => $ebsrSubId],
+            $ebsrSubId,
+            new Result()
+        );
+
+        $this->successSideEffects($existingRegNo, $variationBusRegId, $licenceId, $documentId, $taskMessage, false);
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @return array
+     */
+    public function handleDataRefreshProvider()
+    {
+        return [
+            [['short notice section'], 1],
+            [[], 0]
+        ];
+    }
+
+
+    /**
      * Tests successful creation of a variation application through EBSR
+     *
+     * @param $txcAppType
+     * @param $busRegStatus
+     * @param $taskMessage
+     * @param $fee
      *
      * @dataProvider handleVariationProvider
      */
@@ -261,7 +504,6 @@ class ProcessPackTest extends CommandHandlerTestCase
         $ebsrSubmission->shouldReceive('setLicenceNo')->with($parsedLicenceNumber)->once()->andReturnSelf();
         $ebsrSubmission->shouldReceive('setVariationNo')->with($parsedVariationNumber)->once()->andReturnSelf();
         $ebsrSubmission->shouldReceive('setRegistrationNo')->with($parsedRouteNumber)->once()->andReturnSelf();
-        $ebsrSubmission->shouldReceive('isDataRefresh')->twice()->andReturn(false);
         $ebsrSubmission->shouldReceive('setOrganisationEmailAddress')
             ->with($parsedOrganisationEmail)
             ->once()
@@ -292,10 +534,8 @@ class ProcessPackTest extends CommandHandlerTestCase
         $variationBusReg->shouldReceive('getIsShortNotice')->once()->andReturn('Y');
         $variationBusReg->shouldReceive('getShortNotice->fromData')->once()->with($busShortNotice);
         $variationBusReg->shouldReceive('setEbsrSubmissions')->once()->with(m::type(ArrayCollection::class));
-        $variationBusReg->shouldReceive('getEbsrSubmissions')
-            ->times(2)
-            ->andReturn(new ArrayCollection([$ebsrSubmission]));
-        $variationBusReg->shouldReceive('getStatus->getId')->times(2)->andReturn($busRegStatus);
+        $variationBusReg->shouldReceive('isEbsrRefresh')->twice()->andReturn(false);
+        $variationBusReg->shouldReceive('getStatus->getId')->twice()->andReturn($busRegStatus);
 
         $previousBusReg = m::mock(BusRegEntity::class);
         $previousBusReg->shouldReceive('createVariation')
@@ -350,21 +590,15 @@ class ProcessPackTest extends CommandHandlerTestCase
     public function handleVariationProvider()
     {
         return [
-            ['cancel', BusRegEntity::STATUS_CANCEL, 'New cancellation created: ', false],
-            ['chargeableChange', BusRegEntity::STATUS_VAR, 'New variation created: ', true]
+            [BusRegEntity::TXC_APP_CANCEL, BusRegEntity::STATUS_CANCEL, 'New cancellation created: ', false],
+            [BusRegEntity::TXC_APP_CHARGEABLE, BusRegEntity::STATUS_VAR, 'New variation created: ', true]
         ];
     }
 
     /**
      * Tests successful creation of a new bus reg application through EBSR
-     *
-     * @param $isDataRefresh
-     * @param $emailCommandClass
-     * @param $taskMessage
-     *
-     * @dataProvider handleNewApplicationProvider
      */
-    public function testHandleCommandNewApplication($isDataRefresh, $emailCommandClass, $taskMessage)
+    public function testHandleCommandNewApplication()
     {
         $xmlName = 'tmp/directory/path/xml-file-name.xml';
         $xmlDocument = "<xml></xml>";
@@ -419,7 +653,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'existingRegNo' => $existingRegNo,
             'subsidised' => 'bs_in_part',
             'busNoticePeriod' => 1,
-            'txcAppType' => 'new',
+            'txcAppType' => BusRegEntity::TXC_APP_NEW,
             'serviceClassifications' => $busServiceTypes,
             'trafficAreas' => $parsedTrafficAreas,
             'localAuthorities' => $parsedLocalAuthorities,
@@ -442,7 +676,7 @@ class ProcessPackTest extends CommandHandlerTestCase
         $ebsrSubmission->shouldReceive('setLicenceNo')->with($parsedLicenceNumber)->once()->andReturnSelf();
         $ebsrSubmission->shouldReceive('setVariationNo')->with($parsedVariationNumber)->once()->andReturnSelf();
         $ebsrSubmission->shouldReceive('setRegistrationNo')->with($parsedRouteNumber)->once()->andReturnSelf();
-        $ebsrSubmission->shouldReceive('isDataRefresh')->twice()->andReturn($isDataRefresh);
+        $ebsrSubmission->shouldReceive('isDataRefresh')->twice()->andReturn(false);
         $ebsrSubmission->shouldReceive('setOrganisationEmailAddress')
             ->with($parsedOrganisationEmail)
             ->once()
@@ -518,24 +752,18 @@ class ProcessPackTest extends CommandHandlerTestCase
             ->with($this->refData[EbsrSubmissionEntity::PROCESSED_STATUS])
             ->andReturnSelf();
 
-        $this->expectedEmailQueueSideEffect($emailCommandClass, ['id' => $ebsrSubId], $ebsrSubId, new Result());
+        $this->expectedEmailQueueSideEffect(SendEbsrReceivedCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
 
-        $this->successSideEffects($existingRegNo, $savedBusRegId, $licenceId, $documentId, $taskMessage, true);
+        $this->successSideEffects(
+            $existingRegNo,
+            $savedBusRegId,
+            $licenceId,
+            $documentId,
+            'New application created: ',
+            true
+        );
 
         $this->sut->handleCommand($command);
-    }
-
-    /**
-     * Data provider for handle new application
-     *
-     * @return array
-     */
-    public function handleNewApplicationProvider()
-    {
-        return [
-            [false, SendEbsrReceivedCmd::class, 'New application created: '],
-            [true, SendEbsrRefreshedCmd::class, 'Data refresh created: ']
-        ];
     }
 
     /**
@@ -743,7 +971,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'existingRegNo' => $existingRegNo,
             'subsidised' => 'bs_in_part',
             'busNoticePeriod' => 1,
-            'txcAppType' => 'new',
+            'txcAppType' => BusRegEntity::TXC_APP_NEW,
             'serviceClassifications' => $busServiceTypes,
             'trafficAreas' => $parsedTrafficAreas,
             'localAuthorities' => $parsedLocalAuthorities,
@@ -855,7 +1083,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'existingRegNo' => $existingRegNo,
             'subsidised' => 'bs_in_part',
             'busNoticePeriod' => 1,
-            'txcAppType' => 'new',
+            'txcAppType' => BusRegEntity::TXC_APP_NEW,
             'serviceClassifications' => $busServiceTypes,
             'trafficAreas' => $parsedTrafficAreas,
             'localAuthorities' => $parsedLocalAuthorities,

@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Ebsr\Filter;
 
 use Zend\Filter\AbstractFilter;
 use Zend\Filter\Exception;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**
  * Class InjectIsTxcApp
@@ -14,16 +15,17 @@ class InjectIsTxcApp extends AbstractFilter
     /**
      * Returns the result of filtering $value
      *
-     * @param  mixed $value
+     * @param array $value input value
+     *
      * @throws Exception\RuntimeException If filtering $value is impossible
-     * @return mixed
+     * @return array
      */
     public function filter($value)
     {
         $value['isTxcApp'] = 'Y';
         $value['ebsrRefresh'] = 'N';
 
-        if (isset($value['txcAppType']) && $value['txcAppType'] == 'nonChargeableChange') {
+        if (isset($value['txcAppType']) && $value['txcAppType'] === BusRegEntity::TXC_APP_NON_CHARGEABLE) {
             $value['ebsrRefresh'] = 'Y';
         }
 

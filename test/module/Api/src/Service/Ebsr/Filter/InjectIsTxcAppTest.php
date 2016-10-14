@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Ebsr\Filter;
 
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp;
 use PHPUnit_Framework_TestCase as TestCase;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**
  * Class InjectIsTxcAppTest
@@ -35,10 +36,10 @@ class InjectIsTxcAppTest extends TestCase
     public function provideEbsrRefresh()
     {
         return [
-            ['nonChargeableChange', 'Y'],
-            ['new', 'N'],
-            ['cancel', 'N'],
-            ['chargeableChange', 'N']
+            [BusRegEntity::TXC_APP_NON_CHARGEABLE, 'Y'],
+            [BusRegEntity::TXC_APP_NEW, 'N'],
+            [BusRegEntity::TXC_APP_CANCEL, 'N'],
+            [BusRegEntity::TXC_APP_CHARGEABLE, 'N']
         ];
     }
 }
