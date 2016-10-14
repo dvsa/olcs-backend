@@ -236,38 +236,38 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $insolvencyConfirmation
     ) {
         $flags = compact('bankrupt', 'liquidation', 'receivership', 'administration', 'disqualified');
-        if ($this->validateFinancialHistory($flags, $insolvencyDetails)) {
-            foreach ($flags as $key => $flag) {
-                $this->{$key} = $flag;
-            }
-            $this->setInsolvencyDetails($insolvencyDetails);
-            if ($insolvencyConfirmation) {
-                $this->setInsolvencyConfirmation('Y');
-            }
-            return true;
+
+        //  can throw exception
+        $this->validateFinancialHistory($flags, $insolvencyDetails);
+
+        $this->bankrupt = $bankrupt;
+        $this->liquidation = $liquidation;
+        $this->receivership = $receivership;
+        $this->administration = $administration;
+        $this->disqualified = $disqualified;
+
+        $this->setInsolvencyDetails($insolvencyDetails);
+        if ($insolvencyConfirmation) {
+            $this->setInsolvencyConfirmation('Y');
         }
     }
 
     protected function validateFinancialHistory($flags, $insolvencyDetails)
     {
-        $foundYes = false;
-        foreach ($flags as $element) {
-            if ($element == 'Y') {
-                $foundYes = true;
-                break;
-            }
-        }
-        if (!$foundYes) {
+        $minCharsReq = 150;
+
+        if (!in_array('Y', $flags, true)) {
             return true;
         }
-        if (strlen($insolvencyDetails) >= 200) {
+
+        if (strlen(preg_replace('/\s+/', '', $insolvencyDetails)) >= $minCharsReq) {
             return true;
         }
+
         $errors = [
             'insolvencyDetails' => [
                 self::ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED =>
-                    'You selected \'yes\' in one of the provided questions, so the input has to be at least 200
-                characters long'
+                    sprintf('FHAdditionalInfo.api.validation.too_short', $minCharsReq),
             ]
         ];
         throw new ValidationException($errors);
