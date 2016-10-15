@@ -16,8 +16,7 @@
                                         "prefix_length":1,
                                         "fields":[
                                             "entity",
-                                            "forename",
-                                            "family_name"
+                                            "full_name"
                                         ]
                                     }
                                 },
@@ -43,17 +42,22 @@
                                         "email_address":"%SEARCH_TERM%"
                                     }
                                 },
-                                {
+                                 {
                                     "match":{
-                                        "full_name":{
-                                            "query":"%SEARCH_TERM%",
-                                            "boost":2
-                                        }
+                                        "full_name":"%SEARCH_TERM%"
                                     }
                                 },
                                 {
                                     "match":{
                                         "entity":"%SEARCH_TERM%"
+                                    }
+                                },
+                                 {
+                                    "term":{
+                                        "login_id":{
+                                        "value":"%SEARCH_TERM%",
+                                        "boost":3.75
+                                        }
                                     }
                                 },
                                 {
