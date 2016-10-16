@@ -22,4 +22,11 @@ class SendEbsrRequestMapTest extends SendEbsrEmailTestAbstract
     protected $template = 'ebsr-request-map';
     protected $sutClass = '\Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrRequestMap';
     protected $cmdClass = SendEbsrRequestMap::class;
+
+    protected $pdfType = 'pdf type';
+
+    protected $cmdData = [
+        'id' => 1234,
+        'pdfType' => 'pdf type'
+    ];
 }

@@ -90,7 +90,10 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
         $id = 99;
         $licenceId = 77;
         $submissionId = 55;
-        $emailParams = ['id' => $submissionId];
+        $emailParams = [
+            'id' => $submissionId,
+            'pdfType' => $this->sut->getDocumentDescriptions()[$template]
+        ];
         $xmlFilename = 'filename.xml';
         $documentIdentifier = 'identifier';
         $uploadedDocumentId = 55;
