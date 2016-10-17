@@ -1890,6 +1890,80 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->assertEquals('OB1234567', $sut->getReceiverReference($mockFee));
     }
 
+    public function testGetReceiverReferenceOrgFee()
+    {
+        $mockFee = m::mock()
+            ->shouldReceive('getLicence')
+            ->andReturnNull()
+            ->once()
+            ->shouldReceive('getFeeType')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('isMiscellaneous')
+                    ->andReturn(false)
+                    ->once()
+                    ->shouldReceive('getIrfoFeeType')
+                    ->andReturnNull()
+                    ->once()
+                    ->shouldReceive('getFeeType')
+                    ->andReturn(
+                        m::mock()
+                            ->shouldReceive('getId')
+                            ->andReturn('FOO')
+                            ->once()
+                            ->getMock()
+                    )
+                    ->getMock()
+            )
+            ->shouldReceive('getOrganisation')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(99)
+                    ->once()
+                    ->getMock()
+            )
+            ->getMock();
+
+        $sut = m::mock(\Dvsa\Olcs\Api\Service\CpmsV2HelperService::class)->makePartial();
+
+        $this->assertEquals(99, $sut->getReceiverReference($mockFee));
+    }
+
+    public function testGetReceiverReferenceNoFee()
+    {
+        $mockFee = m::mock()
+            ->shouldReceive('getLicence')
+            ->andReturnNull()
+            ->once()
+            ->shouldReceive('getFeeType')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('isMiscellaneous')
+                    ->andReturn(false)
+                    ->once()
+                    ->shouldReceive('getIrfoFeeType')
+                    ->andReturnNull()
+                    ->once()
+                    ->shouldReceive('getFeeType')
+                    ->andReturn(
+                        m::mock()
+                            ->shouldReceive('getId')
+                            ->andReturn('FOO')
+                            ->once()
+                            ->getMock()
+                    )
+                    ->getMock()
+            )
+            ->shouldReceive('getOrganisation')
+            ->andReturnNull()
+            ->getMock();
+
+        $sut = m::mock(\Dvsa\Olcs\Api\Service\CpmsV2HelperService::class)->makePartial();
+
+        $this->assertNull($sut->getReceiverReference($mockFee));
+    }
+
     public function testFormatAddressArray()
     {
         $sut = m::mock(\Dvsa\Olcs\Api\Service\CpmsV2HelperService::class)->makePartial();
