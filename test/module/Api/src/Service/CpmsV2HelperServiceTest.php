@@ -1918,10 +1918,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getOrganisation')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('getId')
-                ->andReturn(99)
-                ->once()
-                ->getMock()
+                    ->shouldReceive('getId')
+                    ->andReturn(99)
+                    ->once()
+                    ->getMock()
             )
             ->getMock();
 
@@ -1962,5 +1962,52 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $sut = m::mock(\Dvsa\Olcs\Api\Service\CpmsV2HelperService::class)->makePartial();
 
         $this->assertNull($sut->getReceiverReference($mockFee));
+    }
+
+    public function testFormatAddressArray()
+    {
+        $sut = m::mock(\Dvsa\Olcs\Api\Service\CpmsV2HelperService::class)->makePartial();
+
+        $expected = [
+            'line_1' => 'line1',
+            'line_2' => 'line2',
+            'line_3' => 'line3',
+            'line_4' => 'line4',
+            'city' => 'city',
+            'postcode' => ' ',
+        ];
+        $address = [
+            'addressLine1' => 'line1',
+            'addressLine2' => 'line2',
+            'addressLine3' => 'line3',
+            'addressLine4' => 'line4',
+            'town' => 'city',
+            'postcode' => null,
+        ];
+
+        $this->assertEquals($sut->formatAddress($address), $expected);
+    }
+
+    public function testFormatAddressObject()
+    {
+        $sut = m::mock(\Dvsa\Olcs\Api\Service\CpmsV2HelperService::class)->makePartial();
+
+        $expected = [
+            'line_1' => 'line1',
+            'line_2' => 'line2',
+            'line_3' => 'line3',
+            'line_4' => 'line4',
+            'city' => 'city',
+            'postcode' => ' ',
+        ];
+        $address = new AddressEntity();
+        $address->setAddressLine1('line1');
+        $address->setAddressLine2('line2');
+        $address->setAddressLine3('line3');
+        $address->setAddressLine4('line4');
+        $address->setTown('city');
+        $address->setPostcode(null);
+
+        $this->assertEquals($sut->formatAddress($address), $expected);
     }
 }
