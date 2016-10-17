@@ -1890,77 +1890,50 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->assertEquals('OB1234567', $sut->getReceiverReference($mockFee));
     }
 
-    public function testGetReceiverReferenceOrgFee()
+    public function testFormatAddressArray()
     {
-        $mockFee = m::mock()
-            ->shouldReceive('getLicence')
-            ->andReturnNull()
-            ->once()
-            ->shouldReceive('getFeeType')
-            ->andReturn(
-                m::mock()
-                    ->shouldReceive('isMiscellaneous')
-                    ->andReturn(false)
-                    ->once()
-                    ->shouldReceive('getIrfoFeeType')
-                    ->andReturnNull()
-                    ->once()
-                    ->shouldReceive('getFeeType')
-                    ->andReturn(
-                        m::mock()
-                            ->shouldReceive('getId')
-                            ->andReturn('FOO')
-                            ->once()
-                            ->getMock()
-                    )
-                    ->getMock()
-            )
-            ->shouldReceive('getOrganisation')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('getId')
-                ->andReturn(99)
-                ->once()
-                ->getMock()
-            )
-            ->getMock();
-
         $sut = m::mock(\Dvsa\Olcs\Api\Service\CpmsV2HelperService::class)->makePartial();
 
-        $this->assertEquals(99, $sut->getReceiverReference($mockFee));
+        $expected = [
+            'line_1' => 'line1',
+            'line_2' => 'line2',
+            'line_3' => 'line3',
+            'line_4' => 'line4',
+            'city' => 'city',
+            'postcode' => ' ',
+        ];
+        $address = [
+            'addressLine1' => 'line1',
+            'addressLine2' => 'line2',
+            'addressLine3' => 'line3',
+            'addressLine4' => 'line4',
+            'town' => 'city',
+            'postcode' => null,
+        ];
+
+        $this->assertEquals($sut->formatAddress($address), $expected);
     }
 
-    public function testGetReceiverReferenceNoFee()
+    public function testFormatAddressObject()
     {
-        $mockFee = m::mock()
-            ->shouldReceive('getLicence')
-            ->andReturnNull()
-            ->once()
-            ->shouldReceive('getFeeType')
-            ->andReturn(
-                m::mock()
-                    ->shouldReceive('isMiscellaneous')
-                    ->andReturn(false)
-                    ->once()
-                    ->shouldReceive('getIrfoFeeType')
-                    ->andReturnNull()
-                    ->once()
-                    ->shouldReceive('getFeeType')
-                    ->andReturn(
-                        m::mock()
-                            ->shouldReceive('getId')
-                            ->andReturn('FOO')
-                            ->once()
-                            ->getMock()
-                    )
-                    ->getMock()
-            )
-            ->shouldReceive('getOrganisation')
-            ->andReturnNull()
-            ->getMock();
-
         $sut = m::mock(\Dvsa\Olcs\Api\Service\CpmsV2HelperService::class)->makePartial();
 
-        $this->assertNull($sut->getReceiverReference($mockFee));
+        $expected = [
+            'line_1' => 'line1',
+            'line_2' => 'line2',
+            'line_3' => 'line3',
+            'line_4' => 'line4',
+            'city' => 'city',
+            'postcode' => ' ',
+        ];
+        $address = new AddressEntity();
+        $address->setAddressLine1('line1');
+        $address->setAddressLine2('line2');
+        $address->setAddressLine3('line3');
+        $address->setAddressLine4('line4');
+        $address->setTown('city');
+        $address->setPostcode(null);
+
+        $this->assertEquals($sut->formatAddress($address), $expected);
     }
 }
