@@ -644,6 +644,10 @@ return [
         'http://www.w3.org/2001/xml.xsd' => __DIR__ . '/../data/ebsr/xsd/xml.xsd',
         'http://www.transxchange.org.uk/schema/2.1/TransXChange_registration.xsd' =>
             __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.1/TransXChange_registration.xsd',
+        'http://www.transxchange.org.uk/schema/2.4/TransXChange_registration.xsd' =>
+            __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.4/TransXChange_registration.xsd',
+        'http://www.transxchange.org.uk/schema/2.5b-2/TransXChange_registration.xsd' =>
+            __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.5b-2/TransXChange_registration.xsd',
         'http://naptan.dft.gov.uk/transxchange/publisher/schema/3.1.2/TransXChangePublisherService.xsd' =>
             __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.1/TransXChangePublisherService_2_4.xsd',
         'https://webgate.ec.testa.eu/erru/1.0' => __DIR__ . '/../data/nr/xsd/ERRU2MS_Infringement_Req.xsd'

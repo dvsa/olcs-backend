@@ -749,16 +749,19 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
                 'line_3' => $address['addressLine3'],
                 'line_4' => $address['addressLine4'],
                 'city' => $address['town'],
-                'postcode' => $address['postcode'],
+                // @see OLCS-14086, agreed solutions is to pass space if the postcode is empty
+                'postcode' => empty($address['postcode']) ? ' ' : $address['postcode'],
             ];
         }
+        $postcode = $address->getPostcode();
         return [
             'line_1' => $address->getAddressLine1(),
             'line_2' => $address->getAddressLine2(),
             'line_3' => $address->getAddressLine3(),
             'line_4' => $address->getAddressLine4(),
             'city' => $address->getTown(),
-            'postcode' => $address->getPostcode(),
+            // @see OLCS-14086, agreed solutions is to pass space if the postcode is empty
+            'postcode' => empty($postcode)  ? ' ' : $postcode,
         ];
     }
 
