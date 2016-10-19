@@ -30,7 +30,6 @@ class PsvVehiclesQueryHelper implements FactoryInterface
         return [
             'vehicles' => $this->getVehicles($entity, $query->getIncludeRemoved()),
             'total' => $activeCount,
-            'availableSpaces' => $entity->getTotAuthVehicles() - $activeCount,
         ];
     }
 

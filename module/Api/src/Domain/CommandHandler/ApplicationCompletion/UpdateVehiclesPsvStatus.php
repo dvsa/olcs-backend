@@ -39,9 +39,6 @@ final class UpdateVehiclesPsvStatus extends AbstractUpdateStatus
             return false;
         }
 
-        if ($application->getLicence()->getActiveVehicles(false)->count() > (int) $application->getTotAuthVehicles()) {
-            return false;
-        }
         return true;
     }
 }
