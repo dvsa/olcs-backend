@@ -537,33 +537,23 @@ class BusRegEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider provideUpdateServiceDetails
-     *
-     * @param $isSn
-     * @param $rules
-     * @param $variationNo
-     * @param $receivedDate
-     * @param $effectiveDate
-     * @param null $parent
+     * Tests updateServiceDetails
      */
-    public function testUpdateServiceDetails($isSn, $rules, $variationNo, $receivedDate, $effectiveDate, $parent = null)
+    public function testUpdateServiceDetails()
     {
         $serviceNo = 12345;
         $startPoint = 'start point';
         $finishPoint = 'finish point';
         $via = 'via';
         $otherDetails = 'other details';
-        $endDate = null;
+        $receivedDate = '2016-12-25';
+        $effectiveDate = '2016-12-26';
+        $endDate = '2017-01-01';
 
         $busNoticePeriod = new BusNoticePeriodEntity();
-        $busNoticePeriod->setId(2);
-        $busNoticePeriod->setCancellationPeriod($rules['cancellationPeriod']);
-        $busNoticePeriod->setStandardPeriod($rules['standardPeriod']);
+        $busNoticePeriod->setStandardPeriod(56);
 
         $this->getAssertionsForCanEditIsTrue();
-
-        $this->entity->setVariationNo($variationNo);
-        $this->entity->setParent($parent);
 
         $this->entity->updateServiceDetails(
             $serviceNo,
@@ -581,68 +571,11 @@ class BusRegEntityTest extends EntityTester
         $this->assertEquals($startPoint, $this->entity->getStartPoint());
         $this->assertEquals($finishPoint, $this->entity->getFinishPoint());
         $this->assertEquals($via, $this->entity->getVia());
-        $this->assertEquals($isSn, $this->entity->getIsShortNotice());
-    }
-
-    /**
-     * Data provider for updateServiceDetails
-     *
-     * @return array
-     */
-    public function provideUpdateServiceDetails()
-    {
-        $scotRules = [
-            'standardPeriod' => 56,
-            'cancellationPeriod' => 90
-        ];
-
-        $otherRules = [
-            'standardPeriod' => 56,
-            'cancellationPeriod' => 0
-        ];
-
-        $parent = new Entity();
-        $parent->setEffectiveDate(new \DateTime('2014-06-11'));
-
-        $sn = 'Y';
-        $notSn = 'N';
-
-        return [
-            //S1
-            [$sn, $otherRules, 0, '2014-05-31', '2014-07-01'],
-            [$sn, $otherRules, 0, '2014-05-31', '2014-07-26'],
-            [$notSn, $otherRules, 0, '2014-05-31', '2014-07-27'],
-            [$notSn, $otherRules, 0, '2014-05-31', '2014-08-28'],
-            [$sn, $otherRules, 1, '2014-05-31', '2014-07-01'],
-            [$sn, $otherRules, 1, '2014-05-31', '2014-07-26'],
-            [$notSn, $otherRules, 1, '2014-05-31', '2014-07-27'],
-            [$notSn, $otherRules, 1, '2014-05-31', '2014-08-28'],
-            //S2
-            [$sn, $scotRules, 0, '2014-05-31', '2014-07-01'],
-            [$sn, $scotRules, 0, '2014-05-31', '2014-07-26'],
-            [$notSn, $scotRules, 0, '2014-05-31', '2014-07-27'],
-            [$notSn, $scotRules, 0, '2014-05-31', '2014-08-28'],
-            //S3
-            [$sn, $scotRules, 1, '2014-07-15', '2014-07-21', $parent],
-            [$sn, $scotRules, 1, '2014-07-15', '2014-09-08', $parent],
-            [$sn, $scotRules, 1, '2014-07-15', '2014-09-09', $parent],
-            [$notSn, $scotRules, 1, '2014-07-15', '2014-09-10', $parent],
-            //S4
-            [$sn, $scotRules, 1, '2014-08-01', '2014-08-12', $parent],
-            [$sn, $scotRules, 1, '2014-08-01', '2014-09-25', $parent],
-            [$sn, $scotRules, 1, '2014-08-01', '2014-09-26', $parent],
-            [$notSn, $scotRules, 1, '2014-08-01', '2015-09-30', $parent],
-            //S5
-            [$sn, $scotRules, 1, '2014-07-01', '2014-08-12', $parent],
-            [$sn, $scotRules, 1, '2014-07-01', '2014-09-08', $parent],
-            [$sn, $scotRules, 1, '2014-07-01', '2014-09-09', $parent],
-            [$notSn, $scotRules, 1, '2014-07-01', '2015-09-30', $parent],
-            //error cases
-            [$notSn, $otherRules, 0, '2014-09-30', ''],
-            [$notSn, $otherRules, 0, '', '2014-09-30'],
-            [$notSn, $scotRules, 1, '2015-02-09', '2016-09-30', $parent],
-            [$notSn, $scotRules, 1, '2014-06-11', '2014-08-11']
-        ];
+        $this->assertEquals($otherDetails, $this->entity->getOtherDetails());
+        $this->assertEquals($receivedDate, $this->entity->getReceivedDate());
+        $this->assertEquals($effectiveDate, $this->entity->getEffectiveDate());
+        $this->assertEquals($endDate, $this->entity->getEndDate());
+        $this->assertEquals($busNoticePeriod, $this->entity->getBusNoticePeriod());
     }
 
     public function testCreateNew()
@@ -2107,6 +2040,209 @@ class BusRegEntityTest extends EntityTester
         return [
             [$serviceNo, new ArrayCollection(), $serviceNo],
             [$serviceNo, $otherServiceNumbers, $expectedFormatted]
+        ];
+    }
+
+    /**
+     * Tests the isShortNotice calculation for standard rules, calls populateShortNotice and checks the result
+     *
+     * @param $variationNo
+     * @param $effectiveDate
+     * @param $receivedDate
+     * @param $expected
+     *
+     * @dataProvider isShortNoticeStandardProvider
+     */
+    public function testIsShortNoticeStandardRules($variationNo, $receivedDate, $effectiveDate, $expected)
+    {
+        $standardRules = m::mock(BusNoticePeriodEntity::class);
+        $standardRules->shouldReceive('isScottishRules')->once()->andReturn(false);
+        $standardRules->shouldReceive('getStandardPeriod')->once()->andReturn(56);
+        $standardRules->shouldReceive('getCancellationPeriod')->never();
+
+        $busReg = new Entity();
+        $busReg->setVariationNo($variationNo);
+        $busReg->setEffectiveDate($effectiveDate);
+        $busReg->setReceivedDate($receivedDate);
+        $busReg->setBusNoticePeriod($standardRules);
+        $busReg->populateShortNotice();
+
+        $this->assertEquals($expected, $busReg->getIsShortNotice());
+    }
+
+    /**
+     * @return array
+     */
+    public function isShortNoticeStandardProvider()
+    {
+        return [
+            [0, '2014-05-31', '2014-07-01', 'Y'], //31 days
+            [0, '2014-05-31', '2014-07-26', 'Y'], //56 days
+            [0, '2014-05-31', '2014-07-27', 'N'], //57 days
+            [0, '2014-05-31', '2014-08-28', 'N'], //89 days
+            [1, '2014-05-31', '2014-07-01', 'Y'], //31 days
+            [1, '2014-05-31', '2014-07-26', 'Y'], //56 days
+            [1, '2014-05-31', '2014-07-27', 'N'], //57 days
+            [1, '2014-05-31', '2015-08-28', 'N']  //58 days
+        ];
+    }
+
+    /**
+     * Tests the isShortNotice calculation for new scottish apps, calls populateShortNotice and checks the result
+     *
+     * @param $variationNo
+     * @param $effectiveDate
+     * @param $receivedDate
+     * @param $expected
+     *
+     * @dataProvider isShortNoticeNewScottishProvider
+     */
+    public function testIsShortNoticeNewScottishRules($variationNo, $receivedDate, $effectiveDate, $expected)
+    {
+        $standardRules = m::mock(BusNoticePeriodEntity::class);
+        $standardRules->shouldReceive('isScottishRules')->once()->andReturn(true);
+        $standardRules->shouldReceive('getStandardPeriod')->once()->andReturn(42);
+        $standardRules->shouldReceive('getCancellationPeriod')->never();
+
+        $busReg = new Entity();
+        $busReg->setVariationNo($variationNo);
+        $busReg->setEffectiveDate($effectiveDate);
+        $busReg->setReceivedDate($receivedDate);
+        $busReg->setBusNoticePeriod($standardRules);
+        $busReg->populateShortNotice();
+
+        $this->assertEquals($expected, $busReg->getIsShortNotice());
+    }
+
+    /**
+     * @return array
+     */
+    public function isShortNoticeNewScottishProvider()
+    {
+        return [
+            [0, '2014-05-31', '2014-07-01', 'Y'], //31 days
+            [0, '2014-05-31', '2014-07-12', 'Y'], //42 days
+            [0, '2014-05-31', '2014-07-13', 'N'], //43 days
+            [0, '2014-05-31', '2014-08-28', 'N'], //89 days
+        ];
+    }
+
+    /**
+     * Tests the isShortNotice calculation for new scottish variations, calls populateShortNotice and checks the result
+     *
+     * @param $effectiveDate
+     * @param $receivedDate
+     * @param $expected
+     *
+     * @dataProvider isShortNoticeVariationScottishProvider
+     */
+    public function testIsShortNoticeVariationScottishRules(
+        $receivedDate,
+        $effectiveDate,
+        $parentDate,
+        $standardPeriodCalled,
+        $expected
+    ) {
+        $scottishRules = m::mock(BusNoticePeriodEntity::class);
+        $scottishRules->shouldReceive('isScottishRules')->once()->andReturn(true);
+        $scottishRules->shouldReceive('getStandardPeriod')->times($standardPeriodCalled)->andReturn(42);
+        $scottishRules->shouldReceive('getCancellationPeriod')->once()->andReturn(90);
+
+        $parentBusReg = new Entity();
+        $parentBusReg->setEffectiveDate($parentDate);
+
+        $busReg = new Entity();
+        $busReg->setVariationNo(1);
+        $busReg->setEffectiveDate($effectiveDate);
+        $busReg->setReceivedDate($receivedDate);
+        $busReg->setBusNoticePeriod($scottishRules);
+        $busReg->setParent($parentBusReg);
+        $busReg->populateShortNotice();
+
+        $this->assertEquals($expected, $busReg->getIsShortNotice());
+    }
+
+    /**
+     * @return array
+     */
+    public function isShortNoticeVariationScottishProvider()
+    {
+        return [
+            ['2014-07-15', '2014-07-21', '2014-06-11', 0, 'Y'], //parent less than 90 days
+            ['2014-07-27', '2014-09-08', '2014-06-11', 0, 'Y'], //parent less than 90 days
+            ['2014-07-30', '2014-09-09', '2014-06-11', 0, 'Y'], //parent is 90 days
+            ['2014-07-31', '2014-09-10', '2014-06-11', 1, 'Y'], //41 days standard period
+            ['2014-07-30', '2014-09-11', '2014-06-11', 1, 'N']  //43 days standard period, 92 days parent
+        ];
+    }
+
+    /**
+     * Tests short notice returns false if there is no parent value
+     *
+     * @param $effectiveDate
+     * @param $receivedDate
+     * @param $parent
+     *
+     * @dataProvider shortNoticeScottishRulesWithMissingParentProvider
+     */
+    public function testShortNoticeScottishRulesWithMissingParent($effectiveDate, $receivedDate, $parent)
+    {
+        $scottishRules = m::mock(BusNoticePeriodEntity::class);
+        $scottishRules->shouldReceive('isScottishRules')->once()->andReturn(true);
+
+        $busReg = new Entity();
+        $busReg->setVariationNo(1);
+        $busReg->setEffectiveDate($effectiveDate);
+        $busReg->setReceivedDate($receivedDate);
+        $busReg->setBusNoticePeriod($scottishRules);
+        $busReg->setParent($parent);
+        $busReg->populateShortNotice();
+
+        $this->assertEquals('N', $busReg->getIsShortNotice());
+    }
+
+    /**
+     * @return array
+     */
+    public function shortNoticeScottishRulesWithMissingParentProvider()
+    {
+        return [
+            ['2016-12-25', '2016-12-26', null],
+            ['2016-12-25', '2016-12-26', new Entity()],
+        ];
+    }
+
+    /**
+     * Tests short notice calculation returns false when dates are not yet filled in
+     *
+     * @param $effectiveDate
+     * @param $receivedDate
+     *
+     * @dataProvider shortNoticeMissingDatesProvider
+     */
+    public function testShortNoticeMissingDates($effectiveDate, $receivedDate)
+    {
+        $scottishRules = m::mock(BusNoticePeriodEntity::class);
+        $scottishRules->shouldReceive('isScottishRules')->never();
+
+        $busReg = new Entity();
+        $busReg->setEffectiveDate($effectiveDate);
+        $busReg->setReceivedDate($receivedDate);
+        $busReg->setBusNoticePeriod(new BusNoticePeriodEntity());
+        $busReg->populateShortNotice();
+
+        $this->assertEquals('N', $busReg->getIsShortNotice());
+    }
+
+    /**
+     * @return array
+     */
+    public function shortNoticeMissingDatesProvider()
+    {
+        return [
+            ['2016-12-25', null],
+            [null, '2016-12-25'],
+            [null, null]
         ];
     }
 }
