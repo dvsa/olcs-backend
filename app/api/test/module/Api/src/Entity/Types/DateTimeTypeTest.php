@@ -2,11 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Types;
 
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Dvsa\Olcs\Api\Entity\Types\DateTimeType;
 use \Mockery as m;
 
 /**
- * Class DateTimeTypeTest
+ * @covers Dvsa\Olcs\Api\Entity\Types\DateTimeType
  */
 class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
 {
@@ -14,23 +15,24 @@ class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
      * @var DateTimeType
      */
     private $sut;
+    /** @var  AbstractPlatform */
+    private $mockPlatform;
 
     public function setup()
     {
         DateTimeType::overrideType('datetime', DateTimeType::class);
         $this->sut = DateTimeType::getType('datetime');
+
+        $this->mockPlatform = m::mock(AbstractPlatform::class);
+        $this->mockPlatform->shouldReceive('getDateTimeFormatString')->andReturn('d-m-Y H:i:s');
     }
 
     /**
      * @dataProvider dpConvertToPhpValue
-     * @param $value
-     * @param $expected
-     * @throws \Doctrine\DBAL\Types\ConversionException
      */
     public function testConvertToPhpValue($value, $expected)
     {
-        $mockPlatform = m::mock('\Doctrine\DBAL\Platforms\MySqlPlatform')->makePartial();
-        $this->assertSame($expected, $this->sut->convertToPHPValue($value, $mockPlatform));
+        static::assertSame($expected, $this->sut->convertToPHPValue($value, $this->mockPlatform));
     }
 
     public function dpConvertToPhpValue()
@@ -45,26 +47,34 @@ class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    public function testConvertToPhpValueConvertExc()
+    {
+        $value = '00000';
+
+        $this->setExpectedException(
+            \Doctrine\DBAL\Types\ConversionException::class,
+            'Could not convert database value "' . $value . '" to Doctrine Type datetime. Expected format: d-m-Y H:i:s'
+        );
+
+        $this->sut->convertToPHPValue($value, $this->mockPlatform);
+    }
+
     /**
      * @dataProvider dpConvertToDatabaseValue
-     *
-     * @param $value
-     * @param $expected
      */
     public function testConvertToDatabaseValue($value, $expected)
     {
-        $mockPlatform = m::mock('\Doctrine\DBAL\Platforms\MySqlPlatform')->makePartial();
-        $this->assertSame($expected, $this->sut->convertToDatabaseValue($value, $mockPlatform));
+        static::assertSame($expected, $this->sut->convertToDatabaseValue($value, $this->mockPlatform));
     }
 
     public function dpConvertToDatabaseValue()
     {
         return [
             [null, null],
-            [new \DateTime('2016-06-03 15:43', new \DateTimeZone('UTC')), '2016-06-03 15:43:00'],
-            [new \DateTime('2016-06-03 15:43', new \DateTimeZone('Europe/London')), '2016-06-03 14:43:00'],
-            ['2016-06-03 13:03:55+0100', '2016-06-03 12:03:55'],
-            ['2016-06-03 13:03:55', '2016-06-03 13:03:55'],
+            [new \DateTime('2016-06-03 15:43', new \DateTimeZone('UTC')), '03-06-2016 15:43:00'],
+            [new \DateTime('2016-06-03 15:43', new \DateTimeZone('Europe/London')), '03-06-2016 14:43:00'],
+            ['2016-06-03 13:03:55+0100', '03-06-2016 12:03:55'],
+            ['2016-06-03 13:03:55', '03-06-2016 13:03:55'],
         ];
     }
 }
