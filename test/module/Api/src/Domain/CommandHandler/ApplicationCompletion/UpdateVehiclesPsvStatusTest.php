@@ -97,7 +97,7 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
         $this->licence->setLicenceVehicles($licenceVehicles);
         $this->application->setTotAuthVehicles(0);
 
-        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
+        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
     }
 
     public function testHandleCommand()

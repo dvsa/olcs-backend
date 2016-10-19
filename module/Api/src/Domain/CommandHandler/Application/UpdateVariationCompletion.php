@@ -52,7 +52,6 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         'financial_evidence' => [],
         'transport_managers' => [],
         'vehicles' => [],
-        'vehicles_psv' => [],
         'vehicles_declarations' => [],
         'discs' => [],
         'community_licences' => [],
