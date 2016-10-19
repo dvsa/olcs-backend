@@ -567,31 +567,10 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         $this->otherDetails = $otherDetails;
         $this->busNoticePeriod = $busNoticePeriod;
 
-        $receivedDateTime = \DateTime::createFromFormat('Y-m-d', $receivedDate);
-        $effectiveDateTime = \DateTime::createFromFormat('Y-m-d', $effectiveDate);
-        $endDateTime = \DateTime::createFromFormat('Y-m-d', $endDate);
-
-        if (!$receivedDateTime instanceof \DateTime) {
-            $receivedDateTime = null;
-        }
-
-        if (!$effectiveDateTime instanceof \DateTime) {
-            $effectiveDateTime = null;
-        }
-
-        if (!$endDateTime instanceof \DateTime) {
-            $endDateTime = null;
-        }
-
-        $this->receivedDate = $receivedDateTime;
-        $this->effectiveDate = $effectiveDateTime;
-        $this->endDate = $endDateTime;
-
-        $this->isShortNotice = 'N';
-
-        if ($this->isShortNotice($effectiveDateTime, $receivedDateTime, $busNoticePeriod)) {
-            $this->isShortNotice = 'Y';
-        }
+        $this->receivedDate = $receivedDate;
+        $this->effectiveDate = $effectiveDate;
+        $this->endDate = $endDate;
+        $this->populateShortNotice();
 
         return true;
     }
@@ -610,6 +589,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
      * @param string $routeDescription    Route description
      *
      * @return BusReg
+     * @throws ForbiddenException
      */
     public function updateServiceRegister(
         $trcConditionChecked,
@@ -651,8 +631,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     /**
      * Is short notice
      *
-     * @param \DateTime             $effectiveDate Effective date
-     * @param \DateTime             $receivedDate  Received date
+     * @param \DateTime|null        $effectiveDate Effective date
+     * @param \DateTime|null        $receivedDate  Received date
      * @param BusNoticePeriodEntity $busRules      Bus rules
      *
      * @return bool|null
@@ -663,37 +643,31 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             return false;
         }
 
-        $standardPeriod = $busRules->getStandardPeriod();
+        //we only check the parent for scottish variations/cancellations
+        if ($busRules->isScottishRules() && $this->variationNo > 0) {
+            //there should always be a parent, but we'll test for bad (most probably legacy) data
+            if (!$this->parent instanceof BusReg || $this->parent->getEffectiveDate() === null) {
+                return false;
+            }
 
-        if ($standardPeriod > 0) {
-            $receivedDate = clone $receivedDate;
-            $interval = new \DateInterval('P' . $standardPeriod . 'D');
+            $parentEffectiveDate = $this->parent->getEffectiveDate();
 
-            if ($receivedDate->add($interval)->setTime(0, 0) >= $effectiveDate->setTime(0, 0)) {
+            $lastDateTime
+                = ($parentEffectiveDate instanceof \DateTime)
+                ? clone $parentEffectiveDate : new \DateTime($parentEffectiveDate);
+
+            $interval = new \DateInterval('P' . $busRules->getCancellationPeriod() . 'D');
+
+            if ($effectiveDate->setTime(0, 0) <= $lastDateTime->add($interval)->setTime(0, 0)) {
                 return true;
             }
         }
 
-        $cancellationPeriod = $busRules->getCancellationPeriod();
-        $variationNo = $this->getVariationNo();
+        $receivedDate = clone $receivedDate;
+        $interval = new \DateInterval('P' . $busRules->getStandardPeriod() . 'D');
 
-        if ($cancellationPeriod > 0 && $variationNo > 0) {
-            $parent = $this->getParent();
-
-            if (!$parent || empty($parent->getEffectiveDate())) {
-                //if we don't have a parent record, the result is undefined.
-                return null;
-            }
-
-            $lastDateTime
-                = ($parent->getEffectiveDate() instanceof \DateTime)
-                    ? clone $parent->getEffectiveDate() : new \DateTime($parent->getEffectiveDate());
-
-            $interval = new \DateInterval('P' . $cancellationPeriod . 'D');
-
-            if ($lastDateTime->add($interval)->setTime(0, 0) >= $effectiveDate->setTime(0, 0)) {
-                return true;
-            }
+        if ($receivedDate->add($interval)->setTime(0, 0) >= $effectiveDate->setTime(0, 0)) {
+            return true;
         }
 
         return false;
