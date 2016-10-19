@@ -32,6 +32,13 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
     protected $sutClass = null;
     protected $cmdClass = null;
 
+    protected $ebsrSubmissionId = 1234;
+    protected $pdfType = null;
+
+    protected $cmdData = [
+        'id' => 1234
+    ];
+
     /**
      * @var CommandInterface
      */
@@ -56,7 +63,6 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
      */
     public function testHandleCommand($orgEmail, $adminEmail, $expectedToAddress, $cmdClass)
     {
-        $ebsrSubmissionId = 1234;
         $regNo = 5678;
         $laDescription1 = 'la description 1';
         $laEmail1 = 'terry.valtech@gmail.com';
@@ -84,7 +90,7 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
 
         $la = new ArrayCollection([$la1, $la2]);
 
-        $command = $cmdClass::create(['id' => $ebsrSubmissionId]);
+        $command = $cmdClass::create($this->cmdData);
 
         $busRegEntity = m::mock(BusRegEntity::class);
         $busRegEntity->shouldReceive('getRegNo')->times(2)->andReturn($regNo);
@@ -97,7 +103,7 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
         $busRegEntity->shouldReceive('getPublicationLinksForGrantEmail')->never(); //only for registered & cancelled
 
         $ebsrSubmissionEntity = m::mock(EbsrSubmissionEntity::class);
-        $ebsrSubmissionEntity->shouldReceive('getId')->andReturn($ebsrSubmissionId);
+        $ebsrSubmissionEntity->shouldReceive('getId')->andReturn($this->ebsrSubmissionId);
         $ebsrSubmissionEntity->shouldReceive('getSubmittedDate')->andReturn($submittedDate);
         $ebsrSubmissionEntity->shouldReceive('getOrganisationEmailAddress')->once()->andReturn($orgEmail);
         $ebsrSubmissionEntity->shouldReceive('getBusReg')->once()->andReturn($busRegEntity);
@@ -124,6 +130,7 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
                 'submissionErrors' => $submissionResult,
                 'hasBusData' => true,
                 'publicationId' => null,
+                'pdfType' => $this->pdfType
             ],
             'default'
         );
@@ -139,7 +146,7 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['ebsrSubmission' => $ebsrSubmissionId], $result->getIds());
+        $this->assertSame(['ebsrSubmission' => $this->ebsrSubmissionId], $result->getIds());
         $this->assertSame(['Email sent'], $result->getMessages());
     }
 

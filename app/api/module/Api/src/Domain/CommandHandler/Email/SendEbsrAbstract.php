@@ -21,6 +21,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrWithdrawn as WithdrawnCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefused as RefusedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrReceived as ReceivedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefreshed as RefreshedCmd;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRequestMap as RequestMapCmd;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
@@ -221,7 +222,8 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements EmailA
             'localAuthoritys' => $this->getLocalAuthString($this->busReg->getLocalAuthoritys()),
             'submissionErrors' => $submissionErrors,
             'hasBusData' => true,
-            'publicationId' => null
+            'publicationId' => null,
+            'pdfType' => null
         ];
 
         //when ebsr bus reg is registered or cancelled, we send additional publication data
@@ -232,6 +234,11 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements EmailA
                 $pubSectionEntity = $this->getRepo()->getReference(PublicationSectionEntity::class, $pubSection);
                 $emailData['publicationId'] = $this->busReg->getPublicationLinksForGrantEmail($pubSectionEntity);
             }
+        }
+
+        //if command is a request map command, we need to know which one we are generating.
+        if ($command instanceof RequestMapCmd) {
+            $emailData['pdfType'] = $command->getPdfType();
         }
 
         return $emailData;
