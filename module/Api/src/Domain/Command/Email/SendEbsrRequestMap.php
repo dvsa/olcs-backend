@@ -12,5 +12,15 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class SendEbsrRequestMap extends AbstractIdOnlyCommand
 {
+    protected $pdfType;
 
+    /**
+     * The pdf type we're sending the email for
+     *
+     * @return string
+     */
+    public function getPdfType()
+    {
+        return $this->pdfType;
+    }
 }
