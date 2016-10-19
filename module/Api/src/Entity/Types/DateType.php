@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Custom date type
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Entity\Types;
 
 use Doctrine\DBAL\Types\ConversionException;
@@ -20,7 +15,14 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 class DateType extends DoctrineDateType
 {
     /**
-     * {@inheritdoc}
+     * Convert to PHP Value
+     *
+     * @param mixed            $value    The value to convert.
+     * @param AbstractPlatform $platform The currently used database platform.
+     *
+     * @return string|null
+     * @throws ConversionException
+     * @inheritdoc
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
@@ -33,21 +35,26 @@ class DateType extends DoctrineDateType
         }
 
         $val = \DateTime::createFromFormat('!'.$platform->getDateFormatString(), $value);
-        if (!$val) {
-            throw ConversionException::conversionFailedFormat(
-                $value,
-                $this->getName(),
-                $platform->getDateFormatString()
-            );
-        }
-
         if ($val instanceof \DateTime) {
             return $val->format('Y-m-d');
         }
 
-        return $val;
+        throw ConversionException::conversionFailedFormat(
+            $value,
+            $this->getName(),
+            $platform->getDateFormatString()
+        );
     }
 
+    /**
+     * Convert to Database value
+     *
+     * @param mixed            $value    The value to convert.
+     * @param AbstractPlatform $platform The currently used database platform.
+     *
+     * @return null|string
+     * @inheritdoc
+     */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         if ($value !== null && !($value instanceof \DateTime)) {

@@ -5,27 +5,20 @@ namespace Dvsa\OlcsTest\Api\Entity\View;
 use Dvsa\Olcs\Api\Entity\View\DocumentSearchView;
 
 /**
- * Document Search View entity unit tests
- *
- * N.B. NOT Auto-Generated!!
- *
- * @author Dan Eggleston <dan@stolenegg.com>
+ * @covers Dvsa\Olcs\Api\Entity\View\DocumentSearchView
  */
 class DocumentSearchViewTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var DocumentSearchView
-     */
-    protected $entity;
+    /** @var DocumentSearchView */
+    protected $sut;
 
-    /**
-     * @var array
-     */
+    /**  @var array */
     protected $testData;
 
     public function setUp()
     {
         $this->testData = [
+            'id' => 'unit_Id',
             'issuedDate' => '2014-12-10',
             'category' => 1,
             'documentSubCategory' => 2,
@@ -46,25 +39,39 @@ class DocumentSearchViewTest extends \PHPUnit_Framework_TestCase
             'ciId' => 8,
             'irfoOrganisationId' => 10,
             'applicationId' => 'unit_AppId',
+            'deletedDate' => 'unit_deleteDate',
+            'agreedDate' => 'unit_agreedDate',
+            'targetDate' => 'unit_targetDate',
+            'sentDate' => 'unit_sentDate',
         ];
-        $this->entity = new DocumentSearchView();
+        $this->sut = new DocumentSearchView();
+    }
 
-        // no public methods to set data exist so we must use reflection api
-        // (which, apparently, is what Doctrine does)
-        $ref = new \ReflectionObject($this->entity);
-        foreach (array_keys($this->testData) as $property) {
-            $refProperty = $ref->getProperty($property);
-            $refProperty->setAccessible(true);
-            $refProperty->setValue($this->entity, $this->testData[$property]);
+    public function testSetGetters()
+    {
+        $ref = new \ReflectionObject($this->sut);
+
+        // test all teh getters
+        foreach ($this->testData as $property => $value) {
+            $methodName = ucfirst($property);
+
+            if (!method_exists($this->sut, 'set' . $methodName)) {
+                $refProperty = $ref->getProperty($property);
+                $refProperty->setAccessible(true);
+                $refProperty->setValue($this->sut, $value);
+            } else {
+                $this->sut->{'set' . $methodName}($value);
+            }
+
+            static::assertEquals($value, $this->sut->{'get' . $methodName}());
         }
     }
 
-    public function testGetters()
+    public function testIsDelete()
     {
-        // test all teh getters
-        foreach ($this->testData as $property => $value) {
-            $getter = 'get'.ucfirst($property);
-            $this->assertEquals($value, $this->entity->$getter());
-        }
+        static::assertFalse($this->sut->isDeleted());
+
+        $this->sut->setDeletedDate(new \DateTime());
+        static::assertTrue($this->sut->isDeleted());
     }
 }
