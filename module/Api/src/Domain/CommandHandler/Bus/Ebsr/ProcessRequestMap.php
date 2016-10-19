@@ -169,9 +169,14 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
      */
     private function createSideEffects(BusRegEntity $busReg, $documentId, $templateFile, $ebsrId, $documentDesc)
     {
+        $emailParams = [
+            'id' => $ebsrId,
+            'pdfType' => $this->documentDescriptions[$templateFile]
+        ];
+
         $sideEffects = [
             $this->createTaskCmd($busReg, $documentDesc),
-            $this->emailQueue(SendEbsrRequestMapCmd::class, ['id' => $ebsrId], $ebsrId)
+            $this->emailQueue(SendEbsrRequestMapCmd::class, $emailParams, $ebsrId)
         ];
 
         //add txc inbox pdf for all except timetables
