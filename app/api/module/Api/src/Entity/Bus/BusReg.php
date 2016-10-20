@@ -1026,29 +1026,29 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             return null;
         }
 
-        if ($this->busNoticePeriod === null) {
-            return null;
-        }
+        //first try to work out the date based on the standard period
+        $standardPeriodInterval = new \DateInterval('P' . ($this->busNoticePeriod->getStandardPeriod() + 1) . 'D');
+        $standardPeriodDate = $receivedDateTime->add($standardPeriodInterval);
 
-        if (($this->busNoticePeriod->getCancellationPeriod() > 0) && ($this->variationNo > 0)) {
-            if ($this->parent === null) {
-                // if we don't have a parent record, the result is undefined.
-                return null;
+        //we only check the parent for scottish variations/cancellations
+        //there should always be a parent, but we'll test for bad (most probably legacy) data
+        if ($this->busNoticePeriod->isScottishRules()
+            && $this->variationNo > 0
+            && $this->parent instanceof BusReg
+            && $this->parent->getEffectiveDate() !== null
+        ) {
+            $parentEffectiveDate = $this->processDate($this->parent->getEffectiveDate());
+
+            $parentInterval = new \DateInterval('P' . ($this->busNoticePeriod->getCancellationPeriod() + 1) . 'D');
+            $parentPeriodDate = $parentEffectiveDate->add($parentInterval);
+
+            //if the date we got from the parent is later than what we got from the standard period, use the parent
+            if ($parentPeriodDate > $standardPeriodDate) {
+                return $parentPeriodDate;
             }
-
-            $lastDateTime = $this->processDate($this->parent->getEffectiveDate());
-            $interval = new \DateInterval('P' . $this->busNoticePeriod->getCancellationPeriod() . 'D');
-
-            return $lastDateTime->add($interval);
         }
 
-        if ($this->busNoticePeriod->getStandardPeriod() > 0) {
-            $interval = new \DateInterval('P' . $this->busNoticePeriod->getStandardPeriod() . 'D');
-
-            return $receivedDateTime->add($interval);
-        }
-
-        return $this->effectiveDate;
+        return $standardPeriodDate;
     }
 
     /**

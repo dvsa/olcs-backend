@@ -1047,42 +1047,49 @@ class BusRegEntityTest extends EntityTester
     public function provideCalculateNoticeDate()
     {
         $scotRules = [
-            'standardPeriod' => 56,
-            'cancellationPeriod' => 90
+            'standardPeriod' => 42,
+            'cancellationPeriod' => 90,
+            'id' => 1
         ];
 
         $otherRules = [
             'standardPeriod' => 56,
-            'cancellationPeriod' => 0
-        ];
-
-        $noRules = [
-            'standardPeriod' => 0,
-            'cancellationPeriod' => 0
+            'cancellationPeriod' => 0,
+            'id' => 2
         ];
 
         return [
             [
-                $otherRules,
-                ['receivedDate' => null],
-                null
+                $scotRules,
+                [
+                    'variationNo' => 0,
+                    'receivedDate' => null
+                ],
+                null //no received date
             ],
             [
                 $scotRules,
                 [
                     'variationNo' => 1,
-                    'receivedDate' => '2015-02-09'
+                    'receivedDate' => null
                 ],
-                null
+                null //no received date
             ],
             [
-                $noRules,
+                $otherRules,
+                [
+                    'variationNo' => 0,
+                    'receivedDate' => null
+                ],
+                null //no received date
+            ],
+            [
+                $otherRules,
                 [
                     'variationNo' => 1,
-                    'receivedDate' => '2015-02-09',
-                    'effectiveDate' => '2015-03-31'
+                    'receivedDate' => null
                 ],
-                '2015-03-31' //not a date time as the test data has stayed the same
+                null //no received date
             ],
             [
                 $otherRules,
@@ -1090,7 +1097,7 @@ class BusRegEntityTest extends EntityTester
                     'variationNo' => 0,
                     'receivedDate' => '2015-02-09'
                 ],
-                new \DateTime('2015-04-06')
+                new \DateTime('2015-04-07') //received + 57 days
             ],
             [
                 $otherRules,
@@ -1098,7 +1105,7 @@ class BusRegEntityTest extends EntityTester
                     'variationNo' => 1,
                     'receivedDate' => '2015-02-09'
                 ],
-                new \DateTime('2015-04-06')
+                new \DateTime('2015-04-07') //received + 57 days
             ],
             [
                 $scotRules,
@@ -1106,16 +1113,69 @@ class BusRegEntityTest extends EntityTester
                     'variationNo' => 0,
                     'receivedDate' => '2015-02-09'
                 ],
-                new \DateTime('2015-04-06')
+                new \DateTime('2015-03-24') //received + 43 days
+            ],
+            [
+                $scotRules,
+                [
+                    'variationNo' => 1,
+                    'receivedDate' => '2015-02-09'
+                ],
+                new \DateTime('2015-03-24') //received + 43 days (no parent)
             ],
             [
                 $scotRules,
                 [
                     'variationNo' => 1,
                     'receivedDate' => '2015-02-09',
+                    'parent' => ['effectiveDate' => null]
+                ],
+                new \DateTime('2015-03-24') //received + 43 days (no parent effective date)
+            ],
+            [
+                $scotRules,
+                [
+                    'variationNo' => 1,
+                    'receivedDate' => '2014-07-15',
                     'parent' => ['effectiveDate' => '2014-06-11']
                 ],
-                new \DateTime('2014-09-09')
+                new \DateTime('2014-09-10') //parent + 91 days
+            ],
+            [
+                $scotRules,
+                [
+                    'variationNo' => 1,
+                    'receivedDate' => '2014-07-27',
+                    'parent' => ['effectiveDate' => '2014-06-11']
+                ],
+                new \DateTime('2014-09-10') //parent + 91 days
+            ],
+            [
+                $scotRules,
+                [
+                    'variationNo' => 1,
+                    'receivedDate' => '2014-07-30',
+                    'parent' => ['effectiveDate' => '2014-06-11']
+                ],
+                new \DateTime('2014-09-11') //received + 43 days
+            ],
+            [
+                $scotRules,
+                [
+                    'variationNo' => 1,
+                    'receivedDate' => '2014-07-31',
+                    'parent' => ['effectiveDate' => '2014-06-11']
+                ],
+                new \DateTime('2014-09-12') //received + 43 days
+            ],
+            [
+                $scotRules,
+                [
+                    'variationNo' => 1,
+                    'receivedDate' => '2014-10-10',
+                    'parent' => ['effectiveDate' => '2014-06-11']
+                ],
+                new \DateTime('2014-11-22') //received + 43 days
             ],
         ];
     }
