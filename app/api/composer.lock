@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5e55a012a80e370181758784bed72086",
-    "content-hash": "1b0468aa82915002b3d3f07c59b99258",
+    "hash": "9444915265c2ac8c9e85ebff57470e38",
+    "content-hash": "662840353db9e317414d03e51219bcf3",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -52,7 +52,7 @@
             "version": "v2.1.1",
             "source": {
                 "type": "git",
-                "url": "git@gitlab.inf.mgt.mtpdvsa:cpms/cpms-client.git",
+                "url": "git@repo.shd.ci.nonprod.dvsa.aws:cpms/cpms-client.git",
                 "reference": "25913ef0de73baa8ff1aa5beb9cf885deee11bd9"
             },
             "require": {
@@ -1066,23 +1066,23 @@
             "version": "dev-develop",
             "source": {
                 "type": "git",
-                "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-autoload.git",
-                "reference": "7341d5466605e8bcdd26d8b79806e8ab2a9a77a3"
+                "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-autoload.git",
+                "reference": "eba5e292aa8a2835b576ce70aab8d4a25d7f76de"
             },
             "bin": [
                 "bin/autoload"
             ],
             "type": "library",
             "description": "OLCS optimised autoloader",
-            "time": "2016-03-16 16:59:28"
+            "time": "2016-10-04 09:48:47"
         },
         {
             "name": "olcs/companies-house",
             "version": "dev-develop",
             "source": {
                 "type": "git",
-                "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/companies-house.git",
-                "reference": "a5d0ad0374f3b171c9d46a836c18a16acf25ffe2"
+                "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
+                "reference": "33025ede27631e144d4de3e347cc788d7fed0aa5"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1094,20 +1094,19 @@
                 }
             },
             "description": "Companies house library",
-            "time": "2015-09-23 16:08:31"
+            "time": "2016-10-12 17:05:38"
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "dev-develop",
+            "version": "dev-release/4.0.3",
             "source": {
                 "type": "git",
-                "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-logging.git",
-                "reference": "d106712c54f2fc06ae2b378467b77d8a8df517db"
+                "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
+                "reference": "55911ada4b530ac113658dae3861564375fc0444"
             },
             "require": {
                 "php": ">=5.4",
                 "psr/log": "~1.0",
-                "zendframework/zend-console": "~2.3.5",
                 "zendframework/zend-eventmanager": "~2.3.5",
                 "zendframework/zend-http": "~2.3.5",
                 "zendframework/zend-log": "~2.3.5",
@@ -1128,14 +1127,14 @@
                 }
             },
             "description": "Logging Module for Olcs",
-            "time": "2016-08-15 13:02:19"
+            "time": "2015-10-16 09:10:32"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-release/4.0",
+            "version": "dev-release/4.0.3",
             "source": {
                 "type": "git",
-                "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-transfer.git",
+                "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
                 "reference": "d39e22e8c5039b0e1e832f17f11706ed14cc6ba6"
             },
             "require": {
@@ -1158,11 +1157,11 @@
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "dev-release/4.0",
+            "version": "dev-release/4.0.3",
             "source": {
                 "type": "git",
-                "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-utils.git",
-                "reference": "47401d854d83fd3814aa7a6abca302d5d192493c"
+                "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
+                "reference": "e03e1fb1254c9470454242b2b7b32ebfe51060c9"
             },
             "require": {
                 "php": ">=5.4",
@@ -1170,7 +1169,7 @@
             },
             "require-dev": {
                 "mockery/mockery": "~0.9.3",
-                "olcs/olcs-logging": "dev-develop",
+                "olcs/olcs-logging": "dev-release/4.0.3",
                 "phpunit/phpunit": "^4.0.0"
             },
             "type": "library",
@@ -1180,14 +1179,14 @@
                 }
             },
             "description": "OLCS Utils",
-            "time": "2016-08-22 14:19:20"
+            "time": "2016-10-18 16:29:33"
         },
         {
             "name": "olcs/olcs-xmltools",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-xmltools.git",
+                "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
                 "reference": "a9340ce441ff9ae9dccd43acb999e20cc83aa26d"
             },
             "require": {
@@ -1213,17 +1212,17 @@
         },
         {
             "name": "psr/log",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "5277094ed527a1c4477177d102fe4c53551953e0"
+                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://satis.inf.mgt.mtpdvsa/dist/psr-log-5277094ed527a1c4477177d102fe4c53551953e0-zip-4bd4a1.tar",
-                "reference": "5277094ed527a1c4477177d102fe4c53551953e0",
-                "shasum": "33d01e68cc6adae20bfcbec8e771accf68f1b07c"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/psr-log-4ebe3a8bf773a19edfe0a84b6585ba3d401b724d-zip-6434e8.tar",
+                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+                "shasum": "577c66992e7df49d13bd929e61b74dd92f2bf630"
             },
             "require": {
                 "php": ">=5.3.0"
@@ -1256,7 +1255,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-09-19 16:02:08"
+            "time": "2016-10-10 12:19:37"
         },
         {
             "name": "ruflin/elastica",
@@ -1372,26 +1371,27 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.8.11",
+            "version": "v3.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "3d3e4fa5f0614c8e45220e5de80332322e33bd90"
+                "reference": "6cb0872fb57b38b3b09ff213c21ed693956b9eb0"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://satis.inf.mgt.mtpdvsa/dist/symfony-console-3d3e4fa5f0614c8e45220e5de80332322e33bd90-zip-f90d67.tar",
-                "reference": "3d3e4fa5f0614c8e45220e5de80332322e33bd90",
-                "shasum": "98abf37093ff33cc4580a04c9a3c061e819b30f3"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-console-6cb0872fb57b38b3b09ff213c21ed693956b9eb0-zip-cf45fb.tar",
+                "reference": "6cb0872fb57b38b3b09ff213c21ed693956b9eb0",
+                "shasum": "e91ae575add0da23f5bc80fa8cc9ef95f04450da"
             },
             "require": {
-                "php": ">=5.3.9",
+                "php": ">=5.5.9",
+                "symfony/debug": "~2.8|~3.0",
                 "symfony/polyfill-mbstring": "~1.0"
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/event-dispatcher": "~2.1|~3.0.0",
-                "symfony/process": "~2.1|~3.0.0"
+                "symfony/event-dispatcher": "~2.8|~3.0",
+                "symfony/process": "~2.8|~3.0"
             },
             "suggest": {
                 "psr/log": "For using the console logger",
@@ -1401,7 +1401,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.1-dev"
                 }
             },
             "autoload": {
@@ -1428,7 +1428,64 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-06 10:55:00"
+            "time": "2016-09-28 00:11:12"
+        },
+        {
+            "name": "symfony/debug",
+            "version": "v3.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/debug.git",
+                "reference": "e2b3f74a67fc928adc3c1b9027f73e1bc01190a8"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-debug-e2b3f74a67fc928adc3c1b9027f73e1bc01190a8-zip-ef8c4e.tar",
+                "reference": "e2b3f74a67fc928adc3c1b9027f73e1bc01190a8",
+                "shasum": "a91aa66f16b8246756b5e58652bce21eb5c703a0"
+            },
+            "require": {
+                "php": ">=5.5.9",
+                "psr/log": "~1.0"
+            },
+            "conflict": {
+                "symfony/http-kernel": ">=2.3,<2.3.24|~2.4.0|>=2.5,<2.5.9|>=2.6,<2.6.2"
+            },
+            "require-dev": {
+                "symfony/class-loader": "~2.8|~3.0",
+                "symfony/http-kernel": "~2.8|~3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Debug\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Debug Component",
+            "homepage": "https://symfony.com",
+            "time": "2016-09-06 11:02:40"
         },
         {
             "name": "symfony/filesystem",
@@ -2084,17 +2141,17 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "3.1.0",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "9270140b940ff02e58ec577c237274e92cd40cdd"
+                "reference": "8331b5efe816ae05461b7ca1e721c01b46bafb3e"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://satis.inf.mgt.mtpdvsa/dist/phpdocumentor-reflection-docblock-9270140b940ff02e58ec577c237274e92cd40cdd-zip-550863.tar",
-                "reference": "9270140b940ff02e58ec577c237274e92cd40cdd",
-                "shasum": "1b7849332c64a48194e1ddcd8214bfc39c563ab2"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpdocumentor-reflection-docblock-8331b5efe816ae05461b7ca1e721c01b46bafb3e-zip-319752.tar",
+                "reference": "8331b5efe816ae05461b7ca1e721c01b46bafb3e",
+                "shasum": "ceda327315b2bb35c7f71b9fd952a50a4c45df08"
             },
             "require": {
                 "php": ">=5.5",
@@ -2125,7 +2182,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2016-06-10 09:48:41"
+            "time": "2016-09-30 07:12:33"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -2981,25 +3038,25 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.11",
+            "version": "v3.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "e7540734bad981fe59f8ef14b6fc194ae9df8d9c"
+                "reference": "368b9738d4033c8b93454cb0dbd45d305135a6d3"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://satis.inf.mgt.mtpdvsa/dist/symfony-yaml-e7540734bad981fe59f8ef14b6fc194ae9df8d9c-zip-c17009.tar",
-                "reference": "e7540734bad981fe59f8ef14b6fc194ae9df8d9c",
-                "shasum": "24ac99847ce00b5dc9c3c300381d4472a57bc5ef"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-yaml-368b9738d4033c8b93454cb0dbd45d305135a6d3-zip-04aa57.tar",
+                "reference": "368b9738d4033c8b93454cb0dbd45d305135a6d3",
+                "shasum": "d918b7a2a7bb083101c7b90b6e9d8b4b47e38bc3"
             },
             "require": {
-                "php": ">=5.3.9"
+                "php": ">=5.5.9"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.1-dev"
                 }
             },
             "autoload": {
@@ -3026,7 +3083,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-02 01:57:56"
+            "time": "2016-09-25 08:27:07"
         },
         {
             "name": "webmozart/assert",
