@@ -105,9 +105,9 @@ class XmlStructureInputFactoryTest extends TestCase
         $mockFilter = m::mock('Zend\Filter\AbstractFilter');
 
         $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
-        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
-        $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
-        $mockSl->shouldReceive('get')->with(ParseXml::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
+        $mockSl->shouldReceive('get')->with('FilterManager')->once()->andReturnSelf();
+        $mockSl->shouldReceive('get')->with(ParseXml::class)->once()->andReturn($mockFilter);
 
         $sut = new XmlStructureInputFactory();
         $sut->createService($mockSl);
