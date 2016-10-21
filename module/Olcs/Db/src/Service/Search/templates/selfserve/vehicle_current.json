@@ -41,9 +41,12 @@
                                         "org_name":"%SEARCH_TERM%"
                                     }
                                 },
-                                {
+                               {
                                     "match":{
-                                        "lic_no":"%SEARCH_TERM%"
+                                        "lic_no":{
+                                        "query":"%SEARCH_TERM%",
+                                        "boost":2.5
+                                        }
                                     }
                                 },
                                 {
