@@ -1461,11 +1461,13 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             $expectedCustomer,
             [
                 'scope' => 'REFUND',
+                'country_code' => 'NI',
                 'payments' => [
                     [
                         'receipt_reference' => 'payment_ref',
                         'refund_reason' => 'Refund',
                         'country_code' => 'NI',
+                        'total_amount' => '100.00',
                         'payment_data' => [
                             array_merge(
                                 $expectedReceiver,
@@ -1493,6 +1495,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                         'receipt_reference' => 'payment_ref',
                         'refund_reason' => 'Refund',
                         'country_code' => 'NI',
+                        'total_amount' => '201.00',
                         'payment_data' => [
                             array_merge(
                                 $expectedReceiver,
@@ -1569,7 +1572,17 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'postcode' => 'postcode'
                 ]
             )
-            ->once();
+            ->once()
+            ->shouldReceive('getFeeType')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getCountryCode')
+                ->andReturn('GB')
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
 
         $this->cpmsClient
             ->shouldReceive('post')
