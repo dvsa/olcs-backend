@@ -539,6 +539,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             [
                 'scope' => $scope,
                 'payments' => $payments,
+                'country_code' => $fee->getFeeType()->getCountryCode(),
             ],
             $extraParams
         );
@@ -579,6 +580,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'country_code' => $ft->getFee()->getFeeType()->getCountryCode(),
             'receipt_reference' => $ft->getTransaction()->getReference(),
             'refund_reason' => self::REFUND_REASON,
+            'total_amount' =>  $this->formatAmount($ft->getAmount()),
             'payment_data' => [
                 $paymentData,
             ]
