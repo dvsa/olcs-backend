@@ -19,15 +19,27 @@ class XmlStructureInputFactoryTest extends TestCase
      */
     public function testCreateService()
     {
+        $maxSchemaErrors = 3;
+
+        $config = [
+            'ebsr' => [
+                'validate' => [
+                    'xml_structure' => true
+                ],
+                'max_schema_errors' => $maxSchemaErrors
+            ]
+        ];
+
         $mockXsdValidator = m::mock('Zend\Validator\AbstractValidator');
         $mockXsdValidator->shouldReceive('setXsd')->once()
             ->with('http://www.transxchange.org.uk/schema/2.1/TransXChange_registration.xsd');
+        $mockXsdValidator->shouldReceive('setMaxErrors')->once()->with($maxSchemaErrors);
 
         $mockFilter = m::mock('Zend\Filter\AbstractFilter');
         $mockValidator = m::mock('Zend\Validator\AbstractValidator');
 
         $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
-        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
+        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
@@ -72,5 +84,32 @@ class XmlStructureInputFactoryTest extends TestCase
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
         $this->assertCount(1, $service->getFilterChain());
         $this->assertCount(0, $service->getValidatorChain());
+    }
+
+    /**
+     * test correct exception thrown when the max errors config is missing
+     *
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage No config specified for max_schema_errors
+     */
+    public function testCreateServiceMissingMaxErrorsConfig()
+    {
+        $config = [
+            'ebsr' => [
+                'validate' => [
+                    'xml_structure' => true
+                ]
+            ]
+        ];
+
+        $mockFilter = m::mock('Zend\Filter\AbstractFilter');
+
+        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
+        $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
+        $mockSl->shouldReceive('get')->with(ParseXml::class)->andReturn($mockFilter);
+
+        $sut = new XmlStructureInputFactory();
+        $sut->createService($mockSl);
     }
 }
