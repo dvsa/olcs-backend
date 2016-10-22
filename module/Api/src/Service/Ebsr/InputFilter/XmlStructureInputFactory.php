@@ -15,6 +15,8 @@ use Dvsa\Olcs\Api\Service\InputFilter\Input;
 class XmlStructureInputFactory implements FactoryInterface
 {
     const MAX_SCHEMA_MSG = 'No config specified for max_schema_errors';
+    const SCHEMA_VERSION_MSG = 'No config specified for transxchange schema version';
+    const XSD_PATH = 'http://www.transxchange.org.uk/schema/%s/TransXChange_registration.xsd';
 
     /**
      * Create service
@@ -41,9 +43,13 @@ class XmlStructureInputFactory implements FactoryInterface
                 throw new \RuntimeException(self::MAX_SCHEMA_MSG);
             }
 
+            if (!isset($config['ebsr']['transxchange_schema_version'])) {
+                throw new \RuntimeException(self::SCHEMA_VERSION_MSG);
+            }
+
             /** @var Xsd $xsdValidator */
             $xsdValidator = $serviceLocator->get('ValidatorManager')->get(Xsd::class);
-            $xsdValidator->setXsd('http://www.transxchange.org.uk/schema/2.1/TransXChange_registration.xsd');
+            $xsdValidator->setXsd(sprintf(self::XSD_PATH, $config['ebsr']['transxchange_schema_version']));
             $xsdValidator->setMaxErrors($config['ebsr']['max_schema_errors']);
 
             $validatorchain->attach($xsdValidator);

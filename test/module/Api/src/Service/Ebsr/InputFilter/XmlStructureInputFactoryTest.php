@@ -20,19 +20,21 @@ class XmlStructureInputFactoryTest extends TestCase
     public function testCreateService()
     {
         $maxSchemaErrors = 3;
+        $schemaVersion = 2.5;
 
         $config = [
             'ebsr' => [
                 'validate' => [
                     'xml_structure' => true
                 ],
-                'max_schema_errors' => $maxSchemaErrors
+                'max_schema_errors' => $maxSchemaErrors,
+                'transxchange_schema_version' => $schemaVersion
             ]
         ];
 
         $mockXsdValidator = m::mock('Zend\Validator\AbstractValidator');
         $mockXsdValidator->shouldReceive('setXsd')->once()
-            ->with('http://www.transxchange.org.uk/schema/2.1/TransXChange_registration.xsd');
+            ->with('http://www.transxchange.org.uk/schema/' . $schemaVersion . '/TransXChange_registration.xsd');
         $mockXsdValidator->shouldReceive('setMaxErrors')->once()->with($maxSchemaErrors);
 
         $mockFilter = m::mock('Zend\Filter\AbstractFilter');
@@ -99,6 +101,34 @@ class XmlStructureInputFactoryTest extends TestCase
                 'validate' => [
                     'xml_structure' => true
                 ]
+            ]
+        ];
+
+        $mockFilter = m::mock('Zend\Filter\AbstractFilter');
+
+        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
+        $mockSl->shouldReceive('get')->with('FilterManager')->once()->andReturnSelf();
+        $mockSl->shouldReceive('get')->with(ParseXml::class)->once()->andReturn($mockFilter);
+
+        $sut = new XmlStructureInputFactory();
+        $sut->createService($mockSl);
+    }
+
+    /**
+     * test correct exception thrown when the max errors config is missing
+     *
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage No config specified for transxchange schema version
+     */
+    public function testCreateServiceMissingSchemaVersionConfig()
+    {
+        $config = [
+            'ebsr' => [
+                'validate' => [
+                    'xml_structure' => true
+                ],
+                'max_schema_errors' => 3
             ]
         ];
 
