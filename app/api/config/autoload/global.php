@@ -48,4 +48,7 @@ return array(
             'Cache.SerializerPath' => sys_get_temp_dir(),
         ),
     ),
+    'ebsr' => array(
+        'max_schema_errors' => 3 //maximum number of xml schema problems to return (prevents massive error messages)
+    )
 );
