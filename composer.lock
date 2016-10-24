@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9444915265c2ac8c9e85ebff57470e38",
-    "content-hash": "662840353db9e317414d03e51219bcf3",
+    "hash": "68a9288686d6593aac1cb8f03a499f8c",
+    "content-hash": "9463dbf0a4357a31ae1d06978cd6b179",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1209,7 +1209,7 @@
                 }
             },
             "description": "Xml tools for olcs",
-            "time": "2016-08-04 11:14:39"
+            "time": "2016-10-24 08:14:21"
         },
         {
             "name": "psr/log",
