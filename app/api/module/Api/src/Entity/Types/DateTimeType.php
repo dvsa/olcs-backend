@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Custom date time type
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Entity\Types;
 
 use Doctrine\DBAL\Types\ConversionException;
@@ -41,18 +36,9 @@ class DateTimeType extends DoctrineDateTimeType
 
         // create from format, using timezone
         $val = \DateTime::createFromFormat($platform->getDateTimeFormatString(), $value, $this->getDbTimeZone());
-
         if (!$val) {
             // create date, using timezone
             $val = date_create($value, $this->getDbTimeZone());
-        }
-
-        if (!$val) {
-            throw ConversionException::conversionFailedFormat(
-                $value,
-                $this->getName(),
-                $platform->getDateTimeFormatString()
-            );
         }
 
         if ($val instanceof \DateTime) {
@@ -60,7 +46,11 @@ class DateTimeType extends DoctrineDateTimeType
             return $val->format(\DateTime::ISO8601);
         }
 
-        return $val;
+        throw ConversionException::conversionFailedFormat(
+            $value,
+            $this->getName(),
+            $platform->getDateTimeFormatString()
+        );
     }
 
     /**

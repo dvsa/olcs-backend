@@ -3,30 +3,24 @@
 namespace Dvsa\OlcsTest\Api\Entity\View;
 
 use Dvsa\Olcs\Api\Entity\View\BusRegSearchView;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery as m;
 
 /**
- * BusRegSearchView entity unit tests
- *
- * N.B. NOT Auto-Generated!!
- *
- * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Entity\View\BusRegSearchView
  */
-class BusRegSearchViewTest extends \PHPUnit_Framework_TestCase
+class BusRegSearchViewTest extends MockeryTestCase
 {
-    /**
-     * @var DocumentSearchView
-     */
-    protected $entity;
-
-    /**
-     * @var array
-     */
+    /** @var  BusRegSearchView */
+    private $sut;
+    /** @var array */
     protected $testData;
 
     public function setUp()
     {
         $this->testData = [
             'id' => 15,
+            'date1stReg' => 'unit_Date1stReg',
             'serviceNo' => '46474',
             'regNo' => 'PD2737280/15711',
             'licId' => '110',
@@ -38,26 +32,21 @@ class BusRegSearchViewTest extends \PHPUnit_Framework_TestCase
             'busRegStatus' => 'bus_s_reg',
             'busRegStatusDesc' => 'Registered',
             'routeNo' => '15711',
-            'variationNo' => '6'
+            'variationNo' => '6',
+            'localAuthorityId' => 'unit_LaId',
         ];
-        $this->entity = new BusRegSearchView();
-
-        // no public methods to set data exist so we must use reflection api
-        // (which, apparently, is what Doctrine does)
-        $ref = new \ReflectionObject($this->entity);
-        foreach (array_keys($this->testData) as $property) {
-            $refProperty = $ref->getProperty($property);
-            $refProperty->setAccessible(true);
-            $refProperty->setValue($this->entity, $this->testData[$property]);
-        }
+        $this->sut = new BusRegSearchView();
     }
 
     public function testGetters()
     {
         // test all teh getters
         foreach ($this->testData as $property => $value) {
-            $getter = 'get'.ucfirst($property);
-            $this->assertEquals($value, $this->entity->$getter());
+            $methodName = ucfirst($property);
+
+            $this->sut->{'set' . $methodName}($value);
+
+            static::assertEquals($value, $this->sut->{'get' . $methodName}());
         }
     }
 }
