@@ -8,17 +8,14 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus\Ebsr;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\CreateTxcInbox;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateTxcInbox as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
-use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
-use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Orm\Query;
 
 /**
  * Create TxcInbox Test
@@ -29,7 +26,6 @@ class CreateTxcInboxTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateTxcInbox();
         $this->mockRepo('Bus', BusRepo::class);
-        $this->mockRepo('TxcInbox', TxcInboxRepo::class);
 
         parent::setUp();
     }
@@ -47,8 +43,8 @@ class CreateTxcInboxTest extends CommandHandlerTestCase
 
         $zipDocument = m::mock(DocumentEntity::class);
         $ebsrSubmission = m::mock(EbsrSubmissionEntity::class);
-        $ebsrSubmission->shouldReceive('getOrganisation')->andReturn($organisation);
-        $ebsrSubmission->shouldReceive('getDocument')->andReturn($zipDocument);
+        $ebsrSubmission->shouldReceive('getOrganisation')->once()->andReturn($organisation);
+        $ebsrSubmission->shouldReceive('getDocument')->once()->andReturn($zipDocument);
         $ebsrSubmissions = new ArrayCollection([$ebsrSubmission]);
 
         $localAuthorityDescription = 'local authority description';
@@ -57,10 +53,11 @@ class CreateTxcInboxTest extends CommandHandlerTestCase
         $localAuthorities = new ArrayCollection([$localAuthority]);
 
         $busReg = m::mock(BusRegEntity::class);
-        $busReg->shouldReceive('getEbsrSubmissions')->andReturn($ebsrSubmissions);
-        $busReg->shouldReceive('getLocalAuthoritys')->andReturn($localAuthorities);
-        $busReg->shouldReceive('isFromEbsr')->andReturn(true);
-        $busReg->shouldReceive('getVariationNo')->andReturn(123456);
+        $busReg->shouldReceive('getEbsrSubmissions')->once()->andReturn($ebsrSubmissions);
+        $busReg->shouldReceive('getLocalAuthoritys')->once()->andReturn($localAuthorities);
+        $busReg->shouldReceive('isFromEbsr')->twice()->andReturn(true);
+        $busReg->shouldReceive('getVariationNo')->twice()->andReturn(123456);
+        $busReg->shouldReceive('setTxcInboxs')->once()->with(m::type(ArrayCollection::class));
 
         $command = Cmd::create(['id' => $busRegId]);
 
@@ -68,40 +65,17 @@ class CreateTxcInboxTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($busReg);
 
-        $this->repoMap['TxcInbox']->shouldReceive('save')
+        $this->repoMap['Bus']->shouldReceive('save')
             ->once()
-            ->with(m::type(TxcInboxEntity::class))
-            ->andReturnUsing(
-                function (TxcInboxEntity $txcInboxLa) use (&$savedTxcInboxLa) {
-                    $txcInboxLa->setId(22);
-                }
-            );
-
-        $this->repoMap['TxcInbox']->shouldReceive('save')
-            ->once()
-            ->with(m::type(TxcInboxEntity::class))
-            ->andReturnUsing(
-                function (TxcInboxEntity $txcInboxOrg) use (&$savedTxcInboxOrg) {
-                    $txcInboxOrg->setId(33);
-                }
-            );
-
-        $laTxcId = 22;
-        $orgTxcId = 33;
+            ->with(m::type(BusRegEntity::class));
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [
-                'txcInbox_' . $laTxcId => $laTxcId,
-                'txcInbox_' . $orgTxcId => $orgTxcId
-            ],
-            'messages' => [
-                'Txc Inbox record created for ' . $localAuthorityDescription,
-                'Txc Inbox record created for ' . $organisationName
-            ]
+            'Txc Inbox record created for ' . $localAuthorityDescription,
+            'Txc Inbox record created for ' . $organisationName
         ];
 
-        $this->assertEquals($expected, $result->toArray());
+        $this->assertEquals($expected, $result->getMessages());
     }
 }

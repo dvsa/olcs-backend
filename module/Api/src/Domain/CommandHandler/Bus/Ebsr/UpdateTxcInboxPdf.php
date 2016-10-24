@@ -39,6 +39,8 @@ final class UpdateTxcInboxPdf extends AbstractCommandHandler implements Transact
         $busReg = $this->getRepo('Bus')->fetchUsingId($command);
         $txcInboxRecords = $busReg->getTxcInboxs();
 
+        $result->addMessage($txcInboxRecords->count() . ' TxcInbox records found');
+
         $pdfDocument = $this->getRepo()->getReference(DocumentEntity::class, $command->getDocument());
 
         $count = 0;
