@@ -1184,11 +1184,11 @@
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "dev-master",
+            "version": "dev-release/4.0.3",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "a9340ce441ff9ae9dccd43acb999e20cc83aa26d"
+                "reference": "5248da5b8074c07c991d7abb6229f3d2c1fdd184"
             },
             "require": {
                 "php": ">=5.4.0",
