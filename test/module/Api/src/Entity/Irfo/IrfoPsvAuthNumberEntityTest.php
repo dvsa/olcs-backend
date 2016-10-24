@@ -2,13 +2,14 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Irfo;
 
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthNumber as Entity;
+use Mockery as m;
 
 /**
- * IrfoPsvAuthNumber Entity Unit Tests
- *
- * Initially auto-generated but won't be overridden
+ * @covers Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthNumber
+ * @covers Dvsa\Olcs\Api\Entity\Irfo\AbstractIrfoPsvAuthNumber
  */
 class IrfoPsvAuthNumberEntityTest extends EntityTester
 {
@@ -18,4 +19,30 @@ class IrfoPsvAuthNumberEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    /** @var  IrfoPsvAuth */
+    private $mockIrfoPsvAuth;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->mockIrfoPsvAuth = m::mock(IrfoPsvAuth::class);
+    }
+
+    public function testConstructor()
+    {
+        $name = 'unit_Name';
+
+        $sut = new Entity($this->mockIrfoPsvAuth, $name);
+
+        static::assertEquals($this->mockIrfoPsvAuth, $sut->getIrfoPsvAuth());
+        static::assertEquals($name, $sut->getName());
+    }
+
+    public function testGetCalculatedValues()
+    {
+        $actual = (new Entity($this->mockIrfoPsvAuth, ''))->jsonSerialize();
+        static::assertNull($actual['irfoPsvAuth']);
+    }
 }
