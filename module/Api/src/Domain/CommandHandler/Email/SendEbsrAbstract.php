@@ -74,6 +74,11 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements EmailA
     protected $regNo;
 
     /**
+     * @var string
+     */
+    protected $pdfType;
+
+    /**
      * Handles the command
      *
      * @param CommandInterface|CancelCmd|RegCmd|WithdrawnCmd|RefusedCmd|ReceivedCmd|RefreshedCmd $command command
@@ -87,6 +92,9 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements EmailA
         $this->ebsr = $repo->fetchUsingId($command, Query::HYDRATE_OBJECT, null);
         $this->busReg = $this->ebsr->getBusReg();
         $this->submissionResult = $this->ebsr->getDecodedSubmissionResult();
+
+        //request map only
+        $this->pdfType = ($command instanceof RequestMapCmd ? $command->getPdfType() : null);
 
         //get template variables
         $this->emailData = $this->getTemplateVariables($command);
@@ -160,12 +168,17 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements EmailA
     }
 
     /**
-     * Gets subject line variables, depends on whether the bus reg is included or not
+     * Gets subject line variables, depends on whether the bus reg and pdf type is included or not
      *
      * @return array
      */
     private function getSubjectVars()
     {
+        //map requests only
+        if ($this->pdfType !== null) {
+            return [$this->pdfType, $this->regNo, $this->ebsr->getId()];
+        }
+
         if ($this->regNo) {
             return [$this->regNo, $this->ebsr->getId()];
         }
