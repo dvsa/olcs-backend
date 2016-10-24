@@ -2,7 +2,7 @@
 
 return array(
     'email.cns.subject' => 'Licences set to CNS between %s and %s',
-    'email.ebsr-request-map.subject' => 'EBSR Route Map PDF - %s - EBSR ID: %s',
+    'email.ebsr-request-map.subject' => 'EBSR %s - %s - EBSR ID: %s',
     'email.ebsr-cancelled.subject' => 'EBSR Application Cancelled - %s - EBSR ID: %s',
     'email.ebsr-received.subject' => 'EBSR Application Received - %s - EBSR ID: %s',
     'email.ebsr-refreshed.subject' => 'EBSR Data Refresh Completed - %s - EBSR ID: %s',
