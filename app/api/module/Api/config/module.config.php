@@ -652,6 +652,9 @@ return [
             __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.4/TransXChangePublisherService_2_4.xsd',
         'https://webgate.ec.testa.eu/erru/1.0' => __DIR__ . '/../data/nr/xsd/ERRU2MS_Infringement_Req.xsd'
     ],
+    'nysiis' => [
+        'wsdl' => __DIR__ . '/../data/nysiis/wsdl/nysiis.svc.wsdl'
+    ],
     'validators' => [
         'invokables' => [
             \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class =>
