@@ -2,13 +2,14 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Irfo;
 
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoCountry;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPermitStock as Entity;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Mockery as m;
 
 /**
- * IrfoPermitStock Entity Unit Tests
- *
- * Initially auto-generated but won't be overridden
+ * @covers Dvsa\Olcs\Api\Entity\Irfo\IrfoPermitStock
+ * @covers Dvsa\Olcs\Api\Entity\Irfo\AbstractIrfoPermitStock
  */
 class IrfoPermitStockEntityTest extends EntityTester
 {
@@ -18,4 +19,17 @@ class IrfoPermitStockEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testConstructor()
+    {
+        $serialNo = 'unit_SerialNo';
+        $validForYear = 'unit_ValidForYear';
+        $ifroCntr = new IrfoCountry();
+
+        $sut = new Entity($serialNo, $validForYear, $ifroCntr);
+
+        static::assertEquals($serialNo, $sut->getSerialNo());
+        static::assertEquals($validForYear, $sut->getValidForYear());
+        static::assertEquals($ifroCntr, $sut->getIrfoCountry());
+    }
 }

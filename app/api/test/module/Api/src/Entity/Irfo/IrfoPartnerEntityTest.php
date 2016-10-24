@@ -2,13 +2,15 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Irfo;
 
+use Dvsa\Olcs\Api\Entity as Entities;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPartner as Entity;
+use Mockery as m;
 
 /**
- * IrfoPartner Entity Unit Tests
- *
- * Initially auto-generated but won't be overridden
+ * @covers Dvsa\Olcs\Api\Entity\Irfo\IrfoPartner
+ * @covers Dvsa\Olcs\Api\Entity\Irfo\AbstractIrfoPartner
  */
 class IrfoPartnerEntityTest extends EntityTester
 {
@@ -18,4 +20,30 @@ class IrfoPartnerEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    /** @var  Organisation */
+    private $mockOrg;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->mockOrg = m::mock(Organisation::class);
+    }
+
+    public function testConstructor()
+    {
+        $name = 'unit_Name';
+
+        $sut = new Entity($this->mockOrg, $name);
+
+        static::assertEquals($this->mockOrg, $sut->getOrganisation());
+        static::assertEquals($name, $sut->getName());
+    }
+
+    public function testGetCalculatedValues()
+    {
+        $actual = (new Entity($this->mockOrg, ''))->jsonSerialize();
+        static::assertNull($actual['organisation']);
+    }
 }
