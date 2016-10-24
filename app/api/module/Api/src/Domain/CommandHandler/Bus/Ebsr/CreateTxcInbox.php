@@ -5,6 +5,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -12,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
-use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateTxcInbox as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateTxcInbox as CreateTxcInboxCmd;
 use Doctrine\ORM\Query;
 
 /**
@@ -20,14 +21,18 @@ use Doctrine\ORM\Query;
  */
 final class CreateTxcInbox extends AbstractCommandHandler
 {
-    protected $repoServiceName = 'TxcInbox';
+    protected $repoServiceName = 'Bus';
 
-    protected $extraRepos = ['Bus'];
-
+    /**
+     * Create TXC Inbox records for a bus reg
+     *
+     * @param CommandInterface|CreateTxcInboxCmd $command command to create txc inbox
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         /**
-         * @var Cmd $command
          * @var BusRegEntity $busReg
          * @var EbsrSubmissionEntity $ebsrSubmission
          * @var LocalAuthorityEntity $localAuthority
@@ -41,20 +46,16 @@ final class CreateTxcInbox extends AbstractCommandHandler
 
         $result = new Result();
 
-        foreach ($localAuthorities as $localAuthority) {
-            $txc = new TxcInbox($busReg, $zipDocument, $localAuthority);
-            $this->getRepo()->save($txc);
+        $inboxRecords = new ArrayCollection();
 
-            $id = $txc->getId();
-            $result->addId('txcInbox_' . $id, $id);
+        foreach ($localAuthorities as $localAuthority) {
+            $inboxRecords->add(new TxcInbox($busReg, $zipDocument, $localAuthority));
             $result->addMessage('Txc Inbox record created for ' . $localAuthority->getDescription());
         }
 
-        $orgTxc = new TxcInbox($busReg, $zipDocument, null, $organisation);
-        $this->getRepo()->save($orgTxc);
-
-        $id = $orgTxc->getId();
-        $result->addId('txcInbox_' . $id, $id);
+        $inboxRecords->add(new TxcInbox($busReg, $zipDocument, null, $organisation));
+        $busReg->setTxcInboxs($inboxRecords);
+        $this->getRepo('Bus')->save($busReg);
         $result->addMessage('Txc Inbox record created for ' . $organisation->getName());
 
         return $result;

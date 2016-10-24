@@ -758,7 +758,11 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox", mappedBy="busReg")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox",
+     *     mappedBy="busReg",
+     *     cascade={"persist"}
+     * )
      */
     protected $txcInboxs;
 
