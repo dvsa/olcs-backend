@@ -2,13 +2,14 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Vehicle;
 
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle as Entity;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 
 /**
- * Vehicle Entity Unit Tests
- *
- * Initially auto-generated but won't be overridden
+ * @covers Dvsa\Olcs\Api\Entity\Vehicle\Vehicle
+ * @covers Dvsa\Olcs\Api\Entity\Vehicle\AbstractVehicle
  */
 class VehicleEntityTest extends EntityTester
 {
@@ -18,4 +19,11 @@ class VehicleEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testConstuctor()
+    {
+        $sut = new Vehicle();
+
+        static::assertInstanceOf(ArrayCollection::class, $sut->getLicenceVehicles());
+    }
 }

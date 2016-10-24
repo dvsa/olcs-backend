@@ -2,19 +2,20 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Irfo;
 
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as Entity;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType as IrfoPsvAuthTypeEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
 
 /**
- * IrfoPsvAuth Entity Unit Tests
- *
- * Initially auto-generated but won't be overridden
+ * @covers Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth
+ * @covers Dvsa\Olcs\Api\Entity\Irfo\AbstractIrfoPsvAuth
  */
 class IrfoPsvAuthEntityTest extends EntityTester
 {
@@ -25,36 +26,50 @@ class IrfoPsvAuthEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
+    /** @var  Entity */
+    protected $entity;
+
+    /** @var  OrganisationEntity | m\MockInterface */
+    private $mockOrg;
+    /** @var  IrfoPsvAuthTypeEntity | m\MockInterface */
+    private $mockType;
+    /** @var  RefData */
+    private $status;
+
     public function setUp()
     {
         /** @var Entity entity */
         $this->entity = $this->instantiate($this->entityClass);
         $this->entity->setId('999');
+
+        $this->mockOrg = m::mock(OrganisationEntity::class);
+        $this->mockType = m::mock(IrfoPsvAuthTypeEntity::class);
+        $this->status = new RefData();
     }
 
     public function testConstruct()
     {
-        $organisation = m::mock(OrganisationEntity::class);
-        $type = m::mock(IrfoPsvAuthTypeEntity::class);
-        $status = m::mock(RefData::class);
+        $entity = new Entity($this->mockOrg, $this->mockType, $this->status);
 
-        $entity = new Entity($organisation, $type, $status);
-
-        $this->assertSame($organisation, $entity->getOrganisation());
-        $this->assertSame($type, $entity->getIrfoPsvAuthType());
-        $this->assertSame($status, $entity->getStatus());
+        $this->assertSame($this->mockOrg, $entity->getOrganisation());
+        $this->assertSame($this->mockType, $entity->getIrfoPsvAuthType());
+        $this->assertSame($this->status, $entity->getStatus());
     }
 
     public function testUpdate()
     {
+        /** @var IrfoPsvAuthTypeEntity $irfoPsvAuthType */
         $irfoPsvAuthType = m::mock(IrfoPsvAuthTypeEntity::class)->makePartial();
         $irfoPsvAuthType->setSectionCode('blah');
         $validityPeriod = 2;
         $inForceDate = new \DateTime('2010-02-03');
         $serviceRouteFrom = 'Bristol';
         $serviceRouteTo = 'Leeds';
+
+        /** @var RefData $journeyFrequency */
         $journeyFrequency = m::mock(RefData::class)->makePartial();
         $journeyFrequency->setId('psv_freq_daily');
+
         $copiesRequired = 3;
         $copiesRequiredTotal = 4;
 
@@ -82,13 +97,9 @@ class IrfoPsvAuthEntityTest extends EntityTester
 
     public function testPopulateIrfoFeeId()
     {
-        $organisation = m::mock(OrganisationEntity::class);
-        $organisation->shouldReceive('getId')->once()->andReturn(44);
+        $this->mockOrg->shouldReceive('getId')->once()->andReturn(44);
 
-        $type = m::mock(IrfoPsvAuthTypeEntity::class);
-        $status = m::mock(RefData::class);
-
-        $entity = new Entity($organisation, $type, $status);
+        $entity = new Entity($this->mockOrg, $this->mockType, $this->status);
         $entity->populateIrfoFeeId();
 
         $this->assertEquals('IR0000044', $entity->getIrfoFeeId());
@@ -162,7 +173,7 @@ class IrfoPsvAuthEntityTest extends EntityTester
     }
 
     /**
-     * @expectedException Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
     public function testGrantFeeNotPaidThrowsException()
     {
@@ -182,7 +193,7 @@ class IrfoPsvAuthEntityTest extends EntityTester
     }
 
     /**
-     * @expectedException Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
     public function testGrantInvalidStateThrowsException()
     {
@@ -241,7 +252,7 @@ class IrfoPsvAuthEntityTest extends EntityTester
     }
 
     /**
-     * @expectedException Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
     public function testRefuseThrowsException()
     {
@@ -545,5 +556,59 @@ class IrfoPsvAuthEntityTest extends EntityTester
         $this->entity->setStatus($status);
 
         $this->entity->generate(['FEE']);
+    }
+
+    public function testIsResetableState()
+    {
+        $status = new RefData();
+        $this->entity->setStatus($status);
+
+        //  check false
+        $status->setId(Entity::STATUS_PENDING);
+
+        static::assertFalse($this->entity->isResetable());
+
+        //  check true
+        $status->setId('UNIT_NOT_PENDING');
+
+        static::assertTrue($this->entity->isResetable());
+    }
+
+    public function testReset()
+    {
+        $newStatus = new RefData();
+
+        $statusNoPending = (new RefData())
+            ->setId('NOT_PENDING_STATUS');
+
+        $this->entity
+            ->setStatus($statusNoPending)
+            ->reset($newStatus);
+
+        static::assertSame($newStatus, $this->entity->getStatus());
+    }
+
+    public function testResetException()
+    {
+        $this->setExpectedException(BadRequestException::class, 'Irfo Psv Auth cannot be reset');
+
+        $this->entity
+            ->setStatus(
+                (new RefData())
+                    ->setId(Entity::STATUS_PENDING)
+            )
+            ->reset(new RefData());
+
+        static::assertEquals('UNIT_STATUS', $this->entity->getStatus()->getId());
+    }
+
+    public function testGetRelatedOrganisation()
+    {
+        /** @var Organisation $mockOrg */
+        $mockOrg = m::mock(Organisation::class);
+
+        $this->entity->setOrganisation($mockOrg);
+
+        static::assertSame($mockOrg, $this->entity->getRelatedOrganisation());
     }
 }
