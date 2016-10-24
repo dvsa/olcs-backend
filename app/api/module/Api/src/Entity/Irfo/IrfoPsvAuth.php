@@ -48,6 +48,8 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth implements OrganisationProviderInt
         $this->organisation = $organisation;
         $this->irfoPsvAuthType = $type;
         $this->status = $status;
+
+        parent::__construct();
     }
 
     /**

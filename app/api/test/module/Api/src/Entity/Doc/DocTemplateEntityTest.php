@@ -2,13 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Doc;
 
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Doc\DocTemplate as Entity;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 
 /**
- * DocTemplate Entity Unit Tests
- *
- * Initially auto-generated but won't be overridden
+ * @covers Dvsa\Olcs\Api\Entity\Doc\DocTemplate
+ * @covers Dvsa\Olcs\Api\Entity\Doc\AbstractDocTemplate
  */
 class DocTemplateEntityTest extends EntityTester
 {
@@ -18,4 +18,13 @@ class DocTemplateEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testConstructor()
+    {
+        $sut = new Entity();
+        $actual = $sut->getDocTemplateBookmarks();
+
+        static::assertInstanceOf(ArrayCollection::class, $actual);
+        static::assertEmpty($actual);
+    }
 }
