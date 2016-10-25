@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Abstract Query Handler
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler;
 
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
