@@ -33,7 +33,7 @@ class Result
      *
      * @return void
      */
-    public function __construct(BundleSerializableInterface $object, array $bundle = [], array $values = [])
+    public function __construct(BundleSerializableInterface $object = null, array $bundle = [], array $values = [])
     {
         $this->object = $object;
         $this->bundle = $bundle;
@@ -60,6 +60,10 @@ class Result
      */
     public function serialize()
     {
+        if ($this->isEmpty()) {
+            return null;
+        }
+
         $data = $this->object->serialize($this->bundle);
 
         return array_replace_recursive($data, $this->values);
