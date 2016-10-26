@@ -93,6 +93,7 @@ class GoodsDiscTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('lv.application', 'lva')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('lva.licenceType', 'lvalt')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('lva.goodsOrPsv', 'lvagp')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('order')->with('lvl.licNo', 'ASC')->once()->andReturnSelf();
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('gd')->once()->andReturn($mockQb);
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['result']);
@@ -168,6 +169,7 @@ class GoodsDiscTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('lv.application', 'lva')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('lva.licenceType', 'lvalt')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('lva.goodsOrPsv', 'lvagp')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('order')->with('lvl.licNo', 'ASC')->once()->andReturnSelf();
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('gd')->once()->andReturn($mockQb);
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['result']);
