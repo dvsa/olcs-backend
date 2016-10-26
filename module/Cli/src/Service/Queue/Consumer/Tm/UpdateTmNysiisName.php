@@ -42,17 +42,4 @@ class UpdateTmNysiisName extends AbstractCommandConsumer
             $json->unserialize($item->getOptions())
         );
     }
-
-    /**
-     * Method to handle the Service Manager exception. Default to failed.
-     *
-     * @param QueueEntity $item
-     * @param \Exception $e
-     * @return string
-     */
-    protected function handleZendServiceException(QueueEntity $item, \Exception $e)
-    {
-        $ni = new NysiisException();
-        return $this->retry($item, $ni->getRetryAfter(), $e->getMessage());
-    }
 }
