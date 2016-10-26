@@ -1,15 +1,12 @@
 <?php
 
-/**
- * Update Submission
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Submission;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
-use Dvsa\Olcs\Transfer\Command\Submission\UpdateSubmission as Cmd;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareTrait;
@@ -24,6 +21,15 @@ final class UpdateSubmission extends AbstractCommandHandler implements Submissio
 
     protected $repoServiceName = 'Submission';
 
+    /**
+     * Handle
+     * 
+     * @param TransferCmd\Submission\UpdateSubmission $command Command
+     *
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws \Exception
+     */
     public function handleCommand(CommandInterface $command)
     {
         $submissionEntity = $this->updateSubmission($command);
@@ -43,11 +49,15 @@ final class UpdateSubmission extends AbstractCommandHandler implements Submissio
     }
 
     /**
-     * @param Cmd $command
+     * Update submission
+     *
+     * @param TransferCmd\Submission\UpdateSubmission $command Command
+     *
      * @return Submission
      */
-    private function updateSubmission(Cmd $command)
+    private function updateSubmission(TransferCmd\Submission\UpdateSubmission $command)
     {
+        /** @var Submission $submission */
         $submission = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         if ($command->getSubmissionType() !== null) {
