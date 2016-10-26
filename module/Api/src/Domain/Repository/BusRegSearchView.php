@@ -86,6 +86,10 @@ class BusRegSearchView extends AbstractRepository
             $qb->andWhere($qb->expr()->eq($this->alias . '.busRegStatus', ':status'))
                 ->setParameter('status', $query->getStatus());
         }
+
+        // OLCS-14215 - need to group by id
+        // otherwise we can get multiple rows per id which dehydrates to one object
+        $qb->groupBy($this->alias .'.id');
     }
 
     /**
