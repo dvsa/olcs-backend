@@ -101,7 +101,8 @@ return [
             \Dvsa\Olcs\Api\Service\Nr\MsiResponse::class => \Dvsa\Olcs\Api\Service\Nr\MsiResponseFactory::class,
 
             \Dvsa\Olcs\Api\Mvc\OlcsBlameableListener::class => \Dvsa\Olcs\Api\Mvc\OlcsBlameableListenerFactory::class,
-            \Dvsa\Olcs\Api\Service\Data\Nysiis::class => \Dvsa\Olcs\Api\Service\Data\NysiisFactory::class,
+            \Dvsa\Olcs\Api\Service\Nysiis\NysiisClient::class =>
+                \Dvsa\Olcs\Api\Service\Nysiis\NysiisClientFactory::class,
         ],
     ],
     'view_manager' => [
@@ -651,9 +652,6 @@ return [
         'http://naptan.dft.gov.uk/transxchange/publisher/schema/3.1.2/TransXChangePublisherService.xsd' =>
             __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.4/TransXChangePublisherService_2_4.xsd',
         'https://webgate.ec.testa.eu/erru/1.0' => __DIR__ . '/../data/nr/xsd/ERRU2MS_Infringement_Req.xsd'
-    ],
-    'nysiis' => [
-        'wsdl' => __DIR__ . '/../data/nysiis/wsdl/nysiis.svc.wsdl'
     ],
     'validators' => [
         'invokables' => [
