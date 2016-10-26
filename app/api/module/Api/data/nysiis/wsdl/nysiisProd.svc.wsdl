@@ -32,7 +32,7 @@
 </wsdl:binding>
 <wsdl:service name="Nysiis">
 <wsdl:port name="BasicHttpBinding_INysiis" binding="tns:BasicHttpBinding_INysiis">
-<soap:address location="http://viacpvwolbsut01.olbstest.local:81/INR.NysiisServices/Nysiis.svc"/>
+<soap:address location="https://r-inr-01.corp.vosa.gov.uk:444/INR.NysiisServices/Nysiis.svc"/>
 </wsdl:port>
 </wsdl:service>
 </wsdl:definitions>
