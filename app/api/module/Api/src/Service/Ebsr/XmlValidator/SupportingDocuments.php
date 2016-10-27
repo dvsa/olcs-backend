@@ -7,30 +7,23 @@ use Zend\Validator\Exception;
 
 /**
  * Class SupportingDocuments
- * @package Olcs\Ebsr\Validator\Structure
+ * @package Dvsa\Olcs\Api\Service\Ebsr\XmlValidator
  */
 class SupportingDocuments extends AbstractValidator
 {
     const MISSING_DOCUMENT_ERROR = 'missing-document-error';
 
+    const DOC_IN_TAG = '"%s" specified in tag name "%s"';
+
     /**
+     * error message templates
+     *
      * @var array
      */
     protected $messageTemplates = [
-        self::MISSING_DOCUMENT_ERROR => 'Document %value% specified in tag %tagName% not found'
+        self::MISSING_DOCUMENT_ERROR => 'Document with filename %value% was not found'
     ];
 
-    /**
-     * @var array
-     */
-    protected $messageVariables = [
-        'tagName'
-    ];
-
-    /**
-     * @var string
-     */
-    protected $tagName = '';
     /**
      * Returns true if and only if $value meets the validation requirements
      *
@@ -38,8 +31,9 @@ class SupportingDocuments extends AbstractValidator
      * getMessages() will return an array of messages that explain why the
      * validation failed.
      *
-     * @param  mixed $value
-     * @param  array $context
+     * @param mixed $value   input value
+     * @param array $context input context
+     *
      * @return bool
      * @throws Exception\RuntimeException If validation of $value is impossible
      */
@@ -59,18 +53,22 @@ class SupportingDocuments extends AbstractValidator
     }
 
     /**
-     * @param string $dir
-     * @param \DomDocument $domDocument
-     * @param string $tagName
+     * Check files exist as specified
+     *
+     * @param string       $dir         directory name
+     * @param \DomDocument $domDocument xml document
+     * @param string       $tagName     specified tag
+     *
+     * @return void
      */
     protected function checkFileExistsByTag($dir, $domDocument, $tagName)
     {
         foreach ($domDocument->getElementsByTagName($tagName) as $document) {
             //validate exists
-            $value = $document->nodeValue;
-            if (!file_exists($dir . $value)) {
-                $this->tagName = $tagName;
-                $this->abstractOptions['messages'][] = $this->createMessage(self::MISSING_DOCUMENT_ERROR, $value);
+            $fileName = $document->nodeValue;
+            if (!file_exists($dir . $fileName)) {
+                $message = sprintf(self::DOC_IN_TAG, $fileName, $tagName);
+                $this->abstractOptions['messages'][] = $this->createMessage(self::MISSING_DOCUMENT_ERROR, $message);
             }
         }
     }
