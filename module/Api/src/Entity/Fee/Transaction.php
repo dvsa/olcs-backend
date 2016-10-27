@@ -18,7 +18,8 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
  *        @ORM\Index(name="ix_txn_processed_by_user_id", columns={"processed_by_user_id"}),
  *        @ORM\Index(name="ix_txn_olbs_key", columns={"olbs_key"}),
  *        @ORM\Index(name="ix_txn_payment_method", columns={"payment_method"}),
- *        @ORM\Index(name="ix_txn_type", columns={"type"})
+ *        @ORM\Index(name="ix_txn_type", columns={"type"}),
+ *        @ORM\Index(name="ix_txn_reference", columns={"reference"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_txn_receipt_document_id", columns={"receipt_document_id"})
