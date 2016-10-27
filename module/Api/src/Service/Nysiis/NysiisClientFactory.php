@@ -38,11 +38,13 @@ class NysiisClientFactory implements FactoryInterface
          * http://phil.lavin.me.uk/2014/04/how-to-force-tls-v1-0-in-php/
          * http://docs.php.net/manual/en/migration56.openssl.php#migration56.openssl.crypto-method
          */
-        $context = stream_context_create([
-            'ssl' => [
-                'crypto_method' => STREAM_CRYPTO_METHOD_TLSv1_0_CLIENT,
-            ],
-        ]);
+        $context = stream_context_create(
+            [
+                'ssl' => [
+                    'crypto_method' => STREAM_CRYPTO_METHOD_TLSv1_0_CLIENT,
+                ],
+            ]
+        );
 
         $config['nysiis']['options']['stream_context'] = $context;
 
