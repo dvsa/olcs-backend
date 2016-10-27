@@ -101,7 +101,8 @@ return [
             \Dvsa\Olcs\Api\Service\Nr\MsiResponse::class => \Dvsa\Olcs\Api\Service\Nr\MsiResponseFactory::class,
 
             \Dvsa\Olcs\Api\Mvc\OlcsBlameableListener::class => \Dvsa\Olcs\Api\Mvc\OlcsBlameableListenerFactory::class,
-            \Dvsa\Olcs\Api\Service\Data\Nysiis::class => \Dvsa\Olcs\Api\Service\Data\NysiisFactory::class,
+            \Dvsa\Olcs\Api\Service\Nysiis\NysiisClient::class =>
+                \Dvsa\Olcs\Api\Service\Nysiis\NysiisClientFactory::class,
         ],
     ],
     'view_manager' => [

@@ -34,62 +34,6 @@ class UpdateTmNysiisNameTest extends AbstractConsumerTestCase
     }
 
     /**
-     * Tests that update command retries correctly when service cannot be created
-     */
-    public function testProcessMessageHandlesZendServiceException()
-    {
-        $message = 'exception message';
-        $userId = 11;
-        $user = new User('pid', 'type');
-        $user->setId($userId);
-
-        $itemId = 99;
-        $entityId = 88;
-        $jobName = 'job name';
-
-        $optionsArray = [
-            'jobName' => $jobName,
-            'userId' => $userId
-        ];
-
-        $json = new ZendJson();
-        $options = $json->serialize($optionsArray);
-
-        $item = new QueueEntity();
-        $item->setId($itemId);
-        $item->setEntityId($entityId);
-        $item->setOptions($options);
-        $item->setCreatedBy($user);
-
-        $retryAfter = 900;
-
-        $cmdData = [
-            'id' => $entityId
-        ];
-
-        $this->expectCommandException(
-            UpdateNysiisCmd::class, $cmdData, ZendServiceException::class, $message, $retryAfter
-        );
-
-        $this->expectCommand(
-            RetryCmd::class,
-            [
-                'item' => $item,
-                'retryAfter' => $retryAfter
-            ],
-            new Result(),
-            false
-        );
-
-        $result = $this->sut->processMessage($item);
-
-        $this->assertEquals(
-            'Requeued message: 99 ' . $options . ' for retry in ' . $retryAfter . ' ' . $message,
-            $result
-        );
-    }
-
-    /**
      * Tests that update command retries correctly upon Nysiis Exception
      */
     public function testProcessMessageHandlesNysiisException()
