@@ -112,11 +112,6 @@ class SubmissionGeneratorTest extends MockeryTestCase
 
     /**
      * Branch test for TM submissions that remove sections
-     *
-     * @param $submissionType
-     * @param $expectedSections
-     *
-     * @throws \Exception
      */
     public function testGenerateSubmissionValidTmSubmission()
     {
@@ -130,30 +125,24 @@ class SubmissionGeneratorTest extends MockeryTestCase
                     'case-summary',
                     'outstanding-applications',
                     'people',
-                    'section6'
+                    'section6',
                 ]
             ]
         ];
 
-        /** @var SectionGeneratorPluginManager $mockSectionGeneratorPluginManager */
-        $mockSectionGeneratorPluginManager = m::mock(SectionGeneratorPluginManager::class);
-
-        /** @var SubmissionEntity | m\MockInterface $mockSubmission */
-        $mockSubmission = m::mock(SubmissionEntity::class)->makePartial();
+        $expectSections = [
+            'section1' => 'foo',
+            'section2' => 'foo',
+            'section6' => 'unit_FromSnapshot',
+        ];
 
         /** @var CaseEntity | m\MockInterface $mockCase */
         $mockCase = m::mock(CaseEntity::class)->makePartial();
         $mockCase->setId(77);
-        $mockSubmission->setSubmissionType(new RefdataEntity($sectionId));
-
-        $sections = [];
-
-        $sut = new SubmissionGenerator($mockConfig, $mockSectionGeneratorPluginManager);
-
-        $mockSubmission->shouldReceive('getCase')->andReturn($mockCase);
-
         $mockCase->shouldReceive('isTm')->andReturn(true);
 
+        /** @var SectionGeneratorPluginManager $mockSectionGeneratorPluginManager */
+        $mockSectionGeneratorPluginManager = m::mock(SectionGeneratorPluginManager::class);
         $mockSectionGeneratorPluginManager->shouldReceive('get')
             ->with(m::type('string'))
             ->andReturnSelf()
@@ -161,16 +150,28 @@ class SubmissionGeneratorTest extends MockeryTestCase
             ->with($mockCase)
             ->andReturn('foo');
 
-        $result = $sut->generateSubmission($mockSubmission, $sections);
-        $this->assertEquals('{"section1":"foo","section2":"foo","section6":"foo"}', $mockSubmission->getDataSnapshot());
-        $this->assertArrayHasKey('section1', $mockSubmission->getSectionData());
-        $this->assertArrayHasKey('section2', $mockSubmission->getSectionData());
-        $this->assertEquals('foo', $mockSubmission->getSectionData()['section1']);
-        $this->assertSame($result, $mockSubmission);
+        /** @var SubmissionEntity | m\MockInterface $mockSubmission */
+        $mockSubmission = m::mock(SubmissionEntity::class)->makePartial();
+        $mockSubmission->setSubmissionType(new RefdataEntity($sectionId));
+        $mockSubmission
+            ->shouldReceive('getCase')->times(3)->andReturn($mockCase)
+            ->shouldReceive('getDataSnapshot')->once()->andReturn('{"section6":"unit_FromSnapshot", "people":"unitT"}')
+            ->shouldReceive('setDataSnapshot')->once()->with(json_encode($expectSections));
 
-        $this->assertNotContains('case-outline', $mockSubmission->getSectionData());
-        $this->assertNotContains('outstanding-applications', $mockSubmission->getSectionData());
-        $this->assertNotContains('people', $mockSubmission->getSectionData());
+        $sections = [];
+
+        //  call & check
+        $sut = new SubmissionGenerator($mockConfig, $mockSectionGeneratorPluginManager);
+        $actual = $sut->generateSubmission($mockSubmission, $sections);
+
+        static::assertSame($actual, $mockSubmission);
+
+        $actualSectionData = $mockSubmission->getSectionData();
+        static::assertEquals($expectSections, $actualSectionData);
+
+        static::assertNotContains('case-outline', $actualSectionData);
+        static::assertNotContains('outstanding-applications', $actualSectionData);
+        static::assertNotContains('people', $actualSectionData);
     }
 
     /**
