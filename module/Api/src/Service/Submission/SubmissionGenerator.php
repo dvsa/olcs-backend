@@ -53,17 +53,19 @@ class SubmissionGenerator
 
         $requiredSections = $this->getRequiredSections($sectionTypeId, $sections, $isTm);
 
+        $snapshot = json_decode($submissionEntity->getDataSnapshot(), true);
+
         //  store and set new limit of execution time
         $timeLimit = ini_get('MAX_EXECUTION_TIME');
         set_time_limit(self::MAX_GENERATE_SUBMISSION_TIME);
 
         // foreach section
         foreach ($requiredSections as $sectionId) {
-            $data = $this->sectionGeneratorPluginManager
-                ->get($sectionId)
-                ->generateSection(
-                    $submissionEntity->getCase()
-                );
+            if (isset($snapshot[$sectionId])) {
+                $data = $snapshot[$sectionId];
+            } else {
+                $data = $this->generateSubmissionSectionData($submissionEntity, $sectionId);
+            }
 
             $submissionEntity->setSectionData($sectionId, $data);
         }

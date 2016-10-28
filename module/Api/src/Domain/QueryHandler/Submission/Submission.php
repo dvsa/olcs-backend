@@ -22,6 +22,7 @@ final class Submission extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\Submission $repo */
         $repo = $this->getRepo();
 
         // retrieve reason even if deleted
@@ -31,6 +32,7 @@ final class Submission extends AbstractQueryHandler
             ]
         );
 
+        /** @var SubmissionEntity $submission */
         $submission = $repo->fetchUsingId($query);
 
         return $this->result(
