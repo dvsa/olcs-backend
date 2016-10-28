@@ -43,12 +43,14 @@ final class Pi extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\Pi $repo */
         $repo = $this->getRepo();
 
         // retrieve reason even if deleted
         $repo->disableSoftDeleteable(
             [
-                \Dvsa\Olcs\Api\Entity\Pi\Reason::class
+                \Dvsa\Olcs\Api\Entity\Pi\Reason::class,
+                \Dvsa\Olcs\Api\Entity\Pi\PresidingTc::class,
             ]
         );
 
