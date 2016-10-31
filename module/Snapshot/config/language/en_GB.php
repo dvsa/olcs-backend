@@ -53,8 +53,8 @@ return [
         Licensing Office',
     'application-review-financial-evidence-no-of-vehicles' => 'Number of vehicles',
     'application-review-financial-evidence-required-finance' => 'Required finance',
-    'application-review-financial-history-administration' => 'Has anyone you’ve named in this application (including partners, directors and Transport Managers) ever been involved with a company or business that has gone (or is going into) administration?',
-    'application-review-financial-history-bankrupt' => 'Has anyone you’ve named in this application (including partners, directors and Transport Managers) ever been declared bankrupt or had their estate seized or confiscated?',
+    'application-review-financial-history-administration' => 'Has anyone you\'ve named ever been involved with a business that has gone or is going into administration or a Company Voluntary Arrangement?',
+    'application-review-financial-history-bankrupt' => 'Has anyone you\'ve named ever been declared bankrupt or had their estate seized or been the subject of an Individual Voluntary Arrangement?',
     'application-review-financial-history-disqualified' => 'Have you or any of your partners, directors, majority shareholders or Transport Managers ever been disqualified from acting as the director of a company, or from taking part in the management of a company?',
     'application-review-financial-history-evidence' => 'Evidence',
     'application-review-financial-history-evidence-send' => 'Operator to send original evidence to the Central Licensing
