@@ -52,18 +52,17 @@ class XmlStructureInputFactoryTest extends TestCase
     }
 
     /**
-     * Tests exception when max schema errors config is missing
+     * tests for missing config keys
      *
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage No config specified for max_schema_errors
+     * @param $config
+     * @param $exceptionName
+     * @param $exceptionMessage
+     *
+     * @dataProvider createServiceErrorProvider
      */
-    public function testCreateServiceMissingMaxSchema()
+    public function testCreateServiceMissingConfig($config, $exceptionName, $exceptionMessage)
     {
-        $config = [
-            'nr' => [],
-            'xml_valid_message_exclude' => ['strings']
-        ];
-
+        $this->setExpectedException($exceptionName, $exceptionMessage);
         $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
 
@@ -72,23 +71,30 @@ class XmlStructureInputFactoryTest extends TestCase
     }
 
     /**
-     * Tests exception when xml message exclude config is missing
+     * Data provider for testCreateServiceMissingConfig
      *
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage No config specified for xml messages to exclude
+     * @return array
      */
-    public function testCreateServiceMissingXmlMessageExclude()
+    public function createServiceErrorProvider()
     {
-        $config = [
-            'nr' => [
-                'max_schema_errors' => 10
-            ]
+        return [
+            [
+                [
+                    'nr' => [],
+                    'xml_valid_message_exclude' => ['strings']
+                ],
+                \RuntimeException::class,
+                'No config specified for max_schema_errors'
+            ],
+            [
+                [
+                    'nr' => [
+                        'max_schema_errors' => 10
+                    ]
+                ],
+                \RuntimeException::class,
+                'No config specified for xml messages to exclude'
+            ],
         ];
-
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
-        $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
-
-        $sut = new XmlStructureInputFactory();
-        $sut->createService($mockSl);
     }
 }
