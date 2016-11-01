@@ -159,7 +159,7 @@ return [
     'review-business_type' => 'Business type',
     'review-community_licences' => 'Community licences',
     'review-conditions_undertakings' => 'Conditions undertakings',
-    'review-convictions_penalties' => 'Convictions penalties',
+    'review-convictions_penalties' => 'Convictions and penalties',
     'review-date' => 'Review date',
     'review-discs' => 'Discs',
     'review-financial_evidence' => 'Financial evidence',
