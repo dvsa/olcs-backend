@@ -2,10 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use \Dvsa\Olcs\Transfer\Query as TransferQry;
+use Dvsa\Olcs\Api\Entity;
+ use Mockery as m;
+
 /**
- * CategoryTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\Category
  */
 class CategoryTest extends RepositoryTestCase
 {
@@ -14,31 +16,23 @@ class CategoryTest extends RepositoryTestCase
         $this->setUpSut(\Dvsa\Olcs\Api\Domain\Repository\Category::class, true);
     }
 
-    public function testApplyListFiltersNoFilters()
+    public function testApplyListFiltersInvalidClass()
     {
         $qb = $this->createMockQb('QUERY');
 
         $this->mockCreateQueryBuilder($qb);
 
         $this->queryBuilder
-            ->shouldReceive('modifyQuery')
-            ->with($qb)
-            ->andReturnSelf()
-            ->shouldReceive('withRefdata')
-            ->once()
-            ->andReturnSelf();
+            ->shouldReceive('modifyQuery')->times(1)->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf();
 
-        $dto = \Dvsa\Olcs\Transfer\Query\Category\GetList::create(
-            []
-        );
         $this->sut->shouldReceive('fetchPaginatedList')
             ->andReturn('RESULTS');
 
-        $this->assertEquals('RESULTS', $this->sut->fetchList($dto));
+        $dto = TransferQry\Category\GetList::create([]);
 
-        $expectedQuery = 'QUERY';
-
-        $this->assertEquals($expectedQuery, $this->query);
+        static::assertEquals('RESULTS', $this->sut->fetchList($dto));
+        static::assertEquals('QUERY', $this->query);
     }
 
     public function testApplyListFiltersAllN()
@@ -55,7 +49,7 @@ class CategoryTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf();
 
-        $dto = \Dvsa\Olcs\Transfer\Query\Category\GetList::create(
+        $dto = TransferQry\Category\GetList::create(
             [
                 'isTaskCategory' => 'N',
                 'isDocCategory' => 'N',
@@ -81,28 +75,27 @@ class CategoryTest extends RepositoryTestCase
         $this->mockCreateQueryBuilder($qb);
 
         $this->queryBuilder
-            ->shouldReceive('modifyQuery')
-            ->with($qb)
-            ->andReturnSelf()
-            ->shouldReceive('withRefdata')
-            ->once()
-            ->andReturnSelf();
+            ->shouldReceive('modifyQuery')->times(2)->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf();
 
-        $dto = \Dvsa\Olcs\Transfer\Query\Category\GetList::create(
+        $this->sut->shouldReceive('fetchPaginatedList')
+            ->andReturn('RESULTS');
+
+        $dto = TransferQry\Category\GetList::create(
             [
                 'isTaskCategory' => 'Y',
                 'isDocCategory' => 'Y',
                 'isScanCategory' => 'Y',
             ]
         );
-        $this->sut->shouldReceive('fetchPaginatedList')
-            ->andReturn('RESULTS');
-
         $this->assertEquals('RESULTS', $this->sut->fetchList($dto));
 
-        $expectedQuery = 'QUERY AND m.isTaskCategory = [[true]] AND '
-            . 'm.isDocCategory = [[true]] AND '
-            . 'm.isScanCategory = [[true]]';
+        $expectedQuery = 'QUERY '.
+            'INNER JOIN ' . Entity\Doc\DocTemplate::class . ' dct WITH dct.category = m.id ' .
+            'INNER JOIN ' . Entity\Doc\Document::class . ' dc WITH dc.id = dct.document ' .
+            'AND m.isTaskCategory = [[true]] ' .
+            'AND m.isDocCategory = [[true]] ' .
+            'AND m.isScanCategory = [[true]]';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
