@@ -51,5 +51,8 @@ return array(
     'ebsr' => array(
         'max_schema_errors' => 3, //maximum number of xml schema problems to return (prevents massive error messages)
         'transxchange_schema_version' => 2.5 //validate against transxchange schema (2.1, 2.4 and 2.5 available)
+    ),
+    'nr' => array(
+        'max_schema_errors' => 10, //maximum number of xml schema problems to return (prevents massive error messages)
     )
 );
