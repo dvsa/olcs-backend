@@ -113,6 +113,9 @@ final class CreateViExtractFiles extends AbstractCommandHandler
                 $total = count($results);
                 $this->result->addMessage('Found ' . $total . ' record(s) for ' . $settings['name']);
                 if ($total) {
+                    foreach ($results as &$result) {
+                        $result['line'] = strtoupper($result['line']);
+                    }
                     $content = implode(self::PHP_EOL_WIN, array_column($results, 'line')) . self::PHP_EOL_WIN;
                     if (file_put_contents($fileName, $content) === false) {
                         throw new \Exception(
