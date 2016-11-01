@@ -56,6 +56,13 @@
                                 {
                                     "or":[
                                         {
+                                            "missing":{
+                                                "field":[
+                                                    "lic_no"
+                                                ]
+                                            }
+                                        },
+                                        {
                                             "terms":{
                                                 "contact_type":[
                                                     "ct_complainant"
