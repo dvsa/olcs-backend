@@ -1188,7 +1188,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "5248da5b8074c07c991d7abb6229f3d2c1fdd184"
+                "reference": "4bd2759e7c2d3378364a7937fb3c9e9e4096dc0c"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1209,7 +1209,7 @@
                 }
             },
             "description": "Xml tools for olcs",
-            "time": "2016-10-24 08:14:21"
+            "time": "2016-11-01 15:22:25"
         },
         {
             "name": "psr/log",
