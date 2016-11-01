@@ -311,4 +311,12 @@ return [
         'extensions' => 'doc,pdf,rtf,xls,xlsx,docx,xml,zip,jpeg,jpg,png,tiff,txt,rtf,xml',
     ],
 
+    //If we find these strings in xml validator error messages, don't return the message to the user.
+    //This is so we can avoid showing things like directory paths to the user in cases such as schema import errors
+    'xml_valid_message_exclude' => [
+        '/var/www/olcs',
+        '/opt/dvsa',
+        'Skipping import of schema'
+    ],
+
 ];
