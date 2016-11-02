@@ -1,21 +1,18 @@
 <?php
 
-/**
- * Pi Test
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Pi as PiRepo;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Transfer\Query\Cases\Pi as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**
- * Pi Test
+ * @covers Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi
  */
 class PiTest extends QueryHandlerTestCase
 {
@@ -23,6 +20,16 @@ class PiTest extends QueryHandlerTestCase
     {
         $this->sut = new Pi();
         $this->mockRepo('Pi', PiRepo::class);
+
+        $this->repoMap['Pi']
+            ->shouldReceive('disableSoftDeleteable')
+            ->with(
+                [
+                    \Dvsa\Olcs\Api\Entity\Pi\Reason::class,
+                    \Dvsa\Olcs\Api\Entity\Pi\PresidingTc::class,
+                ]
+            )
+            ->once();
 
         parent::setUp();
     }
@@ -35,13 +42,6 @@ class PiTest extends QueryHandlerTestCase
         $query = Qry::create(['id' => 1]);
 
         $this->repoMap['Pi']
-            ->shouldReceive('disableSoftDeleteable')
-            ->with(
-                [
-                    \Dvsa\Olcs\Api\Entity\Pi\Reason::class
-                ]
-            )
-            ->once()
             ->shouldReceive('fetchUsingCase')
             ->with($query, Query::HYDRATE_OBJECT)
             ->andReturn(null);
@@ -57,13 +57,6 @@ class PiTest extends QueryHandlerTestCase
         $pi->shouldReceive('flattenSlaTargetDates')->once()->andReturn([]);
 
         $this->repoMap['Pi']
-            ->shouldReceive('disableSoftDeleteable')
-            ->with(
-                [
-                    \Dvsa\Olcs\Api\Entity\Pi\Reason::class
-                ]
-            )
-            ->once()
             ->shouldReceive('fetchUsingCase')
             ->with($query, Query::HYDRATE_OBJECT)
             ->andReturn($pi);

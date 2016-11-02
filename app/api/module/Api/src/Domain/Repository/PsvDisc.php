@@ -31,7 +31,8 @@ class PsvDisc extends AbstractRepository
             ->with('licence', 'l')
             ->with('l.trafficArea', 'lta')
             ->with('l.licenceType', 'llt')
-            ->with('l.goodsOrPsv', 'lgp');
+            ->with('l.goodsOrPsv', 'lgp')
+            ->order('l.licNo', 'ASC');
 
         $this->addFilteringConditions($qb, $licenceType);
 

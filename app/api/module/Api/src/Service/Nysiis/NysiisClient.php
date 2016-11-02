@@ -42,7 +42,7 @@ class NysiisClient
         Logger::info('Nysiis parameters', ['data' => [$forename, $familyName]]);
 
         try {
-            $nysiisData = $this->soapClient->GetNYSISSSearchKeys(
+            $nysiisData = $this->soapClient->GetNYSIISSearchKeys(
                 [
                     'firstName' => $forename,
                     'familyName' => $familyName
@@ -51,6 +51,7 @@ class NysiisClient
         } catch (\SoapFault $e) {
             // Catch SoapFault exceptions and ensure a Nysiis exception is thrown to trigger a requeue
             $this->logClientInfo();
+            Logger::info('Nysiis soap fault object', ['data' => $e->__toString()]);
             throw new NysiisException('SOAP Fault connecting to Nysiis service: ' . $e->getMessage());
         }
 

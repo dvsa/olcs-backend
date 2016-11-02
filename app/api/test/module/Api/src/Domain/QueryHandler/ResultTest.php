@@ -12,17 +12,11 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class ResultTest extends MockeryTestCase
 {
-    public function testResultWithEntity()
+    public function testResultWithoutEntity()
     {
-        $expected = ['foo' => 'bar', 'cake' => 'bar'];
+        $sut = new Result(null);
 
-        /** @var BundleSerializableInterface $entity */
-        $entity = m::mock(BundleSerializableInterface::class);
-
-        $entity->shouldReceive('serialize')->once()->with([])->andReturn(['foo' => 'bar', 'cake' => 'bar']);
-
-        $result = new Result($entity);
-        $this->assertEquals($expected, $result->serialize());
+        static::assertNull($sut->serialize());
     }
 
     public function testResultWithEntityAndBundle()

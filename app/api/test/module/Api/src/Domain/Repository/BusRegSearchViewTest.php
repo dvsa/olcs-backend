@@ -231,6 +231,11 @@ class BusRegSearchViewTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('setParameter')
             ->with('organisationId', 342)
+            ->andReturnSelf()
+
+            ->shouldReceive('groupBy')
+            ->with('m.id')
+            ->once()
             ->andReturnSelf();
 
         $mockQ = BusRegSearchViewList::create(
@@ -260,6 +265,10 @@ class BusRegSearchViewTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('setParameter')
             ->with('status', 'bar')
+            ->andReturnSelf()
+            ->shouldReceive('groupBy')
+            ->with('m.id')
+            ->once()
             ->andReturnSelf()
             ->getMock();
 
@@ -300,6 +309,11 @@ class BusRegSearchViewTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('setParameter')
             ->with('localAuthorityId', 234)
+            ->andReturnSelf()
+
+            ->shouldReceive('groupBy')
+            ->with('m.id')
+            ->once()
             ->andReturnSelf();
 
         $mockQ = BusRegSearchViewList::create(
