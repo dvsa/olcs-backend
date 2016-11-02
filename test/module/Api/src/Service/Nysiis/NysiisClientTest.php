@@ -29,7 +29,7 @@ class NysiisClientTest extends MockeryTestCase
         $nysiisResult->shouldReceive('FamilyName')->twice()->andReturn($nysissFamilyName);
 
         $soapClient = $this->soapClient();
-        $soapClient->shouldReceive('GetNYSISSSearchKeys')
+        $soapClient->shouldReceive('GetNYSIISSearchKeys')
             ->with(
                 [
                     'firstName' => $inputForename,
@@ -68,7 +68,7 @@ class NysiisClientTest extends MockeryTestCase
 
         $soapClient = $this->soapClient();
 
-        $soapClient->shouldReceive('GetNYSISSSearchKeys')
+        $soapClient->shouldReceive('GetNYSIISSearchKeys')
             ->once()
             ->with($inputData)
             ->andThrowExceptions([new \SoapFault('SOAP-ERROR', 'Soap error message')]);

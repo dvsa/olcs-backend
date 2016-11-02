@@ -16,6 +16,7 @@ class XmlStructureInputFactory implements FactoryInterface
 {
     const MAX_SCHEMA_MSG = 'No config specified for max_schema_errors';
     const SCHEMA_VERSION_MSG = 'No config specified for transxchange schema version';
+    const XML_VALID_EXCLUDE_MSG = 'No config specified for xml messages to exclude';
     const XSD_PATH = 'http://www.transxchange.org.uk/schema/%s/TransXChange_registration.xsd';
 
     /**
@@ -47,10 +48,15 @@ class XmlStructureInputFactory implements FactoryInterface
                 throw new \RuntimeException(self::SCHEMA_VERSION_MSG);
             }
 
+            if (!isset($config['xml_valid_message_exclude'])) {
+                throw new \RuntimeException(self::XML_VALID_EXCLUDE_MSG);
+            }
+
             /** @var Xsd $xsdValidator */
             $xsdValidator = $serviceLocator->get('ValidatorManager')->get(Xsd::class);
             $xsdValidator->setXsd(sprintf(self::XSD_PATH, $config['ebsr']['transxchange_schema_version']));
             $xsdValidator->setMaxErrors($config['ebsr']['max_schema_errors']);
+            $xsdValidator->setXmlMessageExclude($config['xml_valid_message_exclude']);
 
             $validatorchain->attach($xsdValidator);
             $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\ServiceClassification'));

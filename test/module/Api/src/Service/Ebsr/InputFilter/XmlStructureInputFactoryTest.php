@@ -21,6 +21,7 @@ class XmlStructureInputFactoryTest extends TestCase
     {
         $maxSchemaErrors = 3;
         $schemaVersion = 2.5;
+        $xmlMessageExclude = [];
 
         $config = [
             'ebsr' => [
@@ -29,13 +30,15 @@ class XmlStructureInputFactoryTest extends TestCase
                 ],
                 'max_schema_errors' => $maxSchemaErrors,
                 'transxchange_schema_version' => $schemaVersion
-            ]
+            ],
+            'xml_valid_message_exclude' => $xmlMessageExclude
         ];
 
         $mockXsdValidator = m::mock('Zend\Validator\AbstractValidator');
         $mockXsdValidator->shouldReceive('setXsd')->once()
             ->with('http://www.transxchange.org.uk/schema/' . $schemaVersion . '/TransXChange_registration.xsd');
         $mockXsdValidator->shouldReceive('setMaxErrors')->once()->with($maxSchemaErrors);
+        $mockXsdValidator->shouldReceive('setXmlMessageExclude')->once()->with($xmlMessageExclude);
 
         $mockFilter = m::mock('Zend\Filter\AbstractFilter');
         $mockValidator = m::mock('Zend\Validator\AbstractValidator');
@@ -129,6 +132,35 @@ class XmlStructureInputFactoryTest extends TestCase
                     'xml_structure' => true
                 ],
                 'max_schema_errors' => 3
+            ]
+        ];
+
+        $mockFilter = m::mock('Zend\Filter\AbstractFilter');
+
+        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
+        $mockSl->shouldReceive('get')->with('FilterManager')->once()->andReturnSelf();
+        $mockSl->shouldReceive('get')->with(ParseXml::class)->once()->andReturn($mockFilter);
+
+        $sut = new XmlStructureInputFactory();
+        $sut->createService($mockSl);
+    }
+
+    /**
+     * test correct exception thrown when the max errors config is missing
+     *
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage No config specified for xml messages to exclude
+     */
+    public function testCreateServiceMissingXmlMessageExclude()
+    {
+        $config = [
+            'ebsr' => [
+                'validate' => [
+                    'xml_structure' => true
+                ],
+                'max_schema_errors' => 3,
+                'transxchange_schema_version' => 2.5
             ]
         ];
 
