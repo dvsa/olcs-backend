@@ -64,6 +64,9 @@ class PsvVehiclesTest extends QueryHandlerTestCase
             ->shouldReceive('getTotAuthVehicles')
             ->andReturn(0)
             ->once()
+            ->shouldReceive('getActiveVehiclesCount')
+            ->andReturn(1)
+            ->once()
             ->getMock();
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
@@ -147,6 +150,7 @@ class PsvVehiclesTest extends QueryHandlerTestCase
             'canTransfer' => false,
             'hasBreakdown' => false,
             'licenceVehicles' => ['results' => [['foo' => 'bar']], 'count' => 1],
+            'activeVehicleCount' => 1,
             'allVehicleCount' => 3
         ];
 

@@ -80,6 +80,7 @@ class PsvDiscTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('l.trafficArea', 'lta')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('l.licenceType', 'llt')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('l.goodsOrPsv', 'lgp')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('order')->with('l.licNo', 'ASC')->once()->andReturnSelf();
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('psv')->once()->andReturn($mockQb);
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['result']);

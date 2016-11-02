@@ -39,7 +39,9 @@ class GoodsDisc extends AbstractRepository
             ->with('lv.vehicle', 'lvv')
             ->with('lv.application', 'lva')
             ->with('lva.licenceType', 'lvalt')
-            ->with('lva.goodsOrPsv', 'lvagp');
+            ->with('lva.goodsOrPsv', 'lvagp')
+            ->order('lvl.licNo', 'ASC');
+
         $this->addFilteringConditions($qb, $niFlag, $licenceType);
 
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);

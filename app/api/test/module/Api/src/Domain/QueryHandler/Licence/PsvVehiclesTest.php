@@ -53,6 +53,9 @@ class PsvVehiclesTest extends QueryHandlerTestCase
             ->shouldReceive('getId')
             ->andReturn(111)
             ->once()
+            ->shouldReceive('getActiveVehiclesCount')
+            ->andReturn(1)
+            ->once()
             ->getMock();
         $licence->shouldReceive('getLicenceVehicles->count')->andReturn(3)->once()->getMock();
 
@@ -134,6 +137,7 @@ class PsvVehiclesTest extends QueryHandlerTestCase
             'canTransfer' => false,
             'hasBreakdown' => false,
             'licenceVehicles' => ['results' => [['foo' => 'bar']], 'count' => 1],
+            'activeVehicleCount' => 1,
             'allVehicleCount' => 3
         ];
 
