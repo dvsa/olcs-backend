@@ -7,7 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -31,16 +30,16 @@ final class SendPublication extends AbstractCommandHandler implements EmailAware
 
     protected $template = null;
 
-    /**
-     * @todo we need the proper email address - email sent to John Spellman for clarification 06/04/2016
-     */
-    const TO_EMAIL = 'terry.valtech+publication@gmail.com';
+    const TO_EMAIL = 'Operatorlicensing@otc.gsi.gov.uk';
     const EMAIL_TEMPLATE = 'publication-published';
     const EMAIL_SUBJECT = 'email.send-publication';
     const EMAIL_POLICE_SUBJECT = 'email.send-publication-police';
 
     /**
-     * @param CommandInterface|SendPublicationEmailCmd $command
+     * Sends an email, with a copy of the publication attached
+     *
+     * @param CommandInterface|SendPublicationEmailCmd $command command to send publication email
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
