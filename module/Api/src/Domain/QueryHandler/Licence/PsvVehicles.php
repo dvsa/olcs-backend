@@ -58,6 +58,7 @@ class PsvVehicles extends AbstractQueryHandler
             ),
             'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery)
         ];
+        $flags['activeVehicleCount'] = $licence->getActiveVehiclesCount();
         $flags['allVehicleCount'] = $licence->getLicenceVehicles()->count();
 
         return $this->result(

@@ -1,23 +1,16 @@
 <?php
 
-/**
- * Get Presiding TC list test
- *
- * @author Alex Peshkov <alex.pehkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\PresidingTc;
 
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\PresidingTc\GetList as QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\PresidingTc as Repo;
+use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
 use Dvsa\Olcs\Transfer\Query\Cases\PresidingTc\GetList as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
+use Mockery as m;
 
 /**
- * Get Presiding TC list test
- *
- * @author Alex Peshkov <alex.pehkov@valtech.co.uk>
+ * @covers Dvsa\Olcs\Api\Domain\QueryHandler\Cases\PresidingTc\GetList
  */
 class GetListTest extends QueryHandlerTestCase
 {
@@ -36,9 +29,11 @@ class GetListTest extends QueryHandlerTestCase
         $presidingTcEntity = m::mock(PresidingTcEntity::class);
         $presidingTcEntity->shouldReceive('serialize')->once()->andReturn('SERIALIZED');
 
-        $this->repoMap['PresidingTc']->shouldReceive('fetchList')
-            ->with($query, \Doctrine\ORM\Query::HYDRATE_OBJECT)->andReturn([$presidingTcEntity]);
-        $this->repoMap['PresidingTc']->shouldReceive('fetchCount')->with($query)->andReturn('COUNT');
+        $this->repoMap['PresidingTc']
+            ->shouldReceive('fetchList')
+            ->with($query, \Doctrine\ORM\Query::HYDRATE_OBJECT)
+            ->andReturn([$presidingTcEntity])
+            ->shouldReceive('fetchCount')->with($query)->andReturn('COUNT');
 
         $result = $this->sut->handleQuery($query);
 

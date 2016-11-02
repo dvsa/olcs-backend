@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Psv Vehicles
+ *
+ * @author Rob Caiger <rob@clocal.co.uk>
+ */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -74,6 +79,7 @@ class PsvVehicles extends AbstractQueryHandler
             ),
             'count' => $lvRepo->fetchPaginatedCount($lvQuery)
         ];
+        $flags['activeVehicleCount'] = $application->getActiveVehiclesCount();
         $flags['allVehicleCount'] = $lvRepo->fetchAllVehiclesCount($licenceId);
 
         return $this->result($application, [], $flags);
