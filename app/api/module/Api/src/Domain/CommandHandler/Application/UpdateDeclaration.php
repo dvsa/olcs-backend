@@ -63,7 +63,7 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
 
         // if interimRequested is Y or N (eg it is specified)
         if ($command->getInterimRequested() === 'Y' || $command->getInterimRequested() === 'N') {
-            $interimFeeResult = $this->handleInterimFee($command);
+            $interimFeeResult = $this->handleInterimFee($command, $application->isVariation());
             if ($interimFeeResult instanceof Result) {
                 $result->merge($interimFeeResult);
             }
@@ -96,11 +96,12 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
     /**
      * Handle what should happen with the interim fee
      *
-     * @param UpdateDeclarationCommand $command
+     * @param UpdateDeclarationCommand $command     update declaration command
+     * @param bool                     $isVariation is variation
      *
      * @return Result|false
      */
-    private function handleInterimFee(UpdateDeclarationCommand $command)
+    private function handleInterimFee(UpdateDeclarationCommand $command, $isVariation)
     {
         // if interim is requested
         if ($command->getInterimRequested() === 'Y') {
