@@ -635,7 +635,7 @@ class Fee extends AbstractRepository
     }
 
     /**
-     * Fetch Latest Fee By Type And Application Id
+     * Fetch latest fee by type and application id
      *
      * @param string $feeType       Fee type
      * @param int    $applicationId Application Id
