@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\CancelAllInterimFees as CancelAllInterimFeesCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateFee as CreateFeeCommand;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 
 /**
  * UpdateDeclarationTest
@@ -158,8 +159,79 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
             ->once()
             ->with($application);
 
-        $this->repoMap['Fee']->shouldReceive('fetchInterimFeesByApplicationId')->with(627, true)->once()
-            ->andReturn(['SOMETHING']);
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchInterimFeesByApplicationId')
+            ->with(627, true)
+            ->once()
+            ->andReturn(['SOMETHING'])
+            ->shouldReceive('fetchFeeByTypeAndApplicationId')
+            ->with(FeeTypeEntity::FEE_TYPE_VAR, 627)
+            ->andReturn('foo')
+            ->once()
+            ->getMock();
+
+        $this->expectedSideEffect(
+            UpdateApplicationCompletionCommand::class, ['id' => 627, 'section' => 'undertakings'], new Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => ['application' => 627],
+            'messages' => ['Update declaration successful']
+        ];
+
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertEquals($expected, $result->toArray());
+        $this->assertEquals('Y', $application->getDeclarationConfirmation());
+        $this->assertEquals($this->mapRefData('int_sts_requested'), $application->getInterimStatus());
+        $this->assertEquals('SOME REASON', $application->getInterimReason());
+    }
+
+    public function testHandleCommandInterimYesExistingFeeVar()
+    {
+        // Params
+        $command = UpdateDeclarationCmd::create(
+            [
+                'id' => 627,
+                'version' => 45,
+                'declarationConfirmation' => 'Y',
+                'interimRequested' => 'Y',
+                'interimReason' => 'SOME REASON',
+            ]
+        );
+
+        // Mocks
+        $application = $this->getApplication($command);
+
+        // Expectations
+        $application->shouldReceive('isVariation')
+            ->once()
+            ->andReturn(true)
+            ->getMock();
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command, Query::HYDRATE_OBJECT, 45)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->once()
+            ->with($application);
+
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchInterimFeesByApplicationId')
+            ->with(627, true)
+            ->once()
+            ->andReturn()
+            ->shouldReceive('fetchFeeByTypeAndApplicationId')
+            ->with(FeeTypeEntity::FEE_TYPE_VAR, 627)
+            ->andReturn('foo')
+            ->once()
+            ->getMock();
+
+        $this->expectedSideEffect(
+            CreateFeeCommand::class, ['id' => 627, 'feeTypeFeeType' => 'GRANTINT', 'task' => null], new Result()
+        );
         $this->expectedSideEffect(
             UpdateApplicationCompletionCommand::class, ['id' => 627, 'section' => 'undertakings'], new Result()
         );
