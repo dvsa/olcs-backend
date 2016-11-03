@@ -59,8 +59,12 @@ class PsvDiscPage extends AbstractDiscList
                 $prefix . 'LINE2'       => isset($orgParts[1]) ? $orgParts[1] : '',
                 $prefix . 'LINE3'       => isset($orgParts[2]) ? $orgParts[2] : '',
                 $prefix . 'LICENCE'     => $licence['licNo'],
-                $prefix . 'VALID_DATE'  => isset($licence['inForceDate']) ? $licence['inForceDate'] : 'N/A',
-                $prefix . 'EXPIRY_DATE' => isset($licence['expiryDate']) ? $licence['expiryDate'] : 'N/A'
+                $prefix . 'VALID_DATE'  => isset($licence['inForceDate'])
+                    ? $this->formatDate($licence['inForceDate'])
+                    : 'N/A',
+                $prefix . 'EXPIRY_DATE' => isset($licence['expiryDate'])
+                    ? $this->formatDate($licence['expiryDate'])
+                    : 'N/A'
             ];
         }
 
