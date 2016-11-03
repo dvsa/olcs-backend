@@ -126,7 +126,7 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
     }
 
     /**
-     * Should be create interim fee
+     * Should we create an interim fee?
      *
      * @param UpdateDeclarationCommand $command     update declaration command
      * @param bool                     $isVariation is variation
