@@ -81,4 +81,16 @@ abstract class AbstractDiscList extends DynamicBookmark
         }
         return $str;
     }
+
+    /**
+     * Format date
+     *
+     * @param string $backendDate date
+     *
+     * @return string
+     */
+    protected function formatDate($backendDate)
+    {
+        return (new \DateTime($backendDate))->format('d-m-Y');
+    }
 }

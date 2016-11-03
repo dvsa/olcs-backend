@@ -118,7 +118,7 @@ class DiscListTest extends \PHPUnit_Framework_TestCase
             'DISC1_LINE5' => '',
             'DISC1_LICENCE_ID' => 'L1234',
             'DISC1_VEHICLE_REG' => 'VRM123',
-            'DISC1_EXPIRY_DATE' => '2014-10-03',
+            'DISC1_EXPIRY_DATE' => '03-10-2014',
 
             'DISC2_TITLE' => 'COPY',
             'DISC2_DISC_NO' => 2,
@@ -144,7 +144,7 @@ class DiscListTest extends \PHPUnit_Framework_TestCase
             'DISC1_LINE5' => '',
             'DISC1_LICENCE_ID' => 'L1234 START 2014-01-01',
             'DISC1_VEHICLE_REG' => 'VRM123',
-            'DISC1_EXPIRY_DATE' => '2014-10-03',
+            'DISC1_EXPIRY_DATE' => '03-10-2014',
 
             'DISC2_TITLE' => 'XXXXXXXXXX',
             'DISC2_DISC_NO' => 'XXXXXXXXXX',
