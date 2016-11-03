@@ -642,7 +642,8 @@ class Fee extends AbstractRepository
      *
      * @return array
      */
-    public function fetchFeeByTypeAndApplicationId($feeType, $applicationId) {
+    public function fetchFeeByTypeAndApplicationId($feeType, $applicationId)
+    {
         $doctrineQb = $this->createQueryBuilder();
         $doctrineQb
             ->join($this->alias . '.feeType', 'ft')
