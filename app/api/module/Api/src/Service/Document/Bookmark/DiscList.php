@@ -88,7 +88,9 @@ class DiscList extends AbstractDiscList
                 $prefix . 'LINE5'       => isset($tradingParts[1]) ? $tradingParts[1] : '',
                 $prefix . 'LICENCE_ID'  => $discLicenceId,
                 $prefix . 'VEHICLE_REG' => $vehicle['vrm'],
-                $prefix . 'EXPIRY_DATE' => isset($licence['expiryDate']) ? $licence['expiryDate'] : 'N/A'
+                $prefix . 'EXPIRY_DATE' => isset($licence['expiryDate'])
+                    ? $this->formatDate($licence['expiryDate'])
+                    : 'N/A'
             ];
         }
 
