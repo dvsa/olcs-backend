@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6728a4ac9b32429c86f5b21ce44c3425",
-    "content-hash": "842f2ce9122e298aef20d1c9a32d6ca4",
+    "hash": "e36c6d4fd48c09c9c8ad1e037d0df469",
+    "content-hash": "55f29613768f1200e336eb3ab39c3fc2",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1078,7 +1078,7 @@
         },
         {
             "name": "olcs/companies-house",
-            "version": "dev-release/4.0.5",
+            "version": "dev-release/4.0.6",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
@@ -1098,7 +1098,7 @@
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "dev-release/4.0.5",
+            "version": "dev-release/4.0.6",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
@@ -1132,7 +1132,7 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-release/4.0.5",
+            "version": "dev-release/4.0.6",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
@@ -1158,11 +1158,11 @@
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "dev-release/4.0.5",
+            "version": "dev-release/4.0.6",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "a63824becba92f3c2e57765ce45ca47660b4a5a4"
+                "reference": "c878a090fc791e2acf004f5922646ed171a6693f"
             },
             "require": {
                 "php": ">=5.4",
@@ -1170,7 +1170,7 @@
             },
             "require-dev": {
                 "mockery/mockery": "~0.9.3",
-                "olcs/olcs-logging": "dev-release/4.0.5",
+                "olcs/olcs-logging": "dev-release/4.0.6",
                 "phpunit/phpunit": "^4.0.0"
             },
             "type": "library",
@@ -1180,11 +1180,11 @@
                 }
             },
             "description": "OLCS Utils",
-            "time": "2016-11-02 12:10:44"
+            "time": "2016-11-04 16:48:39"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "dev-release/4.0.5",
+            "version": "dev-release/4.0.6",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
