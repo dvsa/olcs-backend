@@ -2,6 +2,7 @@
 
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceWithId;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalOrSystemUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 
@@ -143,7 +144,7 @@ return [
     CommandHandler\Licence\ContinueLicence::class => IsInternalUser::class,
     CommandHandler\Licence\Curtail::class => IsInternalUser::class,
     CommandHandler\Licence\Overview::class => IsInternalUser::class,
-    CommandHandler\Licence\PrintLicence::class => IsInternalUser::class,
+    CommandHandler\Licence\PrintLicence::class => CanAccessLicenceWithId::class,
     CommandHandler\Licence\ResetToValid::class => IsInternalUser::class,
     CommandHandler\Licence\Revoke::class => IsInternalUser::class,
     CommandHandler\Licence\Surrender::class => IsInternalUser::class,
