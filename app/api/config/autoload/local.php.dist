@@ -308,7 +308,12 @@ return [
 
     'allow_file_upload' => [
         // list of allowed file extensions that can be uploaded
-        'extensions' => 'doc,pdf,rtf,xls,xlsx,docx,xml,zip,jpeg,jpg,png,tiff,txt,rtf,xml',
+        'extensions' => [
+            // for external users
+            'external' => 'doc,pdf,rtf,xls,xlsx,docx,xml,zip,jpeg,jpg,png,tiff,txt,rtf,xml',
+            // for internal users
+            'internal' => 'doc,pdf,rtf,xls,xlsx,docx,xml,zip,jpeg,jpg,png,tiff,txt,rtf,xml',
+        ]
     ],
 
     //If we find these strings in xml validator error messages, don't return the message to the user.
