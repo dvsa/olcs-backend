@@ -16,6 +16,9 @@ class CanCreateDocument extends AbstractHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
+    const EXTENSIONS_KEY_EXTERNAL = 'external';
+    const EXTENSIONS_KEY_INTERNAL = 'internal';
+
     /**
      * @var bool
      */
@@ -36,7 +39,7 @@ class CanCreateDocument extends AbstractHandler implements AuthAwareInterface
 
         $config = $mainServiceManager->get('config');
         if (isset($config['allow_file_upload']['extensions'])) {
-            $this->setAllowedExtensions(explode(',', $config['allow_file_upload']['extensions']));
+            $this->setAllowedExtensions($config['allow_file_upload']['extensions']);
         }
 
         return parent::createService($serviceLocator);
@@ -149,11 +152,20 @@ class CanCreateDocument extends AbstractHandler implements AuthAwareInterface
      */
     private function validateExtension($filename)
     {
+        $key = ($this->isInternalUser() || $this->isSystemUser())
+            ? self::EXTENSIONS_KEY_INTERNAL
+            : self::EXTENSIONS_KEY_EXTERNAL;
+
+        $allowedExtensions = isset($this->allowedExtensions[$key])
+            ? explode(',', $this->allowedExtensions[$key])
+            : [];
+
         $extension = '';
         if (strrpos($filename, '.') !== false) {
             $extension = substr($filename, strrpos($filename, '.') + 1);
         }
-        foreach ($this->allowedExtensions as $ext) {
+
+        foreach ($allowedExtensions as $ext) {
             if (trim(strtolower($ext)) == trim(strtolower($extension))) {
                 return true;
             }
