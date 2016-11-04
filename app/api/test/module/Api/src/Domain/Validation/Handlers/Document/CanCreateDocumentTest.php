@@ -21,7 +21,12 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
     {
         $this->sut = new CanCreateDocument();
 
-        $this->sut->setAllowedExtensions(['pdf', 'RTF', 'jpG ']);
+        $this->sut->setAllowedExtensions(
+            [
+                CanCreateDocument::EXTENSIONS_KEY_EXTERNAL => 'pdf,RTF,jpG , EXT ',
+                CanCreateDocument::EXTENSIONS_KEY_INTERNAL => 'pdf,RTF,jpG , INT ',
+            ]
+        );
 
         parent::setUp();
     }
@@ -29,11 +34,10 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
     public function testIsValid()
     {
         $this->auth->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
             ->andReturn(false);
         $this->mockUser()->shouldReceive('isSystemUser')
             ->andReturn(false)
-            ->once()
             ->getMock();
 
         /** @var CommandInterface|m\MockInterface $dto */
@@ -63,11 +67,10 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
     public function testIsValidOnFalse()
     {
         $this->auth->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
             ->andReturn(false);
         $this->mockUser()->shouldReceive('isSystemUser')
             ->andReturn(false)
-            ->once()
             ->getMock();
 
         /** @var CommandInterface|m\MockInterface $dto */
@@ -97,9 +100,9 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
     public function testIsValidNoChecks()
     {
         $this->auth->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
             ->andReturn(false);
-        $this->mockUser()->shouldReceive('isSystemUser')->once()->andReturn(false);
+        $this->mockUser()->shouldReceive('isSystemUser')->andReturn(false);
 
         /** @var CommandInterface|m\MockInterface $dto */
         $dto = m::mock(CommandInterface::class);
@@ -119,7 +122,7 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
     public function testIsInternalUser()
     {
         $this->auth->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
             ->andReturn(true);
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getFilename')->with()->once()->andReturn('foo.pdf');
@@ -128,12 +131,12 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
     }
 
     /**
-     * @dataProvider dataProviderTestIsValidExtension
+     * @dataProvider dataProviderTestIsValidExtensionInternal
      *
      * @param $valid
      * @param $extension
      */
-    public function testIsValidExtension($valid, $extension)
+    public function testIsValidExtensionInternal($valid, $extension)
     {
         $this->auth->shouldReceive('isGranted')
             ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->andReturn(true);
@@ -148,7 +151,7 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
         }
     }
 
-    public function dataProviderTestIsValidExtension()
+    public function dataProviderTestIsValidExtensionInternal()
     {
         return [
             [true, 'jpg'],
@@ -160,6 +163,64 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
             [false, 'gif'],
             [false, 'pd'],
             [false, 'pdfx'],
+            // internal specific
+            [true, 'INT'],
+            // external specific
+            [false, 'EXT'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderTestIsValidExtensionExternal
+     *
+     * @param $valid
+     * @param $extension
+     */
+    public function testIsValidExtensionExternal($valid, $extension)
+    {
+        $this->auth->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
+            ->andReturn(false);
+        $this->mockUser()->shouldReceive('isSystemUser')->andReturn(false);
+
+        /** @var CommandInterface|m\MockInterface $dto */
+        $dto = m::mock(CommandInterface::class);
+        $dto->shouldReceive('getFilename')->with()->once()->andReturn('foo.'. $extension);
+        $dto->shouldReceive('getLicence')->andReturn(176);
+        $dto->shouldReceive('getApplication')->andReturn(null);
+        $dto->shouldReceive('getCase')->andReturn(null);
+        $dto->shouldReceive('getTransportManager')->andReturn(null);
+        $dto->shouldReceive('getOperatingCentre')->andReturn(null);
+        $dto->shouldReceive('getBusReg')->andReturn(null);
+        $dto->shouldReceive('getIrfoOrganisation')->andReturn(null);
+        $dto->shouldReceive('getSubmission')->andReturn(null);
+
+        $this->setIsValid('canAccessLicence', [176], true);
+
+        if ($valid) {
+            $this->assertTrue($this->sut->isValid($dto));
+        } else {
+            $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+            $this->sut->isValid($dto);
+        }
+    }
+
+    public function dataProviderTestIsValidExtensionExternal()
+    {
+        return [
+            [true, 'jpg'],
+            [true, 'JPG'],
+            [true, 'JpG'],
+            [true, 'rtf'],
+            [true, 'pdf'],
+            [false, 'GIF'],
+            [false, 'gif'],
+            [false, 'pd'],
+            [false, 'pdfx'],
+            // internal specific
+            [false, 'INT'],
+            // external specific
+            [true, 'EXT'],
         ];
     }
 }
