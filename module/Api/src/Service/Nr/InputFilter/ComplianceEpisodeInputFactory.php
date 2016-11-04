@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Nr\InputFilter;
 
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber;
-use Dvsa\Olcs\Api\Service\Nr\Filter\MemberStateCode;
+use Dvsa\Olcs\Api\Service\Nr\Filter\Format\MemberStateCode;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Vrm as VrmFilter;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Zend\ServiceManager\FactoryInterface;

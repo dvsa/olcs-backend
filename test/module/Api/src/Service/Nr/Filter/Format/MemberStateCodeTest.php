@@ -1,8 +1,8 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Nr\Filter;
+namespace Dvsa\OlcsTest\Api\Service\Nr\Filter\Format;
 
-use Dvsa\Olcs\Api\Service\Nr\Filter\MemberStateCode;
+use Dvsa\Olcs\Api\Service\Nr\Filter\Format\MemberStateCode;
 
 /**
  * @covers \Dvsa\Olcs\Api\Service\Nr\Filter\MemberStateCode

@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Nr\Filter;
+namespace Dvsa\Olcs\Api\Service\Nr\Filter\Format;
 
 use Zend\Filter\AbstractFilter as ZendAbstractFilter;
 
