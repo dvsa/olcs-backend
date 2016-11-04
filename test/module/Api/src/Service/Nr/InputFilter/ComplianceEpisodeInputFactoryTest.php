@@ -33,7 +33,7 @@ class ComplianceEpisodeInputFactoryTest extends MockeryTestCase
         $mockSl->shouldReceive('get')->with(MapXmlFile::class)->andReturn($mockMapFilter);
         $mockSl->shouldReceive('get')->with(Filter\Vrm::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(Filter\LicenceNumber::class)->andReturn($mockFilter);
-        $mockSl->shouldReceive('get')->with(Filter\MemberStateCode::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(Filter\Format\MemberStateCode::class)->andReturn($mockFilter);
 
         $sut = new ComplianceEpisodeInputFactory();
         /** @var \Zend\InputFilter\Input $service */
