@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Tm\UpdateNysiisName as UpdateNysiisNameCmd;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
-use Dvsa\Olcs\Api\Service\Nysiis\NysiisClient as NysiisClient;
+use Dvsa\Olcs\Api\Service\Nysiis\NysiisSoapClient;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
 
@@ -25,7 +25,7 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
     /**
      * Client to connect to Nysiis servers
      *
-     * @var NysiisClient
+     * @var NysiisSoapClient
      */
     private $nysiisClient;
 
@@ -40,7 +40,7 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->nysiisClient = $mainServiceLocator->get(NysiisClient::class);
+        $this->nysiisClient = $mainServiceLocator->get(NysiisSoapClient::class);
 
         return parent::createService($serviceLocator);
     }

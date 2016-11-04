@@ -11,7 +11,7 @@ use Zend\Soap\Client as ZendSoap;
  * Class NysiisClientFactory
  * @package Dvsa\Olcs\Api\Service\Nysiis
  */
-class NysiisClientFactory implements FactoryInterface
+class NysiisSoapClientFactory implements FactoryInterface
 {
     /**
      * Create service.
