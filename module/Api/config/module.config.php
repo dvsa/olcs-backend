@@ -103,6 +103,8 @@ return [
             \Dvsa\Olcs\Api\Mvc\OlcsBlameableListener::class => \Dvsa\Olcs\Api\Mvc\OlcsBlameableListenerFactory::class,
             \Dvsa\Olcs\Api\Service\Nysiis\NysiisSoapClient::class =>
                 \Dvsa\Olcs\Api\Service\Nysiis\NysiisSoapClientFactory::class,
+            \Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClient::class =>
+                \Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClientFactory::class,
         ],
     ],
     'view_manager' => [
