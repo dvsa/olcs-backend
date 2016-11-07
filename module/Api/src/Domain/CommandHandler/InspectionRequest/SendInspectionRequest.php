@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Send Inspection Request Email
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\InspectionRequest;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -28,6 +23,7 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
         AuthAwareTrait;
 
     const SUBJECT_LINE = "[ Maintenance Inspection ] REQUEST=%s,STATUS=";
+    const SUBJECT_LINE_W = '[ Archwiliad Cynnal a Chadw] CAIS=%s,STATWS=';
 
     protected $repoServiceName = 'InspectionRequest';
 
