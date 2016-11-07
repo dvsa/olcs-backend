@@ -271,9 +271,13 @@ class Search implements AuthAwareInterface
 
         foreach ($dateRanges as $filterName => $value) {
 
-            if (is_array($value) && !empty(trim(implode(" ", [$value['year'], $value['month'], $value['day']])))) {
-                $value = implode('-', [$value['year'], $value['month'], $value['day']]);
-            } elseif (false === preg_match('/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/', $value)) {
+            if (is_array($value)) {
+                $value = (!empty($value['year']) && !empty($value['month']) && !empty($value['day']))
+                    ? sprintf('%04d-%02d-%02d', $value['year'], $value['month'], $value['day'])
+                    : null;
+            } elseif (is_string($value) && preg_match('/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/', $value)) {
+                // value already matches the format required
+            } else {
                 $value = null;
             }
 
