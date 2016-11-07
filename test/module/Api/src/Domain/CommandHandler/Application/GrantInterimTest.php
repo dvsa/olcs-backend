@@ -44,6 +44,7 @@ class GrantInterimTest extends CommandHandlerTestCase
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setId(111);
+        $application->setIsVariation(false);
 
         $fees = [];
 
@@ -58,7 +59,12 @@ class GrantInterimTest extends CommandHandlerTestCase
             ->shouldReceive('fetchInterimFeesByApplicationId')
             ->with(111, false, true)
             ->andReturn(['fees'])
-            ->once();
+            ->once()
+            ->shouldReceive('fetchFeeByTypeAndApplicationId')
+            ->with(FeeType::FEE_TYPE_VAR, 111)
+            ->andReturn([])
+            ->once()
+            ->getMock();
 
         $result1 = new Result();
         $result1->addMessage('InForceInterim');
@@ -117,7 +123,12 @@ class GrantInterimTest extends CommandHandlerTestCase
             ->shouldReceive('fetchInterimFeesByApplicationId')
             ->with(111, false, true)
             ->andReturn([])
-            ->once();
+            ->once()
+            ->shouldReceive('fetchFeeByTypeAndApplicationId')
+            ->with(FeeType::FEE_TYPE_VAR, 111)
+            ->andReturn([])
+            ->once()
+            ->getMock();
 
         $expectedData = [
             'template' => 'FEE_REQ_INT_APP',
@@ -198,7 +209,12 @@ class GrantInterimTest extends CommandHandlerTestCase
             ->shouldReceive('fetchInterimFeesByApplicationId')
             ->with(111, false, true)
             ->andReturn([])
-            ->once();
+            ->once()
+            ->shouldReceive('fetchFeeByTypeAndApplicationId')
+            ->with(FeeType::FEE_TYPE_VAR, 111)
+            ->andReturn([])
+            ->once()
+            ->getMock();
 
         $expectedData = [
             'template' => 'FEE_REQ_INT_APP',
@@ -259,6 +275,7 @@ class GrantInterimTest extends CommandHandlerTestCase
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setId(111);
         $application->setLicence($licence);
+        $application->setIsVariation(false);
 
         /** @var Fee $fee */
         $fee = m::mock(Fee::class)->makePartial();
@@ -283,7 +300,12 @@ class GrantInterimTest extends CommandHandlerTestCase
             ->shouldReceive('fetchById')
             ->with(444)
             ->once()
-            ->andReturn($fee);
+            ->andReturn($fee)
+            ->shouldReceive('fetchFeeByTypeAndApplicationId')
+            ->with(FeeType::FEE_TYPE_VAR, 111)
+            ->andReturn([])
+            ->once()
+            ->getMock();
 
         $result1 = new Result();
         $result1->addId('fee', 444);

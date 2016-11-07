@@ -132,6 +132,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $application->setId(111);
         $application->setOperatingCentres($ocs);
         $application->setLicenceVehicles($lvs);
+        $application->setIsVariation(false);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
@@ -143,7 +144,12 @@ class UpdateInterimTest extends CommandHandlerTestCase
 
         $this->repoMap['Fee']->shouldReceive('fetchInterimFeesByApplicationId')
             ->with(111, true)
-            ->andReturn($fees);
+            ->andReturn($fees)
+            ->shouldReceive('fetchFeeByTypeAndApplicationId')
+            ->with(FeeType::FEE_TYPE_VAR, 111)
+            ->andReturn([])
+            ->once()
+            ->getMock();
 
         $result1 = new Result();
         $result1->addMessage('CreateApplicationFee');
@@ -194,6 +200,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
 
         /** @var ApplicationEntity $application */
         $application->setId(111);
+        $application->setIsVariation(false);
 
         /** @var ApplicationOperatingCentre $oc1 */
         $oc1 = m::mock(ApplicationOperatingCentre::class)->makePartial();

@@ -30,6 +30,10 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
 
     protected $extraRepos = ['Fee'];
 
+    const ACTION_GRANTED = 'granted';
+    const ACTION_IN_FORCE = 'in_force';
+    const ACTION_FEE_REQUEST = 'fee_request';
+
     /**
      * @param Cmd $command
      */
@@ -40,16 +44,24 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
 
         $existingFees = $this->getExistingFees($application);
         $paidFees = $this->getPaidFees($application);
+        $variationFees = $this->getRepo('Fee')->fetchFeeByTypeAndApplicationId(
+            FeeType::FEE_TYPE_VAR,
+            $application->getId()
+        );
+        $isVariation = $application->isVariation();
+        $latestFee = null;
 
         // if we had paid fees before interim status can be set to in-force
         if (count($paidFees)) {
             $this->result->merge($this->handleSideEffect(InForceInterimCmd::create(['id' => $application->getId()])));
-            $this->result->addId('action', 'in_force');
+            $this->result->addId('action', self::ACTION_IN_FORCE);
             return $this->result;
         }
 
         // if there is no fees - we need to create one
-        if (!count($existingFees)) {
+        if (!empty($existingFees)) {
+            $latestFee = $existingFees[0];
+        } elseif (!$isVariation || ($isVariation && !empty($variationFees))) {
             $data = [
                 'id' => $application->getId(),
                 'feeTypeFeeType' => FeeType::FEE_TYPE_GRANTINT
@@ -57,18 +69,19 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
             $feeResult = $this->handleSideEffect(CreateApplicationFeeCmd::create($data));
             $this->result->merge($feeResult);
             $latestFee = $this->getRepo('Fee')->fetchById($feeResult->getId('fee'));
-        } else {
-            $latestFee = $existingFees[0];
         }
 
-        // prepare fee request document and change status to granted
-        $this->generateInterimFeeRequestDocument($application, $latestFee);
+        if ($latestFee !== null) {
+            // prepare fee request document and change status to granted
+            $this->generateInterimFeeRequestDocument($application, $latestFee);
+        }
+
         $application->setInterimStatus(
             $this->getRepo()->getRefdataReference(ApplicationEntity::INTERIM_STATUS_GRANTED)
         );
         $this->result->addMessage('Interim status updated');
         $this->getRepo()->save($application);
-        $this->result->addId('action', 'fee_request');
+        $this->result->addId('action', $latestFee === null ? self::ACTION_GRANTED : self::ACTION_FEE_REQUEST);
 
         return $this->result;
     }
