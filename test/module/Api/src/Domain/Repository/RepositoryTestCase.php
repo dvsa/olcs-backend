@@ -124,6 +124,9 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('orWhere')
             ->andReturnUsing([$this, 'mockOrWhere']);
 
+        $this->qb->shouldReceive('join')
+            ->andReturnUsing([$this, 'mockInnerJoin']);
+
         $this->qb->shouldReceive('innerJoin')
             ->andReturnUsing([$this, 'mockInnerJoin']);
 
