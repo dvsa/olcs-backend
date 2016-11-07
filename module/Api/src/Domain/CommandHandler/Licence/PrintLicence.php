@@ -27,7 +27,7 @@ final class PrintLicence extends AbstractCommandHandler implements Transactioned
     /**
      * Handle comment
      *
-     * @param CommandInterface $command Command
+     * @param \Dvsa\Olcs\Transfer\Command\Licence\PrintLicence $command Command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
@@ -36,29 +36,21 @@ final class PrintLicence extends AbstractCommandHandler implements Transactioned
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo()->fetchUsingId($command);
 
-        return $this->generateDocument($licence);
-    }
+        if (!$licence instanceof LicenceEntity) {
+            return null;
+        }
 
-    /**
-     * Generate the Licence print document
-     *
-     * @param LicenceEntity $licence Licence to print
-     *
-     * @return \Dvsa\Olcs\Api\Domain\Command\Result
-     */
-    protected function generateDocument(LicenceEntity $licence)
-    {
         $dtoData = [
             'template' => $this->getTemplateId($licence),
             'query' => [
-                'licence' => $licence->getId()
+                'licence' => $licence->getId(),
             ],
             'description' => $this->getDescription($licence),
             'licence'     => $licence->getId(),
             'category'    => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
             'isExternal'  => false,
-            'dispatch' => true
+            'dispatch' => $command->isDispatch(),
         ];
 
         return $this->handleSideEffect(GenerateAndStore::create($dtoData));
@@ -73,7 +65,7 @@ final class PrintLicence extends AbstractCommandHandler implements Transactioned
      */
     private function getTemplateId(LicenceEntity $licence)
     {
-        if ($licence->getNiFlag() == 'Y') {
+        if ($licence->getNiFlag() === 'Y') {
             if ($licence->isGoods()) {
                 return Document::GV_LICENCE_NI;
             }

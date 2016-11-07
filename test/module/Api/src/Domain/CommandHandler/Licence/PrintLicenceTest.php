@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Create Psv Discs Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
@@ -18,9 +13,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
- * Create Psv Discs Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\PrintLicence
  */
 class PrintLicenceTest extends CommandHandlerTestCase
 {
@@ -32,20 +25,21 @@ class PrintLicenceTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    /**
-     * @dataProvider dataProvider
-     *
-     * @param $isGoods
-     * @param $isSpecialRestricted
-     * @param $niFlag
-     * @param $expectedDocumentId
-     * @param $expectedDesc
-     */
-    public function testHandleCommand($isGoods, $isSpecialRestricted, $niFlag, $expectedDocumentId, $expectedDesc)
+    public function testHandleCommandFailNull()
     {
         $command = Cmd::create(['id' => 111]);
 
-        /** @var LicenceEntity $licence */
+        $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($command)->andReturnNull();
+
+        static::assertNull($this->sut->handleCommand($command));
+    }
+
+    /**
+     * @dataProvider dataProvider
+     */
+    public function testHandleCommand($command, $isGoods, $isSpecialRestricted, $niFlag, array $expect)
+    {
+        /** @var LicenceEntity | m\MockInterface $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setId(111);
         $licence->shouldReceive('isGoods')->andReturn($isGoods);
@@ -57,9 +51,9 @@ class PrintLicenceTest extends CommandHandlerTestCase
             ->andReturn($licence);
 
         $data = [
-            'template' => $expectedDocumentId,
+            'template' => $expect['docId'],
             'query' => ['licence' => 111],
-            'description' => $expectedDesc,
+            'description' => $expect['desc'],
             'licence' => 111,
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
@@ -75,7 +69,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
             'opposition' => null,
             'isScan' => 0,
             'issuedDate' => null,
-            'dispatch' => true
+            'dispatch' => isset($expect['isDispatch']) ? $expect['isDispatch'] : true,
         ];
         $result1 = new Result();
         $result1->addMessage('GenerateAndStore');
@@ -86,7 +80,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                'GenerateAndStore'
+                'GenerateAndStore',
             ]
         ];
 
@@ -95,16 +89,91 @@ class PrintLicenceTest extends CommandHandlerTestCase
 
     public function dataProvider()
     {
+        $command = Cmd::create(['id' => 111]);
+
         return [
-            // isGoods, isSpecialRestricted, Ni flag 'N' or 'Y', expected document ID, expected description
-            [true,      false,             'N',                1254,                 'GV Licence'],
-            [false,     false,             'N',                1255,                 'PSV Licence'],
-            [true,      true,              'N',                1254,                 'GV Licence'],
-            [false,     true,              'N',                1310,                 'PSV-SR Licence'],
-            [true,      false,             'Y',                1512,                 'GV Licence'],
-            [false,     false,             'Y',                1516,                 'PSV Licence'],
-            [true,      true,              'Y',                1512,                 'GV Licence'],
-            [false,     true,              'Y',                1518,                 'PSV-SR Licence'],
+            [
+                'cmd' => Cmd::create(['id' => 111, 'isDispatch' => false]),
+                'isGoods' => true,
+                'isSpecialRestricted' => false,
+                'niFlag' => 'N',
+                'expect' => [
+                    'docId' => 1254,
+                    'desc' => 'GV Licence',
+                    'isDispatch' => false,
+                ],
+            ],
+            [
+                'cmd' => $command,
+                'isGoods' => false,
+                'isSpecialRestricted' => false,
+                'niFlag' => 'N',
+                'expect' => [
+                    'docId' => 1255,
+                    'desc' => 'PSV Licence',
+                    'isDispatch' => true,
+                ],
+            ],
+            [
+                'cmd' => $command,
+                'isGoods' => true,
+                'isSpecialRestricted' => true,
+                'niFlag' => 'N',
+                'expect' => [
+                    'docId' => 1254,
+                    'desc' => 'GV Licence',
+                ],
+            ],
+            [
+                'cmd' => $command,
+                'isGoods' => false,
+                'isSpecialRestricted' => true,
+                'niFlag' => 'N',
+                'expect' => [
+                    'docId' => 1310,
+                    'desc' => 'PSV-SR Licence',
+                ],
+            ],
+            [
+                'cmd' => $command,
+                'isGoods' => true,
+                'isSpecialRestricted' => false,
+                'niFlag' => 'Y',
+                'expect' => [
+                    'docId' => 1512,
+                    'desc' => 'GV Licence',
+                ],
+            ],
+            [
+                'cmd' => $command,
+                'isGoods' => false,
+                'isSpecialRestricted' => false,
+                'niFlag' => 'Y',
+                'expect' => [
+                    'docId' => 1516,
+                    'desc' => 'PSV Licence',
+                ],
+            ],
+            [
+                'cmd' => $command,
+                'isGoods' => true,
+                'isSpecialRestricted' => true,
+                'niFlag' => 'Y',
+                'expect' => [
+                    'docId' => 1512,
+                    'desc' => 'GV Licence',
+                ],
+            ],
+            [
+                'cmd' => $command,
+                'isGoods' => false,
+                'isSpecialRestricted' => true,
+                'niFlag' => 'Y',
+                'expect' => [
+                    'docId' => 1518,
+                    'desc' => 'PSV-SR Licence',
+                ],
+            ],
         ];
     }
 }
