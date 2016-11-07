@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\CreateFee as CreateFeeCommand;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateDeclaration as UpdateDeclarationCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 
 /**
  * UpdateDeclaration
@@ -63,7 +64,7 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
 
         // if interimRequested is Y or N (eg it is specified)
         if ($command->getInterimRequested() === 'Y' || $command->getInterimRequested() === 'N') {
-            $interimFeeResult = $this->handleInterimFee($command);
+            $interimFeeResult = $this->handleInterimFee($command, $application->isVariation());
             if ($interimFeeResult instanceof Result) {
                 $result->merge($interimFeeResult);
             }
@@ -96,23 +97,21 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
     /**
      * Handle what should happen with the interim fee
      *
-     * @param UpdateDeclarationCommand $command
+     * @param UpdateDeclarationCommand $command     update declaration command
+     * @param bool                     $isVariation is variation
      *
      * @return Result|false
      */
-    private function handleInterimFee(UpdateDeclarationCommand $command)
+    private function handleInterimFee(UpdateDeclarationCommand $command, $isVariation)
     {
         // if interim is requested
         if ($command->getInterimRequested() === 'Y') {
-            // get existing interim fees
-            $outstandingInterimFees = $this->feeRepo->fetchInterimFeesByApplicationId($command->getId(), true);
-            // if there are no existing interim fees then create interim fee
-            if (empty($outstandingInterimFees)) {
+            if ($this->shouldCreateInterimFee($command, $isVariation)) {
                 return $this->handleSideEffect(
                     CreateFeeCommand::create(
                         [
                             'id' => $command->getId(),
-                            'feeTypeFeeType' => \Dvsa\Olcs\Api\Entity\Fee\FeeType::FEE_TYPE_GRANTINT
+                            'feeTypeFeeType' => FeeTypeEntity::FEE_TYPE_GRANTINT
                         ]
                     )
                 );
@@ -121,6 +120,35 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
             return $this->handleSideEffect(
                 CancelAllInterimFeesCommand::create(['id' => $command->getId()])
             );
+        }
+
+        return false;
+    }
+
+    /**
+     * Should we create an interim fee?
+     *
+     * @param UpdateDeclarationCommand $command     update declaration command
+     * @param bool                     $isVariation is variation
+     *
+     * @return bool
+     */
+    private function shouldCreateInterimFee(UpdateDeclarationCommand $command, $isVariation)
+    {
+        $id = $command->getId();
+
+        $outstandingInterimFees = $this->feeRepo->fetchInterimFeesByApplicationId($id, true);
+        if (!$isVariation && empty($outstandingInterimFees)) {
+            return true;
+        }
+
+        $variationFees = $this->feeRepo->fetchFeeByTypeAndApplicationId(
+            FeeTypeEntity::FEE_TYPE_VAR,
+            $id
+        );
+
+        if ($isVariation && empty($outstandingInterimFees) && !empty($variationFees)) {
+            return true;
         }
 
         return false;

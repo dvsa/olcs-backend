@@ -633,4 +633,25 @@ class Fee extends AbstractRepository
 
         return count($results) ? current($results) : [];
     }
+
+    /**
+     * Fetch latest fee by type and application id
+     *
+     * @param string $feeType       Fee type
+     * @param int    $applicationId Application Id
+     *
+     * @return array
+     */
+    public function fetchFeeByTypeAndApplicationId($feeType, $applicationId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+        $doctrineQb
+            ->join($this->alias . '.feeType', 'ft')
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.application', ':application'))
+            ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeType'))
+            ->setParameter('application', $applicationId)
+            ->setParameter('feeType', $feeType);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
 }

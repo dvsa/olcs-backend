@@ -321,16 +321,21 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
      */
     protected function maybeCreateInterimFee(ApplicationEntity $application)
     {
-        $fees = $this->getExistingFees($application);
+        $interimFees = $this->getExistingFees($application);
+        $variationFees = $this->getRepo('Fee')->fetchFeeByTypeAndApplicationId(
+            FeeType::FEE_TYPE_VAR,
+            $application->getId()
+        );
+        $isVariation = $application->isVariation();
 
-        if (empty($fees)) {
-
+        if (empty($interimFees) && (!$isVariation || ($isVariation && !empty($variationFees)))) {
             $data = [
                 'id' => $application->getId(),
                 'feeTypeFeeType' => FeeType::FEE_TYPE_GRANTINT,
                 'optional' => true
             ];
 
+            // despite the command name we create an interim fee
             $this->result->merge($this->handleSideEffect(CreateApplicationFeeCmd::create($data)));
         }
     }

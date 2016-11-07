@@ -842,4 +842,63 @@ class FeeTest extends RepositoryTestCase
             $this->sut->fetchFeesByIrfoPsvAuthId($irfoPsvAuthId, true)
         );
     }
+
+    public function testFetchFeeByTypeAndApplicationId()
+    {
+        $feeType = 'APP';
+        $applicationId = 69;
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class)
+            ->shouldReceive('expr')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('eq')
+                ->with('f.application', ':application')
+                ->andReturn('FOO')
+                ->once()
+                ->shouldReceive('eq')
+                ->with('ft.feeType', ':feeType')
+                ->andReturn('BAR')
+                ->once()
+                ->getMock()
+            )
+            ->twice()
+            ->shouldReceive('andWhere')
+            ->with('FOO')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('BAR')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('application', $applicationId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('feeType', $feeType)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('join')
+            ->with('f.feeType', 'ft')
+            ->once()
+            ->andReturnSelf()
+            ->getMock();
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('f')
+            ->once()
+            ->andReturn($mockQb);
+
+        $results = [m::mock()];
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn($results);
+
+        $this->assertSame(
+            $results,
+            $this->sut->fetchFeeByTypeAndApplicationId($feeType, $applicationId)
+        );
+    }
 }
