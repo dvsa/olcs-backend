@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Tm\UpdateNysiisName as UpdateNysiisNameCmd;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
-use Dvsa\Olcs\Api\Service\Nysiis\NysiisSoapClient;
+use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClient;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
 
@@ -25,7 +25,7 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
     /**
      * Client to connect to Nysiis servers
      *
-     * @var NysiisSoapClient
+     * @var NysiisRestClient
      */
     private $nysiisClient;
 
@@ -40,7 +40,7 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->nysiisClient = $mainServiceLocator->get(NysiisSoapClient::class);
+        $this->nysiisClient = $mainServiceLocator->get(NysiisRestClient::class);
 
         return parent::createService($serviceLocator);
     }
@@ -63,8 +63,8 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
 
         $nysiisData = $this->nysiisClient->makeRequest($person->getForename(), $person->getFamilyName());
 
-        $transportManager->setNysiisForename($nysiisData['forename']);
-        $transportManager->setNysiisFamilyName($nysiisData['familyName']);
+        $transportManager->setNysiisForename($nysiisData['nysiisFirstName']);
+        $transportManager->setNysiisFamilyName($nysiisData['nysiisFamilyName']);
 
         $this->getRepo('TransportManager')->save($transportManager);
 
