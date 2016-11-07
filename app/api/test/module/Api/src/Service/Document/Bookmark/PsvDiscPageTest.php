@@ -75,8 +75,8 @@ class PsvDiscPageTest extends \PHPUnit_Framework_TestCase
             'PSV1_LINE2' => '',
             'PSV1_LINE3' => '',
             'PSV1_LICENCE' => 'L1234',
-            'PSV1_VALID_DATE' => '2013-11-01',
-            'PSV1_EXPIRY_DATE' => '2014-10-03',
+            'PSV1_VALID_DATE' => '01-11-2013',
+            'PSV1_EXPIRY_DATE' => '03-10-2014',
 
             'PSV2_TITLE' => 'COPY',
             'PSV2_DISC_NO' => 2,

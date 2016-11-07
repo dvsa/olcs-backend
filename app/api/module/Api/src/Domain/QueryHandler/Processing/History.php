@@ -47,7 +47,8 @@ class History extends AbstractQueryHandler
                     'user' => [
                         'contactDetails' => [
                             'person'
-                        ]
+                        ],
+                        'team',
                     ]
                 ]
             ),

@@ -736,6 +736,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted::class,
             \Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates::class =>
                 \Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates::class,
+            \Dvsa\Olcs\Api\Service\Nr\Filter\Format\MemberStateCode::class =>
+                \Dvsa\Olcs\Api\Service\Nr\Filter\Format\MemberStateCode::class,
             \Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber::class =>
                 \Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification::class =>
