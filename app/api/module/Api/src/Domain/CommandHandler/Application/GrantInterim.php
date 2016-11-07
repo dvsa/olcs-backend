@@ -59,7 +59,9 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
         }
 
         // if there is no fees - we need to create one
-        if (empty($existingFees) && (!$isVariation || ($isVariation && !empty($variationFees)))) {
+        if (!empty($existingFees)) {
+            $latestFee = $existingFees[0];
+        } elseif (!$isVariation || ($isVariation && !empty($variationFees))) {
             $data = [
                 'id' => $application->getId(),
                 'feeTypeFeeType' => FeeType::FEE_TYPE_GRANTINT
@@ -67,8 +69,6 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
             $feeResult = $this->handleSideEffect(CreateApplicationFeeCmd::create($data));
             $this->result->merge($feeResult);
             $latestFee = $this->getRepo('Fee')->fetchById($feeResult->getId('fee'));
-        } elseif (!empty($existingFees)) {
-            $latestFee = $existingFees[0];
         }
 
         if ($latestFee !== null) {
