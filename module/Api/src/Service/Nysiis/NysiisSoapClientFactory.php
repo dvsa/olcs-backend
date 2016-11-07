@@ -18,7 +18,7 @@ class NysiisSoapClientFactory implements FactoryInterface
      *
      * @param ServiceLocatorInterface $serviceLocator service locator
      *
-     * @return NysiisClient
+     * @return NysiisSoapClient
      * @throws NysiisException
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -55,6 +55,6 @@ class NysiisSoapClientFactory implements FactoryInterface
             throw new NysiisException($e->getMessage());
         }
 
-        return new NysiisClient($soapClient);
+        return new NysiisSoapClient($soapClient);
     }
 }
