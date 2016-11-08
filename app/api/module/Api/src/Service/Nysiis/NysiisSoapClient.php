@@ -7,9 +7,9 @@ use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
 use Olcs\Logging\Log\Logger;
 
 /**
- * Class NysiisClient
+ * Class NysiisSoapClient
  */
-class NysiisClient
+class NysiisSoapClient
 {
     /**
      * @var ZendSoap
