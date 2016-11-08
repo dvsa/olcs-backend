@@ -17,9 +17,13 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 class NysiisRestClientTest extends MockeryTestCase
 {
     /**
- * tests makeRequest
- */
-    public function testMakeRequest()
+     * tests makeRequest
+     *
+     * @param $outputJson
+     *
+     * @dataProvider makeRequestProvider
+     */
+    public function testMakeRequest($outputJson)
     {
         $volFirstName = 'vol first name';
         $volFamilyName = 'vol family name';
@@ -27,7 +31,6 @@ class NysiisRestClientTest extends MockeryTestCase
         $nysiisFamilyName = 'nysiis family name';
 
         $inputJson = '{"volFirstName":"' . $volFirstName . '","volFamilyName":"' . $volFamilyName . '"}';
-        $outputJson = '{"nysiisFirstName":"' . $nysiisFirstName . '","nysiisFamilyName":"' . $nysiisFamilyName . '"}';
 
         $returnedArray = [
             'nysiisFirstName' => $nysiisFirstName,
@@ -43,6 +46,18 @@ class NysiisRestClientTest extends MockeryTestCase
 
         $sut = new NysiisRestClient($restClient);
         $this->assertEquals($returnedArray, $sut->makeRequest($volFirstName, $volFamilyName));
+    }
+
+    /**
+     * data provider for makeRequest
+     */
+    public function makeRequestProvider()
+    {
+        return [
+            ['38{"nysiisFirstName":"nysiis first name","nysiisFamilyName":"nysiis family name"}0'],
+            ['3a{"nysiisFirstName":"nysiis first name","nysiisFamilyName":"nysiis family name"}0'],
+            ['{"nysiisFirstName":"nysiis first name","nysiisFamilyName":"nysiis family name"}']
+        ];
     }
 
     /**
@@ -94,7 +109,7 @@ class NysiisRestClientTest extends MockeryTestCase
     public function basicRestClient($inputJson)
     {
         $restClient = m::mock(RestClient::class);
-        $restClient->shouldReceive('setEncType')->with('application/json')->once();
+        $restClient->shouldReceive('setEncType')->with('application/json; charset=UTF-8')->once();
         $restClient->shouldReceive('getRequest->setMethod')->with(HttpRequest::METHOD_POST)->once();
         $restClient->shouldReceive('getRequest->setContent')->with($inputJson)->once();
 
