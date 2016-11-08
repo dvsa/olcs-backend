@@ -2,16 +2,16 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Nysiis;
 
-use Dvsa\Olcs\Api\Service\Nysiis\NysiisClient;
+use Dvsa\Olcs\Api\Service\Nysiis\NysiisSoapClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\Soap\Client as SoapClient;
 
 /**
- * Class NysiisClientTest
+ * Class NysiisSoapClientTest
  * @package Dvsa\OlcsTest\Api\Service\Data
  */
-class NysiisClientTest extends MockeryTestCase
+class NysiisSoapClientTest extends MockeryTestCase
 {
     /**
      * testGetNysiisSearchKeys
@@ -45,7 +45,7 @@ class NysiisClientTest extends MockeryTestCase
             'familyName' => $nysissFamilyName
         ];
 
-        $sut = new NysiisClient($soapClient);
+        $sut = new NysiisSoapClient($soapClient);
 
         $this->assertEquals($returnedValue, $sut->makeRequest($inputForename, $inputFamilyName));
     }
@@ -73,7 +73,7 @@ class NysiisClientTest extends MockeryTestCase
             ->with($inputData)
             ->andThrowExceptions([new \SoapFault('SOAP-ERROR', 'Soap error message')]);
 
-        $sut = new NysiisClient($soapClient);
+        $sut = new NysiisSoapClient($soapClient);
         $sut->makeRequest($inputForename, $inputFamilyName);
     }
 
