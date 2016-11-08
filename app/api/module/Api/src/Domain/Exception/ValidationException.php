@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Validation Exception
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Exception;
 
 /**
@@ -17,5 +12,7 @@ class ValidationException extends Exception
     public function __construct(array $messages)
     {
         $this->messages = $messages;
+
+        parent::__construct(var_export($messages, true), $this->getCode(), $this->getPrevious());
     }
 }
