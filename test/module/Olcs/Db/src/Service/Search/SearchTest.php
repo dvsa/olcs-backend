@@ -292,4 +292,87 @@ class SearchTest extends MockeryTestCase
         );
         $sut->search('FOO', ['MISSING']);
     }
+
+    /**
+     * @dataProvider setDateRangesDataProvider
+     */
+    public function testSetDateRanges($data, $expect)
+    {
+        $sut = new SearchService();
+
+        $sut->setDateRanges($data);
+
+        $this->assertSame($expect, $sut->getDateRanges());
+    }
+
+    public function setDateRangesDataProvider()
+    {
+        return [
+            // valid from string
+            [
+                [
+                    'field1' => '2010-02-01',
+                ],
+                [
+                    'field1' => '2010-02-01',
+                ]
+            ],
+            // valid from array
+            [
+                [
+                    'field1' => [
+                        'year' => '2010',
+                        'month' => '02',
+                        'day' => '01',
+                    ],
+                    'field2' => [
+                        'year' => '2010',
+                        'month' => '2',
+                        'day' => '1',
+                    ],
+                ],
+                [
+                    'field1' => '2010-02-01',
+                    'field2' => '2010-02-01',
+                ]
+            ],
+            // invalid
+            [
+                [
+                    'field1' => '2010',
+                    'field2' => '2010-02',
+                    'field3' => '01-02-2010',
+                    'field4' => '02-2010',
+                    'field5' => '',
+                    'field6' => [
+                        'year' => '2010',
+                        'month' => '02',
+                        'day' => '',
+                    ],
+                    'field7' => [
+                        'year' => '2010',
+                        'month' => '',
+                        'day' => '',
+                    ],
+                    'field8' => [
+                        'year' => '',
+                        'month' => '2',
+                        'day' => '',
+                    ],
+                    'field9' => [
+                        'year' => '',
+                        'month' => '',
+                        'day' => '1',
+                    ],
+                    'field10' => [
+                        'day' => '',
+                        'month' => '',
+                        'year' => ''
+                    ],
+                ],
+                [
+                ]
+            ],
+        ];
+    }
 }
