@@ -9,7 +9,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Tm\UpdateNysiisName as Cmd;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
-use Dvsa\Olcs\Api\Service\Nysiis\NysiisClient;
+use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClient;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
@@ -26,7 +26,7 @@ class UpdateNysiisNameTest extends CommandHandlerTestCase
 
         $this->mockRepo('TransportManager', TransportManagerRepo::class);
 
-        $this->mockedSmServices[NysiisClient::class] = m::mock(NysiisClient::class)->makePartial();
+        $this->mockedSmServices[NysiisRestClient::class] = m::mock(NysiisRestClient::class)->makePartial();
         $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
 
         parent::setUp();
@@ -57,11 +57,11 @@ class UpdateNysiisNameTest extends CommandHandlerTestCase
         $transportManager->shouldReceive('setNysiisFamilyName')->once()->andReturn($nysiisFamilyName);
 
         $nysiisResult = [
-            'forename' => $nysiisForename,
-            'familyName' => $nysiisFamilyName
+            'nysiisFirstName' => $nysiisForename,
+            'nysiisFamilyName' => $nysiisFamilyName
         ];
 
-        $this->mockedSmServices[NysiisClient::class]
+        $this->mockedSmServices[NysiisRestClient::class]
             ->shouldReceive('makeRequest')
             ->once()
             ->with($personForename, $personFamilyName)
