@@ -1,8 +1,8 @@
 <?php
 // @codingStandardsIgnoreFile
 return [
-    'tachograph_analyser.tach_external' => 'Contractwr allanol',
-    'tachograph_analyser.tach_internal' => 'Perchennog neu gyflogai’r busnes',
+    'tachograph_analyser.tach_internal' => 'In-house, using software on your own PC',
+    'tachograph_analyser.tach_external' => 'By sending to an external analysis bureau/company',
     'tachograph_analyser.tach_na' => 'Amherthnasol',
     'variation-application-type-of-licence-freetext' => 'Mae math y drwydded wedi ei newid o %s i %s',
     '1 Week' => '1 Wythnos',

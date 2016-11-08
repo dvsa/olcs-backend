@@ -1,8 +1,8 @@
 <?php
 // @codingStandardsIgnoreFile
 return [
-    'tachograph_analyser.tach_external' => 'An external contractor',
-    'tachograph_analyser.tach_internal' => 'An owner or employee of the business',
+    'tachograph_analyser.tach_internal' => 'In-house, using software on your own PC',
+    'tachograph_analyser.tach_external' => 'By sending to an external analysis bureau/company',
     'tachograph_analyser.tach_na' => 'Not applicable',
     'variation-application-type-of-licence-freetext' => 'The licence type has been changed from %s to %s',
     '1 Week' => '1 Week',
