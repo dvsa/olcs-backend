@@ -8,18 +8,18 @@
 namespace Dvsa\OlcsTest\Api\Service\Data;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Service\Nysiis\NysiisClientFactory;
-use Dvsa\Olcs\Api\Service\Nysiis\NysiisClient;
+use Dvsa\Olcs\Api\Service\Nysiis\NysiisSoapClientFactory;
+use Dvsa\Olcs\Api\Service\Nysiis\NysiisSoapClient;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Zend\Soap\Client as ZendSoapClient;
 
 /**
- * NysiisClientFactory Test
+ * NysiisSoapClientFactory Test
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class NysiisClientFactoryTest extends MockeryTestCase
+class NysiisSoapClientFactoryTest extends MockeryTestCase
 {
     /**
      * Tests client created properly
@@ -35,8 +35,8 @@ class NysiisClientFactoryTest extends MockeryTestCase
 
         $mockSl = m::mock(ServiceLocatorInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
-        $sut = new NysiisClientFactory();
-        $this->assertInstanceOf(NysiisClient::class, $sut->createService($mockSl));
+        $sut = new NysiisSoapClientFactory();
+        $this->assertInstanceOf(NysiisSoapClient::class, $sut->createService($mockSl));
     }
 
     /**
@@ -55,7 +55,7 @@ class NysiisClientFactoryTest extends MockeryTestCase
 
         $mockSl = m::mock(ServiceLocatorInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
-        $sut = new NysiisClientFactory();
+        $sut = new NysiisSoapClientFactory();
         $sut->createService($mockSl);
     }
 
@@ -75,7 +75,7 @@ class NysiisClientFactoryTest extends MockeryTestCase
 
         $mockSl = m::mock(ServiceLocatorInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
-        $sut = new NysiisClientFactory();
+        $sut = new NysiisSoapClientFactory();
         $sut->createService($mockSl);
     }
 
@@ -98,7 +98,7 @@ class NysiisClientFactoryTest extends MockeryTestCase
 
         $mockSl = m::mock(ServiceLocatorInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
-        $sut = new NysiisClientFactory();
+        $sut = new NysiisSoapClientFactory();
         $sut->createService($mockSl);
     }
 
@@ -121,7 +121,7 @@ class NysiisClientFactoryTest extends MockeryTestCase
 
         $mockSl = m::mock(ServiceLocatorInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
-        $sut = new NysiisClientFactory();
+        $sut = new NysiisSoapClientFactory();
         $sut->createService($mockSl);
     }
 }

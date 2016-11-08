@@ -11,14 +11,14 @@ use Zend\Soap\Client as ZendSoap;
  * Class NysiisClientFactory
  * @package Dvsa\Olcs\Api\Service\Nysiis
  */
-class NysiisClientFactory implements FactoryInterface
+class NysiisSoapClientFactory implements FactoryInterface
 {
     /**
      * Create service.
      *
      * @param ServiceLocatorInterface $serviceLocator service locator
      *
-     * @return NysiisClient
+     * @return NysiisSoapClient
      * @throws NysiisException
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -55,6 +55,6 @@ class NysiisClientFactory implements FactoryInterface
             throw new NysiisException($e->getMessage());
         }
 
-        return new NysiisClient($soapClient);
+        return new NysiisSoapClient($soapClient);
     }
 }
