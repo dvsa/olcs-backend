@@ -46,7 +46,9 @@ class Search implements AuthAwareInterface
     /**
      * Elastic client to use for making requests
      *
-     * @param \Elastica\Client $client
+     * @param \Elastica\Client $client Client
+     *
+     * @return void
      */
     public function setClient(\Elastica\Client $client)
     {
@@ -64,6 +66,8 @@ class Search implements AuthAwareInterface
     }
 
     /**
+     * Get sort
+     *
      * @return string
      */
     public function getSort()
@@ -72,7 +76,11 @@ class Search implements AuthAwareInterface
     }
 
     /**
-     * @param string $sort
+     * Set sort
+     *
+     * @param string $sort Sort
+     *
+     * @return void
      */
     public function setSort($sort)
     {
@@ -80,6 +88,8 @@ class Search implements AuthAwareInterface
     }
 
     /**
+     * Get order
+     *
      * @return string
      */
     public function getOrder()
@@ -88,7 +98,11 @@ class Search implements AuthAwareInterface
     }
 
     /**
-     * @param string $order
+     * Set order
+     *
+     * @param string $order Order
+     *
+     * @return void
      */
     public function setOrder($order)
     {
@@ -98,10 +112,10 @@ class Search implements AuthAwareInterface
     /**
      * Submit a search request to elastic
      *
-     * @param string $query  The string you are searching for
-     * @param array $indexes The indexes to search, this is now only used to idenitify which query template to use
-     * @param int $page      Starting page, for pagination
-     * @param int $limit     Number of results to return
+     * @param string $query   The string you are searching for
+     * @param array  $indexes The indexes to search, this is now only used to idenitify which query template to use
+     * @param int    $page    Starting page, for pagination
+     * @param int    $limit   Number of results to return
      *
      * @return array
      */
@@ -180,6 +194,13 @@ class Search implements AuthAwareInterface
         return false;
     }
 
+    /**
+     * Process results
+     *
+     * @param ResultSet $resultSet Result set
+     *
+     * @return array
+     */
     protected function processResults(ResultSet $resultSet)
     {
         $f = new UnderscoreToCamelCase();
@@ -200,6 +221,13 @@ class Search implements AuthAwareInterface
         return $response;
     }
 
+    /**
+     * Process filters
+     *
+     * @param array $aggregations Aggregations
+     *
+     * @return array
+     */
     protected function processFilters(array $aggregations)
     {
         $return = [];
@@ -214,6 +242,8 @@ class Search implements AuthAwareInterface
     }
 
     /**
+     * Get filters
+     *
      * @return array
      */
     public function getFilters()
@@ -224,7 +254,7 @@ class Search implements AuthAwareInterface
     /**
      * Sets the filters.
      *
-     * @param array $filters
+     * @param array $filters Filters
      *
      * @return array
      */
@@ -251,6 +281,8 @@ class Search implements AuthAwareInterface
     }
 
     /**
+     * Get date ranges
+     *
      * @return array
      */
     public function getDateRanges()
@@ -259,9 +291,10 @@ class Search implements AuthAwareInterface
     }
 
     /**
-     * Sets the filters. Requires the dates in three parts ['y','m','d']
+     * Sets the filters.
+     * Requires the dates in three parts ['year','month','day'] or [0-9]{4}\-[0-9]{2}\-[0-9]{2} string
      *
-     * @param array $filters
+     * @param array $dateRanges Date ranges
      *
      * @return array
      */
