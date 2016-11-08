@@ -69,5 +69,4 @@ class NysiisRestClientFactoryTest extends MockeryTestCase
             [['options' => []], 'Missing nysiis rest client uri']
         ];
     }
-
 }

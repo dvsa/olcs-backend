@@ -52,7 +52,7 @@ class NysiisRestClient
             'volFamilyName' => $familyName
         ];
 
-        $this->restClient->setEncType('application/json');
+        $this->restClient->setEncType('application/json; charset=UTF-8');
         $this->restClient->getRequest()->setMethod(HttpRequest::METHOD_POST);
         $this->restClient->getRequest()->setContent(ZendJson::encode($inputData));
 
@@ -61,7 +61,7 @@ class NysiisRestClient
             Logger::info('Nysiis response', ['data' => $response]);
 
             if ($response instanceof HttpResponse && $response->isSuccess()) {
-                return ZendJson::decode($response->getContent(), ZendJson::TYPE_ARRAY);
+                return ZendJson::decode($this->cleanJson($response->getContent()), ZendJson::TYPE_ARRAY);
             }
         } catch (\Exception $e) {
             Logger::info('Nysiis exception object', ['data' => $e->__toString()]);
@@ -69,5 +69,33 @@ class NysiisRestClient
         }
 
         throw new NysiisException('Nysiis REST service returned incorrect response');
+    }
+
+    /**
+     * quick fix: remove byte order mark characters from the json string
+     *
+     * @param string $text text being cleaned
+     *
+     * @todo we need to sort this problem properly, either at source (java service) or here with a more detailed fix
+     *
+     * @return string
+     */
+    public function cleanJson($text)
+    {
+        //if there isn't a character matched then our string is invalid, but we can't do anything about it
+        if (strstr($text, '{') !== false) {
+            $text = strstr($text, '{');
+        }
+
+        //find the position of the last "}" character
+        $lastChar = strrpos($text, '}');
+
+        //if there isn't a character matched then our string is invalid, but we can't do anything about it
+        if ($lastChar !== false) {
+            //count is from zero, so we return up to matched character + 1
+            $text = substr($text, 0, $lastChar + 1);
+        }
+
+        return $text;
     }
 }
