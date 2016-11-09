@@ -87,7 +87,7 @@ return [
     'application-review-safety-safetyInsVaries' => 'A yw rhai o’r cerbydau neu ôl-gerbydau yn cael eu harchwilio yn amlach na’r cyfnod a nodir uchod?',
     'application-review-safety-safetyInsVaries-psv' => 'A yw rhai o’r cerbydau yn cael eu harchwilio yn amlach na’r cyfnod a nodir uchod?',
     'application-review-safety-safetyInsVehicles' => 'Uchafswm o amser rhwng archwiliadau diogelwch ar cerbydau',
-    'application-review-safety-tachographIns' => 'Pwy sy’n dadansoddi’r cofnodion tacograff?',
+    'application-review-safety-tachographIns' => 'How do you analyse the information from your digital tachographs?',
     'application-review-safety-tachographInsName' => 'Enw’r cwmni neu enw llawn y contractwr allanol sy’n dadansoddi’r cofnodion tacograff?',
     'application-review-safety-workshop-address' => 'Cyfeiriad',
     'application-review-safety-workshop-isExternal' => 'Pwy fydd yn gwneud yr archwiliadau diogelwch?',
