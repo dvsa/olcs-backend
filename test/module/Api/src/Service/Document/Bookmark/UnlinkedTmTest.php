@@ -2,12 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\UnlinkedTm;
 
 /**
- * Licence holder name test
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Service\Document\Bookmark\UnlinkedTm
  */
 class UnlinkedTmTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,58 +20,70 @@ class UnlinkedTmTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderValidDataProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 "Testy McTest",
-                array(
-                    'tmLicences' => array(
-                        0 => array(
-                            'transportManager' => array(
-                                'homeCd' => array(
-                                    'person' => array(
+                [
+                    'tmLicences' => [
+                        0 => [
+                            'transportManager' => [
+                                'homeCd' => [
+                                    'person' => [
                                         'forename' => 'Testy',
-                                        'familyName' => 'McTest'
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            ),
-            array(
+                                        'familyName' => 'McTest',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
                 "Lorem Ipsum\nTesty McTest",
-                array(
-                    'tmLicences' => array(
-                        0 => array(
-                            'transportManager' => array(
-                                'homeCd' => array(
-                                    'person' => array(
+                [
+                    'tmLicences' => [
+                        0 => [
+                            'transportManager' => [
+                                'homeCd' => [
+                                    'person' => [
                                         'forename' => 'Lorem',
-                                        'familyName' => 'Ipsum'
-                                    )
-                                )
-                            )
-                        ),
-                        1 => array(
-                            'transportManager' => array(
-                                'homeCd' => array(
-                                    'person' => array(
+                                        'familyName' => 'Ipsum',
+                                    ],
+                                ],
+                            ],
+                        ],
+                        1 => [
+                            'transportManager' => [
+                                'homeCd' => [
+                                    'person' => [
                                         'forename' => 'Testy',
-                                        'familyName' => 'McTest'
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            ),
-            array(
-                'To be nominated.',
-                array(
-                    'tmLicences' => array()
-                )
-            )
-        );
+                                        'familyName' => 'McTest',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                UnlinkedTm::TM_NA,
+                [
+                    'tmLicences' => [],
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_RESTRICTED,
+                    ],
+                ],
+            ],
+            [
+                UnlinkedTm::TM_BE_NOMINATED,
+                [
+                    'tmLicences' => [],
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    ],
+                ],
+            ],
+        ];
     }
 
     /**
