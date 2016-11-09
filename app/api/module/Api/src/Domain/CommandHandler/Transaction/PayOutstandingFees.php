@@ -35,6 +35,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Transfer\Command\Fee\RejectWaive as RejectWaiveCmd;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Entity\Task\Task;
 
 /**
  * Pay Outstanding Fees
@@ -55,7 +57,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'Transaction';
 
-    protected $extraRepos = ['Fee', 'FeeType', 'SystemParameter'];
+    protected $extraRepos = ['Fee', 'FeeType', 'SystemParameter', 'Task'];
 
     /**
      * There are three valid use cases for this command
@@ -233,9 +235,14 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                 // We need to call save() on the fee, it won't cascade persist from the transaction
                 $this->getRepo('Fee')->save($fee);
                 $this->result->merge($this->handleSideEffect(PayFeeCmd::create(['id' => $fee->getId()])));
-            } elseif ($fee->getLicence()) {
-                // Generate Insufficient Fee Request letter
-                $this->result->merge($this->generateInsufficientFeeRequestLetter($fee, $allocatedAmount));
+            } else {
+                if ($fee->getLicence()) {
+                    // Generate Insufficient Fee Request letter
+                    $this->result->merge($this->generateInsufficientFeeRequestLetter($fee, $allocatedAmount));
+                }
+                if ($fee->getTask() === null) {
+                    $this->createTaskForOutstandingFee($fee);
+                }
             }
         }
 
@@ -249,6 +256,29 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             ->addMessage('FeeTransaction record(s) created');
 
         return $this->result;
+    }
+
+    /**
+     * Create task for outstanding fee
+     *
+     * @param FeeEntity $fee fee
+     *
+     * @return void
+     */
+    protected function createTaskForOutstandingFee($fee)
+    {
+        $data = [
+            'category' => Task::CATEGORY_LICENSING,
+            'subCategory' => Task::SUBCATEGORY_LICENSING_GENERAL_TASK,
+            'description' => Task::TASK_DESCRIPTION_FEE_DUE,
+            'actionDate' => (new DateTime())->format(\DateTime::W3C)
+        ];
+        $this->result->merge($this->handleSideEffect(CreateTask::create($data)));
+        $fee->setTask(
+            $this->getRepo('Task')->fetchById($this->result->getId('task'))
+        );
+
+        $this->getRepo('Fee')->save($fee);
     }
 
     /**

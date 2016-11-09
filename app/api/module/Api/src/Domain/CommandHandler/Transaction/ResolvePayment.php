@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Resolve Payment
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Transaction;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -15,13 +10,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as Cpms;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Entity\Task\Task;
 
 /**
  * Resolve Payment
@@ -37,7 +33,7 @@ final class ResolvePayment extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'Transaction';
 
-    protected $extraRepos = ['Fee'];
+    protected $extraRepos = ['Fee', 'Task'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -133,9 +129,32 @@ final class ResolvePayment extends AbstractCommandHandler implements
                 $result->merge(
                     $this->handleSideEffect(PayFeeCmd::create(['id' => $fee->getId()]))
                 );
+            } elseif ($fee->getTask() === null) {
+                $result->merge($this->handleSideEffect($this->createCreateTaskCommand($ft)));
+                $fee->setTask(
+                    $this->getRepo('Task')->fetchById($result->getId('task'))
+                );
+                $this->getRepo('Fee')->save($fee);
             }
         }
 
         return $result;
+    }
+
+    /**
+     * Create command for create task
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask
+     */
+    protected function createCreateTaskCommand()
+    {
+        $data = [
+            'category' => Task::CATEGORY_LICENSING,
+            'subCategory' => Task::SUBCATEGORY_LICENSING_GENERAL_TASK,
+            'description' => Task::TASK_DESCRIPTION_FEE_DUE,
+            'actionDate' => (new DateTime())->format(\DateTime::W3C)
+        ];
+
+        return CreateTask::create($data);
     }
 }
