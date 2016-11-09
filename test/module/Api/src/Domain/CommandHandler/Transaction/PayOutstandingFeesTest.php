@@ -37,6 +37,9 @@ use Dvsa\Olcs\Transfer\Command\Transaction\PayOutstandingFees as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Pay Outstanding Fees Test
@@ -66,6 +69,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockRepo('Transaction', Repository\Transaction::class);
         $this->mockRepo('Application', Repository\Application::class);
         $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
+        $this->mockRepo('Task', Repository\Task::class);
 
         /** @var UserEntity $mockUser */
         $mockUser = m::mock(UserEntity::class)
@@ -1243,6 +1247,32 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                 }
             );
 
+        $taskId = 987;
+        $taskResult = new Result();
+        $taskResult->addId('task', $taskId);
+        $createTaskData = [
+            'category' => Task::CATEGORY_LICENSING,
+            'subCategory' => Task::SUBCATEGORY_LICENSING_GENERAL_TASK,
+            'description' => Task::TASK_DESCRIPTION_FEE_DUE,
+            'actionDate' => (new DateTime('now'))->format(\DateTime::W3C)
+        ];
+        $this->expectedSideEffect(CreateTask::class, $createTaskData, $taskResult);
+
+        $mockTask = m::mock(Task::class);
+
+        $this->repoMap['Task']
+            ->shouldReceive('fetchById')
+            ->with($taskId)
+            ->andReturn($mockTask)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Fee']
+            ->shouldReceive('save')
+            ->with($fee1)
+            ->once()
+            ->getMock();
+
         // assertions
         $result = $this->sut->handleCommand($command);
 
@@ -1250,6 +1280,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             'id' => [
                 'transaction' => $transactionId,
                 'feeTransaction' => [$feeTransactionId],
+                'task' => $taskId,
             ],
             'messages' => [
                 'Transaction record created: OLCS-1234-CHEQUE',
