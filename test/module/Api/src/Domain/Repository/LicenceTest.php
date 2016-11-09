@@ -21,9 +21,9 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 
 /**
- * @covers Dvsa\Olcs\Api\Domain\Repository\Licence
- * @covers Dvsa\Olcs\Api\Domain\Repository\AbstractRepository
- * @covers Dvsa\Olcs\Api\Domain\Repository\AbstractReadonlyRepository
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\Licence
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\AbstractRepository
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\AbstractReadonlyRepository
  */
 class LicenceTest extends RepositoryTestCase
 {
@@ -613,14 +613,15 @@ class LicenceTest extends RepositoryTestCase
 
         $now = new DateTime();
 
-        $qb->shouldReceive('select')->with('m', 'ta')->once();
         $this->assertEquals($expected, $this->sut->fetchForContinuationNotSought($now, 200));
 
-        $expectedQuery = '[QUERY] AND m.expiryDate < [[' . $now->format(\DateTime::W3C) . ']] '
-            . 'AND m.status IN [[["lsts_valid","lsts_curtailed","lsts_suspended"]]] '
-            . 'AND (m.goodsOrPsv = [[lcat_gv]] OR (m.goodsOrPsv = [[lcat_psv]] AND m.licenceType = [[ltyp_sr]])) '
-            . 'INNER JOIN m.fees f INNER JOIN f.feeType ft AND f.feeStatus = [[lfs_ot]] AND ft.feeType = [[CONT]] '
-            .  'LIMIT 200';
+        $expectedQuery = '[QUERY] ' .
+            'SELECT m, ta ' .
+            'AND m.expiryDate < [[' . $now->format(\DateTime::W3C) . ']] ' .
+            'AND m.status IN [[["lsts_valid","lsts_curtailed","lsts_suspended"]]] ' .
+            'AND (m.goodsOrPsv = [[lcat_gv]] OR (m.goodsOrPsv = [[lcat_psv]] AND m.licenceType = [[ltyp_sr]])) ' .
+            'INNER JOIN m.fees f INNER JOIN f.feeType ft AND f.feeStatus = [[lfs_ot]] AND ft.feeType = [[CONT]] ' .
+            'LIMIT 200';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
