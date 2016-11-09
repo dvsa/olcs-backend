@@ -318,9 +318,20 @@ return [
         // list of allowed file extensions that can be uploaded
         'extensions' => [
             // for external users
-            'external' => 'doc,pdf,rtf,xls,xlsx,docx,xml,zip,jpeg,jpg,png,tiff,txt,rtf,xml',
+            'external'
+                => 'doc,docb,docm,docx,ppt,pptx,pptm,pps,ppsm,ppsx,sldx,sldm,xls,xlsb,xlsx,xlsm,xlw'
+                . ',odt,ods,odp,odt,odm,odg,odp,ods,odi,odg'
+                . ',txt,csv,rtf,xml,htm,html,pdf,log,xml,json,djvu,xps,oxps'
+                . ',jpeg,jpg,png,tif,tiff,gif,jfif,bmp,webp,emf,dwg,dxf,wmf'
+                . ',zip,7z',
             // for internal users
-            'internal' => 'doc,pdf,rtf,xls,xlsx,docx,xml,zip,jpeg,jpg,png,tiff,txt,rtf,xml',
+            'internal'
+                => 'doc,docb,docm,docx,ppt,pptx,pptm,pps,ppsm,ppsx,sldx,sldm,xls,xlsb,xlsx,xlsm,xlw'
+                . ',odt,ods,odp,odt,odm,odg,odp,ods,odi,odg'
+                . ',txt,csv,rtf,xml,htm,html,pdf,log,xml,json,djvu,xps,oxps'
+                . ',jpeg,jpg,png,tif,tiff,gif,jfif,bmp,webp,emf,dwg,dxf,wmf'
+                . ',zip,7z'
+                . ',mp2,mp3,m4a,3gp,wav,aif,aiff,flac,ogg,wma,ape,aac,amr,webm,ac3',
         ]
     ],
 
