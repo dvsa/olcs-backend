@@ -38,6 +38,7 @@ class Task extends AbstractTask
     const STATUS_CLOSED = 'tst_closed';
     const STATUS_ALL = 'tst_all';
 
+    const CATEGORY_LICENSING = 1;
     const CATEGORY_COMPLIANCE = 2;
     const CATEGORY_BUS = 3;
     const CATEGORY_ENVIRONMENTAL = 7;
@@ -49,6 +50,7 @@ class Task extends AbstractTask
     const SUB_CATEGORY_HEARINGS_APPEALS = 49;
     const SUBCATEGORY_REVIEW_COMPLAINT = 61;
     const SUBCATEGORY_SUBMISSION_ASSIGNMENT = 114;
+    const SUBCATEGORY_LICENSING_GENERAL_TASK = 77;
 
     /**
      * Ref data constants
@@ -56,6 +58,8 @@ class Task extends AbstractTask
     const TYPE_SIMPLE  = 'task_at_simple';
     const TYPE_MEDIUM  = 'task_at_medium';
     const TYPE_COMPLEX = 'task_at_complex';
+
+    const TASK_DESCRIPTION_FEE_DUE = 'Fee due (Part)';
 
     public function __construct(Category $category, SubCategory $subCategory)
     {
