@@ -388,6 +388,9 @@ class Licence extends AbstractRepository
             ->with('trafficArea', 'ta');
 
         $qb
+            // The query can generate a lot of data which can exceed PHP memory_limit
+            // minimize this by only selecting the root entity
+            ->select($this->alias, 'ta')
             // the continuation date is in the past;
             ->andWhere($qb->expr()->lt($this->alias . '.expiryDate', ':now'))
             // the status of the licence is valid, valid curtailed or valid suspended;
@@ -422,10 +425,6 @@ class Licence extends AbstractRepository
             ->setParameter('gv', Entity::LICENCE_CATEGORY_GOODS_VEHICLE)
             ->setParameter('psv', Entity::LICENCE_CATEGORY_PSV)
             ->setParameter('sr', Entity::LICENCE_TYPE_SPECIAL_RESTRICTED);
-
-        // The query can generate a lot of data which can exceed PHP memory_limit
-        // minimize this by only selecting the root entity
-        $qb->select($this->alias, 'ta');
 
         if ($limit) {
             $qb->setMaxResults($limit);

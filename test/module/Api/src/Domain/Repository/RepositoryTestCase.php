@@ -118,6 +118,9 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('addSelect')
             ->andReturnUsing([$this, 'mockAddSelect']);
 
+        $this->qb->shouldReceive('select')
+            ->andReturnUsing([$this, 'mockAddSelect']);
+
         $this->qb->shouldReceive('andWhere')
             ->andReturnUsing([$this, 'mockAndWhere']);
 
@@ -170,7 +173,7 @@ class RepositoryTestCase extends MockeryTestCase
 
     public function mockAddSelect($select)
     {
-        $this->query .= ' SELECT ' . $select;
+        $this->query .= ' SELECT ' . implode(', ', func_get_args());
 
         return $this->qb;
     }

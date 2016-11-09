@@ -1,13 +1,7 @@
 <?php
 
-/**
- * System Parameter Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
 use Doctrine\ORM\QueryBuilder;
@@ -16,12 +10,13 @@ use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter as SystemParameterEntity;
 
 /**
- * System Parameter Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\SystemParameter
  */
 class SystemParameterTest extends RepositoryTestCase
 {
+    /** @var  SystemParameterRepo */
+    protected $sut;
+
     public function setUp()
     {
         $this->setUpSut(SystemParameterRepo::class);
