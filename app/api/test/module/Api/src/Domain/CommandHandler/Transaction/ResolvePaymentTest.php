@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Resolve Payment Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 
 
@@ -23,6 +18,8 @@ use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Entity\Task\Task;
 
 /**
  * Resolve Payment Test
@@ -45,6 +42,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $this->sut = new ResolvePayment();
         $this->mockRepo('Transaction', Repo::class);
         $this->mockRepo('Fee', Repo::class);
+        $this->mockRepo('Task', Repo::class);
 
         $this->refData = [
             PaymentEntity::STATUS_OUTSTANDING,
@@ -94,7 +92,6 @@ class ResolvePaymentTest extends CommandHandlerTestCase
 
         parent::setUp();
     }
-
 
     public function testHandleCommandSuccess()
     {
@@ -366,5 +363,102 @@ class ResolvePaymentTest extends CommandHandlerTestCase
                 'Unexpected status received from CPMS, transaction 69 status FooBar'
             ],
         ];
+    }
+
+    public function testHandleCommandSuccessPartialPayment()
+    {
+        $paymentId = 69;
+        $guid = 'OLCS-1234-ABCDE';
+        $amount = '1234.56';
+
+        $data = [
+            'id' => $paymentId,
+            'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
+        ];
+
+        $fee = $this->references[FeeEntity::class][22];
+        $fee->setGrossAmount($amount);
+        $fee->shouldReceive('getOutstandingAmount')
+            ->andReturn('10.00');
+
+        $payment = m::mock(PaymentEntity::class)->makePartial();
+        $payment->setId($paymentId);
+        $payment->setReference($guid);
+        $payment->setFeeTransactions($this->references[FeePaymentEntity::class]);
+        $payment->setType($this->refData[PaymentEntity::TYPE_PAYMENT]);
+
+        $command = Cmd::create($data);
+
+        $this->repoMap['Transaction']
+            ->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command)
+            ->andReturn($payment);
+
+        $this->mockCpmsService
+            ->shouldReceive('getPaymentStatus')
+            ->once()
+            ->with($guid)
+            ->andReturn(CpmsHelper::PAYMENT_SUCCESS);
+
+        $payment
+            ->shouldReceive('setStatus')
+            ->once()
+            ->with($this->refData[PaymentEntity::STATUS_PAID])
+            ->passthru()
+            ->andReturnSelf()
+            ->globally()
+            ->ordered();
+
+        $this->repoMap['Fee']
+            ->shouldReceive('save')
+            ->once()
+            ->with($fee)
+            ->globally()
+            ->ordered();
+
+        $this->repoMap['Transaction']
+            ->shouldReceive('save')
+            ->once()
+            ->with($payment);
+
+        $taskId = 987;
+        $taskResult = new Result();
+        $taskResult->addId('task', $taskId);
+        $createTaskData = [
+            'category' => Task::CATEGORY_LICENSING,
+            'subCategory' => Task::SUBCATEGORY_LICENSING_GENERAL_TASK,
+            'description' => Task::TASK_DESCRIPTION_FEE_DUE,
+            'actionDate' => (new DateTime('now'))->format(\DateTime::W3C)
+        ];
+        $this->expectedSideEffect(CreateTask::class, $createTaskData, $taskResult);
+
+        $mockTask = m::mock(Task::class);
+
+        $this->repoMap['Task']
+            ->shouldReceive('fetchById')
+            ->with($taskId)
+            ->andReturn($mockTask)
+            ->once()
+            ->getMock();
+
+        $now = new DateTime();
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertEquals($guid, $payment->getReference());
+        $this->assertEquals($now->format('Y-m-d'), $payment->getCompletedDate()->format('Y-m-d'));
+
+        $expected = [
+            'id' => [
+                'transaction' => 69,
+                'task' => $taskId
+            ],
+            'messages' => [
+                'Transaction 69 resolved as PAYMENT PAID',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
     }
 }
