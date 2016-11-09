@@ -163,7 +163,7 @@ return [
     // Email config
     'email' => [
         // Debugging option forces all email to be sent to an address
-        // 'send_all_mail_to' => 'terry.valtech@gmail.com',
+        'send_all_mail_to' => 'terry.valtech@gmail.com',
         // Selfserve/external URI e.g. http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa *Environment specific*
         'selfserve_uri' => 'http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa',
         // Internal URI e.g. http://demo_dvsa-internal.web03.olcs.mgt.mtpdvsa *Environment specific*
