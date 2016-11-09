@@ -91,6 +91,7 @@ class CategoryTest extends RepositoryTestCase
         $this->assertEquals('RESULTS', $this->sut->fetchList($dto));
 
         $expectedQuery = 'QUERY '.
+            'SELECT DISTINCT m ' .
             'INNER JOIN ' . Entity\Doc\DocTemplate::class . ' dct WITH dct.category = m.id ' .
             'INNER JOIN ' . Entity\Doc\Document::class . ' dc WITH dc.id = dct.document ' .
             'AND m.isTaskCategory = [[true]] ' .
