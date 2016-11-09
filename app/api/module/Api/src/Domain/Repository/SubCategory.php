@@ -83,6 +83,7 @@ class SubCategory extends AbstractRepository
             && $this->query->getIsDocCategory() === 'Y'
         ) {
             $qb
+                ->select('DISTINCT ' . $this->alias)
                 ->join(
                     Entities\Doc\DocTemplate::class,
                     'dct',

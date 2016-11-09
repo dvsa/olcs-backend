@@ -10,7 +10,7 @@ use Dvsa\Olcs\Transfer\Query\System\InfoMessage\GetListActive as Qry;
 use Mockery as m;
 
 /**
- * @covers Dvsa\Olcs\Api\Domain\Repository\SystemInfoMessage
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\SystemInfoMessage
  */
 class SystemInfoMessageTest extends RepositoryTestCase
 {
@@ -30,9 +30,7 @@ class SystemInfoMessageTest extends RepositoryTestCase
         $qry = Qry::create(['isInternal' => $isInternal]);
 
         $qb = $this->createMockQb('{QUERY}');
-        $qb->shouldReceive('select')->once()->andReturnSelf()
-            //
-            ->shouldReceive('getQuery->getResult')
+        $qb->shouldReceive('getQuery->getResult')
             ->with(Query::HYDRATE_ARRAY)
             ->once()
             ->andReturn($expect);
@@ -46,9 +44,11 @@ class SystemInfoMessageTest extends RepositoryTestCase
 
         $now = (new DateTime())->format(DateTime::ATOM);
 
-        $expectedQuery = '{QUERY} AND m.isInternal = [[1]]' .
-            ' AND m.startDate <= [[' . $now . ']]' .
-            ' AND m.endDate >= [[' . $now . ']]';
+        $expectedQuery = '{QUERY} ' .
+            'SELECT partial m.{id, description} ' .
+            'AND m.isInternal = [[1]] ' .
+            'AND m.startDate <= [[' . $now . ']] ' .
+            'AND m.endDate >= [[' . $now . ']]';
 
         self::assertEquals($expectedQuery, $this->query);
     }
