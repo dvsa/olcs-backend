@@ -64,6 +64,14 @@
                                         },
                                         {
                                             "terms":{
+                                                "lic_status":[
+                                                    "lsts_unlicenced",
+                                                    "lsts_withdrawn"
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "terms":{
                                                 "contact_type":[
                                                     "ct_complainant"
                                                 ]
