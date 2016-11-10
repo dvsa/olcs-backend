@@ -87,7 +87,7 @@ return [
     'application-review-safety-safetyInsVaries' => 'Are some of the vehicles or trailers inspected more frequently than the interval stated above?',
     'application-review-safety-safetyInsVaries-psv' => 'Are some of the vehicles inspected more frequently than the interval stated above?',
     'application-review-safety-safetyInsVehicles' => 'Maximum time between vehicle safety inspections',
-    'application-review-safety-tachographIns' => 'Who analyses the tachograph records?',
+    'application-review-safety-tachographIns' => 'How do you analyse the information from your digital tachographs?',
     'application-review-safety-tachographInsName' => 'The company or full name of the external contractor who analyses the tachograph records',
     'application-review-safety-workshop-address' => 'Address',
     'application-review-safety-workshop-isExternal' => 'Who will carry out the safety inspections?',
