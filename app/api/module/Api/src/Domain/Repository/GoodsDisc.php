@@ -40,7 +40,11 @@ class GoodsDisc extends AbstractRepository
             ->with('lv.application', 'lva')
             ->with('lva.licenceType', 'lvalt')
             ->with('lva.goodsOrPsv', 'lvagp')
-            ->order('lvl.licNo', 'ASC');
+            // IMPORTANT The order the discs are returned needs to be specified so that it is consistent
+            // If the order is not consistent then there is a possibility of the disc numbers on the print
+            // out not being the same as in the DB
+            ->order('lvl.licNo', 'ASC')
+            ->order('gd.id', 'ASC');
 
         $this->addFilteringConditions($qb, $niFlag, $licenceType);
 
