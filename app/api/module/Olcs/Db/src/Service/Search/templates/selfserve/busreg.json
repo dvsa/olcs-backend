@@ -78,6 +78,25 @@
                                 }
                             ]
                         }
+                    },
+                    "filter":{
+                        "bool":{
+                            "must_not":[
+                                {
+                                    "or":[
+                                        {
+                                            "terms":{
+                                                "lic_status":[
+                                                    "lsts_not_submitted",
+                                                    "lsts_unlicenced",
+                                                    "lsts_withdrawn"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
                     }
                 }
             },
