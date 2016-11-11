@@ -142,11 +142,13 @@ class GoodsDisc extends AbstractRepository
 
     public function setIsPrintingOffAndAssignNumbers($discIds, $startNumber)
     {
-        return $this->getDbQueryManager()->get('Discs\GoodsDiscsSetIsPrintingOffAndDiscNo')
-            ->execute(
-                ['ids' => $discIds, 'startNumber' => $startNumber],
-                ['ids' => Connection::PARAM_INT_ARRAY, 'startNumber' => \PDO::PARAM_INT]
-            );
+        // discs need to be processed in the correct order so that they get the same disc no as what has been printed
+        $discNo = $startNumber;
+        foreach ($discIds as $discId) {
+            $this->getDbQueryManager()->get('Discs\GoodsDiscsSetIsPrintingOffAndDiscNo')
+                ->execute(['id' => $discId, 'discNo' => $discNo]);
+            $discNo++;
+        }
     }
 
     /**

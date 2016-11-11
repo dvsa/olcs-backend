@@ -216,13 +216,16 @@ class GoodsDiscTest extends RepositoryTestCase
 
     public function testSetIsPrintingOffAndAssignNumbers()
     {
-        $this->expectQueryWithData(
-            'Discs\GoodsDiscsSetIsPrintingOffAndDiscNo',
-            ['ids' => [1, 2], 'startNumber' => 1],
-            ['ids' => Connection::PARAM_INT_ARRAY, 'startNumber' => \PDO::PARAM_INT]
-        );
+        $query = m::mock();
+        $query->shouldReceive('execute')->once()->with(['id' => 1, 'discNo' => 634]);
+        $query->shouldReceive('execute')->once()->with(['id' => 32, 'discNo' => 635]);
+        $query->shouldReceive('execute')->once()->with(['id' => 4, 'discNo' => 636]);
 
-        $this->sut->setIsPrintingOffAndAssignNumbers([1, 2], 1);
+        $this->dbQueryService->shouldReceive('get')
+            ->with('Discs\GoodsDiscsSetIsPrintingOffAndDiscNo')
+            ->andReturn($query);
+
+        $this->sut->setIsPrintingOffAndAssignNumbers([1, 32, 4], 634);
     }
 
     public function testCeaseDiscsForLicence()
