@@ -27,9 +27,28 @@ class QueryTemplate extends Query
             throw new \RuntimeException("Query template file '". $filename ."' is missing");
         }
 
-        $template = str_replace('%SEARCH_TERM%', trim(json_encode($searchTerm), '"'), file_get_contents($filename));
+        $searchTermReplace = json_encode($searchTerm);
+
+        if ($searchTermReplace === false) {
+            throw new \RuntimeException(
+                "Search term '". $searchTerm ."' gives invalid json. Error: ".json_last_error_msg()
+            );
+        }
+
+        // OLCS-14386 - don't use trim to remove " from the encoded $searchTerm
+        $template = str_replace(
+            '%SEARCH_TERM%',
+            substr(substr($searchTermReplace, 1), 0, -1),
+            file_get_contents($filename)
+        );
 
         $this->_params = json_decode($template, true);
+
+        if (empty($this->_params)) {
+            throw new \RuntimeException(
+                "Empty params for query template file '". $filename ."' and search term '". $searchTerm ."'"
+            );
+        }
 
         // apply filters
         $this->applyFilters($filters);
