@@ -25,6 +25,14 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
  */
 class CorrespondenceInbox extends AbstractCorrespondenceInbox implements OrganisationProviderInterface
 {
+    /**
+     * CorrespondenceInbox constructor.
+     *
+     * @param Licence  $licence  Licence
+     * @param Document $document Document
+     *
+     * @return void
+     */
     public function __construct(Licence $licence, Document $document)
     {
         $this->setLicence($licence);
