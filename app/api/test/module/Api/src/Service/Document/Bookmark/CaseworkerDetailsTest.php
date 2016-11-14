@@ -18,106 +18,143 @@ class CaseworkerDetailsTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query[1]);
     }
 
-    public function testRenderWithContactDetailsAddress()
+    /**
+     * @dataProvider renderDataProvider
+     */
+    public function testRender($data, $expected)
     {
         $bookmark = new CaseworkerDetails();
-        $bookmark->setData(
-            [
-                [
-                    'contactDetails' => [
-                        'emailAddress' => 'a@user.com',
-                        'address' => [
-                            'addressLine1' => 'Line 1'
-                        ],
-                        'person' => [
-                            'forename' => 'A',
-                            'familyName' => 'User',
-                        ]
-                    ]
-                ],
-                []
-            ]
-        );
-        $this->assertEquals(
-            "A User\nLine 1\nDirect Line: \ne-mail: a@user.com",
-            $bookmark->render()
-        );
+        $bookmark->setData($data);
+
+        $this->assertEquals($expected, $bookmark->render());
     }
 
-    public function testRenderWithContactDetailsAddressAndDirectDial()
+    public function renderDataProvider()
     {
-        $bookmark = new CaseworkerDetails();
-        $bookmark->setData(
+        return [
+            // testRenderWithContactDetailsAddress
             [
                 [
-                    'contactDetails' => [
-                        'emailAddress' => 'a@user.com',
-                        'address' => [
-                            'addressLine1' => 'Line 1'
-                        ],
-                        'phoneContacts' => [
-                            [
-                                'phoneContactType' => ['id' => 'phone_t_tel'],
-                                'phoneNumber' => '0113 123 1234'
+                    [
+                        'contactDetails' => [
+                            'emailAddress' => 'a@user.com',
+                            'address' => [
+                                'addressLine1' => 'Line 1'
+                            ],
+                            'person' => [
+                                'forename' => 'A',
+                                'familyName' => 'User',
                             ]
-                        ],
-                        'person' => [
-                            'forename' => 'A',
-                            'familyName' => 'User',
                         ]
-                    ]
-                ],
-                []
-            ]
-        );
-        $this->assertEquals(
-            "A User\nLine 1\nDirect Line: 0113 123 1234\ne-mail: a@user.com",
-            $bookmark->render()
-        );
-    }
-
-    public function testRenderWithTrafficAreaContactDetailsAddress()
-    {
-        $bookmark = new CaseworkerDetails();
-        $bookmark->setData(
-            [
-                [
-                    'contactDetails' => [
-                        'emailAddress' => 'a@user.com',
-                        'address' => [],
-                        'person' => [
-                            'forename' => 'A',
-                            'familyName' => 'User',
-                        ],
-                        'phoneContacts' => [
-                            [
-                                'phoneContactType' => [
-                                    'id' => 'INVALID_TYPE',
-                                ],
-                            ]
-                        ],
                     ],
-                    'team' => [
-                        'trafficArea' => [
-                            'name' => 'An Area',
-                            'contactDetails' => [
-                                'address' => [
-                                    'addressLine1' => 'TA 11'
+                    []
+                ],
+                "A User\nLine 1\nDirect Line: \ne-mail: a@user.com"
+            ],
+            // testRenderWithContactDetailsAddressAndDirectDial
+            [
+                [
+                    [
+                        'contactDetails' => [
+                            'emailAddress' => 'a@user.com',
+                            'address' => [
+                                'addressLine1' => 'Line 1'
+                            ],
+                            'phoneContacts' => [
+                                [
+                                    'phoneContactType' => ['id' => 'phone_t_tel'],
+                                    'phoneNumber' => '0113 123 1234'
+                                ]
+                            ],
+                            'person' => [
+                                'forename' => 'A',
+                                'familyName' => 'User',
+                            ]
+                        ]
+                    ],
+                    []
+                ],
+                "A User\nLine 1\nDirect Line: 0113 123 1234\ne-mail: a@user.com"
+            ],
+            // testRenderWithTrafficAreaContactDetailsAddress
+            [
+                [
+                    [
+                        'contactDetails' => [
+                            'emailAddress' => 'a@user.com',
+                            'address' => [],
+                            'person' => [
+                                'forename' => 'A',
+                                'familyName' => 'User',
+                            ],
+                            'phoneContacts' => [
+                                [
+                                    'phoneContactType' => [
+                                        'id' => 'INVALID_TYPE',
+                                    ],
+                                ]
+                            ],
+                        ],
+                        'team' => [
+                            'trafficArea' => [
+                                'name' => 'An Area',
+                                'contactDetails' => [
+                                    'address' => [
+                                        'addressLine1' => 'TA 11'
+                                    ]
                                 ]
                             ]
                         ]
+                    ],
+                    [
+                        'trafficArea' => [
+                            'name' => 'North East of England',
+                            'isNi' => false,
+                        ]
                     ]
                 ],
+                "A User\nOffice of the Traffic Commissioner\n"
+                . "North East of England\nTA 11\nDirect Line: \ne-mail: a@user.com",
+            ],
+            // testRenderWithTrafficAreaContactDetailsAddress for NI
+            [
                 [
-                    'trafficArea' => [
-                        'name' => 'North East of England'
+                    [
+                        'contactDetails' => [
+                            'emailAddress' => 'a@user.com',
+                            'address' => [],
+                            'person' => [
+                                'forename' => 'A',
+                                'familyName' => 'User',
+                            ],
+                            'phoneContacts' => [
+                                [
+                                    'phoneContactType' => [
+                                        'id' => 'INVALID_TYPE',
+                                    ],
+                                ]
+                            ],
+                        ],
+                        'team' => [
+                            'trafficArea' => [
+                                'name' => 'An Area',
+                                'contactDetails' => [
+                                    'address' => [
+                                        'addressLine1' => 'TA 11'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        'trafficArea' => [
+                            'name' => 'Northern Ireland',
+                            'isNi' => true,
+                        ]
                     ]
-                ]
-            ]
-        );
-        $this->assertEquals(
-            "A User\nNorth East of England\nTA 11\nDirect Line: \ne-mail: a@user.com",
-            $bookmark->render()
-        );
+                ],
+                "A User\nNorthern Ireland\nTA 11\nDirect Line: \ne-mail: a@user.com",
+            ],
+        ];
     }
 }
