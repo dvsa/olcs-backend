@@ -89,6 +89,7 @@ class BusRegEntityTest extends EntityTester
     {
         $busRegStatus = new RefDataEntity($status);
 
+        /** @var Entity|m\MockInterface $busReg */
         $busReg = m::mock(Entity::class)->makePartial();
         $busReg->shouldReceive('isLatestVariation')->once()->andReturn($isLatestVariation);
         $busReg->setStatus($busRegStatus);
@@ -137,6 +138,7 @@ class BusRegEntityTest extends EntityTester
     {
         $busRegStatus = new RefDataEntity($status);
 
+        /** @var Entity|m\MockInterface $busReg */
         $busReg = m::mock(Entity::class)->makePartial();
         $busReg->setStatus($busRegStatus);
 
@@ -252,6 +254,19 @@ class BusRegEntityTest extends EntityTester
         ];
     }
 
+    public function testIsVariation()
+    {
+        $busReg = new Entity();
+
+        //  not variation
+        $busReg->setVariationNo(null);
+        static::assertFalse($busReg->isVariation());
+
+        //  is variation
+        $busReg->setVariationNo(1);
+        static::assertTrue($busReg->isVariation());
+    }
+
     /**
      * Tests calculated values
      */
@@ -270,6 +285,7 @@ class BusRegEntityTest extends EntityTester
         $noticePeriod = new BusNoticePeriodEntity();
         $noticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_SCOTLAND);
 
+        /** @var Entity|m\MockInterface $sut */
         $sut = m::mock(Entity::class)->makePartial();
         $sut->shouldReceive('getRegNo')->once()->andReturn($regNo);
         $sut->shouldReceive('getId')->once()->andReturn($id);
@@ -302,6 +318,7 @@ class BusRegEntityTest extends EntityTester
         $licenceEntityMock = m::mock(LicenceEntity::class);
         $licenceEntityMock->shouldReceive('getLatestBusVariation')->once()->with($regNo)->andReturn($licenceBusReg);
 
+        /** @var Entity|m\MockInterface $sut */
         $sut = m::mock(Entity::class)->makePartial();
         $sut->shouldReceive('getRegNo')->once()->andReturn($regNo);
         $sut->shouldReceive('getId')->once()->andReturn($id);
@@ -672,6 +689,7 @@ class BusRegEntityTest extends EntityTester
         $this->entity->setStatus(new RefDataEntity(Entity::STATUS_REGISTERED));
         $this->entity->setOlbsKey(123);
 
+        /** @var Entity $busReg */
         $busReg = $this->entity->createVariation($status, $revertStatus);
 
         // test some values from $defaultAll
@@ -1196,6 +1214,7 @@ class BusRegEntityTest extends EntityTester
 
     public function testGrant()
     {
+        /** @var Entity|m\MockInterface $sut */
         $sut = m::mock(Entity::class)->makePartial();
         $sut->shouldReceive('canMakeDecision')->once()->andReturn(true);
         $sut->shouldReceive('isGrantable')->once()->andReturn(true);
@@ -1244,6 +1263,7 @@ class BusRegEntityTest extends EntityTester
      */
     public function testGrantThrowsNotGrantableException()
     {
+        /** @var Entity|m\MockInterface $sut */
         $sut = m::mock(Entity::class)->makePartial();
         $sut->shouldReceive('canMakeDecision')->once()->andReturn(true);
         $sut->shouldReceive('isGrantable')->once()->andReturn(false);
@@ -1263,6 +1283,7 @@ class BusRegEntityTest extends EntityTester
      */
     public function testGrantThrowsIncorrectStatusException()
     {
+        /** @var Entity|m\MockInterface $sut */
         $sut = m::mock(Entity::class)->makePartial();
         $sut->shouldReceive('canMakeDecision')->once()->andReturn(true);
         $sut->shouldReceive('isGrantable')->once()->andReturn(true);
