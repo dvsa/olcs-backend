@@ -187,6 +187,7 @@ return [
     Command\Bus\Ebsr\ProcessRequestMap::class => CommandHandler\Bus\Ebsr\ProcessRequestMap::class,
     Command\Bus\Ebsr\CreateSubmission::class => CommandHandler\Bus\Ebsr\CreateSubmission::class,
     Command\Bus\Ebsr\DeleteSubmission::class => CommandHandler\Bus\Ebsr\DeleteSubmission::class,
+    TransferCommand\Bus\PrintLetter::class => CommandHandler\Bus\PrintLetter::class,
 
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
