@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Organisation;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * CorrespondenceInbox Entity
@@ -22,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  *    }
  * )
  */
-class CorrespondenceInbox extends AbstractCorrespondenceInbox
+class CorrespondenceInbox extends AbstractCorrespondenceInbox implements OrganisationProviderInterface
 {
     public function __construct(Licence $licence, Document $document)
     {
