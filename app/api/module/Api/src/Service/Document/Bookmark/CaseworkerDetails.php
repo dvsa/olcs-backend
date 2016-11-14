@@ -71,6 +71,10 @@ class CaseworkerDetails extends DynamicBookmark
 
         $address = $this->fetchBestAddress();
 
+        $departmentName = (isset($licData['trafficArea']['isNi']) && !$licData['trafficArea']['isNi'])
+            ? 'Office of the Traffic Commissioner'
+            : '';
+
         $taName = isset($licData['trafficArea']['name'])
             ? $licData['trafficArea']['name']
             : '';
@@ -82,6 +86,7 @@ class CaseworkerDetails extends DynamicBookmark
             array_filter(
                 [
                     Formatter\Name::format($details['person']),
+                    $departmentName,
                     $taName,
                     Formatter\Address::format($address),
                     'Direct Line: ' . $directDial,
