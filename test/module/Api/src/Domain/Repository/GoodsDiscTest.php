@@ -63,8 +63,10 @@ class GoodsDiscTest extends RepositoryTestCase
 
         $mockQb->shouldReceive('expr->isNull')->with('gd.ceasedDate')->once()->andReturn('noCeasedDateCond');
         $mockQb->shouldReceive('expr->isNull')->with('gd.issuedDate')->once()->andReturn('noIssuedDateCond');
+        $mockQb->shouldReceive('expr->isNull')->with('lv.removalDate')->once()->andReturn('noRemovalDateCond');
         $mockQb->shouldReceive('andWhere')->with('noCeasedDateCond')->once()->andReturnSelf();
         $mockQb->shouldReceive('andWhere')->with('noIssuedDateCond')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->with('noRemovalDateCond')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('setParameter')
             ->with('applicationLicenceType', $licenceType)
@@ -133,8 +135,10 @@ class GoodsDiscTest extends RepositoryTestCase
 
         $mockQb->shouldReceive('expr->isNull')->with('gd.ceasedDate')->once()->andReturn('noCeasedDateCond');
         $mockQb->shouldReceive('expr->isNull')->with('gd.issuedDate')->once()->andReturn('noIssuedDateCond');
+        $mockQb->shouldReceive('expr->isNull')->with('lv.removalDate')->once()->andReturn('noRemovalDateCond');
         $mockQb->shouldReceive('andWhere')->with('noCeasedDateCond')->once()->andReturnSelf();
         $mockQb->shouldReceive('andWhere')->with('noIssuedDateCond')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->with('noRemovalDateCond')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('setParameter')
             ->with('operatorType', LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)
@@ -281,8 +285,10 @@ class GoodsDiscTest extends RepositoryTestCase
 
         $mockQb->shouldReceive('expr->isNull')->with('gd.ceasedDate')->once()->andReturn('noCeasedDateCond');
         $mockQb->shouldReceive('expr->isNull')->with('gd.issuedDate')->once()->andReturn('noIssuedDateCond');
+        $mockQb->shouldReceive('expr->isNull')->with('lv.removalDate')->once()->andReturn('noRemovalDateCond');
         $mockQb->shouldReceive('andWhere')->with('noCeasedDateCond')->once()->andReturnSelf();
         $mockQb->shouldReceive('andWhere')->with('noIssuedDateCond')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->with('noRemovalDateCond')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('setParameter')
             ->with('operatorType', LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)
