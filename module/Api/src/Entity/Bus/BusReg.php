@@ -349,6 +349,16 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     }
 
     /**
+     * Returns is record variation or not
+     *
+     * @return bool
+     */
+    public function isVariation()
+    {
+        return ((int)$this->getVariationNo() > 0);
+    }
+
+    /**
      * Returns whether the variation is the latest one
      *
      * @return bool
@@ -1016,7 +1026,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     /**
      * Calculates the short notice date
      *
-     * @return null|string
+     * @return \DateTime|null
      */
     private function calculateNoticeDate()
     {
@@ -1054,8 +1064,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     /**
      * Grant
      *
-     * @param RefData $status           Status
-     * @param array   $variationReasons Variation reasons
+     * @param RefData         $status           Status
+     * @param ArrayCollection $variationReasons Variation reasons
      *
      * @throws BadRequestException
      * @return BusReg

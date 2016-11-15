@@ -43,6 +43,13 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
     const PSV_LICENCE_NI    = 1516; //templates/NI/PSV_LICENCE_V1.rtf
     const PSR_SR_LICENCE_NI = 1518; //templates/NI/PSVSRLicence.rtf
 
+    const BUS_REG_NEW = 1236;           //  /templates/GB/BUS_REG_NEW_REGISTRATION_TAN21.rtf
+    const BUS_REG_VARIATION = 1237;     //  /templates/GB/BUS_REG_VARIATION_TAN21.rtf
+    const BUS_REG_CANCELLATION = 1238;   //  /templates/GB/BUS_REG_CANCELLATION.rtf
+    const BUS_REG_NEW_REFUSE_SHORT_NOTICE = 1239;  //  /templates/GB/BUS_REG_NEW_REGISTRATION_REFUSE_SHORT_NOTICE.rtf
+    const BUS_REG_VARIATION_REFUSE_SHORT_NOTICE = 1240;  //  /templates/GB/BUS_REG_VARIATION_REFUSE_SHORT_NOTICE.rtf
+    const BUS_REG_CANCELLATION_REFUSE_SHORT_NOTICE = 1241;   //  /te.../GB/BUS_REG_CANCELLATION_REFUSE_SHORT_NOTICE.rtf
+
     /**
      * Document constructor.
      *
@@ -61,6 +68,8 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
+     *
+     * @return void
      */
     public function setCreatedOnBeforePersist()
     {
