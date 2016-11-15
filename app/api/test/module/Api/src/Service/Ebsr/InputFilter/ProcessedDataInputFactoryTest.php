@@ -34,10 +34,6 @@ class ProcessedDataInputFactoryTest extends TestCase
             ->once()
             ->andReturn($mockValidator);
         $mockSl->shouldReceive('get')
-            ->with('Rules\ProcessedData\LocalAuthorityNotRequired')
-            ->once()
-            ->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')
             ->with('Rules\ProcessedData\LocalAuthorityMissing')
             ->once()
             ->andReturn($mockValidator);
@@ -46,7 +42,7 @@ class ProcessedDataInputFactoryTest extends TestCase
         $service = $sut->createService($mockSl);
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
-        $this->assertCount(6, $service->getValidatorChain());
+        $this->assertCount(5, $service->getValidatorChain());
     }
 
     /**
