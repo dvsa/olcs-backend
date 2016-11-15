@@ -262,6 +262,10 @@ class BusRegEntityTest extends EntityTester
         $busReg->setVariationNo(null);
         static::assertFalse($busReg->isVariation());
 
+        //  not variation
+        $busReg->setVariationNo(0);
+        static::assertFalse($busReg->isVariation());
+
         //  is variation
         $busReg->setVariationNo(1);
         static::assertTrue($busReg->isVariation());

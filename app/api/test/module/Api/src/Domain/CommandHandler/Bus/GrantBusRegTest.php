@@ -4,17 +4,19 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\GrantBusReg;
-use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
-use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
-use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
-use Dvsa\Olcs\Transfer\Command as TransferCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrCancelled;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRegistered;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\GrantBusReg;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
+use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
+use Dvsa\Olcs\Transfer\Command\Bus\GrantBusReg as BusGrantBusRegCmd;
+use Dvsa\Olcs\Transfer\Command\Bus\PrintLetter as BusPrintLetterCmd;
+use Dvsa\Olcs\Transfer\Command\Publication\Bus as PublicationBusCmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Bus\GrantBusReg
@@ -55,7 +57,7 @@ class GrantBusRegTest extends CommandHandlerTestCase
 
         $id = 99;
 
-        $command = TransferCmd\Bus\GrantBusReg::create(
+        $command = BusGrantBusRegCmd::create(
             [
                 'id' => $id,
                 'variationReasons' => ['brvr_route'],
@@ -77,7 +79,7 @@ class GrantBusRegTest extends CommandHandlerTestCase
 
         $id = 99;
 
-        $command = TransferCmd\Bus\GrantBusReg::create(
+        $command = BusGrantBusRegCmd::create(
             [
                 'id' => $id,
             ]
@@ -102,7 +104,7 @@ class GrantBusRegTest extends CommandHandlerTestCase
      */
     public function testHandleCommand($oldStatus)
     {
-        $command = TransferCmd\Bus\GrantBusReg::create(
+        $command = BusGrantBusRegCmd::create(
             [
                 'id' => self::BUS_REG_ID,
                 'variationReasons' => ['brvr_route'],
@@ -124,12 +126,12 @@ class GrantBusRegTest extends CommandHandlerTestCase
             ->shouldReceive('save')->with(m::type(BusRegEntity::class))->once();
 
         $this->expectedSideEffect(
-            TransferCmd\Publication\Bus::class,
+            PublicationBusCmd::class,
             ['id' => self::BUS_REG_ID],
             new Result()
         );
 
-        $this->expectedSideEffect(TransferCmd\Bus\PrintLetter::class, ['id' => self::BUS_REG_ID], (new Result()));
+        $this->expectedSideEffect(BusPrintLetterCmd::class, ['id' => self::BUS_REG_ID], (new Result()));
 
         $actual = $this->sut->handleCommand($command);
 
@@ -167,7 +169,7 @@ class GrantBusRegTest extends CommandHandlerTestCase
     {
         $ebsrId = 55;
 
-        $command = TransferCmd\Bus\GrantBusReg::create(
+        $command = BusGrantBusRegCmd::create(
             [
                 'id' => self::BUS_REG_ID,
                 'variationReasons' => ['brvr_route'],
@@ -198,12 +200,12 @@ class GrantBusRegTest extends CommandHandlerTestCase
             ->shouldReceive('save')->with(m::type(BusRegEntity::class))->once();
 
         $this->expectedSideEffect(
-            TransferCmd\Publication\Bus::class,
+            PublicationBusCmd::class,
             ['id' => self::BUS_REG_ID],
             new Result()
         );
 
-        $this->expectedSideEffect(TransferCmd\Bus\PrintLetter::class, ['id' => self::BUS_REG_ID], (new Result()));
+        $this->expectedSideEffect(BusPrintLetterCmd::class, ['id' => self::BUS_REG_ID], (new Result()));
 
         $this->expectedEmailQueueSideEffect(
             $emailSideEffectClass,

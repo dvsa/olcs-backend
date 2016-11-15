@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
-use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -37,7 +37,7 @@ class PrintLetter extends AbstractCommandHandler implements TransactionedInterfa
         BusReg::STATUS_CANCELLED => 'Bus cancelled letter',
     ];
 
-    /** @var  Entity\Bus\BusReg*/
+    /** @var  BusReg */
     private $busReg;
 
     /**
@@ -51,8 +51,8 @@ class PrintLetter extends AbstractCommandHandler implements TransactionedInterfa
     {
         $this->busReg = $this->getRepo()->fetchUsingId($command);
 
-        if (!$this->busReg instanceof Entity\Bus\BusReg) {
-            return null;
+        if (!$this->busReg instanceof BusReg) {
+            throw new NotFoundException('Bus registration not found');
         }
 
         $licId = $this->busReg->getLicence()->getId();

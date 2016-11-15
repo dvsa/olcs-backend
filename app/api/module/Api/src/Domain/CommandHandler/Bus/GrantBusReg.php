@@ -3,16 +3,17 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrCancelled;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRegistered;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
-use Dvsa\Olcs\Transfer\Command as TransferCmd;
+use Dvsa\Olcs\Transfer\Command\Bus\PrintLetter as BusPrintLetterCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrCancelled;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRegistered;
+use Dvsa\Olcs\Transfer\Command\Publication\Bus as PublicationBusCmd;
 
 /**
  * Grant BusReg
@@ -79,7 +80,7 @@ final class GrantBusReg extends AbstractCommandHandler
         }
 
         // Print licence
-        $sideEffects[] = TransferCmd\Bus\PrintLetter::create(['id' => $busReg->getId()]);
+        $sideEffects[] = BusPrintLetterCmd::create(['id' => $busReg->getId()]);
 
         $this->handleSideEffects($sideEffects);
 
@@ -95,11 +96,11 @@ final class GrantBusReg extends AbstractCommandHandler
      *
      * @param int $busRegId Bus registration id
      *
-     * @return TransferCmd\Publication\Bus
+     * @return PublicationBusCmd
      */
     private function getPublishCmd($busRegId)
     {
-        return TransferCmd\Publication\Bus::create(['id' => $busRegId]);
+        return PublicationBusCmd::create(['id' => $busRegId]);
     }
 
     /**

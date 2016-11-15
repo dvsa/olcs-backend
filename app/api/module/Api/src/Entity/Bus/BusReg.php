@@ -355,7 +355,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
      */
     public function isVariation()
     {
-        return ($this->getVariationNo() !== null);
+        return ((int)$this->getVariationNo() > 0);
     }
 
     /**
