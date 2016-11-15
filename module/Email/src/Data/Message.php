@@ -39,7 +39,7 @@ class Message
 
     public function __construct($to, $subject)
     {
-        $this->setTo(trim($to));
+        $this->setTo($to);
         $this->setSubject($subject);
     }
 
