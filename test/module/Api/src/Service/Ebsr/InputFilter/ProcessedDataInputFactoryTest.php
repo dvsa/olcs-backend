@@ -34,10 +34,6 @@ class ProcessedDataInputFactoryTest extends TestCase
             ->once()
             ->andReturn($mockValidator);
         $mockSl->shouldReceive('get')
-            ->with('Rules\ProcessedData\LocalAuthorityNotRequired')
-            ->once()
-            ->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')
             ->with('Rules\ProcessedData\LocalAuthorityMissing')
             ->once()
             ->andReturn($mockValidator);
