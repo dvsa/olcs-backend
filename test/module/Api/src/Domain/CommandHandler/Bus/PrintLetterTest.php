@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\PrintLetter;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -40,14 +41,18 @@ class PrintLetterTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommandNull()
+    public function testHandleCommandBusReg404()
     {
         $cmd = TransferCmd\Licence\PrintLicence::create([]);
 
         $this->repoMap['Bus']
             ->shouldReceive('fetchUsingId')->with($cmd)->once()->andReturnNull();
 
-        static::assertNull($this->sut->handleCommand($cmd));
+        //  expect
+        $this->setExpectedException(NotFoundException::class, 'Bus registration not found');
+
+        //  call
+        $this->sut->handleCommand($cmd);
     }
 
     public function testHandleCommandExcTemplate404()
@@ -63,9 +68,11 @@ class PrintLetterTest extends CommandHandlerTestCase
         $this->repoMap['Bus']
             ->shouldReceive('fetchUsingId')->with($cmd)->once()->andReturn($mockBusReg);
 
+        //  expect
         $this->setExpectedException(BadRequestException::class, 'Template not found for bus registration');
 
-        static::assertNull($this->sut->handleCommand($cmd));
+        //  call
+        $this->sut->handleCommand($cmd);
     }
 
     /**
