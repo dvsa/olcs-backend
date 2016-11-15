@@ -39,7 +39,7 @@ class Message
 
     public function __construct($to, $subject)
     {
-        $this->setTo($to);
+        $this->setTo(trim($to));
         $this->setSubject($subject);
     }
 
@@ -154,7 +154,7 @@ class Message
      */
     public function setTo($to)
     {
-        $this->to = $to;
+        $this->to = trim($to);
         return $this;
     }
 
@@ -255,6 +255,9 @@ class Message
      */
     public function setCc(array $cc)
     {
+        foreach ($cc as &$email) {
+            $email = trim($email);
+        }
         $this->cc = $cc;
         return $this;
     }
@@ -276,6 +279,9 @@ class Message
      */
     public function setBcc(array $bcc)
     {
+        foreach ($bcc as &$email) {
+            $email = trim($email);
+        }
         $this->bcc = $bcc;
         return $this;
     }
