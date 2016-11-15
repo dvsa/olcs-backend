@@ -17,30 +17,33 @@ class MessageTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->sut = new Message('TO', 'SUBJECT');
+        $this->sut = new Message(' TO ', 'SUBJECT');
     }
 
     public function testTo()
     {
         $this->assertSame('TO', $this->sut->getTo());
 
-        $value = 'ABCDEFG';
+        $value = ' ABCDEFG ';
+        $expected = 'ABCDEFG';
         $this->sut->setTo($value);
-        $this->assertSame($value, $this->sut->getTo());
+        $this->assertSame($expected, $this->sut->getTo());
     }
 
     public function testCc()
     {
-        $value = ['ABCDEFG'];
+        $value = [' ABCDEFG '];
+        $expected = ['ABCDEFG'];
         $this->sut->setCc($value);
-        $this->assertSame($value, $this->sut->getCc());
+        $this->assertSame($expected, $this->sut->getCc());
     }
 
     public function testBcc()
     {
-        $value = ['bcc1', 'bcc2'];
+        $value = [' bcc1 ', ' bcc2 '];
+        $expected = ['bcc1', 'bcc2'];
         $this->sut->setBcc($value);
-        $this->assertSame($value, $this->sut->getBcc());
+        $this->assertSame($expected, $this->sut->getBcc());
     }
 
     public function testDocs()
