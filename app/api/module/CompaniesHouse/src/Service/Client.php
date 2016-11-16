@@ -12,12 +12,16 @@ use Zend\Http\Client as HttpClient;
  */
 class Client
 {
+    const WAIT_SEC_BETWEEN_REQUESTS = 0.5;   //  half second
+
     const ERR_KEY_COMPANY_PROFILE_NOT_FOUND = 'company-profile-not-found';
 
     const ERR_INVALID_JSON = 'Invalid JSON';
     const ERR_SERVICE_NOT_RESPOND = 'Service not respond';
     const ERR_COMPANY_PROFILE_NOT_FOUND = 'Company not found';
     const ERR_RATE_LIMIT_EXCEED = 'Rate limit exceeded';
+
+    private static $lastCall = 0;
 
     /**
      * @var HttpClient
@@ -121,6 +125,14 @@ class Client
      */
     protected function getData($resourcePath)
     {
+        //  check if last request to CH Api was make less then WAIT_BETWEEN_REQUESTS, then set timeout
+        if (microtime(true) - self::$lastCall < self::WAIT_SEC_BETWEEN_REQUESTS) {
+            usleep(self::WAIT_SEC_BETWEEN_REQUESTS * 1E6);
+        }
+
+        self::$lastCall = microtime(true);
+
+        //  send requst to CH Api
         $uri = $this->baseUri . $resourcePath;
 
         $this->httpClient->getRequest()
