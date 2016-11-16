@@ -69,7 +69,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
             'opposition' => null,
             'isScan' => 0,
             'issuedDate' => null,
-            'dispatch' => isset($expect['isDispatch']) ? $expect['isDispatch'] : true,
+            'dispatch' => true,
         ];
         $result1 = new Result();
         $result1->addMessage('GenerateAndStore');
@@ -93,14 +93,13 @@ class PrintLicenceTest extends CommandHandlerTestCase
 
         return [
             [
-                'cmd' => Cmd::create(['id' => 111, 'isDispatch' => false]),
+                'cmd' => $command,
                 'isGoods' => true,
                 'isSpecialRestricted' => false,
                 'niFlag' => 'N',
                 'expect' => [
                     'docId' => 1254,
                     'desc' => 'GV Licence',
-                    'isDispatch' => false,
                 ],
             ],
             [
@@ -111,7 +110,6 @@ class PrintLicenceTest extends CommandHandlerTestCase
                 'expect' => [
                     'docId' => 1255,
                     'desc' => 'PSV Licence',
-                    'isDispatch' => true,
                 ],
             ],
             [
