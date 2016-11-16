@@ -88,12 +88,43 @@ class OrganisationEntityTest extends EntityTester
 
     public function testGetAdminOrganisationUsers()
     {
+        $mockOrgUser1 = m::mock()
+            ->shouldReceive('getUser')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getAccountDisabled')
+                ->andReturn('N')
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $mockOrgUser2 = m::mock()
+            ->shouldReceive('getUser')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getAccountDisabled')
+                    ->andReturn('Y')
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $collection = new ArrayCollection();
+        $collection->add($mockOrgUser1);
+        $collection->add($mockOrgUser2);
+
         $organisation = m::mock(Entity::class)->makePartial();
         $organisation->shouldReceive('getOrganisationUsers->matching')
             ->with(m::type(Criteria::class))
-            ->andReturn(['foo' => 'bar']);
+            ->andReturn($collection);
 
-        $this->assertEquals(['foo' => 'bar'], $organisation->getAdminOrganisationUsers());
+        $expected = new ArrayCollection();
+        $expected->add($mockOrgUser1);
+
+        $this->assertEquals($expected, $organisation->getAdminOrganisationUsers());
     }
 
     public function dpOrgTypes()

@@ -57,6 +57,11 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         return $this->hasInforceLicences;
     }
 
+    /**
+     * Get admin organisation users
+     *
+     * @return ArrayCollection
+     */
     public function getAdminOrganisationUsers()
     {
         $criteria = Criteria::create();
@@ -64,7 +69,17 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
             $criteria->expr()->eq('isAdministrator', 'Y')
         );
 
-        return $this->getOrganisationUsers()->matching($criteria);
+        $adminUsers = $this->getOrganisationUsers()->matching($criteria);
+
+        // unfortunately criteria doesn't work with a relations so need to filter manually
+        $enabledOrgUsers = new ArrayCollection();
+        foreach ($adminUsers as $orgUser) {
+            if ($orgUser->getUser()->getAccountDisabled() !== 'Y') {
+                $enabledOrgUsers->add($orgUser);
+            }
+        }
+
+        return $enabledOrgUsers;
     }
 
     /**
