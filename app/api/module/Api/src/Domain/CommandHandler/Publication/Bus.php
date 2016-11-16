@@ -20,7 +20,6 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEnt
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedBusReg as UnpublishedBusRegQry;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Bus command handler
@@ -64,23 +63,23 @@ class Bus extends AbstractCommandHandler implements TransactionedInterface, Publ
         switch ($revertStatus) {
             case BusRegEntity::STATUS_NEW:
                 $handler = 'BusGrantNew';
-                $pubSection = ($shortNotice == 'Y' ?
-                    PublicationSectionEntity::BUS_NEW_SHORT_SECTION :
-                    PublicationSectionEntity::BUS_NEW_SECTION
+                $pubSection = ($shortNotice === 'Y'
+                    ? PublicationSectionEntity::BUS_NEW_SHORT_SECTION
+                    : PublicationSectionEntity::BUS_NEW_SECTION
                 );
                 break;
             case BusRegEntity::STATUS_VAR:
                 $handler = 'BusGrantVariation';
-                $pubSection = ($shortNotice == 'Y' ?
-                    PublicationSectionEntity::BUS_VAR_SHORT_SECTION :
-                    PublicationSectionEntity::BUS_VAR_SECTION
+                $pubSection = ($shortNotice === 'Y'
+                    ? PublicationSectionEntity::BUS_VAR_SHORT_SECTION
+                    : PublicationSectionEntity::BUS_VAR_SECTION
                 );
                 break;
             case BusRegEntity::STATUS_CANCEL:
                 $handler = 'BusGrantCancel';
-                $pubSection = ($shortNotice == 'Y' ?
-                    PublicationSectionEntity::BUS_CANCEL_SHORT_SECTION :
-                    PublicationSectionEntity::BUS_CANCEL_SECTION
+                $pubSection = ($shortNotice === 'Y'
+                    ? PublicationSectionEntity::BUS_CANCEL_SHORT_SECTION
+                    : PublicationSectionEntity::BUS_CANCEL_SECTION
                 );
                 break;
             default:

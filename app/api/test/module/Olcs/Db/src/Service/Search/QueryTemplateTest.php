@@ -80,6 +80,131 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                     ]
                 ]
             ],
+            // query empty
+            [
+                '',
+                null,
+                null,
+                [
+                    'indices' => [
+                        'query' => [
+                            'filtered' => [
+                                'query' => [
+                                    'bool' => [
+                                        'should' => [
+                                            [
+                                                'match' => [
+                                                    'field_1' => ''
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            // query single " (double quote)
+            [
+                '"',
+                null,
+                null,
+                [
+                    'indices' => [
+                        'query' => [
+                            'filtered' => [
+                                'query' => [
+                                    'bool' => [
+                                        'should' => [
+                                            [
+                                                'match' => [
+                                                    'field_1' => '"'
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            // query double " (double quote)
+            [
+                '""',
+                null,
+                null,
+                [
+                    'indices' => [
+                        'query' => [
+                            'filtered' => [
+                                'query' => [
+                                    'bool' => [
+                                        'should' => [
+                                            [
+                                                'match' => [
+                                                    'field_1' => '""'
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            // query ending with " (double quote)
+            [
+                '"SMITH"',
+                null,
+                null,
+                [
+                    'indices' => [
+                        'query' => [
+                            'filtered' => [
+                                'query' => [
+                                    'bool' => [
+                                        'should' => [
+                                            [
+                                                'match' => [
+                                                    'field_1' => '"SMITH"'
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            // query json
+            [
+                '{"key":"value"}',
+                null,
+                null,
+                [
+                    'indices' => [
+                        'query' => [
+                            'filtered' => [
+                                'query' => [
+                                    'bool' => [
+                                        'should' => [
+                                            [
+                                                'match' => [
+                                                    'field_1' => '{"key":"value"}'
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
             // query with one filter
             [
                 'SMITH',

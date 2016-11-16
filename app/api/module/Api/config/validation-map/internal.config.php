@@ -1,7 +1,8 @@
 <?php
 
-use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessBusRegWithId;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceWithId;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalOrSystemUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
@@ -100,6 +101,7 @@ return [
     CommandHandler\Bus\UpdateStops::class => IsInternalUser::class,
     CommandHandler\Bus\UpdateTaAuthority::class => IsInternalUser::class,
     CommandHandler\Bus\WithdrawBusReg::class => IsInternalUser::class,
+    CommandHandler\Bus\PrintLetter::class => CanAccessBusRegWithId::class,
     CommandHandler\ChangeOfEntity\CreateChangeOfEntity::class => IsInternalUser::class,
     CommandHandler\ChangeOfEntity\DeleteChangeOfEntity::class => IsInternalUser::class,
     CommandHandler\ChangeOfEntity\UpdateChangeOfEntity::class => IsInternalUser::class,

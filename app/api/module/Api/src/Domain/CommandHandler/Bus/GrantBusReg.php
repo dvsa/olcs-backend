@@ -1,22 +1,19 @@
 <?php
 
-/**
- * Grant BusReg
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrCancelled;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRegistered;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
+use Dvsa\Olcs\Transfer\Command\Bus\PrintLetter as BusPrintLetterCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Publication\Bus as PublishDto;
-use Dvsa\Olcs\Transfer\Command\Bus\GrantBusReg as GrantCmd;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrCancelled;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRegistered;
+use Dvsa\Olcs\Transfer\Command\Publication\Bus as PublicationBusCmd;
 
 /**
  * Grant BusReg
@@ -27,12 +24,18 @@ final class GrantBusReg extends AbstractCommandHandler
 
     protected $repoServiceName = 'Bus';
 
+    /**
+     * Handle Query
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Bus\GrantBusReg $command Command
+     *
+     * @return Result
+     * @throws BadRequestException
+     * @throws ValidationException
+     */
     public function handleCommand(CommandInterface $command)
     {
-        /**
-         * @var BusRegEntity $busReg
-         * @var GrantCmd $command
-         */
+        /** @var BusRegEntity $busReg */
         $busReg = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
         $status = $busReg->getStatusForGrant();
@@ -76,6 +79,9 @@ final class GrantBusReg extends AbstractCommandHandler
             }
         }
 
+        // Print licence
+        $sideEffects[] = BusPrintLetterCmd::create(['id' => $busReg->getId()]);
+
         $this->handleSideEffects($sideEffects);
 
         $result = new Result();
@@ -86,16 +92,22 @@ final class GrantBusReg extends AbstractCommandHandler
     }
 
     /**
-     * @param int $busRegId
-     * @return PublishDto
+     * Get publish command
+     *
+     * @param int $busRegId Bus registration id
+     *
+     * @return PublicationBusCmd
      */
     private function getPublishCmd($busRegId)
     {
-        return PublishDto::create(['id' => $busRegId]);
+        return PublicationBusCmd::create(['id' => $busRegId]);
     }
 
     /**
-     * @param int $ebsrId
+     * Get Cancelled email command
+     *
+     * @param int $ebsrId Ebrs Id
+     *
      * @return SendEbsrCancelled
      */
     private function getCancelledEmailCmd($ebsrId)
@@ -104,7 +116,10 @@ final class GrantBusReg extends AbstractCommandHandler
     }
 
     /**
-     * @param int $ebsrId
+     * Get Registered Email command
+     *
+     * @param int $ebsrId Ebrs Id
+     *
      * @return SendEbsrRegistered
      */
     private function getRegisteredEmailCmd($ebsrId)

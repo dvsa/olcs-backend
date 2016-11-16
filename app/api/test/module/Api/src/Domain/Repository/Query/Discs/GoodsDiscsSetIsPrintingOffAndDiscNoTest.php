@@ -74,12 +74,12 @@ class GoodsDiscsSetIsPrintingOffAndDiscNoTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'UPDATE goods_disc gd, (SELECT @n := :startNumber - 1) m '
+        return 'UPDATE goods_disc gd '
         . 'SET gd.is_printing = 0, '
-            . 'gd.disc_no = @n := @n + 1, '
+            . 'gd.disc_no = :discNo, '
             . 'gd.issued_date = :issuedDate, '
             . 'gd.last_modified_on = NOW(), '
             . 'gd.last_modified_by = :currentUserId '
-        . 'WHERE gd.id IN (:ids)';
+        . 'WHERE gd.id = :id';
     }
 }

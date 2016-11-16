@@ -40,7 +40,11 @@ class GoodsDisc extends AbstractRepository
             ->with('lv.application', 'lva')
             ->with('lva.licenceType', 'lvalt')
             ->with('lva.goodsOrPsv', 'lvagp')
-            ->order('lvl.licNo', 'ASC');
+            // IMPORTANT The order the discs are returned needs to be specified so that it is consistent
+            // If the order is not consistent then there is a possibility of the disc numbers on the print
+            // out not being the same as in the DB
+            ->order('lvl.licNo', 'ASC')
+            ->order('gd.id', 'ASC');
 
         $this->addFilteringConditions($qb, $niFlag, $licenceType);
 
@@ -77,6 +81,7 @@ class GoodsDisc extends AbstractRepository
             );
             $qb->andWhere($qb->expr()->isNull('gd.issuedDate'));
             $qb->andWhere($qb->expr()->isNull('gd.ceasedDate'));
+            $qb->andWhere($qb->expr()->isNull('lv.removalDate'));
 
             $qb->setParameter('applicationLicenceType', $licenceType);
 
@@ -105,6 +110,7 @@ class GoodsDisc extends AbstractRepository
             );
             $qb->andWhere($qb->expr()->isNull('gd.issuedDate'));
             $qb->andWhere($qb->expr()->isNull('gd.ceasedDate'));
+            $qb->andWhere($qb->expr()->isNull('lv.removalDate'));
 
             $qb->setParameter('operatorType', LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE);
             $qb->setParameter('applicationLicenceType', $licenceType);
@@ -138,11 +144,13 @@ class GoodsDisc extends AbstractRepository
 
     public function setIsPrintingOffAndAssignNumbers($discIds, $startNumber)
     {
-        return $this->getDbQueryManager()->get('Discs\GoodsDiscsSetIsPrintingOffAndDiscNo')
-            ->execute(
-                ['ids' => $discIds, 'startNumber' => $startNumber],
-                ['ids' => Connection::PARAM_INT_ARRAY, 'startNumber' => \PDO::PARAM_INT]
-            );
+        // discs need to be processed in the correct order so that they get the same disc no as what has been printed
+        $discNo = $startNumber;
+        foreach ($discIds as $discId) {
+            $this->getDbQueryManager()->get('Discs\GoodsDiscsSetIsPrintingOffAndDiscNo')
+                ->execute(['id' => $discId, 'discNo' => $discNo]);
+            $discNo++;
+        }
     }
 
     /**
