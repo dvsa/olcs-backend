@@ -15,8 +15,9 @@ class ProcessedDataInputFactory implements FactoryInterface
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
+     * @return Input
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -37,9 +38,6 @@ class ProcessedDataInputFactory implements FactoryInterface
             );
             $validatorChain->attach(
                 $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\RegisteredBusRoute')
-            );
-            $validatorChain->attach(
-                $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\LocalAuthorityNotRequired')
             );
             $validatorChain->attach(
                 $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\LocalAuthorityMissing')
