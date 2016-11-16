@@ -19,7 +19,8 @@ class ByLicenceRouteTest extends PHPUnit_Framework_TestCase
         $query = ByLicenceRoute::create(
             [
                 'licenceId' => $licence,
-                'routeNo' => $routeNo
+                'routeNo' => $routeNo,
+                'busRegStatus' => $busStatus
             ]
         );
 
