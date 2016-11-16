@@ -36,6 +36,27 @@ class ByLicenceRoute extends AbstractQuery implements PagedQueryInterface, Order
     protected $licenceId;
 
     /**
+     * @Transfer\ArrayInput
+     * @Transfer\ArrayFilter({"name":"Dvsa\Olcs\Transfer\Filter\FilterEmptyItems"})
+     * @Transfer\ArrayFilter({"name":"Dvsa\Olcs\Transfer\Filter\UniqueItems"})
+     * @Transfer\Filter({"name":"Zend\Filter\StringTrim"})
+     * @Transfer\Validator({
+     *     "name":"Zend\Validator\InArray",
+     *     "options": {
+     *         "haystack": {
+     *              "breg_s_admin", "breg_s_cancellation", "breg_s_cancelled", "breg_s_cns", "breg_s_curt",
+     *              "breg_s_expired", "breg_s_new", "breg_s_refused", "breg_s_registered", "breg_s_revoked",
+     *              "breg_s_surr", "breg_s_var", "breg_s_withdrawn"
+     *         }
+     *     }
+     * })
+     * @Transfer\Optional
+     */
+    protected $busRegStatus;
+
+    /**
+     * Gets routeNo
+     *
      * @return int
      */
     public function getRouteNo()
@@ -44,10 +65,22 @@ class ByLicenceRoute extends AbstractQuery implements PagedQueryInterface, Order
     }
 
     /**
+     * Gets licence id
+     *
      * @return int
      */
     public function getLicenceId()
     {
         return $this->licenceId;
+    }
+
+    /**
+     * Gets bus reg statuses
+     *
+     * @return array
+     */
+    public function getBusRegStatus()
+    {
+        return $this->busRegStatus;
     }
 }
