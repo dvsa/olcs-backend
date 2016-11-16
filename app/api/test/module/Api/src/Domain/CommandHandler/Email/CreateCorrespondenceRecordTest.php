@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Create Correspondence Record Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -23,6 +18,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\CreateCorrespondenceRecord as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\CorrespondenceInbox as CorrespondenceInboxRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * Create Correspondence Record Test
@@ -58,7 +54,10 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
     }
 
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider usersProvider
+     */
+    public function testHandleCommand($email1, $email2, $times)
     {
         $data = [
             'licence' => 111,
@@ -70,13 +69,13 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
         /** @var User $user1 */
         $user1 = m::mock(User::class)->makePartial();
         $contactDetails1 = m::mock(ContactDetails::class)->makePartial();
-        $contactDetails1->setEmailAddress('foo1@bar.com');
+        $contactDetails1->setEmailAddress($email1);
         $user1->setContactDetails($contactDetails1);
 
         /** @var User $user2 */
         $user2 = m::mock(User::class)->makePartial();
         $contactDetails2 = m::mock(ContactDetails::class)->makePartial();
-        $contactDetails2->setEmailAddress('foo2@bar.com');
+        $contactDetails2->setEmailAddress($email2);
         $user2->setContactDetails($contactDetails2);
 
         /** @var OrganisationUser $orgUser1 */
@@ -106,7 +105,7 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
             );
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')
-            ->times(2)
+            ->times($times)
             ->with(
                 m::type(Message::class),
                 'licensing-information-standard',
@@ -119,18 +118,20 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             SendEmail::class,
             [
-                'to' => 'foo1@bar.com'
+                'to' => $email1
             ],
             $result
         );
 
-        $this->expectedSideEffect(
-            SendEmail::class,
-            [
-                'to' => 'foo2@bar.com'
-            ],
-            $result
-        );
+        if ($times === 2) {
+            $this->expectedSideEffect(
+                SendEmail::class,
+                [
+                    'to' => $email2
+                ],
+                $result
+            );
+        }
 
         $result = $this->sut->handleCommand($command);
 
@@ -145,5 +146,65 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function usersProvider()
+    {
+        return [
+            ['foo1@bar.com', 'foo2@bar.com', 2],
+            ['foo1@bar.com', null, 1]
+        ];
+    }
+
+    public function testHandleCommandValidationError()
+    {
+        $this->setExpectedException(ValidationException::class);
+
+        $data = [
+            'licence' => 111,
+            'document' => 222,
+            'type' => 'standard'
+        ];
+        $command = Cmd::create($data);
+
+        /** @var User $user1 */
+        $user1 = m::mock(User::class)->makePartial();
+        $contactDetails1 = m::mock(ContactDetails::class)->makePartial();
+        $contactDetails1->setEmailAddress(null);
+        $user1->setContactDetails($contactDetails1);
+
+        /** @var User $user2 */
+        $user2 = m::mock(User::class)->makePartial();
+        $contactDetails2 = m::mock(ContactDetails::class)->makePartial();
+        $contactDetails2->setEmailAddress('foo@bar@cake');
+        $user2->setContactDetails($contactDetails2);
+
+        /** @var OrganisationUser $orgUser1 */
+        $orgUser1 = m::mock(OrganisationUser::class)->makePartial();
+        $orgUser1->setUser($user1);
+        /** @var OrganisationUser $orgUser2 */
+        $orgUser2 = m::mock(OrganisationUser::class)->makePartial();
+        $orgUser2->setUser($user2);
+
+        /** @var Organisation $organisation */
+        $organisation = m::mock(Organisation::class)->makePartial();
+        $organisation->shouldReceive('getAdminOrganisationUsers')
+            ->andReturn([$orgUser1, $orgUser2]);
+
+        $this->references[Licence::class][111]->setOrganisation($organisation);
+        $this->references[Licence::class][111]->setTranslateToWelsh(true);
+        $this->references[Licence::class][111]->setLicNo('AB12345678');
+
+        $this->repoMap['CorrespondenceInbox']->shouldReceive('save')
+            ->with(m::type(CorrespondenceInbox::class))
+            ->andReturnUsing(
+                function (CorrespondenceInbox $record) {
+                    $record->setId(123);
+                    $this->assertSame($this->references[Licence::class][111], $record->getLicence());
+                    $this->assertSame($this->references[Document::class][222], $record->getDocument());
+                }
+            );
+
+        $this->sut->handleCommand($command);
     }
 }
