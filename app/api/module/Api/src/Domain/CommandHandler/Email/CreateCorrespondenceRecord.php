@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Create Correspondence Record
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -15,6 +10,8 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Transfer\Validators\EmailAddress as EmailAddressValidator;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * Create Correspondence Record
@@ -27,6 +24,13 @@ final class CreateCorrespondenceRecord extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'CorrespondenceInbox';
 
+    /**
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Api\Domain\Command\Email\CreateCorrespondenceRecord $command command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -43,11 +47,19 @@ final class CreateCorrespondenceRecord extends AbstractCommandHandler implements
         $result->addId('correspondenceInbox', $record->getId());
         $result->addMessage('Correspondence record created');
 
+        $validator = new EmailAddressValidator();
+        $success = false;
+
         foreach ($licence->getOrganisation()->getAdminOrganisationUsers() as $orgUser) {
             $user = $orgUser->getUser();
 
+            $emailAddress = $user->getContactDetails()->getEmailAddress();
+            if (!$validator->isValid($emailAddress)) {
+                continue;
+            }
+            $success = true;
             $message = new \Dvsa\Olcs\Email\Data\Message(
-                $user->getContactDetails()->getEmailAddress(),
+                $emailAddress,
                 'email.licensing-information.' . $command->getType()  . '.subject'
             );
             $message->setTranslateToWelsh($user->getTranslateToWelsh());
@@ -61,6 +73,10 @@ final class CreateCorrespondenceRecord extends AbstractCommandHandler implements
                     'url' => 'http://selfserve/correspondence'
                 ]
             );
+        }
+
+        if (!$success) {
+            throw new ValidationException(['internal.granting.email-error']);
         }
 
         $result->addMessage('Email sent');
