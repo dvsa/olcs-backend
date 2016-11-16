@@ -27,6 +27,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_application_status", columns={"status"}),
  *        @ORM\Index(name="ix_application_interim_status", columns={"interim_status"}),
  *        @ORM\Index(name="ix_application_withdrawn_reason", columns={"withdrawn_reason"}),
+ *        @ORM\Index(name="ix_application_signature_type", columns={"signature_type"}),
  *        @ORM\Index(name="ix_application_goods_or_psv", columns={"goods_or_psv"}),
  *        @ORM\Index(name="ix_application_applied_via", columns={"applied_via"}),
  *        @ORM\Index(name="ix_application_psv_which_vehicle_sizes",
@@ -576,6 +577,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      * @ORM\Column(type="yesno", name="safety_confirmation", nullable=false, options={"default": 0})
      */
     protected $safetyConfirmation = 0;
+
+    /**
+     * Signature type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="signature_type", referencedColumnName="id", nullable=true)
+     */
+    protected $signatureType;
 
     /**
      * Status
@@ -2248,6 +2259,30 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     public function getSafetyConfirmation()
     {
         return $this->safetyConfirmation;
+    }
+
+    /**
+     * Set the signature type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $signatureType entity being set as the value
+     *
+     * @return Application
+     */
+    public function setSignatureType($signatureType)
+    {
+        $this->signatureType = $signatureType;
+
+        return $this;
+    }
+
+    /**
+     * Get the signature type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getSignatureType()
+    {
+        return $this->signatureType;
     }
 
     /**
