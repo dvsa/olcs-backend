@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 
 /**
  * Application
@@ -19,6 +20,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class Declaration extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Application';
+    protected $extraRepos = ['SystemParameter'];
 
     /**
      * @var \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
@@ -78,6 +80,8 @@ class Declaration extends AbstractQueryHandler
                 ),
                 'sections' => $this->sectionAccessService->getAccessibleSections($application),
                 'variationCompletion' => $application->getVariationCompletion(),
+                'disableSignatures' =>
+                    $this->getRepo('SystemParameter')->fetchValue(SystemParameter::DISABLE_GDS_VERIFY_SIGNATURES),
             ]
         );
     }
