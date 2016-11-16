@@ -90,6 +90,15 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
     protected $id;
 
     /**
+     * Last error
+     *
+     * @var string
+     *
+     * @ORM\Column(type="text", name="last_error", length=65535, nullable=true)
+     */
+    protected $lastError;
+
+    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -299,6 +308,30 @@ abstract class AbstractQueue implements BundleSerializableInterface, JsonSeriali
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the last error
+     *
+     * @param string $lastError new value being set
+     *
+     * @return Queue
+     */
+    public function setLastError($lastError)
+    {
+        $this->lastError = $lastError;
+
+        return $this;
+    }
+
+    /**
+     * Get the last error
+     *
+     * @return string
+     */
+    public function getLastError()
+    {
+        return $this->lastError;
     }
 
     /**
