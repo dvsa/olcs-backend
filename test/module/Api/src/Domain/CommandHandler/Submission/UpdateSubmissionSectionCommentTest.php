@@ -11,7 +11,9 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\UpdateSubmissionSectionCommen
 use Dvsa\Olcs\Api\Domain\Repository\SubmissionSectionComment;
 use Dvsa\Olcs\Api\Entity\Submission\SubmissionSectionComment as SubmissionSectionCommentEntity;
 use Dvsa\Olcs\Transfer\Command\Submission\UpdateSubmissionSectionComment as Cmd;
+use Dvsa\Olcs\Transfer\Command\Submission\DeleteSubmissionSectionComment;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * Update SubmissionSectionComment Test
@@ -88,5 +90,37 @@ class UpdateSubmissionSectionCommentTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertEquals($data['comment'], $savedSubmissionSectionComment->getComment());
+    }
+
+    /**
+     * Tests the comment is deleted if it's empty
+     *
+     * @param $comment
+     *
+     * @dataProvider emptyCommentProvider
+     */
+    public function testEmptyCommentDeleted($comment)
+    {
+        $commandData = [
+            'id' => 1,
+            'comment' => $comment,
+        ];
+
+        $command = Cmd::create($commandData);
+
+        $this->expectedSideEffect(DeleteSubmissionSectionComment::class, ['id' => 1], new Result());
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @return array
+     */
+    public function emptyCommentProvider()
+    {
+        return [
+            [null],
+            ['']
+        ];
     }
 }

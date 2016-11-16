@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Print Licence
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
@@ -50,7 +45,7 @@ final class PrintLicence extends AbstractCommandHandler implements Transactioned
             'category'    => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
             'isExternal'  => false,
-            'dispatch' => $command->isDispatch(),
+            'dispatch' => true,
         ];
 
         return $this->handleSideEffect(GenerateAndStore::create($dtoData));

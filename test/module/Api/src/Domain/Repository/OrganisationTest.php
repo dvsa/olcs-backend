@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Organisation test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Dvsa\Olcs\Transfer\Query\Organisation\CpidOrganisation;
@@ -18,9 +13,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 
 /**
- * Organisation test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\Organisation
  */
 class OrganisationTest extends RepositoryTestCase
 {
@@ -307,7 +300,7 @@ class OrganisationTest extends RepositoryTestCase
         $query = m::mock(CpidOrganisation::class)
             ->makePartial()
             ->shouldReceive('getCpid')
-            ->andReturn('op_cpid_central');
+            ->andReturn('op_cpid_central_government');
 
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
@@ -344,7 +337,7 @@ class OrganisationTest extends RepositoryTestCase
 
     public function testFetchAllByStatusForCpidExportWithStatus()
     {
-        /** @var QueryBuilder $qb */
+        /** @var m\MockInterface $qb */
         $qb = m::mock(QueryBuilder::class);
 
         $this->queryBuilder->shouldReceive('modifyQuery')
@@ -372,7 +365,7 @@ class OrganisationTest extends RepositoryTestCase
             ->with(Organisation::class)
             ->andReturn($repo);
 
-        $this->sut->fetchAllByStatusForCpidExport('op_cpid_central');
+        $this->sut->fetchAllByStatusForCpidExport('op_cpid_central_government');
     }
 
     public function testFetchAllByStatusForCpidExportWithNullStatus()

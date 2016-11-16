@@ -22,11 +22,10 @@ class GoodsDiscsSetIsPrintingOffAndDiscNo extends AbstractRawQuery
         'gd' => GoodsDisc::class
     ];
 
-    protected $queryTemplate = 'UPDATE {gd},
-       (SELECT @n := :startNumber - 1) m
-          SET {gd.isPrinting} = 0, {gd.discNo} = @n := @n + 1, {gd.issuedDate} = :issuedDate,
+    protected $queryTemplate = 'UPDATE {gd}
+          SET {gd.isPrinting} = 0, {gd.discNo} = :discNo, {gd.issuedDate} = :issuedDate,
             {gd.lastModifiedOn} = NOW(), {gd.lastModifiedBy} = :currentUserId
-          WHERE {gd.id} IN (:ids)';
+          WHERE {gd.id} = :id';
 
     /**
      * {@inheritdoc}

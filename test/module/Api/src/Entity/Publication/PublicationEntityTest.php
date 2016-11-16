@@ -66,7 +66,7 @@ class PublicationEntityTest extends EntityTester
     public function testGetNextPublicationDate()
     {
         $pubDate = '2015-12-11';
-        $newPubDate  = '2015-12-25'; // +14 days
+        $newPubDate  = '2015-12-18'; // +7 days
 
         $entity = $this->instantiate(Entity::class);
         $entity->setPubDate($pubDate);

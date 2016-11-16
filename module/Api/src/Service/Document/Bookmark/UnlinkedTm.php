@@ -1,10 +1,8 @@
 <?php
 
-/**
- * Unlinked Tm
- */
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
 
@@ -17,13 +15,16 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
  */
 class UnlinkedTm extends DynamicBookmark
 {
+    const TM_NA = 'N/A';
+    const TM_BE_NOMINATED = 'To be nominated.';
+
     /**
      * Get the query, this query returns the licences transport managers contact
      * details.
      *
      * @param array $data The licence data
      *
-     * @return array
+     * @return \Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle
      */
     public function getQuery(array $data)
     {
@@ -50,7 +51,11 @@ class UnlinkedTm extends DynamicBookmark
         $licences = $this->data['tmLicences'];
 
         if (count($licences) === 0) {
-            return "To be nominated.";
+            if ($this->data['licenceType']['id'] === Licence::LICENCE_TYPE_RESTRICTED) {
+                return self::TM_NA;
+            }
+
+            return self::TM_BE_NOMINATED;
         }
 
         $output = [];
