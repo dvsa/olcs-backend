@@ -33,6 +33,18 @@ class Publication extends AbstractPublication
     const PUB_TYPE_N_P = 'N&P';
     const PUB_TYPE_A_D = 'A&D';
 
+    /**
+     * Publication constructor
+     *
+     * @param TrafficAreaEntity $trafficArea   traffic area
+     * @param RefData           $pubStatus     publication status
+     * @param DocTemplateEntity $docTemplate   document template
+     * @param string            $pubDate       publication date
+     * @param string            $pubType       publication type
+     * @param int               $publicationNo publication number
+     *
+     * @return void
+     */
     public function __construct(
         TrafficAreaEntity $trafficArea,
         RefData $pubStatus,
@@ -72,7 +84,9 @@ class Publication extends AbstractPublication
     /**
      * Publish a publication providing the current status is correct
      *
-     * @param RefData $newPubStatus
+     * @param RefData $newPubStatus new publication status (in effect this will always be status of published)
+     *
+     * @return void
      * @throws ForbiddenException
      */
     public function publish(RefData $newPubStatus)
@@ -88,7 +102,9 @@ class Publication extends AbstractPublication
      * Update published documents. This is done separately from changing the publication status, as the police document
      * itself is created afterwards
      *
-     * @param DocumentEntity $policeDocument
+     * @param DocumentEntity $policeDocument the police document
+     *
+     * @return void
      */
     public function updatePublishedDocuments(DocumentEntity $policeDocument)
     {
@@ -98,8 +114,10 @@ class Publication extends AbstractPublication
     /**
      * Generate a publication providing the current status is correct
      *
-     * @param DocumentEntity $document
-     * @param RefData $newPubStatus
+     * @param DocumentEntity $document     document being generated
+     * @param RefData        $newPubStatus new publication status (in effect this will always be status of generated)
+     *
+     * @return void
      * @throws ForbiddenException
      */
     public function generate(DocumentEntity $document, RefData $newPubStatus)
@@ -126,12 +144,14 @@ class Publication extends AbstractPublication
             throw new RuntimeException('Can\'t generate future publication date without current publication date');
         }
 
-        $newPubDate->add(new \DateInterval('P14D'));
+        $newPubDate->add(new \DateInterval('P7D'));
 
         return $newPubDate;
     }
 
     /**
+     * Whether the record is a new publication
+     *
      * @return bool
      */
     public function isNew()
