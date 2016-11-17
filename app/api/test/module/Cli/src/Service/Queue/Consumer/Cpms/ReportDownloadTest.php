@@ -1,26 +1,23 @@
 <?php
 
-/**
- * Cpms Report Download Queue Consumer Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer\Cpms;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
-use Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms\ReportDownload as Sut;
-use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms\ReportDownload;
+use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
 
 /**
- * Cpms Report Download Queue Consumer Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
+ * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms\ReportDownload
+ * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer
  */
 class ReportDownloadTest extends AbstractConsumerTestCase
 {
-    protected $consumerClass = Sut::class;
+    protected $consumerClass = ReportDownload::class;
+
+    /** @var ReportDownload */
+    protected $sut;
 
     public function testProcessMessageSuccess()
     {
@@ -96,7 +93,10 @@ class ReportDownloadTest extends AbstractConsumerTestCase
 
         $this->expectCommand(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
-            ['item' => $item],
+            [
+                'item' => $item,
+                'lastError' =>  'Maximum attempts exceeded',
+            ],
             new Result(),
             false
         );
@@ -162,7 +162,10 @@ class ReportDownloadTest extends AbstractConsumerTestCase
 
         $this->expectCommand(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
-            ['item' => $item],
+            [
+                'item' => $item,
+                'lastError' => 'unknown fail',
+            ],
             new Result(),
             false
         );
@@ -211,7 +214,10 @@ class ReportDownloadTest extends AbstractConsumerTestCase
 
         $this->expectCommand(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
-            ['item' => $item],
+            [
+                'item' => $item,
+                'lastError' => 'backend fail',
+            ],
             new Result(),
             false
         );

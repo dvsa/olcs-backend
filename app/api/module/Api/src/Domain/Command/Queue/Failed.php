@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Failed queue item
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\Command\Queue;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
@@ -23,10 +18,27 @@ final class Failed extends AbstractCommand
     protected $item;
 
     /**
+     * @var string
+     */
+    protected $lastError;
+
+    /**
+     * Return queue entity
+     *
      * @return QueueEntity
      */
     public function getItem()
     {
         return $this->item;
+    }
+
+    /**
+     * Returns last error message
+     *
+     * @return string
+     */
+    public function getLastError()
+    {
+        return $this->lastError;
     }
 }
