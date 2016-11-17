@@ -2,6 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 
+use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
+use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
+use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+
 /**
  * Can Access a Document
  */
@@ -25,10 +30,26 @@ class CanAccessDocument extends AbstractCanAccessEntity
             return true;
         }
 
-        // attempt to find if the document is linked through a txc_inbox
-        $entities = $this->getRepo('TxcInbox')->fetchLinkedToDocument($entityId);
-        if (!empty($entities)) {
-            return $this->isOwner($entities[0]);
+        /**
+         * @todo olcs-14494 emergency fix, need to clean this up
+         * attempt to find if the document is linked through a txc_inbox
+         *
+         * @var TxcInboxRepo $txcInboxRepo
+         * @var TxcInboxEntity $txcEntity
+         */
+        $txcInboxRepo = $this->getRepo('TxcInbox');
+        $txcEntities = $txcInboxRepo->fetchLinkedToDocument($entityId);
+
+        if (!empty($txcEntities)) {
+            $localAuthorityUser = $this->getCurrentLocalAuthority();
+
+            foreach ($txcEntities as $txcEntity) {
+                $txcLocalAuthority = $txcEntity->getLocalAuthority();
+
+                if ($txcLocalAuthority instanceof LocalAuthority && $txcLocalAuthority == $localAuthorityUser) {
+                    return true;
+                }
+            }
         }
 
         return false;

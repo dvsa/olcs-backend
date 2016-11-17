@@ -178,7 +178,7 @@ class TxcInbox extends AbstractRepository
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
 
-        $qb->orwhere($qb->expr()->eq($this->alias .'.zipDocument', ':documentId'))
+        $qb->orWhere($qb->expr()->eq($this->alias .'.zipDocument', ':documentId'))
             ->orWhere($qb->expr()->eq($this->alias .'.routeDocument', ':documentId'))
             ->orWhere($qb->expr()->eq($this->alias .'.pdfDocument', ':documentId'))
             ->setParameter('documentId', $documentId);
