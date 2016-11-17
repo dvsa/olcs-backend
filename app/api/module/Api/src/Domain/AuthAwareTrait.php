@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
+use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
@@ -55,6 +56,23 @@ trait AuthAwareTrait
 
         if ($identity && $hasOrganisation) {
             return $identity->getUser()->getRelatedOrganisation();
+        }
+    }
+
+    /**
+     * @note Even though this appears to be a one to one relationship, there's only ever one local authority for a user
+     * @todo olcs-14494 emergency fix, need to clean this up
+     *
+     * @return LocalAuthority
+     */
+    public function getCurrentLocalAuthority()
+    {
+        $identity = $this->authService->getIdentity();
+
+        $localAuthority = $identity->getUser()->getLocalAuthority();
+
+        if ($localAuthority instanceof LocalAuthority) {
+            return $localAuthority;
         }
     }
 
