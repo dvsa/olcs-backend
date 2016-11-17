@@ -3283,4 +3283,23 @@ class ApplicationEntityTest extends EntityTester
 
         static::assertEquals('EXPECTED', $sut->getRelatedOrganisation());
     }
+
+    public function testGetOutOfRepresentationDateWithDeletedOc()
+    {
+        $aoc1 = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc1->setAction('D')
+            ->setAdPlacedDate('2015-04-21')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc2->setAction('A')
+            ->setAdPlacedDate('2015-04-23')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals(new DateTime('2015-05-14'), $oorDate);
+    }
 }
