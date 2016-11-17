@@ -1,25 +1,26 @@
 <?php
 
-/**
- * Email Send Queue Consumer Test
- */
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserRegistered as SampleEmail;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
-use Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send as Sut;
+use Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
 use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
 use Zend\Serializer\Adapter\Json as ZendJson;
 use Zend\ServiceManager\Exception\RuntimeException as ZendServiceException;
 
 /**
- * Email Send Queue Consumer Test
+ * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send
+ * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer
  */
 class SendTest extends AbstractConsumerTestCase
 {
-    protected $consumerClass = Sut::class;
+    protected $consumerClass = Send::class;
+
+    /** @var  Send */
+    protected $sut;
 
     public function testProcessMessageSuccess()
     {
@@ -131,6 +132,7 @@ class SendTest extends AbstractConsumerTestCase
             \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
             [
                 'item' => $item,
+                'lastError' => 'Email not sent',
             ],
             new Result(),
             false
@@ -171,6 +173,7 @@ class SendTest extends AbstractConsumerTestCase
             \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
             [
                 'item' => $item,
+                'lastError' => 'Email not sent',
             ],
             new Result(),
             false
@@ -209,6 +212,7 @@ class SendTest extends AbstractConsumerTestCase
             \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
             [
                 'item' => $item,
+                'lastError' => 'Maximum attempts exceeded',
             ],
             new Result(),
             false
