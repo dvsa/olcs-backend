@@ -105,7 +105,7 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
     protected function addLicenceOperatingCentre(Aoc $aoc, Licence $licence)
     {
         $loc = new Loc($licence, $aoc->getOperatingCentre());
-
+        $licence->addOperatingCentres($loc);
         $this->updateLicenceOperatingCentre($aoc, $loc);
     }
 
