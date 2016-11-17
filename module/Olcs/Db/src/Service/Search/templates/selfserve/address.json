@@ -70,6 +70,15 @@
                     },
                     "filter":{
                         "bool":{
+                            "must":[
+                                {
+                                    "missing":{
+                                        "field":[
+                                            "deleted_date"
+                                        ]
+                                    }
+                                }
+                            ],
                             "must_not":[
                                 {
                                     "or":[
