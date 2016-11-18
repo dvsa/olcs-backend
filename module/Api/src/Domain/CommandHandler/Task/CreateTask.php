@@ -269,6 +269,7 @@ final class CreateTask extends AbstractCommandHandler
      */
     protected function getLetterForAlphaSplit(Task $task)
     {
+        $letter = '';
         $organisation = $task->getLicence()->getOrganisation();
         switch ($organisation->getType()) {
             case Organisation::ORG_TYPE_REGISTERED_COMPANY:
@@ -282,18 +283,23 @@ final class CreateTask extends AbstractCommandHandler
                 break;
             case Organisation::ORG_TYPE_SOLE_TRADER:
                 $organisationPerson = $organisation->getOrganisationPersons()->first();
-                $letter = strtoupper(substr($organisationPerson->getPerson()->getFamilyName(), 0, 1));
+                if ($organisationPerson) {
+                    $letter = strtoupper(substr($organisationPerson->getPerson()->getFamilyName(), 0, 1));
+                }
                 break;
             case Organisation::ORG_TYPE_PARTNERSHIP:
-                $organisationPerson = $organisation->getOrganisationPersons();
+                $organisationPersons = $organisation->getOrganisationPersons();
                 $criteria = Criteria::create();
                 $criteria->orderBy(array('id' => Criteria::ASC));
-                $person = $organisationPerson->matching($criteria)->first()->getPerson();
-                $letter = strtoupper(substr($person->getFamilyName(), 0, 1));
+                // get first person
+                $organisationPerson = $organisationPersons->matching($criteria)->first();
+                // if first person exists
+                if ($organisationPerson) {
+                    $letter = strtoupper(substr($organisationPerson->getPerson()->getFamilyName(), 0, 1));
+                }
                 break;
-            default:
-                $letter = '';
         }
+
         return $letter;
     }
 
