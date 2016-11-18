@@ -883,6 +883,12 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         /* @var $aoc \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre */
         $maximumDate = null;
         foreach ($this->getOperatingCentres() as $aoc) {
+
+            // deleted O/C are not considered within the OOR date
+            if ($aoc->getAction() === 'D') {
+                continue;
+            }
+
             $operatingCentreOorDate = $this->calcOperatingCentreOutOfRepresentationDate($aoc);
 
             // If 1 or more of the operating centres are 'Unknown' then the overall OOR date = 'Unknown'
