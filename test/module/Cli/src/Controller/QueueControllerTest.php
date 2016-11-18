@@ -105,7 +105,8 @@ class QueueControllerTest extends MockeryTestCase
 
         // Assertions
         $this->routeMatch->setParam('action', 'index');
-        $this->sut->dispatch($this->request);
+        $response = $this->sut->dispatch($this->request);
+        $this->assertEquals($response->getErrorLevel(), 0);
     }
 
     public function testIndexActionIncludeExclude()
