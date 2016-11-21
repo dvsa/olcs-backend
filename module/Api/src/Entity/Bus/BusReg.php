@@ -69,6 +69,19 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     ];
 
     /**
+     * Statuses to be included in a registration history list
+     *
+     * @var array
+     */
+    public static $registrationHistoryStatuses = [
+        self::STATUS_NEW,
+        self::STATUS_REGISTERED,
+        self::STATUS_VAR,
+        self::STATUS_CANCEL,
+        self::STATUS_CANCELLED
+    ];
+
+    /**
      * @var array
      */
     private static $grantStatusMap = [

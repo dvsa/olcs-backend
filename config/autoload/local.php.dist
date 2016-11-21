@@ -31,8 +31,8 @@ return [
 
     // Elastic search
     'elastic_search' => [
-        // Hostname e.g. elasticsearch-dev.olcs.mgt.mtpdvsa *Environment specific*
-        'host' => 'elasticsearch-dev.olcs.mgt.mtpdvsa',
+        // Hostname e.g. search.olcs.da.nonprod.dvsa.aws *Environment specific*
+        'host' => 'search.olcs.da.nonprod.dvsa.aws',
         // Port, e.g. 9200
         'port' => '9200'
     ],
