@@ -8,8 +8,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Api\Domain\Query\Bus\ByLicenceRoute as LicenceRouteNoQuery;
 use Dvsa\Olcs\Transfer\Query\Bus\RegistrationHistoryList as RegListQuery;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Doctrine\ORM\Query;
 use Mockery as m;
 
 /**
@@ -45,11 +43,8 @@ class RegistrationHistoryListTest extends QueryHandlerTestCase
         $regListQuery = RegListQuery::create($regListQueryParams);
 
         $mockBusReg = m::mock(BusEntity::class);
-        $mockLicence = m::mock(LicenceEntity::class)->makePartial();
-        $mockLicence->setId(9999);
-
         $mockBusReg->shouldReceive('getRouteNo')->andReturn($routeNo);
-        $mockBusReg->shouldReceive('getLicence')->andReturn($mockLicence);
+        $mockBusReg->shouldReceive('getLicence->getId')->andReturn(9999);
 
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')
             ->with($regListQuery)

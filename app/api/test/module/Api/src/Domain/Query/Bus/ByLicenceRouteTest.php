@@ -14,15 +14,18 @@ class ByLicenceRouteTest extends PHPUnit_Framework_TestCase
     {
         $licence = 1;
         $routeNo = 2;
+        $busStatus = ['status', 'status2'];
 
         $query = ByLicenceRoute::create(
             [
                 'licenceId' => $licence,
-                'routeNo' => $routeNo
+                'routeNo' => $routeNo,
+                'busRegStatus' => $busStatus
             ]
         );
 
         $this->assertSame($routeNo, $query->getRouteNo());
         $this->assertSame($licence, $query->getLicenceId());
+        $this->assertSame($busStatus, $query->getBusRegStatus());
     }
 }
