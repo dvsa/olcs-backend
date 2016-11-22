@@ -36,7 +36,7 @@ abstract class AbstractReadAudit extends AbstractRepository implements ReadAudit
     }
 
     /**
-     * Returns one ore more record for specified user, object and date
+     * Returns one or more record for specified user, object and date
      */
     public function fetchOneOrMore($userId, $entityId, \DateTime $date)
     {
