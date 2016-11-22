@@ -1,36 +1,30 @@
 <?php
 
-/**
- * LicenceVehicle test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
+use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc as GoodsDiscEntity;
 use Dvsa\Olcs\Transfer\Query\Application\GoodsVehicles as AppGoodsVehicles;
-use Dvsa\Olcs\Transfer\Query\Variation\GoodsVehicles as VarGoodsVehicles;
 use Dvsa\Olcs\Transfer\Query\Licence\GoodsVehicles as LicGoodsVehicles;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Transfer\Query\Variation\GoodsVehicles as VarGoodsVehicles;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
-use Doctrine\ORM\QueryBuilder;
 
 /**
- * LicenceVehicle test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle
  */
 class LicenceVehicleTest extends RepositoryTestCase
 {
+    /** @var  LicenceVehicleRepo */
+    protected $sut;
+
     public function setUp()
     {
         $this->setUpSut(LicenceVehicleRepo::class);
@@ -524,7 +518,7 @@ class LicenceVehicleTest extends RepositoryTestCase
         $this->expectQueryWithData(
             'LicenceVehicle\ClearSpecifiedDateAndInterimAppForLicence',
             ['application' => 12, 'licence' => 123]
-            );
+        );
 
         $this->sut->clearSpecifiedDateAndInterimApp($application);
     }
@@ -583,6 +577,34 @@ class LicenceVehicleTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getSingleScalarResult')->once()->andReturn('result');
 
         $this->assertSame('result', $this->sut->fetchAllVehiclesCount(1));
+    }
 
+    public function testFetchForExport()
+    {
+        $mockQbS =  m::mock(QueryBuilder::class)
+            ->shouldReceive('select')->once()->with('MAX(gds.id) as maxId')->andReturnSelf()
+            ->shouldReceive('from')->once()->with(GoodsDiscEntity::class, 'gds')->andReturnSelf()
+            ->shouldReceive('where')->once()->with('gds.licenceVehicle = m.id')->andReturnSelf()
+            ->shouldReceive('getDQL')->once()->andReturn('{{DQL}}')
+            ->getMock();
+
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($mockQbS);
+
+        $mockQb = $this->createMockQb('{{QUERY}}');
+        $mockQb->shouldReceive('getQuery->iterate')
+            ->once()
+            ->with()
+            ->andReturn('EXPECT');
+
+        $this->mockCreateQueryBuilder($mockQb);
+
+        static::assertEquals('EXPECT', $this->sut->fetchForExport($mockQb));
+
+        static::assertEquals(
+            '{{QUERY}} ' .
+            'SELECT v.vrm ' .
+            'LEFT JOIN Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc gd2 WITH gd2.id = ({{DQL}})',
+            $this->query
+        );
     }
 }

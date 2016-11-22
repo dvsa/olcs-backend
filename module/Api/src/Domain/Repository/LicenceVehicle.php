@@ -1,21 +1,17 @@
 <?php
 
-/**
- * Licence Vehicle
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as Entity;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as Entity;
+use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc as GoodsDiscEntity;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Licence Vehicle
@@ -446,5 +442,35 @@ class LicenceVehicle extends AbstractRepository
             ->setParameter('licence', $licenceId);
 
         return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Prepare Vehicle query for export
+     *
+     * @param QueryBuilder $qb Prepared Query Builder
+     *
+     * @return \Doctrine\ORM\Internal\Hydration\IterableResult
+     */
+    public function fetchForExport(QueryBuilder $qb)
+    {
+        $qbs = $this->getEntityManager()->createQueryBuilder()
+            ->select('MAX(gds.id) as maxId')
+            ->from(GoodsDiscEntity::class, 'gds')
+            ->where('gds.licenceVehicle = ' . $this->alias . '.id');
+
+        $qb->
+            select(
+                'v.vrm', 'v.platedWeight',
+                $this->alias . '.specifiedDate', $this->alias . '.removalDate',
+                'gd2.id as discId', 'gd2.ceasedDate ', 'gd2.discNo '
+            )
+            ->leftJoin(
+                GoodsDiscEntity::class,
+                'gd2',
+                Expr\Join::WITH,
+                $qb->expr()->eq('gd2.id', '(' . $qbs->getDQL() . ')')
+            );
+
+        return $qb->getQuery()->iterate();
     }
 }
