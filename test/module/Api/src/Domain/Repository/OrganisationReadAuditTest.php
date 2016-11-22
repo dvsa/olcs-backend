@@ -20,9 +20,9 @@ class OrganisationReadAuditTest extends AbstractReadAuditTest
         $this->setUpSut(OrganisationReadAudit::class, true);
     }
 
-    public function testFetchOne()
+    public function testFetchOneOrMore()
     {
-        parent::commonTestFetchOne('organisation');
+        parent::commonTestFetchOneOrMore('organisation');
     }
 
     public function testFetchList()

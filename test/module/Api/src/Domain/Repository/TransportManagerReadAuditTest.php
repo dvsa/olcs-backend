@@ -23,9 +23,9 @@ class TransportManagerReadAuditTest extends AbstractReadAuditTest
         $this->setUpSut(TransportManagerReadAudit::class, true);
     }
 
-    public function testFetchOne()
+    public function testFetchOneOrMore()
     {
-        parent::commonTestFetchOne('transportManager');
+        parent::commonTestFetchOneOrMore('transportManager');
     }
 
     public function testFetchList()

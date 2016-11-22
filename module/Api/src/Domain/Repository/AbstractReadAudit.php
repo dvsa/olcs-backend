@@ -36,9 +36,9 @@ abstract class AbstractReadAudit extends AbstractRepository implements ReadAudit
     }
 
     /**
-     * Returns one record for specified user, object and date
+     * Returns one or more record for specified user, object and date
      */
-    public function fetchOne($userId, $entityId, \DateTime $date)
+    public function fetchOneOrMore($userId, $entityId, \DateTime $date)
     {
         $qb = $this->createQueryBuilder();
 
@@ -52,7 +52,7 @@ abstract class AbstractReadAudit extends AbstractRepository implements ReadAudit
         $qb->setParameter('dateFrom', $date->setTime(0, 0, 0)->format(DATE_ISO8601));
         $qb->setParameter('dateTo', $date->setTime(23, 59, 59)->format(DATE_ISO8601));
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->getResult();
     }
 
     /**
