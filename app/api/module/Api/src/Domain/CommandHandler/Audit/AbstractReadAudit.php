@@ -54,7 +54,7 @@ abstract class AbstractReadAudit extends AbstractCommandHandler implements Trans
         /** @var \Dvsa\Olcs\Api\Domain\Repository\AbstractReadAudit $repo */
         $repo = $this->getRepo();
 
-        return (null !== $repo->fetchOne($userId, $command->getId(), new \DateTime));
+        return (!empty($repo->fetchOneOrMore($userId, $command->getId(), new \DateTime())));
     }
 
     protected function createRecord($command)
