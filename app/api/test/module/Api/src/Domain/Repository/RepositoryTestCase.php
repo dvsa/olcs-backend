@@ -115,6 +115,9 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('expr->isNull')
             ->andReturnUsing([$this, 'mockIsNull']);
 
+        $this->qb->shouldReceive('select')
+            ->andReturnUsing([$this, 'mockAddSelect']);
+
         $this->qb->shouldReceive('addSelect')
             ->andReturnUsing([$this, 'mockAddSelect']);
 

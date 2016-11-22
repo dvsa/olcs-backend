@@ -2,11 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Lva;
 
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Lva\AbstractGoodsVehiclesExport;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -33,18 +31,31 @@ class AbstractGoodsVehiclesExportTest extends QueryHandlerTestCase
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
 
-        $mockLicVhclEntity = m::mock(Entity\Licence\LicenceVehicle::class)
-            ->shouldReceive('serialize')
-            ->twice()
-            ->with(['vehicle', 'goodsDiscs', 'interimApplication'])
-            ->andReturn('SERIALIZED')
+        $dbRow1 = [
+            'vrm' => 'unit_Vrm_1',
+            'platedWeight' => 'unit_platedWeight_1',
+            'specifiedDate' => 'unit_specifiedDate_1',
+            'removalDate' => 'unit_removalDate_1',
+            'discId' => null,
+        ];
+        $dbRow2 = [
+            'vrm' => 'unit_Vrm_2',
+            'platedWeight' => 'unit_platedWeight_2',
+            'specifiedDate' => 'unit_specifiedDate_2',
+            'removalDate' => 'unit_removalDate_2',
+            'discId' => 999,
+            'discNo' => 'unit_DiscNo',
+            'ceasedDate' => 'unit_CeasedDate',
+        ];
+
+        $mockDbIterator = m::mock(\Doctrine\ORM\Internal\Hydration\IterableResult::class)
+            ->shouldReceive('next')->once()->andReturn([$dbRow1])
+            ->shouldReceive('next')->once()->andReturn([$dbRow2])
+            ->shouldReceive('next')->once()->andReturn(false)
             ->getMock();
 
         $this->repoMap['LicenceVehicle']
-            ->shouldReceive('fetchPaginatedList')
-            ->once()
-            ->with($qb, Query::HYDRATE_OBJECT)
-            ->andReturn([$mockLicVhclEntity, clone $mockLicVhclEntity]);
+            ->shouldReceive('fetchForExport')->once()->with($qb)->andReturn($mockDbIterator);
 
         //  call & check
         $actual = $this->sut->getData($qb);
@@ -52,8 +63,28 @@ class AbstractGoodsVehiclesExportTest extends QueryHandlerTestCase
         static::assertEquals(
             [
                 'results' => [
-                    'SERIALIZED',
-                    'SERIALIZED',
+                    [
+                        'vehicle' => [
+                            'vrm' => 'unit_Vrm_1',
+                            'platedWeight' => 'unit_platedWeight_1',
+                        ],
+                        'specifiedDate' => 'unit_specifiedDate_1',
+                        'removalDate' => 'unit_removalDate_1',
+                    ],
+                    [
+                        'vehicle' => [
+                            'vrm' => 'unit_Vrm_2',
+                            'platedWeight' => 'unit_platedWeight_2',
+                        ],
+                        'specifiedDate' => 'unit_specifiedDate_2',
+                        'removalDate' => 'unit_removalDate_2',
+                        'goodsDiscs' => [
+                            [
+                                'discNo' => 'unit_DiscNo',
+                                'ceasedDate' => 'unit_CeasedDate',
+                            ],
+                        ],
+                    ],
                 ],
                 'count' => 2,
             ],

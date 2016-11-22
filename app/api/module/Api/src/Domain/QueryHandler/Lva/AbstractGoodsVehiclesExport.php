@@ -2,12 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Lva;
 
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Entity;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Goods Vehicles
@@ -21,24 +17,43 @@ abstract class AbstractGoodsVehiclesExport extends AbstractQueryHandler
     /**
      * Get vehicle data from db
      *
-     * @param QueryBuilder $qb Query Builder
+     * @param \Dvsa\Olcs\Transfer\Query\Lva\AbstractGoodsVehicles $qb Query Builder
      *
      * @return array
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     protected function getData(QueryBuilder $qb)
     {
-        $result = $this->getRepo()->fetchPaginatedList($qb, Query::HYDRATE_OBJECT);
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle $repo */
+        $repo = $this->getRepo();
+        $iterableResult = $repo->fetchForExport($qb);
+
+        $result = [];
+        while (false !== ($row = $iterableResult->next())) {
+            $row = current($row);
+
+            $resultRow = [
+                'vehicle' => [
+                    'vrm' => $row['vrm'],
+                    'platedWeight' => $row['platedWeight'],
+                ],
+                'specifiedDate' => $row['specifiedDate'],
+                'removalDate' => $row['removalDate'],
+            ];
+
+            if ($row['discId'] !== null) {
+                $resultRow['goodsDiscs'] = [
+                    [
+                        'discNo' => $row['discNo'],
+                        'ceasedDate' => $row['ceasedDate'],
+                    ],
+                ];
+            }
+
+            $result[] = $resultRow;
+        }
 
         return [
-            'results' => $this->resultList(
-                $result,
-                [
-                    'vehicle',
-                    'goodsDiscs',
-                    'interimApplication'
-                ]
-            ),
+            'results' => $result,
             'count' => count($result),
         ];
     }
