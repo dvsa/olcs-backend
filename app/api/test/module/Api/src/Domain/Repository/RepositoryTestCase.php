@@ -170,7 +170,7 @@ class RepositoryTestCase extends MockeryTestCase
 
     public function mockAddSelect($select)
     {
-        $this->query .= ' SELECT ' . $select;
+        $this->query .= ' SELECT ' . implode(', ', func_get_args());
 
         return $this->qb;
     }

@@ -462,7 +462,7 @@ class LicenceVehicle extends AbstractRepository
             select(
                 'v.vrm', 'v.platedWeight',
                 $this->alias . '.specifiedDate', $this->alias . '.removalDate',
-                'gd2.id as discId', 'gd2.ceasedDate ', 'gd2.discNo '
+                'gd2.id as discId', 'gd2.ceasedDate', 'gd2.discNo'
             )
             ->leftJoin(
                 GoodsDiscEntity::class,

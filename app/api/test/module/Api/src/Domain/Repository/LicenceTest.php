@@ -619,7 +619,7 @@ class LicenceTest extends RepositoryTestCase
             . 'AND m.status IN [[["lsts_valid","lsts_curtailed","lsts_suspended"]]] '
             . 'AND (m.goodsOrPsv = [[lcat_gv]] OR (m.goodsOrPsv = [[lcat_psv]] AND m.licenceType = [[ltyp_sr]])) '
             . 'INNER JOIN m.fees f INNER JOIN f.feeType ft AND f.feeStatus = [[lfs_ot]] AND ft.feeType = [[CONT]] '
-            . 'SELECT m LIMIT 200';
+            . 'SELECT m, ta LIMIT 200';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
