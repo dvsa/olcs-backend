@@ -1,10 +1,5 @@
 <?php
 
-/**
- * BatchVehicleListGeneratorForGoodsDiscs test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as CreateVehicleListDocumentCommand;
@@ -23,9 +18,17 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
  */
 class BatchVehicleListGeneratorForGoodsDiscsTest extends CommandHandlerTestCase
 {
+    protected $batchSize = 180;
+
     public function setUp()
     {
         $this->sut = new Batch();
+
+        $this->mockedSmServices = [
+            'Config' => [
+                'disc_printing' => ['gv_vehicle_list_batch_size' => $this->batchSize]
+            ]
+        ];
 
         parent::setUp();
     }
@@ -37,7 +40,7 @@ class BatchVehicleListGeneratorForGoodsDiscsTest extends CommandHandlerTestCase
             'licences' => $licences,
             'user' => 1
         ];
-        $queuedLicences = array_slice($licences, Batch::BATCH_SIZE);
+        $queuedLicences = array_slice($licences, $this->batchSize);
         $options = [
             'licences' => $queuedLicences,
             'user' => 1
@@ -46,7 +49,7 @@ class BatchVehicleListGeneratorForGoodsDiscsTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
         $expected = ['id' => []];
 
-        for ($i = 0; $i < Batch::BATCH_SIZE; $i++) {
+        for ($i = 0; $i < $this->batchSize; $i++) {
             $data = [
                 'id' =>  $i,
             ];
@@ -68,7 +71,7 @@ class BatchVehicleListGeneratorForGoodsDiscsTest extends CommandHandlerTestCase
     protected function getLicences()
     {
         $licences = [];
-        for ($i = 0; $i < Batch::BATCH_SIZE + 2; $i++) {
+        for ($i = 0; $i < $this->batchSize + 2; $i++) {
             $licences[] = ['id' => $i];
         }
         return $licences;

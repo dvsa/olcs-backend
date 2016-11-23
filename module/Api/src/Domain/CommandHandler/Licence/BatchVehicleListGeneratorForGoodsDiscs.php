@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Batch Vehicle List Generator for Goods Discs
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -14,27 +9,39 @@ use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as CreateVehicl
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreatQueue;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
+use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 
 /**
  * Batch Vehicle List Generator for Goods Discs
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class BatchVehicleListGeneratorForGoodsDiscs extends AbstractCommandHandler implements TransactionedInterface
+final class BatchVehicleListGeneratorForGoodsDiscs extends AbstractCommandHandler implements
+    TransactionedInterface,
+    ConfigAwareInterface
 {
+    use ConfigAwareTrait;
+
     protected $repoServiceName = 'GoodsDisc';
 
     const BATCH_SIZE = 30;
 
     public function handleCommand(CommandInterface $command)
     {
+        $config = $this->getConfig();
+        $batchSize = isset($config['disc_printing']['gv_vehicle_list_batch_size'])
+            && is_numeric($config['disc_printing']['gv_vehicle_list_batch_size'])
+            ? $config['disc_printing']['gv_vehicle_list_batch_size']
+            : self::BATCH_SIZE;
+
         $result = new Result();
         $licences = $command->getLicences();
         $options = null;
 
-        if (count($licences) > self::BATCH_SIZE) {
-            $queuedLicences = array_slice($licences, self::BATCH_SIZE);
-            $licences = array_slice($licences, 0, self::BATCH_SIZE);
+        if (count($licences) > $batchSize) {
+            $queuedLicences = array_slice($licences, $batchSize);
+            $licences = array_slice($licences, 0, $batchSize);
             $options = [
                 'licences' => $queuedLicences,
                 'user' => $command->getUser()
