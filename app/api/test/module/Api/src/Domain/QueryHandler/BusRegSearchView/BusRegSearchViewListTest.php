@@ -1,8 +1,5 @@
 <?php
 
-/**
- * BusRegSearchViewList Test
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\BusRegSearchView;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,7 +14,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**
- * BusRegSearchViewList Test
+ * @covers \Dvsa\Olcs\Api\Domain\QueryHandler\BusRegSearchView\BusRegSearchViewList
  */
 class BusRegSearchViewListTest extends QueryHandlerTestCase
 {
@@ -37,10 +34,11 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
      *
      * @param null $localAuthorityId
      * @param null $organisationId
-     * @return m\Mock
+     * @return m\MockInterface
      */
     private function getCurrentUser($localAuthorityId = null, $organisationId = null)
     {
+        /** @var \Dvsa\Olcs\Api\Entity\User\User|m\MockInterface $mockUser */
         $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $mockUser->shouldReceive('getUser')
             ->andReturnSelf();
@@ -211,12 +209,13 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
             ->andReturn($currentUser);
 
         $data = [
+            'organisationId' => 9999,
             'licId' => 1234,
             'busRegStatus' => 'breg_s_cancellation',
             'page' => 4,
             'limit' => 10,
             'sort' => 'licId',
-            'order' => 'ASC'
+            'order' => 'ASC',
         ];
         $query = BusRegSearchViewTransferQry::create($data);
 
@@ -243,6 +242,5 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
         $this->assertEquals($expected, $this->sut->handleQuery($query));
         $this->assertEquals($data, $query->getArrayCopy());
         $this->assertArrayNotHasKey('localAuthorityId', $query->getArrayCopy());
-        $this->assertArrayNotHasKey('organisationId', $query->getArrayCopy());
     }
 }
