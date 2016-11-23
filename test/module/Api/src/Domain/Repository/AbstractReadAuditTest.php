@@ -16,7 +16,7 @@ abstract class AbstractReadAuditTest extends RepositoryTestCase
     /** @var AbstractReadAudit|m\MockInterface */
     protected $sut;
 
-    protected function commonTestFetchOne($entityProperty)
+    protected function commonTestFetchOneOrMore($entityProperty)
     {
         $userId = 111;
         $entityId = 222;
@@ -25,9 +25,9 @@ abstract class AbstractReadAuditTest extends RepositoryTestCase
         $qb = $this->createMockQb('{{QUERY}}');
         $this->mockCreateQueryBuilder($qb);
 
-        $qb->shouldReceive('getQuery->getOneOrNullResult')->andReturn(['foo']);
+        $qb->shouldReceive('getQuery->getResult')->andReturn(['foo']);
 
-        static::assertEquals(['foo'], $this->sut->fetchOne($userId, $entityId, $date));
+        static::assertEquals(['foo'], $this->sut->fetchOneOrMore($userId, $entityId, $date));
 
         $expected = '{{QUERY}} AND m.user = [[111]]' .
             ' AND m.' . $entityProperty . ' = [[222]]' .

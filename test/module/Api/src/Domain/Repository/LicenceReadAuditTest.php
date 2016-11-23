@@ -23,9 +23,9 @@ class LicenceReadAuditTest extends AbstractReadAuditTest
         $this->setUpSut(LicenceReadAudit::class, true);
     }
 
-    public function testFetchOne()
+    public function testFetchOneOrMore()
     {
-        parent::commonTestFetchOne('licence');
+        parent::commonTestFetchOneOrMore('licence');
     }
 
     public function testFetchList()

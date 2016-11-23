@@ -49,7 +49,7 @@ class ReadOrganisationTest extends CommandHandlerTestCase
 
     public function testHandleCommandWhenExists()
     {
-        $this->repoMap['OrganisationReadAudit']->shouldReceive('fetchOne')
+        $this->repoMap['OrganisationReadAudit']->shouldReceive('fetchOneOrMore')
             ->once()
             ->with(self::USER_ID, 111, \DateTime::class)
             ->andReturn(['foo']);
@@ -70,7 +70,7 @@ class ReadOrganisationTest extends CommandHandlerTestCase
     {
         $entity = m::mock(Organisation::class);
 
-        $this->repoMap['OrganisationReadAudit']->shouldReceive('fetchOne')->once()
+        $this->repoMap['OrganisationReadAudit']->shouldReceive('fetchOneOrMore')->once()
             ->with(self::USER_ID, 111, \DateTime::class)
             ->andReturn(null)
             ->shouldReceive('save')
