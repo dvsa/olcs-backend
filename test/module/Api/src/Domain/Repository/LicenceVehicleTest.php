@@ -602,7 +602,8 @@ class LicenceVehicleTest extends RepositoryTestCase
 
         static::assertEquals(
             '{{QUERY}} ' .
-            'SELECT v.vrm ' .
+            'SELECT v.vrm, v.platedWeight, m.specifiedDate, ' .
+            'm.removalDate, gd2.id as discId, gd2.ceasedDate, gd2.discNo ' .
             'LEFT JOIN Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc gd2 WITH gd2.id = ({{DQL}})',
             $this->query
         );
