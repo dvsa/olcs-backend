@@ -342,5 +342,9 @@ return [
         '/opt/dvsa',
         'Skipping import of schema'
     ],
-
+    'disc_printing' => [
+        'disc_batch_size' => 300,
+        'psv_vehicle_list_batch_size' => 300,
+        'gv_vehicle_list_batch_size' => 300,
+    ],
 ];
