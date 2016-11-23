@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Print discs
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Discs;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
@@ -28,10 +23,18 @@ use Dvsa\Olcs\Api\Domain\Repository\GoodsDisc as GoodsDiscRepo;
  */
 class PrintDiscsTest extends CommandHandlerTestCase
 {
+    protected $batchSize = 180;
+
     public function setUp()
     {
         $this->sut = new PrintDiscs();
         $this->mockRepo('GoodsDisc', GoodsDiscRepo::class);
+
+        $this->mockedSmServices = [
+            'Config' => [
+                'disc_printing' => ['disc_batch_size' => $this->batchSize]
+            ]
+        ];
 
         parent::setUp();
     }
@@ -49,9 +52,9 @@ class PrintDiscsTest extends CommandHandlerTestCase
         ];
         $command = Cmd::create($data);
 
-        $queuedStartNumber = $startNumber + PrintDiscs::BATCH_SIZE;
-        $queuedDiscs = array_slice($discs, PrintDiscs::BATCH_SIZE);
-        $discs = array_slice($discs, 0, PrintDiscs::BATCH_SIZE);
+        $queuedStartNumber = $startNumber + $this->batchSize;
+        $queuedDiscs = array_slice($discs, $this->batchSize);
+        $discs = array_slice($discs, 0, $this->batchSize);
         $options = [
             'discs' => $queuedDiscs,
             'startNumber' => $queuedStartNumber,
@@ -104,7 +107,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
     protected function getDiscs()
     {
         $discs = [];
-        for ($i = 0; $i <= PrintDiscs::BATCH_SIZE +  2; $i++) {
+        for ($i = 0; $i <= $this->batchSize +  2; $i++) {
             $discs[] = $i + 1;
         }
         return $discs;
@@ -116,7 +119,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
             'Disc_List' => []
         ];
         $discNumber = (int) $startNumber;
-        for ($i = 0; $i < PrintDiscs::BATCH_SIZE; $i++) {
+        for ($i = 0; $i < $this->batchSize; $i++) {
             $knownValues['Disc_List'][$i]['discNo'] = $discNumber++;
         }
         return $knownValues;
