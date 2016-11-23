@@ -20,9 +20,9 @@ class ApplicationReadAuditTest extends AbstractReadAuditTest
         $this->setUpSut(ApplicationReadAudit::class, true);
     }
 
-    public function testFetchOne()
+    public function testFetchOneOrMore()
     {
-        parent::commonTestFetchOne('application');
+        parent::commonTestFetchOneOrMore('application');
     }
 
     public function testFetchList()
