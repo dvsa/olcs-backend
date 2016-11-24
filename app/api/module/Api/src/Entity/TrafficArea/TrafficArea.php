@@ -33,9 +33,12 @@ class TrafficArea extends AbstractTrafficArea
     /**
      * Gets the recipients for a publication, formatted ready for zend mail
      *
+     * @param string $isPolice Y or N depending on whether this is a police document
+     * @param string $pubType  A&D or N&P
+     *
      * @return array
      */
-    public function getPublicationRecipients($isPolice)
+    public function getPublicationRecipients($isPolice, $pubType)
     {
         /* @todo the commented code can't currently be used due to a bug with Doctrine Criteria when used with
          * many-to-many collections. The links below describe the issue. Once this has been fixed in our version of
@@ -50,13 +53,14 @@ class TrafficArea extends AbstractTrafficArea
         //$criteria->where($expr->eq('isPolice', $isPolice));
         //$matchedRecipients = $this->recipients->matching($criteria);
         $matchedRecipients = $this->getRecipients(); //remove when code above is uncommented
+        $checkPubMethod = ($pubType === 'A&D' ? 'getSendAppDecision' : 'getSendNoticesProcs');
 
         $recipients = [];
 
         /** @var RecipientEntity $recipient */
         foreach ($matchedRecipients as $recipient) {
             //remove this if statement once the doctrine criteria code is uncommented
-            if ($recipient->getIsPolice() === $isPolice) {
+            if ($recipient->getIsPolice() === $isPolice && $recipient->$checkPubMethod() === 'Y') {
                 $recipients[$recipient->getEmailAddress()] = $recipient->getContactName();
             }
         }

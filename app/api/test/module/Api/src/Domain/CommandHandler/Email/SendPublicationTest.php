@@ -76,7 +76,10 @@ class SendPublicationTest extends CommandHandlerTestCase
 
         $trafficArea = m::mock(TrafficAreaEntity::class);
         $trafficArea->shouldReceive('getName')->once()->andReturn($trafficAreaName);
-        $trafficArea->shouldReceive('getPublicationRecipients')->once()->with($isPolice)->andReturn($recipients);
+        $trafficArea->shouldReceive('getPublicationRecipients')
+            ->once()
+            ->with($isPolice, $pubType)
+            ->andReturn($recipients);
 
         $document = m::mock(DocumentEntity::class);
         $document->shouldReceive('getFilename')->once()->andReturn($documentFilename);
