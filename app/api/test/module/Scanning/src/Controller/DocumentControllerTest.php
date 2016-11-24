@@ -1,33 +1,29 @@
 <?php
 
-/**
- * Document controller test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @author Nick Payne <nick.payne@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Scanning\Controller;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use \Olcs\Logging\Log\Logger;
 
 /**
  * Document controller test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @author Nick Payne <nick.payne@valtech.co.uk>
  */
 class DocumentControllerTest extends MockeryTestCase
 {
+    /**
+     * @var \Dvsa\Olcs\Scanning\Controller\DocumentController|m\Mock
+     */
     protected $sut;
 
     /**
-     * @var \Zend\Log\Writer\Mock
+     * @var m\Mock
      */
-    protected $logWriter;
-
     private $mockCommandHandlerManager;
+
+    /**
+     * @var \Zend\Http\PhpEnvironment\Request|m\Mock
+     */
+    private $request;
 
     protected function setUp()
     {
@@ -43,151 +39,153 @@ class DocumentControllerTest extends MockeryTestCase
             ->shouldReceive('getRequest')
             ->andReturn($this->request);
 
-        // Mock the logger
-        $this->logWriter = new \Zend\Log\Writer\Mock();
-        $logger = new \Zend\Log\Logger();
-        $logger->addWriter($this->logWriter);
-        Logger::setLogger($logger);
-
         $this->mockCommandHandlerManager = m::mock();
         $this->sm->setService('CommandHandlerManager', $this->mockCommandHandlerManager);
 
         $this->sut->setServiceLocator($this->sm);
     }
 
-    public function testCreateWithInvalidRequest()
+    public function testMissingDescription()
     {
-        $scanMock = m::mock()
-            ->shouldReceive('setDataFromRequest')
-            ->with($this->request)
-            ->shouldReceive('isValidRequest')
-            ->andReturn(false)
-            ->getMock();
-
-        $this->sm->setService('Scanning', $scanMock);
-
-        $this->sut->shouldReceive('respondError')
-            ->once()
-            ->with(400, 'Bad Request');
-
-        $this->sut->create([]);
+        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        $jsonModel = $this->sut->create([]);
+        $this->assertSame(400, $jsonModel->getVariable('status'));
+        $this->assertSame('POST "description" is not a valid number', $jsonModel->getVariable('title'));
     }
 
-    public function testCreateWithValidRequestButInvalidMimeType()
+    public function testInvalidDescription()
     {
-        $scanMock = m::mock()
-            ->shouldReceive('setDataFromRequest')
-            ->with($this->request)
-            ->shouldReceive('isValidRequest')
-            ->andReturn(true)
-            ->shouldReceive('getData')
-            ->andReturn(
-                [
-                    'image' => ['tmp_name' => 'file-data', 'name' => 'foo'],
-                    'description' => 34
-                ]
-            )
-            ->getMock();
+        $this->request->shouldReceive('getPost')->with('description')->once()->andReturn('X');
+        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        $jsonModel = $this->sut->create([]);
+        $this->assertSame(400, $jsonModel->getVariable('status'));
+        $this->assertSame('POST "description" is not a valid number', $jsonModel->getVariable('title'));
+    }
 
-        $this->sm->setService('Scanning', $scanMock);
+    public function testMissingImage()
+    {
+        $this->request->shouldReceive('getPost')->with('description')->once()->andReturn('12');
+        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        $jsonModel = $this->sut->create([]);
 
-        $this->sut->shouldReceive('getUploadContents')->andReturn('CONTENTS');
+        $this->assertSame(400, $jsonModel->getVariable('status'));
+        $this->assertSame('POST "image" is missing', $jsonModel->getVariable('title'));
+    }
+
+    public function testInvalidImage()
+    {
+        $this->request->shouldReceive('getPost')->with('description')->once()->andReturn('12');
+        $this->request->shouldReceive('getFiles->get')->with('image')->once()->andReturn('FOO');
+        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        $jsonModel = $this->sut->create([]);
+
+        $this->assertSame(400, $jsonModel->getVariable('status'));
+        $this->assertSame('File was not found', $jsonModel->getVariable('title'));
+    }
+
+    public function testInvalidImageValidator()
+    {
+        // No need to test all validation outcomes as were not testing the validator itself
+        $this->request->shouldReceive('getPost')->with('description')->once()->andReturn('12');
+        $this->request->shouldReceive('getFiles->get')->with('image')->once()->andReturn(
+            ['name' => 'foo', 'tmp_name' => 'bar', 'error' => 6]
+        );
+        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        $jsonModel = $this->sut->create([]);
+
+        $this->assertSame(400, $jsonModel->getVariable('status'));
+        $this->assertSame('No temporary directory was found for file', $jsonModel->getVariable('title'));
+    }
+
+    public function testInvalidImageUnsupportedMediaType()
+    {
+        $this->request->shouldReceive('getPost')->with('description')->once()->andReturn('12');
+        $imageUpload = ['name' => 'foo', 'tmp_name' => __FILE__];
+        $this->request->shouldReceive('getFiles->get')->with('image')->once()->andReturn($imageUpload);
+        $this->sut->shouldReceive('validateRequest')->with(12, $imageUpload)->once();
 
         $e = new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(['SCAN_INVALID_MIME' => 'foo']);
-        $this->mockCommandHandlerManager->shouldReceive('handleCommand')->andThrow($e);
+        $this->mockCommandHandlerManager->shouldReceive('handleCommand')->once()->andThrow($e);
 
-        $this->sut->shouldReceive('respondError')
-            ->once()
-            ->with(415, 'Unsupported Media Type');
+        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        $jsonModel = $this->sut->create([]);
 
-        $this->sut->create([]);
+        $this->assertSame(415, $jsonModel->getVariable('status'));
+        $this->assertSame('Unsupported Media Type', $jsonModel->getVariable('title'));
     }
 
-    public function testCreateWithValidRequestButScanNotFound()
+    public function testInvalidImageScanDocumentNotFound()
     {
-        $scanMock = m::mock()
-            ->shouldReceive('setDataFromRequest')
-            ->with($this->request)
-            ->shouldReceive('isValidRequest')
-            ->andReturn(true)
-            ->shouldReceive('getData')
-            ->andReturn(
-                [
-                    'image' => ['tmp_name' => 'file-data', 'name' => 'foo'],
-                    'description' => 34
-                ]
-            )
-            ->getMock();
-
-        $this->sm->setService('Scanning', $scanMock);
-
-        $this->sut->shouldReceive('getUploadContents')->andReturn('CONTENTS');
+        $this->request->shouldReceive('getPost')->with('description')->once()->andReturn('12');
+        $imageUpload = ['name' => 'foo', 'tmp_name' => __FILE__];
+        $this->request->shouldReceive('getFiles->get')->with('image')->once()->andReturn($imageUpload);
+        $this->sut->shouldReceive('validateRequest')->with(12, $imageUpload)->once();
 
         $e = new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(['SCAN_NOT_FOUND' => 'foo']);
-        $this->mockCommandHandlerManager->shouldReceive('handleCommand')->andThrow($e);
+        $this->mockCommandHandlerManager->shouldReceive('handleCommand')->once()->andThrow($e);
 
-        $this->sut->shouldReceive('respondError')
-            ->once()
-            ->with(400, 'Cannot find scan record');
+        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        $jsonModel = $this->sut->create([]);
 
-        $this->sut->create([]);
+        $this->assertSame(400, $jsonModel->getVariable('status'));
+        $this->assertSame('Cannot find scan record', $jsonModel->getVariable('title'));
     }
 
-    public function testCreateWithValidRequestButOtherError()
+    public function testInvalidImageDomainError()
     {
-        $scanMock = m::mock()
-            ->shouldReceive('setDataFromRequest')
-            ->with($this->request)
-            ->shouldReceive('isValidRequest')
-            ->andReturn(true)
-            ->shouldReceive('getData')
-            ->andReturn(
-                [
-                    'image' => ['tmp_name' => 'file-data', 'name' => 'foo'],
-                    'description' => 34
-                ]
-            )
-            ->getMock();
+        $this->request->shouldReceive('getPost')->with('description')->once()->andReturn('12');
+        $imageUpload = ['name' => 'foo', 'tmp_name' => __FILE__];
+        $this->request->shouldReceive('getFiles->get')->with('image')->once()->andReturn($imageUpload);
+        $this->sut->shouldReceive('validateRequest')->with(12, $imageUpload)->once();
+        $this->sut->shouldReceive('logError')->with('Error processing scan document', ['FOO' => 'foo'])->once();
 
-        $this->sm->setService('Scanning', $scanMock);
+        $e = new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(['FOO' => 'foo']);
+        $this->mockCommandHandlerManager->shouldReceive('handleCommand')->once()->andThrow($e);
 
-        $this->sut->shouldReceive('getUploadContents')->andReturn('CONTENTS');
+        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        $jsonModel = $this->sut->create([]);
 
-        $e = new \Exception('an error');
-        $this->mockCommandHandlerManager->shouldReceive('handleCommand')->andThrow($e);
-
-        $this->sut->shouldReceive('respondError')
-            ->once()
-            ->with(500, 'Internal Server Error');
-
-        $this->sut->create([]);
+        $this->assertSame(500, $jsonModel->getVariable('status'));
+        $this->assertSame('Internal Server Error', $jsonModel->getVariable('title'));
     }
 
-    public function testCreateWithValidRequest()
+    public function testInvalidImageOtherError()
     {
-        $scanMock = m::mock()
-            ->shouldReceive('setDataFromRequest')
-            ->with($this->request)
-            ->shouldReceive('isValidRequest')
-            ->andReturn(true)
-            ->shouldReceive('getData')
-            ->andReturn(
-                [
-                    'image' => ['tmp_name' => 'file-data', 'name' => 'foo'],
-                    'description' => 34
-                ]
-            )
-            ->getMock();
+        $this->request->shouldReceive('getPost')->with('description')->once()->andReturn('12');
+        $imageUpload = ['name' => 'foo', 'tmp_name' => __FILE__];
+        $this->request->shouldReceive('getFiles->get')->with('image')->once()->andReturn($imageUpload);
+        $this->sut->shouldReceive('validateRequest')->with(12, $imageUpload)->once();
+        $this->sut->shouldReceive('logError')->with('Error processing scan document', ['message' => 'FOO'])->once();
 
-        $this->sm->setService('Scanning', $scanMock);
+        $e = new \Exception('FOO');
+        $this->mockCommandHandlerManager->shouldReceive('handleCommand')->once()->andThrow($e);
 
-        $this->sut->shouldReceive('getUploadContents')->andReturn('CONTENTS');
+        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        $jsonModel = $this->sut->create([]);
 
-        $this->mockCommandHandlerManager->shouldReceive('handleCommand');
+        $this->assertSame(500, $jsonModel->getVariable('status'));
+        $this->assertSame('Internal Server Error', $jsonModel->getVariable('title'));
+    }
 
+    public function testSuccess()
+    {
+        $this->request->shouldReceive('getPost')->with('description')->once()->andReturn('12');
+        $imageUpload = ['name' => 'foo', 'tmp_name' => __DIR__  . DIRECTORY_SEPARATOR . 'test.file'];
+        $this->request->shouldReceive('getFiles->get')->with('image')->once()->andReturn($imageUpload);
+        $this->sut->shouldReceive('validateRequest')->with(12, $imageUpload)->once();
+        $this->sut->shouldNotReceive('logError');
+
+        $this->mockCommandHandlerManager->shouldReceive('handleCommand')->once()->andReturnUsing(
+            function ($dto) {
+                /** @var \Dvsa\Olcs\Transfer\Command\Scan\CreateDocument $dto */
+                $this->assertSame(12, $dto->getScanId());
+                $this->assertSame('VEVTVDE=', $dto->getContent());
+                $this->assertSame('foo', $dto->getFilename());
+            }
+        );
+
+        /** @var \Zend\Http\PhpEnvironment\Response $response*/
         $response = $this->sut->create([]);
-
-        $this->assertEquals(204, $response->getStatusCode());
-        $this->assertEquals('', $response->getContent());
+        $this->assertSame(204, $response->getStatusCode());
     }
 }

@@ -15,9 +15,7 @@ return array(
         ),
     ),
     'service_manager' => array(
-        'invokables' => array(
-            'Scanning' => \Dvsa\Olcs\Scanning\Service\ScanningService::class,
-        ),
+        'invokables' => array(),
     ),
     'controllers' => array(
         'invokables' => array(
