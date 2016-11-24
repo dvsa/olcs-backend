@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Correspondence Inbox
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox as Entity;
@@ -20,9 +14,20 @@ class CorrespondenceInbox extends AbstractRepository
 {
     protected $entity = Entity::class;
 
+    /**
+     * Get All Requiring Print
+     *
+     * @param string $minDate Date From
+     * @param string $maxDate Date To
+     *
+     * @return array
+     */
     public function getAllRequiringPrint($minDate, $maxDate)
     {
         $qb = $this->createQueryBuilder();
+
+        $qb->addSelect('d')
+            ->join($this->alias . '.document', 'd');
 
         $this->getQueryBuilder()
             ->modifyQuery($qb)
@@ -31,7 +36,6 @@ class CorrespondenceInbox extends AbstractRepository
             ->with('lo.organisationUsers', 'lou')
             ->with('lou.user', 'louu')
             ->with('louu.contactDetails', 'louucd')
-            ->with('document', 'd')
             ->with('d.continuationDetails', 'cd');
 
         $qb->andWhere($qb->expr()->eq('l.translateToWelsh', 0));
@@ -47,12 +51,25 @@ class CorrespondenceInbox extends AbstractRepository
         $qb->setParameter('minDate', $minDate);
         $qb->setParameter('maxDate', $maxDate);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()
+            ->setFetchMode(Entity::class, 'document', \Doctrine\ORM\Mapping\ClassMetadata::FETCH_EAGER)
+            ->getResult();
     }
 
+    /**
+     * Get All Requiring Reminder
+     *
+     * @param string $minDate Date From
+     * @param string $maxDate Date To
+     *
+     * @return array
+     */
     public function getAllRequiringReminder($minDate, $maxDate)
     {
         $qb = $this->createQueryBuilder();
+
+        $qb->addSelect('d')
+            ->join($this->alias . '.document', 'd');
 
         $this->getQueryBuilder()
             ->modifyQuery($qb)
@@ -61,7 +78,6 @@ class CorrespondenceInbox extends AbstractRepository
             ->with('lo.organisationUsers', 'lou')
             ->with('lou.user', 'louu')
             ->with('louu.contactDetails', 'louucd')
-            ->with('document', 'd')
             ->with('d.continuationDetails', 'cd')
             ->with('cd.checklistDocument', 'cdd');
 
@@ -82,6 +98,8 @@ class CorrespondenceInbox extends AbstractRepository
         $qb->setParameter('minDate', $minDate);
         $qb->setParameter('maxDate', $maxDate);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()
+            ->setFetchMode(Entity::class, 'document', \Doctrine\ORM\Mapping\ClassMetadata::FETCH_EAGER)
+            ->getResult();
     }
 }
