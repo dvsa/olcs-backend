@@ -26,6 +26,9 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as IrfoGvPermitEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
@@ -1135,7 +1138,10 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    public function testHandleCommandChequePaymentInsufficientFee()
+    /**
+     * @dataProvider feeDataProvider
+     */
+    public function testHandleCommandChequePaymentInsufficientFee($type, $orgId)
     {
         // set up data
         $feeIds = [99];
@@ -1146,6 +1152,34 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $fee1->setApplication(
             m::mock(ApplicationEntity::class)->shouldReceive('getId')->andReturn(33)->getMock()
         );
+        $fee1->setBusReg(
+            m::mock(BusRegEntity::class)->shouldReceive('getId')->andReturn(44)->getMock()
+        );
+        if ($type === 'psv') {
+            $fee1->setIrfoPsvAuth(
+                m::mock(PsvAuthEntity::class)
+                    ->shouldReceive('getOrganisation')
+                    ->andReturn(
+                        m::mock()
+                        ->shouldReceive('getId')
+                        ->andReturn($orgId)
+                        ->getMock()
+                    )
+                    ->getMock()
+            );
+        } else {
+            $fee1->setIrfoGvPermit(
+                m::mock(GvPermitEntity::class)
+                    ->shouldReceive('getOrganisation')
+                    ->andReturn(
+                        m::mock()
+                        ->shouldReceive('getId')
+                        ->andReturn($orgId)
+                        ->getMock()
+                    )
+                    ->getMock()
+            );
+        }
         $fees = [$fee1];
         $transactionId = 69;
         $feeTransactionId = 123;
@@ -1254,7 +1288,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             'category' => Task::CATEGORY_LICENSING,
             'subCategory' => Task::SUBCATEGORY_LICENSING_GENERAL_TASK,
             'description' => Task::TASK_DESCRIPTION_FEE_DUE,
-            'actionDate' => (new DateTime('now'))->format(\DateTime::W3C)
+            'actionDate' => (new DateTime('now'))->format(\DateTime::W3C),
+            'licence' => 22,
+            'application' => 33,
+            'busReg' => 44,
+            'irfoOrganisation' => $orgId,
         ];
         $this->expectedSideEffect(CreateTask::class, $createTaskData, $taskResult);
 
@@ -1300,6 +1338,20 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->assertEquals(PaymentEntity::TYPE_PAYMENT, $savedTransaction->getType()->getId());
         $this->assertEquals('23456', $savedTransaction->getChequePoNumber());
         $this->assertEquals('2015-06-10', $savedTransaction->getChequePoDate()->format('Y-m-d'));
+    }
+
+    public function feeDataProvider()
+    {
+        return [
+            [
+                'psv',
+                55,
+            ],
+            [
+                'gv',
+                66,
+            ]
+        ];
     }
 
     public function testHandleCommandCancelPendingWaive()
