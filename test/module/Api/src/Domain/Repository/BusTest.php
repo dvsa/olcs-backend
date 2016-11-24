@@ -201,7 +201,7 @@ class BusTest extends RepositoryTestCase
         $mockQuery = m::mock(ByLicenceRoute::class);
         $mockQuery->shouldReceive('getRouteNo')->andReturn($routeNo)->once();
         $mockQuery->shouldReceive('getLicenceId')->andReturn($licenceId)->once();
-        $mockQuery->shouldReceive('getBusRegStatus')->andReturn($busStatus)->once();
+        $mockQuery->shouldReceive('getBusRegStatus')->andReturn($busStatus)->twice();
         $mockQuery->shouldReceive('getVariationNo')->never();
 
         $mockQb = m::mock(QueryBuilder::class);
@@ -214,6 +214,31 @@ class BusTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr->in')->with('m.status', ':byStatus')->once()->andReturnSelf();
         $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('byStatus', $busStatus)->once()->andReturnSelf();
+
+        $sut->applyListFilters($mockQb, $mockQuery);
+    }
+
+    public function testApplyListFiltersLicenceRouteWithEmptyBusRegStatus()
+    {
+        $sut = m::mock(BusRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $licenceId = 11;
+        $routeNo = 22;
+        $busStatus = [];
+
+        $mockQuery = m::mock(ByLicenceRoute::class);
+        $mockQuery->shouldReceive('getRouteNo')->andReturn($routeNo)->once();
+        $mockQuery->shouldReceive('getLicenceId')->andReturn($licenceId)->once();
+        $mockQuery->shouldReceive('getBusRegStatus')->andReturn($busStatus)->once();
+        $mockQuery->shouldReceive('getVariationNo')->never();
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr->eq')->with('m.licence', ':byLicence')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('byLicence', $licenceId)->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('m.routeNo', ':byRouteNo')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('byRouteNo', $routeNo)->once()->andReturnSelf();
 
         $sut->applyListFilters($mockQb, $mockQuery);
     }
