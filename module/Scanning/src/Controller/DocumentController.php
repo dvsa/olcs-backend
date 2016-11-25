@@ -1,91 +1,91 @@
 <?php
 
-/**
- * Document controller
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @author Nick Payne <nick.payne@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Scanning\Controller;
 
-use Dvsa\Olcs\Scanning\Service\ScanningService;
-
 /**
  * Document controller
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @author Nick Payne <nick.payne@valtech.co.uk>
  */
 class DocumentController extends AbstractController
 {
+    /**
+     * Create action
+     *
+     * @param array $postData POST data
+     *
+     * @return \Zend\Stdlib\ResponseInterface|\Zend\View\Model\JsonModel
+     */
     public function create($postData)
     {
-        $scanner = $this->getScanningService();
+        /** @var \Zend\Http\PhpEnvironment\Request $request */
+        $request = $this->getRequest();
 
-        $this->debug('Validating request...');
-
-        if (!$scanner->isValidRequest()) {
-            return $this->respondError(400, 'Bad Request');
+        $scanId = (int) $request->getPost('description');
+        $uploadImage = $request->getFiles()->get('image');
+        try {
+            $this->validateRequest($scanId, $uploadImage);
+        } catch (\Exception $e) {
+            return $this->respondError(400, $e->getMessage());
         }
-
-        $data = $scanner->getData();
-        $scanId = (int) $data['description'];
-
-        $dtoData = [
-            'content' => $this->getUploadContents($data),
-            'filename' => $data['image']['name'],
-            'scanId' => $scanId
-        ];
 
         try {
+            $dtoData = [
+                'content' => $this->getUploadContents($uploadImage),
+                'filename' => $uploadImage['name'],
+                'scanId' => $scanId
+            ];
             $this->handleCommand(\Dvsa\Olcs\Transfer\Command\Scan\CreateDocument::create($dtoData));
+        } catch (\Dvsa\Olcs\Api\Domain\Exception\Exception $e) {
+            $messages = $e->getMessages();
+            if (isset($messages['SCAN_INVALID_MIME'])) {
+                return $this->respondError(415, 'Unsupported Media Type');
+            }
+
+            if (isset($messages['SCAN_NOT_FOUND'])) {
+                return $this->respondError(400, 'Cannot find scan record');
+            }
+
+            $this->logError('Error processing scan document', $messages);
+            return $this->respondError(500, 'Internal Server Error');
         } catch (\Exception $e) {
-            return $this->handleNotOkResponse($scanId, $e);
+            $this->logError('Error processing scan document', ['message' => $e->getMessage()]);
+            return $this->respondError(500, 'Internal Server Error');
         }
 
+        // Everything worked ok
         $this->getResponse()->setStatusCode(204);
 
         return $this->getResponse();
     }
 
-    protected function handleNotOkResponse($scanId, \Exception $e)
-    {
-        if ($e instanceof \Dvsa\Olcs\Api\Domain\Exception\Exception) {
-            $messages = $e->getMessages();
-        } else {
-            $messages = $e->getMessage();
-        }
-
-        if (isset($messages['SCAN_INVALID_MIME'])) {
-            $this->debug('Invalid mime type: ' . $messages['SCAN_INVALID_MIME']);
-            return $this->respondError(415, 'Unsupported Media Type');
-        }
-
-        if (isset($messages['SCAN_NOT_FOUND'])) {
-            $this->debug('Scan record with ID ' . $scanId . ' does not exist');
-            return $this->respondError(400, 'Cannot find scan record');
-        }
-
-        $this->debug(
-            'Error executing backend Scan\CreateDocument command :'. $messages
-        );
-
-        return $this->respondError(500, 'Internal Server Error');
-    }
-
     /**
-     * @return ScanningService
+     * Validate the request parameters
+     *
+     * @param int   $scanId      ID od scan record
+     * @param array $uploadImage uploaded image data
+     *
+     * @return void
      */
-    protected function getScanningService()
+    protected function validateRequest($scanId, $uploadImage)
     {
-        $scanner = $this->getServiceLocator()->get('Scanning');
-        $scanner->setDataFromRequest($this->getRequest());
+        if (!is_numeric($scanId) || ($scanId === 0)) {
+            throw new \RuntimeException('POST "description" is not a valid number');
+        }
 
-        return $scanner;
+        if ($uploadImage === null) {
+            throw new \RuntimeException('POST "image" is missing');
+        }
+
+        $validator = new \Zend\Validator\File\UploadFile();
+        if (!$validator->isValid($uploadImage)) {
+            throw new \RuntimeException(implode(' AND ', $validator->getMessages()));
+        }
     }
 
     /**
-     * @param \Dvsa\Olcs\Transfer\Command\CommandInterface $dto
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\CommandInterface $dto DTO
+     *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     private function handleCommand($dto)
@@ -93,8 +93,15 @@ class DocumentController extends AbstractController
         return $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
     }
 
-    protected function getUploadContents($data)
+    /**
+     * Get file contents of uploaded file
+     *
+     * @param array $data Uploaded file data
+     *
+     * @return string
+     */
+    protected function getUploadContents(array $data)
     {
-        return base64_encode(file_get_contents($data['image']['tmp_name']));
+        return base64_encode(file_get_contents($data['tmp_name']));
     }
 }

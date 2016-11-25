@@ -27,49 +27,112 @@ class TrafficAreaEntityTest extends EntityTester
     const PUB_RECIPIENT_NAME2 = 'name 2';
     const PUB_RECIPIENT_NAME3 = 'name 3';
     const PUB_RECIPIENT_NAME4 = 'name 4';
+    const PUB_RECIPIENT_NAME5 = 'name 5';
+    const PUB_RECIPIENT_NAME6 = 'name 6';
+    const PUB_RECIPIENT_NAME7 = 'name 7';
+    const PUB_RECIPIENT_NAME8 = 'name 8';
     const PUB_RECIPIENT_EMAIL1 = 'email1@foo.bar';
     const PUB_RECIPIENT_EMAIL2 = 'email2@foo.bar';
     const PUB_RECIPIENT_EMAIL3 = 'email3@foo.bar';
     const PUB_RECIPIENT_EMAIL4 = 'email4@foo.bar';
+    const PUB_RECIPIENT_EMAIL5 = 'email5@foo.bar';
+    const PUB_RECIPIENT_EMAIL6 = 'email6@foo.bar';
+    const PUB_RECIPIENT_EMAIL7 = 'email7@foo.bar';
+    const PUB_RECIPIENT_EMAIL8 = 'email8@foo.bar';
 
     /**
      * Test getPublicationRecipients
      *
      * @dataProvider publicationRecipientsProvider
      *
+     * @param $pubType
      * @param $isPolice
      * @param $policeTimes
      * @param $nonPoliceTimes
      * @param $expectedRecipients
      */
-    public function testGetPublicationRecipients($isPolice, $policeTimes, $nonPoliceTimes, $expectedRecipients)
-    {
+    public function testGetPublicationRecipients(
+        $pubType,
+        $isPolice,
+        $adPoliceTimes,
+        $adNonPoliceTimes,
+        $npPoliceTimes,
+        $npNonPoliceTimes,
+        $expectedRecipients
+    ) {
         $entity = new Entity();
 
         $recipient1 = m::mock(RecipientEntity::class);
-        $recipient1->shouldReceive('getEmailAddress')->times($nonPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL1);
-        $recipient1->shouldReceive('getContactName')->times($nonPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME1);
+        $recipient1->shouldReceive('getEmailAddress')->times($adNonPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL1);
+        $recipient1->shouldReceive('getContactName')->times($adNonPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME1);
         $recipient1->shouldReceive('getIsPolice')->once()->andReturn('N');
+        $recipient1->shouldReceive('getSendAppDecision')->andReturn('Y');
+        $recipient1->shouldReceive('getSendNoticesProcs')->andReturn('N');
 
         $recipient2 = m::mock(RecipientEntity::class);
-        $recipient2->shouldReceive('getEmailAddress')->times($policeTimes)->andReturn(self::PUB_RECIPIENT_EMAIL2);
-        $recipient2->shouldReceive('getContactName')->times($policeTimes)->andReturn(self::PUB_RECIPIENT_NAME2);
+        $recipient2->shouldReceive('getEmailAddress')->times($adPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL2);
+        $recipient2->shouldReceive('getContactName')->times($adPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME2);
         $recipient2->shouldReceive('getIsPolice')->once()->andReturn('Y');
+        $recipient2->shouldReceive('getSendAppDecision')->andReturn('Y');
+        $recipient2->shouldReceive('getSendNoticesProcs')->andReturn('N');
 
         $recipient3 = m::mock(RecipientEntity::class);
-        $recipient3->shouldReceive('getEmailAddress')->times($nonPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL3);
-        $recipient3->shouldReceive('getContactName')->times($nonPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME3);
+        $recipient3->shouldReceive('getEmailAddress')->times($adNonPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL3);
+        $recipient3->shouldReceive('getContactName')->times($adNonPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME3);
         $recipient3->shouldReceive('getIsPolice')->once()->andReturn('N');
+        $recipient3->shouldReceive('getSendAppDecision')->andReturn('Y');
+        $recipient3->shouldReceive('getSendNoticesProcs')->andReturn('N');
 
         $recipient4 = m::mock(RecipientEntity::class);
-        $recipient4->shouldReceive('getEmailAddress')->times($policeTimes)->andReturn(self::PUB_RECIPIENT_EMAIL4);
-        $recipient4->shouldReceive('getContactName')->times($policeTimes)->andReturn(self::PUB_RECIPIENT_NAME4);
+        $recipient4->shouldReceive('getEmailAddress')->times($adPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL4);
+        $recipient4->shouldReceive('getContactName')->times($adPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME4);
         $recipient4->shouldReceive('getIsPolice')->once()->andReturn('Y');
+        $recipient4->shouldReceive('getSendAppDecision')->andReturn('Y');
+        $recipient4->shouldReceive('getSendNoticesProcs')->andReturn('N');
 
-        $recipientCollection = new ArrayCollection([$recipient1, $recipient2, $recipient3, $recipient4]);
+        $recipient5 = m::mock(RecipientEntity::class);
+        $recipient5->shouldReceive('getEmailAddress')->times($npNonPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL5);
+        $recipient5->shouldReceive('getContactName')->times($npNonPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME5);
+        $recipient5->shouldReceive('getIsPolice')->once()->andReturn('N');
+        $recipient5->shouldReceive('getSendAppDecision')->andReturn('N');
+        $recipient5->shouldReceive('getSendNoticesProcs')->andReturn('Y');
+
+        $recipient6 = m::mock(RecipientEntity::class);
+        $recipient6->shouldReceive('getEmailAddress')->times($npPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL6);
+        $recipient6->shouldReceive('getContactName')->times($npPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME6);
+        $recipient6->shouldReceive('getIsPolice')->once()->andReturn('Y');
+        $recipient6->shouldReceive('getSendAppDecision')->andReturn('N');
+        $recipient6->shouldReceive('getSendNoticesProcs')->andReturn('Y');
+
+        $recipient7 = m::mock(RecipientEntity::class);
+        $recipient7->shouldReceive('getEmailAddress')->times($npNonPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL7);
+        $recipient7->shouldReceive('getContactName')->times($npNonPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME7);
+        $recipient7->shouldReceive('getIsPolice')->once()->andReturn('N');
+        $recipient7->shouldReceive('getSendAppDecision')->andReturn('N');
+        $recipient7->shouldReceive('getSendNoticesProcs')->andReturn('Y');
+
+        $recipient8 = m::mock(RecipientEntity::class);
+        $recipient8->shouldReceive('getEmailAddress')->times($npPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL8);
+        $recipient8->shouldReceive('getContactName')->times($npPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME8);
+        $recipient8->shouldReceive('getIsPolice')->once()->andReturn('Y');
+        $recipient8->shouldReceive('getSendAppDecision')->andReturn('N');
+        $recipient8->shouldReceive('getSendNoticesProcs')->andReturn('Y');
+
+        $recipientArray = [
+            $recipient1,
+            $recipient2,
+            $recipient3,
+            $recipient4,
+            $recipient5,
+            $recipient6,
+            $recipient7,
+            $recipient8
+        ];
+
+        $recipientCollection = new ArrayCollection($recipientArray);
         $entity->setRecipients($recipientCollection);
 
-        $this->assertEquals($expectedRecipients, $entity->getPublicationRecipients($isPolice));
+        $this->assertEquals($expectedRecipients, $entity->getPublicationRecipients($isPolice, $pubType));
     }
 
     /**
@@ -79,19 +142,31 @@ class TrafficAreaEntityTest extends EntityTester
      */
     public function publicationRecipientsProvider()
     {
-        $policeRecipients = [
+        $adPoliceRecipients = [
             self::PUB_RECIPIENT_EMAIL2 => self::PUB_RECIPIENT_NAME2,
             self::PUB_RECIPIENT_EMAIL4 => self::PUB_RECIPIENT_NAME4
         ];
 
-        $nonPoliceRecipients = [
+        $adNonPoliceRecipients = [
             self::PUB_RECIPIENT_EMAIL1 => self::PUB_RECIPIENT_NAME1,
             self::PUB_RECIPIENT_EMAIL3 => self::PUB_RECIPIENT_NAME3
         ];
 
+        $npPoliceRecipients = [
+            self::PUB_RECIPIENT_EMAIL6 => self::PUB_RECIPIENT_NAME6,
+            self::PUB_RECIPIENT_EMAIL8 => self::PUB_RECIPIENT_NAME8
+        ];
+
+        $npNonPoliceRecipients = [
+            self::PUB_RECIPIENT_EMAIL5 => self::PUB_RECIPIENT_NAME5,
+            self::PUB_RECIPIENT_EMAIL7 => self::PUB_RECIPIENT_NAME7
+        ];
+
         return [
-            ['Y', 1, 0, $policeRecipients],
-            ['N', 0, 1, $nonPoliceRecipients]
+            ['A&D', 'Y', 1, 0, 0, 0, $adPoliceRecipients],
+            ['A&D', 'N', 0, 1, 0, 0, $adNonPoliceRecipients],
+            ['N&P', 'Y', 0, 0, 1, 0, $npPoliceRecipients],
+            ['N&P', 'N', 0, 0, 0, 1, $npNonPoliceRecipients]
         ];
     }
 }

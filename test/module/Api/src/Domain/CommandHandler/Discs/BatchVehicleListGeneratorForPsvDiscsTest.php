@@ -1,10 +1,5 @@
 <?php
 
-/**
- * BatchVehicleListGeneratorForPsvDiscs test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Discs;
 
 use Dvsa\Olcs\Api\Domain\Command\Discs\CreatePsvVehicleListForDiscs as CreatePsvVehicleListForDiscsCommand;
@@ -23,9 +18,17 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
  */
 class BatchVehicleListGeneratorForPsvDiscsTest extends CommandHandlerTestCase
 {
+    protected $batchSize = 180;
+
     public function setUp()
     {
         $this->sut = new Batch();
+
+        $this->mockedSmServices = [
+            'Config' => [
+                'disc_printing' => ['psv_vehicle_list_batch_size' => $this->batchSize]
+            ]
+        ];
 
         parent::setUp();
     }
@@ -39,7 +42,7 @@ class BatchVehicleListGeneratorForPsvDiscsTest extends CommandHandlerTestCase
             'bookmarks' => $bookmarks,
             'user' => 1
         ];
-        $queuedQueries = array_slice($queries, Batch::BATCH_SIZE);
+        $queuedQueries = array_slice($queries, $this->batchSize);
         $options = [
             'queries' => $queuedQueries,
             'bookmarks' => $bookmarks,
@@ -49,7 +52,7 @@ class BatchVehicleListGeneratorForPsvDiscsTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
         $expected = ['id' => []];
 
-        for ($i = 0; $i < Batch::BATCH_SIZE; $i++) {
+        for ($i = 0; $i < $this->batchSize; $i++) {
             $data = [
                 'id' =>  $i + 1,
                 'knownValues' => ['foo' => 'bar' . $i],
@@ -73,7 +76,7 @@ class BatchVehicleListGeneratorForPsvDiscsTest extends CommandHandlerTestCase
     protected function getBookmarks()
     {
         $params = [];
-        for ($i = 0; $i < Batch::BATCH_SIZE + 2; $i++) {
+        for ($i = 0; $i < $this->batchSize + 2; $i++) {
             $params[$i] = ['foo' => 'bar' . $i];
         }
         return $params;
@@ -82,7 +85,7 @@ class BatchVehicleListGeneratorForPsvDiscsTest extends CommandHandlerTestCase
     protected function getQueries()
     {
         $queries = [];
-        for ($i = 0; $i <= Batch::BATCH_SIZE +  2; $i++) {
+        for ($i = 0; $i <= $this->batchSize +  2; $i++) {
             $queries[$i + 1] = ['id' => $i + 1];
         }
         return $queries;
