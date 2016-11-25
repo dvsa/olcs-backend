@@ -51,9 +51,8 @@ final class AdjustTransaction extends AbstractCommandHandler implements
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        parent::createService($serviceLocator);
         $this->feesHelper = $serviceLocator->getServiceLocator()->get('FeesHelperService');
-        return $this;
+        return parent::createService($serviceLocator);
     }
 
     public function handleCommand(CommandInterface $command)

@@ -33,11 +33,10 @@ abstract class AbstractCommandHandler extends DomainAbstractCommandHandler imple
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        parent::createService($serviceLocator);
         $this->api = $serviceLocator->getServiceLocator()->get(CompaniesHouseClient::class);
 
         $this->wordFilter = new \Zend\Filter\Word\UnderscoreToCamelCase();
-        return $this;
+        return parent::createService($serviceLocator);
     }
 
     /**
