@@ -16,6 +16,8 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 trait BundleSerializableTrait
 {
     /**
+     * JSON serialize
+     *
      * @return array
      * @deprecated
      */
@@ -55,6 +57,8 @@ trait BundleSerializableTrait
     }
 
     /**
+     * Get calculated values
+     *
      * @return array
      * @deprecated
      */
@@ -64,6 +68,10 @@ trait BundleSerializableTrait
     }
 
     /**
+     * Serialize
+     *
+     * @param array $bundle Bundle
+     *
      * @return array
      */
     public function serialize(array $bundle = [])
@@ -109,9 +117,10 @@ trait BundleSerializableTrait
     /**
      * Property bundle is null when we haven't asked for the property
      *
-     * @param mixed $value
-     * @param string $property
-     * @param array $propertyBundle
+     * @param mixed  $value          Value
+     * @param string $property       Property
+     * @param array  $propertyBundle Property bundle
+     *
      * @return array|null
      */
     private function determineValue($value, $property, $propertyBundle = null)
@@ -169,6 +178,14 @@ trait BundleSerializableTrait
         return null;
     }
 
+    /**
+     * Get serialized value
+     *
+     * @param mixed $value          Value
+     * @param array $propertyBundle Property bundle
+     *
+     * @return mixed|null
+     */
     private function getSerializedValue($value, $propertyBundle)
     {
         if ($value instanceof BundleSerializableInterface) {
@@ -185,6 +202,13 @@ trait BundleSerializableTrait
         return $value;
     }
 
+    /**
+     * Get property value
+     *
+     * @param string $property Property
+     *
+     * @return mixed|null
+     */
     private function getPropertyValue($property)
     {
         $value = null;
@@ -199,6 +223,8 @@ trait BundleSerializableTrait
     }
 
     /**
+     * Get calculated bundle values
+     *
      * @return array
      */
     protected function getCalculatedBundleValues()
