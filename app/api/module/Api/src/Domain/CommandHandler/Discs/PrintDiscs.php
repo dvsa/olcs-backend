@@ -16,14 +16,18 @@ use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreatQueue;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
+use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 
 /**
  * Print Discs
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class PrintDiscs extends AbstractCommandHandler implements TransactionedInterface
+final class PrintDiscs extends AbstractCommandHandler implements TransactionedInterface, ConfigAwareInterface
 {
+    use ConfigAwareTrait;
+
     const BATCH_SIZE = 30;
 
     protected $repoServiceName = 'GoodsDisc';
@@ -44,15 +48,21 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
 
     public function handleCommand(CommandInterface $command)
     {
+        $config = $this->getConfig();
+        $batchSize = isset($config['disc_printing']['disc_batch_size'])
+            && is_numeric($config['disc_printing']['disc_batch_size'])
+            ? $config['disc_printing']['disc_batch_size']
+            : self::BATCH_SIZE;
+
         $bookmark = $this->params[$command->getType()]['bookmark'];
         $options = null;
 
         $discsToPrintIds = $command->getDiscs();
 
-        if (count($discsToPrintIds) > self::BATCH_SIZE) {
-            $queuedDiscsIds = array_slice($discsToPrintIds, self::BATCH_SIZE);
-            $discsToPrintIds = array_slice($discsToPrintIds, 0, self::BATCH_SIZE);
-            $queuedStartNumber = $command->getStartNumber() + self::BATCH_SIZE;
+        if (count($discsToPrintIds) > $batchSize) {
+            $queuedDiscsIds = array_slice($discsToPrintIds, $batchSize);
+            $discsToPrintIds = array_slice($discsToPrintIds, 0, $batchSize);
+            $queuedStartNumber = $command->getStartNumber() + $batchSize;
             $options = [
                 'discs' => $queuedDiscsIds,
                 'startNumber' => $queuedStartNumber,

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Batch Vehicle List Generator for Psv Discs
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Discs;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -14,28 +9,40 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CreatePsvVehicleListForDiscs as CreatePsv
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreatQueue;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
+use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 
 /**
  * Batch Vehicle List Generator for Psv Discs
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class BatchVehicleListGeneratorForPsvDiscs extends AbstractCommandHandler implements TransactionedInterface
+final class BatchVehicleListGeneratorForPsvDiscs extends AbstractCommandHandler implements
+    TransactionedInterface,
+    ConfigAwareInterface
 {
-    protected $repoServiceName = 'GoodsDisc';
+    use ConfigAwareTrait;
+
+    protected $repoServiceName = 'PsvDisc';
 
     const BATCH_SIZE = 30;
 
     public function handleCommand(CommandInterface $command)
     {
+        $config = $this->getConfig();
+        $batchSize = isset($config['disc_printing']['psv_vehicle_list_batch_size'])
+            && is_numeric($config['disc_printing']['psv_vehicle_list_batch_size'])
+            ? $config['disc_printing']['psv_vehicle_list_batch_size']
+            : self::BATCH_SIZE;
+
         $result = new Result();
         $queries = $command->getQueries();
         $bookmarks = $command->getBookmarks();
         $options = null;
 
-        if (count($queries) > self::BATCH_SIZE) {
-            $queuedQueries = array_slice($queries, self::BATCH_SIZE);
-            $queries = array_slice($queries, 0, self::BATCH_SIZE);
+        if (count($queries) > $batchSize) {
+            $queuedQueries = array_slice($queries, $batchSize);
+            $queries = array_slice($queries, 0, $batchSize);
             $options = [
                 'queries' => $queuedQueries,
                 'bookmarks' => $bookmarks,
