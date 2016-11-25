@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Traits;
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Proxy\Proxy;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -15,6 +16,8 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 trait BundleSerializableTrait
 {
     /**
+     * JSON serialize
+     *
      * @return array
      * @deprecated
      */
@@ -54,6 +57,8 @@ trait BundleSerializableTrait
     }
 
     /**
+     * Get calculated values
+     *
      * @return array
      * @deprecated
      */
@@ -63,6 +68,10 @@ trait BundleSerializableTrait
     }
 
     /**
+     * Serialize
+     *
+     * @param array $bundle Bundle
+     *
      * @return array
      */
     public function serialize(array $bundle = [])
@@ -108,9 +117,10 @@ trait BundleSerializableTrait
     /**
      * Property bundle is null when we haven't asked for the property
      *
-     * @param mixed $value
-     * @param string $property
-     * @param array $propertyBundle
+     * @param mixed  $value          Value
+     * @param string $property       Property
+     * @param array  $propertyBundle Property bundle
+     *
      * @return array|null
      */
     private function determineValue($value, $property, $propertyBundle = null)
@@ -168,15 +178,37 @@ trait BundleSerializableTrait
         return null;
     }
 
+    /**
+     * Get serialized value
+     *
+     * @param mixed $value          Value
+     * @param array $propertyBundle Property bundle
+     *
+     * @return mixed|null
+     */
     private function getSerializedValue($value, $propertyBundle)
     {
         if ($value instanceof BundleSerializableInterface) {
-            return $value->serialize($propertyBundle);
+            try {
+                // try to serialize the value
+                return $value->serialize($propertyBundle);
+            } catch (EntityNotFoundException $ex) {
+                // we may have the object id but will not be able to load it
+                // because SoftDeleteable is used
+                return null;
+            }
         }
 
         return $value;
     }
 
+    /**
+     * Get property value
+     *
+     * @param string $property Property
+     *
+     * @return mixed|null
+     */
     private function getPropertyValue($property)
     {
         $value = null;
@@ -191,6 +223,8 @@ trait BundleSerializableTrait
     }
 
     /**
+     * Get calculated bundle values
+     *
      * @return array
      */
     protected function getCalculatedBundleValues()
