@@ -105,7 +105,7 @@ SQL;
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->order('createdOn', 'ASC');
+            ->order('id', 'ASC');
 
         $now = new DateTime();
         $qb
