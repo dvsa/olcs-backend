@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Traits;
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Proxy\Proxy;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -171,7 +172,14 @@ trait BundleSerializableTrait
     private function getSerializedValue($value, $propertyBundle)
     {
         if ($value instanceof BundleSerializableInterface) {
-            return $value->serialize($propertyBundle);
+            try {
+                // try to serialize the value
+                return $value->serialize($propertyBundle);
+            } catch (EntityNotFoundException $ex) {
+                // we may have the object id but will not be able to load it
+                // because SoftDeleteable is used
+                return null;
+            }
         }
 
         return $value;
