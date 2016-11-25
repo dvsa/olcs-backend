@@ -190,8 +190,8 @@ class Bus extends AbstractRepository
                 ->setParameter('byLicence', $query->getLicenceId());
         }
 
-        //array of allowable bus reg statuses
-        if (method_exists($query, 'getBusRegStatus')) {
+        //array of allowable bus reg statuses (optional parameter, if empty return everything)
+        if (method_exists($query, 'getBusRegStatus') && !empty($query->getBusRegStatus())) {
             $qb->andWhere($qb->expr()->in($this->alias . '.status', ':byStatus'))
                 ->setParameter('byStatus', $query->getBusRegStatus());
         }
