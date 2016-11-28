@@ -40,7 +40,7 @@ class QueueTest extends RepositoryTestCase
         $this->mockCreateQueryBuilder($qb);
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
-            ->shouldReceive('order')->with('createdOn', 'ASC')->once()->andReturnSelf();
+            ->shouldReceive('order')->with('id', 'ASC')->once()->andReturnSelf();
 
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()->shouldReceive('execute')
@@ -75,7 +75,7 @@ class QueueTest extends RepositoryTestCase
         $this->mockCreateQueryBuilder($qb);
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
-            ->shouldReceive('order')->with('createdOn', 'ASC')->once()->andReturnSelf();
+            ->shouldReceive('order')->with('id', 'ASC')->once()->andReturnSelf();
 
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()->shouldReceive('execute')
@@ -111,7 +111,7 @@ class QueueTest extends RepositoryTestCase
         $this->mockCreateQueryBuilder($qb);
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
-            ->shouldReceive('order')->with('createdOn', 'ASC')->once()->andReturnSelf();
+            ->shouldReceive('order')->with('id', 'ASC')->once()->andReturnSelf();
 
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()->shouldReceive('execute')

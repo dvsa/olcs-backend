@@ -25,7 +25,7 @@ final class BatchVehicleListGeneratorForPsvDiscs extends AbstractCommandHandler 
 
     protected $repoServiceName = 'PsvDisc';
 
-    const BATCH_SIZE = 30;
+    const BATCH_SIZE = 2;
 
     public function handleCommand(CommandInterface $command)
     {
@@ -41,8 +41,8 @@ final class BatchVehicleListGeneratorForPsvDiscs extends AbstractCommandHandler 
         $options = null;
 
         if (count($queries) > $batchSize) {
-            $queuedQueries = array_slice($queries, $batchSize);
-            $queries = array_slice($queries, 0, $batchSize);
+            $queuedQueries = array_slice($queries, $batchSize, count($queries) - $batchSize, true);
+            $queries = array_slice($queries, 0, $batchSize, true);
             $options = [
                 'queries' => $queuedQueries,
                 'bookmarks' => $bookmarks,
