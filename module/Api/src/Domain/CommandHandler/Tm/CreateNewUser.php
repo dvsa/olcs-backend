@@ -54,7 +54,11 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
     protected $usernameErrorKey = 'username';
 
     /**
-     * @param Cmd $command
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -101,6 +105,11 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
     }
 
     /**
+     * Create contact details
+     *
+     * @param string $emailAddress Email address
+     * @param Person $person       Person
+     *
      * @return ContactDetails
      */
     protected function createContactDetails($emailAddress, Person $person)
@@ -125,8 +134,10 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
     }
 
     /**
-     * @param Cmd $command
-     * @param ContactDetails $contactDetails
+     * Create person
+     *
+     * @param Cmd $command Command
+     *
      * @return Person
      */
     protected function createPerson(Cmd $command)
@@ -142,6 +153,10 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
     }
 
     /**
+     * Create Transport Manager
+     *
+     * @param ContactDetails $contactDetails Contact details
+     *
      * @return TransportManager
      */
     protected function createTransportManager(ContactDetails $contactDetails)
@@ -169,8 +184,12 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
     }
 
     /**
-     * @param TransportManager $transportManager
-     * @param Application $application
+     * Create TM Application
+     *
+     * @param TransportManager $transportManager Transport Manager
+     * @param Application      $application      Application
+     * @param CommandInterface $command          Command
+     *
      * @return TransportManagerApplication
      */
     protected function createTmApplication(TransportManager $transportManager, Application $application, Cmd $command)
@@ -194,9 +213,12 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
     }
 
     /**
-     * @param \Dvsa\Olcs\Transfer\Command\Tm\CreateNewUser $command
-     * @param TransportManagerApplication $transportManagerApplication
-     * @param ContactDetails $contactDetails
+     * Create user
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Tm\CreateNewUser $command                     Command
+     * @param TransportManagerApplication                  $transportManagerApplication TM Application
+     * @param ContactDetails                               $contactDetails              Contact Details
+     *
      * @return User
      */
     protected function createUser(
@@ -265,6 +287,14 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
         return $user;
     }
 
+    /**
+     * Validate required
+     *
+     * @param string $username     Username
+     * @param string $emailAddress Email address
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     protected function validateRequired($username, $emailAddress)
     {
         $messages = [];

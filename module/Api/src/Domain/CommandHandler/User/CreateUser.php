@@ -37,6 +37,13 @@ final class CreateUser extends AbstractUserCommandHandler implements
 
     protected $extraRepos = ['Application', 'ContactDetails', 'Licence'];
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         if (!$this->isGranted(Permission::CAN_MANAGE_USER_INTERNAL)) {
