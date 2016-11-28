@@ -45,6 +45,13 @@ final class UpdateUser extends AbstractUserCommandHandler implements
 
     protected $extraRepos = ['Application', 'ContactDetails', 'Licence'];
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         if (!$this->isGranted(Permission::CAN_MANAGE_USER_INTERNAL)) {
@@ -120,12 +127,12 @@ final class UpdateUser extends AbstractUserCommandHandler implements
     /**
      * Generates a new temp password and sends letter or email
      *
-     * @param User $user
-     * @param string $mode
+     * @param User   $user User
+     * @param string $mode Mode
      *
      * @return Result
      */
-    private function resetPassword($user, $mode)
+    private function resetPassword(User $user, $mode)
     {
         $licence = null;
 
@@ -169,7 +176,7 @@ final class UpdateUser extends AbstractUserCommandHandler implements
                     $this->handleSideEffect(
                         SendUserTemporaryPasswordDto::create(
                             [
-                                'user' => $user,
+                                'user' => $user->getId(),
                                 'password' => $password,
                             ]
                         )
@@ -184,8 +191,8 @@ final class UpdateUser extends AbstractUserCommandHandler implements
     /**
      * Sends letter with a temporary password
      *
-     * @param Licence $licence
-     * @param string $password
+     * @param Licence $licence  Licence
+     * @param string  $password Password
      *
      * @return Result
      */
@@ -216,9 +223,9 @@ final class UpdateUser extends AbstractUserCommandHandler implements
     /**
      * Generates a reset password document and returns its id
      *
-     * @param string $template
-     * @param array $queryData
-     * @param array $knownValues
+     * @param string $template    Template
+     * @param array  $queryData   Query data
+     * @param array  $knownValues Known values
      *
      * @return int
      */
