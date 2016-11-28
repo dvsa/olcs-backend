@@ -117,7 +117,7 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
                     $this->expectedSideEffect(
                         SendUserCreatedDto::class,
                         [
-                            'user' => $savedUser
+                            'user' => $userId
                         ],
                         new Result()
                     );
@@ -125,7 +125,7 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
                     $this->expectedSideEffect(
                         SendUserTemporaryPasswordDto::class,
                         [
-                            'user' => $savedUser,
+                            'user' => $userId,
                             'password' => 'GENERATED_PASSWORD',
                         ],
                         new Result()

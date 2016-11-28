@@ -243,8 +243,8 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
             $this->handleSideEffect(
                 SendTmUserCreatedDto::create(
                     [
-                        'user' => $user,
-                        'tma' => $transportManagerApplication
+                        'user' => $user->getId(),
+                        'tma' => $transportManagerApplication->getId()
                     ]
                 )
             );
@@ -253,7 +253,7 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
             $this->handleSideEffect(
                 SendUserTemporaryPasswordDto::create(
                     [
-                        'user' => $user,
+                        'user' => $user->getId(),
                         'password' => $password,
                     ]
                 )

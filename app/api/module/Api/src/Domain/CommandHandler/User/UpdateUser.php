@@ -125,7 +125,7 @@ final class UpdateUser extends AbstractUserCommandHandler implements
      *
      * @return Result
      */
-    private function resetPassword($user, $mode)
+    private function resetPassword(User $user, $mode)
     {
         $licence = null;
 
@@ -169,7 +169,7 @@ final class UpdateUser extends AbstractUserCommandHandler implements
                     $this->handleSideEffect(
                         SendUserTemporaryPasswordDto::create(
                             [
-                                'user' => $user,
+                                'user' => $user->getId(),
                                 'password' => $password,
                             ]
                         )
