@@ -109,7 +109,7 @@ final class CreateUser extends AbstractUserCommandHandler implements
             $this->handleSideEffect(
                 SendUserCreatedDto::create(
                     [
-                        'user' => $user,
+                        'user' => $user->getId(),
                     ]
                 )
             );
@@ -118,7 +118,7 @@ final class CreateUser extends AbstractUserCommandHandler implements
             $this->handleSideEffect(
                 SendUserTemporaryPasswordDto::create(
                     [
-                        'user' => $user,
+                        'user' => $user->getId(),
                         'password' => $password,
                     ]
                 )
