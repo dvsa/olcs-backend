@@ -114,6 +114,11 @@ return array(
                 'persist'
             )
         ),
+        'partner_contact_details_id' => array(
+            'cascade' => array(
+                'persist'
+            )
+        ),
         'transport_manager_id' => array(
             'inversedBy' => array(
                 'entity' => 'TransportManager',
