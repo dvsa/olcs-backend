@@ -31,9 +31,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_bus_reg_parent_id", columns={"parent_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_bus_reg_olbs_key", columns={"olbs_key"}),
- *        @ORM\UniqueConstraint(name="uk_bus_reg_reg_no_variation_no_deleted_date",
-     *     columns={"reg_no","variation_no","deleted_date"})
+ *        @ORM\UniqueConstraint(name="uk_bus_reg_reg_no_variation_no", columns={"reg_no","variation_no"}),
+ *        @ORM\UniqueConstraint(name="uk_bus_reg_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
