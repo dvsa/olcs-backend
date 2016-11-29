@@ -92,7 +92,7 @@ class Email implements FactoryInterface
         $addressList = new AddressList();
 
         //null or empty string
-        if (empty($addressOrAddresses) || $addressOrAddresses === '') {
+        if (empty($addressOrAddresses)) {
             return $addressList;
         }
 
