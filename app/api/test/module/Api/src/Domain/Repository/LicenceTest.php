@@ -698,4 +698,29 @@ class LicenceTest extends RepositoryTestCase
 
         static::assertEquals(['EXPECT'], $this->sut->fetchWithAddressesUsingId($mockQuery));
     }
+
+    public function testFetchByOrganisationIdAndStatuses()
+    {
+
+        $qb = m::mock(QueryBuilder::class);
+        $repo = m::mock(EntityRepository::class);
+
+        $statuses = ['foo', 'bar'];
+
+        $this->em->shouldReceive('getRepository')->with(Licence::class)->andReturn($repo);
+
+        $repo->shouldReceive('createQueryBuilder')->with('m')->once()->andReturn($qb);
+
+        $qb->shouldReceive('expr->eq')->with('m.organisation', ':organisationId')->once()->andReturn('orgCond');
+        $qb->shouldReceive('andWhere')->with('orgCond')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('organisationId', 1)->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->in')->with('m.status', ':statuses')->once()->andReturn('stCond');
+        $qb->shouldReceive('andWhere')->with('stCond')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('statuses', $statuses)->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getResult')->with(Query::HYDRATE_ARRAY)->once()->andReturn(['result']);
+
+        $this->assertSame(['result'], $this->sut->fetchByOrganisationIdAndStatuses(1, $statuses));
+    }
 }
