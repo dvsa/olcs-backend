@@ -59,9 +59,11 @@ class TrafficArea extends AbstractTrafficArea
 
         /** @var RecipientEntity $recipient */
         foreach ($matchedRecipients as $recipient) {
+            $email = $recipient->getEmailAddress();
+
             //remove this if statement once the doctrine criteria code is uncommented
-            if ($recipient->getIsPolice() === $isPolice && $recipient->$checkPubMethod() === 'Y') {
-                $recipients[$recipient->getEmailAddress()] = $recipient->getContactName();
+            if ($recipient->getIsPolice() === $isPolice && $recipient->$checkPubMethod() === 'Y' && !empty($email)) {
+                $recipients[$email] = $recipient->getContactName();
             }
         }
 

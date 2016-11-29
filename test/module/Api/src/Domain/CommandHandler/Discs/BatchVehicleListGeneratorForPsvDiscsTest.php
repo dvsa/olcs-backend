@@ -88,7 +88,7 @@ class BatchVehicleListGeneratorForPsvDiscsTest extends CommandHandlerTestCase
     protected function getQueries()
     {
         $queries = [];
-        for ($i = 0; $i < $this->batchSize +  $this->additionalSize; $i++) {
+        for ($i = 0; $i < $this->batchSize + $this->additionalSize; $i++) {
             $licenceId = $i + 1;
             $queries[$licenceId] = ['id' => $licenceId];
         }
