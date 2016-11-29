@@ -89,8 +89,6 @@ abstract class AbstractController extends AbstractRestfulController
 
         $data = ['status' => $code, 'title' => $message];
 
-        $this->debug('Responding with ' . $code . ': ' . $message, $data);
-
         return $this->respond($data);
     }
 
@@ -106,6 +104,22 @@ abstract class AbstractController extends AbstractRestfulController
             [
                 'data' => $data
             ]
+        );
+    }
+
+    /**
+     * Add an ERR log entry
+     *
+     * @param string $message Message to log
+     * @param array  $data    Additional data
+     *
+     * @return Logger
+     */
+    protected function logError($message, $data = [])
+    {
+        return Logger::err(
+            $message,
+            $data
         );
     }
 }

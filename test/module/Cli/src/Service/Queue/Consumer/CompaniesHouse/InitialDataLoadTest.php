@@ -1,25 +1,22 @@
 <?php
 
-/**
- * Companies House Initial Data Load Queue Consumer Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
-use Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\InitialDataLoad as Sut;
+use Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\InitialDataLoad;
 use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
 
 /**
- * Companies House Initial Data Load Queue Consumer Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
+ * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\InitialDataLoad
+ * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer
  */
 class InitialDataLoadTest extends AbstractConsumerTestCase
 {
-    protected $consumerClass = Sut::class;
+    protected $consumerClass = InitialDataLoad::class;
+
+    /** @var InitialDataLoad */
+    protected $sut;
 
     public function testProcessMessageSuccess()
     {
@@ -69,7 +66,10 @@ class InitialDataLoadTest extends AbstractConsumerTestCase
 
         $this->expectCommand(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
-            ['item' => $item],
+            [
+                'item' => $item,
+                'lastError' => 'epic fail',
+            ],
             new Result(),
             false
         );

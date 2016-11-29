@@ -54,7 +54,12 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
      */
     public function failed(QueueEntity $item, $reason = null)
     {
-        $command = FailedCmd::create(['item' => $item]);
+        $command = FailedCmd::create(
+            [
+                'item' => $item,
+                'lastError' => $reason,
+            ]
+        );
         $this->handleSideEffectCommand($command);
 
         $description = 'Failed to process message';

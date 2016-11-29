@@ -31,8 +31,8 @@ return [
 
     // Elastic search
     'elastic_search' => [
-        // Hostname e.g. elasticsearch-dev.olcs.mgt.mtpdvsa *Environment specific*
-        'host' => 'elasticsearch-dev.olcs.mgt.mtpdvsa',
+        // Hostname e.g. search.olcs.da.nonprod.dvsa.aws *Environment specific*
+        'host' => 'search.olcs.da.nonprod.dvsa.aws',
         // Port, e.g. 9200
         'port' => '9200'
     ],
@@ -342,5 +342,14 @@ return [
         '/opt/dvsa',
         'Skipping import of schema'
     ],
-
+    
+    // Specifies the batch size to use for disc printing
+    'disc_printing' => [
+        // Number of discs to print for each queue job
+        'disc_batch_size' => 300,
+        // Number of PSV vehicle lists to print for each queue job
+        'psv_vehicle_list_batch_size' => 300,
+        // Number of GOODS vehicle lists to print for each queue job
+        'gv_vehicle_list_batch_size' => 300,
+    ],
 ];

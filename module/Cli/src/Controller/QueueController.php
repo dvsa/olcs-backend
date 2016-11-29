@@ -9,6 +9,7 @@
 namespace Dvsa\Olcs\Cli\Controller;
 
 use Zend\Mvc\Controller\AbstractConsoleController;
+use Zend\View\Model\ConsoleModel;
 
 /**
  * QueueController
@@ -68,6 +69,10 @@ class QueueController extends AbstractConsoleController
                 $this->getConsole()->writeLine($response);
             }
         }
+
+        $model = new ConsoleModel();
+        $model->setErrorLevel(0);
+        return $model;
     }
 
     /**

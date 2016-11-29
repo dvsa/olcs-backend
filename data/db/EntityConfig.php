@@ -1588,7 +1588,6 @@ return array(
                 'indexBy' => 'id',
                 'orphanRemoval' => 'true',
                 'orderBy' => array(
-                    'lastModifiedOn' => 'DESC',
                     'id' => 'DESC',
                 ),
             )

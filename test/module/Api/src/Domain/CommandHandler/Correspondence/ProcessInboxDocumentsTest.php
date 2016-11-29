@@ -77,7 +77,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
                     ->getMock()
                 ]
             )
-            ->twice()
+            ->once()
             ->shouldReceive('getId')
             ->andReturn('id')
             ->once()
@@ -98,7 +98,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
             ->once()
             ->shouldReceive('getDocument')
             ->andReturn($mockDocument)
-            ->times(3)
+            ->times(2)
             ->getMock();
 
         $this->repoMap['CorrespondenceInbox']
@@ -176,7 +176,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
                         ->getMock()
                 ]
             )
-            ->twice()
+            ->once()
             ->shouldReceive('getId')
             ->andReturn('id')
             ->once()
@@ -194,7 +194,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
             ->once()
             ->shouldReceive('getDocument')
             ->andReturn($mockDocument)
-            ->times(3)
+            ->times(2)
             ->getMock();
 
         $this->repoMap['CorrespondenceInbox']

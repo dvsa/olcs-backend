@@ -1,21 +1,15 @@
 <?php
 
-/**
- * Process inbox documents
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Correspondence;
 
+use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
 use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
-use Dvsa\Olcs\Email\Data\Message;
-use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
-use Dvsa\Olcs\Api\Service\File\File;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Process inbox documents
@@ -31,6 +25,13 @@ final class ProcessInboxDocuments extends AbstractCommandHandler implements Emai
 
     protected $repoServiceName = 'CorrespondenceInbox';
 
+    /**
+     * Handle Command
+     *
+     * @param \Dvsa\Olcs\Api\Domain\Command\Correspondence\ProcessInboxDocuments $command Command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -41,6 +42,11 @@ final class ProcessInboxDocuments extends AbstractCommandHandler implements Emai
         return $result;
     }
 
+    /**
+     * Send Reminders
+     *
+     * @return Result
+     */
     protected function sendReminders()
     {
         $result = new Result();
@@ -49,11 +55,24 @@ final class ProcessInboxDocuments extends AbstractCommandHandler implements Emai
         $emailList = $this->getRepo()->getAllRequiringReminder($minDate, $maxReminderDate);
         $result->addMessage('Found ' . count($emailList) . ' records to email');
 
-        foreach ($emailList as $row) {
+        Logger::debug('#REMOVE-ME Found ' . count($emailList) . ' records to email;');
+
+        foreach ($emailList as $idx => $row) {
+            /** @var \Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox $row */
+            $document = $row->getDocument();
+            Logger::debug(
+                '#REMOVE-ME' . $idx . ' ProcessInboxDocs::sendReminders: ' .
+                'type: ' . gettype($row) . '; ' .
+                'class: ' . get_class($row) . '; ' .
+                '$row->getDocument() === null: ' . var_export($document === null, 1) . ';'
+            );
+
             $licence = $row->getLicence();
-            $continuationsDetails = $row->getDocument()->getContinuationDetails();
-            $isContinuation = count($row->getDocument()->getContinuationDetails()) &&
-                $continuationsDetails[0]->getChecklistDocument();
+            $continuationsDetails = $document->getContinuationDetails();
+            $isContinuation = (
+                count($continuationsDetails) > 0
+                && $continuationsDetails[0]->getChecklistDocument() !== null
+            );
             $emailType = $isContinuation ? self::EMAIL_TYPE_CONTINUATION : self::EMAIL_TYPE_STANDARD;
 
             // edge case; we expect to find email addresses otherwise we wouldn't
@@ -66,6 +85,7 @@ final class ProcessInboxDocuments extends AbstractCommandHandler implements Emai
 
             $sentTo = [];
             foreach ($licence->getOrganisation()->getAdminOrganisationUsers() as $orgUser) {
+                /** @var \Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser $orgUser */
                 $user = $orgUser->getUser();
                 $to = $user->getContactDetails()->getEmailAddress();
 
@@ -99,6 +119,11 @@ final class ProcessInboxDocuments extends AbstractCommandHandler implements Emai
         return $result;
     }
 
+    /**
+     * Print Documents
+     *
+     * @return Result
+     */
     protected function printDocuments()
     {
         $result = new Result();
@@ -129,6 +154,13 @@ final class ProcessInboxDocuments extends AbstractCommandHandler implements Emai
         return $result;
     }
 
+    /**
+     * Get Date
+     *
+     * @param int $interval Interval
+     *
+     * @return \DateTime
+     */
     protected function getDate($interval)
     {
         $now = new DateTime('now');

@@ -18,7 +18,7 @@ interface ReadAuditRepositoryInterface
     public function deleteOlderThan($oldestDate);
 
     /**
-     * Fetch one record by userId, entityId and date
+     * Fetch one or more records by userId, entityId and date
      *
      * @param $userId
      * @param $entityId
@@ -26,5 +26,5 @@ interface ReadAuditRepositoryInterface
      * 
      * @return mixed
      */
-    public function fetchOne($userId, $entityId, \DateTime $date);
+    public function fetchOneOrMore($userId, $entityId, \DateTime $date);
 }

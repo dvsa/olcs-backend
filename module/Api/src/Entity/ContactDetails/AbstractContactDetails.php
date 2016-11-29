@@ -214,7 +214,7 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
      *     indexBy="id",
      *     orphanRemoval=true
      * )
-     * @ORM\OrderBy({"lastModifiedOn" = "DESC","id" = "DESC"})
+     * @ORM\OrderBy({"id" = "DESC"})
      */
     protected $phoneContacts;
 

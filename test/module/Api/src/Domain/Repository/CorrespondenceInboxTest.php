@@ -1,27 +1,23 @@
 <?php
 
-/**
- * Correspondence inbox test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\CorrespondenceInbox as CorrespondenceInboxRepo;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity;
+use Mockery as m;
 
 /**
- * Correspondence inbox test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\CorrespondenceInbox
  */
 class CorrespondenceInboxTest extends RepositoryTestCase
 {
+    /** @var  Repository\CorrespondenceInbox */
+    protected $sut;
+
     public function setUp()
     {
-        $this->setUpSut(CorrespondenceInboxRepo::class);
+        $this->setUpSut(Repository\CorrespondenceInbox::class);
     }
 
     public function testGetAllRequiringPrint()
@@ -30,6 +26,8 @@ class CorrespondenceInboxTest extends RepositoryTestCase
         $maxDate = '2016-01-01';
 
         $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('addSelect')->with('d')->once()->andReturnSelf();
+        $qb->shouldReceive('join')->with('m.document', 'd')->once()->andReturnSelf();
 
         $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
@@ -37,7 +35,6 @@ class CorrespondenceInboxTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('lo.organisationUsers', 'lou')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('lou.user', 'louu')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('louu.contactDetails', 'louucd')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('document', 'd')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('d.continuationDetails', 'cd')->once()->andReturnSelf();
 
         $qb->shouldReceive('expr->eq')->with('l.translateToWelsh', 0)->once()->andReturn('condition1');
@@ -61,9 +58,21 @@ class CorrespondenceInboxTest extends RepositoryTestCase
         $qb->shouldReceive('andWhere')->with('condition6')->once()->andReturnSelf();
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($qb);
-        $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['result']);
 
-        $this->sut->getAllRequiringPrint($minDate, $maxDate);
+        $mockQry = m::mock(\Doctrine\ORM\AbstractQuery::class);
+        $mockQry->shouldReceive('setFetchMode')
+            ->once()
+            ->with(
+                Entity\Organisation\CorrespondenceInbox::class,
+                'document',
+                \Doctrine\ORM\Mapping\ClassMetadata::FETCH_EAGER
+            )
+            ->andReturnSelf();
+        $mockQry->shouldReceive('getResult')->once()->andReturn('EXPECT');
+
+        $qb->shouldReceive('getQuery')->once()->andReturn($mockQry);
+
+        static::assertEquals('EXPECT', $this->sut->getAllRequiringPrint($minDate, $maxDate));
     }
 
     public function testGetAllRequiringReminder()
@@ -72,6 +81,8 @@ class CorrespondenceInboxTest extends RepositoryTestCase
         $maxDate = '2016-01-01';
 
         $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('addSelect')->with('d')->once()->andReturnSelf();
+        $qb->shouldReceive('join')->with('m.document', 'd')->once()->andReturnSelf();
 
         $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
@@ -79,7 +90,6 @@ class CorrespondenceInboxTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('lo.organisationUsers', 'lou')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('lou.user', 'louu')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('louu.contactDetails', 'louucd')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('document', 'd')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('d.continuationDetails', 'cd')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('cd.checklistDocument', 'cdd')->once()->andReturnSelf();
 
@@ -107,8 +117,20 @@ class CorrespondenceInboxTest extends RepositoryTestCase
         $qb->shouldReceive('andWhere')->with('condition7')->once()->andReturnSelf();
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($qb);
-        $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['result']);
 
-        $this->sut->getAllRequiringReminder($minDate, $maxDate);
+        $mockQry = m::mock(\Doctrine\ORM\AbstractQuery::class);
+        $mockQry->shouldReceive('setFetchMode')
+            ->once()
+            ->with(
+                Entity\Organisation\CorrespondenceInbox::class,
+                'document',
+                \Doctrine\ORM\Mapping\ClassMetadata::FETCH_EAGER
+            )
+            ->andReturnSelf();
+        $mockQry->shouldReceive('getResult')->once()->andReturn('EXPECT');
+
+        $qb->shouldReceive('getQuery')->once()->andReturn($mockQry);
+
+        static::assertEquals('EXPECT', $this->sut->getAllRequiringReminder($minDate, $maxDate));
     }
 }

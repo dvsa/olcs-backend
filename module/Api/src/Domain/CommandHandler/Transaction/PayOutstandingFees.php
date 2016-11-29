@@ -273,6 +273,21 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             'description' => Task::TASK_DESCRIPTION_FEE_DUE,
             'actionDate' => (new DateTime())->format(\DateTime::W3C)
         ];
+        if ($fee->getApplication() !== null) {
+            $data['application'] = $fee->getApplication()->getId();
+        }
+        if ($fee->getLicence() !== null) {
+            $data['licence'] = $fee->getLicence()->getId();
+        }
+        if ($fee->getBusReg() !== null) {
+            $data['busReg'] = $fee->getBusReg()->getId();
+        }
+        if ($fee->getIrfoGvPermit() !== null) {
+            $data['irfoOrganisation'] = $fee->getIrfoGvPermit()->getOrganisation()->getId();
+        } elseif ($fee->getIrfoPsvAuth() !== null) {
+            $data['irfoOrganisation'] = $fee->getIrfoPsvAuth()->getOrganisation()->getId();
+        }
+
         $this->result->merge($this->handleSideEffect(CreateTask::create($data)));
         $fee->setTask(
             $this->getRepo('Task')->fetchById($this->result->getId('task'))
@@ -341,9 +356,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        parent::createService($serviceLocator);
         $this->feesHelper = $serviceLocator->getServiceLocator()->get('FeesHelperService');
-        return $this;
+        return parent::createService($serviceLocator);
     }
 
     /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * RequestMap Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessRequestMap as ProcessRequestMapCmd;
@@ -16,18 +11,20 @@ use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\RequestMap as Sut;
+use Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\RequestMap;
 use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
 use Zend\Serializer\Adapter\Json as ZendJson;
 
 /**
- * RequestMap Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\RequestMap
+ * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer
  */
 class RequestMapTest extends AbstractConsumerTestCase
 {
-    protected $consumerClass = Sut::class;
+    protected $consumerClass = RequestMap::class;
+
+    /** @var  RequestMap */
+    protected $sut;
 
     public function testGetCommandData()
     {
@@ -72,7 +69,7 @@ class RequestMapTest extends AbstractConsumerTestCase
         $taskData = [
             'category' => TaskEntity::CATEGORY_BUS,
             'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
-            'description' => sprintf(Sut::TASK_FAIL_DESC, $regNo),
+            'description' => sprintf(RequestMap::TASK_FAIL_DESC, $regNo),
             'actionDate' => date('Y-m-d'),
             'busReg' => $busRegId,
             'licence' => $licence,
@@ -80,10 +77,18 @@ class RequestMapTest extends AbstractConsumerTestCase
 
         $cmd = CreateTaskCmd::create($taskData);
 
-        $this->expectCommand(FailedCmd::class, ['item' => $item], new Result(), false);
+        $this->expectCommand(
+            FailedCmd::class,
+            [
+                'item' => $item,
+                'lastError' => 'unit_LastErr',
+            ],
+            new Result(),
+            false
+        );
         $this->expectCommand(CreateTaskCmd::class, $cmd->getArrayCopy(), new Result());
 
-        $this->sut->failed($item, null);
+        $this->sut->failed($item, 'unit_LastErr');
     }
 
     /**
