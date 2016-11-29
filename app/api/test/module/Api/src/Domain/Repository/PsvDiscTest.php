@@ -125,13 +125,16 @@ class PsvDiscTest extends RepositoryTestCase
 
     public function testSetIsPrintingOffAndAssignNumbers()
     {
-        $this->expectQueryWithData(
-            'Discs\PsvDiscsSetIsPrintingOffAndDiscNo',
-            ['ids' => [1, 2], 'startNumber' => 1],
-            ['ids' => Connection::PARAM_INT_ARRAY, 'startNumber' => \PDO::PARAM_INT]
-        );
+        $query = m::mock();
+        $query->shouldReceive('execute')->once()->with(['id' => 121, 'discNo' => 99]);
+        $query->shouldReceive('execute')->once()->with(['id' => 12, 'discNo' => 100]);
+        $query->shouldReceive('execute')->once()->with(['id' => 54, 'discNo' => 101]);
 
-        $this->sut->setIsPrintingOffAndAssignNumbers([1, 2], 1);
+        $this->dbQueryService->shouldReceive('get')
+            ->with('Discs\PsvDiscsSetIsPrintingOffAndDiscNo')
+            ->andReturn($query);
+
+        $this->sut->setIsPrintingOffAndAssignNumbers([121, 12, 54], 99);
     }
 
     public function testApplyListFiltersIncludeCeasedFalse()

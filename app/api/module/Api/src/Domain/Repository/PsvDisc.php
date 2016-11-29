@@ -89,13 +89,23 @@ class PsvDisc extends AbstractRepository
             );
     }
 
+    /**
+     * Issue the disc and assign the diesc number
+     *
+     * @param array $discIds     List of disc Ids to issue
+     * @param int   $startNumber The starting disc number
+     *
+     * @return void
+     */
     public function setIsPrintingOffAndAssignNumbers($discIds, $startNumber)
     {
-        return $this->getDbQueryManager()->get('Discs\PsvDiscsSetIsPrintingOffAndDiscNo')
-            ->execute(
-                ['ids' => $discIds, 'startNumber' => $startNumber],
-                ['ids' => Connection::PARAM_INT_ARRAY, 'startNumber' => \PDO::PARAM_INT]
-            );
+        $discNo = $startNumber;
+        foreach ($discIds as $discId) {
+            $this->getDbQueryManager()->get('Discs\PsvDiscsSetIsPrintingOffAndDiscNo')
+                ->execute(['id' => $discId, 'discNo' => $discNo]);
+
+            $discNo++;
+        }
     }
 
     protected function applyListFilters(\Doctrine\ORM\QueryBuilder $qb, \Dvsa\Olcs\Transfer\Query\QueryInterface $query)
