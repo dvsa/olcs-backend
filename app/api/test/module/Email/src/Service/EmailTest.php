@@ -11,12 +11,12 @@ use Dvsa\Olcs\Email\Service\Email;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\Mail\Message;
-use Zend\Mime\Part;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Mail\Transport\TransportInterface;
 use Zend\Mime\Mime as ZendMime;
 use Zend\Mime\Part as ZendMimePart;
 use Zend\Mail\AddressList;
+use Dvsa\Olcs\Email\Exception\EmailNotSentException;
 
 /**
  * Email Test
@@ -213,8 +213,8 @@ class EmailTest extends MockeryTestCase
             ]
         ];
 
-        $cc = ['cc1@foo.com', 'cc2@foo.com'];
-        $bcc = ['bcc1@foo.com', 'bcc2@foo.com', 'bcc3@foo.com'];
+        $cc = ['invalid-email', 'cc1@foo.com', 'cc2@foo.com'];
+        $bcc = [null, 'bcc1@foo.com', 'bcc2@foo.com', 'bcc3@foo.com'];
 
         $this->sut->send(
             'foo@bar.com',
@@ -295,8 +295,8 @@ class EmailTest extends MockeryTestCase
                 }
             );
 
-        $cc = ['cc1@foo.com', 'cc2@foo.com'];
-        $bcc = ['bcc1@foo.com', 'bcc2@foo.com', 'bcc3@foo.com'];
+        $cc = ['cc1@foo.com', 'cc2@foo.com', 'invalid-email'];
+        $bcc = ['bcc1@foo.com', 'bcc2@foo.com', 'bcc3@foo.com', null];
 
         $this->sut->send(
             'foo@bar.com',
@@ -309,6 +309,41 @@ class EmailTest extends MockeryTestCase
             $bcc,
             []
         );
+    }
+
+    /**
+     * Tests sending an email without attachments
+     *
+     * @dataProvider toFromAddressProvider
+     */
+    public function testToFromAddressException($fromEmail, $fromName, $toEmail, $exceptionMessage)
+    {
+        $this->setExpectedException(EmailNotSentException::class, $exceptionMessage);
+
+        $this->sut->send(
+            $fromEmail,
+            $fromName,
+            $toEmail,
+            'msg subject',
+            'plain content',
+            'html content',
+            [],
+            [],
+            []
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function toFromAddressProvider()
+    {
+        return [
+            ['foo@bar.com', 'from name', null, Email::MISSING_TO_ERROR],
+            ['foo@bar.com', null, null, Email::MISSING_TO_ERROR],
+            [null, 'from name', 'foo@bar.com', Email::MISSING_FROM_ERROR],
+            [null, null, 'foo@bar.com', Email::MISSING_FROM_ERROR],
+        ];
     }
 
     /**

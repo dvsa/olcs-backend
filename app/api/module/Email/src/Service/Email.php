@@ -9,8 +9,12 @@ use Zend\Mail as ZendMail;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Part as ZendMimePart;
 use Zend\Mime\Mime as ZendMime;
+use Zend\Mail\Address as ZendAddress;
+use Zend\Mail\AddressList;
+use Zend\Mail\Exception\InvalidArgumentException as ZendAddressException;
 use Zend\Mail\Exception\RuntimeException as ZendMailRuntimeException;
 use Zend\Mail\Transport\TransportInterface;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Class Email
@@ -20,6 +24,10 @@ use Zend\Mail\Transport\TransportInterface;
  */
 class Email implements FactoryInterface
 {
+    const MISSING_FROM_ERROR = 'Email is missing a valid from address';
+    const MISSING_TO_ERROR = 'Email is missing a valid to address';
+    const NOT_SENT_ERROR = 'Email not sent';
+
     private $mailTransport;
 
     /**
@@ -35,7 +43,8 @@ class Email implements FactoryInterface
     /**
      * Set Transport.
      *
-     * @param TransportInterface $mailTransport
+     * @param TransportInterface $mailTransport mail transport
+     *
      * @return $this
      */
     public function setMailTransport(TransportInterface $mailTransport)
@@ -48,7 +57,8 @@ class Email implements FactoryInterface
     /**
      * Setup the factory, with a service locator.
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
      * @return $this
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -63,6 +73,55 @@ class Email implements FactoryInterface
         $this->setMailTransport($transport);
 
         return $this;
+    }
+
+    /**
+     * Validates the array of email addresses, excluding those which fail, and returns a zend AddressList object
+     *
+     * The array of cc/bcc can either be in the format [email_address => name] or [0 => email_address]
+     * If the key is a string, it is assumed that is the email address, and the value is the name of the recipient
+     *
+     * The "to" address tends to just be a string, but we're designed here to cope if an array is passed in
+     *
+     * @param string|array|null $addressOrAddresses email addresses
+     *
+     * @return AddressList
+     */
+    public function validateAddresses($addressOrAddresses)
+    {
+        $addressList = new AddressList();
+
+        //null or empty string
+        if (empty($addressOrAddresses)) {
+            return $addressList;
+        }
+
+        //addresses we pass as string, usually a to address
+        if (!is_array($addressOrAddresses)) {
+            $addressOrAddresses = [$addressOrAddresses];
+        }
+
+        //addresses passed in as an array (from, cc, bcc)
+        foreach ($addressOrAddresses as $key => $value) {
+            $name = null;
+            $email = null;
+
+            if (is_int($key) || is_numeric($key)) {
+                $email = $value;
+            } elseif (is_string($key)) {
+                $email = $key;
+                $name = $value;
+            }
+
+            try {
+                $address = new ZendAddress($email, $name);
+                $addressList->add($address);
+            } catch (ZendAddressException $e) {
+                //address is invalid in some way, right now these addresses are ignored
+            }
+        }
+
+        return $addressList;
     }
 
     /**
@@ -94,11 +153,25 @@ class Email implements FactoryInterface
     ) {
         $emailBody = new MimeMessage();
 
+        $fromAddress = $this->validateAddresses([$fromEmail => $fromName]);
+
+        if (count($fromAddress) === 0) {
+            Logger::err('email failed', ['data' => self::MISSING_FROM_ERROR]);
+            throw new EmailNotSentException(self::MISSING_FROM_ERROR);
+        }
+
+        $toAddresses = $this->validateAddresses($to);
+
+        if (count($toAddresses) === 0) {
+            Logger::err('email failed', ['data' => self::MISSING_TO_ERROR]);
+            throw new EmailNotSentException(self::MISSING_TO_ERROR);
+        }
+
         $mail = new ZendMail\Message();
-        $mail->setFrom($fromEmail, $fromName);
-        $mail->addTo($to);
-        $mail->addCc($cc);
-        $mail->addBcc($bcc);
+        $mail->setFrom($fromAddress);
+        $mail->addTo($toAddresses);
+        $mail->addCc($this->validateAddresses($cc));
+        $mail->addBcc($this->validateAddresses($bcc));
         $mail->setSubject($subject);
 
         $plainPart = new ZendMimePart($plainBody);
@@ -151,7 +224,8 @@ class Email implements FactoryInterface
         try {
             $trans->send($mail);
         } catch (\Exception $e) {
-            throw new EmailNotSentException('Email not sent', 0, $e);
+            Logger::err('email failed', ['data' => self::NOT_SENT_ERROR]);
+            throw new EmailNotSentException(self::NOT_SENT_ERROR, 0, $e);
         }
     }
 }
