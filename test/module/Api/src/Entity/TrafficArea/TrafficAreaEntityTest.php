@@ -63,56 +63,56 @@ class TrafficAreaEntityTest extends EntityTester
         $entity = new Entity();
 
         $recipient1 = m::mock(RecipientEntity::class);
-        $recipient1->shouldReceive('getEmailAddress')->times($adNonPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL1);
+        $recipient1->shouldReceive('getEmailAddress')->once()->andReturn(self::PUB_RECIPIENT_EMAIL1);
         $recipient1->shouldReceive('getContactName')->times($adNonPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME1);
         $recipient1->shouldReceive('getIsPolice')->once()->andReturn('N');
         $recipient1->shouldReceive('getSendAppDecision')->andReturn('Y');
         $recipient1->shouldReceive('getSendNoticesProcs')->andReturn('N');
 
         $recipient2 = m::mock(RecipientEntity::class);
-        $recipient2->shouldReceive('getEmailAddress')->times($adPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL2);
+        $recipient2->shouldReceive('getEmailAddress')->once()->andReturn(self::PUB_RECIPIENT_EMAIL2);
         $recipient2->shouldReceive('getContactName')->times($adPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME2);
         $recipient2->shouldReceive('getIsPolice')->once()->andReturn('Y');
         $recipient2->shouldReceive('getSendAppDecision')->andReturn('Y');
         $recipient2->shouldReceive('getSendNoticesProcs')->andReturn('N');
 
         $recipient3 = m::mock(RecipientEntity::class);
-        $recipient3->shouldReceive('getEmailAddress')->times($adNonPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL3);
+        $recipient3->shouldReceive('getEmailAddress')->once()->andReturn(self::PUB_RECIPIENT_EMAIL3);
         $recipient3->shouldReceive('getContactName')->times($adNonPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME3);
         $recipient3->shouldReceive('getIsPolice')->once()->andReturn('N');
         $recipient3->shouldReceive('getSendAppDecision')->andReturn('Y');
         $recipient3->shouldReceive('getSendNoticesProcs')->andReturn('N');
 
         $recipient4 = m::mock(RecipientEntity::class);
-        $recipient4->shouldReceive('getEmailAddress')->times($adPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL4);
+        $recipient4->shouldReceive('getEmailAddress')->once()->andReturn(self::PUB_RECIPIENT_EMAIL4);
         $recipient4->shouldReceive('getContactName')->times($adPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME4);
         $recipient4->shouldReceive('getIsPolice')->once()->andReturn('Y');
         $recipient4->shouldReceive('getSendAppDecision')->andReturn('Y');
         $recipient4->shouldReceive('getSendNoticesProcs')->andReturn('N');
 
         $recipient5 = m::mock(RecipientEntity::class);
-        $recipient5->shouldReceive('getEmailAddress')->times($npNonPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL5);
+        $recipient5->shouldReceive('getEmailAddress')->once()->andReturn(self::PUB_RECIPIENT_EMAIL5);
         $recipient5->shouldReceive('getContactName')->times($npNonPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME5);
         $recipient5->shouldReceive('getIsPolice')->once()->andReturn('N');
         $recipient5->shouldReceive('getSendAppDecision')->andReturn('N');
         $recipient5->shouldReceive('getSendNoticesProcs')->andReturn('Y');
 
         $recipient6 = m::mock(RecipientEntity::class);
-        $recipient6->shouldReceive('getEmailAddress')->times($npPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL6);
+        $recipient6->shouldReceive('getEmailAddress')->once()->andReturn(self::PUB_RECIPIENT_EMAIL6);
         $recipient6->shouldReceive('getContactName')->times($npPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME6);
         $recipient6->shouldReceive('getIsPolice')->once()->andReturn('Y');
         $recipient6->shouldReceive('getSendAppDecision')->andReturn('N');
         $recipient6->shouldReceive('getSendNoticesProcs')->andReturn('Y');
 
         $recipient7 = m::mock(RecipientEntity::class);
-        $recipient7->shouldReceive('getEmailAddress')->times($npNonPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL7);
+        $recipient7->shouldReceive('getEmailAddress')->once()->andReturn(self::PUB_RECIPIENT_EMAIL7);
         $recipient7->shouldReceive('getContactName')->times($npNonPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME7);
         $recipient7->shouldReceive('getIsPolice')->once()->andReturn('N');
         $recipient7->shouldReceive('getSendAppDecision')->andReturn('N');
         $recipient7->shouldReceive('getSendNoticesProcs')->andReturn('Y');
 
         $recipient8 = m::mock(RecipientEntity::class);
-        $recipient8->shouldReceive('getEmailAddress')->times($npPoliceTimes)->andReturn(self::PUB_RECIPIENT_EMAIL8);
+        $recipient8->shouldReceive('getEmailAddress')->once()->andReturn(self::PUB_RECIPIENT_EMAIL8);
         $recipient8->shouldReceive('getContactName')->times($npPoliceTimes)->andReturn(self::PUB_RECIPIENT_NAME8);
         $recipient8->shouldReceive('getIsPolice')->once()->andReturn('Y');
         $recipient8->shouldReceive('getSendAppDecision')->andReturn('N');

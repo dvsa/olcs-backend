@@ -73,12 +73,12 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
         $bookmarks = [];
         foreach ($discsToPrint as $disc) {
             $licenceId = $disc['licence']['id'];
-            if (!isset($bookmarks[$licenceId])) {
+            if (!isset($bookmarks[$licenceId]['NO_DISCS_PRINTED'])) {
                 $bookmarks[$licenceId] = [
                     'NO_DISCS_PRINTED' => ['count' => 0]
                 ];
             }
-            $bookmarks[$licenceId]['NO_DISCS_PRINTED']['count'] ++;
+            $bookmarks[$licenceId]['NO_DISCS_PRINTED']['count']++;
             $queries[$licenceId] = [
                 'id' => $licenceId
             ];
