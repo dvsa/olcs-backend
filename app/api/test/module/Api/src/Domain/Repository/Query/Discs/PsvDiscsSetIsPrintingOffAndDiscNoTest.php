@@ -74,12 +74,12 @@ class PsvDiscsSetIsPrintingOffAndDiscNoTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'UPDATE psv_disc pd, (SELECT @n := :startNumber - 1) m '
+        return 'UPDATE psv_disc pd '
         . 'SET pd.is_printing = 0, '
-            . 'pd.disc_no = @n := @n + 1, '
+            . 'pd.disc_no = :discNo, '
             . 'pd.issued_date = :issuedDate, '
             . 'pd.last_modified_on = NOW(), '
             . 'pd.last_modified_by = :currentUserId '
-        . 'WHERE pd.id IN (:ids)';
+        . 'WHERE pd.id = :id';
     }
 }
