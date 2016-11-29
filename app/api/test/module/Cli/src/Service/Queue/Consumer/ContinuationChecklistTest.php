@@ -1,27 +1,23 @@
 <?php
 
-/**
- * Continuation Checklist Queue Consumer Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
-use Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklist as Sut;
-use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklist;
 
 /**
- * Continuation Checklist Queue Consumer Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
+ * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklist
+ * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer
  */
 class ContinuationChecklistTest extends AbstractConsumerTestCase
 {
-    protected $consumerClass = Sut::class;
+    protected $consumerClass = ContinuationChecklist::class;
+
+    /** @var  ContinuationChecklist */
+    protected $sut;
 
     public function testProcessMessageSuccess()
     {
@@ -94,7 +90,10 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
 
         $this->expectCommand(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
-            ['item' => $item],
+            [
+                'item' => $item,
+                'lastError' => 'epic fail, marking as fail failed',
+            ],
             new Result(),
             false
         );

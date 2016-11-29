@@ -35,9 +35,7 @@ class PolicePeople extends DynamicBookmark
             'publicationLinks' => [
                 'licence',
                 'publicationSection',
-                'policeDatas' => [
-                    'person'
-                ],
+                'policeDatas',
                 'publication'
             ]
         ];

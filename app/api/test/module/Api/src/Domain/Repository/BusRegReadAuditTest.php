@@ -25,9 +25,9 @@ class BusRegReadAuditTest extends AbstractReadAuditTest
         $this->setUpSut(BusRegReadAudit::class, true);
     }
 
-    public function testFetchOne()
+    public function testFetchOneOrMore()
     {
-        parent::commonTestFetchOne('busReg');
+        parent::commonTestFetchOneOrMore('busReg');
     }
 
     public function testFetchList()

@@ -23,9 +23,9 @@ class CasesReadAuditTest extends AbstractReadAuditTest
         $this->setUpSut(CasesReadAudit::class, true);
     }
 
-    public function testFetchOne()
+    public function testFetchOneOrMore()
     {
-        parent::commonTestFetchOne('case');
+        parent::commonTestFetchOneOrMore('case');
     }
 
     public function testFetchList()

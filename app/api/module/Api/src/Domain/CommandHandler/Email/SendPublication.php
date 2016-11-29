@@ -54,8 +54,9 @@ final class SendPublication extends AbstractCommandHandler implements EmailAware
         $trafficArea = $publication->getTrafficArea();
 
         //recipients
+        $pubType = $publication->getPubType();
         $isPolice = $command->getIsPolice();
-        $recipients = $trafficArea->getPublicationRecipients($isPolice);
+        $recipients = $trafficArea->getPublicationRecipients($isPolice, $pubType);
 
         //get the correct document and email subject line, depending on whether the email is police
         if ($isPolice === 'Y') {
@@ -73,7 +74,7 @@ final class SendPublication extends AbstractCommandHandler implements EmailAware
         $message->setDocs([$document->getId()]);
 
         $subjectVars = [
-            $publication->getPubType(),
+            $pubType,
             $publication->getPublicationNo(),
             $trafficArea->getName()
         ];

@@ -126,9 +126,9 @@ class Bus extends AbstractRepository
     /**
      * Fetch a list of unread docs filtered by local authority, submission type and status for a given bus reg id
      *
-     * @param QryCmd $query         query
-     * @param int $localAuthorityId local authority id
-     * @param int $hydrateMode      doctrine hydrate mode
+     * @param QryCmd $query            query
+     * @param int    $localAuthorityId local authority id
+     * @param int    $hydrateMode      doctrine hydrate mode
      *
      * @throws Exception\NotFoundException
      * @return Entity
@@ -188,6 +188,12 @@ class Bus extends AbstractRepository
         if (method_exists($query, 'getLicenceId')) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':byLicence'))
                 ->setParameter('byLicence', $query->getLicenceId());
+        }
+
+        //array of allowable bus reg statuses (optional parameter, if empty return everything)
+        if (method_exists($query, 'getBusRegStatus') && !empty($query->getBusRegStatus())) {
+            $qb->andWhere($qb->expr()->in($this->alias . '.status', ':byStatus'))
+                ->setParameter('byStatus', $query->getBusRegStatus());
         }
     }
 

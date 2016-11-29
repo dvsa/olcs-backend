@@ -1,12 +1,9 @@
 <?php
 
-/**
- * Abstract Queue Consumer Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer;
 
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
@@ -18,10 +15,13 @@ use OlcsTest\Bootstrap;
  */
 abstract class AbstractConsumerTestCase extends MockeryTestCase
 {
+    /** @var  \Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractConsumer */
     protected $sut;
     protected $sm;
-    protected $chm;
+    /** @var  m\MockInterface */
     protected $qhm;
+    /** @var  m\MockInterface */
+    protected $chm;
     protected $consumerClass = 'override_me';
 
     public function setUp()
@@ -51,7 +51,7 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
                 ->shouldReceive('handleCommand')
                 ->with(
                     m::on(
-                        function ($cmd) use ($expectedDtoData, $class) {
+                        function (CommandInterface $cmd) use ($expectedDtoData, $class) {
                             $matched = (
                                 is_a($cmd, $class)
                                 &&
@@ -68,7 +68,7 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
                 ->shouldReceive('handleCommand')
                 ->with(
                     m::on(
-                        function ($cmd) use ($expectedDtoData, $class) {
+                        function (CommandInterface $cmd) use ($expectedDtoData, $class) {
                             $matched = (
                                 is_a($cmd, $class)
                                 &&
@@ -111,7 +111,7 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
                 ->shouldReceive('handleCommand')
                 ->with(
                     m::on(
-                        function ($cmd) use ($expectedDtoData, $class) {
+                        function (CommandInterface $cmd) use ($expectedDtoData, $class) {
                             $matched = (
                                 is_a($cmd, $class)
                                 &&
@@ -128,7 +128,7 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
                 ->shouldReceive('handleCommand')
                 ->with(
                     m::on(
-                        function ($cmd) use ($expectedDtoData, $class) {
+                        function (CommandInterface $cmd) use ($expectedDtoData, $class) {
                             $matched = (
                                 is_a($cmd, $class)
                                 &&
@@ -155,7 +155,7 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
             ->shouldReceive('handleQuery')
             ->with(
                 m::on(
-                    function ($qry) use ($expectedDtoData, $class) {
+                    function (QueryInterface $qry) use ($expectedDtoData, $class) {
                         $matched = (
                             is_a($qry, $class)
                             &&
@@ -172,7 +172,7 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
     /**
      * @param string $class
      * @param array $expectedDtoData
-     * @param string|Exception $exception
+     * @param string|\Exception $exception
      */
     protected function expectQueryException($class, $expectedDtoData, $exception, $exceptionMsg = '')
     {
@@ -184,7 +184,7 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
             ->shouldReceive('handleQuery')
             ->with(
                 m::on(
-                    function ($qry) use ($expectedDtoData, $class) {
+                    function (QueryInterface $qry) use ($expectedDtoData, $class) {
                         $matched = (
                             is_a($qry, $class)
                             &&

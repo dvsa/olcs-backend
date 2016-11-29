@@ -2,12 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Query\BusRegSearchView;
 
-use Dvsa\Olcs\Transfer\Query\AbstractQuery;
-use Dvsa\Olcs\Transfer\Query\OrderedQueryInterface;
-use Dvsa\Olcs\Transfer\Query\OrderedTrait;
-use Dvsa\Olcs\Transfer\Query\PagedQueryInterface;
-use Dvsa\Olcs\Transfer\Query\PagedTrait;
-use \Dvsa\Olcs\Transfer\Query\BusRegSearchView\BusRegSearchViewList as BusRegSearchViewTransfer;
+use Dvsa\Olcs\Transfer\Query\BusRegSearchView\BusRegSearchViewList as BusRegSearchViewTransfer;
 
 /**
  * Class Bus Reg Search View List for Organisation or LA, optionally filtered by licence and bus reg status
@@ -16,16 +11,6 @@ use \Dvsa\Olcs\Transfer\Query\BusRegSearchView\BusRegSearchViewList as BusRegSea
  */
 class BusRegSearchViewList extends BusRegSearchViewTransfer
 {
-
-    /**
-     * @var int
-     * @Transfer\Optional
-     * @Transfer\Filter({"name":"Zend\Filter\Digits"})
-     * @Transfer\Validator({"name":"Zend\Validator\Digits"})
-     * @Transfer\Validator({"name":"Zend\Validator\GreaterThan", "options": {"min": 0}})
-     */
-    protected $organisationId;
-
     /**
      * @var int
      * @Transfer\Optional
@@ -36,24 +21,8 @@ class BusRegSearchViewList extends BusRegSearchViewTransfer
     protected $localAuthorityId;
 
     /**
-     * @return int
-     */
-    public function getOrganisationId()
-    {
-        return $this->organisationId;
-    }
-
-    /**
-     * Setter required to apply default Organisation ID for Operator queries.
+     * Get Local Authority Id
      *
-     * @param int $organisationId
-     */
-    public function setOrganisationId($organisationId)
-    {
-        $this->organisationId = $organisationId;
-    }
-
-    /**
      * @return int
      */
     public function getLocalAuthorityId()
@@ -62,7 +31,11 @@ class BusRegSearchViewList extends BusRegSearchViewTransfer
     }
 
     /**
-     * @param int $localAuthorityId
+     * Set Local Authority Id
+     *
+     * @param int $localAuthorityId Local Authority Id
+     *
+     * @return void
      */
     public function setLocalAuthorityId($localAuthorityId)
     {

@@ -72,6 +72,7 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
+        $licence->shouldReceive('addOperatingCentres')->with(m::type(LicenceOperatingCentre::class))->once();
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
