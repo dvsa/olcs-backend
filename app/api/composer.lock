@@ -1136,7 +1136,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "86d934218ecfedb7da3d849a729c8766372bda08"
+                "reference": "33610d7cbf34c1b269e63861014f36c8fd9ed4db"
             },
             "require": {
                 "php": ">=5.4",
@@ -1154,7 +1154,7 @@
                 }
             },
             "description": "OLCS Transfer",
-            "time": "2016-11-23 17:45:04"
+            "time": "2016-11-30 18:32:55"
         },
         {
             "name": "olcs/olcs-utils",
