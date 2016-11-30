@@ -62,7 +62,7 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
         $result->merge($printDiscsResult);
         $result->addMessage("PSV discs printed");
 
-        $result->merge($this->createVehicleLists($discsToPrint));
+        $this->createVehicleLists($discsToPrint);
 
         return $result;
     }
