@@ -1,14 +1,10 @@
 <?php
 
-/**
- * ProposeToRevoke
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Exception;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke as Entity;
+use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 
 /**
  * ProposeToRevoke
@@ -17,6 +13,14 @@ class ProposeToRevoke extends AbstractRepository
 {
     protected $entity = Entity::class;
 
+    /**
+     * FetchProposeToRevokeUsingCase
+     *
+     * @param \Dvsa\Olcs\Transfer\Query\Cases\ProposeToRevoke\ProposeToRevokeByCase $query       Query
+     * @param int                                                                   $hydrateMode Histration mode
+     *
+     * @return null|Entity
+     */
     public function fetchProposeToRevokeUsingCase(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
@@ -27,12 +31,6 @@ class ProposeToRevoke extends AbstractRepository
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
             ->setParameter('byCase', $query->getCase());
 
-        $results = $qb->getQuery()->getResult($hydrateMode);
-
-        if (empty($results)) {
-            throw new Exception\NotFoundException('Resource not found');
-        }
-
-        return $results[0];
+        return $qb->getQuery()->getOneOrNullResult($hydrateMode);
     }
 }

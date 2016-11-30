@@ -83,7 +83,13 @@ class Response extends AbstractPlugin
             $result = $result->serialize();
         }
 
-        if (!is_array($result)) {
+        if (
+            !is_array($result)
+            && (
+                $result instanceof \JsonSerializable
+                || method_exists($result, 'jsonSerialize')  //  #TODO Remove it in Develop
+            )
+        ) {
             $result = $result->jsonSerialize();
         }
 

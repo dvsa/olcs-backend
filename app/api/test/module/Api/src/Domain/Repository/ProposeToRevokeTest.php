@@ -1,79 +1,49 @@
 <?php
 
-/**
- * ProposeToRevoke Repo test
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Mockery as m;
-use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\EntityRepository;
-use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\Repository\ProposeToRevoke as Repo;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Mockery as m;
 
 /**
- * ProposeToRevoke Repo test
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\ProposeToRevoke
  */
 class ProposeToRevokeTest extends RepositoryTestCase
 {
+    /** @var  Repository\ProposeToRevoke */
+    protected $sut;
+
     public function setUp()
     {
-        $this->setUpSut(Repo::class);
+        $this->setUpSut(Repository\ProposeToRevoke::class);
     }
 
     public function testFetchProposeToRevokeUsingCase()
     {
-        $case = 24;
-        $mockResult = [0 => 'result'];
+        $caseId = 24;
 
-        $command = m::mock(QueryInterface::class);
+        $command = m::mock(\Dvsa\Olcs\Transfer\Query\Cases\ProposeToRevoke\ProposeToRevokeByCase::class);
         $command->shouldReceive('getCase')
-            ->andReturn($case);
+            ->andReturn($caseId);
 
-        /** @var Expr $expr */
-        $expr = m::mock(QueryBuilder::class);
-        $expr->shouldReceive('eq')
-            ->with(m::type('string'), ':byCase')
-            ->andReturnSelf();
+        $qb = $this->createMockQb('{{QUERY}}');
+        $this->mockCreateQueryBuilder($qb);
 
-        /** @var QueryBuilder $qb */
-        $qb = m::mock(QueryBuilder::class);
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
 
-        $qb->shouldReceive('expr')
-            ->andReturn($expr);
-
-        $qb->shouldReceive('setParameter')
-            ->with('byCase', $case)
-            ->andReturnSelf();
-
-        $qb->shouldReceive('andWhere')
-            ->with($expr)
-            ->andReturnSelf();
-
-        $this->queryBuilder->shouldReceive('modifyQuery')
-            ->once()
-            ->with($qb)
-            ->andReturnSelf();
-
-        $qb->shouldReceive('getQuery->getResult')
+        $qb->shouldReceive('getQuery->getOneOrNullResult')
             ->with(Query::HYDRATE_OBJECT)
-            ->andReturn($mockResult);
+            ->andReturn('EXPECT');
 
-        /** @var EntityRepository $repo */
-        $repo = m::mock(EntityRepository::class);
-        $repo->shouldReceive('createQueryBuilder')
-            ->with('m')
-            ->andReturn($qb);
+        $actual = $this->sut->fetchProposeToRevokeUsingCase($command, Query::HYDRATE_OBJECT);
 
-        $this->em->shouldReceive('getRepository')
-            ->with(ProposeToRevoke::class)
-            ->andReturn($repo);
+        static::assertEquals('EXPECT', $actual);
 
-        $result = $this->sut->fetchProposeToRevokeUsingCase($command, Query::HYDRATE_OBJECT);
+        $expected = '{{QUERY}} ' .
+            'AND m.case = [[' . $caseId . ']]';
 
-        $this->assertEquals($result, $mockResult[0]);
+        static::assertEquals($expected, $this->query);
     }
 }
