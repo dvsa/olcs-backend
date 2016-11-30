@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 
 /**
  * Application
@@ -45,6 +46,7 @@ class Declaration extends AbstractQueryHandler
 
         $this->sectionAccessService = $mainServiceLocator->get('SectionAccessService');
         $this->feesHelper = $mainServiceLocator->get('FeesHelperService');
+        $this->reviewService = $mainServiceLocator->get('Review\ApplicationUndertakings');
 
         return parent::createService($serviceLocator);
     }
@@ -81,8 +83,25 @@ class Declaration extends AbstractQueryHandler
                 'sections' => $this->sectionAccessService->getAccessibleSections($application),
                 'variationCompletion' => $application->getVariationCompletion(),
                 'disableSignatures' =>
-                    $this->getRepo('SystemParameter')->fetchValue(SystemParameter::DISABLE_GDS_VERIFY_SIGNATURES),
+                    (bool)$this->getRepo('SystemParameter')->fetchValue(SystemParameter::DISABLE_GDS_VERIFY_SIGNATURES),
+                'declarations' => $this->getDeclarations($application),
             ]
         );
+    }
+
+    /**
+     * Get declarations
+     *
+     * @param Application $application application
+     *
+     * @return string
+     */
+    protected function getDeclarations($application)
+    {
+        $data = $application->serialize();
+        $data['isGoods'] = $application->isGoods();
+        $data['isInternal'] = false;
+
+        return $this->reviewService->getMarkup($data);
     }
 }
