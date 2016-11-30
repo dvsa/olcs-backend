@@ -36,8 +36,9 @@ class RemindUsernameSelfserveTest extends CommandHandlerTestCase
         ];
 
         /** @var User $user1 */
+        $user1Id = 1;
         $user1 = m::mock(User::class)->makePartial();
-        $user1->setId(1);
+        $user1->setId($user1Id);
 
         $users = [$user1];
 
@@ -52,7 +53,7 @@ class RemindUsernameSelfserveTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             SendUsernameSingleCmd::class,
             [
-                'user' => $user1,
+                'user' => $user1Id,
             ],
             new Result()
         );
