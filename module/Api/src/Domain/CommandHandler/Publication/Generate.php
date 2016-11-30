@@ -21,11 +21,17 @@ use Dvsa\Olcs\Api\Domain\Command\Publication\CreateNextPublication as CreateNext
  */
 final class Generate extends AbstractCommandHandler implements TransactionedInterface
 {
+    const DOCUMENT_DESCRIPTION = '%s %d generated';
+
     protected $repoServiceName = 'Publication';
 
     /**
-     * @param CommandInterface $command
+     * Generates a publication
+     *
+     * @param CommandInterface $command command to generate publication
+     *
      * @return Result
+     *
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleCommand(CommandInterface $command)
@@ -61,18 +67,27 @@ final class Generate extends AbstractCommandHandler implements TransactionedInte
     }
 
     /**
-     * @param PublicationEntity $publication
+     * Creates the command for generating the document
+     *
+     * @param PublicationEntity $publication publication doctrine entity
+     *
      * @return GenerateDocCommand
      */
     private function getGenerateDocCommand(PublicationEntity $publication)
     {
+        $description = sprintf(
+            self::DOCUMENT_DESCRIPTION,
+            $publication->getDocTemplate()->getDescription(),
+            $publication->getPublicationNo()
+        );
+
         $data = [
             'template' => $publication->getDocTemplate()->getDocument()->getIdentifier(),
             'query' => [
                 'publicationId' => $publication->getId(),
                 'pubType' => $publication->getPubType()
             ],
-            'description'   => $publication->getDocTemplate()->getDescription() . ' generated',
+            'description'   => $description,
             'category'      => $publication->getDocTemplate()->getCategory()->getId(),
             'subCategory'   => $publication->getDocTemplate()->getSubCategory()->getId(),
             'isExternal'    => true,

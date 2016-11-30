@@ -324,7 +324,8 @@ class CreateNewUserTest extends CommandHandlerTestCase
             ->with(m::type(User::class))
             ->andReturnUsing(
                 function (User $user) use (&$savedContactDetails, &$savedTm, &$savedTma) {
-                    $user->setId(777);
+                    $userId = 777;
+                    $user->setId($userId);
                     $this->assertSame($savedContactDetails[0], $user->getContactDetails());
                     $this->assertEquals('Foo', $user->getLoginId());
                     $this->assertCount(1, $user->getRoles());
@@ -334,8 +335,8 @@ class CreateNewUserTest extends CommandHandlerTestCase
                     $this->expectedSideEffect(
                         SendTmUserCreatedDto::class,
                         [
-                            'user' => $user,
-                            'tma' => $savedTma
+                            'user' => $userId,
+                            'tma' => $savedTma->getId()
                         ],
                         new Result()
                     );
@@ -343,7 +344,7 @@ class CreateNewUserTest extends CommandHandlerTestCase
                     $this->expectedSideEffect(
                         SendUserTemporaryPasswordDto::class,
                         [
-                            'user' => $user,
+                            'user' => $userId,
                             'password' => 'GENERATED_PASSWORD',
                         ],
                         new Result()

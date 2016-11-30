@@ -53,6 +53,7 @@ class GenerateTest extends CommandHandlerTestCase
         $docCategory = 11;
         $docSubCategory = 113;
         $docDescription = 'doc description';
+        $pubNo = 12345;
         $pubStatus = new RefData(PublicationEntity::PUB_GENERATED_STATUS);
         $pubType = 'A&D';
         $generatedDocId = 2345;
@@ -63,7 +64,7 @@ class GenerateTest extends CommandHandlerTestCase
                 'publicationId' => $id,
                 'pubType' => $pubType
             ],
-            'description'   => $docDescription . ' generated',
+            'description'   => $docDescription . ' ' . $pubNo . ' generated',
             'category'      => $docCategory,
             'subCategory'   => $docSubCategory,
             'isExternal'    => true,
@@ -90,6 +91,7 @@ class GenerateTest extends CommandHandlerTestCase
         $publicationEntity->setDocTemplate($docTemplate);
         $publicationEntity->setPubStatus($pubStatus);
         $publicationEntity->setPubType($pubType);
+        $publicationEntity->setPublicationNo($pubNo);
         $publicationEntity->shouldReceive('generate')
             ->once()
             ->with(
