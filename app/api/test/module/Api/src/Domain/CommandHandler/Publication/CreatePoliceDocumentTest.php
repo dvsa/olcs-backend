@@ -31,8 +31,9 @@ class CreatePoliceDocumentTest extends CommandHandlerTestCase
         $id = 11;
         $docCategory = 22;
         $docSubCategory = 113;
+        $publicationNo = 12345;
         $docDescription = 'doc description';
-        $docDescriptionPolice = $docDescription . ' police version';
+        $docDescriptionPolice = $docDescription . ' ' . $publicationNo . ' police version';
         $generatedDocId = 2345;
         $previousDocId = 33;
 
@@ -54,6 +55,7 @@ class CreatePoliceDocumentTest extends CommandHandlerTestCase
         $publicationEntity->shouldReceive('getDocTemplate->getCategory->getId')->once()->andReturn($docCategory);
         $publicationEntity->shouldReceive('getDocTemplate->getSubCategory->getId')->once()->andReturn($docSubCategory);
         $publicationEntity->shouldReceive('getDocument->getId')->once()->andReturn($previousDocId);
+        $publicationEntity->shouldReceive('getPublicationNo')->once()->andReturn($publicationNo);
         $publicationEntity->shouldReceive('getId')->once()->andReturn($id);
 
         $generatedDocResult = new Result();
