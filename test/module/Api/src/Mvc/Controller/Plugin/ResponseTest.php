@@ -5,22 +5,28 @@ namespace Dvsa\OlcsTest\Api\Mvc\Controller\Plugin;
 use Dvsa\Olcs\Api\Domain\Command\Result as CommandResult;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result as QueryResult;
 use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
-use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response as Sut;
+use Dvsa\Olcs\Api\Mvc\Controller\Plugin;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\Http\Response as HttpResponse;
+use Zend\Stdlib\JsonSerializable\PhpLegacyCompatibility;
 use Zend\View\Model\JsonModel;
 
 /**
- * Response Test
+ * @covers \Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response
  */
 class ResponseTest extends MockeryTestCase
 {
+    /** @var  Plugin\Response */
+    protected $sut;
+    /** @var  HttpResponse */
+    private $response;
+
     public function setUp()
     {
         $this->response = new HttpResponse();
 
-        $this->sut = m::mock(Sut::class)->makePartial();
+        $this->sut = m::mock(Plugin\Response::class)->makePartial();
         $this->sut->shouldReceive('getController->getResponse')->andReturn($this->response);
 
         parent::setUp();
@@ -99,6 +105,13 @@ class ResponseTest extends MockeryTestCase
             // Entity
             [
                 m::mock(VenueEntity::class)->shouldReceive('jsonSerialize')->andReturn(['item'])->getMock()
+            ],
+            // Object not implemented JsonSerialize, but has a method
+            // #TODO Remove in Develop
+            [
+                m::mock(PhpLegacyCompatibility::class)
+                    ->shouldReceive('jsonSerialize')->andReturn(['item'])
+                    ->getMock(),
             ],
         ];
     }
