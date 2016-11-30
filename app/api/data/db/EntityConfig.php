@@ -1969,6 +1969,11 @@ return array(
             'ignore' => true
         )
     ),
+    'bus_reg_browse_view' => array(
+        '@settings' => array(
+            'ignore' => true
+        )
+    ),
     'bus_reg_search_view' => array(
         '@settings' => array(
             'ignore' => true
