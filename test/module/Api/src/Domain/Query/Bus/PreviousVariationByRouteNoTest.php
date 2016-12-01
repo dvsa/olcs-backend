@@ -14,15 +14,18 @@ class PreviousVariationByRouteNoTest extends PHPUnit_Framework_TestCase
     {
         $variationNo = 1;
         $routeNo = 2;
+        $licenceId = 3;
 
         $query = PreviousVariationByRouteNo::create(
             [
                 'variationNo' => $variationNo,
-                'routeNo' => $routeNo
+                'routeNo' => $routeNo,
+                'licenceId' => $licenceId
             ]
         );
 
         $this->assertSame($routeNo, $query->getRouteNo());
         $this->assertSame($variationNo, $query->getVariationNo());
+        $this->assertSame($licenceId, $query->getLicenceId());
     }
 }
