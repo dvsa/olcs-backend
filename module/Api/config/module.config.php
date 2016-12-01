@@ -255,6 +255,7 @@ return [
             'SubCategory' => RepositoryFactory::class,
             'SubCategoryDescription' => RepositoryFactory::class,
             'Scan' => RepositoryFactory::class,
+            'BusRegBrowseView' => RepositoryFactory::class,
             'BusRegSearchView' => RepositoryFactory::class,
             'ProposeToRevoke' => RepositoryFactory::class,
             'OrganisationPerson' => RepositoryFactory::class,
