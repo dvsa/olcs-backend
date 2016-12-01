@@ -10,13 +10,15 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 use org\bovigo\vfs\vfsStream;
-use Zend\Http\Response\Stream;
 
 /**
- * @covers Dvsa\Olcs\Api\Domain\QueryHandler\Document\AbstractDownload
+ * @covers \Dvsa\Olcs\Api\Domain\QueryHandler\Document\AbstractDownload
  */
 class AbstractDownloadTest extends QueryHandlerTestCase
 {
+    const MIME_TYPE = 'unit_mime';
+    const MIME_TYPE_EXCLUDE = 'unit_EXC_mime';
+
     /** @var  AbstractDownloadStub */
     protected $sut;
 
@@ -24,6 +26,13 @@ class AbstractDownloadTest extends QueryHandlerTestCase
     {
         $this->sut = new AbstractDownloadStub();
 
+        $this->mockedSmServices['config'] = [
+            'document_share' => [
+                'mime_exclude' => [
+                    'unit_excl_ext' => self::MIME_TYPE_EXCLUDE,
+                ],
+            ],
+        ];
         $this->mockedSmServices['FileUploader'] = m::mock(ContentStoreFileUploader::class);
 
         parent::setUp();
@@ -47,29 +56,28 @@ class AbstractDownloadTest extends QueryHandlerTestCase
     /**
      * @dataProvider dpTestDownload
      */
-    public function testDownload($identifier, $isInline, $expectIsDownload)
+    public function testDownload($identifier, $path, $isInline, $expect)
     {
         $this->sut->setIsInline($isInline);
 
-        $path = '/unit_dir/unit_file1.pdf';
-
         $expectContent = 'unit_Contnet';
-        $expectMime = 'unit_mime';
-        $expectSize = 9999;
+        $expectSize = '9999';
 
         $vfs = vfsStream::setup('temp');
         $tmpFilePath = vfsStream::newFile('stream')->withContent($expectContent)->at($vfs)->url();
 
         $mockFile = m::mock(ContentStoreFile::class)
             ->shouldReceive('getResource')->once()->andReturn($tmpFilePath)
-            ->shouldReceive('getMimeType')->once()->andReturn($expectMime)
             ->shouldReceive('getSize')->once()->andReturn($expectSize)
+            ->shouldReceive('getMimeType')
+            ->times($expect['mime'] !== self::MIME_TYPE_EXCLUDE ? 1 : 0)
+            ->andReturn(self::MIME_TYPE)
             ->getMock();
 
         $this->mockedSmServices['FileUploader']
             ->shouldReceive('download')
             ->once()
-            ->with($path)
+            ->with($expect['path'])
             ->andReturn($mockFile);
 
         //  call & check
@@ -80,10 +88,10 @@ class AbstractDownloadTest extends QueryHandlerTestCase
         static::assertEquals($expectContent, $actual->getBody());
 
         $expectHeaders = [
-            'Content-Type' => $expectMime,
+            'Content-Type' => $expect['mime'],
             'Content-Length' => $expectSize,
         ];
-        if ($expectIsDownload === true) {
+        if ($expect['isDownload'] === true) {
             $expectHeaders ['Content-Disposition'] = 'attachment; filename="' . basename($identifier) . '"';
         }
         static::assertEquals($expectHeaders, $actual->getHeaders()->toArray());
@@ -94,18 +102,43 @@ class AbstractDownloadTest extends QueryHandlerTestCase
         return [
             [
                 'identifier' => 'unit_file.ext',
+                'path' => '/unit_dir/unit_file1.pdf',
                 'isInline' => false,
-                'expectIsDownload' => true,
+                'expect' => [
+                    'mime' => self::MIME_TYPE,
+                    'isDownload' => true,
+                    'path' => '/unit_dir/unit_file1.pdf',
+                ],
             ],
             [
                 'identifier' => 'unit_file.html',
+                'path' => null,
                 'isInline' => false,
-                'expectIsDownload' => false,
+                'expect' => [
+                    'mime' => self::MIME_TYPE,
+                    'isDownload' => false,
+                    'path' => 'unit_file.html',
+                ],
+            ],
+            [
+                'identifier' => 'dir/dir/unit_file.unit_excl_ext',
+                'path' => null,
+                'isInline' => false,
+                'expect' => [
+                    'mime' => self::MIME_TYPE_EXCLUDE,
+                    'isDownload' => true,
+                    'path' => 'dir/dir/unit_file.unit_excl_ext',
+                ],
             ],
             [
                 'identifier' => 'unit_file.ext',
+                'path' => 'unti_path',
                 'isInline' => true,
-                'expectIsDownload' => false,
+                'expect' => [
+                    'mime' => self::MIME_TYPE,
+                    'isDownload' => false,
+                    'path' => 'unti_path',
+                ],
             ],
         ];
     }
