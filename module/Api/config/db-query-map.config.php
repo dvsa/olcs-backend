@@ -27,5 +27,6 @@ return [
         'ViStoredProcedures\ViVhlComplete' => Query\ViStoredProcedures\ViVhlComplete::class,
         'Continuations\CreateContinuationDetails' => Query\Continuations\CreateContinuationDetails::class,
         'EventHistory\GetEventHistoryDetails' => Query\EventHistory\GetEventHistoryDetails::class,
+        'Task\FlagUrgentTasks' => Query\Task\FlagUrgentTasks::class,
     ]
 ];
