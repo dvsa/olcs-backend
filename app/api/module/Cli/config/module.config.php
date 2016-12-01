@@ -156,6 +156,15 @@ return [
                         ],
                     ],
                 ],
+                'flag-urgent-tasks' => [
+                    'options' => [
+                        'route' => 'flag-urgent-tasks [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'flagUrgentTasks'
+                        ],
+                    ],
+                ],
             ]
         ]
     ],

@@ -820,6 +820,7 @@ return [
     TransferCommand\Task\ReassignTasks::class => CommandHandler\Task\ReassignTasks::class,
     TransferCommand\Task\UpdateTask::class => CommandHandler\Task\UpdateTask::class,
     TransferCommand\Task\CreateTask::class => CommandHandler\Task\CreateTask::class,
+    TransferCommand\Task\FlagUrgentTasks::class => CommandHandler\Task\FlagUrgentTasks::class,
 
     // PrivateHireLicence
     TransferCommand\PrivateHireLicence\DeleteList::class => CommandHandler\PrivateHireLicence\DeleteList::class,
