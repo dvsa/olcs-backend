@@ -155,7 +155,11 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
      *
      * @var \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails",
+     *     fetch="LAZY",
+     *     cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="partner_contact_details_id", referencedColumnName="id", nullable=true)
      */
     protected $partnerContactDetails;
