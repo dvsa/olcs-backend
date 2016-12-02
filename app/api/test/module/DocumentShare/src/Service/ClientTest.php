@@ -8,14 +8,11 @@ use Dvsa\Olcs\DocumentShare\Service\Client;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Olcs\Logging\Log\Logger;
-use org\bovigo\vfs\vfsStream;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
-use Zend\Http\Headers;
 use Zend\Http\Request;
-use Zend\Http\Response;
 
 /**
- * @covers Dvsa\Olcs\DocumentShare\Service\Client
+ * @covers \Dvsa\Olcs\DocumentShare\Service\Client
  */
 class ClientTest extends MockeryTestCase
 {
@@ -27,8 +24,6 @@ class ClientTest extends MockeryTestCase
 
     /** @var  MockObj | \Zend\Http\Client */
     private $mockClient;
-    /** @var  MockObj | \Zend\Http\Request */
-    private $mockRequest;
     /** @var  m\MockInterface|File */
     private $mockFile;
 
@@ -70,19 +65,26 @@ class ClientTest extends MockeryTestCase
 
         $mockResponse = m::mock(\Zend\Http\Response::class)
             ->shouldReceive('isSuccess')->once()->andReturn(true)
-            ->shouldReceive('getContent')->once()->andReturn($content)
             ->getMock();
 
         $this->mockClient->expects(static::once())->method('setRequest')->willReturnSelf();
-        $this->mockClient
-            ->expects(static::once())
-            ->method('setMethod')->with(Request::METHOD_GET)
-            ->willReturnSelf();
+        $this->mockClient->expects(static::once())->method('setMethod')->with(Request::METHOD_GET)->willReturnSelf();
         $this->mockClient
             ->expects(static::once())
             ->method('setUri')
             ->with(self::BASE_URI . '/content/' . self::WORKSPACE . '/test')
             ->willReturnSelf();
+        $this->mockClient
+            ->expects(static::once())
+            ->method('setStream')
+            ->with(static::stringContains('/download'))
+            ->willReturnCallback(
+                function ($filePath) use ($content) {
+                    file_put_contents($filePath, $content);
+
+                    return $this->mockClient;
+                }
+            );
         $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
 
         //  call & check
@@ -90,6 +92,33 @@ class ClientTest extends MockeryTestCase
 
         static::assertInstanceOf(DocShareFile::class, $actual);
         static::assertEquals($expectContent, file_get_contents($actual->getResource()));
+    }
+
+    public function testReadExceptionUnlink()
+    {
+        $filePath = null;
+
+        $this->mockClient->expects(static::once())->method('setRequest')->willReturnSelf();
+        $this->mockClient->expects(static::once())->method('setUri')->willReturnSelf();
+        $this->mockClient->expects(static::once())->method('setMethod')->willReturnSelf();
+        $this->mockClient
+            ->expects(static::once())
+            ->method('setStream')
+            ->willReturnCallback(
+                function ($arg) use (&$filePath) {
+                    $filePath = $arg;
+                    return $this->mockClient;
+                }
+            );
+        $this->mockClient->expects(static::once())->method('send')->willThrowException(new \Exception('simulate_err'));
+
+        static::assertFalse(is_file($filePath));
+
+        //  expect
+        $this->setExpectedException(\Exception::class, 'simulate_err');
+
+        //  call & check
+        $this->sut->read('test');
     }
 
     public function testReadNullNotSuccess()
@@ -102,6 +131,7 @@ class ClientTest extends MockeryTestCase
         $this->mockClient->expects(static::once())->method('setRequest')->willReturnSelf();
         $this->mockClient->expects(static::once())->method('setUri')->willReturnSelf();
         $this->mockClient->expects(static::once())->method('setMethod')->willReturnSelf();
+        $this->mockClient->expects(static::once())->method('setStream')->willReturnSelf();
         $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
 
         $this->logger
@@ -115,18 +145,27 @@ class ClientTest extends MockeryTestCase
         static::assertEquals(null, $actual);
     }
 
-    public function testReadNull()
+    public function testReadNullProcessErr()
     {
         $content = '{"message": "unit_ErrMsg"}';
 
         $mockResponse = m::mock(\Zend\Http\Response::class)
             ->shouldReceive('isSuccess')->once()->andReturn(true)
-            ->shouldReceive('getContent')->once()->andReturn($content)
             ->getMock();
 
         $this->mockClient->expects(static::once())->method('setRequest')->willReturnSelf();
         $this->mockClient->expects(static::once())->method('setUri')->willReturnSelf();
         $this->mockClient->expects(static::once())->method('setMethod')->willReturnSelf();
+        $this->mockClient
+            ->expects(static::once())
+            ->method('setStream')
+            ->willReturnCallback(
+                function ($filePath) use ($content) {
+                    file_put_contents($filePath, $content);
+
+                    return $this->mockClient;
+                }
+            );
         $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
 
         $this->logger
