@@ -42,6 +42,7 @@ class DeleteBusTest extends CommandHandlerTestCase
 
         $routeNo = 11;
         $variationNo = 22;
+        $licenceId = 33;
 
         $command = Cmd::Create(['id' => $id,]);
 
@@ -64,14 +65,15 @@ class DeleteBusTest extends CommandHandlerTestCase
             ->andReturn($mockEbsrSubmissionList)
             ->shouldReceive('getTxcInboxs')
             ->once()
-            ->andReturn($mockTxcInboxList);
+            ->andReturn($mockTxcInboxList)
+            ->shouldReceive('getLicence->getId')
+            ->once()
+            ->andReturn($licenceId);
 
         $mockPreviousBusReg = m::mock(BusEntity::class);
         $mockPreviousBusReg->shouldReceive('getId')-> andReturn($previousId);
 
-        $mockFetchList = m::mock(\ArrayIterator::class);
-        $mockFetchList->shouldReceive('count')->andReturn(1);
-        $mockFetchList->shouldReceive('current')->andReturn($mockPreviousBusReg);
+        $mockFetchList = new \ArrayIterator([0 => $mockPreviousBusReg]);
 
         $this->repoMap['TxcInbox']->shouldReceive('delete')->with('txcInbox1');
         $this->repoMap['EbsrSubmission']->shouldReceive('delete')->with('ebsrSubmission1');
