@@ -711,10 +711,6 @@ return [
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\RegisteredBusRoute::class,
             'Rules\ProcessedData\VariationNumber' =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\VariationNumber::class,
-            'Rules\ShortNotice\MissingSection' =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingSection::class,
-            'Rules\ShortNotice\MissingReason' =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason::class
         ]
     ],
     'filters' => [

@@ -5,6 +5,8 @@ namespace Dvsa\OlcsTest\Api\Service\Ebsr\InputFilter;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingSection;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason;
 
 /**
  * Class ShortNoticeInputFactoryTest
@@ -23,8 +25,8 @@ class ShortNoticeInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
-        $mockSl->shouldReceive('get')->with('Rules\ShortNotice\MissingSection')->once()->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')->with('Rules\ShortNotice\MissingReason')->once()->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with(MissingSection::class)->once()->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with(MissingReason::class)->once()->andReturn($mockValidator);
 
         $sut = new ShortNoticeInputFactory();
         $service = $sut->createService($mockSl);
