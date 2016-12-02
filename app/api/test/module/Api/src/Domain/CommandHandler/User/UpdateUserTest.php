@@ -389,7 +389,7 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             SendUserTemporaryPasswordDto::class,
             [
-                'user' => $user,
+                'user' => $userId,
                 'password' => 'GENERATED_PASSWORD',
             ],
             new Result()

@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
  * People
@@ -14,8 +15,16 @@ class People extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['ApplicationOrganisationPerson', 'OrganisationPerson', 'Person'];
+    protected $extraRepos = ['ApplicationOrganisationPerson', 'OrganisationPerson', 'Person', 'Licence'];
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
         /* @var $application \Dvsa\Olcs\Api\Entity\Application\Application */
@@ -28,6 +37,15 @@ class People extends AbstractQueryHandler
 
         $appOrgPersons = $this->getRepo('ApplicationOrganisationPerson')->fetchListForApplication(
             $query->getId()
+        );
+
+        $licences = $this->getRepo('Licence')->fetchByOrganisationIdAndStatuses(
+            $licence->getOrganisation()->getId(),
+            [
+                LicenceEntity::LICENCE_STATUS_VALID,
+                LicenceEntity::LICENCE_STATUS_SURRENDERED,
+                LicenceEntity::LICENCE_STATUS_CURTAILED,
+            ]
         );
 
         return $this->result(
@@ -43,6 +61,8 @@ class People extends AbstractQueryHandler
                 'isSoleTrader' => $licence->getOrganisation()->isSoleTrader(),
                 'people' => $this->resultList($orgPersons, ['person']),
                 'application-people' => $this->resultList($appOrgPersons, ['person', 'originalPerson']),
+                'hasMoreThanOneValidCurtailedOrSuspendedLicences' =>
+                    is_array($licences) && count($licences) > 1,
             ]
         );
     }

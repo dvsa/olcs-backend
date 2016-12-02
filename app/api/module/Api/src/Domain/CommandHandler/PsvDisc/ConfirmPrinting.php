@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 
 /**
  * Confirm PSV discs printing
@@ -21,16 +22,14 @@ final class ConfirmPrinting extends AbstractCommandHandler implements Transactio
 {
     protected $repoServiceName = 'PsvDisc';
 
-    protected $extraRepos = ['DiscSequence'];
+    protected $extraRepos = ['DiscSequence', 'Queue'];
 
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
 
-        $discs = $this->getRepo()->fetchDiscsToPrint(
-            $command->getLicenceType()
-        );
-        $discIds = array_column($discs, 'id');
+        $discIds = $this->getDiscIds($command);
+
         if ($command->getIsSuccessfull()) {
             $this->getRepo()->setIsPrintingOffAndAssignNumbers($discIds, $command->getStartNumber());
             $this->setNewStartNumber(
@@ -50,5 +49,18 @@ final class ConfirmPrinting extends AbstractCommandHandler implements Transactio
         $entity = $this->getRepo('DiscSequence')->fetchById($discSequence);
         $entity->setDiscStartNumber($licenceType, $newStartNumber);
         $this->getRepo('DiscSequence')->save($entity);
+    }
+
+    protected function getDiscIds($command)
+    {
+        $queueRepo = $this->getRepo('Queue');
+        $queueRepo->disableSoftDeleteable();
+        $queueWithDisc = $queueRepo->fetchById($command->getQueueId());
+        $options = json_decode($queueWithDisc->getOptions(), true);
+        if (!isset($options['discs'])) {
+            throw new RuntimeException('Unable to fetch discs form the queue');
+        }
+        $queueRepo->enableSoftDeleteable();
+        return $options['discs'];
     }
 }

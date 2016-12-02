@@ -18,10 +18,15 @@ use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore as GenerateDocCommand
  */
 final class CreatePoliceDocument extends AbstractCommandHandler implements TransactionedInterface
 {
+    const DOCUMENT_DESCRIPTION = '%s %d police version';
+
     protected $repoServiceName = 'Publication';
 
     /**
-     * @param CommandInterface $command
+     * handles command to create the police document
+     *
+     * @param CommandInterface $command command
+     *
      * @return Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
@@ -39,17 +44,24 @@ final class CreatePoliceDocument extends AbstractCommandHandler implements Trans
     /**
      * Copies the non-police document, then adds the police data
      *
-     * @param PublicationEntity $publication
+     * @param PublicationEntity $publication publication doctrine entity
+     *
      * @return GenerateDocCommand
      */
     private function persistPoliceDoc(PublicationEntity $publication)
     {
+        $description = sprintf(
+            self::DOCUMENT_DESCRIPTION,
+            $publication->getDocTemplate()->getDescription(),
+            $publication->getPublicationNo()
+        );
+
         $data = [
             'template' => $publication->getDocument()->getId(),
             'query' => [
                 'id' => $publication->getId()
             ],
-            'description'   => $publication->getDocTemplate()->getDescription() . ' police version',
+            'description'   => $description,
             'category'      => $publication->getDocTemplate()->getCategory()->getId(),
             'subCategory'   => $publication->getDocTemplate()->getSubCategory()->getId(),
             'isExternal'    => true,
