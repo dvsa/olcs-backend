@@ -672,8 +672,6 @@ return [
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class,
-            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityNotRequired::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityNotRequired::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\NewAppAlreadyExists::class =>
@@ -699,8 +697,6 @@ return [
             'Rules\EffectiveDate' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate::class,
             'Rules\ApplicationType' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class,
             'Rules\Licence' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class,
-            'Rules\ProcessedData\LocalAuthorityNotRequired' =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityNotRequired::class,
             'Rules\ProcessedData\LocalAuthorityMissing' =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class,
             'Rules\ProcessedData\NewAppAlreadyExists' =>
