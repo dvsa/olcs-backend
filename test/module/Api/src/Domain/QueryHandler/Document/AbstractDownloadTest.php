@@ -28,7 +28,7 @@ class AbstractDownloadTest extends QueryHandlerTestCase
 
         $this->mockedSmServices['config'] = [
             'document_share' => [
-                'mime_exclude' => [
+                'invalid_defined_mime_types' => [
                     'unit_excl_ext' => self::MIME_TYPE_EXCLUDE,
                 ],
             ],

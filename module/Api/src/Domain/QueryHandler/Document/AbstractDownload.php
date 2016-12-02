@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
+use Dvsa\Olcs\Utils\Helper\FileHelper;
 use Zend\Http\Response;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -107,10 +108,10 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
      */
     private function getMimeType(ContentStoreFile $file, $path)
     {
-        $ext = substr(strrchr($path, '.'), 1);
+        $ext = FileHelper::getExtension($path);
 
         $cfgDs = $this->config['document_share'];
-        $mimeExclude = (isset($cfgDs['mime_exclude']) ? $cfgDs['mime_exclude'] : []);
+        $mimeExclude = (isset($cfgDs['invalid_defined_mime_types']) ? $cfgDs['invalid_defined_mime_types'] : []);
 
         if (isset($mimeExclude[$ext])) {
             return $mimeExclude[$ext];

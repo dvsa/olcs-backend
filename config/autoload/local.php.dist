@@ -101,7 +101,7 @@ return [
             // Document service workspace "olcs"
             'workspace' => 'olcs'
         ],
-        'mime_exclude' => [
+        'invalid_defined_mime_types' => [
             'docm' => 'application/vnd.ms-word.document.macroEnabled.12',
             'dotm' => 'application/vnd.ms-word.template.macroEnabled.12',
             'xlsm' => 'application/vnd.ms-excel.sheet.macroEnabled.12',
