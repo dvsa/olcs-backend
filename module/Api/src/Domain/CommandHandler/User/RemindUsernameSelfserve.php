@@ -33,10 +33,12 @@ final class RemindUsernameSelfserve extends AbstractCommandHandler implements Tr
             $result->addMessage('ERR_USERNAME_NOT_FOUND');
         } elseif (count($users) === 1) {
             // exact match - send email to the user
+            $user = array_shift($users);
+
             $this->handleSideEffect(
                 SendUsernameSingleDto::create(
                     [
-                        'user' => array_shift($users),
+                        'user' => $user->getId(),
                     ]
                 )
             );

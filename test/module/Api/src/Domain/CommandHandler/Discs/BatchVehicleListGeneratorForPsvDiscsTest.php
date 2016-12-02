@@ -20,6 +20,8 @@ class BatchVehicleListGeneratorForPsvDiscsTest extends CommandHandlerTestCase
 {
     protected $batchSize = 180;
 
+    protected $additionalSize = 2;
+
     public function setUp()
     {
         $this->sut = new Batch();
@@ -42,7 +44,7 @@ class BatchVehicleListGeneratorForPsvDiscsTest extends CommandHandlerTestCase
             'bookmarks' => $bookmarks,
             'user' => 1
         ];
-        $queuedQueries = array_slice($queries, $this->batchSize);
+        $queuedQueries = array_slice($queries, $this->batchSize, count($queries) - $this->additionalSize, true);
         $options = [
             'queries' => $queuedQueries,
             'bookmarks' => $bookmarks,
@@ -53,13 +55,14 @@ class BatchVehicleListGeneratorForPsvDiscsTest extends CommandHandlerTestCase
         $expected = ['id' => []];
 
         for ($i = 0; $i < $this->batchSize; $i++) {
+            $licenceId = $i + 1;
             $data = [
-                'id' =>  $i + 1,
-                'knownValues' => ['foo' => 'bar' . $i],
+                'id' =>  $licenceId,
+                'knownValues' => ['foo' => 'bar' . $licenceId],
                 'user' => 1
             ];
             $this->expectedSideEffect(CreatePsvVehicleListForDiscsCommand::class, $data, new Result());
-            $expected['messages'][] = 'Vehicle list generated for licence ' . $i;
+            $expected['messages'][] = 'Vehicle list generated for licence ' . $licenceId;
         }
 
         $data = [
@@ -76,7 +79,7 @@ class BatchVehicleListGeneratorForPsvDiscsTest extends CommandHandlerTestCase
     protected function getBookmarks()
     {
         $params = [];
-        for ($i = 0; $i < $this->batchSize + 2; $i++) {
+        for ($i = 0; $i < $this->batchSize + $this->additionalSize; $i++) {
             $params[$i] = ['foo' => 'bar' . $i];
         }
         return $params;
@@ -85,8 +88,9 @@ class BatchVehicleListGeneratorForPsvDiscsTest extends CommandHandlerTestCase
     protected function getQueries()
     {
         $queries = [];
-        for ($i = 0; $i <= $this->batchSize +  2; $i++) {
-            $queries[$i + 1] = ['id' => $i + 1];
+        for ($i = 0; $i < $this->batchSize + $this->additionalSize; $i++) {
+            $licenceId = $i + 1;
+            $queries[$licenceId] = ['id' => $licenceId];
         }
         return $queries;
     }
