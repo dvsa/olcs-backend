@@ -17,8 +17,9 @@ class ShortNoticeInputFactory implements FactoryInterface
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
+     * @return Input
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
