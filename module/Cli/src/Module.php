@@ -10,7 +10,7 @@ use Zend\Mvc\MvcEvent;
 /**
  * Cli Module
  *
- * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @codeCoverageIgnore
  */
 class Module implements ConsoleUsageProviderInterface
 {
@@ -28,6 +28,7 @@ class Module implements ConsoleUsageProviderInterface
 
         return [
             // Describe available commands
+            'flag-urgent-tasks [--verbose|-v]' => 'Flag applicable tasks as urgent',
             'licence-status-rules [--verbose|-v]' => 'Process licence status change rules',
             'enqueue-ch-compare [--verbose|-v]' => 'Enqueue Companies House lookups for all Organisations',
             'duplicate-vehicle-warning [--verbose|-v]' => 'Send duplicate vehicle warning letters',

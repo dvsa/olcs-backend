@@ -23,6 +23,16 @@ use Zend\View\Model\ConsoleModel;
 class BatchController extends AbstractConsoleController
 {
     /**
+     * Flag tasks as urgent
+     *
+     * @return \Zend\View\Model\ConsoleModel
+     */
+    public function flagUrgentTasksAction()
+    {
+        return $this->handleExitStatus($this->handleCommand([TransferCommand\Task\FlagUrgentTasks::create([])]));
+    }
+
+    /**
      * Remove read audit action
      *
      * @return \Zend\View\Model\ConsoleModel

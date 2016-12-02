@@ -37,6 +37,16 @@ class PreviousVariationByRouteNo extends AbstractQuery implements PagedQueryInte
     protected $variationNo;
 
     /**
+     * @var int
+     * @Transfer\Filter({"name":"Zend\Filter\Digits"})
+     * @Transfer\Validator({"name":"Zend\Validator\Digits"})
+     * @Transfer\Validator({"name":"Zend\Validator\GreaterThan", "options": {"min": 0}})
+     */
+    protected $licenceId;
+
+    /**
+     * gets route no
+     *
      * @return int
      */
     public function getRouteNo()
@@ -45,10 +55,22 @@ class PreviousVariationByRouteNo extends AbstractQuery implements PagedQueryInte
     }
 
     /**
+     * gets variation no
+     *
      * @return int
      */
     public function getVariationNo()
     {
         return $this->variationNo;
+    }
+
+    /**
+     * gets licence id
+     *
+     * @return int
+     */
+    public function getLicenceId()
+    {
+        return $this->licenceId;
     }
 }

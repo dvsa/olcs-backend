@@ -355,6 +355,11 @@ return [
     TransferQuery\BusRegSearchView\BusRegSearchViewContextList::class =>
         QueryHandler\BusRegSearchView\BusRegSearchViewContextList::class,
 
+    TransferQuery\Bus\BusRegBrowseContextList::class =>
+        QueryHandler\Bus\BusRegBrowseContextList::class,
+    TransferQuery\Bus\BusRegBrowseExport::class =>
+        QueryHandler\Bus\BusRegBrowseExport::class,
+
     // Fee
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
     TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,

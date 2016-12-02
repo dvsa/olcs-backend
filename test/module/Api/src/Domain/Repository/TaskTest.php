@@ -12,6 +12,11 @@ use Dvsa\Olcs\Api\Domain\Repository\Task as Repo;
  */
 class TaskTest extends RepositoryTestCase
 {
+    /**
+     * @var m\MockInterface|\Dvsa\Olcs\Api\Domain\Repository\Task
+     */
+    protected $sut;
+
     public function setUp()
     {
         $this->setUpSut(Repo::class);
@@ -134,5 +139,22 @@ class TaskTest extends RepositoryTestCase
             'AND m.category = [[10]] AND m.subCategory = [[114]] AND m.isClosed = 0';
 
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFlagUrgentsTasks()
+    {
+        $queryResponse = m::mock();
+        $queryResponse->shouldReceive('fetchColumn')->with(0)->once()->andReturn(65);
+
+        $query = m::mock();
+        $query->shouldReceive('execute')->once()->with()->andReturn($queryResponse);
+
+        $this->dbQueryService->shouldReceive('get')
+            ->with('Task/FlagUrgentTasks')
+            ->andReturn($query);
+
+        $result = $this->sut->flagUrgentsTasks();
+
+        $this->assertSame(65, $result);
     }
 }
