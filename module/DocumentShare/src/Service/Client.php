@@ -2,13 +2,11 @@
 
 namespace Dvsa\Olcs\DocumentShare\Service;
 
-use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Olcs\Logging\Log\Logger;
 use Zend\Http\Client as HttpClient;
 use Zend\Http\Request;
 use Zend\Http\Response;
-use Zend\Mime\Mime;
 
 /**
  * Class Client
@@ -123,20 +121,32 @@ class Client
      */
     public function read($path)
     {
-        /** @var  \Zend\Http\Response\Stream $response */
-        $response = $this->getHttpClient()
-            ->setRequest($this->getRequest())
-            ->setUri($this->getContentUri($path))
-            ->setMethod(Request::METHOD_GET)
-            ->send();
+        $path = $this->getContentUri($path);
 
-        if (!$response->isSuccess()) {
-            Logger::logResponse($response->getStatusCode(), self::ERR_RESP_FAIL);
+        try {
+            $tmpFileName = tempnam(sys_get_temp_dir(), 'download');
 
-            return null;
+            /** @var  \Zend\Http\Response\Stream $response */
+            $response = $this->getHttpClient()
+                ->setRequest($this->getRequest())
+                ->setUri($path)
+                ->setStream($tmpFileName)
+                ->setMethod(Request::METHOD_GET)
+                ->send();
+
+            if (!$response->isSuccess()) {
+                Logger::logResponse($response->getStatusCode(), self::ERR_RESP_FAIL);
+
+                return null;
+            }
+
+            $data = (array)json_decode(file_get_contents($tmpFileName));
+
+        } finally {
+            if (is_file($tmpFileName)) {
+                unlink($tmpFileName);
+            }
         }
-
-        $data = (array) json_decode($response->getContent());
 
         //  process file content
         $content = (isset($data['content']) ? base64_decode($data['content']) : false);
