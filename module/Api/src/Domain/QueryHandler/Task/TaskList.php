@@ -1,15 +1,10 @@
 <?php
 
-/**
- * Task List
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Task;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Doctrine\ORM\Query;
 
 /**
  * Task List
@@ -39,13 +34,19 @@ class TaskList extends AbstractQueryHandler
         unset($data['date']);
         unset($data['status']);
         unset($data['urgent']);
+        unset($data['showTasks']);
 
         $unfilteredQuery = \Dvsa\Olcs\Transfer\Query\Task\TaskList::create($data);
 
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\TaskSearchView $repo */
+        $repo = $this->getRepo();
+
         return [
-            'result' => $this->resultList($this->getRepo()->fetchList($query, Query::HYDRATE_OBJECT)),
-            'count' => $this->getRepo()->fetchCount($query),
-            'count-unfiltered' => $this->getRepo()->hasRows($unfilteredQuery),
+            'result' => $this->resultList(
+                $repo->fetchList($query, Query::HYDRATE_OBJECT)
+            ),
+            'count' => $repo->fetchCount($query),
+            'count-unfiltered' => $repo->hasRows($unfilteredQuery),
         ];
     }
 }

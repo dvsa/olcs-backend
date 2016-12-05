@@ -1,17 +1,11 @@
 <?php
 
-/**
- * Document Search View
- *
- * @author Jessica Rowbottom <jess.rowbottom@valtech.co.uk>
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Entity\View;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Document Search View
@@ -133,6 +127,15 @@ class DocumentSearchView implements BundleSerializableInterface
      * @ORM\Column(type="string", name="id_col")
      */
     protected $identifier;
+
+    /**
+     * Application Id
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="application_id")
+     */
+    protected $applicationId;
 
     /**
      * Licence number
@@ -360,6 +363,16 @@ class DocumentSearchView implements BundleSerializableInterface
     public function getIdentifier()
     {
         return $this->identifier;
+    }
+
+    /**
+     * Get the application Identifier (if applicable)
+     *
+     * @return int
+     */
+    public function getApplicationId()
+    {
+        return $this->applicationId;
     }
 
     /**
