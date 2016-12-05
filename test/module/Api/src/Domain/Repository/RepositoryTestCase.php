@@ -118,6 +118,9 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('select')
             ->andReturnUsing([$this, 'mockAddSelect']);
 
+        $this->qb->shouldReceive('distinct')
+            ->andReturnUsing([$this, 'mockDistinct']);
+
         $this->qb->shouldReceive('addSelect')
             ->andReturnUsing([$this, 'mockAddSelect']);
 
@@ -168,9 +171,18 @@ class RepositoryTestCase extends MockeryTestCase
         return $this->qb;
     }
 
+    public function mockDistinct()
+    {
+        $this->query .= ' DISTINCT';
+
+        return $this->qb;
+    }
+
     public function mockAddSelect($select)
     {
-        $this->query .= ' SELECT ' . implode(', ', func_get_args());
+        $selects = is_array($select) ? $select : func_get_args();
+
+        $this->query .= ' SELECT ' . implode(', ', $selects);
 
         return $this->qb;
     }
