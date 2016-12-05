@@ -1,17 +1,12 @@
 <?php
 
-/**
- * Application
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
-use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 
 /**
  * Application
@@ -61,7 +56,7 @@ class Declaration extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        /* @var $application \Dvsa\Olcs\Api\Entity\Application\Application */
+        /* @var $application ApplicationEntity */
         $application = $this->getRepo()->fetchUsingId($query);
 
         return $this->result(
@@ -92,7 +87,7 @@ class Declaration extends AbstractQueryHandler
     /**
      * Get declarations
      *
-     * @param Application $application application
+     * @param ApplicationEntity $application application
      *
      * @return string
      */
