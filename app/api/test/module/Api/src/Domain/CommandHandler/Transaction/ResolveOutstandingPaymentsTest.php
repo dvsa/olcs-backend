@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
+use OlcsTest\Bootstrap;
 
 /**
 * Resolve Outstanding Payments Test
@@ -101,6 +102,54 @@ class ResolveOutstandingPaymentsTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'Transaction 99 resolved as Failed',
+                'Transaction 100 resolved as Failed',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandWithException()
+    {
+        Bootstrap::setupLogger();
+
+        // expectations
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('fetchValue')
+            ->once()
+            ->with('RESOLVE_CARD_PAYMENTS_MIN_AGE')
+            ->andReturn('30');
+
+        $transactions = new ArrayCollection(
+            [
+                $this->mapReference(PaymentEntity::class, 99),
+                $this->mapReference(PaymentEntity::class, 100),
+            ]
+        );
+
+        $this->repoMap['Transaction']
+            ->shouldReceive('fetchOutstandingCardPayments')
+            ->once()
+            ->with('30')
+            ->andReturn($transactions);
+
+        $this->expectedSideEffectThrowsException(
+            ResolvePaymentCmd::class,
+            ['id' => 99],
+            (new \Exception())
+        );
+
+        $this->expectedSideEffect(
+            ResolvePaymentCmd::class,
+            ['id' => 100],
+            (new Result())->addMessage('Transaction 100 resolved as Failed')
+        );
+
+        $result = $this->sut->handleCommand(Cmd::create([]));
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Error resolving payment for transaction 99',
                 'Transaction 100 resolved as Failed',
             ]
         ];
