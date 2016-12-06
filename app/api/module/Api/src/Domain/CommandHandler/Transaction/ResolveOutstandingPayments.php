@@ -10,10 +10,10 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Transaction;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCmd;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Resolve Outstanding Payments
@@ -21,7 +21,6 @@ use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCmd
  * @author Dan Eggleston <dan@stolenegg.com>
  */
 final class ResolveOutstandingPayments extends AbstractCommandHandler implements
-    TransactionedInterface,
     AuthAwareInterface
 {
     use AuthAwareTrait;
@@ -41,8 +40,15 @@ final class ResolveOutstandingPayments extends AbstractCommandHandler implements
 
         /* @var $transaction Transaction */
         foreach ($transactions as $transaction) {
-            $cmd = ResolvePaymentCmd::create(['id' => $transaction->getId()]);
-            $this->result->merge($this->handleSideEffect($cmd));
+            $transactionId = $transaction->getId();
+            try {
+                $cmd = ResolvePaymentCmd::create(['id' => $transactionId]);
+                $this->result->merge($this->handleSideEffect($cmd));
+            } catch (\Exception $e) {
+                $message = 'Error resolving payment for transaction ' . $transactionId;
+                $this->result->addMessage($message);
+                Logger::err($message);
+            }
         }
 
         return $this->result;
