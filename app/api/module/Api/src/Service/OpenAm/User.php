@@ -175,6 +175,20 @@ class User implements UserInterface
     }
 
     /**
+     * Fetch user
+     *
+     * @param string $pid Pid
+     *
+     * @return array
+     * @throws FailedRequestException
+     * @throws \RuntimeException
+     */
+    public function fetchUser($pid)
+    {
+        return $this->openAmClient->fetchUser($pid);
+    }
+
+    /**
      * Is active
      *
      * @param string $pid
@@ -186,7 +200,7 @@ class User implements UserInterface
     public function isActiveUser($pid)
     {
         // is active if successfully logged in at least once
-        return !empty($this->openAmClient->fetchUser($pid)['lastLoginTime']);
+        return !empty($this->fetchUser($pid)['lastLoginTime']);
     }
 
     /**

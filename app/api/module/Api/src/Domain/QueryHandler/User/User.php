@@ -8,6 +8,8 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\User;
 
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -17,8 +19,10 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class User extends AbstractQueryHandler
+class User extends AbstractQueryHandler implements OpenAmUserAwareInterface
 {
+    use OpenAmUserAwareTrait;
+
     protected $repoServiceName = 'User';
 
     public function handleQuery(QueryInterface $query)
@@ -51,7 +55,8 @@ class User extends AbstractQueryHandler
                 ],
             ],
             [
-                'userType' => $user->getUserType()
+                'userType' => $user->getUserType(),
+                'lastLoggedInOn' => $this->getOpenAmUser()->fetchUser($user->getPid())['lastLoginTime'] ? : null,
             ]
         );
     }
