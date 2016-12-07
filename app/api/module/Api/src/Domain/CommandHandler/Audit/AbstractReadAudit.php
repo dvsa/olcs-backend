@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Audit;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -13,8 +12,10 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractReadAudit extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
+abstract class AbstractReadAudit extends AbstractCommandHandler implements AuthAwareInterface
 {
+    const INTEGRITY_CONSTRAINT_VIOLATION_CODE = 23000;
+
     use AuthAwareTrait;
 
     protected $recordClass;
@@ -23,14 +24,19 @@ abstract class AbstractReadAudit extends AbstractCommandHandler implements Trans
 
     public function handleCommand(CommandInterface $command)
     {
+        $existsMessage = 'Audit record exists';
         if ($this->doesRecordExist($command)) {
-            $this->result->addMessage('Audit record exists');
+            $this->result->addMessage($existsMessage);
             return $this->result;
         }
 
-        $this->createRecord($command);
+        if ($this->createRecord($command)) {
+            $message = 'Audit record created';
+        } else {
+            $message = $existsMessage;
+        }
+        $this->result->addMessage($message);
 
-        $this->result->addMessage('Audit record created');
         return $this->result;
     }
 
@@ -62,6 +68,23 @@ abstract class AbstractReadAudit extends AbstractCommandHandler implements Trans
         $className = $this->recordClass;
 
         $record = new $className($this->getCurrentUser(), $this->getEntity($command->getId()));
-        $this->getRepo()->save($record);
+        try {
+            $this->getRepo()->save($record);
+        } catch (\Exception $e) {
+            $code = $e->getCode();
+            if (empty($code)) {
+                $previousException = $e->getPrevious();
+                $code = $previousException->getCode();
+            }
+            if ((int) $code === self::INTEGRITY_CONSTRAINT_VIOLATION_CODE) {
+                // that's fine, we already have an audit record, just tried to insert
+                // two records at the same time and got "Integrity constraint violation"
+                // we can ignore it.
+                return false;
+            }
+            // otherwise re-throw an exception
+            throw $e;
+        }
+        return true;
     }
 }
