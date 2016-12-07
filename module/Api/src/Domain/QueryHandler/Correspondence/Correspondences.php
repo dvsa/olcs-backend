@@ -1,14 +1,9 @@
 <?php
 
-/**
- * Correspondences.php
- *
- * @author Joshua Curtis <josh.curtis@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Correspondence;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -22,25 +17,59 @@ class Correspondences extends AbstractQueryHandler
 
     protected $extraRepos = ['Fee'];
 
+    /**
+     * Handle Query
+     *
+     * @param \Dvsa\Olcs\Transfer\Query\Correspondence\Correspondences $query Query
+     *
+     * @return array
+     */
     public function handleQuery(QueryInterface $query)
     {
-        // Object hydration to enforce JsonSerialize.
-        $result = $this->getRepo()
-            ->fetchList($query, Query::HYDRATE_OBJECT);
+        /** @var Repository\Correspondence $repo */
+        $repo = $this->getRepo();
+
+        $iterableResult = $repo->fetchDocumentsList($query);
+
+        $result = [];
+        while (false !== ($row = $iterableResult->next())) {
+            $row = current($row);
+
+            $result[] = [
+                'id' => $row['id'],
+                'accessed' => $row['accessed'],
+                'createdOn' => $row['createdOn'],
+
+                'licence' => [
+                    'id' => $row['licId'],
+                    'licNo' => $row['licNo'],
+                    'status' => $row['licStatus'],
+                ],
+                'document' => [
+                    'description' => $row['docDesc'],
+                ],
+            ];
+        }
 
         return [
-            'result' => $this->resultList($result, ['licence', 'document']),
-            'count' => $this->getRepo()->fetchCount($query),
+            'result' => $result,
+            'count' => count($result),
             'feeCount' => $this->getFeeCount($query->getOrganisation()),
         ];
     }
 
     /**
-     * @param int $organisationId
+     * Get Count of Fees
+     *
+     * @param int $organisationId Org Id
+     *
      * @return int
      */
     protected function getFeeCount($organisationId)
     {
-        return $this->getRepo('Fee')->getOutstandingFeeCountByOrganisationId($organisationId, true);
+        /** @var Repository\Fee $repo */
+        $repo = $this->getRepo('Fee');
+
+        return $repo->getOutstandingFeeCountByOrganisationId($organisationId, true);
     }
 }
