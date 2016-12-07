@@ -22,8 +22,12 @@ class User implements UserInterface
     private $randomGenerator;
 
     /**
-     * @param ClientInterface $openAmClient
-     * @param Generator $randomGenerator
+     * Construct
+     *
+     * @param ClientInterface $openAmClient    OpenAM client
+     * @param Generator       $randomGenerator Random generator
+     *
+     * @return void
      */
     public function __construct(ClientInterface $openAmClient, Generator $randomGenerator)
     {
@@ -34,7 +38,7 @@ class User implements UserInterface
     /**
      * Generates a pid
      *
-     * @param string $loginId
+     * @param string $loginId Login id
      *
      * @return string
      */
@@ -46,10 +50,10 @@ class User implements UserInterface
     /**
      * Registers a user
      *
-     * @param string $loginId
-     * @param string $emailAddress
-     * @param string $realm
-     * @param callable $callback
+     * @param string   $loginId      Login id
+     * @param string   $emailAddress Email address
+     * @param string   $realm        Realm
+     * @param callable $callback     Callback
      *
      * @return void
      * @throws FailedRequestException
@@ -82,10 +86,10 @@ class User implements UserInterface
     /**
      * Updates a user
      *
-     * @param string $pid
-     * @param string $username
-     * @param string $emailAddress
-     * @param bool $disabled
+     * @param string $pid          Pid
+     * @param string $username     Username
+     * @param string $emailAddress Email address
+     * @param bool   $disabled     Disabled
      *
      * @return void
      * @throws FailedRequestException
@@ -128,7 +132,7 @@ class User implements UserInterface
     /**
      * Disables a user
      *
-     * @param string $pid
+     * @param string $pid Pid
      *
      * @return void
      * @throws FailedRequestException
@@ -147,8 +151,8 @@ class User implements UserInterface
     /**
      * Resets user password
      *
-     * @param string $pid
-     * @param callable $callback
+     * @param string   $pid      Pid
+     * @param callable $callback Callback
      *
      * @return void
      * @throws FailedRequestException
@@ -191,7 +195,7 @@ class User implements UserInterface
     /**
      * Is active
      *
-     * @param string $pid
+     * @param string $pid Pid
      *
      * @return bool
      * @throws FailedRequestException
@@ -221,8 +225,10 @@ class User implements UserInterface
     /**
      * Calls the callback function/method if exists.
      *
-     * @param callable $callback
-     * @param array $params
+     * @param callable $callback Callback
+     * @param array    $params   Params
+     *
+     * @return void
      * @throws \Exception
      */
     private function callCallbackIfExists($callback, $params)
