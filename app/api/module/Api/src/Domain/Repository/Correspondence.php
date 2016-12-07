@@ -3,9 +3,8 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox as Entity;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Transfer\Query\Correspondence\Correspondences;
 
 /**
  * Class Correspondence
@@ -19,19 +18,43 @@ class Correspondence extends AbstractRepository
     protected $alias = 'co';
 
     /**
-     * @param QueryBuilder   $qb
-     * @param \Dvsa\Olcs\Transfer\Query\Correspondence\Correspondences $query
+     * Fetch List of documents
+     *
+     * @param Correspondences $query Query
+     *
+     * @return \Doctrine\ORM\Internal\Hydration\IterableResult
      */
-    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    public function fetchDocumentsList(Correspondences $query)
     {
-        $this->getQueryBuilder()->modifyQuery($qb)->with('licence', 'l');
-        $this->getQueryBuilder()->modifyQuery($qb)->with('document');
+        $qb = $this->createQueryBuilder();
 
-        $qb->where($qb->expr()->eq('l.organisation', ':organisationId'));
-        $qb->setParameter(':organisationId', $query->getOrganisation());
-        $qb->orderBy($this->alias . '.createdOn', 'DESC');
+        $qb
+            ->select(
+                $this->alias . '.id',
+                $this->alias . '.accessed',
+                $this->alias . '.createdOn',
+                'l.id as licId, l.licNo',
+                'IDENTITY(l.status) as licStatus',
+                'd.description as docDesc'
+            )
+            ->join($this->alias . '.licence', 'l')
+            ->join($this->alias . '.document', 'd')
+            ->where(
+                $qb->expr()->eq('l.organisation', ':ORG_ID')
+            )
+            ->setParameter('ORG_ID', $query->getOrganisation())
+            ->orderBy($this->alias . '.createdOn', 'DESC');
+
+        return $qb->getQuery()->iterate();
     }
 
+    /**
+     * Get Unread Count
+     *
+     * @param int $organisationId Org Id
+     *
+     * @return int
+     */
     public function getUnreadCountForOrganisation($organisationId)
     {
         $qb = $this->createQueryBuilder();

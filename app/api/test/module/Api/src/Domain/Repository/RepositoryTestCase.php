@@ -112,9 +112,6 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('expr->andX')
             ->andReturnUsing([$this, 'mockAndX']);
 
-        $this->qb->shouldReceive('expr->isNull')
-            ->andReturnUsing([$this, 'mockIsNull']);
-
         $this->qb->shouldReceive('select')
             ->andReturnUsing([$this, 'mockAddSelect']);
 
@@ -124,11 +121,17 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('addSelect')
             ->andReturnUsing([$this, 'mockAddSelect']);
 
+        $this->qb->shouldReceive('where')
+            ->andReturnUsing([$this, 'mockAndWhere']);
+
         $this->qb->shouldReceive('andWhere')
             ->andReturnUsing([$this, 'mockAndWhere']);
 
         $this->qb->shouldReceive('orWhere')
             ->andReturnUsing([$this, 'mockOrWhere']);
+
+        $this->qb->shouldReceive('join')
+            ->andReturnUsing([$this, 'mockInnerJoin']);
 
         $this->qb->shouldReceive('innerJoin')
             ->andReturnUsing([$this, 'mockInnerJoin']);
@@ -190,14 +193,6 @@ class RepositoryTestCase extends MockeryTestCase
     public function mockAndWhere($where)
     {
         $this->query .= ' AND ' . $where;
-
-        return $this->qb;
-    }
-
-    public function mockIsNull($where)
-    {
-        $this->query .= $where . ' IS NULL';
-
         return $this->qb;
     }
 
