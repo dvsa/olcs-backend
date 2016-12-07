@@ -1,10 +1,5 @@
 <?php
 
-/**
- * User
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\User;
 
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
@@ -25,6 +20,13 @@ class User extends AbstractQueryHandler implements OpenAmUserAwareInterface
 
     protected $repoServiceName = 'User';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
         if (!$this->isGranted(Permission::CAN_MANAGE_USER_INTERNAL)) {
