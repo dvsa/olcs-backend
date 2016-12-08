@@ -98,4 +98,86 @@ class ReadLicenceTest extends CommandHandlerTestCase
 
         static::assertEquals($expected, $result->toArray());
     }
+
+    public function testHandleCommandWithIntegrityException()
+    {
+        $entity = m::mock(Licence::class);
+
+        $e = new \Exception('Integrity constraints violation', 23000);
+        $this->repoMap['LicenceReadAudit']->shouldReceive('fetchOneOrMore')->once()
+            ->with(self::USER_ID, 111, \DateTime::class)
+            ->andReturn(null)
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(LicenceReadAudit::class))
+            ->andThrow($e);
+
+        $this->repoMap['Licence']->shouldReceive('fetchById')
+            ->with(111)
+            ->andReturn($entity);
+
+        $result = $this->sut->handleCommand($this->command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Audit record exists',
+            ],
+        ];
+
+        static::assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandWithPreviousException()
+    {
+        $entity = m::mock(Licence::class);
+
+        $previousException = new \Exception('Integrity constraints violation', 23000);
+        $e = new \Exception('Foo', 0, $previousException);
+
+        $this->repoMap['LicenceReadAudit']->shouldReceive('fetchOneOrMore')->once()
+            ->with(self::USER_ID, 111, \DateTime::class)
+            ->andReturn(null)
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(LicenceReadAudit::class))
+            ->andThrow($e);
+
+        $this->repoMap['Licence']->shouldReceive('fetchById')
+            ->with(111)
+            ->andReturn($entity);
+
+        $result = $this->sut->handleCommand($this->command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Audit record exists',
+            ],
+        ];
+
+        static::assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandWithDifferentException()
+    {
+        $this->setExpectedException(\Exception::class);
+
+        $entity = m::mock(Licence::class);
+
+        $e = new \Exception('Foo', 23);
+        $this->repoMap['LicenceReadAudit']->shouldReceive('fetchOneOrMore')->once()
+            ->with(self::USER_ID, 111, \DateTime::class)
+            ->andReturn(null)
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(LicenceReadAudit::class))
+            ->andThrow($e);
+
+        $this->repoMap['Licence']->shouldReceive('fetchById')
+            ->with(111)
+            ->andReturn($entity);
+
+        $this->sut->handleCommand($this->command);
+    }
 }
