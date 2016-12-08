@@ -26,7 +26,7 @@ class Email implements FactoryInterface
 {
     const MISSING_FROM_ERROR = 'Email is missing a valid from address';
     const MISSING_TO_ERROR = 'Email is missing a valid to address';
-    const NOT_SENT_ERROR = 'Email not sent';
+    const NOT_SENT_ERROR = 'Email not sent: %s';
 
     private $mailTransport;
 
@@ -224,8 +224,9 @@ class Email implements FactoryInterface
         try {
             $trans->send($mail);
         } catch (\Exception $e) {
-            Logger::err('email failed', ['data' => self::NOT_SENT_ERROR]);
-            throw new EmailNotSentException(self::NOT_SENT_ERROR, 0, $e);
+            $message = sprintf(self::NOT_SENT_ERROR, $e->getMessage());
+            Logger::err('email failed', ['data' => $message]);
+            throw new EmailNotSentException($message, 0, $e);
         }
     }
 }
