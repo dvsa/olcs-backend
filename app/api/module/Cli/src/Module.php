@@ -25,7 +25,6 @@ class Module implements ConsoleUsageProviderInterface
     {
         // supress PMD error
         unset($console);
-
         return [
             // Describe available commands
             'flag-urgent-tasks [--verbose|-v]' => 'Flag applicable tasks as urgent',
@@ -40,15 +39,20 @@ class Module implements ConsoleUsageProviderInterface
             'remove-read-audit [--verbose|-v]' => 'Process deletion of old read audit records',
             'system-parameter name value [--verbose|-v]' => 'Set a system parameter',
             'resolve-payments [--verbose|-v]' => 'Resolve pending CPMS payments',
-            'create-vi-extract-files [--verbose|-v] [--oc|-oc] [--op|-op] [--tnm|-tnm] [--vhl|-vhl] [--all|-all]' .
-                ' [--path=<exportPath>] ' => 'Create mobile compliance VI extract files',
-            // Describe parameters
+            'create-vi-extract-files' => 'Create mobile compliance VI extract files',
+                // Describe parameters
+            ['--oc|-oc', 'Export Operating Centres file'],
+            ['--op|-op', 'Export Operators file'],
+            ['--tnm|-tnm', 'Export Trading Names file'],
+            ['--vhl|-vhl', 'Export Vehicle file'],
+            ['--all|-all', 'Export all 4 files'],
+            ['--path=<exportPath>', 'Path to create exported files'],
             ['--verbose|-v', '(optional) turn on verbose mode'],
             ['--dryrun|-d', '(optional) dryrun, nothing is actually changed'],
-            'process-queue [--type=]' => 'Process the queue',
+            'process-queue' => 'Process the queue',
             ['--type=<que_typ_xxx>', '(optional) queue message type to process can be a comma seperated list'],
             ['--exclude=<que_typ_xxx>', '(optional) DON\'t process message type, can be a comma seperated list'],
-
+            ['--queue-duration=SECONDS', '(optional) Number of seconds the queue process will run for'],
             'data-gov-uk-export <report-name> [--verbose|-v] [--path=<exportPath>]' => 'Export to csv for data.gov.uk',
             ['<report-name>', 'export report name'],
             ['    ' . DataGovUkExport::OPERATOR_LICENCE, '- export operator licences'],
@@ -57,7 +61,7 @@ class Module implements ConsoleUsageProviderInterface
             ['--path=<exportPath>', '(optional) save export file in specified directory'],
             //
             'ch-vs-olcs-diffs [--verbose|-v] [--path=<exportPath>]' =>
-                'Compare data at olcs vs companies house and export to csv',
+            'Compare data at olcs vs companies house and export to csv',
             ['--path=<exportPath>', '(optional) save export file in specified directory'],
         ];
     }

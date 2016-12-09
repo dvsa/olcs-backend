@@ -111,13 +111,39 @@ class EnqueueTest extends CommandHandlerTestCase
         );
     }
 
-    private function expectCreateQueue()
+    public function testHandleCommandDiscPrinting()
+    {
+        $command = Cmd::create(
+            ['documentId' => 200116, 'jobName' => 'JOBNAME', 'user' => 10, 'isDiscPrinting' => true]
+        );
+
+        $team = new \Dvsa\Olcs\Api\Entity\User\Team();
+        $team->addTeamPrinters('PRINTER 1');
+        $user = new \Dvsa\Olcs\Api\Entity\User\User('PID', 'TYPE');
+        $user->setTeam($team);
+        $user->setId(10);
+        $this->repoMap['User']->shouldReceive('fetchById')
+            ->with(10)
+            ->andReturn($user)
+            ->getMock();
+
+        $this->expectCreateQueue(Queue::TYPE_DISC_PRINTING_PRINT);
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(
+            ["Document id '200116', 'JOBNAME' queued for print"],
+            $result->getMessages()
+        );
+    }
+
+    private function expectCreateQueue($type = Queue::TYPE_PRINT)
     {
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Create::class,
             [
                 'entityId' => 200116,
-                'type' => Queue::TYPE_PRINT,
+                'type' => $type,
                 'status' => Queue::STATUS_QUEUED,
                 'options' => json_encode(
                     [
