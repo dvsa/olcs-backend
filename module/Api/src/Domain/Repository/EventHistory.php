@@ -122,6 +122,40 @@ class EventHistory extends AbstractRepository
     }
 
     /**
+     * Fetch a list for an account
+     *
+     * @param int|\Dvsa\Olcs\Api\Entity\User\User                     $user             User
+     * @param int|\Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType $eventHistoryType EventHistoryType
+     * @param string                                                  $sort             Sort
+     * @param string                                                  $order            Order
+     * @param int                                                     $limit            Limit
+     *
+     * @return array
+     */
+    public function fetchByAccount($user, $eventHistoryType = null, $sort = null, $order = null, $limit = null)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.account', ':account'))
+            ->setParameter('account', $user);
+
+        if ($eventHistoryType !== null) {
+            $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.eventHistoryType', ':eventHistoryType'))
+                ->setParameter('eventHistoryType', $eventHistoryType);
+        }
+
+        if ($sort !== null) {
+            $doctrineQb->orderBy($this->alias . '.' .$sort, $order);
+        }
+
+        if ($limit !== null) {
+            $doctrineQb->setMaxResults($limit);
+        }
+
+        return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
      * Fetch event history details
      *
      * @param int $id
