@@ -37,6 +37,7 @@ class BusRegBrowseViewTest extends \PHPUnit_Framework_TestCase
             'acceptedDate' => '2015-01-04',
             'eventDescription' => 'event description',
             'eventRegistrationStatus' => 'event registration status',
+            'status' => 'status',
         ];
         $this->entity = new BusRegBrowseView();
 
