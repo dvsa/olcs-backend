@@ -103,18 +103,17 @@ class Email implements FactoryInterface
 
         //addresses passed in as an array (from, cc, bcc)
         foreach ($addressOrAddresses as $key => $value) {
-            $name = null;
             $email = null;
 
             if (is_int($key) || is_numeric($key)) {
                 $email = $value;
             } elseif (is_string($key)) {
                 $email = $key;
-                $name = $value;
             }
 
             try {
-                $address = new ZendAddress($email, $name);
+                //olcs-14825 we no longer pass in the name, as this occasionally caused problems with postfix
+                $address = new ZendAddress($email);
                 $addressList->add($address);
             } catch (ZendAddressException $e) {
                 //address is invalid in some way, right now these addresses are ignored
