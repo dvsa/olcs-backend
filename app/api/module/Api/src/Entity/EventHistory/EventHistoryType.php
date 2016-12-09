@@ -12,5 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EventHistoryType extends AbstractEventHistoryType
 {
+    const EVENT_CODE_PASSWORD_RESET = 'PWR';
 
 }
