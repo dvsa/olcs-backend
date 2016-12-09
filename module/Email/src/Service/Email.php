@@ -103,14 +103,13 @@ class Email implements FactoryInterface
 
         //addresses passed in as an array (from, cc, bcc)
         foreach ($addressOrAddresses as $key => $value) {
-            $name = null;
+            $name = null; //olcs-14825 we no longer use the name, as this occasionally caused problems with postfix
             $email = null;
 
             if (is_int($key) || is_numeric($key)) {
                 $email = $value;
             } elseif (is_string($key)) {
                 $email = $key;
-                $name = $value;
             }
 
             try {
