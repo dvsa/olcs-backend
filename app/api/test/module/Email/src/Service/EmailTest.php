@@ -90,7 +90,7 @@ class EmailTest extends MockeryTestCase
                     array_shift($parts);
 
                     $expected = [
-                        'From: foo <foo@bar.com>',
+                        'From: foo@bar.com',
                         'To: bar@foo.com',
                         'Cc: cc@foo.com',
                         'Bcc: bcc@foo.com',
