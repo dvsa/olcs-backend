@@ -162,6 +162,11 @@ final class SaveBusinessDetails extends AbstractCommandHandler implements AuthAw
             )
         );
 
+        if ($result->getFlag('hasChanged')) {
+            // if trading names have changed, then set a flag on the result
+            $this->result->setFlag('tradingNamesChanged', true);
+        }
+
         $this->handleSideEffectResult($result);
     }
 
