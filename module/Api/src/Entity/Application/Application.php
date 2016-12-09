@@ -736,6 +736,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return array_values($list);
     }
 
+    /**
+     * Get a list of sections with their completion status
+     *
+     * @return array|null
+     */
     public function getVariationCompletion()
     {
         if (!$this->isVariation()) {

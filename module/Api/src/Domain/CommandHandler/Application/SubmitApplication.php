@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use \Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 
 /**
  * Submit Application
@@ -149,7 +150,81 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
             'licence' => $application->getLicence()->getId(),
         ];
 
+        if ($application->isVariation()) {
+            $taskData = $this->getVariationTaskdata($application, $taskData);
+        }
+
         return $this->handleSideEffect(CreateTaskCmd::create($taskData));
+    }
+
+    /**
+     * Modify the task creation data for a variation
+     *
+     * @param ApplicationEntity $application Application entity
+     * @param array             $taskData    Task data
+     *
+     * @return array
+     */
+    private function getVariationTaskdata(ApplicationEntity $application, array $taskData)
+    {
+        // If People is only change section
+        if ($this->isOnlyCompletedSection($application, ApplicationCompletion::SECTION_PEOPLE)) {
+            // If Ltd company
+            if ($application->getLicence()->getOrganisation()->isLtd()) {
+                $taskData['subCategory'] = CategoryEntity::TASK_SUB_CATEGORY_DIRECTOR_CHANGE_DIGITAL;
+                $taskData['description'] = 'Director change application';
+            } else {
+                $taskData['subCategory'] = CategoryEntity::TASK_SUB_CATEGORY_PARTNER_CHANGE_DIGITAL;
+                $taskData['description'] = 'Partner change application';
+            }
+            return $taskData;
+        }
+
+        // If People is only change section
+        if ($this->isOnlyCompletedSection($application, ApplicationCompletion::SECTION_TRANSPORT_MANAGER)) {
+            $taskData['subCategory'] = CategoryEntity::TASK_SUB_CATEGORY_APPLICATION_TM1_DIGITAL;
+            $taskData['description'] = 'TM change variation';
+        }
+
+        return $taskData;
+    }
+
+    /**
+     * Is a section the only completed section
+     *
+     * @param ApplicationEntity $application Application entity
+     * @param string            $section     Section to test if its the only completed section
+     *
+     * @return bool
+     */
+    private function isOnlyCompletedSection(ApplicationEntity $application, $section)
+    {
+        // These sections are ignored as they always have to be completed
+        $ignoredSections = [
+            ApplicationCompletion::SECTION_DECLARATION,
+            ApplicationCompletion::SECTION_DECLARATION_INTERNAL,
+            ApplicationCompletion::SECTION_FINANCIAL_HISTORY,
+            ApplicationCompletion::SECTION_CONVICTIONS_AND_PENALTIES,
+        ];
+        $completionStatuses = $application->getVariationCompletion();
+
+        foreach ($completionStatuses as $completionSection => $status) {
+            if (in_array($completionSection, $ignoredSections)) {
+                // ignore sections
+                continue;
+            }
+            if ($completionSection === $section) {
+                if ($status !== \Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion::STATUS_COMPLETE) {
+                    return false;
+                }
+            } else {
+                if ($status === \Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion::STATUS_COMPLETE) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
