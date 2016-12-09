@@ -163,7 +163,7 @@ class Email implements FactoryInterface
         $toAddresses = $this->validateAddresses($to);
 
         if (count($toAddresses) === 0) {
-            Logger::err('email failed', ['data' => self::MISSING_TO_ERROR]);
+            Logger::err('email failed', ['data' => self::MISSING_TO_ERROR, 'to' => $to]);
             throw new EmailNotSentException(self::MISSING_TO_ERROR);
         }
 
