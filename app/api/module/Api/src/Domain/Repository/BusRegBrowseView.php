@@ -61,7 +61,7 @@ class BusRegBrowseView extends AbstractRepository
             ->setParameter('byTrafficAreas', $trafficAreas);
 
         if (!empty($status)) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.eventRegistrationStatus', ':byStatus'))
+            $qb->andWhere($qb->expr()->eq($this->alias . '.status', ':byStatus'))
                 ->setParameter('byStatus', $status);
         }
 

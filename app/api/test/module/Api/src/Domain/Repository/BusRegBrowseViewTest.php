@@ -58,7 +58,7 @@ class BusRegBrowseViewTest extends RepositoryTestCase
             = 'BLAH SELECT m.FIELD1, m.FIELD2 '
             . 'AND m.acceptedDate = [[DATE]] '
             . 'AND m.trafficAreaId IN [[["TA1","TA2"]]] '
-            . 'AND m.eventRegistrationStatus = [[STATUS]]';
+            . 'AND m.status = [[STATUS]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
