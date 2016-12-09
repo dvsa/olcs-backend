@@ -101,6 +101,8 @@ return [
             \Dvsa\Olcs\Api\Service\Nr\MsiResponse::class => \Dvsa\Olcs\Api\Service\Nr\MsiResponseFactory::class,
 
             \Dvsa\Olcs\Api\Mvc\OlcsBlameableListener::class => \Dvsa\Olcs\Api\Mvc\OlcsBlameableListenerFactory::class,
+            \Dvsa\Olcs\Api\Listener\OlcsEntityListener::class => \Dvsa\Olcs\Api\Listener\OlcsEntityListener::class,
+
             \Dvsa\Olcs\Api\Service\Nysiis\NysiisSoapClient::class =>
                 \Dvsa\Olcs\Api\Service\Nysiis\NysiisSoapClientFactory::class,
             \Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClient::class =>
@@ -347,16 +349,17 @@ return [
         'eventmanager' => [
             'orm_default' => [
                 'subscribers' => [
-                    'Gedmo\SoftDeleteable\SoftDeleteableListener',
-                    'Gedmo\Translatable\TranslatableListener',
-                    \Dvsa\Olcs\Api\Mvc\OlcsBlameableListener::class
+                    \Dvsa\Olcs\Api\Listener\OlcsEntityListener::class,
+                    \Gedmo\SoftDeleteable\SoftDeleteableListener::class,
+                    \Gedmo\Translatable\TranslatableListener::class,
+                    \Dvsa\Olcs\Api\Mvc\OlcsBlameableListener::class,
                 ],
             ],
         ],
         'configuration' => [
             'orm_default' => [
                 'filters' => [
-                    'soft-deleteable' => 'Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter'
+                    'soft-deleteable' => \Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class,
                 ],
                 'types' => [
                     'yesno' => 'Dvsa\Olcs\Api\Entity\Types\YesNoType',
