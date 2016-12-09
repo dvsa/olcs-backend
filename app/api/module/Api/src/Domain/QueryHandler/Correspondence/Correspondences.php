@@ -9,7 +9,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 /**
  * Correspondences
  *
- * @author Joshua Curtis <josh.curtis@valtech.co.uk>
+ * @todo Need to paginate this
  */
 class Correspondences extends AbstractQueryHandler
 {
