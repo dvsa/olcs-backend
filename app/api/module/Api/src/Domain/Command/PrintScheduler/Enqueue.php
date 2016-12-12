@@ -20,6 +20,8 @@ final class Enqueue extends AbstractCommand
 
     protected $user;
 
+    protected $isDiscPrinting = false;
+
     /**
      * Get the document ID
      *
@@ -48,5 +50,15 @@ final class Enqueue extends AbstractCommand
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Get is a disc printing job
+     *
+     * @return bool
+     */
+    public function getIsDiscPrinting()
+    {
+        return $this->isDiscPrinting;
     }
 }
