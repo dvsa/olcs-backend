@@ -24,8 +24,13 @@ class UpdateBusinessDetails extends AbstractCommandHandler implements AuthAwareI
     protected $repoServiceName = 'Licence';
 
     /**
+     * Handle Command
+     *
      * @inheritdoc
-     * @param \Dvsa\Olcs\Transfer\Command\Licence\UpdateBusinessDetails $command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Licence\UpdateBusinessDetails $command DTO
+     *
+     * @return DomainCmd\Result
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -34,7 +39,7 @@ class UpdateBusinessDetails extends AbstractCommandHandler implements AuthAwareI
         );
         $this->result->merge($updateResult);
 
-        if (($updateResult->getFlag('hasChanged') === true)
+        if (($updateResult->getFlag('tradingNamesChanged') === true)
             && $this->isGranted(Permission::SELFSERVE_USER)
         ) {
             $taskData = [
