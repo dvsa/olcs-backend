@@ -412,9 +412,9 @@ class MergeTest extends CommandHandlerTestCase
         $mockRecipientTm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
         $mockRecipientTm->setId(9);
 
-        $ev1 = new \Dvsa\Olcs\Api\Entity\EventHistory\EventHistory();
+        $ev1 = m::mock(\Dvsa\Olcs\Api\Entity\EventHistory\EventHistory::class)->makePartial();
         $ev1->setId(172);
-        $ev2 = new \Dvsa\Olcs\Api\Entity\EventHistory\EventHistory();
+        $ev2 = m::mock(\Dvsa\Olcs\Api\Entity\EventHistory\EventHistory::class)->makePartial();
         $ev2->setId(272);
 
         $command = Cmd::create($data);
@@ -434,8 +434,8 @@ class MergeTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(
-            [\Dvsa\Olcs\Api\Entity\EventHistory\EventHistory::class => [172, 272]],
-            $mockDonorTm->getMergeDetails()
+            [[172, 272]],
+            array_values($mockDonorTm->getMergeDetails())
         );
         $this->assertSame($mockRecipientTm, $mockDonorTm->getMergeToTransportManager());
         $this->assertEquals(new DateTime(), $mockDonorTm->getRemovedDate());
