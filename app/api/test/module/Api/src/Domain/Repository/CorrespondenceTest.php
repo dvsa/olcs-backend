@@ -1,26 +1,53 @@
 <?php
 
-/**
- * Correspondence Repo test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\Correspondence as Repo;
 
 /**
- * Correspondence Repo test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\Correspondence
  */
 class CorrespondenceTest extends RepositoryTestCase
 {
+    /** @var  Repository\Correspondence */
+    protected $sut;
+
     public function setUp()
     {
-        $this->setUpSut(Repo::class, true);
+        $this->setUpSut(Repository\Correspondence::class, true);
+    }
+
+    public function testFetchDocumentsList()
+    {
+        $orgId = 9999;
+
+        $mockQry = m::mock(TransferQry\Correspondence\Correspondences::class)
+            ->shouldReceive('getOrganisation')->once()->andReturn($orgId)
+            ->getMock();
+
+        $mockQb = $this->createMockQb('{{QUERY}}');
+        $mockQb->shouldReceive('getQuery->iterate')
+            ->once()
+            ->with()
+            ->andReturn('EXPECT');
+
+        $this->mockCreateQueryBuilder($mockQb);
+
+        static::assertEquals('EXPECT', $this->sut->fetchDocumentsList($mockQry));
+
+        static::assertEquals(
+            '{{QUERY}} ' .
+            'SELECT co.id, co.accessed, co.createdOn, ' .
+            'l.id as licId, l.licNo, IDENTITY(l.status) as licStatus, d.description as docDesc ' .
+            'INNER JOIN co.licence l ' .
+            'INNER JOIN co.document d ' .
+            'AND l.organisation = [[' . $orgId . ']] ' .
+            'ORDER BY co.createdOn DESC',
+            $this->query
+        );
     }
 
     public function testGetUnreadCountForOrganisation()

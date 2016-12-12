@@ -181,6 +181,15 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     protected $eventRegistrationStatus;
 
     /**
+     * Status
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="status")
+     */
+    protected $status;
+
+    /**
      * Get id
      *
      * @return int
@@ -574,5 +583,27 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     public function setEventRegistrationStatus($eventRegistrationStatus)
     {
         $this->eventRegistrationStatus = $eventRegistrationStatus;
+    }
+
+    /**
+     * Get status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set status
+     *
+     * @param string $status Status
+     *
+     * @return void
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
     }
 }
