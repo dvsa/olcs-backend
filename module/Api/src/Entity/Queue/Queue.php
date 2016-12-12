@@ -47,6 +47,7 @@ class Queue extends AbstractQueue
     const TYPE_SEND_MSI_RESPONSE = 'que_typ_msi_response';
     const TYPE_EMAIL = 'que_typ_email';
     const TYPE_PRINT = 'que_typ_print';
+    const TYPE_DISC_PRINTING_PRINT = 'que_typ_disc_printing_print';
     const TYPE_DISC_PRINTING = 'que_typ_disc_printing';
     const TYPE_CREATE_GOODS_VEHICLE_LIST = 'que_typ_create_gds_vehicle_list';
     const TYPE_CREATE_PSV_VEHICLE_LIST = 'que_typ_create_psv_vehicle_list';
@@ -68,6 +69,7 @@ class Queue extends AbstractQueue
         self::TYPE_EMAIL,
         self::TYPE_PRINT,
         self::TYPE_DISC_PRINTING,
+        self::TYPE_DISC_PRINTING_PRINT,
         self::TYPE_CREATE_GOODS_VEHICLE_LIST,
         self::TYPE_CREATE_PSV_VEHICLE_LIST,
         self::TYPE_UPDATE_NYSIIS_TM_NAME,

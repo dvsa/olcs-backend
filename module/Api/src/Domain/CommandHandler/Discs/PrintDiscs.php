@@ -90,7 +90,8 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
             [
                 'documentId' => $documentId,
                 'jobName' => $command->getType() . ' Disc List',
-                'user' => $command->getUser()
+                'user' => $command->getUser(),
+                'isDiscPrinting' => true,
             ]
         );
         $printQueueResult = $this->handleSideEffect($printQueue);

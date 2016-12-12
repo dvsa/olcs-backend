@@ -65,7 +65,7 @@ return [
                 ],
                 'process-queue' => [
                     'options' => [
-                        'route' => 'process-queue [--type=] [--exclude=]',
+                        'route' => 'process-queue [--type=] [--exclude=] [--queue-duration=]',
                         'defaults' => [
                             'controller' => Cli\Controller\QueueController::class,
                             'action' => 'index'
@@ -214,6 +214,8 @@ return [
             Queue::TYPE_EMAIL
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send::class,
             Queue::TYPE_PRINT
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob::class,
+            Queue::TYPE_DISC_PRINTING_PRINT
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob::class,
             Queue::TYPE_DISC_PRINTING
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting\PrintDiscs::class,
