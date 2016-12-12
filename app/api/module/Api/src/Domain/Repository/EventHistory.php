@@ -1,7 +1,5 @@
 <?php
-/**
- * EventHistory
- */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
@@ -31,8 +29,12 @@ class EventHistory extends AbstractRepository
     ];
 
     /**
-     * @param QueryBuilder $qb
-     * @param HistoryDTO $query
+     * Apply list filters
+     *
+     * @param QueryBuilder $qb    Query builder
+     * @param HistoryDTO   $query Query
+     *
+     * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
@@ -72,7 +74,9 @@ class EventHistory extends AbstractRepository
     /**
      * Apply list join
      *
-     * @param QueryBuilder $qb
+     * @param QueryBuilder $qb Query builder
+     *
+     * @return void
      */
     protected function applyListJoins(QueryBuilder $qb)
     {
@@ -89,7 +93,7 @@ class EventHistory extends AbstractRepository
     /**
      * Fetch a list for an organisation
      *
-     * @param int|\Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     * @param int|\Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation Organisation
      *
      * @return array
      */
@@ -107,7 +111,7 @@ class EventHistory extends AbstractRepository
     /**
      * Fetch a list for a Transport Manager
      *
-     * @param int|\Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager
+     * @param int|\Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager Transport Manager
      *
      * @return array
      */
@@ -158,9 +162,10 @@ class EventHistory extends AbstractRepository
     /**
      * Fetch event history details
      *
-     * @param int $id
-     * @param int $version
-     * @param string $table
+     * @param int    $id      Id
+     * @param int    $version Version
+     * @param string $table   Table
+     *
      * @return array
      */
     public function fetchEventHistoryDetails($id, $version, $table)
