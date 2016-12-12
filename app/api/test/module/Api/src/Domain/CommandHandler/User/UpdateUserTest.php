@@ -16,11 +16,15 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUser as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
+use Dvsa\Olcs\Api\Domain\Repository\EventHistory;
+use Dvsa\Olcs\Api\Domain\Repository\EventHistoryType;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory as EventHistoryEntity;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
@@ -46,6 +50,8 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->mockRepo('Application', Application::class);
         $this->mockRepo('ContactDetails', ContactDetails::class);
         $this->mockRepo('Licence', Licence::class);
+        $this->mockRepo('EventHistory', EventHistory::class);
+        $this->mockRepo('EventHistoryType', EventHistoryType::class);
 
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class),
@@ -333,10 +339,20 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+        $loggedInUserId = 1000;
+
+        /** @var UserEntity $user */
+        $loggedInUser = m::mock(UserEntity::class)->makePartial();
+        $loggedInUser->setId($loggedInUserId);
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getIdentity->getUser')
+            ->once()
+            ->andReturn($loggedInUser);
 
         $this->mockedSmServices[UserInterface::class]
             ->shouldReceive('updateUser')
@@ -395,6 +411,27 @@ class UpdateUserTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $eventHistoryType = m::mock(EventHistoryTypeEntity::class)->makePartial();
+        $this->repoMap['EventHistoryType']
+            ->shouldReceive('fetchOneByEventCode')
+            ->once()
+            ->with(EventHistoryTypeEntity::EVENT_CODE_PASSWORD_RESET)
+            ->andReturn($eventHistoryType);
+
+        $this->repoMap['EventHistory']
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(EventHistoryEntity::class))
+            ->andReturnUsing(
+                function (EventHistoryEntity $eventHistory) use ($loggedInUser, $eventHistoryType, $user) {
+                    $this->assertSame($loggedInUser, $eventHistory->getUser());
+                    $this->assertSame($eventHistoryType, $eventHistory->getEventHistoryType());
+                    $this->assertSame('By email', $eventHistory->getEventData());
+                    $this->assertInstanceOf(\DateTime::class, $eventHistory->getEventDatetime());
+                    $this->assertSame($user, $eventHistory->getAccount());
+                }
+            );
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -427,10 +464,20 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+        $loggedInUserId = 1000;
+
+        /** @var UserEntity $user */
+        $loggedInUser = m::mock(UserEntity::class)->makePartial();
+        $loggedInUser->setId($loggedInUserId);
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getIdentity->getUser')
+            ->once()
+            ->andReturn($loggedInUser);
 
         $this->mockedSmServices[UserInterface::class]
             ->shouldReceive('updateUser')
@@ -526,6 +573,27 @@ class UpdateUserTest extends CommandHandlerTestCase
             ],
             new Result()
         );
+
+        $eventHistoryType = m::mock(EventHistoryTypeEntity::class)->makePartial();
+        $this->repoMap['EventHistoryType']
+            ->shouldReceive('fetchOneByEventCode')
+            ->once()
+            ->with(EventHistoryTypeEntity::EVENT_CODE_PASSWORD_RESET)
+            ->andReturn($eventHistoryType);
+
+        $this->repoMap['EventHistory']
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(EventHistoryEntity::class))
+            ->andReturnUsing(
+                function (EventHistoryEntity $eventHistory) use ($loggedInUser, $eventHistoryType, $user) {
+                    $this->assertSame($loggedInUser, $eventHistory->getUser());
+                    $this->assertSame($eventHistoryType, $eventHistory->getEventHistoryType());
+                    $this->assertSame('By post', $eventHistory->getEventData());
+                    $this->assertInstanceOf(\DateTime::class, $eventHistory->getEventDatetime());
+                    $this->assertSame($user, $eventHistory->getAccount());
+                }
+            );
 
         $result = $this->sut->handleCommand($command);
 

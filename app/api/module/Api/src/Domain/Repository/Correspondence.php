@@ -3,8 +3,10 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox as Entity;
 use Dvsa\Olcs\Transfer\Query\Correspondence\Correspondences;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Class Correspondence
@@ -18,34 +20,34 @@ class Correspondence extends AbstractRepository
     protected $alias = 'co';
 
     /**
-     * Fetch List of documents
+     * Apply joins
      *
-     * @param Correspondences $query Query
+     * @param QueryBuilder $qb Query Builder
      *
-     * @return \Doctrine\ORM\Internal\Hydration\IterableResult
+     * @return void
      */
-    public function fetchDocumentsList(Correspondences $query)
+    protected function applyListJoins(QueryBuilder $qb)
     {
-        $qb = $this->createQueryBuilder();
-
         $qb
-            ->select(
-                $this->alias . '.id',
-                $this->alias . '.accessed',
-                $this->alias . '.createdOn',
-                'l.id as licId, l.licNo',
-                'IDENTITY(l.status) as licStatus',
-                'd.description as docDesc'
-            )
+            ->addSelect('l, d')
             ->join($this->alias . '.licence', 'l')
-            ->join($this->alias . '.document', 'd')
-            ->where(
-                $qb->expr()->eq('l.organisation', ':ORG_ID')
-            )
+            ->join($this->alias . '.document', 'd');
+    }
+
+    /**
+     * Apply filters
+     *
+     * @param QueryBuilder    $qb    Query builder
+     * @param Correspondences $query Http query
+     *
+     * @return void
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        $qb
+            ->where($qb->expr()->eq('l.organisation', ':ORG_ID'))
             ->setParameter('ORG_ID', $query->getOrganisation())
             ->orderBy($this->alias . '.createdOn', 'DESC');
-
-        return $qb->getQuery()->iterate();
     }
 
     /**

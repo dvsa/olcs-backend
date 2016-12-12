@@ -44,7 +44,8 @@ final class CreatePsvVehicleListForDiscs extends AbstractCommandHandler implemen
         $printData = [
             'documentId' => $result->getId('document'),
             'jobName' => 'New disc notification',
-            'user' => $command->getUser()
+            'user' => $command->getUser(),
+            'isDiscPrinting' => true,
         ];
 
         $this->handleSideEffect(Enqueue::create($printData));
