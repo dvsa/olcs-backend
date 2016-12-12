@@ -192,6 +192,7 @@ return [
             'Pi' => RepositoryFactory::class,
             'NonPi' => RepositoryFactory::class,
             'EventHistory' => RepositoryFactory::class,
+            'EventHistoryType' => RepositoryFactory::class,
             'PublicHoliday' => RepositoryFactory::class,
             'Sla' => RepositoryFactory::class,
             'LicenceNoGen' => RepositoryFactory::class,
