@@ -2,11 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Domain\Query\Bus\TxcInboxList;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as Repo;
-use \Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Query\Bus\TxcInboxList;
+use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as Repo;
+use Mockery as m;
 
 /**
  * TxcInboxTest
@@ -15,6 +14,9 @@ use Doctrine\ORM\QueryBuilder;
  */
 class TxcInboxTest extends RepositoryTestCase
 {
+    /** @var  Repo */
+    protected $sut;
+
     public function setUp()
     {
         $this->setUpSut(Repo::class);
@@ -40,6 +42,9 @@ class TxcInboxTest extends RepositoryTestCase
 
     public function testFetchListForOrganisationByBusReg()
     {
+        $busRegId = 8888;
+        $orgId = 7777;
+
         $qb = $this->createMockQb('BLAH');
 
         $this->mockCreateQueryBuilder($qb);
@@ -48,22 +53,27 @@ class TxcInboxTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('busReg', 'b')->once()->andReturnSelf();
 
-        $qb->shouldReceive('where')->with('b.id = :busReg')->once()->andReturnSelf();
-
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()->shouldReceive('execute')
                 ->shouldReceive('getResult')
                 ->andReturn(['RESULTS'])
                 ->getMock()
         );
-        $this->assertEquals(['RESULTS'], $this->sut->fetchListForOrganisationByBusReg(2, 4));
+        $this->assertEquals(['RESULTS'], $this->sut->fetchListForOrganisationByBusReg($busRegId, $orgId));
 
-        $expectedQuery = 'BLAH AND m.localAuthority IS NULL AND m.organisation = [[4]]';
-        $this->assertEquals($expectedQuery, $this->query);
+        $this->assertEquals(
+            'BLAH ' .
+            'AND b.id = [[' . $busRegId . ']] ' .
+            'AND m.localAuthority IS NULL ' .
+            'AND m.organisation = [[' . $orgId . ']]',
+            $this->query
+        );
     }
 
     public function testFetchListForLocalAuthorityByBusReg()
     {
+        $busRegId = 8888;
+
         $qb = $this->createMockQb('BLAH');
 
         $this->mockCreateQueryBuilder($qb);
@@ -72,22 +82,27 @@ class TxcInboxTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('busReg', 'b')->once()->andReturnSelf();
 
-        $qb->shouldReceive('where')->with('b.id = :busReg')->once()->andReturnSelf();
-
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()->shouldReceive('execute')
                 ->shouldReceive('getResult')
                 ->andReturn(['RESULTS'])
                 ->getMock()
         );
-        $this->assertEquals(['RESULTS'], $this->sut->fetchListForLocalAuthorityByBusReg(2, 4));
+        $this->assertEquals(['RESULTS'], $this->sut->fetchListForLocalAuthorityByBusReg($busRegId, 4));
 
-        $expectedQuery = 'BLAH AND m.fileRead = 0 AND m.localAuthority = [[4]]';
-        $this->assertEquals($expectedQuery, $this->query);
+        $this->assertEquals(
+            'BLAH ' .
+            'AND b.id = [[' . $busRegId . ']] ' .
+            'AND m.fileRead = 0 ' .
+            'AND m.localAuthority = [[4]]',
+            $this->query
+        );
     }
 
     public function testFetchListForLocalAuthorityByBusRegOperator()
     {
+        $busRegId = 8888;
+
         $qb = $this->createMockQb('BLAH');
 
         $this->mockCreateQueryBuilder($qb);
@@ -96,18 +111,20 @@ class TxcInboxTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('busReg', 'b')->once()->andReturnSelf();
 
-        $qb->shouldReceive('where')->with('b.id = :busReg')->andReturnSelf();
-
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()->shouldReceive('execute')
                 ->shouldReceive('getResult')
                 ->andReturn(['RESULTS'])
                 ->getMock()
         );
-        $this->assertEquals(['RESULTS'], $this->sut->fetchListForLocalAuthorityByBusReg(2, null));
+        $this->assertEquals(['RESULTS'], $this->sut->fetchListForLocalAuthorityByBusReg($busRegId, null));
 
-        $expectedQuery = 'BLAH AND m.localAuthority IS NULL';
-        $this->assertEquals($expectedQuery, $this->query);
+        $this->assertEquals(
+            'BLAH ' .
+            'AND b.id = [[' . $busRegId . ']] ' .
+            'AND m.localAuthority IS NULL',
+            $this->query
+        );
     }
 
     public function testBuildDefaultQuery()

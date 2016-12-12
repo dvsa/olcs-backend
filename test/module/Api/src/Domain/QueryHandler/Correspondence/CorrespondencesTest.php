@@ -1,33 +1,25 @@
 <?php
 
-/**
- * CorrespondencesTest.php
- *
- * @author Joshua Curtis <josh.curtis@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\GracePeriod;
 
-use Doctrine\ORM\Query;
-
+use Doctrine\ORM\Internal\Hydration\IterableResult;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Correspondence\Correspondences;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\Correspondence as CorrespondenceRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\Correspondence\Correspondences as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**
- * Correspondences Test
- *
- * @author Joshua Curtis <josh.curtis@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\QueryHandler\Correspondence\Correspondences
  */
 class CorrespondencesTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
         $this->sut = new Correspondences();
-        $this->mockRepo('Correspondence', CorrespondenceRepo::class);
-        $this->mockRepo('Fee', FeeRepo::class);
+
+        $this->mockRepo('Correspondence', Repository\Correspondence::class);
+        $this->mockRepo('Fee', Repository\Fee::class);
 
         parent::setUp();
     }
@@ -36,31 +28,25 @@ class CorrespondencesTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['organisation' => 1]);
 
+        $row = [
+            'id' => 9999,
+            'accessed' => 'unit_Accessed',
+            'createdOn' => 'unit_CreatedOn',
+            'licId' => 'unit_licId',
+            'licNo' => 'unit_licNo',
+            'licStatus' => 'unit_licStatus',
+            'docDesc' => 'unit_docDesc',
+        ];
+
+        $mockIterResult = m::mock(IterableResult::class)
+            ->shouldReceive('next')->once()->andReturn([$row])
+            ->shouldReceive('next')->once()->andReturn(false)
+            ->getMock();
+
         $this->repoMap['Correspondence']
-            ->shouldReceive('fetchList')
-            ->with($query, Query::HYDRATE_OBJECT)
-            ->andReturn(
-                [
-                    m::mock()
-                        ->shouldReceive('serialize')
-                        ->andReturn(
-                            [
-                                'id' => 1
-                            ]
-                        )
-                        ->getMock(),
-                    m::mock()
-                        ->shouldReceive('serialize')
-                        ->andReturn(
-                            [
-                                'id' => 2
-                            ]
-                        )
-                        ->getMock()
-                ]
-            )
-            ->shouldReceive('fetchCount')
-            ->andReturn(2);
+            ->shouldReceive('fetchDocumentsList')
+            ->with($query)
+            ->andReturn($mockIterResult);
 
         $this->repoMap['Fee']
             ->shouldReceive('getOutstandingFeeCountByOrganisationId')
@@ -73,13 +59,21 @@ class CorrespondencesTest extends QueryHandlerTestCase
             [
                 'result' => [
                     [
-                        'id' => 1
+                        'id' => 9999,
+                        'accessed' => 'unit_Accessed',
+                        'createdOn' => 'unit_CreatedOn',
+
+                        'licence' => [
+                            'id' => 'unit_licId',
+                            'licNo' => 'unit_licNo',
+                            'status' => 'unit_licStatus',
+                        ],
+                        'document' => [
+                            'description' => 'unit_docDesc',
+                        ],
                     ],
-                    [
-                        'id' => 2
-                    ]
                 ],
-                'count' => 2,
+                'count' => 1,
                 'feeCount' => 66,
             ],
             $result
