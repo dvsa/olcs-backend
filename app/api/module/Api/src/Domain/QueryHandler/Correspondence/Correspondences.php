@@ -2,14 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Correspondence;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Correspondences
- *
- * @todo Need to paginate this
  */
 class Correspondences extends AbstractQueryHandler
 {
@@ -29,31 +28,15 @@ class Correspondences extends AbstractQueryHandler
         /** @var Repository\Correspondence $repo */
         $repo = $this->getRepo();
 
-        $iterableResult = $repo->fetchDocumentsList($query);
-
-        $result = [];
-        while (false !== ($row = $iterableResult->next())) {
-            $row = current($row);
-
-            $result[] = [
-                'id' => $row['id'],
-                'accessed' => $row['accessed'],
-                'createdOn' => $row['createdOn'],
-
-                'licence' => [
-                    'id' => $row['licId'],
-                    'licNo' => $row['licNo'],
-                    'status' => $row['licStatus'],
-                ],
-                'document' => [
-                    'description' => $row['docDesc'],
-                ],
-            ];
-        }
-
         return [
-            'result' => $result,
-            'count' => count($result),
+            'result' => $this->resultList(
+                $repo->fetchList($query, Query::HYDRATE_OBJECT),
+                [
+                    'licence',
+                    'document',
+                ]
+            ),
+            'count' => $repo->fetchCount($query),
             'feeCount' => $this->getFeeCount($query->getOrganisation()),
         ];
     }

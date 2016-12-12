@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\GracePeriod;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Correspondence;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
