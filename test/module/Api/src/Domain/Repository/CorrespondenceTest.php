@@ -20,28 +20,22 @@ class CorrespondenceTest extends RepositoryTestCase
         $this->setUpSut(Repository\Correspondence::class, true);
     }
 
-    public function testFetchDocumentsList()
+    public function testApplyListMethods()
     {
         $orgId = 9999;
+
+        $mockQb = $this->createMockQb('{{QUERY}}');
 
         $mockQry = m::mock(TransferQry\Correspondence\Correspondences::class)
             ->shouldReceive('getOrganisation')->once()->andReturn($orgId)
             ->getMock();
 
-        $mockQb = $this->createMockQb('{{QUERY}}');
-        $mockQb->shouldReceive('getQuery->iterate')
-            ->once()
-            ->with()
-            ->andReturn('EXPECT');
-
-        $this->mockCreateQueryBuilder($mockQb);
-
-        static::assertEquals('EXPECT', $this->sut->fetchDocumentsList($mockQry));
+        $this->sut->applyListJoins($mockQb);
+        $this->sut->applyListFilters($mockQb, $mockQry);
 
         static::assertEquals(
             '{{QUERY}} ' .
-            'SELECT co.id, co.accessed, co.createdOn, ' .
-            'l.id as licId, l.licNo, IDENTITY(l.status) as licStatus, d.description as docDesc ' .
+            'SELECT l, d ' .
             'INNER JOIN co.licence l ' .
             'INNER JOIN co.document d ' .
             'AND l.organisation = [[' . $orgId . ']] ' .

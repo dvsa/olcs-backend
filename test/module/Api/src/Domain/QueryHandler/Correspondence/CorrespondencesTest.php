@@ -1,8 +1,9 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\GracePeriod;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Correspondence;
 
-use Doctrine\ORM\Internal\Hydration\IterableResult;
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Correspondence\Correspondences;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\Correspondence\Correspondences as Qry;
@@ -14,6 +15,8 @@ use Mockery as m;
  */
 class CorrespondencesTest extends QueryHandlerTestCase
 {
+    const ORG_ID = 9999;
+
     public function setUp()
     {
         $this->sut = new Correspondences();
@@ -26,55 +29,38 @@ class CorrespondencesTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
-        $query = Qry::create(['organisation' => 1]);
+        $query = Qry::create(['organisation' => self::ORG_ID]);
 
-        $row = [
-            'id' => 9999,
-            'accessed' => 'unit_Accessed',
-            'createdOn' => 'unit_CreatedOn',
-            'licId' => 'unit_licId',
-            'licNo' => 'unit_licNo',
-            'licStatus' => 'unit_licStatus',
-            'docDesc' => 'unit_docDesc',
-        ];
-
-        $mockIterResult = m::mock(IterableResult::class)
-            ->shouldReceive('next')->once()->andReturn([$row])
-            ->shouldReceive('next')->once()->andReturn(false)
+        $mockEntity = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->times(2)
+            ->with(['licence', 'document'])
+            ->andReturn('EXPECT_ENTITY')
             ->getMock();
 
         $this->repoMap['Correspondence']
-            ->shouldReceive('fetchDocumentsList')
-            ->with($query)
-            ->andReturn($mockIterResult);
+            ->shouldReceive('fetchList')
+            ->once()
+            ->with($query, Query::HYDRATE_OBJECT)
+            ->andReturn([$mockEntity, clone $mockEntity])
+            ->shouldReceive('fetchCount')->once()->andReturn(2);
 
+        $feeCnt = 123;
         $this->repoMap['Fee']
             ->shouldReceive('getOutstandingFeeCountByOrganisationId')
-            ->with(1, true)
-            ->andReturn(66);
+            ->with(self::ORG_ID, true)
+            ->andReturn($feeCnt);
 
         $result = $this->sut->handleQuery($query);
 
         $this->assertEquals(
             [
                 'result' => [
-                    [
-                        'id' => 9999,
-                        'accessed' => 'unit_Accessed',
-                        'createdOn' => 'unit_CreatedOn',
-
-                        'licence' => [
-                            'id' => 'unit_licId',
-                            'licNo' => 'unit_licNo',
-                            'status' => 'unit_licStatus',
-                        ],
-                        'document' => [
-                            'description' => 'unit_docDesc',
-                        ],
-                    ],
+                    'EXPECT_ENTITY',
+                    'EXPECT_ENTITY',
                 ],
-                'count' => 1,
-                'feeCount' => 66,
+                'count' => 2,
+                'feeCount' => $feeCnt,
             ],
             $result
         );
