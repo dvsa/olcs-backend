@@ -51,7 +51,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
 
         $saveCmdResult = new Result();
         $saveCmdResult->addMessage('Business Details updated');
-        $saveCmdResult->setFlag('hasChanged', true);
+        $saveCmdResult->setFlag('tradingNamesChanged', true);
 
         $this->expectedSideEffect(DomainCmd\Licence\SaveBusinessDetails::class, $saveCmdData, $saveCmdResult);
 
@@ -103,7 +103,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
 
         $saveCmdResult = new Result();
         $saveCmdResult->addMessage('Business Details updated');
-        $saveCmdResult->setFlag('hasChanged', $hasChanged);
+        $saveCmdResult->setFlag('tradingNamesChanged', $hasChanged);
 
         $sut->shouldReceive('handleSideEffect')
             ->andReturn($saveCmdResult);
@@ -136,6 +136,10 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
             [
                 'hasChanged' => false,
                 'isGranted' => true,
+            ],
+            [
+                'hasChanged' => false,
+                'isGranted' => false,
             ],
         ];
     }

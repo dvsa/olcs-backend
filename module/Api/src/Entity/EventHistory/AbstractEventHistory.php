@@ -22,7 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_event_history_event_history_type_id", columns={"event_history_type_id"}),
  *        @ORM\Index(name="ix_event_history_organisation_id", columns={"organisation_id"}),
  *        @ORM\Index(name="ix_event_history_case_id", columns={"case_id"}),
- *        @ORM\Index(name="ix_event_history_bus_reg_id", columns={"bus_reg_id"})
+ *        @ORM\Index(name="ix_event_history_bus_reg_id", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="ix_event_history_account_id", columns={"account_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_event_history_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
@@ -32,6 +33,16 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class AbstractEventHistory implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
+
+    /**
+     * Account
+     *
+     * @var \Dvsa\Olcs\Api\Entity\User\User
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="account_id", referencedColumnName="id", nullable=true)
+     */
+    protected $account;
 
     /**
      * Application
@@ -186,6 +197,30 @@ abstract class AbstractEventHistory implements BundleSerializableInterface, Json
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
     protected $user;
+
+    /**
+     * Set the account
+     *
+     * @param \Dvsa\Olcs\Api\Entity\User\User $account entity being set as the value
+     *
+     * @return EventHistory
+     */
+    public function setAccount($account)
+    {
+        $this->account = $account;
+
+        return $this;
+    }
+
+    /**
+     * Get the account
+     *
+     * @return \Dvsa\Olcs\Api\Entity\User\User
+     */
+    public function getAccount()
+    {
+        return $this->account;
+    }
 
     /**
      * Set the application

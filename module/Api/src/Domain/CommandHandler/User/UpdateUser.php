@@ -18,6 +18,8 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -43,7 +45,7 @@ final class UpdateUser extends AbstractUserCommandHandler implements
 
     protected $repoServiceName = 'User';
 
-    protected $extraRepos = ['Application', 'ContactDetails', 'Licence'];
+    protected $extraRepos = ['Application', 'ContactDetails', 'Licence', 'EventHistory', 'EventHistoryType'];
 
     /**
      * Handle command
@@ -163,12 +165,15 @@ final class UpdateUser extends AbstractUserCommandHandler implements
         $result = new Result();
         $result->addMessage('Temporary password successfully generated and saved');
 
+        $eventData = null;
+
         switch ($mode) {
             case self::RESET_PASSWORD_BY_POST:
                 // send a letter with the temp password
                 $result->merge(
                     $this->sendLetter($licence, $password)
                 );
+                $eventData = 'By post';
                 break;
             case self::RESET_PASSWORD_BY_EMAIL:
                 // send temporary password email
@@ -182,8 +187,19 @@ final class UpdateUser extends AbstractUserCommandHandler implements
                         )
                     )
                 );
+                $eventData = 'By email';
                 break;
         }
+
+        // create event history record
+        $eventHistory = new EventHistory(
+            $this->getUser(),
+            $this->getRepo('EventHistoryType')->fetchOneByEventCode(EventHistoryType::EVENT_CODE_PASSWORD_RESET),
+            $eventData
+        );
+        $eventHistory->setAccount($user);
+
+        $this->getRepo('EventHistory')->save($eventHistory);
 
         return $result;
     }
