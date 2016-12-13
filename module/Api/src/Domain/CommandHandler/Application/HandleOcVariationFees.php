@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Handle Oc Variation Fees
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateApplicationFeeCmd;
@@ -29,6 +24,13 @@ final class HandleOcVariationFees extends AbstractCommandHandler implements Tran
 
     protected $extraRepos = ['Fee'];
 
+    /**
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees $command command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         /** @var Application $application */
@@ -43,7 +45,7 @@ final class HandleOcVariationFees extends AbstractCommandHandler implements Tran
             return $this->result;
         }
 
-        if ($this->feeApplies($applicationOcs, $licenceOcs)) {
+        if ($this->feeApplies($applicationOcs, $licenceOcs, $application)) {
             $this->maybeCreateVariationFee($application);
         } else {
             $this->maybeCancelVariationFee($application);
@@ -52,6 +54,13 @@ final class HandleOcVariationFees extends AbstractCommandHandler implements Tran
         return $this->result;
     }
 
+    /**
+     * Maybe create variation fee
+     *
+     * @param Application $application application
+     *
+     * @return void
+     */
     private function maybeCreateVariationFee(Application $application)
     {
         if (!$application->hasApplicationFee()) {
@@ -64,6 +73,13 @@ final class HandleOcVariationFees extends AbstractCommandHandler implements Tran
         }
     }
 
+    /**
+     * Maybe cancel variation fee
+     *
+     * @param Application $application application
+     *
+     * @return void
+     */
     private function maybeCancelVariationFee(Application $application)
     {
         $fees = $this->getRepo('Fee')->fetchOutstandingFeesByApplicationId($application->getId());
@@ -78,14 +94,23 @@ final class HandleOcVariationFees extends AbstractCommandHandler implements Tran
         }
     }
 
-    private function feeApplies($applicationOcs, $licenceOcs)
+    /**
+     * Fee applies
+     *
+     * @param array       $applicationOcs application operating centres
+     * @param array       $licenceOcs     licence operaring centres
+     * @param Application $application    application
+     *
+     * @return bool
+     */
+    private function feeApplies($applicationOcs, $licenceOcs, $application)
     {
         foreach ($applicationOcs as $aoc) {
 
             switch ($aoc->getAction()) {
                 case 'A':
-                    // operating centre added, fee always applies
-                    return true;
+                    // operating centre added, fee applies if this is a goods application
+                    return $application->isGoods();
                 case 'U':
                     // if there's an increase in auth. at a centre, fee applies
                     if ($this->hasIncreasedAuth($aoc, $licenceOcs)) {
@@ -97,6 +122,14 @@ final class HandleOcVariationFees extends AbstractCommandHandler implements Tran
         return false;
     }
 
+    /**
+     * Has increased authority
+     *
+     * @param ApplicationOperatingCentre $aoc        application operating centre
+     * @param array                      $licenceOcs licence operating centres
+     *
+     * @return bool
+     */
     private function hasIncreasedAuth(ApplicationOperatingCentre $aoc, $licenceOcs)
     {
         /** @var LicenceOperatingCentre $loc */
