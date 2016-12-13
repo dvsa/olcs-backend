@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Handle Oc Variation Fees Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -49,7 +44,7 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommandWithAddedOcWithoutFees()
+    public function testHandleCommandWithAddedOcWithoutFeesGoods()
     {
         $data = [];
         $command = Cmd::create($data);
@@ -70,7 +65,12 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
         $licence->setOperatingCentres($locs);
 
         /** @var Application $application */
-        $application = m::mock(Application::class)->makePartial();
+        $application = m::mock(Application::class)->makePartial()
+            ->shouldReceive('isGoods')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+
         $application->setOperatingCentres($aocs);
         $application->setLicence($licence);
         $application->setId(111);
@@ -104,7 +104,7 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testHandleCommandWithAddedOcWithFees()
+    public function testHandleCommandWithAddedOcPsv()
     {
         $data = [];
         $command = Cmd::create($data);
@@ -125,7 +125,63 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
         $licence->setOperatingCentres($locs);
 
         /** @var Application $application */
-        $application = m::mock(Application::class)->makePartial();
+        $application = m::mock(Application::class)->makePartial()
+            ->shouldReceive('isGoods')
+            ->andReturn(false)
+            ->once()
+            ->getMock();
+
+        $application->setOperatingCentres($aocs);
+        $application->setLicence($licence);
+        $application->setId(111);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application);
+
+        $this->repoMap['Fee']->shouldReceive('fetchOutstandingFeesByApplicationId')
+            ->with(111)
+            ->once()
+            ->andReturn([])
+            ->getMock();
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => []
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandWithAddedOcWithFeesGoods()
+    {
+        $data = [];
+        $command = Cmd::create($data);
+
+        /** @var LicenceOperatingCentre $loc */
+        $loc = m::mock(LicenceOperatingCentre::class)->makePartial();
+        $locs = new ArrayCollection();
+        $locs->add($loc);
+
+        /** @var ApplicationOperatingCentre $aoc */
+        $aoc = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $aoc->setAction('A');
+        $aocs = new ArrayCollection();
+        $aocs->add($aoc);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setOperatingCentres($locs);
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial()
+            ->shouldReceive('isGoods')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+
         $application->setOperatingCentres($aocs);
         $application->setLicence($licence);
         $application->setId(111);
