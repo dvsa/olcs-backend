@@ -74,8 +74,9 @@ class Module implements BootstrapListenerInterface
             );
         }
         if ($response instanceof \Zend\Http\PhpEnvironment\Response) {
-            if (empty($content)) {
+            if (empty($content) && $response->getStatusCode() !== \Zend\Http\PhpEnvironment\Response::STATUS_CODE_204) {
                 // Response should never be empty, this is a symptom that the backend has gone wrong
+                // Except if the status code is 204 No content
                 Logger::err('API Response is empty');
             }
             Logger::logResponse(
