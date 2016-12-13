@@ -84,13 +84,28 @@ class ModuleTest extends MockeryTestCase
 
         $mockRespone = m::mock(\Zend\Http\PhpEnvironment\Response::class);
         $mockRespone->shouldReceive('getContent')->with()->once()->andReturn('');
-        $mockRespone->shouldReceive('getStatusCode')->with()->twice()->andReturn(200);
+        $mockRespone->shouldReceive('getStatusCode')->with()->andReturn(200);
 
         $sut->logResponse($mockRespone);
 
         $this->assertCount(2, $logWriter->events);
         $this->assertSame(\Zend\Log\Logger::ERR, $logWriter->events[0]['priority']);
         $this->assertSame('API Response is empty', $logWriter->events[0]['message']);
+    }
+
+    public function testLogResponseHttpEmpty204()
+    {
+        $sut = m::mock(\Dvsa\Olcs\Api\Module::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $logWriter = $this->setupLogger();
+
+        $mockRespone = m::mock(\Zend\Http\PhpEnvironment\Response::class);
+        $mockRespone->shouldReceive('getContent')->with()->once()->andReturn('');
+        $mockRespone->shouldReceive('getStatusCode')->with()->andReturn(204);
+
+        $sut->logResponse($mockRespone);
+
+        $this->assertCount(1, $logWriter->events);
+        $this->assertNotContains('API Response is empty', $logWriter->events[0]);
     }
 
     public function testLogResponseCli()
