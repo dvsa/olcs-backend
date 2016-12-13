@@ -72,7 +72,7 @@ class Response extends AbstractPlugin
      *
      * @param QueryResult|Result $result Result
      *
-     * @return JsonModel
+     * @return JsonModel|HttpResponse\Stream
      */
     public function singleResult($result)
     {
@@ -89,10 +89,7 @@ class Response extends AbstractPlugin
 
         if (
             !is_array($result)
-            && (
-                $result instanceof \JsonSerializable
-                || method_exists($result, 'jsonSerialize')  //  #TODO Remove it in Develop
-            )
+            && $result instanceof \JsonSerializable
         ) {
             $result = $result->jsonSerialize();
         }
@@ -112,6 +109,7 @@ class Response extends AbstractPlugin
      */
     public function multipleResults($count, $results, $countUnfiltered = 0, array $extra = [])
     {
+        /** @var HttpResponse $response */
         $response = $this->getController()->getResponse();
         $response->setStatusCode(HttpResponse::STATUS_CODE_200);
 
@@ -123,6 +121,34 @@ class Response extends AbstractPlugin
                 'extra' => $extra
             ]
         );
+    }
+
+    /**
+     * Echo stream (used for download, because SimpleStreamResponseSender fail on big
+     * files @see \Zend\Mvc\ResponseSender\SimpleStreamResponseSender
+     *
+     * @param HttpResponse\Stream $result File Stream
+     *
+     * @return bool
+     */
+    public function streamResult(HttpResponse\Stream $result)
+    {
+        foreach ($result->getHeaders() as $header) {
+            header($header->toString());
+        }
+
+        $bh = fopen('php://output', 'w+b');
+        stream_copy_to_stream($result->getStream(), $bh);
+
+        fclose($bh);
+        fclose($result->getStream());
+
+        //  set status code 206 - Partial Content to avoid empty resposne error
+        $this->getController()
+            ->getResponse()
+            ->setStatusCode(206);
+
+        return false;
     }
 
     /**

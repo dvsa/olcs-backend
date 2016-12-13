@@ -19,7 +19,7 @@ class GenericController extends AbstractRestfulController
      *
      * @param int $id Identifier (ignorred)
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return Response|Response\Stream|\Zend\View\Model\JsonModel
      */
     public function get($id)
     {
@@ -47,7 +47,7 @@ class GenericController extends AbstractRestfulController
     /**
      * Get list of data by passed Query Fqcl
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return Response|\Zend\View\Model\JsonModel
      */
     public function getList()
     {
@@ -57,7 +57,8 @@ class GenericController extends AbstractRestfulController
             $result = $this->handleQuery($dto);
 
             if ($result instanceof Response\Stream) {
-                return $result;
+                return $this->response()->streamResult($result);
+
             } elseif ($result instanceof Result || !isset($result['result'])) {
                 // we sometimes still get a single result if we're not retrieving by id
                 return $this->response()->singleResult($result);
@@ -91,7 +92,7 @@ class GenericController extends AbstractRestfulController
      * @param null $data Ignored
      *
      * @inheritdoc
-     * @return \Zend\View\Model\JsonModel
+     * @return Response|\Zend\View\Model\JsonModel
      */
     public function update($id, $data)
     {
@@ -122,7 +123,7 @@ class GenericController extends AbstractRestfulController
      * @param null $data Ignored
      *
      * @inheritdoc
-     * @return \Zend\View\Model\JsonModel
+     * @return Response|\Zend\View\Model\JsonModel
      */
     public function replaceList($data)
     {
@@ -149,7 +150,7 @@ class GenericController extends AbstractRestfulController
      * @param null $data Ignored
      *
      * @inheritdoc
-     * @return \Zend\View\Model\JsonModel
+     * @return Response|\Zend\View\Model\JsonModel
      */
     public function create($data)
     {
@@ -176,7 +177,7 @@ class GenericController extends AbstractRestfulController
      * @param null $id Ignored
      *
      * @inheritdoc
-     * @return \Zend\View\Model\JsonModel
+     * @return Response|\Zend\View\Model\JsonModel
      */
     public function delete($id)
     {
@@ -201,7 +202,7 @@ class GenericController extends AbstractRestfulController
      * Delete a resources by passed Command Fqcl
      *
      * @inheritdoc
-     * @return \Zend\View\Model\JsonModel
+     * @return Response|\Zend\View\Model\JsonModel
      */
     public function deleteList()
     {

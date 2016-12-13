@@ -63,9 +63,13 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
         $response = new \Zend\Http\Response\Stream();
         $response->setStatusCode(Response::STATUS_CODE_200);
 
-        $res = $file->getResource();
-        $response->setStream(fopen($res, 'rb'));
-        $response->setStreamName($res);
+        $fileName = $file->getResource();
+        $fileSize = $file->getSize();
+
+        $response->setStream(fopen($fileName, 'rb'));
+        $response->setStreamName($fileName);
+        $response->setContentLength($fileSize);
+        $response->setCleanup(true);
 
         $isInline = (
             $this->isInline === true
@@ -75,8 +79,8 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
         $headers = $response->getHeaders();
         $headers->addHeaders(
             [
-                'Content-Type' => $this->getMimeType($file, $path) .';charset=UTF-8',
-                'Content-Length' => $file->getSize(),
+                'Content-Type' => $this->getMimeType($file, $path) . ';charset=UTF-8',
+                'Content-Length' => $fileSize,
                 'Content-Disposition' => ($isInline ? 'inline' : 'attachment') .
                     ';filename="' . basename($identifier) . '"',
             ]
