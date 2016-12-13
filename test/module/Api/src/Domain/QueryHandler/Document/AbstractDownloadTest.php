@@ -88,12 +88,11 @@ class AbstractDownloadTest extends QueryHandlerTestCase
         static::assertEquals($expectContent, $actual->getBody());
 
         $expectHeaders = [
-            'Content-Type' => $expect['mime'],
+            'Content-Type' => $expect['mime'].';charset=UTF-8',
             'Content-Length' => $expectSize,
+            'Content-Disposition' => ($expect['isDownload'] ? 'attachment' : 'inline') .
+                ';filename="' . basename($identifier) . '"',
         ];
-        if ($expect['isDownload'] === true) {
-            $expectHeaders ['Content-Disposition'] = 'attachment; filename="' . basename($identifier) . '"';
-        }
         static::assertEquals($expectHeaders, $actual->getHeaders()->toArray());
     }
 
