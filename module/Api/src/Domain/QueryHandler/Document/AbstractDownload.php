@@ -67,20 +67,20 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
         $response->setStream(fopen($res, 'rb'));
         $response->setStreamName($res);
 
+        $isInline = (
+            $this->isInline === true
+            || 'html' === FileHelper::getExtension($identifier)
+        );
+
         $headers = $response->getHeaders();
         $headers->addHeaders(
             [
-                'Content-Type' => $this->getMimeType($file, $path),
+                'Content-Type' => $this->getMimeType($file, $path) .';charset=UTF-8',
                 'Content-Length' => $file->getSize(),
+                'Content-Disposition' => ($isInline ? 'inline' : 'attachment') .
+                    ';filename="' . basename($identifier) . '"',
             ]
         );
-
-        if (
-            $this->isInline === false
-            && !preg_match('/\.html$/', $identifier)
-        ) {
-            $headers->addHeaderLine('Content-Disposition: attachment; filename="' . basename($identifier) . '"');
-        }
 
         return $response;
     }
