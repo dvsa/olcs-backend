@@ -2,14 +2,16 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Organisation;
 
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Mockery as m;
 
 /**
  * Organisation Entity Unit Tests
@@ -88,43 +90,43 @@ class OrganisationEntityTest extends EntityTester
 
     public function testGetAdminOrganisationUsers()
     {
-        $mockOrgUser1 = m::mock()
+        $mockOrgUser1 = m::mock(OrganisationUser::class)
             ->shouldReceive('getUser')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('getAccountDisabled')
-                ->andReturn('N')
-                ->once()
-                ->getMock()
-            )
             ->once()
-            ->getMock();
-
-        $mockOrgUser2 = m::mock()
-            ->shouldReceive('getUser')
             ->andReturn(
-                m::mock()
-                    ->shouldReceive('getAccountDisabled')
-                    ->andReturn('Y')
-                    ->once()
+                m::mock(UserEntity::class)
+                    ->shouldReceive('getAccountDisabled')->andReturn('N')->once()
                     ->getMock()
             )
-            ->once()
             ->getMock();
 
-        $collection = new ArrayCollection();
-        $collection->add($mockOrgUser1);
-        $collection->add($mockOrgUser2);
+        $mockOrgUser2 = m::mock(OrganisationUser::class)
+            ->shouldReceive('getUser')
+            ->once()
+            ->andReturn(
+                m::mock(UserEntity::class)
+                    ->shouldReceive('getAccountDisabled')->andReturn('Y')->once()
+                    ->getMock()
+            )
+            ->getMock();
 
-        $organisation = m::mock(Entity::class)->makePartial();
-        $organisation->shouldReceive('getOrganisationUsers->matching')
+        //  not user entity
+        $mockOrgUser3 = m::mock(OrganisationUser::class)
+            ->shouldReceive('getUser')->once()->andReturn(m::mock())
+            ->getMock();
+
+        $collection = new ArrayCollection([$mockOrgUser1, $mockOrgUser2, $mockOrgUser3]);
+
+        /** @var Entity | m\MockInterface $sut */
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('getOrganisationUsers->matching')
             ->with(m::type(Criteria::class))
             ->andReturn($collection);
 
         $expected = new ArrayCollection();
         $expected->add($mockOrgUser1);
 
-        $this->assertEquals($expected, $organisation->getAdminOrganisationUsers());
+        $this->assertEquals($expected, $sut->getAdminOrganisationUsers());
     }
 
     public function dpOrgTypes()
