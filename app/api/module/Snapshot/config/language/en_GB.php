@@ -110,7 +110,7 @@ return [
     'application-review-safety-workshop-isExternal-Y' => 'An external contractor',
     'application-review-safety-workshop-name' => 'Contractor\'s name or person\'s full name if performed internally',
     'application-review-safety-workshop-title' => 'Safety inspection providers',
-    'application-review-taxi-phv-address' => 'Address',
+    'application-review-taxi-phv-address' => 'Workshop address',
     'application-review-taxi-phv-council-name' => 'Council name',
     'application-review-taxi-phv-licence-number' => 'Taxi/PHV licence number',
     'application-review-taxi-phv-title' => 'Taxi/PHV licences',
