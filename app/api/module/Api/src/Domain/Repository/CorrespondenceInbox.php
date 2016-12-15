@@ -26,17 +26,12 @@ class CorrespondenceInbox extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->addSelect('d')
-            ->join($this->alias . '.document', 'd');
+        $qb->addSelect('d, l')
+            ->join($this->alias . '.document', 'd')
+            ->join($this->alias . '.licence', 'l');
 
         $this->getQueryBuilder()
-            ->modifyQuery($qb)
-            ->with('licence', 'l')
-            ->with('l.organisation', 'lo')
-            ->with('lo.organisationUsers', 'lou')
-            ->with('lou.user', 'louu')
-            ->with('louu.contactDetails', 'louucd')
-            ->with('d.continuationDetails', 'cd');
+            ->modifyQuery($qb);
 
         $qb->andWhere($qb->expr()->eq('l.translateToWelsh', 0));
         $qb->andWhere($qb->expr()->eq($this->alias . '.accessed', 0));
@@ -68,16 +63,16 @@ class CorrespondenceInbox extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->addSelect('d')
-            ->join($this->alias . '.document', 'd');
+        $qb->addSelect('d, l, lo, lou, louu, louucd')
+            ->join($this->alias . '.document', 'd')
+            ->join($this->alias . '.licence', 'l')
+            ->join('l.organisation', 'lo')
+            ->join('lo.organisationUsers', 'lou')
+            ->join('lou.user', 'louu')
+            ->join('louu.contactDetails', 'louucd');
 
         $this->getQueryBuilder()
             ->modifyQuery($qb)
-            ->with('licence', 'l')
-            ->with('l.organisation', 'lo')
-            ->with('lo.organisationUsers', 'lou')
-            ->with('lou.user', 'louu')
-            ->with('louu.contactDetails', 'louucd')
             ->with('d.continuationDetails', 'cd')
             ->with('cd.checklistDocument', 'cdd');
 
