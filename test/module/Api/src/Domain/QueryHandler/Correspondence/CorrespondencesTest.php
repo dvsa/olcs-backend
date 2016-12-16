@@ -1,86 +1,66 @@
 <?php
 
-/**
- * CorrespondencesTest.php
- *
- * @author Joshua Curtis <josh.curtis@valtech.co.uk>
- */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\GracePeriod;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Correspondence;
 
 use Doctrine\ORM\Query;
-
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Correspondence\Correspondences;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\Correspondence as CorrespondenceRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\Correspondence\Correspondences as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**
- * Correspondences Test
- *
- * @author Joshua Curtis <josh.curtis@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\QueryHandler\Correspondence\Correspondences
  */
 class CorrespondencesTest extends QueryHandlerTestCase
 {
+    const ORG_ID = 9999;
+
     public function setUp()
     {
         $this->sut = new Correspondences();
-        $this->mockRepo('Correspondence', CorrespondenceRepo::class);
-        $this->mockRepo('Fee', FeeRepo::class);
+
+        $this->mockRepo('Correspondence', Repository\Correspondence::class);
+        $this->mockRepo('Fee', Repository\Fee::class);
 
         parent::setUp();
     }
 
     public function testHandleQuery()
     {
-        $query = Qry::create(['organisation' => 1]);
+        $query = Qry::create(['organisation' => self::ORG_ID]);
+
+        $mockEntity = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->times(2)
+            ->with(['licence', 'document'])
+            ->andReturn('EXPECT_ENTITY')
+            ->getMock();
 
         $this->repoMap['Correspondence']
             ->shouldReceive('fetchList')
+            ->once()
             ->with($query, Query::HYDRATE_OBJECT)
-            ->andReturn(
-                [
-                    m::mock()
-                        ->shouldReceive('serialize')
-                        ->andReturn(
-                            [
-                                'id' => 1
-                            ]
-                        )
-                        ->getMock(),
-                    m::mock()
-                        ->shouldReceive('serialize')
-                        ->andReturn(
-                            [
-                                'id' => 2
-                            ]
-                        )
-                        ->getMock()
-                ]
-            )
-            ->shouldReceive('fetchCount')
-            ->andReturn(2);
+            ->andReturn([$mockEntity, clone $mockEntity])
+            ->shouldReceive('fetchCount')->once()->andReturn(2);
 
+        $feeCnt = 123;
         $this->repoMap['Fee']
             ->shouldReceive('getOutstandingFeeCountByOrganisationId')
-            ->with(1, true)
-            ->andReturn(66);
+            ->with(self::ORG_ID, true)
+            ->andReturn($feeCnt);
 
         $result = $this->sut->handleQuery($query);
 
         $this->assertEquals(
             [
                 'result' => [
-                    [
-                        'id' => 1
-                    ],
-                    [
-                        'id' => 2
-                    ]
+                    'EXPECT_ENTITY',
+                    'EXPECT_ENTITY',
                 ],
                 'count' => 2,
-                'feeCount' => 66,
+                'feeCount' => $feeCnt,
             ],
             $result
         );

@@ -90,7 +90,7 @@ class EmailTest extends MockeryTestCase
                     array_shift($parts);
 
                     $expected = [
-                        'From: foo <foo@bar.com>',
+                        'From: foo@bar.com',
                         'To: bar@foo.com',
                         'Cc: cc@foo.com',
                         'Bcc: bcc@foo.com',
@@ -348,6 +348,7 @@ class EmailTest extends MockeryTestCase
 
     /**
      * @expectedException \Dvsa\Olcs\Email\Exception\EmailNotSentException
+     * @expectedExceptionMessage Email not sent: exception message
      */
     public function testSendHandlesException()
     {
@@ -358,7 +359,7 @@ class EmailTest extends MockeryTestCase
         $transport->shouldReceive('send')
             ->once()
             ->with(m::type(Message::class))
-            ->andThrow(new \Exception());
+            ->andThrow(new \Exception('exception message'));
 
         $this->sut->send(
             'foo@bar.com',

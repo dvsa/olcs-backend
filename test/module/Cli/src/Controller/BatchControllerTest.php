@@ -751,4 +751,17 @@ class BatchControllerTest extends MockeryTestCase
 
         $this->sut->resolvePaymentsAction();
     }
+
+    public function testFlagUrgentTasksAction()
+    {
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(\Dvsa\Olcs\Transfer\Command\Task\FlagUrgentTasks::class))
+            ->once()
+            ->andReturn(new Command\Result());
+
+        $this->sut->flagUrgentTasksAction();
+    }
 }

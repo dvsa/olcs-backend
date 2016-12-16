@@ -103,6 +103,16 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     }
 
     /**
+     * Is this organisation a Ltd company
+     *
+     * @return bool
+     */
+    public function isLtd()
+    {
+        return $this->getType()->getId() === self::ORG_TYPE_REGISTERED_COMPANY;
+    }
+
+    /**
      * @return array
      * @deprecated
      */

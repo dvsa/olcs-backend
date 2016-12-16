@@ -50,7 +50,7 @@ class QueueControllerTest extends MockeryTestCase
         // Mocks
         $mockConfig = [
             'queue' => [
-                'runFor' => 0.1, // seconds
+                'runFor' => 0.01, // seconds
                 'sleepFor' => 50, // microseconds
             ]
         ];
@@ -61,6 +61,7 @@ class QueueControllerTest extends MockeryTestCase
         // Expectations
         $this->request->shouldReceive('getParam')->with('type')->andReturn('foo');
         $this->request->shouldReceive('getParam')->with('exclude')->andReturn('');
+        $this->request->shouldReceive('getParam')->with('queue-duration', 0.01)->andReturn(0.01);
 
         $mockQueue->shouldReceive('processNextItem')
             ->with(['foo'], [])
@@ -68,6 +69,7 @@ class QueueControllerTest extends MockeryTestCase
 
         $this->console->shouldReceive('writeLine')->with('Types = foo')->once();
         $this->console->shouldReceive('writeLine')->with('Exclude types = ')->once();
+        $this->console->shouldReceive('writeLine')->with('Queue duration = 0.01')->once();
         $this->console->shouldReceive('writeLine')
             ->with('No items queued, waiting for items');
 
@@ -81,7 +83,7 @@ class QueueControllerTest extends MockeryTestCase
         // Mocks
         $mockConfig = [
             'queue' => [
-                'runFor' => 0.1,
+                'runFor' => 0.01,
                 'sleepFor' => 50,
             ]
         ];
@@ -92,6 +94,7 @@ class QueueControllerTest extends MockeryTestCase
         // Expectations
         $this->request->shouldReceive('getParam')->with('type')->andReturn('foo');
         $this->request->shouldReceive('getParam')->with('exclude')->andReturn('');
+        $this->request->shouldReceive('getParam')->with('queue-duration', 0.01)->andReturn(0.01);
 
         $mockQueue->shouldReceive('processNextItem')
             ->with(['foo'], [])
@@ -99,6 +102,7 @@ class QueueControllerTest extends MockeryTestCase
 
         $this->console->shouldReceive('writeLine')->with('Types = foo')->once();
         $this->console->shouldReceive('writeLine')->with('Exclude types = ')->once();
+        $this->console->shouldReceive('writeLine')->with('Queue duration = 0.01')->once();
         $this->console->shouldReceive('writeLine')
             ->atLeast(100)
             ->with('Some output');
@@ -114,7 +118,7 @@ class QueueControllerTest extends MockeryTestCase
         // Mocks
         $mockConfig = [
             'queue' => [
-                'runFor' => 0.1,
+                'runFor' => 0.01,
                 'sleepFor' => 50,
             ]
         ];
@@ -125,6 +129,7 @@ class QueueControllerTest extends MockeryTestCase
         // Expectations
         $this->request->shouldReceive('getParam')->with('type')->andReturn('foo,bar');
         $this->request->shouldReceive('getParam')->with('exclude')->andReturn('aaa,bbb');
+        $this->request->shouldReceive('getParam')->with('queue-duration', 0.01)->andReturn(0.01);
 
         $mockQueue->shouldReceive('processNextItem')
             ->with(['foo', 'bar'], ['aaa', 'bbb'])
@@ -132,6 +137,40 @@ class QueueControllerTest extends MockeryTestCase
 
         $this->console->shouldReceive('writeLine')->with('Types = foo,bar')->once();
         $this->console->shouldReceive('writeLine')->with('Exclude types = aaa,bbb')->once();
+        $this->console->shouldReceive('writeLine')->with('Queue duration = 0.01')->once();
+        $this->console->shouldReceive('writeLine')
+            ->atLeast(100)
+            ->with('Some output');
+
+        // Assertions
+        $this->routeMatch->setParam('action', 'index');
+        $this->sut->dispatch($this->request);
+    }
+
+    public function testIndexActionQueueDuration()
+    {
+        // Mocks
+        $mockConfig = [
+            'queue' => [
+                'runFor' => 22,
+            ]
+        ];
+        $mockQueue = m::mock();
+        $this->sm->setService('Config', $mockConfig);
+        $this->sm->setService('Queue', $mockQueue);
+
+        // Expectations
+        $this->request->shouldReceive('getParam')->with('type')->andReturn('foo,bar');
+        $this->request->shouldReceive('getParam')->with('exclude')->andReturn('aaa,bbb');
+        $this->request->shouldReceive('getParam')->with('queue-duration', 22)->andReturn(0.01);
+
+        $mockQueue->shouldReceive('processNextItem')
+            ->with(['foo', 'bar'], ['aaa', 'bbb'])
+            ->andReturn('Some output');
+
+        $this->console->shouldReceive('writeLine')->with('Types = foo,bar')->once();
+        $this->console->shouldReceive('writeLine')->with('Exclude types = aaa,bbb')->once();
+        $this->console->shouldReceive('writeLine')->with('Queue duration = 0.01')->once();
         $this->console->shouldReceive('writeLine')
             ->atLeast(100)
             ->with('Some output');
@@ -146,7 +185,7 @@ class QueueControllerTest extends MockeryTestCase
         // Mocks
         $mockConfig = [
             'queue' => [
-                'runFor' => 0.1,
+                'runFor' => 0.01,
             ]
         ];
         $mockQueue = m::mock();
@@ -156,6 +195,7 @@ class QueueControllerTest extends MockeryTestCase
         // Expectations
         $this->request->shouldReceive('getParam')->with('type')->andReturn('foo');
         $this->request->shouldReceive('getParam')->with('exclude')->andReturn('');
+        $this->request->shouldReceive('getParam')->with('queue-duration', 0.01)->andReturn(0.01);
 
         $errorMessage = 'error message';
         $mockQueue->shouldReceive('processNextItem')
@@ -164,6 +204,7 @@ class QueueControllerTest extends MockeryTestCase
 
         $this->console->shouldReceive('writeLine')->with('Types = foo')->once();
         $this->console->shouldReceive('writeLine')->with('Exclude types = ')->once();
+        $this->console->shouldReceive('writeLine')->with('Queue duration = 0.01')->once();
         $this->console->shouldReceive('writeLine')
             ->atLeast(1)
             ->with('Error: '.$errorMessage);

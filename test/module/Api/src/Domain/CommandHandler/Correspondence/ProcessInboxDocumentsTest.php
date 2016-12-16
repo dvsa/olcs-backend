@@ -2,36 +2,43 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Correspondence;
 
-use Dvsa\Olcs\Email\Domain\Command\SendEmail;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Correspondence\ProcessInboxDocuments as CommandHandler;
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Correspondence\ProcessInboxDocuments as Command;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
-use Dvsa\Olcs\Api\Domain\Repository\CorrespondenceInbox as CorrespondenceInboxRepo;
-use Mockery as m;
-use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Dvsa\Olcs\Email\Data\Message;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Correspondence\ProcessInboxDocuments;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
-use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Email\Data\Message;
+use Dvsa\Olcs\Email\Domain\Command\SendEmail;
+use Dvsa\Olcs\Email\Service\TemplateRenderer;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
- * Process inbox documents test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Correspondence\ProcessInboxDocuments
  */
 class ProcessInboxDocumentsTest extends CommandHandlerTestCase
 {
+    const LIC_ID = 999;
+    const ORG_ID = 7777;
+
+    /** @var  m\MockInterface */
+    private $mockTempRenderer;
+
     public function setUp()
     {
-        $this->sut = new CommandHandler();
-        $this->mockRepo('CorrespondenceInbox', CorrespondenceInboxRepo::class);
+        $this->sut = new ProcessInboxDocuments();
+        $this->mockRepo('CorrespondenceInbox', Repository\CorrespondenceInbox::class);
+
+        $this->mockTempRenderer = m::mock(TemplateRenderer::class);
 
         $this->mockedSmServices = [
-            TemplateRenderer::class => m::mock(TemplateRenderer::class)
+            TemplateRenderer::class => $this->mockTempRenderer,
         ];
 
         parent::setUp();
@@ -148,6 +155,73 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
         ];
         $result = $this->sut->handleCommand($command);
         $this->assertEquals($result->toArray(), $expected);
+    }
+
+    public function testHandleCommandFailSendEmail()
+    {
+        $command = Command::create([]);
+
+        $cd = new ContactDetails(m::mock(RefData::class));
+        $cd->setEmailAddress('foo@bar.com');
+
+        $user = new User('pid', 'TYPE');
+        $user->setContactDetails($cd);
+        $user->setTranslateToWelsh('Y');
+
+        $orgUser = (new OrganisationUser())
+            ->setUser($user)
+            ->setIsAdministrator('Y');
+
+        $organisation = (new Organisation())
+            ->setId(self::ORG_ID)
+            ->addOrganisationUsers(new ArrayCollection([$orgUser]));
+
+        $mockLicence = m::mock()
+            ->shouldReceive('getId')->once()->andReturn(self::LIC_ID)
+            ->shouldReceive('getOrganisation')->andReturn($organisation)
+            ->shouldReceive('getLicNo')->once()->andReturn('licNo')
+            ->getMock();
+
+        $mockDocument = m::mock()
+            ->shouldReceive('getContinuationDetails')
+            ->once()
+            ->andReturn(
+                [
+                    m::mock()
+                        ->shouldReceive('getChecklistDocument')->andReturn('foo')->once()
+                        ->getMock(),
+                ]
+            )
+            ->getMock();
+
+        $mockInboxRecord = m::mock()
+            ->shouldReceive('getDocument')->once()->andReturn($mockDocument)
+            ->shouldReceive('getLicence')->once()->andReturn($mockLicence)
+            ->shouldReceive('setEmailReminderSent')->never()
+            ->getMock();
+
+        $this->repoMap['CorrespondenceInbox']
+            ->shouldReceive('getAllRequiringReminder')->once()->andReturn([$mockInboxRecord])
+            ->shouldReceive('getAllRequiringPrint')->once()->andReturn([])
+            ->shouldReceive('save')->never()
+            ->getMock();
+
+        $this->mockTempRenderer
+            ->shouldReceive('renderBody')
+            ->once()
+            ->andThrow(new \Dvsa\Olcs\Email\Exception\EmailNotSentException('Unit_ErrMsg'));
+
+        $actual = $this->sut->handleCommand($command);
+
+        static::assertInstanceOf(Result::class, $actual);
+        static::assertEquals(
+            [
+                'Found 1 records to email',
+                sprintf(ProcessInboxDocuments::ERR_SEND_REMINDER, self::LIC_ID, self::ORG_ID),
+                'Found 0 records to print',
+            ],
+            $actual->getMessages()
+        );
     }
 
     public function testHandleCommandNoUsers()

@@ -172,11 +172,12 @@ class BusTest extends RepositoryTestCase
 
         $variationNo = 11;
         $routeNo = 22;
+        $licenceId = 33;
 
         $mockQuery = m::mock(PreviousVariationByRouteNo::class);
         $mockQuery->shouldReceive('getRouteNo')->andReturn($routeNo)->once();
         $mockQuery->shouldReceive('getVariationNo') ->andReturn($variationNo)->once();
-        $mockQuery->shouldReceive('getLicenceId')->never();
+        $mockQuery->shouldReceive('getLicenceId')->andReturn($licenceId)->once();
         $mockQuery->shouldReceive('getBusRegStatus')->never();
 
         $mockQb = m::mock(QueryBuilder::class);
@@ -186,6 +187,9 @@ class BusTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr->eq')->with('m.routeNo', ':byRouteNo')->once()->andReturnSelf();
         $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('byRouteNo', $routeNo)->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('m.licence', ':byLicence')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('byLicence', $licenceId)->once()->andReturnSelf();
 
         $sut->applyListFilters($mockQb, $mockQuery);
     }

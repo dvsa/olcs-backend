@@ -112,17 +112,20 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('expr->andX')
             ->andReturnUsing([$this, 'mockAndX']);
 
-        $this->qb->shouldReceive('expr->isNull')
-            ->andReturnUsing([$this, 'mockIsNull']);
-
         $this->qb->shouldReceive('select')
             ->andReturnUsing([$this, 'mockAddSelect']);
+
+        $this->qb->shouldReceive('distinct')
+            ->andReturnUsing([$this, 'mockDistinct']);
 
         $this->qb->shouldReceive('addSelect')
             ->andReturnUsing([$this, 'mockAddSelect']);
 
         $this->qb->shouldReceive('select')
             ->andReturnUsing([$this, 'mockAddSelect']);
+
+        $this->qb->shouldReceive('where')
+            ->andReturnUsing([$this, 'mockAndWhere']);
 
         $this->qb->shouldReceive('andWhere')
             ->andReturnUsing([$this, 'mockAndWhere']);
@@ -174,9 +177,18 @@ class RepositoryTestCase extends MockeryTestCase
         return $this->qb;
     }
 
+    public function mockDistinct()
+    {
+        $this->query .= ' DISTINCT';
+
+        return $this->qb;
+    }
+
     public function mockAddSelect($select)
     {
-        $this->query .= ' SELECT ' . implode(', ', func_get_args());
+        $selects = is_array($select) ? $select : func_get_args();
+
+        $this->query .= ' SELECT ' . implode(', ', $selects);
 
         return $this->qb;
     }
@@ -184,14 +196,6 @@ class RepositoryTestCase extends MockeryTestCase
     public function mockAndWhere($where)
     {
         $this->query .= ' AND ' . $where;
-
-        return $this->qb;
-    }
-
-    public function mockIsNull($where)
-    {
-        $this->query .= $where . ' IS NULL';
-
         return $this->qb;
     }
 

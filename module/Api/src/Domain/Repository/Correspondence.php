@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox as Entity;
+use Dvsa\Olcs\Transfer\Query\Correspondence\Correspondences;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -19,19 +20,43 @@ class Correspondence extends AbstractRepository
     protected $alias = 'co';
 
     /**
-     * @param QueryBuilder   $qb
-     * @param \Dvsa\Olcs\Transfer\Query\Correspondence\Correspondences $query
+     * Apply joins
+     *
+     * @param QueryBuilder $qb Query Builder
+     *
+     * @return void
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        $qb
+            ->addSelect('l, d')
+            ->join($this->alias . '.licence', 'l')
+            ->join($this->alias . '.document', 'd');
+    }
+
+    /**
+     * Apply filters
+     *
+     * @param QueryBuilder    $qb    Query builder
+     * @param Correspondences $query Http query
+     *
+     * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        $this->getQueryBuilder()->modifyQuery($qb)->with('licence', 'l');
-        $this->getQueryBuilder()->modifyQuery($qb)->with('document');
-
-        $qb->where($qb->expr()->eq('l.organisation', ':organisationId'));
-        $qb->setParameter(':organisationId', $query->getOrganisation());
-        $qb->orderBy($this->alias . '.createdOn', 'DESC');
+        $qb
+            ->where($qb->expr()->eq('l.organisation', ':ORG_ID'))
+            ->setParameter('ORG_ID', $query->getOrganisation())
+            ->orderBy($this->alias . '.createdOn', 'DESC');
     }
 
+    /**
+     * Get Unread Count
+     *
+     * @param int $organisationId Org Id
+     *
+     * @return int
+     */
     public function getUnreadCountForOrganisation($organisationId)
     {
         $qb = $this->createQueryBuilder();

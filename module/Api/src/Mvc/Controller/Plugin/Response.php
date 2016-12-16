@@ -79,11 +79,21 @@ class Response extends AbstractPlugin
         $response = $this->getController()->getResponse();
         $response->setStatusCode(HttpResponse::STATUS_CODE_200);
 
+        if ($result instanceof HttpResponse\Stream) {
+            return $result;
+        }
+
         if ($result instanceof QueryResult) {
             $result = $result->serialize();
         }
 
-        if (!is_array($result)) {
+        if (
+            !is_array($result)
+            && (
+                $result instanceof \JsonSerializable
+                || method_exists($result, 'jsonSerialize')  //  #TODO Remove it in Develop
+            )
+        ) {
             $result = $result->jsonSerialize();
         }
 
