@@ -26,6 +26,14 @@ class ApplicationCompletion extends AbstractApplicationCompletion
     const STATUS_INCOMPLETE = 1;
     const STATUS_COMPLETE = 2;
 
+    const SECTION_PEOPLE = 'people';
+    const SECTION_TRANSPORT_MANAGER = 'transport_managers';
+    const SECTION_FINANCIAL_HISTORY = 'financial_history';
+    const SECTION_DECLARATION_INTERNAL = 'declarations_internal';
+    const SECTION_CONVICTIONS_AND_PENALTIES = 'convictions_penalties';
+    // For some reason declaration section is called 'undertakings'?
+    const SECTION_DECLARATION = 'undertakings';
+
     /**
      * ApplicationCompletion constructor.
      *

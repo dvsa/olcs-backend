@@ -19,6 +19,8 @@ use Zend\View\Model\ConsoleModel;
  */
 class QueueController extends AbstractConsoleController
 {
+    const DEFAULT_RUN_FOR = 60;
+
     protected $startTime;
     protected $endTime;
     protected $sleepFor = 1000000; // microseconds
@@ -30,14 +32,16 @@ class QueueController extends AbstractConsoleController
      */
     public function indexAction()
     {
+        $config = $this->getServiceLocator()->get('Config')['queue'];
+
         // Which message type to process, if null then we process any message type
         $includeTypes = $this->getIncludeTypes();
         $excludeTypes = $this->getExcludeTypes();
+        $queueDuration = $this->getQueueDuration($config);
 
         $this->getConsole()->writeLine('Types = '. implode(',', $includeTypes));
         $this->getConsole()->writeLine('Exclude types = '. implode(',', $excludeTypes));
-
-        $config = $this->getServiceLocator()->get('Config')['queue'];
+        $this->getConsole()->writeLine('Queue duration = '. $queueDuration);
 
         /** @var \Dvsa\Olcs\Cli\Service\Queue\QueueProcessor $service */
         $service = $this->getServiceLocator()->get('Queue');
@@ -45,7 +49,7 @@ class QueueController extends AbstractConsoleController
         // Then we need to run for a given length of time
         if (empty($config['isLongRunningProcess'])) {
             $this->startTime = microtime(true);
-            $this->endTime = $this->startTime + $config['runFor'];
+            $this->endTime = $this->startTime + $queueDuration;
         }
 
         if (isset($config['sleepFor'])) {
@@ -76,7 +80,7 @@ class QueueController extends AbstractConsoleController
     }
 
     /**
-     * Get queue tyoe to include
+     * Get queue types to include
      *
      * @return array
      */
@@ -88,7 +92,7 @@ class QueueController extends AbstractConsoleController
     }
 
     /**
-     * Get queue tyoe to exclude
+     * Get queue types to exclude
      *
      * @return array
      */
@@ -97,6 +101,20 @@ class QueueController extends AbstractConsoleController
         return $this->getRequest()->getParam('exclude') ?
             explode(',', $this->getRequest()->getParam('exclude')) :
             [];
+    }
+
+    /**
+     * Get queue duration
+     *
+     * @param array $config Condig
+     *
+     * @return number Queue duration in seconds
+     */
+    private function getQueueDuration($config)
+    {
+        // get default from config, if not in config then default to self::gsDEFAULT_RUN_FOR
+        $default = isset($config['runFor']) && is_numeric($config['runFor']) ? $config['runFor'] : self::DEFAULT_RUN_FOR;
+        return $this->getRequest()->getParam('queue-duration', $default);
     }
 
     /**

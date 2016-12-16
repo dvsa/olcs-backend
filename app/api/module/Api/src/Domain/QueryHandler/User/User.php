@@ -1,14 +1,12 @@
 <?php
 
-/**
- * User
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\User;
 
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -17,10 +15,21 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class User extends AbstractQueryHandler
+class User extends AbstractQueryHandler implements OpenAmUserAwareInterface
 {
+    use OpenAmUserAwareTrait;
+
     protected $repoServiceName = 'User';
 
+    protected $extraRepos = ['EventHistory', 'EventHistoryType'];
+
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
         if (!$this->isGranted(Permission::CAN_MANAGE_USER_INTERNAL)) {
@@ -28,6 +37,17 @@ class User extends AbstractQueryHandler
         }
 
         $user = $this->getRepo()->fetchUsingId($query);
+
+        // get user's latest password reset event
+        $passwordResetEvents = $this->getRepo('EventHistory')
+            ->fetchByAccount(
+                $user->getId(),
+                $this->getRepo('EventHistoryType')
+                    ->fetchOneByEventCode(EventHistoryType::EVENT_CODE_PASSWORD_RESET),
+                'id',
+                'desc',
+                1
+            );
 
         return $this->result(
             $user,
@@ -51,7 +71,12 @@ class User extends AbstractQueryHandler
                 ],
             ],
             [
-                'userType' => $user->getUserType()
+                'userType' => $user->getUserType(),
+                'lastLoggedInOn' => $this->getOpenAmUser()->fetchUser($user->getPid())['lastLoginTime'] ? : null,
+                'latestPasswordResetEvent'
+                    => !empty($passwordResetEvents)
+                        ? array_shift($passwordResetEvents)->serialize()
+                        : null,
             ]
         );
     }

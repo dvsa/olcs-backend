@@ -42,7 +42,12 @@ final class CreateVehicleListDocument extends AbstractCommandHandler implements
         $user = $command->getUser() ? $command->getUser() : $this->getCurrentUser()->getId();
         $documentId = $this->generateDocument($template, $command, $description, $user);
 
-        $printData = ['documentId' => $documentId, 'jobName' => $description, 'user' => $user];
+        $printData = [
+            'documentId' => $documentId,
+            'jobName' => $description,
+            'user' => $user,
+            'isDiscPrinting' => true,
+        ];
         $this->result->merge($this->handleSideEffect(Enqueue::create($printData)));
 
         return $this->result;

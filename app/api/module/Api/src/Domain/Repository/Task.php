@@ -138,4 +138,21 @@ class Task extends AbstractRepository
 
         return $result;
     }
+
+    /**
+     * Flag applicable tasks as urgent
+     *
+     * @return int Number of tasks updated
+     */
+    public function flagUrgentsTasks()
+    {
+        /** @var \Doctrine\DBAL\Driver\PDOStatement $stmt */
+        $stmt = $this->getDbQueryManager()
+            ->get('Task/FlagUrgentTasks')
+            ->execute();
+
+        $updatedTasks = $stmt->fetchColumn(0);
+
+        return $updatedTasks;
+    }
 }

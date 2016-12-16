@@ -58,7 +58,12 @@ final class Submission extends AbstractQueryHandler
                 ],
                 'submissionActions' => [
                     'actionTypes',
-                    'reasons'
+                    'reasons',
+                    'createdBy' => [
+                        'contactDetails' => [
+                            'person'
+                        ]
+                    ],
                 ]
             ],
             [

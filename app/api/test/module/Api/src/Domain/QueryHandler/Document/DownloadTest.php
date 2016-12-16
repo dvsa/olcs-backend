@@ -10,7 +10,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**
- * @covers Dvsa\Olcs\Api\Domain\QueryHandler\Document\Download
+ * @covers \Dvsa\Olcs\Api\Domain\QueryHandler\Document\Download
  */
 class DownloadTest extends QueryHandlerTestCase
 {
@@ -24,6 +24,7 @@ class DownloadTest extends QueryHandlerTestCase
 
         $this->mockRepo('Document', \Dvsa\Olcs\Api\Domain\Repository\Document::class);
 
+        $this->mockedSmServices['config'] = [];
         $this->mockedSmServices['FileUploader'] = m::mock(ContentStoreFileUploader::class);
 
         parent::setUp();

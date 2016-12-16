@@ -26,9 +26,10 @@ final class DeleteBus extends AbstractCommandHandler implements TransactionedInt
     protected $extraRepos = ['TxcInbox', 'EbsrSubmission'];
 
     /**
-     * Delete Command Handler Abstract
+     * Delete a bus registration and provides a redirect id for the previous bus reg, if it exists
      *
-     * @param CommandInterface $command
+     * @param CommandInterface $command command
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -49,6 +50,7 @@ final class DeleteBus extends AbstractCommandHandler implements TransactionedInt
             'order' => 'DESC',
             'page' => 1,
             'limit' => 1,
+            'licenceId' => $busReg->getLicence()->getId(),
             'routeNo' => $busReg->getRouteNo(),
             'variationNo' => $busReg->getVariationNo(),
         ];
@@ -73,7 +75,7 @@ final class DeleteBus extends AbstractCommandHandler implements TransactionedInt
         $result->addMessage('Deleted');
 
         if ($previousBusReg->count()) {
-            $result->addId('previousBusRegId', $previousBusReg->current()->getId());
+            $result->addId('previousBusRegId', $previousBusReg[0]->getId());
         }
 
         return $result;

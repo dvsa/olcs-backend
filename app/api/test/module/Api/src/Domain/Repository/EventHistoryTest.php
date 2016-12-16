@@ -55,6 +55,42 @@ class EventHistoryTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
+    public function testFetchByAccount()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchByAccount('USER', 'EHT', 'SORT', 'ORDER', 1));
+
+        $expectedQuery = 'BLAH AND m.account = [[USER]] AND m.eventHistoryType = [[EHT]] ORDER BY m.SORT ORDER LIMIT 1';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchByAccountWithoutEventType()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchByAccount('USER'));
+
+        $expectedQuery = 'BLAH AND m.account = [[USER]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
     public function testApplyListFilters()
     {
         $this->setUpSut(Repo::class, true);

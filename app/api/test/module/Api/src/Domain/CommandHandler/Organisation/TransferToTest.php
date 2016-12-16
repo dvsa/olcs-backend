@@ -632,9 +632,9 @@ class TransferToTest extends CommandHandlerTestCase
         $fromOrganisation = new Organisation();
         $toOrganisation = new Organisation();
 
-        $eventHistory1 = new \Dvsa\Olcs\Api\Entity\EventHistory\EventHistory();
+        $eventHistory1 = m::mock(\Dvsa\Olcs\Api\Entity\EventHistory\EventHistory::class)->makePartial();
         $eventHistory1->setOrganisation($fromOrganisation);
-        $eventHistory2 = new \Dvsa\Olcs\Api\Entity\EventHistory\EventHistory();
+        $eventHistory2 = m::mock(\Dvsa\Olcs\Api\Entity\EventHistory\EventHistory::class)->makePartial();
         $eventHistory2->setOrganisation($fromOrganisation);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
@@ -696,7 +696,7 @@ class TransferToTest extends CommandHandlerTestCase
         $organisationUser1 = new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser();
         $organisationUser1->setOrganisation($fromOrganisation);
         $fromOrganisation->addOrganisationUsers($organisationUser1);
-        $organisationUser2 = new \Dvsa\Olcs\Api\Entity\EventHistory\EventHistory();
+        $organisationUser2 = m::mock(\Dvsa\Olcs\Api\Entity\EventHistory\EventHistory::class)->makePartial();
         $organisationUser2->setOrganisation($fromOrganisation);
         $fromOrganisation->addOrganisationUsers($organisationUser2);
 

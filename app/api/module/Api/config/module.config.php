@@ -192,6 +192,7 @@ return [
             'Pi' => RepositoryFactory::class,
             'NonPi' => RepositoryFactory::class,
             'EventHistory' => RepositoryFactory::class,
+            'EventHistoryType' => RepositoryFactory::class,
             'PublicHoliday' => RepositoryFactory::class,
             'Sla' => RepositoryFactory::class,
             'LicenceNoGen' => RepositoryFactory::class,
@@ -257,6 +258,7 @@ return [
             'SubCategory' => RepositoryFactory::class,
             'SubCategoryDescription' => RepositoryFactory::class,
             'Scan' => RepositoryFactory::class,
+            'BusRegBrowseView' => RepositoryFactory::class,
             'BusRegSearchView' => RepositoryFactory::class,
             'ProposeToRevoke' => RepositoryFactory::class,
             'OrganisationPerson' => RepositoryFactory::class,
@@ -674,8 +676,6 @@ return [
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class,
-            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityNotRequired::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityNotRequired::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\NewAppAlreadyExists::class =>
@@ -701,8 +701,6 @@ return [
             'Rules\EffectiveDate' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate::class,
             'Rules\ApplicationType' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class,
             'Rules\Licence' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class,
-            'Rules\ProcessedData\LocalAuthorityNotRequired' =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityNotRequired::class,
             'Rules\ProcessedData\LocalAuthorityMissing' =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class,
             'Rules\ProcessedData\NewAppAlreadyExists' =>
@@ -713,10 +711,6 @@ return [
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\RegisteredBusRoute::class,
             'Rules\ProcessedData\VariationNumber' =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\VariationNumber::class,
-            'Rules\ShortNotice\MissingSection' =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingSection::class,
-            'Rules\ShortNotice\MissingReason' =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason::class
         ]
     ],
     'filters' => [

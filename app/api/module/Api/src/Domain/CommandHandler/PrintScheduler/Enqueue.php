@@ -54,6 +54,11 @@ final class Enqueue extends AbstractCommandHandler implements \Dvsa\Olcs\Api\Dom
             ),
         ];
 
+        if ($command->getIsDiscPrinting()) {
+            // if disc printing then use bespoke queue print type
+            $dtoData['type'] = Queue::TYPE_DISC_PRINTING_PRINT;
+        }
+
         $this->handleSideEffect(\Dvsa\Olcs\Api\Domain\Command\Queue\Create::create($dtoData));
 
         $this->result->addMessage(
