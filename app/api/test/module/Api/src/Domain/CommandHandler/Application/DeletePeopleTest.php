@@ -127,7 +127,7 @@ class DeletePeopleTest extends CommandHandlerTestCase
         );
         $appOrgPerson1->setId(179);
         $appOrgPerson1->setPerson((new \Dvsa\Olcs\Api\Entity\Person\Person())->setId(79));
-        $appOrgPerson1->setAction('A');
+        $appOrgPerson1->setAction(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::ACTION_ADD);
 
         $this->repoMap['ApplicationOrganisationPerson']->shouldReceive('fetchForApplicationAndPerson')
             ->with(52, 79)->once()->andReturn($appOrgPerson1);
@@ -144,7 +144,10 @@ class DeletePeopleTest extends CommandHandlerTestCase
                 $organisation,
                 $application
             ) {
-                $this->assertSame('D', $appOrgPerson->getAction());
+                $this->assertSame(
+                    \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::ACTION_DELETE,
+                    $appOrgPerson->getAction()
+                );
                 $this->assertSame($organisation, $appOrgPerson->getOrganisation());
                 $this->assertSame($application, $appOrgPerson->getApplication());
                 $this->assertSame(234, $appOrgPerson->getPerson()->getId());
@@ -191,7 +194,7 @@ class DeletePeopleTest extends CommandHandlerTestCase
         );
         $appOrgPerson1->setId(179);
         $appOrgPerson1->setPerson((new \Dvsa\Olcs\Api\Entity\Person\Person())->setId(79));
-        $appOrgPerson1->setAction('D');
+        $appOrgPerson1->setAction(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::ACTION_DELETE);
 
         $this->repoMap['ApplicationOrganisationPerson']->shouldReceive('fetchForApplicationAndPerson')
             ->with(52, 79)->once()->andReturn($appOrgPerson1);

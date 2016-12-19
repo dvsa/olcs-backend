@@ -34,17 +34,16 @@ final class DeleteList extends AbstractCommandHandler implements TransactionedIn
             $organisationPerson = $this->getRepo()->fetchById($organisationPersonId);
             $this->getRepo()->delete($organisationPerson);
             $result->addMessage("OrganisationPerson ID {$organisationPersonId} deleted");
+            $person = $organisationPerson->getPerson();
+            $organisationPersons = $this->getRepo('OrganisationPerson')->fetchListForPerson($person->getId());
 
-            $organisationPersons = $this->getRepo('OrganisationPerson')->fetchListForPerson(
-                $organisationPerson->getPerson()->getId()
-            );
             if (count($organisationPersons) === 0) {
                 // if no organisation person records for this person, then person can be deleted
-                $this->getRepo('Person')->delete($organisationPerson->getPerson());
-                $result->addMessage("Person ID {$organisationPerson->getPerson()->getId()} deleted");
+                $this->getRepo('Person')->delete($person);
+                $result->addMessage("Person ID {$person->getId()} deleted");
 
                 // remove all application_organisation_person records for this person
-                $this->getRepo('ApplicationOrganisationPerson')->deleteForPerson($organisationPerson->getPerson());
+                $this->getRepo('ApplicationOrganisationPerson')->deleteForPerson($person);
             }
         }
 
