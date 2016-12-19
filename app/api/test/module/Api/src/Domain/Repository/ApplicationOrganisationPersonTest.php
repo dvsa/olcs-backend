@@ -148,4 +148,25 @@ class ApplicationOrganisationPersonTest extends RepositoryTestCase
 
         $this->sut->fetchForApplicationAndOriginalPerson(34, 76);
     }
+
+    public function testDeleteForPerson()
+    {
+        $qb = $this->createMockQb('[DELETE]');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('delete')->with(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class, 'm')
+            ->once()->andReturnSelf();
+        $qb->shouldReceive('getQuery->execute')->with()->once();
+
+        $person = new \Dvsa\Olcs\Api\Entity\Person\Person();
+        $person->setId(99);
+
+        $this->sut->deleteForPerson($person);
+
+        $expectedQuery = '[DELETE] '.
+            'AND m.person = [[Dvsa\Olcs\Api\Entity\Person\Person]] '.
+            'OR m.originalPerson = [[Dvsa\Olcs\Api\Entity\Person\Person]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }
