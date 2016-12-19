@@ -16,14 +16,36 @@ final class DeleteList extends AbstractCommandHandler implements TransactionedIn
 {
     protected $repoServiceName = 'OrganisationPerson';
 
+    protected $extraRepos = ['Person', 'ApplicationOrganisationPerson'];
+
+    /**
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\OrganisationPerson\DeleteList $command Command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
 
         foreach ($command->getIds() as $organisationPersonId) {
+            /** @var \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson $organisationPerson */
             $organisationPerson = $this->getRepo()->fetchById($organisationPersonId);
             $this->getRepo()->delete($organisationPerson);
             $result->addMessage("OrganisationPerson ID {$organisationPersonId} deleted");
+
+            $organisationPersons = $this->getRepo('OrganisationPerson')->fetchListForPerson(
+                $organisationPerson->getPerson()->getId()
+            );
+            if (count($organisationPersons) === 0) {
+                // if no organisation person records for this person, then person can be deleted
+                $this->getRepo('Person')->delete($organisationPerson->getPerson());
+                $result->addMessage("Person ID {$organisationPerson->getPerson()->getId()} deleted");
+
+                // remove all application_organisation_person records for this person
+                $this->getRepo('ApplicationOrganisationPerson')->deleteForPerson($organisationPerson->getPerson());
+            }
         }
 
         return $result;

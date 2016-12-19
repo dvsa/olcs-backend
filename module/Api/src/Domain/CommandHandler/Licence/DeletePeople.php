@@ -24,6 +24,13 @@ final class DeletePeople extends AbstractCommandHandler implements Transactioned
     protected $repoServiceName = 'Licence';
     protected $extraRepos = ['OrganisationPerson', 'Person'];
 
+    /**
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Licence\DeletePeople $command Command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         /* @var $command \Dvsa\Olcs\Transfer\Command\Licence\DeletePeople */
@@ -38,17 +45,14 @@ final class DeletePeople extends AbstractCommandHandler implements Transactioned
                 $licence->getOrganisation()->getId(),
                 $personId
             );
-            // There should only be one, but just in case iterate them
-            foreach ($organisationPersons as $organisationPerson) {
-                $this->getRepo('OrganisationPerson')->delete($organisationPerson);
-                $result->addMessage("OrganisatonPerson ID {$organisationPerson->getId()} deleted");
-            }
 
-            // if no other OrganisationPerson relates to the person ID
-            if (count($this->getRepo('OrganisationPerson')->fetchListForPerson($personId)) === 0) {
-                $this->getRepo('Person')->delete($organisationPerson->getPerson());
-                $result->addMessage("Person ID {$organisationPerson->getPerson()->getId()} deleted");
+            // There should only be one, but just in case iterate them
+            $organisationPersonIds = [];
+            foreach ($organisationPersons as $organisationPerson) {
+                $organisationPersonIds[] = $organisationPerson->getId();
             }
+            $dto = \Dvsa\Olcs\Transfer\Command\OrganisationPerson\DeleteList::create(['ids' => $organisationPersonIds]);
+            $result->merge($this->handleSideEffect($dto));
         }
 
         return $result;
