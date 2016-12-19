@@ -113,7 +113,7 @@ class ApplicationOrganisationPerson extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
         $qb->delete(Entity::class, $this->alias)
-            ->andWhere($qb->expr()->eq($this->alias . '.person', ':person'))
+            ->where($qb->expr()->eq($this->alias . '.person', ':person'))
             ->orWhere($qb->expr()->eq($this->alias . '.originalPerson', ':person'))
             ->setParameter('person', $person);
 
