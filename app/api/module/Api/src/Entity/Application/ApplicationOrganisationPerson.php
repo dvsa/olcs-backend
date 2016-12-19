@@ -21,6 +21,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ApplicationOrganisationPerson extends AbstractApplicationOrganisationPerson
 {
+    const ACTION_ADD = 'A';
+    const ACTION_DELETE = 'D';
+    const ACTION_UPDATE = 'U';
+
     public function __construct(
         Application $application,
         \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation,

@@ -68,22 +68,26 @@ class DeletePeopleTest extends CommandHandlerTestCase
 
         $this->repoMap['OrganisationPerson']->shouldReceive('fetchListForOrganisationAndPerson')
             ->with(48, 543)->once()->andReturn([$op1]);
-        $this->repoMap['OrganisationPerson']->shouldReceive('delete')->with($op1)->once()->andReturn();
-        $this->repoMap['OrganisationPerson']->shouldReceive('fetchListForPerson')->with(543)->once()->andReturn([]);
-        $this->repoMap['Person']->shouldReceive('delete')->with($p1)->once()->andReturn([]);
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\OrganisationPerson\DeleteList::class,
+            ['ids' => [3]],
+            (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('3 DELETED')
+        );
 
         $this->repoMap['OrganisationPerson']->shouldReceive('fetchListForOrganisationAndPerson')
             ->with(48, 63)->once()->andReturn([$op2]);
-        $this->repoMap['OrganisationPerson']->shouldReceive('delete')->with($op2)->once()->andReturn();
-        $this->repoMap['OrganisationPerson']->shouldReceive('fetchListForPerson')->with(63)->once()->andReturn(['X']);
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\OrganisationPerson\DeleteList::class,
+            ['ids' => [54]],
+            (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('54 DELETED')
+        );
 
         $response = $this->sut->handleCommand($command);
 
         $this->assertSame(
             [
-                "OrganisatonPerson ID {$op1->getId()} deleted",
-                "Person ID {$p1->getId()} deleted",
-                "OrganisatonPerson ID {$op2->getId()} deleted",
+                '3 DELETED',
+                '54 DELETED',
             ],
             $response->getMessages()
         );

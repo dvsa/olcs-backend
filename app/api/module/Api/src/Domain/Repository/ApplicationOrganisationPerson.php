@@ -21,7 +21,7 @@ class ApplicationOrganisationPerson extends AbstractRepository
     /**
      * Fetch a list for an Application
      *
-     * @param int $applicationId
+     * @param int $applicationId Application ID
      *
      * @return array of Entity
      */
@@ -43,10 +43,11 @@ class ApplicationOrganisationPerson extends AbstractRepository
     /**
      * Fetch an entity for an Application and Person
      *
-     * @param int $applicationId
-     * @param int $personId
+     * @param int $applicationId Application ID
+     * @param int $personId      Person ID
      *
      * @return Entity
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
      */
     public function fetchForApplicationAndPerson($applicationId, $personId)
     {
@@ -73,10 +74,11 @@ class ApplicationOrganisationPerson extends AbstractRepository
     /**
      * Fetch an entity for an Application and OriginalPerson
      *
-     * @param int $applicationId
-     * @param int $personId
+     * @param int $applicationId Application ID
+     * @param int $personId      Person ID
      *
      * @return Entity
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
      */
     public function fetchForApplicationAndOriginalPerson($applicationId, $personId)
     {
@@ -98,5 +100,23 @@ class ApplicationOrganisationPerson extends AbstractRepository
         }
 
         return $results[0];
+    }
+
+    /**
+     * Delete all applicationOrganisationPerson's which are connected to a Person
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Person\Person $person Person
+     *
+     * @return void
+     */
+    public function deleteForPerson(\Dvsa\Olcs\Api\Entity\Person\Person $person)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->delete(Entity::class, $this->alias)
+            ->where($qb->expr()->eq($this->alias . '.person', ':person'))
+            ->orWhere($qb->expr()->eq($this->alias . '.originalPerson', ':person'))
+            ->setParameter('person', $person);
+
+        $qb->getQuery()->execute();
     }
 }
