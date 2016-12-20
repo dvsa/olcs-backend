@@ -152,12 +152,8 @@ class Search implements AuthAwareInterface
         //Search on the index.
         $es = new \Elastica\Search($this->getClient());
 
-        // If not using QueryTemplate then need to add indexes
-        if (!$elasticaQuery instanceof QueryTemplate) {
-            foreach ($indexes as $index) {
-                $es->addIndex($index);
-            }
-        }
+        // Add indices, otherwise search is executed against all indices
+        $es->addIndices($indexes);
 
         $response = [];
 

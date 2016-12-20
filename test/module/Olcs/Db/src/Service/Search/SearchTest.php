@@ -172,7 +172,7 @@ class SearchTest extends MockeryTestCase
         $mockClient = m::mock(\Elastica\Client::class);
         $mockClient->shouldReceive('request')->once()->andReturnUsing(
             function ($path, $method, $query, $params) {
-                $this->assertSame('/_search', $path);
+                $this->assertSame('licence/_search', $path);
                 $this->assertSame('GET', $method);
 
                 $this->assertArrayHasKey('query', $query);
@@ -211,7 +211,7 @@ class SearchTest extends MockeryTestCase
         $mockClient = m::mock(\Elastica\Client::class);
         $mockClient->shouldReceive('request')->once()->andReturnUsing(
             function ($path, $method, $query, $params) {
-                $this->assertSame('/_search', $path);
+                $this->assertSame('licence/_search', $path);
                 $this->assertSame('GET', $method);
 
                 $this->assertArrayHasKey('query', $query);
@@ -250,7 +250,7 @@ class SearchTest extends MockeryTestCase
         $mockClient = m::mock(\Elastica\Client::class);
         $mockClient->shouldReceive('request')->once()->andReturnUsing(
             function ($path, $method, $query, $params) {
-                $this->assertSame('/_search', $path);
+                $this->assertSame('licence/_search', $path);
                 $this->assertSame('GET', $method);
 
                 $this->assertArrayHasKey('query', $query);
