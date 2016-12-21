@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Entity;
 
 /**
  * Create Vehicle List Document
@@ -29,13 +30,27 @@ final class CreateVehicleListDocument extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'Licence';
 
+    /**
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument $command Command to handle
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     public function handleCommand(CommandInterface $command)
     {
+        /** @var \Dvsa\Olcs\Api\Entity\Licence\Licence $licence */
+        $licence = $this->getRepo()->fetchById($command->getId());
+
         if ($command->getType() === 'dp') {
-            $template = 'GVDiscLetter';
+            $template = $licence->isNi() ?
+                Entity\Doc\Document::GV_DISC_LETTER_NI :
+                Entity\Doc\Document::GV_DISC_LETTER_GB;
             $description = 'New disc notification';
         } else {
-            $template = 'GVVehiclesList';
+            $template = $licence->isNi() ?
+                Entity\Doc\Document::GV_VEHICLE_LIST_NI :
+                Entity\Doc\Document::GV_VEHICLE_LIST_GB;
             $description = 'Goods Vehicle List';
         }
 

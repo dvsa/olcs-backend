@@ -43,6 +43,11 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
     const PSV_LICENCE_NI    = 1516; //templates/NI/PSV_LICENCE_V1.rtf
     const PSR_SR_LICENCE_NI = 1518; //templates/NI/PSVSRLicence.rtf
 
+    const GV_DISC_LETTER_GB  = 1730; // /templates/GB/GVDiscLetter.rtf
+    const GV_DISC_LETTER_NI  = 1731; // /templates/NI/GVDiscLetter.rtf
+    const GV_VEHICLE_LIST_GB = 1258; // /templates/GB/GVVehiclesList.rtf
+    const GV_VEHICLE_LIST_NI = 1513; // /templates/NI/GVVehiclesList.rtf
+
     /**
      * Document constructor.
      *
