@@ -706,6 +706,16 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * Is this licence an NI licence
+     *
+     * @return bool
+     */
+    public function isNi()
+    {
+        return $this->getNiFlag() === 'Y';
+    }
+
+    /**
      * Returns the latest publication by type from a licence
      * @param $type
      * @return mixed

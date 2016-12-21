@@ -36,27 +36,43 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleCommand()
+    /**
+     * @param $isDp
+     * @param $isNi
+     * @param $expectedTempateId
+     * @param $expectedTemplateDescription
+     *
+     * @dataProvider dataProviderTestHandleCommandAll
+     */
+    public function testHandleCommandAll($isDp, $isNi, $expectedTempateId, $expectedTemplateDescription)
     {
         $data = [
             'id' => 111,
             'user' => 1
         ];
+        if ($isDp) {
+            $data['type'] = 'dp';
+        }
+
         $command = Cmd::create($data);
+
+        $licence = m::mock();
+        $licence->shouldReceive('isNi')->once()->with()->andReturn($isNi);
+        $this->repoMap['Licence']->shouldReceive('fetchById')->with(111)->once()->andReturn($licence);
 
         $data = [
             'documentId' => 123,
-            'jobName' => 'Goods Vehicle List',
+            'jobName' => $expectedTemplateDescription,
             'user' => 1
         ];
         $result1 = new Result();
         $this->expectedSideEffect(Enqueue::class, $data, $result1);
 
         $data = [
-            'template' => 'GVVehiclesList',
+            'template' => $expectedTempateId,
             'query' => ['licence' => 111, 'user' => 1],
             'licence' => 111,
-            'description' => 'Goods Vehicle List',
+            'description' => $expectedTemplateDescription,
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST,
             'isExternal' => false,
@@ -88,56 +104,14 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testHandleCommandWithTypeDp()
+    public function dataProviderTestHandleCommandAll()
     {
-        $data = [
-            'id' => 111,
-            'type' => 'dp',
-            'user' => 1
+        return [
+            // is DP type, is NI, Expected description, Expected template ID,
+            [true, true, 1731, 'New disc notification'],
+            [true, false, 1730, 'New disc notification'],
+            [false, true, 1513, 'Goods Vehicle List'],
+            [false, false, 1258, 'Goods Vehicle List'],
         ];
-        $command = Cmd::create($data);
-
-        $data = [
-            'documentId' => 123,
-            'jobName' => 'New disc notification',
-            'user' => 1
-        ];
-        $result1 = new Result();
-        $this->expectedSideEffect(Enqueue::class, $data, $result1);
-
-        $data = [
-            'template' => 'GVDiscLetter',
-            'query' => ['licence' => 111, 'user' => 1],
-            'licence' => 111,
-            'description' => 'New disc notification',
-            'category' => Category::CATEGORY_LICENSING,
-            'subCategory' => Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST,
-            'isExternal' => false,
-            'application' => null,
-            'busReg' => null,
-            'case' => null,
-            'irfoOrganisation' => null,
-            'submission' => null,
-            'trafficArea' => null,
-            'transportManager' => null,
-            'operatingCentre' => null,
-            'opposition' => null,
-            'isScan' => 0,
-            'issuedDate' => null
-        ];
-        $result2 = new Result();
-        $result2->addId('document', 123);
-        $this->expectedSideEffect(GenerateAndStore::class, $data, $result2);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [
-                'document' => 123
-            ],
-            'messages' => []
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
     }
 }
