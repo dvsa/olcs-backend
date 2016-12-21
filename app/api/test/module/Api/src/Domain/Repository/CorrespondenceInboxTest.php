@@ -26,16 +26,11 @@ class CorrespondenceInboxTest extends RepositoryTestCase
         $maxDate = '2016-01-01';
 
         $qb = m::mock(QueryBuilder::class);
-        $qb->shouldReceive('addSelect')->with('d')->once()->andReturnSelf();
+        $qb->shouldReceive('addSelect')->with('d, l')->once()->andReturnSelf();
         $qb->shouldReceive('join')->with('m.document', 'd')->once()->andReturnSelf();
+        $qb->shouldReceive('join')->with('m.licence', 'l')->once()->andReturnSelf();
 
         $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('l.organisation', 'lo')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('lo.organisationUsers', 'lou')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('lou.user', 'louu')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('louu.contactDetails', 'louucd')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('d.continuationDetails', 'cd')->once()->andReturnSelf();
 
         $qb->shouldReceive('expr->eq')->with('l.translateToWelsh', 0)->once()->andReturn('condition1');
         $qb->shouldReceive('andWhere')->with('condition1')->once()->andReturnSelf();
@@ -81,15 +76,15 @@ class CorrespondenceInboxTest extends RepositoryTestCase
         $maxDate = '2016-01-01';
 
         $qb = m::mock(QueryBuilder::class);
-        $qb->shouldReceive('addSelect')->with('d')->once()->andReturnSelf();
+        $qb->shouldReceive('addSelect')->with('d, l, lo, lou, louu, louucd')->once()->andReturnSelf();
         $qb->shouldReceive('join')->with('m.document', 'd')->once()->andReturnSelf();
+        $qb->shouldReceive('join')->with('m.licence', 'l')->once()->andReturnSelf();
+        $qb->shouldReceive('join')->with('l.organisation', 'lo')->once()->andReturnSelf();
+        $qb->shouldReceive('join')->with('lo.organisationUsers', 'lou')->once()->andReturnSelf();
+        $qb->shouldReceive('join')->with('lou.user', 'louu')->once()->andReturnSelf();
+        $qb->shouldReceive('join')->with('louu.contactDetails', 'louucd')->once()->andReturnSelf();
 
         $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('l.organisation', 'lo')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('lo.organisationUsers', 'lou')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('lou.user', 'louu')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('louu.contactDetails', 'louucd')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('d.continuationDetails', 'cd')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('cd.checklistDocument', 'cdd')->once()->andReturnSelf();
 
