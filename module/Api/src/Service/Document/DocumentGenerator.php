@@ -94,7 +94,7 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
         // if template is an int then assume it is an ID to a document ID
         if (is_int($template)) {
             try {
-                /* @var $documentTemplate \Dvsa\Olcs\Api\Entity\Doc\DocTemplate */
+                /** @var \Dvsa\Olcs\Api\Entity\Doc\Document $documentTemplate */
                 $documentTemplate = $this->documentRepo->fetchById($template);
             } catch (\Dvsa\Olcs\Api\Domain\Exception\NotFoundException $e) {
                 throw new \Exception('Template not found');
