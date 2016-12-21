@@ -2,11 +2,14 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\PreviousConviction;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\Cases\Conviction;
+use Dvsa\Olcs\Api\Entity\Cases\Statement;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
@@ -29,6 +32,7 @@ use Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruRequested;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyImposedType;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyRequestedType;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyType;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Tm\TmEmployment;
 use Dvsa\Olcs\Api\Entity\Tm\TmQualification;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
@@ -36,12 +40,8 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Doctrine\Common\Collections\ArrayCollection;
-use \Dvsa\Olcs\Api\Entity\Cases\Statement;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\View\Renderer\PhpRenderer;
 
 /**
@@ -161,7 +161,7 @@ class SubmissionSectionTest extends MockeryTestCase
         $case->setStatements($this->generateStatements($case));
         $case->setOppositions($this->generateOppositions($case));
 
-        $case->setConvictions($this->generateConvictions($case));
+        $case->setConvictions($this->generateConvictions());
         $case->setConvictionNote('conv_note1');
 
         $case->setSeriousInfringements($this->generateSeriousInfringements($case));
@@ -171,13 +171,13 @@ class SubmissionSectionTest extends MockeryTestCase
         $case->setProhibitionNote('prohibition-note');
         $case->setProhibitions($this->generateArrayCollection('Prohibition'));
 
-        $case->setConditionUndertakings(
-            $this->generateConditionsUndertakings(
-                $case,
-                ConditionUndertaking::TYPE_CONDITION,
-                29
-            )
+        $cu = $this->generateConditionsUndertakings(
+            $case,
+            ConditionUndertaking::TYPE_CONDITION,
+            29
         );
+
+        $case->setConditionUndertakings($cu);
 
         return $case;
     }
@@ -289,9 +289,7 @@ class SubmissionSectionTest extends MockeryTestCase
             if ($i == 1) {
                 // assign some tms to the first application
                 $application->setTransportManagers(
-                    $this->generateTransportManagerApplications(
-                        $application
-                    )
+                    $this->generateTransportManagerApplications()
                 );
             }
             $applications->add($application);
@@ -412,38 +410,52 @@ class SubmissionSectionTest extends MockeryTestCase
         $licence = $this->generateLicence($organisation, 55);
 
         $entity->setApplication(
-            $this->generateApplication(2255, $licence, Application::APPLICATION_STATUS_UNDER_CONSIDERATION),
-            false
+            $this->generateApplication(2255, $licence, Application::APPLICATION_STATUS_UNDER_CONSIDERATION)
         );
         return $entity;
     }
 
-    protected function generateConditionsUndertakings($parentEntity, $conditionType, $id = 1)
-    {
-        $conditionUndertakings = new ArrayCollection();
+    protected function generateConditionsUndertakings(
+        $parentEntity,
+        $condType,
+        $id = 1,
+        $addedVia = null,
+        $attachTo = null,
+        $createdOn = null
+    ) {
+        $cu = new ConditionUndertaking($this->generateRefDataEntity($condType), 'Y', 'N');
 
-        $cu = new ConditionUndertaking(
-            $this->generateRefDataEntity($conditionType),
-            'Y',
-            'N'
-        );
+        $addedViaByParent = null;
+        $attachToByParent = null;
         if ($parentEntity instanceof Licence) {
-            $cu->setAddedVia($this->generateRefDataEntity(ConditionUndertaking::ADDED_VIA_LICENCE));
-            $cu->setAttachedTo($this->generateRefDataEntity(ConditionUndertaking::ATTACHED_TO_LICENCE));
+            $addedViaByParent = ConditionUndertaking::ADDED_VIA_LICENCE;
+            $attachToByParent = ConditionUndertaking::ATTACHED_TO_LICENCE;
+
         } elseif ($parentEntity instanceof Application) {
-            $cu->setAddedVia($this->generateRefDataEntity(ConditionUndertaking::ADDED_VIA_APPLICATION));
-            $cu->setAttachedTo($this->generateRefDataEntity(ConditionUndertaking::ATTACHED_TO_OPERATING_CENTRE));
+            $addedViaByParent = ConditionUndertaking::ADDED_VIA_APPLICATION;
+            $attachToByParent = ConditionUndertaking::ATTACHED_TO_OPERATING_CENTRE;
+
             $cu->setOperatingCentre($this->generateOperatingCentre());
-        } else {
-            $cu->setAddedVia($this->generateRefDataEntity(ConditionUndertaking::ADDED_VIA_CASE));
-            $cu->setAttachedTo($this->generateRefDataEntity(ConditionUndertaking::ATTACHED_TO_LICENCE));
+
+        } elseif ($parentEntity instanceof CasesEntity) {
+            $addedViaByParent = ConditionUndertaking::ADDED_VIA_CASE;
+            $attachToByParent = ConditionUndertaking::ATTACHED_TO_LICENCE;
+
             $cu->setCase($parentEntity);
         }
 
-        $cu->setId($id);
-        $cu->setVersion((100+$id));
-        $cu->setCreatedOn(new \DateTime('2011-01-23'));
+        $cu
+            ->setId($id)
+            ->setVersion((100 + $id))
+            ->setCreatedOn($createdOn ?: new \DateTime('2011-01-23'))
+            ->setAddedVia(
+                $this->generateRefDataEntity($addedVia ?: $addedViaByParent)
+            )
+            ->setAttachedTo(
+                $this->generateRefDataEntity($attachTo ?: $attachToByParent)
+            );
 
+        $conditionUndertakings = new ArrayCollection();
         $conditionUndertakings->add($cu);
 
         return $conditionUndertakings;
@@ -673,12 +685,7 @@ class SubmissionSectionTest extends MockeryTestCase
         $statements = new ArrayCollection();
 
         $statements->add(
-            $this->generateStatement(
-                253,
-                $case,
-                $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
-                1
-            )
+            $this->generateStatement(253, $case)
         );
 
         return $statements;
@@ -836,7 +843,7 @@ class SubmissionSectionTest extends MockeryTestCase
         $sis = new ArrayCollection();
 
         $sis->add(
-            $this->generateSeriousInfringement(734, $case)
+            $this->generateSeriousInfringement(734)
         );
 
         return $sis;
@@ -891,6 +898,7 @@ class SubmissionSectionTest extends MockeryTestCase
 
     protected function generateImposedErru($id = 101)
     {
+        /** @var SiPenaltyErruImposed | m\MockInterface $entity */
         $entity = m::mock(SiPenaltyErruImposed::class)->makePartial();
         $entity->setId($id);
         $entity->setVersion(23);
@@ -905,6 +913,7 @@ class SubmissionSectionTest extends MockeryTestCase
 
     protected function generateRequestedErru($id = 101)
     {
+        /** @var SiPenaltyErruRequested | m\MockInterface $entity */
         $entity = m::mock(SiPenaltyErruRequested::class)->makePartial();
         $entity->setId($id);
         $entity->setVersion(34);

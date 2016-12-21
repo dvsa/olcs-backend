@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Note\Note;
-use Dvsa\Olcs\Api\Entity\Si\ErruRequest;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -438,17 +437,22 @@ class Cases extends AbstractCases implements
     /**
      * Return Conditions and Undertakings that are added via Case. Used in submissions.
      *
-     * @return \Doctrine\Common\Collections\Collection|static
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getConditionUndertakingsAddedViaCase()
     {
+        $expr = Criteria::expr();
+
         $criteria = Criteria::create()
             ->where(
-                Criteria::expr()->in(
-                    'addedVia',
-                    [
-                        ConditionUndertaking::ADDED_VIA_CASE
-                    ]
+                $expr->andX(
+                    $expr->in(
+                        'addedVia',
+                        [
+                            ConditionUndertaking::ADDED_VIA_CASE
+                        ]
+                    ),
+                    $expr->eq('deletedDate', null)
                 )
             );
         return $this->getConditionUndertakings()->matching($criteria);
