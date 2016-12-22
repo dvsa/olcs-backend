@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
@@ -27,19 +26,20 @@ final class ConditionsAndUndertakings extends AbstractSection
     {
         $tables = ['undertakings' => [], 'conditions' => []];
 
+        $licence = $case->getLicence();
+
         // CUs attached to the case
-        $caseConditionsAndUndertakings = $case->getConditionUndertakingsAddedViaCase();
-        if (!empty($caseConditionsAndUndertakings)) {
+        $caseCus = $case->getConditionUndertakingsAddedViaCase();
+        if (!empty($caseCus)) {
             /** @var ConditionUndertaking $entity */
-            foreach ($caseConditionsAndUndertakings as $entity) {
+            foreach ($caseCus as $entity) {
                 $tables[$this->determineTableName($entity)][] =
                     $this->generateTableRow($entity, $entity->getCase()->getId());
             }
         }
 
         // CUs attached to the any other applications for this licence
-        $applications = $case->getLicence()->getApplications();
-
+        $applications = $licence->getApplications();
         if (!empty($applications)) {
             /** @var Application $application */
             foreach ($applications as $application) {
@@ -52,10 +52,16 @@ final class ConditionsAndUndertakings extends AbstractSection
         }
 
         // CUs attached to the licence
-        $licenceConditionsUndertakings = $case->getLicence()->getConditionUndertakingsAddedViaLicence();
-        foreach ($licenceConditionsUndertakings as $entity) {
+        $licCus = $licence->getConditionUndertakingsAddedViaLicence();
+        foreach ($licCus as $entity) {
             $tables[$this->determineTableName($entity)][] =
-                $this->generateTableRow($entity, $case->getLicence()->getLicNo());
+                $this->generateTableRow($entity, $licence->getLicNo());
+        }
+
+        // import fix - CUs imported as ViaApp, but ApplicationId not specified (instead specified LicenceId)
+        $licCus = $licence->getConditionUndertakingsAddedViaImport();
+        foreach ($licCus as $entity) {
+            $tables[$this->determineTableName($entity)][] = $this->generateTableRow($entity);
         }
 
         usort(
@@ -89,7 +95,11 @@ final class ConditionsAndUndertakings extends AbstractSection
      */
     private function determineTableName(ConditionUndertaking $entity)
     {
-        return $entity->getConditionType()->getId() == 'cdt_und' ? 'undertakings' : 'conditions';
+        return (
+            $entity->getConditionType()->getId() == ConditionUndertaking::TYPE_UNDERTAKING
+            ? 'undertakings'
+            : 'conditions'
+        );
     }
 
     /**
