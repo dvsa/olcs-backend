@@ -17,7 +17,7 @@ use Zend\Mvc\Controller\PluginManager;
 use Zend\View\Model\JsonModel;
 
 /**
- * @covers Dvsa\Olcs\Api\Controller\GenericController
+ * @covers \Dvsa\Olcs\Api\Controller\GenericController
  */
 class GenericControllerTest extends TestCase
 {
@@ -243,6 +243,9 @@ class GenericControllerTest extends TestCase
 
         $mockStream = m::mock(\Zend\Http\Response\Stream::class);
 
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('streamResult')->with($mockStream)->andReturn('EXPECT');
+
         $mockParams = m::mock(Params::class)
             ->shouldReceive('__invoke')->with('dto')->andReturn($dto)
             ->getMock();
@@ -251,16 +254,12 @@ class GenericControllerTest extends TestCase
             ->shouldReceive('handleQuery')->with($dto)->andReturn($mockStream)
             ->getMock();
 
-        $mockSl = m::mock(PluginManager::class)
-            ->shouldReceive('get')->with('params', null)->andReturn($mockParams)
-            ->shouldReceive('get')->with('QueryHandlerManager')->andReturn($mockQueryHandler)
-            ->shouldReceive('setController')
-            ->getMock();
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
 
         //  call & check
         $actual = $this->setupSut($mockSl)->getList();
 
-        static::assertSame($mockStream, $actual);
+        static::assertSame('EXPECT', $actual);
     }
 
     public function testGetListSingle()

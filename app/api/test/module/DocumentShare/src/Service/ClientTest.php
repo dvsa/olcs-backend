@@ -61,7 +61,7 @@ class ClientTest extends MockeryTestCase
     public function testReadOk()
     {
         $expectContent = 'unit_ABCD1234';
-        $content = '{"content": "' . base64_encode($expectContent) . '"}';
+        $content = '{"content":"' . base64_encode($expectContent) . '"}';
 
         $mockResponse = m::mock(\Zend\Http\Response::class)
             ->shouldReceive('isSuccess')->once()->andReturn(true)
@@ -77,7 +77,7 @@ class ClientTest extends MockeryTestCase
         $this->mockClient
             ->expects(static::once())
             ->method('setStream')
-            ->with(static::stringContains('/download'))
+            ->with(static::stringContains('/' . Client::DS_DOWNLOAD_FILE_PREFIX))
             ->willReturnCallback(
                 function ($filePath) use ($content) {
                     file_put_contents($filePath, $content);
@@ -147,7 +147,7 @@ class ClientTest extends MockeryTestCase
 
     public function testReadNullProcessErr()
     {
-        $content = '{"message": "unit_ErrMsg"}';
+        $content = '{"message":"unit_ErrMsg"}';
 
         $mockResponse = m::mock(\Zend\Http\Response::class)
             ->shouldReceive('isSuccess')->once()->andReturn(true)

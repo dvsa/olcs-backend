@@ -8,8 +8,9 @@ use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
 use Dvsa\Olcs\Api\Mvc\Controller\Plugin;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use org\bovigo\vfs\vfsStream;
+use Zend\Http\Headers;
 use Zend\Http\Response as HttpResponse;
-use Zend\Stdlib\JsonSerializable\PhpLegacyCompatibility;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -106,13 +107,6 @@ class ResponseTest extends MockeryTestCase
             [
                 m::mock(VenueEntity::class)->shouldReceive('jsonSerialize')->andReturn(['item'])->getMock()
             ],
-            // Object not implemented JsonSerialize, but has a method
-            // #TODO Remove in Develop
-            [
-                m::mock(PhpLegacyCompatibility::class)
-                    ->shouldReceive('jsonSerialize')->andReturn(['item'])
-                    ->getMock(),
-            ],
         ];
     }
 
@@ -126,6 +120,45 @@ class ResponseTest extends MockeryTestCase
             $result->serialize()
         );
         $this->assertEquals(HttpResponse::STATUS_CODE_200, $this->response->getStatusCode());
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testStreamResult()
+    {
+        $streanContent = 'UNIT_expect_content';
+        $streamHeaders = [
+            'Content-Type: unittest/plain',
+            'X-UnitTest: expect',
+        ];
+
+        $vfs = vfsStream::setup('temp');
+        $tmpFilePath = vfsStream::newFile('stream')
+            ->withContent($streanContent)
+            ->at($vfs)
+            ->url();
+        $fh = fopen($tmpFilePath, 'rb');
+
+        $mockHeaders = new Headers();
+        $mockHeaders->addHeaders($streamHeaders);
+
+        $mockSteam = m::mock(HttpResponse\Stream::class);
+        $mockSteam->shouldReceive('getHeaders')->once()->andReturn($mockHeaders);
+        $mockSteam->shouldReceive('getStream')->times(2)->andReturn($fh);
+
+        ob_start();
+        $actual = $this->sut->streamResult($mockSteam);
+
+        $output = ob_get_contents();
+        ob_end_clean();
+
+        static::assertEquals(false, $actual);
+
+        static::assertEquals($streanContent, $output);
+        static::assertEquals($streamHeaders, xdebug_get_headers());
+
+        static::assertEquals(206, $this->sut->getController()->getResponse()->getStatusCode());
     }
 
     public function testSuccessfulUpdate()

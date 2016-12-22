@@ -2,7 +2,7 @@
 
 namespace OlcsTest\Api;
 
-use Dvsa\Olcs\Api\Module as Sut;
+use Dvsa\Olcs\Api\Module;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Olcs\Logging\Log\Logger;
@@ -17,11 +17,17 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class ModuleTest extends MockeryTestCase
 {
+    /** @var  Module */
+    private $sut;
+
+    public function setUp()
+    {
+        $this->sut = m::mock(Module::class)->makePartial()->shouldAllowMockingProtectedMethods();
+    }
+
     public function testOnBootstrap()
     {
         $loginId = 123;
-
-        $sut = m::mock(Sut::class)->makePartial();
 
         $mockShm = m::mock();
         $mockShm->shouldReceive('attach')->once()
@@ -56,20 +62,18 @@ class ModuleTest extends MockeryTestCase
         $mockEvent = m::mock(Event::class);
         $mockEvent->shouldReceive('getApplication')->andReturn($mockApp);
 
-        $sut->onBootstrap($mockEvent);
-
+        $this->sut->onBootstrap($mockEvent);
     }
 
     public function testLogResponseHttp()
     {
-        $sut = m::mock(\Dvsa\Olcs\Api\Module::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $logWriter = $this->setupLogger();
 
         $mockRespone = m::mock(\Zend\Http\PhpEnvironment\Response::class);
         $mockRespone->shouldReceive('getContent')->with()->once()->andReturn('CONTENT');
         $mockRespone->shouldReceive('getStatusCode')->with()->twice()->andReturn(200);
 
-        $sut->logResponse($mockRespone);
+        $this->sut->logResponse($mockRespone);
 
         $this->assertCount(1, $logWriter->events);
         $this->assertSame(\Zend\Log\Logger::DEBUG, $logWriter->events[0]['priority']);
@@ -79,14 +83,18 @@ class ModuleTest extends MockeryTestCase
 
     public function testLogResponseHttpEmpty()
     {
-        $sut = m::mock(\Dvsa\Olcs\Api\Module::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $logWriter = $this->setupLogger();
 
         $mockRespone = m::mock(\Zend\Http\PhpEnvironment\Response::class);
         $mockRespone->shouldReceive('getContent')->with()->once()->andReturn('');
         $mockRespone->shouldReceive('getStatusCode')->with()->andReturn(200);
+        $mockRespone->shouldReceive('getHeaders')->andReturn(
+            m::mock()
+                ->shouldReceive('has')->andReturn(false)
+                ->getMock()
+        );
 
-        $sut->logResponse($mockRespone);
+        $this->sut->logResponse($mockRespone);
 
         $this->assertCount(2, $logWriter->events);
         $this->assertSame(\Zend\Log\Logger::ERR, $logWriter->events[0]['priority']);
@@ -95,29 +103,41 @@ class ModuleTest extends MockeryTestCase
 
     public function testLogResponseHttpEmpty204()
     {
-        $sut = m::mock(\Dvsa\Olcs\Api\Module::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $logWriter = $this->setupLogger();
 
         $mockRespone = m::mock(\Zend\Http\PhpEnvironment\Response::class);
         $mockRespone->shouldReceive('getContent')->with()->once()->andReturn('');
         $mockRespone->shouldReceive('getStatusCode')->with()->andReturn(204);
 
-        $sut->logResponse($mockRespone);
+        $this->sut->logResponse($mockRespone);
 
         $this->assertCount(1, $logWriter->events);
         $this->assertNotContains('API Response is empty', $logWriter->events[0]);
     }
 
+    public function testLogResponseHttpEmptyOlcsDownloadHeader()
+    {
+        $logWriter = $this->setupLogger();
+
+        $mockRespone = m::mock(\Zend\Http\PhpEnvironment\Response::class);
+        $mockRespone->shouldReceive('getContent')->with()->once()->andReturn('');
+        $mockRespone->shouldReceive('getStatusCode')->with()->andReturn(206);
+
+        $this->sut->logResponse($mockRespone);
+
+        $this->assertCount(1, $logWriter->events);
+        $this->assertNotContains('API Response is empty', current($logWriter->events));
+    }
+
     public function testLogResponseCli()
     {
-        $sut = m::mock(\Dvsa\Olcs\Api\Module::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $logWriter = $this->setupLogger();
 
         $mockRespone = m::mock(\Zend\Console\Response::class);
         $mockRespone->shouldReceive('getContent')->with()->once()->andReturn('CONTENT');
         $mockRespone->shouldReceive('getErrorLevel')->with()->twice()->andReturn(0);
 
-        $sut->logResponse($mockRespone);
+        $this->sut->logResponse($mockRespone);
 
         $this->assertCount(1, $logWriter->events);
         $this->assertSame(\Zend\Log\Logger::DEBUG, $logWriter->events[0]['priority']);
@@ -127,14 +147,13 @@ class ModuleTest extends MockeryTestCase
 
     public function testLogResponseCliError()
     {
-        $sut = m::mock(\Dvsa\Olcs\Api\Module::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $logWriter = $this->setupLogger();
 
         $mockRespone = m::mock(\Zend\Console\Response::class);
         $mockRespone->shouldReceive('getContent')->with()->once()->andReturn('CONTENT');
         $mockRespone->shouldReceive('getErrorLevel')->with()->twice()->andReturn(1);
 
-        $sut->logResponse($mockRespone);
+        $this->sut->logResponse($mockRespone);
 
         $this->assertCount(1, $logWriter->events);
         $this->assertSame(\Zend\Log\Logger::ERR, $logWriter->events[0]['priority']);
@@ -144,7 +163,6 @@ class ModuleTest extends MockeryTestCase
 
     public function testLogResponseContentLong()
     {
-        $sut = m::mock(\Dvsa\Olcs\Api\Module::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $logWriter = $this->setupLogger();
 
         $content = str_repeat('X', 1010);
@@ -153,7 +171,7 @@ class ModuleTest extends MockeryTestCase
         $mockRespone->shouldReceive('getContent')->with()->once()->andReturn($content);
         $mockRespone->shouldReceive('getStatusCode')->with()->twice()->andReturn(200);
 
-        $sut->logResponse($mockRespone);
+        $this->sut->logResponse($mockRespone);
 
         $this->assertCount(1, $logWriter->events);
         $this->assertSame(\Zend\Log\Logger::DEBUG, $logWriter->events[0]['priority']);
