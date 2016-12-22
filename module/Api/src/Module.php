@@ -7,13 +7,24 @@ use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\ResponseSender\SendResponseEvent;
-use Zend\ServiceManager\ServiceManager;
 
 /**
  * Module class
  */
 class Module implements BootstrapListenerInterface
 {
+    private static $allowEmptyStatusCodes = [
+        \Zend\Http\PhpEnvironment\Response::STATUS_CODE_204,
+        \Zend\Http\PhpEnvironment\Response::STATUS_CODE_206,
+    ];
+
+    /**
+     * Bootstrap
+     *
+     * @param EventInterface $e Event
+     *
+     * @return void
+     */
     public function onBootstrap(EventInterface $e)
     {
         $sm = $e->getApplication()->getServiceManager();
@@ -36,6 +47,11 @@ class Module implements BootstrapListenerInterface
         $this->setLoggerUser($e->getApplication()->getServiceManager());
     }
 
+    /**
+     * Config
+     *
+     * @return mixed
+     */
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
@@ -44,7 +60,9 @@ class Module implements BootstrapListenerInterface
     /**
      * Set the user ID in the log processor so that it can be included in the log files
      *
-     * @param type $serviceManager
+     * @param \Zend\ServiceManager\ServiceManager $serviceManager Service Manager
+     *
+     * @return void
      */
     private function setLoggerUser(\Zend\ServiceManager\ServiceManager $serviceManager)
     {
@@ -56,7 +74,9 @@ class Module implements BootstrapListenerInterface
     /**
      * Add details of the response to the log
      *
-     * @param \Zend\Stdlib\ResponseInterface $response
+     * @param \Zend\Stdlib\ResponseInterface $response Response
+     *
+     * @return void
      */
     protected function logResponse(\Zend\Stdlib\ResponseInterface $response)
     {
@@ -73,10 +93,14 @@ class Module implements BootstrapListenerInterface
                 ['errorLevel' => $response->getErrorLevel(), 'content' => $content]
             );
         }
+
         if ($response instanceof \Zend\Http\PhpEnvironment\Response) {
-            if (empty($content) && $response->getStatusCode() !== \Zend\Http\PhpEnvironment\Response::STATUS_CODE_204) {
+            if (
+                empty($content)
+                && !in_array($response->getStatusCode(), self::$allowEmptyStatusCodes, true)
+            ) {
                 // Response should never be empty, this is a symptom that the backend has gone wrong
-                // Except if the status code is 204 No content
+                // Except if the status code is 204 No content and 206 - Partial content (Download)
                 Logger::err('API Response is empty');
             }
             Logger::logResponse(

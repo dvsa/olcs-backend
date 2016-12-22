@@ -15,6 +15,8 @@ class Client
 {
     const ERR_RESP_FAIL = 'Document store returns invalid response';
 
+    const DS_DOWNLOAD_FILE_PREFIX = 'ds_dwnld_';
+
     /** @var HttpClient */
     protected $httpClient;
     /** @var string */
@@ -49,11 +51,13 @@ class Client
      *
      * @param string $uuid UUID
      *
-     * @return @void
+     * @return $this
      */
     public function setUuid($uuid)
     {
         $this->uuid = $uuid;
+
+        return $this;
     }
 
     /**
@@ -121,15 +125,15 @@ class Client
      */
     public function read($path)
     {
-        $path = $this->getContentUri($path);
+        $tmpFileName = tempnam(sys_get_temp_dir(), self::DS_DOWNLOAD_FILE_PREFIX);
 
         try {
-            $tmpFileName = tempnam(sys_get_temp_dir(), 'download');
-
             /** @var  \Zend\Http\Response\Stream $response */
             $response = $this->getHttpClient()
                 ->setRequest($this->getRequest())
-                ->setUri($path)
+                ->setUri(
+                    $this->getContentUri($path)
+                )
                 ->setStream($tmpFileName)
                 ->setMethod(Request::METHOD_GET)
                 ->send();
@@ -140,20 +144,24 @@ class Client
                 return null;
             }
 
+            $file = new File();
+            $file->setContentFromDsStream($tmpFileName);
+
+            if ($file->getSize() !== 0) {
+                return $file;
+            }
+
             $data = (array)json_decode(file_get_contents($tmpFileName));
+
+        } catch (\Exception $e) {
+            unset($file);
+
+            throw $e;
 
         } finally {
             if (is_file($tmpFileName)) {
                 unlink($tmpFileName);
             }
-        }
-
-        //  process file content
-        $content = (isset($data['content']) ? base64_decode($data['content']) : false);
-        if ($content !== false) {
-            $file = new File();
-            $file->setContent($content);
-            return $file;
         }
 
         //  process error message
