@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 
 /**
  * Class ConditionsAndUndertakingsTest
@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class ConditionsAndUndertakingsTest extends SubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\ConditionsAndUndertakings';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\ConditionsAndUndertakings::class;
 
     /**
      * Filter provider
@@ -20,12 +20,34 @@ class ConditionsAndUndertakingsTest extends SubmissionSectionTest
     public function sectionTestProvider()
     {
         $case = $this->getCase();
+        $case->getLicence()->addConditionUndertakings(
+            $this->generateConditionsUndertakings(
+                $case->getLicence(),
+                ConditionUndertaking::TYPE_CONDITION,
+                999,
+                ConditionUndertaking::ADDED_VIA_APPLICATION,
+                ConditionUndertaking::ATTACHED_TO_OPERATING_CENTRE,
+                new \DateTime('2016-12-20')
+            )
+        );
 
         $expectedResult = [
             'data' => [
                 'tables' => [
                     'conditions' => [
                         0 => [
+                            'id' => 999,
+                            'version' => 1099,
+                            'createdOn' => '20/12/2016',
+                            'parentId' => '',
+                            'addedVia' => 'cav_app-desc',
+                            'isFulfilled' => 'Y',
+                            'isDraft' => 'N',
+                            'attachedTo' => 'cat_oc-desc',
+                            'OcAddress' => [],
+                            'notes' => null,
+                        ],
+                        1 => [
                             'id' => 58,
                             'version' => 158,
                             'createdOn' => '23/01/2011',
@@ -37,7 +59,7 @@ class ConditionsAndUndertakingsTest extends SubmissionSectionTest
                             'OcAddress' => [],
                             'notes' => null
                         ],
-                        1 => [
+                        2 => [
                             'id' => 29,
                             'version' => 129,
                             'createdOn' => '23/01/2011',
@@ -48,7 +70,7 @@ class ConditionsAndUndertakingsTest extends SubmissionSectionTest
                             'attachedTo' => 'cat_lic-desc',
                             'OcAddress' => [],
                             'notes' => null
-                        ]
+                        ],
                     ],
                     'undertakings' => [
                         0 => [
