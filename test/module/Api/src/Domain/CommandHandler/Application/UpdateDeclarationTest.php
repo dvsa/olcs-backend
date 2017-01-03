@@ -39,7 +39,8 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            'int_sts_requested'
+            'int_sts_requested',
+            'sig_physical_signature',
         ];
 
         parent::initReferences();
@@ -53,6 +54,7 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
                 'id' => 627,
                 'version' => 45,
                 'declarationConfirmation' => 'Y',
+                'signatureType' => 'sig_physical_signature'
             ]
         );
 
@@ -86,6 +88,7 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
         $this->assertEquals('Y', $application->getDeclarationConfirmation());
         $this->assertEquals('STATUS', $application->getInterimStatus());
         $this->assertEquals('SOME REASON', $application->getInterimReason());
+        $this->assertEquals('sig_physical_signature', $application->getSignatureType());
     }
 
     public function testHandleCommandInterimNo()

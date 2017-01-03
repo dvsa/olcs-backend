@@ -45,13 +45,16 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
+        $repo = $this->getRepo();
 
         /* @var $application Application  */
-        $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
-        $application->setDeclarationConfirmation($command->getDeclarationConfirmation());
+        $application = $repo->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+        if ($command->getDeclarationConfirmation() === 'Y') {
+            $application->setDeclarationConfirmation($command->getDeclarationConfirmation());
+        }
         if ($command->getInterimRequested() === 'Y') {
             $application->setInterimStatus(
-                $this->getRepo()->getRefdataReference(Application::INTERIM_STATUS_REQUESTED)
+                $repo->getRefdataReference(Application::INTERIM_STATUS_REQUESTED)
             );
             $application->setInterimReason($command->getInterimReason());
         }
@@ -59,8 +62,11 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
             $application->setInterimStatus(null);
             $application->setInterimReason(null);
         }
+        if ($command->getSignatureType()) {
+            $application->setSignatureType($repo->getRefdataReference($command->getSignatureType()));
+        }
 
-        $this->getRepo()->save($application);
+        $repo->save($application);
 
         // if interimRequested is Y or N (eg it is specified)
         if ($command->getInterimRequested() === 'Y' || $command->getInterimRequested() === 'N') {
@@ -71,7 +77,9 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
         }
 
         // update completion
-        $result->merge($this->updateApplicationCompletionCommand($command));
+        if ($command->getDeclarationConfirmation() === 'Y') {
+            $result->merge($this->updateApplicationCompletionCommand($command));
+        }
 
         $result->addId('application', $application->getId());
         $result->addMessage('Update declaration successful');
