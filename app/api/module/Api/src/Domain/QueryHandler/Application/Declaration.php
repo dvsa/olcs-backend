@@ -1,15 +1,12 @@
 <?php
 
-/**
- * Application
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 
 /**
  * Application
@@ -19,6 +16,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class Declaration extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Application';
+    protected $extraRepos = ['SystemParameter'];
 
     /**
      * @var \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
@@ -43,6 +41,7 @@ class Declaration extends AbstractQueryHandler
 
         $this->sectionAccessService = $mainServiceLocator->get('SectionAccessService');
         $this->feesHelper = $mainServiceLocator->get('FeesHelperService');
+        $this->reviewService = $mainServiceLocator->get('Review\ApplicationUndertakings');
 
         return parent::createService($serviceLocator);
     }
@@ -57,7 +56,7 @@ class Declaration extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        /* @var $application \Dvsa\Olcs\Api\Entity\Application\Application */
+        /* @var $application ApplicationEntity */
         $application = $this->getRepo()->fetchUsingId($query);
 
         return $this->result(
@@ -78,7 +77,26 @@ class Declaration extends AbstractQueryHandler
                 ),
                 'sections' => $this->sectionAccessService->getAccessibleSections($application),
                 'variationCompletion' => $application->getVariationCompletion(),
+                'disableSignatures' =>
+                    (bool)$this->getRepo('SystemParameter')->fetchValue(SystemParameter::DISABLE_GDS_VERIFY_SIGNATURES),
+                'declarations' => $this->getDeclarations($application),
             ]
         );
+    }
+
+    /**
+     * Get declarations
+     *
+     * @param ApplicationEntity $application application
+     *
+     * @return string
+     */
+    protected function getDeclarations($application)
+    {
+        $data = $application->serialize();
+        $data['isGoods'] = $application->isGoods();
+        $data['isInternal'] = false;
+
+        return $this->reviewService->getMarkup($data);
     }
 }
