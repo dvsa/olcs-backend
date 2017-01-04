@@ -62,17 +62,9 @@ final class ProcessInboxDocuments extends AbstractCommandHandler implements Emai
         $emailList = $repo->getAllRequiringReminder($minDate, $maxReminderDate);
         $result->addMessage('Found ' . count($emailList) . ' records to email');
 
-        Logger::debug('#REMOVE-ME Found ' . count($emailList) . ' records to email;');
-
         foreach ($emailList as $idx => $row) {
             /** @var \Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox $row */
             $document = $row->getDocument();
-            Logger::debug(
-                '#REMOVE-ME' . $idx . ' ProcessInboxDocs::sendReminders: ' .
-                'type: ' . gettype($row) . '; ' .
-                'class: ' . get_class($row) . '; ' .
-                '$row->getDocument() === null: ' . var_export($document === null, 1) . ';'
-            );
 
             $licence = $row->getLicence();
             $licId = $licence->getId();
@@ -126,7 +118,9 @@ final class ProcessInboxDocuments extends AbstractCommandHandler implements Emai
                 Logger::err(
                     $msg,
                     [
-                        'trace' => $e->getTrace(),
+                        'message' => $e->getMessage(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
                     ]
                 );
             }
@@ -155,6 +149,7 @@ final class ProcessInboxDocuments extends AbstractCommandHandler implements Emai
         $printList = $this->getRepo()->getAllRequiringPrint($minDate, $maxPrintDate);
         $result->addMessage('Found ' . count($printList) . ' records to print');
 
+        /** @var \Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox $row */
         foreach ($printList as $row) {
             $licence = $row->getLicence();
             $document = $row->getDocument();

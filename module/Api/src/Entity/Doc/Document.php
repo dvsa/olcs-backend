@@ -50,6 +50,11 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
     const BUS_REG_VARIATION_REFUSE_SHORT_NOTICE = 1240;  //  /templates/GB/BUS_REG_VARIATION_REFUSE_SHORT_NOTICE.rtf
     const BUS_REG_CANCELLATION_REFUSE_SHORT_NOTICE = 1241;   //  /te.../GB/BUS_REG_CANCELLATION_REFUSE_SHORT_NOTICE.rtf
 
+    const GV_DISC_LETTER_GB  = 1730; // /templates/GB/GVDiscLetter.rtf
+    const GV_DISC_LETTER_NI  = 1731; // /templates/NI/GVDiscLetter.rtf
+    const GV_VEHICLE_LIST_GB = 1258; // /templates/GB/GVVehiclesList.rtf
+    const GV_VEHICLE_LIST_NI = 1513; // /templates/NI/GVVehiclesList.rtf
+
     /**
      * Document constructor.
      *

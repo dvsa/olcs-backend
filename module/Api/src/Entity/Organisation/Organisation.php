@@ -2,14 +2,15 @@
 
 namespace Dvsa\Olcs\Api\Entity\Organisation;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
-use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 
 /**
  * Organisation Entity
@@ -69,12 +70,19 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
             $criteria->expr()->eq('isAdministrator', 'Y')
         );
 
+        /** @var ArrayCollection $adminUsers */
         $adminUsers = $this->getOrganisationUsers()->matching($criteria);
 
         // unfortunately criteria doesn't work with a relations so need to filter manually
         $enabledOrgUsers = new ArrayCollection();
+
+        /** @var OrganisationUserEntity $orgUser */
         foreach ($adminUsers as $orgUser) {
-            if ($orgUser->getUser()->getAccountDisabled() !== 'Y') {
+            $user = $orgUser->getUser();
+            if (
+                $user instanceof UserEntity
+                && $user->getAccountDisabled() !== 'Y'
+            ) {
                 $enabledOrgUsers->add($orgUser);
             }
         }
@@ -128,7 +136,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     protected function getCalculatedBundleValues()
     {
         return [
-            'hasInforceLicences' => $this->hasInforceLicences()
+            'hasInforceLicences' => $this->hasInforceLicences(),
         ];
     }
 
@@ -188,7 +196,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      *
      * @param string $goodsOrPsv Return only licences of a given goodsOrPsv value
      *
-     * @return array LicenceEntity[]
+     * @return ArrayCollection LicenceEntity[]
      */
     public function getActiveLicences($goodsOrPsv = null)
     {
@@ -328,9 +336,12 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                 ]
             )
         );
+        /** @var ArrayCollection $newLicences */
         $newLicences = $this->getLicences()->matching($criteria);
 
         $totalLicencesWithNewGoodsApplications = 0;
+
+        /** @var LicenceEntity $licence */
         foreach ($newLicences as $licence) {
             $applications = $licence->getApplications();
             if ($applications->count() > 0 && $applications->first()->isGoods()) {
@@ -346,7 +357,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      * Status "under consideration" or "granted" and optionally "not submitted"
      *
      * @param bool $includeNotSubmitted
-     * @return \Doctrine\Common\Collections\Collection|static
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getOutstandingApplications($includeNotSubmitted = false)
     {
@@ -462,6 +473,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         } else {
             $licences = $this->getLicences();
             $trafficAreaCode = null;
+            /** @var LicenceEntity $licence */
             foreach ($licences as $licence) {
                 if ($licence->getStatus() &&
                     ($licence->getStatus()->getId() === LicenceEntity::LICENCE_STATUS_CANCELLED ||
