@@ -148,11 +148,14 @@ final class ResolvePayment extends AbstractCommandHandler implements
      */
     protected function createCreateTaskCommand()
     {
+        $currentUser = $this->getCurrentUser();
         $data = [
             'category' => Task::CATEGORY_LICENSING,
             'subCategory' => Task::SUBCATEGORY_LICENSING_GENERAL_TASK,
             'description' => Task::TASK_DESCRIPTION_FEE_DUE,
-            'actionDate' => (new DateTime())->format(\DateTime::W3C)
+            'actionDate' => (new DateTime())->format(\DateTime::W3C),
+            'assignedToUser' => $currentUser->getId(),
+            'assignedToTeam' => $currentUser->getTeam()->getId()
         ];
 
         return CreateTask::create($data);

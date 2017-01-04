@@ -267,11 +267,14 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      */
     protected function createTaskForOutstandingFee($fee)
     {
+        $currentUser = $this->getCurrentUser();
         $data = [
             'category' => Task::CATEGORY_LICENSING,
             'subCategory' => Task::SUBCATEGORY_LICENSING_GENERAL_TASK,
             'description' => Task::TASK_DESCRIPTION_FEE_DUE,
-            'actionDate' => (new DateTime())->format(\DateTime::W3C)
+            'actionDate' => (new DateTime())->format(\DateTime::W3C),
+            'assignedToUser' => $currentUser->getId(),
+            'assignedToTeam' => $currentUser->getTeam()->getId()
         ];
         if ($fee->getApplication() !== null) {
             $data['application'] = $fee->getApplication()->getId();
