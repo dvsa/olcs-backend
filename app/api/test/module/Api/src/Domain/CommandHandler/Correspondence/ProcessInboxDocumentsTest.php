@@ -30,6 +30,9 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
     /** @var  m\MockInterface */
     private $mockTempRenderer;
 
+    /** @var ProcessInboxDocuments  */
+    protected $sut;
+
     public function setUp()
     {
         $this->sut = new ProcessInboxDocuments();

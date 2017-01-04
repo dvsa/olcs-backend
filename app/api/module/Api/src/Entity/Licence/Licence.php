@@ -3,24 +3,24 @@
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
-use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
-use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
-use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
-use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 
 /**
  * Licence Entity
@@ -199,9 +199,9 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
                 Criteria::expr()->in(
                     'status',
                     [
-                        CommunityLic::STATUS_PENDING,
-                        CommunityLic::STATUS_ACTIVE,
-                        CommunityLic::STATUS_SUSPENDED
+                        CommunityLicEntity::STATUS_PENDING,
+                        CommunityLicEntity::STATUS_ACTIVE,
+                        CommunityLicEntity::STATUS_SUSPENDED,
                     ]
                 )
             )
@@ -337,6 +337,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
             $criteria->expr()->neq('id', $this->getId())
         );
 
+        /** @var ArrayCollection $otherActiveLicences */
         $otherActiveLicences = $this->getOrganisation()->getLicences()->matching($criteria);
 
         // goods_or_psv can be null
@@ -491,7 +492,9 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getOpenComplaintsCount()
     {
         $count = 0;
+        /** @var CasesEntity $case */
         foreach ($this->getCases() as $case) {
+            /** @var \Dvsa\Olcs\Api\Entity\Cases\Complaint $complaint */
             foreach ($case->getComplaints() as $complaint) {
                 if ($complaint->getIsCompliance() == 0 && $complaint->isOpen()) {
                     $count++;
@@ -504,6 +507,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getPiRecordCount()
     {
         $count = 0;
+        /** @var CasesEntity $case */
         foreach ($this->getCases() as $case) {
             if (!empty($case->getPublicInquiry())) {
                 $count++;
@@ -544,7 +548,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     /**
      * Get PSV discs that are not ceased
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getPsvDiscsNotCeased()
     {
@@ -643,19 +647,52 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     /**
      * Return Conditions and Undertakings that are added via Licence. Used in submissions.
      *
-     * @return \Doctrine\Common\Collections\Collection|static
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getConditionUndertakingsAddedViaLicence()
     {
+        $expr = Criteria::expr();
+
         $criteria = Criteria::create()
             ->where(
-                Criteria::expr()->in(
-                    'addedVia',
-                    [
-                        ConditionUndertaking::ADDED_VIA_LICENCE
-                    ]
+                $expr->andX(
+                    $expr->eq('deletedDate', null),
+                    $expr->in(
+                        'addedVia',
+                        [
+                            ConditionUndertaking::ADDED_VIA_LICENCE,
+                        ]
+                    )
                 )
             );
+
+        return $this->getConditionUndertakings()->matching($criteria);
+    }
+
+    /**
+     * Return Conditions and Undertakings those are incorrectly imported from OLBS db. It has via Application,
+     * but licenceId specified instead of applicationId
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getConditionUndertakingsAddedViaImport()
+    {
+        $expr = Criteria::expr();
+
+        $criteria = Criteria::create()
+            ->where(
+                $expr->andX(
+                    $expr->eq('deletedDate', null),
+                    $expr->eq('application', null),
+                    $expr->in(
+                        'addedVia',
+                        [
+                            ConditionUndertaking::ADDED_VIA_APPLICATION,
+                        ]
+                    )
+                )
+            );
+
         return $this->getConditionUndertakings()->matching($criteria);
     }
 
@@ -706,6 +743,16 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * Is this licence an NI licence
+     *
+     * @return bool
+     */
+    public function isNi()
+    {
+        return $this->getNiFlag() === 'Y';
+    }
+
+    /**
      * Returns the latest publication by type from a licence
      * @param $type
      * @return mixed
@@ -729,7 +776,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
                 return $pLink->getPublication();
             }
         }
-
     }
 
     /**
