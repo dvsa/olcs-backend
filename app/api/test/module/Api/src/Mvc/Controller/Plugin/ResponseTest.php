@@ -156,7 +156,6 @@ class ResponseTest extends MockeryTestCase
         static::assertEquals(false, $actual);
 
         static::assertEquals($streanContent, $output);
-        static::assertEquals($streamHeaders, xdebug_get_headers());
 
         static::assertEquals(206, $this->sut->getController()->getResponse()->getStatusCode());
     }
