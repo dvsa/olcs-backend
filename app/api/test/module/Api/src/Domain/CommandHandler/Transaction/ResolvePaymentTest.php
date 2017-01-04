@@ -85,6 +85,15 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $mockUser = m::mock(UserEntity::class)
             ->shouldReceive('getLoginId')
             ->andReturn('bob')
+            ->shouldReceive('getId')
+            ->andReturn(1)
+            ->shouldReceive('getTeam')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(2)
+                    ->getMock()
+            )
             ->getMock();
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
@@ -429,7 +438,9 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             'category' => Task::CATEGORY_LICENSING,
             'subCategory' => Task::SUBCATEGORY_LICENSING_GENERAL_TASK,
             'description' => Task::TASK_DESCRIPTION_FEE_DUE,
-            'actionDate' => (new DateTime('now'))->format(\DateTime::W3C)
+            'actionDate' => (new DateTime('now'))->format(\DateTime::W3C),
+            'assignedToUser' => 1,
+            'assignedToTeam' => 2
         ];
         $this->expectedSideEffect(CreateTask::class, $createTaskData, $taskResult);
 

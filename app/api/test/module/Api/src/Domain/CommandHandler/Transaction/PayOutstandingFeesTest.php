@@ -78,6 +78,15 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $mockUser = m::mock(UserEntity::class)
             ->shouldReceive('getLoginId')
             ->andReturn('bob')
+            ->shouldReceive('getId')
+            ->andReturn(1)
+            ->shouldReceive('getTeam')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(2)
+                ->getMock()
+            )
             ->getMock();
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
@@ -1293,6 +1302,8 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             'application' => 33,
             'busReg' => 44,
             'irfoOrganisation' => $orgId,
+            'assignedToUser' => 1,
+            'assignedToTeam' => 2
         ];
         $this->expectedSideEffect(CreateTask::class, $createTaskData, $taskResult);
 
