@@ -136,7 +136,11 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
      *
      * @var \Dvsa\Olcs\Api\Entity\Bus\LocalAuthority
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Bus\LocalAuthority", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Bus\LocalAuthority",
+     *     fetch="LAZY",
+     *     inversedBy="users"
+     * )
      * @ORM\JoinColumn(name="local_authority_id", referencedColumnName="id", nullable=true)
      */
     protected $localAuthority;
