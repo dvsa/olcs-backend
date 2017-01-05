@@ -49,7 +49,6 @@ final class GrantGoods extends AbstractCommandHandler implements TransactionedIn
             $result->merge($this->handleSideEffect(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
         }
         if ($this->isInternalUser()) {
-            //$result->merge($this->proxyCommand($command, CancelAllInterimFees::class));
             $result->merge($this->handleSideEffect(CancelAllInterimFeesCmd::create(['id' => $application->getId()])));
         }
 
