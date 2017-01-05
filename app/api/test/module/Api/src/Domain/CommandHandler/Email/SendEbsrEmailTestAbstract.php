@@ -89,50 +89,56 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
         $formattedEffectiveDate = $effectiveDate->format(SendEbsrAbstract::DATE_FORMAT);
 
         $contactDetails1 = m::mock(ContactDetailsEntity::class);
-        $contactDetails1->shouldReceive('getEmailAddress')->once()->andReturn($laEmail1User1);
+        $contactDetails1->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($laEmail1User1);
 
         $contactDetails2 = m::mock(ContactDetailsEntity::class);
-        $contactDetails2->shouldReceive('getEmailAddress')->once()->andReturn($laEmail1User2);
+        $contactDetails2->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($laEmail1User2);
 
-        $laUser1 = m::mock(UserEntity::class)->makePartial();
-        $laUser1->setContactDetails($contactDetails1);
+        $laUser1 = m::mock(UserEntity::class);
+        $laUser1->shouldReceive('getContactDetails')->once()->withNoArgs()->andReturn($contactDetails1);
 
-        $laUser2 = m::mock(UserEntity::class)->makePartial();
-        $laUser2->setContactDetails($contactDetails2);
+        $laUser2 = m::mock(UserEntity::class);
+        $laUser2->shouldReceive('getContactDetails')->once()->withNoArgs()->andReturn($contactDetails2);
 
-        $laUser3 = m::mock(UserEntity::class)->makePartial(); //tests missing contact details are safely ignored
+        //tests missing contact details are safely ignored
+        $laUser3 = m::mock(UserEntity::class);
+        $laUser3->shouldReceive('getContactDetails')->once()->withNoArgs()->andReturnNull();
 
-        $la1 = m::mock(LocalAuthorityEntity::class)->makePartial();
-        $la1->shouldReceive('getDescription')->once()->andReturn($laDescription1);
-        $la1->shouldReceive('getEmailAddress')->once()->andReturn($laEmail1);
-        $la1->shouldReceive('getUsers')->once()->andReturn(new ArrayCollection([$laUser1, $laUser2, $laUser3]));
+        $la1Users = new ArrayCollection([$laUser1, $laUser2, $laUser3]);
 
-        $la2 = m::mock(LocalAuthorityEntity::class)->makePartial();
-        $la2->shouldReceive('getDescription')->once()->andReturn($laDescription2);
-        $la2->shouldReceive('getEmailAddress')->once()->andReturn($laEmail2);
-        $la2->shouldReceive('getUsers')->once()->andReturn(new ArrayCollection());
+        $la1 = m::mock(LocalAuthorityEntity::class);
+        $la1->shouldReceive('getDescription')->once()->withNoArgs()->andReturn($laDescription1);
+        $la1->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($laEmail1);
+        $la1->shouldReceive('getUsers')->once()->withNoArgs()->andReturn($la1Users);
+
+        $la2 = m::mock(LocalAuthorityEntity::class);
+        $la2->shouldReceive('getDescription')->once()->withNoArgs()->andReturn($laDescription2);
+        $la2->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($laEmail2);
+        $la2->shouldReceive('getUsers')->once()->withNoArgs()->andReturn(new ArrayCollection());
 
         $la = new ArrayCollection([$la1, $la2]);
 
         $command = $cmdClass::create($this->cmdData);
 
         $busRegEntity = m::mock(BusRegEntity::class);
-        $busRegEntity->shouldReceive('getRegNo')->times(2)->andReturn($regNo);
-        $busRegEntity->shouldReceive('getStartPoint')->once()->andReturn($startPoint);
-        $busRegEntity->shouldReceive('getFinishPoint')->once()->andReturn($endPoint);
-        $busRegEntity->shouldReceive('getEffectiveDate')->once()->andReturn($effectiveDate);
-        $busRegEntity->shouldReceive('getLocalAuthoritys')->times(2)->andReturn($la);
-        $busRegEntity->shouldReceive('getFormattedServiceNumbers')->once()->andReturn($serviceNumbers);
+        $busRegEntity->shouldReceive('getRegNo')->times(2)->withNoArgs()->andReturn($regNo);
+        $busRegEntity->shouldReceive('getStartPoint')->once()->withNoArgs()->andReturn($startPoint);
+        $busRegEntity->shouldReceive('getFinishPoint')->once()->withNoArgs()->andReturn($endPoint);
+        $busRegEntity->shouldReceive('getEffectiveDate')->once()->withNoArgs()->andReturn($effectiveDate);
+        $busRegEntity->shouldReceive('getLocalAuthoritys')->times(2)->withNoArgs()->andReturn($la);
+        $busRegEntity->shouldReceive('getFormattedServiceNumbers')->once()->withNoArgs()->andReturn($serviceNumbers);
         $busRegEntity->shouldReceive('getPublicationSectionForGrantEmail')->never(); //only for registered & cancelled
         $busRegEntity->shouldReceive('getPublicationLinksForGrantEmail')->never(); //only for registered & cancelled
 
         $ebsrSubmissionEntity = m::mock(EbsrSubmissionEntity::class);
-        $ebsrSubmissionEntity->shouldReceive('getId')->andReturn($this->ebsrSubmissionId);
-        $ebsrSubmissionEntity->shouldReceive('getSubmittedDate')->andReturn($submittedDate);
-        $ebsrSubmissionEntity->shouldReceive('getOrganisationEmailAddress')->once()->andReturn($orgEmail);
-        $ebsrSubmissionEntity->shouldReceive('getBusReg')->once()->andReturn($busRegEntity);
-        $ebsrSubmissionEntity->shouldReceive('getOrganisation->getAdminEmailAddresses')->andReturn($orgAdminEmails);
-        $ebsrSubmissionEntity->shouldReceive('getDecodedSubmissionResult')->andReturn($submissionResult);
+        $ebsrSubmissionEntity->shouldReceive('getId')->withNoArgs()->andReturn($this->ebsrSubmissionId);
+        $ebsrSubmissionEntity->shouldReceive('getSubmittedDate')->withNoArgs()->andReturn($submittedDate);
+        $ebsrSubmissionEntity->shouldReceive('getOrganisationEmailAddress')->once()->withNoArgs()->andReturn($orgEmail);
+        $ebsrSubmissionEntity->shouldReceive('getBusReg')->once()->withNoArgs()->andReturn($busRegEntity);
+        $ebsrSubmissionEntity->shouldReceive('getOrganisation->getAdminEmailAddresses')
+            ->withNoArgs()
+            ->andReturn($orgAdminEmails);
+        $ebsrSubmissionEntity->shouldReceive('getDecodedSubmissionResult')->withNoArgs()->andReturn($submissionResult);
 
         $this->repoMap['EbsrSubmission']
             ->shouldReceive('fetchUsingId')
