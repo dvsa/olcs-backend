@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Grant Goods
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateGrantFee as CreateGrantFeeCmd;
@@ -17,6 +12,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask as CloseTexTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask as CloseFeeDueTaskCmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\CancelAllInterimFees as CancelAllInterimFeesCmd;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
@@ -51,6 +47,10 @@ final class GrantGoods extends AbstractCommandHandler implements TransactionedIn
             $result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
             // close fee due tasks, createGrantFee will create a new fee due task
             $result->merge($this->handleSideEffect(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
+        }
+        if ($this->isInternalUser()) {
+            //$result->merge($this->proxyCommand($command, CancelAllInterimFees::class));
+            $result->merge($this->handleSideEffect(CancelAllInterimFeesCmd::create(['id' => $application->getId()])));
         }
 
         $result->merge($this->createGrantFee($application));

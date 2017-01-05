@@ -311,7 +311,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         $this->mockedSmServices[\ZfcRbac\Service\AuthorizationService::class]
             ->shouldReceive('isGranted')
             ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
-            ->once()->atLeast()
+            ->atLeast()->once()
             ->andReturn($isInternalUser);
     }
 
