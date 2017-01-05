@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Undo Grant
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\Criteria;
@@ -18,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Application\UndoGrant as Cmd;
 use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Api\Domain\Command\Application\UndoCancelAllInterimFees as UndoCancelAllInterimFeesCmd;
 
 /**
  * Undo Grant
@@ -46,6 +42,7 @@ final class UndoGrant extends AbstractCommandHandler implements TransactionedInt
         $this->getRepo()->save($application);
 
         $result->merge($this->maybeCancelFees($application));
+        $result->merge($this->handleSideEffect(UndoCancelAllInterimFeesCmd::create(['id' => $application->getId()])));
 
         $count = $this->closeGrantTask($application);
 
