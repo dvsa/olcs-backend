@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Grant Goods Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateGrantFee;
@@ -15,6 +10,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantGoods as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\CancelAllInterimFees;
 
 /**
  * Grant Goods Test
@@ -48,6 +44,8 @@ class GrantGoodsTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
+        $this->setupIsInternalUser(false);
+
         $data = [
             'id' => 111
         ];
@@ -127,6 +125,10 @@ class GrantGoodsTest extends CommandHandlerTestCase
         $result1->addMessage('CreateGrantFee');
         $this->expectedSideEffect(CreateGrantFee::class, ['id' => 111], $result1);
 
+        $result2 = new Result();
+        $result2->addMessage('CancelAllInterimFees');
+        $this->expectedSideEffect(CancelAllInterimFees::class, ['id' => 111], $result2);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -136,7 +138,8 @@ class GrantGoodsTest extends CommandHandlerTestCase
                 'Licence status updated',
                 'CLOSE_TEX_TASK',
                 'CLOSE_FEEDUE_TASK',
-                'CreateGrantFee',
+                'CancelAllInterimFees',
+                'CreateGrantFee'
             ]
         ];
 
