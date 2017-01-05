@@ -18,7 +18,7 @@ final class UndoCancelAllInterimFees extends AbstractCommandHandler implements T
 
     /**
      * Handle command
-     * 
+     *
      * @param CommandInterface $command command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
