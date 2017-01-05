@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Grant Goods Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\UndoGrant as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\UndoCancelAllInterimFees as UndoCmd;
 
 /**
  * Grant Goods Test
@@ -105,13 +101,18 @@ class UndoGrantTest extends CommandHandlerTestCase
         $result1->addMessage('CancelLicenceFees');
         $this->expectedSideEffect(CancelFee::class, ['id' => 333], $result1);
 
+        $result2 = new Result();
+        $result2->addMessage('UndoCancelAllInterimFees');
+        $this->expectedSideEffect(UndoCmd::class, ['id' => 111], $result2);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
                 'CancelLicenceFees',
-                '1 Task(s) closed'
+                'UndoCancelAllInterimFees',
+                '1 Task(s) closed',
             ]
         ];
 
