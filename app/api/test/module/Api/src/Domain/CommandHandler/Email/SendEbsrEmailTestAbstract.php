@@ -22,6 +22,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrAbstract;
+use Dvsa\Olcs\Email\Data\Message;
 
 /**
  * Send Ebsr Cancelled Email Test
@@ -171,7 +172,11 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
 
         $this->assertSame(['ebsrSubmission' => $this->ebsrSubmissionId], $result->getIds());
         $this->assertSame(['Email sent'], $result->getMessages());
-        $this->assertSame($expectedCcAddresses, $this->sut->getMessage()->getCc());
+
+        /** @var Message $message */
+        $message = $this->sut->getMessage();
+        $this->assertSame($expectedCcAddresses, $message->getCc());
+        $this->assertSame('email.' . $this->template . '.subject', $message->getSubject());
     }
 
     public function handleCommandProvider()
