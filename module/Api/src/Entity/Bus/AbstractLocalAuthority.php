@@ -150,6 +150,15 @@ abstract class AbstractLocalAuthority implements BundleSerializableInterface, Js
     protected $version = 1;
 
     /**
+     * User
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\User\User", mappedBy="localAuthority")
+     */
+    protected $users;
+
+    /**
      * Initialise the collections
      *
      * @return void
@@ -167,6 +176,7 @@ abstract class AbstractLocalAuthority implements BundleSerializableInterface, Js
     public function initCollections()
     {
         $this->busRegs = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**
@@ -494,6 +504,69 @@ abstract class AbstractLocalAuthority implements BundleSerializableInterface, Js
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the user
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $users collection being set as the value
+     *
+     * @return LocalAuthority
+     */
+    public function setUsers($users)
+    {
+        $this->users = $users;
+
+        return $this;
+    }
+
+    /**
+     * Get the users
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * Add a users
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $users collection being added
+     *
+     * @return LocalAuthority
+     */
+    public function addUsers($users)
+    {
+        if ($users instanceof ArrayCollection) {
+            $this->users = new ArrayCollection(
+                array_merge(
+                    $this->users->toArray(),
+                    $users->toArray()
+                )
+            );
+        } elseif (!$this->users->contains($users)) {
+            $this->users->add($users);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a users
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $users collection being removed
+     *
+     * @return LocalAuthority
+     */
+    public function removeUsers($users)
+    {
+        if ($this->users->contains($users)) {
+            $this->users->removeElement($users);
+        }
+
+        return $this;
     }
 
     /**

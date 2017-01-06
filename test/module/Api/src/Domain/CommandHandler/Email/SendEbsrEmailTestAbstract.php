@@ -16,10 +16,13 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrAbstract;
+use Dvsa\Olcs\Email\Data\Message;
 
 /**
  * Send Ebsr Cancelled Email Test
@@ -63,12 +66,15 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
      *
      * @param string $orgEmail
      */
-    public function testHandleCommand($orgEmail, $adminEmail, $expectedToAddress, $cmdClass)
+    public function testHandleCommand($orgEmail, $adminEmail, $expectedToAddress, $extraCc, $cmdClass)
     {
         $regNo = 5678;
         $laDescription1 = 'la description 1';
-        $laEmail1 = 'terry.valtech@gmail.com';
-        $laEmail2 = 'terry.valtech+1@gmail.com';
+        $laEmail1 = 'terry.valtech+la1@gmail.com';
+        $laEmail1User1 = 'terry.valtech+la1user1@gmail.com';
+        $laEmail1User2 = 'terry.valtech+la1user2@gmail.com';
+        $laEmail2 = 'terry.valtech+la2@gmail.com';
+        $expectedCcAddresses = array_merge([$laEmail1, $laEmail1User1, $laEmail1User2, $laEmail2], $extraCc);
         $laDescription2 = 'la description 2';
         $startPoint = 'start point';
         $endPoint = 'end point';
@@ -82,35 +88,57 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
         $effectiveDate = new \DateTime('2015-01-16 00:00:00');
         $formattedEffectiveDate = $effectiveDate->format(SendEbsrAbstract::DATE_FORMAT);
 
-        $la1 = m::mock(LocalAuthorityEntity::class)->makePartial();
-        $la1->setDescription($laDescription1);
-        $la1->setEmailAddress($laEmail1);
+        $contactDetails1 = m::mock(ContactDetailsEntity::class);
+        $contactDetails1->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($laEmail1User1);
 
-        $la2 = m::mock(LocalAuthorityEntity::class)->makePartial();
-        $la2->setDescription($laDescription2);
-        $la2->setEmailAddress($laEmail2);
+        $contactDetails2 = m::mock(ContactDetailsEntity::class);
+        $contactDetails2->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($laEmail1User2);
+
+        $laUser1 = m::mock(UserEntity::class);
+        $laUser1->shouldReceive('getContactDetails')->once()->withNoArgs()->andReturn($contactDetails1);
+
+        $laUser2 = m::mock(UserEntity::class);
+        $laUser2->shouldReceive('getContactDetails')->once()->withNoArgs()->andReturn($contactDetails2);
+
+        //tests missing contact details are safely ignored
+        $laUser3 = m::mock(UserEntity::class);
+        $laUser3->shouldReceive('getContactDetails')->once()->withNoArgs()->andReturnNull();
+
+        $la1Users = new ArrayCollection([$laUser1, $laUser2, $laUser3]);
+
+        $la1 = m::mock(LocalAuthorityEntity::class);
+        $la1->shouldReceive('getDescription')->once()->withNoArgs()->andReturn($laDescription1);
+        $la1->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($laEmail1);
+        $la1->shouldReceive('getUsers')->once()->withNoArgs()->andReturn($la1Users);
+
+        $la2 = m::mock(LocalAuthorityEntity::class);
+        $la2->shouldReceive('getDescription')->once()->withNoArgs()->andReturn($laDescription2);
+        $la2->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($laEmail2);
+        $la2->shouldReceive('getUsers')->once()->withNoArgs()->andReturn(new ArrayCollection());
 
         $la = new ArrayCollection([$la1, $la2]);
 
         $command = $cmdClass::create($this->cmdData);
 
         $busRegEntity = m::mock(BusRegEntity::class);
-        $busRegEntity->shouldReceive('getRegNo')->times(2)->andReturn($regNo);
-        $busRegEntity->shouldReceive('getStartPoint')->once()->andReturn($startPoint);
-        $busRegEntity->shouldReceive('getFinishPoint')->once()->andReturn($endPoint);
-        $busRegEntity->shouldReceive('getEffectiveDate')->once()->andReturn($effectiveDate);
-        $busRegEntity->shouldReceive('getLocalAuthoritys')->times(2)->andReturn($la);
-        $busRegEntity->shouldReceive('getFormattedServiceNumbers')->once()->andReturn($serviceNumbers);
+        $busRegEntity->shouldReceive('getRegNo')->times(2)->withNoArgs()->andReturn($regNo);
+        $busRegEntity->shouldReceive('getStartPoint')->once()->withNoArgs()->andReturn($startPoint);
+        $busRegEntity->shouldReceive('getFinishPoint')->once()->withNoArgs()->andReturn($endPoint);
+        $busRegEntity->shouldReceive('getEffectiveDate')->once()->withNoArgs()->andReturn($effectiveDate);
+        $busRegEntity->shouldReceive('getLocalAuthoritys')->times(2)->withNoArgs()->andReturn($la);
+        $busRegEntity->shouldReceive('getFormattedServiceNumbers')->once()->withNoArgs()->andReturn($serviceNumbers);
         $busRegEntity->shouldReceive('getPublicationSectionForGrantEmail')->never(); //only for registered & cancelled
         $busRegEntity->shouldReceive('getPublicationLinksForGrantEmail')->never(); //only for registered & cancelled
 
         $ebsrSubmissionEntity = m::mock(EbsrSubmissionEntity::class);
-        $ebsrSubmissionEntity->shouldReceive('getId')->andReturn($this->ebsrSubmissionId);
-        $ebsrSubmissionEntity->shouldReceive('getSubmittedDate')->andReturn($submittedDate);
-        $ebsrSubmissionEntity->shouldReceive('getOrganisationEmailAddress')->once()->andReturn($orgEmail);
-        $ebsrSubmissionEntity->shouldReceive('getBusReg')->once()->andReturn($busRegEntity);
-        $ebsrSubmissionEntity->shouldReceive('getOrganisation->getAdminEmailAddresses')->andReturn($orgAdminEmails);
-        $ebsrSubmissionEntity->shouldReceive('getDecodedSubmissionResult')->andReturn($submissionResult);
+        $ebsrSubmissionEntity->shouldReceive('getId')->withNoArgs()->andReturn($this->ebsrSubmissionId);
+        $ebsrSubmissionEntity->shouldReceive('getSubmittedDate')->withNoArgs()->andReturn($submittedDate);
+        $ebsrSubmissionEntity->shouldReceive('getOrganisationEmailAddress')->once()->withNoArgs()->andReturn($orgEmail);
+        $ebsrSubmissionEntity->shouldReceive('getBusReg')->once()->withNoArgs()->andReturn($busRegEntity);
+        $ebsrSubmissionEntity->shouldReceive('getOrganisation->getAdminEmailAddresses')
+            ->withNoArgs()
+            ->andReturn($orgAdminEmails);
+        $ebsrSubmissionEntity->shouldReceive('getDecodedSubmissionResult')->withNoArgs()->andReturn($submissionResult);
 
         $this->repoMap['EbsrSubmission']
             ->shouldReceive('fetchUsingId')
@@ -150,13 +178,18 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
 
         $this->assertSame(['ebsrSubmission' => $this->ebsrSubmissionId], $result->getIds());
         $this->assertSame(['Email sent'], $result->getMessages());
+
+        /** @var Message $message */
+        $message = $this->sut->getMessage();
+        $this->assertSame($expectedCcAddresses, $message->getCc());
+        $this->assertSame('email.' . $this->template . '.subject', $message->getSubject());
     }
 
     public function handleCommandProvider()
     {
         return [
-            ['test@test.com', 'foo@bar.com', 'test@test.com', $this->cmdClass],
-            ['',  'foo@bar.com', 'foo@bar.com', $this->cmdClass]
+            ['test@test.com', 'foo@bar.com', 'test@test.com', ['foo@bar.com'], $this->cmdClass],
+            ['',  'foo@bar.com', 'foo@bar.com', [], $this->cmdClass]
         ];
     }
 }
