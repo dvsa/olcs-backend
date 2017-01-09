@@ -26,13 +26,12 @@ use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Domain\Repository\LocalAuthority as LocalAuthorityRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
-use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessPack as ProcessPackCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks as UpdateDocumentLinksCmd;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateBusFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateTxcInbox as CreateTxcInboxCmd;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrReceived as SendEbsrReceivedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefreshed as SendEbsrRefreshedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrErrors as SendEbsrErrorsCmd;
@@ -462,7 +461,6 @@ final class ProcessPack extends AbstractCommandHandler implements
         $busRegId = $busReg->getId();
         $sideEffects = $this->persistDocuments($ebsrData, $busReg, $ebsrSub, $docPath);
         $sideEffects[] = $this->createTxcInboxCmd($busRegId);
-        $sideEffects[] = $this->createTaskCommand($busReg);
         $sideEffects[] = $this->getRequestMapQueueCmd($busReg->getId());
 
         if ($busReg->isChargeableStatus()) {
@@ -562,7 +560,7 @@ final class ProcessPack extends AbstractCommandHandler implements
      */
     private function getRequestMapQueueCmd($busRegId)
     {
-        return RequestMapQueueCmd::create(['id' => $busRegId, 'scale' => 'auto']);
+        return RequestMapQueueCmd::create(['id' => $busRegId, 'scale' => 'auto', 'isFromEbsr' => true]);
     }
 
     /**
@@ -570,7 +568,7 @@ final class ProcessPack extends AbstractCommandHandler implements
      *
      * @param int $ebsrId EBSR submission id
      *
-     * @return SendEbsrRefreshedCmd
+     * @return CreateQueueCmd
      */
     private function getEbsrRefreshedEmailCmd($ebsrId)
     {
@@ -582,7 +580,7 @@ final class ProcessPack extends AbstractCommandHandler implements
      *
      * @param int $ebsrId EBSR submission id
      *
-     * @return SendEbsrReceivedCmd
+     * @return CreateQueueCmd
      */
     private function getEbsrReceivedEmailCmd($ebsrId)
     {
@@ -594,51 +592,11 @@ final class ProcessPack extends AbstractCommandHandler implements
      *
      * @param int $ebsrId EBSR submission id
      *
-     * @return SendEbsrErrorsCmd
+     * @return CreateQueueCmd
      */
     private function getEbsrErrorEmailCmd($ebsrId)
     {
         return $this->emailQueue(SendEbsrErrorsCmd::class, ['id' => $ebsrId], $ebsrId);
-    }
-
-    /**
-     * Returns a command to create a task
-     *
-     * @param BusRegEntity $busReg bus reg entity
-     *
-     * @return CreateTaskCmd
-     */
-    private function createTaskCommand(BusRegEntity $busReg)
-    {
-        if ($busReg->isEbsrRefresh()) {
-            $description = 'Data refresh created';
-        } else {
-            $status = $busReg->getStatus()->getId();
-
-            switch ($status) {
-                case BusRegEntity::STATUS_CANCEL:
-                    $state = 'cancellation';
-                    break;
-                case BusRegEntity::STATUS_VAR:
-                    $state = 'variation';
-                    break;
-                default:
-                    $state = 'application';
-            }
-
-            $description = 'New ' . $state . ' created';
-        }
-
-        $data = [
-            'category' => TaskEntity::CATEGORY_BUS,
-            'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
-            'description' => $description . ': ' . $busReg->getRegNo(),
-            'actionDate' => date('Y-m-d'),
-            'busReg' => $busReg->getId(),
-            'licence' => $busReg->getLicence()->getId(),
-        ];
-
-        return CreateTaskCmd::create($data);
     }
 
     /**
