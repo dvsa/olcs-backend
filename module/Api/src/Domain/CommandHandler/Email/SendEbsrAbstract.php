@@ -11,6 +11,8 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as Repository;
@@ -79,6 +81,11 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements EmailA
     protected $pdfType;
 
     /**
+     * @var Message
+     */
+    protected $message;
+
+    /**
      * Handles the command
      *
      * @param CommandInterface|CancelCmd|RegCmd|WithdrawnCmd|RefusedCmd|ReceivedCmd|RefreshedCmd $command command
@@ -102,15 +109,25 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements EmailA
         //get the bus regNo (which could come from a number of sources)
         $this->regNo = $this->getBusRegNo();
 
-        $message = $this->getMessage();
+        $this->message = $this->buildMessage();
 
-        $this->sendEmailTemplate($message, $this->template, $this->emailData);
+        $this->sendEmailTemplate($this->message, $this->template, $this->emailData);
 
         $result = new Result();
         $result->addId('ebsrSubmission', $this->ebsr->getId());
         $result->addMessage('Email sent');
 
         return $result;
+    }
+
+    /**
+     * Returns the message object, used to assist with UT
+     *
+     * @return Message
+     */
+    public function getMessage()
+    {
+        return $this->message;
     }
 
     /**
@@ -135,7 +152,7 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements EmailA
      *
      * @return Message
      */
-    private function getMessage()
+    private function buildMessage()
     {
         $localAuthoritiesCc = [];
 
@@ -270,7 +287,20 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements EmailA
 
         /** @var LocalAuthority $localAuth */
         foreach ($localAuths as $localAuth) {
+            //main local authority email address
             $localAuthoritiesCc[] = $localAuth->getEmailAddress();
+
+            //retrieve other local authority users and add their email addresses
+            $localAuthUsers = $localAuth->getUsers();
+
+            /** @var UserEntity $user */
+            foreach ($localAuthUsers as $user) {
+                $contactDetails = $user->getContactDetails();
+
+                if ($contactDetails instanceof ContactDetailsEntity) {
+                    $localAuthoritiesCc[] = $contactDetails->getEmailAddress();
+                }
+            }
         }
 
         return $localAuthoritiesCc;
