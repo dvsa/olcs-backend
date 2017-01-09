@@ -104,7 +104,7 @@ return [
     'application-review-safety-tachographIns' => 'Who analyses the tachograph records?',
     'application-review-safety-tachographInsName' => 'The company or full name of the external contractor who analyses
         the tachograph records',
-    'application-review-safety-workshop-address' => 'Workshop Address',
+    'application-review-safety-workshop-address' => 'Workshop address',
     'application-review-safety-workshop-isExternal' => 'Who will carry out the safety inspections?',
     'application-review-safety-workshop-isExternal-N' => 'An owner or employee of the business',
     'application-review-safety-workshop-isExternal-Y' => 'An external contractor',
