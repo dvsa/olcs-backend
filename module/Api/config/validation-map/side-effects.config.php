@@ -53,6 +53,7 @@ return [
     CommandHandler\Application\UpdateVariationCompletion::class                       => IsSideEffect::class,
     CommandHandler\Application\CreateFee::class                                       => IsSideEffect::class,
     CommandHandler\Application\CancelAllInterimFees::class                            => IsSideEffect::class,
+    CommandHandler\Application\UndoCancelAllInterimFees::class                        => IsSideEffect::class,
     CommandHandler\Application\CancelOutstandingFees::class                           => IsSideEffect::class,
     CommandHandler\Application\SetDefaultTrafficAreaAndEnforcementArea::class         => IsSideEffect::class,
     CommandHandler\Application\DeleteApplication::class                               => IsSideEffect::class,
