@@ -13,11 +13,6 @@ use Zend\Mvc\ResponseSender\SendResponseEvent;
  */
 class Module implements BootstrapListenerInterface
 {
-    private static $allowEmptyStatusCodes = [
-        \Zend\Http\PhpEnvironment\Response::STATUS_CODE_204,
-        \Zend\Http\PhpEnvironment\Response::STATUS_CODE_206,
-    ];
-
     /**
      * Bootstrap
      *
@@ -95,14 +90,6 @@ class Module implements BootstrapListenerInterface
         }
 
         if ($response instanceof \Zend\Http\PhpEnvironment\Response) {
-            if (
-                empty($content)
-                && !in_array($response->getStatusCode(), self::$allowEmptyStatusCodes, true)
-            ) {
-                // Response should never be empty, this is a symptom that the backend has gone wrong
-                // Except if the status code is 204 No content and 206 - Partial content (Download)
-                Logger::err('API Response is empty');
-            }
             Logger::logResponse(
                 $response->getStatusCode(),
                 'API Response Sent',
