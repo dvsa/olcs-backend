@@ -128,6 +128,12 @@ return array(
         'translate_to_welsh' => array(
             'type' => 'yesno'
         ),
+        'local_authority_id' => array(
+            'inversedBy' => array(
+                'entity' => 'LocalAuthority',
+                'property' => 'user'
+            ),
+        ),
     ),
     'licence' => array(
         'organisation_id' => array(
