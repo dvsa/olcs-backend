@@ -81,40 +81,6 @@ class ModuleTest extends MockeryTestCase
         $this->assertSame(['status' => 200, 'content' => 'CONTENT'], $logWriter->events[0]['extra']);
     }
 
-    public function testLogResponseHttpEmpty()
-    {
-        $logWriter = $this->setupLogger();
-
-        $mockRespone = m::mock(\Zend\Http\PhpEnvironment\Response::class);
-        $mockRespone->shouldReceive('getContent')->with()->once()->andReturn('');
-        $mockRespone->shouldReceive('getStatusCode')->with()->andReturn(200);
-        $mockRespone->shouldReceive('getHeaders')->andReturn(
-            m::mock()
-                ->shouldReceive('has')->andReturn(false)
-                ->getMock()
-        );
-
-        $this->sut->logResponse($mockRespone);
-
-        $this->assertCount(2, $logWriter->events);
-        $this->assertSame(\Zend\Log\Logger::ERR, $logWriter->events[0]['priority']);
-        $this->assertSame('API Response is empty', $logWriter->events[0]['message']);
-    }
-
-    public function testLogResponseHttpEmpty204()
-    {
-        $logWriter = $this->setupLogger();
-
-        $mockRespone = m::mock(\Zend\Http\PhpEnvironment\Response::class);
-        $mockRespone->shouldReceive('getContent')->with()->once()->andReturn('');
-        $mockRespone->shouldReceive('getStatusCode')->with()->andReturn(204);
-
-        $this->sut->logResponse($mockRespone);
-
-        $this->assertCount(1, $logWriter->events);
-        $this->assertNotContains('API Response is empty', $logWriter->events[0]);
-    }
-
     public function testLogResponseHttpEmptyOlcsDownloadHeader()
     {
         $logWriter = $this->setupLogger();
