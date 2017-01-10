@@ -48,7 +48,11 @@ final class ResolvePayment extends AbstractCommandHandler implements
             return $result;
         }
 
-        $cpmsStatus = $this->getCpmsService()->getPaymentStatus($transaction->getReference());
+        $fees = $transaction->getFees();
+        $cpmsStatus = $this->getCpmsService()->getPaymentStatus(
+            $transaction->getReference(),
+            reset($fees)
+        );
 
         $now = new DateTime();
 

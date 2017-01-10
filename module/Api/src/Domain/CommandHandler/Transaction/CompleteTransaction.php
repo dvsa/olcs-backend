@@ -46,9 +46,10 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
                 ['Invalid transaction status: '.$transaction->getStatus()->getId()]
             );
         }
+        $fees = $transaction->getFees();
 
         // update CPMS
-        $this->getCpmsService()->handleResponse($reference, $command->getCpmsData());
+        $this->getCpmsService()->handleResponse($reference, $command->getCpmsData(), reset($fees));
 
         // resolve payment
         $result->merge($this->resolvePayment($command, $transaction));

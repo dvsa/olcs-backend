@@ -57,6 +57,21 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     protected $feesHelper;
 
     /**
+     * @var string
+     */
+    protected $niSchemaId;
+
+    /**
+     * @var string
+     */
+    protected $niClientSecret;
+
+    /**
+     * @var string
+     */
+    protected $schemaId;
+
+    /**
      * @param ServiceLocatorInterface $serviceLocator
      * @return self
      */
@@ -67,6 +82,19 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             $this->setInvoicePrefix($config['cpms']['invoice_prefix']);
         }
 
+        $this->niSchemaId = isset($config['cpms_credentials']['client_id_ni'])
+            ? $config['cpms_credentials']['client_id_ni']
+            : null;
+
+        $this->niClientSecret = isset($config['cpms_credentials']['client_secret_ni'])
+            ? $config['cpms_credentials']['client_secret_ni']
+            : null;
+
+        $this->schemaId = isset($config['cpms_credentials']['client_id'])
+            ? $config['cpms_credentials']['client_id']
+            : null;
+
+        $this->identity = $serviceLocator->get($config['cpms_api']['identity_provider']);
         $this->cpmsClient = $serviceLocator->get('cpms\service\api');
         $this->feesHelper = $serviceLocator->get('FeesHelperService');
         return $this;
@@ -162,7 +190,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             $params['payment_data'][] = $this->getPaymentDataForFee($fee, [], $miscExtraParams);
         }
 
-        $response = $this->send($method, $endPoint, $scope, $params);
+        $response = $this->send($method, $endPoint, $scope, $params, reset($fees));
 
         return $this->validatePaymentResponse($response, false);
     }
@@ -171,11 +199,13 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * Update CPMS with payment result
      *
      * @param string $reference payment reference / guid
-     * @param array $data response data from the payment gateway
+     * @param array  $data      response data from the payment gateway
+     * @param Fee    $fee       fee
+     *
      * @return array|mixed response
      * @see CpmsClient\Service\ApiService::put()
      */
-    public function handleResponse($reference, $data)
+    public function handleResponse($reference, $data, $fee = null)
     {
         /**
          * Let CPMS know the response from the payment gateway
@@ -183,16 +213,22 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
          * We have to bundle up the response data verbatim as it can
          * vary per gateway implementation
          */
+        $schemaId = ($fee !== null) ? $this->getSchemaId($fee) : $this->schemaId;
+        if ($schemaId === $this->niSchemaId) {
+            $this->changeSchema($this->niSchemaId, $this->niClientSecret);
+        }
         return $this->getClient()->put('/api/gateway/' . $reference . '/complete', ApiService::SCOPE_CARD, $data);
     }
 
     /**
      * Determine the status of a payment/transaction
      *
-     * @param string $receiptReference
+     * @param string $receiptReference receipt reference
+     * @param Fee    $fee              fee
+     *
      * @return int status code|null
      */
-    public function getPaymentStatus($receiptReference)
+    public function getPaymentStatus($receiptReference, $fee)
     {
         $method   = 'get';
         $endPoint = '/api/payment/'.$receiptReference;
@@ -206,7 +242,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             ]
         ];
 
-        $response = $this->send($method, $endPoint, $scope, $params);
+        $response = $this->send($method, $endPoint, $scope, $params, $fee);
 
         if (isset($response['payment_status']['code'])) {
             return $response['payment_status']['code'];
@@ -219,16 +255,18 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * Note: this is potentially required for chargebacks, etc. but is not
      * currently used
      *
-     * @param string $receiptReference
+     * @param string $receiptReference receipt reference
+     * @param Fee    $fee              fee
+     *
      * @return string auth code|null
      */
-    public function getPaymentAuthCode($receiptReference)
+    public function getPaymentAuthCode($receiptReference, $fee)
     {
         $method   = 'get';
         $endPoint = '/api/payment/'.$receiptReference.'/auth-code';
         $scope    = ApiService::SCOPE_QUERY_TXN;
 
-        $response = $this->send($method, $endPoint, $scope, []);
+        $response = $this->send($method, $endPoint, $scope, [], $fee);
 
         if (isset($response['auth_code'])) {
             return $response['auth_code'];
@@ -274,7 +312,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             }
         }
 
-        $response = $this->send($method, $endPoint, $scope, $params);
+        $response = $this->send($method, $endPoint, $scope, $params, reset($fees));
 
         return $this->validatePaymentResponse($response);
     }
@@ -331,7 +369,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             }
         }
 
-        $response = $this->send($method, $endPoint, $scope, $params);
+        $response = $this->send($method, $endPoint, $scope, $params, reset($fees));
 
         return $this->validatePaymentResponse($response);
     }
@@ -376,7 +414,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             }
         }
 
-        $response = $this->send($method, $endPoint, $scope, $params);
+        $response = $this->send($method, $endPoint, $scope, $params, reset($fees));
 
         return $this->validatePaymentResponse($response);
     }
@@ -388,17 +426,34 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function getReportList()
     {
-        return $this->send('get', '/api/report', ApiService::SCOPE_REPORT, []);
+        $params = [
+            'filters' => [
+                'scheme' => [
+                    $this->schemaId,
+                    $this->niSchemaId
+                ],
+            ]
+        ];
+        return $this->send('get', '/api/report', ApiService::SCOPE_REPORT, $params);
     }
 
     /**
      * Get a list of stored debit/credit cards references stored in CPMS
      *
+     * @param string $isNi is NI list
+     *
      * @return array
      */
-    public function getListStoredCards()
+    public function getListStoredCards($isNi)
     {
-        return $this->send('get', '/api/stored-card', ApiService::SCOPE_STORED_CARD, []);
+        return $this->send(
+            'get',
+            '/api/stored-card',
+            ApiService::SCOPE_STORED_CARD,
+            [],
+            null,
+            ($isNi === 'Y') ? $this->niSchemaId : $this->schemaId
+        );
     }
 
     /**
@@ -416,6 +471,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'filters' => [
                 'from' => $this->formatDateTime($start),
                 'to' => $this->formatDateTime($end),
+                'scheme' => [
+                    $this->schemaId,
+                    $this->niSchemaId
+                ],
             ],
         ];
 
@@ -431,8 +490,16 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     public function getReportStatus($reference)
     {
         $endPoint = '/api/report/'.$reference.'/status';
+        $params = [
+            'filters' => [
+                'scheme' => [
+                    $this->schemaId,
+                    $this->niSchemaId
+                ],
+            ]
+        ];
 
-        return $this->send('get', $endPoint, ApiService::SCOPE_REPORT, []);
+        return $this->send('get', $endPoint, ApiService::SCOPE_REPORT, $params);
     }
 
     /**
@@ -445,8 +512,16 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     public function downloadReport($reference, $token)
     {
         $url = '/api/report/'.$reference.'/download?token='.$token;
+        $params = [
+            'filters' => [
+                'scheme' => [
+                    $this->schemaId,
+                    $this->niSchemaId
+                ],
+            ]
+        ];
 
-        return $this->send('get', $url, ApiService::SCOPE_REPORT, []);
+        return $this->send('get', $url, ApiService::SCOPE_REPORT, $params);
     }
 
     /**
@@ -499,10 +574,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $params = $this->addCustomerParams($params, [$fee], $fee);
         $paymentMethod = $ft->getTransaction()->getPaymentMethod()->getId();
         if (in_array($paymentMethod, [Fee::METHOD_CARD_ONLINE, Fee::METHOD_CARD_OFFLINE], true)) {
-            $params['auth_code'] = $this->getPaymentAuthCode($reference);
+            $params['auth_code'] = $this->getPaymentAuthCode($reference, $fee);
         }
 
-        $response = $this->send($method, $endPoint, $scope, $params);
+        $response = $this->send($method, $endPoint, $scope, $params, $fee);
 
         if (isset($response['code']) && $response['code'] === self::PAYMENT_REFUNDED) {
             return [$ft->getTransaction()->getReference() => $response['receipt_reference']];
@@ -545,7 +620,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         );
         $params = $this->addCustomerParams($params, [$fee], $fee);
 
-        $response = $this->send($method, $endPoint, $scope, $params);
+        $response = $this->send($method, $endPoint, $scope, $params, $fee);
 
         if (isset($response['code']) && $response['code'] === self::RESPONSE_SUCCESS) {
             return $response['receipt_references'];
@@ -622,68 +697,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $params = array_merge(['scope' => $scope], $extraParams);
         $params = $this->addCustomerParams($params, $fees, $firstFee);
 
-        $response = $this->send($method, $endPoint, $scope, $params);
-
-        return $this->validatePaymentResponse($response, false);
-    }
-
-    /**
-     * Adjust a transaction
-     *
-     * @param  Transaction $originalTransaction
-     * @param  Transaction $newTransaction
-     * @return array CPMS response data
-     * @throws CpmsResponseException if response is invalid
-     */
-    public function adjustTransaction($originalTransaction, $newTransaction)
-    {
-        $method   = 'post';
-        $endPoint = '/api/payment/'.$originalTransaction->getReference().'/adjustment';
-        $scope    = ApiService::SCOPE_ADJUSTMENT;
-
-        $newAmount = $newTransaction->getAmountAfterAdjustment();
-        $fees = $newTransaction->getFees();
-
-        $chequeNo = $poNo = null;
-        switch ($newTransaction->getPaymentMethod()->getId()) {
-            case Fee::METHOD_CHEQUE:
-                $chequeNo = $newTransaction->getChequePoNumber();
-                break;
-            case Fee::METHOD_POSTAL_ORDER:
-                $poNo = $newTransaction->getChequePoNumber();
-                break;
-            default:
-                break;
-        }
-
-        $extraParams = [
-            'cheque_date' => $this->formatDate($newTransaction->getChequePoDate()),
-            'cheque_number' => (string) $chequeNo,
-            'postal_order_number' => (string) $poNo,
-            'slip_number' => (string) $newTransaction->getPayingInSlipNumber(),
-            'batch_number' => (string) $newTransaction->getPayingInSlipNumber(),
-            'name_on_cheque' => $newTransaction->getPayerName(),
-            'scope' => $scope,
-            'total_amount' => $this->formatAmount($newAmount),
-        ];
-        $params = $this->getParametersForFees($fees, $extraParams);
-
-        foreach ($fees as $fee) {
-            if ($fee->isBalancingFee()) {
-                continue;
-            }
-            $allocation = $newTransaction->getAmountAllocatedToFeeId($fee->getId());
-            if ($allocation == 0) {
-                continue;
-            }
-            $extraPaymentData = ['allocated_amount' => $allocation];
-            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
-            if (!empty($paymentData)) {
-                $params['payment_data'][] = $paymentData;
-            }
-        }
-
-        $response = $this->send($method, $endPoint, $scope, $params);
+        $response = $this->send($method, $endPoint, $scope, $params, $firstFee);
 
         return $this->validatePaymentResponse($response, false);
     }
@@ -1049,12 +1063,15 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     /**
      * Send a request via the CPMS client and log request/response
      *
-     * @param string $endPoint
-     * @param string $scope
-     * @param array $params
+     * @param string $endPoint endPoint
+     * @param string $scope    scope
+     * @param array  $params   params
+     * @param Fee    $fee      fee
+     * @param string $schemaId schemaId
+     *
      * @return array|mixed cpms client response
      */
-    protected function send($method, $endPoint, $scope, $params)
+    protected function send($method, $endPoint, $scope, $params, $fee = null, $schemaId = null)
     {
         $method = strtolower($method);
 
@@ -1066,6 +1083,14 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
                 'params'   => $params,
             ]
         );
+
+        if ($schemaId === null) {
+            $schemaId = ($fee !== null) ? $this->getSchemaId($fee) : $this->schemaId;
+        }
+
+        if ($schemaId === $this->niSchemaId) {
+            $this->changeSchema($this->niSchemaId, $this->niClientSecret);
+        }
 
         $response = $this->getClient()->$method($endPoint, $scope, $params);
 
@@ -1178,5 +1203,32 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             self::PARAM_CUSTOMER_MANAGER_NAME_LIMIT
         );
         return $params;
+    }
+
+    /**
+     * Get schema id
+     *
+     * @param Fee $fee fee
+     *
+     * @return string
+     */
+    private function getSchemaId($fee)
+    {
+        return $fee->getFeeType()->getIsNi() === 'Y' ? $this->niSchemaId : $this->schemaId;
+    }
+
+    /**
+     * Change schema id and client secret
+     *
+     * @param string $schemaId     schema id
+     * @param string $clientSecret client secret
+     */
+    private function changeSchema($schemaId, $clientSecret)
+    {
+        $options = $this->getClient()->getOptions();
+        $options->setClientId($schemaId);
+        $options->setClientSecret($clientSecret);
+        $this->identity->setClientId($schemaId);
+        $this->identity->setClientSecret($clientSecret);
     }
 }
