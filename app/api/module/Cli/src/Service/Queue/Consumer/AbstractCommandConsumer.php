@@ -76,8 +76,6 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
             return $this->retry($item, $e->getRetryAfter(), $e->getMessage());
         } catch (EmailNotSentException $e) {
             return $this->retry($item, $this->retryAfter, $e->getMessage());
-        } catch (TransxchangeException $e) {
-            return $this->retry($item, $this->retryAfter, $e->getMessage());
         } catch (NysiisException $e) {
             return $this->retry($item, $e->getRetryAfter(), $e->getMessage());
         } catch (DomainException $e) {
@@ -99,8 +97,9 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
     /**
      * Method to handle the Service Manager exception. Default to failed.
      * 
-     * @param QueueEntity $item
-     * @param \Exception $e
+     * @param QueueEntity $item queue item
+     * @param \Exception  $e    exception
+     *
      * @return string
      */
     protected function handleZendServiceException(QueueEntity $item, \Exception $e)
