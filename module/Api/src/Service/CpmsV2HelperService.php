@@ -1085,7 +1085,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         );
 
         if ($schemaId === null) {
-            $schemaId = ($fee !== null) ? $this->getSchemaId($fee) : $this->schemaId;
+            $schemaId = ($fee instanceof Fee) ? $this->getSchemaId($fee) : $this->schemaId;
         }
 
         if ($schemaId === $this->niSchemaId) {

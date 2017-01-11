@@ -137,7 +137,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('getPaymentStatus')
             ->once()
-            ->with($guid)
+            ->with($guid, 'fee1')
             ->andReturn(CpmsHelper::PAYMENT_SUCCESS);
 
         $payment
@@ -147,7 +147,10 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ->passthru()
             ->andReturnSelf()
             ->globally()
-            ->ordered();
+            ->ordered()
+            ->shouldReceive('getFees')
+            ->andReturn(['fee1', 'fee2'])
+            ->once();
 
         $this->repoMap['Fee']
             ->shouldReceive('save')
@@ -216,6 +219,11 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $payment->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING]);
         $payment->setType($this->refData[PaymentEntity::TYPE_PAYMENT]);
 
+        $payment
+            ->shouldReceive('getFees')
+            ->andReturn(['fee1', 'fee2'])
+            ->once();
+
         $command = Cmd::create($data);
 
         // expectations
@@ -228,7 +236,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('getPaymentStatus')
             ->once()
-            ->with($guid)
+            ->with($guid, 'fee1')
             ->andReturn($cpmsStatus);
 
         $this->repoMap['Transaction']
@@ -305,6 +313,10 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $payment->setId($paymentId);
         $payment->setReference($guid);
         $payment->setType($this->refData[PaymentEntity::TYPE_PAYMENT]);
+        $payment
+            ->shouldReceive('getFees')
+            ->andReturn(['fee1', 'fee2'])
+            ->once();
 
         $command = Cmd::create($data);
 
@@ -318,7 +330,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('getPaymentStatus')
             ->once()
-            ->with($guid)
+            ->with($guid, 'fee1')
             ->andReturn($cpmsStatus);
 
         // payment status should not be changed
@@ -395,6 +407,10 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $payment->setReference($guid);
         $payment->setFeeTransactions($this->references[FeePaymentEntity::class]);
         $payment->setType($this->refData[PaymentEntity::TYPE_PAYMENT]);
+        $payment
+            ->shouldReceive('getFees')
+            ->andReturn(['fee1', 'fee2'])
+            ->once();
 
         $command = Cmd::create($data);
 
@@ -407,7 +423,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('getPaymentStatus')
             ->once()
-            ->with($guid)
+            ->with($guid, 'fee1')
             ->andReturn(CpmsHelper::PAYMENT_SUCCESS);
 
         $payment
