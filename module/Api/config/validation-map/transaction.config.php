@@ -10,7 +10,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
 
 return [
     CommandHandler\Transaction\ReverseTransaction::class => IsInternalUser::class,
-    CommandHandler\Transaction\AdjustTransaction::class => IsInternalUser::class,
     CommandHandler\Transaction\CompleteTransaction::class => CanAccessTransactionWithRef::class,
     CommandHandler\Transaction\PayOutstandingFees::class => CanPayOutstandingFees::class,
     // No validation required, as it will return a list of cards linked to the current user ID
