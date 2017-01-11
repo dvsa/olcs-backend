@@ -53,7 +53,14 @@ class UserTest extends QueryHandlerTestCase
             ->shouldReceive('fetchUser')
             ->once()
             ->with('pid')
-            ->andReturn(['lastLoginTime' => '2016-12-06T16:12:46+0000']);
+            ->andReturn(
+                [
+                    'lastLoginTime' => '2016-12-06T16:12:46+0000',
+                    'meta' => [
+                        'locked' => '20170110090018.001Z',
+                    ]
+                ]
+            );
 
         $userId = 100;
         $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
@@ -86,6 +93,7 @@ class UserTest extends QueryHandlerTestCase
                 'foo' => 'bar',
                 'userType' => 'internal',
                 'lastLoggedInOn' => '2016-12-06T16:12:46+0000',
+                'lockedOn' => '2017-01-10T09:00:18+00:00',
                 'latestPasswordResetEvent' => 'PASSWORD RESET EVENT'
             ],
             $result
@@ -135,6 +143,7 @@ class UserTest extends QueryHandlerTestCase
                 'foo' => 'bar',
                 'userType' => 'internal',
                 'lastLoggedInOn' => null,
+                'lockedOn' => null,
                 'latestPasswordResetEvent' => null,
             ],
             $result
