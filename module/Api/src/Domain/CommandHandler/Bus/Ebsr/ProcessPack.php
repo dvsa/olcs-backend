@@ -560,7 +560,7 @@ final class ProcessPack extends AbstractCommandHandler implements
      */
     private function getRequestMapQueueCmd($busRegId)
     {
-        return RequestMapQueueCmd::create(['id' => $busRegId, 'scale' => 'auto', 'isFromEbsr' => true]);
+        return RequestMapQueueCmd::create(['id' => $busRegId, 'scale' => 'auto', 'fromNewEbsr' => true]);
     }
 
     /**

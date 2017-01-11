@@ -56,7 +56,7 @@ final class RequestMapQueue extends AbstractCommandHandler implements AuthAwareI
         $optionData = [
             'scale' => $command->getScale(),
             'id' => $entityId,
-            'isFromEbsr' => $command->getIsFromEbsr(),
+            'fromNewEbsr' => $command->getFromNewEbsr(),
             'regNo' => $busReg->getRegNo(),
             'licence' => $busReg->getLicence()->getId(),
             'user' => $this->getCurrentUser()->getId()
