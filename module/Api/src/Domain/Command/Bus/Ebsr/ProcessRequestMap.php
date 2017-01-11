@@ -14,8 +14,6 @@ class ProcessRequestMap extends AbstractIdOnlyCommand
 
     protected $scale;
 
-    protected $template;
-
     protected $licence;
 
     protected $regNo;
@@ -28,14 +26,6 @@ class ProcessRequestMap extends AbstractIdOnlyCommand
     public function getScale()
     {
         return $this->scale;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**
