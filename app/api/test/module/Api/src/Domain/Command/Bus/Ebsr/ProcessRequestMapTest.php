@@ -20,6 +20,7 @@ class ProcessRequestMapTest extends PHPUnit_Framework_TestCase
         $template = 'template';
         $licence = 'licence';
         $regNo = '123/45678';
+        $fromNewEbsr = true;
 
         $command = ProcessRequestMap::create(
             [
@@ -28,7 +29,8 @@ class ProcessRequestMapTest extends PHPUnit_Framework_TestCase
                 'scale' => $scale,
                 'template' => $template,
                 'licence' => $licence,
-                'regNo' => $regNo
+                'regNo' => $regNo,
+                'fromNewEbsr' => $fromNewEbsr
             ]
         );
 
@@ -38,5 +40,6 @@ class ProcessRequestMapTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($template, $command->getTemplate());
         $this->assertEquals($licence, $command->getLicence());
         $this->assertEquals($regNo, $command->getRegNo());
+        $this->assertEquals($fromNewEbsr, $command->getFromNewEbsr());
     }
 }

@@ -42,13 +42,13 @@ class RequestMapQueueTest extends CommandHandlerTestCase
         $licenceId = 789;
         $regNo = '123/4567';
         $scale = 'small';
-        $isFromEbsr = true;
+        $fromNewEbsr = true;
 
         $cmd = RequestMapCmd::create(
             [
                 'id' => $busRegId,
                 'scale' => $scale,
-                'isFromEbsr' => $isFromEbsr
+                'fromNewEbsr' => $fromNewEbsr
             ]
         );
 
@@ -77,7 +77,7 @@ class RequestMapQueueTest extends CommandHandlerTestCase
         $optionData = [
             'scale' => $scale,
             'id' => $busRegId,
-            'isFromEbsr' => $isFromEbsr,
+            'fromNewEbsr' => $fromNewEbsr,
             'regNo' => $regNo,
             'licence' => $licenceId,
             'user' => $userId

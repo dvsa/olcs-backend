@@ -20,6 +20,8 @@ class ProcessRequestMap extends AbstractIdOnlyCommand
 
     protected $regNo;
 
+    protected $fromNewEbsr;
+
     /**
      * @return string
      */
@@ -50,5 +52,13 @@ class ProcessRequestMap extends AbstractIdOnlyCommand
     public function getRegNo()
     {
         return $this->regNo;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getFromNewEbsr()
+    {
+        return $this->fromNewEbsr;
     }
 }
