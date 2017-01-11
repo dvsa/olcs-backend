@@ -143,11 +143,6 @@ class Response extends AbstractPlugin
         fclose($bh);
         fclose($result->getStream());
 
-        //  set status code 206 - Partial Content to avoid empty resposne error
-        $this->getController()
-            ->getResponse()
-            ->setStatusCode(206);
-
         return false;
     }
 
