@@ -48,9 +48,6 @@ class CompleteTransactionTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    /**
-     * @group test123
-     */
     public function testHandleCommand()
     {
         // set up data
@@ -75,7 +72,10 @@ class CompleteTransactionTest extends CommandHandlerTestCase
             ->andReturn(
                 $this->refData[PaymentEntity::STATUS_OUTSTANDING],
                 $this->refData[PaymentEntity::STATUS_PAID]
-            );
+            )
+            ->shouldReceive('getFees')
+            ->once()
+            ->andReturn(['fee1', 'fee2']);
 
         $command = Cmd::create($data);
 
@@ -84,10 +84,7 @@ class CompleteTransactionTest extends CommandHandlerTestCase
             ->shouldReceive('fetchByReference')
             ->once()
             ->with($guid)
-            ->andReturn($payment)
-            ->shouldReceive('getFees')
-            ->once()
-            ->andReturn(['fee1', 'fee2']);
+            ->andReturn($payment);
 
         $this->mockCpmsService
             ->shouldReceive('handleResponse')
