@@ -72,7 +72,10 @@ class CompleteTransactionTest extends CommandHandlerTestCase
             ->andReturn(
                 $this->refData[PaymentEntity::STATUS_OUTSTANDING],
                 $this->refData[PaymentEntity::STATUS_PAID]
-            );
+            )
+            ->shouldReceive('getFees')
+            ->once()
+            ->andReturn(['fee1', 'fee2']);
 
         $command = Cmd::create($data);
 
@@ -86,7 +89,7 @@ class CompleteTransactionTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('handleResponse')
             ->once()
-            ->with($guid, $cpmsData);
+            ->with($guid, $cpmsData, 'fee1');
 
         $resolveResult = new Result();
         $resolveResult

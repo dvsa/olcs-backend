@@ -641,7 +641,6 @@ return [
     TransferCommand\Transaction\CompleteTransaction::class => CommandHandler\Transaction\CompleteTransaction::class,
     Command\Transaction\ResolvePayment::class => CommandHandler\Transaction\ResolvePayment::class,
     TransferCommand\Transaction\ReverseTransaction::class => CommandHandler\Transaction\ReverseTransaction::class,
-    TransferCommand\Transaction\AdjustTransaction::class => CommandHandler\Transaction\AdjustTransaction::class,
     Command\Transaction\ResolveOutstandingPayments::class
         => CommandHandler\Transaction\ResolveOutstandingPayments::class,
 

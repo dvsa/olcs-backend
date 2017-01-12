@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Service;
 
 use CpmsClient\Service\ApiService;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 
 /**
  * Cpms Helper Interface
@@ -69,28 +70,34 @@ interface CpmsHelperInterface
     /**
      * Update CPMS with payment result
      *
-     * @param string $reference payment reference / guid
-     * @param array $data response data from the payment gateway
+     * @param string    $reference payment reference / guid
+     * @param array     $data      response data from the payment gateway
+     * @param FeeEntity $fee       fee
+     *
      * @return array|mixed response
      * @see CpmsClient\Service\ApiService::put()
      */
-    public function handleResponse($reference, $data);
+    public function handleResponse($reference, $data, $fee);
 
     /**
      * Determine the status of a payment/transaction
      *
-     * @param string $receiptReference
+     * @param string    $receiptReference receipt reference
+     * @param FeeEntity $fee              fee
+     *
      * @return int status code
      */
-    public function getPaymentStatus($receiptReference);
+    public function getPaymentStatus($receiptReference, $fee);
 
     /**
      * Get the authorisation code for a card payment
      *
-     * @param string $receiptReference
+     * @param string    $receiptReference receipt reference
+     * @param FeeEntity $fee              fee
+     *
      * @return string auth code|null
      */
-    public function getPaymentAuthCode($receiptReference);
+    public function getPaymentAuthCode($receiptReference, $fee);
 
     /**
      * Record a cash payment in CPMS
@@ -142,9 +149,11 @@ interface CpmsHelperInterface
     /**
      * Get a list of stored debit/credit cards references stored in CPMS
      *
+     * @param string $isNi
+     *
      * @return array
      */
-    public function getListStoredCards();
+    public function getListStoredCards($isNi);
 
     /**
      * Request report creation
@@ -191,16 +200,6 @@ interface CpmsHelperInterface
      * @throws CpmsResponseException if response is invalid
      */
     public function reversePayment($receiptReference, $paymentMethod, $fees = array());
-
-    /**
-     * Adjust a transaction
-     *
-     * @param  Transaction $originalTransaction
-     * @param  Transaction $newTransaction
-     * @return array CPMS response data
-     * @throws CpmsResponseException if response is invalid
-     */
-    public function adjustTransaction($originalTransaction, $newTransaction);
 
     /**
      * @param mixed $amount
