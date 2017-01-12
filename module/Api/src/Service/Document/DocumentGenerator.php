@@ -1,23 +1,17 @@
 <?php
 
-/**
- * Document Generator
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Service\Document;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
-use Dvsa\Olcs\Api\Service\File\File;
+use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
+use Dvsa\Olcs\DocumentShare\Service\Client;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\ArrayUtils;
-use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
-use Dvsa\Olcs\DocumentShare\Service\Client;
 
 /**
  * Document Generator
@@ -64,7 +58,8 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator Service Locator
+     *
      * @return mixed
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -83,9 +78,9 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
      * Helper method to generate a string of content from a given template and
      * query parameters
      *
-     * @param string $template
-     * @param array $queryData
-     * @param array $knownValues
+     * @param string $template    Template path or id
+     * @param array  $queryData   Query Data
+     * @param array  $knownValues Values
      *
      * @return string
      */
@@ -117,25 +112,32 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
     /**
      * Upload the generated content
      *
-     * @param $content
-     * @param $fileName
-     * @return \Dvsa\Olcs\Api\Service\File\File
+     * @param string $content  File Content
+     * @param string $fileName File name at Storage
+     *
+     * @return DsFile
      */
     public function uploadGeneratedContent($content, $fileName)
     {
-        $file = new File();
+        $file = new DsFile();
         $file->setContent($content);
 
-        $this->uploader->setFile($file);
-
-        return $this->uploader->upload($fileName);
+        try {
+            return $this->uploader->upload($fileName, $file);
+        } catch (\Exception $e) {
+            unset($file);
+            throw $e;
+        }
     }
 
     /**
-     * @param array $possibleTemplatePaths
-     * @param array $queryData
-     * @param array $knownValues
-     * @return mixed
+     * Generate From Template Identifier
+     *
+     * @param array $possibleTemplatePaths Template Paths
+     * @param array $queryData             Query Data
+     * @param array $knownValues           Values
+     *
+     * @return string
      * @throws \Exception
      */
     private function generateFromTemplateIdentifier(array $possibleTemplatePaths, $queryData = [], $knownValues = [])
@@ -173,23 +175,22 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
     /**
      * Add the template prefix
      *
-     * @param $queryData
-     * @param $template
+     * @param array  $queryData Query Data
+     * @param string $template  Template path
+     *
      * @return string
      */
     private function addTemplatePrefix($queryData, $template)
     {
         foreach (['application', 'licence'] as $key) {
-
             if (isset($queryData[$key])) {
-
                 if ($key === 'licence') {
-                    $result = $this->queryHandlerManager
-                        ->handleQuery(LicenceBundle::create(['id' => $queryData[$key]]));
+                    $qry = LicenceBundle::create(['id' => $queryData[$key]]);
                 } else {
-                    $result = $this->queryHandlerManager
-                        ->handleQuery(ApplicationBundle::create(['id' => $queryData[$key]]));
+                    $qry = ApplicationBundle::create(['id' => $queryData[$key]]);
                 }
+
+                $result = $this->queryHandlerManager->handleQuery($qry);
 
                 return $this->getPrefix($result['niFlag']) . '/' . $template;
             }
@@ -201,7 +202,8 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
     /**
      * Get the template prefix
      *
-     * @param $niFlag
+     * @param string $niFlag Flag
+     *
      * @return string
      */
     private function getPrefix($niFlag)
@@ -212,13 +214,13 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
     /**
      * Grab the template from the possible paths
      *
-     * @param array $possibleTemplatePaths
-     * @return string|null
+     * @param array $possibleTemplatePaths Path to template
+     *
+     * @return DsFile|null
      */
     private function getTemplate(array $possibleTemplatePaths)
     {
         foreach ($possibleTemplatePaths as $template) {
-
             if (isset($this->templateCache[$template])) {
                 return $this->templateCache[$template];
             }

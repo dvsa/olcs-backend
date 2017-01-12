@@ -86,7 +86,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
     public function testSetContentFromDsStreamExcStream404()
     {
-        $this->setExpectedException(\Exception::class, File::ERR_CANT_OPEN_STREAM);
+        $this->setExpectedException(\Exception::class, File::ERR_CANT_OPEN_DOWNLOAD_STREAM);
 
         $res = vfsStream::newFile('res')
             ->at($this->vfs)
