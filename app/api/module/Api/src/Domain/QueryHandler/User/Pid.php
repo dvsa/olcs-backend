@@ -22,8 +22,17 @@ class Pid extends AbstractQueryHandler implements OpenAmUserAwareInterface
 {
     use OpenAmUserAwareTrait;
 
+    const CAN_RESET_PWD_IF_NOT_ACTIVE_MAX_USER_ID = 1000000;
+
     protected $repoServiceName = 'User';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
         /** @var UserEntity $user */
@@ -33,7 +42,12 @@ class Pid extends AbstractQueryHandler implements OpenAmUserAwareInterface
 
         return [
             'pid' => $pid,
-            'isActive' => $this->getOpenAmUser()->isActiveUser($pid),
+            'canResetPassword' => (
+                // migrated selfserve user can always reset a password
+                (!$user->isInternal() && ((int)$user->getId() < self::CAN_RESET_PWD_IF_NOT_ACTIVE_MAX_USER_ID))
+                // otherwise the user must have logged in before
+                || $this->getOpenAmUser()->isActiveUser($pid)
+            ),
         ];
     }
 }
