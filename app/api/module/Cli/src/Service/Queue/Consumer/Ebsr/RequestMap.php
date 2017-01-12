@@ -25,14 +25,10 @@ class RequestMap extends AbstractCommandConsumer
     protected $commandName = Cmd::class;
 
     /**
-     * @var int Max retry attempts before fails
-     */
-    protected $maxAttempts = 4;
-
-    /**
      * gets command data
      *
-     * @param QueueEntity $item
+     * @param QueueEntity $item queue item
+     *
      * @return array
      */
     public function getCommandData(QueueEntity $item)
@@ -44,8 +40,9 @@ class RequestMap extends AbstractCommandConsumer
     /**
      * Creates a task if the map request has failed, then calls the usual failure method
      *
-     * @param QueueEntity $item
-     * @param string|null $reason
+     * @param QueueEntity $item   queue item
+     * @param string|null $reason reason for failure
+     *
      * @return string
      */
     public function failed(QueueEntity $item, $reason = null)

@@ -17,7 +17,6 @@ use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessRequestMap as RequestMapCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\UpdateTxcInboxPdf as UpdateTxcInboxPdfCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRequestMap as SendEbsrRequestMapCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
@@ -31,8 +30,9 @@ use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Olcs\XmlTools\Xml\TemplateBuilder;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
-use Zend\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeException;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
+use Olcs\Logging\Log\Logger;
+use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
 
 /**
  * Request new Ebsr map
@@ -50,8 +50,13 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     use FileProcessorAwareTrait;
     use QueueAwareTrait;
 
-    const TASK_SUCCESS_DESC = 'New %s available: %s';
+    const MISSING_TMP_DIR_ERROR = 'No tmp directory specified in config';
+    const MISSING_PACK_FILE_ERROR = 'Could not fetch EBSR pack file';
+    const MISSING_TEMPLATE_ERROR = 'Missing template: %s';
+
+    const TASK_DESC = '%s created: %s';
     const SCALE_DESC = ' (%s Scale)';
+    const PDF_GENERATED = "The following PDFs %s: %s";
 
     const TXC_INBOX_TYPE_ROUTE = 'Route';
     const TXC_INBOX_TYPE_PDF = 'Pdf';
@@ -104,87 +109,80 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
         $config = $this->getConfig();
 
         if (!isset($config['ebsr']['tmp_extra_path'])) {
-            throw new TransxchangeException('No tmp directory specified in config');
+            Logger::info('TransXchange error', ['data' => self::MISSING_TMP_DIR_ERROR]);
+            throw new TransxchangeException(self::MISSING_TMP_DIR_ERROR);
         }
 
+        $sideEffects = [];
+        $processedMaps = [];
+        $failedMaps = [];
         $result = new Result();
+
         $busReg = $this->getRepo()->fetchUsingId($command);
         $ebsrSubmissions = $busReg->getEbsrSubmissions();
         $submission = $ebsrSubmissions->first();
 
-        $this->getFileProcessor()->setSubDirPath($config['ebsr']['tmp_extra_path']);
-
-        $xmlFilename = $this->getFileProcessor()->fetchXmlFileNameFromDocumentStore(
-            $submission->getDocument()->getIdentifier(),
-            true
-        );
-
-        $templateFile = $command->getTemplate();
-        $scale = $command->getScale();
-
-        $template = $this->createRequestMapTemplate($templateFile, $xmlFilename, $scale);
+        /** @var FileProcessor $fileProcessor */
+        $fileProcessor = $this->getFileProcessor();
+        $fileProcessor->setSubDirPath($config['ebsr']['tmp_extra_path']);
 
         try {
-            $documents = $this->getTransExchange()->makeRequest($template);
-        } catch (AdapterRuntimeException $e) {
-            throw new TransxchangeException($e->getMessage());
-        }
-
-        if (!isset($documents['files'])) {
-            throw new TransxchangeException('Invalid response from transXchange publisher');
-        }
-
-        $documentDesc = $this->getDocumentDescription($templateFile, $scale);
-
-        foreach ($documents['files'] as $document) {
-            $result->merge(
-                $this->handleSideEffect(
-                    $this->generateDocumentCmd($document, $busReg, $command->getUser(), $documentDesc)
-                )
+            $xmlFilename = $fileProcessor->fetchXmlFileNameFromDocumentStore(
+                $submission->getDocument()->getIdentifier(),
+                true
             );
+        } catch (\Exception $e) {
+            Logger::info('TransXchange error', ['data' => self::MISSING_PACK_FILE_ERROR]);
+            throw new TransxchangeException(self::MISSING_PACK_FILE_ERROR);
         }
 
-        $ebsrId = $submission->getId();
+        //decide which template files we need
+        $templates = [TransExchangeClient::DVSA_RECORD_TEMPLATE => TransExchangeClient::DVSA_RECORD_TEMPLATE];
 
-        //update txc inbox records with the new document id, create a task and send confirmation email
-        $result->merge(
-            $this->handleSideEffects(
-                $this->createSideEffects($busReg, $result->getId('document'), $templateFile, $ebsrId, $documentDesc)
-            )
-        );
+        //we only create the dvsa record pdf for cancellations, otherwise create all three
+        if (!$busReg->isCancellation()) {
+            $templates[TransExchangeClient::TIMETABLE_TEMPLATE] = TransExchangeClient::TIMETABLE_TEMPLATE;
+            $templates[TransExchangeClient::REQUEST_MAP_TEMPLATE] = TransExchangeClient::REQUEST_MAP_TEMPLATE;
+        }
+
+        $scale = $command->getScale();
+        $busRegId = $busReg->getId();
+
+        foreach ($templates as $templateFile) {
+            try {
+                $documentDesc = $this->getDocumentDescription($templateFile, $scale);
+                $template = $this->createRequestMapTemplate($templateFile, $xmlFilename, $scale);
+                $documents = $this->getTransExchange()->makeRequest($template);
+            } catch (\Exception $e) {
+                Logger::info('TransXchange error', ['data' => $e->getMessage()]);
+                $failedMaps[$documentDesc] = $documentDesc;
+                continue;
+            }
+
+            if (!isset($documents['files'])) {
+                $failedMaps[$documentDesc] = $documentDesc;
+                continue;
+            }
+
+            foreach ($documents['files'] as $document) {
+                $uploadDocCmd = $this->generateDocumentCmd($document, $busReg, $command->getUser(), $documentDesc);
+                $uploadedDoc = $this->handleSideEffect($uploadDocCmd);
+                $documentId = $uploadedDoc->getId('document');
+                $result->addId('document', $documentId, true);
+
+                //add txc inbox pdf for all except timetables
+                if ($templateFile !== TransExchangeClient::TIMETABLE_TEMPLATE) {
+                    $sideEffects[] = $this->createUpdateTxcInboxPdfCmd($busRegId, $documentId, $templateFile);
+                }
+
+                $processedMaps[] = $documentDesc;
+            }
+        }
+
+        $sideEffects[] = $this->createTaskCmd($busReg, $processedMaps, $failedMaps, $command->getFromNewEbsr());
+        $result->merge($this->handleSideEffects($sideEffects));
 
         return $result;
-    }
-
-    /**
-     * Creates side effects, these are slightly different depending on which PDF we're generating
-     *
-     * @param BusRegEntity $busReg       Bus reg entity
-     * @param int          $documentId   Document id
-     * @param string       $templateFile Template file
-     * @param int          $ebsrId       EBSR submission id
-     * @param string       $documentDesc document description
-     *
-     * @return array
-     */
-    private function createSideEffects(BusRegEntity $busReg, $documentId, $templateFile, $ebsrId, $documentDesc)
-    {
-        $emailParams = [
-            'id' => $ebsrId,
-            'pdfType' => $this->documentDescriptions[$templateFile]
-        ];
-
-        $sideEffects = [
-            $this->createTaskCmd($busReg, $documentDesc),
-            $this->emailQueue(SendEbsrRequestMapCmd::class, $emailParams, $ebsrId)
-        ];
-
-        //add txc inbox pdf for all except timetables
-        if ($templateFile !== TransExchangeClient::TIMETABLE_TEMPLATE) {
-            $sideEffects[] = $this->createUpdateTxcInboxPdfCmd($busReg->getId(), $documentId, $templateFile);
-        }
-
-        return $sideEffects;
     }
 
     /**
@@ -202,7 +200,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
         $config = $this->getConfig();
 
         if (!isset($config['ebsr']['transexchange_publisher']['templates'][$template])) {
-            throw new TransxchangeException('Missing template');
+            throw new TransxchangeException(sprintf(self::MISSING_TEMPLATE_ERROR, $template));
         }
 
         $templatePath = $config['ebsr']['transexchange_publisher']['templates'][$template];
@@ -245,21 +243,53 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     }
 
     /**
-     * Creates a command to add a task
+     * Returns a command to create a task
      *
-     * @param BusRegEntity $busReg       bus reg entity
-     * @param string       $documentDesc document description
+     * @param BusRegEntity $busReg        bus reg entity
+     * @param array        $processedMaps processed maps, comma separated
+     * @param array        $failedMaps    failed maps, comma separated
+     * @param bool         $fromNewEbsr   whether this map request is a result of a new ebsr submission
      *
      * @return CreateTaskCmd
      */
-    private function createTaskCmd(BusRegEntity $busReg, $documentDesc)
+    private function createTaskCmd(BusRegEntity $busReg, array $processedMaps, array $failedMaps, $fromNewEbsr)
     {
-        $desc = sprintf(self::TASK_SUCCESS_DESC, $documentDesc, $busReg->getRegNo());
+        $message = [];
+        $state = 'pdf files'; //default, if this isn't as a result of a new EBSR pack being processed
+
+        if ($fromNewEbsr) {
+            if ($busReg->isEbsrRefresh()) {
+                $state = 'data refresh';
+            } else {
+                $status = $busReg->getStatus()->getId();
+
+                switch ($status) {
+                    case BusRegEntity::STATUS_CANCEL:
+                        $state = 'cancellation';
+                        break;
+                    case BusRegEntity::STATUS_VAR:
+                        $state = 'variation';
+                        break;
+                    default:
+                        $state = 'application';
+                }
+            }
+        }
+
+        $message[] = sprintf(self::TASK_DESC, 'New ' . $state, $busReg->getRegNo());
+
+        if (!empty($processedMaps)) {
+            $message[] = sprintf(self::PDF_GENERATED, 'were generated', implode(', ', $processedMaps));
+        }
+
+        if (!empty($failedMaps)) {
+            $message[] = sprintf(self::PDF_GENERATED, 'failed to generate', implode(', ', $failedMaps));
+        }
 
         $data = [
             'category' => TaskEntity::CATEGORY_BUS,
             'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
-            'description' => $desc,
+            'description' => implode("\n", $message),
             'actionDate' => date('Y-m-d'),
             'busReg' => $busReg->getId(),
             'licence' => $busReg->getLicence()->getId(),
@@ -305,7 +335,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     {
         $scaleString = '';
 
-        if ($templateFile ===  TransExchangeClient::REQUEST_MAP_TEMPLATE) {
+        if ($templateFile === TransExchangeClient::REQUEST_MAP_TEMPLATE) {
             $scaleString = sprintf(self::SCALE_DESC, ucwords(strtolower($scale)));
         }
 

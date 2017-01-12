@@ -25,7 +25,7 @@ final class RequestMapQueue extends AbstractCommandHandler implements AuthAwareI
     use AuthAwareTrait;
     use QueueAwareTrait;
 
-    const CONFIRM_MESSAGE = '%s new PDF(s) requested';
+    const CONFIRM_MESSAGE = 'New PDF(s) requested';
 
     protected $repoServiceName = 'Bus';
 
@@ -56,27 +56,14 @@ final class RequestMapQueue extends AbstractCommandHandler implements AuthAwareI
         $optionData = [
             'scale' => $command->getScale(),
             'id' => $entityId,
+            'fromNewEbsr' => $command->getFromNewEbsr(),
             'regNo' => $busReg->getRegNo(),
             'licence' => $busReg->getLicence()->getId(),
             'user' => $this->getCurrentUser()->getId()
         ];
 
-        $recordData = $optionData + ['template' => TransExchangeClient::DVSA_RECORD_TEMPLATE];
-
-        $sideEffects[] = $this->createQueue($entityId, Queue::TYPE_EBSR_REQUEST_MAP, $recordData);
-
-        //we only create the dvsa record pdf for cancellations, otherwise create all three
-        if (!$busReg->isCancellation()) {
-            $mapData = $optionData + ['template' => TransExchangeClient::REQUEST_MAP_TEMPLATE];
-            $timeTableData = $optionData + ['template' => TransExchangeClient::TIMETABLE_TEMPLATE];
-
-            $sideEffects[] = $this->createQueue($entityId, Queue::TYPE_EBSR_REQUEST_MAP, $mapData);
-            $sideEffects[] = $this->createQueue($entityId, Queue::TYPE_EBSR_REQUEST_MAP, $timeTableData);
-        }
-
-        $this->handleSideEffects($sideEffects);
-
-        $result->addMessage(sprintf(self::CONFIRM_MESSAGE, count($sideEffects)));
+        $this->handleSideEffect($this->createQueue($entityId, Queue::TYPE_EBSR_REQUEST_MAP, $optionData));
+        $result->addMessage(self::CONFIRM_MESSAGE);
 
         return $result;
     }

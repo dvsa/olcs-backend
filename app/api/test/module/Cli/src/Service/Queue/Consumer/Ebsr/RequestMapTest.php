@@ -90,44 +90,4 @@ class RequestMapTest extends AbstractConsumerTestCase
 
         $this->sut->failed($item, 'unit_LastErr');
     }
-
-    /**
-     * Tests that the Transxchange exception is caught correctly
-     */
-    public function testProcessMessageHandlesTransxchangeException()
-    {
-        $message = 'Invalid response from transXchange publisher';
-        $user = new User('pid', 'type');
-        $user->setId(11);
-
-        $json = new ZendJson();
-        $options = $json->serialize(['options']);
-
-        $item = new QueueEntity();
-        $item->setId(99);
-        $item->setOptions($options);
-        $item->setCreatedBy($user);
-
-        $this->chm
-            ->shouldReceive('handleCommand')
-            ->with(ProcessRequestMapCmd::class)
-            ->andThrow(new TransxchangeException($message));
-
-        $this->expectCommand(
-            RetryCmd::class,
-            [
-                'item' => $item,
-                'retryAfter' => 900
-            ],
-            new Result(),
-            false
-        );
-
-        $result = $this->sut->processMessage($item);
-
-        $this->assertEquals(
-            'Requeued message: 99 ' . $options . ' for retry in 900 ' . $message,
-            $result
-        );
-    }
 }
