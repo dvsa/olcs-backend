@@ -264,7 +264,8 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
     /**
      * testHandleCommand where documents are failing
      */
-    public function testHandleCommandDocumentsFailing() {
+    public function testHandleCommandDocumentsFailing()
+    {
         //use different config from the rest of the tests
         $config = [
             'ebsr' => [
