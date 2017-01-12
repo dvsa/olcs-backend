@@ -6,6 +6,8 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus\Ebsr;
 
+use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
+use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessRequestMap as ProcessRequestMapCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\ProcessRequestMap;
@@ -18,7 +20,6 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\UpdateTxcInboxPdf as UpdateTxcInboxPdfCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRequestMap as SendEbsrRequestMapCmd;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Olcs\XmlTools\Xml\TemplateBuilder;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
@@ -27,7 +28,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use org\bovigo\vfs\vfsStream;
-use Zend\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeException;
 
 /**
  * ProcessRequestMap Test
@@ -35,7 +35,6 @@ use Zend\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeExcepti
  */
 class ProcessRequestMapTest extends CommandHandlerTestCase
 {
-    protected $template;
     protected $templatePath;
     protected $templatePaths;
 
@@ -48,7 +47,7 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
             'ebsr' => [
                 'transexchange_publisher' => [
                     'templates' => [
-                        $this->template => 'template path'
+                        TransExchangeClient::REQUEST_MAP_TEMPLATE => 'template path'
                     ],
                 ],
                 'tmp_extra_path' => '/tmp/file/path'
@@ -67,18 +66,20 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
     }
 
     /**
-     * testHandleCommand
+     * testHandleCommand for a cancellation
      *
-     * @dataProvider handleCommandProvider
+     * @dataProvider handleCommandCancellationProvider
      */
-    public function testHandleCommand($template, $pdfType, $scale, $extraDocumentDesc)
+    public function testHandleCommandCancellation($fromNewEbsr, $state, $getStatusTimes)
     {
         //use different config from the rest of the tests
         $config = [
             'ebsr' => [
                 'transexchange_publisher' => [
                     'templates' => [
-                        $template => 'template path'
+                        TransExchangeClient::DVSA_RECORD_TEMPLATE => '/templates/record',
+                        TransExchangeClient::REQUEST_MAP_TEMPLATE => '/templates/map',
+                        TransExchangeClient::TIMETABLE_TEMPLATE => '/templates/timetable'
                     ],
                 ],
                 'tmp_extra_path' => '/tmp/file/path'
@@ -90,15 +91,9 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
         $id = 99;
         $licenceId = 77;
         $submissionId = 55;
-        $emailParams = [
-            'id' => $submissionId,
-            'pdfType' => $this->sut->getDocumentDescriptions()[$template]
-        ];
-        $xmlFilename = 'filename.xml';
         $documentIdentifier = 'identifier';
         $uploadedDocumentId = 55;
         $busRegNo = 'PB8593040/4896';
-        $xmlTemplate = '<xml></xml>';
 
         $fileSystem = vfsStream::setup();
         $transxchangeFilename = vfsStream::url('root/transxchange.pdf');
@@ -107,18 +102,11 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
         $file->setContent($transxchangeContent);
         $fileSystem->addChild($file);
 
-        $transExchangeDocument = [
-            'files' => [
-                0 => $transxchangeFilename
-            ]
-        ];
-
         $command = ProcessRequestMapCmd::create(
             [
                 'id' => $id,
-                'template' => $template,
-                'scale' => $scale,
-                'user' => 1
+                'user' => 1,
+                'fromNewEbsr' => $fromNewEbsr
             ]
         );
 
@@ -127,15 +115,410 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
         $submission->shouldReceive('getId')->andReturn($submissionId);
 
         $busReg = m::mock(BusRegEntity::class);
-        $busReg->shouldReceive('getId')->andReturn($id);
+        $busReg->shouldReceive('getId')->times(3)->withNoArgs()->andReturn($id);
         $busReg->shouldReceive('getRegNo')->andReturn($busRegNo);
         $busReg->shouldReceive('getLicence->getId')->andReturn($licenceId);
         $busReg->shouldReceive('getEbsrSubmissions')->once()->andReturn(new ArrayCollection([$submission]));
+        $busReg->shouldReceive('isCancellation')->once()->withNoArgs()->andReturn(true);
+        $busReg->shouldReceive('isEbsrRefresh')->times($getStatusTimes)->withNoArgs()->andReturn(false);
+        $busReg->shouldReceive('getStatus->getId')
+            ->times($getStatusTimes)
+            ->withNoArgs()
+            ->andReturn(BusRegEntity::STATUS_CANCEL);
 
+        $this->commonAssertions($command, $busReg, $documentIdentifier, $transxchangeFilename, 1);
+
+        $docUploadResult = $this->docUploadResult($uploadedDocumentId);
+        $documentDesc = $this->sut->getDocumentDescriptions()[TransExchangeClient::DVSA_RECORD_TEMPLATE];
+
+        $this->documentSideEffect($transxchangeFilename, $id, $licenceId, $documentDesc, $docUploadResult);
+        $this->txcInboxSideEffect($id, $uploadedDocumentId, ProcessRequestMap::TXC_INBOX_TYPE_PDF);
+        $this->taskSideEffect($id, $licenceId, $this->taskSuccessDesc($state, $busRegNo, $documentDesc));
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertInstanceOf(Result::class, $result);
+    }
+
+    /**
+     * data provider for testHandleCommandCancellation
+     */
+    public function handleCommandCancellationProvider()
+    {
+        return [
+            [true, 'cancellation', 1],
+            [false, 'pdf files', 0],
+        ];
+    }
+
+    /**
+     * testHandleCommand where bus reg is not a cancellation
+     *
+     * @dataProvider handleCommandNotCancellationProvider
+     */
+    public function testHandleCommandNotCancellation(
+        $fromNewEbsr,
+        $isEbsrRefresh,
+        $ebsrRefreshTimes,
+        $state,
+        $busRegStatus,
+        $getStatusTimes
+    ) {
+        //use different config from the rest of the tests
+        $config = [
+            'ebsr' => [
+                'transexchange_publisher' => [
+                    'templates' => [
+                        TransExchangeClient::DVSA_RECORD_TEMPLATE => '/templates/record',
+                        TransExchangeClient::REQUEST_MAP_TEMPLATE => '/templates/map',
+                        TransExchangeClient::TIMETABLE_TEMPLATE => '/templates/timetable'
+                    ],
+                ],
+                'tmp_extra_path' => '/tmp/file/path'
+            ]
+        ];
+
+        $this->sut->setConfig($config);
+
+        $id = 99;
+        $licenceId = 77;
+        $submissionId = 55;
+        $documentIdentifier = 'identifier';
+        $uploadedDocumentId1 = 55;
+        $uploadedDocumentId2 = 56;
+        $uploadedDocumentId3 = 57;
+        $busRegNo = 'PB8593040/4896';
+
+        $fileSystem = vfsStream::setup();
+        $transxchangeFilename = vfsStream::url('root/transxchange.pdf');
+        $transxchangeContent = 'doc content';
+        $file = vfsStream::newFile('transxchange.pdf');
+        $file->setContent($transxchangeContent);
+        $fileSystem->addChild($file);
+
+        $command = ProcessRequestMapCmd::create(
+            [
+                'id' => $id,
+                'user' => 1,
+                'fromNewEbsr' => $fromNewEbsr,
+                'scale' => 'auto'
+            ]
+        );
+
+        $submission = m::mock(EbsrSubmissionEntity::class);
+        $submission->shouldReceive('getDocument->getIdentifier')->andReturn($documentIdentifier);
+        $submission->shouldReceive('getId')->andReturn($submissionId);
+
+        $busReg = m::mock(BusRegEntity::class);
+        $busReg->shouldReceive('getId')->times(5)->withNoArgs()->andReturn($id);
+        $busReg->shouldReceive('getRegNo')->andReturn($busRegNo);
+        $busReg->shouldReceive('getLicence->getId')->times(4)->withNoArgs()->andReturn($licenceId);
+        $busReg->shouldReceive('getEbsrSubmissions')->once()->andReturn(new ArrayCollection([$submission]));
+        $busReg->shouldReceive('isCancellation')->once()->withNoArgs()->andReturn(false);
+        $busReg->shouldReceive('isEbsrRefresh')->times($ebsrRefreshTimes)->withNoArgs()->andReturn($isEbsrRefresh);
+        $busReg->shouldReceive('getStatus->getId')
+            ->times($getStatusTimes)
+            ->withNoArgs()
+            ->andReturn($busRegStatus);
+
+        $this->commonAssertions($command, $busReg, $documentIdentifier, $transxchangeFilename, 3);
+
+        $docUploadResult1 = $this->docUploadResult($uploadedDocumentId1);
+        $docUploadResult2 = $this->docUploadResult($uploadedDocumentId2);
+        $docUploadResult3 = $this->docUploadResult($uploadedDocumentId3);
+
+        $docDescs = $this->sut->getDocumentDescriptions();
+
+        $documentDesc1 = $docDescs[TransExchangeClient::DVSA_RECORD_TEMPLATE];
+        $documentDesc2 = $docDescs[TransExchangeClient::TIMETABLE_TEMPLATE];
+        $documentDesc3 = $docDescs[TransExchangeClient::REQUEST_MAP_TEMPLATE] . ' (Auto Scale)';
+
+        $this->documentSideEffect($transxchangeFilename, $id, $licenceId, $documentDesc1, $docUploadResult1);
+        $this->documentSideEffect($transxchangeFilename, $id, $licenceId, $documentDesc2, $docUploadResult2);
+        $this->documentSideEffect($transxchangeFilename, $id, $licenceId, $documentDesc3, $docUploadResult3);
+
+        $this->txcInboxSideEffect($id, $uploadedDocumentId1, ProcessRequestMap::TXC_INBOX_TYPE_PDF);
+        $this->txcInboxSideEffect($id, $uploadedDocumentId3, ProcessRequestMap::TXC_INBOX_TYPE_ROUTE);
+
+        $documentDesc = $documentDesc1 . ', ' . $documentDesc2 . ', ' . $documentDesc3;
+        $this->taskSideEffect($id, $licenceId, $this->taskSuccessDesc($state, $busRegNo, $documentDesc));
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertInstanceOf(Result::class, $result);
+    }
+
+    /**
+     * data provider for testHandleCommandNotCancellation
+     */
+    public function handleCommandNotCancellationProvider()
+    {
+        return [
+            [true, false, 1, 'variation', BusRegEntity::STATUS_VAR, 1],
+            [true, false, 1, 'application', 'other bus status', 1],
+            [true, true, 1, 'data refresh', '', 0],
+            [false, false, 0, 'pdf files', '', 0],
+        ];
+    }
+
+    /**
+     * testHandleCommand where documents are failing
+     */
+    public function testHandleCommandDocumentsFailing()
+    {
+        //use different config from the rest of the tests
+        $config = [
+            'ebsr' => [
+                'transexchange_publisher' => [
+                    'templates' => [
+                        TransExchangeClient::DVSA_RECORD_TEMPLATE => '/templates/record',
+                        TransExchangeClient::REQUEST_MAP_TEMPLATE => '/templates/map',
+                        TransExchangeClient::TIMETABLE_TEMPLATE => '/templates/timetable'
+                    ],
+                ],
+                'tmp_extra_path' => '/tmp/file/path'
+            ]
+        ];
+
+        $this->sut->setConfig($config);
+
+        $id = 99;
+        $licenceId = 77;
+        $submissionId = 55;
+        $documentIdentifier = 'identifier';
+        $busRegNo = 'PB8593040/4896';
+
+        $command = ProcessRequestMapCmd::create(
+            [
+                'id' => $id,
+                'user' => 1,
+                'fromNewEbsr' => false,
+                'scale' => 'auto'
+            ]
+        );
+
+        $submission = m::mock(EbsrSubmissionEntity::class);
+        $submission->shouldReceive('getDocument->getIdentifier')->andReturn($documentIdentifier);
+        $submission->shouldReceive('getId')->andReturn($submissionId);
+
+        $busReg = m::mock(BusRegEntity::class);
+        $busReg->shouldReceive('getId')->times(2)->withNoArgs()->andReturn($id);
+        $busReg->shouldReceive('getRegNo')->andReturn($busRegNo);
+        $busReg->shouldReceive('getLicence->getId')->times(1)->withNoArgs()->andReturn($licenceId);
+        $busReg->shouldReceive('getEbsrSubmissions')->once()->andReturn(new ArrayCollection([$submission]));
+        $busReg->shouldReceive('isCancellation')->once()->withNoArgs()->andReturn(false);
+
+        $this->commonAssertions($command, $busReg, $documentIdentifier, null, 3, false);
+
+        $docDescs = $this->sut->getDocumentDescriptions();
+
+        $documentDesc1 = $docDescs[TransExchangeClient::DVSA_RECORD_TEMPLATE];
+        $documentDesc2 = $docDescs[TransExchangeClient::TIMETABLE_TEMPLATE];
+        $documentDesc3 = $docDescs[TransExchangeClient::REQUEST_MAP_TEMPLATE] . ' (Auto Scale)';
+
+        $taskDesc = 'New pdf files created: '
+            . $busRegNo . "\n"
+            . 'The following PDFs failed to generate: '
+            . $documentDesc1 . ', ' . $documentDesc2 . ', ' . $documentDesc3;
+        $this->taskSideEffect($id, $licenceId, $taskDesc);
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertInstanceOf(Result::class, $result);
+    }
+
+    /**
+     * test handleCommand when template config is not found
+     *
+     * @dataProvider missingEbsrPackProvider
+     */
+    public function testHandleCommandMissingEbsrPack($fileProcessorException)
+    {
+        $this->setExpectedException(TransxchangeException::class, ProcessRequestMap::MISSING_PACK_FILE_ERROR);
+
+        $config = [
+            'ebsr' => [
+                'transexchange_publisher' => [
+                    'templates' => [],
+                ],
+                'tmp_extra_path' => '/tmp/file/path'
+            ]
+        ];
+
+        $this->sut->setConfig($config);
+
+        $id = 99;
+        $documentIdentifier = 'identifier';
+
+        $command = ProcessRequestMapCmd::Create(
+            [
+                'id' => $id,
+                'user' => 1,
+            ]
+        );
+
+        $submission = m::mock(EbsrSubmissionEntity::class);
+        $submission->shouldReceive('getDocument->getIdentifier')->andReturn($documentIdentifier);
+
+        $busReg = m::mock(BusRegEntity::class);
+        $busReg->shouldReceive('getEbsrSubmissions')->once()->andReturn(new ArrayCollection([$submission]));
+
+        $this->busEntity($command, $busReg);
+
+        $this->mockedSmServices[FileProcessorInterface::class]
+            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
+            ->once()
+            ->with($documentIdentifier, true)
+            ->andThrow($fileProcessorException);
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @return array
+     */
+    public function missingEbsrPackProvider()
+    {
+        return [
+            [EbsrPackException::class],
+            [\RuntimeException::class]
+        ];
+    }
+
+    /**
+     * test handleCommand when template config is not found
+     */
+    public function testHandleCommandMissingTemplateConfig()
+    {
+        $config = [
+            'ebsr' => [
+                'transexchange_publisher' => [
+                    'templates' => [],
+                ],
+                'tmp_extra_path' => '/tmp/file/path'
+            ]
+        ];
+
+        $this->sut->setConfig($config);
+
+        $id = 99;
+        $licenceId = 77;
+        $busRegNo = 'PB8593040/4896';
+        $submissionId = 55;
+        $scale = 'small';
+        $xmlFilename = 'filename.xml';
+        $documentIdentifier = 'identifier';
+
+        $command = ProcessRequestMapCmd::Create(
+            [
+                'id' => $id,
+                'scale' => $scale,
+                'user' => 1,
+                'fromNewEbsr' => false
+            ]
+        );
+
+        $submission = m::mock(EbsrSubmissionEntity::class);
+        $submission->shouldReceive('getDocument->getIdentifier')->andReturn($documentIdentifier);
+        $submission->shouldReceive('getId')->andReturn($submissionId);
+
+        $busReg = m::mock(BusRegEntity::class);
+        $busReg->shouldReceive('getEbsrSubmissions')->once()->andReturn(new ArrayCollection([$submission]));
+        $busReg->shouldReceive('isCancellation')->once()->withNoArgs()->andReturn(true);
+        $busReg->shouldReceive('getId')->times(2)->withNoArgs()->andReturn($id);
+        $busReg->shouldReceive('getRegNo')->once()->withNoArgs()->andReturn($busRegNo);
+        $busReg->shouldReceive('getLicence->getId')->andReturn($licenceId);
+
+        $this->busEntity($command, $busReg);
+
+        $this->mockedSmServices[FileProcessorInterface::class]
+            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
+            ->once()
+            ->with($documentIdentifier, true)
+            ->andReturn($xmlFilename);
+
+        $taskDesc = 'New pdf files created: '
+            . $busRegNo . "\n"
+            . 'The following PDFs failed to generate: DVSA Record PDF';
+        $this->taskSideEffect($id, $licenceId, $taskDesc);
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * test handleCommand throws an exception when config not found
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\TransxchangeException
+     * @expectedExceptionMessage No tmp directory specified in config
+     */
+    public function testHandleCommandMissingFilePathConfig()
+    {
+        $command = ProcessRequestMapCmd::create([]);
+        $this->sut->setConfig([]);
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @param $state
+     * @param $regNo
+     * @param $desc
+     *
+     * @return string
+     */
+    private function taskSuccessDesc($state, $regNo, $desc)
+    {
+        return 'New ' . $state . ' created: ' . $regNo . "\n" . 'The following PDFs were generated: ' . $desc;
+    }
+
+    /**
+     * @param $uploadedDocumentId
+     * @return Result
+     */
+    private function docUploadResult($uploadedDocumentId)
+    {
+        $docUploadResult = new Result();
+        $docUploadResult->addId('document', $uploadedDocumentId);
+
+        return $docUploadResult;
+    }
+
+    /**
+     * @param $command
+     * @param $busReg
+     */
+    private function busEntity($command, $busReg)
+    {
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')
             ->once()
             ->with($command)
             ->andReturn($busReg);
+    }
+
+    /**
+     * @param $command
+     * @param $busReg
+     * @param $documentIdentifier
+     * @param $numRequests
+     */
+    private function commonAssertions(
+        $command,
+        $busReg,
+        $documentIdentifier,
+        $transxchangeFilename,
+        $numRequests,
+        $returnDocument = true
+    ) {
+        $xmlFilename = 'filename.xml';
+
+        $transXchangeDocument = [
+            'files' => [
+                0 => $transxchangeFilename
+            ]
+        ];
+
+        $xmlTemplate = '<xml></xml>';
+
+        $this->busEntity($command, $busReg);
 
         $this->mockedSmServices[FileProcessorInterface::class]
             ->shouldReceive('fetchXmlFileNameFromDocumentStore')
@@ -145,80 +528,14 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
 
         $this->mockedSmServices[TemplateBuilder::class]
             ->shouldReceive('buildTemplate')
-            ->once()
+            ->times($numRequests)
             ->andReturn($xmlTemplate);
 
         $this->mockedSmServices[TransExchangeClient::class]
             ->shouldReceive('makeRequest')
-            ->once()
+            ->times($numRequests)
             ->with($xmlTemplate)
-            ->andReturn($transExchangeDocument);
-
-        $docUploadResult = new Result();
-        $docUploadResult->addId('document', $uploadedDocumentId);
-
-        $documentDesc = $this->sut->getDocumentDescriptions()[$template] . $extraDocumentDesc;
-
-        $documentData = [
-            'content' => base64_encode(file_get_contents($transxchangeFilename)),
-            'busReg' => $busReg->getId(),
-            'licence' => $busReg->getLicence()->getId(),
-            'category' => CategoryEntity::CATEGORY_BUS_REGISTRATION,
-            'subCategory' => CategoryEntity::BUS_SUB_CATEGORY_TRANSXCHANGE_PDF,
-            'filename' => basename($transxchangeFilename),
-            'description' => $documentDesc,
-            'user' => 1
-        ];
-
-        $this->expectedSideEffect(UploadCmd::class, $documentData, $docUploadResult);
-
-        $this->txcInboxSideEffect($id, $uploadedDocumentId, $pdfType);
-
-        $taskData = [
-            'category' => TaskEntity::CATEGORY_BUS,
-            'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
-            'description' => sprintf(ProcessRequestMap::TASK_SUCCESS_DESC, $documentDesc, $busRegNo),
-            'actionDate' => date('Y-m-d'),
-            'busReg' => $id,
-            'licence' => $licenceId,
-        ];
-
-        $this->expectedSideEffect(CreateTaskCmd::class, $taskData, new Result());
-
-        $this->expectedEmailQueueSideEffect(SendEbsrRequestMapCmd::class, $emailParams, $submissionId, new Result());
-
-        $result = $this->sut->handleCommand($command);
-
-        $this->assertInstanceOf(Result::class, $result);
-    }
-
-    /**
-     * data provider for testHandleCommand
-     */
-    public function handleCommandProvider()
-    {
-        return [
-            [
-                TransExchangeClient::REQUEST_MAP_TEMPLATE,
-                ProcessRequestMap::TXC_INBOX_TYPE_ROUTE,
-                'auto',
-                ' (Auto Scale)'
-            ],
-            [
-                TransExchangeClient::REQUEST_MAP_TEMPLATE,
-                ProcessRequestMap::TXC_INBOX_TYPE_ROUTE,
-                'small',
-                ' (Small Scale)'
-            ],
-            [
-                TransExchangeClient::REQUEST_MAP_TEMPLATE,
-                ProcessRequestMap::TXC_INBOX_TYPE_ROUTE,
-                'large',
-                ' (Large Scale)'
-            ],
-            [TransExchangeClient::DVSA_RECORD_TEMPLATE, ProcessRequestMap::TXC_INBOX_TYPE_PDF, '', ''],
-            [TransExchangeClient::TIMETABLE_TEMPLATE, '', '', '']
-        ];
+            ->andReturn($returnDocument ? $transXchangeDocument : []);
     }
 
     /**
@@ -242,191 +559,44 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
     }
 
     /**
-     * test handleCommand throws an exception when transxchange doesn't return a good response
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\TransxchangeException
+     * @param $transxchangeFilename
+     * @param $busRegId
+     * @param $licenceId
+     * @param $documentDesc
+     * @param $uploadResult
      */
-    public function testHandleCommandFail()
+    private function documentSideEffect($transxchangeFilename, $busRegId, $licenceId, $documentDesc, $uploadResult)
     {
-        $id = 99;
-        $licenceId = 77;
-        $submissionId = 55;
-        $scale = 'small';
-        $xmlFilename = 'filename.xml';
-        $documentIdentifier = 'identifier';
-        $busRegNo = 'PB8593040/4896';
-        $xmlTemplate = '<xml></xml>';
-
-        $command = ProcessRequestMapCmd::Create(
-            [
-                'id' => $id,
-                'template' => $this->template,
-                'scale' => $scale,
-                'user' => 1
-            ]
-        );
-
-        $submission = m::mock(EbsrSubmissionEntity::class);
-        $submission->shouldReceive('getDocument->getIdentifier')->andReturn($documentIdentifier);
-        $submission->shouldReceive('getId')->andReturn($submissionId);
-
-        $busReg = m::mock(BusRegEntity::class);
-        $busReg->shouldReceive('getId')->andReturn($id);
-        $busReg->shouldReceive('getRegNo')->andReturn($busRegNo);
-        $busReg->shouldReceive('getLicence->getId')->andReturn($licenceId);
-        $busReg->shouldReceive('getEbsrSubmissions')->once()->andReturn(new ArrayCollection([$submission]));
-
-        $this->repoMap['Bus']->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command)
-            ->andReturn($busReg);
-
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
-            ->once()
-            ->with($documentIdentifier, true)
-            ->andReturn($xmlFilename);
-
-        $this->mockedSmServices[TemplateBuilder::class]
-            ->shouldReceive('buildTemplate')
-            ->once()
-            ->andReturn($xmlTemplate);
-
-        $this->mockedSmServices[TransExchangeClient::class]
-            ->shouldReceive('makeRequest')
-            ->once()
-            ->with($xmlTemplate)
-            ->andReturn(false);
-
-        $result = $this->sut->handleCommand($command);
-
-        $this->assertInstanceOf(Result::class, $result);
-    }
-
-    /**
-     * test handleCommand throws an exception when transxchange throws a runtime exception
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\TransxchangeException
-     */
-    public function testHandleCommandTransxchangeRuntimeException()
-    {
-        $id = 99;
-        $licenceId = 77;
-        $submissionId = 55;
-        $scale = 'small';
-        $xmlFilename = 'filename.xml';
-        $documentIdentifier = 'identifier';
-        $busRegNo = 'PB8593040/4896';
-        $xmlTemplate = '<xml></xml>';
-
-        $command = ProcessRequestMapCmd::Create(
-            [
-                'id' => $id,
-                'template' => $this->template,
-                'scale' => $scale,
-                'user' => 1
-            ]
-        );
-
-        $submission = m::mock(EbsrSubmissionEntity::class);
-        $submission->shouldReceive('getDocument->getIdentifier')->andReturn($documentIdentifier);
-        $submission->shouldReceive('getId')->andReturn($submissionId);
-
-        $busReg = m::mock(BusRegEntity::class);
-        $busReg->shouldReceive('getId')->andReturn($id);
-        $busReg->shouldReceive('getRegNo')->andReturn($busRegNo);
-        $busReg->shouldReceive('getLicence->getId')->andReturn($licenceId);
-        $busReg->shouldReceive('getEbsrSubmissions')->once()->andReturn(new ArrayCollection([$submission]));
-
-        $this->repoMap['Bus']->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command)
-            ->andReturn($busReg);
-
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
-            ->once()
-            ->with($documentIdentifier, true)
-            ->andReturn($xmlFilename);
-
-        $this->mockedSmServices[TemplateBuilder::class]
-            ->shouldReceive('buildTemplate')
-            ->once()
-            ->andReturn($xmlTemplate);
-
-        $this->mockedSmServices[TransExchangeClient::class]
-            ->shouldReceive('makeRequest')
-            ->once()
-            ->andThrow(AdapterRuntimeException::class, 'exception message');
-
-        $result = $this->sut->handleCommand($command);
-
-        $this->assertInstanceOf(Result::class, $result);
-    }
-
-    /**
-     * test handleCommand throws an exception when template config is not found
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\TransxchangeException
-     */
-    public function testHandleCommandMissingTemplateConfig()
-    {
-        $config = [
-            'ebsr' => [
-                'transexchange_publisher' => [
-                    'templates' => [],
-                ],
-                'tmp_extra_path' => '/tmp/file/path'
-            ]
+        $documentData = [
+            'content' => base64_encode(file_get_contents($transxchangeFilename)),
+            'busReg' => $busRegId,
+            'licence' => $licenceId,
+            'category' => CategoryEntity::CATEGORY_BUS_REGISTRATION,
+            'subCategory' => CategoryEntity::BUS_SUB_CATEGORY_TRANSXCHANGE_PDF,
+            'filename' => basename($transxchangeFilename),
+            'description' => $documentDesc,
+            'user' => 1
         ];
 
-        $this->sut->setConfig($config);
-
-        $id = 99;
-        $submissionId = 55;
-        $scale = 'small';
-        $xmlFilename = 'filename.xml';
-        $documentIdentifier = 'identifier';
-
-        $command = ProcessRequestMapCmd::Create(
-            [
-                'id' => $id,
-                'template' => $this->template,
-                'scale' => $scale,
-                'user' => 1
-            ]
-        );
-
-        $submission = m::mock(EbsrSubmissionEntity::class);
-        $submission->shouldReceive('getDocument->getIdentifier')->andReturn($documentIdentifier);
-        $submission->shouldReceive('getId')->andReturn($submissionId);
-
-        $busReg = m::mock(BusRegEntity::class);
-        $busReg->shouldReceive('getEbsrSubmissions')->once()->andReturn(new ArrayCollection([$submission]));
-
-        $this->repoMap['Bus']->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command)
-            ->andReturn($busReg);
-
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
-            ->once()
-            ->with($documentIdentifier, true)
-            ->andReturn($xmlFilename);
-
-        $this->sut->handleCommand($command);
+        $this->expectedSideEffect(UploadCmd::class, $documentData, $uploadResult);
     }
 
     /**
-     * test handleCommand throws an exception when config not found
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\TransxchangeException
+     * @param $busRegId
+     * @param $licenceId
+     * @param $taskDesc
      */
-    public function testHandleCommandMissingFilePathConfig()
+    private function taskSideEffect($busRegId, $licenceId, $taskDesc)
     {
-        $command = ProcessRequestMapCmd::create([]);
-        $this->sut->setConfig([]);
-        $this->sut->handleCommand($command);
+        $taskData = [
+            'category' => TaskEntity::CATEGORY_BUS,
+            'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
+            'description' => $taskDesc,
+            'actionDate' => date('Y-m-d'),
+            'busReg' => $busRegId,
+            'licence' => $licenceId,
+        ];
+
+        $this->expectedSideEffect(CreateTaskCmd::class, $taskData, new Result());
     }
 }

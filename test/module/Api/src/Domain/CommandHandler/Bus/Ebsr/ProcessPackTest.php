@@ -10,7 +10,6 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
-use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
@@ -34,7 +33,6 @@ use Zend\InputFilter\Input;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrReceived as SendEbsrReceivedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefreshed as SendEbsrRefreshedCmd;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateTxcInbox as CreateTxcInboxCmd;
 use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks as UpdateDocumentLinksCmd;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\RequestMap as RequestMapQueueCmd;
@@ -148,7 +146,6 @@ class ProcessPackTest extends CommandHandlerTestCase
         $submissionTypeId = 'submission type id';
         $organisation = m::mock(OrganisationEntity::class);
         $busRegStatus = BusRegEntity::STATUS_REGISTERED;
-        $taskMessage = 'Data refresh created: ';
 
         $fileSystem = vfsStream::setup();
         $supportingDocName = 'supporting.doc';
@@ -290,13 +287,12 @@ class ProcessPackTest extends CommandHandlerTestCase
         $variationBusReg->shouldReceive('setOtherServices')->once()->with(m::type(ArrayCollection::class));
         $variationBusReg->shouldReceive('addOtherServiceNumber')->once()->with($otherServiceNumber1);
         $variationBusReg->shouldReceive('addOtherServiceNumber')->once()->with($otherServiceNumber2);
-        $variationBusReg->shouldReceive('getRegNo')->once()->andReturn($existingRegNo);
-        $variationBusReg->shouldReceive('getId')->times(6)->andReturn($variationBusRegId);
-        $variationBusReg->shouldReceive('getLicence->getId')->times(4)->andReturn($licenceId);
+        $variationBusReg->shouldReceive('getId')->times(5)->andReturn($variationBusRegId);
+        $variationBusReg->shouldReceive('getLicence->getId')->times(3)->andReturn($licenceId);
         $variationBusReg->shouldReceive('getIsShortNotice')->once()->andReturn('Y');
         $variationBusReg->shouldReceive('getShortNotice->fromData')->once()->with($busShortNotice);
         $variationBusReg->shouldReceive('setEbsrSubmissions')->once()->with(m::type(ArrayCollection::class));
-        $variationBusReg->shouldReceive('isEbsrRefresh')->twice()->andReturn(true);
+        $variationBusReg->shouldReceive('isEbsrRefresh')->once()->andReturn(true);
         $variationBusReg->shouldReceive('getStatus->getId')->once()->andReturn($busRegStatus);
 
         $previousBusReg = m::mock(BusRegEntity::class);
@@ -346,7 +342,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             new Result()
         );
 
-        $this->successSideEffects($existingRegNo, $variationBusRegId, $licenceId, $documentId, $taskMessage, false);
+        $this->successSideEffects($variationBusRegId, $licenceId, $documentId, false);
 
         $this->sut->handleCommand($command);
     }
@@ -368,12 +364,11 @@ class ProcessPackTest extends CommandHandlerTestCase
      *
      * @param $txcAppType
      * @param $busRegStatus
-     * @param $taskMessage
      * @param $fee
      *
      * @dataProvider handleVariationProvider
      */
-    public function testHandleCommandVariation($txcAppType, $busRegStatus, $taskMessage, $fee)
+    public function testHandleCommandVariation($txcAppType, $busRegStatus, $fee)
     {
         $filePath = 'vfs://root';
         $xmlName = $filePath . '/xml-file-name.xml';
@@ -528,14 +523,13 @@ class ProcessPackTest extends CommandHandlerTestCase
         $variationBusReg->shouldReceive('setOtherServices')->once()->with(m::type(ArrayCollection::class));
         $variationBusReg->shouldReceive('addOtherServiceNumber')->once()->with($otherServiceNumber1);
         $variationBusReg->shouldReceive('addOtherServiceNumber')->once()->with($otherServiceNumber2);
-        $variationBusReg->shouldReceive('getRegNo')->once()->andReturn($existingRegNo);
-        $variationBusReg->shouldReceive('getId')->times(6)->andReturn($variationBusRegId);
-        $variationBusReg->shouldReceive('getLicence->getId')->times(4)->andReturn($licenceId);
+        $variationBusReg->shouldReceive('getId')->times(5)->andReturn($variationBusRegId);
+        $variationBusReg->shouldReceive('getLicence->getId')->times(3)->andReturn($licenceId);
         $variationBusReg->shouldReceive('getIsShortNotice')->once()->andReturn('Y');
         $variationBusReg->shouldReceive('getShortNotice->fromData')->once()->with($busShortNotice);
         $variationBusReg->shouldReceive('setEbsrSubmissions')->once()->with(m::type(ArrayCollection::class));
-        $variationBusReg->shouldReceive('isEbsrRefresh')->twice()->andReturn(false);
-        $variationBusReg->shouldReceive('getStatus->getId')->twice()->andReturn($busRegStatus);
+        $variationBusReg->shouldReceive('isEbsrRefresh')->once()->andReturn(false);
+        $variationBusReg->shouldReceive('getStatus->getId')->once()->andReturn($busRegStatus);
 
         $previousBusReg = m::mock(BusRegEntity::class);
         $previousBusReg->shouldReceive('createVariation')
@@ -579,7 +573,7 @@ class ProcessPackTest extends CommandHandlerTestCase
 
         $this->expectedEmailQueueSideEffect(SendEbsrReceivedCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
 
-        $this->successSideEffects($existingRegNo, $variationBusRegId, $licenceId, $documentId, $taskMessage, $fee);
+        $this->successSideEffects($variationBusRegId, $licenceId, $documentId, $fee);
 
         $this->sut->handleCommand($command);
     }
@@ -590,8 +584,8 @@ class ProcessPackTest extends CommandHandlerTestCase
     public function handleVariationProvider()
     {
         return [
-            [BusRegEntity::TXC_APP_CANCEL, BusRegEntity::STATUS_CANCEL, 'New cancellation created: ', false],
-            [BusRegEntity::TXC_APP_CHARGEABLE, BusRegEntity::STATUS_VAR, 'New variation created: ', true]
+            [BusRegEntity::TXC_APP_CANCEL, BusRegEntity::STATUS_CANCEL, false],
+            [BusRegEntity::TXC_APP_CHARGEABLE, BusRegEntity::STATUS_VAR, true]
         ];
     }
 
@@ -676,7 +670,7 @@ class ProcessPackTest extends CommandHandlerTestCase
         $ebsrSubmission->shouldReceive('setLicenceNo')->with($parsedLicenceNumber)->once()->andReturnSelf();
         $ebsrSubmission->shouldReceive('setVariationNo')->with($parsedVariationNumber)->once()->andReturnSelf();
         $ebsrSubmission->shouldReceive('setRegistrationNo')->with($parsedRouteNumber)->once()->andReturnSelf();
-        $ebsrSubmission->shouldReceive('isDataRefresh')->twice()->andReturn(false);
+        $ebsrSubmission->shouldReceive('isDataRefresh')->once()->andReturn(false);
         $ebsrSubmission->shouldReceive('setOrganisationEmailAddress')
             ->with($parsedOrganisationEmail)
             ->once()
@@ -717,7 +711,7 @@ class ProcessPackTest extends CommandHandlerTestCase
         $licence = m::mock(LicenceEntity::class);
         $licence->shouldReceive('getLicNo')->twice()->andReturn($parsedLicenceNumber);
         $licence->shouldReceive('getLatestBusRouteNo')->once()->andReturn(12345);
-        $licence->shouldReceive('getId')->twice()->andReturn($licenceId);
+        $licence->shouldReceive('getId')->once()->andReturn($licenceId);
 
         $this->repoMap['Licence']->shouldReceive('fetchByLicNoWithoutAdditionalData')
             ->once()
@@ -755,11 +749,9 @@ class ProcessPackTest extends CommandHandlerTestCase
         $this->expectedEmailQueueSideEffect(SendEbsrReceivedCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
 
         $this->successSideEffects(
-            $existingRegNo,
             $savedBusRegId,
             $licenceId,
             $documentId,
-            'New application created: ',
             true
         );
 
@@ -1404,15 +1396,12 @@ class ProcessPackTest extends CommandHandlerTestCase
     /**
      * Common assertions to mock side effects when submission is successful
      *
-     * @param $existingRegNo
      * @param $savedBusRegId
      * @param $licenceId
      * @param $documentId
-     * @param $taskMessage
      */
-    private function successSideEffects($existingRegNo, $savedBusRegId, $licenceId, $documentId, $taskMessage, $fee)
+    private function successSideEffects($savedBusRegId, $licenceId, $documentId, $fee)
     {
-        $this->taskSideEffect($existingRegNo, $savedBusRegId, $licenceId, $taskMessage);
         $this->documentLinkSideEffect($documentId, $savedBusRegId, $licenceId);
         $this->requestMapSideEffect($savedBusRegId);
         $this->txcInboxSideEffect($savedBusRegId);
@@ -1448,28 +1437,6 @@ class ProcessPackTest extends CommandHandlerTestCase
     }
 
     /**
-     * Common assertions for task side effect
-     *
-     * @param $existingRegNo
-     * @param $savedBusRegId
-     * @param $licenceId
-     * @param $taskMessage
-     */
-    private function taskSideEffect($existingRegNo, $savedBusRegId, $licenceId, $taskMessage)
-    {
-        $taskData = [
-            'category' => TaskEntity::CATEGORY_BUS,
-            'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
-            'description' => $taskMessage . $existingRegNo,
-            'actionDate' => date('Y-m-d'),
-            'busReg' => $savedBusRegId,
-            'licence' => $licenceId,
-        ];
-
-        $this->expectedSideEffect(CreateTaskCmd::class, $taskData, new Result());
-    }
-
-    /**
      * Common assertions for side effect updating document links
      *
      * @param $documentId
@@ -1496,7 +1463,8 @@ class ProcessPackTest extends CommandHandlerTestCase
     {
         $requestMapData = [
             'id' => $savedBusRegId,
-            'scale' => 'auto'
+            'scale' => 'auto',
+            'fromNewEbsr' => true
         ];
 
         $this->expectedSideEffect(RequestMapQueueCmd::class, $requestMapData, new Result());

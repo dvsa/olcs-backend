@@ -17,26 +17,26 @@ class ProcessRequestMapTest extends PHPUnit_Framework_TestCase
         $id = 1;
         $user = 2;
         $scale = 'small';
-        $template = 'template';
         $licence = 'licence';
         $regNo = '123/45678';
+        $fromNewEbsr = true;
 
         $command = ProcessRequestMap::create(
             [
                 'id' => $id,
                 'user' => $user,
                 'scale' => $scale,
-                'template' => $template,
                 'licence' => $licence,
-                'regNo' => $regNo
+                'regNo' => $regNo,
+                'fromNewEbsr' => $fromNewEbsr
             ]
         );
 
         $this->assertEquals($id, $command->getId());
         $this->assertEquals($user, $command->getUser());
         $this->assertEquals($scale, $command->getScale());
-        $this->assertEquals($template, $command->getTemplate());
         $this->assertEquals($licence, $command->getLicence());
         $this->assertEquals($regNo, $command->getRegNo());
+        $this->assertEquals($fromNewEbsr, $command->getFromNewEbsr());
     }
 }
