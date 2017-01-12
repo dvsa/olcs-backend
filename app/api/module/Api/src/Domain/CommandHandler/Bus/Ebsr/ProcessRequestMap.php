@@ -255,8 +255,6 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     private function createTaskCmd(BusRegEntity $busReg, array $processedMaps, array $failedMaps, $fromNewEbsr)
     {
         $message = [];
-        $processedMapString = implode(', ', $processedMaps);
-        $failedMapString = implode(', ', $failedMaps);
         $state = 'pdf files'; //default, if this isn't as a result of a new EBSR pack being processed
 
         if ($fromNewEbsr) {
@@ -281,11 +279,11 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
         $message[] = sprintf(self::TASK_DESC, 'New ' . $state, $busReg->getRegNo());
 
         if (!empty($processedMaps)) {
-            $message[] = sprintf(self::PDF_GENERATED, 'were generated', $processedMapString);
+            $message[] = sprintf(self::PDF_GENERATED, 'were generated', implode(', ', $processedMaps));
         }
 
         if (!empty($failedMaps)) {
-            $message[] = sprintf(self::PDF_GENERATED, 'failed to generate', $failedMapString);
+            $message[] = sprintf(self::PDF_GENERATED, 'failed to generate', implode(', ', $failedMaps));
         }
 
         $data = [
