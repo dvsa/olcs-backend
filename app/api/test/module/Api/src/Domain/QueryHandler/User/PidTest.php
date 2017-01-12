@@ -33,22 +33,55 @@ class PidTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    /**
+     * @dataProvider handleQueryDataProvider
+     */
+    public function testHandleQuery($isInternal, $userId, $isActiveUser, $expectedCanResetPassword)
     {
         $query = Query::create(['id' => 'login_id']);
 
         $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
+        $mockUser->shouldReceive('getId')->andReturn($userId);
         $mockUser->shouldReceive('getPid')->andReturn('some-pid');
+        $mockUser->shouldReceive('isInternal')->andReturn($isInternal);
 
         $this->repoMap['User']->shouldReceive('fetchOneByLoginId')->with('login_id')->andReturn($mockUser);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('isActiveUser')
-            ->once()
             ->with('some-pid')
-            ->andReturn(false);
+            ->andReturn($isActiveUser);
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertSame(['pid' => 'some-pid', 'isActive' => false], $result);
+        $this->assertSame(
+            [
+                'pid' => 'some-pid',
+                'canResetPassword' => $expectedCanResetPassword
+            ],
+            $result
+        );
+    }
+
+    public function handleQueryDataProvider()
+    {
+        return [
+            // selfserve - migrated user - inactive - can reset password
+            [false, (QueryHandler::CAN_RESET_PWD_IF_NOT_ACTIVE_MAX_USER_ID - 1), false, true],
+            // selfserve - migrated user - active - can reset password
+            [false, (QueryHandler::CAN_RESET_PWD_IF_NOT_ACTIVE_MAX_USER_ID - 1), true, true],
+            // selfserve - non-migrated user - inactive - cannot reset password
+            [false, QueryHandler::CAN_RESET_PWD_IF_NOT_ACTIVE_MAX_USER_ID, false, false],
+            // selfserve - non-migrated user - active - can reset password
+            [false, QueryHandler::CAN_RESET_PWD_IF_NOT_ACTIVE_MAX_USER_ID, true, true],
+
+            // internal - migrated user - inactive - cannot reset password
+            [true, (QueryHandler::CAN_RESET_PWD_IF_NOT_ACTIVE_MAX_USER_ID - 1), false, false],
+            // internal - migrated user - active - can reset password
+            [true, (QueryHandler::CAN_RESET_PWD_IF_NOT_ACTIVE_MAX_USER_ID - 1), true, true],
+            // internal - non-migrated user - inactive - cannot reset password
+            [true, QueryHandler::CAN_RESET_PWD_IF_NOT_ACTIVE_MAX_USER_ID, false, false],
+            // internal - non-migrated user - active - can reset password
+            [true, QueryHandler::CAN_RESET_PWD_IF_NOT_ACTIVE_MAX_USER_ID, true, true],
+        ];
     }
 }
