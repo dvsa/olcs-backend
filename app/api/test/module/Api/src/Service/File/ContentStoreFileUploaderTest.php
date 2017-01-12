@@ -4,9 +4,8 @@ namespace Dvsa\OlcsTest\Api\Service\File;
 
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Api\Service\File\Exception;
-use Dvsa\Olcs\Api\Service\File\File;
 use Dvsa\Olcs\Api\Service\File\MimeNotAllowedException;
-use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
+use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\DocumentShare\Service\Client as ContentStoreClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -14,15 +13,13 @@ use OlcsTest\Bootstrap;
 use Zend\Http\Response;
 
 /**
- * @covers Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader
+ * @covers \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader
  */
 class ContentStoreFileUploaderTest extends MockeryTestCase
 {
     const IDENTIFIER = 'unit_Identifier';
 
-    /**
-     * @var ContentStoreFileUploader
-     */
+    /** @var ContentStoreFileUploader */
     protected $sut;
 
     /** @var m\MockInterface  */
@@ -38,15 +35,6 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
         $sm->setService('ContentStore', $this->mockContentStoreCli);
 
         static::assertSame($this->sut, $this->sut->createService($sm));
-    }
-
-    public function testSetGet()
-    {
-        $file = new  File();
-
-        $this->sut->setFile($file);
-
-        static::assertSame($file, $this->sut->getFile());
     }
 
     public function testDownload()
@@ -73,10 +61,8 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
     {
         $expectContent = 'unit_content';
 
-        $file = new  File();
+        $file = new DsFile();
         $file->setContent($expectContent);
-
-        $this->sut->setFile($file);
 
         $response = m::mock(Response::class);
         $response->shouldReceive('isSuccess')
@@ -84,16 +70,15 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
 
         $this->mockContentStoreCli->shouldReceive('write')
             ->once()
-            ->with(self::IDENTIFIER, m::type(ContentStoreFile::class))
+            ->with(self::IDENTIFIER, m::type(DsFile::class))
             ->andReturn($response);
 
         //  call & check
-        $actual = $this->sut->upload(self::IDENTIFIER);
+        $actual = $this->sut->upload(self::IDENTIFIER, $file);
 
         static::assertSame($file, $actual);
         static::assertEquals($expectContent, $actual->getContent());
         static::assertEquals(self::IDENTIFIER, $actual->getIdentifier());
-        static::assertEquals(self::IDENTIFIER, $actual->getPath());
     }
 
     public function testUploadFail()
@@ -112,8 +97,7 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
-        $this->sut->setFile(new File());
-        $this->sut->upload(self::IDENTIFIER);
+        $this->sut->upload(self::IDENTIFIER, new DsFile());
     }
 
     public function testUploadFailMime()
@@ -129,7 +113,6 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
-        $this->sut->setFile(new File());
-        $this->sut->upload(self::IDENTIFIER);
+        $this->sut->upload(self::IDENTIFIER, new DsFile());
     }
 }

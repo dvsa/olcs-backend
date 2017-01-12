@@ -18,8 +18,6 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
 {
     const ERR_UNABLE_UPLOAD = 'Unable to store uploaded file: %s';
 
-    /** @var File */
-    private $file;
     /** @var ContentStoreClient */
     private $contentStoreClient;
 
@@ -38,51 +36,22 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
     }
 
     /**
-     * Getter for file
-     *
-     * @return File
-     */
-    public function getFile()
-    {
-        return $this->file;
-    }
-
-    /**
-     * Setter for file
-     *
-     * @param File $file File
-     *
-     * @return $this
-     */
-    public function setFile(File $file)
-    {
-        $this->file = $file;
-
-        return $this;
-    }
-
-    /**
      * Upload file to remote storage
      *
-     * @param string $identifier File name on Storage
+     * @param string           $identifier File name on Storage
+     * @param ContentStoreFile $file       Uploded File
      *
-     * @return \Dvsa\Olcs\Api\Service\File\File
+     * @return ContentStoreFile
      * @throws Exception
      * @throws MimeNotAllowedException
      */
-    public function upload($identifier)
+    public function upload($identifier, ContentStoreFile $file)
     {
-        $file = $this->file;
+        $file->setIdentifier($identifier);
 
-        $storeFile = new ContentStoreFile();
-        $storeFile->setContent($file->getContent());
-
-        $response = $this->write($identifier, $storeFile);
+        $response = $this->write($identifier, $file);
 
         if ($response->isSuccess()) {
-            $file->setPath($identifier);
-            $file->setIdentifier($identifier);
-
             return $file;
         }
 

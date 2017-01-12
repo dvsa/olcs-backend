@@ -4,15 +4,15 @@ namespace Dvsa\OlcsTest\Api\Service\Document;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle;
+use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
-use Dvsa\Olcs\Api\Service\File\File;
+use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
 
 /**
- * @covers Dvsa\Olcs\Api\Service\Document\DocumentGenerator
+ * @covers \Dvsa\Olcs\Api\Service\Document\DocumentGenerator
  */
 class DocumentGeneratorTest extends MockeryTestCase
 {
@@ -243,15 +243,10 @@ class DocumentGeneratorTest extends MockeryTestCase
     {
         $this->setExpectedException('\Exception');
 
-        $this->contentStore->shouldReceive('read')
-            ->with('x')
-            ->andReturn(null)
-            ->shouldReceive('read')
-            ->with('/templates/x.rtf')
-            ->andReturn(null)
-            ->shouldReceive('read')
-            ->with('/templates/NI/x.rtf')
-            ->andReturn(null);
+        $this->contentStore
+            ->shouldReceive('read')->with('x')->andReturn(null)
+            ->shouldReceive('read')->with('/templates/x.rtf')->andReturn(null)
+            ->shouldReceive('read')->with('/templates/NI/x.rtf')->andReturn(null);
 
         $this->queryHandlerManager->shouldReceive('handleQuery')
             ->with(m::type(ApplicationBundle::class))
@@ -262,19 +257,34 @@ class DocumentGeneratorTest extends MockeryTestCase
 
     public function testUploadGeneratedContent()
     {
-        $this->fileUploader->shouldReceive('setFile')
-            ->with(m::type(File::class))
-            ->andReturnUsing(
-                function (File $file) {
-                    $this->assertEquals('foo', $file->getContent());
-                }
-            )
-            ->shouldReceive('upload')
-            ->with('docs')
-            ->andReturn('result');
+        $expectFileName = 'fileName';
+        $expectBody = 'expect_Body';
 
-        $this->sut->uploadGeneratedContent('foo', 'docs');
+        $this->fileUploader
+            ->shouldReceive('upload')
+            ->andReturnUsing(
+                function ($fileName, DsFile $file) use ($expectFileName, $expectBody) {
+                    static::assertSame($expectFileName, $fileName);
+                    static::assertEquals($expectBody, $file->getContent());
+
+                    return 'EXPECT';
+                }
+            );
+
+        static::assertEquals('EXPECT', $this->sut->uploadGeneratedContent($expectBody, $expectFileName));
     }
+
+    public function testUploadGeneratedContentError()
+    {
+        $this->setExpectedException(\Exception::class, 'any error');
+
+        $this->fileUploader
+            ->shouldReceive('upload')
+            ->andThrow(new \Exception('any error'));
+
+        $this->sut->uploadGeneratedContent('fileName', 'body');
+    }
+
 
     public function testGenerateFromTemplateWithDocumentId()
     {

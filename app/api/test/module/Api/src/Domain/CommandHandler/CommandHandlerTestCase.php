@@ -144,7 +144,10 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
             foreach ($this->references as $mocks) {
                 foreach ($mocks as $id => $mock) {
-                    $mock->makePartial();
+                    if ($mock instanceof m\MockInterface) {
+                        $mock->makePartial();
+                    }
+
                     $mock->setId($id);
                 }
             }
