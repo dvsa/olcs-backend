@@ -21,6 +21,8 @@ class ProcessRequestMap extends AbstractIdOnlyCommand
     protected $fromNewEbsr;
 
     /**
+     * Gets the scale
+     *
      * @return string
      */
     public function getScale()
@@ -29,6 +31,8 @@ class ProcessRequestMap extends AbstractIdOnlyCommand
     }
 
     /**
+     * Gets the licence id
+     *
      * @return int
      */
     public function getLicence()
@@ -37,6 +41,8 @@ class ProcessRequestMap extends AbstractIdOnlyCommand
     }
 
     /**
+     * Gets the reg no
+     *
      * @return string
      */
     public function getRegNo()
@@ -45,6 +51,8 @@ class ProcessRequestMap extends AbstractIdOnlyCommand
     }
 
     /**
+     * Gets whether the request is a result of a new EBSR pack
+     *
      * @return bool
      */
     public function getFromNewEbsr()
