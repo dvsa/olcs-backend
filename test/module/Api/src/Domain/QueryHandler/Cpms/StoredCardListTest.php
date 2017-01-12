@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cpms;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
-use Dvsa\Olcs\Transfer\Query\Cpms\ReportList as Qry;
+use Dvsa\Olcs\Transfer\Query\Cpms\StoredCardList as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
@@ -32,7 +32,7 @@ class StoredCardListTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
-        $query = Qry::create([]);
+        $query = Qry::create(['isNi' => 'Y']);
         $data = [
             'items' => [
                 [

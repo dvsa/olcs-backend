@@ -23,7 +23,7 @@ class StoredCardList extends AbstractQueryHandler implements CpmsAwareInterface
     {
         $result = [];
 
-        $data = $this->getCpmsService()->getListStoredCards();
+        $data = $this->getCpmsService()->getListStoredCards($query->getIsNi());
         if (isset($data['items'])) {
             foreach ($data['items'] as $item) {
                 $result[] = [

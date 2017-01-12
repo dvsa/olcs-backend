@@ -36,23 +36,40 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
     /** @var \Dvsa\Olcs\Api\Service\FeesHelperService | m\MockInterface */
     protected $feesHelper;
 
+    protected $identity;
+
+    protected $options;
+
     public function setUp()
     {
+        $this->options = m::mock()
+            ->shouldReceive('getDomain')
+            ->andReturn('fake-domain')
+            ->getMock();
+
         // Mock the CPMS client
         $this->cpmsClient = m::mock()
             ->shouldReceive('getOptions')
-            ->andReturn(
-                m::mock()
-                    ->shouldReceive('getDomain')
-                    ->andReturn('fake-domain')
-                    ->getMock()
-            )
+            ->andReturn($this->options)
             ->getMock();
 
         $this->feesHelper = m::mock(FeesHelperService::class);
 
+        $this->identity = m::mock();
+
+        $config = [
+            'cpms_credentials' => [
+                'client_id_ni'     => 'client_id_ni',
+                'client_secret_ni' => 'client_secret_ni',
+                'client_id'        => 'client_id'
+            ],
+            'cpms_api' => [
+                'identity_provider' => 'identity'
+            ]
+        ];
+
         // Create service with mocked dependencies
-        $this->sut = $this->createService($this->cpmsClient, $this->feesHelper);
+        $this->sut = $this->createService($this->cpmsClient, $this->feesHelper, $config);
 
         return parent::setUp();
     }
@@ -70,7 +87,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn($feesHelper)
             ->shouldReceive('get')
             ->with('config')
-            ->andReturn($config);
+            ->andReturn($config)
+            ->shouldReceive('get')
+            ->with('identity')
+            ->andReturn($this->identity);
 
         $sut = new CpmsV2HelperService();
         return $sut->createService($sm);
@@ -90,6 +110,50 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         static::assertEquals('EXPECTED', $this->sut->handleResponse($ref, $data));
     }
 
+    public function testHanldeResponseWithNi()
+    {
+        $data = ['unit_data'];
+        $ref = 'unit_ref';
+
+        $mockFee = m::mock()
+            ->shouldReceive('getFeeType')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getIsNi')
+                ->andReturn('Y')
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $this->options
+            ->shouldReceive('setClientId')
+            ->with('client_id_ni')
+            ->once()
+            ->shouldReceive('setClientSecret')
+            ->with('client_secret_ni')
+            ->once()
+            ->getMock();
+
+        $this->identity
+            ->shouldReceive('setClientId')
+            ->with('client_id_ni')
+            ->once()
+            ->shouldReceive('setClientSecret')
+            ->with('client_secret_ni')
+            ->once()
+            ->getMock();
+
+        $this->cpmsClient
+            ->shouldReceive('put')
+            ->once()
+            ->with('/api/gateway/' . $ref . '/complete', ApiService::SCOPE_CARD, $data)
+            ->andReturn('EXPECTED');
+
+        static::assertEquals('EXPECTED', $this->sut->handleResponse($ref, $data, $mockFee));
+    }
+
     /**
      * @dataProvider dpTestGetPaymentStatus
      */
@@ -101,12 +165,12 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $sut = m::mock(CpmsV2HelperService::class . '[send]')
             ->shouldAllowMockingProtectedMethods()
             ->shouldReceive('send')
-            ->with('get', '/api/payment/'.$ref, ApiService::SCOPE_QUERY_TXN, m::type('array'))
+            ->with('get', '/api/payment/'.$ref, ApiService::SCOPE_QUERY_TXN, m::type('array'), 'fee')
             ->once()
             ->andReturn($response)
             ->getMock();
 
-        static::assertEquals($expect, $sut->getPaymentStatus($ref));
+        static::assertEquals($expect, $sut->getPaymentStatus($ref, 'fee'));
     }
 
     public function dpTestGetPaymentStatus()
@@ -469,7 +533,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->with('/api/stored-card', 'STORED_CARD', [])
             ->andReturn(['FOO']);
 
-        $this->assertSame(['FOO'], $this->sut->getListStoredCards());
+        $this->assertSame(['FOO'], $this->sut->getListStoredCards('N'));
     }
 
     /**
@@ -819,7 +883,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
-        $result = $this->sut->getPaymentAuthCode('MY-REFERENCE');
+        $result = $this->sut->getPaymentAuthCode('MY-REFERENCE', null);
 
         $this->assertSame($authCode, $result);
     }
@@ -830,6 +894,51 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ['AUTH123'],
             [null]
         ];
+    }
+
+    public function testGetPaymentAuthCodeWithNi()
+    {
+        $response = ['auth_code' => 'AUTH123'];
+
+        $this->cpmsClient
+            ->shouldReceive('get')
+            ->with('/api/payment/MY-REFERENCE/auth-code', 'QUERY_TXN', [])
+            ->once()
+            ->andReturn($response);
+
+        $mockFee = m::mock(FeeEntity::class)
+            ->shouldReceive('getFeeType')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getIsNi')
+                ->andReturn('Y')
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $this->options
+            ->shouldReceive('setClientId')
+            ->with('client_id_ni')
+            ->once()
+            ->shouldReceive('setClientSecret')
+            ->with('client_secret_ni')
+            ->once()
+            ->getMock();
+
+        $this->identity
+            ->shouldReceive('setClientId')
+            ->with('client_id_ni')
+            ->once()
+            ->shouldReceive('setClientSecret')
+            ->with('client_secret_ni')
+            ->once()
+            ->getMock();
+
+        $result = $this->sut->getPaymentAuthCode('MY-REFERENCE', $mockFee);
+
+        $this->assertSame('AUTH123', $result);
     }
 
     /**
@@ -1012,7 +1121,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->setFeeType((new RefData($feeTypeId)))
             ->setCostCentreRef('TA')
             ->setVatCode('Z')
-            ->setProductReference('TEST_PRODUCT_REF');
+            ->setProductReference('TEST_PRODUCT_REF')
+            ->setIsNi('N');
 
         $organisation = new OrganisationEntity();
         $organisation
@@ -1051,9 +1161,16 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
     {
         $response = ['stuff'];
 
+        $params = [
+            'filters' => [
+                'scheme' => [
+                    'client_id', 'client_id_ni'
+                ]
+            ]
+        ];
         $this->cpmsClient
             ->shouldReceive('get')
-            ->with('/api/report', 'REPORT', [])
+            ->with('/api/report', 'REPORT', $params)
             ->once()
             ->andReturn($response);
 
@@ -1073,6 +1190,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'filters' => [
                 'from' => '2015-10-07 08:57:00',
                 'to' => '2015-10-08 08:56:59',
+                'scheme' => [
+                    'client_id', 'client_id_ni'
+                ]
             ],
         ];
 
@@ -1095,9 +1215,16 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $response = ['stuff'];
 
+        $params = [
+            'filters' => [
+                'scheme' => [
+                    'client_id', 'client_id_ni'
+                ]
+            ]
+        ];
         $this->cpmsClient
             ->shouldReceive('get')
-            ->with('/api/report/OLCS-1234-FOO/status', 'REPORT', [])
+            ->with('/api/report/OLCS-1234-FOO/status', 'REPORT', $params)
             ->once()
             ->andReturn($response);
 
@@ -1113,9 +1240,16 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $response = "foo,bar,csv,data";
 
+        $params = [
+            'filters' => [
+                'scheme' => [
+                    'client_id', 'client_id_ni'
+                ]
+            ]
+        ];
         $this->cpmsClient
             ->shouldReceive('get')
-            ->with('/api/report/OLCS-1234-FOO/download?token=secretsquirrel', 'REPORT', [])
+            ->with('/api/report/OLCS-1234-FOO/download?token=secretsquirrel', 'REPORT', $params)
             ->once()
             ->andReturn($response);
 
@@ -1208,6 +1342,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $fee->shouldReceive('getFeeType->isMiscellaneous')->andReturn($isMiscellaneous);
         $fee->shouldReceive('getFeeType->getIrfoFeeType')->andReturnNull();
         $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn('APP');
+        $fee->shouldReceive('getFeeType->getIsNi')->andReturn('N');
 
         $ft->shouldReceive('getFee')->andReturn($fee);
 
@@ -1297,6 +1432,40 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $address = new Address();
         $address->updateAddress('ADDR1', 'ADDR2', 'ADDR3', 'ADDR4', 'TOWN', 'POSTCODE');
+
+        $mockFeeType = m::mock()
+            ->shouldReceive('getDescription')
+            ->andReturn('TEST_FEE_TYPE')
+            ->twice()
+            ->shouldReceive('getVatCode')
+            ->andReturn('VAT_CODE')
+            ->once()
+            ->shouldReceive('getVatRate')
+            ->andReturn('VAT_RATE')
+            ->once()
+            ->shouldReceive('getCountryCode')
+            ->andReturn('NI')
+            ->times(3)
+            ->shouldReceive('isMiscellaneous')
+            ->andReturn(false)
+            ->once()
+            ->shouldReceive('getIrfoFeeType')
+            ->andReturnNull()
+            ->once()
+            ->shouldReceive('getFeeType')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn('APP')
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getIsNi')
+            ->andReturn('N')
+            ->twice()
+            ->getMock();
+
         $fee
             ->shouldReceive('getFeeTransactionsForRefund')
             ->andReturn([$ft])
@@ -1342,15 +1511,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ->shouldReceive('getLicNo')
                     ->andReturn('OB1234567')
                     ->getMock()
-            );
-
-        $fee->shouldReceive('getFeeType->getDescription')->andReturn('TEST_FEE_TYPE');
-        $fee->shouldReceive('getFeeType->getVatCode')->andReturn('VAT_CODE');
-        $fee->shouldReceive('getFeeType->getVatRate')->andReturn('VAT_RATE');
-        $fee->shouldReceive('getFeeType->getCountryCode')->andReturn('NI');
-        $fee->shouldReceive('getFeeType->isMiscellaneous')->andReturn(false);
-        $fee->shouldReceive('getFeeType->getIrfoFeeType')->andReturnNull();
-        $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn('APP');
+            )
+            ->shouldReceive('getFeeType')
+            ->andReturn($mockFeeType)
+            ->getMock();
 
         $ft->shouldReceive('getFee')->andReturn($fee);
 
@@ -1399,6 +1563,45 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $address = new Address();
         $address->updateAddress('Foo', null, null, null, 'Bar', 'LS9 6NF');
+
+        $mockFeeType = m::mock()
+            ->shouldReceive('getDescription')
+            ->andReturn('TEST_FEE_TYPE')
+            ->times(4)
+            ->shouldReceive('getVatCode')
+            ->andReturn('VAT_CODE')
+            ->twice()
+            ->shouldReceive('getVatRate')
+            ->andReturn('VAT_RATE')
+            ->twice()
+            ->shouldReceive('getCountryCode')
+            ->andReturn('NI')
+            ->times(5)
+            ->shouldReceive('getIsNi')
+            ->andReturn('N')
+            ->once()
+            ->getMock();
+
+        if (!$isMiscellaneous) {
+            $mockFeeType
+                ->shouldReceive('isMiscellaneous')
+                ->andReturn($isMiscellaneous)
+                ->twice()
+                ->shouldReceive('getIrfoFeeType')
+                ->andReturnNull()
+                ->twice()
+                ->shouldReceive('getFeeType')
+                ->andReturn(
+                    m::mock()
+                        ->shouldReceive('getId')
+                        ->andReturn('APP')
+                        ->twice()
+                        ->getMock()
+                )
+                ->twice()
+                ->getMock();
+        }
+
         $fee
             ->shouldReceive('getFeeTransactionsForRefund')
             ->andReturn([$ft, $ft2])
@@ -1443,16 +1646,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ->shouldReceive('getLicNo')
                     ->andReturn('OB1234567')
                     ->getMock()
-            );
-
-        $fee->shouldReceive('getFeeType->getDescription')
-            ->andReturn('TEST_FEE_TYPE');
-        $fee->shouldReceive('getFeeType->getVatCode')->andReturn('VAT_CODE');
-        $fee->shouldReceive('getFeeType->getVatRate')->andReturn('VAT_RATE');
-        $fee->shouldReceive('getFeeType->getCountryCode')->andReturn('NI');
-        $fee->shouldReceive('getFeeType->isMiscellaneous')->andReturn($isMiscellaneous);
-        $fee->shouldReceive('getFeeType->getIrfoFeeType')->andReturnNull();
-        $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn('APP');
+            )
+            ->shouldReceive('getFeeType')
+            ->andReturn($mockFeeType)
+            ->getMock();
 
         $ft->shouldReceive('getFee')->andReturn($fee);
         $ft2->shouldReceive('getFee')->andReturn($fee);
@@ -1579,9 +1776,12 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                 ->shouldReceive('getCountryCode')
                 ->andReturn('GB')
                 ->once()
+                ->shouldReceive('getIsNi')
+                ->andReturn('N')
+                ->once()
                 ->getMock()
             )
-            ->once()
+            ->twice()
             ->getMock();
 
         $this->cpmsClient
@@ -1596,137 +1796,16 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->sut->batchRefund($fee);
     }
 
-    /**
-     * @dataProvider dpTestAdjustTransaction
-     */
-    public function testAdjustTransaction($paymentMethod, $expectParams)
-    {
-        $response = [
-            'code' => CpmsV2HelperService::RESPONSE_SUCCESS,
-            'message' => 'ok',
-            'receipt_reference' => 'ADJUSTMENT_REFERENCE',
-        ];
-
-        $expectedParams =
-            $expectParams +
-            [
-                'customer_reference' => '99',
-                'payment_data' => [
-                    [
-                        'line_identifier' => '100',
-                        'amount' => '100.00',
-                        'allocated_amount' => '10.00',
-                        'net_amount' => '100.00',
-                        'tax_amount' => '0.00',
-                        'tax_code' => 'Z',
-                        'tax_rate' => 0,
-                        'invoice_date' => null,
-                        'sales_reference' => '100',
-                        'product_reference' => 'fee type description',
-                        'product_description' => 'fee type description',
-                        'receiver_reference' => 'OB1234567',
-                        'receiver_name' => 'some organisation',
-                        'receiver_address' => [
-                            'line_1' => 'Foo',
-                            'line_2' => null,
-                            'line_3' => null,
-                            'line_4' => null,
-                            'city' => 'Bar',
-                            'postcode' => 'LS9 6NF',
-                        ],
-                        'rule_start_date' => null,
-                        'deferment_period' => '',
-                        'country_code' => 'GB',
-                        'sales_person_reference' => 'Traffic Area Ref',
-                    ],
-                ],
-                'total_amount' => '10.00',
-                'customer_name' => 'some organisation',
-                'customer_manager_name' => 'some organisation',
-                'customer_address' => [
-                    'line_1' => 'Foo',
-                    'line_2' => null,
-                    'line_3' => null,
-                    'line_4' => null,
-                    'city' => 'Bar',
-                    'postcode' => 'LS9 6NF',
-                ],
-                'refund_overpayment' => true,
-                'country_code' => 'GB',
-                'cheque_date' => '2013-12-11',
-                'slip_number' => '1235',
-                'batch_number' => '1235',
-                'name_on_cheque' => 'Dan2',
-                'scope' => 'ADJUSTMENT',
-            ];
-
-        $this->cpmsClient
-            ->shouldReceive('post')
-            ->with('/api/payment/ORIGINAL_REFERENCE/adjustment', 'ADJUSTMENT', $expectedParams)
-            ->once()
-            ->andReturn($response);
-
-        $fee1 = $this->getStubFee(100, '100.00', null, null, 99);
-        $fee2 = $this->getStubFee(101, '100.00', null, null, 99);
-        $fee3 = $this->getStubFee(103, '9.99', null, null, 99, null, FeeTypeEntity::FEE_TYPE_ADJUSTMENT);
-        $fees = [$fee1, $fee2, $fee3];
-
-        $originalTransaction = m::mock(TransactionEntity::class)
-            ->shouldReceive('getReference')->once()->andReturn('ORIGINAL_REFERENCE')
-            ->getMock();
-
-        $newTransaction = m::mock(TransactionEntity::class);
-        $newTransaction
-            ->shouldReceive('getChequePoDate')->once()->andReturn(new \DateTime('2013-12-11'))
-            ->shouldReceive('getPayingInSlipNumber')->times(2)->andReturn('1235')
-            ->shouldReceive('getPayerName')->once()->andReturn('Dan2')
-            ->shouldReceive('getAmountAfterAdjustment')->once()->andReturn('10.00')
-            ->shouldReceive('getFees')->once()->andReturn($fees)
-            ->shouldReceive('getAmountAllocatedToFeeId')->with(100)->andReturn('10.00')
-            ->shouldReceive('getAmountAllocatedToFeeId')->with(101)->andReturn('0.00')
-            ->shouldReceive('getChequePoNumber')->atMost(1)->andReturn(self::CHEQUE_NR)
-            ->shouldReceive('getPaymentMethod->getId')->once()->andReturn($paymentMethod);
-
-        $this->feesHelper
-            ->shouldReceive('allocatePayments')
-            ->with('10.00', $fees)
-            ->andReturn([100 => '10.00']);
-
-        $result = $this->sut->adjustTransaction($originalTransaction, $newTransaction);
-
-        $this->assertSame($response, $result);
-    }
-
-    public function dpTestAdjustTransaction()
-    {
-        return [
-            [
-                'paymentMethod' => FeeEntity::METHOD_CHEQUE,
-                'expectedParams' => [
-                    'cheque_number' => self::CHEQUE_NR,
-                    'postal_order_number' => '',
-                ],
-            ],
-            [
-            'paymentMethod' => FeeEntity::METHOD_POSTAL_ORDER,
-                'expectedParams' => [
-                    'cheque_number' => '',
-                    'postal_order_number' => self::CHEQUE_NR,
-                ],
-            ],
-            [
-                'paymentMethod' => FeeEntity::METHOD_CASH,
-                'expectedParams' => [
-                    'cheque_number' => '',
-                    'postal_order_number' => '',
-                ],
-            ],
-        ];
-    }
-
     public function testCreateServiceWithInvoicePrefix()
     {
-        $sut = $this->createService(null, null, ['cpms' => ['invoice_prefix' => 'PREFIX']]);
+        $sut = $this->createService(
+            null,
+            null,
+            [
+                'cpms' => ['invoice_prefix' => 'PREFIX'],
+                'cpms_api' => ['identity_provider' => 'identity'],
+            ]
+        );
 
         $this->assertSame('PREFIX', $sut->getInvoicePrefix());
     }
