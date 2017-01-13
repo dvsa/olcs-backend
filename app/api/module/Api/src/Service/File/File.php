@@ -6,6 +6,8 @@ namespace Dvsa\Olcs\Api\Service\File;
  * File
  *
  * @author Rob Caiger <rob@clocal.co.uk>
+ *
+ * @deprecated Please use \Dvsa\Olcs\DocumentShare\Data\Object\File
  */
 class File
 {
@@ -137,26 +139,6 @@ class File
     public function getContent()
     {
         return $this->content;
-    }
-
-    /**
-     * Get file extention
-     *
-     * @return string
-     */
-    public function getExtension()
-    {
-        if (empty($this->name)) {
-            // we may want to handle this differently, unsure of rules as of yet
-            return '';
-        }
-
-        $extPos = strrpos($this->name, '.');
-        if ($extPos === false) {
-            return '';
-        }
-
-        return substr($this->name, $extPos + 1);
     }
 
     /**

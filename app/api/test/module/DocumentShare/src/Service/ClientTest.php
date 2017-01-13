@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\DocumentShare\Service;
 
-use Dvsa\Olcs\Api\Service\File\File;
-use Dvsa\Olcs\DocumentShare\Data\Object\File as DocShareFile;
+use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\DocumentShare\Service\Client;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Olcs\Logging\Log\Logger;
+use org\bovigo\vfs\vfsStream;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\Http\Request;
 
@@ -24,7 +24,7 @@ class ClientTest extends MockeryTestCase
 
     /** @var  MockObj | \Zend\Http\Client */
     private $mockClient;
-    /** @var  m\MockInterface|File */
+    /** @var  m\MockInterface|DsFile */
     private $mockFile;
 
     /** @var  m\MockInterface|\Zend\Log\Logger */
@@ -41,7 +41,7 @@ class ClientTest extends MockeryTestCase
         );
         $this->sut->setUuid('UUID1');
 
-        $this->mockFile = m::mock(File::class);
+        $this->mockFile = m::mock(DsFile::class);
 
         // Mock the logger
         $logWriter = m::mock(\Zend\Log\Writer\WriterInterface::class);
@@ -90,7 +90,7 @@ class ClientTest extends MockeryTestCase
         //  call & check
         $actual = $this->sut->read('test');
 
-        static::assertInstanceOf(DocShareFile::class, $actual);
+        static::assertInstanceOf(DsFile::class, $actual);
         static::assertEquals($expectContent, file_get_contents($actual->getResource()));
     }
 
@@ -185,17 +185,23 @@ class ClientTest extends MockeryTestCase
         $expectMime = 'unit_Mime';
         $expectContent = 'unit_ABCDE123';
 
-        /** @var DocShareFile $mockFile */
-        $mockFile = m::mock(DocShareFile::class)
+        $res = vfsStream::newFile('res')
+            ->withContent($expectContent)
+            ->at(vfsStream::setup('temp'))
+            ->url();
+
+        /** @var DsFile $mockFile */
+        $mockFile = m::mock(DsFile::class)
             ->shouldReceive('getMimeType')->once()->andReturn($expectMime)
-            ->shouldReceive('getContent')->once()->andReturn($expectContent)
+            ->shouldReceive('getResource')->once()->andReturn($res)
             ->getMock();
 
         $this->mockClient->expects(static::once())->method('setRequest')->willReturnCallback(
             function (Request $request) {
-                $expectJson = '{"hubPath": "unit_Path","mime": "unit_Mime","content": "dW5pdF9BQkNERTEyMw=="}';
+                $expectJson = '{"hubPath":"unit_Path","mime":"unit_Mime","content":"dW5pdF9BQkNERTEyMw=="}';
 
                 $this->assertSame(Request::METHOD_POST, $request->getMethod());
+
                 $this->assertEquals(strlen($expectJson), $request->getHeader('Content-Length')->getFieldValue());
                 $this->assertEquals('UUID1', $request->getHeader('uuid')->getFieldValue());
                 $this->assertEquals($expectJson, $request->getContent());
@@ -215,7 +221,6 @@ class ClientTest extends MockeryTestCase
      */
     public function testRemove($uri, $hard)
     {
-
         $this->mockClient->expects(static::once())->method('setRequest')->willReturnCallback(
             function (Request $request) use ($uri) {
                 $this->assertSame($uri, $request->getUri()->toString());

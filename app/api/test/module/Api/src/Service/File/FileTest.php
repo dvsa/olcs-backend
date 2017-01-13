@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Service\File\File;
 use org\bovigo\vfs\vfsStream;
 
 /**
- * @covers Dvsa\Olcs\Api\Service\File\File
+ * @covers \Dvsa\Olcs\Api\Service\File\File
  */
 class FileTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,7 +31,6 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $name = 'unit_Name.extX';
         static::assertEquals($this->sut, $this->sut->setName($name));
         static::assertEquals($name, $this->sut->getName());
-        static::assertEquals('extX', $this->sut->getExtension());
 
         $content = '<html></html>';
         static::assertEquals(
@@ -41,37 +40,6 @@ class FileTest extends \PHPUnit_Framework_TestCase
         static::assertEquals($content, $this->sut->getContent());
         static::assertEquals('text/html', $this->sut->getMimeType());
         static::assertEquals(13, $this->sut->getSize());
-    }
-
-    /**
-     * @dataProvider dpTestGetExtention
-     */
-    public function testGetExtention($name, $expect)
-    {
-        $this->sut->setName($name);
-        static::assertEquals($expect, $this->sut->getExtension());
-    }
-
-    public function dpTestGetExtention()
-    {
-        return [
-            [
-                'name'=> '',
-                'expect' => '',
-            ],
-            [
-                'name'=> 'A file with no extension',
-                'expect' => '',
-            ],
-            [
-                'name'=> 'Another file.txt',
-                'expect' => 'txt',
-            ],
-            [
-                'name'=> 'article.jpg.doc',
-                'expect' => 'doc',
-            ],
-        ];
     }
 
     public function testSetContentFromFileData()

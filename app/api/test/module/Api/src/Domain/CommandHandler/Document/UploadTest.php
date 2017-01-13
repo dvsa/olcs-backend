@@ -1,39 +1,47 @@
 <?php
 
-/**
- * Upload Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument;
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\Upload;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\Document;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
-use Dvsa\Olcs\Api\Service\File\File;
 use Dvsa\Olcs\Api\Service\File\MimeNotAllowedException;
-use Mockery as m;
+use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity;
+use Mockery as m;
+use org\bovigo\vfs\vfsStream;
 
 /**
- * Upload Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Document\Upload
  */
 class UploadTest extends CommandHandlerTestCase
 {
+    const BODY = 'expect_body';
+    const IDENTIFIER = '/some/identifier.pdf';
+    const USER_ID = 7001;
+
+    /** @var Upload */
+    protected $sut;
+
+    /** @var  m\MockInterface */
+    private $mockUploader;
+
     public function setUp()
     {
         $this->sut = new Upload();
+
         $this->mockRepo('Document', Document::class);
 
-        $this->mockedSmServices['FileUploader'] = m::mock(ContentStoreFileUploader::class);
+        $this->mockUploader = m::mock(ContentStoreFileUploader::class);
+        $this->mockedSmServices['FileUploader'] = $this->mockUploader;
+
         $this->mockedSmServices['DocumentNamingService'] = m::mock(NamingService::class);
 
         parent::setUp();
@@ -41,9 +49,16 @@ class UploadTest extends CommandHandlerTestCase
 
     protected function initReferences()
     {
+        $refData = new Entity\System\RefData();
+
+        $org = new Entity\Organisation\Organisation();
+        $org->setId(6001);
+        $org->setType(clone $refData);
+        $org->setTradingNames(new ArrayCollection(['TrN']));
+
         $this->references = [
             Entity\Licence\Licence::class => [
-                111 => m::mock(Entity\Licence\Licence::class)
+                111 => new Entity\Licence\Licence($org, $refData),
             ],
             Entity\Application\Application::class => [
                 222 => m::mock(Entity\Application\Application::class)
@@ -58,7 +73,7 @@ class UploadTest extends CommandHandlerTestCase
                 555 => m::mock(Entity\Bus\BusReg::class)
             ],
             Entity\Organisation\Organisation::class => [
-                666 => m::mock(Entity\Organisation\Organisation::class)
+                666 => m::mock(Entity\Organisation\Organisation::class),
             ]
         ];
 
@@ -74,69 +89,67 @@ class UploadTest extends CommandHandlerTestCase
     }
 
     /**
-     * @dataProvider provideLinkedEntity
+     * @dataProvider dpLinkedEntity
      */
     public function testHandleCommand($key, $id, $entityClass)
     {
         $data = [
-            'content' => base64_encode('<foo>'),
-            'filename' => 'foo.pdf',
+            'content' => base64_encode(self::BODY),
+            'filename' => 'fileName.pdf',
             'category' => 11,
             'subCategory' => 22,
             'isExternal' => 1,
-            'description' => 'foo',
-            'user' => 1
+            'description' => 'description',
+            'user' => self::USER_ID,
+            $key => $id,
         ];
 
-        $data[$key] = $id;
+        $command = TransferCmd\Document\Upload::create($data);
 
-        $command = \Dvsa\Olcs\Transfer\Command\Document\Upload::create($data);
-
-        $this->mockedSmServices['DocumentNamingService']->shouldReceive('generateName')
+        $this->mockedSmServices['DocumentNamingService']
+            ->shouldReceive('generateName')
             ->once()
             ->with(
-                'foo',
+                'description',
                 'pdf',
                 $this->categoryReferences[11],
                 $this->subCategoryReferences[22],
                 $this->references[$entityClass][$id]
             )
-            ->andReturn('/some/identifier.pdf');
+            ->andReturn(self::IDENTIFIER);
 
-        /** @var File $file */
-        $file = m::mock(File::class)->makePartial();
-        $file->setIdentifier('/some/identifier.pdf');
-
-        $this->mockedSmServices['FileUploader']->shouldReceive('setFile')
-            ->once()
-            ->with(m::type(File::class))
-            ->andReturnUsing(
-                function (File $file) {
-                    $this->assertEquals('foo.pdf', $file->getName());
-                    $this->assertEquals('<foo>', $file->getContent());
-                    $this->assertEquals(5, $file->getSize());
-                }
-            )
+        $this->mockUploader
             ->shouldReceive('upload')
-            ->with('/some/identifier.pdf')
-            ->andReturn($file);
+            ->andReturnUsing(
+                function ($fileName, DsFile $file) {
+                    static::assertSame(self::IDENTIFIER, $fileName);
+                    static::assertEquals(self::BODY, $file->getContent());
 
+                    $file->setIdentifier(self::IDENTIFIER);
+
+                    return $file;
+                }
+            );
+
+        //  mock document creation
         $result = new Result();
         $result->addMessage('CreateDocumentSpecific');
         $data = [
-            'identifier' => '/some/identifier.pdf',
-            'filename' => '/some/identifier.pdf',
-            'description' => 'foo',
+            'identifier' => self::IDENTIFIER,
+            'size' => strlen(self::BODY),
+            'filename' => self::IDENTIFIER,
+            'description' => 'description',
             'isExternal' => 1,
-            'user' => 1
+            'user' => self::USER_ID,
         ];
-        $this->expectedSideEffect(CreateDocumentSpecific::class, $data, $result);
+        $this->expectedSideEffect(DomainCmd\Document\CreateDocumentSpecific::class, $data, $result);
 
+        //  call
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [
-                'identifier' => '/some/identifier.pdf'
+                'identifier' => self::IDENTIFIER,
             ],
             'messages' => [
                 'File uploaded',
@@ -147,171 +160,13 @@ class UploadTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    /**
-     * Tests EBSR doc upload throws exception if file isn't zip
-     *
-     * @dataProvider provideLinkedEntity
-     * @param string $key
-     * @param int $id
-     * @param string $entityClass
-     */
-    public function testHandleCommandInvalidEbsrMime($key, $id, $entityClass)
-    {
-        $this->setExpectedException(ValidationException::class);
-
-        $data = [
-            'content' => base64_encode('<foo>'),
-            'filename' => 'foo.pdf',
-            'category' => 11,
-            'subCategory' => 22,
-            'isExternal' => 1,
-            'isEbsrPack' => true,
-            'user' => 1
-        ];
-
-        $data[$key] = $id;
-
-        $command = \Dvsa\Olcs\Transfer\Command\Document\Upload::create($data);
-
-        $this->mockedSmServices['DocumentNamingService']->shouldReceive('generateName')
-            ->once()
-            ->with(
-                'foo',
-                'pdf',
-                $this->categoryReferences[11],
-                $this->subCategoryReferences[22],
-                $this->references[$entityClass][$id]
-            )
-            ->andReturn('/some/identifier.pdf');
-
-        $this->sut->handleCommand($command);
-    }
-
-    /**
-     * @dataProvider provideLinkedEntity
-     */
-    public function testHandleCommandInvalidMime($key, $id, $entityClass)
-    {
-        $this->setExpectedException(ValidationException::class);
-
-        $data = [
-            'content' => base64_encode('<foo>'),
-            'filename' => 'foo.pdf',
-            'category' => 11,
-            'subCategory' => 22,
-            'isExternal' => 1,
-            'user' => 1
-        ];
-
-        $data[$key] = $id;
-
-        $command = \Dvsa\Olcs\Transfer\Command\Document\Upload::create($data);
-
-        $this->mockedSmServices['DocumentNamingService']->shouldReceive('generateName')
-            ->once()
-            ->with(
-                'foo',
-                'pdf',
-                $this->categoryReferences[11],
-                $this->subCategoryReferences[22],
-                $this->references[$entityClass][$id]
-            )
-            ->andReturn('/some/identifier.pdf');
-
-        /** @var File $file */
-        $file = m::mock(File::class)->makePartial();
-        $file->setIdentifier('/some/identifier.pdf');
-
-        $this->mockedSmServices['FileUploader']->shouldReceive('setFile')
-            ->once()
-            ->with(m::type(File::class))
-            ->andReturnUsing(
-                function (File $file) {
-                    $this->assertEquals('foo.pdf', $file->getName());
-                    $this->assertEquals('<foo>', $file->getContent());
-                    $this->assertEquals(5, $file->getSize());
-                }
-            )
-            ->shouldReceive('upload')
-            ->with('/some/identifier.pdf')
-            ->andThrow(MimeNotAllowedException::class);
-
-        $this->sut->handleCommand($command);
-    }
-
-    public function testHandleCommandWithoutIsExternal()
-    {
-        $data = [
-            'content' => base64_encode('<foo>'),
-            'filename' => 'foo.pdf',
-            'category' => 11,
-            'subCategory' => 22,
-            'user' => 1
-        ];
-
-        $command = \Dvsa\Olcs\Transfer\Command\Document\Upload::create($data);
-
-        $this->mockedSmServices['DocumentNamingService']->shouldReceive('generateName')
-            ->once()
-            ->with(
-                'foo',
-                'pdf',
-                $this->categoryReferences[11],
-                $this->subCategoryReferences[22],
-                null
-            )
-            ->andReturn('/some/identifier.pdf');
-
-        /** @var File $file */
-        $file = m::mock(File::class)->makePartial();
-        $file->setIdentifier('/some/identifier.pdf');
-
-        $this->mockedSmServices['FileUploader']->shouldReceive('setFile')
-            ->once()
-            ->with(m::type(File::class))
-            ->andReturnUsing(
-                function (File $file) {
-                    $this->assertEquals('foo.pdf', $file->getName());
-                    $this->assertEquals('<foo>', $file->getContent());
-                    $this->assertEquals(5, $file->getSize());
-                }
-            )
-            ->shouldReceive('upload')
-            ->with('/some/identifier.pdf')
-            ->andReturn($file);
-
-        $result = new Result();
-        $result->addMessage('CreateDocument');
-        $data = [
-            'identifier' => '/some/identifier.pdf',
-            'filename' => '/some/identifier.pdf',
-            'description' => 'foo',
-            'user' => 1
-        ];
-        $this->expectedSideEffect(CreateDocument::class, $data, $result);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [
-                'identifier' => '/some/identifier.pdf'
-            ],
-            'messages' => [
-                'File uploaded',
-                'CreateDocument'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-    }
-
-    public function provideLinkedEntity()
+    public function dpLinkedEntity()
     {
         return [
             [
-                'licence',
-                111,
-                Entity\Licence\Licence::class
+                'key' => 'licence',
+                'id' => 111,
+                'entityClass' => Entity\Licence\Licence::class,
             ],
             [
                 'application',
@@ -339,5 +194,183 @@ class UploadTest extends CommandHandlerTestCase
                 Entity\Organisation\Organisation::class
             ]
         ];
+    }
+
+    public function testHandleCommandFileAndIsExternalNull()
+    {
+        $vfs = vfsStream::setup('temp');
+        $tmpFilePath = vfsStream::newFile('stream')->withContent(self::BODY)->at($vfs)->url();
+
+        $expectMimeType = 'x-mimeType';
+
+        $data = [
+            'content' => [
+                'tmp_name' => $tmpFilePath,
+                'type' => $expectMimeType,
+            ],
+            'filename' => 'fileName.xxml',
+            'licence' => 111,
+            'category' => 11,
+            'subCategory' => 22,
+            'isExternal' => null,
+            'user' => self::USER_ID,
+        ];
+
+        $command = TransferCmd\Document\Upload::create($data);
+
+        $this->mockedSmServices['DocumentNamingService']
+            ->shouldReceive('generateName')
+            ->once()
+            ->with(
+                'fileName',
+                'xxml',
+                $this->categoryReferences[11],
+                $this->subCategoryReferences[22],
+                $this->references[Entity\Licence\Licence::class][111]
+            )
+            ->andReturn(self::IDENTIFIER);
+
+        $this->mockUploader
+            ->shouldReceive('upload')
+            ->andReturnUsing(
+                function ($fileName, DsFile $file) use ($expectMimeType) {
+                    static::assertSame(self::IDENTIFIER, $fileName);
+
+                    static::assertEquals(self::BODY, $file->getContent());
+                    static::assertEquals($expectMimeType, $file->getMimeType());
+
+                    $file->setIdentifier(self::IDENTIFIER);
+                    return $file;
+                }
+            );
+
+        //  mock document creation
+        $result = new Result();
+        $result->addMessage('CreateDocument');
+        $data = [
+            'identifier' => self::IDENTIFIER,
+            'size' => strlen(self::BODY),
+            'filename' => self::IDENTIFIER,
+            'description' => 'fileName',
+            'user' => self::USER_ID,
+        ];
+        $this->expectedSideEffect(DomainCmd\Document\CreateDocument::class, $data, $result);
+
+        //  call
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'identifier' => self::IDENTIFIER,
+            ],
+            'messages' => [
+                'File uploaded',
+                'CreateDocument'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    /**
+     * Tests EBSR doc upload throws exception if file isn't zip
+     */
+    public function testHandleCommandInvalidEbsrMime()
+    {
+        $this->setExpectedException(ValidationException::class);
+
+        $data = [
+            'content' => base64_encode(self::BODY),
+            'filename' => 'fileName.pdf',
+            'licence' => 111,
+            'category' => 11,
+            'subCategory' => 22,
+            'isExternal' => 1,
+            'isEbsrPack' => true,
+            'user' => 1,
+        ];
+
+        $command = TransferCmd\Document\Upload::create($data);
+
+        $this->mockedSmServices['DocumentNamingService']->shouldReceive('generateName')
+            ->once()
+            ->with(
+                'fileName',
+                'pdf',
+                $this->categoryReferences[11],
+                $this->subCategoryReferences[22],
+                $this->references[Entity\Licence\Licence::class][111]
+            )
+            ->andReturn(self::IDENTIFIER);
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandInvalidMime()
+    {
+        $this->setExpectedException(ValidationException::class);
+
+        $data = [
+            'content' => base64_encode(self::BODY),
+            'filename' => 'fileName.pdf',
+            'licence' => 111,
+            'category' => 11,
+            'subCategory' => 22,
+            'isExternal' => 1,
+            'user' => 1,
+        ];
+
+        $command = TransferCmd\Document\Upload::create($data);
+
+        $this->mockedSmServices['DocumentNamingService']->shouldReceive('generateName')
+            ->once()
+            ->with(
+                'fileName',
+                'pdf',
+                $this->categoryReferences[11],
+                $this->subCategoryReferences[22],
+                $this->references[Entity\Licence\Licence::class][111]
+            )
+            ->andReturn(self::IDENTIFIER);
+
+        $this->mockUploader
+            ->shouldReceive('upload')
+            ->andThrow(MimeNotAllowedException::class);
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandError()
+    {
+        $this->setExpectedException(\Exception::class, 'any error');
+
+        $data = [
+            'content' => base64_encode(self::BODY),
+            'filename' => 'fileName.pdf',
+            'licence' => 111,
+            'category' => 11,
+            'subCategory' => 22,
+            'isExternal' => 1,
+            'user' => 1,
+        ];
+
+        $command = TransferCmd\Document\Upload::create($data);
+
+        $this->mockedSmServices['DocumentNamingService']->shouldReceive('generateName')
+            ->once()
+            ->with(
+                'fileName',
+                'pdf',
+                $this->categoryReferences[11],
+                $this->subCategoryReferences[22],
+                $this->references[Entity\Licence\Licence::class][111]
+            )
+            ->andReturn(self::IDENTIFIER);
+
+        $this->mockUploader
+            ->shouldReceive('upload')
+            ->andThrow(new \Exception('any error'));
+
+        $this->sut->handleCommand($command);
     }
 }

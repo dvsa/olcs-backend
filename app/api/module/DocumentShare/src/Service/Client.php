@@ -101,7 +101,7 @@ class Client
         if ($this->getUuid()) {
             $request->getHeaders()->addHeaderLine('uuid', $this->getUuid());
         }
-        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+        $request->getHeaders()->addHeaderLine('Content-Type', 'application/json;charset=UTF-8');
 
         return $request;
     }
@@ -201,24 +201,46 @@ class Client
      */
     public function write($path, File $file)
     {
-        //  don't use here json_encode it consume too much memory
-        $requestJson =
-            '{' .
-                '"hubPath": "' . $path . '",' .
-                '"mime": "' . $file->getMimeType() . '",' .
-                '"content": "' . base64_encode($file->getContent()) . '"' .
-            '}';
+        try {
+            $fh = fopen($file->getResource(), 'rb');
 
-        $request = $this->getRequest();
-        $request
-            ->setUri($this->getContentUri(''))
-            ->setMethod(Request::METHOD_POST)
-            ->setContent($requestJson);
+            //  set filter for auto base 64 encode on read from file
+            $filter = stream_filter_append($fh, 'convert.base64-encode', STREAM_FILTER_READ);
 
-        $request->getHeaders()
-            ->addHeaderLine('Content-Length', strlen($requestJson));
+            //  prepare json for sending to DocMan
+            $fhT = fopen('php://temp', 'w+b');
 
-        return $this->getHttpClient()->setRequest($request)->send();
+            fwrite(
+                $fhT,
+                '{' .
+                '"hubPath":"' . $path . '",' .
+                '"mime":"' . $file->getMimeType() . '",' .
+                '"content":"'
+            );
+            stream_copy_to_stream($fh, $fhT);
+
+            //  do not remove following 2 lines, it is fix of last character
+            stream_filter_remove($filter);
+            stream_copy_to_stream($fh, $fhT);
+
+            fwrite($fhT, '"}');
+            rewind($fhT);
+
+            //  send file to DocMan
+            $request = $this->getRequest();
+            $request
+                ->setUri($this->getContentUri(''))
+                ->setMethod(Request::METHOD_POST)
+                ->setContent(stream_get_contents($fhT));
+
+            $request->getHeaders()
+                ->addHeaderLine('Content-Length', fstat($fhT)['size']);
+
+            return $this->getHttpClient()->setRequest($request)->send();
+        } finally {
+            @fclose($fh);
+            @fclose($fhT);
+        }
     }
 
     /**
