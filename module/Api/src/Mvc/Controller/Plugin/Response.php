@@ -22,6 +22,7 @@ class Response extends AbstractPlugin
      */
     public function notFound()
     {
+        /** @var HttpResponse $response */
         $response = $this->getController()->getResponse();
         $response->setStatusCode(HttpResponse::STATUS_CODE_404);
 
@@ -37,6 +38,7 @@ class Response extends AbstractPlugin
      */
     public function notReady($retryAfter = null)
     {
+        /** @var HttpResponse $response */
         $response = $this->getController()->getResponse();
         $response->setStatusCode(HttpResponse::STATUS_CODE_503);
 
@@ -57,6 +59,7 @@ class Response extends AbstractPlugin
      */
     public function error($code, array $messages = [])
     {
+        /** @var HttpResponse $response */
         $response = $this->getController()->getResponse();
         $response->setStatusCode($code);
 
@@ -76,6 +79,7 @@ class Response extends AbstractPlugin
      */
     public function singleResult($result)
     {
+        /** @var HttpResponse $response */
         $response = $this->getController()->getResponse();
         $response->setStatusCode(HttpResponse::STATUS_CODE_200);
 
@@ -155,6 +159,7 @@ class Response extends AbstractPlugin
      */
     public function successfulUpdate(Result $result)
     {
+        /** @var HttpResponse $response */
         $response = $this->getController()->getResponse();
         $response->setStatusCode(HttpResponse::STATUS_CODE_200);
 
@@ -170,6 +175,7 @@ class Response extends AbstractPlugin
      */
     public function successfulCreate(Result $result)
     {
+        /** @var HttpResponse $response */
         $response = $this->getController()->getResponse();
         $response->setStatusCode(HttpResponse::STATUS_CODE_201);
 

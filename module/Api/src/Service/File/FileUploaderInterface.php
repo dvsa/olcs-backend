@@ -12,29 +12,14 @@ use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 interface FileUploaderInterface
 {
     /**
-     * Set the file
-     *
-     * @param File $file File
-     *
-     * @return $this
-     */
-    public function setFile(File $file);
-
-    /**
-     * Get the file
-     *
-     * @return File
-     */
-    public function getFile();
-
-    /**
      * Upload file by identifier
      *
-     * @param string $identifier File identifier
+     * @param string           $identifier File identifier
+     * @param ContentStoreFile $file       File
      *
      * @return ContentStoreFile
      */
-    public function upload($identifier);
+    public function upload($identifier, ContentStoreFile $file);
 
     /**
      * Process the file download

@@ -11,10 +11,11 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait;
-use Dvsa\Olcs\Api\Service\File\File;
 use Dvsa\Olcs\Api\Service\File\MimeNotAllowedException;
+use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Utils\Helper\FileHelper;
 
 /**
  * Upload
@@ -65,9 +66,7 @@ final class Upload extends AbstractCommandHandler implements
     {
         $description = $this->getDescriptionFromCommand($command);
 
-        $filename = $command->getFilename();
-        $parts = explode('.', $filename);
-        $extension = array_pop($parts);
+        $extension = FileHelper::getExtension($command->getFilename());
 
         $category = null;
         $subCategory = null;
@@ -90,47 +89,52 @@ final class Upload extends AbstractCommandHandler implements
      * @param TransferCmd\Document\Upload $command    Upload Command
      * @param string                      $identifier File name (path)
      *
-     * @return File
+     * @return DsFile
      * @throws ValidationException
-     * @throws \Dvsa\Olcs\Api\Service\File\Exception
-     * @throws \Exception
      */
     protected function uploadFile(TransferCmd\Document\Upload $command, $identifier)
     {
-        $file = new File();
-        $file->setName($command->getFilename());
-
         $content = $command->getContent();
-        $file->setContent(!is_array($content) ? base64_decode($content) : $content);
 
-        if ($command->getIsEbsrPack() && $file->getMimeType() !== 'application/zip') {
+        $dsFile = new DsFile();
+        if (!empty($content['tmp_name'])) {
+            $dsFile->setContentFromStream($content['tmp_name']);
+            $dsFile->setMimeType($content['type']);
+        } else {
+            $dsFile->setContent(base64_decode($content));
+        }
+
+        if ($command->getIsEbsrPack() && $dsFile->getMimeType() !== 'application/zip') {
             throw new ValidationException([self::ERR_EBSR_MIME => self::ERR_EBSR_MIME]);
         }
 
         try {
-            $this->getUploader()->setFile($file);
-            $file = $this->getUploader()->upload($identifier);
+            $file = $this->getUploader()
+                ->upload($identifier, $dsFile);
 
+            $this->result->addMessage('File uploaded');
+            $this->result->addId('identifier', $file->getIdentifier());
+
+            return $file;
         } catch (MimeNotAllowedException $ex) {
             throw new ValidationException([self::ERR_MIME => self::ERR_MIME]);
+        } catch (\Exception $e) {
+            unset($dsFile);
+
+            throw $e;
         }
-
-        $this->result->addMessage('File uploaded');
-        $this->result->addId('identifier', $file->getIdentifier());
-
-        return $file;
     }
 
     /**
      * Create document
      *
      * @param TransferCmd\Document\Upload $command    Upload command
-     * @param File                        $file       File
+     * @param DsFile                      $file       File
      * @param string                      $identifier File name (path)
      *
      * @return Result
      */
-    protected function createDocument(TransferCmd\Document\Upload $command, File $file, $identifier)
+    protected function createDocument(TransferCmd\Document\Upload $command, DsFile $file, $identifier)
     {
         $data = $command->getArrayCopy();
         unset($data['content']);

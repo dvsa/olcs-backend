@@ -9,13 +9,15 @@ class File
 {
     const CHUNK_SIZE = 8192;
 
-    const ERR_CANT_OPEN_STREAM = 'Can not access temp file with downloaded content';
+    const ERR_CANT_OPEN_DOWNLOAD_STREAM = 'Can not access temp file with downloaded content';
     const ERR_CANT_OPEN_RES = 'Can not access temp file for record downloaded content';
 
     /** @var  string */
     protected $file;
     /** @var  string */
     private $mimeType;
+    /** @var  string */
+    private $identifier;
 
     /**
      * File constructor.
@@ -28,13 +30,51 @@ class File
     }
 
     /**
-     * Descructor
+     * Destructor
      */
     public function __destruct()
     {
         if (is_file($this->file)) {
             unlink($this->file);
         }
+    }
+
+    /**
+     * Getter for identifier
+     *
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * Setter for identifier
+     *
+     * @param string $identifier Identifier
+     *
+     * @return $this
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = $identifier;
+
+        return $this;
+    }
+
+    /**
+     * Set mime type of file content
+     *
+     * @param string $type Type
+     *
+     * @return $this
+     */
+    public function setMimeType($type)
+    {
+        $this->mimeType = $type;
+
+        return $this;
     }
 
     /**
@@ -49,33 +89,6 @@ class File
         }
 
         return $this->mimeType;
-    }
-
-    /**
-     * Store content and define mime type
-     *
-     * @param string $content Content
-     *
-     * @return $this
-     */
-    public function setContent($content)
-    {
-        file_put_contents($this->file, $content);
-
-        //  reset dependant properties
-        $this->mimeType = null;
-
-        return $this;
-    }
-
-    /**
-     * Get content
-     *
-     * @return string
-     */
-    public function getContent()
-    {
-        return file_get_contents($this->file);
     }
 
     /**
@@ -117,6 +130,48 @@ class File
     }
 
     /**
+     * Get content
+     *
+     * @return string
+     */
+    public function getContent()
+    {
+        return file_get_contents($this->file);
+    }
+
+    /**
+     * Store content and define mime type
+     *
+     * @param string $content Content
+     *
+     * @return $this
+     */
+    public function setContent($content)
+    {
+        file_put_contents($this->file, $content);
+
+        //  reset dependant properties
+        $this->mimeType = null;
+
+        return $this;
+    }
+
+    /**
+     * Set File content from stream (file)
+     *
+     * @param string $streamFileName File name
+     *
+     * @return void
+     */
+    public function setContentFromStream($streamFileName)
+    {
+        copy($streamFileName, $this->file);
+
+        //  reset dependant properties
+        $this->mimeType = null;
+    }
+
+    /**
      * Set from content field downloader data and push it to File
      *
      * @param string $streamFileName Document Storeage Downloaded stream
@@ -130,7 +185,7 @@ class File
             //  get content from stream
             $fhSrc = @fopen($streamFileName, 'rb');
             if ($fhSrc === false) {
-                throw new \Exception(self::ERR_CANT_OPEN_STREAM);
+                throw new \Exception(self::ERR_CANT_OPEN_DOWNLOAD_STREAM);
             }
 
             //  get resouce file
@@ -177,12 +232,8 @@ class File
             stream_filter_remove($filter);
 
         } finally {
-            if (is_resource($fhTrg)) {
-                fclose($fhTrg);
-            }
-            if (is_resource($fhSrc)) {
-                fclose($fhSrc);
-            }
+            @fclose($fhTrg);
+            @fclose($fhSrc);
         }
     }
 }
