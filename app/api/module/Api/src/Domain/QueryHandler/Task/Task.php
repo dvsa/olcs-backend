@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Task
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Task;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -19,6 +14,13 @@ class Task extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Task';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
         $repo = $this->getRepo();
@@ -32,6 +34,11 @@ class Task extends AbstractQueryHandler
                 'assignedToTeam',
                 'assignedToUser',
                 'assignedByUser' => [
+                    'contactDetails' => [
+                        'person'
+                    ]
+                ],
+                'lastModifiedBy' => [
                     'contactDetails' => [
                         'person'
                     ]
