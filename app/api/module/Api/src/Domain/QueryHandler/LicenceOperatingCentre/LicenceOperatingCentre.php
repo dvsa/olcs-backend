@@ -21,6 +21,13 @@ class LicenceOperatingCentre extends AbstractQueryHandler
 {
     protected $repoServiceName = 'LicenceOperatingCentre';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query DTO
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
         /** @var LicenceOperatingCentreEntity $loc */
@@ -43,11 +50,19 @@ class LicenceOperatingCentre extends AbstractQueryHandler
                 'canUpdateAddress' => $this->canUpdateAddress($query),
                 'wouldIncreaseRequireAdditionalAdvertisement' => $query->getIsVariation(),
                 'currentVehiclesRequired' => $loc->getNoOfVehiclesRequired(),
-                'currentTrailersRequired' => $loc->getNoOfTrailersRequired()
+                'currentTrailersRequired' => $loc->getNoOfTrailersRequired(),
+                'niFlag' => $licence->getNiFlag(),
             ]
         );
     }
 
+    /**
+     * Can the address be updated
+     *
+     * @param QueryInterface $query DTO query
+     *
+     * @return bool
+     */
     protected function canUpdateAddress($query)
     {
         if ($this->isGranted(Permission::INTERNAL_USER)) {
