@@ -101,6 +101,7 @@ class UploadTest extends CommandHandlerTestCase
             'isExternal' => 1,
             'description' => 'description',
             'user' => self::USER_ID,
+            'shouldUploadOnly' => false,
             $key => $id,
         ];
 
@@ -214,6 +215,7 @@ class UploadTest extends CommandHandlerTestCase
             'subCategory' => 22,
             'isExternal' => null,
             'user' => self::USER_ID,
+            'shouldUploadOnly' => false,
         ];
 
         $command = TransferCmd\Document\Upload::create($data);
