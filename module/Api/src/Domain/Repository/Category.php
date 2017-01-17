@@ -76,6 +76,8 @@ class Category extends AbstractRepository
         if (
             method_exists($this->query, 'getIsDocCategory')
             && $this->query->getIsDocCategory() === 'Y'
+            && method_exists($this->query, 'getIsOnlyWithItems')
+            && $this->query->getIsOnlyWithItems() === 'Y'
         ) {
             $qb
                 ->select('DISTINCT ' . $this->alias)
