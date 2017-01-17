@@ -216,12 +216,10 @@ class CopyDocumentTest extends CommandHandlerTestCase
             ->getMock();
 
         $params = [
-            //'identifier' => 'identifier',
             'description' => 'description',
             'category' => 4,
             'subCategory' => 5,
             'issuedDate' => '2015-01-01',
-            //'filename' => 'filename',
             'isScan' => true,
             'isExternal' => true,
             'application' => null,
