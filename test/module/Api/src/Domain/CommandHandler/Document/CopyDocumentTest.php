@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Copy document test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Transfer\Command\Document\CopyDocument as Cmd;
@@ -26,6 +21,8 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
+use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
+use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 
 /**
  * Copy document test
@@ -34,6 +31,9 @@ use Mockery as m;
  */
 class CopyDocumentTest extends CommandHandlerTestCase
 {
+    /** @var  m\MockInterface */
+    private $mockUploader;
+
     public function setUp()
     {
         $this->sut = new CommandHandler();
@@ -45,6 +45,9 @@ class CopyDocumentTest extends CommandHandlerTestCase
         $this->mockRepo('Organisation', OrganisationRepo::class);
         $this->mockRepo('TransportManager', TransportManagerRepo::class);
         $this->mockRepo('Publication', PublicationRepo::class);
+
+        $this->mockUploader = m::mock(ContentStoreFileUploader::class);
+        $this->mockedSmServices['FileUploader'] = $this->mockUploader;
 
         parent::setUp();
     }
@@ -86,17 +89,11 @@ class CopyDocumentTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $createResult = new Result();
-        $createResult->addId('document', 111);
-        $createResult->addMessage('Document(s) copied');
-
         $params = [
-            'identifier' => 'identifier',
             'description' => 'description',
             'category' => 4,
             'subCategory' => 5,
             'issuedDate' => '2015-01-01',
-            'filename' => 'filename',
             'isScan' => true,
             'isExternal' => true,
             'application' => 1,
@@ -111,7 +108,75 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'operatingCentre' => null,
             'opposition' => null
         ];
-        $this->expectedSideEffect(CreateDocumentSpecificCmd::class, $params, $createResult);
+
+        $this->mockCopyDocumentsCommands($params);
+
+        $result = $this->sut->handleCommand($command);
+        $res = $result->toArray();
+        $this->assertEquals(111, $res['id']['document111']);
+        $this->assertEquals('Document(s) copied', $res['messages'][0]);
+    }
+
+    public function testHandleCommandWithException()
+    {
+        $this->setExpectedException(ValidationException::class);
+
+        $data = [
+            'targetId' => 1,
+            'type'     => CommandHandler::APP,
+            'ids'      => [2]
+        ];
+        $command = Cmd::create($data);
+
+        $mockEntity = m::mock()
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(3)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Application']
+            ->shouldReceive('fetchWithLicence')
+            ->with(1)
+            ->andReturn($mockEntity)
+            ->once()
+            ->getMock();
+
+        $mockDocument = $this->getMockDocument(null, 1);
+
+        $this->repoMap['Document']
+            ->shouldReceive('fetchById')
+            ->with(2)
+            ->andReturn($mockDocument)
+            ->once()
+            ->getMock();
+
+        $params = [
+            'description' => 'description',
+            'category' => 4,
+            'subCategory' => 5,
+            'issuedDate' => '2015-01-01',
+            'isScan' => true,
+            'isExternal' => true,
+            'application' => 1,
+            'licence' => 3,
+            'size' => null,
+            'busReg' => null,
+            'case' => null,
+            'irfoOrganisation' => null,
+            'submission' => null,
+            'trafficArea' => null,
+            'transportManager' => null,
+            'operatingCentre' => null,
+            'opposition' => null
+        ];
+
+        $this->mockCopyDocumentsCommands($params, true);
 
         $result = $this->sut->handleCommand($command);
         $res = $result->toArray();
@@ -150,17 +215,13 @@ class CopyDocumentTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $createResult = new Result();
-        $createResult->addId('document', 111);
-        $createResult->addMessage('Document(s) copied');
-
         $params = [
-            'identifier' => 'identifier',
+            //'identifier' => 'identifier',
             'description' => 'description',
             'category' => 4,
             'subCategory' => 5,
             'issuedDate' => '2015-01-01',
-            'filename' => 'filename',
+            //'filename' => 'filename',
             'isScan' => true,
             'isExternal' => true,
             'application' => null,
@@ -175,7 +236,8 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'operatingCentre' => null,
             'opposition' => null
         ];
-        $this->expectedSideEffect(CreateDocumentSpecificCmd::class, $params, $createResult);
+
+        $this->mockCopyDocumentsCommands($params);
 
         $result = $this->sut->handleCommand($command);
         $res = $result->toArray();
@@ -217,17 +279,11 @@ class CopyDocumentTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $createResult = new Result();
-        $createResult->addId('document', 111);
-        $createResult->addMessage('Document(s) copied');
-
         $params = [
-            'identifier' => 'identifier',
             'description' => 'description',
             'category' => 4,
             'subCategory' => 5,
             'issuedDate' => '2015-01-01',
-            'filename' => 'filename',
             'isScan' => true,
             'isExternal' => true,
             'application' => null,
@@ -242,7 +298,7 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'operatingCentre' => null,
             'opposition' => null
         ];
-        $this->expectedSideEffect(CreateDocumentSpecificCmd::class, $params, $createResult);
+        $this->mockCopyDocumentsCommands($params);
 
         $result = $this->sut->handleCommand($command);
         $res = $result->toArray();
@@ -305,17 +361,11 @@ class CopyDocumentTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $createResult = new Result();
-        $createResult->addId('document', 111);
-        $createResult->addMessage('Document(s) copied');
-
         $params = [
-            'identifier' => 'identifier',
             'description' => 'description',
             'category' => 4,
             'subCategory' => 5,
             'issuedDate' => '2015-01-01',
-            'filename' => 'filename',
             'isScan' => true,
             'isExternal' => true,
             'application' => 44,
@@ -330,7 +380,8 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'operatingCentre' => null,
             'opposition' => null
         ];
-        $this->expectedSideEffect(CreateDocumentSpecificCmd::class, $params, $createResult);
+
+        $this->mockCopyDocumentsCommands($params);
 
         $result = $this->sut->handleCommand($command);
         $res = $result->toArray();
@@ -365,17 +416,11 @@ class CopyDocumentTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $createResult = new Result();
-        $createResult->addId('document', 111);
-        $createResult->addMessage('Document(s) copied');
-
         $params = [
-            'identifier' => 'identifier',
             'description' => 'description',
             'category' => 4,
             'subCategory' => 5,
             'issuedDate' => '2015-01-01',
-            'filename' => 'filename',
             'isScan' => true,
             'isExternal' => true,
             'application' => null,
@@ -390,7 +435,8 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'operatingCentre' => null,
             'opposition' => null
         ];
-        $this->expectedSideEffect(CreateDocumentSpecificCmd::class, $params, $createResult);
+
+        $this->mockCopyDocumentsCommands($params);
 
         $result = $this->sut->handleCommand($command);
         $res = $result->toArray();
@@ -425,17 +471,11 @@ class CopyDocumentTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $createResult = new Result();
-        $createResult->addId('document', 111);
-        $createResult->addMessage('Document(s) copied');
-
         $params = [
-            'identifier' => 'identifier',
             'description' => 'description',
             'category' => 4,
             'subCategory' => 5,
             'issuedDate' => '2015-01-01',
-            'filename' => 'filename',
             'isScan' => true,
             'isExternal' => true,
             'application' => null,
@@ -450,7 +490,8 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'operatingCentre' => null,
             'opposition' => null
         ];
-        $this->expectedSideEffect(CreateDocumentSpecificCmd::class, $params, $createResult);
+
+        $this->mockCopyDocumentsCommands($params);
 
         $result = $this->sut->handleCommand($command);
         $res = $result->toArray();
@@ -491,17 +532,11 @@ class CopyDocumentTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $createResult = new Result();
-        $createResult->addId('document', 111);
-        $createResult->addMessage('Document(s) copied');
-
         $params = [
-            'identifier' => 'identifier',
             'description' => 'description',
             'category' => 4,
             'subCategory' => 5,
             'issuedDate' => '2015-01-01',
-            'filename' => 'filename',
             'isScan' => true,
             'isExternal' => true,
             'application' => null,
@@ -516,7 +551,8 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'operatingCentre' => null,
             'opposition' => null
         ];
-        $this->expectedSideEffect(CreateDocumentSpecificCmd::class, $params, $createResult);
+
+        $this->mockCopyDocumentsCommands($params);
 
         $result = $this->sut->handleCommand($command);
         $res = $result->toArray();
@@ -524,7 +560,7 @@ class CopyDocumentTest extends CommandHandlerTestCase
         $this->assertEquals('Document(s) copied', $res['messages'][0]);
     }
 
-    public function testHandleCommandWithWrrongType()
+    public function testHandleCommandWithWrongType()
     {
         $this->setExpectedException(ValidationException::class);
 
@@ -559,21 +595,18 @@ class CopyDocumentTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    protected function getMockDocument($trafficArea = null)
+    protected function getMockDocument($trafficArea = null, $getIdentifierCount = 2)
     {
         return m::mock()
             ->shouldReceive('getIdentifier')
             ->andReturn('identifier')
-            ->once()
-            ->getMock()
+            ->times($getIdentifierCount)
             ->shouldReceive('getTrafficArea')
             ->andReturn($trafficArea)
             ->once()
-            ->getMock()
             ->shouldReceive('getDescription')
             ->andReturn('description')
             ->once()
-            ->getMock()
             ->shouldReceive('getCategory')
             ->andReturn(
                 m::mock()
@@ -583,7 +616,6 @@ class CopyDocumentTest extends CommandHandlerTestCase
                 ->getMock()
             )
             ->once()
-            ->getMock()
             ->shouldReceive('getSubCategory')
             ->andReturn(
                 m::mock()
@@ -593,22 +625,73 @@ class CopyDocumentTest extends CommandHandlerTestCase
                 ->getMock()
             )
             ->once()
-            ->getMock()
             ->shouldReceive('getIssuedDate')
             ->andReturn('2015-01-01')
             ->once()
-            ->getMock()
-            ->shouldReceive('getFilename')
-            ->andReturn('filename')
-            ->once()
-            ->getMock()
             ->shouldReceive('getIsScan')
             ->andReturn(true)
             ->once()
-            ->getMock()
             ->shouldReceive('getIsExternal')
             ->andReturn(true)
             ->once()
             ->getMock();
+    }
+
+    protected function mockCopyDocumentsCommands($params, $emptyDownload = false)
+    {
+        if (!$emptyDownload) {
+            $mockDownloadedFile = m::mock()
+                ->shouldReceive('getResource')
+                ->andReturn('resource')
+                ->once()
+                ->shouldReceive('getMimeType')
+                ->andReturn('mimeType')
+                ->once()
+                ->getMock();
+
+            $uploadData = array_merge(
+                $params,
+                [
+                    'content' => [
+                        'tmp_name' => 'resource',
+                        'type'     => 'mimeType'
+                    ],
+                    'filename'         => 'identifier',
+                    'shouldUploadOnly' => true
+                ]
+            );
+
+            $this->mockUploader
+                ->shouldReceive('download')
+                ->with('identifier')
+                ->andReturn($mockDownloadedFile)
+                ->once();
+
+            $uploadResult = new Result();
+            $uploadResult->addId('identifier', 'identifier');
+
+            $createData = array_merge(
+                $params,
+                [
+                    'identifier' => 'identifier',
+                    'filename'   => 'identifier'
+                ]
+            );
+
+            $createResult = new Result();
+            $createResult->addId('document', 111);
+            $createResult->addMessage('Document(s) copied');
+
+            $this->expectedSideEffect(UploadCmd::class, $uploadData, $uploadResult);
+            $this->expectedSideEffect(CreateDocumentSpecificCmd::class, $createData, $createResult);
+
+            return;
+        }
+
+        $this->mockUploader
+            ->shouldReceive('download')
+            ->with('identifier')
+            ->andReturn(null)
+            ->once();
     }
 }
