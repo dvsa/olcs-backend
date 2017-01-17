@@ -49,7 +49,9 @@ final class Upload extends AbstractCommandHandler implements
 
         $file = $this->uploadFile($command, $identifier);
 
-        $this->result->merge($this->createDocument($command, $file, $identifier));
+        if (!$command->getShouldUploadOnly()) {
+            $this->result->merge($this->createDocument($command, $file, $identifier));
+        }
 
         return $this->result;
     }
