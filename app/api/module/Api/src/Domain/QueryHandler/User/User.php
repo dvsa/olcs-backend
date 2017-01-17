@@ -49,6 +49,8 @@ class User extends AbstractQueryHandler implements OpenAmUserAwareInterface
                 1
             );
 
+        $authDetails = $this->getOpenAmUser()->fetchUser($user->getPid());
+
         return $this->result(
             $user,
             [
@@ -72,7 +74,12 @@ class User extends AbstractQueryHandler implements OpenAmUserAwareInterface
             ],
             [
                 'userType' => $user->getUserType(),
-                'lastLoggedInOn' => $this->getOpenAmUser()->fetchUser($user->getPid())['lastLoginTime'] ? : null,
+                'lastLoggedInOn' => $authDetails['lastLoginTime'] ? : null,
+                'lockedOn'
+                    => !empty($authDetails['meta']['locked'])
+                        ? \DateTime::createFromFormat('YmdHis.uT', $authDetails['meta']['locked'])
+                            ->format(\DateTime::W3C)
+                        : null,
                 'latestPasswordResetEvent'
                     => !empty($passwordResetEvents)
                         ? array_shift($passwordResetEvents)->serialize()
