@@ -48,8 +48,8 @@ class LicenceOperatingCentreTest extends QueryHandlerTestCase
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
-        $licence->shouldReceive('isPsv')
-            ->andReturn(true);
+        $licence->shouldReceive('isPsv')->with()->once()->andReturn(true);
+        $licence->shouldReceive('getNiFlag')->with()->once()->andReturn('Y');
 
         /** @var LicenceOperatingCentreEntity $loc */
         $loc = m::mock(LicenceOperatingCentreEntity::class)->makePartial();
@@ -75,7 +75,8 @@ class LicenceOperatingCentreTest extends QueryHandlerTestCase
             'canUpdateAddress' => true,
             'wouldIncreaseRequireAdditionalAdvertisement' => false,
             'currentVehiclesRequired' => null,
-            'currentTrailersRequired' => null
+            'currentTrailersRequired' => null,
+            'niFlag' => 'Y',
         ];
 
         $this->assertEquals($expected, $result->serialize());
