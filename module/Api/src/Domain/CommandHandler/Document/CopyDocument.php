@@ -17,14 +17,19 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Transfer\Command\Document\CopyDocument as CopyDocumentCmd;
+use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
+use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
+use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 
 /**
  * Copy document
  * 
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class CopyDocument extends AbstractCommandHandler implements TransactionedInterface
+final class CopyDocument extends AbstractCommandHandler implements TransactionedInterface, UploaderAwareInterface
 {
+    use UploaderAwareTrait;
+
     const APP = 'application';
     const LIC = 'licence';
     const BUSREG = 'busReg';
@@ -57,12 +62,10 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
         foreach ($command->getIds() as $id) {
             $document = $this->getRepo()->fetchById($id);
             $params = [
-                'identifier' => $document->getIdentifier(),
                 'description' => $document->getDescription(),
                 'category' => $document->getCategory()->getId(),
                 'subCategory' => $document->getSubCategory()->getId(),
                 'issuedDate' => $document->getIssuedDate(),
-                'filename' => $document->getFilename(),
                 'isScan' => $document->getIsScan(),
                 'isExternal' => $document->getIsExternal(),
             ];
@@ -106,7 +109,32 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
                 case self::PUBLICATION:
                     /* @todo publication doesn't currently have a foreign key in document table - it should */
             }
+
+            $sourceDocument = $this->getUploader()->download($document->getIdentifier());
+            if ($sourceDocument === null) {
+                throw new ValidationException(['targetId' => 'Can\'t download the source document']);
+            }
+            $uploadData = array_merge(
+                $params,
+                [
+                    'content' => [
+                        'tmp_name' => $sourceDocument->getResource(),
+                        'type'     => $sourceDocument->getMimeType()
+                    ],
+                    'filename'         => basename($document->getIdentifier()),
+                    'shouldUploadOnly' => true
+                ]
+            );
+            $res = $this->handleSideEffect(UploadCmd::create($uploadData));
+            $params = array_merge(
+                $params,
+                [
+                    'identifier' => $res->getId('identifier'),
+                    'filename'   => $res->getId('identifier')
+                ]
+            );
             $res = $this->handleSideEffect(CreateDocumentSpecificCmd::create($params));
+
             $result->addId('document' . $res->getId('document'), $res->getId('document'));
         }
         $result->addMessage('Document(s) copied');
