@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Task Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Task;
 
 use Mockery as m;
@@ -41,6 +36,11 @@ class TaskTest extends QueryHandlerTestCase
                     'assignedToTeam',
                     'assignedToUser',
                     'assignedByUser' => [
+                        'contactDetails' => [
+                            'person'
+                        ]
+                    ],
+                    'lastModifiedBy' => [
                         'contactDetails' => [
                             'person'
                         ]
