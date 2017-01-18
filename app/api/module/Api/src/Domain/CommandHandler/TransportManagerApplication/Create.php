@@ -8,6 +8,8 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
+use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Create as CreateTmApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
@@ -16,6 +18,8 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * Create a Transport Manager Application
@@ -27,6 +31,7 @@ final class Create extends AbstractCommandHandler implements
     \Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface
 {
     use \Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+    use QueueAwareTrait;
 
     protected $repoServiceName = 'TransportManagerApplication';
     /**
@@ -38,6 +43,13 @@ final class Create extends AbstractCommandHandler implements
      */
     protected $tmRepo;
 
+    /**
+     * Creates service
+     *
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
+     * @return TransactioningCommandHandler
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->userRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
@@ -48,11 +60,18 @@ final class Create extends AbstractCommandHandler implements
         return parent::createService($serviceLocator);
     }
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface|CreateTmApplicationCmd $command command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
 
-        /* @var $user \Dvsa\Olcs\Api\Entity\User\User */
+        /* @var $user UserEntity */
         $user = $this->userRepo->fetchForTma($command->getUser());
         $this->validateTransportManagerApplication($command->getApplication(), $user);
 
@@ -68,6 +87,8 @@ final class Create extends AbstractCommandHandler implements
             $transportManager->addUsers($user);
             $user->setTransportManager($transportManager);
             $this->userRepo->save($user);
+
+            $result->merge($this->handleSideEffect($this->nysiisQueue($transportManager->getId())));
         }
 
         if ($command->getDob()) {
@@ -106,7 +127,17 @@ final class Create extends AbstractCommandHandler implements
         return $result;
     }
 
-    protected function validateTransportManagerApplication($applicationId, $user)
+    /**
+     * Validates transport manager application
+     *
+     * @param int        $applicationId application id
+     * @param UserEntity $user          user entity
+     *
+     * @throws ValidationException
+     *
+     * @return void
+     */
+    protected function validateTransportManagerApplication($applicationId, UserEntity $user)
     {
         if (!$user->getTransportManager()) {
             return;
