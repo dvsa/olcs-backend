@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "97ca099c9bbbb2c99741c1af52c34bdb",
-    "content-hash": "83ee3da53b4547d64795fcb518615e35",
+    "hash": "fff120f550912454cf5e0bca3c73f0a1",
+    "content-hash": "dce479bbfb6083686e7bf98e303ab633",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1063,7 +1063,7 @@
         },
         {
             "name": "olcs/autoload",
-            "version": "dev-develop",
+            "version": "dev-release/4.6",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-autoload.git",
@@ -1078,7 +1078,7 @@
         },
         {
             "name": "olcs/companies-house",
-            "version": "dev-develop",
+            "version": "dev-release/4.6",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
@@ -1098,11 +1098,11 @@
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "dev-develop",
+            "version": "dev-release/4.6",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
-                "reference": "ee458b49dcb4902b26f6ee5d8d552b89046b6118"
+                "reference": "5b82a6695446bdc695df223504fdfa644ec2b738"
             },
             "require": {
                 "php": ">=5.4",
@@ -1128,15 +1128,15 @@
                 }
             },
             "description": "Logging Module for Olcs",
-            "time": "2016-11-09 12:21:36"
+            "time": "2017-01-18 10:55:43"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-develop",
+            "version": "dev-release/4.6",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "ab85f726df613077fbba68bca8ff68bccc81385e"
+                "reference": "18a9138f34e7c2489d075d5ec244286f6979e4f1"
             },
             "require": {
                 "php": ">=5.4",
@@ -1154,15 +1154,15 @@
                 }
             },
             "description": "OLCS Transfer",
-            "time": "2017-01-17 15:15:35"
+            "time": "2017-01-18 10:42:16"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "dev-develop",
+            "version": "dev-release/4.6",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "b70784f2c1373ddd6097c5a68adad8c912986010"
+                "reference": "94b375ae976c90b655f70845360eebf219f95865"
             },
             "require": {
                 "php": ">=5.4",
@@ -1170,7 +1170,7 @@
             },
             "require-dev": {
                 "mockery/mockery": "~0.9.3",
-                "olcs/olcs-logging": "dev-develop",
+                "olcs/olcs-logging": "dev-release/4.6",
                 "phpunit/phpunit": "^4.0.0"
             },
             "type": "library",
@@ -1180,15 +1180,15 @@
                 }
             },
             "description": "OLCS Utils",
-            "time": "2016-12-14 10:44:28"
+            "time": "2017-01-18 10:53:46"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "dev-master",
+            "version": "dev-release/4.6",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "4bd2759e7c2d3378364a7937fb3c9e9e4096dc0c"
+                "reference": "7a50eea646a8da1f310f2531ab0394097fd4f3fb"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1209,7 +1209,7 @@
                 }
             },
             "description": "Xml tools for olcs",
-            "time": "2016-11-01 15:22:25"
+            "time": "2017-01-18 10:54:29"
         },
         {
             "name": "psr/log",
