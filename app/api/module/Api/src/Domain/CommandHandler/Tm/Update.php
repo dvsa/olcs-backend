@@ -9,14 +9,15 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Tm;
 
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as SaveAddressCmd;
 use Dvsa\Olcs\Api\Domain\Command\Person\UpdateFull as UpdatePersonCmd;
+use Dvsa\Olcs\Transfer\Command\Tm\Update as UpdateTmCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\Serializer\Adapter\Json as ZendJson;
-use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 
 /**
  * Transport Manager / Update
@@ -29,6 +30,15 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
 
     protected $extraRepos = ['ContactDetails'];
 
+    use QueueAwareTrait;
+
+    /**
+     * Handle command
+     *
+     * @param CommandInterface|UpdateTmCmd $command command to update a TM
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -103,8 +113,16 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         return $result;
     }
 
+    /**
+     * update home contact details
+     *
+     * @param UpdateTmCmd $command command to update tm
+     *
+     * @return ContactDetailsEntity
+     */
     protected function updateHomeContactDetails($command)
     {
+        /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = $this->getRepo('ContactDetails')->fetchById($command->getHomeCdId());
         $contactDetails->updateContactDetailsWithPersonAndEmailAddress(
             null,
@@ -115,13 +133,17 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
     }
 
     /**
-     * @param $command
-     * @param null $workCdId
-     * @return mixed
+     * Update a transport manager
+     *
+     * @param UpdateTmCmd $command  command to update tm
+     * @param int|null    $workCdId work contact details id
+     *
+     * @return TransportManagerEntity
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     protected function updateTransportManager($command, $workCdId = null)
     {
+        /** @var TransportManagerEntity $transportManager */
         $transportManager = $this->getRepo('TransportManager')->fetchById($command->getId());
 
         $transportManager->updateTransportManager(
@@ -134,38 +156,10 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
 
         $this->result->merge(
             $this->handleSideEffect(
-                $this->getNysiisNameUpdateQueueCmd(
-                    [
-                        'id' => $transportManager->getId()
-                    ]
-                )
+                $this->nysiisQueueCmd($transportManager->getId())
             )
         );
 
         return $transportManager;
-    }
-
-    /**
-     * Returns a command to queue a NYSIIS name request and update
-     *
-     * @param array $params
-     * @return CreateQueue
-     */
-    private function getNysiisNameUpdateQueueCmd($params)
-    {
-        $jsonSerializer = new ZendJson();
-
-        $optionData = [
-            'id' => $params['id']
-        ];
-
-        $dtoData = [
-            'entityId' => $params['id'],
-            'type' => Queue::TYPE_UPDATE_NYSIIS_TM_NAME,
-            'status' => Queue::STATUS_QUEUED,
-            'options' => $jsonSerializer->serialize($optionData)
-        ];
-
-        return CreateQueue::create($dtoData);
     }
 }

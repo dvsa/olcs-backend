@@ -17,6 +17,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as TransportManagerApplicationEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 
 /**
  * CreateTest
@@ -197,6 +198,8 @@ class CreateTest extends CommandHandlerTestCase
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
         );
+
+        $this->expectedQueueSideEffect(645, Queue::TYPE_UPDATE_NYSIIS_TM_NAME, ['id' => 645]);
 
         $this->sut->handleCommand($command);
     }
