@@ -88,7 +88,7 @@ final class Create extends AbstractCommandHandler implements
             $user->setTransportManager($transportManager);
             $this->userRepo->save($user);
 
-            $result->merge($this->handleSideEffect($this->nysiisQueue($transportManager->getId())));
+            $result->merge($this->handleSideEffect($this->nysiisQueueCmd($transportManager->getId())));
         }
 
         if ($command->getDob()) {

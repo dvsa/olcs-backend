@@ -12,7 +12,7 @@ use Zend\Json\Json as ZendJson;
 trait QueueAwareTrait
 {
     /**
-     * Adds an email to the queue
+     * Generates command for adding an email to the queue
      *
      * @param string      $cmdClass         email command class
      * @param array       $cmdData          command data
@@ -32,20 +32,20 @@ trait QueueAwareTrait
     }
 
     /**
-     * Adds a nysiis request the queue
+     * Generates command for adding a nysiis request to the queue
      *
      * @param int         $entityId         entity id (transport manager)
      * @param string|null $processAfterDate wait until this date to process
      *
      * @return CreateQueue
      */
-    public function nysiisQueue($entityId, $processAfterDate = null)
+    public function nysiisQueueCmd($entityId, $processAfterDate = null)
     {
         return $this->createQueue($entityId, Queue::TYPE_UPDATE_NYSIIS_TM_NAME, ['id' => $entityId], $processAfterDate);
     }
 
     /**
-     * Creates a queue job
+     * Generates command for adding a queue job
      *
      * @param int         $entityId         id of the record being processed
      * @param string      $type             queue type

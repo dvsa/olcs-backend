@@ -99,7 +99,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
 
         $this->result->merge(
             $this->handleSideEffect(
-                $this->nysiisQueue($transportManagerId)
+                $this->nysiisQueueCmd($transportManagerId)
             )
         );
 

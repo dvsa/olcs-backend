@@ -156,7 +156,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
 
         $this->result->merge(
             $this->handleSideEffect(
-                $this->nysiisQueue($transportManager->getId())
+                $this->nysiisQueueCmd($transportManager->getId())
             )
         );
 
