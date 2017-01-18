@@ -14,10 +14,11 @@ trait QueueAwareTrait
     /**
      * Adds an email to the queue
      *
-     * @param string $cmdClass
-     * @param array $cmdData
-     * @param int $entityId
-     * @param string|null $processAfterDate
+     * @param string      $cmdClass         email command class
+     * @param array       $cmdData          command data
+     * @param int         $entityId         id of the record being processed
+     * @param string|null $processAfterDate queue job won't be processed before this date
+     *
      * @return CreateQueue
      */
     public function emailQueue($cmdClass, array $cmdData, $entityId, $processAfterDate = null)
@@ -31,12 +32,26 @@ trait QueueAwareTrait
     }
 
     /**
+     * Adds a nysiis request the queue
+     *
+     * @param int         $entityId         entity id (transport manager)
+     * @param string|null $processAfterDate wait until this date to process
+     *
+     * @return CreateQueue
+     */
+    public function nysiisQueue($entityId, $processAfterDate = null)
+    {
+        return $this->createQueue($entityId, Queue::TYPE_UPDATE_NYSIIS_TM_NAME, ['id' => $entityId], $processAfterDate);
+    }
+
+    /**
      * Creates a queue job
      *
-     * @param int $entityId
-     * @param string $type
-     * @param array $options
-     * @param string|null $processAfterDate
+     * @param int         $entityId         id of the record being processed
+     * @param string      $type             queue type
+     * @param array       $options          queue options
+     * @param string|null $processAfterDate queue job won't be processed before this date
+     *
      * @return CreateQueue
      */
     public function createQueue($entityId, $type, array $options, $processAfterDate = null)

@@ -8,18 +8,16 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Tm;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
-use Dvsa\Olcs\Transfer\Command\Tm\Create as Cmd;
+use Dvsa\Olcs\Transfer\Command\Tm\Create as CreateTmCmd;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as SaveAddressCmd;
 use Dvsa\Olcs\Api\Domain\Command\Person\Create as CreatePersonCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Zend\Serializer\Adapter\Json as ZendJson;
-use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
 
 /**
  * Transport Manager / Create
@@ -32,6 +30,15 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
 
     protected $extraRepos = ['ContactDetails'];
 
+    use QueueAwareTrait;
+
+    /**
+     * handle command
+     *
+     * @param CommandInterface|CreateTmCmd $command command to create a transport manager
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -88,18 +95,15 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         );
 
         $this->getRepo()->save($transportManager);
+        $transportManagerId = $transportManager->getId();
 
         $this->result->merge(
             $this->handleSideEffect(
-                $this->getNysiisNameUpdateQueueCmd(
-                    [
-                        'id' => $transportManager->getId()
-                    ]
-                )
+                $this->nysiisQueue($transportManagerId)
             )
         );
 
-        $result->addId('transportManager', $transportManager->getId());
+        $result->addId('transportManager', $transportManagerId);
         $result->addMessage('Transport Manager created successfully');
         $result->merge($personResult);
 
@@ -116,8 +120,18 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         return $result;
     }
 
+    /**
+     * Update home contact details
+     *
+     * @param int         $contactDetailsId contact details id
+     * @param int         $personId         person id
+     * @param CreateTmCmd $command          command
+     *
+     * @return void
+     */
     protected function updateHomeContactDetails($contactDetailsId, $personId, $command)
     {
+        /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = $this->getRepo('ContactDetails')->fetchById($contactDetailsId);
         $contactDetails->updateContactDetailsWithPersonAndEmailAddress(
             $this->getRepo()->getReference(PersonEntity::class, $personId),
@@ -127,7 +141,12 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     }
 
     /**
-     * @param Cmd $command
+     * Creates transport manager object
+     *
+     * @param CreateTmCmd $command  create TM command
+     * @param int         $workCdId work contact details id
+     * @param int         $homeCdId home contact details id
+     *
      * @return TransportManagerEntity
      */
     private function createTransportManagerObject($command, $workCdId, $homeCdId)
@@ -142,29 +161,5 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
             $this->getRepo()->getReference(ContactDetailsEntity::class, $homeCdId)
         );
         return $transportManager;
-    }
-
-    /**
-     * Returns a command to queue a NYSIIS name request and update
-     *
-     * @param array $params
-     * @return CreateQueue
-     */
-    private function getNysiisNameUpdateQueueCmd($params)
-    {
-        $jsonSerializer = new ZendJson();
-
-        $optionData = [
-            'id' => $params['id']
-        ];
-
-        $dtoData = [
-            'entityId' => $params['id'],
-            'type' => Queue::TYPE_UPDATE_NYSIIS_TM_NAME,
-            'status' => Queue::STATUS_QUEUED,
-            'options' => $jsonSerializer->serialize($optionData)
-        ];
-
-        return CreateQueue::create($dtoData);
     }
 }
