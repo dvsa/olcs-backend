@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use \Dvsa\Olcs\Transfer\Query as TransferQry;
 use Dvsa\Olcs\Api\Entity;
- use Mockery as m;
+use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\Repository\Category
@@ -35,69 +35,68 @@ class CategoryTest extends RepositoryTestCase
         static::assertEquals('QUERY', $this->query);
     }
 
-    public function testApplyListFiltersAllN()
+    /**
+     * @dataProvider dpTestApplyListX
+     */
+    public function testApplyListX($query, $expect)
     {
         $qb = $this->createMockQb('QUERY');
 
         $this->mockCreateQueryBuilder($qb);
 
         $this->queryBuilder
-            ->shouldReceive('modifyQuery')
-            ->with($qb)
-            ->andReturnSelf()
-            ->shouldReceive('withRefdata')
-            ->once()
-            ->andReturnSelf();
-
-        $dto = TransferQry\Category\GetList::create(
-            [
-                'isTaskCategory' => 'N',
-                'isDocCategory' => 'N',
-                'isScanCategory' => 'N',
-            ]
-        );
-        $this->sut->shouldReceive('fetchPaginatedList')
-            ->andReturn('RESULTS');
-
-        $this->assertEquals('RESULTS', $this->sut->fetchList($dto));
-
-        $expectedQuery = 'QUERY AND m.isTaskCategory = [[false]] AND '
-            . 'm.isDocCategory = [[false]] AND '
-            . 'm.isScanCategory = [[false]]';
-
-        $this->assertEquals($expectedQuery, $this->query);
-    }
-
-    public function testApplyListFiltersAllY()
-    {
-        $qb = $this->createMockQb('QUERY');
-
-        $this->mockCreateQueryBuilder($qb);
-
-        $this->queryBuilder
-            ->shouldReceive('modifyQuery')->times(2)->with($qb)->andReturnSelf()
+            ->shouldReceive('modifyQuery')->atLeast(1)->with($qb)->andReturnSelf()
             ->shouldReceive('withRefdata')->once()->andReturnSelf();
 
         $this->sut->shouldReceive('fetchPaginatedList')
             ->andReturn('RESULTS');
 
-        $dto = TransferQry\Category\GetList::create(
-            [
-                'isTaskCategory' => 'Y',
-                'isDocCategory' => 'Y',
-                'isScanCategory' => 'Y',
-            ]
+        $this->assertEquals(
+            'RESULTS',
+            $this->sut->fetchList(TransferQry\Category\GetList::create($query))
         );
-        $this->assertEquals('RESULTS', $this->sut->fetchList($dto));
 
-        $expectedQuery = 'QUERY '.
-            'SELECT DISTINCT m ' .
-            'INNER JOIN ' . Entity\Doc\DocTemplate::class . ' dct WITH dct.category = m.id ' .
-            'INNER JOIN ' . Entity\Doc\Document::class . ' dc WITH dc.id = dct.document ' .
-            'AND m.isTaskCategory = [[true]] ' .
-            'AND m.isDocCategory = [[true]] ' .
-            'AND m.isScanCategory = [[true]]';
+        $this->assertEquals($expect, $this->query);
+    }
 
-        $this->assertEquals($expectedQuery, $this->query);
+    public function dpTestApplyListX()
+    {
+        return [
+            [
+                'query' => [
+                    'isTaskCategory' => 'Y',
+                    'isDocCategory' => 'N',
+                    'isScanCategory' => 'Y',
+                    'isOnlyWithItems' => 'Y',
+                ],
+                'expect' => 'QUERY ' .
+                    'AND m.isTaskCategory = [[true]] ' .
+                    'AND m.isDocCategory = [[false]] ' .
+                    'AND m.isScanCategory = [[true]]',
+            ],
+            [
+                'query' => [
+                    'isDocCategory' => 'Y',
+                    'isOnlyWithItems' => 'N',
+                ],
+                'expect' => 'QUERY ' .
+                    'AND m.isDocCategory = [[true]]',
+            ],
+            [
+                'query' => [
+                    'isTaskCategory' => 'N',
+                    'isDocCategory' => 'Y',
+                    'isScanCategory' => 'N',
+                    'isOnlyWithItems' => 'Y',
+                ],
+                'expect' => $expectedQuery = 'QUERY ' .
+                    'SELECT DISTINCT m ' .
+                    'INNER JOIN ' . Entity\Doc\DocTemplate::class . ' dct WITH dct.category = m.id ' .
+                    'INNER JOIN ' . Entity\Doc\Document::class . ' dc WITH dc.id = dct.document ' .
+                    'AND m.isTaskCategory = [[false]] ' .
+                    'AND m.isDocCategory = [[true]] ' .
+                    'AND m.isScanCategory = [[false]]',
+            ],
+        ];
     }
 }
