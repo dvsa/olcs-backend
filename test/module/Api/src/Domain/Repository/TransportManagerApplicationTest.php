@@ -28,17 +28,22 @@ class TransportManagerApplicationTest extends RepositoryTestCase
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tma')->once()->andReturn($mockQb);
 
-        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
-
-        $this->queryBuilder->shouldReceive('with')->with('tma.transportManager', 'tm')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('tm.homeCd', 'hcd')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('hcd.address', 'hadd')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('hadd.countryCode')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('hcd.person', 'hp')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('tm.workCd', 'wcd')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('wcd.address', 'wadd')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('wadd.countryCode')->once()->andReturnSelf();
+        $mockQb->shouldReceive('leftJoin')->with('tma.transportManager', 'tm')->once()->andReturnSelf();
+        $mockQb->shouldReceive('leftJoin')->with('tma.tmApplicationStatus', 'tmas')->once()->andReturnSelf();
+        $mockQb->shouldReceive('leftJoin')->with('tm.homeCd', 'hcd')->once()->andReturnSelf();
+        $mockQb->shouldReceive('leftJoin')->with('hcd.person', 'hp')->once()->andReturnSelf();
+        $mockQb->shouldReceive('select')->with('tma.id')->once()->andReturnSelf();
+        $mockQb->shouldReceive('addSelect')->with('tma.action')->once()->andReturnSelf();
+        $mockQb->shouldReceive('addSelect')->with('tm.id as tmid')->once()->andReturnSelf();
+        $mockQb->shouldReceive('addSelect')
+            ->with('tmas.id as tmasid, tmas.description as tmasdesc')
+            ->once()
+            ->andReturnSelf();
+        $mockQb->shouldReceive('addSelect')->with('hcd.emailAddress')->once()->andReturnSelf();
+        $mockQb->shouldReceive('addSelect')
+            ->with('hp.birthDate, hp.forename, hp.familyName')
+            ->once()
+            ->andReturnSelf();
 
         $mockQb->shouldReceive('expr->eq')->with('tma.application', ':applicationId')->once()->andReturn('EXPR');
         $mockQb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
