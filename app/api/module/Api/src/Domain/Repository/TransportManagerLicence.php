@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence as Entity;
+use Doctrine\ORM\Query;
 
 /**
  * TransportManagerLicence repository
@@ -38,7 +39,7 @@ class TransportManagerLicence extends AbstractRepository
     /**
      * Get a list of transport manager licences with contact details
      *
-     * @param int $licenceId
+     * @param int $licenceId licence id
      *
      * @return array TransportManagerLicence entities
      */
@@ -46,15 +47,18 @@ class TransportManagerLicence extends AbstractRepository
     {
         $dqb = $this->createQueryBuilder();
 
-        $this->getQueryBuilder()->modifyQuery($dqb)->withRefdata();
-        $dqb->join($this->alias .'.transportManager', 'tm')->addSelect('tm')
-            ->join('tm.homeCd', 'hcd')->addSelect('hcd')
-            ->join('hcd.person', 'p')->addSelect('p');
-
         $dqb->andWhere($dqb->expr()->eq($this->alias .'.licence', ':licenceId'))
             ->setParameter('licenceId', $licenceId);
 
-        return $dqb->getQuery()->getResult();
+        $dqb->join($this->alias .'.transportManager', 'tm')
+            ->join('tm.homeCd', 'hcd')
+            ->join('hcd.person', 'p')
+            ->select($this->alias . '.id')
+            ->addSelect('tm.id as tmid')
+            ->addSelect('p.birthDate, p.forename, p.familyName')
+            ->addSelect('hcd.emailAddress');
+
+        return $dqb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
     public function fetchForTransportManager($tmId, array $licenceStatuses = null)

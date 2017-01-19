@@ -28,15 +28,13 @@ class TransportManagerLicenceTest extends RepositoryTestCase
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tml')->once()->andReturn($mockQb);
 
-        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
-
         $mockQb->shouldReceive('join')->with('tml.transportManager', 'tm')->once()->andReturnSelf();
-        $mockQb->shouldReceive('addSelect')->with('tm')->once()->andReturnSelf();
         $mockQb->shouldReceive('join')->with('tm.homeCd', 'hcd')->once()->andReturnSelf();
-        $mockQb->shouldReceive('addSelect')->with('hcd')->once()->andReturnSelf();
         $mockQb->shouldReceive('join')->with('hcd.person', 'p')->once()->andReturnSelf();
-        $mockQb->shouldReceive('addSelect')->with('p')->once()->andReturnSelf();
+        $mockQb->shouldReceive('select')->with('tml.id')->once()->andReturnSelf();
+        $mockQb->shouldReceive('addSelect')->with('tm.id as tmid')->once()->andReturnSelf();
+        $mockQb->shouldReceive('addSelect')->with('p.birthDate, p.forename, p.familyName')->once()->andReturnSelf();
+        $mockQb->shouldReceive('addSelect')->with('hcd.emailAddress')->once()->andReturnSelf();
         $mockQb->shouldReceive('expr->eq')->with('tml.licence', ':licenceId')->once()->andReturn('EXPR');
         $mockQb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('licenceId', 834)->once();

@@ -1,16 +1,14 @@
 <?php
 
-/**
- * TransportManagersTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Application\TransportManagers as QueryHandler;
 use Dvsa\Olcs\Transfer\Query\Application\TransportManagers as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TransportManagerLicenceRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
+use Mockery as m;
 
 /**
  * TransportManagersTest
@@ -22,55 +20,72 @@ class TransportManagersTest extends QueryHandlerTestCase
     public function setUp()
     {
         $this->sut = new QueryHandler();
-        $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
+        $this->mockRepo('Application', ApplicationRepo::class);
         $this->mockRepo('TransportManagerApplication', TransportManagerApplicationRepo::class);
-        $this->mockRepo('TransportManagerLicence', \Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence::class);
+        $this->mockRepo('TransportManagerLicence', TransportManagerLicenceRepo::class);
 
         parent::setUp();
     }
 
     public function testHandleQuery()
     {
-        $query = Query::create(['id' => 1066]);
+        $applicationId = 1066;
+        $licenceId = 1077;
+        $query = Query::create(['id' => $applicationId]);
 
-        $application = $this->getApplication();
+        $application = m::mock()
+            ->shouldReceive('getId')
+            ->andReturn($applicationId)
+            ->twice()
+            ->shouldReceive('getLicenceType')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn('licType')
+                    ->once()
+                    ->getMock()
+            )
+            ->twice()
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn($licenceId)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->getMock();
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($query)->once()->andReturn($application);
-        $this->repoMap['TransportManagerApplication']->shouldReceive('fetchWithContactDetailsByApplication')
-            ->with(1066)->once();
-        $this->repoMap['TransportManagerLicence']->shouldReceive('fetchWithContactDetailsByLicence')
-            ->with(624)->once();
+        $this->repoMap['Application']
+            ->shouldReceive('fetchUsingId')
+            ->with($query)
+            ->once()
+            ->andReturn($application);
 
-        /* @var $result \Dvsa\Olcs\Api\Domain\QueryHandler\Result */
-        $this->sut->handleQuery($query);
-    }
+        $this->repoMap['TransportManagerApplication']
+            ->shouldReceive('fetchWithContactDetailsByApplication')
+            ->with($applicationId)
+            ->andReturn('tmas')
+            ->once();
 
-    /**
-     * @return \Dvsa\Olcs\Api\Entity\Licence\Licence
-     */
-    protected function getLicence($id)
-    {
-        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
-        $status = new \Dvsa\Olcs\Api\Entity\System\RefData();
-        $licence = new \Dvsa\Olcs\Api\Entity\Licence\Licence($organisation, $status);
-        $licence->setId($id);
+        $this->repoMap['TransportManagerLicence']
+            ->shouldReceive('fetchWithContactDetailsByLicence')
+            ->with($licenceId)
+            ->andReturn('tmls')
+            ->once();
 
-        return $licence;
-    }
+        $expected = [
+            'id' => $applicationId,
+            'licenceType' => ['id' => 'licType'],
+            'transportManagers' => 'tmas',
+            'licence' => [
+                'tmLicences' => 'tmls'
+            ]
+        ];
 
-    /**
-     * @return \Dvsa\Olcs\Api\Entity\Application\Application
-     */
-    protected function getApplication($licence = null)
-    {
-        if ($licence === null) {
-            $licence = $this->getLicence(624);
-        }
+        $result = $this->sut->handleQuery($query);
 
-        $status = new \Dvsa\Olcs\Api\Entity\System\RefData();
-        $application = new \Dvsa\Olcs\Api\Entity\Application\Application($licence, $status, false);
-        $application->setId(1066);
-
-        return $application;
+        $this->assertEquals($expected, $result);
     }
 }
