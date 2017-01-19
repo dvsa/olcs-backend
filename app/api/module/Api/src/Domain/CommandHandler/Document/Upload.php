@@ -101,7 +101,10 @@ final class Upload extends AbstractCommandHandler implements
         $dsFile = new DsFile();
         if (!empty($content['tmp_name'])) {
             $dsFile->setContentFromStream($content['tmp_name']);
-            $dsFile->setMimeType($content['type']);
+
+            if ('application/octet-stream' === $dsFile->getMimeType()) {
+                $dsFile->setMimeType($content['type']);
+            }
         } else {
             $dsFile->setContent(base64_decode($content));
         }
