@@ -199,8 +199,10 @@ class UploadTest extends CommandHandlerTestCase
 
     public function testHandleCommandFileAndIsExternalNull()
     {
+        $gzBody = gzcompress(self::BODY);
+
         $vfs = vfsStream::setup('temp');
-        $tmpFilePath = vfsStream::newFile('stream')->withContent(self::BODY)->at($vfs)->url();
+        $tmpFilePath = vfsStream::newFile('stream.zip')->withContent($gzBody)->at($vfs)->url();
 
         $expectMimeType = 'x-mimeType';
 
@@ -238,7 +240,7 @@ class UploadTest extends CommandHandlerTestCase
                 function ($fileName, DsFile $file) use ($expectMimeType) {
                     static::assertSame(self::IDENTIFIER, $fileName);
 
-                    static::assertEquals(self::BODY, $file->getContent());
+                    static::assertEquals(self::BODY, gzuncompress($file->getContent()));
                     static::assertEquals($expectMimeType, $file->getMimeType());
 
                     $file->setIdentifier(self::IDENTIFIER);
@@ -251,7 +253,7 @@ class UploadTest extends CommandHandlerTestCase
         $result->addMessage('CreateDocument');
         $data = [
             'identifier' => self::IDENTIFIER,
-            'size' => strlen(self::BODY),
+            'size' => strlen($gzBody),
             'filename' => self::IDENTIFIER,
             'description' => 'fileName',
             'user' => self::USER_ID,
