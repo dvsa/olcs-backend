@@ -1,13 +1,9 @@
 <?php
 
-/**
- * Transport Manager Application Repository
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as Entity;
+use Doctrine\ORM\Query;
 
 /**
  * Transport Manager Application Repository
@@ -22,7 +18,7 @@ class TransportManagerApplication extends AbstractRepository
     /**
      * Get a list of transport manager application with contact details
      *
-     * @param int $applicationId
+     * @param int $applicationId application id
      *
      * @return array TransportManagerApplication entities
      */
@@ -30,13 +26,21 @@ class TransportManagerApplication extends AbstractRepository
     {
         $dqb = $this->createQueryBuilder();
 
-        $this->getQueryBuilder()->modifyQuery($dqb)->withRefdata();
-        $this->joinTmContactDetails();
+        $dqb->leftJoin($this->alias .'.transportManager', 'tm')
+            ->leftJoin($this->alias . '.tmApplicationStatus', 'tmas')
+            ->leftJoin('tm.homeCd', 'hcd')
+            ->leftJoin('hcd.person', 'hp')
+            ->select($this->alias . '.id')
+            ->addSelect($this->alias . '.action')
+            ->addSelect('tm.id as tmid')
+            ->addSelect('tmas.id as tmasid, tmas.description as tmasdesc')
+            ->addSelect('hcd.emailAddress')
+            ->addSelect('hp.birthDate, hp.forename, hp.familyName');
 
         $dqb->andWhere($dqb->expr()->eq($this->alias .'.application', ':applicationId'))
             ->setParameter('applicationId', $applicationId);
 
-        return $dqb->getQuery()->getResult();
+        return $dqb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
     /**

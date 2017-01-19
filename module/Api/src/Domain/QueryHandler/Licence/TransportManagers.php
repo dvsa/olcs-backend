@@ -20,37 +20,17 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 class TransportManagers extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
-
-    /**
-     * @var \Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence
-     */
-    protected $tmlRepo;
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->tmlRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('TransportManagerLicence');
-
-        return parent::createService($serviceLocator);
-    }
+    protected $extraRepos = ['TransportManagerLicence'];
 
     public function handleQuery(QueryInterface $query)
     {
         /* @var $licence \Dvsa\Olcs\Api\Entity\Licence\Licence */
         $licence = $this->getRepo()->fetchUsingId($query);
-        $this->tmlRepo->fetchWithContactDetailsByLicence($licence->getId());
+        $tmls = $this->getRepo('TransportManagerLicence')->fetchWithContactDetailsByLicence($licence->getId());
 
-        return $this->result(
-            $licence,
-            [
-                'tmLicences' => [
-                    'transportManager' => [
-                        'homeCd' => [
-                            'person'
-                        ]
-                    ]
-                ]
-            ]
-        );
+        return [
+            'id' => $licence->getId(),
+            'tmLicences' => $tmls
+        ];
     }
 }

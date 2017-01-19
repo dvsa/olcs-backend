@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Doctrine\ORM\Query;
 
 /**
  * Transport Managers Query Handler
@@ -24,32 +25,23 @@ class TransportManagers extends AbstractQueryHandler
 
         /** @var \Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication $repoApp */
         $repoApp = $this->getRepo('TransportManagerApplication');
-        $repoApp->fetchWithContactDetailsByApplication($application->getId());
+        $tmas = $repoApp->fetchWithContactDetailsByApplication($application->getId());
 
         /** @var \Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence $repoLic */
         $repoLic = $this->getRepo('TransportManagerLicence');
-        $repoLic->fetchWithContactDetailsByLicence($application->getLicence()->getId());
+        $tmls = $repoLic->fetchWithContactDetailsByLicence($application->getLicence()->getId());
 
-        return $this->result(
-            $application,
-            [
-                'transportManagers' => [
-                    'transportManager' => [
-                        'homeCd' => [
-                            'person'
-                        ],
-                    ],
-                ],
-                'licence' => [
-                    'tmLicences' => [
-                        'transportManager' => [
-                            'homeCd' => [
-                                'person'
-                            ],
-                        ],
-                    ],
-                ],
+        $licenceType = $application->getLicenceType() === null
+            ? null
+            : ['id' => $application->getLicenceType()->getId()];
+
+        return [
+            'id' => $application->getId(),
+            'licenceType' => $licenceType,
+            'transportManagers' => $tmas,
+            'licence' => [
+                'tmLicences' => $tmls
             ]
-        );
+        ];
     }
 }
