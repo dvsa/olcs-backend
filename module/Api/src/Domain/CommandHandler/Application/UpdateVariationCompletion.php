@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Update Variation Completion
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -57,12 +52,8 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         'community_licences' => [],
         'safety' => [],
         'conditions_undertakings' => [],
-        'financial_history' => [
-            'people'
-        ],
-        'convictions_penalties' => [
-            'people'
-        ],
+        'financial_history' => [],
+        'convictions_penalties' => [],
         //'undertakings' => [] We don't want this as there is bespoke rules around setting this status
     ];
 
@@ -689,9 +680,23 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
             return;
         }
 
-        if ($this->application->getApplicationOrganisationPersons()->isEmpty()) {
+        $appOrgPersons = $this->application->getApplicationOrganisationPersons();
+        if ($appOrgPersons->isEmpty()) {
             $this->markSectionUnchanged('people');
             return;
+        }
+
+        $markRequired = false;
+        foreach ($appOrgPersons as $appOrgPerson) {
+            if (in_array($appOrgPerson->getAction(), ['A', 'U'])) {
+                $markRequired = true;
+                break;
+            }
+        }
+
+        if ($markRequired) {
+            $this->markSectionRequired('financial_history');
+            $this->markSectionRequired('convictions_penalties');
         }
 
         $this->markSectionUpdated('people');
