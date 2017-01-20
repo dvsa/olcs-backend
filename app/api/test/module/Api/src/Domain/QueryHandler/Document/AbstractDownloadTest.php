@@ -3,10 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Document\AbstractDownload;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 use org\bovigo\vfs\vfsStream;
@@ -91,7 +89,7 @@ class AbstractDownloadTest extends QueryHandlerTestCase
             'Content-Type' => $expect['mime'].';charset=UTF-8',
             'Content-Length' => $expectSize,
             'Content-Disposition' => ($expect['isDownload'] ? 'attachment' : 'inline') .
-                ';filename="' . basename($identifier) . '"',
+                ';filename="' . $expect['filename'] . '"',
         ];
         static::assertEquals($expectHeaders, $actual->getHeaders()->toArray());
     }
@@ -107,6 +105,7 @@ class AbstractDownloadTest extends QueryHandlerTestCase
                     'mime' => self::MIME_TYPE,
                     'isDownload' => true,
                     'path' => '/unit_dir/unit_file1.pdf',
+                    'filename' => 'unit_file.ext',
                 ],
             ],
             [
@@ -117,6 +116,7 @@ class AbstractDownloadTest extends QueryHandlerTestCase
                     'mime' => self::MIME_TYPE,
                     'isDownload' => false,
                     'path' => 'unit_file.html',
+                    'filename' => 'unit_file.html',
                 ],
             ],
             [
@@ -127,6 +127,7 @@ class AbstractDownloadTest extends QueryHandlerTestCase
                     'mime' => self::MIME_TYPE_EXCLUDE,
                     'isDownload' => true,
                     'path' => 'dir/dir/unit_file.unit_excl_ext',
+                    'filename' => 'unit_file.unit_excl_ext',
                 ],
             ],
             [
@@ -137,28 +138,20 @@ class AbstractDownloadTest extends QueryHandlerTestCase
                     'mime' => self::MIME_TYPE,
                     'isDownload' => false,
                     'path' => 'unti_path',
+                    'filename' => 'unit_file.ext',
+                ],
+            ],
+            [
+                'identifier' => '/foo/bar',
+                'path' => null,
+                'isInline' => false,
+                'expect' => [
+                    'mime' => self::MIME_TYPE,
+                    'isDownload' => true,
+                    'path' => '/foo/bar',
+                    'filename' => 'bar.txt',
                 ],
             ],
         ];
-    }
-}
-
-/**
- * Stub class of AbstractDownload handler for testing
- */
-class AbstractDownloadStub extends AbstractDownload
-{
-    public function download($identifier, $path = null)
-    {
-        return parent::download($identifier, $path);
-    }
-
-    public function setIsInline($inline)
-    {
-        return parent::setIsInline($inline);
-    }
-
-    public function handleQuery(QueryInterface $query)
-    {
     }
 }
