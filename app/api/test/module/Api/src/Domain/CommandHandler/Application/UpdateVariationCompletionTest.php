@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Update Variation Completion Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -252,6 +247,25 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         return $application;
     }
 
+    private function getApplicationState6($action)
+    {
+        $application = $this->newApplication();
+
+        $application->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
+        $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
+
+        $aop1 = m::mock()
+            ->shouldReceive('getAction')
+            ->andReturn($action)
+            ->getMock();
+
+        $aop = new ArrayCollection();
+        $aop->add($aop1);
+
+        $application->setApplicationOrganisationPersons($aop);
+
+        return $application;
+    }
 
     private function getLicenceState1()
     {
@@ -533,7 +547,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
             ],
             'Changed People' => [
                 'people',
-                $this->getApplicationState1(),
+                $this->getApplicationState6('U'),
                 $this->getLicenceState1(),
                 [
                     'People' => UpdateVariationCompletion::STATUS_UNCHANGED,
@@ -541,7 +555,24 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 ],
                 [
                     'People' => UpdateVariationCompletion::STATUS_UPDATED,
-                    'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
+                    'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
+                    'FinancialHistory' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
+                    'ConvictionsPenalties' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
+                ],
+                'N',
+                []
+            ],
+            'Changed People 1' => [
+                'people',
+                $this->getApplicationState6('D'),
+                $this->getLicenceState1(),
+                [
+                    'People' => UpdateVariationCompletion::STATUS_UNCHANGED,
+                    'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED
+                ],
+                [
+                    'People' => UpdateVariationCompletion::STATUS_UPDATED,
+                    'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                 ],
                 'N',
                 []
