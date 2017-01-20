@@ -76,13 +76,19 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
             || 'html' === FileHelper::getExtension($identifier)
         );
 
+        // OLCS-14910 If file doesn't have an extension then add a '.txt' extension
+        $downloadFileName = basename($identifier);
+        if (FileHelper::getExtension($downloadFileName) === false) {
+            $downloadFileName .= '.txt';
+        }
+
         $headers = $response->getHeaders();
         $headers->addHeaders(
             [
                 'Content-Type' => $this->getMimeType($file, $path) . ';charset=UTF-8',
                 'Content-Length' => $fileSize,
                 'Content-Disposition' => ($isInline ? 'inline' : 'attachment') .
-                    ';filename="' . basename($identifier) . '"',
+                    ';filename="' . $downloadFileName . '"',
             ]
         );
 
