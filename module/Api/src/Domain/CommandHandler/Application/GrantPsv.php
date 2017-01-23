@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Grant Psv
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CommonGrant;
@@ -23,6 +18,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask as CloseTexTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask as CloseFeeDueTaskCmd;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateSmallVehicleCondition as CreateSvConditionUndertakingCmd;
 
 /**
  * Grant Psv
@@ -35,12 +31,16 @@ final class GrantPsv extends AbstractCommandHandler implements TransactionedInte
 
     protected $repoServiceName = 'Application';
 
+    protected $extraRepos = ['ConditionUndertaking'];
+
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
 
         /* @var $application ApplicationEntity */
         $application = $this->getRepo()->fetchUsingId($command);
+
+        $result->merge($this->maybeCreateSmallVehicleCondition($application));
 
         $result->merge($this->createSnapshot($application->getId()));
 
@@ -95,5 +95,19 @@ final class GrantPsv extends AbstractCommandHandler implements TransactionedInte
     {
         $entity->setStatus($this->getRepo()->getRefdataReference($status));
         $entity->setGrantedDate(new DateTime());
+    }
+
+    /**
+     * Maybe create small vehicle condition
+     *
+     * @param ApplicationEntity $application application
+     */
+    protected function maybeCreateSmallVehicleCondition($application)
+    {
+        return $this->handleSideEffect(
+            CreateSvConditionUndertakingCmd::create(
+                ['applicationId' => $application->getId()]
+            )
+        );
     }
 }

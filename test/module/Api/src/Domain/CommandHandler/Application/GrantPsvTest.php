@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Grant Psv Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CommonGrant;
@@ -19,6 +14,7 @@ use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantPsv as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateSmallVehicleCondition as CreateSvConditionUndertakingCmd;
 
 /**
  * Grant Psv Test
@@ -100,6 +96,8 @@ class GrantPsvTest extends CommandHandlerTestCase
         $result5->addMessage('CommonGrant');
         $this->expectedSideEffect(CommonGrant::class, $data, $result5);
 
+        $this->expectedSideEffect(CreateSvConditionUndertakingCmd::class, ['applicationId' => 111], new Result());
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -120,7 +118,6 @@ class GrantPsvTest extends CommandHandlerTestCase
         $this->assertEquals(Licence::LICENCE_STATUS_VALID, $licence->getStatus()->getId());
         $this->assertEquals(ApplicationEntity::APPLICATION_STATUS_VALID, $application->getStatus()->getId());
     }
-
 
     public function testHandleCommandCloseTasks()
     {
@@ -182,6 +179,8 @@ class GrantPsvTest extends CommandHandlerTestCase
             ['id' => 111],
             (new Result())->addMessage('CLOSE_FEEDUE_TASK')
         );
+
+        $this->expectedSideEffect(CreateSvConditionUndertakingCmd::class, ['applicationId' => 111], new Result());
 
         $result = $this->sut->handleCommand($command);
 
