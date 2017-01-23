@@ -18,7 +18,7 @@ use Mockery as m;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateSmallVehicleTest extends CommandHandlerTestCase
+class CreateSmallVehicleConditionTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
