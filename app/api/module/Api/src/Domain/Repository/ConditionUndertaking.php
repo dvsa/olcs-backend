@@ -217,4 +217,26 @@ class ConditionUndertaking extends AbstractRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * Fetch small vehicle undertakings
+     *
+     * @param int $licenceId licence id
+     *
+     * @return array
+     */
+    public function fetchSmallVehilceUndertakings($licenceId)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
+            ->setParameter('licence', $licenceId);
+        $qb->andWhere($qb->expr()->eq($this->alias . '.conditionType', ':conditionType'))
+            ->setParameter('conditionType', Entity::TYPE_UNDERTAKING);
+        $qb->andWhere($qb->expr()->like($this->alias . '.notes', ':note'))
+            ->setParameter('note', '%' . Entity::SMALL_VEHICLE_UNDERTAKINGS . '%');
+
+        return $qb->getQuery()->getResult();
+    }
 }

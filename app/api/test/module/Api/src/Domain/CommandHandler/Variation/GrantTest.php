@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Grant Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Variation;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\Grant;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
-use Dvsa\Olcs\Api\Entity\Licence\PsvDisc;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs;
@@ -25,6 +19,7 @@ use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Variation\Grant as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
+use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateSmallVehicleCondition as CreateSvConditionUndertakingCmd;
 
 /**
  * Grant Test
@@ -87,6 +82,9 @@ class GrantTest extends CommandHandlerTestCase
             ->shouldReceive('isPublishable')
             ->andReturn(true)
             ->once()
+            ->shouldReceive('isPsv')
+            ->once()
+            ->andReturn(false)
             ->getMock();
         $this->expectedSideEffect(EndInterimCmd::class, ['id' => 111], new Result());
 
@@ -173,6 +171,9 @@ class GrantTest extends CommandHandlerTestCase
         $application->shouldReceive('isGoods')
             ->andReturn(true)
             ->shouldReceive('isPublishable')
+            ->andReturn(false)
+            ->shouldReceive('isPsv')
+            ->once()
             ->andReturn(false);
 
         /** @var GoodsDisc $goodsDisc1 */
@@ -268,6 +269,11 @@ class GrantTest extends CommandHandlerTestCase
             ->shouldReceive('isPublishable')
             ->andReturn(false);
 
+        $application->shouldReceive('isPsv')
+            ->once()
+            ->andReturn(true);
+        $this->expectedSideEffect(CreateSvConditionUndertakingCmd::class, ['applicationId' => 111], new Result());
+
         $licence->shouldReceive('copyInformationFromApplication')
             ->with($application);
         $licence->shouldReceive('getPsvDiscsNotCeased->count')->with()->once()->andReturn(123);
@@ -349,7 +355,11 @@ class GrantTest extends CommandHandlerTestCase
         $application->shouldReceive('isGoods')
             ->andReturn(false)
             ->shouldReceive('isPublishable')
-            ->andReturn(false);
+            ->andReturn(false)
+            ->shouldReceive('isPsv')
+            ->once()
+            ->andReturn(true);
+        $this->expectedSideEffect(CreateSvConditionUndertakingCmd::class, ['applicationId' => 111], new Result());
 
         $licence->shouldReceive('copyInformationFromApplication')
             ->with($application)
