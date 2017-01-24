@@ -11,10 +11,15 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  */
 final class CreateSmallVehicleCondition extends AbstractCommand
 {
+    /**
+     * @var int
+     */
     protected $applicationId;
 
     /**
-     * @return mixed
+     * Get application id
+     *
+     * @return int
      */
     public function getApplicationId()
     {
