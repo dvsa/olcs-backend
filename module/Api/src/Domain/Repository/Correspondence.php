@@ -46,8 +46,7 @@ class Correspondence extends AbstractRepository
     {
         $qb
             ->where($qb->expr()->eq('l.organisation', ':ORG_ID'))
-            ->setParameter('ORG_ID', $query->getOrganisation())
-            ->orderBy($this->alias . '.createdOn', 'DESC');
+            ->setParameter('ORG_ID', $query->getOrganisation());
     }
 
     /**
