@@ -8,7 +8,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Document\CanCreateDocument;
 
 /**
- * @covers Dvsa\Olcs\Api\Domain\Validation\Handlers\Document\CanCreateDocument
+ * @covers CanCreateDocument
  */
 class CanCreateDocumentTest extends AbstractHandlerTestCase
 {
@@ -60,6 +60,30 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
         $this->setIsValid('canAccessBusReg', [676], true);
         $this->setIsValid('canAccessOrganisation', [776], true);
         $this->setIsValid('canAccessSubmission', [876], true);
+
+        $this->assertTrue($this->sut->isValid($dto));
+    }
+
+    public function testIsValidEbsr()
+    {
+        $this->auth->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
+            ->andReturn(false);
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $organisation->setId(876);
+        $mockUser = $this->mockUser();
+        $mockUser->shouldReceive('isSystemUser')->andReturn(false);
+        $mockUser->shouldReceive('getOrganisationUsers->isEmpty')->with()->once()->andReturn(false);
+        $mockUser->shouldReceive('getRelatedOrganisation')->with()->once()->andReturn($organisation);
+
+        /** @var CommandInterface|m\MockInterface $dto */
+        $dto = \Dvsa\Olcs\Transfer\Command\Document\Upload::create(
+            [
+                'filename' => 'foo.pdf',
+                'isEbsrPack' => 1,
+            ]
+        );
+        $this->setIsValid('canUploadEbsr', [876], true);
 
         $this->assertTrue($this->sut->isValid($dto));
     }
