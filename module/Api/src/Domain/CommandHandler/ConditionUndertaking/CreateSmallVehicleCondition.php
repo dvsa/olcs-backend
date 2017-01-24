@@ -27,7 +27,8 @@ final class CreateSmallVehicleCondition extends AbstractCommandHandler
         'the operator will provide an audit trail to the Traffic Commissioner or any enforcement body on ' .
         'request, that demonstrates compliance with PSV requirements. This includes paperwork as to how in ' .
         'respect of any service separate fares were paid and one of the two conditions set out in Question 1 ' .
-        'were met. Note this undertaking does not apply when the vehicle is being used under the provisions of Section 79A.
+        'were met. Note this undertaking does not apply when the vehicle is being used ' .
+        'under the provisions of Section 79A.
 (c) Each small vehicle to be used under the licence will have a V5C registration certificate, and the ' .
         'operator must possess and produce, when asked to do so, a document confirming this.
 (d) Each small vehicle will receive a full safety inspection (maximum every 10 weeks) in premises suitable for ' .
