@@ -640,7 +640,7 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         $vehSection = $this->getRelevantVehicleSection();
 
         // If the vehicle section is unchanged AND the totAuthVehicles has dropped below the number of vehicles added
-        if ($this->isUnchanged($vehSection) && $this->hasTotAuthVehiclesDroppedBelowVehicleCount()) {
+        if (!$this->isPsv() && $this->isUnchanged($vehSection) && $this->hasTotAuthVehiclesDroppedBelowVehicleCount()) {
             $this->markSectionRequired($vehSection);
         }
 
