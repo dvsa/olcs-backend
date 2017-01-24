@@ -141,8 +141,47 @@ class PrintJobTest extends CommandHandlerTestCase
 
         $this->sut->shouldReceive('deleteTempFiles')->with('TEMP_FILE.rtf')->once();
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
-        $result = $this->sut->handleCommand($command);
+        $this->setExpectedException(
+            \Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class,
+            'Error generating the PDF TEMP_FILE.rtf : TEST MESSAGE'
+        );
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * Test https://jira.i-env.net/browse/OLCS-15140 Convert to PDF timeout
+     */
+    public function testHandleCommandConvertUsingWebServiceTimeout()
+    {
+        $this->sut->setConfig(
+            [
+                'print' => ['server' => 'PRINT_SERVER'],
+                'convert_to_pdf' => ['uri' => 'http://web.com:8080/foo']
+            ]
+        );
+
+        $command = Cmd::create(['id' => 'QUEUE_ID', 'document' => 'DOC_ID', 'title' => 'JOB', 'user' => '']);
+
+        $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
+            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
+
+        $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+            ->andReturn($mockFile);
+
+        $this->sut->shouldReceive('createTmpFile')->with($mockFile, 'QUEUE_ID', 'FILENAME')->once()
+            ->andReturn('TEMP_FILE.rtf');
+
+        $this->convertToPdfService->shouldReceive('convert')->with('TEMP_FILE.rtf', 'TEMP_FILE.pdf')->once()
+            ->andThrow(\Zend\Http\Client\Adapter\Exception\TimeoutException::class, 'Timeout');
+
+        $this->sut->shouldReceive('deleteTempFiles')->with('TEMP_FILE.rtf')->once();
+
+        $this->setExpectedException(
+            \Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class,
+            'Error generating the PDF TEMP_FILE.rtf : Timeout'
+        );
+        $this->sut->handleCommand($command);
     }
 
     public function testHandleCommandSelfserveUser()
