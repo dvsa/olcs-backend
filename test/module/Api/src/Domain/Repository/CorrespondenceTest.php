@@ -38,8 +38,7 @@ class CorrespondenceTest extends RepositoryTestCase
             'SELECT l, d ' .
             'INNER JOIN co.licence l ' .
             'INNER JOIN co.document d ' .
-            'AND l.organisation = [[' . $orgId . ']] ' .
-            'ORDER BY co.createdOn DESC',
+            'AND l.organisation = [[' . $orgId . ']]',
             $this->query
         );
     }
