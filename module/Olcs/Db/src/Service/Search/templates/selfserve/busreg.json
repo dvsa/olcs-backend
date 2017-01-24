@@ -93,6 +93,13 @@
                                                     "lsts_withdrawn"
                                                 ]
                                             }
+                                        },
+                                        {
+                                            "terms":{
+                                                "status":[
+                                                    "breg_s_surr"
+                                                ]
+                                            }
                                         }
                                     ]
                                 }
