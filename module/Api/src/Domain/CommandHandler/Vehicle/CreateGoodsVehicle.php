@@ -1,25 +1,20 @@
 <?php
 
-/**
- * Create Goods Vehicle
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsVehicle as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RequiresConfirmationException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
-use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsVehicle as Cmd;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Create Goods Vehicle
@@ -183,6 +178,12 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
 
     /**
      * Check whether the VRM already exist on this licence
+     *
+     * @param LicenceEntity $licence Licence
+     * @param string        $vrm     VRM
+     *
+     * @return void
+     * @throws ValidationException
      */
     protected function checkIfVrmAlreadyExistsOnLicence(LicenceEntity $licence, $vrm)
     {
@@ -192,13 +193,14 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
             return;
         }
 
+        /** @var LicenceVehicle $licenceVehicle */
         foreach ($currentLicenceVehicles as $licenceVehicle) {
             if ($licenceVehicle->getVehicle()->getVrm() == $vrm) {
                 throw new ValidationException(
                     [
                         'vrm' => [
-                            Vehicle::ERROR_VRM_EXISTS => 'Vehicle already exists on this licence'
-                        ]
+                            Vehicle::ERROR_VRM_EXISTS => 'application.vehicle.already-exist',
+                        ],
                     ]
                 );
             }
