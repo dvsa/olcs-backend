@@ -141,4 +141,5 @@ return [
     QueryHandler\Bus\ByLicenceRoute::class                                            => IsSideEffect::class,
     Dvsa\Olcs\Email\Domain\CommandHandler\UpdateInspectionRequest::class              => IsSideEffect::class,
     Dvsa\Olcs\Email\Domain\CommandHandler\SendEmail::class                            => IsSideEffect::class,
+    CommandHandler\ConditionUndertaking\CreateSmallVehicleCondition::class            => IsSideEffect::class,
 ];

@@ -963,4 +963,8 @@ return [
     // Command - CommunityLc
     Command\Licence\EnqueueContinuationNotSought::class =>
         CommandHandler\Licence\EnqueueContinuationNotSought::class,
+
+    // Command - ConditionUndertaking
+    Command\ConditionUndertaking\CreateSmallVehicleCondition::class =>
+        CommandHandler\ConditionUndertaking\CreateSmallVehicleCondition::class,
 ];
