@@ -67,7 +67,7 @@ class CanCreateDocument extends AbstractHandler implements AuthAwareInterface
 
         //only the upload version of the DTO is used for EBSR packs, so we need a method_exists here
         if (method_exists($dto, 'getIsEbsrPack') && $dto->getIsEbsrPack()) {
-            $this->setIsValid($this->canUploadEbsr($this->getCurrentOrganisation()));
+            $this->setIsValid($this->canUploadEbsr($this->getCurrentOrganisation()->getId()));
         }
 
         if ($dto->getLicence()) {
