@@ -276,6 +276,13 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return $this->getPsvDiscsNotCeased()->count();
     }
 
+    /**
+     * Returns List of Active Vehicles
+     *
+     * @param bool $checkSpecified Only with Specicifed date
+     *
+     * @return ArrayCollection
+     */
     public function getActiveVehicles($checkSpecified = true)
     {
         $criteria = Criteria::create();
