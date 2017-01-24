@@ -101,6 +101,8 @@ final class GrantPsv extends AbstractCommandHandler implements TransactionedInte
      * Maybe create small vehicle condition
      *
      * @param ApplicationEntity $application application
+     *
+     * @return Result
      */
     protected function maybeCreateSmallVehicleCondition($application)
     {

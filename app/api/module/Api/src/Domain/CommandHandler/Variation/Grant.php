@@ -180,6 +180,8 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      * Maybe create small vehicle condition
      *
      * @param ApplicationEntity $application application
+     *
+     * @return Result
      */
     protected function maybeCreateSmallVehicleCondition($application)
     {

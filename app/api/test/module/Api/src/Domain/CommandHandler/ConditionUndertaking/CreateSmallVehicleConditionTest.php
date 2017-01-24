@@ -73,7 +73,7 @@ class CreateSmallVehicleConditionTest extends CommandHandlerTestCase
         $data = [
             'attachedTo' => ConditionUndertakingEntity::ATTACHED_TO_LICENCE,
             'type' => ConditionUndertakingEntity::TYPE_UNDERTAKING,
-            'notes' => ConditionUndertakingEntity::SMALL_VEHICLE_UNERRTAKINGS_NOTES,
+            'notes' => CommandHandler::SMALL_VEHICLE_UNERRTAKINGS_NOTES,
             'application' => $applicationId
         ];
 
