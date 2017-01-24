@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Grant
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Variation;
 
 use Doctrine\Common\Collections\Criteria;
@@ -15,7 +10,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\Licence\PsvDisc;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs as CreatePsvDiscsCmd;
@@ -23,9 +17,8 @@ use Dvsa\Olcs\Transfer\Command\Licence\VoidPsvDiscs;
 use Dvsa\Olcs\Transfer\Command\Variation\Grant as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
-use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
+use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateSmallVehicleCondition as CreateSvConditionUndertakingCmd;
 
 /**
  * Grant
@@ -46,6 +39,10 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command);
         $licence = $application->getLicence();
+
+        if ($application->isPsv()) {
+            $this->maybeCreateSmallVehicleCondition($application);
+        }
 
         $result->merge($this->createSnapshot($command->getId()));
 
@@ -175,6 +172,22 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
                     'trafficArea' => $application->getTrafficArea()->getId(),
                     'publicationSection' => \Dvsa\Olcs\Api\Entity\Publication\PublicationSection::VAR_GRANTED_SECTION,
                 ]
+            )
+        );
+    }
+
+    /**
+     * Maybe create small vehicle condition
+     *
+     * @param ApplicationEntity $application application
+     *
+     * @return Result
+     */
+    protected function maybeCreateSmallVehicleCondition($application)
+    {
+        return $this->handleSideEffect(
+            CreateSvConditionUndertakingCmd::create(
+                ['applicationId' => $application->getId()]
             )
         );
     }

@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as Repo;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * ConditionUndertaking test
@@ -197,5 +198,31 @@ class ConditionUndertakingTest extends RepositoryTestCase
 
         $expectedQuery = 'BLAH AND m.licConditionVariation = [[95]]';
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchSmallVehilceUndertakings()
+    {
+        $licenceId = 1;
+
+        $qb = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($qb);
+
+        $qb->shouldReceive('expr->eq')->with('m.licence', ':licence')->once()->andReturn('licexpr');
+        $qb->shouldReceive('andWhere')->with('licexpr')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('licence', $licenceId)->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')->with('m.conditionType', ':conditionType')->once()->andReturn('condexpr');
+        $qb->shouldReceive('andWhere')->with('condexpr')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')
+            ->with('conditionType', ConditionUndertakingEntity::TYPE_UNDERTAKING)->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->like')->with('m.notes', ':note')->once()->andReturn('likeexpr');
+        $qb->shouldReceive('andWhere')->with('likeexpr')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')
+            ->with('note', '%' . ConditionUndertakingEntity::SMALL_VEHICLE_UNDERTAKINGS . '%')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn('results');
+
+        $this->assertEquals('results', $this->sut->fetchSmallVehilceUndertakings($licenceId));
     }
 }

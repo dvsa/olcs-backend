@@ -43,6 +43,8 @@ class ConditionUndertaking extends AbstractConditionUndertaking
     const TYPE_CONDITION = 'cdt_con';
     const TYPE_UNDERTAKING = 'cdt_und';
 
+    const SMALL_VEHICLE_UNDERTAKINGS = 'Small vehicles undertakings';
+
     /**
      * Construct Condition Undertaking entity
      * @param RefData $conditionType
