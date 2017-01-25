@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Create Psv Vehicle
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -13,12 +8,12 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\Application\CreatePsvVehicle as Cmd;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Create Psv Vehicle
@@ -75,6 +70,12 @@ final class CreatePsvVehicle extends AbstractCommandHandler implements Transacti
 
     /**
      * Check whether the VRM already exist on this licence
+     *
+     * @param LicenceEntity $licence Licence
+     * @param string        $vrm     VRM
+     *
+     * @return void
+     * @throws ValidationException
      */
     protected function checkIfVrmAlreadyExistsOnLicence(LicenceEntity $licence, $vrm)
     {
@@ -84,13 +85,14 @@ final class CreatePsvVehicle extends AbstractCommandHandler implements Transacti
             return;
         }
 
+        /** @var LicenceVehicle $licenceVehicle */
         foreach ($currentLicenceVehicles as $licenceVehicle) {
             if ($licenceVehicle->getVehicle()->getVrm() == $vrm) {
                 throw new ValidationException(
                     [
                         'vrm' => [
-                            Vehicle::ERROR_VRM_EXISTS => 'Vehicle already exists on this licence'
-                        ]
+                            Vehicle::ERROR_VRM_EXISTS => 'application.vehicle.already-exist',
+                        ],
                     ]
                 );
             }
