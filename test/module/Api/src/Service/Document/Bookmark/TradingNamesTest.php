@@ -14,8 +14,14 @@ class TradingNamesTest extends \PHPUnit_Framework_TestCase
     {
         $bookmark = new TradingNames();
         $query = $bookmark->getQuery(['licence' => 123]);
-
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query);
+        $this->assertEquals(
+            [
+                'id' => 123,
+                'bundle' => ['tradingNames']
+            ],
+            $query->getArrayCopy()
+        );
     }
 
     public function testRenderWithNoTradingNames()
@@ -23,7 +29,7 @@ class TradingNamesTest extends \PHPUnit_Framework_TestCase
         $bookmark = new TradingNames();
         $bookmark->setData(
             [
-                'organisation' => null
+                'tradingNames' => null
             ]
         );
 
@@ -38,12 +44,10 @@ class TradingNamesTest extends \PHPUnit_Framework_TestCase
         $bookmark = new TradingNames();
         $bookmark->setData(
             [
-                'organisation' => [
-                    'tradingNames' => [
-                        ['name' => 'tn1'],
-                        ['name' => 'tn2'],
-                        ['name' => 'tn3']
-                    ]
+                'tradingNames' => [
+                    ['name' => 'tn1'],
+                    ['name' => 'tn2'],
+                    ['name' => 'tn3']
                 ]
             ]
         );

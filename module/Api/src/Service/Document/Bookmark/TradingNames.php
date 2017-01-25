@@ -12,22 +12,32 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
  */
 class TradingNames extends DynamicBookmark
 {
+    /**
+     * Get the DTO that will get data required by this bookmark
+     *
+     * @param array $data Data
+     *
+     * @return \Dvsa\Olcs\Transfer\Query\QueryInterface
+     */
     public function getQuery(array $data)
     {
         $bundle = [
-            'organisation' => [
-                'tradingNames'
-            ]
+            'tradingNames'
         ];
 
         return Qry::create(['id' => $data['licence'], 'bundle' => $bundle]);
     }
 
+    /**
+     * Rendered bookmark
+     *
+     * @return string
+     */
     public function render()
     {
-        if (isset($this->data['organisation']['tradingNames'])) {
+        if (isset($this->data['tradingNames'])) {
             $names = [];
-            foreach ($this->data['organisation']['tradingNames'] as $tn) {
+            foreach ($this->data['tradingNames'] as $tn) {
                 $names[] = $tn['name'];
             }
             return implode(', ', $names);
