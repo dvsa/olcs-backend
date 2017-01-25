@@ -72,12 +72,8 @@ class DeleteUserTest extends CommandHandlerTestCase
             ->andReturn($tasks);
 
         $this->repoMap['OrganisationUser']
-            ->shouldReceive('fetchByUserId')
+            ->shouldReceive('deleteByUserId')
             ->with($userId)
-            ->once()
-            ->andReturn(['FOO'])
-            ->shouldReceive('delete')
-            ->with('FOO')
             ->once();
 
         $result = $this->sut->handleCommand($command);

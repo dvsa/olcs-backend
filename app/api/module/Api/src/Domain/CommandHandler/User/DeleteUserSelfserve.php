@@ -39,12 +39,7 @@ final class DeleteUserSelfserve extends AbstractCommandHandler implements
             throw new BadRequestException('The user still has some open tasks');
         }
 
-        $ouRepo = $this->getRepo('OrganisationUser');
-        $organisationUsers = $ouRepo->fetchByUserId($user->getId());
-        foreach ($organisationUsers as $ou) {
-            $ouRepo->delete($ou);
-        }
-
+        $this->getRepo('OrganisationUser')->deleteByUserId($user->getId());
         $this->getRepo()->delete($user);
 
         $this->getOpenAmUser()->disableUser(
