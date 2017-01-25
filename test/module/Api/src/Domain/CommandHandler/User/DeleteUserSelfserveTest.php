@@ -1,14 +1,12 @@
 <?php
 
-/**
- * Delete User Selfserve Test
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepo;
+use Dvsa\Olcs\Api\Domain\Repository\OrganisationUser as OrganisationUserRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\DeleteUserSelfserve as Sut;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
@@ -24,6 +22,7 @@ class DeleteUserSelfserveTest extends CommandHandlerTestCase
         $this->sut = new Sut();
         $this->mockRepo('User', UserRepo::class);
         $this->mockRepo('Task', TaskRepo::class);
+        $this->mockRepo('OrganisationUser', OrganisationUserRepo::class);
 
         $this->mockedSmServices = [
             UserInterface::class => m::mock(UserInterface::class)
@@ -63,6 +62,11 @@ class DeleteUserSelfserveTest extends CommandHandlerTestCase
             ->with($userId, true)
             ->once()
             ->andReturn($tasks);
+
+        $this->repoMap['OrganisationUser']
+            ->shouldReceive('deleteByUserId')
+            ->with($userId)
+            ->once();
 
         $result = $this->sut->handleCommand($command);
 

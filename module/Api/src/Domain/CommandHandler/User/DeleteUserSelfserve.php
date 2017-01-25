@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Delete User Selfserve
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -24,7 +21,7 @@ final class DeleteUserSelfserve extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'User';
 
-    protected $extraRepos = ['Task'];
+    protected $extraRepos = ['Task', 'OrganisationUser'];
 
     /**
      * Handle command
@@ -42,6 +39,7 @@ final class DeleteUserSelfserve extends AbstractCommandHandler implements
             throw new BadRequestException('The user still has some open tasks');
         }
 
+        $this->getRepo('OrganisationUser')->deleteByUserId($user->getId());
         $this->getRepo()->delete($user);
 
         $this->getOpenAmUser()->disableUser(
