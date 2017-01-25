@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
+use Doctrine\ORM\EntityNotFoundException;
 
 /**
  * Organisation Entity
@@ -78,12 +79,17 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         /** @var OrganisationUserEntity $orgUser */
         foreach ($adminUsers as $orgUser) {
-            $user = $orgUser->getUser();
-            if (
-                $user instanceof UserEntity
-                && $user->getAccountDisabled() !== 'Y'
-            ) {
-                $enabledOrgUsers->add($orgUser);
+            try {
+                $user = $orgUser->getUser();
+                if (
+                    $user instanceof UserEntity
+                    && $user->getAccountDisabled() !== 'Y'
+                ) {
+                    $enabledOrgUsers->add($orgUser);
+                }
+            } catch (EntityNotFoundException $ex) {
+                // we may have the user id but will not be able to load it
+                // because SoftDeleteable is used
             }
         }
 
