@@ -12,4 +12,22 @@ use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as Entity;
 class OrganisationUser extends AbstractRepository
 {
     protected $entity = Entity::class;
+
+    /**
+     * Fetch by user id
+     *
+     * @param int $userId user id
+     *
+     * @return array
+     */
+    public function fetchByUserId($userId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->eq('m.user', $userId));
+        $query = $qb->getQuery();
+        $query->execute();
+
+        return $query->getResult();
+    }
 }

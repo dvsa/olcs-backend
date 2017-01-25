@@ -1,14 +1,12 @@
 <?php
 
-/**
- * Delete User Test
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepo;
+use Dvsa\Olcs\Api\Domain\Repository\OrganisationUser as OrganisationUserRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\DeleteUser as Sut;
 use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
@@ -26,6 +24,7 @@ class DeleteUserTest extends CommandHandlerTestCase
         $this->sut = new Sut();
         $this->mockRepo('User', UserRepo::class);
         $this->mockRepo('Task', TaskRepo::class);
+        $this->mockRepo('OrganisationUser', OrganisationUserRepo::class);
 
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class),
@@ -71,6 +70,15 @@ class DeleteUserTest extends CommandHandlerTestCase
             ->with($userId, true)
             ->once()
             ->andReturn($tasks);
+
+        $this->repoMap['OrganisationUser']
+            ->shouldReceive('fetchByUserId')
+            ->with($userId)
+            ->once()
+            ->andReturn(['FOO'])
+            ->shouldReceive('delete')
+            ->with('FOO')
+            ->once();
 
         $result = $this->sut->handleCommand($command);
 

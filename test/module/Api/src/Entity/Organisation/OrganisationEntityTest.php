@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
+use Doctrine\ORM\EntityNotFoundException;
 
 /**
  * Organisation Entity Unit Tests
@@ -127,6 +128,44 @@ class OrganisationEntityTest extends EntityTester
         $expected->add($mockOrgUser1);
 
         $this->assertEquals($expected, $sut->getAdminOrganisationUsers());
+    }
+
+    public function testGetAdminOrganisationUsersWithException()
+    {
+        $mockOrgUser1 = m::mock(OrganisationUser::class)
+            ->shouldReceive('getUser')
+            ->once()
+            ->andReturn(
+                m::mock(UserEntity::class)
+                    ->shouldReceive('getAccountDisabled')->andThrow(EntityNotFoundException::class)->once()
+                    ->getMock()
+            )
+            ->getMock();
+
+        $mockOrgUser2 = m::mock(OrganisationUser::class)
+            ->shouldReceive('getUser')
+            ->once()
+            ->andReturn(
+                m::mock(UserEntity::class)
+                    ->shouldReceive('getAccountDisabled')->andReturn('Y')->once()
+                    ->getMock()
+            )
+            ->getMock();
+
+        //  not user entity
+        $mockOrgUser3 = m::mock(OrganisationUser::class)
+            ->shouldReceive('getUser')->once()->andReturn(m::mock())
+            ->getMock();
+
+        $collection = new ArrayCollection([$mockOrgUser1, $mockOrgUser2, $mockOrgUser3]);
+
+        /** @var Entity | m\MockInterface $sut */
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('getOrganisationUsers->matching')
+            ->with(m::type(Criteria::class))
+            ->andReturn($collection);
+
+        $this->assertEquals(new ArrayCollection(), $sut->getAdminOrganisationUsers());
     }
 
     public function dpOrgTypes()
