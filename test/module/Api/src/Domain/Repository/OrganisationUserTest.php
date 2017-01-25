@@ -69,4 +69,19 @@ class OrganisationUserTest extends RepositoryTestCase
 
         $this->assertEquals(['res'], $this->sut->fetchByUserId($userId));
     }
+
+    public function testDeleteByUserId()
+    {
+        $userId = 1;
+
+        $this->sut->shouldReceive('fetchByUserId')
+            ->with($userId)
+            ->once()
+            ->andReturn(['FOO'])
+            ->shouldReceive('delete')
+            ->with('FOO')
+            ->once();
+
+        $this->assertNull($this->sut->deleteByUserId($userId));
+    }
 }

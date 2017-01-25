@@ -30,4 +30,19 @@ class OrganisationUser extends AbstractRepository
 
         return $query->getResult();
     }
+
+    /**
+     * Delete by user id
+     *
+     * @param int $userId user id
+     *
+     * @return null
+     */
+    public function deleteByUserId($userId)
+    {
+        $orgUsers = $this->fetchByUserId($userId);
+        foreach ($orgUsers as $ou) {
+            $this->delete($ou);
+        }
+    }
 }

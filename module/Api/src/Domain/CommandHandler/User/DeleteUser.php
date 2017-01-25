@@ -42,12 +42,7 @@ final class DeleteUser extends AbstractCommandHandler implements
             throw new BadRequestException('ERR_USER_HAS_OPEN_TASK');
         }
 
-        $ouRepo = $this->getRepo('OrganisationUser');
-        $organisationUsers = $ouRepo->fetchByUserId($user->getId());
-        foreach ($organisationUsers as $ou) {
-            $ouRepo->delete($ou);
-        }
-
+        $this->getRepo('OrganisationUser')->deleteByUserId($user->getId());
         $this->getRepo()->delete($user);
 
         $this->getOpenAmUser()->disableUser(
