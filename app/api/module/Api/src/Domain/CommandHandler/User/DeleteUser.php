@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Delete User
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -30,7 +27,7 @@ final class DeleteUser extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'User';
 
-    protected $extraRepos = ['Task'];
+    protected $extraRepos = ['Task', 'OrganisationUser'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -45,6 +42,7 @@ final class DeleteUser extends AbstractCommandHandler implements
             throw new BadRequestException('ERR_USER_HAS_OPEN_TASK');
         }
 
+        $this->getRepo('OrganisationUser')->deleteByUserId($user->getId());
         $this->getRepo()->delete($user);
 
         $this->getOpenAmUser()->disableUser(
