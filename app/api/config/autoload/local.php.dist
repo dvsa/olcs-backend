@@ -347,6 +347,7 @@ return [
                 . ',txt,csv,rtf,xml,htm,html,pdf,log,xml,json,djvu,xps,oxps'
                 . ',jpeg,jpg,png,tif,tiff,gif,jfif,bmp,webp,emf,dwg,dxf,wmf'
                 . ',zip,7z'
+                . ',scan,eml'
                 . ',mp2,mp3,m4a,3gp,wav,aif,aiff,flac,ogg,wma,ape,aac,amr,webm,ac3',
         ]
     ],
@@ -358,14 +359,14 @@ return [
         '/opt/dvsa',
         'Skipping import of schema'
     ],
-    
-    // Specifies the batch size to use for disc printing
+
+	  // Specifies the batch size to use for disc printing
     'disc_printing' => [
         // Number of discs to print for each queue job
-        'disc_batch_size' => 300,
+        'disc_batch_size' => 120,
         // Number of PSV vehicle lists to print for each queue job
-        'psv_vehicle_list_batch_size' => 300,
+        'psv_vehicle_list_batch_size' => 120,
         // Number of GOODS vehicle lists to print for each queue job
-        'gv_vehicle_list_batch_size' => 300,
-    ],
+        'gv_vehicle_list_batch_size' => 120,
+    ]
 ];
