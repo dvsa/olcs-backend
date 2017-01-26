@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Licence Entity Unit Tests
@@ -1105,5 +1106,42 @@ class LicenceEntityTest extends EntityTester
             ->getMock();
 
         $this->assertTrue($licence->isGoodsApplication());
+    }
+
+    /**
+     * @dataProvider expiryDateProvider
+     */
+    public function testGetExpiryDateAsDate($expiryDate, $expected)
+    {
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getExpiryDate')
+            ->andReturn($expiryDate)
+            ->once()
+            ->getMock();
+
+        $this->assertEquals($sut->getExpiryDateAsDate(), $expected);
+    }
+
+    public function expiryDateProvider()
+    {
+        $today = new DateTime('now');
+        $date2017 = \DateTime::createFromFormat('Y-m-d', '2017-01-01');
+        $date2017->setTime(0, 0, 0);
+        $date2017->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+        return [
+            [
+                null,
+                null
+            ],
+            [
+                $today,
+                $today
+            ],
+            [
+                '2017-01-01',
+                $date2017
+            ]
+        ];
     }
 }

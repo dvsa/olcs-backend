@@ -121,8 +121,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getLatestBusVariation(
         $regNo,
         array $notInStatus = [
-            BusReg::STATUS_REFUSED,
-            BusReg::STATUS_WITHDRAWN
+        BusReg::STATUS_REFUSED,
+        BusReg::STATUS_WITHDRAWN
         ]
     ) {
         $criteria = Criteria::create()
@@ -937,5 +937,25 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
             return $organisation->getLeadTcArea();
         }
         return $this->getTrafficArea();
+    }
+
+    /**
+     * Get licence expiry date as a date
+     *
+     * @return \DateTime
+     * @see Dvsa\Olcs\Api\Entity\Types\DateTimeType
+     */
+    public function getExpiryDateAsDate()
+    {
+        $expiryDate = $this->getExpiryDate();
+        if ($expiryDate instanceof \DateTime || $expiryDate === null) {
+            return $expiryDate;
+        }
+        $expiryDateAsDate = \DateTime::createFromFormat('Y-m-d', $expiryDate);
+        if ($expiryDateAsDate instanceof \DateTime) {
+            $expiryDateAsDate->setTime(0, 0, 0);
+            $expiryDateAsDate->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+        }
+        return $expiryDateAsDate;
     }
 }

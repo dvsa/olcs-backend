@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Fee Entity
@@ -315,7 +316,25 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
             'receiptNo' => $this->getLatestPaymentRef(),
             'amount' => $this->getGrossAmount(),
             'ruleDateBeforeInvoice' => $this->isRuleBeforeInvoiceDate(),
+            'isExpiredForLicence' => $this->isExpiredForLicence(),
         ];
+    }
+
+    /**
+     * Is this fee attached to the expired licence
+     *
+     * @return bool
+     */
+    public function isExpiredForLicence()
+    {
+        $licence = $this->getLicence();
+        if ($licence !== null && $licence->getExpiryDate() !== null) {
+            $today = (new DateTime())->setTime(0, 0, 0)->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+            if ($licence->getExpiryDateAsDate() < $today) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

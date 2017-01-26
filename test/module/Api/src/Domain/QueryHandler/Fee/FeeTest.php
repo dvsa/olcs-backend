@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Fee Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Fee;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -81,7 +76,17 @@ class FeeTest extends QueryHandlerTestCase
             ->andReturn(null)
             ->shouldReceive('canRefund')
             ->once()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getExpiryDate')
+                ->andReturn('2017-01-01')
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
 
         $completed = new \DateTime('2015-10-30');
         $status = new RefData(TransactionEntity::STATUS_COMPLETE);
@@ -176,6 +181,7 @@ class FeeTest extends QueryHandlerTestCase
                 ],
             ],
             'vatInfo' => '20% (S)',
+            'licenceExpiryDate' => '2017-01-01',
         ];
 
         $this->assertEquals($expected, $result->serialize());
