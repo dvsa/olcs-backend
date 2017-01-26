@@ -14,6 +14,7 @@ return [
     QueryHandler\BusRegSearchView\BusRegSearchViewContextList::class                    => NoValidationRequired::class,
     QueryHandler\Bus\BusRegBrowseContextList::class                                     => NoValidationRequired::class,
     QueryHandler\Bus\BusRegBrowseExport::class                                          => NoValidationRequired::class,
+    QueryHandler\Bus\BusRegBrowseList::class                                            => NoValidationRequired::class,
     QueryHandler\Bus\SearchViewList::class                                              => IsInternalUser::class,
 
     // External users

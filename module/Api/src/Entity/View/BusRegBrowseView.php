@@ -100,6 +100,15 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     protected $brStatus;
 
     /**
+     * Bus service type
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="bus_service_type")
+     */
+    protected $busServiceType;
+
+    /**
      * Variation Number
      *
      * @var int
@@ -143,6 +152,42 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
      * @ORM\Column(type="string", name="service_no")
      */
     protected $serviceNo;
+
+    /**
+     * Is short notice
+     *
+     * @var bool
+     *
+     * @ORM\Column(type="string", name="is_short_notice")
+     */
+    protected $isShortNotice;
+
+    /**
+     * Start point
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="start_point")
+     */
+    protected $startPoint;
+
+    /**
+     * Finish point
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="finish_point")
+     */
+    protected $finishPoint;
+
+    /**
+     * Via
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="via")
+     */
+    protected $via;
 
     /**
      * Other details
@@ -200,18 +245,6 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
-     * Set id
-     *
-     * @param int $id Id
-     *
-     * @return void
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
      * Get traffic area id
      *
      * @return string
@@ -219,18 +252,6 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     public function getTrafficAreaId()
     {
         return $this->trafficAreaId;
-    }
-
-    /**
-     * Set traffic area id
-     *
-     * @param string $trafficAreaId Traffic area id
-     *
-     * @return void
-     */
-    public function setTrafficAreaId($trafficAreaId)
-    {
-        $this->trafficAreaId = $trafficAreaId;
     }
 
     /**
@@ -244,18 +265,6 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
-     * Set traffic area name
-     *
-     * @param string $trafficAreaName Traffic area name
-     *
-     * @return void
-     */
-    public function setTrafficAreaName($trafficAreaName)
-    {
-        $this->trafficAreaName = $trafficAreaName;
-    }
-
-    /**
      * Get name
      *
      * @return string
@@ -263,18 +272,6 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name Name
-     *
-     * @return void
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
     }
 
     /**
@@ -288,18 +285,6 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
-     * Set address
-     *
-     * @param string $address Address
-     *
-     * @return void
-     */
-    public function setAddress($address)
-    {
-        $this->address = $address;
-    }
-
-    /**
      * Get lic no
      *
      * @return string
@@ -307,18 +292,6 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     public function getLicNo()
     {
         return $this->licNo;
-    }
-
-    /**
-     * Set lic no
-     *
-     * @param string $licNo Lic no
-     *
-     * @return void
-     */
-    public function setLicNo($licNo)
-    {
-        $this->licNo = $licNo;
     }
 
     /**
@@ -332,18 +305,6 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
-     * Set lic status
-     *
-     * @param string $licStatus Lic status
-     *
-     * @return void
-     */
-    public function setLicStatus($licStatus)
-    {
-        $this->licStatus = $licStatus;
-    }
-
-    /**
      * Get reg no
      *
      * @return string
@@ -351,18 +312,6 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     public function getRegNo()
     {
         return $this->regNo;
-    }
-
-    /**
-     * Set reg no
-     *
-     * @param string $regNo Reg no
-     *
-     * @return void
-     */
-    public function setRegNo($regNo)
-    {
-        $this->regNo = $regNo;
     }
 
     /**
@@ -376,15 +325,13 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
-     * Set Bus Reg status
+     * Get Bus Service type
      *
-     * @param string $brStatus Bus Reg status
-     *
-     * @return void
+     * @return string
      */
-    public function setBrStatus($brStatus)
+    public function getBusServiceType()
     {
-        $this->brStatus = $brStatus;
+        return $this->busServiceType;
     }
 
     /**
@@ -398,18 +345,6 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
-     * Set variation no
-     *
-     * @param string $variationNo Variation no
-     *
-     * @return void
-     */
-    public function setVariationNo($variationNo)
-    {
-        $this->variationNo = $variationNo;
-    }
-
-    /**
      * Get received date
      *
      * @return \DateTime
@@ -417,18 +352,6 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     public function getReceivedDate()
     {
         return $this->receivedDate;
-    }
-
-    /**
-     * Set received date
-     *
-     * @param \DateTime $receivedDate Received date
-     *
-     * @return void
-     */
-    public function setReceivedDate($receivedDate)
-    {
-        $this->receivedDate = $receivedDate;
     }
 
     /**
@@ -442,18 +365,6 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
-     * Set effective date
-     *
-     * @param \DateTime $effectiveDate Effective date
-     *
-     * @return void
-     */
-    public function setEffectiveDate($effectiveDate)
-    {
-        $this->effectiveDate = $effectiveDate;
-    }
-
-    /**
      * Get end date
      *
      * @return \DateTime
@@ -461,18 +372,6 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     public function getEndDate()
     {
         return $this->endDate;
-    }
-
-    /**
-     * Set end date
-     *
-     * @param \DateTime $endDate End date
-     *
-     * @return void
-     */
-    public function setEndDate($endDate)
-    {
-        $this->endDate = $endDate;
     }
 
     /**
@@ -486,15 +385,43 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
-     * Set service no
+     * Is short notice
      *
-     * @param string $serviceNo Service no
-     *
-     * @return void
+     * @return bool
      */
-    public function setServiceNo($serviceNo)
+    public function isShortNotice()
     {
-        $this->serviceNo = $serviceNo;
+        return $this->isShortNotice;
+    }
+
+    /**
+     * Get start point
+     *
+     * @return string
+     */
+    public function getStartPoint()
+    {
+        return $this->startPoint;
+    }
+
+    /**
+     * Get finish point
+     *
+     * @return string
+     */
+    public function getFinishPoint()
+    {
+        return $this->finishPoint;
+    }
+
+    /**
+     * Get via
+     *
+     * @return string
+     */
+    public function getVia()
+    {
+        return $this->via;
     }
 
     /**
@@ -508,18 +435,6 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
-     * Set other details
-     *
-     * @param string $otherDetails Other details
-     *
-     * @return void
-     */
-    public function setOtherDetails($otherDetails)
-    {
-        $this->otherDetails = $otherDetails;
-    }
-
-    /**
      * Get accepted date
      *
      * @return \DateTime
@@ -527,18 +442,6 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     public function getAcceptedDate()
     {
         return $this->acceptedDate;
-    }
-
-    /**
-     * Set accepted date
-     *
-     * @param \DateTime $acceptedDate Accepted date
-     *
-     * @return void
-     */
-    public function setAcceptedDate($acceptedDate)
-    {
-        $this->acceptedDate = $acceptedDate;
     }
 
     /**
@@ -552,18 +455,6 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
-     * Set event description
-     *
-     * @param string $eventDescription Event description
-     *
-     * @return void
-     */
-    public function setEventDescription($eventDescription)
-    {
-        $this->eventDescription = $eventDescription;
-    }
-
-    /**
      * Get event registration status
      *
      * @return string
@@ -574,18 +465,6 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
-     * Set event registration status
-     *
-     * @param string $eventRegistrationStatus Event registration status
-     *
-     * @return void
-     */
-    public function setEventRegistrationStatus($eventRegistrationStatus)
-    {
-        $this->eventRegistrationStatus = $eventRegistrationStatus;
-    }
-
-    /**
      * Get status
      *
      * @return string
@@ -593,17 +472,5 @@ class BusRegBrowseView implements BundleSerializableInterface, JsonSerializable
     public function getStatus()
     {
         return $this->status;
-    }
-
-    /**
-     * Set status
-     *
-     * @param string $status Status
-     *
-     * @return void
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
     }
 }
