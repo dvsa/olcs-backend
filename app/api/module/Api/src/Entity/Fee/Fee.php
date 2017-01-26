@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
-use Olcs\Logging\Log\Logger;
 
 /**
  * Fee Entity
