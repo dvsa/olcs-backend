@@ -2,7 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\View\BusRegBrowseView as Entity;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * BusRegBrowseView
@@ -31,7 +33,7 @@ class BusRegBrowseView extends AbstractRepository
     }
 
     /**
-     * Fetch a distinct list of record column
+     * Fetch for export
      *
      * @param array  $columns      Columns to export
      * @param string $date         Date
@@ -55,7 +57,7 @@ class BusRegBrowseView extends AbstractRepository
         $qb->select($columns);
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.acceptedDate', ':byAcceptedDate'))
-            ->setParameter('byAcceptedDate', $date);
+            ->setParameter('byAcceptedDate', (new \DateTime($date))->format('Y-m-d'));
 
         $qb->andWhere($qb->expr()->in($this->alias . '.trafficAreaId', ':byTrafficAreas'))
             ->setParameter('byTrafficAreas', $trafficAreas);
@@ -66,5 +68,27 @@ class BusRegBrowseView extends AbstractRepository
         }
 
         return $qb->getQuery()->iterate();
+    }
+
+    /**
+     * Applies filters to list queries
+     *
+     * @param QueryBuilder   $qb    doctrine query builder
+     * @param QueryInterface $query the query
+     *
+     * @return void
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        $qb->andWhere($qb->expr()->eq($this->alias . '.acceptedDate', ':byAcceptedDate'))
+            ->setParameter('byAcceptedDate', (new \DateTime($query->getAcceptedDate()))->format('Y-m-d'));
+
+        $qb->andWhere($qb->expr()->in($this->alias . '.trafficAreaId', ':byTrafficAreas'))
+            ->setParameter('byTrafficAreas', $query->getTrafficAreas());
+
+        if (!empty($query->getStatus())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.status', ':byStatus'))
+                ->setParameter('byStatus', $query->getStatus());
+        }
     }
 }
