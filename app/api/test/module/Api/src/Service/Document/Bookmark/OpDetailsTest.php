@@ -17,6 +17,19 @@ class OpDetailsTest extends \PHPUnit_Framework_TestCase
         $query = $bookmark->getQuery(['licence' => 123]);
 
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query);
+        $this->assertSame(
+            [
+                'bundle' => [
+                    'correspondenceCd' => [
+                        'address'
+                    ],
+                    'organisation',
+                    'tradingNames',
+                ],
+                'id' => 123
+            ],
+            $query->getArrayCopy()
+        );
     }
 
     public function testRenderValidDataProvider()
@@ -28,11 +41,11 @@ class OpDetailsTest extends \PHPUnit_Framework_TestCase
                 array(
                     'organisation' => array(
                         'name' => 'Testing Test Limited',
-                        'tradingNames' => array(
-                            array(
-                                'name' => 'Trading Test Limited'
-                            )
-                        ),
+                    ),
+                    'tradingNames' => array(
+                        array(
+                            'name' => 'Trading Test Limited'
+                        )
                     ),
                     'correspondenceCd' => array(
                         'fao' => 'Mr Testy Test',
@@ -53,8 +66,8 @@ class OpDetailsTest extends \PHPUnit_Framework_TestCase
                 array(
                     'organisation' => array(
                         'name' => 'Testing Test Limited',
-                        'tradingNames' => array(),
                     ),
+                    'tradingNames' => array(),
                     'correspondenceCd' => array(
                         'fao' => '',
                         'address' => array(
