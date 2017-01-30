@@ -261,5 +261,6 @@ return [
     'owners-signature' => 'Owner\'s signature',
     'responsible-person-signature' => 'A responsible person\'s signature',
     'application-review-safety-additional-information' => 'Additional information (optional)',
+    'tm-review-responsibility-other-licences-role-not-given' => 'Not given',
     // Potentially unused translations
 ];
