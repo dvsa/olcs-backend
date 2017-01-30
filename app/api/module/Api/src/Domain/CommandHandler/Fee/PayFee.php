@@ -176,12 +176,6 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         ) {
             $this->result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
         }
-
-        if ($application->getCurrentInterimStatus() !== ApplicationEntity::INTERIM_STATUS_GRANTED) {
-            return;
-        }
-
-        $this->result->merge($this->handleSideEffect(InForceInterim::create(['id' => $application->getId()])));
     }
 
     /**

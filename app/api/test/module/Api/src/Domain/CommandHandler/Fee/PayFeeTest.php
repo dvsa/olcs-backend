@@ -412,17 +412,12 @@ class PayFeeTest extends CommandHandlerTestCase
         $result1->addMessage('ValidateApplication');
         $this->expectedSideEffect(ValidateApplication::class, ['id' => 222], $result1);
 
-        $result2 = new Result();
-        $result2->addMessage('InForceInterim');
-        $this->expectedSideEffect(InForceInterim::class, ['id' => 222], $result2);
-
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
                 'ValidateApplication',
-                'InForceInterim'
             ]
         ];
 
