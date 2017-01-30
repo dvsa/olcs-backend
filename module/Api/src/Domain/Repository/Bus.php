@@ -60,33 +60,6 @@ class Bus extends AbstractRepository
     }
 
     /**
-     * fetch the latest bus reg variation by registration number
-     *
-     * @param string $regNo       registration number
-     * @param int    $hydrateMode doctrine hydrate mode
-     *
-     * @return Entity|array
-     */
-    public function fetchLatestUsingRegNo($regNo, $hydrateMode = Query::HYDRATE_OBJECT)
-    {
-        $qb = $this->createQueryBuilder();
-
-        $qb->andWhere($qb->expr()->eq($this->alias . '.regNo', ':byRegNo'))
-            ->setParameter('byRegNo', $regNo);
-        $qb->andWhere($qb->expr()->notIn($this->alias . '.status', ':byStatus'))
-            ->setParameter('byStatus', Entity::$ebsrExistingRecordExcluded);
-        $qb->addOrderBy($this->alias . '.id', 'DESC');
-
-        $results = $qb->getQuery()->getResult($hydrateMode);
-
-        if (!empty($results)) {
-            return $results[0];
-        }
-
-        return $results;
-    }
-
-    /**
      * fetch with txc inbox list for organisation
      *
      * @param QueryInterface $query          the query
