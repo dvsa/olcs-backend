@@ -332,7 +332,6 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
      *
      * @return string PDF file name
      * @throws NotReadyException
-     * @throws RuntimeException
      */
     private function convertToPdf($fileName)
     {
@@ -342,8 +341,9 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
             $convertToPdfService = $this->getCommandHandler()->getServiceLocator()->get('ConvertToPdf');
             try {
                 $convertToPdfService->convert($fileName, $pdfFileName);
-            } catch (\Dvsa\Olcs\Api\Domain\Exception\RestResponseException $e) {
-                $exception = new RuntimeException('Error generating the PDF : ' . $e->getMessage());
+            } catch (\Exception $e) {
+                $exception = new NotReadyException('Error generating the PDF '. $fileName .' : '. $e->getMessage());
+                $exception->setRetryAfter(60);
                 throw $exception;
             }
         } else {

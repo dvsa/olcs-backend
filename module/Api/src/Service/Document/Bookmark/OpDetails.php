@@ -30,9 +30,8 @@ class OpDetails extends DynamicBookmark
             'correspondenceCd' => [
                 'address'
             ],
-            'organisation' => [
-                'tradingNames'
-            ]
+            'organisation',
+            'tradingNames',
         ];
         return Qry::create(['id' => $data['licence'], 'bundle' => $bundle]);
     }
@@ -53,7 +52,7 @@ class OpDetails extends DynamicBookmark
             function ($tradingName) use (&$tradingNames) {
                 $tradingNames .= $tradingName['name'] . ' ';
             },
-            $organisation['tradingNames']
+            $this->data['tradingNames']
         );
 
         if (strlen($tradingNames) > 0) {
