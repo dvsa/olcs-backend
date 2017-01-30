@@ -194,12 +194,13 @@ class Fee extends AbstractRepository
     /**
      * Fetch outstanding continuation fees for a licence
      *
-     * @param int      $licenceId Licence Id
-     * @param DateTime $after     if specified, only return fees with invoicedDate after this value
+     * @param int      $licenceId    Licence Id
+     * @param DateTime $after        if specified, only return fees with invoicedDate after this value
+     * @param bool     $hasAnyStatus outstanding or paid fee
      *
      * @return array
      */
-    public function fetchOutstandingContinuationFeesByLicenceId($licenceId, $after = null)
+    public function fetchOutstandingContinuationFeesByLicenceId($licenceId, $after = null, $hasAnyStatus = false)
     {
         $doctrineQb = $this->createQueryBuilder();
 
@@ -210,7 +211,9 @@ class Fee extends AbstractRepository
             ->setParameter('licence', $licenceId)
             ->setParameter('feeType', RefDataEntity::FEE_TYPE_CONT);
 
-        $this->whereOutstandingFee($doctrineQb);
+        if (!$hasAnyStatus) {
+            $this->whereOutstandingFee($doctrineQb);
+        }
 
         if (!is_null($after)) {
             $doctrineQb

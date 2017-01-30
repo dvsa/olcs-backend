@@ -186,7 +186,7 @@ class ProcessTest extends CommandHandlerTestCase
         $this->repoMap['Fee']
             ->shouldReceive('fetchOutstandingContinuationFeesByLicenceId')
             ->once()
-            ->with($licenceId, m::type(\DateTime::class))
+            ->with($licenceId, m::type(\DateTime::class), true)
             ->andReturn([]);
 
         $now = new DateTime();
@@ -340,7 +340,7 @@ class ProcessTest extends CommandHandlerTestCase
         $this->repoMap['Fee']
             ->shouldReceive('fetchOutstandingContinuationFeesByLicenceId')
             ->once()
-            ->with($licenceId, m::type(\DateTime::class))
+            ->with($licenceId, m::type(\DateTime::class), true)
             ->andReturn([]);
 
         $now = new DateTime();
