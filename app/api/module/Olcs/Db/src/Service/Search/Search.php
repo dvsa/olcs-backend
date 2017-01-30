@@ -140,10 +140,10 @@ class Search implements AuthAwareInterface
         $filterNames = $this->getFilterNames();
         if (isset($filterNames)) {
             foreach ($filterNames as $filterName) {
-
                 $terms = new Terms($filterName);
                 $terms->setField($filterName);
-                $terms->setMinimumDocumentCount(1);
+                $terms->setOrder('_term', 'ASC');
+                $terms->setSize(0);
 
                 $elasticaQuery->addAggregation($terms);
             }
@@ -252,7 +252,7 @@ class Search implements AuthAwareInterface
      *
      * @param array $filters Filters
      *
-     * @return array
+     * @return $this
      */
     public function setFilters(array $filters)
     {
