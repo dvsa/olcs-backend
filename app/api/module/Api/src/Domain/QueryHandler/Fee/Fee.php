@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Fee
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Fee;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -48,6 +45,8 @@ class Fee extends AbstractQueryHandler
      */
     private function getAdditionalFeeData(FeeEntity $fee)
     {
+        $licence = $fee->getLicence();
+        $licenceExpiryDate = ($licence === null) ? null : $licence->getExpiryDate();
         return [
             'allowEdit' => $fee->allowEdit(),
             'outstanding' => $fee->getOutstandingAmount(),
@@ -67,6 +66,7 @@ class Fee extends AbstractQueryHandler
             'canRefund' => $fee->canRefund(),
             'displayTransactions' => $this->getDisplayTransactions($fee),
             'vatInfo' => $this->getVatInfo($fee),
+            'licenceExpiryDate' => $licenceExpiryDate,
         ];
     }
 

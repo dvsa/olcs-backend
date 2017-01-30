@@ -31,7 +31,6 @@ return [
     QueryHandler\Document\TemplateParagraphs::class => IsInternalUser::class,
     QueryHandler\EnvironmentalComplaint\EnvironmentalComplaint::class => IsInternalUser::class,
     QueryHandler\EnvironmentalComplaint\EnvironmentalComplaintList::class => IsInternalUser::class,
-    QueryHandler\Fee\Fee::class => IsInternalUser::class,
     QueryHandler\Fee\FeeList::class => IsInternalUser::class,
     QueryHandler\Fee\FeeType::class => IsInternalUser::class,
     QueryHandler\Fee\FeeTypeList::class => IsInternalUser::class,

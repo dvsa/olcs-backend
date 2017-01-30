@@ -541,6 +541,7 @@ class FeeEntityTest extends EntityTester
             ->shouldReceive('getLatestPaymentRef')->once()->andReturn('unit_receiptNo')
             ->shouldReceive('getGrossAmount')->once()->andReturn('unit_Amount')
             ->shouldReceive('isRuleBeforeInvoiceDate')->once()->andReturn('unit_RuleDateBeforeInvoice')
+            ->shouldReceive('isExpiredForLicence')->once()->andReturn('unit_ExpiredForLicence')
             ->getMock();
 
         static::assertEquals(
@@ -549,9 +550,49 @@ class FeeEntityTest extends EntityTester
                 'receiptNo' => 'unit_receiptNo',
                 'amount' => 'unit_Amount',
                 'ruleDateBeforeInvoice' => 'unit_RuleDateBeforeInvoice',
+                'isExpiredForLicence' => 'unit_ExpiredForLicence',
             ],
             $sut->getCalculatedBundleValues()
         );
+    }
+
+    /**
+     * @dataProvider providerExpiredForLicence
+     */
+    public function testIsExpiredForLicence($expiryDate, $expected)
+    {
+        $mockLicence = m::mock()
+            ->shouldReceive('getExpiryDate')
+            ->andReturn('foo')
+            ->once()
+            ->shouldReceive('getExpiryDateAsDate')
+            ->andReturn($expiryDate)
+            ->once()
+            ->getMock();
+
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)
+            ->makePartial()
+            ->shouldReceive('getLicence')
+            ->andReturn($mockLicence)
+            ->once()
+            ->getMock();
+
+        $this->assertEquals($sut->isExpiredForLicence(), $expected);
+    }
+
+    public function providerExpiredForLicence()
+    {
+        return [
+            [
+                \DateTime::createFromFormat('Y-m-d', '3000-01-01'),
+                false
+            ],
+            [
+                \DateTime::createFromFormat('Y-m-d', '1000-01-01'),
+                true
+            ]
+        ];
     }
 
     /**

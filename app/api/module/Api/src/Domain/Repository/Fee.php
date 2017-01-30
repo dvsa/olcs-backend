@@ -74,12 +74,12 @@ class Fee extends AbstractRepository
      * Fetch outstanding fees for an organisation
      * (only those associated to a valid licence or in progress application)
      *
-     * @param int  $organisationId Organisation ID
-     * @param bool $hideExpired    If True, then hide expired
+     * @param int  $organisationId        organisation ID
+     * @param bool $hideForCeasedLicences if true, then hide fees where the licence has ceased
      *
      * @return array
      */
-    public function fetchOutstandingFeesByOrganisationId($organisationId, $hideExpired = false)
+    public function fetchOutstandingFeesByOrganisationId($organisationId, $hideForCeasedLicences = false)
     {
         $doctrineQb = $this->createQueryBuilder();
 
@@ -94,8 +94,8 @@ class Fee extends AbstractRepository
         $this->whereOutstandingFee($doctrineQb);
         $this->whereCurrentLicenceOrApplicationFee($doctrineQb, $organisationId);
 
-        if ($hideExpired) {
-            $this->hideExpired($doctrineQb);
+        if ($hideForCeasedLicences) {
+            $this->hideForCeasedLicences($doctrineQb);
         }
 
         return $doctrineQb->getQuery()->getResult();
@@ -104,12 +104,12 @@ class Fee extends AbstractRepository
     /**
      * Get Outstanding Fee Count
      *
-     * @param int  $organisationId Organisation Id
-     * @param bool $hideExpired    If True, then hide expired
+     * @param int  $organisationId        organisation Id
+     * @param bool $hideForCeasedLicences if true, then hide fees where the licence has ceased
      *
      * @return int
      */
-    public function getOutstandingFeeCountByOrganisationId($organisationId, $hideExpired = false)
+    public function getOutstandingFeeCountByOrganisationId($organisationId, $hideForCeasedLicences = false)
     {
         $doctrineQb = $this->createQueryBuilder();
 
@@ -120,28 +120,32 @@ class Fee extends AbstractRepository
         // than an OR
         $this->whereCurrentLicenceOrApplicationFee($doctrineQb, $organisationId);
 
-        if ($hideExpired) {
-            $this->hideExpired($doctrineQb);
+        if ($hideForCeasedLicences) {
+            $this->hideForCeasedLicences($doctrineQb);
         }
 
         return $doctrineQb->getQuery()->getSingleScalarResult();
     }
 
     /**
-     * Add a check to hide expired fees
+     * Add a check to hide fees where licence has ceased
      *
-     * @param QueryBuilder $doctrineQb Doctrin Query Builder
+     * @param QueryBuilder $doctrineQb Doctrine Query Builder
      *
      * @return void
      */
-    protected function hideExpired($doctrineQb)
+    protected function hideForCeasedLicences($doctrineQb)
     {
+        $ceasedStatuses = [
+            LicenceEntity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT,
+            LicenceEntity::LICENCE_STATUS_REVOKED,
+            LicenceEntity::LICENCE_STATUS_SURRENDERED,
+            LicenceEntity::LICENCE_STATUS_TERMINATED
+        ];
+
         $doctrineQb->andWhere(
-            $doctrineQb->expr()->orX(
-                $doctrineQb->expr()->isNull('l.expiryDate'),
-                $doctrineQb->expr()->gte('l.expiryDate', ':today')
-            )
-        )->setParameter('today', new DateTime());
+            $doctrineQb->expr()->notIn('l.status', ':ceasedStatuses')
+        )->setParameter('ceasedStatuses', $ceasedStatuses);
     }
 
     /**

@@ -9,6 +9,7 @@ use Dvsa\Olcs\Transfer\Query\Fee\FeeList as FeeListQry;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
  * @covers Dvsa\Olcs\Api\Domain\Repository\Fee
@@ -98,11 +99,16 @@ class FeeTest extends RepositoryTestCase
 
         $mockQb = m::mock(QueryBuilder::class);
 
-        $mockQb->shouldReceive('expr->isNull')->with('l.expiryDate')->once()->andReturn('condition1');
-        $mockQb->shouldReceive('expr->gte')->with('l.expiryDate', ':today')->once()->andReturn('condition2');
-        $mockQb->shouldReceive('orX')->with('condition1', 'condition2')->andReturn('condition')->andReturnSelf();
-        $mockQb->shouldReceive('andWhere')->with('condition')->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('today', m::type(DateTime::class))->andReturnSelf();
+        $ceasedStatuses = [
+            LicenceEntity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT,
+            LicenceEntity::LICENCE_STATUS_REVOKED,
+            LicenceEntity::LICENCE_STATUS_SURRENDERED,
+            LicenceEntity::LICENCE_STATUS_TERMINATED
+        ];
+
+        $mockQb->shouldReceive('expr->notIn')->with('l.status', ':ceasedStatuses')->once()->andReturn('condition1');
+        $mockQb->shouldReceive('andWhere')->with('condition1')->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('ceasedStatuses', $ceasedStatuses)->andReturnSelf();
 
         $this->em
             ->shouldReceive('getRepository->createQueryBuilder')
@@ -163,12 +169,16 @@ class FeeTest extends RepositoryTestCase
         /** @var QueryBuilder $qb */
         $mockQb = m::mock(QueryBuilder::class);
 
-        //  set hide expire conditions
-        $mockQb->shouldReceive('expr->isNull')->with('l.expiryDate')->once()->andReturn('condition1');
-        $mockQb->shouldReceive('expr->gte')->with('l.expiryDate', ':today')->once()->andReturn('condition2');
-        $mockQb->shouldReceive('orX')->with('condition1', 'condition2')->andReturn('condition')->andReturnSelf();
-        $mockQb->shouldReceive('andWhere')->with('condition')->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('today', m::type(DateTime::class))->andReturnSelf();
+        $ceasedStatuses = [
+            LicenceEntity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT,
+            LicenceEntity::LICENCE_STATUS_REVOKED,
+            LicenceEntity::LICENCE_STATUS_SURRENDERED,
+            LicenceEntity::LICENCE_STATUS_TERMINATED
+        ];
+
+        $mockQb->shouldReceive('expr->notIn')->with('l.status', ':ceasedStatuses')->once()->andReturn('condition1');
+        $mockQb->shouldReceive('andWhere')->with('condition1')->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('ceasedStatuses', $ceasedStatuses)->andReturnSelf();
 
         $this->em
             ->shouldReceive('getRepository->createQueryBuilder')
