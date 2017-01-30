@@ -195,13 +195,18 @@ class TransportManagerResponsibilityReviewService extends AbstractReviewService
 
         /** @var OtherLicence $otherLicence */
         foreach ($tma->getOtherLicences() as $otherLicence) {
+            $role = $otherLicence->getRole();
             $mainItems[] = [
                 'header' => $otherLicence->getLicNo(),
                 'multiItems' => [
                     [
                         [
                             'label' => 'tm-review-responsibility-other-licences-role',
-                            'value' => $otherLicence->getRole()->getDescription()
+                            'value' => (
+                                $role !== null
+                                ? $role->getDescription()
+                                : $this->translate('tm-review-responsibility-other-licences-role-not-given')
+                            )
                         ],
                         [
                             'label' => 'tm-review-responsibility-other-licences-operating-centres',
