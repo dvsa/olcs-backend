@@ -176,7 +176,8 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
         $after = (new DateTime('now'))->sub(new \DateInterval('P3M'));
         $results = $this->getRepo('Fee')->fetchOutstandingContinuationFeesByLicenceId(
             $licence->getId(),
-            $after
+            $after,
+            true
         );
 
         return empty($results);
