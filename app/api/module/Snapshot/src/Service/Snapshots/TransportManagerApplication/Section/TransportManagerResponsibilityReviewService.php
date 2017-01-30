@@ -202,9 +202,11 @@ class TransportManagerResponsibilityReviewService extends AbstractReviewService
                     [
                         [
                             'label' => 'tm-review-responsibility-other-licences-role',
-                            'value' => $role !== null
+                            'value' => (
+                                $role !== null
                                 ? $role->getDescription()
                                 : $this->translate('tm-review-responsibility-other-licences-role-not-given')
+                            )
                         ],
                         [
                             'label' => 'tm-review-responsibility-other-licences-operating-centres',
