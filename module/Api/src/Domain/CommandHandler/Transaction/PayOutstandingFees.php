@@ -240,7 +240,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                     // Generate Insufficient Fee Request letter
                     $this->result->merge($this->generateInsufficientFeeRequestLetter($fee, $allocatedAmount));
                 }
-                if ($fee->getTask() === null) {
+                $task = $fee->getTask();
+                if ($fee->getTask() === null || $task->getIsClosed() === 'Y') {
                     $this->createTaskForOutstandingFee($fee);
                 }
             }
