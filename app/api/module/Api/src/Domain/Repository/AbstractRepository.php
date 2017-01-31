@@ -16,23 +16,51 @@ use Dvsa\Olcs\Api\Domain\Exception;
  */
 abstract class AbstractRepository extends AbstractReadonlyRepository implements RepositoryInterface
 {
+    /**
+     * Save an entity
+     *
+     * @param mixed $entity Entity to save
+     *
+     * @return void
+     * @throws Exception\RuntimeException
+     * @throws \Exception
+     */
     public function save($entity)
     {
         if (!($entity instanceof $this->entity)) {
             throw new Exception\RuntimeException('This repository can only save entities of type ' . $this->entity);
         }
 
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
+        try {
+            $this->getEntityManager()->persist($entity);
+            $this->getEntityManager()->flush();
+        } catch (\Exception $e) {
+            \Olcs\Logging\Log\Logger::crit($e->getMessage());
+            throw $e;
+        }
     }
 
+    /**
+     * Delete an entity
+     *
+     * @param mixec $entity Entity to delete
+     *
+     * @return void
+     * @throws Exception\RuntimeException
+     * @throws \Exception
+     */
     public function delete($entity)
     {
         if (!($entity instanceof $this->entity)) {
             throw new Exception\RuntimeException('This repository can only delete entities of type ' . $this->entity);
         }
 
-        $this->getEntityManager()->remove($entity);
-        $this->getEntityManager()->flush();
+        try {
+            $this->getEntityManager()->remove($entity);
+            $this->getEntityManager()->flush();
+        } catch (\Exception $e) {
+            \Olcs\Logging\Log\Logger::crit($e->getMessage());
+            throw $e;
+        }
     }
 }
