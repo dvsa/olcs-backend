@@ -180,8 +180,14 @@ final class ProcessPack extends AbstractCommandHandler implements
         //get the parts of the data we need doctrine for
         $ebsrData = $this->getDoctrineInformation($ebsrData);
 
-        /** @var BusRegEntity $previousBusReg */
-        $previousBusReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['existingRegNo']);
+        /**
+         * @var LicenceRepo $repo
+         * @var LicenceEntity $licence
+         * @var BusRegEntity $previousBusReg
+         */
+        $repo = $this->getRepo('Licence');
+        $licence = $repo->fetchByLicNoWithoutAdditionalData($ebsrData['licNo']);
+        $previousBusReg = $licence->getLatestBusVariation($ebsrData['existingRegNo']);
 
         //we now have the data from doctrine, so validate this additional data
         $processedContext = ['busReg' => $previousBusReg];
@@ -192,7 +198,7 @@ final class ProcessPack extends AbstractCommandHandler implements
         }
 
         //we have valid data, so build a bus reg record
-        $busReg = $this->createBusReg($ebsrData, $previousBusReg);
+        $busReg = $this->createBusReg($ebsrData, $previousBusReg, $licence);
 
         //we can only validate short notice data once we've created the bus reg
         if (!$this->validateInput('shortNotice', $ebsrSub, $doc, $xmlName, $ebsrData, ['busReg' => $busReg])) {
@@ -388,15 +394,16 @@ final class ProcessPack extends AbstractCommandHandler implements
      *
      * @param array              $ebsrData       array of EBSR data
      * @param BusRegEntity|array $previousBusReg information on the previous bus registration
+     * @param LicenceEntity      $licence        licence
      *
      * @return BusRegEntity
      */
-    private function createBusReg(array $ebsrData, $previousBusReg)
+    private function createBusReg(array $ebsrData, $previousBusReg, LicenceEntity $licence)
     {
         //decide what to do based on txcAppType
         switch ($ebsrData['txcAppType']) {
             case BusRegEntity::TXC_APP_NEW: //new application
-                $busReg = $this->createNew($ebsrData);
+                $busReg = $this->createNew($ebsrData, $licence);
                 break;
             case BusRegEntity::TXC_APP_CANCEL: //cancellation
                 $busReg = $this->createVariation($previousBusReg, BusRegEntity::STATUS_CANCEL);
@@ -602,19 +609,14 @@ final class ProcessPack extends AbstractCommandHandler implements
     /**
      * Create a new bus reg
      *
-     * @param array $ebsrData array of EBSR data
+     * @param array         $ebsrData array of EBSR data
+     * @param LicenceEntity $licence  licence
      *
      * @throws Exception\ForbiddenException
      * @return BusRegEntity
      */
-    private function createNew(array $ebsrData)
+    private function createNew(array $ebsrData, LicenceEntity $licence)
     {
-        /**
-         * @var LicenceRepo $repo
-         * @var LicenceEntity $licence
-         */
-        $repo = $this->getRepo('Licence');
-        $licence = $repo->fetchByLicNoWithoutAdditionalData($ebsrData['licNo']);
         $refDataStatus = $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_NEW);
 
         $newBusReg = BusRegEntity::createNew(

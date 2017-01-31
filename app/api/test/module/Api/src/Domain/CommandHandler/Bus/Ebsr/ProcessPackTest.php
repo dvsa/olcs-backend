@@ -301,15 +301,18 @@ class ProcessPackTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($variationBusReg);
 
-        $this->repoMap['Bus']->shouldReceive('fetchLatestUsingRegNo')
-            ->once()
-            ->with($existingRegNo)
-            ->andReturn($previousBusReg);
-
         $this->repoMap['Bus']->shouldReceive('save')
             ->once()
             ->with($variationBusReg)
             ->andReturn($variationBusReg);
+
+        $licence = m::mock(LicenceEntity::class);
+        $licence->shouldReceive('getLatestBusVariation')->once()->with($existingRegNo)->andReturn($previousBusReg);
+
+        $this->repoMap['Licence']->shouldReceive('fetchByLicNoWithoutAdditionalData')
+            ->once()
+            ->with($parsedLicenceNumber)
+            ->andReturn($licence);
 
         $this->mockInput('EbsrBusRegInput', $xmlDocument, $busRegInputContext, $parsedEbsrData);
 
@@ -537,15 +540,18 @@ class ProcessPackTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($variationBusReg);
 
-        $this->repoMap['Bus']->shouldReceive('fetchLatestUsingRegNo')
-            ->once()
-            ->with($existingRegNo)
-            ->andReturn($previousBusReg);
-
         $this->repoMap['Bus']->shouldReceive('save')
             ->once()
             ->with($variationBusReg)
             ->andReturn($variationBusReg);
+
+        $licence = m::mock(LicenceEntity::class);
+        $licence->shouldReceive('getLatestBusVariation')->once()->with($existingRegNo)->andReturn($previousBusReg);
+
+        $this->repoMap['Licence']->shouldReceive('fetchByLicNoWithoutAdditionalData')
+            ->once()
+            ->with($parsedLicenceNumber)
+            ->andReturn($licence);
 
         $this->mockInput('EbsrBusRegInput', $xmlDocument, $busRegInputContext, $parsedEbsrData);
 
@@ -699,11 +705,6 @@ class ProcessPackTest extends CommandHandlerTestCase
             'organisation' => $organisation
         ];
 
-        $this->repoMap['Bus']->shouldReceive('fetchLatestUsingRegNo')
-            ->once()
-            ->with($existingRegNo)
-            ->andReturnNull();
-
         $this->mockInput('EbsrBusRegInput', $xmlDocument, $busRegInputContext, $parsedEbsrData);
 
         $this->fileProcessor($docIdentifier, $xmlName);
@@ -712,6 +713,7 @@ class ProcessPackTest extends CommandHandlerTestCase
         $licence->shouldReceive('getLicNo')->twice()->andReturn($parsedLicenceNumber);
         $licence->shouldReceive('getLatestBusRouteNo')->once()->andReturn(12345);
         $licence->shouldReceive('getId')->once()->andReturn($licenceId);
+        $licence->shouldReceive('getLatestBusVariation')->once()->with($existingRegNo)->andReturnNull();
 
         $this->repoMap['Licence']->shouldReceive('fetchByLicNoWithoutAdditionalData')
             ->once()
@@ -993,10 +995,13 @@ class ProcessPackTest extends CommandHandlerTestCase
             'organisation' => $organisation
         ];
 
-        $this->repoMap['Bus']->shouldReceive('fetchLatestUsingRegNo')
+        $licence = m::mock(LicenceEntity::class);
+        $licence->shouldReceive('getLatestBusVariation')->once()->with($existingRegNo)->andReturnNull();
+
+        $this->repoMap['Licence']->shouldReceive('fetchByLicNoWithoutAdditionalData')
             ->once()
-            ->with($existingRegNo)
-            ->andReturnNull();
+            ->with($parsedLicenceNumber)
+            ->andReturn($licence);
 
         $this->mockInput('EbsrBusRegInput', $xmlDocument, $busRegInputContext, $parsedEbsrData);
 
@@ -1105,11 +1110,6 @@ class ProcessPackTest extends CommandHandlerTestCase
             'organisation' => $organisation
         ];
 
-        $this->repoMap['Bus']->shouldReceive('fetchLatestUsingRegNo')
-            ->once()
-            ->with($existingRegNo)
-            ->andReturnNull();
-
         $this->mockInput('EbsrBusRegInput', $xmlDocument, $busRegInputContext, $parsedEbsrData);
 
         $this->fileProcessor($docIdentifier, $xmlName);
@@ -1117,6 +1117,7 @@ class ProcessPackTest extends CommandHandlerTestCase
         $licence = m::mock(LicenceEntity::class);
         $licence->shouldReceive('getLicNo')->twice()->andReturn($parsedLicenceNumber);
         $licence->shouldReceive('getLatestBusRouteNo')->once()->andReturn(12345);
+        $licence->shouldReceive('getLatestBusVariation')->once()->with($existingRegNo)->andReturnNull();
 
         $this->repoMap['Licence']->shouldReceive('fetchByLicNoWithoutAdditionalData')
             ->once()
