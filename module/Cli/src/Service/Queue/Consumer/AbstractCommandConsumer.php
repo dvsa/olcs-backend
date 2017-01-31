@@ -83,6 +83,9 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
             return $this->failed($item, $message);
         } catch (ZendServiceException $e) {
             return $this->handleZendServiceException($item, $e);
+        } catch (\Doctrine\ORM\ORMException $e) {
+            // rethrow ORMException such as Entity Manager Closed.
+            throw $e;
         } catch (\Exception $e) {
             return $this->failed($item, $e->getMessage());
         }

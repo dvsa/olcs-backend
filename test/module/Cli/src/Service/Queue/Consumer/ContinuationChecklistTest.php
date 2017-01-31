@@ -105,4 +105,25 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
             $result
         );
     }
+
+    public function testProcessMessageFailureOrmException()
+    {
+        $user = new UserEntity('pid', 'type');
+        $user->setId(1);
+        $item = new QueueEntity();
+        $item->setId(99);
+        $item->setEntityId(69);
+        $item->setCreatedBy($user);
+
+        $this->expectCommandException(
+            \Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\Process::class,
+            ['id' => 69, 'user' => 1],
+            \Doctrine\ORM\ORMException::class,
+            'ORM Exception'
+        );
+
+        $this->setExpectedException(\Doctrine\ORM\ORMException::class, 'ORM Exception');
+
+        $this->sut->processMessage($item);
+    }
 }

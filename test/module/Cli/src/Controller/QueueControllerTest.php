@@ -213,4 +213,41 @@ class QueueControllerTest extends MockeryTestCase
         $this->routeMatch->setParam('action', 'index');
         $this->sut->dispatch($this->request);
     }
+
+    public function testIndexActionHandlesOrmException()
+    {
+        // Mocks
+        $mockConfig = [
+            'queue' => [
+                'runFor' => 0.01,
+            ]
+        ];
+        $mockQueue = m::mock();
+        $this->sm->setService('Config', $mockConfig);
+        $this->sm->setService('Queue', $mockQueue);
+
+        // Expectations
+        $this->request->shouldReceive('getParam')->with('type')->andReturn('foo');
+        $this->request->shouldReceive('getParam')->with('exclude')->andReturn('');
+        $this->request->shouldReceive('getParam')->with('queue-duration', 0.01)->andReturn(0.01);
+
+        $errorMessage = 'error message';
+        $mockQueue->shouldReceive('processNextItem')
+            ->with(['foo'], [])
+            ->andThrow(new \Doctrine\ORM\ORMException($errorMessage));
+
+        $this->console->shouldReceive('writeLine')->with('Types = foo')->once();
+        $this->console->shouldReceive('writeLine')->with('Exclude types = ')->once();
+        $this->console->shouldReceive('writeLine')->with('Queue duration = 0.01')->once();
+        $this->console->shouldReceive('writeLine')
+            ->atLeast(1)
+            ->with('ORM Error: '.$errorMessage);
+
+        // Assertions
+        $this->routeMatch->setParam('action', 'index');
+        /** @var \Zend\View\Model\ConsoleModel $model */
+        $model = $this->sut->dispatch($this->request);
+
+        $this->assertEquals(1, $model->getErrorLevel());
+    }
 }
