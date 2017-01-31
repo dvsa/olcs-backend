@@ -56,8 +56,10 @@ class QueueProcessor implements ServiceLocatorAwareInterface
 
         try {
             return $consumer->processMessage($item);
+        } catch (\Doctrine\ORM\ORMException $e) {
+            // rethrow ORMException which can cause Entity Manager to close
+            throw $e;
         } catch (\Exception $e) {
-            // mark the item as failed
             return $consumer->failed($item, $e->getMessage());
         }
     }

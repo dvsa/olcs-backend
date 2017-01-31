@@ -60,6 +60,12 @@ class QueueController extends AbstractConsoleController
             try {
                 // process next item
                 $response = $service->processNextItem($includeTypes, $excludeTypes);
+            } catch (\Doctrine\ORM\ORMException $e) {
+                // If ORMException such as "Entity Manager Closed" exit script as they will fail
+                $this->getConsole()->writeLine('ORM Error: '.$e->getMessage());
+                $model = new ConsoleModel();
+                $model->setErrorLevel(1);
+                return $model;
             } catch (\Exception $e) {
                 $this->getConsole()->writeLine('Error: '.$e->getMessage());
                 // continue with the next item
@@ -113,7 +119,9 @@ class QueueController extends AbstractConsoleController
     private function getQueueDuration($config)
     {
         // get default from config, if not in config then default to self::gsDEFAULT_RUN_FOR
-        $default = isset($config['runFor']) && is_numeric($config['runFor']) ? $config['runFor'] : self::DEFAULT_RUN_FOR;
+        $default = isset($config['runFor']) && is_numeric($config['runFor']) ?
+            $config['runFor'] :
+            self::DEFAULT_RUN_FOR;
         return $this->getRequest()->getParam('queue-duration', $default);
     }
 

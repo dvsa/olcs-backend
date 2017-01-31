@@ -127,6 +127,41 @@ class QueueProcessorTest extends MockeryTestCase
         $this->assertEquals('error message', $this->sut->processNextItem($includeTypes, $excludeTypes));
     }
 
+    public function testProcessMessageHandlesOrmException()
+    {
+        $includeTypes = ['foo'];
+        $excludeTypes = ['bar'];
+
+        $type = new RefData($includeTypes[0]);
+        $item = new QueueEntity($type);
+
+        // Mocks
+        $mockQueryHandlerManager = m::mock();
+        $mockMsm = m::mock(MessageConsumerManager::class)->makePartial();
+        $this->sm->setService('QueryHandlerManager', $mockQueryHandlerManager);
+        $this->sm->setService('MessageConsumerManager', $mockMsm);
+        $mockConsumer = m::mock(MessageConsumerInterface::class);
+        $mockMsm->setService('foo', $mockConsumer);
+
+        // Expectations
+        $this->expectQuery(
+            $mockQueryHandlerManager,
+            NextQueueItemQry::class,
+            ['includeTypes' => $includeTypes, 'excludeTypes' => $excludeTypes],
+            $item
+        );
+
+        $exceptionMessage = 'something went wrong';
+        $mockConsumer->shouldReceive('processMessage')
+            ->once()
+            ->with($item)
+            ->andThrow(new \Doctrine\ORM\ORMException($exceptionMessage));
+
+        $this->setExpectedException(\Doctrine\ORM\ORMException::class);
+
+        $this->sut->processNextItem($includeTypes, $excludeTypes);
+    }
+
     /**
      * @param QueryHandlerManager $queryHandlerManager service mock
      * @param string $class expected Query/Command class name
