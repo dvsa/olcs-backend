@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as CollectionInterface;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -85,6 +86,12 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     const TACH_INT = 'tach_internal';
     const TACH_NA = 'tach_na';
 
+    /**
+     * Licence constructor
+     *
+     * @param Organisation $organisation licence organisation
+     * @param RefData      $status       licence status
+     */
     public function __construct(Organisation $organisation, RefData $status)
     {
         parent::__construct();
@@ -114,15 +121,17 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     /**
      * Gets the latest Bus Reg variation number, based on the supplied regNo
      *
-     * @param string $regNo
-     * @param array $notInStatus
-     * @return mixed
+     * @param string $regNo       bus registration number
+     * @param array  $notInStatus statuses to ignore
+     *
+     * @return BusReg|null
      */
     public function getLatestBusVariation(
         $regNo,
         array $notInStatus = [
-        BusReg::STATUS_REFUSED,
-        BusReg::STATUS_WITHDRAWN
+            BusReg::STATUS_REFUSED,
+            BusReg::STATUS_WITHDRAWN,
+            BusReg::STATUS_EXPIRED
         ]
     ) {
         $criteria = Criteria::create()
@@ -134,13 +143,19 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
             $criteria->andWhere(Criteria::expr()->notIn('status', $notInStatus));
         }
 
-        return $this->getBusRegs()->matching($criteria)->current();
+        $matchedBusReg = $this->getBusRegs()->matching($criteria);
+
+        if (!$matchedBusReg->isEmpty()) {
+            return $matchedBusReg->current();
+        }
+
+        return null;
     }
 
     /**
      * Gets the latest Bus Reg route number for the licence
      *
-     * @return mixed
+     * @return int
      */
     public function getLatestBusRouteNo()
     {
@@ -153,11 +168,30 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
             ? $this->getBusRegs()->matching($criteria)->current()->getRouteNo() : 0;
     }
 
+    /**
+     * Updates total community licences
+     *
+     * @param int $totalCount total count
+     *
+     * @return void
+     */
     public function updateTotalCommunityLicences($totalCount)
     {
         $this->totCommunityLicences = $totalCount;
     }
 
+    /**
+     * update safety details
+     *
+     * @param int     $safetyInsVehicles safetyInsVehicles
+     * @param int     $safetyInsTrailers safetyInsTrailers
+     * @param RefData $tachographIns     tachographIns
+     * @param string  $tachographInsName tachographInsName
+     * @param string  $safetyInsVaries   safetyInsVaries
+     *
+     * @return void
+     * @throws ValidationException
+     */
     public function updateSafetyDetails(
         $safetyInsVehicles,
         $safetyInsTrailers,
@@ -192,6 +226,11 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         $this->setSafetyInsVaries($safetyInsVaries);
     }
 
+    /**
+     * Get active community licences
+     *
+     * @return CollectionInterface
+     */
     public function getActiveCommunityLicences()
     {
         $criteria = Criteria::create()
@@ -213,7 +252,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
-     * Get Active varation for this licence
+     * Get Active variation for this licence
      *
      * @return ArrayCollection
      */
@@ -233,6 +272,11 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return $this->getApplications()->matching($criteria);
     }
 
+    /**
+     * Get calculated bundle values
+     *
+     * @return array
+     */
     public function getCalculatedBundleValues()
     {
         return [
@@ -240,11 +284,21 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         ];
     }
 
+    /**
+     * Get calculated values
+     *
+     * @return array
+     */
     public function getCalculatedValues()
     {
         return $this->getCalculatedBundleValues();
     }
 
+    /**
+     * Get serial number prefix (UKGB or UKNI)
+     *
+     * @return string
+     */
     public function getSerialNoPrefixFromTrafficArea()
     {
         $trafficArea = $this->getTrafficArea();
@@ -256,30 +310,50 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return CommunityLicEntity::PREFIX_GB;
     }
 
+    /**
+     * Get remaining spaces for new vehicles
+     *
+     * @return int
+     */
     public function getRemainingSpaces()
     {
         return $this->getTotAuthVehicles() - $this->getActiveVehiclesCount();
     }
 
+    /**
+     * Get number of active vehicles
+     *
+     * @return int
+     */
     public function getActiveVehiclesCount()
     {
         return $this->getActiveVehicles()->count();
     }
 
+    /**
+     * Get remaining spaces for PSV
+     *
+     * @return int
+     */
     public function getRemainingSpacesPsv()
     {
         return $this->getTotAuthVehicles() - $this->getPsvDiscsNotCeasedCount();
     }
 
+    /**
+     * Get count of PSV discs not ceased
+     *
+     * @return int
+     */
     public function getPsvDiscsNotCeasedCount()
     {
         return $this->getPsvDiscsNotCeased()->count();
     }
 
     /**
-     * Returns List of Active Vehicles
+     * Returns list of active vehicles
      *
-     * @param bool $checkSpecified Only with Specicifed date
+     * @param bool $checkSpecified when true, only return vehicles with a specified date
      *
      * @return ArrayCollection
      */
@@ -295,6 +369,13 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return $this->getLicenceVehicles()->matching($criteria);
     }
 
+    /**
+     * has community licence office copy
+     *
+     * @param array $ids ids
+     *
+     * @return bool
+     */
     public function hasCommunityLicenceOfficeCopy($ids)
     {
         $hasOfficeCopy = false;
@@ -324,6 +405,11 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return $hasOfficeCopy;
     }
 
+    /**
+     * Get other active licences
+     *
+     * @return CollectionInterface
+     */
     public function getOtherActiveLicences()
     {
         $criteria = Criteria::create();
@@ -364,6 +450,11 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return $otherActiveLicences;
     }
 
+    /**
+     * Check whether licence has conditions and undertakings that aren't fulfilled
+     *
+     * @return bool
+     */
     public function hasApprovedUnfulfilledConditions()
     {
         $criteria = Criteria::create();
@@ -378,6 +469,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * Returns whether the licence is a goods licence
+     *
      * @return boolean|null
      */
     public function isGoods()
@@ -388,6 +481,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * Returns whether the licence is a PSV licence
+     *
      * @return boolean|null
      */
     public function isPsv()
@@ -398,6 +493,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * Returns whether the licence is special restricted
+     *
      * @return boolean|null
      */
     public function isSpecialRestricted()
@@ -408,6 +505,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * Returns whether the licence is restricted
+     *
      * @return boolean|null
      */
     public function isRestricted()
@@ -418,6 +517,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * Returns whether the licence is standard international
+     *
      * @return boolean|null
      */
     public function isStandardInternational()
@@ -428,6 +529,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * Returns whether the licence is standard national
+     *
      * @return boolean|null
      */
     public function isStandardNational()
@@ -496,6 +599,11 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return $data;
     }
 
+    /**
+     * Get a count of open complaints
+     *
+     * @return int
+     */
     public function getOpenComplaintsCount()
     {
         $count = 0;
@@ -511,6 +619,11 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return $count;
     }
 
+    /**
+     * Get Pi record count
+     *
+     * @return int
+     */
     public function getPiRecordCount()
     {
         $count = 0;
@@ -523,6 +636,11 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return $count;
     }
 
+    /**
+     * Returns open cases
+     *
+     * @return array
+     */
     public function getOpenCases()
     {
         $allCases = (array) $this->getCases()->getIterator();
@@ -534,6 +652,13 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         );
     }
 
+    /**
+     * Copies information from the application onto the licence
+     *
+     * @param Application $application application to copy information from
+     *
+     * @return void
+     */
     public function copyInformationFromApplication(Application $application)
     {
         $this->setLicenceType($application->getLicenceType());
@@ -542,6 +667,11 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         $this->setTotAuthVehicles($application->getTotAuthVehicles());
     }
 
+    /**
+     * Gets a list of operating centres for the licence
+     *
+     * @return array
+     */
     public function getOcForInspectionRequest()
     {
         $list = [];
@@ -565,6 +695,11 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return $this->getPsvDiscs()->matching($criteria);
     }
 
+    /**
+     * Returns whether the licence can have community licences
+     *
+     * @return bool
+     */
     public function canHaveCommunityLicences()
     {
         return ($this->isStandardInternational() || ($this->isPsv() && $this->isRestricted()));
@@ -588,11 +723,21 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         );
     }
 
+    /**
+     * Get category prefix (P or O)
+     *
+     * @return string
+     */
     public function getCategoryPrefix()
     {
         return LicenceNoGenEntity::getCategoryPrefix($this->getGoodsOrPsv());
     }
 
+    /**
+     * Whether to allow fee payments (based on the licence status)
+     *
+     * @return bool
+     */
     public function allowFeePayments()
     {
         if (in_array(
@@ -616,8 +761,9 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     /**
      * Get Outstanding applications of status "under consideration" or "granted" and optionally "not submitted"
      *
-     * @param bool $includeNotSubmitted
-     * @return \Doctrine\Common\Collections\Collection|static
+     * @param bool $includeNotSubmitted whether to include application not submitted
+     *
+     * @return CollectionInterface
      */
     public function getOutstandingApplications($includeNotSubmitted = false)
     {
@@ -638,8 +784,9 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     /**
      * Return applications of a particular status
      *
-     * @param array $status
-     * @return ArrayCollection|static
+     * @param array $status status
+     *
+     * @return CollectionInterface
      */
     public function getApplicationsByStatus($status)
     {
@@ -728,6 +875,11 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return $shortCodes[$this->getLicenceType()->getId()];
     }
 
+    /**
+     * Get context value (the lic no)
+     *
+     * @return string
+     */
     public function getContextValue()
     {
         return $this->getLicNo();
@@ -760,9 +912,11 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
-     * Returns the latest publication by type from a licence
-     * @param $type
-     * @return mixed
+     * Returns the latest publication by type (A&D or N&P)
+     *
+     * @param string $type publication type
+     *
+     * @return PublicationEntity
      */
     public function getLatestPublicationByType($type)
     {
@@ -778,6 +932,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         );
         $publicationLinks = new ArrayCollection(iterator_to_array($iterator));
 
+        /** @var PublicationLinkEntity $pLink */
         foreach ($publicationLinks as $pLink) {
             if ($pLink->getPublication()->getPubType() == $type) {
                 return $pLink->getPublication();
@@ -786,6 +941,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * returns the publication number of the latest N&P publication featuring this licence
+     *
      * @return int|null
      */
     public function determineNpNumber()
@@ -798,7 +955,10 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
-     * @param OperatingCentre $oc
+     * Get a licence operating centre record from an operating centre record
+     *
+     * @param OperatingCentre $oc operating centre entity
+     *
      * @return LicenceOperatingCentre|null
      */
     public function getLocByOc(OperatingCentre $oc)
@@ -815,6 +975,11 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return $locs->first();
     }
 
+    /**
+     * Get variation applications
+     *
+     * @return CollectionInterface
+     */
     public function getVariations()
     {
         $criteria = Criteria::create()->andWhere(Criteria::expr()->eq('isVariation', true));
@@ -852,13 +1017,23 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
-     * @inheritdoc
+     * Gets the organisation attached to the licence
+     *
+     * @return Organisation
      */
     public function getRelatedOrganisation()
     {
         return $this->getOrganisation();
     }
 
+    /**
+     * Get documents for the licence by category and sub category
+     *
+     * @param RefData $category    document category
+     * @param RefData $subCategory document sub category
+     *
+     * @return CollectionInterface
+     */
     public function getLicenceDocuments($category, $subCategory)
     {
         $expr = Criteria::expr();

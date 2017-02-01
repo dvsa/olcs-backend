@@ -3,9 +3,11 @@
 namespace Dvsa\OlcsTest\Api\Entity\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as CollectionInterface;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
@@ -13,7 +15,6 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -1142,6 +1143,62 @@ class LicenceEntityTest extends EntityTester
                 '2017-01-01',
                 $date2017
             ]
+        ];
+    }
+
+    /**
+     * @dataProvider getLatestBusVariationProvider
+     *
+     * @param $isEmpty
+     * @param $expectedResult
+     * @param $expectedCriteria
+     * @param $statuses
+     */
+    public function testGetLatestBusVariation($isEmpty, $expectedResult, $expectedCriteria, $statuses)
+    {
+        $busRegCollection = m::mock(CollectionInterface::class);
+        $matchedCollection = m::mock(CollectionInterface::class);
+        $matchedCollection->shouldReceive('isEmpty')->times()->andReturn($isEmpty);
+        $matchedCollection->shouldReceive('current')->times($isEmpty ? 0 : 1)->andReturn($expectedResult);
+
+        $busRegCollection->shouldReceive('matching')
+            ->once()
+            ->with(m::type(Criteria::class))->andReturnUsing(
+                function (Criteria $criteria) use ($matchedCollection, $expectedCriteria) {
+                    $this->assertEquals($expectedCriteria, $criteria);
+                    return $matchedCollection;
+                }
+            );
+
+        /** @var Entity|\Mockery\MockInterface $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getBusRegs')->andReturn($busRegCollection);
+        $this->assertEquals($expectedResult, $licence->getLatestBusVariation('1234567', $statuses));
+    }
+
+    /**
+     * Data provider for testGetLatestBusVariation
+     *
+     * @return array
+     */
+    public function getLatestBusVariationProvider()
+    {
+        $mockBusReg = m::mock(BusRegEntity::class);
+
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('regNo', '1234567'))
+            ->orderBy(array('variationNo' => Criteria::DESC))
+            ->setMaxResults(1);
+
+        $notInStatus = ['status'];
+        $criteriaWithStatus = clone $criteria;
+        $criteriaWithStatus->andWhere(Criteria::expr()->notIn('status', $notInStatus));
+
+        return [
+            [true, null, $criteria, []],
+            [false, $mockBusReg, $criteriaWithStatus, $notInStatus],
+            [true, null, $criteriaWithStatus, $notInStatus],
+            [false, $mockBusReg, $criteria, []]
         ];
     }
 }

@@ -649,17 +649,25 @@ class BusRegEntityTest extends EntityTester
         $this->assertEquals($busReg, $busRegSN->getBusReg());
     }
 
-    public function testCreateVariation()
+    /**
+     * @dataProvider createVariationProvider
+     *
+     * @param $statusId
+     * @param $variationNo
+     * @param $newVariationNo
+     * @param $latestVarTimes
+     * @return bool
+     */
+    public function testCreateVariation($statusId, $variationNo, $newVariationNo, $latestVarTimes)
     {
         $id = 15;
         $regNo = 12345;
-        $variationNo = 2;
 
         $status = new RefDataEntity();
-        $status->setId(Entity::STATUS_VAR);
+        $status->setId($statusId);
 
         $revertStatus = new RefDataEntity();
-        $revertStatus->setId(Entity::STATUS_VAR);
+        $revertStatus->setId($statusId);
 
         // the bus reg entity which exists on the licence
         $licenceBusReg = new Entity();
@@ -667,7 +675,10 @@ class BusRegEntityTest extends EntityTester
         $licenceBusReg->setVariationNo($variationNo);
 
         $licenceEntityMock = m::mock(LicenceEntity::class);
-        $licenceEntityMock->shouldReceive('getLatestBusVariation')->once()->with($regNo, [])->andReturn($licenceBusReg);
+        $licenceEntityMock->shouldReceive('getLatestBusVariation')
+            ->times($latestVarTimes)
+            ->with($regNo, [])
+            ->andReturn($licenceBusReg);
 
         $shortNotice = new BusShortNoticeEntity();
         $shortNotice->setId(100);
@@ -692,6 +703,7 @@ class BusRegEntityTest extends EntityTester
         $this->entity->addOtherServices($otherService2);
         $this->entity->setStatus(new RefDataEntity(Entity::STATUS_REGISTERED));
         $this->entity->setOlbsKey(123);
+        $this->entity->setVariationNo($variationNo);
 
         /** @var Entity $busReg */
         $busReg = $this->entity->createVariation($status, $revertStatus);
@@ -711,7 +723,7 @@ class BusRegEntityTest extends EntityTester
         $this->assertEquals($status, $busReg->getStatus());
         $this->assertInstanceOf(\DateTime::class, $busReg->getStatusChangeDate());
         $this->assertEquals($revertStatus, $busReg->getRevertStatus());
-        $this->assertEquals($variationNo + 1, $busReg->getVariationNo());
+        $this->assertEquals($newVariationNo, $busReg->getVariationNo());
 
         // test some short notice values
         $busRegSN = $busReg->getShortNotice();
@@ -732,6 +744,19 @@ class BusRegEntityTest extends EntityTester
         $this->assertEquals('otherService2', $busReg->getOtherServices()->last()->getServiceNo());
 
         return true;
+    }
+
+    /**
+     * Data provider for testCreateVariation
+     *
+     * @return array
+     */
+    public function createVariationProvider()
+    {
+        return [
+            [Entity::STATUS_VAR, 5, 6, 1],
+            [Entity::STATUS_CANCEL, 7, 7, 0],
+        ];
     }
 
     /**
