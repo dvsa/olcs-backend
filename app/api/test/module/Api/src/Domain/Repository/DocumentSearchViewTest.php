@@ -56,6 +56,7 @@ class DocumentSearchViewTest extends RepositoryTestCase
             'case' => 333,
             'irfoOrganisation' => 444,
             'showDocs' => 'OTHER',
+            'format' => 'FOO'
         ];
 
         $query = DocumentList::create($data);
@@ -72,6 +73,7 @@ class DocumentSearchViewTest extends RepositoryTestCase
         $expected = '{QUERY} AND m.isExternal = [[1]]' .
             ' AND m.category = 11' .
             ' AND m.documentSubCategory IN 22' .
+            ' AND m.extension = [[FOO]]' .
             ' AND (m.licenceId = :licence OR m.tmId = :tm OR m.caseId = :case' .
             ' OR m.irfoOrganisationId = :irfoOrganisation)';
 
@@ -112,5 +114,32 @@ class DocumentSearchViewTest extends RepositoryTestCase
             ')';
 
         $this->assertEquals($expected, $this->query);
+    }
+
+    public function testFetchDistinctListExtensions()
+    {
+        $mockQb = $this->createMockQb('{QUERY}');
+        $mockQb->shouldReceive('getQuery->getResult')->with(Query::HYDRATE_ARRAY)->once()->andReturn(
+            [
+                ['extension' => 'DOC'],
+                ['extension' => 'RTF'],
+                ['extension' => 'DOCX'],
+            ]
+        );
+
+        $this->mockCreateQueryBuilder($mockQb);
+
+        $data = [
+            'licence' => 111,
+        ];
+        $query = DocumentList::create($data);
+
+        $this->sut->shouldReceive('buildDefaultListQuery')->once();
+
+        $this->assertEquals(['DOC', 'RTF', 'DOCX'], $this->sut->fetchDistinctListExtensions($query));
+
+        $expected = '{QUERY} SELECT DISTINCT m.extension AND (m.licenceId = :licence)';
+        $this->assertEquals($expected, $this->query);
+
     }
 }

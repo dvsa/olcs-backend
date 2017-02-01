@@ -43,6 +43,7 @@ class DocumentSearchViewTest extends \PHPUnit_Framework_TestCase
             'agreedDate' => 'unit_agreedDate',
             'targetDate' => 'unit_targetDate',
             'sentDate' => 'unit_sentDate',
+            'extension' => 'unit_extension',
         ];
         $this->sut = new DocumentSearchView();
     }
