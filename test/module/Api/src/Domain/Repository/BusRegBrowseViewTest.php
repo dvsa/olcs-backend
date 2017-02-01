@@ -2,8 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Mockery as m;
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Repository\BusRegBrowseView as Repo;
+use Dvsa\Olcs\Transfer\Query\Bus\BusRegBrowseList as BusRegBrowseListQuery;
+use Mockery as m;
 
 /**
  * BusRegSearchViewTest
@@ -48,7 +50,7 @@ class BusRegBrowseViewTest extends RepositoryTestCase
 
         $results = $this->sut->fetchForExport(
             ['FIELD1', 'FIELD2'],
-            'DATE',
+            '2017-2-1',
             ['TA1', 'TA2'],
             'STATUS'
         );
@@ -56,7 +58,7 @@ class BusRegBrowseViewTest extends RepositoryTestCase
 
         $expectedQuery
             = 'BLAH SELECT m.FIELD1, m.FIELD2 '
-            . 'AND m.acceptedDate = [[DATE]] '
+            . 'AND m.acceptedDate = [[2017-02-01]] '
             . 'AND m.trafficAreaId IN [[["TA1","TA2"]]] '
             . 'AND m.status = [[STATUS]]';
         $this->assertEquals($expectedQuery, $this->query);
@@ -77,15 +79,45 @@ class BusRegBrowseViewTest extends RepositoryTestCase
 
         $results = $this->sut->fetchForExport(
             ['FIELD1'],
-            'DATE',
+            '2017-02-01',
             ['TA1']
         );
         $this->assertEquals(['RESULTS'], $results);
 
         $expectedQuery
             = 'BLAH SELECT m.FIELD1 '
-            . 'AND m.acceptedDate = [[DATE]] '
+            . 'AND m.acceptedDate = [[2017-02-01]] '
             . 'AND m.trafficAreaId IN [[["TA1"]]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchList()
+    {
+        $this->setUpSut(Repo::class, true);
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
+
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf();
+
+        $query = BusRegBrowseListQuery::create(
+            [
+                'trafficAreas' => ['TA1', 'TA2'],
+                'status' => 'STATUS',
+                'acceptedDate' => '2017-02-01',
+            ]
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
+
+        $expectedQuery
+            = 'BLAH '
+            . 'AND m.acceptedDate = [[2017-02-01]] '
+            . 'AND m.trafficAreaId IN [[["TA1","TA2"]]] '
+            . 'AND m.status = [[STATUS]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 }

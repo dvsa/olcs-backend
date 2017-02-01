@@ -359,6 +359,7 @@ return [
         QueryHandler\Bus\BusRegBrowseContextList::class,
     TransferQuery\Bus\BusRegBrowseExport::class =>
         QueryHandler\Bus\BusRegBrowseExport::class,
+    TransferQuery\Bus\BusRegBrowseList::class => QueryHandler\Bus\BusRegBrowseList::class,
 
     // Fee
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
