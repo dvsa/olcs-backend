@@ -246,6 +246,15 @@ class DocumentSearchView implements BundleSerializableInterface
     protected $sentDate;
 
     /**
+     * Format (ie file extension)
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="extension")
+     */
+    protected $extension;
+
+    /**
      * Get the id
      *
      * @return int
@@ -517,5 +526,15 @@ class DocumentSearchView implements BundleSerializableInterface
     public function getSentDate()
     {
         return $this->sentDate;
+    }
+
+    /**
+     * Get the extension of the file
+     *
+     * @return string
+     */
+    public function getExtension()
+    {
+        return $this->extension;
     }
 }

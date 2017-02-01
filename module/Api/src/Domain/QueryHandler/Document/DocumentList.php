@@ -31,6 +31,7 @@ class DocumentList extends AbstractQueryHandler
         unset($data['documentSubCategory']);
         unset($data['isExternal']);
         unset($data['showDocs']);
+        unset($data['format']);
 
         $unfilteredQuery = \Dvsa\Olcs\Transfer\Query\Document\DocumentList::create($data);
 
@@ -43,6 +44,7 @@ class DocumentList extends AbstractQueryHandler
             ),
             'count' => $repo->fetchCount($query),
             'count-unfiltered' => $repo->hasRows($unfilteredQuery),
+            'extensionList' => $repo->fetchDistinctListExtensions($unfilteredQuery),
         ];
     }
 }

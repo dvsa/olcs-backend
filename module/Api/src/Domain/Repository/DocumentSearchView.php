@@ -26,6 +26,35 @@ class DocumentSearchView extends AbstractReadonlyRepository
     protected $entity = Entity::class;
 
     /**
+     * Get a distinct list of file extensions
+     *
+     * @param QueryInterface $query Query from DocumentList
+     *
+     * @return array
+     */
+    public function fetchDistinctListExtensions(QueryInterface $query)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->select('DISTINCT m.extension');
+
+        $this->buildDefaultListQuery($qb, $query);
+        $this->applyListJoins($qb);
+        $this->applyListFilters($qb, $query);
+
+        $result = $qb->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        // flatten the array and remove blanks
+        $list = [];
+        foreach ($result as $row) {
+            if (!empty($row['extension'])) {
+                $list[] = $row['extension'];
+            }
+        }
+
+        return $list;
+    }
+
+    /**
      * Apply filters 
      *
      * @param QueryBuilder                      $qb    Query Builder
@@ -52,6 +81,13 @@ class DocumentSearchView extends AbstractReadonlyRepository
             $qb->andWhere(
                 $qb->expr()->in('m.documentSubCategory', $query->getDocumentSubCategory())
             );
+        }
+
+        if (!empty($query->getFormat())) {
+            $qb->andWhere(
+                $qb->expr()->eq('m.extension', ':extension')
+            );
+            $qb->setParameter('extension', $query->getFormat());
         }
 
         //  check if should show only items related to current object
