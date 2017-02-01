@@ -28,11 +28,16 @@ class BusRegBrowseViewTest extends \PHPUnit_Framework_TestCase
             'licStatus' => 'lic status',
             'regNo' => 'reg no',
             'brStatus' => 'bus reg status',
+            'busServiceType' => 'bus service type',
             'variationNo' => 1,
             'receivedDate' => '2015-01-01',
             'effectiveDate' => '2015-01-02',
             'endDate' => '2015-01-03',
             'serviceNo' => 'service no',
+            'isShortNotice' => true,
+            'startPoint' => 'start point',
+            'finishPoint' => 'finish point',
+            'via' => 'via',
             'otherDetails' => 'other details',
             'acceptedDate' => '2015-01-04',
             'eventDescription' => 'event description',
@@ -52,7 +57,7 @@ class BusRegBrowseViewTest extends \PHPUnit_Framework_TestCase
     public function testGetters()
     {
         foreach ($this->testData as $property => $value) {
-            $getter = 'get'.ucfirst($property);
+            $getter = ($property === 'isShortNotice') ? $property : 'get'.ucfirst($property);
             $this->assertEquals($value, $this->entity->$getter());
         }
     }
