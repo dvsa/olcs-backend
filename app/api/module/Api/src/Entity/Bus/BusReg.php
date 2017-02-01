@@ -53,6 +53,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     const STATUS_WITHDRAWN = 'breg_s_withdrawn';
     const STATUS_CNS = 'breg_s_cns';
     const STATUS_CANCELLED = 'breg_s_cancelled';
+    const STATUS_EXPIRED = 'breg_s_expired';
 
     const SUBSIDY_NO = 'bs_no';
 
@@ -62,11 +63,6 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     const TXC_APP_NON_CHARGEABLE = 'nonChargeableChange';
 
     const FORBIDDEN_ERROR = 'This bus reg can\'t be edited. It must be the latest variation, and not from EBSR';
-
-    public static $ebsrExistingRecordExcluded = [
-        self::STATUS_REFUSED,
-        self::STATUS_WITHDRAWN
-    ];
 
     /**
      * Statuses to be included in a registration history list
@@ -265,9 +261,15 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         $busReg->setStatusChangeDate(new \DateTime);
         $busReg->setRevertStatus($revertStatus);
 
-        // get the latest variation no for the reg no and increment it
-        $newVariationNo
-            = (int)$busReg->getLicence()->getLatestBusVariation($busReg->getRegNo(), [])->getVariationNo() + 1;
+        //for cancellations, the variation number is the same as previously, this is our default
+        $newVariationNo = $this->variationNo;
+
+        // for variations, we instead get the latest variation no for the reg no and increment it
+        if ($status->getId() === self::STATUS_VAR) {
+            $latestVariation = $busReg->getLicence()->getLatestBusVariation($busReg->getRegNo(), []);
+            $newVariationNo = (int)$latestVariation->getVariationNo() + 1;
+        }
+
         $busReg->setVariationNo($newVariationNo);
 
         // set default short notice
