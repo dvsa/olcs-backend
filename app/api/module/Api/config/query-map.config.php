@@ -112,6 +112,7 @@ return [
     TransferQuery\Licence\GetList::class => QueryHandler\Licence\GetList::class,
     TransferQuery\Licence\OperatingCentres::class => QueryHandler\Licence\OperatingCentres::class,
     TransferQuery\Licence\PsvVehicles::class => QueryHandler\Licence\PsvVehicles::class,
+    TransferQuery\Licence\PsvVehiclesExport::class => QueryHandler\Licence\PsvVehiclesExport::class,
     TransferQuery\Licence\Exists::class => QueryHandler\Licence\Exists::class,
     Query\Licence\ContinuationNotSoughtList::class => QueryHandler\Licence\ContinuationNotSoughtList::class,
 
