@@ -25,7 +25,7 @@ class DocumentListTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
-        $query = Qry::create([]);
+        $query = Qry::create(['format' => 'FOO']);
 
         $mockDocument = m::mock(BundleSerializableInterface::class)
             ->shouldReceive('serialize')
@@ -42,16 +42,19 @@ class DocumentListTest extends QueryHandlerTestCase
                     static::assertEquals([], $query->getDocumentSubCategory());
                     static::assertNull($query->getIsExternal());
                     static::assertNull($query->getShowDocs());
+                    static::assertNull($query->getFormat());
 
                     return 999;
                 }
-            );
+            )
+            ->shouldReceive('fetchDistinctListExtensions')->once()->andReturn(['RTF', 'DOCX']);
 
         $this->assertEquals(
             [
                 'result' => [['foo' => 'bar']],
                 'count' => 888,
                 'count-unfiltered' => 999,
+                'extensionList' => ['RTF', 'DOCX']
             ],
             $this->sut->handleQuery($query)
         );
