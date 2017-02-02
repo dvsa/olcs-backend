@@ -1,16 +1,10 @@
 <?php
 
-/**
- * Psv Vehicles Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Licence\PsvVehicles;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Domain\Service\PsvVehicles\PsvVehiclesQueryHelper;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query\Licence\PsvVehicles as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -29,7 +23,6 @@ class PsvVehiclesTest extends QueryHandlerTestCase
         $this->sut = new PsvVehicles();
         $this->mockRepo('Licence', Repository\Licence::class);
         $this->mockRepo('LicenceVehicle', Repository\LicenceVehicle::class);
-        $this->mockedSmServices['PsvVehiclesQueryHelper'] = m::mock(PsvVehiclesQueryHelper::class);
 
         parent::setUp();
     }
@@ -85,55 +78,12 @@ class PsvVehiclesTest extends QueryHandlerTestCase
             ->with($mockQb)
             ->once();
 
-        $flags = [
-            'showSmallTable' => true,
-            'showMediumTable' => true,
-            'showLargeTable' => true,
-            'smallAuthExceeded' => true,
-            'mediumAuthExceeded' => true,
-            'largeAuthExceeded' => true,
-            'availableSmallSpaces' => 9,
-            'availableMediumSpaces' => 8,
-            'availableLargeSpaces' => 7,
-            'small' => [
-                ['type' => 'small']
-            ],
-            'medium' => [
-                ['type' => 'medium']
-            ],
-            'large' => [
-                ['type' => 'large']
-            ],
-        ];
-
-        $this->mockedSmServices['PsvVehiclesQueryHelper']->shouldReceive('getCommonQueryFlags')
-            ->with($licence, $query)
-            ->andReturn($flags);
-
         $result = $this->sut->handleQuery($query);
 
         $data = $result->serialize();
 
         $expected = [
             'foo' => 'bar',
-            'showSmallTable' => true,
-            'showMediumTable' => true,
-            'showLargeTable' => true,
-            'smallAuthExceeded' => true,
-            'mediumAuthExceeded' => true,
-            'largeAuthExceeded' => true,
-            'availableSmallSpaces' => 9,
-            'availableMediumSpaces' => 8,
-            'availableLargeSpaces' => 7,
-            'small' => [
-                ['type' => 'small']
-            ],
-            'medium' => [
-                ['type' => 'medium']
-            ],
-            'large' => [
-                ['type' => 'large']
-            ],
             'canTransfer' => false,
             'hasBreakdown' => false,
             'licenceVehicles' => ['results' => [['foo' => 'bar']], 'count' => 1],
