@@ -473,4 +473,30 @@ class LicenceVehicle extends AbstractRepository
 
         return $qb->getQuery()->iterate();
     }
+
+    /**
+     * Fetch psv vehicles by licence id
+     *
+     * @param int  $licenceId      licence id
+     * @param bool $includeRemoved include removed
+     *
+     * @return array
+     */
+    public function fetchPsvVehiclesByLicenceId($licenceId, $includeRemoved = false)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->innerJoin('m.vehicle', 'v')
+            ->select('v.vrm, v.makeModel, m.specifiedDate, m.removalDate')
+            ->orderBy('m.specifiedDate', 'ASC')
+            ->andWhere($qb->expr()->isNotNull('m.specifiedDate'))
+            ->andWhere($qb->expr()->eq('m.licence', ':licence'))
+            ->setParameter('licence', $licenceId);
+
+        if (!$includeRemoved) {
+            $qb->andWhere($qb->expr()->isNull('m.removalDate'));
+        }
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
 }

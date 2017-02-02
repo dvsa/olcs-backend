@@ -1,16 +1,10 @@
 <?php
 
-/**
- * Psv Vehicles Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Variation;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Variation\PsvVehicles;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Domain\Service\PsvVehicles\PsvVehiclesQueryHelper;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query\Variation\PsvVehicles as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -29,7 +23,6 @@ class PsvVehiclesTest extends QueryHandlerTestCase
         $this->sut = new PsvVehicles();
         $this->mockRepo('Application', Repository\Application::class);
         $this->mockRepo('LicenceVehicle', Repository\LicenceVehicle::class);
-        $this->mockedSmServices['PsvVehiclesQueryHelper'] = m::mock(PsvVehiclesQueryHelper::class)->makePartial();
 
         parent::setUp();
     }
@@ -74,27 +67,6 @@ class PsvVehiclesTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($application);
 
-        $flags = [
-            'showSmallTable' => true,
-            'showMediumTable' => true,
-            'showLargeTable' => true,
-            'smallAuthExceeded' => true,
-            'mediumAuthExceeded' => true,
-            'largeAuthExceeded' => true,
-            'availableSmallSpaces' => 9,
-            'availableMediumSpaces' => 8,
-            'availableLargeSpaces' => 7,
-            'small' => [
-                ['type' => 'small']
-            ],
-            'medium' => [
-                ['type' => 'medium']
-            ],
-            'large' => [
-                ['type' => 'large']
-            ],
-        ];
-
         $mockList = m::mock()
             ->shouldReceive('serialize')
             ->andReturn(['foo' => 'bar'])
@@ -120,34 +92,12 @@ class PsvVehiclesTest extends QueryHandlerTestCase
             ->once()
             ->getMock();
 
-        $this->mockedSmServices['PsvVehiclesQueryHelper']->shouldReceive('getCommonQueryFlags')
-            ->with($application, $query)
-            ->andReturn($flags);
-
         $result = $this->sut->handleQuery($query);
 
         $data = $result->serialize();
 
         $expected = [
             'foo' => 'bar',
-            'showSmallTable' => true,
-            'showMediumTable' => true,
-            'showLargeTable' => true,
-            'smallAuthExceeded' => true,
-            'mediumAuthExceeded' => true,
-            'largeAuthExceeded' => true,
-            'availableSmallSpaces' => 9,
-            'availableMediumSpaces' => 8,
-            'availableLargeSpaces' => 7,
-            'small' => [
-                ['type' => 'small']
-            ],
-            'medium' => [
-                ['type' => 'medium']
-            ],
-            'large' => [
-                ['type' => 'large']
-            ],
             'canTransfer' => false,
             'hasBreakdown' => false,
             'licenceVehicles' => ['results' => [['foo' => 'bar']], 'count' => 1],
