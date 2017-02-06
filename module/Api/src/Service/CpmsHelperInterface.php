@@ -23,6 +23,7 @@ interface CpmsHelperInterface
     const PAYMENT_FAILURE      = 802;
     const PAYMENT_CANCELLATION = 807;
     const PAYMENT_REFUNDED     = 809;
+    const PAYMENT_REFUND_REQUESTED = 822;
     const PAYMENT_GATEWAY_ERROR = 810;
     const PAYMENT_PAYMENT_CHARGED_BACK = 820;
     const PAYMENT_AWAITING_GATEWAY_URL = 824;
