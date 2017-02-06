@@ -1,27 +1,31 @@
 <?php
 
-/**
- * Create SubmissionSectionComment Test
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\CreateSubmissionSectionComment;
-use Dvsa\Olcs\Api\Domain\Repository\SubmissionSectionComment;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
 use Dvsa\Olcs\Api\Entity\Submission\SubmissionSectionComment as SubmissionSectionCommentEntity;
 use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
- * Create SubmissionSectionComment Test
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Submission\CreateSubmissionSectionComment
  */
 class CreateSubmissionSectionCommentTest extends CommandHandlerTestCase
 {
+    const COMMENT_ID = 9999;
+
+    /** @var CreateSubmissionSectionComment */
+    protected $sut;
+
     public function setUp()
     {
         $this->sut = new CreateSubmissionSectionComment();
-        $this->mockRepo('SubmissionSectionComment', SubmissionSectionComment::class);
+
+        $this->mockRepo('SubmissionSectionComment', Repository\SubmissionSectionComment::class);
 
         parent::setUp();
     }
@@ -41,6 +45,20 @@ class CreateSubmissionSectionCommentTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
+    public function testHandleCommandAlreadyExists()
+    {
+        $this->setExpectedException(
+            ValidationException::class, CreateSubmissionSectionComment::ERR_COMMENT_EXISTS
+        );
+
+        $cmd = Cmd::create([]);
+
+        $this->repoMap['SubmissionSectionComment']
+            ->shouldReceive('isExist')->once()->with($cmd)->andReturn(true);
+
+        $this->sut->handleCommand($cmd);
+    }
+
     public function testHandleCommand()
     {
         $data = [
@@ -54,14 +72,16 @@ class CreateSubmissionSectionCommentTest extends CommandHandlerTestCase
         /** @var SubmissionSectionCommentEntity $savedSubmissionSectionComment */
         $savedSubmissionSectionComment = null;
 
-        $this->repoMap['SubmissionSectionComment']->shouldReceive('save')
+        $this->repoMap['SubmissionSectionComment']
+            ->shouldReceive('isExist')->once()->with($command)->andReturn(false)
+            ->shouldReceive('save')
             ->once()
             ->with(m::type(SubmissionSectionCommentEntity::class))
             ->andReturnUsing(
                 function (
                     SubmissionSectionCommentEntity $submissionSectionComment
                 ) use (&$savedSubmissionSectionComment) {
-                    $submissionSectionComment->setId(111);
+                    $submissionSectionComment->setId(self::COMMENT_ID);
                     $savedSubmissionSectionComment = $submissionSectionComment;
                 }
             );
@@ -70,7 +90,7 @@ class CreateSubmissionSectionCommentTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'submissionSectionComment' => 111,
+                'submissionSectionComment' => self::COMMENT_ID,
                 'submissionSection' => 'case-summary'
             ],
             'messages' => [
