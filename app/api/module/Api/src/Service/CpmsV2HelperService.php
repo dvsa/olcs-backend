@@ -428,13 +428,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     {
         $params = [
             'filters' => [
-                /*
-                @todo uncomment when actual version of CPMS 3.1.29 will be deployed
                 'scheme' => [
                     $this->schemaId,
                     $this->niSchemaId
                 ],
-                */
             ]
         ];
         return $this->send('get', '/api/report', ApiService::SCOPE_REPORT, $params);
@@ -474,13 +471,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'filters' => [
                 'from' => $this->formatDateTime($start),
                 'to' => $this->formatDateTime($end),
-                /*
-                @todo uncomment when actual version of CPMS 3.1.29 will be deployed
                 'scheme' => [
                     $this->schemaId,
                     $this->niSchemaId
                 ],
-                */
             ],
         ];
 
@@ -498,13 +492,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $endPoint = '/api/report/'.$reference.'/status';
         $params = [
             'filters' => [
-                /*
-                @todo uncomment when actual version of CPMS 3.1.29 will be deployed
                 'scheme' => [
                     $this->schemaId,
                     $this->niSchemaId
                 ],
-                */
             ]
         ];
 
@@ -523,13 +514,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $url = '/api/report/'.$reference.'/download?token='.$token;
         $params = [
             'filters' => [
-                /*
-                @todo uncomment when actual version of CPMS 3.1.29 will be deployed
                 'scheme' => [
                     $this->schemaId,
                     $this->niSchemaId
                 ],
-                */
             ]
         ];
 
