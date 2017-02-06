@@ -595,7 +595,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             self::PAYMENT_REFUNDED,
             self::PAYMENT_REFUND_REQUESTED
         ];
-        if (in_array(isset($response['code']) && $response['code'], $refundSuccessStatuses)) {
+        if (isset($response['code']) && in_array($response['code'], $refundSuccessStatuses)) {
             return [$ft->getTransaction()->getReference() => $response['receipt_reference']];
         } else {
             $statusCode = $this->getCpmsHttpStatusCode();
