@@ -80,6 +80,20 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     }
 
     /**
+     * Loop through a fee's payment records and check if any are outstanding that are not waives
+     */
+    public function hasOutstandingPaymentExcludeWaive()
+    {
+        foreach ($this->getFeeTransactions() as $fp) {
+            $transaction = $fp->getTransaction();
+            if ($transaction->isOutstanding() && $transaction->getType()->getId() !== Transaction::TYPE_WAIVE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Determine 'rule start date' for a fee
      *
      * @see https://jira.i-env.net/browse/OLCS-6005 for business rules
