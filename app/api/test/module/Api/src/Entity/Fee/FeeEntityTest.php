@@ -95,6 +95,71 @@ class FeeEntityTest extends EntityTester
     }
 
     /**
+     * @param ArrayCollection $feeTransactions
+     * @param boolean         $expected
+     *
+     * @dataProvider outstandingPaymentWithWaivesProvider
+     */
+    public function testHadOutstandingPaymentExcludeWaive($feeTransactions, $expected)
+    {
+        $this->sut->setFeeTransactions($feeTransactions);
+
+        $this->assertEquals($expected, $this->sut->hasOutstandingPaymentExcludeWaive());
+    }
+
+    public function outstandingPaymentWithWaivesProvider()
+    {
+        return [
+            'no fee payments' => [
+                [],
+                false,
+            ],
+            'outstanding no waives' => [
+                [
+                    m::mock()
+                        ->shouldReceive('getTransaction')
+                        ->andReturn(
+                            m::mock()
+                                ->shouldReceive('isOutstanding')
+                                ->andReturn(true)
+                                ->shouldReceive('getType')
+                                ->andReturn(
+                                    m::mock()
+                                        ->shouldReceive('getId')
+                                        ->andReturn(Transaction::TYPE_PAYMENT)
+                                        ->getMock()
+                                )
+                                ->getMock()
+                        )
+                        ->getMock()
+                ],
+                true,
+            ],
+            'outstanding with waives' => [
+                [
+                    m::mock()
+                        ->shouldReceive('getTransaction')
+                        ->andReturn(
+                            m::mock()
+                                ->shouldReceive('isOutstanding')
+                                ->andReturn(true)
+                                ->shouldReceive('getType')
+                                ->andReturn(
+                                    m::mock()
+                                        ->shouldReceive('getId')
+                                        ->andReturn(Transaction::TYPE_WAIVE)
+                                        ->getMock()
+                                )
+                                ->getMock()
+                        )
+                        ->getMock()
+                ],
+                false,
+            ]
+        ];
+    }
+
+    /**
      * @param string $accrualRuleId,
      * @param Licence $licence
      * @param DateTime $expected

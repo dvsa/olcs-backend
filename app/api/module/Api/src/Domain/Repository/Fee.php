@@ -255,6 +255,34 @@ class Fee extends AbstractRepository
     }
 
     /**
+     * Fetch fees by IDs
+     *
+     * @param array $ids List of Fees identifiers
+     *
+     * @return array
+     */
+    public function fetchFeesByIds($ids)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($doctrineQb)
+            ->withRefdata()
+            ->with('licence')
+            ->with('application')
+            ->with('feeTransactions', 'ft')
+            ->with('ft.transaction', 't')
+            ->with('t.status')
+            ->order('invoicedDate', 'ASC');
+
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->in($this->alias . '.id', ':feeIds'))
+            ->setParameter('feeIds', $ids);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
      * Fetch fees by irfoGvPermitId
      *
      * @param int $irfoGvPermitId Irfo Gv Permit Id
