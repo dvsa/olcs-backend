@@ -1,16 +1,10 @@
 <?php
 
-/**
- * Pay Outstanding Fees
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Transaction;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as CreateFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateOverpaymentFee as CreateOverpaymentFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -26,7 +20,6 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
@@ -49,6 +42,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     CpmsAwareInterface
 {
     use AuthAwareTrait, CpmsAwareTrait;
+
+    const ERR_WAIT = 'ERR_WAIT';
+
+    const ERR_NO_FEES = 'ERR_NO_FEES';
 
     /**
      * @var \Dvsa\Olcs\Api\Service\FeesHelperService
@@ -92,8 +89,25 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         // filter out fees that may have been paid by resolving outstanding payments
         $feesToPay = $this->resolvePaidFees($fees);
 
+        // reload all not paid fees to update transaction statuses after resolving
+        if (count($feesToPay) !== 0) {
+            $feesToPay = $this->reloadFees($feesToPay);
+        }
+
         if (empty($feesToPay)) {
-            $this->result->addMessage('No fees to pay');
+            $this->result->addMessage(
+                [self::ERR_NO_FEES => 'The fee(s) has already been paid']
+            );
+            return $this->result;
+        }
+
+        if ($this->feesHasOutstandingTransactions($feesToPay)) {
+            $this->result->addMessage(
+                [
+                    self::ERR_WAIT =>
+                        'Error attempting to resolve a previous payment. Please wait 15 minutes and try again'
+                ]
+            );
             return $this->result;
         }
 
@@ -112,6 +126,39 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                 $e
             );
         }
+    }
+
+    /**
+     * If any of fees has outstanding transaction
+     *
+     * @param array $fees fees
+     *
+     * @return bool
+     */
+    protected function feesHasOutstandingTransactions($fees)
+    {
+        foreach ($fees as $fee) {
+            if ($fee->hasOutstandingPaymentExcludeWaive()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Reload fees
+     *
+     * @param array $fees fees
+     *
+     * @return array
+     */
+    protected function reloadFees($fees)
+    {
+        $ids = [];
+        foreach ($fees as $fee) {
+            $ids[] = $fee->getId();
+        }
+        return $this->getRepo('Fee')->fetchFeesByIds($ids);
     }
 
     /**
@@ -373,7 +420,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      */
     protected function resolveOutstandingPayments($fee)
     {
-        $paid = false;
+        $paid = true;
 
         foreach ($fee->getFeeTransactions() as $ft) {
             if ($ft->getTransaction()->isOutstanding()) {
@@ -391,9 +438,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
 
                 // check payment status
                 $transaction = $this->getRepo()->fetchById($transactionId);
-
-                if ($transaction->isPaid()) {
-                    $paid = true;
+                if (!$transaction->isPaid()) {
+                    $paid = false;
                 }
             }
         }
@@ -418,7 +464,12 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                     $feesToPay[] = $fee;
                 }
             } else {
-                $feesToPay[] = $fee;
+                // need to reload fee everytime, because transaction status for the current fee
+                // can be changed during another fee processing
+                $feeToTest = $this->getRepo('Fee')->fetchById($fee->getId());
+                if ($feeToTest->getFeeStatus()->getId() !== FeeEntity::STATUS_PAID) {
+                    $feesToPay[] = $feeToTest;
+                }
             }
         }
         return $feesToPay;
