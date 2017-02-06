@@ -911,4 +911,35 @@ class FeeTest extends RepositoryTestCase
             $this->sut->fetchFeeByTypeAndApplicationId($feeType, $applicationId)
         );
     }
+
+    public function testFetchFeesByIds()
+    {
+        $ids = [1, 2, 3];
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('f')
+            ->once()
+            ->andReturn($mockQb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->once()->with($mockQb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('licence')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('application')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('feeTransactions', 'ft')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ft.transaction', 't')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('t.status')->once()->andReturnSelf()
+            ->shouldReceive('order')->with('invoicedDate', 'ASC')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->in')->with('f.id', ':feeIds')->once()->andReturn('IN');
+        $mockQb->shouldReceive('andWhere')->with('IN')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('feeIds', $ids)->andReturnSelf();
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('result');
+
+        $this->assertSame('result', $this->sut->fetchFeesByIds($ids));
+    }
 }

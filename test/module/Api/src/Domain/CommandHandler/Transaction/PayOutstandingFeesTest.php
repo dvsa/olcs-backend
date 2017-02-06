@@ -166,7 +166,19 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->shouldReceive('fetchOutstandingFeesByOrganisationId')
             ->once()
             ->with($organisationId)
-            ->andReturn($fees);
+            ->andReturn($fees)
+            ->shouldReceive('fetchFeesByIds')
+            ->with([99, 101])
+            ->andReturn($fees)
+            ->once()
+            ->shouldReceive('fetchById')
+            ->with(99)
+            ->andReturn($fees[0])
+            ->once()
+            ->shouldReceive('fetchById')
+            ->with(101)
+            ->andReturn($fees[1])
+            ->once();
 
         $this->mockCpmsService
             ->shouldReceive('initiateCardRequest')
@@ -237,7 +249,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                'No fees to pay',
+                ['ERR_NO_FEES' => 'The fee(s) has already been paid'],
             ]
         ];
 
@@ -394,7 +406,19 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
             ->with($feeIds)
-            ->andReturn($fees);
+            ->andReturn($fees)
+            ->shouldReceive('fetchFeesByIds')
+            ->once()
+            ->with([99, 101])
+            ->andReturn($fees)
+            ->shouldReceive('fetchById')
+            ->with(99)
+            ->andReturn($fees[0])
+            ->once()
+            ->shouldReceive('fetchById')
+            ->with(101)
+            ->andReturn($fees[1])
+            ->once();
 
         $this->mockCpmsService
             ->shouldReceive('initiateCnpRequest')
@@ -468,7 +492,19 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
             ->with($feeIds)
-            ->andReturn($fees);
+            ->andReturn($fees)
+            ->shouldReceive('fetchFeesByIds')
+            ->once()
+            ->with([99, 101])
+            ->andReturn($fees)
+            ->shouldReceive('fetchById')
+            ->with(99)
+            ->andReturn($fees[0])
+            ->once()
+            ->shouldReceive('fetchById')
+            ->with(101)
+            ->andReturn($fees[1])
+            ->once();
 
         $this->mockCpmsService
             ->shouldReceive('initiateStoredCardRequest')
@@ -542,6 +578,20 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->once()
             ->with($applicationId)
             ->andReturn($fees);
+
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchFeesByIds')
+            ->once()
+            ->with([99, 101])
+            ->andReturn($fees)
+            ->shouldReceive('fetchById')
+            ->with(99)
+            ->andReturn($fees[0])
+            ->once()
+            ->shouldReceive('fetchById')
+            ->with(101)
+            ->andReturn($fees[1])
+            ->once();
 
         $this->mockCpmsService
             ->shouldReceive('initiateCardRequest')
@@ -625,7 +675,15 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
             ->with($feeIds)
-            ->andReturn([$fee1]);
+            ->andReturn([$fee1])
+            ->shouldReceive('fetchFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn([$fee1])
+            ->shouldReceive('fetchById')
+            ->with(99)
+            ->andReturn($fee1)
+            ->once();
 
         // overpayment balancing fee should be created
         //////////////////////////////////////////////////////////////////////
@@ -781,7 +839,15 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
             ->with($feeIds)
-            ->andReturn($fees);
+            ->andReturn($fees)
+            ->shouldReceive('fetchFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees)
+            ->shouldReceive('fetchById')
+            ->with(99)
+            ->andReturn($fee1)
+            ->once();
 
         $this->mockCpmsService
             ->shouldReceive('recordChequePayment')
@@ -904,7 +970,15 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
             ->with($feeIds)
-            ->andReturn($fees);
+            ->andReturn($fees)
+            ->shouldReceive('fetchFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees)
+            ->shouldReceive('fetchById')
+            ->with(99)
+            ->andReturn($fee1)
+            ->once();
 
         $this->mockCpmsService
             ->shouldReceive('recordPostalOrderPayment')
@@ -1015,7 +1089,15 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
             ->with($feeIds)
-            ->andReturn($fees);
+            ->andReturn($fees)
+            ->shouldReceive('fetchFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees)
+            ->shouldReceive('fetchById')
+            ->with(99)
+            ->andReturn($fee1)
+            ->once();
 
         $this->mockCpmsService
             ->shouldReceive('recordCashPayment')
@@ -1058,7 +1140,15 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
             ->with($feeIds)
-            ->andReturn($fees);
+            ->andReturn($fees)
+            ->shouldReceive('fetchFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees)
+            ->shouldReceive('fetchById')
+            ->with(99)
+            ->andReturn($fee1)
+            ->once();
 
         $this->mockCpmsService
             ->shouldReceive('recordCashPayment')
@@ -1111,7 +1201,15 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
             ->with($feeIds)
-            ->andReturn($fees);
+            ->andReturn($fees)
+            ->shouldReceive('fetchFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees)
+            ->shouldReceive('fetchById')
+            ->with(99)
+            ->andReturn($fee1)
+            ->once();
 
         $this->mockFeesHelperService
             ->shouldReceive('allocatePayments')
@@ -1219,7 +1317,15 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
             ->with($feeIds)
-            ->andReturn($fees);
+            ->andReturn($fees)
+            ->shouldReceive('fetchFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees)
+            ->shouldReceive('fetchById')
+            ->with(99)
+            ->andReturn($fee1)
+            ->once();
 
         $this->mockCpmsService
             ->shouldReceive('recordChequePayment')
@@ -1414,6 +1520,10 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
             ->with($feeIds)
+            ->andReturn($fees)
+            ->shouldReceive('fetchFeesByIds')
+            ->once()
+            ->with($feeIds)
             ->andReturn($fees);
 
         $this->mockCpmsService
@@ -1497,7 +1607,19 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
             ->with($feeIds)
-            ->andReturn($fees);
+            ->andReturn($fees)
+            ->shouldReceive('fetchFeesByIds')
+            ->once()
+            ->with([99, 100])
+            ->andReturn($fees)
+            ->shouldReceive('fetchById')
+            ->with(99)
+            ->andReturn($fee1)
+            ->once()
+            ->shouldReceive('fetchById')
+            ->with(100)
+            ->andReturn($fee2)
+            ->once();
 
         $this->mockFeesHelperService
             ->shouldReceive('getMinPaymentForFees')
@@ -1541,5 +1663,164 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $fee->setId($id);
 
         return $fee;
+    }
+
+    public function testHandleCommandWithPendingFees()
+    {
+        // set up data
+        $feeIds = [99];
+        $transactionId = 10;
+
+        $transaction = m::mock()
+            ->shouldReceive('isOutstanding')
+            ->andReturn(true)
+            ->once()
+            ->shouldReceive('getId')
+            ->andReturn($transactionId)
+            ->once()
+            ->shouldReceive('getPaymentMethod')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(1)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->shouldReceive('isPaid')
+            ->andReturn(false)
+            ->once()
+            ->getMock();
+
+        $feeTransaction = m::mock()
+            ->shouldReceive('getTransaction')
+            ->andReturn($transaction)
+            ->getMock();
+
+        $this->expectedSideEffect(
+            ResolvePaymentCommand::class,
+            ['id' => $transactionId, 'paymentMethod' => 1],
+            new Result()
+        );
+
+        $feeTransactions = new ArrayCollection();
+        $feeTransactions->add($feeTransaction);
+
+        $fee = m::mock(FeeEntity::class)
+            ->shouldReceive('hasOutstandingPayment')
+            ->andReturn(true)
+            ->once()
+            ->shouldReceive('hasOutstandingPaymentExcludeWaive')
+            ->andReturn(true)
+            ->once()
+            ->shouldReceive('getFeeTransactions')
+            ->andReturn($feeTransactions)
+            ->once()
+            ->shouldReceive('getId')
+            ->andReturn(99)
+            ->once()
+            ->getMock();
+
+        $fees = [$fee];
+
+        $this->repoMap['Transaction']
+            ->shouldReceive('fetchById')
+            ->with($transactionId)
+            ->andReturn($transaction)
+            ->getMock();
+
+        $data = [
+            'feeIds' => $feeIds,
+            'paymentMethod' => FeeEntity::METHOD_CARD_OFFLINE,
+            'customerName' => 'foo',
+            'customerReference' => 'bar',
+            'address' => 'cake',
+        ];
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees)
+            ->shouldReceive('fetchFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                [
+                    'ERR_WAIT' => 'Error attempting to resolve a previous payment. Please wait 15 minutes and try again'
+                ]
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandWithCompletedFees()
+    {
+        // set up data
+        $feeIds = [99];
+
+        $fee = m::mock(FeeEntity::class)
+            ->shouldReceive('hasOutstandingPayment')
+            ->andReturn(false)
+            ->once()
+            ->shouldReceive('getId')
+            ->andReturn(99)
+            ->once()
+            ->shouldReceive('getFeeStatus')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(FeeEntity::STATUS_PAID)
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $fees = [$fee];
+
+        $data = [
+            'feeIds' => $feeIds,
+            'paymentMethod' => FeeEntity::METHOD_CARD_OFFLINE,
+            'customerName' => 'foo',
+            'customerReference' => 'bar',
+            'address' => 'cake',
+        ];
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees)
+            ->shouldReceive('fetchById')
+            ->with(99)
+            ->andReturn($fee)
+            ->once();
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                [
+                    'ERR_NO_FEES' => 'The fee(s) has already been paid'
+                ]
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
     }
 }
