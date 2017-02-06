@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Api\Domain\Query\Bus\PreviousVariationByRouteNo;
 use Dvsa\Olcs\Api\Domain\Query\Bus\ByLicenceRoute;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Bus\Expire as ExpireQuery;
 
 /**
  * Bus test
@@ -431,5 +432,11 @@ class BusTest extends RepositoryTestCase
             [$withResult, $withResult[0]],
             [[], []]
         ];
+    }
+
+    public function testExpireBusRegistrations()
+    {
+        $this->expectQueryWithData(ExpireQuery::class, []);
+        $this->sut->expireRegistrations();
     }
 }
