@@ -23,6 +23,16 @@ use Zend\View\Model\ConsoleModel;
 class BatchController extends AbstractConsoleController
 {
     /**
+     * Expire bus registrations that have passed the end date
+     *
+     * @return \Zend\View\Model\ConsoleModel
+     */
+    public function expireBusRegistrationAction()
+    {
+        return $this->handleExitStatus($this->handleCommand([CliCommand\Bus\Expire::create([])]));
+    }
+
+    /**
      * Flag tasks as urgent
      *
      * @return \Zend\View\Model\ConsoleModel
