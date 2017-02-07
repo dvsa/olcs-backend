@@ -145,8 +145,8 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
     {
         $id = $command->getId();
 
-        $outstandingInterimFees = $this->feeRepo->fetchInterimFeesByApplicationId($id, true);
-        if (!$isVariation && empty($outstandingInterimFees)) {
+        $interimFees = $this->feeRepo->fetchInterimFeesByApplicationId($id, true, true);
+        if (!$isVariation && empty($interimFees)) {
             return true;
         }
 
@@ -155,7 +155,7 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
             $id
         );
 
-        if ($isVariation && empty($outstandingInterimFees) && !empty($variationFees)) {
+        if ($isVariation && empty($interimFees) && !empty($variationFees)) {
             return true;
         }
 

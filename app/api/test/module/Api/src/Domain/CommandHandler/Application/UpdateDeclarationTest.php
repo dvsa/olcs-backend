@@ -164,7 +164,7 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
 
         $this->repoMap['Fee']
             ->shouldReceive('fetchInterimFeesByApplicationId')
-            ->with(627, true)
+            ->with(627, true, true)
             ->once()
             ->andReturn(['SOMETHING'])
             ->shouldReceive('fetchFeeByTypeAndApplicationId')
@@ -223,7 +223,7 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
 
         $this->repoMap['Fee']
             ->shouldReceive('fetchInterimFeesByApplicationId')
-            ->with(627, true)
+            ->with(627, true, true)
             ->once()
             ->andReturn()
             ->shouldReceive('fetchFeeByTypeAndApplicationId')
@@ -278,7 +278,7 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
             ->once()
             ->with($application);
 
-        $this->repoMap['Fee']->shouldReceive('fetchInterimFeesByApplicationId')->with(627, true)->once()
+        $this->repoMap['Fee']->shouldReceive('fetchInterimFeesByApplicationId')->with(627, true, true)->once()
             ->andReturn([]);
 
         $this->expectedSideEffect(
