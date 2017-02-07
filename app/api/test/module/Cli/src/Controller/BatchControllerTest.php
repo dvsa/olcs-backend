@@ -17,6 +17,7 @@ use Zend\Console\Adapter\AdapterInterface;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\ServiceManager\ServiceManager;
+use Dvsa\Olcs\Cli\Domain\Command\Bus\Expire as ExpireBusCmd;
 
 /**
  * Batch Controller Test
@@ -763,5 +764,18 @@ class BatchControllerTest extends MockeryTestCase
             ->andReturn(new Command\Result());
 
         $this->sut->flagUrgentTasksAction();
+    }
+
+    public function testExpireBusRegistrationAction()
+    {
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(ExpireBusCmd::class))
+            ->once()
+            ->andReturn(new Command\Result());
+
+        $this->sut->expireBusRegistrationAction();
     }
 }

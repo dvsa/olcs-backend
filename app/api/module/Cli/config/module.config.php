@@ -165,6 +165,15 @@ return [
                         ],
                     ],
                 ],
+                'expire-bus-registration' => [
+                    'options' => [
+                        'route' => 'expire-bus-registration [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'expireBusRegistration'
+                        ],
+                    ],
+                ],
             ]
         ]
     ],
@@ -250,6 +259,7 @@ return [
             Command\SetViFlags::class => CommandHandler\SetViFlags::class,
             Command\DataGovUkExport::class => CommandHandler\DataGovUkExport::class,
             Command\CompaniesHouseVsOlcsDiffsExport::class => CommandHandler\CompaniesHouseVsOlcsDiffsExport::class,
+            Command\Bus\Expire::class => CommandHandler\Bus\Expire::class,
         ],
     ],
     'batch_config' => [
