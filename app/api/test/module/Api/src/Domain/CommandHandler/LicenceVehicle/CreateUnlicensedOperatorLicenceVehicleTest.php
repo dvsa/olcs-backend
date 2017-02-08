@@ -1,21 +1,13 @@
 <?php
 
-/**
- * Create Unlicensed Operator Licence Vehicle Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\LicenceVehicle;
 
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
-use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle as VehicleEntity;
 use Dvsa\Olcs\Transfer\Command\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -23,7 +15,7 @@ use Mockery as m;
 /**
  * Create Unlicensed Operator Licence Vehicle Test
  *
- * @author Dan Eggleston <dan@stolenegg.com>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle
  */
 class CreateUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
 {
@@ -115,6 +107,7 @@ class CreateUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
             [
                 'organisation' => $organisationId,
                 'vrm' => 'ABC1234',
+                'platedWeight' => '',
             ]
         );
 
