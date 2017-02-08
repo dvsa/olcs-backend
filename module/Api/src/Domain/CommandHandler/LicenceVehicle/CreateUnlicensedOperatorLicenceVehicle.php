@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Create Unlicensed Operator Licence Vehicle
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\LicenceVehicle;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -26,10 +21,15 @@ final class CreateUnlicensedOperatorLicenceVehicle extends AbstractCommandHandle
     protected $extraRepos = ['Organisation'];
 
     /**
-     * @param Cmd $command
+     * Command handler
+     *
+     * @param Cmd $command Command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     public function handleCommand(CommandInterface $command)
     {
+        /** @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation */
         $organisation = $this->getRepo('Organisation')->fetchById($command->getOrganisation());
 
         $licence = $organisation->getLicences()->first();
@@ -49,8 +49,11 @@ final class CreateUnlicensedOperatorLicenceVehicle extends AbstractCommandHandle
     }
 
     /**
-     * @param Cmd $command
-     * @param Licence $licence
+     * Create Licence Vehicle
+     *
+     * @param Cmd     $command Command
+     * @param Licence $licence Licence
+     *
      * @return LicenceVehicle
      */
     private function createLicenceVehicleObject($command, $licence)
@@ -58,7 +61,7 @@ final class CreateUnlicensedOperatorLicenceVehicle extends AbstractCommandHandle
         $vehicle = new Vehicle();
         $vehicle->setVrm($command->getVrm());
 
-        if (!is_null($command->getPlatedWeight())) {
+        if (0 !== (int)$command->getPlatedWeight()) {
             $vehicle->setPlatedWeight($command->getPlatedWeight());
         }
 
