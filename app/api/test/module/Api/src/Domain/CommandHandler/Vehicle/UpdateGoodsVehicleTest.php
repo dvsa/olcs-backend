@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Update Goods Vehicle Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Vehicle;
 
 use Doctrine\ORM\Query;
@@ -165,7 +160,8 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
             'specifiedDate' => '2015-01-01',
             'receivedDate' => '2015-02-02',
             'version' => 1,
-            'seedDate' => '2015-01-01'
+            'seedDate' => '2015-01-01',
+            'sentDate' => '2016-01-01',
         ];
         $command = Cmd::create($data);
 
@@ -202,6 +198,7 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
         $this->assertEquals('2015-02-02', $licenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());
         $this->assertEquals('2015-01-01', $licenceVehicle->getWarningLetterSeedDate()->format('Y-m-d'));
+        $this->assertEquals('2016-01-01', $licenceVehicle->getWarningLetterSentDate()->format('Y-m-d'));
     }
 
     public function testHandleCommandUpdateRemoved()
