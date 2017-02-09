@@ -89,6 +89,8 @@ final class SaveAddress extends AbstractCommandHandler implements TransactionedI
 
         if (!empty($countryCode)) {
             $countryCode = $this->getRepo()->getReference(Country::class, $countryCode);
+        } else {
+            $countryCode = null;
         }
 
         $address->updateAddress(
