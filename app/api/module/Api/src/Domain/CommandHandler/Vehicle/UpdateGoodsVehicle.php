@@ -74,6 +74,14 @@ final class UpdateGoodsVehicle extends AbstractCommandHandler implements Transac
             }
 
             $licenceVehicle->setWarningLetterSeedDate($date);
+
+            $date = $command->getSentDate();
+
+            if ($date !== null) {
+                $date = new DateTime($date);
+            }
+
+            $licenceVehicle->setWarningLetterSentDate($date);
         }
 
         $this->getRepo()->save($licenceVehicle);
