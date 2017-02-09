@@ -86,6 +86,20 @@ class RtfParser implements ParserInterface
         if ($formatted) {
             return $data;
         }
+
         return str_replace("\n", "\par ", $data);
+    }
+
+    /**
+     * Helper method to replace special characters (e.g. apostrophes) with entities,
+     * and to quote reserved RTF chanracters (e.g. { and })
+     *
+     * @param string $data data to be modified
+     *
+     * @return string
+     */
+    public function getEntitiesAndQuote($data)
+    {
+        return \PHPRtfLite_Utf8::getUnicodeEntities(\PHPRtfLite::quoteRtfCode($data, true), 'UTF-8');
     }
 }

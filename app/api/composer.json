@@ -3,9 +3,6 @@
     "description": "Back End Application for OLCS Project",
     "repositories": [
         {
-            "packagist": false
-        },
-        {
             "url": "http://devrepo.shd.ci.nonprod.dvsa.aws",
             "type": "composer"
         },
@@ -57,7 +54,8 @@
         "symfony/Filesystem": "~2.6.0",
         "symfony/Finder": "~2.6.0",
         "olcs/olcs-xmltools": "dev-release/4.7",
-        "ircmaxell/random-lib": "^1.1"
+        "ircmaxell/random-lib": "^1.1",
+        "phprtflite/phprtflite": "~1.3.3"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.8",
