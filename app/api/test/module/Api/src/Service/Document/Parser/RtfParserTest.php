@@ -106,4 +106,16 @@ TXT;
             $result
         );
     }
+
+    public function testGetEntitiesAndQuote()
+    {
+        $startText = "a1'`~škėąčęėįšųūžĄČĘĖĮŠŲŪŽкийтехтàcôté■\{}";
+        $endText = "a1'`~\uc0{\u353}k\uc0{\u279}\uc0{\u261}\uc0{\u269}\uc0{\u281}\uc0{\u279}\uc0{\u303}\uc0{\u353}\uc0"
+        . "{\u371}\uc0{\u363}\uc0{\u382}\uc0{\u260}\uc0{\u268}\uc0{\u280}\uc0{\u278}\uc0{\u302}\uc0{\u352}\uc0{\u370}"
+        . "\uc0{\u362}\uc0{\u381}\uc0{\u1082}\uc0{\u1080}\uc0{\u1081}\uc0{\u1090}\uc0{\u1077}\uc0{\u1093}\uc0{\u1090}"
+        . "\uc0{\u224}c\uc0{\u244}t\uc0{\u233}\uc0{\u9632}\\\\\{\}";
+
+        $parser = new RtfParser();
+        $this->assertEquals($endText, $parser->getEntitiesAndQuote($startText));
+    }
 }
