@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\TransportManagerLicence;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
  * Get a list of Transport Manager Licence
@@ -17,8 +18,16 @@ class GetListByVariation extends AbstractQueryHandler
 
     protected $extraRepos = ['Application'];
 
+    /**
+     * handle query
+     *
+     * @param QueryInterface $query DTO
+     *
+     * @return array
+     */
     public function handleQuery(QueryInterface $query)
     {
+        /** @var \Dvsa\Olcs\Api\Entity\Application\Application $application */
         $application = $this->getRepo('Application')->fetchById($query->getVariation());
         $result = $this->getRepo()->fetchByLicence($application->getLicence()->getId());
 
@@ -38,7 +47,9 @@ class GetListByVariation extends AbstractQueryHandler
                     ]
                 ]
             ),
-            'count' => count($result)
+            'count' => count($result),
+            'requiresSiQualification' =>
+                $application->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
         ];
     }
 }
