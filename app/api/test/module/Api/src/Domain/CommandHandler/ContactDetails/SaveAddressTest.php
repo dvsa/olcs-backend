@@ -89,12 +89,20 @@ class SaveAddressTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testHandleCommandUpdateWithChange()
+    /**
+     * @dataProvider countryProvider
+     */
+    public function testHandleCommandUpdateWithChange($countryCode)
     {
+        if ($countryCode === '') {
+            $expectedCountryCode = null;
+        } else {
+            $expectedCountryCode = $this->references[Country::class]['GB'];
+        }
         /** @var AddressEntity $address */
         $address = m::mock(AddressEntity::class)->makePartial();
         $address->shouldReceive('updateAddress')
-            ->with('address 1', null, null, null, 'Town', 'PostCode', $this->references[Country::class]['GB']);
+            ->with('address 1', null, null, null, 'Town', 'PostCode', $expectedCountryCode);
 
         $data = [
             'id' => 111,
@@ -102,7 +110,7 @@ class SaveAddressTest extends CommandHandlerTestCase
             'addressLine1' => 'address 1',
             'town' => 'Town',
             'postcode' => 'PostCode',
-            'countryCode' => 'GB'
+            'countryCode' => $countryCode
         ];
         $command = Cmd::create($data);
 
@@ -131,6 +139,14 @@ class SaveAddressTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function countryProvider()
+    {
+        return [
+            [''],
+            ['GB']
+        ];
     }
 
     public function testHandleCommandCreate()
