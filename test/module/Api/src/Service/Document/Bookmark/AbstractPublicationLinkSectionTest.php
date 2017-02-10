@@ -8,6 +8,7 @@ use Dvsa\OlcsTest\Api\Service\Document\Bookmark\Stub\AbstractPublicationLinkSect
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use org\bovigo\vfs\vfsStream;
+use Dvsa\Olcs\Api\Service\Document\Parser\RtfParser;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Document\Bookmark\AbstractPublicationLinkSection
@@ -113,13 +114,20 @@ class AbstractPublicationLinkSectionTest extends MockeryTestCase
             ->andReturn($snippetFiles);
 
         //  mock parser
-        /** @var ParserInterface $mockParser */
-        $mockParser = m::mock(ParserInterface::class)
+        /** @var RtfParser $mockParser */
+        $mockParser = m::mock(RtfParser::class)
             ->shouldReceive('replace')
             ->times(2)
             ->andReturnUsing(
                 function ($file, $token) {
                     return $file . '_' . implode('|', $token) . '@';
+                }
+            )
+            ->shouldReceive('getEntitiesAndQuote')
+            ->times(6)
+            ->andReturnUsing(
+                function ($text) {
+                    return $text === null ? '' : $text . 'f';
                 }
             )
             ->getMock();
@@ -130,8 +138,8 @@ class AbstractPublicationLinkSectionTest extends MockeryTestCase
         $actual = $sut->render();
 
         static::assertEquals(
-            'unit_SnippetFile1_|unit_Text2|unit_Text1@' .
-            'unit_SnippetFile1_unit_Text1|unit_Text2|unit_Text3@',
+            'unit_SnippetFile1_|unit_Text2f|unit_Text1f@' .
+            'unit_SnippetFile1_unit_Text1f|unit_Text2f|unit_Text3f@',
             $actual
         );
     }
