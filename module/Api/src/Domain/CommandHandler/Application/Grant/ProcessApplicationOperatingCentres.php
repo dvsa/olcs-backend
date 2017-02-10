@@ -63,8 +63,10 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
                     break;
                 case 'U':
                     $loc = $this->findCorrespondingLoc($aoc, $licence);
-                    $this->updateLicenceOperatingCentre($aoc, $loc);
-                    $update++;
+                    if ($loc !== null) {
+                        $this->updateLicenceOperatingCentre($aoc, $loc);
+                        $update++;
+                    }
                     break;
                 case 'D':
                     $this->deleteLicenceOperatingCentre($aoc, $licence);

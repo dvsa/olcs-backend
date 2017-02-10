@@ -178,6 +178,60 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
         $this->assertFalse($aoc->getIsInterim());
     }
 
+    public function testHandleCommandUpdateNoLoc()
+    {
+        $data = [
+            'id' => 111
+        ];
+
+        $command = ProcessAocCmd::create($data);
+
+        $oc = m::mock(OperatingCentre::class)->makePartial();
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+
+        $aoc = new ApplicationOperatingCentre($application, $oc);
+        $aoc->setAction('U');
+        $aoc->setIsInterim(true);
+        $aoc->setNoOfVehiclesRequired(10);
+
+        $aocs = [
+            $aoc
+        ];
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+
+        /** @var ApplicationEntity $application */
+        $application->setLicence($licence);
+        $application->setOperatingCentres($aocs);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application);
+
+        $this->repoMap['ApplicationOperatingCentre']->shouldReceive('save')
+            ->with($aoc)
+            ->shouldReceive('findCorrespondingLoc')
+            ->once()
+            ->with($aoc, $licence)
+            ->andReturn(null);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                '0 licence operating centre(s) created',
+                '0 licence operating centre(s) updated',
+                '0 licence operating centre(s) removed'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertFalse($aoc->getIsInterim());
+    }
+
     public function testHandleCommandDelete()
     {
         $data = [
