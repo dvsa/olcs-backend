@@ -58,7 +58,7 @@ class ApplicationOperatingCentre extends AbstractQueryHandler
 
         /** @var LicenceOperatingCentre $loc */
         $loc = $this->getRepo('ApplicationOperatingCentre')->findCorrespondingLoc($aoc, $licence);
-        return $loc->getNoOfVehiclesRequired();
+        return ($loc === null) ? 0 : $loc->getNoOfVehiclesRequired();
     }
 
     protected function getNoOfTrailersRequired(ApplicationOperatingCentreEntity $aoc, Licence $licence)
@@ -69,6 +69,6 @@ class ApplicationOperatingCentre extends AbstractQueryHandler
 
         /** @var LicenceOperatingCentre $loc */
         $loc = $this->getRepo('ApplicationOperatingCentre')->findCorrespondingLoc($aoc, $licence);
-        return $loc->getNoOfTrailersRequired();
+        return ($loc === null) ? 0 : $loc->getNoOfTrailersRequired();
     }
 }
