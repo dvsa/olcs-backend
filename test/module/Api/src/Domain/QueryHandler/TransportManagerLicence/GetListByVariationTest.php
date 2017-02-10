@@ -25,7 +25,13 @@ class GetListByVariationTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    /**
+     * @dataProvider dpHandleQuery
+     *
+     * @param $licenceType Application licence type id . eg Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+     * @param $expected
+     */
+    public function testHandleQuery($licenceType, $expected)
     {
         $query = Query::create(['variation' => 1]);
 
@@ -41,6 +47,7 @@ class GetListByVariationTest extends QueryHandlerTestCase
             )
             ->once()
             ->getMock();
+        $mockApplication->shouldReceive('getLicenceType->getId')->with()->once()->andReturn($licenceType);
 
         $this->repoMap['Application']
             ->shouldReceive('fetchById')
@@ -69,6 +76,20 @@ class GetListByVariationTest extends QueryHandlerTestCase
             ]
         )->once()->andReturn('RESULT');
 
-        $this->assertEquals(['result' => ['RESULT'], 'count' => 1], $this->sut->handleQuery($query));
+        $this->assertEquals($expected, $this->sut->handleQuery($query));
+    }
+
+    public function dpHandleQuery()
+    {
+        return [
+            [
+                'xxx',
+                ['result' => ['RESULT'], 'count' => 1, 'requiresSiQualification' => false]
+            ],
+            [
+                \Dvsa\Olcs\Api\Entity\Licence\Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                ['result' => ['RESULT'], 'count' => 1, 'requiresSiQualification' => true]
+            ],
+        ];
     }
 }
