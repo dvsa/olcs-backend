@@ -115,8 +115,8 @@ class ApplicationOperatingCentre extends AbstractRepository
 
         $locs = $licence->getOperatingCentres()->matching($criteria);
 
-        if ($locs->count() !== 1) {
-            throw new \Exception('Expected 1 matching licence operating centre record, found: ' . $locs->count());
+        if ($locs->count() === 0) {
+            return null;
         }
 
         return $locs->first();

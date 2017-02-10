@@ -196,18 +196,12 @@ class ApplicationOperatingCentreTest extends RepositoryTestCase
         $aoc = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
         $aoc->setOperatingCentre($oc);
 
-        /** @var Entity\Licence\LicenceOperatingCentre $loc */
-        $loc = m::mock(Entity\Licence\LicenceOperatingCentre::class)->makePartial();
-
         $locs = new ArrayCollection();
-        $locs->add($loc);
 
         /** @var Entity\Licence\Licence $licence */
         $licence = m::mock(Entity\Licence\Licence::class)->makePartial();
         $licence->setOperatingCentres($locs);
 
-        $this->setExpectedException(\Exception::class);
-
-        $this->sut->findCorrespondingLoc($aoc, $licence);
+        $this->assertNull($this->sut->findCorrespondingLoc($aoc, $licence));
     }
 }
