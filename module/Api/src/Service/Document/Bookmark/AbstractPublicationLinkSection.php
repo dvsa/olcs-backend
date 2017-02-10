@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\PublicationBundle as Qry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Service\Document\Parser\RtfParser;
 
 /**
  * AbstractPublicationLinkSection
@@ -137,6 +138,9 @@ abstract class AbstractPublicationLinkSection extends DynamicBookmark
     {
         $entries = [];
 
+        /** @var RtfParser $parser */
+        $parser = $this->getParser();
+
         $pubSection = $this->getPubTypeSection();
         $sectionId = $pubSection[$this->data['pubType']];
 
@@ -157,10 +161,14 @@ abstract class AbstractPublicationLinkSection extends DynamicBookmark
                     $entry['text1'] = null;
                 }
 
+                /**
+                 * @todo this only affects publications, once we have a proper solution for rtf documents as a whole,
+                 * (olcs-15279) entities/quote may be done elsewhere and it may be necessary to change this code
+                 */
                 $entries[] = [
-                    'ITEM1' => $entry['text1'],
-                    'ITEM2' => $entry['text2'],
-                    'ITEM3' => $entry['text3'],
+                    'ITEM1' => $parser->getEntitiesAndQuote($entry['text1']),
+                    'ITEM2' => $parser->getEntitiesAndQuote($entry['text2']),
+                    'ITEM3' => $parser->getEntitiesAndQuote($entry['text3']),
                 ];
             }
         }
