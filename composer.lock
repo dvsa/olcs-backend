@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "97ca099c9bbbb2c99741c1af52c34bdb",
-    "content-hash": "83ee3da53b4547d64795fcb518615e35",
+    "hash": "80b11b646ecc0557c719bf109e0c4084",
+    "content-hash": "865649c282cf61eca143e5c6872d13d7",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1064,7 +1064,7 @@
         },
         {
             "name": "olcs/autoload",
-            "version": "dev-develop",
+            "version": "dev-release/4.7",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-autoload.git",
@@ -1079,11 +1079,11 @@
         },
         {
             "name": "olcs/companies-house",
-            "version": "dev-develop",
+            "version": "dev-release/4.7",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
-                "reference": "ed4a1add7f4ffadd26e8f63eada8c6b8a31163ed"
+                "reference": "87f4bebed0adc09d31b5c5a73c22d8c8670059fe"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1095,15 +1095,15 @@
                 }
             },
             "description": "Companies house library",
-            "time": "2016-12-14 10:37:07"
+            "time": "2017-02-07 12:36:34"
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "dev-develop",
+            "version": "dev-release/4.7",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
-                "reference": "6d3cea2ddebdf680e25c28b38b4a5a20e36ff631"
+                "reference": "af389ca9d2ba7ac9a856b5bc9c909ec69d3a5aec"
             },
             "require": {
                 "php": ">=5.4",
@@ -1129,15 +1129,15 @@
                 }
             },
             "description": "Logging Module for Olcs",
-            "time": "2017-01-18 16:51:12"
+            "time": "2017-02-07 12:36:28"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-develop",
+            "version": "dev-release/4.7",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "fe99a61e0fc59178b8f345201f366285a6282494"
+                "reference": "e559539608fdc31ad5ee503509462cb90471980a"
             },
             "require": {
                 "php": ">=5.4",
@@ -1155,15 +1155,15 @@
                 }
             },
             "description": "OLCS Transfer",
-            "time": "2017-02-02 13:26:42"
+            "time": "2017-02-07 12:29:08"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "dev-develop",
+            "version": "dev-release/4.7",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "cd995e6ea118bf41e839485155a0faf8e401a0d2"
+                "reference": "23ba3348452d0af89abaa9332e8d0c00b1af42ba"
             },
             "require": {
                 "php": ">=5.4",
@@ -1171,7 +1171,7 @@
             },
             "require-dev": {
                 "mockery/mockery": "~0.9.3",
-                "olcs/olcs-logging": "dev-develop",
+                "olcs/olcs-logging": "dev-release/4.7",
                 "phpunit/phpunit": "^4.0.0"
             },
             "type": "library",
@@ -1181,15 +1181,15 @@
                 }
             },
             "description": "OLCS Utils",
-            "time": "2017-01-18 16:51:09"
+            "time": "2017-02-07 12:35:29"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "dev-master",
+            "version": "dev-release/4.7",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "7a50eea646a8da1f310f2531ab0394097fd4f3fb"
+                "reference": "8ff93c5b114c3d21228cc49c40b54705737d7190"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1210,7 +1210,40 @@
                 }
             },
             "description": "Xml tools for olcs",
-            "time": "2017-01-18 10:54:29"
+            "time": "2017-02-07 12:35:52"
+        },
+        {
+            "name": "phprtflite/phprtflite",
+            "version": "v1.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phprtflite/PHPRtfLite.git",
+                "reference": "eef76d965fc7a0cb4c7342f229f67ad4793c61c2"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phprtflite-phprtflite-eef76d965fc7a0cb4c7342f229f67ad4793c61c2-zip-4b883b.tar",
+                "reference": "eef76d965fc7a0cb4c7342f229f67ad4793c61c2",
+                "shasum": "43e978ed7ebcecdcb297a692b65ba2891fb5521e"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPRtfLite": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Steffen Zeidler",
+                    "email": "sigma_z@sigma-scripts.de"
+                }
+            ],
+            "description": "PHPRtfLite is an API enabling developers to create rtf documents with php.",
+            "time": "2014-07-04 19:43:18"
         },
         {
             "name": "psr/log",
