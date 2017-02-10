@@ -6,6 +6,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as Entity;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Bus\Expire as ExpireQuery;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Doctrine\ORM\Query;
@@ -182,5 +183,15 @@ class Bus extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($qb)
             ->with('busNoticePeriod')
             ->with('status');
+    }
+
+    /**
+     * expire all bus registrations that have reached their end date
+     *
+     * @return void
+     */
+    public function expireRegistrations()
+    {
+        $this->getDbQueryManager()->get(ExpireQuery::class)->execute([]);
     }
 }

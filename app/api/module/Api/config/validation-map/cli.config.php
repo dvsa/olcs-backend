@@ -13,6 +13,7 @@ return [
     CliCommandHandler\DataGovUkExport::class => IsSystemUser::class,
     CliCommandHandler\CompaniesHouseVsOlcsDiffsExport::class => IsSystemUser::class,
     CliCommandHandler\RemoveReadAudit::class => IsSystemUser::class,
+    CliCommandHandler\Bus\Expire::class => IsSystemUser::class,
     Dvsa\Olcs\Email\Domain\CommandHandler\ProcessInspectionRequestEmail::class => IsSystemUser::class,
     CommandHandler\Email\SendErruErrors::class => IsSystemUser::class,
     QueryHandler\Application\NotTakenUpList::class => IsSystemUser::class,
