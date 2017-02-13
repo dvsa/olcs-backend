@@ -45,11 +45,15 @@ class ConditionUndertaking extends AbstractConditionUndertaking
 
     const SMALL_VEHICLE_UNDERTAKINGS = 'Small vehicles undertakings';
 
+    const ACTION_ADD = 'A';
+    const ACTION_DELETE = 'D';
+
     /**
      * Construct Condition Undertaking entity
-     * @param RefData $conditionType
-     * @param String $isDraft Y|N
-     * @param String $isFulfilled Y|N
+     *
+     * @param RefData $conditionType Condition Type
+     * @param string  $isFulfilled   'Yes|No' fulfilled
+     * @param string  $isDraft       'Yes|No' draft
      */
     public function __construct(
         RefData $conditionType,
