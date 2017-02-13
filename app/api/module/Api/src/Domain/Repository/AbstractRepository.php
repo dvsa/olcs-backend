@@ -43,7 +43,7 @@ abstract class AbstractRepository extends AbstractReadonlyRepository implements 
     /**
      * Delete an entity
      *
-     * @param mixec $entity Entity to delete
+     * @param mixed $entity Entity to delete
      *
      * @return void
      * @throws Exception\RuntimeException

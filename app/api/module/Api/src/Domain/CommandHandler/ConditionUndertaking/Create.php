@@ -2,17 +2,17 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\ConditionUndertaking;
 
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Transfer\Command\ConditionUndertaking\Create as Command;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
-use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
-use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Cases\Cases;
+use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\ConditionUndertaking\Create as Command;
 
 /**
  * Create ConditionUndertaking
@@ -24,10 +24,15 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     protected $repoServiceName = 'ConditionUndertaking';
     protected $extraRepos = ['Cases'];
 
+    /**
+     * Command Handler
+     *
+     * @param Command $command Command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
-        /* @var $command Command */
-
         $this->validate($command);
 
         // create entity with default values
@@ -78,7 +83,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
             $conditionUndertaking
                 ->setAddedVia($this->getRepo()->getRefdataReference(ConditionUndertaking::ADDED_VIA_APPLICATION))
                 ->setApplication($this->getRepo()->getReference(Application::class, $command->getApplication()))
-                ->setAction('A');
+                ->setAction(ConditionUndertaking::ACTION_ADD);
         }
         $this->getRepo()->save($conditionUndertaking);
 
@@ -92,7 +97,9 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     /**
      * Vaidate the command params
      *
-     * @param Command $command
+     * @param Command $command Command
+     *
+     * @return void
      * @throws ValidationException
      */
     protected function validate(Command $command)
