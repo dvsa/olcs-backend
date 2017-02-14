@@ -3,8 +3,6 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DriverManager;
-use Doctrine\ORM\EntityManager;
 
 /**
  * Contains methods to get difference between company house and olcs data from DB
@@ -73,6 +71,6 @@ class CompaniesHouseVsOlcsDiffs
      */
     public function fetchWithNotActiveStatus()
     {
-        return $this->conn->query('SELECT * FROM vw_ch_vs_olcs_diff_organisation_not_active');
+        return $this->conn->query('CALL sp_ch_vs_olcs_diff_organisation_not_active');
     }
 }
