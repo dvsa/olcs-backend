@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Resolve Outstanding Payments
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Transaction;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -14,6 +9,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCmd;
 use Olcs\Logging\Log\Logger;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 
 /**
  * Resolve Outstanding Payments
@@ -45,7 +41,7 @@ final class ResolveOutstandingPayments extends AbstractCommandHandler implements
                 $cmd = ResolvePaymentCmd::create(['id' => $transactionId]);
                 $this->result->merge($this->handleSideEffect($cmd));
             } catch (\Exception $e) {
-                $message = 'Error resolving payment for transaction ' . $transactionId;
+                $message = 'Error resolving payment for transaction ' . $transactionId . ': ' . $e->getMessage();
                 $this->result->addMessage($message);
                 Logger::err($message);
             }

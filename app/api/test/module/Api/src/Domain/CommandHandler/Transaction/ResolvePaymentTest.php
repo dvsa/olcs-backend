@@ -45,10 +45,15 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $this->mockRepo('Task', Repo::class);
 
         $this->refData = [
-            PaymentEntity::STATUS_OUTSTANDING,
+            PaymentEntity::STATUS_OUTSTANDING => m::mock(RefData::class)
+                ->shouldReceive('getId')
+                ->andReturn(PaymentEntity::STATUS_OUTSTANDING)
+                ->getMock(),
             PaymentEntity::STATUS_PAID => m::mock(RefData::class)
                 ->shouldReceive('getDescription')
                 ->andReturn('PAYMENT PAID')
+                ->shouldReceive('getId')
+                ->andReturn(PaymentEntity::STATUS_PAID)
                 ->getMock(),
             PaymentEntity::STATUS_FAILED => m::mock(RefData::class)
                 ->shouldReceive('getDescription')
@@ -124,6 +129,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $payment->setReference($guid);
         $payment->setFeeTransactions($this->references[FeePaymentEntity::class]);
         $payment->setType($this->refData[PaymentEntity::TYPE_PAYMENT]);
+        $payment->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING]);
 
         $command = Cmd::create($data);
 
@@ -218,6 +224,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $payment->setFeeTransactions($this->references[FeePaymentEntity::class]);
         $payment->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING]);
         $payment->setType($this->refData[PaymentEntity::TYPE_PAYMENT]);
+        $payment->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING]);
 
         $payment
             ->shouldReceive('getFees')
@@ -317,6 +324,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ->shouldReceive('getFees')
             ->andReturn(['fee1', 'fee2'])
             ->once();
+        $payment->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING]);
 
         $command = Cmd::create($data);
 
@@ -411,6 +419,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ->shouldReceive('getFees')
             ->andReturn(['fee1', 'fee2'])
             ->once();
+        $payment->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING]);
 
         $command = Cmd::create($data);
 
@@ -486,6 +495,36 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ]
         ];
 
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandResolved()
+    {
+        $paymentId = 69;
+        $data = [
+            'id' => $paymentId,
+            'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
+        ];
+        $command = Cmd::create($data);
+        $expected = [
+            'id' => [
+                'transaction' => 69,
+            ],
+            'messages' => [
+                'Transaction is already resolved',
+            ]
+        ];
+        $payment = m::mock(PaymentEntity::class)->makePartial();
+        $payment->setId($paymentId);
+        $payment->setStatus($this->refData[PaymentEntity::STATUS_PAID]);
+
+        $this->repoMap['Transaction']
+            ->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command)
+            ->andReturn($payment);
+
+        $result = $this->sut->handleCommand($command);
         $this->assertEquals($expected, $result->toArray());
     }
 }
