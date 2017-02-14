@@ -38,13 +38,38 @@ class DocumentList extends AbstractQueryHandler
         /** @var  \Dvsa\Olcs\Api\Domain\Repository\DocumentSearchView $repo */
         $repo = $this->getRepo();
 
+        $extensionList = [];
+        if ($this->hasExtensionFilter($query)) {
+            // only calculate extension list if it is used
+            $extensionList = $repo->fetchDistinctListExtensions($unfilteredQuery);
+        }
+
         return [
             'result' => $this->resultList(
                 $repo->fetchList($query, Query::HYDRATE_OBJECT)
             ),
             'count' => $repo->fetchCount($query),
             'count-unfiltered' => $repo->hasRows($unfilteredQuery),
-            'extensionList' => $repo->fetchDistinctListExtensions($unfilteredQuery),
+            'extensionList' => $extensionList,
         ];
+    }
+
+    /**
+     * Does this document list use the extension filter
+     *
+     * @param \Dvsa\Olcs\Transfer\Query\Document\DocumentList $query DTO
+     *
+     * @return bool
+     */
+    private function hasExtensionFilter(\Dvsa\Olcs\Transfer\Query\Document\DocumentList $query)
+    {
+        // Only use the extension filter is document list is filter by something else, otherwise it will
+        // attempt to get a list for the entire table
+        return $query->getApplication() !== null
+            || $query->getLicence() !== null
+            || $query->getCase() !== null
+            || $query->getBusReg() !== null
+            || $query->getTransportManager() !== null
+            || $query->getIrfoOrganisation() !== null;
     }
 }

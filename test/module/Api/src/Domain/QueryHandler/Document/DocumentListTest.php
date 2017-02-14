@@ -25,6 +25,43 @@ class DocumentListTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
+        $query = Qry::create(['format' => 'FOO', 'application' => 1]);
+
+        $mockDocument = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar'])
+            ->once()
+            ->getMock();
+
+        $this->repoMap['DocumentSearchView']
+            ->shouldReceive('fetchList')->once()->with($query, Query::HYDRATE_OBJECT)->andReturn([$mockDocument])
+            ->shouldReceive('fetchCount')->once()->with($query)->andReturn(888)
+            ->shouldReceive('hasRows')->once()->andReturnUsing(
+                function (Qry $query) {
+                    static::assertNull($query->getCategory());
+                    static::assertEquals([], $query->getDocumentSubCategory());
+                    static::assertNull($query->getIsExternal());
+                    static::assertNull($query->getShowDocs());
+                    static::assertNull($query->getFormat());
+
+                    return true;
+                }
+            )
+            ->shouldReceive('fetchDistinctListExtensions')->once()->andReturn(['RTF', 'DOCX']);
+
+        $this->assertEquals(
+            [
+                'result' => [['foo' => 'bar']],
+                'count' => 888,
+                'count-unfiltered' => true,
+                'extensionList' => ['RTF', 'DOCX']
+            ],
+            $this->sut->handleQuery($query)
+        );
+    }
+
+    public function testHandleQueryNoProperLimit()
+    {
         $query = Qry::create(['format' => 'FOO']);
 
         $mockDocument = m::mock(BundleSerializableInterface::class)
@@ -44,17 +81,16 @@ class DocumentListTest extends QueryHandlerTestCase
                     static::assertNull($query->getShowDocs());
                     static::assertNull($query->getFormat());
 
-                    return 999;
+                    return true;
                 }
-            )
-            ->shouldReceive('fetchDistinctListExtensions')->once()->andReturn(['RTF', 'DOCX']);
+            );
 
         $this->assertEquals(
             [
                 'result' => [['foo' => 'bar']],
                 'count' => 888,
-                'count-unfiltered' => 999,
-                'extensionList' => ['RTF', 'DOCX']
+                'count-unfiltered' => true,
+                'extensionList' => []
             ],
             $this->sut->handleQuery($query)
         );
