@@ -136,7 +136,7 @@ class ResolveOutstandingPaymentsTest extends CommandHandlerTestCase
         $this->expectedSideEffectThrowsException(
             ResolvePaymentCmd::class,
             ['id' => 99],
-            (new \Exception())
+            (new \Exception('Foo'))
         );
 
         $this->expectedSideEffect(
@@ -149,7 +149,7 @@ class ResolveOutstandingPaymentsTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                'Error resolving payment for transaction 99',
+                'Error resolving payment for transaction 99: Foo',
                 'Transaction 100 resolved as Failed',
             ]
         ];

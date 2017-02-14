@@ -37,11 +37,21 @@ final class ResolvePayment extends AbstractCommandHandler implements
 
     public function handleCommand(CommandInterface $command)
     {
+        $result = new Result();
+
         /* @var $transaction Transaction */
         $transaction = $this->getRepo()->fetchUsingId($command);
-
-        $result = new Result();
         $result->addId('transaction', $transaction->getId());
+
+        $finalStatuses = [
+            Transaction::STATUS_PAID,
+            Transaction::STATUS_CANCELLED,
+            Transaction::STATUS_FAILED
+        ];
+        if (in_array($transaction->getStatus()->getId(), $finalStatuses)) {
+            $result->addMessage('Transaction is already resolved');
+            return $result;
+        }
 
         if ($transaction->isWaive()) {
             $result->addMessage(sprintf('Waive transaction %d not resolved', $transaction->getId()));
