@@ -26,6 +26,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Tm\CreateNewUser as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 
 /**
  * Create New User Test
@@ -171,6 +172,8 @@ class CreateNewUserTest extends CommandHandlerTestCase
             ],
             new Result()
         );
+
+        $this->expectedQueueSideEffect(555, Queue::TYPE_UPDATE_NYSIIS_TM_NAME, ['id' => 555]);
 
         $response = $this->sut->handleCommand($command);
 
@@ -360,6 +363,8 @@ class CreateNewUserTest extends CommandHandlerTestCase
             ],
             new Result()
         );
+
+        $this->expectedQueueSideEffect(555, Queue::TYPE_UPDATE_NYSIIS_TM_NAME, ['id' => 555]);
 
         $response = $this->sut->handleCommand($command);
 
