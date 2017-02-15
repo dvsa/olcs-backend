@@ -8,7 +8,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
- * @covers Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseVsOlcsDiffs
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseVsOlcsDiffs
  */
 class CompaniesHouseVsOlcsDiffsTest extends MockeryTestCase
 {
@@ -69,7 +69,7 @@ class CompaniesHouseVsOlcsDiffsTest extends MockeryTestCase
         $this->mockConn
             ->shouldReceive('query')
             ->once()
-            ->with('/FROM vw_ch_vs_olcs_diff/')
+            ->with('/^CALL sp_ch_vs_olcs_diff/')
             ->andReturn($this->mockStmt);
 
         static::assertSame($this->mockStmt, $this->sut->fetchWithNotActiveStatus());
