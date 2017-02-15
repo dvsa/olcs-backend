@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Service\OpenAm\Client;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Tm\CreateNewUser as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 
 /**
@@ -37,6 +37,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 final class CreateNewUser extends AbstractUserCommandHandler implements TransactionedInterface, OpenAmUserAwareInterface
 {
     use OpenAmUserAwareTrait;
+    use QueueAwareTrait;
 
     const ERR_EMAIL_REQUIRED = 'ERR_EMAIL_REQUIRED';
     const ERR_USERNAME_REQUIRED = 'ERR_USERNAME_REQUIRED';
@@ -84,10 +85,13 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
         $transportManagerApplication = $this->createTmApplication($transportManager, $application, $command);
 
         $this->result->merge(
-            $this->handleSideEffect(
-                UpdateApplicationCompletion::create(
-                    ['id' => $command->getApplication(), 'section' => 'transportManagers']
-                )
+            $this->handleSideEffects(
+                [
+                    UpdateApplicationCompletion::create(
+                        ['id' => $command->getApplication(), 'section' => 'transportManagers']
+                    ),
+                    $this->nysiisQueueCmd($transportManager->getId())
+                ]
             )
         );
 
