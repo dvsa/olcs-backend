@@ -1823,4 +1823,50 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
     }
+
+    public function testHandleCommandWithFeeIdsResolveOnly()
+    {
+        // set up data
+        $feeIds = [99, 100, 101];
+
+        $fee1 = $this->getStubFee(99, 99.99);
+        $fee2 = $this->getStubFee(101, 99.99);
+        $fees = [$fee1, $fee2];
+
+        $data = [
+            'feeIds' => $feeIds,
+            'shouldResolveOnly' => true
+        ];
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees)
+            ->shouldReceive('fetchFeesByIds')
+            ->once()
+            ->with([99, 101])
+            ->andReturn($fees)
+            ->shouldReceive('fetchById')
+            ->with(99)
+            ->andReturn($fees[0])
+            ->once()
+            ->shouldReceive('fetchById')
+            ->with(101)
+            ->andReturn($fees[1])
+            ->once();
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => []
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
 }

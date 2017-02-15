@@ -111,6 +111,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             return $this->result;
         }
 
+        if ($command->getShouldResovleOnly() === true) {
+            return $this->result;
+        }
+
         try {
             $cardMethods = [FeeEntity::METHOD_CARD_ONLINE, FeeEntity:: METHOD_CARD_OFFLINE];
             if (in_array($command->getPaymentMethod(), $cardMethods)) {
