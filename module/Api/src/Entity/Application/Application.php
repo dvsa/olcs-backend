@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
@@ -164,6 +165,16 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
     }
 
+    /**
+     * Validate Type of Licence
+     *
+     * @param string  $niFlag      Is Northern Ireland
+     * @param RefData $goodsOrPsv  Goods or Psv
+     * @param RefData $licenceType Licence type
+     *
+     * @return bool
+     * @throws ValidationException
+     */
     public function validateTol($niFlag, $goodsOrPsv, $licenceType)
     {
         $errors = [];
@@ -197,7 +208,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
             if ($this->getNiFlag() != $niFlag) {
                 $errors['niFlag'][] =[
-                    self::ERROR_GV_NON_SR => 'GV operators cannot apply for special restricted licences'
+                    self::ERROR_GV_NON_SR => 'GV operators cannot apply for special restricted licences',
                 ];
             }
         }
@@ -702,12 +713,18 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return false;
     }
 
+    /**
+     * Get Oc For Inspection Request
+     *
+     * @return array
+     */
     public function getOcForInspectionRequest()
     {
         $list = [];
         $deleted = [];
 
         $applicationOperatingCentres = $this->getOperatingCentres();
+        /** @var Entity\Application\ApplicationOperatingCentre $applicationOperatingCentre */
         foreach ($applicationOperatingCentres as $applicationOperatingCentre) {
             $id = $applicationOperatingCentre->getOperatingCentre()->getId();
             if ($applicationOperatingCentre->getAction() !== 'D') {
@@ -718,6 +735,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         $licenceOperatingCentres = $this->getLicence()->getOperatingCentres();
+        /** @var Entity\Licence\LicenceOperatingCentre $licenceOperatingCentre */
         foreach ($licenceOperatingCentres as $licenceOperatingCentre) {
             $id = $licenceOperatingCentre->getOperatingCentre()->getId();
             if (!in_array($id, $deleted)) {
@@ -868,6 +886,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         $updatedAddedOperatingCentres = 0;
+        /* @var Entity\Application\ApplicationOperatingCentre $aoc */
         foreach ($this->getOperatingCentres() as $aoc) {
             if ($aoc->getAction() === 'A' || $aoc->getAction() === 'U') {
                 $updatedAddedOperatingCentres++;
@@ -885,7 +904,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         // If a goods new/variation application and operating centres have been added/udpated:
-        /* @var $aoc \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre */
+        /* @var Entity\Application\ApplicationOperatingCentre $aoc */
         $maximumDate = null;
         foreach ($this->getOperatingCentres() as $aoc) {
 
@@ -926,7 +945,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      * If a date can be calcuated this will return a string date (YYYY-MM-DD)
      * If a date cannot be calculated it will return a string of either self::NOT_APPLICABLE or self::UNKNOWN
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre $aoc
+     * @param Entity\Application\ApplicationOperatingCentre $aoc Application Operation Center
      *
      * @return string date|self::NOT_APPLICABLE|self::UNKNOWN
      */
@@ -944,17 +963,22 @@ class Application extends AbstractApplication implements ContextProviderInterfac
                     }
                 }
             }
-        }
 
-        // For updated operating centres, if there has been no increase to the vehicles
-        if ($aoc->getAction() === 'U') {
+        } else if ($aoc->getAction() === 'U') {
+            // For updated operating centres, if there has been no increase to the vehicles
             $licenceOperatingCentres = $this->getLicence()->getOperatingCentres();
-            /* @var $licenceOperatingCentre \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre */
-            foreach ($licenceOperatingCentres as $licenceOperatingCentre) {
-                if ($licenceOperatingCentre->getOperatingCentre() === $aoc->getOperatingCentre()) {
-                    if ($aoc->getNoOfVehiclesRequired() <=  $licenceOperatingCentre->getNoOfVehiclesRequired()) {
-                        return self::NOT_APPLICABLE;
-                    }
+
+            /* @var Entity\Licence\LicenceOperatingCentre $licOc */
+            foreach ($licenceOperatingCentres as $licOc) {
+                if ($licOc->getOperatingCentre() !== $aoc->getOperatingCentre()) {
+                    continue;
+                }
+
+                if (
+                    $aoc->getNoOfVehiclesRequired() <= $licOc->getNoOfVehiclesRequired()
+                    && $aoc->getNoOfTrailersRequired() <= $licOc->getNoOfTrailersRequired()
+                ) {
+                    return self::NOT_APPLICABLE;
                 }
             }
         }
@@ -1329,6 +1353,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
             return array_values($filtered);
         }
+
+        return null;
     }
 
     public function getTrafficArea()
@@ -1358,7 +1384,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
     /**
      * Set the target completion date to +7 weeks from received date
-     * @return this
+     *
+     * @return $this
      */
     public function setTargetCompletionDateFromReceivedDate()
     {
@@ -1455,6 +1482,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
         // iterate to get tasks of category, subcategory
         // NB reason to iterate is crtieria should only be used with scalar values
+        /** @var Entity\Task\Task $task */
         foreach ($openTasks as $task) {
             if ($task->getCategory()->getId() !== $categoryId) {
                 continue;
@@ -1539,6 +1567,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
+     * Get Latest Outstanding Application Fee
+     *
      * @return FeeEntity|null
      */
     public function getLatestOutstandingApplicationFee()
@@ -1552,15 +1582,20 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $criteria = Criteria::create()
             ->orderBy(['invoicedDate' => Criteria::DESC]);
 
+        /** @var Entity\Fee\Fee $fee */
         foreach ($this->getFees()->matching($criteria) as $fee) {
             if ($fee->isOutstanding()
                 && $fee->getFeeType()->getFeeType()->getId() === $feeTypeFeeTypeId) {
                 return $fee;
             }
         }
+
+        return null;
     }
 
     /**
+     * Get Latest Outstanding Interim Fee
+     *
      * @return FeeEntity|null
      */
     public function getLatestOutstandingInterimFee()
@@ -1568,12 +1603,15 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $criteria = Criteria::create()
             ->orderBy(['invoicedDate' => Criteria::DESC]);
 
+        /** @var Entity\Fee\Fee $fee */
         foreach ($this->getFees()->matching($criteria) as $fee) {
             if ($fee->isOutstanding()
                 && $fee->getFeeType()->getFeeType()->getId() === FeeTypeEntity::FEE_TYPE_GRANTINT) {
                 return $fee;
             }
         }
+
+        return null;
     }
 
     /**
@@ -1585,12 +1623,15 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
+     * Get Outstanding Grant Fees
+     *
      * @return array
      */
     public function getOutstandingGrantFees()
     {
         $grantFees = [];
 
+        /** @var Entity\Fee\Fee $fee */
         foreach ($this->getFees() as $fee) {
             if ($fee->isGrantFee() && $fee->isOutstanding()) {
                 $grantFees[$fee->getId()] = $fee;
@@ -1611,13 +1652,18 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         if ($this->getAppliedVia()) {
             return !($this->getAppliedVia()->getId() === self::APPLIED_VIA_SELFSERVE);
         }
+
+        return null;
     }
 
     /**
+     * Has Application Fee
+     *
      * @return bool whether the application already has a fee (that is not cancelled)
      */
     public function hasApplicationFee()
     {
+        /** @var Entity\Fee\Fee $fee */
         foreach ($this->getFees() as $fee) {
             if (
                 ($fee->isNewApplicationFee() || $fee->isVariationFee())
