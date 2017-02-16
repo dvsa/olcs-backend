@@ -695,8 +695,12 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         }
 
         if ($markRequired) {
-            $this->markSectionRequired('financial_history');
-            $this->markSectionRequired('convictions_penalties');
+            if (!$this->isUpdated('financial_history')) {
+                $this->markSectionRequired('financial_history');
+            }
+            if (!$this->isUpdated('convictions_penalties')) {
+                $this->markSectionRequired('convictions_penalties');
+            }
         }
 
         $this->markSectionUpdated('people');
