@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -15,9 +17,11 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 final class DeleteUserSelfserve extends AbstractCommandHandler implements
     TransactionedInterface,
+    AuthAwareInterface,
     OpenAmUserAwareInterface
 {
     use OpenAmUserAwareTrait;
+    use AuthAwareTrait;
 
     protected $repoServiceName = 'User';
 
@@ -26,12 +30,17 @@ final class DeleteUserSelfserve extends AbstractCommandHandler implements
     /**
      * Handle command
      *
-     * @param CommandInterface $command command
+     * @param \Dvsa\Olcs\Transfer\Command\User\DeleteUserSelfserve $command command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     public function handleCommand(CommandInterface $command)
     {
+        if ((int)$command->getId() === $this->getCurrentUser()->getId()) {
+            throw new BadRequestException('You can not delete yourself');
+        }
+
+        /** @var \Dvsa\Olcs\Api\Entity\User\User $user */
         $user = $this->getRepo()->fetchUsingId($command);
 
         if (!empty($this->getRepo('Task')->fetchByUser($user->getId(), true))) {
