@@ -1,20 +1,15 @@
 <?php
 
-/**
- * Reassign Tasks
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Task;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Entity\User\Team;
-use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Task\Task;
-use Dvsa\Olcs\Transfer\Command\Task\ReassignTasks as Cmd;
 
 /**
  * Reassign Tasks
@@ -23,37 +18,57 @@ use Dvsa\Olcs\Transfer\Command\Task\ReassignTasks as Cmd;
  */
 final class ReassignTasks extends AbstractCommandHandler implements TransactionedInterface
 {
+    const ERR_TEAM_INVALID = 'task.reassign.team.invalid';
+
     protected $repoServiceName = 'Task';
 
     /**
-     * @param Cmd $command
+     * Command Handler
+     * 
+     * @param TransferCmd\Task\ReassignTasks $command Command
+     *
      * @return Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
+        /** @var Repository\Task $repo */
+        $repo = $this->getRepo();
 
+        //  get User entity
         $userId = $command->getUser();
-        if (empty($userId)) {
-            $user = null;
-        } else {
-            $user = $this->getRepo()->getReference(User::class, $command->getUser());
+
+        /** @var Entity\User\User $user */
+        $user = null;
+        if (null !== $userId) {
+            $user = $repo->getReference(Entity\User\User::class, $command->getUser());
         }
 
-        $team = $this->getRepo()->getReference(Team::class, $command->getTeam());
+        //  get Team entity
+        $teamId = (int)$command->getTeam();
+
+        /** @var Entity\User\Team $team */
+        $team = null;
+        if (0 !== $teamId) {
+            $team = $repo->getReference(Entity\User\Team::class, $command->getTeam());
+        } elseif (null !== $user) {
+            $team = $user->getTeam();
+        }
+
+        if ($team === null) {
+            throw new ValidationException([self::ERR_TEAM_INVALID]);
+        }
 
         foreach ($command->getIds() as $id) {
-
-            /** @var Task $task */
-            $task = $this->getRepo()->fetchById($id);
+            /** @var Entity\Task\Task $task */
+            $task = $repo->fetchById($id);
             $task->setAssignedToUser($user);
             $task->setAssignedToTeam($team);
-            $this->getRepo()->save($task);
+
+            $repo->save($task);
         }
 
-        $result->addMessage(count($command->getIds()) . ' Task(s) reassigned');
-
-        return $result;
+        return (new Result())
+            ->addMessage(count($command->getIds()) . ' Task(s) reassigned');
     }
 }
