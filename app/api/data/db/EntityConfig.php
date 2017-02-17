@@ -1233,6 +1233,12 @@ return array(
                 'property' => 'fee',
             ),
         ),
+        'bus_reg_id' => array(
+            'inversedBy' => array(
+                'entity' => 'BusReg',
+                'property' => 'fee',
+            ),
+        ),
     ),
     'ebsr_submission_result' => array(
         'email_authority' => array(
