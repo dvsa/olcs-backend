@@ -154,6 +154,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             $this->setLicenceType($licenceType);
             return true;
         }
+
+        return null;
     }
 
     public function isValidTol($niFlag, $goodsOrPsv, $licenceType)
@@ -581,6 +583,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         if ($this->getGoodsOrPsv()) {
             return $this->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
         }
+
+        return null;
     }
 
     /**
@@ -591,6 +595,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         if ($this->getGoodsOrPsv()) {
             return $this->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_PSV;
         }
+
+        return null;
     }
 
     /**
@@ -601,6 +607,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         if ($this->getLicenceType()) {
             return $this->getLicenceType()->getId() === Licence::LICENCE_TYPE_SPECIAL_RESTRICTED;
         }
+
+        return null;
     }
 
     /**
@@ -984,7 +992,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         // If there is an advertisement date then
-        if ($aoc->getAdPlacedDate()) {
+        if ($aoc->getAdPlaced() === 'Y' && $aoc->getAdPlacedDate()) {
             return $aoc->getAdPlacedDate();
         }
 
@@ -1043,6 +1051,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     /**
      * Method to return ooo as strings. Used in submission tables
      * @param string $format
+     *
      * @return string
      */
     public function getOutOfOppositionDateAsString()
@@ -1054,6 +1063,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     /**
      * Method to return oor as strings. Used in submission tables
      * @param string $format
+     *
      * @return string
      */
     public function getOutOfRepresentationDateAsString()
@@ -1065,6 +1075,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     /**
      * @param $date
      * @param string $format
+     *
      * @return string
      */
     private function formatDateToString($date, $format = self::DATE_FORMAT)
@@ -1278,6 +1289,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
     /**
      * Determine and set the latest publication number
+     *
      * @return mixed
      */
     public function determinePublicationNo()
@@ -1295,6 +1307,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
     /**
      * Determine and set the latest publication number
+     *
      * @return mixed
      */
     public function determinePublishedDate()
@@ -1311,6 +1324,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
     /**
      * Has this application received any opposition
+     *
      * @return bool
      */
     public function hasOpposition()
@@ -1357,11 +1371,21 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return null;
     }
 
+    /**
+     * Get Traffic Area
+     *
+     * @return TrafficArea
+     */
     public function getTrafficArea()
     {
         return $this->getLicence()->getTrafficArea();
     }
 
+    /**
+     * Get Operating Centres Net Delta
+     *
+     * @return int
+     */
     public function getOperatingCentresNetDelta()
     {
         $delta = 0;
@@ -1396,6 +1420,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return $this;
     }
 
+    /**
+     * Has Allow Fee Payments
+     *
+     * @return bool
+     */
     public function allowFeePayments()
     {
         if (in_array(
@@ -1412,6 +1441,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return $this->getLicence()->allowFeePayments();
     }
 
+    /**
+     * Has application changed vehicle or trailer authorisation
+     *
+     * @return bool
+     */
     public function hasAuthChanged()
     {
         if ($this->isNew()) {
@@ -1432,6 +1466,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return false;
     }
 
+    /**
+     * Is Application has Under Consideration status
+     *
+     * @return bool
+     */
     public function isUnderConsideration()
     {
         return !is_null($this->getStatus())
@@ -1459,6 +1498,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return $shortCodes[$this->getLicenceType()->getId()];
     }
 
+    /**
+     * Get Context Value
+     *
+     * @return string
+     */
     public function getContextValue()
     {
         return $this->getLicence()->getLicNo();
@@ -1615,6 +1659,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
+     * Has Outstanding Grant Fee
+     *
      * @return bool
      */
     public function hasOutstandingGrantFee()
@@ -1705,7 +1751,9 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * @inheritdoc
+     * Get the organisation
+     *
+     * @return Entity\Organisation\Organisation
      */
     public function getRelatedOrganisation()
     {
