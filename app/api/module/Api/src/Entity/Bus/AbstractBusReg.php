@@ -743,6 +743,15 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     protected $ebsrSubmissions;
 
     /**
+     * Fee
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Fee\Fee", mappedBy="busReg")
+     */
+    protected $fees;
+
+    /**
      * Publication link
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -792,6 +801,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
         $this->readAudits = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->ebsrSubmissions = new ArrayCollection();
+        $this->fees = new ArrayCollection();
         $this->publicationLinks = new ArrayCollection();
         $this->txcInboxs = new ArrayCollection();
     }
@@ -2735,6 +2745,69 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     {
         if ($this->ebsrSubmissions->contains($ebsrSubmissions)) {
             $this->ebsrSubmissions->removeElement($ebsrSubmissions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the fee
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being set as the value
+     *
+     * @return BusReg
+     */
+    public function setFees($fees)
+    {
+        $this->fees = $fees;
+
+        return $this;
+    }
+
+    /**
+     * Get the fees
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getFees()
+    {
+        return $this->fees;
+    }
+
+    /**
+     * Add a fees
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being added
+     *
+     * @return BusReg
+     */
+    public function addFees($fees)
+    {
+        if ($fees instanceof ArrayCollection) {
+            $this->fees = new ArrayCollection(
+                array_merge(
+                    $this->fees->toArray(),
+                    $fees->toArray()
+                )
+            );
+        } elseif (!$this->fees->contains($fees)) {
+            $this->fees->add($fees);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a fees
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being removed
+     *
+     * @return BusReg
+     */
+    public function removeFees($fees)
+    {
+        if ($this->fees->contains($fees)) {
+            $this->fees->removeElement($fees);
         }
 
         return $this;

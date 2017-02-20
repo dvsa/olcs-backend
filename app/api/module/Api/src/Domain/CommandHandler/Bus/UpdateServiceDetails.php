@@ -25,7 +25,7 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
 {
     protected $repoServiceName = 'Bus';
 
-    protected $extraRepos = ['BusRegOtherService', 'Fee'];
+    protected $extraRepos = ['BusRegOtherService'];
 
     /**
      * Handle command
@@ -64,7 +64,7 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
 
         $this->processServiceNumbers($busReg, $command->getOtherServices());
 
-        if ($busReg->getReceivedDate() !== null && $this->shouldCreateFee($busReg)) {
+        if ($busReg->shouldCreateFee()) {
             $result->merge($this->handleSideEffect($this->createBusFeeCommand($busRegId)));
         }
 
@@ -72,25 +72,6 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
         $result->addMessage('Bus registration saved successfully');
 
         return $result;
-    }
-
-    /**
-     * Returns whether we should create a fee
-     * (basically this is down to whether there's already a fee in place for this busReg)
-     *
-     * @param BusReg $busReg Bus reg
-     *
-     * @return bool
-     */
-    private function shouldCreateFee($busReg)
-    {
-        $latestFee = $this->getRepo('Fee')->getLatestFeeForBusReg($busReg->getId());
-
-        if (!empty($latestFee) || !($busReg->isChargeableStatus())) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
