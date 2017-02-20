@@ -87,6 +87,7 @@ return [
     CommandHandler\Discs\CeasePsvDiscs::class                                         => IsSideEffect::class,
     CommandHandler\LicenceVehicle\RemoveLicenceVehicle::class                         => IsSideEffect::class,
     CommandHandler\Vehicle\ProcessDuplicateVehicleWarning::class                      => IsSideEffect::class,
+    CommandHandler\Vehicle\RemoveDuplicateVehicle::class                              => IsSideEffect::class,
     CommandHandler\Tm\DeleteTransportManagerLicence::class                            => IsSideEffect::class,
     CommandHandler\ContactDetails\SaveAddress::class                                  => IsSideEffect::class,
     CommandHandler\Organisation\UpdateTradingNames::class                             => IsSideEffect::class,

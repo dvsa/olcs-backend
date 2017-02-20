@@ -599,6 +599,10 @@ return [
         => CommandHandler\Vehicle\ProcessDuplicateVehicleWarning::class,
     Command\Vehicle\ProcessDuplicateVehicleWarnings::class
         => CommandHandler\Vehicle\ProcessDuplicateVehicleWarnings::class,
+    Command\Vehicle\ProcessDuplicateVehicleRemoval::class
+        => CommandHandler\Vehicle\ProcessDuplicateVehicleRemoval::class,
+    Command\Vehicle\RemoveDuplicateVehicle::class
+        => CommandHandler\Vehicle\RemoveDuplicateVehicle::class,
 
     // Domain - Transport Managers
     Command\Tm\DeleteTransportManagerLicence::class => CommandHandler\Tm\DeleteTransportManagerLicence::class,

@@ -85,6 +85,22 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * Duplicate vehicle removal action
+     *
+     * @return ConsoleModel
+     */
+    public function duplicateVehicleRemovalAction()
+    {
+        return $this->handleExitStatus(
+            $this->handleCommand(
+                [
+                    Command\Vehicle\ProcessDuplicateVehicleRemoval::create([]),
+                ]
+            )
+        );
+    }
+
+    /**
      * Process LicenceStatusRules
      *
      * @return ConsoleModel
