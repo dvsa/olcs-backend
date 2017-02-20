@@ -40,7 +40,7 @@ final class ReassignTasks extends AbstractCommandHandler implements Transactione
 
         /** @var Entity\User\User $user */
         $user = null;
-        if (null !== $userId) {
+        if ($userId !== null) {
             $user = $repo->getReference(Entity\User\User::class, $command->getUser());
         }
 
@@ -49,9 +49,9 @@ final class ReassignTasks extends AbstractCommandHandler implements Transactione
 
         /** @var Entity\User\Team $team */
         $team = null;
-        if (0 !== $teamId) {
+        if ($teamId !== 0) {
             $team = $repo->getReference(Entity\User\Team::class, $command->getTeam());
-        } elseif (null !== $user) {
+        } elseif ($user !== null) {
             $team = $user->getTeam();
         }
 
