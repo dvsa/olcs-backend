@@ -786,11 +786,9 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     /**
      * Returns whether a bus reg may be granted
      *
-     * @param FeeEntity $fee Fee
-     *
      * @return bool
      */
-    public function isGrantable(FeeEntity $fee = null)
+    public function isGrantable()
     {
         if (false === $this->isGrantableBasedOnRequiredFields()) {
             // bus reg without all required fields which makes it non-grantable
@@ -802,7 +800,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             return false;
         }
 
-        if ((false === $this->isGrantableBasedOnFee($fee))) {
+        if ($this->hasOutstandingFee()) {
             // bus reg with a fee which makes it non-grantable
             return false;
         }
@@ -893,21 +891,52 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     }
 
     /**
-     * Returns whether a bus reg has a fee which makes it grantable
-     *
-     * @param FeeEntity $fee Fee
+     * Whether the registration has an active fee (anything except cancelled)
      *
      * @return bool
      */
-    private function isGrantableBasedOnFee(FeeEntity $fee = null)
+    private function hasActiveFee()
     {
-        if (empty($fee)) {
-            // no fee makes it grantable
-            return true;
+        $fees = $this->getFees();
+
+        /** @var FeeEntity $fee */
+        foreach ($fees as $fee) {
+            if ($fee->isPaid() || $fee->isOutstanding()) {
+                return true;
+            }
         }
 
-        if ($fee->getFeeStatus()->getId() === FeeEntity::STATUS_PAID) {
-            // the fee is paid
+        return false;
+    }
+
+    /**
+     * Whether the registration has an outstanding fee
+     *
+     * @return bool
+     */
+    private function hasOutstandingFee()
+    {
+        $fees = $this->getFees();
+
+        /** @var FeeEntity $fee */
+        foreach ($fees as $fee) {
+            if ($fee->isOutstanding()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns whether we should create a fee
+     * (we need there to be a received date, have the correct status, and not already have an active fee)
+     *
+     * @return bool
+     */
+    public function shouldCreateFee()
+    {
+        if ($this->receivedDate !== null && $this->isChargeableStatus() && !$this->hasActiveFee()) {
             return true;
         }
 
