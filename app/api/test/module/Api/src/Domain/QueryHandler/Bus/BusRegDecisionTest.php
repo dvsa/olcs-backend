@@ -8,11 +8,10 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\BusRegDecision;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
-use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Transfer\Query\Bus\BusRegDecision as Qry;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 
 /**
  * BusReg Decision Test
@@ -23,7 +22,6 @@ class BusRegDecisionTest extends QueryHandlerTestCase
     {
         $this->sut = new BusRegDecision();
         $this->mockRepo('Bus', BusRepo::class);
-        $this->mockRepo('Fee', FeeRepo::class);
 
         parent::setUp();
     }
@@ -32,25 +30,16 @@ class BusRegDecisionTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
-        $fee = m::mock(FeeEntity::class);
-
-        $bus = m::mock(BusReg::class)->makePartial();
-        $bus->shouldReceive('serialize')
-            ->andReturn(['foo'])
-            ->shouldReceive('getDecision')
-            ->andReturn(['bar'])
-            ->shouldReceive('isGrantable')
-            ->with($fee)
-            ->andReturn(true);
+        $bus = m::mock(BusReg::class);
+        $bus->shouldReceive('serialize')->once()->andReturn(['foo']);
+        $bus->shouldReceive('getDecision')->once()->andReturn(['bar']);
+        $bus->shouldReceive('isGrantable')->once()->andReturn(true);
 
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($bus);
 
-        $this->repoMap['Fee']->shouldReceive('getLatestFeeForBusReg')
-            ->with(111)
-            ->andReturn($fee);
-
+        /** @var Result $result */
         $result = $this->sut->handleQuery($query);
 
         $this->assertEquals(['foo', 'decision' => ['bar'], 'isGrantable' => true], $result->serialize());
