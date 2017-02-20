@@ -54,6 +54,15 @@ return [
                         ],
                     ],
                 ],
+                'duplicate-vehicle-removal' => [
+                    'options' => [
+                        'route' => 'duplicate-vehicle-removal [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'duplicateVehicleRemoval',
+                        ],
+                    ],
+                ],
                 'batch-cns' => [
                     'options' => [
                         'route' => 'batch-cns [--verbose|-v] [--dryrun|-d]',

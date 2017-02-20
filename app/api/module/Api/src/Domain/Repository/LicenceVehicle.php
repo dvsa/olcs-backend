@@ -499,4 +499,34 @@ class LicenceVehicle extends AbstractRepository
 
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
+
+    /**
+     * Fetch for removal
+     *
+     * @return array
+     */
+    public function fetchForRemoval()
+    {
+        $qb = $this->createQueryBuilder();
+
+        $now = new DateTime();
+        $sentDate = $now->sub(new \DateInterval('P15D'));
+        $qb->innerJoin('m.licence', 'l')
+            ->innerJoin('m.vehicle', 'v')
+            ->andWhere(
+                $qb->expr()->in(
+                    'l.status',
+                    [
+                        LicenceEntity::LICENCE_STATUS_CURTAILED,
+                        LicenceEntity::LICENCE_STATUS_VALID,
+                        LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                    ]
+                )
+            )
+            ->andWhere($qb->expr()->lt('m.warningLetterSentDate', ':sentDate'))
+            ->andWhere($qb->expr()->isNull('m.removalDate'))
+            ->setParameter('sentDate', $sentDate);
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+    }
 }
