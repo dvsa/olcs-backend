@@ -39,6 +39,63 @@ class BusRegEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
+    /**
+     * @dataProvider shouldCreateFeeProvider
+     *
+     * @param $receivedDate
+     * @param $status
+     * @param $fees
+     * @param $expectedResult
+     */
+    public function testShouldCreateFee($receivedDate, $status, $fees, $expectedResult)
+    {
+        $statusRefData = new RefData($status);
+        $entity = new Entity();
+        $entity->setReceivedDate($receivedDate);
+        $entity->setStatus($statusRefData);
+        $entity->setFees(new ArrayCollection($fees));
+
+        $this->assertEquals($expectedResult, $entity->shouldCreateFee());
+    }
+
+    /**
+     * Data provider for shouldCreateFee
+     *
+     * @return array
+     */
+    public function shouldCreateFeeProvider()
+    {
+        $outstandingFee = m::mock(FeeEntity::class);
+        $outstandingFee->shouldReceive('isPaid')->andReturn(false);
+        $outstandingFee->shouldReceive('isOutstanding')->andReturn(true);
+
+        $paidFee = m::mock(FeeEntity::class);
+        $paidFee->shouldReceive('isPaid')->andReturn(true);
+        $paidFee->shouldReceive('isOutstanding')->never();
+
+        $cancelledFee = m::mock(FeeEntity::class);
+        $cancelledFee->shouldReceive('isPaid')->andReturn(false);
+        $cancelledFee->shouldReceive('isOutstanding')->andReturn(false);
+
+        return [
+            [null, Entity::STATUS_NEW, [], false],
+            [null, Entity::STATUS_VAR, [], false],
+            ['2015-12-25', Entity::STATUS_CANCEL, [], false],
+            ['2015-12-25', Entity::STATUS_NEW, [$cancelledFee], true],
+            ['2015-12-25', Entity::STATUS_VAR, [$cancelledFee], true],
+            ['2015-12-25', Entity::STATUS_NEW, [], true],
+            ['2015-12-25', Entity::STATUS_VAR, [], true],
+            ['2015-12-25', Entity::STATUS_NEW, [$paidFee], false],
+            ['2015-12-25', Entity::STATUS_VAR, [$paidFee], false],
+            ['2015-12-25', Entity::STATUS_NEW, [$outstandingFee], false],
+            ['2015-12-25', Entity::STATUS_VAR, [$outstandingFee], false],
+            ['2015-12-25', Entity::STATUS_NEW, [$cancelledFee, $paidFee], false],
+            ['2015-12-25', Entity::STATUS_VAR, [$cancelledFee, $paidFee], false],
+            ['2015-12-25', Entity::STATUS_NEW, [$cancelledFee, $outstandingFee], false],
+            ['2015-12-25', Entity::STATUS_VAR, [$cancelledFee, $outstandingFee], false],
+        ];
+    }
+
     private function getAssertionsForCanEditIsTrue()
     {
         $id = 15;
@@ -1669,8 +1726,10 @@ class BusRegEntityTest extends EntityTester
 
         $fee = new FeeEntity($feeType, 10, $status);
 
+        $this->entity->setFees(new ArrayCollection([$fee]));
+
         // Grantable - Rule: Other - isShortNotice: N - Fee: paid
-        $this->assertEquals(true, $this->entity->isGrantable($fee));
+        $this->assertEquals(true, $this->entity->isGrantable());
     }
 
     public function testIsGrantableWithFeeOutstanding()
@@ -1684,8 +1743,59 @@ class BusRegEntityTest extends EntityTester
 
         $fee = new FeeEntity($feeType, 10, $status);
 
+        $this->entity->setFees(new ArrayCollection([$fee]));
+
         // nonGrantable - Rule: Other - isShortNotice: N - Fee: outstanding
-        $this->assertEquals(false, $this->entity->isGrantable($fee));
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithMixedFeesGrantable()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        $feeType = new FeeTypeEntity();
+
+        $status1 = new RefDataEntity();
+        $status1->setId(FeeEntity::STATUS_CANCELLED);
+        $status2 = new RefDataEntity();
+        $status2->setId(FeeEntity::STATUS_CANCELLED);
+        $status3 = new RefDataEntity();
+        $status3->setId(FeeEntity::STATUS_PAID);
+
+        $fee1 = new FeeEntity($feeType, 10, $status1);
+        $fee2 = new FeeEntity($feeType, 10, $status2);
+        $fee3 = new FeeEntity($feeType, 10, $status3);
+
+        $this->entity->setFees(new ArrayCollection([$fee1, $fee2, $fee3]));
+
+        // Grantable - Rule: Other - isShortNotice: N - Fee: paid
+        $this->assertEquals(true, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithMixedFeesNonGrantable()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        $feeType = new FeeTypeEntity();
+
+        $status1 = new RefDataEntity();
+        $status1->setId(FeeEntity::STATUS_CANCELLED);
+        $status2 = new RefDataEntity();
+        $status2->setId(FeeEntity::STATUS_CANCELLED);
+        $status3 = new RefDataEntity();
+        $status3->setId(FeeEntity::STATUS_PAID);
+        $status4 = new RefDataEntity();
+        $status4->setId(FeeEntity::STATUS_OUTSTANDING);
+
+        $fee1 = new FeeEntity($feeType, 10, $status1);
+        $fee2 = new FeeEntity($feeType, 10, $status2);
+        $fee3 = new FeeEntity($feeType, 10, $status3);
+        $fee4 = new FeeEntity($feeType, 10, $status4);
+
+        $this->entity->setFees(new ArrayCollection([$fee1, $fee2, $fee3, $fee4]));
+
+        // nonGrantable - Rule: Other - isShortNotice: N - Fee: outstanding
+        $this->assertEquals(false, $this->entity->isGrantable());
     }
 
     public function testIsGrantableWithoutShortNotice()
