@@ -18,6 +18,7 @@ return [
     CommandHandler\Email\SendErruErrors::class => IsSystemUser::class,
     QueryHandler\Application\NotTakenUpList::class => IsSystemUser::class,
     CommandHandler\Vehicle\ProcessDuplicateVehicleWarnings::class => IsSystemUser::class,
+    CommandHandler\Vehicle\ProcessDuplicateVehicleRemoval::class => IsSystemUser::class,
     CommandHandler\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class => IsSystemUser::class,
     CommandHandler\LicenceStatusRule\ProcessToValid::class => IsSystemUser::class,
     CommandHandler\CompaniesHouse\EnqueueOrganisations::class => IsSystemUser::class,

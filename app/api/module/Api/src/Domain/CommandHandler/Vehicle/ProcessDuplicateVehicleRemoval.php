@@ -7,15 +7,22 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
+use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
+use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Process Duplicate Vehicle Removal
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class ProcessDuplicateVehicleRemoval extends AbstractCommandHandler
+final class ProcessDuplicateVehicleRemoval extends AbstractCommandHandler implements EmailAwareInterface
 {
+    use EmailAwareTrait;
+
     protected $repoServiceName = 'LicenceVehicle';
+
+    protected $extraRepos = ['SystemParameter'];
 
     /**
      * Handle command
@@ -95,12 +102,38 @@ final class ProcessDuplicateVehicleRemoval extends AbstractCommandHandler
         }
         usort(
             $removedVehicles, function ($a, $b) {
-            if ($a['qualificationType']['displayOrder'] == $b['qualificationType']['displayOrder']) {
-                return 0;
+                if ($a['vrm'] === $b['vrm']) {
+                    return 0;
+                }
+                return ($a['vrm'] > $b['vrm']) ? +1 : -1;
             }
-            return ($a['qualificationType']['displayOrder'] > $b['qualificationType']['displayOrder']) ? +1 : -1;
-        }
         );
+        try {
+            $message = new \Dvsa\Olcs\Email\Data\Message(
+                $emailAddress,
+                'email.duplicate-vehicles-removal.subject'
+            );
 
+            $this->sendEmailTemplate(
+                $message,
+                'email-duplicate-vehicles-removal',
+                [
+                    'removedVehicles' => $removedVehicles,
+                ]
+            );
+            $this->result->addMessage('Removed vehicle list successfully sent to ' . $emailAddress);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error sending removed vehicle list to ' . $emailAddress;
+            $this->result->addMessage($errorMessage);
+
+            Logger::err(
+                'Error sending removed vehicle list to ' . $emailAddress,
+                [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ]
+            );
+        }
     }
 }

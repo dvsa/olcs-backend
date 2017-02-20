@@ -56,9 +56,19 @@ class LicenceVehicle extends AbstractLicenceVehicle implements OrganisationProvi
         return null;
     }
 
-    public function removeDuplicateMark()
+    /**
+     * Remove duplicate mark
+     *
+     * @param bool $shouldRemoveSentDate shouldRemoveSentDate
+     *
+     * @return void
+     */
+    public function removeDuplicateMark($shouldRemoveSentDate = false)
     {
         $this->setWarningLetterSeedDate(null);
+        if ($shouldRemoveSentDate) {
+            $this->setWarningLetterSentDate(null);
+        }
     }
 
     public function markAsDuplicate()
