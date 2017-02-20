@@ -167,7 +167,6 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
             $this->expectedSideEffect(CmdCreateBusFee::class, ['id' => $busRegId], $createFeeResult);
         }
 
-
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
