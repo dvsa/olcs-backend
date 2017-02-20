@@ -6,13 +6,11 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\UpdateServiceDetails;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Api\Domain\Repository\BusNoticePeriod as BusNoticePeriodRepo;
 use Dvsa\Olcs\Api\Domain\Repository\BusRegOtherService as BusRegOtherServiceRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\UpdateServiceDetails as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CmdCreateBusFee;
@@ -35,7 +33,6 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
         $this->mockRepo('Bus', BusRepo::class);
         $this->mockRepo('BusNoticePeriod', BusNoticePeriodRepo::class);
         $this->mockRepo('BusRegOtherService', BusRegOtherServiceRepo::class);
-        $this->mockRepo('Fee', FeeRepo::class);
 
         parent::setUp();
     }
@@ -60,12 +57,10 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
      * @note we don't test the two dates here relate to each other properly, that is tested elsewhere
      * First date is included for completeness
      *
-     * @dataProvider receivedDateProvider
-     * @param string|null $receivedDate
-     * @param \DateTime|null
-     * @param int $checkForFee
+     * @dataProvider createFeeProvider
+     * @param bool $createFee
      */
-    public function testHandleCommand($receivedDate, $receivedDateFromBusReg, $checkForFee)
+    public function testHandleCommand($createFee)
     {
         $busRegId = 99;
         $serviceNumber = 12345;
@@ -74,6 +69,7 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
         $via = 'via';
         $otherDetails = 'other details';
         $effectiveDate = '';
+        $receivedDate = '';
         $endDate = '';
         $busNoticePeriod = 2;
         $otherServices = [
@@ -140,14 +136,9 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
             ->once()
             ->shouldReceive('getOtherServices')
             ->andReturn([0 => $mockBusRegObjectOtherServiceEntity])
-            ->shouldReceive('getReceivedDate')
+            ->shouldReceive('shouldCreateFee')
             ->once()
-            ->andReturn($receivedDateFromBusReg);
-
-        $this->repoMap['Fee']->shouldReceive('getLatestFeeForBusReg')
-            ->with($busRegId)
-            ->times($checkForFee)
-            ->andReturn(['fee']); //won't get this far if no received date
+            ->andReturn($createFee);
 
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
@@ -168,6 +159,15 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
         $this->repoMap['BusNoticePeriod']->shouldReceive('fetchById')
             ->andReturn($mockBusNoticePeriodEntity);
 
+        if ($createFee) {
+            $createFeeResult = new Result();
+            $createFeeResult
+                ->addId('fee', 99)
+                ->addMessage('bus reg fee created');
+            $this->expectedSideEffect(CmdCreateBusFee::class, ['id' => $busRegId], $createFeeResult);
+        }
+
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
@@ -176,93 +176,11 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
     /**
      * return array
      */
-    public function receivedDateProvider()
+    public function createFeeProvider()
     {
         return [
-            ['2015-12-25', \DateTime::createFromFormat('Y-m-d', '2015-12-25'), 1],
-            [null, null, 0]
+            [true],
+            [false]
         ];
-    }
-
-    /**
-     * testHandleCommand and also that fees side effect is called
-     */
-    public function testHandleCommandCreateFee()
-    {
-        $busRegId = 99;
-        $serviceNumber = 12345;
-        $startPoint = 'start point';
-        $finishPoint = 'finish point';
-        $via = 'via';
-        $otherDetails = 'other details';
-        $receivedDate = '2015-12-25';
-        $busRegReceivedDate = new \DateTime('2015-12-25');
-        $effectiveDate = '';
-        $endDate = '';
-        $busNoticePeriod = 2;
-        $otherServices = [];
-        $busServiceTypes = [];
-
-        $command = Cmd::Create(
-            [
-                'id' => $busRegId,
-                'serviceNumber' => $serviceNumber,
-                'startPoint' => $startPoint,
-                'finishPoint' => $finishPoint,
-                'via' => $via,
-                'otherDetails' => $otherDetails,
-                'receivedDate' => $receivedDate,
-                'effectiveDate' => $effectiveDate,
-                'endDate' => $endDate,
-                'busNoticePeriod' => $busNoticePeriod,
-                'otherServices' => $otherServices,
-                'busServiceTypes' => $busServiceTypes
-            ]
-        );
-
-        /** @var RefDataEntity $mockStatus */
-        $mockStatus = m::mock(RefDataEntity::class);
-        $mockStatus->shouldReceive('getId')->andReturn(BusRegEntity::STATUS_NEW);
-
-        /** @var BusRegEntity $busReg */
-        $busReg = m::mock(BusRegEntity::class)->makePartial();
-        $busReg->shouldReceive('updateServiceDetails')
-            ->once()
-            ->shouldReceive('getId')
-            ->andReturn($busRegId)
-            ->shouldReceive('getStatus')
-            ->andReturn($mockStatus)
-            ->shouldReceive('setBusServiceTypes')
-            ->with(m::type(ArrayCollection::class))
-            ->once()
-            ->shouldReceive('getOtherServices')
-            ->andReturn(new ArrayCollection())
-            ->shouldReceive('getReceivedDate')
-            ->andReturn($busRegReceivedDate);
-
-        $this->repoMap['Fee']->shouldReceive('getLatestFeeForBusReg')
-            ->with($busRegId)
-            ->once()
-            ->andReturn([]);
-
-        $this->repoMap['Bus']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
-            ->andReturn($busReg)
-            ->shouldReceive('save')
-            ->with(m::type(BusRegEntity::class))
-            ->once();
-
-        $createFeeResult = new Result();
-        $createFeeResult
-            ->addId('fee', 99)
-            ->addMessage('bus reg fee created');
-        $this->expectedSideEffect(CmdCreateBusFee::class, ['id' => $busRegId], $createFeeResult);
-
-        $result = $this->sut->handleCommand($command);
-
-        $this->assertInstanceOf(Result::class, $result);
-
-        $this->assertEquals(['fee' => 99, 'BusReg' => $busRegId], $result->getIds());
-        $this->assertEquals(['bus reg fee created', 'Bus registration saved successfully'], $result->getMessages());
     }
 }
