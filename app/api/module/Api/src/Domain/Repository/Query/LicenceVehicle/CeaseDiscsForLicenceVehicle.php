@@ -19,8 +19,10 @@ class CeaseDiscsForLicenceVehicle extends AbstractRawQuery
     ];
 
     protected $queryTemplate = 'UPDATE {gd}
-      SET {gd.ceasedDate} = :ceasedDate, {gd.isInterim} = 0,
-        {gd.lastModifiedOn} = NOW(), {gd.lastModifiedBy} = :currentUserId
+      SET {gd.ceasedDate} = :ceasedDate,
+          {gd.isInterim} = 0,
+          {gd.lastModifiedOn} = NOW(),
+          {gd.lastModifiedBy} = :currentUserId
       WHERE {gd.licenceVehicle} = :licenceVehicle
       AND {gd.ceasedDate} IS NULL';
 

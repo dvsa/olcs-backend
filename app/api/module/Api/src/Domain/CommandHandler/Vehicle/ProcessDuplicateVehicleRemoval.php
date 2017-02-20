@@ -60,25 +60,25 @@ final class ProcessDuplicateVehicleRemoval extends AbstractCommandHandler implem
                 continue;
             }
 
+            $licenceVehicleId = $licenceVehicle->getId();
+
             $data = [
-                'id' => $licenceVehicle->getId()
+                'id' => $licenceVehicleId
             ];
             try {
                 $this->result->merge($this->handleSideEffect(RemoveDuplicateVehicleCmd::create($data)));
-                $this->result->addMessage($licenceVehicle->getId() . ' succeeded');
+                $this->result->addMessage($licenceVehicleId . ' succeeded');
                 $count++;
                 $removedVehicles[] = [
-                    'vrm' => $licenceVehicle->getVehicle()->getVrm(),
-                    'licNo' => $licenceVehicle->getLicence()->getLicNo()
+                    'vrm' => $vrm,
+                    'licNo' => $licence->getLicNo()
                 ];
             } catch (\Exception $ex) {
-                $this->result->addMessage($licenceVehicle->getId() . ' failed: ' . $ex->getMessage());
+                $this->result->addMessage($licenceVehicleId . ' failed: ' . $ex->getMessage());
                 $countFailed++;
             }
         }
-        if (count($removedVehicles) > 0) {
-            $this->sendReport($removedVehicles);
-        }
+        $this->sendReport($removedVehicles);
 
         $this->result->addMessage($count . ' vehicle(s) removed');
         $this->result->addMessage($countRemoved . ' record(s) no longer duplicates');
@@ -94,8 +94,11 @@ final class ProcessDuplicateVehicleRemoval extends AbstractCommandHandler implem
      *
      * @return void
      */
-    protected function sendReport($removedVehicles)
+    protected function sendReport(array $removedVehicles)
     {
+        if (count($removedVehicles) === 0) {
+            return;
+        }
         $emailAddress = $this->getRepo('SystemParameter')->fetchValue(SystemParameter::DUPLICATE_VEHICLE_EMAIL_LIST);
         if (empty($emailAddress)) {
             return;
