@@ -63,8 +63,10 @@ class CeaseDiscsForLicenceVehicleTest extends AbstractDbQueryTestCase
     protected function getExpectedQuery()
     {
         return 'UPDATE goods_disc gd '
-          . 'SET gd.ceased_date = :ceasedDate, gd.is_interim = 0, '
-          . 'gd.last_modified_on = NOW(), gd.last_modified_by = :currentUserId '
+          . 'SET gd.ceased_date = :ceasedDate, '
+          . 'gd.is_interim = 0, '
+          . 'gd.last_modified_on = NOW(), '
+          . 'gd.last_modified_by = :currentUserId '
           . 'WHERE gd.licence_vehicle_id = :licenceVehicle '
           . 'AND gd.ceased_date IS NULL';
     }

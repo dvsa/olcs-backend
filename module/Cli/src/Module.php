@@ -41,6 +41,7 @@ class Module implements ConsoleUsageProviderInterface
             'system-parameter name value [--verbose|-v]' => 'Set a system parameter',
             'resolve-payments [--verbose|-v]' => 'Resolve pending CPMS payments',
             'create-vi-extract-files' => 'Create mobile compliance VI extract files',
+            'duplicate-vehicle-removal [--verbose|-v]' => 'Duplicate vehilce removal',
                 // Describe parameters
             ['--oc|-oc', 'Export Operating Centres file'],
             ['--op|-op', 'Export Operators file'],
