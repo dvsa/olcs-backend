@@ -634,4 +634,33 @@ class LicenceVehicleTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getResult')->with(Query::HYDRATE_ARRAY)->once()->andReturn('result');
         $this->assertSame('result', $this->sut->fetchPsvVehiclesByLicenceId($licenceId, $includeRemoved));
     }
+
+    public function testFetchForRemoval()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
+
+        $mockQb->shouldReceive('innerJoin')->with('m.vehicle', 'v')->once()->andReturnSelf();
+        $mockQb->shouldReceive('innerJoin')->with('m.licence', 'l')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->in')
+            ->with(
+                'l.status',
+                [
+                    LicenceEntity::LICENCE_STATUS_CURTAILED,
+                    LicenceEntity::LICENCE_STATUS_VALID,
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                ]
+            )
+            ->once()
+            ->andReturn('COND1');
+        $mockQb->shouldReceive('expr->lt')->with('m.warningLetterSentDate', ':sentDate')->once()->andReturn('COND2');
+        $mockQb->shouldReceive('expr->isNull')->with('m.removalDate')->once()->andReturn('COND3');
+        $mockQb->shouldReceive('andWhere')->with('COND1')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->with('COND2')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->with('COND3')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('sentDate', m::type(\DateTime::class))->once()->andReturnSelf();
+        $mockQb->shouldReceive('getQuery->getResult')->with(Query::HYDRATE_OBJECT)->once()->andReturn('result');
+
+        $this->assertSame('result', $this->sut->fetchForRemoval());
+    }
 }

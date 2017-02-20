@@ -244,6 +244,21 @@ class GoodsDiscTest extends RepositoryTestCase
         $this->assertSame(564, $this->sut->ceaseDiscsForLicence($licenceId));
     }
 
+    public function testCeaseDiscsForLicenceVehicle()
+    {
+        $lvId = 123;
+        $rowCount = 564;
+
+        $stmt = m::mock();
+        $stmt->shouldReceive('rowCount')->with()->once()->andReturn($rowCount);
+
+        $this->expectQueryWithData(
+            'LicenceVehicle\CeaseDiscsForLicenceVehicle', ['licenceVehicle' => $lvId], [], $stmt
+        );
+
+        $this->assertSame($rowCount, $this->sut->ceaseDiscsForLicenceVehicle($lvId));
+    }
+
     public function testCeaseDiscsForApplication()
     {
         $stmt = m::mock();

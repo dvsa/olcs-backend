@@ -25,4 +25,5 @@ return array(
     'email.user-created.subject' => 'You’ve been added to an account',
     'email.user-registered.subject' => 'Your account’s been registered',
     'email.user-temporary-password.subject' => 'Your temporary password',
+    'email.duplicate-vehicles-removal.subject' => 'List of removed duplicated vehicles'
 );

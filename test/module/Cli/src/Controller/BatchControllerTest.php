@@ -181,6 +181,19 @@ class BatchControllerTest extends MockeryTestCase
         $this->sut->duplicateVehicleWarningAction();
     }
 
+    public function testDuplicateVehicleRemovalAction()
+    {
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\Vehicle\ProcessDuplicateVehicleRemoval::class))
+            ->once()
+            ->andReturn(new Command\Result());
+
+        $this->sut->duplicateVehicleRemovalAction();
+    }
+
     public function testContinuationNotSoughtAction()
     {
         $this->mockParamsPlugin(

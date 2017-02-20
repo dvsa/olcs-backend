@@ -6,6 +6,7 @@ return [
     'factories' => [
         'LicenceVehicle\CeaseDiscsForLicence' => Query\LicenceVehicle\CeaseDiscsForLicence::class,
         'LicenceVehicle\CeaseDiscsForApplication' => Query\LicenceVehicle\CeaseDiscsForApplication::class,
+        'LicenceVehicle\CeaseDiscsForLicenceVehicle' => Query\LicenceVehicle\CeaseDiscsForLicenceVehicle::class,
         'LicenceVehicle\CreateDiscsForLicence' => Query\LicenceVehicle\CreateDiscsForLicence::class,
         'CommunityLicence\ExpireAllForLicence' => Query\CommunityLicence\ExpireAllForLicence::class,
         'LicenceVehicle\ClearSpecifiedDateAndInterimAppForLicence'
