@@ -56,11 +56,12 @@ class FeesHelperService implements FactoryInterface
      * AC specify we should only get the *latest* application and interim
      * fees in the event there are multiple fees outstanding.
      *
-     * @param int $applicationId Application Id
+     * @param int  $applicationId       Application Id
+     * @param bool $shouldIgnoreInterim should ignore interim fee
      *
      * @return array
      */
-    public function getOutstandingFeesForApplication($applicationId)
+    public function getOutstandingFeesForApplication($applicationId, $shouldIgnoreInterimFee = false)
     {
         $outstandingFees = [];
 
@@ -73,7 +74,7 @@ class FeesHelperService implements FactoryInterface
         }
 
         // get interim fee if applicable
-        if ($application->isGoods()) {
+        if ($application->isGoods() && !$shouldIgnoreInterimFee) {
             $interimFee = $application->getLatestOutstandingInterimFee();
             if (!empty($interimFee)) {
                 $outstandingFees[] = $interimFee;

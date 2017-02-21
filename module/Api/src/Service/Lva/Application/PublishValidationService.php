@@ -57,7 +57,7 @@ class PublishValidationService implements \Zend\ServiceManager\FactoryInterface
         }
 
         // There is an outstanding application fee;
-        if (!empty($this->feesHelper->getOutstandingFeesForApplication($application->getId()))) {
+        if (!empty($this->feesHelper->getOutstandingFeesForApplication($application->getId(), true))) {
             $errors[self::ERROR_OUSTANDING_FEE] = 'There is an outstanding application fee';
         }
 
