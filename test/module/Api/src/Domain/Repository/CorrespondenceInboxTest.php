@@ -128,4 +128,19 @@ class CorrespondenceInboxTest extends RepositoryTestCase
 
         static::assertEquals('EXPECT', $this->sut->getAllRequiringReminder($minDate, $maxDate));
     }
+
+    public function testFetchByDocumentId()
+    {
+        $documentId = 123;
+
+        $qb = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($qb);
+
+        $qb->shouldReceive('expr->eq')->with('m.document', ':document')->once()->andReturn('condition');
+        $qb->shouldReceive('andWhere')->with('condition')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('document', $documentId)->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn('FOO');
+        $this->assertEquals('FOO', $this->sut->fetchByDocumentId($documentId));
+    }
 }

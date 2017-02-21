@@ -97,4 +97,20 @@ class CorrespondenceInbox extends AbstractRepository
             ->setFetchMode(Entity::class, 'document', \Doctrine\ORM\Mapping\ClassMetadata::FETCH_EAGER)
             ->getResult();
     }
+
+    /**
+     * Fetch by document id
+     *
+     * @param int $documentId document id
+     *
+     * @return array
+     */
+    public function fetchByDocumentId($documentId)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq($this->alias . '.document', ':document'));
+        $qb->setParameter('document', $documentId);
+
+        return $qb->getQuery()->getResult();
+    }
 }
