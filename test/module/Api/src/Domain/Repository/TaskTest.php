@@ -2,24 +2,21 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Entity;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\Task as Repo;
+use Dvsa\Olcs\Api\Domain\Repository;
 
 /**
- * TaskTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\Task
  */
 class TaskTest extends RepositoryTestCase
 {
-    /**
-     * @var m\MockInterface|\Dvsa\Olcs\Api\Domain\Repository\Task
-     */
+    /** @var m\MockInterface | Repository\Task */
     protected $sut;
 
     public function setUp()
     {
-        $this->setUpSut(Repo::class);
+        $this->setUpSut(Repository\Task::class);
     }
 
     public function testFetchByOrganisation()
@@ -156,5 +153,40 @@ class TaskTest extends RepositoryTestCase
         $result = $this->sut->flagUrgentsTasks();
 
         $this->assertSame(65, $result);
+    }
+
+    public function testGetTeamReferenceNull()
+    {
+        $userId = 6555;
+
+        $this->em->shouldReceive('getReference')->once()->with(Entity\User\User::class, $userId)->andReturn(null);
+
+        static::assertNull($this->sut->getTeamReference(null, $userId));
+        static::assertNull($this->sut->getTeamReference(null, null));
+    }
+
+    public function testGetTeamReferenceByTeam()
+    {
+        $teamId = 999;
+
+        $this->em->shouldReceive('getReference')->once()->with(Entity\User\Team::class, $teamId)->andReturn('EXPECT');
+
+        static::assertEquals('EXPECT', $this->sut->getTeamReference($teamId, null));
+    }
+
+    public function testGetTeamReferenceByUser()
+    {
+        $userId = 666;
+
+        $mockUser = m::mock(Entity\User\User::class);
+        $mockUser->shouldReceive('getTeam')->once()->andReturn('EXPECT');
+
+        $this->em
+            ->shouldReceive('getReference')
+            ->once()
+            ->with(Entity\User\User::class, $userId)
+            ->andReturn($mockUser);
+
+        static::assertEquals('EXPECT', $this->sut->getTeamReference(null, $userId));
     }
 }
