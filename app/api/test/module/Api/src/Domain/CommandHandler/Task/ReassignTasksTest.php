@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Task;
 
+use Dvsa\Olcs\Api\Domain\CommandHandler\Task\ReassignTasks;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\Task\ReassignTasks as Cmd;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Task\ReassignTasks;
-use Dvsa\Olcs\Api\Domain\Repository\Task;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
@@ -22,8 +22,7 @@ class ReassignTasksTest extends CommandHandlerTestCase
     const TEAM_ID_1 = 7001;
     const TEAM_ID_2 = 7002;
 
-    const USER_ID_1 = 6001;
-    const USER_ID_2 = 6002;
+    const USER_ID = 6001;
 
     /** @var ReassignTasks */
     protected $sut;
@@ -33,22 +32,18 @@ class ReassignTasksTest extends CommandHandlerTestCase
     private $mockTeam2;
     /** @var  m\MockInterface | User */
     private $mockUser;
-    /** @var  m\MockInterface | User */
-    private $mockUser2;
 
     public function setUp()
     {
         $this->sut = new ReassignTasks();
 
-        $this->mockRepo('Task', Task::class);
+        $this->mockRepo('Task', m::mock(Repository\Task::class)->makePartial());
 
         $this->mockTeam = m::mock(Team::class);
         $this->mockTeam2 = m::mock(Team::class);
 
         $this->mockUser = m::mock(User::class);
         $this->mockUser->shouldReceive('getTeam')->andReturn($this->mockTeam2);
-
-        $this->mockUser2 = m::mock(User::class);
 
         parent::setUp();
     }
@@ -59,8 +54,7 @@ class ReassignTasksTest extends CommandHandlerTestCase
 
         $this->references = [
             User::class => [
-                self::USER_ID_1 => $this->mockUser,
-                self::USER_ID_2 => $this->mockUser2,
+                self::USER_ID => $this->mockUser,
             ],
             Team::class => [
                 self::TEAM_ID_1 => $this->mockTeam,
@@ -76,7 +70,7 @@ class ReassignTasksTest extends CommandHandlerTestCase
         $command = Cmd::create(
             [
                 'ids' => [self::TASK_ID_1, self::TASK_ID_2],
-                'user' => self::USER_ID_1,
+                'user' => self::USER_ID,
                 'team' => self::TEAM_ID_1,
             ]
         );
@@ -149,7 +143,7 @@ class ReassignTasksTest extends CommandHandlerTestCase
         $command = Cmd::create(
             [
                 'ids' => [self::TASK_ID_1],
-                'user' => self::USER_ID_1,
+                'user' => self::USER_ID,
             ]
         );
 

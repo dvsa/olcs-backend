@@ -1,25 +1,19 @@
 <?php
 
-/**
- * Create Task Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Task;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Task\CreateTask;
-use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
-use Dvsa\Olcs\Api\Domain\Repository\Task;
-use Dvsa\Olcs\Api\Domain\Repository\TaskAllocationRule;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
-use Dvsa\Olcs\Api\Entity\Submission\Submission;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Person\Person;
+use Dvsa\Olcs\Api\Entity\Submission\Submission;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
@@ -30,27 +24,26 @@ use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Person;
 
 /**
- * Create Task Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Task\CreateTask
  */
 class CreateTaskTest extends CommandHandlerTestCase
 {
+    /** @var  CreateTask */
+    protected $sut;
+
     protected $mockLicence;
 
     protected $mockApplication;
 
     protected $rules;
-
+    /** @var  array */
     protected $rulesForAlphaSplit;
-
+    /** @var  m\MockInterface | TaskAllocationRuleEntity */
     protected $ruleForAlphaSplit;
+    /** @var  m\MockInterface */
+    private $mockTaskRepo;
 
     /**
      * Set up
@@ -58,9 +51,10 @@ class CreateTaskTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new CreateTask();
-        $this->mockRepo('Task', Task::class);
-        $this->mockRepo('TaskAllocationRule', TaskAllocationRule::class);
-        $this->mockRepo('SystemParameter', SystemParameter::class);
+
+        $this->mockRepo('Task', m::mock(Repository\Task::class)->makePartial());
+        $this->mockRepo('TaskAllocationRule', Repository\TaskAllocationRule::class);
+        $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
 
         parent::setUp();
 
@@ -137,7 +131,7 @@ class CreateTaskTest extends CommandHandlerTestCase
     /**
      * Test handle command
      */
-    public function testHandleCommand()
+    public function testHandleCommandX()
     {
         $data = [
             'category' => 1,
