@@ -1,18 +1,15 @@
 <?php
 
-/**
- * Delete Document Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\Repository\Document;
+use Dvsa\Olcs\Api\Domain\Repository\CorrespondenceInbox;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\DeleteDocument;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Document\DeleteDocument as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\DeleteSubmission as DeleteSubmissionCmd;
+use Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox as CorrespondenceInboxEntity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as Entity;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -28,6 +25,7 @@ class DeleteDocumentTest extends CommandHandlerTestCase
     {
         $this->sut = new DeleteDocument();
         $this->mockRepo('Document', Document::class);
+        $this->mockRepo('CorrespondenceInbox', CorrespondenceInbox::class);
 
         $this->mockedSmServices = [
             'FileUploader' => m::mock()
@@ -50,11 +48,13 @@ class DeleteDocumentTest extends CommandHandlerTestCase
      */
     public function testHandleCommand()
     {
-        $command = Cmd::create(['id' => 123]);
+        $documentId = 123;
+        $command = Cmd::create(['id' => $documentId]);
 
         /** @var Entity $document */
         $document = m::mock(Entity::class)->makePartial();
         $document->setIdentifier('ABC');
+        $document->setId($documentId);
 
         $this->mockedSmServices['FileUploader']->shouldReceive('remove')
             ->once()
@@ -65,6 +65,20 @@ class DeleteDocumentTest extends CommandHandlerTestCase
             ->andReturn($document)
             ->shouldReceive('delete')
             ->with($document);
+
+        $correspondenceInbox1 = m::mock(CorrespondenceInboxEntity::class);
+        $correspondenceInbox2 = m::mock(CorrespondenceInboxEntity::class);
+        $correspondenceInboxes = [$correspondenceInbox1, $correspondenceInbox2];
+        $this->repoMap['CorrespondenceInbox']->shouldReceive('fetchByDocumentId')
+            ->with($documentId)
+            ->andReturn($correspondenceInboxes)
+            ->once()
+            ->shouldReceive('delete')
+            ->with($correspondenceInbox1)
+            ->once()
+            ->shouldReceive('delete')
+            ->with($correspondenceInbox2)
+            ->once();
 
         $result = $this->sut->handleCommand($command);
 
@@ -85,6 +99,7 @@ class DeleteDocumentTest extends CommandHandlerTestCase
     public function testHandleCommandEbsrDoc()
     {
         $ebsrSubId = 123345;
+        $documentId = 123;
         $command = Cmd::create(['id' => 123]);
 
         /** @var EbsrSubmissionEntity $ebsrSubmission */
@@ -95,6 +110,7 @@ class DeleteDocumentTest extends CommandHandlerTestCase
         $document = m::mock(Entity::class)->makePartial();
         $document->setIdentifier('ABC');
         $document->shouldReceive('getEbsrSubmission')->andReturn($ebsrSubmission);
+        $document->setId($documentId);
 
         $this->mockedSmServices['FileUploader']->shouldReceive('remove')
             ->once()
@@ -105,6 +121,11 @@ class DeleteDocumentTest extends CommandHandlerTestCase
             ->andReturn($document)
             ->shouldReceive('delete')
             ->with($document);
+
+        $this->repoMap['CorrespondenceInbox']->shouldReceive('fetchByDocumentId')
+            ->with($documentId)
+            ->andReturn([])
+            ->once();
 
         $this->expectedSideEffect(DeleteSubmissionCmd::class, ['id' => $ebsrSubId], new Result());
 

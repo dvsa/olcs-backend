@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Delete Document
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -26,6 +21,8 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
 {
     protected $repoServiceName = 'Document';
 
+    protected $extraRepos = ['CorrespondenceInbox'];
+
     /**
      * @var ContentStoreFileUploader
      */
@@ -34,7 +31,8 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
     /**
      * Creates service (needs instance of file uploader)
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
      * @return TransactioningCommandHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -50,7 +48,8 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
     /**
      * Deletes a document and optionally triggers side effect of deleting the associated EBSR submission
      *
-     * @param CommandInterface $command
+     * @param CommandInterface $command command
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -73,6 +72,11 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
                     DeleteEbsrSubmission::create(['id' => $document->getEbsrSubmission()->getId()])
                 )
             );
+        }
+
+        $correspondenceInboxes = $this->getRepo('CorrespondenceInbox')->fetchByDocumentId($document->getId());
+        foreach ($correspondenceInboxes as $correspondenceInbox) {
+            $this->getRepo('CorrespondenceInbox')->delete($correspondenceInbox);
         }
 
         $this->getRepo()->delete($document);
