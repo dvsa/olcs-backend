@@ -45,7 +45,11 @@ class PublishValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestC
         $applicationCompletion->setOperatingCentresStatus(2);
 
         $application->shouldReceive('getApplicationCompletion')->with()->once()->andReturn($applicationCompletion);
-        $this->feesHelperService->shouldReceive('getOutstandingFeesForApplication')->with(2409)->once()->andReturn([]);
+        $this->feesHelperService
+            ->shouldReceive('getOutstandingFeesForApplication')
+            ->with(2409, true)
+            ->once()
+            ->andReturn([]);
         $application->shouldReceive('isPublishable')->with()->once()->andReturn(true);
 
         $result = $this->sut->validate($application);
@@ -65,7 +69,7 @@ class PublishValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestC
         $applicationCompletion->setTransportManagersStatus(0);
 
         $application->shouldReceive('getApplicationCompletion')->with()->once()->andReturn($applicationCompletion);
-        $this->feesHelperService->shouldReceive('getOutstandingFeesForApplication')->with(2409)->once()
+        $this->feesHelperService->shouldReceive('getOutstandingFeesForApplication')->with(2409, true)->once()
             ->andReturn(['foo']);
         $application->shouldReceive('isPublishable')->with()->once()->andReturn(false);
 
