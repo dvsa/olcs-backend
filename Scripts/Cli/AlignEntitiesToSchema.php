@@ -184,6 +184,9 @@ class AlignEntitiesToSchema
      */
     public function run($config)
     {
+
+        $this->respond('Building from existing database', 'info');
+
         $this->application = Application::init($config);
 
         try {
@@ -191,7 +194,10 @@ class AlignEntitiesToSchema
 
             $this->createDatabaseConnection();
 
-            $this->maybeImportSchema();
+            $this->removeHistTables();
+            $this->removeLiquibaseTables();
+
+//            $this->maybeImportSchema();
 
             $this->maybeCreateDir($this->options['mapping-files']);
 
@@ -247,6 +253,45 @@ class AlignEntitiesToSchema
         } catch (\Exception $ex) {
             $this->exitResponse($ex->getMessage(), 'error');
         }
+    }
+
+    private function removeHistTables()
+    {
+        $this->respond('Removing _hist tables', 'info');
+
+        $mysqlCommand = sprintf(
+            'mysql -u%s -p%s %s',
+            $this->options['u'],
+            $this->options['p'],
+            $this->options['d']
+        );
+
+        // SQL to generate DROP statements for all _hist tables
+        $sql = 'SELECT CONCAT(\'DROP TABLE \', t.TABLE_NAME, \';\') AS \'-- DROP _hist tables\'FROM information_schema.TABLES t 
+          WHERE t.TABLE_SCHEMA = \''. $this->options['d'] .'\'
+          AND t.TABLE_NAME LIKE \'%_hist\'';
+
+        // run the SQL to get the DROP statements
+        $dropHistTablesSql = shell_exec($mysqlCommand .' -e "'. $sql .'"');
+
+        // execute the DROP statments
+        $output = shell_exec($mysqlCommand .' -e "'. $dropHistTablesSql .'"');
+    }
+
+    private function removeLiquibaseTables()
+    {
+        $this->respond('Removing Liquibase tables', 'info');
+
+        $mysqlCommand = sprintf(
+            'mysql -u%s -p%s %s',
+            $this->options['u'],
+            $this->options['p'],
+            $this->options['d']
+        );
+
+        shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DATABASECHANGELOG"');
+        shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DATABASECHANGELOGLOCK"');
+        shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS log_update"');
     }
 
     /**
@@ -1569,6 +1614,7 @@ class AlignEntitiesToSchema
             case 'text':
             case 'yesno':
             case 'yesnonull':
+            case 'encrypted_string':
                 return 'string';
             case 'bigint':
             case 'integer':
