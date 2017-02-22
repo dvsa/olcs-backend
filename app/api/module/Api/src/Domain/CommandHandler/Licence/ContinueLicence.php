@@ -1,10 +1,5 @@
 <?php
 
-/**
- * ContinueLicence
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
@@ -16,6 +11,8 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
+use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 
 /**
  * ContinueLicence
@@ -117,10 +114,16 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
             // plus the office copy
             $result->merge(
                 $this->handleSideEffect(
-                    \Dvsa\Olcs\Transfer\Command\CommunityLic\Licence\Create::create(
+                    CreateQueueCmd::create(
                         [
-                            'licence' => $licence->getId(),
-                            'totalLicences' => $continuationDetail->getTotCommunityLicences()
+                            'type' => QueueEntity::TYPE_CREATE_COM_LIC,
+                            'status' => QueueEntity::STATUS_QUEUED,
+                            'options' => json_encode(
+                                [
+                                    'licence' => $licence->getId(),
+                                    'totalLicences' => $continuationDetail->getTotCommunityLicences()
+                                ]
+                            ),
                         ]
                     )
                 )
@@ -159,10 +162,16 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
             // plus the office copy
             $result->merge(
                 $this->handleSideEffect(
-                    \Dvsa\Olcs\Transfer\Command\CommunityLic\Licence\Create::create(
+                    CreateQueueCmd::create(
                         [
-                            'licence' => $licence->getId(),
-                            'totalLicences' => $continuationDetail->getTotCommunityLicences()
+                            'type' => QueueEntity::TYPE_CREATE_COM_LIC,
+                            'status' => QueueEntity::STATUS_QUEUED,
+                            'options' => json_encode(
+                                [
+                                    'licence' => $licence->getId(),
+                                    'totalLicences' => $continuationDetail->getTotCommunityLicences()
+                                ]
+                            ),
                         ]
                     )
                 )

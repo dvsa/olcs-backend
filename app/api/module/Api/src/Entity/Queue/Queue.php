@@ -54,6 +54,7 @@ class Queue extends AbstractQueue
     const TYPE_UPDATE_NYSIIS_TM_NAME = 'que_typ_update_nysiis_tm_name';
     const TYPE_CNS = 'que_typ_cns';
     const TYPE_CNS_EMAIL = 'que_typ_cns_email';
+    const TYPE_CREATE_COM_LIC = 'que_typ_create_com_lic';
 
     protected $types = [
         self::TYPE_COMPANIES_HOUSE_INITIAL,
@@ -75,6 +76,7 @@ class Queue extends AbstractQueue
         self::TYPE_UPDATE_NYSIIS_TM_NAME,
         self::TYPE_CNS,
         self::TYPE_CNS_EMAIL,
+        self::TYPE_CREATE_COM_LIC,
     ];
 
     /**
