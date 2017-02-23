@@ -18,7 +18,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 final class ReassignTasks extends AbstractCommandHandler implements TransactionedInterface
 {
-    const ERR_TEAM_INVALID = 'task.reassign.team.invalid';
+    const ERR_TEAM_INVALID = 'task.edit.team.invalid';
 
     protected $repoServiceName = 'Task';
 
@@ -35,25 +35,10 @@ final class ReassignTasks extends AbstractCommandHandler implements Transactione
         /** @var Repository\Task $repo */
         $repo = $this->getRepo();
 
-        //  get User entity
-        $userId = $command->getUser();
+        $userId = (int)$command->getUser();
+        $user = $repo->getReference(Entity\User\User::class, $userId);
 
-        /** @var Entity\User\User $user */
-        $user = null;
-        if ($userId !== null) {
-            $user = $repo->getReference(Entity\User\User::class, $command->getUser());
-        }
-
-        //  get Team entity
-        $teamId = (int)$command->getTeam();
-
-        /** @var Entity\User\Team $team */
-        $team = null;
-        if ($teamId !== 0) {
-            $team = $repo->getReference(Entity\User\Team::class, $command->getTeam());
-        } elseif ($user !== null) {
-            $team = $user->getTeam();
-        }
+        $team = $repo->getTeamReference((int)$command->getTeam(), $userId);
 
         if ($team === null) {
             throw new ValidationException([self::ERR_TEAM_INVALID]);

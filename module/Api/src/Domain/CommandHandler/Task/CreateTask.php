@@ -2,20 +2,18 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Task;
 
-use Doctrine\ORM\Query;
+use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\User\Team;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Task\Task;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as Cmd;
-use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule;
+use Dvsa\Olcs\Api\Entity\User\Team;
+use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Create Task
@@ -45,7 +43,8 @@ final class CreateTask extends AbstractCommandHandler
     /**
      * Handle command
      *
-     * @param Cmd $command
+     * @param \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask $command Command
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -68,7 +67,8 @@ final class CreateTask extends AbstractCommandHandler
     /**
      * Auto assign task
      *
-     * @param Task $task
+     * @param Task $task Task
+     *
      * @return void
      */
     private function autoAssignTask(Task $task)
@@ -94,7 +94,8 @@ final class CreateTask extends AbstractCommandHandler
     /**
      * Fall back on system configuration to populate user and team
      *
-     * @param Task $task
+     * @param Task $task Task
+     *
      * @return void
      */
     private function assignToDefault(Task $task)
@@ -116,9 +117,10 @@ final class CreateTask extends AbstractCommandHandler
     /**
      * Assign by rule
      *
-     * @param Task $task
-     * @param TaskAllocationRule $rule
-     * @param bool $useAlphaSplit
+     * @param Task               $task          Task
+     * @param TaskAllocationRule $rule          TaskAllocationRule
+     * @param bool               $useAlphaSplit Should use Alpha split
+     *
      * @return void
      */
     protected function assignByRule(Task $task, TaskAllocationRule $rule, $useAlphaSplit)
@@ -134,8 +136,9 @@ final class CreateTask extends AbstractCommandHandler
     /**
      * Assign by alpha split
      *
-     * @param Task $task
-     * @param TaskAllocationRule $rule
+     * @param Task               $task Task
+     * @param TaskAllocationRule $rule TaskAllocationRule
+     *
      * @return void
      */
     protected function assignByAlphaSplit(Task $task, TaskAllocationRule $rule)
@@ -160,7 +163,8 @@ final class CreateTask extends AbstractCommandHandler
     /**
      * Get rules based on category
      *
-     * @param Task $task
+     * @param Task $task Task
+     *
      * @return array
      */
     protected function getRulesBasedOnCategory(Task $task)
@@ -171,7 +175,8 @@ final class CreateTask extends AbstractCommandHandler
     /**
      * Get rules based on licence
      *
-     * @param Task $task
+     * @param Task $task Task
+     *
      * @return array
      */
     protected function getRulesBasedOnLicence(Task $task)
@@ -203,15 +208,14 @@ final class CreateTask extends AbstractCommandHandler
             $goodsOrPsv = $app->getGoodsOrPsv();
         }
 
-        if ($goodsOrPsv !== null) {
-            $operatorType = $goodsOrPsv->getId();
-        } else {
+        if ($goodsOrPsv === null) {
             $newApplications = $licence->getNewApplications();
             $app = $newApplications->first();
             $goodsOrPsv = $app->getGoodsOrPsv();
-            if ($goodsOrPsv !== null) {
-                $operatorType = $goodsOrPsv->getId();
-            }
+        }
+
+        if ($goodsOrPsv !== null) {
+            $operatorType = $goodsOrPsv->getId();
         }
 
         // Goods Licence
@@ -264,7 +268,8 @@ final class CreateTask extends AbstractCommandHandler
     /**
      * Get letter for alpha split
      *
-     * @param Task $task
+     * @param Task $task Task
+     *
      * @return string
      */
     protected function getLetterForAlphaSplit(Task $task)
@@ -306,27 +311,25 @@ final class CreateTask extends AbstractCommandHandler
     /**
      * Create task object
      *
-     * @param Cmd $command
+     * @param \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask $command Command
+     *
      * @return Task
      */
     private function createTaskObject(CommandInterface $command)
     {
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\Task $repo */
+        $repo = $this->getRepo();
+
         // Required
-        $category = $this->getRepo()->getCategoryReference($command->getCategory());
-        $subCategory = $this->getRepo()->getSubCategoryReference($command->getSubCategory());
+        $category = $repo->getCategoryReference($command->getCategory());
+        $subCategory = $repo->getSubCategoryReference($command->getSubCategory());
 
         $task = new Task($category, $subCategory);
 
         // Optional relationships
-        if ($command->getAssignedToUser() !== null) {
-            $assignedToUser = $this->getRepo()->getReference(User::class, $command->getAssignedToUser());
-            $task->setAssignedToUser($assignedToUser);
-        }
-
-        if ($command->getAssignedToTeam() !== null) {
-            $assignedToTeam = $this->getRepo()->getReference(Team::class, $command->getAssignedToTeam());
-            $task->setAssignedToTeam($assignedToTeam);
-        }
+        $userId = (int)$command->getAssignedToUser();
+        $task->setAssignedToUser($repo->getReference(User::class, $userId));
+        $task->setAssignedToTeam($repo->getTeamReference((int)$command->getAssignedToTeam(), $userId));
 
         if ($command->getApplication() !== null) {
             $application = $this->getRepo()->getReference(Application::class, $command->getApplication());

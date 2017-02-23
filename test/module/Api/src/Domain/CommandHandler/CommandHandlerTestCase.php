@@ -109,15 +109,19 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
     protected function mockRepo($name, $class)
     {
-        $this->repoMap[$name] = m::mock($class);
-        $this->repoMap[$name]->shouldReceive('getRefdataReference')
-            ->andReturnUsing([$this, 'mapRefData'])
-            ->shouldReceive('getReference')
-            ->andReturnUsing([$this, 'mapReference'])
-            ->shouldReceive('getCategoryReference')
-            ->andReturnUsing([$this, 'mapCategoryReference'])
-            ->shouldReceive('getSubCategoryReference')
-            ->andReturnUsing([$this, 'mapSubCategoryReference']);
+        if (!$class instanceof m\MockInterface) {
+            $class = m::mock($class);
+        }
+
+        $class
+            ->shouldReceive('getRefdataReference')->andReturnUsing([$this, 'mapRefData'])
+            ->shouldReceive('getReference')->andReturnUsing([$this, 'mapReference'])
+            ->shouldReceive('getCategoryReference')->andReturnUsing([$this, 'mapCategoryReference'])
+            ->shouldReceive('getSubCategoryReference')->andReturnUsing([$this, 'mapSubCategoryReference']);
+
+        $this->repoMap[$name] = $class;
+
+        return $class;
     }
 
     protected function initReferences()

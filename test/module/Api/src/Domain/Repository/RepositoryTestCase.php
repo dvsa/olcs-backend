@@ -58,6 +58,11 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb = null;
     }
 
+    public function tearDown()
+    {
+        m::close();
+    }
+
     protected function mockCreateQueryBuilder($mock)
     {
         $this->em->shouldReceive('getRepository->createQueryBuilder')
