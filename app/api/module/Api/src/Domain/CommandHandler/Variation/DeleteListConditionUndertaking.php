@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 
 /**
  * Delete a list of ConditionUndertaking
@@ -30,8 +31,6 @@ final class DeleteListConditionUndertaking extends AbstractCommandHandler implem
     {
         /** @var Repository\ConditionUndertaking $repo */
         $repo = $this->getRepo();
-
-        $result = new Result();
 
         foreach ($command->getIds() as $cuId) {
             /* @var \Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking $conditionUndertaking */
@@ -56,9 +55,20 @@ final class DeleteListConditionUndertaking extends AbstractCommandHandler implem
                 $repo->save($deltaConditionUndertaking);
             }
 
-            $result->addMessage("ConditionUndertaking ID {$cuId} deleted");
+            $this->result->addMessage("ConditionUndertaking ID {$cuId} deleted");
         }
 
-        return $result;
+        $this->result->merge(
+            $this->handleSideEffect(
+                UpdateApplicationCompletionCmd::create(
+                    [
+                        'id' => $command->getId(),
+                        'section' => 'conditionsUndertakings',
+                    ]
+                )
+            )
+        );
+
+        return $this->result;
     }
 }
