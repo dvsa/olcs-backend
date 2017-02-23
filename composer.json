@@ -58,7 +58,8 @@
         "symfony/Finder": "~2.6.0",
         "olcs/olcs-xmltools": "dev-master",
         "ircmaxell/random-lib": "^1.1",
-	"phprtflite/phprtflite": "~1.3.3"
+	    "phprtflite/phprtflite": "~1.3.3",
+        "simplesamlphp/saml2": "^2.2"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.8",
@@ -80,7 +81,8 @@
             "Dvsa\\Olcs\\CompaniesHouse\\": "module/CompaniesHouse/src",
             "Dvsa\\Olcs\\Address\\": "module/Address/src",
             "Dvsa\\Olcs\\Snapshot\\": "module/Snapshot/src",
-            "CompaniesHouse\\": "vendor/olcs/companies-house/lib"
+            "CompaniesHouse\\": "vendor/olcs/companies-house/lib",
+            "Dvsa\\Olcs\\GdsVerify\\": "module/GdsVerify/src"
         }
     },
     "config": {

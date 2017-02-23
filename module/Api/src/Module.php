@@ -40,6 +40,7 @@ class Module implements BootstrapListenerInterface
         );
 
         $this->setLoggerUser($e->getApplication()->getServiceManager());
+        $this->initDoctrineEncrypterType($sm->get('config'));
     }
 
     /**
@@ -95,6 +96,24 @@ class Module implements BootstrapListenerInterface
                 'API Response Sent',
                 ['status' => $response->getStatusCode(), 'content' => $content]
             );
+        }
+    }
+
+    /**
+     * Initialise the Doctrine Encrypter Type with a ciper
+     *
+     * @param array $config Module config array
+     *
+     * @return void
+     */
+    protected function initDoctrineEncrypterType(array $config)
+    {
+        if (!empty($config['olcs-doctrine']['encryption_key'])) {
+            /** @var \Dvsa\Olcs\Api\Entity\Types\EncryptedStringType $encrypterType */
+            $encrypterType = \Doctrine\DBAL\Types\Type::getType('encrypted_string');
+            $blockCipher = \Zend\Crypt\BlockCipher::factory('mcrypt', array('algo' => 'aes'));
+            $blockCipher->setKey($config['olcs-doctrine']['encryption_key']);
+            $encrypterType->setEncrypter($blockCipher);
         }
     }
 }

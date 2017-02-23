@@ -320,6 +320,7 @@ return [
             'PiDefinition' => RepositoryFactory::class,
             'DataGovUk' => Repository\Factory\DataGovUkFactory::class,
             'CompanyHouseVsOlcsDiffs' => Repository\Factory\CompaniesHouseVsOlcsDiffsFactory::class,
+            'DigitalSignature' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
@@ -366,6 +367,7 @@ return [
                     'yesnonull' => 'Dvsa\Olcs\Api\Entity\Types\YesNoNullType',
                     'date' => 'Dvsa\Olcs\Api\Entity\Types\DateType',
                     'datetime' => 'Dvsa\Olcs\Api\Entity\Types\DateTimeType',
+                    'encrypted_string' => \Dvsa\Olcs\Api\Entity\Types\EncryptedStringType::class
                 ]
             ]
         ]
