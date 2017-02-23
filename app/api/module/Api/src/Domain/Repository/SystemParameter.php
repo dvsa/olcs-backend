@@ -1,10 +1,5 @@
 <?php
 
-/**
- * System Parameter
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
@@ -12,13 +7,18 @@ use Dvsa\Olcs\Api\Entity\System\SystemParameter as Entity;
 
 /**
  * System Parameter
- *
- * @author Rob Caiger <rob@clocal.co.uk>
  */
 class SystemParameter extends AbstractRepository
 {
     protected $entity = Entity::class;
 
+    /**
+     * Fetch a system parameter value, return null if not found
+     *
+     * @param string $key The system parameter name, see SystemParameter entity constants
+     *
+     * @return mixed|null
+     */
     public function fetchValue($key)
     {
         try {
@@ -36,5 +36,15 @@ class SystemParameter extends AbstractRepository
     public function getDisableSelfServeCardPayments()
     {
         return (bool) $this->fetchValue(Entity::DISABLED_SELFSERVE_CARD_PAYMENTS);
+    }
+
+    /**
+     * Get Disable Gds Verify Signatures
+     *
+     * @return bool Return true if disabled
+     */
+    public function getDisableGdsVerifySignatures()
+    {
+        return (bool) $this->fetchValue(Entity::DISABLE_GDS_VERIFY_SIGNATURES);
     }
 }

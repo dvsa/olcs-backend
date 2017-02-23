@@ -27,11 +27,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_application_status", columns={"status"}),
  *        @ORM\Index(name="ix_application_interim_status", columns={"interim_status"}),
  *        @ORM\Index(name="ix_application_withdrawn_reason", columns={"withdrawn_reason"}),
- *        @ORM\Index(name="ix_application_signature_type", columns={"signature_type"}),
  *        @ORM\Index(name="ix_application_goods_or_psv", columns={"goods_or_psv"}),
  *        @ORM\Index(name="ix_application_applied_via", columns={"applied_via"}),
  *        @ORM\Index(name="ix_application_psv_which_vehicle_sizes",
-     *     columns={"psv_which_vehicle_sizes"})
+     *     columns={"psv_which_vehicle_sizes"}),
+ *        @ORM\Index(name="ix_application_signature_type", columns={"signature_type"}),
+ *        @ORM\Index(name="ix_application_digital_signature_id", columns={"digital_signature_id"})
  *    }
  * )
  */
@@ -128,6 +129,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
      */
     protected $deletedDate;
+
+    /**
+     * Digital signature
+     *
+     * @var \Dvsa\Olcs\Api\Entity\DigitalSignature
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\DigitalSignature", fetch="LAZY")
+     * @ORM\JoinColumn(name="digital_signature_id", referencedColumnName="id", nullable=true)
+     */
+    protected $digitalSignature;
 
     /**
      * Disqualified
@@ -1107,6 +1118,30 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     public function getDeletedDate()
     {
         return $this->deletedDate;
+    }
+
+    /**
+     * Set the digital signature
+     *
+     * @param \Dvsa\Olcs\Api\Entity\DigitalSignature $digitalSignature entity being set as the value
+     *
+     * @return Application
+     */
+    public function setDigitalSignature($digitalSignature)
+    {
+        $this->digitalSignature = $digitalSignature;
+
+        return $this;
+    }
+
+    /**
+     * Get the digital signature
+     *
+     * @return \Dvsa\Olcs\Api\Entity\DigitalSignature
+     */
+    public function getDigitalSignature()
+    {
+        return $this->digitalSignature;
     }
 
     /**

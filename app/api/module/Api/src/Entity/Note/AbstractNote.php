@@ -72,7 +72,7 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="comment", length=4000, nullable=true)
+     * @ORM\Column(type="text", name="comment", length=65535, nullable=true)
      */
     protected $comment;
 
