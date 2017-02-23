@@ -43,6 +43,9 @@
         <testsuite name="OLDOlcs">
             <directory>./module/Olcs</directory>
         </testsuite>
+        <testsuite name="GdsVerify">
+            <directory>./module/GdsVerify</directory>./Re
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
@@ -56,6 +59,8 @@
                 <file>../module/CompaniesHouse/src/Module.php</file>
                 <file>../module/Snapshot/src/Module.php</file>
                 <file>../module/Address/src/Module.php</file>
+                <file>../module/GdsVerify/src/Module.php</file>
+                <directory>../module/GdsVerify/config</directory>
                 <directory>../module/Email/config</directory>
                 <directory>../module/Cli/config</directory>
                 <directory>../module/DocumentShare/config</directory>
@@ -74,3 +79,4 @@
              highLowerBound="80"/>
     </logging>
 </phpunit>
+

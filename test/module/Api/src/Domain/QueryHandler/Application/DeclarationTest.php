@@ -44,6 +44,9 @@ class DeclarationTest extends QueryHandlerTestCase
             ->shouldReceive('getVariationCompletion')
             ->andReturn('foo')
             ->once()
+            ->shouldReceive('getDigitalSignature')
+            ->andReturn(null)
+            ->once()
             ->getMock();
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
@@ -90,6 +93,73 @@ class DeclarationTest extends QueryHandlerTestCase
             'variationCompletion' => 'foo',
             'disableSignatures' => true,
             'declarations' => 'markup',
+            'signature' => [],
+        ];
+
+        $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());
+    }
+
+    public function testHandleQueryWithSignature()
+    {
+        $query = Qry::create(['id' => 111]);
+
+        $mockDigitalSignature = m::mock();
+        $mockDigitalSignature->shouldReceive('getSignatureName')->with()->once()->andReturn('Bob Smith');
+        $mockDigitalSignature->shouldReceive('getCreatedOn')->with()->once()->andReturn('CREATED_ON');
+
+        $mockApplication = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class);
+        $mockApplication->shouldReceive('getId')->once()->andReturn(111);
+        $mockApplication->shouldReceive('getVariationCompletion')->once()->andReturn('foo');
+        $mockApplication->shouldReceive('getDigitalSignature')->with()->atLeast(1)->andReturn($mockDigitalSignature);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($query)
+            ->andReturn($mockApplication);
+
+        $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
+            ->with(SystemParameterEntity::DISABLE_GDS_VERIFY_SIGNATURES)
+            ->andReturn(true)
+            ->once();
+
+        $mockApplication->shouldReceive('serialize')->twice()->andReturn(['foo' => 'bar']);
+        $mockApplication->shouldReceive('canHaveInterimLicence')->with()->once()->andReturn('xxx');
+        $mockApplication->shouldReceive('isLicenceUpgrade')->with()->once()->andReturn('yyy');
+        $mockApplication->shouldReceive('isGoods')->with()->once()->andReturn(true);
+
+        $this->mockedSmServices['FeesHelperService']
+            ->shouldReceive('getTotalOutstandingFeeAmountForApplication')
+            ->with(111)
+            ->andReturn(123.45)
+            ->once()
+            ->getMock();
+
+        $this->mockedSmServices['SectionAccessService']
+            ->shouldReceive('getAccessibleSections')
+            ->with($mockApplication)
+            ->andReturn('bar')
+            ->once()
+            ->getMock();
+
+        $this->mockedSmServices['Review\ApplicationUndertakings']
+            ->shouldReceive('getMarkup')
+            ->with(['foo' => 'bar', 'isGoods' => true, 'isInternal' => false])
+            ->once()
+            ->andReturn('markup')
+            ->getMock();
+
+        $expected = [
+            'foo' => 'bar',
+            'canHaveInterimLicence' => 'xxx',
+            'isLicenceUpgrade' => 'yyy',
+            'outstandingFeeTotal' => 123.45,
+            'sections' => 'bar',
+            'variationCompletion' => 'foo',
+            'disableSignatures' => true,
+            'declarations' => 'markup',
+            'signature' => [
+                'name' => 'Bob Smith',
+                'date' => 'CREATED_ON'
+            ],
         ];
 
         $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());

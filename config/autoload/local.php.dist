@@ -77,6 +77,12 @@ return [
         ],
     ],
 
+    'olcs-doctrine' => [
+        // The encryption key used for storing encrypted data in the database
+        'encryption_key' => ''
+    ],
+
+
     // Companies house XML gateway credentials
     'companies_house_credentials' => [
         // Companies house XML gateway userID *Environment specific*
