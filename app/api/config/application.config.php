@@ -19,7 +19,8 @@ return array(
         'Dvsa\Olcs\Cli',
         'Dvsa\Olcs\Scanning',
         'Soflomo\Purifier',
-        'Olcs\XmlTools'
+        'Olcs\XmlTools',
+        'Dvsa\Olcs\GdsVerify',
     ],
     // These are various options for the listeners attached to the ModuleManager
     'module_listener_options' => array(

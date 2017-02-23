@@ -971,4 +971,8 @@ return [
     // Command - ConditionUndertaking
     Command\ConditionUndertaking\CreateSmallVehicleCondition::class =>
         CommandHandler\ConditionUndertaking\CreateSmallVehicleCondition::class,
+
+    // GdsVerify
+    TransferCommand\GdsVerify\ProcessSignatureResponse::class =>
+        CommandHandler\GdsVerify\ProcessSignatureResponse::class,
 ];

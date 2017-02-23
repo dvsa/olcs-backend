@@ -59,6 +59,14 @@ class Declaration extends AbstractQueryHandler
         /* @var $application ApplicationEntity */
         $application = $this->getRepo()->fetchUsingId($query);
 
+        $signatureDetails = [];
+        if ($application->getDigitalSignature()) {
+            $signatureDetails = [
+                'name' => $application->getDigitalSignature()->getSignatureName(),
+                'date' => $application->getDigitalSignature()->getCreatedOn(),
+            ];
+        }
+
         return $this->result(
             $application,
             [
@@ -80,6 +88,7 @@ class Declaration extends AbstractQueryHandler
                 'disableSignatures' =>
                     (bool)$this->getRepo('SystemParameter')->fetchValue(SystemParameter::DISABLE_GDS_VERIFY_SIGNATURES),
                 'declarations' => $this->getDeclarations($application),
+                'signature' => $signatureDetails,
             ]
         );
     }
