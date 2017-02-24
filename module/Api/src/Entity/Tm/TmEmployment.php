@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Tm;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * TmEmployment Entity
@@ -17,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class TmEmployment extends AbstractTmEmployment
+class TmEmployment extends AbstractTmEmployment implements OrganisationProviderInterface
 {
     /**
      * Get related organisation
@@ -30,12 +31,14 @@ class TmEmployment extends AbstractTmEmployment
         $relatedOrganisations = [];
 
         $tmApplications = $tmManager->getTmApplications();
+        /** @var TransportManagerApplication $tmApplication */
         foreach ($tmApplications as $tmApplication) {
             $org = $tmApplication->getApplication()->getLicence()->getOrganisation();
             $relatedOrganisations[$org->getId()] = $org;
         }
 
         $tmLicences = $tmManager->getTmLicences();
+        /** @var TransportManagerLicence $tmLicence */
         foreach ($tmLicences as $tmLicence) {
             $org = $tmLicence->getLicence()->getOrganisation();
             $relatedOrganisations[$org->getId()] = $org;
