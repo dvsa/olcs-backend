@@ -9,8 +9,9 @@ return array(
     ],
     'gds_verify' => [
         // URL of hub metadata
-        'federation_metadata_url' =>
-            'https://compliance-tool-reference.ida.digital.cabinet-office.gov.uk/SAML2/metadata/sp',
+//        'federation_metadata_url' =>
+//            'https://compliance-tool-reference.ida.digital.cabinet-office.gov.uk/SAML2/metadata/sp',
+        'federation_metadata_url' => __DIR__ .'/../data/compliance-tool/federation.xml',
         // URL of Matching Service Adapter metadata
 //        'msa_metadata_url' => 'http://34.250.78.40/matching-service/SAML2/metadata',
         'msa_metadata_url' => __DIR__ .'/../data/compliance-tool/msa-certs/metadata.xml',
