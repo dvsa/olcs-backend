@@ -108,12 +108,14 @@ class Module implements BootstrapListenerInterface
      */
     protected function initDoctrineEncrypterType(array $config)
     {
-        if (!empty($config['olcs-doctrine']['encryption_key'])) {
-            /** @var \Dvsa\Olcs\Api\Entity\Types\EncryptedStringType $encrypterType */
-            $encrypterType = \Doctrine\DBAL\Types\Type::getType('encrypted_string');
-            $blockCipher = \Zend\Crypt\BlockCipher::factory('mcrypt', array('algo' => 'aes'));
-            $blockCipher->setKey($config['olcs-doctrine']['encryption_key']);
-            $encrypterType->setEncrypter($blockCipher);
+        if (extension_loaded('mcrypt')) {
+            if (!empty($config['olcs-doctrine']['encryption_key'])) {
+                /** @var \Dvsa\Olcs\Api\Entity\Types\EncryptedStringType $encrypterType */
+                $encrypterType = \Doctrine\DBAL\Types\Type::getType('encrypted_string');
+                $blockCipher = \Zend\Crypt\BlockCipher::factory('mcrypt', array('algo' => 'aes'));
+                $blockCipher->setKey($config['olcs-doctrine']['encryption_key']);
+                $encrypterType->setEncrypter($blockCipher);
+            }
         }
     }
 }
