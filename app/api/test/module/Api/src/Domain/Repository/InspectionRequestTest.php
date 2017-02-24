@@ -82,14 +82,6 @@ class InspectionRequestTest extends RepositoryTestCase
             ->andReturnSelf()
             ->once()
             ->shouldReceive('with')
-            ->with('l.operatingCentres', 'l_oc')
-            ->andReturnSelf()
-            ->once()
-            ->shouldReceive('with')
-            ->with('l_oc.operatingCentre', 'l_oc_oc')
-            ->andReturnSelf()
-            ->once()
-            ->shouldReceive('with')
             ->with('l.correspondenceCd', 'l_ccd')
             ->andReturnSelf()
             ->once()
@@ -176,6 +168,50 @@ class InspectionRequestTest extends RepositoryTestCase
 
         $result = $this->sut->fetchForInspectionRequest($inspectionRequestId);
         $this->assertEquals('RESULT', $result);
+    }
+
+    public function testFetchLicenceOperatingCentreCount()
+    {
+        $inspectionRequestId = 1;
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('select')->with('COUNT(m)');
+
+        $qb->shouldReceive('getQuery->getSingleResult')->with(Query::HYDRATE_SINGLE_SCALAR)->once()->andReturn(115);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('licence', 'l')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
+            ->with('l.operatingCentres', 'l_oc')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
+            ->with('l_oc.operatingCentre', 'l_oc_oc')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('byId')
+            ->with($inspectionRequestId)
+            ->andReturnSelf()
+            ->once();
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(InspectionRequest::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchLicenceOperatingCentreCount($inspectionRequestId);
+        $this->assertEquals(115, $result);
     }
 
     public function testFetchPage()
