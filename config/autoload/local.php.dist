@@ -374,5 +374,34 @@ return [
         'psv_vehicle_list_batch_size' => 120,
         // Number of GOODS vehicle lists to print for each queue job
         'gv_vehicle_list_batch_size' => 120,
-    ]
+    ],
+
+    // GDS Verify configuration
+    'gds_verify' => [
+        // URL of hub metadata
+        'federation_metadata_url' =>
+            'https://compliance-tool-reference.ida.digital.cabinet-office.gov.uk/SAML2/metadata/sp',
+        // URL of Matching Service Adapter metadata
+        'msa_metadata_url' => __DIR__ .'/../../module/GdsVerify/data/compliance-tool/msa-certs/metadata.xml',
+        // Cache settings used to cache the above two metadata documents
+        //'cache' => [
+        //    'adapter' => [
+        //        'name'    => 'filesystem',
+        //        'options' => array('ttl' => 300),
+        //    ],
+        //],
+        // Entity identifier
+        'entity_identifier' => 'http://olcs-selfserve.olcs.gov.uk',
+        // Key used to sign authentication requests
+        'signature_key' => __DIR__ .'/../../module/GdsVerify/data/compliance-tool/signing.key',
+        // Key used to decrypt data from hub
+        'encryption_key' => __DIR__ .'/../../module/GdsVerify/data/compliance-tool/enc.key',
+    ],
+
+    'http_external' => [
+        'adapter' => \Zend\Http\Client\Adapter\Curl::class,
+        //'curl_options' => [
+        //    CURLOPT_PROXY => 'proxy.shd.proxy.nonprod.dvsa.aws:3128',
+        //],
+    ],
 ];
