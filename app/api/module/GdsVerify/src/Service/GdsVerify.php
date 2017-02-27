@@ -84,6 +84,11 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
             $cache = \Zend\Cache\StorageFactory::factory($config['cache']);
         }
         $this->metadataLoader = new Data\Loader($cache);
+        if ($serviceLocator->has(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)) {
+            $this->metadataLoader->setHttpClient(
+                $serviceLocator->get(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)
+            );
+        }
 
         if (!empty($config['entity_identifier'])) {
             $this->setEntityIdentifier($config['entity_identifier']);
