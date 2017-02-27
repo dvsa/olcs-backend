@@ -2089,4 +2089,9 @@ return array(
             'type' => 'yesno'
         ),
     ),
+    'digital_signature' => array(
+        'attributes' => array(
+            'type' => 'encrypted_string'
+        ),
+    ),
 );

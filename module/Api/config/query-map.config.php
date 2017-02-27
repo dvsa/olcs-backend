@@ -535,4 +535,7 @@ return [
     // Si
     TransferQuery\Si\SiCategoryTypeListData::class => QueryHandler\Si\SiCategoryTypeListData::class,
     TransferQuery\Si\SiPenaltyTypeListData::class => QueryHandler\Si\SiPenaltyTypeListData::class,
+
+    // Gds Verify
+    TransferQuery\GdsVerify\GetAuthRequest::class => QueryHandler\GdsVerify\GetAuthRequest::class,
 ];

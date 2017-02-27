@@ -104,6 +104,10 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     const PSV_VEHICLE_SIZE_MEDIUM_LARGE = 'psvvs_medium_large';
     const PSV_VEHICLE_SIZE_BOTH = 'psvvs_both';
 
+    const SIG_PHYSICAL_SIGNATURE = 'sig_physical_signature';
+    const SIG_DIGITAL_SIGNATURE = 'sig_digital_signature';
+    const SIG_SIGNATURE_NOT_REQUIRED = 'sig_signature_not_required';
+
     const DATE_FORMAT = 'd M Y';
 
     /**
@@ -972,7 +976,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
                 }
             }
 
-        } else if ($aoc->getAction() === 'U') {
+        } elseif ($aoc->getAction() === 'U') {
             // For updated operating centres, if there has been no increase to the vehicles
             $licenceOperatingCentres = $this->getLicence()->getOperatingCentres();
 
