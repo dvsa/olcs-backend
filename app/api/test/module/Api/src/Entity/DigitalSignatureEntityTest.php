@@ -1,0 +1,86 @@
+<?php
+
+namespace Dvsa\OlcsTest\Api\Entity;
+
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Dvsa\Olcs\Api\Entity\DigitalSignature as Entity;
+use Dvsa\Olcs\GdsVerify\Data\Attributes;
+
+/**
+ * DigitalSignature Entity Unit Tests
+ *
+ * Initially auto-generated but won't be overridden
+ */
+class DigitalSignatureEntityTest extends EntityTester
+{
+    /**
+     * Define the entity to test
+     *
+     * @var string
+     */
+    protected $entityClass = Entity::class;
+
+    public function testGetSetAttributes()
+    {
+        $sut = new Entity();
+        $this->assertSame([], $sut->getAttributesArray());
+        $sut->setAttributesArray(['foo' => 'bar']);
+        $this->assertSame(['foo' => 'bar'], $sut->getAttributesArray());
+    }
+
+    /**
+     * @dataProvider dpTestGetSignatureName
+     */
+    public function testGetSignatureName($expected, $attributes)
+    {
+        $sut = new Entity();
+        $sut->setAttributesArray($attributes);
+        $this->assertSame($expected, $sut->getSignatureName());
+    }
+
+    public function dpTestGetSignatureName()
+    {
+        return [
+            [
+                'Bob George Smith',
+                [
+                    Attributes::FIRST_NAME => 'BOB',
+                    Attributes::MIDDLE_NAME => 'GEORGE',
+                    Attributes::SURNAME=> 'SMITH',
+                ],
+            ],
+            [
+                'Bob Smith',
+                [
+                    Attributes::FIRST_NAME => 'bob',
+                    Attributes::MIDDLE_NAME => '',
+                    Attributes::SURNAME=> 'smith',
+                ],
+            ],
+            [
+                'Bob Smith',
+                [
+                    Attributes::FIRST_NAME => 'bob',
+                    Attributes::MIDDLE_NAME => null,
+                    Attributes::SURNAME=> 'smith',
+                ],
+            ],
+            [
+                'Smith',
+                [
+                    Attributes::FIRST_NAME => '',
+                    Attributes::MIDDLE_NAME => null,
+                    Attributes::SURNAME=> 'smith',
+                ],
+            ],
+            [
+                'Bob',
+                [
+                    Attributes::FIRST_NAME => 'bob',
+                    Attributes::MIDDLE_NAME => null,
+                    Attributes::SURNAME=> '',
+                ],
+            ],
+        ];
+    }
+}

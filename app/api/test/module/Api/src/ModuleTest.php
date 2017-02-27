@@ -11,6 +11,7 @@ use Zend\Mvc\Application;
 use Zend\Mvc\ResponseSender\SendResponseEvent;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Entity\Types\EncryptedStringType;
 
 /**
  * Tests the Api Module php
@@ -54,6 +55,7 @@ class ModuleTest extends MockeryTestCase
         $mockSm->shouldReceive('get')->with('PayloadValidationListener')->andReturn($mockPvl);
         $mockSm->shouldReceive('get')->with(AuthorizationService::class)->andReturn($mockAuth);
         $mockSm->shouldReceive('get')->with('LogProcessorManager')->andReturn($mockLog);
+        $mockSm->shouldReceive('get')->with('config')->andReturn([]);
 
         $mockApp = m::mock(Application::class);
         $mockApp->shouldReceive('getServiceManager')->andReturn($mockSm);
@@ -143,6 +145,20 @@ class ModuleTest extends MockeryTestCase
         $this->assertSame(\Zend\Log\Logger::DEBUG, $logWriter->events[0]['priority']);
         $this->assertSame('API Response Sent', $logWriter->events[0]['message']);
         $this->assertSame(str_repeat('X', 1000) .'...', $logWriter->events[0]['extra']['content']);
+    }
+
+    public function testInitDoctrineEncrypterType()
+    {
+        if (!EncryptedStringType::hasType(EncryptedStringType::TYPE)) {
+            EncryptedStringType::addType(EncryptedStringType::TYPE, EncryptedStringType::class);
+        }
+        $this->sut->initDoctrineEncrypterType(['olcs-doctrine' => ['encryption_key' => 'key']]);
+
+        /** @var \Zend\Crypt\BlockCipher $ciper */
+        $ciper = \Doctrine\DBAL\Types\Type::getType('encrypted_string')->getEncrypter();
+
+        $this->assertInstanceOf(\Zend\Crypt\BlockCipher::class, $ciper);
+        $this->assertSame('key', $ciper->getKey());
     }
 
     /**

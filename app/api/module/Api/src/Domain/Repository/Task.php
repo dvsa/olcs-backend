@@ -1,16 +1,10 @@
 <?php
 
-/**
- * Task
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Task\Task as Entity;
-use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
-use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity;
 
 /**
  * Task
@@ -19,12 +13,12 @@ use Doctrine\ORM\Query;
  */
 class Task extends AbstractRepository
 {
-    protected $entity = Entity::class;
+    protected $entity = Entity\Task\Task::class;
 
     /**
      * Fetch a list for an irfo organisation
      *
-     * @param int|\Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     * @param int|\Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation Organisation
      *
      * @return array
      */
@@ -41,7 +35,7 @@ class Task extends AbstractRepository
     /**
      * Fetch a list for a Transport Manager
      *
-     * @param int|\Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager
+     * @param int|Entity\Tm\TransportManager $transportManager Transport Manager
      *
      * @return array
      */
@@ -58,8 +52,8 @@ class Task extends AbstractRepository
     /**
      * Fetch a list for a user
      *
-     * @param int|\Dvsa\Olcs\Api\Entity\User\User $user
-     * @param bool $open Only get tasks that are open
+     * @param int|Entity\User\User $user User
+     * @param bool                 $open Only get tasks that are open
      *
      * @return array
      */
@@ -81,9 +75,9 @@ class Task extends AbstractRepository
     /**
      * Fetch a single task record belonging to Case and Transport Manager, filtered by subcategory
      *
-     * @param int|\Dvsa\Olcs\Api\Entity\Cases\Cases $case
-     * @param int|\Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager
-     * @param string $subCategory
+     * @param int|Entity\Cases\Cases         $case             Case
+     * @param int|Entity\Tm\TransportManager $transportManager Transport Manager
+     * @param string                         $subCategory      Sub Category
      *
      * @return mixed
      */
@@ -108,22 +102,20 @@ class Task extends AbstractRepository
                 ->setParameter('subCategory', $subCategory);
         }
 
-        $result = $doctrineQb->getQuery()->getSingleResult(Query::HYDRATE_OBJECT);
-
-        return $result;
+        return $doctrineQb->getQuery()->getSingleResult(Query::HYDRATE_OBJECT);
     }
 
     /**
      * Fetch a single task record belonging to Submission
      *
-     * @param int|\Dvsa\Olcs\Api\Entity\Submission\Submission $submission
+     * @param int|Entity\Submission\Submission $submission Submission
      *
      * @return mixed
      */
     public function fetchAssignedToSubmission($submission)
     {
         $category = CategoryEntity::CATEGORY_SUBMISSION;
-        $subCategory = Entity::SUBCATEGORY_SUBMISSION_ASSIGNMENT;
+        $subCategory = Entity\Task\Task::SUBCATEGORY_SUBMISSION_ASSIGNMENT;
 
         $doctrineQb = $this->createQueryBuilder();
 
@@ -134,9 +126,8 @@ class Task extends AbstractRepository
         $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.subCategory', ':subCategory'))
             ->setParameter('subCategory', $subCategory);
         $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.isClosed', 0));
-        $result = $doctrineQb->getQuery()->getOneOrNullResult(Query::HYDRATE_OBJECT);
 
-        return $result;
+        return $doctrineQb->getQuery()->getOneOrNullResult(Query::HYDRATE_OBJECT);
     }
 
     /**
@@ -151,8 +142,32 @@ class Task extends AbstractRepository
             ->get('Task/FlagUrgentTasks')
             ->execute();
 
-        $updatedTasks = $stmt->fetchColumn(0);
+        return $stmt->fetchColumn(0);
+    }
 
-        return $updatedTasks;
+    /**
+     * Get Team object
+     *
+     * @param int $teamId Team Id
+     * @param int $userId User Id
+     *
+     * @return Entity\User\Team|null
+     */
+    public function getTeamReference($teamId, $userId)
+    {
+        if ($teamId > 0) {
+            return $this->getReference(Entity\User\Team::class, $teamId);
+        }
+
+        if ($userId > 0) {
+            /** @var Entity\User\User $user */
+            $user = $this->getReference(Entity\User\User::class, $userId);
+
+            if ($user !== null) {
+                return $user->getTeam();
+            }
+        }
+
+        return null;
     }
 }
