@@ -1,10 +1,5 @@
 <?php
 
-/**
- * ContinueLicenceTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\ORM\Query;
@@ -16,6 +11,8 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
+use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 
 /**
  * ContinueLicenceTest
@@ -182,7 +179,9 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
     public function testHandleCommandPsvStandardInternational()
     {
-        $data = ['id' => 717, 'version' => 654];
+        $licenceId = 717;
+        $data = ['id' => $licenceId, 'version' => 654];
+        $totCommunityLic = 34;
 
         $command = Command::create($data);
 
@@ -190,16 +189,17 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $licence->setExpiryDate('2015-07-17');
         $licence->setReviewDate('2015-12-04');
         $licence->setPsvDiscs(['disc1', 'disc2']);
+        $licence->setId($licenceId);
 
         $continuationDetail = new ContinuationDetail();
         $continuationDetail->setTotAuthVehicles(434);
         $continuationDetail->setTotPsvDiscs(7);
-        $continuationDetail->setTotCommunityLicences(34);
+        $continuationDetail->setTotCommunityLicences($totCommunityLic);
 
-        $this->repoMap['Licence']->shouldReceive('fetchById')->with(717, Query::HYDRATE_OBJECT, 654)
+        $this->repoMap['Licence']->shouldReceive('fetchById')->with($licenceId, Query::HYDRATE_OBJECT, 654)
             ->once()->andReturn($licence);
 
-        $this->repoMap['ContinuationDetail']->shouldReceive('fetchForLicence')->with(717)->once()
+        $this->repoMap['ContinuationDetail']->shouldReceive('fetchForLicence')->with($licenceId)->once()
             ->andReturn([$continuationDetail]);
 
         $this->repoMap['Licence']->shouldReceive('save')->once()->andReturnUsing(
@@ -212,27 +212,39 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs::class,
-            ['licence' => 717],
+            ['licence' => $licenceId],
             new Result()
         );
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs::class,
-            ['licence' => 717, 'amount' => 7, 'isCopy' => 'N'],
+            ['licence' => $licenceId, 'amount' => 7, 'isCopy' => 'N'],
             new Result()
         );
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Licence\VoidAllCommunityLicences::class,
-            ['id' => 717],
+            ['id' => $licenceId],
             new Result()
         );
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Transfer\Command\CommunityLic\Licence\Create::class,
-            ['licence' => 717, 'totalLicences' => 34],
+            CreateQueueCmd::class,
+            [
+                'type' => QueueEntity::TYPE_CREATE_COM_LIC,
+                'status' => QueueEntity::STATUS_QUEUED,
+                'options' => json_encode(
+                    [
+                        'licence' => $licenceId,
+                        'totalLicences' => $totCommunityLic
+                    ]
+                ),
+            ],
             new Result()
         );
 
-        $this->expectedSideEffect(\Dvsa\Olcs\Transfer\Command\Licence\PrintLicence::class, ['id' => 717], new Result());
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Licence\PrintLicence::class,
+            ['id' => $licenceId], new Result()
+        );
 
         $this->repoMap['ContinuationDetail']->shouldReceive('save')->once()->andReturnUsing(
             function (ContinuationDetail $saveCd) {
@@ -299,7 +311,9 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
     public function testHandleCommandGoodsStandardInternational()
     {
-        $data = ['id' => 717, 'version' => 654];
+        $licenceId = 717;
+        $totCommunityLic = 34;
+        $data = ['id' => $licenceId, 'version' => 654];
 
         $command = Command::create($data);
 
@@ -313,14 +327,14 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $licence->setLicenceVehicles([$lv1, $lv2]);
 
         $continuationDetail = new ContinuationDetail();
-        $continuationDetail->setTotCommunityLicences(34);
+        $continuationDetail->setTotCommunityLicences($totCommunityLic);
 
-        $this->repoMap['GoodsDisc']->shouldReceive('createDiscsForLicence')->with(717)->once()->andReturn(1502);
+        $this->repoMap['GoodsDisc']->shouldReceive('createDiscsForLicence')->with($licenceId)->once()->andReturn(1502);
 
         $this->repoMap['Licence']->shouldReceive('fetchById')->with(717, Query::HYDRATE_OBJECT, 654)
             ->once()->andReturn($licence);
 
-        $this->repoMap['ContinuationDetail']->shouldReceive('fetchForLicence')->with(717)->once()
+        $this->repoMap['ContinuationDetail']->shouldReceive('fetchForLicence')->with($licenceId)->once()
             ->andReturn([$continuationDetail]);
 
         $this->repoMap['Licence']->shouldReceive('save')->once()->andReturnUsing(
@@ -332,21 +346,33 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs::class,
-            ['licence' => 717],
+            ['licence' => $licenceId],
             new Result()
         );
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Licence\VoidAllCommunityLicences::class,
-            ['id' => 717],
+            ['id' => $licenceId],
             new Result()
         );
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Transfer\Command\CommunityLic\Licence\Create::class,
-            ['licence' => 717, 'totalLicences' => 34],
+            CreateQueueCmd::class,
+            [
+                'type' => QueueEntity::TYPE_CREATE_COM_LIC,
+                'status' => QueueEntity::STATUS_QUEUED,
+                'options' => json_encode(
+                    [
+                        'licence' => $licenceId,
+                        'totalLicences' => $totCommunityLic
+                    ]
+                ),
+            ],
             new Result()
         );
 
-        $this->expectedSideEffect(\Dvsa\Olcs\Transfer\Command\Licence\PrintLicence::class, ['id' => 717], new Result());
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Licence\PrintLicence::class,
+            ['id' => $licenceId], new Result()
+        );
 
         $this->repoMap['ContinuationDetail']->shouldReceive('save')->once()->andReturnUsing(
             function (ContinuationDetail $saveCd) {
