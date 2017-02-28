@@ -683,6 +683,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
 
             $interval = new \DateInterval('P' . $busRules->getCancellationPeriod() . 'D');
 
+            //this rule applies until the day AFTER the cancellation period
+            //so for a 90 day cancellation period, short notice applies until the 91st day
             if ($effectiveDate->setTime(0, 0) <= $lastDateTime->add($interval)->setTime(0, 0)) {
                 return true;
             }
@@ -691,7 +693,9 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         $receivedDate = clone $receivedDate;
         $interval = new \DateInterval('P' . $busRules->getStandardPeriod() . 'D');
 
-        if ($receivedDate->add($interval)->setTime(0, 0) >= $effectiveDate->setTime(0, 0)) {
+        //non-scottish: this rule applies UNTIL the standard period day.
+        //so for a 56 day standard period, the rule applies up to and including the 55th day
+        if ($effectiveDate->setTime(0, 0) < $receivedDate->add($interval)->setTime(0, 0)) {
             return true;
         }
 
@@ -1080,8 +1084,9 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             return null;
         }
 
-        //first try to work out the date based on the standard period
-        $standardPeriodInterval = new \DateInterval('P' . ($this->busNoticePeriod->getStandardPeriod() + 1) . 'D');
+        //first try to work out the date based on the standard period: : this rule applies UNTIL the standard period
+        //day. For a 56 day standard period, the rule applies up to and including the 55th day
+        $standardPeriodInterval = new \DateInterval('P' . ($this->busNoticePeriod->getStandardPeriod()) . 'D');
         $standardPeriodDate = $receivedDateTime->add($standardPeriodInterval);
 
         //we only check the parent for scottish variations/cancellations
@@ -1093,6 +1098,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         ) {
             $parentEffectiveDate = $this->processDate($this->parent->getEffectiveDate());
 
+            //use the cancellation period, these can only be granted AFTER the cancellation period has passed, so for a
+            //90 day cancellation period, the rule applies until the 91st day
             $parentInterval = new \DateInterval('P' . ($this->busNoticePeriod->getCancellationPeriod() + 1) . 'D');
             $parentPeriodDate = $parentEffectiveDate->add($parentInterval);
 
