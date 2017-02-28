@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Cli\Domain\CommandHandler as CommandHandlerCli;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemUser;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalOrSystemUser;
 
 return [
     QueryHandler\CommunityLic\CommunityLicences::class                     => IsInternalUser::class,
@@ -17,7 +18,7 @@ return [
     CommandHandlerCli\CommunityLic\Suspend::class                          => IsSystemUser::class,
     CommandHandler\CommunityLic\Application\Create::class                  => IsInternalUser::class,
     CommandHandler\CommunityLic\Application\CreateOfficeCopy::class        => IsInternalUser::class,
-    CommandHandler\CommunityLic\Licence\Create::class                      => IsInternalUser::class,
+    CommandHandler\CommunityLic\Licence\Create::class                      => IsInternalOrSystemUser::class,
     CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class            => IsInternalUser::class,
     CommandHandler\CommunityLic\Reprint::class                             => IsInternalUser::class,
     CommandHandler\CommunityLic\Restore::class                             => IsInternalUser::class,
