@@ -59,10 +59,9 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
         ];
 
         try {
-            $this->result = $this->handleSideEffect(GenerateAndStoreCmd::create($dtoData));
+            return  $this->handleSideEffect(GenerateAndStoreCmd::create($dtoData));
         } catch (\Exception $e) {
             throw new ValidationException([$e->getMessage()]);
         }
-        return $this->result;
     }
 }
