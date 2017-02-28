@@ -26,11 +26,22 @@ final class UpdateUndertakingsStatus extends AbstractUpdateStatus implements Aut
 
     protected $section = 'Undertakings';
 
+    /**
+     * Is section completed
+     *
+     * @param Application $application Application entity
+     *
+     * @return bool
+     */
     protected function isSectionValid(Application $application)
     {
         if ($this->isInternalUser()) {
             return $application->getAuthSignature();
         }
-        return $application->getDeclarationConfirmation() === 'Y';
+
+        $verified = (string)$application->getSignatureType() === Application::SIG_DIGITAL_SIGNATURE
+            && $application->getDigitalSignature() !== null;
+
+        return $application->getDeclarationConfirmation() === 'Y' || $verified;
     }
 }
