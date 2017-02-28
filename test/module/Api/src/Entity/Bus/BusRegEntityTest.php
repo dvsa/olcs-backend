@@ -1201,7 +1201,7 @@ class BusRegEntityTest extends EntityTester
                     'variationNo' => 0,
                     'receivedDate' => '2015-02-09'
                 ],
-                new \DateTime('2015-04-07') //received + 57 days
+                new \DateTime('2015-04-06') //received + 56 days
             ],
             [
                 $otherRules,
@@ -1209,7 +1209,23 @@ class BusRegEntityTest extends EntityTester
                     'variationNo' => 1,
                     'receivedDate' => '2015-02-09'
                 ],
-                new \DateTime('2015-04-07') //received + 57 days
+                new \DateTime('2015-04-06') //received + 56 days
+            ],
+            [
+                $otherRules,
+                [
+                    'variationNo' => 0,
+                    'receivedDate' => '2017-02-14'
+                ],
+                new \DateTime('2017-04-11') //received + 56 days (example from OLCS-15276)
+            ],
+            [
+                $otherRules,
+                [
+                    'variationNo' => 1,
+                    'receivedDate' => '2017-02-14'
+                ],
+                new \DateTime('2017-04-11') //received + 56 days (example from OLCS-15276)
             ],
             [
                 $scotRules,
@@ -1217,7 +1233,7 @@ class BusRegEntityTest extends EntityTester
                     'variationNo' => 0,
                     'receivedDate' => '2015-02-09'
                 ],
-                new \DateTime('2015-03-24') //received + 43 days
+                new \DateTime('2015-03-23') //received + 42 days
             ],
             [
                 $scotRules,
@@ -1225,7 +1241,7 @@ class BusRegEntityTest extends EntityTester
                     'variationNo' => 1,
                     'receivedDate' => '2015-02-09'
                 ],
-                new \DateTime('2015-03-24') //received + 43 days (no parent)
+                new \DateTime('2015-03-23') //received + 42 days (no parent)
             ],
             [
                 $scotRules,
@@ -1234,7 +1250,7 @@ class BusRegEntityTest extends EntityTester
                     'receivedDate' => '2015-02-09',
                     'parent' => ['effectiveDate' => null]
                 ],
-                new \DateTime('2015-03-24') //received + 43 days (no parent effective date)
+                new \DateTime('2015-03-23') //received + 42 days (no parent effective date)
             ],
             [
                 $scotRules,
@@ -1261,7 +1277,7 @@ class BusRegEntityTest extends EntityTester
                     'receivedDate' => '2014-07-30',
                     'parent' => ['effectiveDate' => '2014-06-11']
                 ],
-                new \DateTime('2014-09-11') //received + 43 days
+                new \DateTime('2014-09-10') //received + 42 days
             ],
             [
                 $scotRules,
@@ -1270,7 +1286,7 @@ class BusRegEntityTest extends EntityTester
                     'receivedDate' => '2014-07-31',
                     'parent' => ['effectiveDate' => '2014-06-11']
                 ],
-                new \DateTime('2014-09-12') //received + 43 days
+                new \DateTime('2014-09-11') //received + 42 days
             ],
             [
                 $scotRules,
@@ -1279,7 +1295,7 @@ class BusRegEntityTest extends EntityTester
                     'receivedDate' => '2014-10-10',
                     'parent' => ['effectiveDate' => '2014-06-11']
                 ],
-                new \DateTime('2014-11-22') //received + 43 days
+                new \DateTime('2014-11-21') //received + 42 days
             ],
         ];
     }
@@ -2297,13 +2313,17 @@ class BusRegEntityTest extends EntityTester
     {
         return [
             [0, '2014-05-31', '2014-07-01', 'Y'], //31 days
-            [0, '2014-05-31', '2014-07-26', 'Y'], //56 days
-            [0, '2014-05-31', '2014-07-27', 'N'], //57 days
+            [0, '2014-05-31', '2014-07-25', 'Y'], //55 days
+            [0, '2014-05-31', '2014-07-26', 'N'], //56 days
+            [0, '2017-02-14', '2017-04-10', 'Y'], //55 days (example from OLCS-15276)
+            [0, '2017-02-14', '2017-04-11', 'N'], //56 days (example from OLCS-15276)
             [0, '2014-05-31', '2014-08-28', 'N'], //89 days
             [1, '2014-05-31', '2014-07-01', 'Y'], //31 days
-            [1, '2014-05-31', '2014-07-26', 'Y'], //56 days
-            [1, '2014-05-31', '2014-07-27', 'N'], //57 days
-            [1, '2014-05-31', '2015-08-28', 'N']  //58 days
+            [1, '2014-05-31', '2014-07-25', 'Y'], //55 days
+            [1, '2014-05-31', '2014-07-26', 'N'], //56 days
+            [1, '2014-05-31', '2015-08-27', 'N'], //57 days
+            [1, '2017-02-14', '2017-04-10', 'Y'], //55 days (example from OLCS-15276)
+            [1, '2017-02-14', '2017-04-11', 'N'], //56 days (example from OLCS-15276)
         ];
     }
 
@@ -2341,8 +2361,8 @@ class BusRegEntityTest extends EntityTester
     {
         return [
             [0, '2014-05-31', '2014-07-01', 'Y'], //31 days
-            [0, '2014-05-31', '2014-07-12', 'Y'], //42 days
-            [0, '2014-05-31', '2014-07-13', 'N'], //43 days
+            [0, '2014-05-31', '2014-07-11', 'Y'], //41 days
+            [0, '2014-05-31', '2014-07-12', 'N'], //42 days
             [0, '2014-05-31', '2014-08-28', 'N'], //89 days
         ];
     }
