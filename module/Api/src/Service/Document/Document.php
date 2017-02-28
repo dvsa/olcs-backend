@@ -45,7 +45,6 @@ class Document implements ServiceLocatorAwareInterface
                 continue;
             }
 
-            //$query = $bookmark->getQuery($data);
             $query = $bookmark->validateDataAndGetQuery($data);
 
             // we need to allow for the fact the bookmark might not want
