@@ -1097,25 +1097,59 @@ class ApplicationEntityTest extends EntityTester
         $this->assertEquals('foo', $application->getActiveVehicles());
     }
 
-    public function testGetSectionsRequiringAttention()
+    /**
+     * @dataProvider dpTestGetSectionsRequiringAttention
+     */
+    public function testGetSectionsRequiringAttention(Entity $entity, array $statuses, array $expect)
     {
-        /** @var Entity $application */
-        $application = $this->instantiate(Entity::class);
-
-        $statuses = [
-            'businessTypeStatus' => Entity::VARIATION_STATUS_REQUIRES_ATTENTION,
-            'businessDetailsStatus' => Entity::VARIATION_STATUS_UNCHANGED
-        ];
-
-        /** @var ApplicationCompletion $ac */
+        /** @var ApplicationCompletion | m\MockInterface $ac */
         $ac = m::mock(ApplicationCompletion::class)->makePartial();
-        $ac->shouldReceive('serialize')
-            ->with([])
-            ->andReturn($statuses);
+        $ac->shouldReceive('serialize')->once()->withNoArgs()->andReturn($statuses);
 
-        $application->setApplicationCompletion($ac);
+        $entity->setApplicationCompletion($ac);
 
-        $this->assertEquals(['business_type'], $application->getSectionsRequiringAttention());
+        static::assertEquals($expect, $entity->getSectionsRequiringAttention());
+    }
+
+    public function dpTestGetSectionsRequiringAttention()
+    {
+        return [
+            [
+                'entity' =>  $this->instantiate(Entity::class)
+                    ->setStatus(new RefData(Entity::APPLICATION_STATUS_NOT_SUBMITTED))
+                    ->setAuthSignature(true),
+                'statuses' => [
+                    'businessTypeStatus' => Entity::VARIATION_STATUS_REQUIRES_ATTENTION,
+                    'businessDetailsStatus' => Entity::VARIATION_STATUS_UNCHANGED,
+                    'undertakingsStatus' => Entity::VARIATION_STATUS_REQUIRES_ATTENTION,
+                ],
+                'expect' => [
+                    'business_type',
+                    'undertakings',
+                ],
+            ],
+            [
+                'entity' =>  $this->instantiate(Entity::class)
+                    ->setStatus(new RefData(Entity::APPLICATION_STATUS_UNDER_CONSIDERATION))
+                    ->setAuthSignature(false),
+                'statuses' => [
+                    'businessTypeStatus' => Entity::VARIATION_STATUS_UPDATED,
+                    'undertakingsStatus' => Entity::VARIATION_STATUS_REQUIRES_ATTENTION,
+                ],
+                'expect' => [
+                    'undertakings',
+                ],
+            ],
+            [
+                'entity' =>  $this->instantiate(Entity::class)
+                    ->setStatus(new RefData('OTHER THAN APPLICATION_STATUS_NOT_SUBMITTED STATUS'))
+                    ->setAuthSignature(true),
+                'statuses' => [
+                    'undertakingsStatus' => Entity::VARIATION_STATUS_REQUIRES_ATTENTION,
+                ],
+                'expect' => [],
+            ],
+        ];
     }
 
     public function testHasVariationChanges()
