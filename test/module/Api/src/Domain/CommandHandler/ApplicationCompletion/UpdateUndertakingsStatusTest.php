@@ -72,6 +72,17 @@ class UpdateUndertakingsStatusTest extends AbstractUpdateStatusTestCase
         $this->application->setAuthSignature('Y');
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
+    }
 
+    public function testHandleCommandVerified()
+    {
+        $this->setupIsInternalUser(false);
+        $this->applicationCompletion->setDeclarationsInternalStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
+
+        $this->application->setAuthSignature('N');
+        $this->application->setSignatureType(\Dvsa\Olcs\Api\Entity\Application\Application::SIG_DIGITAL_SIGNATURE);
+        $this->application->setDigitalSignature(new \Dvsa\Olcs\Api\Entity\DigitalSignature());
+
+        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
     }
 }

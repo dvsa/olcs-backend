@@ -58,7 +58,7 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    public function testHandleCommand()
+    public function testHandleCommandApplication()
     {
         $command = Cmd::create(['samlResponse' => base64_encode('SAML'), 'application' => 7]);
 
@@ -86,6 +86,12 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $mockApplication->shouldReceive('setSignatureType')
             ->with($this->refData[\Dvsa\Olcs\Api\Entity\Application\Application::SIG_DIGITAL_SIGNATURE])
             ->once();
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::class,
+            ['id' => 7, 'section' => 'undertakings'],
+            new Result()
+        );
 
         $this->repoMap['Application']->shouldReceive('fetchById')->with(7)->once()->andReturn($mockApplication);
         $this->repoMap['Application']->shouldReceive('save')->once();
