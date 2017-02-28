@@ -38,7 +38,6 @@ class Document implements ServiceLocatorAwareInterface
             ->extractTokens($file->getContent());
 
         $bookmarks = $this->getBookmarks($tokens);
-
         foreach ($bookmarks as $token => $bookmark) {
             // we don't need to query if the bookmark is static (i.e.
             // doesn't rely on any backend information)
@@ -46,7 +45,8 @@ class Document implements ServiceLocatorAwareInterface
                 continue;
             }
 
-            $query = $bookmark->getQuery($data);
+            //$query = $bookmark->getQuery($data);
+            $query = $bookmark->validateDataAndGetQuery($data);
 
             // we need to allow for the fact the bookmark might not want
             // to actually generate a query in which case it can return

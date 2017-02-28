@@ -1,15 +1,11 @@
 <?php
 
-/**
- * Create Letter
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore as GenerateAndStoreCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Doc\DocTemplate;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Doc\DocTemplate as Entity;
@@ -25,7 +21,11 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
     protected $repoServiceName = 'DocTemplate';
 
     /**
-     * @param Cmd $command
+     * Handle command
+     *
+     * @param Cmd $command command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -35,6 +35,14 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
         return $this->generateDocument($template, $command);
     }
 
+    /**
+     * Generate document
+     *
+     * @param Entity $template template
+     * @param Cmd    $command  command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     protected function generateDocument(DocTemplate $template, Cmd $command)
     {
         $queryData = $command->getData();
@@ -50,6 +58,11 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
             'metadata' => $command->getMeta()
         ];
 
-        return $this->handleSideEffect(GenerateAndStoreCmd::create($dtoData));
+        try {
+            $this->result = $this->handleSideEffect(GenerateAndStoreCmd::create($dtoData));
+        } catch (\Exception $e) {
+            throw new ValidationException([$e->getMessage()]);
+        }
+        return $this->result;
     }
 }
