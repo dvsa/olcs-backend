@@ -62,6 +62,7 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
         /* @var array - just to save the time during migration process,
          * InspectionRequest view model used an array, not an object
          */
+
         $inspectionRequest = $this->getRepo()->fetchForInspectionRequest($command->getId());
 
         $message = new Message(
@@ -109,6 +110,8 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
             $expiryDate = (new \DateTime($inspectionRequest['licence']['expiryDate']))->format('d/m/Y');
         }
 
+        $licenceOperatingCentreCount = $this->getRepo()->fetchLicenceOperatingCentreCount($inspectionRequest['id']);
+
         $data = [
             'inspectionRequestId' => $inspectionRequest['id'],
             'currentUserName' => $user->getLoginId(),
@@ -122,7 +125,7 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
             'licenceType' => $this->getLicenceType($inspectionRequest, $locale),
             'totAuthVehicles' => $this->getTotAuthVehicles($inspectionRequest),
             'totAuthTrailers' => $this->getTotAuthTrailers($inspectionRequest),
-            'numberOfOperatingCentres' => count($inspectionRequest['licence']['operatingCentres']),
+            'numberOfOperatingCentres' => $licenceOperatingCentreCount,
             'expiryDate' => $expiryDate,
             'operatorId' => $inspectionRequest['licence']['organisation']['id'],
             'operatorName' => $inspectionRequest['licence']['organisation']['name'],

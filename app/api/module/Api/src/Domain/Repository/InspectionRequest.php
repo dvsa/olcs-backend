@@ -36,8 +36,6 @@ class InspectionRequest extends AbstractRepository
             ->with('l.workshops', 'l_w')
             ->with('l_w.contactDetails', 'l_w_cd')
             ->with('l_w_cd.address', 'l_w_cd_a')
-            ->with('l.operatingCentres', 'l_oc')
-            ->with('l_oc.operatingCentre', 'l_oc_oc')
             ->with('l.correspondenceCd', 'l_ccd')
             ->with('l_ccd.address', 'l_ccd_a')
             ->with('l_ccd.phoneContacts', 'l_ccd_pc')
@@ -58,6 +56,26 @@ class InspectionRequest extends AbstractRepository
             ->withRefData()
             ->byId($id);
         return $qb->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
+    }
+
+    /**
+     * Fetch count of licence operating centres linked to the inspection request
+     *
+     * @param int $inspectionRequestId Inspection Request ID
+     *
+     * @return int
+     */
+    public function fetchLicenceOperatingCentreCount($inspectionRequestId)
+    {
+        $qb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('licence', 'l')
+            ->with('l.operatingCentres', 'l_oc')
+            ->with('l_oc.operatingCentre', 'l_oc_oc')
+            ->byId($inspectionRequestId);
+        $qb->select('COUNT('. $this->alias .')');
+
+        return $qb->getQuery()->getSingleResult(Query::HYDRATE_SINGLE_SCALAR);
     }
 
     /**

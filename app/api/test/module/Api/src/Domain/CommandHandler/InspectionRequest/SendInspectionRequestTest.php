@@ -267,6 +267,10 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             ->with($inspectionRequestId)
             ->andReturn($inspectionRequest)
             ->once()
+            ->shouldReceive('fetchLicenceOperatingCentreCount')
+            ->with($inspectionRequestId)
+            ->andReturn(6)
+            ->once()
             ->getMock();
 
         $expected = [
@@ -287,7 +291,7 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             'licenceType' => 'Standard National',
             'totAuthVehicles' => 5,
             'totAuthTrailers' => 6,
-            'numberOfOperatingCentres' => 2,
+            'numberOfOperatingCentres' => 6,
             'expiryDate' => '31/12/2020',
             'operatorId' => 1,
             'operatorName' => 'Big Old Trucks Ltd.',
@@ -424,6 +428,10 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             ->with($inspectionRequestId)
             ->andReturn($inspectionRequest)
             ->once()
+            ->shouldReceive('fetchLicenceOperatingCentreCount')
+            ->with($inspectionRequestId)
+            ->andReturn(21)
+            ->once()
             ->getMock();
 
         $expected = [
@@ -444,7 +452,7 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             'licenceType' => 'Standard International',
             'totAuthVehicles' => 7,
             'totAuthTrailers' => 8,
-            'numberOfOperatingCentres' => 2,
+            'numberOfOperatingCentres' => 21,
             'expiryDate' => '31/12/2020',
             'operatorId' => 1,
             'operatorName' => 'Big Old Trucks Ltd.',
