@@ -476,6 +476,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         );
     }
 
+    /**
+     * is Psv Downgrade
+     *
+     * @return bool
+     */
     public function isPsvDowngrade()
     {
         if ($this->isGoods() || $this->isRestricted() === false) {
@@ -580,6 +585,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
+     * Is Goods
+     *
      * @return boolean
      */
     public function isGoods()
@@ -592,6 +599,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
+     * Is Psv
+     *
      * @return boolean
      */
     public function isPsv()
@@ -604,6 +613,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
+     * Is Special Restricted
+     *
      * @return boolean
      */
     public function isSpecialRestricted()
@@ -616,6 +627,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
+     * Is Restricted
+     *
      * @return boolean
      */
     public function isRestricted()
@@ -628,6 +641,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
+     * Is Standard National
+     *
      * @return boolean
      */
     public function isStandardNational()
@@ -640,6 +655,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
+     * Is Standard International
+     *
      * @return boolean
      */
     public function isStandardInternational()
@@ -652,6 +669,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
+     * Get Code
+     *
      * @return string
      */
     public function getCode()
@@ -785,6 +804,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
     /**
      * Determine the traffic area used for fee lookup.
+     *
+     * @return null|string
      */
     public function getFeeTrafficAreaId()
     {
@@ -801,6 +822,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return null;
     }
 
+    /**
+     * Has Variation Changes
+     *
+     * @return bool
+     */
     public function hasVariationChanges()
     {
         $completion = $this->getApplicationCompletion();
@@ -816,23 +842,56 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return false;
     }
 
+    /**
+     * Get List of section are required attentions
+     *
+     * @return array
+     */
     public function getSectionsRequiringAttention()
     {
         $completion = $this->getApplicationCompletion();
-        $data = $completion->serialize([]);
+        $data = $completion->serialize();
+
         $sections = [];
 
         $filter = new CamelCaseToUnderscore();
 
         foreach ($data as $key => $value) {
-            if (preg_match('/^([a-zA-Z]+)Status$/', $key, $matches)
-                && (int)$value === self::VARIATION_STATUS_REQUIRES_ATTENTION
-            ) {
-                $sections[] = strtolower($filter->filter($matches[1]));
+            if (!preg_match('/^([a-zA-Z]+)Status$/', $key, $matches)) {
+                continue;
+            }
+
+            $section = strtolower($filter->filter($matches[1]));
+
+            if ($this->isSectionRequireAttention($section, (int)$value)) {
+                $sections[] = $section;
             }
         }
 
         return $sections;
+    }
+
+    /**
+     * Contains rules for defining is section required attention or not
+     *
+     * @param string $section Section key
+     * @param int $value Flag value
+     *
+     * @return bool
+     */
+    private function isSectionRequireAttention($section, $value)
+    {
+        //  after submit App/Var on internal side, section "Review and declarations" at selfserve section
+        //  stay unreachable and user can't change status, so it should be ignored
+        if (
+            $section === ApplicationCompletion::SECTION_DECLARATION
+            && $this->getStatus()->getId() !== Application::APPLICATION_STATUS_NOT_SUBMITTED
+            && $this->getAuthSignature() === true
+        ) {
+            return false;
+        }
+
+        return ($value === self::VARIATION_STATUS_REQUIRES_ATTENTION);
     }
 
     public function getActiveVehicles()
@@ -1054,7 +1113,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
     /**
      * Method to return ooo as strings. Used in submission tables
-     * @param string $format
+     *
+     * @param string $format Format
      *
      * @return string
      */
@@ -1066,7 +1126,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
     /**
      * Method to return oor as strings. Used in submission tables
-     * @param string $format
+     *
+     * @param string $format Format
      *
      * @return string
      */
@@ -1228,6 +1289,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
+     * Get Out Of Opposition Date
+     *
      * @return string
      */
     public function getOooDate()
@@ -1236,14 +1299,21 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * @param string $oooDate
+     * Set Out Of Opposition Date
+     *
+     * @param string $oooDate Date
+     *
+     * @return $this
      */
     public function setOooDate($oooDate)
     {
         $this->oooDate = $oooDate;
+        return $this;
     }
 
     /**
+     * Get Out Of Representation Date
+     *
      * @return string
      */
     public function getOorDate()
@@ -1252,14 +1322,21 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * @param string $oorDate
+     * Set Out Of Representation Date
+     *
+     * @param string $oorDate Date
+     *
+     * @return $this
      */
     public function setOorDate($oorDate)
     {
         $this->oorDate = $oorDate;
+        return $this;
     }
 
     /**
+     * Get Is Opposed
+     *
      * @return boolean
      */
     public function getIsOpposed()
@@ -1268,14 +1345,21 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * @param boolean $isOpposed
+     * Set Is Opposed
+     *
+     * @param boolean $isOpposed Is opposed
+     *
+     * @return $this
      */
     public function setIsOpposed($isOpposed)
     {
         $this->isOpposed = $isOpposed;
+        return $this;
     }
 
     /**
+     * Get Published Date
+     *
      * @return string
      */
     public function getPublishedDate()
@@ -1284,11 +1368,16 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * @param string $publishedDate
+     * Set Published Date
+     *
+     * @param string $publishedDate Publish date
+     *
+     * @return $this
      */
     public function setPublishedDate($publishedDate)
     {
         $this->publishedDate = $publishedDate;
+        return $this;
     }
 
     /**
