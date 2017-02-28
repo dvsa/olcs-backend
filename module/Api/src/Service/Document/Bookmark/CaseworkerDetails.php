@@ -13,6 +13,8 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as QryLic;
  */
 class CaseworkerDetails extends DynamicBookmark
 {
+    protected $params = ['licence', 'user'];
+
     // makes our ref data key a bit clearer in context
     const TEL_DIRECT_DIAL ='phone_t_tel';
 
