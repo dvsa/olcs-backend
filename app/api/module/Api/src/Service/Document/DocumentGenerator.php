@@ -148,7 +148,11 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
             throw new \Exception('Template not found');
         }
 
-        $queries = $this->documentService->getBookmarkQueries($file, $queryData);
+        try {
+            $queries = $this->documentService->getBookmarkQueries($file, $queryData);
+        } catch (\Exception $e) {
+            throw new \Exception('Error generating the document: ' . $e->getMessage());
+        }
 
         $result = [];
 

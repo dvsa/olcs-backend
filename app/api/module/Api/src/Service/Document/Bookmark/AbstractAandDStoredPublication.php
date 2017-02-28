@@ -26,6 +26,8 @@ abstract class AbstractAandDStoredPublication extends DynamicBookmark
         PublicationSection::SCHEDULE_1_NI_UNTRUE
     ];
 
+    protected $params = ['application'];
+
     public function getQuery(array $data)
     {
         $bundle = [

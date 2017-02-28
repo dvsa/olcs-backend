@@ -116,6 +116,25 @@ class DocumentGeneratorTest extends MockeryTestCase
         $this->sut->generateFromTemplate('x', ['y' => 1], ['z' => 2]);
     }
 
+    public function testGenerateFromTemplateWithQueryThrowException()
+    {
+        $this->setExpectedException(\Exception::class);
+
+        $this->contentStore->shouldReceive('read')
+            ->with('x')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/x.rtf')
+            ->andReturn('file');
+
+        $this->document->shouldReceive('getBookmarkQueries')
+            ->with('file', ['y' => 1])
+            ->andThrow(\Exception::class)
+            ->once();
+
+        $this->sut->generateFromTemplate('x', ['y' => 1], ['z' => 2]);
+    }
+
     public function testGenerateFromTemplateWithQueryFailedQuery()
     {
         $this->setExpectedException('\Exception');

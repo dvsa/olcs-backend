@@ -12,6 +12,8 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
  */
 class LicenceHolderAddress extends DynamicBookmark
 {
+    protected $params = ['licence'];
+
     public function getQuery(array $data)
     {
         $bundle = [
