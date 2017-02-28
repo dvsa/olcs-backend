@@ -69,6 +69,12 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
             );
             $this->getRepo('Application')->save($application);
 
+            $this->handleSideEffect(
+                \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::create(
+                    ['id' => $command->getApplication(), 'section' => 'undertakings']
+                )
+            );
+
             $this->result->addMessage('Digital signature added to application '. $command->getApplication());
         }
 
