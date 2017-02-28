@@ -84,7 +84,6 @@ class BookmarkFactoryTest extends \PHPUnit_Framework_TestCase
             ['caseworker_details', 'CaseworkerDetails'],
             ['caseworker_name', 'CaseworkerName'],
             ['caseworker_name1', 'CaseworkerName1'],
-            ['Company_Trading_Name', 'CompanyTradingName'],
             ['CONDITIONS', 'Conditions'],
             ['Conditions', 'Conditions'],
             ['Cont_Next_Exp_Date', 'ContNextExpDate'],
