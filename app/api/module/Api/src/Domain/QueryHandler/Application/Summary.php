@@ -128,6 +128,10 @@ class Summary extends AbstractQueryHandler
             return false;
         }
 
+        if ($application->isDigitallySigned()) {
+            return false;
+        }
+
         return true;
     }
 

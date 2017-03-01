@@ -120,6 +120,76 @@ class SummaryTest extends QueryHandlerTestCase
         );
     }
 
+    public function testHandleQueryDigitallySigned()
+    {
+        $query = Qry::create(['id' => 111]);
+
+        /** @var Entity\Application\Application|m\MockInterface $mockApplication */
+        $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
+        $mockApplication->shouldReceive('isDigitallySigned')->andReturn(true);
+        $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
+
+        $adDocs1 = new ArrayCollection();
+        $adDocs1->add(m::mock());
+
+        $adDocs2 = new ArrayCollection();
+
+        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
+        $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
+        $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs1);
+        $aoc1->setAction('A');
+
+        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc2 */
+        $aoc2 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
+        $aoc2->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs2);
+        $aoc2->setAction('A');
+
+        $aocs = new ArrayCollection();
+        $aocs->add($aoc1);
+        $aocs->add($aoc2);
+
+        $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
+
+        $tms = new ArrayCollection();
+        $tms->add($tm1);
+
+        $mockApplication->setId(111);
+        $mockApplication->setIsVariation(0);
+        $mockApplication->setAuthSignature(0);
+        $mockApplication->setOperatingCentres($aocs);
+        $mockApplication->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+        $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
+        $mockApplication->setDocuments(new ArrayCollection());
+        $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(new \stdClass());
+
+        $this->mockAppRepo->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($query)
+            ->andReturn($mockApplication);
+
+        $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
+        $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+
+        $result = $this->sut->handleQuery($query);
+
+        $this->assertEquals(
+            [
+                'foo' => 'bar',
+                'actions' => [
+                    'SUPPLY_SUPPORTING_EVIDENCE' => [
+                        'MISSING_EVIDENCE_OC',
+                        'markup-financial-standing-proof'
+                    ],
+                    'APPROVE_TM' => 'APPROVE_TM'
+                ],
+                'reference' => 'ref',
+                'outstandingFee' => true,
+            ],
+            $result->serialize()
+        );
+    }
+
     public function testHandleQueryWithDocs()
     {
         $query = Qry::create(['id' => 111]);
