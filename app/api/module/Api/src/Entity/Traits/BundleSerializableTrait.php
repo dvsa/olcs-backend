@@ -240,6 +240,9 @@ trait BundleSerializableTrait
      */
     public function __toString()
     {
+        if ($this->getId() === null) {
+            return '';
+        }
         return $this->getId();
     }
 }
