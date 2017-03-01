@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\GdsVerify\Data\Attributes;
 
 /**
  * DigitalSignature Entity
@@ -52,14 +53,14 @@ class DigitalSignature extends AbstractDigitalSignature
         $attributes = $this->getAttributesArray();
 
         $names = [];
-        if (!empty($attributes[\Dvsa\Olcs\GdsVerify\Data\Attributes::FIRST_NAME])) {
-            $names[] = $attributes[\Dvsa\Olcs\GdsVerify\Data\Attributes::FIRST_NAME];
+        if (!empty($attributes[Attributes::FIRST_NAME])) {
+            $names[] = $attributes[Attributes::FIRST_NAME];
         }
-        if (!empty($attributes[\Dvsa\Olcs\GdsVerify\Data\Attributes::MIDDLE_NAME])) {
-            $names[] = $attributes[\Dvsa\Olcs\GdsVerify\Data\Attributes::MIDDLE_NAME];
+        if (!empty($attributes[Attributes::MIDDLE_NAME])) {
+            $names[] = $attributes[Attributes::MIDDLE_NAME];
         }
-        if (!empty($attributes[\Dvsa\Olcs\GdsVerify\Data\Attributes::SURNAME])) {
-            $names[] = $attributes[\Dvsa\Olcs\GdsVerify\Data\Attributes::SURNAME];
+        if (!empty($attributes[Attributes::SURNAME])) {
+            $names[] = $attributes[Attributes::SURNAME];
         }
 
         foreach ($names as &$namePart) {
@@ -67,5 +68,21 @@ class DigitalSignature extends AbstractDigitalSignature
         }
 
         return implode(' ', $names);
+    }
+
+    /**
+     * Get DOB of the person from attributes
+     *
+     * @return \DateTime|null
+     */
+    public function getDateOfBirth()
+    {
+        $attributes = $this->getAttributesArray();
+
+        if (!empty($attributes[Attributes::DATE_OF_BIRTH])) {
+            return $attributes[Attributes::DATE_OF_BIRTH];
+        }
+
+        return null;
     }
 }

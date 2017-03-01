@@ -81,6 +81,28 @@ class DigitalSignatureEntityTest extends EntityTester
                     Attributes::SURNAME=> '',
                 ],
             ],
+            [
+                '',
+                [],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestGetDateOfBirth
+     */
+    public function testGetDateOfBirth($expected, $attributes)
+    {
+        $sut = new Entity();
+        $sut->setAttributesArray($attributes);
+        $this->assertSame($expected, $sut->getDateOfBirth());
+    }
+
+    public function dpTestGetDateOfBirth()
+    {
+        return [
+            [null, []],
+            ['1942-12-12', [Attributes::DATE_OF_BIRTH => '1942-12-12']],
         ];
     }
 }
