@@ -64,6 +64,7 @@ class Declaration extends AbstractQueryHandler
             $signatureDetails = [
                 'name' => $application->getDigitalSignature()->getSignatureName(),
                 'date' => $application->getDigitalSignature()->getCreatedOn(),
+                'dob' => $application->getDigitalSignature()->getDateOfBirth(),
             ];
         }
 
