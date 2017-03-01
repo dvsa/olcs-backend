@@ -3335,4 +3335,34 @@ class ApplicationEntityTest extends EntityTester
 
         $this->assertEquals(new DateTime('2015-05-14'), $oorDate);
     }
+
+    /**
+     * @dataProvider dpTestIsDigitallySigned
+     *
+     * @param $expected         Expected true or false
+     * @param $signatureType    Eg Application::SIG_PHYSICAL_SIGNATURE
+     * @param $digitalSignature DigitalSignature entity
+     */
+    public function testIsDigitallySigned($expected, $signatureType, $digitalSignature)
+    {
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->setSignatureType(new RefData($signatureType));
+        $sut->setDigitalSignature($digitalSignature);
+        $this->assertSame($expected, $sut->isDigitallySigned());
+    }
+
+    public function dpTestIsDigitallySigned()
+    {
+        return [
+            [false, null, null],
+            [false, Entity::SIG_PHYSICAL_SIGNATURE, null],
+            [false, Entity::SIG_DIGITAL_SIGNATURE, null],
+            [false, Entity::SIG_SIGNATURE_NOT_REQUIRED, null],
+            [false, Entity::SIG_PHYSICAL_SIGNATURE, new Entities\DigitalSignature()],
+            [false, Entity::SIG_SIGNATURE_NOT_REQUIRED, new Entities\DigitalSignature()],
+            [false, '', new Entities\DigitalSignature()],
+            [true, Entity::SIG_DIGITAL_SIGNATURE, new Entities\DigitalSignature()],
+        ];
+    }
 }
