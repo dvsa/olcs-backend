@@ -1852,4 +1852,15 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     {
         return $this->getLicence()->getOrganisation();
     }
+
+    /**
+     * Is this application digitally signed
+     *
+     * @return bool
+     */
+    public function isDigitallySigned()
+    {
+        return (string)$this->getSignatureType() === self::SIG_DIGITAL_SIGNATURE
+            && $this->getDigitalSignature() !== null;
+    }
 }
