@@ -106,6 +106,7 @@ class DeclarationTest extends QueryHandlerTestCase
         $mockDigitalSignature = m::mock();
         $mockDigitalSignature->shouldReceive('getSignatureName')->with()->once()->andReturn('Bob Smith');
         $mockDigitalSignature->shouldReceive('getCreatedOn')->with()->once()->andReturn('CREATED_ON');
+        $mockDigitalSignature->shouldReceive('getDateOfBirth')->with()->once()->andReturn('DOB');
 
         $mockApplication = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class);
         $mockApplication->shouldReceive('getId')->once()->andReturn(111);
@@ -158,7 +159,8 @@ class DeclarationTest extends QueryHandlerTestCase
             'declarations' => 'markup',
             'signature' => [
                 'name' => 'Bob Smith',
-                'date' => 'CREATED_ON'
+                'date' => 'CREATED_ON',
+                'dob' => 'DOB',
             ],
         ];
 
