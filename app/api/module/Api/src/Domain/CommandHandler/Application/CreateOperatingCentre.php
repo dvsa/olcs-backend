@@ -84,7 +84,6 @@ final class CreateOperatingCentre extends AbstractCommandHandler implements Tran
             );
         }
 
-
         return $this->result;
     }
 
