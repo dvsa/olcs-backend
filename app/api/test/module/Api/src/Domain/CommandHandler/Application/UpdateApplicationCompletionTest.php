@@ -20,6 +20,8 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * Update Application Completion Test
@@ -32,6 +34,9 @@ class UpdateApplicationCompletionTest extends CommandHandlerTestCase
     {
         $this->sut = new UpdateApplicationCompletion();
         $this->mockRepo('Application', Application::class);
+        $this->mockRepo('DigitalSignature', \Dvsa\Olcs\Api\Domain\Repository\AbstractRepository::class);
+
+        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class)->makePartial();
 
         parent::setUp();
     }
@@ -39,6 +44,10 @@ class UpdateApplicationCompletionTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $command = Cmd::create(['id' => 111, 'section' => 'typeOfLicence']);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->with(Permission::SELFSERVE_USER, null)
+            ->andReturn(false);
 
         /** @var ApplicationCompletion $applicationCompletion */
         $applicationCompletion = m::mock(ApplicationCompletion::class)->makePartial();
@@ -99,5 +108,85 @@ class UpdateApplicationCompletionTest extends CommandHandlerTestCase
         );
 
         $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @dataProvider dpTestHandleCommandResetSignature
+     *
+     * @param $expectResetSignature
+     * @param $section
+     * @param $isSelfserve
+     * @param $applicationStatus
+     */
+    public function testHandleCommandResetSignature($expectResetSignature, $section, $isSelfserve, $applicationStatus)
+    {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->with(Permission::SELFSERVE_USER, null)
+            ->andReturn($isSelfserve);
+
+        $command = Cmd::create(['id' => 111, 'section' => $section]);
+
+        /** @var ApplicationCompletion $applicationCompletion */
+        $applicationCompletion = m::mock(ApplicationCompletion::class)->makePartial();
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setStatus(new \Dvsa\Olcs\Api\Entity\System\RefData($applicationStatus));
+        $application->setApplicationCompletion($applicationCompletion);
+
+        $digitalSignature = new \Dvsa\Olcs\Api\Entity\DigitalSignature();
+        $application->setDigitalSignature($digitalSignature);
+        $application->setDeclarationConfirmation('Y');
+        $application->setSignatureType('FOO');
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT)
+            ->andReturn($application);
+
+        $result1 = new Result();
+        $result1->addMessage('Tol updated');
+        $this->expectedSideEffect(
+            'Dvsa\\Olcs\\Api\\Domain\\Command\\ApplicationCompletion\\Update'. ucfirst($section) .'Status',
+            ['id' => 111], $result1
+        );
+
+        if ($expectResetSignature) {
+            $this->repoMap['DigitalSignature']->shouldReceive('delete')->with($digitalSignature)->once();
+        }
+
+        $this->sut->handleCommand($command);
+
+        if ($expectResetSignature) {
+            $this->assertSame('N', $application->getDeclarationConfirmation());
+            $this->assertSame(null, $application->getSignatureType());
+            $this->assertSame(null, $application->getDigitalSignature());
+        } else {
+            $this->assertSame('Y', $application->getDeclarationConfirmation());
+            $this->assertSame($digitalSignature, $application->getDigitalSignature());
+            $this->assertSame('FOO', $application->getSignatureType());
+        }
+
+    }
+
+    public function dpTestHandleCommandResetSignature()
+    {
+        return [
+            [true, 'typeOfLicence', true, ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED],
+            [false, 'typeOfLicence', true, ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION],
+            [false, 'typeOfLicence', true, ApplicationEntity::APPLICATION_STATUS_GRANTED],
+            [false, 'typeOfLicence', true, ApplicationEntity::APPLICATION_STATUS_VALID],
+
+            [true, 'addresses', true, ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED],
+            [true, 'typeOfLicence', true, ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED],
+            [true, 'financialHistory', true, ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED],
+            [false, 'undertakings', true, ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED],
+            [false, 'declarationsInternal', true, ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED],
+
+            [false, 'addresses', false, ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED],
+            [false, 'typeOfLicence', false, ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED],
+            [false, 'financialHistory', false, ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED],
+            [false, 'undertakings', false, ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED],
+            [false, 'declarationsInternal', false, ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED],
+        ];
     }
 }

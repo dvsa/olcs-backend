@@ -2747,6 +2747,29 @@ class ApplicationEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpTestIsNotSubmitted
+     */
+    public function testIsNotSubmitted($status, $expected)
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('getStatus')->once()->andReturn(new RefData($status));
+        $this->assertEquals($expected, $sut->isNotSubmitted());
+    }
+
+    public function dpTestIsNotSubmitted()
+    {
+        return [
+            [Entity::APPLICATION_STATUS_NOT_SUBMITTED, true],
+            [Entity::APPLICATION_STATUS_GRANTED, false],
+            [Entity::APPLICATION_STATUS_UNDER_CONSIDERATION, false],
+            [Entity::APPLICATION_STATUS_VALID, false],
+            [Entity::APPLICATION_STATUS_WITHDRAWN, false],
+            [Entity::APPLICATION_STATUS_REFUSED, false],
+            [Entity::APPLICATION_STATUS_NOT_TAKEN_UP, false],
+        ];
+    }
+
+    /**
      * @dataProvider dpTestGetLicenceTypeShortCode
      * @param string $licenceType
      * @param string $shortCode

@@ -22,9 +22,15 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateVariationCompletion as Variat
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateApplicationCompletion extends AbstractCommandHandler implements TransactionedInterface
+final class UpdateApplicationCompletion extends AbstractCommandHandler implements
+    TransactionedInterface,
+    \Dvsa\Olcs\Api\Domain\AuthAwareInterface
 {
+    use \Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+
     protected $repoServiceName = 'Application';
+
+    protected $extraRepos = ['DigitalSignature'];
 
     private $sections = [
         'addresses',
@@ -50,6 +56,13 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler implement
         'declarationsInternal',
     ];
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command Command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         /* @var $application Application  */
@@ -61,9 +74,17 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler implement
         }
 
         $completion = $application->getApplicationCompletion();
-        // always reset decalration(undertakings) section, unless that it is the section just completed
-        if ($command->getSection() !== 'undertakings' && $command->getSection() !== 'declarationsInternal') {
+        // If not declaration section and selfserve user changed an under consideration application
+        if ($command->getSection() !== 'undertakings'
+            && $command->getSection() !== 'declarationsInternal'
+            && $application->isNotSubmitted()
+            && $this->isGranted(\Dvsa\Olcs\Api\Entity\User\Permission::SELFSERVE_USER)
+        ) {
             $application->setDeclarationConfirmation('N');
+            $application->setSignatureType(null);
+            $digitalSignature = $application->getDigitalSignature();
+            $application->setDigitalSignature(null);
+            $this->getRepo('DigitalSignature')->delete($digitalSignature);
         }
 
         $sectionsToUpdate = $this->getSectionsToUpdate($command, $completion);
@@ -77,6 +98,14 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler implement
         return $result;
     }
 
+    /**
+     * Get the DTO command to update a section
+     *
+     * @param string $section Section name to update
+     * @param Cmd    $command UpdateApplicationCompletion command
+     *
+     * @return CommandInterface
+     */
     private function getUpdateCommand($section, Cmd $command)
     {
         $commandName = '\Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\Update' . ucfirst($section) . 'Status';
@@ -87,8 +116,9 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler implement
     /**
      * Filter out the sections that we need to validate and update
      *
-     * @param Cmd $command
-     * @param ApplicationCompletion $completion
+     * @param Cmd                   $command    UpdateApplicationCompletion command
+     * @param ApplicationCompletion $completion Application completion
+     *
      * @return array
      */
     private function getSectionsToUpdate(Cmd $command, ApplicationCompletion $completion)
@@ -108,9 +138,10 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler implement
     /**
      * Check if we should be updating the section
      *
-     * @param string $section
-     * @param Cmd $command
-     * @param int $status
+     * @param string $section Section name
+     * @param Cmd    $command UpdateApplicationCompletion command
+     * @param int    $status  Current status of teh section
+     *
      * @return bool
      */
     private function shouldUpdateSection($section, Cmd $command, $status)

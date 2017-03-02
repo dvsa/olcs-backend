@@ -1571,6 +1571,16 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
+     * Is Application has Not Submitted
+     *
+     * @return bool
+     */
+    public function isNotSubmitted()
+    {
+        return (string)$this->getStatus() === self::APPLICATION_STATUS_NOT_SUBMITTED;
+    }
+
+    /**
      * Get the Shortcode version of a licence type
      *
      * @return string|null if licence type is not set or shortcode does not exist
