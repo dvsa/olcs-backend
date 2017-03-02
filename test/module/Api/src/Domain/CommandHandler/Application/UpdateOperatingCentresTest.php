@@ -1,15 +1,9 @@
 <?php
 
-/**
- * Update Operating Centres Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -555,20 +549,12 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $result->addMessage('UpdateApplicationCompletion');
         $this->expectedSideEffect(UpdateApplicationCompletion::class, $data, $result);
 
-        $data = [
-            'id' => 111
-        ];
-        $result = new Result();
-        $result->addMessage('HandleOcVariationFees');
-        $this->expectedSideEffect(HandleOcVariationFees::class, $data, $result);
-
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
                 'Application record updated',
-                'HandleOcVariationFees',
                 'UpdateApplicationCompletion'
             ]
         ];
@@ -661,20 +647,12 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $result->addMessage('UpdateApplicationCompletion');
         $this->expectedSideEffect(UpdateApplicationCompletion::class, $data, $result);
 
-        $data = [
-            'id' => 111
-        ];
-        $result = new Result();
-        $result->addMessage('HandleOcVariationFees');
-        $this->expectedSideEffect(HandleOcVariationFees::class, $data, $result);
-
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
                 'Application record updated',
-                'HandleOcVariationFees',
                 'UpdateApplicationCompletion'
             ]
         ];

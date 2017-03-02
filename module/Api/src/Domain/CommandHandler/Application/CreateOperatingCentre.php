@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Create Operating Centre
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\SetDefaultTrafficAreaAndEnforcementArea as SetTaAndEa;
@@ -20,6 +15,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as HandleOcVariationFeesCmd;
 
 /**
  * Create Operating Centre
@@ -81,6 +77,13 @@ final class CreateOperatingCentre extends AbstractCommandHandler implements Tran
 
         $completionData = ['id' => $command->getApplication(), 'section' => 'operatingCentres'];
         $this->result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($completionData)));
+
+        if ($application->isVariation()) {
+            $this->result->merge(
+                $this->handleSideEffect(HandleOcVariationFeesCmd::create(['id' => $application->getId()]))
+            );
+        }
+
 
         return $this->result;
     }

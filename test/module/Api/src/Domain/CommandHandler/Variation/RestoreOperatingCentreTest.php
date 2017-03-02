@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Delete Operating Centres Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Variation;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -20,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\RestoreOperatingCentre;
 use Dvsa\Olcs\Transfer\Command\Variation\RestoreOperatingCentre as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as HandleOcVariationFeesCmd;
 
 /**
  * Delete Operating Centres Test
@@ -47,9 +43,10 @@ class RestoreOperatingCentreTest extends CommandHandlerTestCase
 
     public function testHandleCommandAppValid()
     {
+        $applicationId = 111;
         $data = [
             'id' => 'A11',
-            'application' => 111
+            'application' => $applicationId
         ];
         $command = Cmd::create($data);
 
@@ -65,12 +62,14 @@ class RestoreOperatingCentreTest extends CommandHandlerTestCase
             ->with($aoc);
 
         $data = [
-            'id' => 111,
+            'id' => $applicationId,
             'section' => 'operatingCentres',
         ];
         $result = new Result();
         $result->addMessage('UpdateApplicationCompletion');
         $this->expectedSideEffect(UpdateApplicationCompletion::class, $data, $result);
+
+        $this->expectedSideEffect(HandleOcVariationFeesCmd::class, ['id' => $applicationId], new Result());
 
         $result = $this->sut->handleCommand($command);
 
@@ -143,9 +142,10 @@ class RestoreOperatingCentreTest extends CommandHandlerTestCase
 
     public function testHandleCommandLicValid()
     {
+        $applicationId = 111;
         $data = [
             'id' => 'L11',
-            'application' => 111,
+            'application' => $applicationId,
         ];
         $command = Cmd::create($data);
 
@@ -159,13 +159,13 @@ class RestoreOperatingCentreTest extends CommandHandlerTestCase
 
         /** @var Application $application */
         $application = m::mock(Application::class)->makePartial();
-        $application->setId(111);
+        $application->setId($applicationId);
         $application->shouldReceive('getDeltaAocByOc')
             ->with($oc)
             ->andReturn($deltas);
 
         $this->repoMap['Application']->shouldReceive('fetchById')
-            ->with(111)
+            ->with($applicationId)
             ->andReturn($application);
 
         /** @var LicenceOperatingCentre $loc */
@@ -181,12 +181,14 @@ class RestoreOperatingCentreTest extends CommandHandlerTestCase
             ->with($aoc);
 
         $data = [
-            'id' => 111,
+            'id' => $applicationId,
             'section' => 'operatingCentres',
         ];
         $result = new Result();
         $result->addMessage('UpdateApplicationCompletion');
         $this->expectedSideEffect(UpdateApplicationCompletion::class, $data, $result);
+
+        $this->expectedSideEffect(HandleOcVariationFeesCmd::class, ['id' => $applicationId], new Result());
 
         $result = $this->sut->handleCommand($command);
 

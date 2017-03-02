@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Delete Operating Centre
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Variation;
 
 use Doctrine\Common\Collections\Criteria;
@@ -18,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Variation\DeleteOperatingCentre as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as HandleOcVariationFeesCmd;
 
 /**
  * Delete Operating Centre
@@ -59,6 +55,9 @@ final class DeleteOperatingCentre extends AbstractCommandHandler implements Tran
 
         $completionData = ['id' => $application->getId(), 'section' => 'operatingCentres'];
         $this->result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($completionData)));
+        $this->result->merge(
+            $this->handleSideEffect(HandleOcVariationFeesCmd::create(['id' => $application->getId()]))
+        );
 
         return $this->result;
     }

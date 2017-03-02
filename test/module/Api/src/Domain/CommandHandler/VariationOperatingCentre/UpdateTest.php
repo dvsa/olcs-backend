@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Update Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\VariationOperatingCentre;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,6 +16,7 @@ use Dvsa\Olcs\Transfer\Command\VariationOperatingCentre\Update as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\VariationOperatingCentre\Update as CommandHandler;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as HandleOcVariationFeesCmd;
 
 /**
  * Update Test
@@ -48,11 +44,13 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
+        $applicationId = 100;
         $data = [
             'id' => 'A111',
             'address' => [
                 'id' => 123
-            ]
+            ],
+            'application' => $applicationId
         ];
         $command = Cmd::create($data);
 
@@ -71,6 +69,7 @@ class UpdateTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('AppUpdate');
         $this->expectedSideEffect(AppUpdate::class, $data, $result1);
+        $this->expectedSideEffect(HandleOcVariationFeesCmd::class, ['id' => $applicationId], new Result());
 
         $result = $this->sut->handleCommand($command);
 
@@ -90,7 +89,8 @@ class UpdateTest extends CommandHandlerTestCase
             'id' => 'A111',
             'address' => [
                 'id' => 123
-            ]
+            ],
+            'application' => 100
         ];
         $command = Cmd::create($data);
 
@@ -151,9 +151,10 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function testHandleCommandLicenceWithoutDeltas()
     {
+        $applicationId = 222;
         $data = [
             'id' => 'L111',
-            'application' => 222,
+            'application' => $applicationId,
             'address' => [
                 'id' => 123
             ]
@@ -172,7 +173,7 @@ class UpdateTest extends CommandHandlerTestCase
             ->andReturn($deltaRecords);
 
         $this->repoMap['Application']->shouldReceive('fetchById')
-            ->with(222)
+            ->with($applicationId)
             ->andReturn($application);
 
         /** @var LicenceOperatingCentre $loc */
@@ -195,6 +196,8 @@ class UpdateTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('AppUpdate');
         $this->expectedSideEffect(AppUpdate::class, $data, $result1);
+
+        $this->expectedSideEffect(HandleOcVariationFeesCmd::class, ['id' => $applicationId], new Result());
 
         $result = $this->sut->handleCommand($command);
 

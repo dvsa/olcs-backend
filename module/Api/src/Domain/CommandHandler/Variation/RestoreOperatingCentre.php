@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Restore Operating Centre
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Variation;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
@@ -16,6 +11,7 @@ use Dvsa\Olcs\Transfer\Command\Variation\DeleteOperatingCentre as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
+use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as HandleOcVariationFeesCmd;
 
 /**
  * Restore Operating Centre
@@ -34,6 +30,8 @@ final class RestoreOperatingCentre extends AbstractCommandHandler implements Tra
      */
     public function handleCommand(CommandInterface $command)
     {
+        $applicationId = $command->getApplication();
+
         list($prefix, $id) = $this->splitTypeAndId($command->getId());
 
         if ($prefix === 'A') {
@@ -47,6 +45,9 @@ final class RestoreOperatingCentre extends AbstractCommandHandler implements Tra
 
                 $completionData = ['id' => $command->getApplication(), 'section' => 'operatingCentres'];
                 $this->result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($completionData)));
+                $this->result->merge(
+                    $this->handleSideEffect(HandleOcVariationFeesCmd::create(['id' => $applicationId]))
+                );
 
                 return $this->result;
             }
@@ -76,6 +77,9 @@ final class RestoreOperatingCentre extends AbstractCommandHandler implements Tra
 
         $completionData = ['id' => $application->getId(), 'section' => 'operatingCentres'];
         $this->result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($completionData)));
+        $this->result->merge(
+            $this->handleSideEffect(HandleOcVariationFeesCmd::create(['id' => $applicationId]))
+        );
 
         return $this->result;
     }
