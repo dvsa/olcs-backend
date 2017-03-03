@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Create Operating Centre Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\SetDefaultTrafficAreaAndEnforcementArea;
@@ -22,6 +17,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as HandleOcVariationFeesCmd;
 
 /**
  * Create Operating Centre Test
@@ -53,8 +49,9 @@ class CreateOperatingCentreTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
+        $applicationId = 111;
         $data = [
-            'application' => 111
+            'application' => $applicationId
         ];
         $command = Cmd::create($data);
 
@@ -62,12 +59,18 @@ class CreateOperatingCentreTest extends CommandHandlerTestCase
         $licence = m::mock(Licence::class)->makePartial();
 
         /** @var Application $application */
-        $application = m::mock(Application::class)->makePartial();
+        $application = m::mock(Application::class)->makePartial()
+            ->shouldReceive('isVariation')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+
         $application->initCollections();
         $application->setLicence($licence);
+        $application->setId($applicationId);
 
         $this->repoMap['Application']->shouldReceive('fetchById')
-            ->with(111)
+            ->with($applicationId)
             ->andReturn($application);
 
         /** @var OperatingCentre $oc */
@@ -93,7 +96,7 @@ class CreateOperatingCentreTest extends CommandHandlerTestCase
             );
 
         $data = [
-            'id' => 111,
+            'id' => $applicationId,
             'operatingCentre' => 222
         ];
         $result2 = new Result();
@@ -101,12 +104,14 @@ class CreateOperatingCentreTest extends CommandHandlerTestCase
         $this->expectedSideEffect(SetDefaultTrafficAreaAndEnforcementArea::class, $data, $result2);
 
         $data = [
-            'id' => 111,
+            'id' => $applicationId,
             'section' => 'operatingCentres'
         ];
         $result1 = new Result();
         $result1->addMessage('UpdateApplicationCompletion');
         $this->expectedSideEffect(UpdateApplicationCompletion::class, $data, $result1);
+
+        $this->expectedSideEffect(HandleOcVariationFeesCmd::class, ['id' => $applicationId], new Result());
 
         $this->mockedSmServices[AuthorizationService::class]
             ->shouldReceive('isGranted')
