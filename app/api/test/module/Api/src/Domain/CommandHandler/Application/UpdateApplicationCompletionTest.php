@@ -189,4 +189,42 @@ class UpdateApplicationCompletionTest extends CommandHandlerTestCase
             [false, 'declarationsInternal', false, ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED],
         ];
     }
+
+    public function testHandleCommandResetSignatureNoExisting()
+    {
+        $section = 'typeOfLicence';
+        $applicationStatus = ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED;
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->with(Permission::SELFSERVE_USER, null)
+            ->andReturn(true);
+        $command = Cmd::create(['id' => 111, 'section' => $section]);
+
+        /** @var ApplicationCompletion $applicationCompletion */
+        $applicationCompletion = m::mock(ApplicationCompletion::class)->makePartial();
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setStatus(new \Dvsa\Olcs\Api\Entity\System\RefData($applicationStatus));
+        $application->setApplicationCompletion($applicationCompletion);
+        $application->setDeclarationConfirmation('Y');
+        $application->setSignatureType('FOO');
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT)
+            ->andReturn($application);
+
+        $result1 = new Result();
+        $result1->addMessage('Tol updated');
+        $this->expectedSideEffect(
+            'Dvsa\\Olcs\\Api\\Domain\\Command\\ApplicationCompletion\\Update'. ucfirst($section) .'Status',
+            ['id' => 111], $result1
+        );
+
+        $this->sut->handleCommand($command);
+
+        $this->assertSame('N', $application->getDeclarationConfirmation());
+        $this->assertSame(null, $application->getSignatureType());
+        $this->assertSame(null, $application->getDigitalSignature());
+    }
 }
