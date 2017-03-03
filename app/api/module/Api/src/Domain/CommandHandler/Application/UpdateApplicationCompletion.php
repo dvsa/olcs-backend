@@ -83,8 +83,10 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler implement
             $application->setDeclarationConfirmation('N');
             $application->setSignatureType(null);
             $digitalSignature = $application->getDigitalSignature();
-            $application->setDigitalSignature(null);
-            $this->getRepo('DigitalSignature')->delete($digitalSignature);
+            if ($digitalSignature !== null) {
+                $application->setDigitalSignature(null);
+                $this->getRepo('DigitalSignature')->delete($digitalSignature);
+            }
         }
 
         $sectionsToUpdate = $this->getSectionsToUpdate($command, $completion);
