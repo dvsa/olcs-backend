@@ -1,13 +1,7 @@
 <?php
 
-/**
- * Update Operating Centres
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as HandleOcVariationFeesCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -111,12 +105,6 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
         $this->getRepo()->save($application);
         $this->result->addMessage('Application record updated');
-
-        if ($application->isVariation()) {
-            $this->result->merge(
-                $this->handleSideEffect(HandleOcVariationFeesCmd::create(['id' => $application->getId()]))
-            );
-        }
 
         $data = ['id' => $application->getId(), 'section' => 'operatingCentres'];
         $this->result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($data)));
