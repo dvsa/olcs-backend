@@ -16,8 +16,17 @@ class AandDStoredPublicationNumber extends AbstractAandDStoredPublication
 {
     const APP_NO_PUBLISHED = '[Application Not Published - No Date]';
 
+    /**
+     * Render the bookmark
+     *
+     * @return string
+     */
     public function render()
     {
+        if (!isset($this->data['publicationLinks'])) {
+            return '';
+        }
+
         // unfortunately criteria doesn't work in this case, so we need to filter records manually
         $publicationLinks = $this->filterPublicationLinks($this->data['publicationLinks']);
 
