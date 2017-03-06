@@ -18,7 +18,6 @@ class BrRegVarOrCancTest extends \PHPUnit_Framework_TestCase
             \Dvsa\Olcs\Transfer\Query\QueryInterface::class,
             $bookmark->getQuery(['busRegId' => 123])
         );
-        $this->assertTrue(is_null($bookmark->getQuery([])));
     }
 
     /**
@@ -29,6 +28,12 @@ class BrRegVarOrCancTest extends \PHPUnit_Framework_TestCase
         $bookmark = new BrRegVarOrCanc();
         $bookmark->setData($data);
 
+        if ($expected === false) {
+            $this->setExpectedException(
+                \Exception::class,
+                'Failed to generate bookmark Dvsa\Olcs\Api\Service\Document\Bookmark\BrRegVarOrCanc'
+            );
+        }
         $this->assertEquals($expected, $bookmark->render());
     }
 
@@ -37,19 +42,19 @@ class BrRegVarOrCancTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 [],
-                ''
+                false
             ],
             [
                 [
                     'status' => ''
                 ],
-                ''
+                false
             ],
             [
                 [
                     'status' => ['id' => 'foo'],
                 ],
-                ''
+                false
             ],
             [
                 [
@@ -73,7 +78,7 @@ class BrRegVarOrCancTest extends \PHPUnit_Framework_TestCase
                 [
                     'status' => ['id' => BusReg::STATUS_EXPIRED],
                 ],
-                ''
+                false
             ],
         ];
     }
