@@ -12,6 +12,13 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\DocParagraphBundle as Qry;
  */
 class TextBlock extends DynamicBookmark
 {
+    /**
+     * Get the query used to get data required to populate the bookmark
+     *
+     * @param array $data Data
+     *
+     * @return null|Qry
+     */
     public function getQuery(array $data)
     {
         // TextBlocks are used as fallbacks when there isn't a more
@@ -32,6 +39,11 @@ class TextBlock extends DynamicBookmark
         return $queries;
     }
 
+    /**
+     * Render the bookmark
+     *
+     * @return string
+     */
     public function render()
     {
         /**
@@ -48,7 +60,8 @@ class TextBlock extends DynamicBookmark
          */
         $result = "";
         foreach ($this->data as $paragraph) {
-            $result .= $paragraph['paraText'] . "\n";
+            // Data from DB is unicode, but the templates arent
+            $result .= utf8_decode($paragraph['paraText']) . "\n";
         }
         return substr($result, 0, -1);
     }

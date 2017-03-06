@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg;
  */
 class BrRegVarOrCanc extends DynamicBookmark
 {
+    protected $params = [DynamicBookmark::PARAM_BUSREG_ID];
+
     /**
      * Get the query to retrieve date required by the bookmark
      *
@@ -20,25 +22,18 @@ class BrRegVarOrCanc extends DynamicBookmark
      */
     public function getQuery(array $data)
     {
-        if (!isset($data['busRegId'])) {
-            return null;
-        }
-
-        return Qry::create(['id' => $data['busRegId']]);
+        return Qry::create(['id' => $data[DynamicBookmark::PARAM_BUSREG_ID]]);
     }
 
     /**
      * Render the bookmark
      *
      * @return string
+     * @throws \Exception
      */
     public function render()
     {
-        if (empty($this->data)) {
-            return '';
-        }
-
-        if (isset($this->data['status']['id'])) {
+        if (!empty($this->data['status']['id'])) {
             switch ($this->data['status']['id']) {
                 case BusReg::STATUS_NEW:
                     return 'commence';
@@ -49,6 +44,6 @@ class BrRegVarOrCanc extends DynamicBookmark
             }
         }
 
-        return '';
+        throw new \Exception('Failed to generate bookmark '. __CLASS__);
     }
 }
