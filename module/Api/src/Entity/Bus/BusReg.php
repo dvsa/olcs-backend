@@ -261,15 +261,9 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         $busReg->setStatusChangeDate(new \DateTime);
         $busReg->setRevertStatus($revertStatus);
 
-        //for cancellations, the variation number is the same as previously, this is our default
-        $newVariationNo = $this->variationNo;
-
-        // for variations, we instead get the latest variation no for the reg no and increment it
-        if ($status->getId() === self::STATUS_VAR) {
-            $latestVariation = $busReg->getLicence()->getLatestBusVariation($busReg->getRegNo(), []);
-            $newVariationNo = (int)$latestVariation->getVariationNo() + 1;
-        }
-
+        //increment variation number
+        $latestVariation = $busReg->getLicence()->getLatestBusVariation($busReg->getRegNo(), []);
+        $newVariationNo = (int)$latestVariation->getVariationNo() + 1;
         $busReg->setVariationNo($newVariationNo);
 
         // set default short notice

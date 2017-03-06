@@ -710,15 +710,15 @@ class BusRegEntityTest extends EntityTester
      * @dataProvider createVariationProvider
      *
      * @param $statusId
-     * @param $variationNo
-     * @param $newVariationNo
-     * @param $latestVarTimes
+     *
      * @return bool
      */
-    public function testCreateVariation($statusId, $variationNo, $newVariationNo, $latestVarTimes)
+    public function testCreateVariation($statusId)
     {
         $id = 15;
         $regNo = 12345;
+        $variationNo = 5;
+        $newVariationNo = 6;
 
         $status = new RefDataEntity();
         $status->setId($statusId);
@@ -733,7 +733,7 @@ class BusRegEntityTest extends EntityTester
 
         $licenceEntityMock = m::mock(LicenceEntity::class);
         $licenceEntityMock->shouldReceive('getLatestBusVariation')
-            ->times($latestVarTimes)
+            ->once()
             ->with($regNo, [])
             ->andReturn($licenceBusReg);
 
@@ -811,8 +811,8 @@ class BusRegEntityTest extends EntityTester
     public function createVariationProvider()
     {
         return [
-            [Entity::STATUS_VAR, 5, 6, 1],
-            [Entity::STATUS_CANCEL, 7, 7, 0],
+            [Entity::STATUS_VAR],
+            [Entity::STATUS_CANCEL],
         ];
     }
 
