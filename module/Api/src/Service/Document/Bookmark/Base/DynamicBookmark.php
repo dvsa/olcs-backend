@@ -15,6 +15,7 @@ abstract class DynamicBookmark extends AbstractBookmark implements RepositoryMan
     use RepositoryManagerAwareTrait;
 
     const TYPE = 'dynamic';
+    const PARAM_BUSREG_ID = 'busRegId';
 
     protected $data = [];
 
@@ -28,13 +29,28 @@ abstract class DynamicBookmark extends AbstractBookmark implements RepositoryMan
         'publicationId' => 'publication',
         'opposition' => 'opposition',
         'irfoPsvAuth' => 'IRFO PSV auth',
+        self::PARAM_BUSREG_ID => 'Bus Reg ID',
     ];
 
+    /**
+     * Set data used to populate the bookmark
+     *
+     * @param array $data Data
+     *
+     * @return void
+     */
     public function setData($data)
     {
         $this->data = $data;
     }
 
+    /**
+     * Get the Query which can get the data required for the bookmark
+     *
+     * @param array $data Data
+     *
+     * @return \Dvsa\Olcs\Transfer\Query\AbstractQuery
+     */
     abstract public function getQuery(array $data);
 
     /**
@@ -42,7 +58,8 @@ abstract class DynamicBookmark extends AbstractBookmark implements RepositoryMan
      *
      * @param array $data data
      *
-     * @return bool
+     * @return \Dvsa\Olcs\Transfer\Query\AbstractQuery
+     * @throws \Exception
      */
     public function validateDataAndGetQuery($data)
     {
