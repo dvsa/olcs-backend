@@ -117,16 +117,17 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
          * this logic should be changed in case the business decide to
          * introduce a table with phone numbers for internal users your account section
          */
+        $repo = $this->getRepo('PhoneContact');
         foreach ($existingPhoneContacts as $existingPhoneContact) {
-            $this->getRepo('PhoneContact')->delete($existingPhoneContact);
+            $repo->delete($existingPhoneContact);
         }
         foreach ($phoneContacts as $phoneContact) {
             $phoneContactEntity = new PhoneContactEntity(
-                $this->getRepo('PhoneContact')->getRefdataReference($phoneContact['phoneContactType'])
+                $repo->getRefdataReference($phoneContact['phoneContactType'])
             );
             $phoneContactEntity->setPhoneNumber($phoneContact['phoneNumber']);
             $phoneContactEntity->setContactDetails($contactDetails);
-            $this->getRepo('PhoneContact')->save($phoneContactEntity);
+            $repo->save($phoneContactEntity);
         }
     }
 
