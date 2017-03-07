@@ -228,7 +228,6 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
                     $this->assertSame($this->refData[$dataPerson['title']], $savedPerson->getTitle());
                     $this->assertEquals(new \DateTime($dataPerson['birthDate']), $savedPerson->getBirthDate());
                     $savedPerson->setId(753);
-                    return $savedPerson;
                 }
             )
             ->once();
