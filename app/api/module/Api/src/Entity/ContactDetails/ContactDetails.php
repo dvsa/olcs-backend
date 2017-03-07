@@ -218,8 +218,10 @@ class ContactDetails extends AbstractContactDetails
         // set email address
         $this->setEmailAddress($contactParams['emailAddress']);
 
-        // populate person
-        $this->populatePerson($contactParams['person']);
+        if (isset($contactParams['person'])) {
+            // populate person
+            $this->populatePerson($contactParams['person']);
+        }
 
         if (isset($contactParams['address'])) {
             // populate address
