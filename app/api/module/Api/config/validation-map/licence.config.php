@@ -17,11 +17,13 @@ return [
     QueryHandler\Licence\TypeOfLicence::class => Misc\CanAccessLicenceWithId::class,
 
     // Commands
-    CommandHandler\Licence\Curtail::class => Misc\IsInternalUser::class,
-    CommandHandler\Licence\Suspend::class => Misc\IsInternalUser::class,
-    CommandHandler\Licence\Surrender::class => Misc\IsInternalUser::class,
-    CommandHandler\Licence\Revoke::class => Misc\IsInternalUser::class,
-    CommandHandler\Licence\CreateVariation::class => Misc\CanAccessLicenceWithId::class,
+    CommandHandler\Licence\Curtail::class => Misc\IsInternalEdit::class,
+    CommandHandler\Licence\Suspend::class => Misc\IsInternalEdit::class,
+    CommandHandler\Licence\Surrender::class => Misc\IsInternalEdit::class,
+    CommandHandler\Licence\Revoke::class => Misc\IsInternalEdit::class,
+    CommandHandler\Licence\ResetToValid::class => Misc\IsInternalEdit::class,
+    CommandHandler\Licence\PrintLicence::class => Misc\CanEditLicenceWithId::class,
+    CommandHandler\Licence\CreateVariation::class => Misc\CanEditLicenceWithId::class,
     CommandHandler\Licence\UpdateAddresses::class => Misc\CanAccessLicenceWithId::class,
     CommandHandler\Licence\UpdateBusinessDetails::class => Misc\CanAccessLicenceWithId::class,
     CommandHandler\Licence\UpdateOperatingCentres::class => Misc\CanAccessLicenceWithId::class,

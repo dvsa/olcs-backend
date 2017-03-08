@@ -57,6 +57,7 @@ use Dvsa\Olcs\Api\Domain\ValidatorManager;
  * @method bool canUploadEbsr($entityId)
  * @method bool canManageUser($entityId)
  * @method bool canReadUser($entityId)
+ * @method bool canEditLicence($entityId)
  */
 trait ValidationHelperTrait
 {
