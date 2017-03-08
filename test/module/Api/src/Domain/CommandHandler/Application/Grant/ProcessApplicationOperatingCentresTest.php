@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Process Application Operating Centres Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -309,20 +304,18 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
         $this->assertFalse($aoc->getIsInterim());
     }
 
-    public function testHandleCommandDeleteException()
+    public function testHandleCommandDeleteNoLoc()
     {
-        $this->setExpectedException(\Exception::class);
-
         $data = [
             'id' => 111
         ];
 
         $command = ProcessAocCmd::create($data);
 
+        $oc = m::mock(OperatingCentre::class)->makePartial();
+
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
-
-        $oc = m::mock(OperatingCentre::class)->makePartial();
 
         $aoc = new ApplicationOperatingCentre($application, $oc);
         $aoc->setAction('D');
@@ -348,8 +341,21 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
             ->shouldReceive('findCorrespondingLoc')
             ->once()
             ->with($aoc, $licence)
-            ->andReturn(null);
+            ->andReturnNull();
 
-        $this->sut->handleCommand($command);
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                '0 licence operating centre(s) created',
+                '0 licence operating centre(s) updated',
+                '0 licence operating centre(s) removed'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertFalse($aoc->getIsInterim());
     }
 }

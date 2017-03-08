@@ -69,8 +69,9 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
                     }
                     break;
                 case 'D':
-                    $this->deleteLicenceOperatingCentre($aoc, $licence);
-                    $delete++;
+                    if ($this->deleteLicenceOperatingCentre($aoc, $licence)) {
+                        $delete++;
+                    }
                     break;
             }
         }
@@ -117,12 +118,16 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
      * @param Aoc     $aoc     app operating centre
      * @param Licence $licence licence
      *
-     * @return void
+     * @return bool
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     protected function deleteLicenceOperatingCentre(Aoc $aoc, Licence $licence)
     {
         $loc = $this->findCorrespondingLoc($aoc, $licence);
+        if ($loc === null) {
+            // licence operating centre can be already deleted in case of other variation with schedule 4/1
+            return false;
+        }
         $this->getRepo('LicenceOperatingCentre')->delete($loc);
 
         // Side effects:
@@ -138,6 +143,7 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
                 DeleteApplicationLinks::create(['operatingCentre' => $operatingCentre]),
             ]
         );
+        return true;
     }
 
     /**
