@@ -19,6 +19,7 @@ class Permission extends AbstractPermission
 {
     const INTERNAL_ADMIN = 'internal-admin';
     const INTERNAL_USER = 'internal-user';
+    const INTERNAL_EDIT = 'internal-edit';
     const LOCAL_AUTHORITY_ADMIN = 'local-authority-admin';
     const LOCAL_AUTHORITY_USER = 'local-authority-user';
     const OPERATOR_ADMIN = 'operator-admin';

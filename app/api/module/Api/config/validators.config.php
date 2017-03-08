@@ -46,5 +46,6 @@ return [
         'canUploadEbsr' => Validators\CanUploadEbsr::class,
         'canManageUser' => Validators\CanManageUser::class,
         'canReadUser' => Validators\CanReadUser::class,
+        'canEditLicence' => Validators\CanEditLicence::class,
     ]
 ];
