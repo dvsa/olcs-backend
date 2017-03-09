@@ -76,6 +76,7 @@ final class Oppositions extends AbstractSection
                 'isInTime' => $entity->getIsInTime(),
                 'isPublicInquiry' => $entity->getIsPublicInquiry(),
                 'isWithdrawn' => $entity->getIsWithdrawn(),
+                'isWillingToAttendPi'  => $entity->getIsWillingToAttendPi(),
             ];
 
             /** @var RefData $ground */
