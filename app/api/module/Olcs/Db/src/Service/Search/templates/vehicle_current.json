@@ -1,66 +1,51 @@
 {
-    "query":{
-        "indices":{
-            "indices":[
-                "vehicle_current",
-                "vehicle_removed"
-            ],
-            "query":{
-                "filtered":{
-                    "query":{
-                        "bool":{
-                            "should":[
-                                {
-                                    "multi_match":{
-                                        "query":"%SEARCH_TERM%",
-                                        "fuzziness":2,
-                                        "prefix_length":1,
-                                        "fields":[
-                                            "org_name"
-                                        ]
-                                    }
-                                },
-                                {
-                                    "match_phrase":{
-                                        "org_name":{
-                                            "query":"%SEARCH_TERM%",
-                                            "slop":2
-                                        }
-                                    }
-                                },
-                                {
-                                    "match":{
-                                        "disc_no":{
-                                            "query":"%SEARCH_TERM%",
-                                            "boost":2
-                                        }
-                                    }
-                                },
-                                {
-                                    "match":{
-                                        "org_name":"%SEARCH_TERM%"
-                                    }
-                                },
-                                {
-                                    "match":{
-                                        "lic_no":{
-                                        "query":"%SEARCH_TERM%",
-                                        "boost":2.5
-                                        }
-                                    }
-                                },
-                                {
-                                    "match_phrase":{
-                                        "vrm":"%SEARCH_TERM%"
-                                    }
-                                }
+    "query" : {
+        "bool" : {
+            "must" : {
+                "bool" : {
+                    "should" : [{
+                        "multi_match" : {
+                            "query" : "%SEARCH_TERM%",
+                            "fuzziness" : 2,
+                            "prefix_length" : 1,
+                            "fields" : [
+                                "org_name"
                             ]
                         }
+                    }, {
+                        "match_phrase" : {
+                            "org_name" : {
+                                "query" : "%SEARCH_TERM%",
+                                "slop" : 2
+                            }
+                        }
+                    }, {
+                        "match" : {
+                            "disc_no" : {
+                                "query" : "%SEARCH_TERM%",
+                                "boost" : 2
+                            }
+                        }
+                    }, {
+                        "match" : {
+                            "org_name" : "%SEARCH_TERM%"
+                        }
+                    }, {
+                        "match" : {
+                            "lic_no" : {
+                                "query" : "%SEARCH_TERM%",
+                                "boost" : 2.5
+                            }
+                        }
+                    }, {
+                        "match_phrase" : {
+                            "vrm" : "%SEARCH_TERM%"
+                        }
                     }
+                    ]
                 }
-            },
-            "no_match_query":"none"
+            }
         }
     },
-    "min_score":0.16
+    "min_score" : 0.2
 }
