@@ -53,8 +53,6 @@ class QueryTemplate extends Query
         // apply filters
         $this->applyFilters($filters);
 
-
-
         // apply date ranges
         $this->applyDateRanges($dateRanges);
     }
