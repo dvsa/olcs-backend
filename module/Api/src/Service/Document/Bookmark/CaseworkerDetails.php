@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as QryLic;
  */
 class CaseworkerDetails extends DynamicBookmark
 {
-    protected $params = ['licence', 'user'];
+    protected $params = ['user'];
 
     // makes our ref data key a bit clearer in context
     const TEL_DIRECT_DIAL ='phone_t_tel';
@@ -49,6 +49,10 @@ class CaseworkerDetails extends DynamicBookmark
                 ]
             ]
         ];
+        if (empty($data['licence'])) {
+            return [Qry::create(['id' => $data['user'], 'bundle' => $bundle])];
+        }
+
         $licenceBundle = [
             'trafficArea',
         ];
@@ -66,8 +70,8 @@ class CaseworkerDetails extends DynamicBookmark
      */
     public function render()
     {
-        $licData = $this->data[1];
         $userData = $this->data[0];
+        $licData = isset($this->data[1]) ? $this->data[1] : [];
 
         $directDial = $this->fetchDirectDial();
 

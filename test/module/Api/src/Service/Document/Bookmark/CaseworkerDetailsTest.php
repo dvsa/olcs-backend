@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\CaseworkerDetails;
 
 /**
- * @covers Dvsa\Olcs\Api\Service\Document\Bookmark\CaseworkerDetails
+ * @covers \Dvsa\Olcs\Api\Service\Document\Bookmark\CaseworkerDetails
  */
 class CaseworkerDetailsTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,6 +16,16 @@ class CaseworkerDetailsTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query[0]);
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query[1]);
+        $this->assertCount(2, $query);
+    }
+
+    public function testGetQueryNoLicence()
+    {
+        $bookmark = new CaseworkerDetails();
+        $query = $bookmark->getQuery(['user' => 123]);
+
+        $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query[0]);
+        $this->assertCount(1, $query);
     }
 
     /**
@@ -154,6 +164,38 @@ class CaseworkerDetailsTest extends \PHPUnit_Framework_TestCase
                     ]
                 ],
                 "A User\nNorthern Ireland\nTA 11\nDirect Line: \ne-mail: a@user.com",
+            ],
+            [
+                [
+                    [
+                        'contactDetails' => [
+                            'emailAddress' => 'a@user.com',
+                            'address' => [],
+                            'person' => [
+                                'forename' => 'A',
+                                'familyName' => 'User',
+                            ],
+                            'phoneContacts' => [
+                                [
+                                    'phoneContactType' => [
+                                        'id' => 'INVALID_TYPE',
+                                    ],
+                                ]
+                            ],
+                        ],
+                        'team' => [
+                            'trafficArea' => [
+                                'name' => 'An Area',
+                                'contactDetails' => [
+                                    'address' => [
+                                        'addressLine1' => 'TA 11'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                ],
+                "A User\nTA 11\nDirect Line: \ne-mail: a@user.com",
             ],
         ];
     }

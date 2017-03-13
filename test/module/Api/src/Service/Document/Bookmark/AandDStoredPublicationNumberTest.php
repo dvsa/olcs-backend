@@ -107,8 +107,11 @@ class AandDStoredPublicationNumberTest extends MockeryTestCase
             [
                 ['publicationLinks' => []],
                 AandDStoredPublicationNumber::APP_NO_PUBLISHED
+            ],
+            [
+                [],
+                ''
             ]
-
         ];
     }
 }

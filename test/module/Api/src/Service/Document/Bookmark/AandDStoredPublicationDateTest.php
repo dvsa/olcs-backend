@@ -57,8 +57,11 @@ class AandDStoredPublicationDateTest extends MockeryTestCase
             [
                 ['publicationLinks' => []],
                 ''
+            ],
+            [
+                [],
+                ''
             ]
-
         ];
     }
 }
