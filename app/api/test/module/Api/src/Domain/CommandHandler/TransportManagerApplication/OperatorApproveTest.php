@@ -66,10 +66,10 @@ class OperatorApproveTest extends CommandHandlerTestCase
                 m::mock()
                 ->shouldReceive('getEmailAddress')
                 ->andReturn('email1')
-                ->once()
+                ->twice()
                 ->getMock()
             )
-            ->once()
+            ->twice()
             ->getMock();
 
         $tma = m::mock(TransportManagerApplication::class)->makePartial();
@@ -109,10 +109,13 @@ class OperatorApproveTest extends CommandHandlerTestCase
             ->andReturn(
                 m::mock()
                     ->shouldReceive('getEmailAddress')
-                    ->andReturn('email1')
+                    ->andReturnNull()
                     ->once()
                     ->getMock()
             )
+            ->once()
+            ->shouldReceive('getId')
+            ->andReturn(1)
             ->once()
             ->getMock();
 
@@ -132,8 +135,6 @@ class OperatorApproveTest extends CommandHandlerTestCase
             }
         );
         $this->repoMap['TransportManager']->shouldReceive('save')->once();
-
-        $this->assertEmailSent($tma);
 
         $this->sut->handleCommand($command);
     }
