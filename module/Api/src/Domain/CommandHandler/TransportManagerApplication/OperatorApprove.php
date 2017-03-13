@@ -10,12 +10,8 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
 use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Olcs\Logging\Log\Logger;
 
-/**
- * OperatorApprove
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 final class OperatorApprove extends AbstractCommandHandler implements TransactionedInterface, EmailAwareInterface
 {
     use EmailAwareTrait;
@@ -50,9 +46,14 @@ final class OperatorApprove extends AbstractCommandHandler implements Transactio
             $this->updateTmType($tma->getTransportManager(), $tma->getTmType());
         }
 
-        $this->sendConfirmedEmail($tma);
-
         $this->result->addMessage("Transport Manager Application ID {$tma->getId()} operator approved");
+        if ($tma->getTransportManager()->getHomeCd()->getEmailAddress() !== null) {
+            $this->sendConfirmedEmail($tma);
+            $this->result->addMessage('Email is sent.');
+        } else {
+            Logger::warn('Empty email address for TM ' . $tma->getTransportManager()->getId());
+            $this->result->addMessage('Email is not sent.');
+        }
 
         return $this->result;
     }
