@@ -143,7 +143,6 @@ class Search implements AuthAwareInterface
                 $terms = new Terms($filterName);
                 $terms->setField($filterName);
                 $terms->setOrder('_term', 'ASC');
-                $terms->setSize(0);
 
                 $elasticaQuery->addAggregation($terms);
             }
@@ -156,7 +155,6 @@ class Search implements AuthAwareInterface
         $es->addIndices($indexes);
 
         $response = [];
-
         $resultSet = $es->search($elasticaQuery);
 
         $response['Count'] = $resultSet->getTotalHits();
@@ -329,7 +327,7 @@ class Search implements AuthAwareInterface
     public function updateVehicleSection26(array $ids, $section26Value)
     {
         // Build a query to search where vehicle id is one of the IDs
-        $queryBool = new Query\Bool();
+        $queryBool = new Query\BoolQuery();
         foreach ($ids as $id) {
             $match = new Query\Match();
             $match->setField('veh_id', $id);
@@ -352,7 +350,7 @@ class Search implements AuthAwareInterface
             return true;
         }
 
-        // Create a bulk request to upate all the section 26 values
+        // Create a bulk request to update all the section 26 values
         $bulk = new \Elastica\Bulk($this->getClient());
         foreach ($resultSet->getResults() as $result) {
             /* @var $result \Elastica\Result */
