@@ -53,6 +53,8 @@ class QueryTemplate extends Query
         // apply filters
         $this->applyFilters($filters);
 
+
+
         // apply date ranges
         $this->applyDateRanges($dateRanges);
     }
@@ -72,7 +74,7 @@ class QueryTemplate extends Query
 
         foreach ($filters as $field => $value) {
             if (!empty($field) && !empty($value)) {
-                $this->_params['query']['indices']['query']['filtered']['filter']['bool']['must'][] = [
+                $this->_params['query']['bool']['filter'][] = [
                     'term' => [
                         $field => $value
                     ]
@@ -106,7 +108,7 @@ class QueryTemplate extends Query
                  */
                 $fieldName = substr($fieldName, 0, -12);
 
-                $this->_params['query']['indices']['query']['filtered']['filter']['bool']['must'][] = [
+                $this->_params['query']['bool']['filter'][] = [
                     'term' => [
                         $fieldName => $value
                     ]
@@ -125,7 +127,7 @@ class QueryTemplate extends Query
                     $criteria['to'] = $dates[$toFieldName];
                 }
 
-                $this->_params['query']['indices']['query']['filtered']['filter']['bool']['must'][] = [
+                $this->_params['query']['bool']['filter'][] = [
                     'range' => [
                         $fieldName => $criteria
                     ]
