@@ -5,7 +5,7 @@
                 "bool" : {
                     "should" : [{
                         "multi_match" : {
-                            "query" : "Abbey Hulton",
+                            "query" : "%SEARCH_TERM%",
                             "fuzziness" : 1,
                             "fields" : [
                                 "start_point",
