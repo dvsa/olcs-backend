@@ -1,19 +1,15 @@
 {
   "query": {
-    "indices": {
-      "query": {
-        "filtered": {
-          "query": {
-            "bool": {
-              "should": [
-                {
-                  "match": {
-                    "field_1": "%SEARCH_TERM%"
-                  }
-                }
-              ]
+    "bool": {
+      "must": {
+        "bool": {
+          "should": [
+            {
+              "match": {
+                "field_1": "%SEARCH_TERM%"
+              }
             }
-          }
+          ]
         }
       }
     }
