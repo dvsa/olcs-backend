@@ -83,7 +83,9 @@ class Application extends AbstractQueryHandler
                 'latestNote' => $latestNote,
                 'disableCardPayments' => $this->getRepo('SystemParameter')->getDisableSelfServeCardPayments(),
                 'isMlh' => $application->getLicence()->getOrganisation()->isMlh(),
-                'allowedOperatorLocation' => $application->getLicence()->getOrganisation()->getAllowedOperatorLocation()
+                'allowedOperatorLocation' =>
+                    $application->getLicence()->getOrganisation()->getAllowedOperatorLocation(),
+                'canHaveInspectionRequest' => !$application->isSpecialRestricted(),
             ]
         );
     }
