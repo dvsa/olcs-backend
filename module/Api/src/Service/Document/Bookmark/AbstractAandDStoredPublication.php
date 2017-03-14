@@ -26,10 +26,19 @@ abstract class AbstractAandDStoredPublication extends DynamicBookmark
         PublicationSection::SCHEDULE_1_NI_UNTRUE
     ];
 
-    protected $params = ['application'];
-
+    /**
+     * Get the query to fetch data required to populate the bookmark
+     *
+     * @param array $data Data
+     *
+     * @return Qry
+     */
     public function getQuery(array $data)
     {
+        if (!isset($data['application'])) {
+            return null;
+        }
+
         $bundle = [
             'publicationLinks' => [
                 'publication',
@@ -39,6 +48,13 @@ abstract class AbstractAandDStoredPublication extends DynamicBookmark
         return Qry::create(['id' => $data['application'], 'bundle' => $bundle]);
     }
 
+    /**
+     * Sort publication links
+     *
+     * @param array $publicationLinks Publication link data
+     *
+     * @return array
+     */
     protected function sortPublicationLinks($publicationLinks)
     {
         usort(
@@ -62,6 +78,13 @@ abstract class AbstractAandDStoredPublication extends DynamicBookmark
         return $publicationLinks;
     }
 
+    /**
+     * Fileter publication links
+     *
+     * @param array $publicationLinks Publication link data
+     *
+     * @return array
+     */
     protected function filterPublicationLinks($publicationLinks)
     {
         $filteredPublicationLinks = [];

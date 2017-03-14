@@ -15,8 +15,17 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class AandDStoredPublicationDate extends AbstractAandDStoredPublication
 {
+    /**
+     * Render the bookmark
+     *
+     * @return string
+     */
     public function render()
     {
+        if (!isset($this->data['publicationLinks'])) {
+            return '';
+        }
+
         // unfortunately criteria doesn't work in this case, so we need to filter records manually
         $publicationLinks = $this->filterPublicationLinks($this->data['publicationLinks']);
         if (!count($publicationLinks)) {
