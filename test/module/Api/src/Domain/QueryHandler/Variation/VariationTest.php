@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Variation Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Variation;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Application\Application;
@@ -79,6 +74,9 @@ class VariationTest extends QueryHandlerTestCase
                     )
                     ->getMock()
             )
+            ->shouldReceive('isSpecialRestricted')
+            ->andReturn(false)
+            ->once()
             ->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $application->setStatus((new \Dvsa\Olcs\Api\Entity\System\RefData())->setId('apsts_not_submitted'));
 
@@ -121,7 +119,8 @@ class VariationTest extends QueryHandlerTestCase
             'latestNote' => 'latest note',
             'disableCardPayments' => false,
             'isMlh' => true,
-            'allowedOperatorLocation' => 'GB'
+            'allowedOperatorLocation' => 'GB',
+            'canHaveInspectionRequest' => true
         ];
 
         $this->assertEquals($expected, $result->serialize());
