@@ -11,26 +11,38 @@ use Dvsa\Olcs\Transfer\Query\TmResponsibilities\TmResponsibilitiesList as Qry;
  */
 class TmLinkedLicences extends DynamicBookmark
 {
+    /**
+     * Get the DTO which will populate data for the bookmark
+     *
+     * @param array $data Data
+     *
+     * @return Qry
+     */
     public function getQuery(array $data)
     {
         return Qry::create(['transportManager' => $data['transportManager']]);
     }
 
+    /**
+     * Render the bookmark
+     *
+     * @return string
+     */
     public function render()
     {
         $result = [];
 
         if (!empty($this->data['result'])) {
             foreach ($this->data['result'] as $tmLic) {
-                $licence = $tmLic->getLicence();
 
-                if ($licence instanceof Licence) {
+                if (isset($tmLic['licence']['licNo']) && isset($tmLic['licence']['organisation']['name']) ) {
                     $result[] = sprintf(
                         '%s: %s',
-                        $licence->getLicNo(),
-                        $licence->getOrganisation()->getName()
+                        $tmLic['licence']['licNo'],
+                        $tmLic['licence']['organisation']['name']
                     );
                 }
+
             }
         }
 
