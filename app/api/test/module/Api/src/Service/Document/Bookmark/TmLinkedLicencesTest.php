@@ -24,24 +24,28 @@ class TmLinkedLicencesTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-        $tm = new TransportManager();
-        $org = new Organisation();
-        $org->setName('Org name');
-
-        $lic1 = new Licence($org, new RefData);
-        $lic1->setLicNo('licNo1');
-        $tmLic1 = new TransportManagerLicence($lic1, $tm);
-
-        $lic2 = new Licence($org, new RefData);
-        $lic2->setLicNo('licNo2');
-        $tmLic2 = new TransportManagerLicence($lic2, $tm);
-
         $bookmark = new TmLinkedLicences();
         $bookmark->setData(
             [
                 'result' => [
-                    $tmLic1,
-                    $tmLic2
+                    [
+                        'licence' => [
+                            'licNo' => 'licNo1',
+                            'organisation' => ['name' => 'Org name'],
+                        ]
+                    ],
+                    [
+                        'licence' => [
+                            'licNo' => 'licNo2',
+                            'organisation' => ['name' => 'Org name'],
+                        ]
+                    ],
+                    [
+                        'licence' => [
+                            'licNo' => 'licNo3',
+                            'organisation' => ['MISSING' => 'Org name'],
+                        ]
+                    ],
                 ]
             ]
         );
