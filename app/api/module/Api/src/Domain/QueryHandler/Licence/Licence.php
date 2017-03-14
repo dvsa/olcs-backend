@@ -85,7 +85,8 @@ class Licence extends AbstractQueryHandler
                 'niFlag' => $licence->getNiFlag(),
                 'isMlh' => $licence->getOrganisation()->isMlh(),
                 'continuationMarker' => $continuationDetailResponse,
-                'latestNote' => $latestNote
+                'latestNote' => $latestNote,
+                'canHaveInspectionRequest' => !$licence->isSpecialRestricted(),
             ]
         );
     }

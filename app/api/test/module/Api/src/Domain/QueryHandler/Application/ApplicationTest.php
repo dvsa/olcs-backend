@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Application Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Application\Application;
@@ -79,6 +74,9 @@ class ApplicationTest extends QueryHandlerTestCase
                 )
                 ->getMock()
             )
+            ->shouldReceive('isSpecialRestricted')
+            ->andReturn(false)
+            ->once()
             ->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $application->setStatus((new \Dvsa\Olcs\Api\Entity\System\RefData())->setId('apsts_not_submitted'));
 
@@ -122,7 +120,8 @@ class ApplicationTest extends QueryHandlerTestCase
             'latestNote' => 'latest note',
             'disableCardPayments' => false,
             'isMlh' => true,
-            'allowedOperatorLocation' => 'GB'
+            'allowedOperatorLocation' => 'GB',
+            'canHaveInspectionRequest' => true,
         ];
 
         $this->assertEquals($expected, $result->serialize());
