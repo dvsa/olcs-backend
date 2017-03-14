@@ -1,103 +1,96 @@
 {
-    "query":{
-        "indices":{
-            "indices":[
-                "person"
-            ],
-            "query":{
-                "filtered":{
-                    "query":{
-                        "bool":{
-                            "should":[
-                                {
-                                    "multi_match":{
-                                        "query":"%SEARCH_TERM%",
-                                        "fuzziness":2,
-                                        "prefix_length":1,
-                                        "fields":[
-                                            "person_fullname"
-                                        ]
-                                    }
-                                },
-                                {
-                                    "multi_match":{
-                                        "query":"%SEARCH_TERM%",
-                                        "boost":2,
-                                        "fields":[
-                                            "person_fullname"
-                                        ]
-                                    }
-                                },
-                                {
-                                    "match":{
-                                        "lic_no":"%SEARCH_TERM%"
-                                    }
-                                },
-                                {
-                                    "match":{
-                                        "tm_id":"%SEARCH_TERM%"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "filter":{
-                        "bool":{
-                            "must_not":[
-                                {
-                                    "or":[
-                                        {
-                                            "missing":{
-                                                "field":[
-                                                    "lic_no"
-                                                ]
-                                            }
-                                        },
-                                        {
-                                            "terms":{
-                                                "lic_status":[
-                                                    "lsts_not_submitted",
-                                                    "lsts_unlicenced",
-                                                    "lsts_withdrawn"
-                                                ]
-                                            }
-                                        },
-                                        {
-                                            "terms":{
-                                                "contact_type":[
-                                                    "ct_complainant"
-                                                ]
-                                            }
-                                        },
-                                        {
-                                            "terms":{
-                                                "tm_status_id":[
-                                                    "tm_s_rem"
-                                                ]
-                                            }
-                                        },
-                                        {
-                                            "terms":{
-                                                "found_as":[
-                                                    "Historical TM"
-                                                ]
-                                            }
-                                        },
-                                        {
-                                            "terms":{
-                                                "contact_type":[
-                                                    "ct_obj"
-                                                ]
-                                            }
-                                        }
+    "query": {
+        "bool": {
+            "must_not": [
+                {
+                    "bool": {
+                        "filter": [
+                            {
+                                "terms": {
+                                    "lic_status": [
+                                        "lsts_not_submitted",
+                                        "lsts_unlicenced",
+                                        "lsts_withdrawn"
                                     ]
                                 }
-                            ]
-                        }
+                            },
+                            {
+                                "terms": {
+                                    "lic_status": [
+                                        "lsts_not_submitted",
+                                        "lsts_unlicenced",
+                                        "lsts_withdrawn"
+                                    ]
+                                }
+                            },
+                            {
+                                "terms": {
+                                    "contact_type": [
+                                        "ct_complainant"
+                                    ]
+                                }
+                            },
+                            {
+                                "terms": {
+                                    "tm_status_id": [
+                                        "tm_s_rem"
+                                    ]
+                                }
+                            },
+                            {
+                                "terms": {
+                                    "found_as": [
+                                        "Historical TM"
+                                    ]
+                                }
+                            },
+                            {
+                                "terms": {
+                                    "contact_type": [
+                                        "ct_obj"
+                                    ]
+                                }
+                            },
+                            {
+                                "exists": {
+                                    "field": "lic_no"
+                                }
+                            }
+                        ]
                     }
                 }
-            },
-            "no_match_query":"none"
+            ],
+            "should": [
+                {
+                    "multi_match": {
+                        "query": "%SEARCH_TERM%",
+                        "fuzziness": 2,
+                        "prefix_length": 1,
+                        "fields": [
+                            "person_fullname"
+                        ]
+                    }
+                },
+                {
+                    "multi_match": {
+                        "query": "%SEARCH_TERM%",
+                        "boost": 2,
+                        "fields": [
+                            "person_fullname"
+                        ]
+                    }
+                },
+                {
+                    "match": {
+                        "lic_no": "%SEARCH_TERM%"
+                    }
+                },
+                {
+                    "match": {
+                        "tm_id": "%SEARCH_TERM%"
+                    }
+                }
+            ]
         }
     },
     "min_score":0.2
