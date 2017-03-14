@@ -67,7 +67,9 @@ abstract class DynamicBookmark extends AbstractBookmark implements RepositoryMan
             foreach ($this->params as $param) {
                 if (!isset($data[$param])) {
                     $description = isset($this->descriptions[$param]) ? $this->descriptions[$param] : $param;
-                    throw new \Exception('no ' . $description . ' data');
+                    throw new \Exception(
+                        sprintf('Bookmark %s missing %s data', static::class, $description)
+                    );
                 }
             }
         }
