@@ -16,15 +16,6 @@
                             },
                             {
                                 "terms": {
-                                    "lic_status": [
-                                        "lsts_not_submitted",
-                                        "lsts_unlicenced",
-                                        "lsts_withdrawn"
-                                    ]
-                                }
-                            },
-                            {
-                                "terms": {
                                     "contact_type": [
                                         "ct_complainant"
                                     ]
