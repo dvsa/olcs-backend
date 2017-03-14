@@ -1,104 +1,86 @@
 {
-    "query":{
-        "indices":{
-            "indices":[
-                "address"
-            ],
-            "query":{
-                "filtered":{
-                    "query":{
-                        "bool":{
-                            "should":[
-                                {
-                                    "multi_match":{
-                                        "query":"%SEARCH_TERM%",
-                                        "fuzziness":1,
-                                        "fields":[
-                                            "paon_desc",
-                                            "saon_desc",
-                                            "street",
-                                            "locality",
-                                            "town"
-                                        ]
-                                    }
-                                },
-                                {
-                                    "multi_match":{
-                                        "query":"%SEARCH_TERM%",
-                                        "type":"phrase",
-                                        "slop":2,
-                                        "fields":[
-                                            "full_address"
-                                        ]
-                                    }
-                                },
-                                {
-                                    "wildcard":{
-                                        "postcode":{
-                                            "value":"%SEARCH_TERM%*"
-                                        }
-                                    }
-                                },
-                                {
-                                    "prefix":{
-                                        "postcode":{
-                                            "value":"%SEARCH_TERM%"
-                                        }
-                                    }
-                                },
-                                {
-                                    "match":{
-                                        "app_id":{
-                                            "query":"%SEARCH_TERM%"
-                                        }
-                                    }
-                                },
-                                {
-                                    "match":{
-                                        "postcode":{
-                                            "query":"%SEARCH_TERM%"
-                                        }
-                                    }
-                                },
-                                {
-                                    "match":{
-                                        "lic_no":"%SEARCH_TERM%"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "filter":{
-                        "bool":{
-                            "must":[
-                                {
-                                    "missing":{
-                                        "field":[
-                                            "deleted_date"
-                                        ]
-                                    }
-                                }
-                            ],
-                            "must_not":[
-                                {
-                                    "or":[
-                                        {
-                                            "terms":{
-                                                "lic_status":[
-                                                    "lsts_not_submitted",
-                                                    "lsts_unlicenced",
-                                                    "lsts_withdrawn"
-                                                ]
-                                            }
-                                        }
+    "query": {
+        "bool": {
+            "must_not": [
+                {
+                    "bool": {
+                        "filter": [
+                            {
+                                "terms": {
+                                    "lic_status": [
+                                        "lsts_not_submitted",
+                                        "lsts_unlicenced",
+                                        "lsts_withdrawn"
                                     ]
                                 }
-                            ]
-                        }
+                            },
+                            {
+                                "exists": {
+                                    "field": "deleted_date"
+                                }
+                            }
+                        ]
                     }
                 }
-            },
-            "no_match_query":"none"
+            ],
+            "should": [
+                {
+                    "multi_match": {
+                        "query": "%SEARCH_TERM%",
+                        "fuzziness": 1,
+                        "fields": [
+                            "paon_desc",
+                            "saon_desc",
+                            "street",
+                            "locality",
+                            "town"
+                        ]
+                    }
+                },
+                {
+                    "multi_match": {
+                        "query": "%SEARCH_TERM%",
+                        "type": "phrase",
+                        "slop": 2,
+                        "fields": [
+                            "full_address"
+                        ]
+                    }
+                },
+                {
+                    "wildcard": {
+                        "postcode": {
+                            "value": "%SEARCH_TERM%*"
+                        }
+                    }
+                },
+                {
+                    "prefix": {
+                        "postcode": {
+                            "value": "%SEARCH_TERM%"
+                        }
+                    }
+                },
+                {
+                    "match": {
+                        "app_id": {
+                            "query": "%SEARCH_TERM%"
+                        }
+                    }
+                },
+                {
+                    "match": {
+                        "postcode": {
+                            "query": "%SEARCH_TERM%"
+                        }
+                    }
+                },
+                {
+                    "match": {
+                        "lic_no": "%SEARCH_TERM%"
+                    }
+                }
+            ]
         }
     },
     "min_score":0.15
