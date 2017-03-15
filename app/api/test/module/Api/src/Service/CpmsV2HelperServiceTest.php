@@ -1163,12 +1163,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $params = [
             'filters' => [
-                /*
-                 * @todo uncomment after next version of CPMS 3.0.29 will be released
                 'scheme' => [
                     'client_id', 'client_id_ni'
                 ]
-                */
             ]
         ];
         $this->cpmsClient
@@ -1193,12 +1190,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'filters' => [
                 'from' => '2015-10-07 08:57:00',
                 'to' => '2015-10-08 08:56:59',
-                /*
-                 * @todo uncomment after next version of CPMS 3.0.29 will be released
                 'scheme' => [
                     'client_id', 'client_id_ni'
                 ]
-                */
             ],
         ];
 
@@ -1223,12 +1217,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $params = [
             'filters' => [
-                /*
-                 * @todo uncomment after next version of CPMS 3.0.29 will be released
                 'scheme' => [
                     'client_id', 'client_id_ni'
                 ]
-                */
             ]
         ];
         $this->cpmsClient
@@ -1251,12 +1242,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $params = [
             'filters' => [
-                /*
-                 * @todo uncomment after next version of CPMS 3.0.29 will be released
                 'scheme' => [
                     'client_id', 'client_id_ni'
                 ]
-                */
             ]
         ];
         $this->cpmsClient
