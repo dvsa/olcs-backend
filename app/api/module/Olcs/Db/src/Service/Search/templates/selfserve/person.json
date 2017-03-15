@@ -41,13 +41,15 @@
                                         "ct_obj"
                                     ]
                                 }
-                            },
-                            {
-                                "exists": {
-                                    "field": "lic_no"
-                                }
                             }
                         ]
+                    }
+                }
+            ],
+            "must": [
+                {
+                    "exists": {
+                        "field": "lic_no"
                     }
                 }
             ],
@@ -84,5 +86,5 @@
             ]
         }
     },
-    "min_score":0.2
+    "min_score": 0.2
 }
