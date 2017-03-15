@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Grant
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -57,6 +52,6 @@ class Grant extends AbstractQueryHandler
 
     protected function canHaveInspectionRequest(ApplicationEntity $application)
     {
-        return !$application->isVariation();
+        return !$application->isVariation() && !$application->isSpecialRestricted();
     }
 }
