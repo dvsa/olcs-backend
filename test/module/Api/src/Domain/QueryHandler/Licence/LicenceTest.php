@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Licence Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -65,7 +60,10 @@ class LicenceTest extends QueryHandlerTestCase
                 m::mock(Organisation::class)->shouldReceive('isMlh')->once()
                     ->andReturn(true)
                     ->getMock()
-            );
+            )
+            ->shouldReceive('isSpecialRestricted')
+            ->andReturn(false)
+            ->once();
 
         $mockContinuationDetail = m::mock(\Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail::class)
             ->shouldReceive('serialize')->with(['continuation', 'licence'])->once()->andReturn(['CD'])
@@ -98,11 +96,11 @@ class LicenceTest extends QueryHandlerTestCase
             'isMlh' => true,
             'continuationMarker' => ['CD'],
             'latestNote' => 'latest note',
+            'canHaveInspectionRequest' => true,
         ];
 
         $this->assertEquals($expected, $result->serialize());
     }
-
 
     public function testHandleQueryNoContinuationDetail()
     {
@@ -122,7 +120,10 @@ class LicenceTest extends QueryHandlerTestCase
                 m::mock(Organisation::class)->shouldReceive('isMlh')->once()
                     ->andReturn(true)
                     ->getMock()
-            );
+            )
+            ->shouldReceive('isSpecialRestricted')
+            ->andReturn(true)
+            ->once();
 
         $this->repoMap['ContinuationDetail']->shouldReceive('fetchForLicence')->with(111)
             ->andReturn([]);
@@ -152,6 +153,7 @@ class LicenceTest extends QueryHandlerTestCase
             'isMlh' => true,
             'continuationMarker' => null,
             'latestNote' => 'latest note',
+            'canHaveInspectionRequest' => false,
         ];
 
         $this->assertEquals($expected, $result->serialize());
