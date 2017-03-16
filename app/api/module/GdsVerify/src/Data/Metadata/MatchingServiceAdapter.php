@@ -24,7 +24,17 @@ class MatchingServiceAdapter
         $document = new \DOMDocument();
         $document->loadXML($xml);
 
-        $this->metadataDocument = new \SAML2\XML\md\EntityDescriptor($document->documentElement);
+        $element = $document->documentElement;
+
+        if ($element->tagName === 'md:EntitiesDescriptor') {
+            $element = $document->documentElement->childNodes[1];
+        }
+
+        if ($element->tagName !== 'md:EntityDescriptor') {
+            throw new \Exception('Cannot find md:EntityDescriptor element in metadata');
+        }
+
+        $this->metadataDocument = new \SAML2\XML\md\EntityDescriptor($element);
     }
 
     /**
@@ -46,5 +56,23 @@ class MatchingServiceAdapter
         }
 
         throw new Exception('Matching Service Adapter signing certificate not found');
+    }
+
+    /**
+     * Get the SSO Url
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getSsoUrl()
+    {
+        /** @var \SAML2\XML\md\IDPSSODescriptor $roleDescriptor */
+        foreach ($this->metadataDocument->RoleDescriptor as $roleDescriptor) {
+            if ($roleDescriptor instanceof \SAML2\XML\md\IDPSSODescriptor) {
+                return $roleDescriptor->SingleSignOnService[0]->Location;
+            }
+        }
+
+        throw new Exception('SSO URL not found in metadata');
     }
 }

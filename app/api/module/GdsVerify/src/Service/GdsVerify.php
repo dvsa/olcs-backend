@@ -124,7 +124,7 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
         $request = new \SAML2\AuthnRequest();
 
         $request->setIssuer($this->getEntityIdentifier());
-        $request->setDestination($this->getFederationMetaData()->getSsoUrl());
+        $request->setDestination($this->getMatchingServiceAdapterMetadata()->getSsoUrl());
         // Set our signing key so that request can be signed
         $request->setSignatureKey($this->getSignatureKey());
 

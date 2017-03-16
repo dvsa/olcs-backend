@@ -20,7 +20,7 @@ return array(
         //    ],
         //],
         // Entity identifier
-        'entity_identifier' => 'https://www.vehicle-operator-licensing.service.gov.uk',
+        'entity_identifier' => 'http://olcs-selfserve.olcs.gov.uk',
         // Key used to sign authentication requests
         'signature_key' => __DIR__ .'/../data/compliance-tool/signing.key',
         // Key used to decrypt data from hub
