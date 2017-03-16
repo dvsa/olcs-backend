@@ -55,6 +55,9 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
     const GV_VEHICLE_LIST_GB = 1258; // /templates/GB/GVVehiclesList.rtf
     const GV_VEHICLE_LIST_NI = 1513; // /templates/NI/GVVehiclesList.rtf
 
+    const LICENCE_TERMINATED_CONT_FEE_NOT_PAID_GB = 1041; // /tempates/GB/CNS_Letter_to_operator.rtf
+    const LICENCE_TERMINATED_CONT_FEE_NOT_PAID_NI = 1433; // /tempates/NI/CNS_Letter_to_operator.rtf
+
     /**
      * Document constructor.
      *

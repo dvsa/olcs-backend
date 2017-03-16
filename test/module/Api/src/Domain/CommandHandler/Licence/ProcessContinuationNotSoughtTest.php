@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Process Continuation Not Sought test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\ORM\Query;
@@ -20,6 +15,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\ProcessContinuationNotSought as 
 use Dvsa\Olcs\Api\Domain\Repository\Licence as Repo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Mockery as m;
 
 /**
@@ -66,6 +65,9 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
             ->shouldReceive('setStatus')
             ->once()
             ->with($this->mapRefData(LicenceEntity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT))
+            ->shouldReceive('isNi')
+            ->andReturn(false)
+            ->twice()
             ->getMock();
 
         $this->repoMap['Licence']
@@ -107,6 +109,36 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $documentId = 1;
+        $documentDto = [
+            'template' => DocumentEntity::LICENCE_TERMINATED_CONT_FEE_NOT_PAID_GB,
+            'query' => [
+                'licence'   => $licenceId
+            ],
+            'licence'       => $licenceId,
+            'description'   => Sut::DOCUMENT_DESCRIPTION_GB,
+            'category'      => CategoryEntity::CATEGORY_LICENSING,
+            'subCategory'   => CategoryEntity::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
+            'isExternal'    => false,
+        ];
+        $documentResult = new Result();
+        $documentResult->addId('document', $documentId);
+        $this->expectedSideEffect(
+            GenerateAndStore::class,
+            $documentDto,
+            $documentResult
+        );
+
+        $printDto = [
+            'documentId' => $documentId,
+            'jobName'    => Sut::DOCUMENT_DESCRIPTION_GB
+        ];
+        $this->expectedSideEffect(
+            EnqueueFileCommand::class,
+            $printDto,
+            new Result()
+        );
+
         $response = $this->sut->handleCommand($command);
 
         $this->assertEquals(
@@ -143,6 +175,9 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
             ->shouldReceive('setStatus')
             ->once()
             ->with($this->mapRefData(LicenceEntity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT))
+            ->shouldReceive('isNi')
+            ->andReturn(true)
+            ->twice()
             ->getMock();
 
         $this->repoMap['Licence']
@@ -181,6 +216,36 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             PublicationLicenceCmd::class,
             ['id' => $licenceId],
+            new Result()
+        );
+
+        $documentId = 1;
+        $documentDto = [
+            'template' => DocumentEntity::LICENCE_TERMINATED_CONT_FEE_NOT_PAID_NI,
+            'query' => [
+                'licence'   => $licenceId
+            ],
+            'licence'       => $licenceId,
+            'description'   => Sut::DOCUMENT_DESCRIPTION_NI,
+            'category'      => CategoryEntity::CATEGORY_LICENSING,
+            'subCategory'   => CategoryEntity::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
+            'isExternal'    => false,
+        ];
+        $documentResult = new Result();
+        $documentResult->addId('document', $documentId);
+        $this->expectedSideEffect(
+            GenerateAndStore::class,
+            $documentDto,
+            $documentResult
+        );
+
+        $printDto = [
+            'documentId' => $documentId,
+            'jobName'    => Sut::DOCUMENT_DESCRIPTION_NI
+        ];
+        $this->expectedSideEffect(
+            EnqueueFileCommand::class,
+            $printDto,
             new Result()
         );
 
