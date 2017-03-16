@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Process Continuation Not Sought
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -19,6 +14,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Publication\Licence as PublicationLicenceCmd;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 
 /**
  * Process Continuation Not Sought
@@ -28,6 +27,9 @@ use Dvsa\Olcs\Api\Domain\Command\Publication\Licence as PublicationLicenceCmd;
 final class ProcessContinuationNotSought extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Licence';
+
+    const DOCUMENT_DESCRIPTION_GB = 'GV - Termination letter following non payment of cont fee';
+    const DOCUMENT_DESCRIPTION_NI = 'GV - Termination letter following non payment of cont fee (NI)';
 
     public function handleCommand(CommandInterface $command)
     {
@@ -59,6 +61,8 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler implemen
             )
         );
 
+        $this->printLetter($licence);
+
         $result->addMessage('Licence updated');
 
         return $result;
@@ -71,5 +75,48 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler implemen
         }
 
         return CeasePsvDiscs::create(['licence' => $licence->getId()]);
+    }
+
+    /**
+     * Print letter
+     *
+     * @param Entity $licence licence
+     *
+     * @return null
+     */
+    protected function printLetter($licence)
+    {
+        $licenceId = $licence->getId();
+
+        $template = $licence->isNi()
+            ? DocumentEntity::LICENCE_TERMINATED_CONT_FEE_NOT_PAID_NI
+            : DocumentEntity::LICENCE_TERMINATED_CONT_FEE_NOT_PAID_GB;
+
+        $description = $licence->isNi()
+            ? self::DOCUMENT_DESCRIPTION_NI
+            : self::DOCUMENT_DESCRIPTION_GB;
+
+        $dtoData = [
+            'template' => $template,
+            'query' => [
+                'licence'   => $licenceId
+            ],
+            'licence'       => $licenceId,
+            'description'   => $description,
+            'category'      => CategoryEntity::CATEGORY_LICENSING,
+            'subCategory'   => CategoryEntity::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
+            'isExternal'    => false,
+        ];
+
+        $result = $this->handleSideEffect(GenerateAndStore::create($dtoData));
+        $this->result->merge($result);
+
+        $printQueue = EnqueueFileCommand::create(
+            [
+                'documentId' => $result->getId('document'),
+                'jobName'    => $description
+            ]
+        );
+        $this->result->merge($this->handleSideEffect($printQueue));
     }
 }
