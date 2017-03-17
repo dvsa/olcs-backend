@@ -18,6 +18,8 @@ class MatchingServiceAdapter
      * MatchingServiceAdapter constructor.
      *
      * @param string $xml XML
+     *
+     * @throws Exception
      */
     public function __construct($xml)
     {
@@ -31,7 +33,7 @@ class MatchingServiceAdapter
         }
 
         if ($element->tagName !== 'md:EntityDescriptor') {
-            throw new \Exception('Cannot find md:EntityDescriptor element in metadata');
+            throw new Exception('Cannot find md:EntityDescriptor element in metadata');
         }
 
         $this->metadataDocument = new \SAML2\XML\md\EntityDescriptor($element);
@@ -51,7 +53,7 @@ class MatchingServiceAdapter
         /** @var \SAML2\XML\md\KeyDescriptor $keyDescriptor */
         foreach ($roleDescriptor->KeyDescriptor as $keyDescriptor) {
             if ($keyDescriptor->use === 'signing') {
-                return $keyDescriptor->KeyInfo->info[1]->data[0]->certificate;
+                return trim($keyDescriptor->KeyInfo->info[1]->data[0]->certificate);
             }
         }
 
@@ -69,7 +71,7 @@ class MatchingServiceAdapter
         /** @var \SAML2\XML\md\IDPSSODescriptor $roleDescriptor */
         foreach ($this->metadataDocument->RoleDescriptor as $roleDescriptor) {
             if ($roleDescriptor instanceof \SAML2\XML\md\IDPSSODescriptor) {
-                return $roleDescriptor->SingleSignOnService[0]->Location;
+                return trim($roleDescriptor->SingleSignOnService[0]->Location);
             }
         }
 
