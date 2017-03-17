@@ -19,6 +19,8 @@ final class Text2 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
      */
     public function process(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {
+        $this->clear();
+
         if ($context->offsetExists('licenceCancelled')) {
             $this->addTextLine($context->offsetGet('licenceCancelled'));
         }

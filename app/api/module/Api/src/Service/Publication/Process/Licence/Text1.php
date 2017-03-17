@@ -18,6 +18,8 @@ final class Text1 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
      */
     public function process(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {
+        $this->clear();
+
         $this->addTextLine(
             $publicationLink->getLicence()->getLicNo() .' '. $publicationLink->getLicence()->getLicenceTypeShortCode()
         );
