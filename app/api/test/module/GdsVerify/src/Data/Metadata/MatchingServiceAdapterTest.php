@@ -9,6 +9,16 @@ use Dvsa\Olcs\GdsVerify\Data\Metadata\MatchingServiceAdapter;
  */
 class MatchingServiceAdapterTest extends \PHPUnit_Framework_TestCase
 {
+    public function testInvalidXml()
+    {
+        $this->setExpectedException(
+            \Dvsa\Olcs\GdsVerify\Exception::class,
+            'Cannot find md:EntityDescriptor element in metadata'
+        );
+
+        $sut = new MatchingServiceAdapter('<root/>');
+    }
+
     public function testGetSigningCertificate()
     {
         $msaMetadata = $this->getSut();

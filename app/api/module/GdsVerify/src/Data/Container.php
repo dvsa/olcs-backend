@@ -13,9 +13,9 @@ class Container extends \SAML2\Compat\AbstractContainer
     /**
      * Container constructor.
      *
-     * @param \Zend\Log\LoggerInterface $logger Logger
+     * @param \Psr\Log\LoggerInterface $logger Logger
      */
-    public function __construct(\Zend\Log\LoggerInterface $logger)
+    public function __construct(\Psr\Log\LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
@@ -23,7 +23,7 @@ class Container extends \SAML2\Compat\AbstractContainer
     /**
      * Provide logger to SAML2
      *
-     * @return \Zend\Log\LoggerInterface
+     * @return \Psr\Log\LoggerInterface
      */
     public function getLogger()
     {

@@ -24,6 +24,9 @@ return array(
         // Key used to sign authentication requests
         'signature_key' => __DIR__ .'/../data/compliance-tool/signing.key',
         // Key used to decrypt data from hub
-        'encryption_key' => __DIR__ .'/../data/compliance-tool/enc.key',
+        'encryption_keys' => [
+            __DIR__ .'/../data/compliance-tool/signing.key',
+//            __DIR__ .'/../data/compliance-tool/enc.key',
+        ],
     ]
 );
