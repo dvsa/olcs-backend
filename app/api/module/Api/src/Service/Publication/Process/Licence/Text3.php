@@ -14,6 +14,8 @@ final class Text3 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
 {
     public function process(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {
+        $this->clear();
+
         $this->addTextLine($context->offsetGet('licenceAddress'));
         if ($context->offsetExists('busNote')) {
             $this->addTextLine($context->offsetGet('busNote'));

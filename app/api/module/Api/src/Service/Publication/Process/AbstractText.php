@@ -14,7 +14,9 @@ abstract class AbstractText implements ProcessInterface
     /**
      * Add a line of text
      *
-     * @param string $text
+     * @param string $text text
+     *
+     * @return void
      */
     protected function addTextLine($text)
     {
@@ -31,5 +33,15 @@ abstract class AbstractText implements ProcessInterface
     protected function getTextWithNewLine()
     {
         return implode("\n", $this->text);
+    }
+
+    /**
+     * Clear existed text
+     *
+     * @return void
+     */
+    protected function clear()
+    {
+        $this->text = [];
     }
 }
