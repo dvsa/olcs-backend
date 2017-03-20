@@ -12,10 +12,18 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
  */
 final class HearingDate extends AbstractContext
 {
+    /**
+     * Provide data
+     *
+     * @param PublicationLink $publication Publication link
+     * @param \ArrayObject    $context     Context data
+     *
+     * @return \ArrayObject
+     */
     public function provide(PublicationLink $publication, \ArrayObject $context)
     {
-        $hearingDateTime = new \DateTime($context->offsetGet('hearingDate'));
-
+        // use DateTimeFrontEnd as the time needs to be rendered in users local time
+        $hearingDateTime = new \Dvsa\Olcs\Api\Domain\Util\DateTime\DateTimeFrontEnd($context->offsetGet('hearingDate'));
         $context->offsetSet('formattedHearingDate', $hearingDateTime->format('j F Y'));
         $context->offsetSet('formattedHearingTime', $hearingDateTime->format('H:i'));
 
