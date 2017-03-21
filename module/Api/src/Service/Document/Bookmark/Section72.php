@@ -11,6 +11,6 @@ class Section72 extends AbstractPublicationLinkSection
 {
     //section ids differ based on the publication type
     protected $pubTypeSection = [
-        'A&D' => 11
+        'A&D' => [11, 20]
     ];
 }
