@@ -1,10 +1,5 @@
 <?php
 
-/**
- * WithdrawApplication.php
- *
- * @author Josh Curtis <josh.curtis@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
@@ -21,6 +16,9 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
 use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
+use Dvsa\Olcs\Api\Domain\Command\Publication\PublicationLink as PublicationLinkEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Withdraw Application Test
@@ -86,6 +84,11 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(EndInterimCmd::class, ['id' => 1], new Result());
 
         $application->shouldReceive('getIsVariation')->andReturn(false);
+
+        $application->shouldReceive('isPreviouslyPublished')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
 
         $this->repoMap['Application']->shouldReceive('fetchById')
             ->with(532)
@@ -173,6 +176,11 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(EndInterimCmd::class, ['id' => 1], new Result());
 
         $application->shouldReceive('getIsVariation')->andReturn(false);
+
+        $application->shouldReceive('isPreviouslyPublished')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
 
         $this->repoMap['Application']->shouldReceive('fetchById')
             ->with(532)
@@ -305,6 +313,16 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             ->setId(1)
             ->setIsVariation(true)
             ->setLicenceType(new \Dvsa\Olcs\Api\Entity\System\RefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL));
+
+        $publicationLink = m::mock(PublicationLinkEntity::class)
+            ->shouldReceive('getpublicationSection')
+            ->andReturn(PublicationSectionEntity::APP_NEW_SECTION)
+            ->getMock();
+
+        $publicationLinks = new ArrayCollection();
+        $publicationLinks->add($publicationLink);
+
+        $application->setPublicationLinks($publicationLinks);
 
         $this->repoMap['Application']->shouldReceive('fetchById')->with(532)->andReturn($application);
         $this->repoMap['Application']->shouldReceive('save')->once()->with(m::type(Application::class));
