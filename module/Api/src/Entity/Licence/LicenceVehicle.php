@@ -37,6 +37,8 @@ class LicenceVehicle extends AbstractLicenceVehicle implements OrganisationProvi
     }
 
     /**
+     * Get active disc
+     *
      * @return GoodsDisc|null
      */
     public function getActiveDisc()
@@ -47,10 +49,10 @@ class LicenceVehicle extends AbstractLicenceVehicle implements OrganisationProvi
             return null;
         }
 
-        $activeDisc = $goodsDiscs->first();
-
-        if ($activeDisc->getCeasedDate() === null) {
-            return $activeDisc;
+        foreach ($goodsDiscs as $goodsDisc) {
+            if ($goodsDisc->getCeasedDate() === null) {
+                return $goodsDisc;
+            }
         }
 
         return null;
