@@ -43,14 +43,19 @@ class LicenceVehicleEntityTest extends EntityTester
         $entity = $this->instantiate(Entity::class);
 
         /** @var GoodsDisc $goodsDisc */
-        $goodsDisc = m::mock(GoodsDisc::class)->makePartial();
+        $goodsDisc1 = m::mock(GoodsDisc::class)->makePartial();
+        $goodsDisc1->setCeasedDate(new DateTime());
+
+        /** @var GoodsDisc $goodsDisc */
+        $goodsDisc2 = m::mock(GoodsDisc::class)->makePartial();
 
         $goodsDiscs = new ArrayCollection();
-        $goodsDiscs->add($goodsDisc);
+        $goodsDiscs->add($goodsDisc1);
+        $goodsDiscs->add($goodsDisc2);
 
         $entity->setGoodsDiscs($goodsDiscs);
 
-        $this->assertSame($goodsDisc, $entity->getActiveDisc());
+        $this->assertSame($goodsDisc2, $entity->getActiveDisc());
     }
 
     public function testGetActiveDiscCeased()
