@@ -62,7 +62,9 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
         }
 
         if ($application->isPublishable()) {
-            $this->result->merge($this->publishApplication($application));
+            if ($application->isPreviouslyPublished()) {
+                $this->result->merge($this->publishApplication($application));
+            }
             $this->result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
         }
 

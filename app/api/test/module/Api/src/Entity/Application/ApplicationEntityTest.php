@@ -17,6 +17,8 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntiy;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntiy;
 use Mockery as m;
 
 /**
@@ -3387,5 +3389,23 @@ class ApplicationEntityTest extends EntityTester
             [false, '', new Entities\DigitalSignature()],
             [true, Entity::SIG_DIGITAL_SIGNATURE, new Entities\DigitalSignature()],
         ];
+    }
+
+    public function testIsPreviouslyPublished()
+    {
+        $application = $this->instantiate(Entity::class);
+
+        $this->assertFalse($application->isPreviouslyPublished());
+
+        $publicationLink = m::mock(PublicationLinkEntiy::class)
+            ->shouldReceive('getPublicationSection')
+            ->andReturn(PublicationSectionEntiy::APP_NEW_SECTION)
+            ->getMock();
+
+        $publicationLinks = new ArrayCollection();
+        $publicationLinks->add($publicationLink);
+        $application->setPublicationLinks($publicationLinks);
+
+        $this->assertTrue($application->isPreviouslyPublished());
     }
 }

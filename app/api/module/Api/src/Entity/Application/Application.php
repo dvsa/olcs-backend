@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
@@ -1678,6 +1679,30 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
             return false;
         }
+    }
+
+    /**
+     * If the application has been previously published
+     *
+     * @return boolean
+     */
+    public function isPreviouslyPublished()
+    {
+        $linkTypes = [
+            PublicationSectionEntity::APP_NEW_SECTION,
+            PublicationSectionEntity::VAR_NEW_SECTION,
+            PublicationSectionEntity::APP_GRANTED_SECTION,
+            PublicationSectionEntity::VAR_GRANTED_SECTION,
+            PublicationSectionEntity::SCHEDULE_4_NEW,
+            PublicationSectionEntity::SCHEDULE_4_UNTRUE,
+            PublicationSectionEntity::SCHEDULE_4_TRUE,
+            PublicationSectionEntity::SCHEDULE_1_NI_NEW,
+            PublicationSectionEntity::SCHEDULE_1_NI_UNTRUE,
+            PublicationSectionEntity::SCHEDULE_1_NI_TRUE
+        ];
+        $criteria = Criteria::create()->where(Criteria::expr()->in('publicationSection', $linkTypes));
+
+        return ($this->getPublicationLinks()->matching($criteria)->count() > 0);
     }
 
     /**
