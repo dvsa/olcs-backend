@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Process Continuation Not Sought
@@ -42,6 +43,10 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler implemen
 
         // Set status to CNS
         $licence->setStatus($this->getRepo()->getRefdataReference(Entity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT));
+
+        // Set CNS date to current
+        $licence->setCnsDate(new DateTime());
+
         $this->getRepo()->save($licence);
 
         $result->merge(
