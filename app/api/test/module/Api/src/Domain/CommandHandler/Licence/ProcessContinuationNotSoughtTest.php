@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Process Continuation Not Sought test
@@ -65,6 +66,9 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
             ->shouldReceive('setStatus')
             ->once()
             ->with($this->mapRefData(LicenceEntity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT))
+            ->shouldReceive('setCnsDate')
+            ->with(m::type(DateTime::class))
+            ->once()
             ->shouldReceive('isNi')
             ->andReturn(false)
             ->twice()
@@ -175,6 +179,9 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
             ->shouldReceive('setStatus')
             ->once()
             ->with($this->mapRefData(LicenceEntity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT))
+            ->shouldReceive('setCnsDate')
+            ->with(m::type(DateTime::class))
+            ->once()
             ->shouldReceive('isNi')
             ->andReturn(true)
             ->twice()
