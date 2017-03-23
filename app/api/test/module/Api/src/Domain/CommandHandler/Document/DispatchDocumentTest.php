@@ -1,37 +1,35 @@
 <?php
 
-/**
- * Dispatch Document Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
+use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\CreateCorrespondenceRecord;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTranslateToWelshTask;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Document\DispatchDocument as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
-use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument as Cmd;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Document\DispatchDocument as CommandHandler;
-use ZfcRbac\Service\AuthorizationService;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Dispatch Document Test
  *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Document\DispatchDocument
  */
 class DispatchDocumentTest extends CommandHandlerTestCase
 {
+    /** @var \Dvsa\Olcs\Api\Domain\CommandHandler\Document\DispatchDocument */
+    protected $sut;
+
     public function setUp()
     {
         $this->sut = new CommandHandler();
@@ -71,7 +69,7 @@ class DispatchDocumentTest extends CommandHandlerTestCase
         $data = [
             'licence' => 111,
             'description' => 'foo',
-            'user' => 1
+            'user' => 1,
         ];
         $command = Cmd::create($data);
 
@@ -106,7 +104,7 @@ class DispatchDocumentTest extends CommandHandlerTestCase
         $dataForCreateDocSpecific = [
             'licence' => 111,
             'description' => 'foo',
-            'user' => 1
+            'user' => 1,
         ];
         $commandCreateDocSpecific = Cmd::create($dataForCreateDocSpecific);
         $this->expectedSideEffect(CreateDocumentSpecific::class, $commandCreateDocSpecific->getArrayCopy(), $result1);
@@ -141,7 +139,8 @@ class DispatchDocumentTest extends CommandHandlerTestCase
             'licence' => 111,
             'identifier' => 'ABC123',
             'description' => 'foo',
-            'user' => 1
+            'user' => 1,
+            'printCopiesCount' => 888,
         ];
         $command = Cmd::create($data);
 
@@ -173,7 +172,8 @@ class DispatchDocumentTest extends CommandHandlerTestCase
         $data = [
             'documentId' => 123,
             'jobName' => 'foo',
-            'user' => 1
+            'user' => 1,
+            'copies' => 888 ,
         ];
         $result2 = new Result();
         $result2->addMessage('Printed');

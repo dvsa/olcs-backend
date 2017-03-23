@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Print Job
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Command\PrintScheduler;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
@@ -25,6 +20,9 @@ final class PrintJob extends AbstractCommand
 
     protected $user;
 
+    /** @var  int */
+    protected $copies;
+
     public function getDocument()
     {
         return $this->document;
@@ -38,5 +36,15 @@ final class PrintJob extends AbstractCommand
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Get count of copies
+     *
+     * @return int
+     */
+    public function getCopies()
+    {
+        return $this->copies;
     }
 }

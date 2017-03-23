@@ -79,8 +79,16 @@ final class GrantBusReg extends AbstractCommandHandler
             }
         }
 
+        //  count of printed copies: 1 - for operator, 1 - for internal use and 1 - for each LA
+        $copiesCnt = 2 + count($busReg->getLocalAuthoritys());
+
         // Print licence
-        $sideEffects[] = BusPrintLetterCmd::create(['id' => $busReg->getId()]);
+        $sideEffects[] = BusPrintLetterCmd::create(
+            [
+                'id' => $busReg->getId(),
+                'printCopiesCount' => $copiesCnt,
+            ]
+        );
 
         $this->handleSideEffects($sideEffects);
 
@@ -108,7 +116,7 @@ final class GrantBusReg extends AbstractCommandHandler
      *
      * @param int $ebsrId Ebrs Id
      *
-     * @return SendEbsrCancelled
+     * @return \Dvsa\Olcs\Api\Domain\Command\Queue\Create
      */
     private function getCancelledEmailCmd($ebsrId)
     {
@@ -120,7 +128,7 @@ final class GrantBusReg extends AbstractCommandHandler
      *
      * @param int $ebsrId Ebrs Id
      *
-     * @return SendEbsrRegistered
+     * @return \Dvsa\Olcs\Api\Domain\Command\Queue\Create
      */
     private function getRegisteredEmailCmd($ebsrId)
     {

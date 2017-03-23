@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Generate And Store
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Command\Document;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
@@ -15,6 +10,7 @@ use Dvsa\Olcs\Transfer\FieldType\Traits\IrfoOrganisationOptional;
 use Dvsa\Olcs\Transfer\FieldType\Traits\LicenceOptional;
 use Dvsa\Olcs\Transfer\FieldType\Traits\TrafficAreasOptional;
 use Dvsa\Olcs\Transfer\FieldType\Traits\TransportManagerOptional;
+use Dvsa\Olcs\Transfer\FieldType\Traits\PrintCopiesCount;
 
 /**
  * Generate And Store
@@ -29,7 +25,8 @@ class GenerateAndStore extends AbstractCommand
         CasesOptional,
         IrfoOrganisationOptional,
         TransportManagerOptional,
-        TrafficAreasOptional;
+        TrafficAreasOptional,
+        PrintCopiesCount;
 
     protected $template;
 

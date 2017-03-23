@@ -2,13 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\PrintScheduler;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler\Enqueue as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as Cmd;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler\Enqueue as CommandHandler;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * EnqueueTest
@@ -89,7 +88,14 @@ class EnqueueTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $command = Cmd::create(['documentId' => 200116, 'jobName' => 'JOBNAME', 'user' => 10]);
+        $command = Cmd::create(
+            [
+                'documentId' => 200116,
+                'jobName' => 'JOBNAME',
+                'user' => 10,
+                'copies' => 999,
+            ]
+        );
 
         $team = new \Dvsa\Olcs\Api\Entity\User\Team();
         $team->addTeamPrinters('PRINTER 1');
@@ -101,7 +107,7 @@ class EnqueueTest extends CommandHandlerTestCase
             ->andReturn($user)
             ->getMock();
 
-        $this->expectCreateQueue();
+        $this->expectCreateQueue(Queue::TYPE_PRINT, 999);
 
         $result = $this->sut->handleCommand($command);
 
@@ -137,7 +143,7 @@ class EnqueueTest extends CommandHandlerTestCase
         );
     }
 
-    private function expectCreateQueue($type = Queue::TYPE_PRINT)
+    private function expectCreateQueue($type = Queue::TYPE_PRINT, $copies = null)
     {
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Create::class,
@@ -146,10 +152,13 @@ class EnqueueTest extends CommandHandlerTestCase
                 'type' => $type,
                 'status' => Queue::STATUS_QUEUED,
                 'options' => json_encode(
-                    [
-                        'userId' => 10,
-                        'jobName' => 'JOBNAME'
-                    ]
+                    array_filter(
+                        [
+                            'userId' => 10,
+                            'jobName' => 'JOBNAME',
+                            'copies' => $copies,
+                        ]
+                    )
                 ),
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()

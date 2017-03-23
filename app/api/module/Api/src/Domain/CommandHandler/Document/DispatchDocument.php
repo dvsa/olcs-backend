@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Dispatch Document
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -34,31 +29,47 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
 
     protected $repoServiceName = 'Licence';
 
+    /**
+     * Handler
+     *
+     * @param \Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument $command Command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         $this->checkCommandParams($command);
 
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo()->fetchById($command->getLicence());
 
         if ($licence->getTranslateToWelsh() === 'Y') {
-            $result->merge($this->generateTranslationTask($licence, $command->getDescription()));
+            $this->result->merge(
+                $this->generateTranslationTask($licence, $command->getDescription())
+            );
         }
 
         $documentResult = $this->proxyCommand($command, CreateDocumentSpecificCmd::class);
-        $result->merge($documentResult);
+        $this->result->merge($documentResult);
 
-        $user = $command->getUser() ? $command->getUser() : $this->getCurrentUser();
-
-        if ($licence->getOrganisation()->getAllowEmail() === 'N'
+        if (
+            $licence->getOrganisation()->getAllowEmail() === 'N'
             || !$this->hasAdminEmailAddresses($licence->getOrganisation())
+            || $command->getPrintCopiesCount() > 1
         ) {
-            return $this->attemptPrint($documentResult->getId('document'), $command->getDescription(), $result, $user);
+            $this->result->merge(
+                $this->attemptPrint(
+                    $documentResult->getId('document'),
+                    $command->getDescription(),
+                    ($command->getUser() ? $command->getUser() : $this->getCurrentUser()),
+                    $command->getPrintCopiesCount()
+                )
+            );
+
+            return $this->result;
         }
 
-        $result->merge(
+        $this->result->merge(
             $this->sendMessage(
                 $licence,
                 $documentResult->getId('document'),
@@ -66,13 +77,16 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
             )
         );
 
-        return $result;
+        return $this->result;
     }
 
     /**
-     * @param LicenceEntity $licence
-     * @param int $documentId
-     * @param int $subCategoryId
+     * Send Message
+     *
+     * @param LicenceEntity $licence       Licence
+     * @param int           $documentId    Document Id
+     * @param int           $subCategoryId Sub Cat Idf
+     *
      * @return Result
      */
     protected function sendMessage(LicenceEntity $licence, $documentId, $subCategoryId)
@@ -115,13 +129,28 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
         return false;
     }
 
-    protected function attemptPrint($documentId, $description, Result $result, $user)
+    /**
+     * Create print queue
+     *
+     * @param int    $documentId  Document id
+     * @param string $description Job name
+     * @param int    $user        User
+     * @param int    $copiesCount Count of copies to print
+     *
+     * @return Result
+     */
+    protected function attemptPrint($documentId, $description, $user, $copiesCount)
     {
-        $dtoData = ['documentId' => $documentId, 'jobName' => $description, 'user' => $user];
-
-        $result->merge($this->handleSideEffect(Enqueue::create($dtoData)));
-
-        return $result;
+        return $this->handleSideEffect(
+            Enqueue::create(
+                [
+                    'documentId' => $documentId,
+                    'jobName' => $description,
+                    'user' => $user,
+                    'copies' => $copiesCount,
+                ]
+            )
+        );
     }
 
     protected function generateTranslationTask(LicenceEntity $licence, $description)

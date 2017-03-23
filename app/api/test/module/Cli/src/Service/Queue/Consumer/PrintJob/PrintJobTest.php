@@ -4,7 +4,6 @@ namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer\PrintJob;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
-use Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob as Sut;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\PrintJob as PrintJobCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Retry as RetryCmd;
 use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
@@ -19,7 +18,10 @@ use Zend\Serializer\Adapter\Json as ZendJson;
  */
 class PrintJobTest extends AbstractConsumerTestCase
 {
-    protected $consumerClass = Sut::class;
+    protected $consumerClass = \Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob::class;
+
+    /** @var  \Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob */
+    protected $sut;
 
     /**
      * Tests that print job retries correctly
@@ -37,7 +39,7 @@ class PrintJobTest extends AbstractConsumerTestCase
 
         $optionsArray = [
             'jobName' => $jobName,
-            'userId' => $userId
+            'userId' => $userId,
         ];
 
         $json = new ZendJson();
@@ -55,7 +57,8 @@ class PrintJobTest extends AbstractConsumerTestCase
             'id' => $itemId,
             'title' => $jobName,
             'document' => $entityId,
-            'user' => $userId
+            'user' => $userId,
+            'copies' => null,
         ];
 
         $this->expectCommandException(PrintJobCmd::class, $cmdData, NotReadyException::class, $message, $retryAfter);
