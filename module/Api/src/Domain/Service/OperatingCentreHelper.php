@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Operating Centre Helper
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Service;
 
 use Doctrine\Common\Collections\Criteria;
@@ -49,6 +44,7 @@ class OperatingCentreHelper implements FactoryInterface
     const ERR_OC_PC_TA_GB = 'ERR_OC_PC_TA_GB';
     const ERR_OC_SUFFICIENT_PARKING = 'ERR_OC_SUFFICIENT_PARKING';
     const ERR_OC_PERMISSION = 'ERR_OC_PERMISSION';
+    const ERR_OC_TA_NI_APP = 'ERR_OC_TA_NI_APP';
 
     protected $messages = [];
 
@@ -172,6 +168,13 @@ class OperatingCentreHelper implements FactoryInterface
 
         // if new application check not other application/licences in this traffic area
         if ($entity instanceof Application && $entity->isNew()) {
+            if (
+                $trafficArea->getId() === TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
+                && $entity->getNiFlag() === 'N'
+            ) {
+                $this->addMessage('postcode', self::ERR_OC_TA_NI_APP);
+                return;
+            }
             // validate
             $message = $this->trafficAreaValidator->validateForSameTrafficAreas($entity, $trafficArea->getId());
             if (is_array($message)) {
