@@ -421,6 +421,41 @@ class OperatingCentreHelperTest extends MockeryTestCase
         $this->assertEquals($messages, $this->sut->getMessages());
     }
 
+    public function testValidateTrafficAreaWithPostcodeNiAndNewAppGb()
+    {
+        $commandData = [
+            'address' => [
+                'postcode' => 'AA11AAA'
+            ]
+        ];
+        $ta = m::mock(TrafficArea::class)->makePartial();
+        $ta->setId(TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
+
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+            ->andReturn($ta)
+            ->once();
+
+        /** @var Application $entity */
+        $entity = m::mock(Application::class)->makePartial();
+        $entity->setIsVariation(false);
+        $entity->setNiFlag('N');
+
+        $command = CreateOperatingCentre::create($commandData);
+
+        $this->sut->validateTrafficArea($entity, $command);
+
+        $messages = [
+            'postcode' => [
+                [
+                    'ERR_OC_TA_NI_APP' => 'ERR_OC_TA_NI_APP'
+                ]
+            ]
+        ];
+
+        $this->assertEquals($messages, $this->sut->getMessages());
+    }
+
     public function testSaveDocuments()
     {
         $entity = m::mock();
