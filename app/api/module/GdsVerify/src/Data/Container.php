@@ -8,7 +8,15 @@ namespace Dvsa\Olcs\GdsVerify\Data;
  */
 class Container extends \SAML2\Compat\AbstractContainer
 {
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
     private $logger;
+
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $debugLogger;
 
     /**
      * Container constructor.
@@ -40,8 +48,9 @@ class Container extends \SAML2\Compat\AbstractContainer
      */
     public function debugMessage($message, $type)
     {
-        // For debuggin SAML enable this line
-        // $this->logger->debug($type .' - '. $message);
+        if ($this->debugLogger instanceof \Psr\Log\LoggerInterface) {
+            $this->debugLogger->debug($type .' - '. $message);
+        }
     }
 
     /**
@@ -76,5 +85,15 @@ class Container extends \SAML2\Compat\AbstractContainer
      */
     public function redirect($url, $data = array())
     {
+    }
+
+    /**
+     * Set the debug logger
+     *
+     * @param \Psr\Log\LoggerInterface $logger
+     */
+    public function setDebugLog(\Psr\Log\LoggerInterface $logger)
+    {
+        $this->debugLogger = $logger;
     }
 }
