@@ -21,6 +21,7 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
     const CONFIG_SIGNATURE_KEY = 'signature_key';
     const CONFIG_ENCRYPTION_KEYS = 'encryption_keys';
     const CONFIG_MSA_METADATA_URL = 'msa_metadata_url';
+    const CONFIG_ENABLED_DEBUG_LOG = 'enable_debug_log';
 
     /**
      * @var array Config
@@ -61,15 +62,18 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $logger = new \Olcs\Logging\Log\ZendLogPsr3Adapter($serviceLocator->get('logger'));
-        $container = new Data\Container($logger);
-        \SAML2\Compat\ContainerSingleton::setContainer($container);
-
         $config = [];
         $globalConfig = $serviceLocator->get('config');
         if (isset($globalConfig[self::CONFIG_KEY])) {
             $config = $globalConfig[self::CONFIG_KEY];
         }
+
+        $logger = new \Olcs\Logging\Log\ZendLogPsr3Adapter($serviceLocator->get('logger'));
+        $container = new Data\Container($logger);
+        if (!empty($config[self::CONFIG_ENABLED_DEBUG_LOG])) {
+            $container->setDebugLog($logger);
+        }
+        \SAML2\Compat\ContainerSingleton::setContainer($container);
 
         $cache = null;
         if (!empty($config['cache']) && is_array($config['cache'])) {

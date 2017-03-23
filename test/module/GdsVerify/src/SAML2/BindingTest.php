@@ -20,6 +20,10 @@ class BindingTest extends \PHPUnit_Framework_TestCase
         $message->shouldReceive('toSignedXML')->with()->once()->andReturn($element);
         $message->shouldReceive('getDestination')->with()->once()->andReturn('DESTINATION');
 
+        $mockContainer = m::mock(\SAML2\Compat\AbstractContainer::class);
+        $mockContainer->shouldReceive('debugMessage')->once();
+        \SAML2\Compat\ContainerSingleton::setContainer($mockContainer);
+
         $sut = new Binding();
 
         $post = $sut->send($message);
@@ -29,6 +33,10 @@ class BindingTest extends \PHPUnit_Framework_TestCase
 
     public function testReceive()
     {
+        $mockContainer = m::mock(\SAML2\Compat\AbstractContainer::class);
+        $mockContainer->shouldReceive('debugMessage')->once();
+        \SAML2\Compat\ContainerSingleton::setContainer($mockContainer);
+
         $sut = new Binding();
         $this->assertNull($sut->receive());
     }
