@@ -43,7 +43,7 @@ class PrintLetter extends AbstractCommandHandler implements TransactionedInterfa
     /**
      * Handle comment
      *
-     * @param \Dvsa\Olcs\Transfer\Command\Licence\PrintLicence $command Command
+     * @param \Dvsa\Olcs\Transfer\Command\Bus\PrintLetter $command Command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
@@ -71,6 +71,7 @@ class PrintLetter extends AbstractCommandHandler implements TransactionedInterfa
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
             'isExternal' => false,
             'dispatch' => true,
+            'printCopiesCount' => $command->getPrintCopiesCount(),
         ];
 
         return $this->handleSideEffect(GenerateAndStore::create($dtoData));

@@ -43,7 +43,7 @@ class PrintLetterTest extends CommandHandlerTestCase
 
     public function testHandleCommandBusReg404()
     {
-        $cmd = TransferCmd\Licence\PrintLicence::create([]);
+        $cmd = TransferCmd\Bus\PrintLetter::create([]);
 
         $this->repoMap['Bus']
             ->shouldReceive('fetchUsingId')->with($cmd)->once()->andReturnNull();
@@ -57,7 +57,7 @@ class PrintLetterTest extends CommandHandlerTestCase
 
     public function testHandleCommandExcTemplate404()
     {
-        $cmd = TransferCmd\Licence\PrintLicence::create([]);
+        $cmd = TransferCmd\Bus\PrintLetter::create([]);
 
         $mockBusReg = m::mock(Entity\Bus\BusReg::class);
         $mockBusReg->shouldReceive('getLicence->getId')->once()->andReturn(self::LIC_ID);
@@ -80,7 +80,11 @@ class PrintLetterTest extends CommandHandlerTestCase
      */
     public function testHandleCommand($status, $isVariation, $isShortNoticeRefused, array $docCmdData)
     {
-        $cmd = TransferCmd\Licence\PrintLicence::create([]);
+        $cmd = TransferCmd\Bus\PrintLetter::create(
+            [
+                'printCopiesCount' => 999,
+            ]
+        );
 
         $mockBusReg = m::mock(Entity\Bus\BusReg::class);
         $mockBusReg->shouldReceive('getLicence->getId')->once()->andReturn(self::LIC_ID);
@@ -107,6 +111,7 @@ class PrintLetterTest extends CommandHandlerTestCase
                 'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
                 'isExternal' => false,
                 'dispatch' => true,
+                'printCopiesCount' => 999,
             ] +
             $docCmdData;
 
