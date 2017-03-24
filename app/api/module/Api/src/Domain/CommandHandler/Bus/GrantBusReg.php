@@ -87,6 +87,7 @@ final class GrantBusReg extends AbstractCommandHandler
             [
                 'id' => $busReg->getId(),
                 'printCopiesCount' => $copiesCnt,
+                'isEnforcePrint' => 'Y',
             ]
         );
 

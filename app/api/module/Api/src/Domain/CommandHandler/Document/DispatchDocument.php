@@ -55,7 +55,7 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
         if (
             $licence->getOrganisation()->getAllowEmail() === 'N'
             || !$this->hasAdminEmailAddresses($licence->getOrganisation())
-            || $command->getPrintCopiesCount() > 1
+            || $command->getIsEnforcePrint() === 'Y'
         ) {
             $this->result->merge(
                 $this->attemptPrint(

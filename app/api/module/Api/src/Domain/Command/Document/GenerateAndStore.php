@@ -10,7 +10,7 @@ use Dvsa\Olcs\Transfer\FieldType\Traits\IrfoOrganisationOptional;
 use Dvsa\Olcs\Transfer\FieldType\Traits\LicenceOptional;
 use Dvsa\Olcs\Transfer\FieldType\Traits\TrafficAreasOptional;
 use Dvsa\Olcs\Transfer\FieldType\Traits\TransportManagerOptional;
-use Dvsa\Olcs\Transfer\FieldType\Traits\PrintCopiesCount;
+use Dvsa\Olcs\Transfer\FieldType\Traits\PrintOptional;
 
 /**
  * Generate And Store
@@ -26,7 +26,7 @@ class GenerateAndStore extends AbstractCommand
         IrfoOrganisationOptional,
         TransportManagerOptional,
         TrafficAreasOptional,
-        PrintCopiesCount;
+        PrintOptional;
 
     protected $template;
 
