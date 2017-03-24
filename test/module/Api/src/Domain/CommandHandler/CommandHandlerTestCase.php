@@ -165,6 +165,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         $this->initRefdata = false;
         $this->assertCommandData();
 
+        m::close();
         parent::tearDown();
 
         unset(

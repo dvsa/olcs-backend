@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Print Job
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler;
 
 use Doctrine\Common\Collections\Criteria;
@@ -39,7 +34,7 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
     /**
      * Handle Command
      *
-     * @param CommandInterface $command Command
+     * @param \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\PrintJob $command Command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      * @throws Exception
@@ -94,12 +89,11 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
         try {
             $fileName = $this->createTmpFile($file, $command->getId(), basename($document->getFilename()));
 
-            $this->printFile(
-                $fileName,
-                basename($fileName),
-                $destination,
-                $username
-            );
+            $copies = (int)$command->getCopies() ?: 1;
+
+            for ($i = $copies; $i > 0; $i--) {
+                $this->printFile($fileName, basename($fileName), $destination, $username);
+            }
         } finally {
             // if something goes wrong, still delete temp files
             $this->deleteTempFiles($fileName);

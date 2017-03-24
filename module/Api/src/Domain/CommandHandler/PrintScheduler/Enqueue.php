@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Queue a print job
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -47,10 +42,13 @@ final class Enqueue extends AbstractCommandHandler implements \Dvsa\Olcs\Api\Dom
             'entityId' => $command->getDocumentId(),
             'status' => Queue::STATUS_QUEUED,
             'options' => json_encode(
-                [
-                    'userId' => $user->getId(),
-                    'jobName' => $command->getJobName()
-                ]
+                array_filter(
+                    [
+                        'userId' => $user->getId(),
+                        'jobName' => $command->getJobName(),
+                        'copies' => $command->getCopies(),
+                    ]
+                )
             ),
         ];
 
