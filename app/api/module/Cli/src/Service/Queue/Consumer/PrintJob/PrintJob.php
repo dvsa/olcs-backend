@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Print Job
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob;
 
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
@@ -35,7 +30,8 @@ class PrintJob extends AbstractCommandConsumer
             'id' => $item->getId(),
             'title' => $options['jobName'],
             'document' => $item->getEntityId(),
-            'user' => $options['userId']
+            'user' => $options['userId'],
+            'copies' => (isset($options['copies']) ? $options['copies'] : null),
         ];
     }
 }

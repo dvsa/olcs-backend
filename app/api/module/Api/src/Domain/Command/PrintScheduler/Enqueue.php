@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Enqueue a print job
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Command\PrintScheduler;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
@@ -21,6 +16,9 @@ final class Enqueue extends AbstractCommand
     protected $user;
 
     protected $isDiscPrinting = false;
+
+    /** @var int */
+    protected $copies;
 
     /**
      * Get the document ID
@@ -60,5 +58,15 @@ final class Enqueue extends AbstractCommand
     public function getIsDiscPrinting()
     {
         return $this->isDiscPrinting;
+    }
+
+    /**
+     * Get count of copies
+     *
+     * @return int
+     */
+    public function getCopies()
+    {
+        return $this->copies;
     }
 }
