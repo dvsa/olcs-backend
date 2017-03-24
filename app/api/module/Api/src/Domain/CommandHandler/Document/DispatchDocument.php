@@ -52,10 +52,11 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
         $documentResult = $this->proxyCommand($command, CreateDocumentSpecificCmd::class);
         $this->result->merge($documentResult);
 
+        $isEnforcePrint = ($command->getIsEnforcePrint() === 'Y');
         if (
             $licence->getOrganisation()->getAllowEmail() === 'N'
             || !$this->hasAdminEmailAddresses($licence->getOrganisation())
-            || $command->getIsEnforcePrint() === 'Y'
+            || $isEnforcePrint
         ) {
             $this->result->merge(
                 $this->attemptPrint(
@@ -66,7 +67,9 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
                 )
             );
 
-            return $this->result;
+            if (!$isEnforcePrint) {
+                return $this->result;
+            }
         }
 
         $this->result->merge(
