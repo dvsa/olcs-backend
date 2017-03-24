@@ -89,7 +89,7 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
         try {
             $fileName = $this->createTmpFile($file, $command->getId(), basename($document->getFilename()));
 
-            $copies = $command->getCopies() ?: 1;
+            $copies = (int)$command->getCopies() ?: 1;
 
             for ($i = $copies; $i > 0; $i--) {
                 $this->printFile($fileName, basename($fileName), $destination, $username);

@@ -11,7 +11,7 @@ use Dvsa\Olcs\Transfer\FieldType\Traits as FieldType;
  */
 final class DispatchDocument extends CreateDocumentSpecific
 {
-    use FieldType\PrintCopiesCount;
+    use FieldType\PrintOptional;
 
     protected $user;
 

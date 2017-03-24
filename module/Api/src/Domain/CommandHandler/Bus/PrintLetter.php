@@ -72,6 +72,7 @@ class PrintLetter extends AbstractCommandHandler implements TransactionedInterfa
             'isExternal' => false,
             'dispatch' => true,
             'printCopiesCount' => $command->getPrintCopiesCount(),
+            'isEnforcePrint' => $command->getIsEnforcePrint(),
         ];
 
         return $this->handleSideEffect(GenerateAndStore::create($dtoData));
