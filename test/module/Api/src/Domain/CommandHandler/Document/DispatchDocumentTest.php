@@ -27,8 +27,20 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class DispatchDocumentTest extends CommandHandlerTestCase
 {
+    const DOC_ID = 9001;
+    const LIC_ID = 8001;
+
     /** @var \Dvsa\Olcs\Api\Domain\CommandHandler\Document\DispatchDocument */
     protected $sut;
+
+    /** @var  m\MockInterface | ContactDetails  */
+    private $mockContactDetails;
+    /** @var  m\MockInterface | OrganisationUser */
+    private $mockOrgUser;
+    /** @var  m\MockInterface | Organisation */
+    private $mockOrg;
+    /** @var  Licence | m\MockInterface */
+    private $mockLic;
 
     public function setUp()
     {
@@ -38,6 +50,28 @@ class DispatchDocumentTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class)
         ];
+
+        $this->mockContactDetails = m::mock(ContactDetails::class)->makePartial();
+
+        /** @var m\MockInterface | User  $mockUser */
+        $mockUser = m::mock(User::class)->makePartial();
+        $mockUser->setContactDetails($this->mockContactDetails);
+
+        /** @var OrganisationUser $orgUser */
+        $this->mockOrgUser = m::mock(OrganisationUser::class)->makePartial();
+        $this->mockOrgUser->setUser($mockUser);
+
+        $this->mockOrg = m::mock(Organisation::class)->makePartial();
+        $this->mockOrg->setAllowEmail('Y');
+
+        $this->mockLic = m::mock(Licence::class)->makePartial();
+        $this->mockLic
+            ->setId(self::LIC_ID)
+            ->setTranslateToWelsh('N')
+            ->setOrganisation($this->mockOrg);
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchById')->with(self::LIC_ID)->andReturn($this->mockLic);
 
         parent::setUp();
     }
@@ -57,52 +91,31 @@ class DispatchDocumentTest extends CommandHandlerTestCase
         $this->setExpectedException(BadRequestException::class);
 
         $data = [
-            'licence' => 111
+            'licence' => self::LIC_ID
         ];
         $command = Cmd::create($data);
 
         $this->sut->handleCommand($command);
     }
 
-    public function testHandleCommandEmail()
+    public function testHandleCommandEmailNoPrint()
     {
         $data = [
-            'licence' => 111,
+            'licence' => self::LIC_ID,
             'description' => 'foo',
             'user' => 1,
+            'isEnforcePrint' => 'N',
+            'printCopiesCount' => 777,
         ];
         $command = Cmd::create($data);
 
-        /** @var User $user */
-        $user = m::mock(User::class)->makePartial();
-        $contactDetails = m::mock(ContactDetails::class)->makePartial();
-        $contactDetails->setEmailAddress('foo@bar.com');
-        $user->setContactDetails($contactDetails);
-
-        /** @var OrganisationUser $orgUser */
-        $orgUser = m::mock(OrganisationUser::class)->makePartial();
-        $orgUser->setUser($user);
-
-        /** @var Organisation $organisation */
-        $organisation = m::mock(Organisation::class)->makePartial();
-        $organisation->setAllowEmail('Y');
-        $organisation->shouldReceive('getAdminOrganisationUsers')
-            ->andReturn([$orgUser]);
-
-        /** @var Licence  $licence */
-        $licence = m::mock(Licence::class)->makePartial();
-        $licence->setId(111);
-        $licence->setTranslateToWelsh('N');
-        $licence->setOrganisation($organisation);
-
-        $this->repoMap['Licence']->shouldReceive('fetchById')
-            ->with(111)
-            ->andReturn($licence);
+        $this->mockContactDetails->setEmailAddress('foo@bar.com');
+        $this->mockOrg->shouldReceive('getAdminOrganisationUsers')->andReturn([$this->mockOrgUser]);
 
         $result1 = new Result();
-        $result1->addId('document', 123);
+        $result1->addId('document', self::DOC_ID);
         $dataForCreateDocSpecific = [
-            'licence' => 111,
+            'licence' => self::LIC_ID,
             'description' => 'foo',
             'user' => 1,
         ];
@@ -110,8 +123,8 @@ class DispatchDocumentTest extends CommandHandlerTestCase
         $this->expectedSideEffect(CreateDocumentSpecific::class, $commandCreateDocSpecific->getArrayCopy(), $result1);
 
         $data = [
-            'licence' => 111,
-            'document' => 123,
+            'licence' => self::LIC_ID,
+            'document' => self::DOC_ID,
             'type' => 'standard'
         ];
         $result2 = new Result();
@@ -122,12 +135,69 @@ class DispatchDocumentTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'document' => 123,
+                'document' => self::DOC_ID,
                 'correspondenceInbox' => 321
             ],
             'messages' => [
+            ],
+        ];
 
-            ]
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandEmailAndPrint()
+    {
+        $data = [
+            'licence' => self::LIC_ID,
+            'description' => 'foo',
+            'user' => 1,
+            'isEnforcePrint' => 'Y',
+            'printCopiesCount' => 777,
+        ];
+        $command = Cmd::create($data);
+
+        $this->mockContactDetails->setEmailAddress('foo@bar.com');
+        $this->mockOrg->shouldReceive('getAdminOrganisationUsers')->andReturn([$this->mockOrgUser]);
+
+        $result1 = new Result();
+        $result1->addId('document', self::DOC_ID);
+        $dataForCreateDocSpecific = [
+            'licence' => self::LIC_ID,
+            'description' => 'foo',
+            'user' => 1,
+        ];
+        $commandCreateDocSpecific = Cmd::create($dataForCreateDocSpecific);
+        $this->expectedSideEffect(CreateDocumentSpecific::class, $commandCreateDocSpecific->getArrayCopy(), $result1);
+
+        $data = [
+            'documentId' => self::DOC_ID,
+            'jobName' => 'foo',
+            'user' => 1,
+            'copies' => 777,
+        ];
+        $result2 = new Result();
+        $result2->addMessage('Printed');
+        $this->expectedSideEffect(Enqueue::class, $data, $result2);
+
+        $data = [
+            'licence' => self::LIC_ID,
+            'document' => self::DOC_ID,
+            'type' => 'standard'
+        ];
+        $result2 = new Result();
+        $result2->addId('correspondenceInbox', 321);
+        $this->expectedSideEffect(CreateCorrespondenceRecord::class, $data, $result2);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'document' => self::DOC_ID,
+                'correspondenceInbox' => 321
+            ],
+            'messages' => [
+                'Printed'
+            ],
         ];
 
         $this->assertEquals($expected, $result->toArray());
@@ -136,33 +206,20 @@ class DispatchDocumentTest extends CommandHandlerTestCase
     public function testHandleCommandPrint()
     {
         $data = [
-            'licence' => 111,
-            'identifier' => 'ABC123',
+            'licence' => self::LIC_ID,
+            'identifier' => 'ABCself::DOC_ID',
             'description' => 'foo',
             'user' => 1,
-            'printCopiesCount' => 888,
         ];
         $command = Cmd::create($data);
 
-        /** @var Organisation $organisation */
-        $organisation = m::mock(Organisation::class)->makePartial();
-        $organisation->setAllowEmail('N');
-
-        /** @var Licence  $licence */
-        $licence = m::mock(Licence::class)->makePartial();
-        $licence->setId(111);
-        $licence->setTranslateToWelsh('N');
-        $licence->setOrganisation($organisation);
-
-        $this->repoMap['Licence']->shouldReceive('fetchById')
-            ->with(111)
-            ->andReturn($licence);
+        $this->mockOrg->setAllowEmail('N');
 
         $result1 = new Result();
-        $result1->addId('document', 123);
+        $result1->addId('document', self::DOC_ID);
         $dataForCreateDocSpecific = [
-            'licence' => 111,
-            'identifier' => 'ABC123',
+            'licence' => self::LIC_ID,
+            'identifier' => 'ABCself::DOC_ID',
             'description' => 'foo',
             'user' => 1
         ];
@@ -170,10 +227,10 @@ class DispatchDocumentTest extends CommandHandlerTestCase
         $this->expectedSideEffect(CreateDocumentSpecific::class, $commandCreateDocSpecific->getArrayCopy(), $result1);
 
         $data = [
-            'documentId' => 123,
+            'documentId' => self::DOC_ID,
             'jobName' => 'foo',
             'user' => 1,
-            'copies' => 888 ,
+            'copies' => null,
         ];
         $result2 = new Result();
         $result2->addMessage('Printed');
@@ -183,7 +240,7 @@ class DispatchDocumentTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'document' => 123
+                'document' => self::DOC_ID
             ],
             'messages' => [
                 'Printed'
@@ -196,43 +253,21 @@ class DispatchDocumentTest extends CommandHandlerTestCase
     public function testHandleCommandPrintWelsh()
     {
         $data = [
-            'licence' => 111,
-            'identifier' => 'ABC123',
+            'licence' => self::LIC_ID,
+            'identifier' => 'ABCself::DOC_ID',
             'description' => 'foo',
             'user' => 1
         ];
         $command = Cmd::create($data);
 
-        /** @var User $user */
-        $user = m::mock(User::class)->makePartial();
-        $contactDetails = m::mock(ContactDetails::class)->makePartial();
-        $user->setContactDetails($contactDetails);
-
-        /** @var OrganisationUser $orgUser */
-        $orgUser = m::mock(OrganisationUser::class)->makePartial();
-        $orgUser->setUser($user);
-
-        /** @var Organisation $organisation */
-        $organisation = m::mock(Organisation::class)->makePartial();
-        $organisation->setAllowEmail('Y');
-        $organisation->shouldReceive('getAdminOrganisationUsers')
-            ->andReturn([$orgUser]);
-
-        /** @var Licence  $licence */
-        $licence = m::mock(Licence::class)->makePartial();
-        $licence->setId(111);
-        $licence->setTranslateToWelsh('Y');
-        $licence->setOrganisation($organisation);
-
-        $this->repoMap['Licence']->shouldReceive('fetchById')
-            ->with(111)
-            ->andReturn($licence);
+        $this->mockOrg->shouldReceive('getAdminOrganisationUsers')->andReturn([$this->mockOrgUser]);
+        $this->mockLic->setTranslateToWelsh('Y');
 
         $result1 = new Result();
-        $result1->addId('document', 123);
+        $result1->addId('document', self::DOC_ID);
         $dataForCreateDocSpecific = [
-            'licence' => 111,
-            'identifier' => 'ABC123',
+            'licence' => self::LIC_ID,
+            'identifier' => 'ABCself::DOC_ID',
             'description' => 'foo',
             'user' => 1
         ];
@@ -240,7 +275,7 @@ class DispatchDocumentTest extends CommandHandlerTestCase
         $this->expectedSideEffect(CreateDocumentSpecific::class, $commandCreateDocSpecific->getArrayCopy(), $result1);
 
         $data = [
-            'documentId' => 123,
+            'documentId' => self::DOC_ID,
             'jobName' => 'foo',
             'user' => 1
         ];
@@ -250,7 +285,7 @@ class DispatchDocumentTest extends CommandHandlerTestCase
 
         $data = [
             'description' => 'foo',
-            'licence' => 111
+            'licence' => self::LIC_ID
         ];
         $result3 = new Result();
         $result3->addMessage('Task created');
@@ -260,7 +295,7 @@ class DispatchDocumentTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'document' => 123
+                'document' => self::DOC_ID
             ],
             'messages' => [
                 'Task created',
