@@ -2,12 +2,14 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\User;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 use Dvsa\Olcs\Api\Entity\User\User as Entity;
@@ -827,5 +829,35 @@ class UserEntityTest extends EntityTester
 
         $user->addOrganisationUsers($orgUser);
         $this->assertEquals(true, $user->hasActivePsvLicence());
+    }
+
+    public function testGetNumberOfVehicles()
+    {
+        $user = new Entity('pid', Entity::USER_TYPE_OPERATOR);
+
+        $mockLicence = m::mock(LicenceEntity::class)->makePartial();
+        $mockLicence->setStatus(LicenceEntity::LICENCE_STATUS_VALID);
+        $mockLicence->setTotAuthVehicles(2);
+
+        $activeLicences = new ArrayCollection();
+        $activeLicences->add($mockLicence);
+
+        $mockApplication = m::mock(ApplicationEntity::class)->makePartial();
+        $mockApplication->setStatus(ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION);
+        $mockApplication->setTotAuthVehicles(1);
+
+        $outstandingApplications = new ArrayCollection();
+        $outstandingApplications->add($mockApplication);
+
+        $org = m::mock(OrganisationEntity::class)->makePartial();
+        $org->shouldReceive('getActiveLicences')->andReturn($activeLicences);
+        $org->shouldReceive('getOutstandingApplications')->andReturn($outstandingApplications);
+
+        $orgUser = new OrganisationUserEntity();
+        $orgUser->setUser($user);
+        $orgUser->setOrganisation($org);
+
+        $user->addOrganisationUsers($orgUser);
+        $this->assertEquals(3, $user->getNumberOfVehicles());
     }
 }
