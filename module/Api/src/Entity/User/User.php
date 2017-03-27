@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 
 /**
  * User Entity
@@ -576,5 +577,34 @@ class User extends AbstractUser implements OrganisationProviderInterface
     protected function getCalculatedBundleValues()
     {
         return ['userType' => $this->getUserType()];
+    }
+
+    /**
+     * Get total number of vehicles
+     *
+     * @return int
+     */
+    public function getNumberOfVehicles()
+    {
+        $org = $this->getRelatedOrganisation();
+        if ($org === null) {
+            return 0;
+        }
+        $activeLicences = $org->getActiveLicences();
+        $outstandingApplications = $org->getOutstandingApplications(true);
+
+        $total = 0;
+
+        /** @var LicenceEntity $licence */
+        foreach ($activeLicences as $licence) {
+            $total += $licence->getTotAuthVehicles();
+        }
+
+        /** @var ApplicationEntity $application */
+        foreach ($outstandingApplications as $application) {
+            $total += $application->getTotAuthVehicles();
+        }
+
+        return $total;
     }
 }

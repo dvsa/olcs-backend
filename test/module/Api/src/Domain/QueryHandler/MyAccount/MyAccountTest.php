@@ -38,6 +38,7 @@ class MyAccountTest extends QueryHandlerTestCase
         $mockUser->setId($userId);
         $mockUser->shouldReceive('serialize')->andReturn(['foo']);
         $mockUser->shouldReceive('hasActivePsvLicence')->andReturn(false);
+        $mockUser->shouldReceive('getNumberOfVehicles')->andReturn(2);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
@@ -46,7 +47,7 @@ class MyAccountTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
         $this->assertEquals(
-            ['foo', 'hasActivePsvLicence' => false],
+            ['foo', 'hasActivePsvLicence' => false, 'numberOfVehicles' => 2],
             $result->serialize()
         );
     }
