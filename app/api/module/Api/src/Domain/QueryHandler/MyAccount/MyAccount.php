@@ -1,8 +1,5 @@
 <?php
 
-/**
- * User
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\MyAccount;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
@@ -40,7 +37,8 @@ class MyAccount extends AbstractQueryHandler
                 'roles' => ['role']
             ],
             [
-                'hasActivePsvLicence' => $user->hasActivePsvLicence()
+                'hasActivePsvLicence' => $user->hasActivePsvLicence(),
+                'numberOfVehicles' => $user->getNumberOfVehicles(),
             ]
         );
     }
