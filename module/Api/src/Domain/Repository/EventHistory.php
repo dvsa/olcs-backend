@@ -6,6 +6,7 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory as EventHistoryEntity;
 use Dvsa\Olcs\Transfer\Query\Processing\History as HistoryDTO;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\Query;
 
 /**
  * EventHistory
@@ -199,5 +200,28 @@ class EventHistory extends AbstractRepository
         }
 
         return $returnValues;
+    }
+
+    /**
+     * Fetch a list for a task
+     *
+     * @param int $taskId task
+     *
+     * @return array
+     */
+    public function fetchByTask($taskId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.task', ':task'))
+            ->setParameter('task', $taskId);
+
+        $this->getQueryBuilder()->modifyQuery($doctrineQb)
+            ->with('eventHistoryType', 'eht')
+            ->with('user', 'u')
+            ->with('u.contactDetails', 'cd')
+            ->with('cd.person', 'p');
+
+        return $doctrineQb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 }

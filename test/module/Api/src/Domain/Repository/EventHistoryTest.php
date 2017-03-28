@@ -6,6 +6,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\EventHistory as Repo;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\Query;
 
 /**
  * EventHistoryTest
@@ -235,5 +236,70 @@ class EventHistoryTest extends RepositoryTestCase
             ->shouldReceive('with')->with('busReg')->once()->andReturnSelf();
 
         $this->assertNull($this->sut->applyListJoins($qb));
+    }
+
+    public function testFetchByTask()
+    {
+        $taskId = 1;
+
+        $this->setUpSut(Repo::class, true);
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('expr')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('eq')
+                ->with('m.task', ':task')
+                ->andReturn('expr')
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->shouldReceive('andWhere')
+            ->with('expr')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('task', $taskId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getResult')
+                ->with(Query::HYDRATE_ARRAY)
+                ->andReturn(['foo'])
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('eventHistoryType', 'eht')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
+            ->with('user', 'u')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('u.contactDetails', 'cd')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('cd.person', 'p')
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(['foo'], $this->sut->fetchByTask($taskId));
     }
 }
