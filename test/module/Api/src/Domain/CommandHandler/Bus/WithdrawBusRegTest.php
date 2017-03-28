@@ -46,12 +46,13 @@ class WithdrawBusRegTest extends CommandHandlerTestCase
      *
      * @param $isEbsr
      * @param $hasOutstandingFee
-     * @param $fees
      */
-    public function testHandleCommand($isEbsr, $hasOutstandingFee, $fees)
+    public function testHandleCommandWithFee($isEbsr, $hasOutstandingFee)
     {
         $id = 99;
         $ebsrId = 55;
+
+        $fees = $this->getFees($hasOutstandingFee);
 
         $command = Cmd::Create(
             [
@@ -97,11 +98,12 @@ class WithdrawBusRegTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @return array
-     */
-    public function handleCommandProvider()
+    private function getFees($hasOutstandingFees)
     {
+        if (!$hasOutstandingFees) {
+            return new ArrayCollection();
+        }
+
         $fee1 = m::mock(FeeEntity::class);
         $fee1->shouldReceive('isOutstanding')->once()->withNoArgs()->andReturn(false);
         $fee1->shouldReceive('getId')->never();
@@ -122,13 +124,19 @@ class WithdrawBusRegTest extends CommandHandlerTestCase
         $fee5->shouldReceive('isOutstanding')->once()->withNoArgs()->andReturn(true);
         $fee5->shouldReceive('getId')->once()->withNoArgs()->andReturn(79);
 
-        $feeCollection = new ArrayCollection([$fee1, $fee2, $fee3, $fee4, $fee5]);
+        return new ArrayCollection([$fee1, $fee2, $fee3, $fee4, $fee5]);
+    }
 
+    /**
+     * @return array
+     */
+    public function handleCommandProvider()
+    {
         return [
-            [true, true, $feeCollection],
-            [false, true, $feeCollection],
-            [true, false, new ArrayCollection()],
-            [false, false, new ArrayCollection()]
+            [true, true],
+            [false, true],
+            [true, false],
+            [false, false]
         ];
     }
 }
