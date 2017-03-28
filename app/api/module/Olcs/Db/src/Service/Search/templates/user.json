@@ -1,63 +1,78 @@
 {
-    "query" : {
-        "bool" : {
-            "must" : {
-                "bool" : {
-                    "should" : [{
-                        "multi_match" : {
-                            "query" : "%SEARCH_TERM%",
-                            "fuzziness" : 2,
-                            "prefix_length" : 1,
-                            "fields" : [
-                                "entity",
-                                "full_name"
-                            ]
+   "query": {
+      "bool": {
+         "must": {
+            "bool": {
+               "should": [
+                  {
+                     "multi_match": {
+                        "query": "%SEARCH_TERM%",
+                        "fuzziness": 2,
+                        "prefix_length": 1,
+                        "fields": [
+                           "entity",
+                           "full_name"
+                        ]
+                     }
+                  },
+                  {
+                     "multi_match": {
+                        "query": "%SEARCH_TERM%",
+                        "fields": [
+                           "forename",
+                           "family_name"
+                        ]
+                     }
+                  },
+                  {
+                     "match": {
+                        "lic_nos": {
+                           "query": "%SEARCH_TERM%",
+                           "boost": 2
                         }
-                    }, {
-                        "multi_match" : {
-                            "query" : "%SEARCH_TERM%",
-                            "fields" : [
-                                "forename",
-                                "family_name"
-                            ]
+                     }
+                  },
+                  {
+                     "match": {
+                        "email_address": "%SEARCH_TERM%"
+                     }
+                  },
+                  {
+                     "match": {
+                        "full_name": "%SEARCH_TERM%"
+                     }
+                  },
+                  {
+                     "match": {
+                        "entity": "%SEARCH_TERM%"
+                     }
+                  },
+                  {
+                     "term": {
+                        "login_id": {
+                           "value": "%SEARCH_TERM%",
+                           "boost": 3.75
                         }
-                    }, {
-                        "match" : {
-                            "lic_nos" : {
-                                "query" : "%SEARCH_TERM%",
-                                "boost" : 2
-                            }
+                     }
+                  },
+                  {
+                     "match": {
+                        "login_id": {
+                           "query": "%SEARCH_TERM%"
                         }
-                    }, {
-                        "match" : {
-                            "email_address" : "%SEARCH_TERM%"
-                        }
-                    }, {
-                        "match" : {
-                            "full_name" : "%SEARCH_TERM%"
-                        }
-                    }, {
-                        "match" : {
-                            "entity" : "%SEARCH_TERM%"
-                        }
-                    }, {
-                        "term" : {
-                            "login_id" : {
-                                "value" : "%SEARCH_TERM%",
-                                "boost" : 3.75
-                            }
-                        }
-                    }, {
-                        "match" : {
-                            "login_id" : {
-                                "query" : "%SEARCH_TERM%"
-                            }
-                        }
-                    }
-                    ]
-                }
+                     }
+                  }
+               ]
             }
-        }
-    },
-    "min_score" : 0.1
+         },
+         "must_not": [
+            {
+               "exists": {
+                  "field": "is_deleted"
+               }
+            }
+         ]
+      }
+   },
+   "min_score": 0.1
 }
