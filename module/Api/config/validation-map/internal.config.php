@@ -5,6 +5,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessBusRegWithId;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalOrSystemUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalEdit;
 
 return [
     QueryHandler\Application\EnforcementArea::class => IsInternalUser::class,
@@ -76,10 +77,10 @@ return [
     CommandHandler\Application\Schedule41::class => IsInternalUser::class,
     CommandHandler\Application\Overview::class => IsInternalUser::class,
     CommandHandler\Application\PrintInterimDocument::class => IsInternalUser::class,
-    CommandHandler\Application\Publish::class => IsInternalUser::class,
-    CommandHandler\Application\RefuseApplication::class => IsInternalUser::class,
+    CommandHandler\Application\Publish::class => IsInternalEdit::class,
+    CommandHandler\Application\RefuseApplication::class => IsInternalEdit::class,
     CommandHandler\Application\RefuseInterim::class => IsInternalUser::class,
-    CommandHandler\Application\ReviveApplication::class => IsInternalUser::class,
+    CommandHandler\Application\ReviveApplication::class => IsInternalEdit::class,
     CommandHandler\Application\UpdateAuthSignature::class => IsInternalUser::class,
     CommandHandler\Application\UpdateInterim::class => IsInternalUser::class,
     CommandHandler\Bus\AdminCancelBusReg::class => IsInternalUser::class,
