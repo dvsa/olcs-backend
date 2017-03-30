@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Entity\Types\EncryptedStringType;
 
 /**
  * Class EncryptedStringTypeTest
- * @covers EncryptedStringType
+ * @covers \Dvsa\Olcs\Api\Entity\Types\EncryptedStringType
  */
 class EncryptedStringTypeTest extends PHPUnit_Framework_TestCase
 {
