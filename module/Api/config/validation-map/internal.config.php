@@ -2,7 +2,7 @@
 
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessBusRegWithId;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanEditBusRegWithId;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalOrSystemUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalEdit;
@@ -79,24 +79,24 @@ return [
     CommandHandler\Application\ReviveApplication::class => IsInternalEdit::class,
     CommandHandler\Application\UpdateAuthSignature::class => IsInternalUser::class,
     CommandHandler\Application\UpdateInterim::class => IsInternalUser::class,
-    CommandHandler\Bus\AdminCancelBusReg::class => IsInternalUser::class,
+    CommandHandler\Bus\AdminCancelBusReg::class => IsInternalEdit::class,
     CommandHandler\Bus\CreateBus::class => IsInternalUser::class,
-    CommandHandler\Bus\CreateCancellation::class => IsInternalUser::class,
-    CommandHandler\Bus\CreateVariation::class => IsInternalUser::class,
+    CommandHandler\Bus\CreateCancellation::class => IsInternalEdit::class,
+    CommandHandler\Bus\CreateVariation::class => IsInternalEdit::class,
     CommandHandler\Bus\DeleteBus::class => IsInternalUser::class,
-    CommandHandler\Bus\Ebsr\RequestMapQueue::class => IsInternalUser::class,
-    CommandHandler\Bus\GrantBusReg::class => IsInternalUser::class,
-    CommandHandler\Bus\RefuseBusReg::class => IsInternalUser::class,
-    CommandHandler\Bus\RefuseBusRegByShortNotice::class => IsInternalUser::class,
-    CommandHandler\Bus\ResetBusReg::class => IsInternalUser::class,
+    CommandHandler\Bus\Ebsr\RequestMapQueue::class => IsInternalEdit::class,
+    CommandHandler\Bus\GrantBusReg::class => IsInternalEdit::class,
+    CommandHandler\Bus\RefuseBusReg::class => IsInternalEdit::class,
+    CommandHandler\Bus\RefuseBusRegByShortNotice::class => IsInternalEdit::class,
+    CommandHandler\Bus\ResetBusReg::class => IsInternalEdit::class,
     CommandHandler\Bus\UpdateQualitySchemes::class => IsInternalUser::class,
     CommandHandler\Bus\UpdateServiceDetails::class => IsInternalUser::class,
     CommandHandler\Bus\UpdateServiceRegister::class => IsInternalUser::class,
     CommandHandler\Bus\UpdateShortNotice::class => IsInternalUser::class,
     CommandHandler\Bus\UpdateStops::class => IsInternalUser::class,
     CommandHandler\Bus\UpdateTaAuthority::class => IsInternalUser::class,
-    CommandHandler\Bus\WithdrawBusReg::class => IsInternalUser::class,
-    CommandHandler\Bus\PrintLetter::class => CanAccessBusRegWithId::class,
+    CommandHandler\Bus\WithdrawBusReg::class => IsInternalEdit::class,
+    CommandHandler\Bus\PrintLetter::class => CanEditBusRegWithId::class,
     CommandHandler\ChangeOfEntity\CreateChangeOfEntity::class => IsInternalUser::class,
     CommandHandler\ChangeOfEntity\DeleteChangeOfEntity::class => IsInternalUser::class,
     CommandHandler\ChangeOfEntity\UpdateChangeOfEntity::class => IsInternalUser::class,
@@ -148,7 +148,7 @@ return [
     CommandHandler\Processing\Note\Delete::class => IsInternalUser::class,
     CommandHandler\Processing\Note\Update::class => IsInternalUser::class,
     CommandHandler\Publication\Application::class => IsInternalUser::class,
-    CommandHandler\Publication\Bus::class => IsInternalUser::class,
+    CommandHandler\Publication\Bus::class => IsInternalEdit::class,
     CommandHandler\Publication\CreateRecipient::class => IsInternalUser::class,
     CommandHandler\Publication\DeletePublicationLink::class => IsInternalUser::class,
     CommandHandler\Publication\DeleteRecipient::class => IsInternalUser::class,
