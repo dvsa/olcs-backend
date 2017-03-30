@@ -58,6 +58,7 @@ use Dvsa\Olcs\Api\Domain\ValidatorManager;
  * @method bool canManageUser($entityId)
  * @method bool canReadUser($entityId)
  * @method bool canEditLicence($entityId)
+ * @method bool canEditApplication($entityId)
  */
 trait ValidationHelperTrait
 {
