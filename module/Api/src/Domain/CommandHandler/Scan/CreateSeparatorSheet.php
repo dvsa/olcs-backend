@@ -1,24 +1,20 @@
 <?php
 
-/**
- * Create Separator Sheet
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Scan;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Entity\PrintScan\Scan;
-use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\PrintScan\Scan;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Create Separator Sheet
@@ -30,6 +26,8 @@ class CreateSeparatorSheet extends AbstractCommandHandler implements Transaction
     const ERR_NO_ENTITY_FOR_CATEGORY = 'ERR_NO_ENTITY_FOR_CATEGORY';
     const ERR_ENTITY_NAME_NOT_SETUP = 'ERR_ENTITY_NAME_NOT_SETUP';
     const ERR_NO_DESCRIPTION = 'ERR_NO_DESCRIPTION';
+
+    private static $formatDescNr = '%s (%d)';
 
     protected $repoServiceName = 'Scan';
 
@@ -44,17 +42,25 @@ class CreateSeparatorSheet extends AbstractCommandHandler implements Transaction
     ];
 
     /**
-     * @param \Dvsa\Olcs\Transfer\Command\Scan\CreateSeparatorSheet $command
+     * Command handler
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Scan\CreateSeparatorSheet $command Command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @throws ValidationException
      */
     public function handleCommand(CommandInterface $command)
     {
+        $catId = $command->getCategoryId();
+        $subCatId = $command->getSubCategoryId();
+
         if (empty($command->getDescription()) && empty($command->getDescriptionId())) {
             throw new ValidationException(
                 [self::ERR_NO_DESCRIPTION => 'Description or descriptionId must be specified']
             );
         }
 
-        $entity = $this->getEntityForCategory($command->getCategoryId(), $command->getEntityIdentifier());
+        $entity = $this->getEntityForCategory($catId, $command->getEntityIdentifier());
 
         if ($command->getDescriptionId()) {
             $descriptionName = $this->getRepo('SubCategoryDescription')
@@ -64,31 +70,35 @@ class CreateSeparatorSheet extends AbstractCommandHandler implements Transaction
             $descriptionName = $command->getDescription();
         }
 
+        $category = $this->getRepo()->getCategoryReference($catId);
+        $subCategory = $this->getRepo()->getSubCategoryReference($subCatId);
+
+        //  store scan
         $scan = new Scan();
-        $scan->setCategory($this->getRepo()->getCategoryReference($command->getCategoryId()));
-        $scan->setSubCategory($this->getRepo()->getSubCategoryReference($command->getSubCategoryId()));
+        $scan->setCategory($category);
+        $scan->setSubCategory($subCategory);
         $scan->setDescription($descriptionName);
 
-        $this->setScanProperties($command->getCategoryId(), $scan, $entity);
+        $this->setScanProperties($catId, $scan, $entity);
 
         $this->getRepo()->save($scan);
 
+        //  generate document
+        $scanId = $scan->getId();
+
         $knownValues = [
-            'DOC_CATEGORY_ID_SCAN'       => $command->getCategoryId(),
-            'DOC_CATEGORY_NAME_SCAN'     => $this->getRepo('Category')->fetchById($command->getCategoryId())
-                ->getDescription(),
+            'DOC_CATEGORY_ID_SCAN'       => $catId,
+            'DOC_CATEGORY_NAME_SCAN'     => sprintf(self::$formatDescNr, $category->getDescription(), $catId),
             'LICENCE_NUMBER_SCAN'        => $this->getLicNo($entity),
             'LICENCE_NUMBER_REPEAT_SCAN' => $this->getLicNo($entity),
-            'ENTITY_ID_TYPE_SCAN'        => $this->getEntityTypeForCategory($command->getCategoryId()),
+            'ENTITY_ID_TYPE_SCAN'        => $this->getEntityTypeForCategory($catId),
             'ENTITY_ID_SCAN'             => $entity->getId(),
             'ENTITY_ID_REPEAT_SCAN'      => $entity->getId(),
-            'DOC_SUBCATEGORY_ID_SCAN'    => $command->getSubCategoryId(),
-            'DOC_SUBCATEGORY_NAME_SCAN'  => $this->getRepo('SubCategory')->fetchById($command->getSubCategoryId())
-                ->getSubCategoryName(),
-            'DOC_DESCRIPTION_ID_SCAN'    => $scan->getId(),
-            'DOC_DESCRIPTION_NAME_SCAN'  => $descriptionName,
+            'DOC_SUBCATEGORY_ID_SCAN'    => $subCatId,
+            'DOC_SUBCATEGORY_NAME_SCAN'  => sprintf(self::$formatDescNr, $subCategory->getSubCategoryName(), $subCatId),
+            'DOC_DESCRIPTION_ID_SCAN'    => $scanId,
+            'DOC_DESCRIPTION_NAME_SCAN'  => sprintf(self::$formatDescNr, $descriptionName, $scanId),
         ];
-
         $documentId = $this->generateDocument($knownValues);
 
         $this->result->merge(
@@ -111,9 +121,11 @@ class CreateSeparatorSheet extends AbstractCommandHandler implements Transaction
     /**
      * Set the applicable scan properties for a category
      *
-     * @param int $categoryId
-     * @param \Dvsa\Olcs\Api\Entity\PrintScan\Scan $scan
-     * @param object $entity
+     * @param int                                                            $categoryId Category id
+     * @param \Dvsa\Olcs\Api\Entity\PrintScan\Scan                           $scan       Scan object
+     * @param \Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface $entity     Entity
+     *
+     * @return void
      */
     protected function setScanProperties($categoryId, $scan, $entity)
     {
@@ -145,10 +157,16 @@ class CreateSeparatorSheet extends AbstractCommandHandler implements Transaction
     /**
      * Get the entity that a category is related to
      *
-     * @param int $categoryId
+     * @param int    $categoryId       Category identifier
+     * @param string $entityIdentifier Entity identifier
      *
-     * @return An entity
-     * @throws RuntimeException
+     * @return Entity\Application\Application
+     *         | Entity\Cases\Cases
+     *         | Entity\Licence\Licence
+     *         | Entity\Tm\TransportManager
+     *         | Entity\Organisation\Organisation
+     *         | Entity\BusReg
+     * @throws ValidationException
      */
     protected function getEntityForCategory($categoryId, $entityIdentifier)
     {
