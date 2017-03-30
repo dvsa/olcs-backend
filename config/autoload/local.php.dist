@@ -284,23 +284,6 @@ return [
                 ]
             ]
         ],
-        'ExceptionLogger' => [
-            'writers' => [
-                'full' => [
-                    'options' => [
-                        'stream' => '/var/tmp/backend.log',
-                        'filters' => [
-                            'priority' => [
-                                'name' => 'priority',
-                                'options' => [
-                                    'priority' => \Zend\Log\Logger::DEBUG
-                                ]
-                            ],
-                        ]
-                    ],
-                ]
-            ]
-        ]
     ],
 
     // Path to VI extract data
