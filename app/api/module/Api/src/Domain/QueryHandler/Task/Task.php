@@ -14,6 +14,8 @@ class Task extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Task';
 
+    protected $extraRepos = ['EventHistory'];
+
     /**
      * Handle query
      *
@@ -25,6 +27,8 @@ class Task extends AbstractQueryHandler
     {
         $repo = $this->getRepo();
         $repo->disableSoftDeleteable();
+
+        $taskHistory = $this->getRepo('EventHistory')->fetchByTask($query->getId());
 
         return $this->result(
             $repo->fetchUsingId($query),
@@ -43,6 +47,9 @@ class Task extends AbstractQueryHandler
                         'person'
                     ]
                 ]
+            ],
+            [
+                'taskHistory' => $taskHistory
             ]
         );
     }

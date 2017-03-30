@@ -19,13 +19,16 @@ class TaskTest extends QueryHandlerTestCase
     {
         $this->sut = new Task();
         $this->mockRepo('Task', TaskRepo::class);
+        $this->mockRepo('EventHistory', EventHistoryRepo::class);
 
         parent::setUp();
     }
 
     public function testHandleQuery()
     {
-        $query = Qry::create(['id' => 111]);
+        $taskId = 111;
+
+        $query = Qry::create(['id' => $taskId]);
 
         $task = m::mock(\Dvsa\Olcs\Api\Entity\Task\Task::class);
         $task->shouldReceive('serialize')
@@ -56,8 +59,14 @@ class TaskTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($task);
 
+        $this->repoMap['EventHistory']
+            ->shouldReceive('fetchByTask')
+            ->with($taskId)
+            ->andReturn(['foo'])
+            ->once();
+
         $result = $this->sut->handleQuery($query);
 
-        $this->assertEquals(['foo' => 'bar'], $result->serialize());
+        $this->assertEquals(['foo' => 'bar', 'taskHistory' => ['foo']], $result->serialize());
     }
 }
