@@ -20,6 +20,11 @@
                         }
                      },
                      {
+                        "exists": {
+                           "field": "is_deleted"
+                        }
+                     },
+                     {
                         "terms": {
                            "status": [
                               "breg_s_surr"
