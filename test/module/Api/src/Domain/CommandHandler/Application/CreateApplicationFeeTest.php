@@ -173,12 +173,12 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
             [
                 FeeTypeEntity::FEE_TYPE_APP,
                 'Application Fee Due',
-                (new DateTime('now'))->format('Y-m-d')
+                (new DateTime('now'))->format(CreateApplicationFee::DUE_DATE_FORMAT)
             ],
             [
                 FeeTypeEntity::FEE_TYPE_GRANT,
                 'Grant fee due',
-                ((new DateTime('now'))->add(new \DateInterval('P14D'))->format('Y-m-d'))
+                ((new DateTime('now'))->add(new \DateInterval('P14D'))->format(CreateApplicationFee::DUE_DATE_FORMAT))
             ]
         ];
     }
