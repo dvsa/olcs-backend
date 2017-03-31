@@ -32,6 +32,8 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
 
     protected $extraRepos = ['FeeType'];
 
+    const DUE_DATE_FORMAT = 'Y-m-d';
+
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -67,17 +69,16 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
         if ($command->getDescription() !== null) {
             $description = $command->getDescription();
         }
+        $dueDate = new DateTime('now');
         if ($command->getFeeTypeFeeType() === FeeType::FEE_TYPE_GRANT) {
-            $dueDate = ((new DateTime('now'))->add(new \DateInterval('P14D'))->format('Y-m-d'));
-        } else {
-            $dueDate = (new DateTime('now'))->format('Y-m-d');
+            $dueDate = $dueDate->add(new \DateInterval('P14D'));
         }
 
         $data = [
             'category' => Task::CATEGORY_APPLICATION,
             'subCategory' => Task::SUBCATEGORY_FEE_DUE,
             'description' => $description,
-            'actionDate' => $dueDate,
+            'actionDate' => $dueDate->format(self::DUE_DATE_FORMAT),
             'assignedToUser' => $currentUser->getId(),
             'assignedToTeam' => $currentUser->getTeam()->getId(),
             'application' => $application->getId(),
