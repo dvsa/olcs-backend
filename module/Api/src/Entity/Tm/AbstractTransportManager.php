@@ -95,6 +95,15 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
     protected $id;
 
     /**
+     * Last licence date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="last_licence_date", nullable=true)
+     */
+    protected $lastLicenceDate;
+
+    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -479,6 +488,30 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the last licence date
+     *
+     * @param \DateTime $lastLicenceDate new value being set
+     *
+     * @return TransportManager
+     */
+    public function setLastLicenceDate($lastLicenceDate)
+    {
+        $this->lastLicenceDate = $lastLicenceDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the last licence date
+     *
+     * @return \DateTime
+     */
+    public function getLastLicenceDate()
+    {
+        return $this->lastLicenceDate;
     }
 
     /**
