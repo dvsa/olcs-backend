@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Create Application Fee Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
@@ -25,8 +20,8 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Create Application Fee Test
@@ -52,6 +47,7 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
     {
         $this->refData = [
             FeeTypeEntity::FEE_TYPE_APP,
+            FeeTypeEntity::FEE_TYPE_GRANT,
             Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
         ];
@@ -65,7 +61,10 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider feeTypeProvider
+     */
+    public function testHandleCommand($feeTypeFeeType, $description, $expectedDate)
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
@@ -84,7 +83,13 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
 
-        $command = Cmd::create(['id' => 111]);
+        $command = Cmd::create(
+            [
+                'id' => 111,
+                'feeTypeFeeType' => $feeTypeFeeType,
+                'description' => $description,
+            ]
+        );
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
@@ -107,7 +112,7 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
 
         $this->repoMap['FeeType']->shouldReceive('fetchLatest')
             ->with(
-                $this->refData[FeeTypeEntity::FEE_TYPE_APP],
+                $this->refData[$feeTypeFeeType],
                 $this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE],
                 $this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL],
                 m::type('\DateTime'),
@@ -125,8 +130,8 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
         $taskData = [
             'category' => Task::CATEGORY_APPLICATION,
             'subCategory' => Task::SUBCATEGORY_FEE_DUE,
-            'description' => 'Application Fee Due',
-            'actionDate' => date('Y-m-d'),
+            'description' => $description,
+            'actionDate' => $expectedDate,
             'assignedToUser' => 1,
             'assignedToTeam' => 2,
             'application' => 111,
@@ -144,7 +149,7 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
         $result2->addId('fee', 555);
         $feeData = [
             'id' => 111,
-            'feeTypeFeeType' => 'APP',
+            'feeTypeFeeType' => $feeTypeFeeType,
             'task' => 333
         ];
         $this->expectedSideEffect(CreateFee::class, $feeData, $result2);
@@ -160,5 +165,21 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function feeTypeProvider()
+    {
+        return [
+            [
+                FeeTypeEntity::FEE_TYPE_APP,
+                'Application Fee Due',
+                (new DateTime('now'))->format('Y-m-d')
+            ],
+            [
+                FeeTypeEntity::FEE_TYPE_GRANT,
+                'Grant fee due',
+                ((new DateTime('now'))->add(new \DateInterval('P14D'))->format('Y-m-d'))
+            ]
+        ];
     }
 }
