@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Create Application Fee
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
@@ -22,6 +17,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as Cmd;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Create Application Fee
@@ -35,6 +31,8 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
     protected $repoServiceName = 'Application';
 
     protected $extraRepos = ['FeeType'];
+
+    const DUE_DATE_FORMAT = 'Y-m-d';
 
     public function handleCommand(CommandInterface $command)
     {
@@ -71,12 +69,16 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
         if ($command->getDescription() !== null) {
             $description = $command->getDescription();
         }
+        $dueDate = new DateTime('now');
+        if ($command->getFeeTypeFeeType() === FeeType::FEE_TYPE_GRANT) {
+            $dueDate = $dueDate->add(new \DateInterval('P14D'));
+        }
 
         $data = [
             'category' => Task::CATEGORY_APPLICATION,
             'subCategory' => Task::SUBCATEGORY_FEE_DUE,
             'description' => $description,
-            'actionDate' => date('Y-m-d'),
+            'actionDate' => $dueDate->format(self::DUE_DATE_FORMAT),
             'assignedToUser' => $currentUser->getId(),
             'assignedToTeam' => $currentUser->getTeam()->getId(),
             'application' => $application->getId(),
