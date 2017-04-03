@@ -2,12 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\PrintScheduler;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler\PrintJob as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\PrintJob as Cmd;
-use Mockery as m;
+use Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler\PrintJob as CommandHandler;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Mockery as m;
 
 /**
  * PrintJobTest
@@ -16,7 +14,13 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
  */
 class PrintJobTest extends CommandHandlerTestCase
 {
+    /** @var  CommandHandler | m\MockInterface */
+    protected $sut;
+
+    /** @var m\MockInterface | \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClient  */
     private $convertToPdfService;
+    /** @var m\MockInterface | \Dvsa\Olcs\Api\Entity\User\User */
+    private $mockUser;
 
     public function setUp()
     {
@@ -37,6 +41,7 @@ class PrintJobTest extends CommandHandlerTestCase
         $this->mockUser->setLoginId('LOGIN_ID');
         $this->repoMap['User']->shouldReceive('fetchById')->with('USER_ID')->andReturn($this->mockUser);
 
+        /** @var \Dvsa\Olcs\Api\Entity\Doc\Document $mockDocument */
         $mockDocument = m::mock(\Dvsa\Olcs\Api\Entity\Doc\Document::class)->makePartial();
         $mockDocument->setIdentifier('IDENTIFIER');
         $mockDocument->setFilename('FILENAME');
@@ -62,7 +67,14 @@ class PrintJobTest extends CommandHandlerTestCase
 
     public function testHandleCommandNoUser()
     {
-        $command = Cmd::create(['id' => 'QUEUE_ID', 'document' => 'DOC_ID', 'title' => 'JOB', 'user' => '']);
+        $command = Cmd::create(
+            [
+                'id' => 'QUEUE_ID',
+                'document' => 'DOC_ID',
+                'title' => 'JOB',
+                'copies' => 999,
+            ]
+        );
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
             ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
@@ -74,7 +86,7 @@ class PrintJobTest extends CommandHandlerTestCase
         $this->sut->shouldReceive('createTmpFile')->with($mockFile, 'QUEUE_ID', 'FILENAME')->once()
             ->andReturn('TEMP_FILE.rtf');
 
-        $this->expectPrintFile(0, true, 0, 'Anonymous');
+        $this->expectPrintFile(0, true, 0, 'Anonymous', 999);
 
         $this->sut->shouldReceive('deleteTempFiles')->with('TEMP_FILE.rtf')->once();
 
@@ -106,7 +118,7 @@ class PrintJobTest extends CommandHandlerTestCase
 
         $this->convertToPdfService->shouldReceive('convert')->with('TEMP_FILE.rtf', 'TEMP_FILE.pdf')->once();
 
-        $this->expectLpr('Anonymous', 0, true);
+        $this->expectLpr('Anonymous', 0, true, 1);
 
         $this->sut->shouldReceive('deleteTempFiles')->with('TEMP_FILE.rtf')->once();
 
@@ -369,7 +381,8 @@ class PrintJobTest extends CommandHandlerTestCase
         $commandPdfResult = 0,
         $fileExists = true,
         $commandLprResult = 0,
-        $userName = 'LOGIN_ID'
+        $userName = 'LOGIN_ID',
+        $copies = 1
     ) {
         $this->sut->shouldReceive('executeCommand')
             ->with("soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp 'TEMP_FILE.rtf' 2>&1", [], null)
@@ -384,10 +397,10 @@ class PrintJobTest extends CommandHandlerTestCase
             return;
         }
 
-        $this->expectLpr($userName, $commandLprResult, $fileExists);
+        $this->expectLpr($userName, $commandLprResult, $fileExists, $copies);
     }
 
-    private function expectLpr($userName, $commandLprResult, $fileExists)
+    private function expectLpr($userName, $commandLprResult, $fileExists, $copies = 1)
     {
         $this->sut->shouldReceive('fileExists')->with('TEMP_FILE.pdf')->once()->andReturn($fileExists);
         if (!$fileExists) {
@@ -396,7 +409,14 @@ class PrintJobTest extends CommandHandlerTestCase
 
         $this->sut->shouldReceive('executeCommand')
             ->with(
-                "lpr 'TEMP_FILE.pdf' -H 'PRINT_SERVER' -C 'TEMP_FILE.rtf' -h -P 'QUEUE1' -U '{$userName}' 2>&1",
+                "lpr 'TEMP_FILE.pdf'" .
+                " -H 'PRINT_SERVER'" .
+                " -C 'TEMP_FILE.rtf'" .
+                " -h -P 'QUEUE1'" .
+                " -U '{$userName}'".
+                " -#{$copies}" .
+                " -o collate=true" .
+                " 2>&1",
                 [],
                 null
             )->once()
