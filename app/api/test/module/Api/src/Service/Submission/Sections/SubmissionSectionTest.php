@@ -59,7 +59,6 @@ class SubmissionSectionTest extends MockeryTestCase
 
     /**
      * @dataProvider sectionTestProvider
-     * @group test123
      */
     public function testGenerateSection($input = null, $expectedResult = null)
     {
