@@ -45,7 +45,7 @@ class CreateOppositionTest extends CommandHandlerTestCase
             "isValid" => "opp_v_yes",
             "validNotes" => "Notes",
             "isCopied" => "Y",
-            "isWillingToAttendPi" => "N",
+            "isWillingToAttendPi" => "Y",
             "isInTime" => "Y",
             "isWithdrawn" => "N",
             "status" => "opp_ack",
@@ -56,7 +56,6 @@ class CreateOppositionTest extends CommandHandlerTestCase
                 "ogf_env",
                 "ogf_parking"
             ],
-            "isPublicInquiry" => "Y",
             "notes" => "Notes",
             "opposerContactDetails" => [
                 "emailAddress" => "bobED@jones.com",
@@ -93,7 +92,7 @@ class CreateOppositionTest extends CommandHandlerTestCase
             "isValid" => "opp_v_yes",
             "validNotes" => "Notes",
             "isCopied" => "Y",
-            "isWillingToAttendPi" => "N",
+            "isWillingToAttendPi" => "Y",
             "isInTime" => "Y",
             "isWithdrawn" => "N",
             "status" => "opp_ack",
@@ -104,7 +103,6 @@ class CreateOppositionTest extends CommandHandlerTestCase
                 "ogf_env",
                 "ogf_parking"
             ],
-            "isPublicInquiry" => "Y",
             "notes" => "Notes",
             "opposerContactDetails" => [
                 "emailAddress" => "bobED@jones.com",
