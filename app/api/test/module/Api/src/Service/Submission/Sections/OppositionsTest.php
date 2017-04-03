@@ -45,7 +45,6 @@ class OppositionsTest extends SubmissionSectionTest
                             'isValid' => 1,
                             'isCopied' => 1,
                             'isInTime' => 1,
-                            'isPublicInquiry' => 0,
                             'isWithdrawn' => 0,
                             'isWillingToAttendPi' => 1,
                         ],
@@ -69,7 +68,6 @@ class OppositionsTest extends SubmissionSectionTest
                             'isValid' => 1,
                             'isCopied' => 1,
                             'isInTime' => 1,
-                            'isPublicInquiry' => 0,
                             'isWithdrawn' => 0,
                             'isWillingToAttendPi' => 1,
                         ],
@@ -92,7 +90,6 @@ class OppositionsTest extends SubmissionSectionTest
                             'isValid' => 1,
                             'isCopied' => 1,
                             'isInTime' => 1,
-                            'isPublicInquiry' => 0,
                             'isWithdrawn' => 0,
                             'isWillingToAttendPi' => 1,
                         ]

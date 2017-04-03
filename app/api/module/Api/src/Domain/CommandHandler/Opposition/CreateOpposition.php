@@ -77,8 +77,6 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
      */
     private function createOppositionObject(Cmd $command, Opposer $opposer)
     {
-        $isPublicInquiry = 'N';
-
         $case = $this->getRepo()->getReference(Cases::class, $command->getCase());
 
         $opposition = new Opposition(
@@ -88,7 +86,6 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
             $this->getRepo()->getRefdataReference($command->getIsValid()),
             $command->getIsCopied(),
             $command->getIsInTime(),
-            $isPublicInquiry,
             $command->getIsWillingToAttendPi(),
             $command->getIsWithdrawn()
         );

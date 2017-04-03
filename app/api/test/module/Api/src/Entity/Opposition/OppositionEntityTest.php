@@ -31,7 +31,6 @@ class OppositionEntityTest extends EntityTester
         $isValid = 'unit_isValid';
         $isCopied = 'unit_isCopied';
         $isInTime = 'unit_isInTime';
-        $isPublicInquiry = 'unit_IsPublicInquiry';
         $isWillingToAttendPi = 'unit_IsWillingToAttendPi';
         $isWithdraw = 'unit_IsWithdraw';
 
@@ -42,7 +41,6 @@ class OppositionEntityTest extends EntityTester
             $isValid,
             $isCopied,
             $isInTime,
-            $isPublicInquiry,
             $isWillingToAttendPi,
             $isWithdraw
         );
@@ -55,7 +53,6 @@ class OppositionEntityTest extends EntityTester
         static::assertEquals($isWithdraw, $sut->getIsWithdrawn());
         static::assertEquals($isCopied, $sut->getIsCopied());
         static::assertEquals($isInTime, $sut->getIsInTime());
-        static::assertEquals($isPublicInquiry, $sut->getIsPublicInquiry());
         static::assertEquals($isWillingToAttendPi, $sut->getIsWillingToAttendPi());
     }
 }

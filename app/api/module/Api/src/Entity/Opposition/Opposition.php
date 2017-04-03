@@ -38,7 +38,6 @@ class Opposition extends AbstractOpposition
         $isValid,
         $isCopied,
         $isInTime,
-        $isPublicInquiry,
         $isWillingToAttendPi,
         $isWithdrawn
     ) {
@@ -49,7 +48,6 @@ class Opposition extends AbstractOpposition
         $this->setIsValid($isValid);
         $this->setIsCopied($isCopied);
         $this->setIsInTime($isInTime);
-        $this->setIsPublicInquiry($isPublicInquiry);
         $this->setIsWillingToAttendPi($isWillingToAttendPi);
         $this->setIsWithdrawn($isWithdrawn);
     }
