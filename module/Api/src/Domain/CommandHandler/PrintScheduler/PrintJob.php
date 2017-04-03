@@ -27,6 +27,8 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
     use UploaderAwareTrait,
         ConfigAwareTrait;
 
+    const DEF_PRINT_COPIES_CNT = 1;
+
     protected $repoServiceName = 'Document';
 
     protected $extraRepos = ['User', 'SystemParameter', 'Printer'];
@@ -89,11 +91,7 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
         try {
             $fileName = $this->createTmpFile($file, $command->getId(), basename($document->getFilename()));
 
-            $copies = (int)$command->getCopies() ?: 1;
-
-            for ($i = $copies; $i > 0; $i--) {
-                $this->printFile($fileName, basename($fileName), $destination, $username);
-            }
+            $this->printFile($fileName, basename($fileName), $destination, $username, $command->getCopies());
         } finally {
             // if something goes wrong, still delete temp files
             $this->deleteTempFiles($fileName);
@@ -181,12 +179,13 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
      * @param string $jobTitle    Job name
      * @param string $destination Destination print queue
      * @param string $username    Username of person printing
+     * @param int    $copies      Count of copies
      *
      * @return void
      * @throws NotReadyException
      * @throws RuntimeException
      */
-    protected function printFile($fileName, $jobTitle, $destination, $username)
+    protected function printFile($fileName, $jobTitle, $destination, $username, $copies)
     {
         $printServer = $this->getConfigPrintServer();
         if ($printServer === false) {
@@ -205,13 +204,15 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
         // send to CUPS server
         // 2>&1 redirect STDERR to STDOUT so that any errors are included in $outputPrint
         $commandPrint = sprintf(
-            'lpr %s -H %s -C %s -h -P %s -U %s 2>&1',
+            'lpr %s -H %s -C %s -h -P %s -U %s -#%d -o collate=true 2>&1',
             escapeshellarg($pdfFile),
             escapeshellarg($printServer),
             escapeshellarg($jobTitle),
             escapeshellarg($destination),
-            escapeshellarg($username)
+            escapeshellarg($username),
+            ((int)$copies ?: self::DEF_PRINT_COPIES_CNT)
         );
+
         $this->executeCommand($commandPrint, $outputPrint, $resultPrint);
         if ($resultPrint !== 0) {
             $exception = new NotReadyException('Error executing lpr command : ' . implode("\n", $outputPrint));
