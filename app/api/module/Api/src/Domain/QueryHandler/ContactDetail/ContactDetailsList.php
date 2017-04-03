@@ -15,14 +15,28 @@ class ContactDetailsList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'ContactDetails';
 
+    /**
+     * Query Handler
+     *
+     * @param \Dvsa\Olcs\Transfer\Query\ContactDetail\ContactDetailsList $query Query
+     *
+     * @return array
+     */
     public function handleQuery(QueryInterface $query)
     {
         /* @var $repo \Dvsa\Olcs\Api\Domain\Repository\ContactDetails */
         $repo = $this->getRepo();
 
+        $result = $repo->fetchList($query, Query::HYDRATE_OBJECT);
+
+        $count = count($result);
+        if (0 !== (int)$query->getLimit()) {
+            $count = $repo->fetchCount($query);
+        }
+
         return [
-            'result' => $this->resultList($repo->fetchList($query, Query::HYDRATE_OBJECT)),
-            'count' => $repo->fetchCount($query)
+            'result' => $this->resultList($result),
+            'count' => $count,
         ];
     }
 }
