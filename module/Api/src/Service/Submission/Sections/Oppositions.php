@@ -74,7 +74,6 @@ final class Oppositions extends AbstractSection
                 'isValid' => $entity->getIsValid(),
                 'isCopied' => $entity->getIsCopied(),
                 'isInTime' => $entity->getIsInTime(),
-                'isPublicInquiry' => $entity->getIsPublicInquiry(),
                 'isWithdrawn' => $entity->getIsWithdrawn(),
                 'isWillingToAttendPi'  => $entity->getIsWillingToAttendPi(),
             ];
