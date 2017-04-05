@@ -56,9 +56,6 @@ class DigitalSignature extends AbstractDigitalSignature
         if (!empty($attributes[Attributes::FIRST_NAME])) {
             $names[] = $attributes[Attributes::FIRST_NAME];
         }
-        if (!empty($attributes[Attributes::MIDDLE_NAME])) {
-            $names[] = $attributes[Attributes::MIDDLE_NAME];
-        }
         if (!empty($attributes[Attributes::SURNAME])) {
             $names[] = $attributes[Attributes::SURNAME];
         }
