@@ -255,7 +255,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      *
      * @return Response
      */
-    public function deleteList()
+    public function deleteList($data = null)
     {
         $this->checkMethod(__METHOD__);
 

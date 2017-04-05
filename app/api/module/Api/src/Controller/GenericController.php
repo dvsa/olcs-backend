@@ -204,7 +204,7 @@ class GenericController extends AbstractRestfulController
      * @inheritdoc
      * @return Response|\Zend\View\Model\JsonModel
      */
-    public function deleteList()
+    public function deleteList($data = null)
     {
         $dto = $this->params('dto');
 
