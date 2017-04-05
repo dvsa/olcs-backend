@@ -30,7 +30,7 @@ abstract class AbstractController extends AbstractRestfulController
         return $this->respondError(405, 'Method Not Allowed');
     }
 
-    public function deleteList()
+    public function deleteList($data = null)
     {
         return $this->respondError(405, 'Method Not Allowed');
     }
