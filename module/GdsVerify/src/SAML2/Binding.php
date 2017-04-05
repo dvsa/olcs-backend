@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\GdsVerify\SAML2;
 
 /**
- * Use our own bindinf so that we can send info from API to front end
+ * Use our own binding so that we can send info from API to front end
  */
 class Binding extends \SAML2\Binding
 {
