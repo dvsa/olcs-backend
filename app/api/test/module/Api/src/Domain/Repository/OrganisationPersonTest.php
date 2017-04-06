@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Organisation Person Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -13,12 +8,13 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\OrganisationPerson as OrganisationPersonRepo;
 
 /**
- * Organisation Person Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\OrganisationPerson
  */
 class OrganisationPersonTest extends RepositoryTestCase
 {
+    /** @var OrganisationPersonRepo  */
+    protected $sut;
+
     public function setUp()
     {
         $this->setUpSut(OrganisationPersonRepo::class);
@@ -62,9 +58,7 @@ class OrganisationPersonTest extends RepositoryTestCase
 
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
-            ->shouldReceive('withRefData')->with()->once()->andReturnSelf()
-            ->shouldReceive('with')->with('person', 'p')->once()->andReturnSelf()
-            ->shouldReceive('with')->with('p.title')->once()->andReturnSelf();
+            ->shouldReceive('withRefData')->with()->once()->andReturnSelf();
 
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()->shouldReceive('execute')
@@ -74,7 +68,7 @@ class OrganisationPersonTest extends RepositoryTestCase
         );
         $this->assertEquals(['RESULTS'], $this->sut->fetchListForOrganisation(34));
 
-        $expectedQuery = '[QUERY] AND m.organisation = [[34]]';
+        $expectedQuery = '[QUERY] INNER JOIN m.person p AND m.organisation = [[34]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
