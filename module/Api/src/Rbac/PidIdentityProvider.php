@@ -38,6 +38,11 @@ class PidIdentityProvider implements IdentityProviderInterface
      */
     private $identity;
 
+    /**
+     * @var bool
+     */
+    private $masqueradedAsSystemUser;
+
     public function __construct(RepositoryInterface $repository, $request, $headerName)
     {
         $this->repository = $repository;
@@ -79,5 +84,25 @@ class PidIdentityProvider implements IdentityProviderInterface
         }
 
         return $this->identity;
+    }
+
+    /**
+     * Get masqueraded as system user flag
+     *
+     * @return bool
+     */
+    public function getMasqueradedAsSystemUser()
+    {
+        return $this->masqueradedAsSystemUser;
+    }
+
+    /**
+     * Set masqueraded as system user flag
+     *
+     * @param $masqueradedAsSystemUser
+     */
+    public function setMasqueradedAsSystemUser($masqueradedAsSystemUser)
+    {
+        $this->masqueradedAsSystemUser = $masqueradedAsSystemUser;
     }
 }

@@ -33,6 +33,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 
 /**
  * Abstract Command Handler
@@ -66,6 +67,11 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     private $repoManager;
 
     /**
+     * @var PidIdentityProvider
+     */
+    private $pidIdentityProvider;
+
+    /**
      * @var Result
      */
     protected $result;
@@ -90,6 +96,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         }
 
         $this->commandHandler = $serviceLocator;
+
+        $this->pidIdentityProvider = $mainServiceLocator->get(PidIdentityProvider::class);
 
         if ($this instanceof TransactionedInterface) {
             return new TransactioningCommandHandler($this, $mainServiceLocator->get('TransactionManager'));
@@ -128,6 +136,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     {
         if ($this instanceof AuthAwareInterface) {
             $this->setAuthService($mainServiceLocator->get(AuthorizationService::class));
+            $this->setUserRepository($mainServiceLocator->get('RepositoryServiceManager')->get('User'));
         }
 
         if ($this instanceof DocumentGeneratorAwareInterface) {
@@ -222,6 +231,16 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     }
 
     /**
+     * Get PidIdentityProvider
+     *
+     * @return PidIdentityProvider
+     */
+    protected function getPidIdentityProvider()
+    {
+        return $this->pidIdentityProvider;
+    }
+
+    /**
      * Wrapper to call another command
      *
      * @param CommandInterface $command
@@ -250,6 +269,40 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     }
 
     /**
+     * Wrapper to call another command as a system user
+     *
+     * @param CommandInterface $command command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
+    protected function handleSideEffectAsSystemUser(CommandInterface $command)
+    {
+        $pidIdentityProvider = $this->getPidIdentityProvider();
+        $pidIdentityProvider->setMasqueradedAsSystemUser(true);
+        $result = $this->getCommandHandler()->handleCommand($command, false);
+        $pidIdentityProvider->setMasqueradedAsSystemUser(false);
+
+        return $result;
+    }
+
+    /**
+     * Wrapper to call an array of other commands as a system user
+     *
+     * @param array CommandInterface $commands commands
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
+    protected function handleSideEffectsAsSystemUser(array $commands)
+    {
+        $pidIdentityProvider = $this->getPidIdentityProvider();
+        $pidIdentityProvider->setMasqueradedAsSystemUser(true);
+        $result = $this->handleSideEffects($commands);
+        $pidIdentityProvider->setMasqueradedAsSystemUser(false);
+
+        return $result;
+    }
+
+    /**
      * Proxy to another command, using all data from the original command
      *
      * @param $originalCommand
@@ -259,7 +312,26 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     protected function proxyCommand($originalCommand, $proxyCommandClassName)
     {
         $dtoData = $originalCommand->getArrayCopy();
+
         return $this->handleSideEffect($proxyCommandClassName::create($dtoData));
+    }
+
+    /**
+     * Proxy to another command as a system user, using all data from the original command
+     *
+     * @param $originalCommand        original command
+     * @param $proxyCommandClassName proxy command class name
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
+    protected function proxyCommandAsSystemUser($originalCommand, $proxyCommandClassName)
+    {
+        $pidIdentityProvider = $this->getPidIdentityProvider();
+        $pidIdentityProvider->setMasqueradedAsSystemUser(true);
+        $result = $this->proxyCommand($originalCommand, $proxyCommandClassName);
+        $pidIdentityProvider->setMasqueradedAsSystemUser(true);
+
+        return $result;
     }
 
     /**

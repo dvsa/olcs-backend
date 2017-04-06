@@ -167,7 +167,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      */
     protected function publishApplication(ApplicationEntity $application)
     {
-        return $this->handleSideEffect(
+        return $this->handleSideEffectAsSystemUser(
             \Dvsa\Olcs\Transfer\Command\Publication\Application::create(
                 [
                     'id' => $application->getId(),
@@ -187,7 +187,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      */
     protected function closeTexTask(ApplicationEntity $application)
     {
-        return $this->handleSideEffect(
+        return $this->handleSideEffectAsSystemUser(
             \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::create(
                 [
                     'id' => $application->getId(),

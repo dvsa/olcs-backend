@@ -55,21 +55,21 @@ final class GrantPsv extends AbstractCommandHandler implements TransactionedInte
         // Get licence totAuthVehicles before we update
         $currentTotAuth = $application->getLicence()->getTotAuthVehicles();
 
-        $result->merge($this->proxyCommand($command, CopyApplicationDataToLicence::class));
+        $result->merge($this->proxyCommandAsSystemUser($command, CopyApplicationDataToLicence::class));
 
         $data = $command->getArrayCopy();
         $data['currentTotAuth'] = $currentTotAuth;
 
-        $result->merge($this->handleSideEffect(CreateDiscRecords::create($data)));
+        $result->merge($this->handleSideEffectAsSystemUser(CreateDiscRecords::create($data)));
 
         if (!$application->isSpecialRestricted()) {
-            $result->merge($this->proxyCommand($command, ProcessApplicationOperatingCentres::class));
+            $result->merge($this->proxyCommandAsSystemUser($command, ProcessApplicationOperatingCentres::class));
         }
 
         // If Internal user grants PSV application or variation
         if ($this->isInternalUser()) {
-            $result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
-            $result->merge($this->handleSideEffect(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
+            $result->merge($this->handleSideEffectAsSystemUser(CloseTexTaskCmd::create(['id' => $application->getId()])));
+            $result->merge($this->handleSideEffectAsSystemUser(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
         }
 
         $result->merge($this->proxyCommand($command, CommonGrant::class));
@@ -84,7 +84,7 @@ final class GrantPsv extends AbstractCommandHandler implements TransactionedInte
             'event' => CreateSnapshotCmd::ON_GRANT
         ];
 
-        return $this->handleSideEffect(CreateSnapshotCmd::create($data));
+        return $this->handleSideEffectAsSystemUser(CreateSnapshotCmd::create($data));
     }
 
     /**
@@ -106,7 +106,7 @@ final class GrantPsv extends AbstractCommandHandler implements TransactionedInte
      */
     protected function maybeCreateSmallVehicleCondition($application)
     {
-        return $this->handleSideEffect(
+        return $this->handleSideEffectAsSystemUser(
             CreateSvConditionUndertakingCmd::create(
                 ['applicationId' => $application->getId()]
             )

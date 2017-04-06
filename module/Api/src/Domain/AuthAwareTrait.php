@@ -4,6 +4,8 @@ namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\Repository\User as UserRepoService;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 
 /**
  * Auth Aware
@@ -14,6 +16,11 @@ trait AuthAwareTrait
      * @var AuthorizationService
      */
     protected $authService;
+
+    /**
+     * @var UserRepoService
+     */
+    protected $repository;
 
     /**
      * @param AuthorizationService $service
@@ -29,6 +36,22 @@ trait AuthAwareTrait
     public function getAuthService()
     {
         return $this->authService;
+    }
+
+    /**
+     * @param UserRepoService $service
+     */
+    public function setUserRepository(UserRepoService $service)
+    {
+        $this->repository = $service;
+    }
+
+    /**
+     * @return UserRepoService
+     */
+    public function getUserRepository()
+    {
+        return $this->repository;
     }
 
     /**
@@ -158,5 +181,15 @@ trait AuthAwareTrait
             $this->isGranted(\Dvsa\Olcs\Api\Entity\User\Permission::OPERATOR_ADMIN) ||
             $this->isGranted(\Dvsa\Olcs\Api\Entity\User\Permission::OPERATOR_USER)
         );
+    }
+
+    /**
+     * Get system user
+     *
+     * @return \Dvsa\Olcs\Api\Entity\User\User
+     */
+    public function getSystemUser()
+    {
+        return $this->getUserRepository()->fetchById(PidIdentityProvider::SYSTEM_USER);
     }
 }
