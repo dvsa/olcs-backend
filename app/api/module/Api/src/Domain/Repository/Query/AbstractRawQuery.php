@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 
 /**
  * Abstract Raw Query
@@ -74,6 +75,11 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
     protected $paramTypes = [];
 
     /**
+     * @var PidIdentityProvider
+     */
+    protected $pidIdentityProvider;
+
+    /**
      * Inject the DB connection object
      *
      * @param ServiceLocatorInterface $serviceLocator
@@ -85,8 +91,10 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
 
         $this->em = $sm->get('doctrine.entitymanager.orm_default');
         $this->connection = $this->em->getConnection();
+        $this->pidIdentityProvider = $sm->get(PidIdentityProvider::class);
 
         $this->setAuthService($sm->get(AuthorizationService::class));
+        $this->setUserRepository($sm->get('RepositoryServiceManager')->get('User'));
 
         return $this;
     }
@@ -101,11 +109,18 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
      */
     public function execute(array $params = [], array $paramTypes = [])
     {
+        $masqueradedAsSystemUser = $this->pidIdentityProvider->getMasqueradedAsSystemUser();
+        if ($masqueradedAsSystemUser) {
+            $currentUserId = $this->getSystemUser()->getId();
+        } else {
+            $currentUserId = $this->getCurrentUser()->getId();
+        }
+
         $params = array_merge(
             $this->getParams(),
             $params,
             [
-                'currentUserId' => $this->getCurrentUser()->getId()
+                'currentUserId' => $currentUserId
             ]
         );
         if ($this->templateMap) {

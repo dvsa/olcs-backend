@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain;
 
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\Repository\User as UserRepoService;
 
 /**
  * Auth Aware Interface
@@ -18,6 +19,16 @@ interface AuthAwareInterface
      * @return AuthorizationService
      */
     public function getAuthService();
+
+    /**
+     * @param UserRepoService $service
+     */
+    public function setUserRepository(UserRepoService $service);
+
+    /**
+     * @return UserRepoService
+     */
+    public function getUserRepository();
 
     /**
      * @param $permission
