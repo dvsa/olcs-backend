@@ -22,6 +22,14 @@ class OrganisationPerson extends AbstractRepository
 {
     protected $entity = Entity::class;
 
+    /**
+     * Fetch data by org and person
+     *
+     * @param OrganisationEntity $organisation Organisation object
+     * @param PersonEntity       $person       Person object
+     *
+     * @return array
+     */
     public function fetchByOrgAndPerson(OrganisationEntity $organisation, PersonEntity $person)
     {
         $qb = $this->createQueryBuilder();
@@ -43,7 +51,7 @@ class OrganisationPerson extends AbstractRepository
     /**
      * Fetch a list for an Organisation
      *
-     * @param int $organisationId
+     * @param int $organisationId Organisation Id
      *
      * @return array of Entity
      */
@@ -51,12 +59,13 @@ class OrganisationPerson extends AbstractRepository
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb */
         $qb = $this->createQueryBuilder();
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
-            ->with('person', 'p')
-            ->with('p.title');
 
-        $qb->andWhere($qb->expr()->eq($this->alias . '.organisation', ':organisationId'))
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefData();
+
+        $qb
+            ->innerJoin($this->alias . '.person', 'p')
+            ->andWhere($qb->expr()->eq($this->alias . '.organisation', ':organisationId'))
             ->setParameter('organisationId', $organisationId);
 
         return $qb->getQuery()->getResult();
@@ -65,8 +74,8 @@ class OrganisationPerson extends AbstractRepository
     /**
      * Fetch a list for an Organisation and a Person
      *
-     * @param int $organisationId
-     * @param int $personId
+     * @param int $organisationId Organisation Id
+     * @param int $personId       Person Id
      *
      * @return array of Entity
      */
@@ -90,7 +99,7 @@ class OrganisationPerson extends AbstractRepository
     /**
      * Fetch a list for a Person
      *
-     * @param int $personId
+     * @param int $personId Person Id
      *
      * @return array of Entity
      */
