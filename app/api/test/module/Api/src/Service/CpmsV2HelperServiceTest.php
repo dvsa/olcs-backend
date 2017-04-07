@@ -61,7 +61,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'cpms_credentials' => [
                 'client_id_ni'     => 'client_id_ni',
                 'client_secret_ni' => 'client_secret_ni',
-                'client_id'        => 'client_id'
+                'client_id'        => 'client_id',
+                'client_secret'    => 'client_secret'
             ],
             'cpms_api' => [
                 'identity_provider' => 'identity'
@@ -203,6 +204,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             $this->getStubFee(1, 525.25, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-08-29'),
             $this->getStubFee(2, 125.25, FeeEntity::ACCRUAL_RULE_LICENCE_START, '2014-12-25', $orgId, '2015-08-30'),
         ];
+
+        $this->mockSchemaIdChange();
 
         $now = (new DateTime())->format('Y-m-d');
 
@@ -359,6 +362,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             $this->getStubFee(2, 125.25, FeeEntity::ACCRUAL_RULE_LICENCE_START, '2014-12-25', $orgId, '2015-08-30'),
         ];
 
+        $this->mockSchemaIdChange();
+
         $now = (new DateTime())->format('Y-m-d');
 
         $expectedParams = array_merge(
@@ -441,6 +446,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             $this->getStubFee(2, 125.25, FeeEntity::ACCRUAL_RULE_LICENCE_START, '2014-12-25', $orgId, '2015-08-30'),
         ];
 
+        $this->mockSchemaIdChange();
+
         $now = (new DateTime())->format('Y-m-d');
 
         $expectedParams = array_merge(
@@ -514,6 +521,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
     {
         $this->setExpectedException(CpmsResponseException::class, 'Invalid payment response', 400);
 
+        $this->mockSchemaIdChange();
+
         $this->cpmsClient
             ->shouldReceive('post')
             ->with('/api/payment/card', 'CARD', m::any())
@@ -532,6 +541,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('get')
             ->with('/api/stored-card', 'STORED_CARD', [])
             ->andReturn(['FOO']);
+
+        $this->mockSchemaIdChange();
 
         $this->assertSame(['FOO'], $this->sut->getListStoredCards('N'));
     }
@@ -561,6 +572,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                 FeeTypeEntity::FEE_TYPE_ADJUSTMENT
             ),
         ];
+
+        $this->mockSchemaIdChange();
 
         $now = (new DateTime())->format('Y-m-d');
 
@@ -665,6 +678,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             $this->getStubFee(1, 525.25, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-08-29'),
             $this->getStubFee(2, 125.25, FeeEntity::ACCRUAL_RULE_LICENCE_START, '2014-12-25', $orgId, '2015-08-30'),
         ];
+
+        $this->mockSchemaIdChange();
 
         $now = (new DateTime())->format('Y-m-d');
 
@@ -779,6 +794,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             $this->getStubFee(2, 125.25, FeeEntity::ACCRUAL_RULE_LICENCE_START, '2014-12-25', $orgId, '2015-08-30'),
         ];
 
+        $this->mockSchemaIdChange();
+
         $now = (new DateTime())->format('Y-m-d');
 
         $expectedParams = array_merge(
@@ -883,6 +900,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
+        $this->mockSchemaIdChange();
+
         $result = $this->sut->getPaymentAuthCode('MY-REFERENCE', null);
 
         $this->assertSame($authCode, $result);
@@ -918,23 +937,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->once()
             ->getMock();
 
-        $this->options
-            ->shouldReceive('setClientId')
-            ->with('client_id_ni')
-            ->once()
-            ->shouldReceive('setClientSecret')
-            ->with('client_secret_ni')
-            ->once()
-            ->getMock();
-
-        $this->identity
-            ->shouldReceive('setClientId')
-            ->with('client_id_ni')
-            ->once()
-            ->shouldReceive('setClientSecret')
-            ->with('client_secret_ni')
-            ->once()
-            ->getMock();
+        $this->mockSchemaIdChange(true);
 
         $result = $this->sut->getPaymentAuthCode('MY-REFERENCE', $mockFee);
 
@@ -962,6 +965,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             $customer,
             ['scope' => $expectedScope]
         );
+
+        $this->mockSchemaIdChange();
 
         $this->cpmsClient
             ->shouldReceive('post')
@@ -1174,6 +1179,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
+        $this->mockSchemaIdChange();
+
         $result = $this->sut->getReportList();
 
         $this->assertSame($response, $result);
@@ -1195,6 +1202,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                 ]
             ],
         ];
+
+        $this->mockSchemaIdChange();
 
         $response = ['stuff'];
 
@@ -1228,6 +1237,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
+        $this->mockSchemaIdChange();
+
         $result = $this->sut->getReportStatus($reference);
 
         $this->assertSame($response, $result);
@@ -1253,6 +1264,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
+        $this->mockSchemaIdChange();
+
         $result = $this->sut->downloadReport($reference, $token);
 
         $this->assertSame($response, $result);
@@ -1265,6 +1278,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
     {
         $isMiscellaneous = count($miscParams) > 0 ? true : false;
         $fee = m::mock(FeeEntity::class);
+
+        $this->mockSchemaIdChange(false, 2);
 
         $ft = m::mock(FeeTransactionEntity::class);
         $ft->shouldReceive('getAmount')->andReturn('100.00');
@@ -1409,6 +1424,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $fee = m::mock(FeeEntity::class);
 
+        $this->mockSchemaIdChange(false, 2);
+
         $ft = m::mock(FeeTransactionEntity::class);
         $ft->shouldReceive('getAmount')->andReturn('100.00');
         $ft->shouldReceive('getTransaction')
@@ -1544,6 +1561,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
     {
         $isMiscellaneous = count($miscParams) > 0 ? true : false;
         $fee = m::mock(FeeEntity::class);
+
+        $this->mockSchemaIdChange();
 
         $ft = m::mock(FeeTransactionEntity::class);
         $ft
@@ -1742,6 +1761,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
     public function testBatchRefundWithInvalidResponse()
     {
         $this->setExpectedException(CpmsResponseException::class, 'Invalid refund response', 401);
+
+        $this->mockSchemaIdChange();
 
         $fee = m::mock(FeeEntity::class);
         $fee
@@ -2101,5 +2122,26 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $address->setPostcode(null);
 
         $this->assertEquals($sut->formatAddress($address), $expected);
+    }
+
+    protected function mockSchemaIdChange($isNi = false, $times = 1)
+    {
+        $this->options
+            ->shouldReceive('setClientId')
+            ->with('client_id' . ($isNi ? '_ni' : ''))
+            ->times($times)
+            ->shouldReceive('setClientSecret')
+            ->with('client_secret' . ($isNi ? '_ni' : ''))
+            ->times($times)
+            ->getMock();
+
+        $this->identity
+            ->shouldReceive('setClientId')
+            ->with('client_id' . ($isNi ? '_ni' : ''))
+            ->times($times)
+            ->shouldReceive('setClientSecret')
+            ->with('client_secret' . ($isNi ? '_ni' : ''))
+            ->times($times)
+            ->getMock();
     }
 }
