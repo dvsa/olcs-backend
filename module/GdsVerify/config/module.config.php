@@ -21,12 +21,9 @@ return array(
         //],
         // Entity identifier
         'entity_identifier' => 'http://olcs-selfserve.olcs.gov.uk',
-        // Key used to sign authentication requests
-        'signature_key' => __DIR__ .'/../data/compliance-tool/signing.key',
-        // Key used to decrypt data from hub
-        'encryption_keys' => [
-            __DIR__ .'/../data/compliance-tool/signing.key',
-//            __DIR__ .'/../data/compliance-tool/enc.key',
-        ],
+        // Key used to sign authentication requests. Path and file name
+        'signature_key' => '',
+        // Keys used to decrypt data from hub. Path and file name. Will be attempted in order if there are multiple
+        'encryption_keys' => [],
     ]
 );

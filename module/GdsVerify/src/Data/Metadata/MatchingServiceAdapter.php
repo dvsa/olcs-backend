@@ -10,7 +10,7 @@ use Dvsa\Olcs\GdsVerify\Exception;
 class MatchingServiceAdapter
 {
     /**
-     * @var \SAML2\XML\md\EntityDescriptor
+     * @var \SAML2\XML\md\EntitiesDescriptor
      */
     private $metadataDocument;
 
@@ -28,15 +28,7 @@ class MatchingServiceAdapter
 
         $element = $document->documentElement;
 
-        if ($element->tagName === 'md:EntitiesDescriptor') {
-            $element = $document->documentElement->childNodes[1];
-        }
-
-        if ($element->tagName !== 'md:EntityDescriptor') {
-            throw new Exception('Cannot find md:EntityDescriptor element in metadata');
-        }
-
-        $this->metadataDocument = new \SAML2\XML\md\EntityDescriptor($element);
+        $this->metadataDocument = new \SAML2\XML\md\EntitiesDescriptor($element);
     }
 
     /**
@@ -47,14 +39,18 @@ class MatchingServiceAdapter
      */
     public function getSigningCertificate()
     {
-        /** @var \SAML2\XML\md\IDPSSODescriptor $roleDescriptor */
-        $roleDescriptor = $this->metadataDocument->RoleDescriptor[0];
+        try {
+            /** @var \SAML2\XML\md\IDPSSODescriptor $roleDescriptor */
+            $roleDescriptor = $this->metadataDocument->children[0]->RoleDescriptor[0];
 
-        /** @var \SAML2\XML\md\KeyDescriptor $keyDescriptor */
-        foreach ($roleDescriptor->KeyDescriptor as $keyDescriptor) {
-            if ($keyDescriptor->use === 'signing') {
-                return trim($keyDescriptor->KeyInfo->info[1]->data[0]->certificate);
+            /** @var \SAML2\XML\md\KeyDescriptor $keyDescriptor */
+            foreach ($roleDescriptor->KeyDescriptor as $keyDescriptor) {
+                if ($keyDescriptor->use === 'signing') {
+                    return trim($keyDescriptor->KeyInfo->info[1]->data[0]->certificate);
+                }
             }
+        } catch (\Exception $e) {
+            throw new Exception('Matching Service Adapter signing certificate not found : ' .$e->getMessage());
         }
 
         throw new Exception('Matching Service Adapter signing certificate not found');
@@ -68,11 +64,15 @@ class MatchingServiceAdapter
      */
     public function getSsoUrl()
     {
-        /** @var \SAML2\XML\md\IDPSSODescriptor $roleDescriptor */
-        foreach ($this->metadataDocument->RoleDescriptor as $roleDescriptor) {
-            if ($roleDescriptor instanceof \SAML2\XML\md\IDPSSODescriptor) {
-                return trim($roleDescriptor->SingleSignOnService[0]->Location);
+        try {
+            /** @var \SAML2\XML\md\IDPSSODescriptor $roleDescriptor */
+            foreach ($this->metadataDocument->children[0]->RoleDescriptor as $roleDescriptor) {
+                if ($roleDescriptor instanceof \SAML2\XML\md\IDPSSODescriptor) {
+                    return trim($roleDescriptor->SingleSignOnService[0]->Location);
+                }
             }
+        } catch (\Exception $e) {
+            throw new Exception('SSO URL not found in metadata : '. $e->getMessage());
         }
 
         throw new Exception('SSO URL not found in metadata');

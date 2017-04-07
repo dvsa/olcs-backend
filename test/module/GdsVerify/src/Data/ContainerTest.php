@@ -30,11 +30,30 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals($num1, $num2);
     }
 
-    public function testDebugMessage()
+    public function testDebugMessageDisabled()
     {
         $logger = m::mock(\Psr\Log\LoggerInterface::class);
         $container = new Container($logger);
         $this->assertNull($container->debugMessage('FOO', 'BAR'));
+    }
+
+    public function testDebugMessageEnabled()
+    {
+        $logger = m::mock(\Psr\Log\LoggerInterface::class);
+        $logger->shouldReceive('debug')->with('BAR - FOO')->once();
+        $container = new Container($logger);
+        $container->setDebugLog($logger);
+        $this->assertNull($container->debugMessage('FOO', 'BAR'));
+    }
+
+    public function testDebugMessageEnabledObject()
+    {
+        $obj = new \StdClass();
+        $logger = m::mock(\Psr\Log\LoggerInterface::class);
+        $logger->shouldReceive('debug')->with('BAR - stdClass')->once();
+        $container = new Container($logger);
+        $container->setDebugLog($logger);
+        $this->assertNull($container->debugMessage($obj, 'BAR'));
     }
 
     public function testPostRedirect()

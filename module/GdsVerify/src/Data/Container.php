@@ -49,6 +49,9 @@ class Container extends \SAML2\Compat\AbstractContainer
     public function debugMessage($message, $type)
     {
         if ($this->debugLogger instanceof \Psr\Log\LoggerInterface) {
+            if (is_object($message)) {
+                $message = get_class($message);
+            }
             $this->debugLogger->debug($type .' - '. $message);
         }
     }
@@ -90,7 +93,9 @@ class Container extends \SAML2\Compat\AbstractContainer
     /**
      * Set the debug logger
      *
-     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Psr\Log\LoggerInterface $logger Logger
+     *
+     * @return void
      */
     public function setDebugLog(\Psr\Log\LoggerInterface $logger)
     {
