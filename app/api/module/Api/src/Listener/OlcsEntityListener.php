@@ -129,7 +129,7 @@ class OlcsEntityListener implements EventSubscriber, AuthAwareInterface, Factory
         return (
             (
                 $currentUser instanceof Entity\User\User
-                && ($currentUser->isAnonymous() === false || $currentUser->isSystemUser())
+                && $currentUser->isAnonymous() === false
             )
             ? $currentUser
             : null
