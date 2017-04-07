@@ -131,15 +131,6 @@ abstract class AbstractOpposition implements BundleSerializableInterface, JsonSe
     protected $isInTime = 0;
 
     /**
-     * Is public inquiry
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_public_inquiry", nullable=false, options={"default": 0})
-     */
-    protected $isPublicInquiry = 0;
-
-    /**
      * Is valid
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
@@ -550,30 +541,6 @@ abstract class AbstractOpposition implements BundleSerializableInterface, JsonSe
     public function getIsInTime()
     {
         return $this->isInTime;
-    }
-
-    /**
-     * Set the is public inquiry
-     *
-     * @param string $isPublicInquiry new value being set
-     *
-     * @return Opposition
-     */
-    public function setIsPublicInquiry($isPublicInquiry)
-    {
-        $this->isPublicInquiry = $isPublicInquiry;
-
-        return $this;
-    }
-
-    /**
-     * Get the is public inquiry
-     *
-     * @return string
-     */
-    public function getIsPublicInquiry()
-    {
-        return $this->isPublicInquiry;
     }
 
     /**
