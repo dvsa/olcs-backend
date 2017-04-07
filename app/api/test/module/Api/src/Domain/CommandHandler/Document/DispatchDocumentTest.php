@@ -145,7 +145,56 @@ class DispatchDocumentTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testHandleCommandEmailAndPrint()
+    public function testHandleCommandEnforcePrintNoEmail()
+    {
+        $data = [
+            'licence' => self::LIC_ID,
+            'identifier' => self::DOC_ID,
+            'description' => 'foo',
+            'isEnforcePrint' => 'Y',
+            'printCopiesCount' => 777,
+            'user' => 1,
+        ];
+        $command = Cmd::create($data);
+
+        $this->mockOrg->setAllowEmail('N');
+
+        $result1 = new Result();
+        $result1->addId('document', self::DOC_ID);
+        $dataForCreateDocSpecific = [
+            'licence' => self::LIC_ID,
+            'identifier' => self::DOC_ID,
+            'description' => 'foo',
+            'user' => 1
+        ];
+        $commandCreateDocSpecific = Cmd::create($dataForCreateDocSpecific);
+        $this->expectedSideEffect(CreateDocumentSpecific::class, $commandCreateDocSpecific->getArrayCopy(), $result1);
+
+        $data = [
+            'documentId' => self::DOC_ID,
+            'jobName' => 'foo',
+            'user' => 1,
+            'copies' => 777,
+        ];
+        $result2 = new Result();
+        $result2->addMessage('Printed');
+        $this->expectedSideEffect(Enqueue::class, $data, $result2);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'document' => self::DOC_ID
+            ],
+            'messages' => [
+                'Printed'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandEmailAndEnforcePrint()
     {
         $data = [
             'licence' => self::LIC_ID,
