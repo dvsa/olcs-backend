@@ -9,7 +9,6 @@ use Dvsa\Olcs\GdsVerify\Data;
 /**
  * Class GdsVerify
  *
- * @todo This class needs unit testing !!!
  * NOTE php mcrypt extension needs installing, for this to work
  *
  * @package Dvsa\Olcs\GdsVerify\Service
@@ -37,11 +36,6 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
      * @var array of XMLSecLibs\XMLSecurityKey
      */
     private $encryptionKeys = [];
-
-    /**
-     * @var Data\Metadata\Federation
-     */
-//    private $federationMetadata;
 
     /**
      * @var Data\Metadata\MatchingServiceAdapter
@@ -79,9 +73,9 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
         if (!empty($config['cache']) && is_array($config['cache'])) {
             $cache = \Zend\Cache\StorageFactory::factory($config['cache']);
         }
-        $this->metadataLoader = new Data\Loader($cache);
+        $this->setMetadataLoader(new Data\Loader($cache));
         if ($serviceLocator->has(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)) {
-            $this->metadataLoader->setHttpClient(
+            $this->getMetadataLoader()->setHttpClient(
                 $serviceLocator->get(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)
             );
         }
@@ -125,20 +119,9 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
         $samlResponse = $binding->processResponse($response);
 
         if (!$samlResponse->isSuccess()) {
-            throw new \Dvsa\Olcs\GdsVerify\Exception('SAML Response is not a success message');
+            // If not a success message return empty attributes
+            return new Data\Attributes([]);
         }
-
-        // Cannot validate signature at the moment !!! Seems to be missing from Compliance Tool, this is due to the new
-        // SAML Profile. Yet to establish full implications of this
-//        try {
-//            if (!$samlResponse->validate($this->getFederationSigningCertificate())) {
-//                // Assume it should be signed, if not we can remove this
-//                throw new \Dvsa\Olcs\GdsVerify\Exception('Error SAML response is not signed');
-//            }
-//        } catch (\Exception $e) {
-//            // Exception thrown if signature validation fails
-//            throw new \Dvsa\Olcs\GdsVerify\Exception($e->getMessage());
-//        }
 
         // Get MSA signing certificate
         $msaCert = $this->getMatchingServiceAdapterSigningCertificate();
@@ -158,13 +141,17 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
             }
 
             $attributes = $decryptedAssertion->getAttributes();
+            $attributesTransformed = [];
             // flatten array
-            foreach ($attributes as &$value) {
+            foreach ($attributes as $key => $value) {
+                // Compliance tool uses different attribute names to Integration environment
+                $key = str_replace('_', '', strtolower($key));
                 $value = $value[0];
+                $attributesTransformed[$key] = $value;
             }
         }
 
-        return new Data\Attributes($attributes);
+        return new Data\Attributes($attributesTransformed);
     }
 
     /**
@@ -189,23 +176,6 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
 
         throw new \Dvsa\Olcs\GdsVerify\Exception('Cannot decrypt the SAML Assertion');
     }
-
-    /**
-     * Get the Hubs/Federation signing certificate
-     *
-     * @return XMLSecLibs\XMLSecurityKey
-     */
-//    private function getFederationSigningCertificate()
-//    {
-//        $certificate = new XMLSecLibs\XMLSecurityKey(XMLSecLibs\XMLSecurityKey::RSA_SHA1, ['type' => 'public']);
-//        $certificate->loadKey(
-//            "-----BEGIN CERTIFICATE-----\n"
-//            .$this->getFederationMetaData()->getSigningCertificate()
-//            ."\n-----END CERTIFICATE-----"
-//        );
-//
-//        return $certificate;
-//    }
 
     /**
      * Get the Matching Service Adapters signing certificate
@@ -332,27 +302,6 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
     }
 
     /**
-     * Get the Federation/Hub metadata document
-     *
-     * @return Data\Metadata\Federation
-     * @throws \Dvsa\Olcs\GdsVerify\Exception
-     */
-//    public function getFederationMetadata()
-//    {
-//        if ($this->federationMetadata === null && $this->getFederationMetadataUrl() !== null) {
-//            $this->federationMetadata = $this->metadataLoader->loadFederationMetadata(
-//                $this->getFederationMetadataUrl()
-//            );
-//        }
-//
-//        if (!$this->federationMetadata instanceof Data\Metadata\Federation) {
-//            throw new \Dvsa\Olcs\GdsVerify\Exception('Federation metadata not set');
-//        }
-//
-//        return $this->federationMetadata;
-//    }
-
-    /**
      * Get the Matching Service Adapter metadata document
      *
      * @return Data\Metadata\MatchingServiceAdapter
@@ -365,7 +314,7 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
         }
 
         if (!empty($this->config[self::CONFIG_MSA_METADATA_URL])) {
-            $this->matchingServiceAdapterMetadata = $this->metadataLoader->loadMatchingServiceAdapterMetadata(
+            $this->matchingServiceAdapterMetadata = $this->getMetadataLoader()->loadMatchingServiceAdapterMetadata(
                 $this->config[self::CONFIG_MSA_METADATA_URL]
             );
             return $this->matchingServiceAdapterMetadata;
@@ -386,6 +335,28 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
             return $this->config[self::CONFIG_ENTITY_ID];
         }
 
-        throw new \Exception('Entity identifier is not specified');
+        throw new \Dvsa\Olcs\GdsVerify\Exception('Entity identifier is not specified');
+    }
+
+    /**
+     * Get Metadata loader
+     *
+     * @return Data\Loader
+     */
+    public function getMetadataLoader()
+    {
+        return $this->metadataLoader;
+    }
+
+    /**
+     * Set Metadata loader
+     *
+     * @param Data\Loader $metadataLoader Metadata loader object
+     *
+     * @return void
+     */
+    public function setMetadataLoader(Data\Loader $metadataLoader)
+    {
+        $this->metadataLoader = $metadataLoader;
     }
 }
