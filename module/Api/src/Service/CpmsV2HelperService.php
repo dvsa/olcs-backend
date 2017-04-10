@@ -72,6 +72,11 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     protected $schemaId;
 
     /**
+     * @var string
+     */
+    protected $clientSecret;
+
+    /**
      * @param ServiceLocatorInterface $serviceLocator
      * @return self
      */
@@ -92,6 +97,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $this->schemaId = isset($config['cpms_credentials']['client_id'])
             ? $config['cpms_credentials']['client_id']
+            : null;
+
+        $this->clientSecret = isset($config['cpms_credentials']['client_secret'])
+            ? $config['cpms_credentials']['client_secret']
             : null;
 
         $this->identity = $serviceLocator->get($config['cpms_api']['identity_provider']);
@@ -1094,6 +1103,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         if ($schemaId === $this->niSchemaId) {
             $this->changeSchema($this->niSchemaId, $this->niClientSecret);
+        } else {
+            $this->changeSchema($this->schemaId, $this->clientSecret);
         }
 
         $response = $this->getClient()->$method($endPoint, $scope, $params);
