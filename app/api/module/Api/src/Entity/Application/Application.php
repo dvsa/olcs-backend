@@ -96,6 +96,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     const UNKNOWN = 'Unknown';
 
     const TARGET_COMPLETION_TIME = '+7 week';
+    const OUT_OF_OPPOSITION_DATE_INTERVAL = '+22 days';
+    const OUT_OF_REPRESENTATION_DATE_INTERVAL = '+21 days';
 
     const APPLIED_VIA_SELFSERVE = 'applied_via_selfserve';
     const APPLIED_VIA_POST = 'applied_via_post';
@@ -1009,7 +1011,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         // Otherwise = <maximum date> = 21 days
-        return $maximumDate->modify('+21 days');
+        return $maximumDate->modify(self::OUT_OF_REPRESENTATION_DATE_INTERVAL);
     }
 
     /**
@@ -1104,7 +1106,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
         if (!empty($latestPublication)) {
             $oooDate = new DateTime($latestPublication->getPubDate());
-            $oooDate->modify('+21 days');
+            $oooDate->modify(self::OUT_OF_OPPOSITION_DATE_INTERVAL);
 
             return $oooDate;
         }
