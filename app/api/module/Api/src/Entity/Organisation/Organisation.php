@@ -96,6 +96,31 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         return $enabledOrgUsers;
     }
 
+
+    /**
+     * Has even one Operator-admin users a corrent email address
+     *
+     * @return bool
+     */
+    public function hasAdminEmailAddresses()
+    {
+        $emailValidator = new \Zend\Validator\EmailAddress;
+
+        /** @var OrganisationUser $orgUser */
+        foreach ($this->getAdminOrganisationUsers() as $orgUser) {
+            $email = $orgUser->getUser()->getContactDetails()->getEmailAddress();
+
+            if (
+                !empty($email)
+                && $emailValidator->isValid($email)
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Is this organisation a sole trader
      *
@@ -254,6 +279,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      * Gets a licence from the organisation licences. Used by EBSR to check the licence is related to the organisation,
      * we return more than just a true/false, as the status is checked afterwards
      *
+     * @param int $licNo Licence Number
+     *
      * @return ArrayCollection
      */
     public function getLicenceByLicNo($licNo)
@@ -310,8 +337,6 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      *  new application. (There should be only be one associated application)
      *  For the Valid, Curtailed or Suspended statuses, pull the operator type from the licence record
      *
-     * @param $id
-     *
      * @return bool
      */
     public function isMlh()
@@ -362,7 +387,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      * Get All Outstanding applications for all licences
      * Status "under consideration" or "granted" and optionally "not submitted"
      *
-     * @param bool $includeNotSubmitted
+     * @param bool $includeNotSubmitted Is include Not Submitted
+     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getOutstandingApplications($includeNotSubmitted = false)
@@ -382,7 +408,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     /**
      * Returns licences linked to this organisation for submissions
      * NOTE: In submissions, the licence the submission relates to is ALSO EXCLUDED. As these are 'linked licences'.
-     * @return array LicenceEntity[]
+     *
+     * @return ArrayCollection
      */
     public function getLinkedLicences()
     {
@@ -435,6 +462,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     }
 
     /**
+     * Get Administrator Users
+     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getAdministratorUsers()
@@ -449,6 +478,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
     /**
      * Returns the latest Trading Name that hasnt been deleted
+     *
+     * @return string
      */
     public function getTradingAs()
     {
