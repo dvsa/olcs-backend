@@ -1904,7 +1904,7 @@ class ApplicationEntityTest extends EntityTester
 
         $this->entity->addPublicationLinks($publicationLink1);
 
-        $this->assertEquals(new \DateTime('2015-10-26'), $this->entity->getOutOfOppositionDate());
+        $this->assertEquals(new \DateTime('2015-10-27'), $this->entity->getOutOfOppositionDate());
     }
 
     /**
