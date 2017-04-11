@@ -1,7 +1,7 @@
 <?php
 use Dvsa\Olcs\GdsVerify;
 
-return array(
+return [
     'service_manager' => [
         'factories' => [
             GdsVerify\Service\GdsVerify::class => GdsVerify\Service\GdsVerify::class
@@ -26,4 +26,4 @@ return array(
         // Keys used to decrypt data from hub. Path and file name. Will be attempted in order if there are multiple
         'encryption_keys' => [],
     ]
-);
+];

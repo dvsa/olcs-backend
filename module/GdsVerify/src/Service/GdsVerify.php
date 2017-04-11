@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\GdsVerify\Service;
 
+use Zend\Cache\Storage\StorageInterface;
+use Zend\Log\LoggerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use \RobRichards\XMLSecLibs;
 use Dvsa\Olcs\GdsVerify\Data;
@@ -21,6 +23,7 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
     const CONFIG_ENCRYPTION_KEYS = 'encryption_keys';
     const CONFIG_MSA_METADATA_URL = 'msa_metadata_url';
     const CONFIG_ENABLED_DEBUG_LOG = 'enable_debug_log';
+    const CONFIG_CACHE = 'cache';
 
     /**
      * @var array Config
@@ -62,26 +65,53 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
             $config = $globalConfig[self::CONFIG_KEY];
         }
 
-        $logger = new \Olcs\Logging\Log\ZendLogPsr3Adapter($serviceLocator->get('logger'));
-        $container = new Data\Container($logger);
-        if (!empty($config[self::CONFIG_ENABLED_DEBUG_LOG])) {
-            $container->setDebugLog($logger);
-        }
-        \SAML2\Compat\ContainerSingleton::setContainer($container);
+        $this->config = $config;
 
-        $cache = null;
-        if (!empty($config['cache']) && is_array($config['cache'])) {
-            $cache = \Zend\Cache\StorageFactory::factory($config['cache']);
-        }
-        $this->setMetadataLoader(new Data\Loader($cache));
+        \SAML2\Compat\ContainerSingleton::setContainer(
+            $this->getContainer($serviceLocator->get('logger'))
+        );
+        $this->setMetadataLoader(new Data\Loader($this->getCache()));
+
         if ($serviceLocator->has(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)) {
             $this->getMetadataLoader()->setHttpClient(
                 $serviceLocator->get(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)
             );
         }
-        $this->config = $config;
 
         return $this;
+    }
+
+    /**
+     * Setup the SAML container, required to use the simpleSAML library
+     *
+     * @param LoggerInterface $logger Logger
+     *
+     * @return Data\Container
+     */
+    private function getContainer(LoggerInterface $logger)
+    {
+        $Psrlogger = new \Olcs\Logging\Log\ZendLogPsr3Adapter($logger);
+        $container = new Data\Container($Psrlogger);
+        if (!empty($this->config[self::CONFIG_ENABLED_DEBUG_LOG])) {
+            $container->setDebugLog($Psrlogger);
+        }
+
+        return $container;
+    }
+
+    /**
+     * Get the cache adapter
+     *
+     * @return null|StorageInterface
+     */
+    private function getCache()
+    {
+        $cache = null;
+        if (!empty($this->config[self::CONFIG_CACHE]) && is_array($this->config[self::CONFIG_CACHE])) {
+            $cache = \Zend\Cache\StorageFactory::factory($this->config[self::CONFIG_CACHE]);
+        }
+
+        return $cache;
     }
 
     /**
@@ -187,8 +217,8 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
         $certificate = new XMLSecLibs\XMLSecurityKey(XMLSecLibs\XMLSecurityKey::RSA_SHA1, ['type' => 'public']);
         $certificate->loadKey(
             "-----BEGIN CERTIFICATE-----\n"
-            .$this->getMatchingServiceAdapterMetadata()->getSigningCertificate()
-            ."\n-----END CERTIFICATE-----"
+            . $this->getMatchingServiceAdapterMetadata()->getSigningCertificate()
+            . "\n-----END CERTIFICATE-----"
         );
 
         return $certificate;
@@ -249,18 +279,20 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
     /**
      * Get the Encryption key to decrypt response from the hub
      *
-     * @param int $n Index number of key to get
+     * @param int $indexNumber Index number of key to get
      *
      * @return XMLSecLibs\XMLSecurityKey|false
      */
-    public function getEncryptionKey($n = 0)
+    public function getEncryptionKey($indexNumber = 0)
     {
-        if (isset($this->encryptionKeys[$n]) && $this->encryptionKeys[$n] instanceof XMLSecLibs\XMLSecurityKey) {
-            return $this->encryptionKeys[$n];
+        if (isset($this->encryptionKeys[$indexNumber])
+            && $this->encryptionKeys[$indexNumber] instanceof XMLSecLibs\XMLSecurityKey
+        ) {
+            return $this->encryptionKeys[$indexNumber];
         }
 
-        if (!empty($this->config[self::CONFIG_ENCRYPTION_KEYS][$n])) {
-            return $this->loadEncryptionKey($this->config[self::CONFIG_ENCRYPTION_KEYS][$n], $n);
+        if (!empty($this->config[self::CONFIG_ENCRYPTION_KEYS][$indexNumber])) {
+            return $this->loadEncryptionKey($this->config[self::CONFIG_ENCRYPTION_KEYS][$indexNumber], $indexNumber);
         }
 
         return false;
@@ -269,26 +301,26 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
     /**
      * Set the encryption key
      *
-     * @param XMLSecLibs\XMLSecurityKey $key Encryption key
-     * @param int                       $n   Index number of key to set
+     * @param XMLSecLibs\XMLSecurityKey $key         Encryption key
+     * @param int                       $indexNumber Index number of key to set
      *
      * @return void
      */
-    public function setEncryptionKey(XMLSecLibs\XMLSecurityKey $key, $n = 0)
+    public function setEncryptionKey(XMLSecLibs\XMLSecurityKey $key, $indexNumber = 0)
     {
-        $this->encryptionKeys[$n] = $key;
+        $this->encryptionKeys[$indexNumber] = $key;
     }
 
     /**
      * Load the encryption key from a file
      *
      * @param string $keyFilename Path and file name of key
-     * @param int    $n           Index number of key to load
+     * @param int    $indexNumber Index number of key to load
      *
      * @return XMLSecLibs\XMLSecurityKey
      * @throws \Dvsa\Olcs\GdsVerify\Exception
      */
-    public function loadEncryptionKey($keyFilename, $n = 0)
+    public function loadEncryptionKey($keyFilename, $indexNumber = 0)
     {
         if (!file_exists($keyFilename)) {
             throw new \Dvsa\Olcs\GdsVerify\Exception('Encryption key file not found');
@@ -296,7 +328,7 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
 
         $key = new XMLSecLibs\XMLSecurityKey(XMLSecLibs\XMLSecurityKey::RSA_OAEP_MGF1P, ['type' => 'private']);
         $key->loadKey($keyFilename, true);
-        $this->setEncryptionKey($key, $n);
+        $this->setEncryptionKey($key, $indexNumber);
 
         return $key;
     }
