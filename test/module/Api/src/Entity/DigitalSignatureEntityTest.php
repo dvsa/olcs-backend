@@ -42,10 +42,9 @@ class DigitalSignatureEntityTest extends EntityTester
     {
         return [
             [
-                'Bob George Smith',
+                'Bob Smith',
                 [
                     Attributes::FIRST_NAME => 'BOB',
-                    Attributes::MIDDLE_NAME => 'GEORGE',
                     Attributes::SURNAME=> 'SMITH',
                 ],
             ],
@@ -53,7 +52,6 @@ class DigitalSignatureEntityTest extends EntityTester
                 'Bob Smith',
                 [
                     Attributes::FIRST_NAME => 'bob',
-                    Attributes::MIDDLE_NAME => '',
                     Attributes::SURNAME=> 'smith',
                 ],
             ],
@@ -61,7 +59,6 @@ class DigitalSignatureEntityTest extends EntityTester
                 'Bob Smith',
                 [
                     Attributes::FIRST_NAME => 'bob',
-                    Attributes::MIDDLE_NAME => null,
                     Attributes::SURNAME=> 'smith',
                 ],
             ],
@@ -69,7 +66,6 @@ class DigitalSignatureEntityTest extends EntityTester
                 'Smith',
                 [
                     Attributes::FIRST_NAME => '',
-                    Attributes::MIDDLE_NAME => null,
                     Attributes::SURNAME=> 'smith',
                 ],
             ],
@@ -77,7 +73,6 @@ class DigitalSignatureEntityTest extends EntityTester
                 'Bob',
                 [
                     Attributes::FIRST_NAME => 'bob',
-                    Attributes::MIDDLE_NAME => null,
                     Attributes::SURNAME=> '',
                 ],
             ],

@@ -26,8 +26,8 @@ class AttributesTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                [Attributes::FIRST_NAME => 'John', Attributes::MIDDLE_NAME => 'Bobby', Attributes::SURNAME => 'Smith'],
-                'John Bobby Smith'
+                [Attributes::FIRST_NAME => 'John', Attributes::SURNAME => 'Smith'],
+                'John Smith'
             ],
             [
                 [Attributes::FIRST_NAME => 'John', Attributes::SURNAME => 'Smith'],
@@ -78,7 +78,6 @@ class AttributesTest extends \PHPUnit_Framework_TestCase
             [
                 [
                     Attributes::FIRST_NAME => 'John',
-                    Attributes::MIDDLE_NAME => 'Bobby',
                     Attributes::SURNAME => 'Smith',
                     Attributes::DATE_OF_BIRTH => '1999-10-10'],
                 true
