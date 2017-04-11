@@ -8,14 +8,22 @@ namespace Dvsa\Olcs\GdsVerify\Data;
  */
 class Container extends \SAML2\Compat\AbstractContainer
 {
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
     private $logger;
+
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $debugLogger;
 
     /**
      * Container constructor.
      *
-     * @param \Zend\Log\LoggerInterface $logger Logger
+     * @param \Psr\Log\LoggerInterface $logger Logger
      */
-    public function __construct(\Zend\Log\LoggerInterface $logger)
+    public function __construct(\Psr\Log\LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
@@ -23,7 +31,7 @@ class Container extends \SAML2\Compat\AbstractContainer
     /**
      * Provide logger to SAML2
      *
-     * @return \Zend\Log\LoggerInterface
+     * @return \Psr\Log\LoggerInterface
      */
     public function getLogger()
     {
@@ -40,8 +48,12 @@ class Container extends \SAML2\Compat\AbstractContainer
      */
     public function debugMessage($message, $type)
     {
-        // For debuggin SAML enable this line
-        // $this->logger->debug($type .' - '. $message);
+        if ($this->debugLogger instanceof \Psr\Log\LoggerInterface) {
+            if (is_object($message)) {
+                $message = get_class($message);
+            }
+            $this->debugLogger->debug($type .' - '. $message);
+        }
     }
 
     /**
@@ -76,5 +88,17 @@ class Container extends \SAML2\Compat\AbstractContainer
      */
     public function redirect($url, $data = array())
     {
+    }
+
+    /**
+     * Set the debug logger
+     *
+     * @param \Psr\Log\LoggerInterface $logger Logger
+     *
+     * @return void
+     */
+    public function setDebugLog(\Psr\Log\LoggerInterface $logger)
+    {
+        $this->debugLogger = $logger;
     }
 }

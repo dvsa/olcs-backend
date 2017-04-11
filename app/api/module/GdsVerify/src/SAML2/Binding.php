@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\GdsVerify\SAML2;
 
 /**
- * Use our own bindinf so that we can send info from API to front end
+ * Use our own binding so that we can send info from API to front end
  */
 class Binding extends \SAML2\Binding
 {
@@ -18,6 +18,7 @@ class Binding extends \SAML2\Binding
     {
         $msgStr = $message->toSignedXML();
         $msgStr = $msgStr->ownerDocument->saveXML($msgStr);
+        \SAML2\Utils::getContainer()->debugMessage($msgStr, 'SAML Request');
         $msgStr = base64_encode($msgStr);
 
         $post = [
@@ -47,6 +48,7 @@ class Binding extends \SAML2\Binding
     public function processResponse($samlResponse)
     {
         $samlResponse = base64_decode($samlResponse);
+        \SAML2\Utils::getContainer()->debugMessage($samlResponse, 'SAML Response');
 
         $document = \SAML2\DOMDocumentFactory::fromString($samlResponse);
         $xml = $document->firstChild;
