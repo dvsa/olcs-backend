@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Submission;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Submission\Submission as Entity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
@@ -22,7 +22,9 @@ class SubmissionEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
-
+    /**
+     * @var Entity
+     */
     protected $sut;
 
     public function setUp()
@@ -58,18 +60,6 @@ class SubmissionEntityTest extends EntityTester
         $submission->close();
         $this->assertFalse($submission->canClose());
         $this->assertTrue($submission->isClosed());
-    }
-
-    public function testReopen()
-    {
-        $case = m::mock(CaseEntity::class)->makePartial();
-        $submissionType = m::mock(RefDataEntity::class)->makePartial();
-        $submission = new Entity($case, $submissionType);
-
-        $this->assertFalse($submission->canReopen());
-
-        $submission->close();
-        $this->assertTrue($submission->canReopen());
     }
 
     /**
@@ -176,5 +166,47 @@ class SubmissionEntityTest extends EntityTester
 
         $this->assertSame('ORG1', $submission->getRelatedOrganisation());
 
+    }
+
+    public function testGetSetSectionData()
+    {
+        $value  = $this->sut->getSectionData();
+        $this->assertNull($value);
+        $this->sut->setSectionData('KEY', 'VALUE');
+        $value  = $this->sut->getSectionData();
+        $this->assertSame(['KEY'=>'VALUE'], $value);
+    }
+
+    public function testSectionData()
+    {
+        $this->sut->setSectionData('KEY', 'VALUE');
+        $this->sut->setSubmissionDataSnapshot();
+        $this->assertSame('{"KEY":"VALUE"}', ($this->sut->getDataSnapshot()));
+    }
+
+    public function testNewSubmissionDataSnapshot()
+    {
+        $this->sut->setNewSubmissionDataSnapshot(['KEY'=>'VALUE']);
+        $this->assertSame('{"KEY":"VALUE"}', ($this->sut->getDataSnapshot()));
+    }
+
+    public function testReopen()
+    {
+        $this->sut->setClosedDate('SOMETHING');
+        $this->sut->reopen();
+        $this->assertNull($this->sut->getClosedDate());
+    }
+
+    public function testReopenError()
+    {
+        $this->sut->setClosedDate(null);
+        $this->setExpectedException(ForbiddenException::class);
+        $this->sut->reopen();
+    }
+    public function testCloseError()
+    {
+        $this->sut->setClosedDate('YYYY-MM-DD');
+        $this->setExpectedException(ForbiddenException::class);
+        $this->sut->close();
     }
 }
