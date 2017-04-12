@@ -8,10 +8,9 @@ namespace Dvsa\Olcs\GdsVerify\Data;
  */
 class Attributes extends \ArrayObject
 {
-    const DATE_OF_BIRTH = 'DATE_OF_BIRTH';
-    const FIRST_NAME = 'FIRST_NAME';
-    const MIDDLE_NAME = 'MIDDLE_NAME';
-    const SURNAME = 'SURNAME';
+    const DATE_OF_BIRTH = 'dateofbirth';
+    const FIRST_NAME = 'firstname';
+    const SURNAME = 'surname';
 
     /**
      * Get full name
@@ -23,9 +22,6 @@ class Attributes extends \ArrayObject
         $names = [];
         if (!empty($this[self::FIRST_NAME])) {
             $names[] = $this[self::FIRST_NAME];
-        }
-        if (!empty($this[self::MIDDLE_NAME])) {
-            $names[] = $this[self::MIDDLE_NAME];
         }
         if (!empty($this[self::SURNAME])) {
             $names[] = $this[self::SURNAME];
