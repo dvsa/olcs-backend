@@ -659,4 +659,29 @@ class OrganisationEntityTest extends EntityTester
 
         $this->assertFalse($organisation->isMlh());
     }
+
+    public function testHasUnlicencedLicences()
+    {
+        $mockLic1 = m::mock(LicenceEntity::class)
+            ->shouldReceive('getLicNo')
+            ->andReturn('FOO')
+            ->getMock();
+
+        $mockLic2 = m::mock(LicenceEntity::class)
+            ->shouldReceive('getLicNo')
+            ->andReturn('UA123')
+            ->getMock();
+
+        $licences = new ArrayCollection();
+        $licences->add($mockLic1);
+        $licences->add($mockLic2);
+
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getLicences')
+            ->andReturn($licences)
+            ->once()
+            ->getMock();
+
+        $this->assertTrue($organisation->hasUnlicencedLicences());
+    }
 }

@@ -12,6 +12,7 @@ use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * TransferToTest
@@ -33,6 +34,7 @@ class TransferToTest extends CommandHandlerTestCase
         $this->mockRepo('TxcInbox', \Dvsa\Olcs\Api\Domain\Repository\TxcInbox::class);
         $this->mockRepo('EventHistory', \Dvsa\Olcs\Api\Domain\Repository\EventHistory::class);
         $this->mockRepo('OrganisationUser', \Dvsa\Olcs\Api\Domain\Repository\OrganisationUser::class);
+        $this->mockRepo('OrganisationPerson', \Dvsa\Olcs\Api\Domain\Repository\OrganisationPerson::class);
         $this->mockRepo('Note', \Dvsa\Olcs\Api\Domain\Repository\Note::class);
 
         parent::setUp();
@@ -64,7 +66,7 @@ class TransferToTest extends CommandHandlerTestCase
             ->andReturn($fromOrganisation);
         $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($fromOrganisation);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -99,7 +101,14 @@ class TransferToTest extends CommandHandlerTestCase
         $this->repoMap['EventHistory']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
 
-        $this->repoMap['Organisation']->shouldReceive('delete')->with($fromOrganisation)->once();
+        $this->repoMap['Organisation']
+            ->shouldReceive('delete')
+            ->with($fromOrganisation)
+            ->once()
+            ->shouldReceive('save')
+            ->with($toOrganisation)
+            ->once()
+            ->getMock();
 
         $result = $this->sut->handleCommand($command);
 
@@ -114,6 +123,9 @@ class TransferToTest extends CommandHandlerTestCase
             '0 TxcInbox(s) transferred',
             '0 EventHistory(s) transferred',
             '0 OrganisationUser(s) transferred',
+            '0 OrganisationPersons(s) transferred',
+            'Unlicenced flags set',
+            'form.operator-merge.success'
         ];
 
         $this->assertSame($expectedResult, $result->getMessages());
@@ -124,6 +136,7 @@ class TransferToTest extends CommandHandlerTestCase
         $data = [
             'id' => 12,
             'receivingOrganisation' => 12,
+            'licenceIds' => [1, 2]
         ];
         $command = Cmd::create($data);
 
@@ -154,7 +167,14 @@ class TransferToTest extends CommandHandlerTestCase
         $this->repoMap['EventHistory']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
 
-        $this->repoMap['Organisation']->shouldReceive('delete')->with($fromOrganisation)->once();
+        $this->repoMap['Organisation']
+            ->shouldReceive('delete')
+            ->with($fromOrganisation)
+            ->once()
+            ->shouldReceive('save')
+            ->with($toOrganisation)
+            ->once()
+            ->getMock();
 
         $this->repoMap['Licence']->shouldReceive('save')->with($licence1)->once();
         $this->repoMap['Licence']->shouldReceive('save')->with($licence2)->once();
@@ -175,6 +195,9 @@ class TransferToTest extends CommandHandlerTestCase
             '0 TxcInbox(s) transferred',
             '0 EventHistory(s) transferred',
             '0 OrganisationUser(s) transferred',
+            '0 OrganisationPersons(s) transferred',
+            'Unlicenced flags set',
+            'form.operator-merge.success'
         ];
 
         $this->assertSame($expectedResult, $result->getMessages());
@@ -215,7 +238,14 @@ class TransferToTest extends CommandHandlerTestCase
         $this->repoMap['EventHistory']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
 
-        $this->repoMap['Organisation']->shouldReceive('delete')->with($fromOrganisation)->once();
+        $this->repoMap['Organisation']
+            ->shouldReceive('delete')
+            ->with($fromOrganisation)->once()
+            ->once()
+            ->shouldReceive('save')
+            ->with($toOrganisation)
+            ->once()
+            ->getMock();
 
         $this->repoMap['Note']->shouldReceive('save')->with($note1)->once();
         $this->repoMap['Note']->shouldReceive('save')->with($note2)->once();
@@ -236,6 +266,9 @@ class TransferToTest extends CommandHandlerTestCase
             '0 TxcInbox(s) transferred',
             '0 EventHistory(s) transferred',
             '0 OrganisationUser(s) transferred',
+            '0 OrganisationPersons(s) transferred',
+            'Unlicenced flags set',
+            'form.operator-merge.success'
         ];
 
         $this->assertSame($expectedResult, $result->getMessages());
@@ -282,7 +315,14 @@ class TransferToTest extends CommandHandlerTestCase
         $this->repoMap['EventHistory']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
 
-        $this->repoMap['Organisation']->shouldReceive('delete')->with($fromOrganisation)->once();
+        $this->repoMap['Organisation']
+            ->shouldReceive('delete')
+            ->with($fromOrganisation)->once()
+            ->once()
+            ->shouldReceive('save')
+            ->with($toOrganisation)
+            ->once()
+            ->getMock();
 
         $this->repoMap['IrfoGvPermit']->shouldReceive('save')->with($irfoGvPermit1)->once();
         $this->repoMap['IrfoGvPermit']->shouldReceive('save')->with($irfoGvPermit2)->once();
@@ -303,6 +343,9 @@ class TransferToTest extends CommandHandlerTestCase
             '0 TxcInbox(s) transferred',
             '0 EventHistory(s) transferred',
             '0 OrganisationUser(s) transferred',
+            '0 OrganisationPersons(s) transferred',
+            'Unlicenced flags set',
+            'form.operator-merge.success'
         ];
 
         $this->assertSame($expectedResult, $result->getMessages());
@@ -349,7 +392,14 @@ class TransferToTest extends CommandHandlerTestCase
         $this->repoMap['EventHistory']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
 
-        $this->repoMap['Organisation']->shouldReceive('delete')->with($fromOrganisation)->once();
+        $this->repoMap['Organisation']
+            ->shouldReceive('delete')
+            ->with($fromOrganisation)->once()
+            ->once()
+            ->shouldReceive('save')
+            ->with($toOrganisation)
+            ->once()
+            ->getMock();
 
         $this->repoMap['IrfoPsvAuth']->shouldReceive('save')->with($irfoPsvAuth1)->once();
         $this->repoMap['IrfoPsvAuth']->shouldReceive('save')->with($irfoPsvAuth2)->once();
@@ -370,6 +420,9 @@ class TransferToTest extends CommandHandlerTestCase
             '0 TxcInbox(s) transferred',
             '0 EventHistory(s) transferred',
             '0 OrganisationUser(s) transferred',
+            '0 OrganisationPersons(s) transferred',
+            'Unlicenced flags set',
+            'form.operator-merge.success'
         ];
 
         $this->assertSame($expectedResult, $result->getMessages());
@@ -416,7 +469,14 @@ class TransferToTest extends CommandHandlerTestCase
         $this->repoMap['EventHistory']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
 
-        $this->repoMap['Organisation']->shouldReceive('delete')->with($fromOrganisation)->once();
+        $this->repoMap['Organisation']
+            ->shouldReceive('delete')
+            ->with($fromOrganisation)->once()
+            ->once()
+            ->shouldReceive('save')
+            ->with($toOrganisation)
+            ->once()
+            ->getMock();
 
         $this->repoMap['Task']->shouldReceive('save')->with($task1)->once();
         $this->repoMap['Task']->shouldReceive('save')->with($task2)->once();
@@ -437,6 +497,9 @@ class TransferToTest extends CommandHandlerTestCase
             '0 TxcInbox(s) transferred',
             '0 EventHistory(s) transferred',
             '0 OrganisationUser(s) transferred',
+            '0 OrganisationPersons(s) transferred',
+            'Unlicenced flags set',
+            'form.operator-merge.success'
         ];
 
         $this->assertSame($expectedResult, $result->getMessages());
@@ -475,7 +538,14 @@ class TransferToTest extends CommandHandlerTestCase
         $this->repoMap['EventHistory']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
 
-        $this->repoMap['Organisation']->shouldReceive('delete')->with($fromOrganisation)->once();
+        $this->repoMap['Organisation']
+            ->shouldReceive('delete')
+            ->with($fromOrganisation)->once()
+            ->once()
+            ->shouldReceive('save')
+            ->with($toOrganisation)
+            ->once()
+            ->getMock();
 
         $this->repoMap['Disqualification']->shouldReceive('save')->with($disqualification)->once();
 
@@ -494,6 +564,9 @@ class TransferToTest extends CommandHandlerTestCase
             '0 TxcInbox(s) transferred',
             '0 EventHistory(s) transferred',
             '0 OrganisationUser(s) transferred',
+            '0 OrganisationPersons(s) transferred',
+            'Unlicenced flags set',
+            'form.operator-merge.success'
         ];
 
         $this->assertSame($expectedResult, $result->getMessages());
@@ -534,7 +607,14 @@ class TransferToTest extends CommandHandlerTestCase
         $this->repoMap['EventHistory']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
 
-        $this->repoMap['Organisation']->shouldReceive('delete')->with($fromOrganisation)->once();
+        $this->repoMap['Organisation']
+            ->shouldReceive('delete')
+            ->with($fromOrganisation)->once()
+            ->once()
+            ->shouldReceive('save')
+            ->with($toOrganisation)
+            ->once()
+            ->getMock();
 
         $this->repoMap['EbsrSubmission']->shouldReceive('save')->with($ebsrSubmission1)->once();
         $this->repoMap['EbsrSubmission']->shouldReceive('save')->with($ebsrSubmission2)->once();
@@ -555,6 +635,9 @@ class TransferToTest extends CommandHandlerTestCase
             '0 TxcInbox(s) transferred',
             '0 EventHistory(s) transferred',
             '0 OrganisationUser(s) transferred',
+            '0 OrganisationPersons(s) transferred',
+            'Unlicenced flags set',
+            'form.operator-merge.success'
         ];
 
         $this->assertSame($expectedResult, $result->getMessages());
@@ -595,7 +678,14 @@ class TransferToTest extends CommandHandlerTestCase
         $this->repoMap['EventHistory']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
 
-        $this->repoMap['Organisation']->shouldReceive('delete')->with($fromOrganisation)->once();
+        $this->repoMap['Organisation']
+            ->shouldReceive('delete')
+            ->with($fromOrganisation)->once()
+            ->once()
+            ->shouldReceive('save')
+            ->with($toOrganisation)
+            ->once()
+            ->getMock();
 
         $this->repoMap['TxcInbox']->shouldReceive('save')->with($txcInbox1)->once();
         $this->repoMap['TxcInbox']->shouldReceive('save')->with($txcInbox2)->once();
@@ -616,6 +706,9 @@ class TransferToTest extends CommandHandlerTestCase
             '2 TxcInbox(s) transferred',
             '0 EventHistory(s) transferred',
             '0 OrganisationUser(s) transferred',
+            '0 OrganisationPersons(s) transferred',
+            'Unlicenced flags set',
+            'form.operator-merge.success'
         ];
 
         $this->assertSame($expectedResult, $result->getMessages());
@@ -656,7 +749,14 @@ class TransferToTest extends CommandHandlerTestCase
         $this->repoMap['EventHistory']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([$eventHistory1, $eventHistory2]);
 
-        $this->repoMap['Organisation']->shouldReceive('delete')->with($fromOrganisation)->once();
+        $this->repoMap['Organisation']
+            ->shouldReceive('delete')
+            ->with($fromOrganisation)->once()
+            ->once()
+            ->shouldReceive('save')
+            ->with($toOrganisation)
+            ->once()
+            ->getMock();
 
         $this->repoMap['EventHistory']->shouldReceive('save')->with($eventHistory1)->once();
         $this->repoMap['EventHistory']->shouldReceive('save')->with($eventHistory2)->once();
@@ -677,6 +777,9 @@ class TransferToTest extends CommandHandlerTestCase
             '0 TxcInbox(s) transferred',
             '2 EventHistory(s) transferred',
             '0 OrganisationUser(s) transferred',
+            '0 OrganisationPersons(s) transferred',
+            'Unlicenced flags set',
+            'form.operator-merge.success'
         ];
 
         $this->assertSame($expectedResult, $result->getMessages());
@@ -719,7 +822,14 @@ class TransferToTest extends CommandHandlerTestCase
         $this->repoMap['EventHistory']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
 
-        $this->repoMap['Organisation']->shouldReceive('delete')->with($fromOrganisation)->once();
+        $this->repoMap['Organisation']
+            ->shouldReceive('delete')
+            ->with($fromOrganisation)->once()
+            ->once()
+            ->shouldReceive('save')
+            ->with($toOrganisation)
+            ->once()
+            ->getMock();
 
         $this->repoMap['OrganisationUser']->shouldReceive('save')->with($organisationUser1)->once();
         $this->repoMap['OrganisationUser']->shouldReceive('save')->with($organisationUser2)->once();
@@ -740,8 +850,157 @@ class TransferToTest extends CommandHandlerTestCase
             '0 TxcInbox(s) transferred',
             '0 EventHistory(s) transferred',
             '2 OrganisationUser(s) transferred',
+            '0 OrganisationPersons(s) transferred',
+            'Unlicenced flags set',
+            'form.operator-merge.success'
         ];
 
         $this->assertSame($expectedResult, $result->getMessages());
+    }
+
+    public function testHandleCommandPersons()
+    {
+        $data = [
+            'id' => 12,
+            'receivingOrganisation' => 12,
+        ];
+        $command = Cmd::create($data);
+
+        $fromOrganisation = new Organisation();
+        $toOrganisation = new Organisation();
+
+        $organisationPerson1 = new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson();
+        $organisationPerson1->setOrganisation($fromOrganisation);
+        $fromOrganisation->addOrganisationPersons($organisationPerson1);
+        $organisationPerson2 = m::mock(\Dvsa\Olcs\Api\Entity\EventHistory\EventHistory::class)->makePartial();
+        $organisationPerson2->setOrganisation($fromOrganisation);
+        $fromOrganisation->addOrganisationPersons($organisationPerson2);
+
+        $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
+            ->andReturn($fromOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+
+        $this->repoMap['Note']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
+            ->andReturn([]);
+        $this->repoMap['IrfoGvPermit']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
+            ->andReturn([]);
+        $this->repoMap['IrfoPsvAuth']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
+            ->andReturn([]);
+        $this->repoMap['Task']->shouldReceive('fetchByIrfoOrganisation')->with($fromOrganisation)->once()
+            ->andReturn([]);
+        $this->repoMap['EbsrSubmission']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
+            ->andReturn([]);
+        $this->repoMap['TxcInbox']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
+            ->andReturn([]);
+        $this->repoMap['EventHistory']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
+            ->andReturn([]);
+
+        $this->repoMap['Organisation']
+            ->shouldReceive('delete')
+            ->with($fromOrganisation)->once()
+            ->once()
+            ->shouldReceive('save')
+            ->with($toOrganisation)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['OrganisationPerson']->shouldReceive('save')->with($organisationPerson1)->once();
+        $this->repoMap['OrganisationPerson']->shouldReceive('save')->with($organisationPerson2)->once();
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame($toOrganisation, $organisationPerson1->getOrganisation());
+        $this->assertSame($toOrganisation, $organisationPerson2->getOrganisation());
+
+        $expectedResult = [
+            '0 Licence(s) transferred',
+            '0 Note(s) transferred',
+            '0 IrfoGvPermit(s) transferred',
+            '0 IrfoPsvAuth(s) transferred',
+            '0 Task(s) transferred',
+            '0 Disqualifications(s) transferred',
+            '0 EbsrSubmission(s) transferred',
+            '0 TxcInbox(s) transferred',
+            '0 EventHistory(s) transferred',
+            '0 OrganisationUser(s) transferred',
+            '2 OrganisationPersons(s) transferred',
+            'Unlicenced flags set',
+            'form.operator-merge.success'
+        ];
+
+        $this->assertSame($expectedResult, $result->getMessages());
+    }
+
+    public function testHandleCommandLicencesPartial()
+    {
+        $data = [
+            'id' => 12,
+            'receivingOrganisation' => 12,
+            'licenceIds' => [1]
+        ];
+        $command = Cmd::create($data);
+
+        $fromOrganisation = new Organisation();
+        $toOrganisation = new Organisation();
+
+        $licence1= new Licence($fromOrganisation, new RefData());
+        $licence1->setId(1);
+        $licence1->setLicNo('UA123');
+        $fromOrganisation->addLicences($licence1);
+        $licence2= new Licence($fromOrganisation, new RefData());
+        $licence2->setId(2);
+        $fromOrganisation->addLicences($licence2);
+
+        $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
+            ->andReturn($fromOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+
+        $this->repoMap['Organisation']
+            ->shouldReceive('save')
+            ->with($fromOrganisation)
+            ->once()
+            ->shouldReceive('save')
+            ->with($toOrganisation)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Licence']->shouldReceive('save')->with($licence1)->once();
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame($toOrganisation, $licence1->getOrganisation());
+
+        $expectedResult = [
+            '1 Licence(s) transferred',
+            'Unlicenced flags set',
+            'Unlicenced flags set',
+            'form.operator-merge.success-alternative'
+        ];
+
+        $this->assertSame($expectedResult, $result->getMessages());
+    }
+
+    public function testHandleCommandNoLicences()
+    {
+        $data = [
+            'id' => 12,
+            'receivingOrganisation' => 12,
+            'licenceIds' => []
+        ];
+        $command = Cmd::create($data);
+
+        $fromOrganisation = new Organisation();
+        $toOrganisation = new Organisation();
+
+        $licence1= new Licence($fromOrganisation, new RefData());
+        $fromOrganisation->addLicences($licence1);
+
+        $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
+            ->andReturn($fromOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+
+        $this->setExpectedException(ValidationException::class);
+
+        $this->sut->handleCommand($command);
     }
 }
