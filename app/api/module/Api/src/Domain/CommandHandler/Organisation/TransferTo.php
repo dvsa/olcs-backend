@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * Transfer an Organisation eg Licences/Application to another organisation
@@ -15,6 +16,9 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  */
 final class TransferTo extends AbstractCommandHandler implements TransactionedInterface
 {
+    const ERR_INVALID_ID = 'ERR_INVALID_ID';
+    const ERR_NO_LICENCES = 'ERR_NO_LICENCES';
+
     protected $repoServiceName = 'Organisation';
     protected $extraRepos = [
         'Licence',
@@ -26,6 +30,7 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
         'TxcInbox',
         'EventHistory',
         'OrganisationUser',
+        'OrganisationPerson',
         'Note'
     ];
 
@@ -33,27 +38,60 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
     {
         $result = new Result();
 
-        /* @var $organisationFrom OrganisationFrom */
+        $licenceIds = $command->getLicenceIds();
+
+        /* @var Organisation $organisationFrom */
         $organisationFrom = $this->getRepo()->fetchUsingId($command);
 
-        /* @var $organisationTo OrganisationFrom */
+        /* @var Organisation $organisationTo */
         $organisationTo = $this->getRepo()->fetchById($command->getReceivingOrganisation());
 
-        if ($organisationFrom === $organisationTo) {
-            throw new \Dvsa\Olcs\Api\Domain\Exception\BadRequestException('Cannot transfer to same organisation');
+        $existingLicenceCount = $organisationFrom->getLicences()->count();
+
+        $this->validateTransfer($organisationFrom, $organisationTo, $existingLicenceCount, $licenceIds);
+
+        if (count($licenceIds) === $existingLicenceCount) {
+            $result->merge($this->transferLicences($organisationFrom, $organisationTo));
+            $result->merge($this->transferIrfo($organisationFrom, $organisationTo));
+            $result->merge($this->transferDisqualification($organisationFrom, $organisationTo));
+            $result->merge($this->transferEbsr($organisationFrom, $organisationTo));
+            $result->merge($this->transferEventHistory($organisationFrom, $organisationTo));
+            $result->merge($this->transferUsers($organisationFrom, $organisationTo));
+            $result->merge($this->transferPersons($organisationFrom, $organisationTo));
+
+            // delete the from organisation
+            $this->getRepo()->delete($organisationFrom);
+            $successMessage = 'form.operator-merge.success';
+            $result->merge($this->setUnlicencedFlag($organisationTo));
+
+        } else {
+            $result->merge($this->transferLicencesByIds($organisationFrom, $organisationTo, $licenceIds));
+            $successMessage = 'form.operator-merge.success-alternative';
+            $result->merge($this->setUnlicencedFlag($organisationFrom));
+            $result->merge($this->setUnlicencedFlag($organisationTo));
         }
-
-        $result->merge($this->transferLicences($organisationFrom, $organisationTo));
-        $result->merge($this->transferIrfo($organisationFrom, $organisationTo));
-        $result->merge($this->transferDisqualification($organisationFrom, $organisationTo));
-        $result->merge($this->transferEbsr($organisationFrom, $organisationTo));
-        $result->merge($this->transferEventHistory($organisationFrom, $organisationTo));
-        $result->merge($this->transferUsers($organisationFrom, $organisationTo));
-
-        // delete the from organisation
-        $this->getRepo()->delete($organisationFrom);
+        $result->addMessage($successMessage);
 
         return $result;
+    }
+
+    /**
+     * Validate transfer
+     *
+     * @param Organisation $organisationFrom     organisationFrom
+     * @param Organisation $organisationTo       organisationTo
+     * @param int          $existingLicenceCount existing licence count
+     * @param array        $licenceIds           licence ids
+     *
+     */
+    protected function validateTransfer($organisationFrom, $organisationTo, $existingLicenceCount, $licenceIds = [])
+    {
+        if ($organisationFrom === $organisationTo) {
+            throw new ValidationException([self::ERR_INVALID_ID => 'Invalid Operator ID']);
+        }
+        if ($existingLicenceCount > 0 && count($licenceIds) === 0) {
+            throw new ValidationException([self::ERR_NO_LICENCES => 'You must select at least one licence']);
+        }
     }
 
     /**
@@ -74,6 +112,51 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
             $licence->setOrganisation($organisationTo);
             $this->getRepo('Licence')->save($licence);
         }
+
+        return $result;
+    }
+
+    /**
+     * Transfer Licence
+     *
+     * @param Organisation $organisationFrom organisationFrom
+     * @param Organisation $organisationTo   organisationTo
+     * @param array        $licenceIds       licence ids
+     *
+     * @return Result
+     */
+    protected function transferLicencesByIds(Organisation $organisationFrom, Organisation $organisationTo, $licenceIds)
+    {
+        $result = new Result();
+        $existingLicences = $organisationFrom->getLicences();
+        $result->addMessage(count($licenceIds) .' Licence(s) transferred');
+        foreach ($existingLicences as $licence) {
+            if (in_array($licence->getId(), $licenceIds)) {
+                $licence->setOrganisation($organisationTo);
+                $this->getRepo('Licence')->save($licence);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Set unlicenced flag
+     *
+     * @param Organisation $organisation organisation
+     *
+     * @return Result
+     */
+    protected function setUnlicencedFlag(Organisation $organisation)
+    {
+        $result = new Result();
+        if ($organisation->hasUnlicencedLicences()) {
+            $organisation->setIsUnlicensed(true);
+        } else {
+            $organisation->setIsUnlicensed(false);
+        }
+        $this->getRepo()->save($organisation);
+        $result->addMessage('Unlicenced flags set');
 
         return $result;
     }
@@ -222,6 +305,29 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
         foreach ($organisationFrom->getOrganisationUsers() as $organisationUser) {
             $organisationUser->setOrganisation($organisationTo);
             $this->getRepo('OrganisationUser')->save($organisationUser);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Transfer OrganisationPersons
+     *
+     * @param Organisation $organisationFrom
+     * @param Organisation $organisationTo
+     *
+     * @return Result
+     */
+    protected function transferPersons(Organisation $organisationFrom, Organisation $organisationTo)
+    {
+        $result = new Result();
+
+        $organisationPersons = $organisationFrom->getOrganisationPersons();
+        $result->addMessage($organisationPersons->count() .' OrganisationPersons(s) transferred');
+        /* @var $organisationPerson \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson */
+        foreach ($organisationPersons as $organisationPerson) {
+            $organisationPerson->setOrganisation($organisationTo);
+            $this->getRepo('OrganisationPerson')->save($organisationPerson);
         }
 
         return $result;

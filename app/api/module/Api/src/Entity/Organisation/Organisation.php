@@ -499,4 +499,17 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         return $allowedOperatorLocation;
     }
+
+    /**
+     * Has unlicenced licences
+     *
+     * @return bool
+     */
+    public function hasUnlicencedLicences()
+    {
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->contains('licNo', 'U'));
+
+        return !empty($this->getLicences()->matching($criteria)->toArray());
+    }
 }
