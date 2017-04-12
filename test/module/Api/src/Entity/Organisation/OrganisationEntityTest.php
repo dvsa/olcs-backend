@@ -60,7 +60,7 @@ class OrganisationEntityTest extends EntityTester
      */
     public function testUpdateOrganisation($isIrfo, $lastName, $expectedName, $allowEmail)
     {
-        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation = new Entity();
 
         $organisation->updateOrganisation(
             'name',
@@ -168,6 +168,50 @@ class OrganisationEntityTest extends EntityTester
         $this->assertEquals(new ArrayCollection(), $sut->getAdminOrganisationUsers());
     }
 
+    /**
+     * @dataProvider dpTestHasAdminEmailAddresses
+     */
+    public function testHasAdminEmailAddresses(array $emailsMap, $expect)
+    {
+        /** @var Entity | m\MockInterface $sut */
+        $sut = m::mock(Entity::class)->makePartial();
+
+        $orgUsers = [];
+        foreach ($emailsMap as $email) {
+            /** @var OrganisationUser | m\MockInterface $mockOrgUser */
+            $mockOrgUser = m::mock(OrganisationUser::class)->makePartial();
+            $mockOrgUser->setIsAdministrator(true);
+            $mockOrgUser->shouldReceive('getUser->getContactDetails->getEmailAddress')->andReturn($email);
+
+            $orgUsers[] = $mockOrgUser;
+        }
+
+        $sut->shouldReceive('getAdminOrganisationUsers')->andReturn($orgUsers);
+
+        static::assertEquals($expect, $sut->hasAdminEmailAddresses());
+    }
+
+    public function dpTestHasAdminEmailAddresses()
+    {
+        return [
+            [
+                'emailsMap' => [
+                    null,
+                    '',
+                    'unit_broken_emailaddress',
+                ],
+                'expect' => false,
+            ],
+            [
+                'emailsMap' => [
+                    null,
+                    'aaa.bbb@domain.com',
+                ],
+                'expect' => true,
+            ],
+        ];
+    }
+
     public function dpOrgTypes()
     {
         return [
@@ -229,7 +273,7 @@ class OrganisationEntityTest extends EntityTester
     {
         $licNo = 'PD8538936';
 
-        /** @var Entity $organisation */
+        /** @var Entity | m\MockInterface $organisation */
         $organisation = m::mock(Entity::class)->makePartial();
         $organisation->shouldReceive('getLicences->matching')
             ->with(m::type(Criteria::class))
@@ -260,7 +304,7 @@ class OrganisationEntityTest extends EntityTester
 
     public function testGetActiveLicences()
     {
-        /** @var Entity $organisation */
+        /** @var Entity | m\MockInterface $organisation */
         $organisation = m::mock(Entity::class)->makePartial();
         $organisation->shouldReceive('getLicences->matching')
             ->with(m::type(Criteria::class))
@@ -297,7 +341,7 @@ class OrganisationEntityTest extends EntityTester
 
     public function testHasActiveLicences()
     {
-        /** @var Entity $organisation */
+        /** @var Entity | m\MockInterface $organisation */
         $organisation = m::mock(Entity::class)->makePartial();
         $organisation->shouldReceive('getLicences->matching')
             ->with(m::type(Criteria::class))
@@ -340,7 +384,7 @@ class OrganisationEntityTest extends EntityTester
 
     public function testGetRelatedLicences()
     {
-        /** @var Entity $organisation */
+        /** @var Entity | m\MockInterface $organisation */
         $organisation = m::mock(Entity::class)->makePartial();
         $organisation->shouldReceive('getLicences->matching')
             ->with(m::type(Criteria::class))
@@ -422,7 +466,7 @@ class OrganisationEntityTest extends EntityTester
 
     public function testGetLinkedLicences()
     {
-        /** @var Entity $organisation */
+        /** @var Entity | m\MockInterface $organisation */
         $organisation = m::mock(Entity::class)->makePartial();
         $organisation->shouldReceive('getLicences->matching')
             ->with(m::type(Criteria::class))
@@ -503,7 +547,7 @@ class OrganisationEntityTest extends EntityTester
             ->twice()
             ->getMock()
         );
-        /** @var Entity $organisation */
+        /** @var Entity | m\MockInterface $organisation */
         $organisation = m::mock(Entity::class)->makePartial();
         $organisation->shouldReceive('getOutstandingApplications')
             ->with(true)
@@ -555,7 +599,7 @@ class OrganisationEntityTest extends EntityTester
             ->getMock()
         );
 
-        /** @var Entity $organisation */
+        /** @var Entity | m\MockInterface  $organisation */
         $organisation = m::mock(Entity::class)->makePartial();
         $organisation->shouldReceive('getOutstandingApplications')
             ->with(true)
@@ -589,7 +633,7 @@ class OrganisationEntityTest extends EntityTester
         $mockOutstandingApplications = new ArrayCollection();
         $mockLicences = new ArrayCollection();
 
-        /** @var Entity $organisation */
+        /** @var Entity | m\MockInterface  $organisation */
         $organisation = m::mock(Entity::class)->makePartial();
         $organisation->shouldReceive('getOutstandingApplications')
             ->with(true)

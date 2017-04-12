@@ -13,8 +13,6 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTranslateToWelshTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
@@ -52,12 +50,15 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
         $documentResult = $this->proxyCommand($command, CreateDocumentSpecificCmd::class);
         $this->result->merge($documentResult);
 
+        $org = $licence->getOrganisation();
+        $shouldSendEmail = (
+            $org->getAllowEmail() === 'Y'
+            && $org->hasAdminEmailAddresses()
+        );
+
         $isEnforcePrint = ($command->getIsEnforcePrint() === 'Y');
-        if (
-            $licence->getOrganisation()->getAllowEmail() === 'N'
-            || !$this->hasAdminEmailAddresses($licence->getOrganisation())
-            || $isEnforcePrint
-        ) {
+
+        if (!$shouldSendEmail || $isEnforcePrint) {
             $this->result->merge(
                 $this->attemptPrint(
                     $documentResult->getId('document'),
@@ -67,7 +68,7 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
                 )
             );
 
-            if (!$isEnforcePrint) {
+            if (!$shouldSendEmail) {
                 return $this->result;
             }
         }
@@ -109,6 +110,14 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
         return $this->handleSideEffect(CreateCorrespondenceRecord::create($dtoData));
     }
 
+    /**
+     * Check Command Params
+     *
+     * @param Cmd $command Command
+     *
+     * @return void
+     * @throws BadRequestException
+     */
     protected function checkCommandParams(Cmd $command)
     {
         if ($command->getLicence() === null) {
@@ -118,18 +127,6 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
         if ($command->getDescription() === null) {
             throw new BadRequestException('Please provide a document description parameter');
         }
-    }
-
-    protected function hasAdminEmailAddresses(Organisation $organisation)
-    {
-        /** @var OrganisationUser $orgUser */
-        foreach ($organisation->getAdminOrganisationUsers() as $orgUser) {
-            if ($orgUser->getUser()->getContactDetails()->getEmailAddress() !== null) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -156,6 +153,14 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
         );
     }
 
+    /**
+     * Generate Translation Task
+     *
+     * @param LicenceEntity $licence     Licence
+     * @param string        $description Description text
+     *
+     * @return Result
+     */
     protected function generateTranslationTask(LicenceEntity $licence, $description)
     {
         $data = [

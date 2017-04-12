@@ -378,7 +378,10 @@ return [
         // Key used to sign authentication requests
         'signature_key' => __DIR__ .'/../../module/GdsVerify/data/compliance-tool/signing.key',
         // Key used to decrypt data from hub
-        'encryption_key' => __DIR__ .'/../../module/GdsVerify/data/compliance-tool/enc.key',
+        'encryption_keys' => [
+            // Array of encryption keys, they will be tried in order
+            __DIR__ .'/../../module/GdsVerify/data/compliance-tool/enc.key',
+        ],
     ],
 
     'http_external' => [

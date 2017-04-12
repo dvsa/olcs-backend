@@ -1,7 +1,7 @@
 <?php
 use Dvsa\Olcs\GdsVerify;
 
-return array(
+return [
     'service_manager' => [
         'factories' => [
             GdsVerify\Service\GdsVerify::class => GdsVerify\Service\GdsVerify::class
@@ -20,10 +20,10 @@ return array(
         //    ],
         //],
         // Entity identifier
-        'entity_identifier' => 'https://www.vehicle-operator-licensing.service.gov.uk',
-        // Key used to sign authentication requests
-        'signature_key' => __DIR__ .'/../data/compliance-tool/signing.key',
-        // Key used to decrypt data from hub
-        'encryption_key' => __DIR__ .'/../data/compliance-tool/enc.key',
+        'entity_identifier' => 'http://olcs-selfserve.olcs.gov.uk',
+        // Key used to sign authentication requests. Path and file name
+        'signature_key' => '',
+        // Keys used to decrypt data from hub. Path and file name. Will be attempted in order if there are multiple
+        'encryption_keys' => [],
     ]
-);
+];
