@@ -23,11 +23,11 @@ abstract class AbstractController extends AbstractRestfulController
     /**
      * Create a new resource
      *
-     * @param array $data parameters to create new record with Entity
+     * @param array|null $data parameters to create new record with Entity
      *
      * @return JsonModel
      */
-    public function create($data)
+    public function create($data = null)
     {
         return $this->respondError(405, 'Method Not Allowed');
     }
@@ -35,11 +35,11 @@ abstract class AbstractController extends AbstractRestfulController
     /**
      * Delete an existing resource
      *
-     * @param int $id ID or resource number to delete
+     * @param int|null $id ID or resource number to delete
      *
      * @return JsonModel
      */
-    public function delete($id)
+    public function delete($id = null)
     {
         return $this->respondError(405, 'Method Not Allowed');
     }
@@ -47,11 +47,11 @@ abstract class AbstractController extends AbstractRestfulController
     /**
      * Delete list
      *
-     * @param array $data Parameters used to query which records to delete
+     * @param array|null $data Parameters used to query which records to delete
      *
      * @return JsonModel
      */
-    public function deleteList($data)
+    public function deleteList($data = null)
     {
         return $this->respondError(405, 'Method Not Allowed');
     }
@@ -59,11 +59,11 @@ abstract class AbstractController extends AbstractRestfulController
     /**
      * Return single resource
      *
-     * @param int $id ID to retrieve
+     * @param int|null $id ID to retrieve
      *
      * @return JsonModel
      */
-    public function get($id)
+    public function get($id = null)
     {
         return $this->respondError(405, 'Method Not Allowed');
     }
@@ -106,12 +106,12 @@ abstract class AbstractController extends AbstractRestfulController
     /**
      * Patch record
      *
-     * @param int   $id   Resource ID to patch
-     * @param mixed $data Data to patch
+     * @param int|null   $id   Resource ID to patch
+     * @param mixed|null $data Data to patch
      *
      * @return JsonModel
      */
-    public function patch($id, $data)
+    public function patch($id = null, $data = null)
     {
         return $this->respondError(405, 'Method Not Allowed');
     }
@@ -119,11 +119,11 @@ abstract class AbstractController extends AbstractRestfulController
     /**
      * Replace list
      *
-     * @param mixed $data Data to replace
+     * @param mixed|null $data Data to replace
      *
      * @return JsonModel
      */
-    public function replaceList($data)
+    public function replaceList($data = null)
     {
         return $this->respondError(405, 'Method Not Allowed');
     }
@@ -143,12 +143,12 @@ abstract class AbstractController extends AbstractRestfulController
     /**
      * Update record
      *
-     * @param int   $id   ID
-     * @param mixed $data Data to update
+     * @param int|null   $id   ID
+     * @param mixed|null $data Data to update
      *
      * @return JsonModel
      */
-    public function update($id, $data)
+    public function update($id = null, $data = null)
     {
         return $this->respondError(405, 'Method Not Allowed');
     }
