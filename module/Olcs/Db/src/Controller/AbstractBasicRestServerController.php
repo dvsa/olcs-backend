@@ -39,7 +39,8 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     /**
      * Create an entity
      *
-     * @param mixed $data
+     * @param mixed $data Data
+     *
      * @return Response
      */
     public function create($data)
@@ -53,7 +54,6 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         }
 
         try {
-
             $multiple = (isset($data['_OPTIONS_']['multiple']) && $data['_OPTIONS_']['multiple']);
 
             if ($multiple) {
@@ -74,13 +74,11 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
             }
 
             if ((is_numeric($id) && $id > 0) || is_array($id)) {
-
                 return $this->respond(Response::STATUS_CODE_201, 'Entity Created', array('id' => $id));
             }
 
             throw new \Exception();
         } catch (\Exception $ex) {
-
             return $this->unknownError($ex);
         }
     }
@@ -88,7 +86,8 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     /**
      * Get an entity by its id
      *
-     * @param int $id
+     * @param int $id ID of record to retrieve
+     *
      * @return Response
      */
     public function get($id)
@@ -96,19 +95,15 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         $this->checkMethod(__METHOD__);
 
         try {
-
             $data = $this->getDataFromQuery();
-
             $result = $this->getService()->get($id, $data);
 
             if (empty($result)) {
-
                 return $this->respond(Response::STATUS_CODE_404, 'Entity not found');
             }
 
             return $this->respond(Response::STATUS_CODE_200, 'Entity found', $result);
         } catch (\Exception $ex) {
-
             return $this->unknownError($ex);
         }
     }
@@ -128,13 +123,11 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
             $result = $this->getService()->getList($data);
 
             if (empty($result)) {
-
                 return $this->respond(Response::STATUS_CODE_200, 'No results found');
             }
 
             return $this->respond(Response::STATUS_CODE_200, 'Results found', $result);
         } catch (\Exception $ex) {
-
             return $this->unknownError($ex);
         }
     }
@@ -142,37 +135,38 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     /**
      * Update a record
      *
-     * @param id $id
-     * @param mixed $data
+     * @param int   $id   ID
+     * @param mixed $data Data to update
+     *
      * @return Response
      */
     public function update($id, $data)
     {
         $this->checkMethod(__METHOD__);
-
         return $this->updateOrPatch($id, $data, 'update');
     }
 
     /**
      * Patch a record
      *
-     * @param id $id
-     * @param mixed $data
+     * @param int   $id   ID
+     * @param mixed $data data to patch
+     *
      * @return Response
      */
     public function patch($id, $data)
     {
         $this->checkMethod(__METHOD__);
-
         return $this->updateOrPatch($id, $data, 'patch');
     }
 
     /**
      * Update and patch give the same response so no need to duplicate
      *
-     * @param id $id
-     * @param mixed $data
-     * @param string $method
+     * @param int    $id     ID
+     * @param mixed  $data   Data to update or patch
+     * @param string $method Method for either update or patch
+     *
      * @return Response
      */
     protected function updateOrPatch($id, $data, $method)
@@ -180,14 +174,11 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         $data = $this->formatDataFromJson($data);
 
         if ($data instanceof Response) {
-
             return $data;
         }
 
         try {
-
             $success = true;
-
             $multiple = (isset($data['_OPTIONS_']['multiple']) && $data['_OPTIONS_']['multiple']);
 
             if ($multiple) {
@@ -197,6 +188,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
                 foreach ($postData as $data) {
                     $id = $data['id'];
                     unset($data['id']);
+
                     $response = $this->getService()->$method($id, $data);
 
                     if (!$response) {
@@ -208,21 +200,16 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
             }
 
             if ($success) {
-
                 return $this->respond(Response::STATUS_CODE_200, 'Entity updated');
             }
 
             return $this->respond(Response::STATUS_CODE_404, 'Entity not found');
         } catch (NoVersionException $ex) {
-
             return $this->respond(Response::STATUS_CODE_400, 'No version number sent');
         } catch (OptimisticLockException $ex) {
-
             $result = $this->getService()->get($id);
-
             return $this->respond(Response::STATUS_CODE_409, 'This entity has been updated since', $result);
         } catch (\Exception $ex) {
-
             return $this->unknownError($ex);
         }
     }
@@ -230,7 +217,8 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     /**
      * Delete a record
      *
-     * @param id $id
+     * @param int $id ID to remove
+     *
      * @return Response
      */
     public function delete($id)
@@ -239,13 +227,11 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
 
         try {
             if ($this->getService()->delete($id)) {
-
                 return $this->respond(Response::STATUS_CODE_200, 'Entity deleted');
             }
 
             return $this->respond(Response::STATUS_CODE_404, 'Entity not found');
         } catch (\Exception $ex) {
-
             return $this->unknownError($ex);
         }
     }
@@ -253,24 +239,22 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     /**
      * Delete a list of records
      *
+     * @param mixed|null $data Parameters for removing a record
+     *
      * @return Response
      */
-    public function deleteList($data = null)
+    public function deleteList($data)
     {
         $this->checkMethod(__METHOD__);
 
         $data = $this->getDataFromQuery();
 
         try {
-
             if ($this->getService()->deleteList($data)) {
-
                 return $this->respond(Response::STATUS_CODE_200, 'Entity deleted');
             }
-
             return $this->respond(Response::STATUS_CODE_404, 'Entity not found');
         } catch (\Exception $ex) {
-
             return $this->unknownError($ex);
         }
     }
@@ -278,7 +262,8 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     /**
      * Get the service
      *
-     * @param string $name
+     * @param string $name Name of service to retrieve
+     *
      * @return \Olcs\Db\Service\ServiceAbstract
      */
     public function getService($name = null)
@@ -286,24 +271,18 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         $serviceFactory = $this->getServiceLocator()->get('serviceFactory');
 
         if (empty($name)) {
-
             if (!empty($this->serviceName)) {
-
                 $name = $this->serviceName;
             } else {
-
                 $name = $this->getControllerName();
             }
         }
 
         if (!$this->serviceExists($name)) {
-
             $entityName = $this->findEntityClass($name);
-
             $service = $serviceFactory->getService('Generic');
             $service->setEntityName($entityName);
             $service->setLanguage($this->getLanguageFromHeader());
-
             return $service;
         }
 
@@ -313,6 +292,11 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         return $service;
     }
 
+    /**
+     * Get language header
+     *
+     * @return mixed|void
+     */
     protected function getLanguageFromHeader()
     {
         $header = $this->getEvent()->getRequest()->getHeaders('accept-language');
@@ -324,8 +308,9 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     /**
      * Find entity class
      *
-     * @param string $name
-     * @return string
+     * @param string $name Name of entity
+     *
+     * @return string|void
      */
     private function findEntityClass($name)
     {
@@ -337,7 +322,6 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
         $entityNamespaces = $this->getServiceLocator()->get('Config')['entity_namespaces'];
 
         foreach ($namespaces as $namespace) {
-
             if (isset($entityNamespaces[$name])) {
                 $name = $entityNamespaces[$name] . '\\' . $name;
             }
@@ -353,7 +337,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     /**
      * Check if a service exists
      *
-     * @param string $serviceName
+     * @param string $serviceName Check if service exists
      *
      * @return boolean
      */
@@ -367,7 +351,9 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     /**
      * Set the service name
      *
-     * @param string $name
+     * @param string $name Name of service to set
+     *
+     * @return void
      */
     public function setServiceName($name)
     {
@@ -390,7 +376,9 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     /**
      * Check if the method is allowed
      *
-     * @param string $method
+     * @param string $method Method to check
+     *
+     * @return true
      * @throws RestResponseException
      */
     public function checkMethod($method)
@@ -410,9 +398,11 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     /**
      * Set allowed methods
      *
-     * @param array $methods
+     * @param array $methods Methods to allow
+     *
+     * @return void
      */
-    public function setAllowedMethods(array $methods = array())
+    public function setAllowedMethods(array $methods = [])
     {
         $this->allowedMethods = $methods;
     }
