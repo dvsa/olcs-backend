@@ -147,10 +147,9 @@ class GenericController extends AbstractRestfulController
     /**
      * Create a new resource by passed Command Fqcl
      *
-     * @param null $data Ignored
+     * @param null $data Parameters to add into database
      *
-     * @inheritdoc
-     * @return Response|\Zend\View\Model\JsonModel
+     * @return \Zend\View\Model\JsonModel
      */
     public function create($data)
     {
@@ -201,10 +200,11 @@ class GenericController extends AbstractRestfulController
     /**
      * Delete a resources by passed Command Fqcl
      *
-     * @inheritdoc
+     * @param array $data Parameters used to query which records to delete
+     *
      * @return Response|\Zend\View\Model\JsonModel
      */
-    public function deleteList($data = null)
+    public function deleteList($data)
     {
         $dto = $this->params('dto');
 
