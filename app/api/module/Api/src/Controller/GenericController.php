@@ -88,13 +88,13 @@ class GenericController extends AbstractRestfulController
     /**
      * Update by passed Command Fqcl
      *
-     * @param null $id   Ignored
-     * @param null $data Ignored
+     * @param null|int   $id   Ignored
+     * @param null|mixed $data Ignored
      *
      * @inheritdoc
      * @return Response|\Zend\View\Model\JsonModel
      */
-    public function update($id, $data)
+    public function update($id = null, $data = null)
     {
         $dto = $this->params('dto');
 
@@ -120,12 +120,12 @@ class GenericController extends AbstractRestfulController
     /**
      * Replace an entire resource collection by passed Command Fqcl
      *
-     * @param null $data Ignored
+     * @param mixed|null $data Ignored
      *
      * @inheritdoc
      * @return Response|\Zend\View\Model\JsonModel
      */
-    public function replaceList($data)
+    public function replaceList($data = null)
     {
         $dto = $this->params('dto');
 
@@ -147,11 +147,11 @@ class GenericController extends AbstractRestfulController
     /**
      * Create a new resource by passed Command Fqcl
      *
-     * @param null $data Parameters to add into database
+     * @param mixed|null $data Parameters to add into database
      *
      * @return \Zend\View\Model\JsonModel
      */
-    public function create($data)
+    public function create($data = null)
     {
         $dto = $this->params('dto');
 
@@ -173,12 +173,11 @@ class GenericController extends AbstractRestfulController
     /**
      * Delete a resource by passed Command Fqcl
      *
-     * @param null $id Ignored
+     * @param int|null $id Ignored
      *
-     * @inheritdoc
      * @return Response|\Zend\View\Model\JsonModel
      */
-    public function delete($id)
+    public function delete($id = null)
     {
         $dto = $this->params('dto');
 
@@ -200,11 +199,11 @@ class GenericController extends AbstractRestfulController
     /**
      * Delete a resources by passed Command Fqcl
      *
-     * @param array $data Parameters used to query which records to delete
+     * @param array|null $data Parameters used to query which records to delete
      *
      * @return Response|\Zend\View\Model\JsonModel
      */
-    public function deleteList($data)
+    public function deleteList($data = null)
     {
         $dto = $this->params('dto');
 
