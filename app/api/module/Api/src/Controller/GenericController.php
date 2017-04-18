@@ -88,13 +88,13 @@ class GenericController extends AbstractRestfulController
     /**
      * Update by passed Command Fqcl
      *
-     * @param null|int   $id   Ignored
-     * @param null|mixed $data Ignored
+     * @param mixed $id   Ignored
+     * @param mixed $data Ignored
      *
      * @inheritdoc
      * @return Response|\Zend\View\Model\JsonModel
      */
-    public function update($id = null, $data = null)
+    public function update($id, $data)
     {
         $dto = $this->params('dto');
 
@@ -120,12 +120,11 @@ class GenericController extends AbstractRestfulController
     /**
      * Replace an entire resource collection by passed Command Fqcl
      *
-     * @param mixed|null $data Ignored
+     * @param mixed $data Ignored
      *
-     * @inheritdoc
      * @return Response|\Zend\View\Model\JsonModel
      */
-    public function replaceList($data = null)
+    public function replaceList($data)
     {
         $dto = $this->params('dto');
 
@@ -147,11 +146,11 @@ class GenericController extends AbstractRestfulController
     /**
      * Create a new resource by passed Command Fqcl
      *
-     * @param mixed|null $data Parameters to add into database
+     * @param mixed $data Ignored as we use DTO parameter
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return Response|\Zend\View\Model\JsonModel
      */
-    public function create($data = null)
+    public function create($data)
     {
         $dto = $this->params('dto');
 
@@ -173,11 +172,11 @@ class GenericController extends AbstractRestfulController
     /**
      * Delete a resource by passed Command Fqcl
      *
-     * @param int|null $id Ignored
+     * @param mixed $id Ignored
      *
      * @return Response|\Zend\View\Model\JsonModel
      */
-    public function delete($id = null)
+    public function delete($id)
     {
         $dto = $this->params('dto');
 
@@ -199,7 +198,7 @@ class GenericController extends AbstractRestfulController
     /**
      * Delete a resources by passed Command Fqcl
      *
-     * @param array|null $data Parameters used to query which records to delete
+     * @param mixed $data Ignored
      *
      * @return Response|\Zend\View\Model\JsonModel
      */
