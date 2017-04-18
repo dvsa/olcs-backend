@@ -310,7 +310,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      *
      * @param string $name Name of entity
      *
-     * @return string|void
+     * @return string|null
      */
     private function findEntityClass($name)
     {
@@ -332,6 +332,8 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
                 return $potentialClassName;
             }
         }
+
+        return null;
     }
 
     /**
