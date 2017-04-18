@@ -378,7 +378,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
      *
      * @param string $method Method to check
      *
-     * @return true
+     * @return bool
      * @throws RestResponseException
      */
     public function checkMethod($method)
