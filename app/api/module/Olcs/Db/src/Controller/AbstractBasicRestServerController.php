@@ -239,7 +239,7 @@ abstract class AbstractBasicRestServerController extends AbstractController impl
     /**
      * Delete a list of records
      *
-     * @param mixed|null $data Parameters for removing a record
+     * @param mixed $data Parameters for removing a record
      *
      * @return Response
      */
