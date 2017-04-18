@@ -106,8 +106,8 @@ abstract class AbstractController extends AbstractRestfulController
     /**
      * Patch record
      *
-     * @param mixed   $id   Resource ID to patch
-     * @param mixed   $data Data to patch
+     * @param mixed $id   Resource ID to patch
+     * @param mixed $data Data to patch
      *
      * @return JsonModel
      */
@@ -143,8 +143,8 @@ abstract class AbstractController extends AbstractRestfulController
     /**
      * Update record
      *
-     * @param mixed   $id   ID
-     * @param mixed   $data Data to update
+     * @param mixed $id   ID
+     * @param mixed $data Data to update
      *
      * @return JsonModel
      */
