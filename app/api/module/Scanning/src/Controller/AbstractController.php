@@ -86,7 +86,7 @@ abstract class AbstractController extends AbstractRestfulController
      *
      * @param null|int $id ID
      *
-     * @return mixed
+     * @return JsonModel
      */
     public function head($id = null)
     {
