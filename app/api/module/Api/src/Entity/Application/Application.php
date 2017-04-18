@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEnt
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
+use Dvsa\Olcs\Transfer\Validators;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 
 /**
@@ -274,22 +275,25 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
     }
 
+    /**
+     * Validate Financial History data
+     *
+     * @param array $flags Flags
+     * @param string $insolvencyDetails Details Text
+     *
+     * @return bool
+     * @throws ValidationException
+     */
     protected function validateFinancialHistory($flags, $insolvencyDetails)
     {
-        $minCharsReq = 150;
-
-        if (!in_array('Y', $flags, true)) {
-            return true;
-        }
-
-        if (strlen(preg_replace('/\s+/', '', $insolvencyDetails)) >= $minCharsReq) {
+        $validator = new Validators\FHAdditionalInfo();
+        if ($validator->isValid($insolvencyDetails, $flags)) {
             return true;
         }
 
         $errors = [
             'insolvencyDetails' => [
-                self::ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED =>
-                    sprintf('FHAdditionalInfo.api.validation.too_short', $minCharsReq),
+                self::ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED => 'FHAdditionalInfo.api.validation.too_short',
             ]
         ];
         throw new ValidationException($errors);
@@ -1141,8 +1145,10 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * @param $date
-     * @param string $format
+     * Format Date To String
+     *
+     * @param mixed  $date   Data
+     * @param string $format Format
      *
      * @return string
      */
