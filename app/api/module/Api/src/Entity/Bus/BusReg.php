@@ -196,6 +196,16 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     }
 
     /**
+     * Returns whether the bus reg is cancelled
+     *
+     * @return bool
+     */
+    public function isCancelled()
+    {
+        return $this->status->getId() === self::STATUS_CANCELLED;
+    }
+
+    /**
      * Returns whether the bus reg is a registered bus route
      *
      * @return bool
@@ -461,7 +471,9 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             'isLatestVariation' => $this->isLatestVariation(),
             'isReadOnly' => $this->isReadOnly(),
             'isScottishRules' => $this->isScottishRules(),
-            'isFromEbsr' => $this->isFromEbsr()
+            'isFromEbsr' => $this->isFromEbsr(),
+            'isCancelled' => $this->isCancelled(),
+            'isCancellation' => $this->isCancellation(),
         ];
     }
 
@@ -815,12 +827,16 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     {
         // mandatory fields which needs to be marked as Yes
         $yesFields = [
-            'timetableAcceptable',
-            'mapSupplied',
             'trcConditionChecked',
             'copiedToLaPte',
             'applicationSigned'
         ];
+
+        if (!$this->isCancellation()) {
+            // cancellations don't require a map or timetable, all other types do
+            $yesFields[] = 'timetableAcceptable';
+            $yesFields[] = 'mapSupplied';
+        }
 
         if ($this->isScottishRules()) {
             // for Scottish short notice registrations opNotifiedLaPte is required

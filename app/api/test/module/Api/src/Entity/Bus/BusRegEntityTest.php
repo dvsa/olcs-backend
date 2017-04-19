@@ -221,6 +221,43 @@ class BusRegEntityTest extends EntityTester
     }
 
     /**
+     * Test isCancelled
+     *
+     * @param string $status
+     * @param bool   $expected
+     *
+     * @dataProvider dpIsCancelled
+     */
+    public function testIsCancelled($status, $expected)
+    {
+        $busRegStatus = new RefDataEntity($status);
+
+        /** @var Entity|m\MockInterface $busReg */
+        $busReg = m::mock(Entity::class)->makePartial();
+        $busReg->setStatus($busRegStatus);
+
+        $this->assertEquals($expected, $busReg->isCancelled());
+    }
+
+    /**
+     * @return array
+     */
+    public function dpIsCancelled()
+    {
+        return [
+            [Entity::STATUS_NEW, false],
+            [Entity::STATUS_VAR, false],
+            [Entity::STATUS_CANCEL, false],
+            [Entity::STATUS_ADMIN, false],
+            [Entity::STATUS_REGISTERED, false],
+            [Entity::STATUS_REFUSED, false],
+            [Entity::STATUS_WITHDRAWN, false],
+            [Entity::STATUS_CNS, false],
+            [Entity::STATUS_CANCELLED, true]
+        ];
+    }
+
+    /**
      * Test isFromEbsr
      *
      * @param string $isTxcApp
@@ -387,6 +424,8 @@ class BusRegEntityTest extends EntityTester
         $sut->shouldReceive('isScottishRules')->once()->andReturn(true);
         $sut->shouldReceive('isReadOnly')->once()->andReturn(true);
         $sut->shouldReceive('isFromEbsr')->once()->andReturn(true);
+        $sut->shouldReceive('isCancelled')->once()->andReturn(false);
+        $sut->shouldReceive('isCancellation')->once()->andReturn(false);
 
         $result = $sut->getCalculatedBundleValues();
 
@@ -394,6 +433,8 @@ class BusRegEntityTest extends EntityTester
         $this->assertEquals($result['isScottishRules'], true);
         $this->assertEquals($result['isFromEbsr'], true);
         $this->assertEquals($result['isReadOnly'], true);
+        $this->assertEquals($result['isCancelled'], false);
+        $this->assertEquals($result['isCancellation'], false);
     }
 
     /**
@@ -1552,6 +1593,45 @@ class BusRegEntityTest extends EntityTester
         $busNoticePeriod = new BusNoticePeriodEntity();
         $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
         $this->entity->setBusNoticePeriod($busNoticePeriod);
+
+        $this->entity->setStatus(new RefDataEntity(Entity::STATUS_NEW));
+    }
+
+    private function getAssertionsForIsGrantableCancellation()
+    {
+        $this->getAssertionsForIsGrantable();
+        $this->entity->setTimetableAcceptable('N');
+        $this->entity->setMapSupplied('N');
+    }
+
+    /**
+     * Tests that timetable and supplied map don't need to be set to yes for granting a cancellation.
+     * New and variation should return false
+     *
+     * @dataProvider dpIsGrantableForCancellation
+     */
+    public function testIsGrantableForCancellation($status, $expected)
+    {
+        $this->getAssertionsForIsGrantableCancellation();
+
+        $this->entity->setStatus(new RefDataEntity($status));
+
+        // Grantable - Rule: Other - isShortNotice: N - Fee: none
+        $this->assertEquals($expected, $this->entity->isGrantable());
+    }
+
+    /**
+     * data provider for testIsGrantableForCancellation
+     *
+     * @return array
+     */
+    public function dpIsGrantableForCancellation()
+    {
+        return [
+            [Entity::STATUS_NEW, false],
+            [Entity::STATUS_VAR, false],
+            [Entity::STATUS_CANCEL, true]
+        ];
     }
 
     public function testIsGrantable()
