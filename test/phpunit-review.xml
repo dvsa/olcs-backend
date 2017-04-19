@@ -29,6 +29,9 @@
         <testsuite name="ApiService">
             <directory>./module/Api/src/Service</directory>
         </testsuite>
+        <testsuite name="ApiListener">
+            <directory>./module/Api/src/Listener</directory>
+        </testsuite>
         <testsuite name="ApiMisc">
             <directory>./module/Api/src</directory>
         </testsuite>

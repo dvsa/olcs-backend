@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Abstract Db Query Test Case
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository\Query;
 
 use Doctrine\DBAL\Connection;
@@ -15,6 +10,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 
 /**
  * Abstract Db Query Test Case
@@ -41,6 +37,10 @@ abstract class AbstractDbQueryTestCase extends MockeryTestCase
 
     private $metaMap = [];
 
+    private $mockPidIdentityProvider;
+
+    private $mockUserRepo;
+
     abstract public function paramProvider();
     abstract protected function getSut();
     abstract protected function getExpectedQuery();
@@ -60,10 +60,22 @@ abstract class AbstractDbQueryTestCase extends MockeryTestCase
         $auth = m::mock(AuthorizationService::class);
         $auth->shouldReceive('getIdentity->getUser')->andReturn($user);
 
+        $this->mockUserRepo = m::mock(\Dvsa\Olcs\Api\Domain\Repository\User::class);
+
+        $mockRepoServiceManager = m::mock()
+            ->shouldReceive('get')
+            ->with('User')
+            ->andReturn($this->mockUserRepo)
+            ->getMock();
+
+        $this->mockPidIdentityProvider = m::mock(PidIdentityProvider::class);
+
         $sm = m::mock(ServiceManager::class)->makePartial();
         $sm->shouldReceive('getServiceLocator')->andReturnSelf();
         $sm->setService('doctrine.entitymanager.orm_default', $this->em);
         $sm->setService(AuthorizationService::class, $auth);
+        $sm->setService('RepositoryServiceManager', $mockRepoServiceManager);
+        $sm->setService(PidIdentityProvider::class, $this->mockPidIdentityProvider);
 
         $sut = $this->getSut();
         $this->sut = $sut->createService($sm);
@@ -106,6 +118,10 @@ abstract class AbstractDbQueryTestCase extends MockeryTestCase
      */
     public function testExecuteWithException($inputParams, $inputTypes, $expectedParams, $expectedTypes)
     {
+        $this->mockPidIdentityProvider
+            ->shouldReceive('getMasqueradedAsSystemUser')
+            ->andReturn(false);
+
         // add generic params
         $expectedParams['currentUserId'] = 1;
 
@@ -124,8 +140,40 @@ abstract class AbstractDbQueryTestCase extends MockeryTestCase
      */
     public function testExecute($inputParams, $inputTypes, $expectedParams, $expectedTypes)
     {
+        $this->mockPidIdentityProvider
+            ->shouldReceive('getMasqueradedAsSystemUser')
+            ->andReturn(false);
+
         // add generic params
         $expectedParams['currentUserId'] = 1;
+
+        $this->connection->shouldReceive('executeQuery')
+            ->with($this->getExpectedQuery(), $expectedParams, $expectedTypes)
+            ->once()
+            ->andReturn('result');
+
+        $this->assertEquals('result', $this->sut->execute($inputParams, $inputTypes));
+    }
+
+    /**
+     * @dataProvider paramProvider
+     */
+    public function testExecuteAsSystemUser($inputParams, $inputTypes, $expectedParams, $expectedTypes)
+    {
+        $this->mockPidIdentityProvider
+            ->shouldReceive('getMasqueradedAsSystemUser')
+            ->andReturn(true);
+
+        $user = m::mock(UserEntity::class)->makePartial();
+        $user->setId(PidIdentityProvider::SYSTEM_USER);
+
+        $this->mockUserRepo
+            ->shouldReceive('fetchById')
+            ->with(PidIdentityProvider::SYSTEM_USER)
+            ->andReturn($user);
+
+        // add generic params
+        $expectedParams['currentUserId'] = PidIdentityProvider::SYSTEM_USER;
 
         $this->connection->shouldReceive('executeQuery')
             ->with($this->getExpectedQuery(), $expectedParams, $expectedTypes)

@@ -14,7 +14,6 @@ use Zend\Http\Request;
  */
 class PidIdentityProvider implements IdentityProviderInterface
 {
-    // @todo remove user from testdata when we find constant solution for CLI requests
     const SYSTEM_USER = 1;
     const SYSTEM_TEAM = 1;
 
@@ -53,7 +52,6 @@ class PidIdentityProvider implements IdentityProviderInterface
     private function authenticate()
     {
         if ($this->request instanceof \Zend\Console\Request) {
-            // @todo remove when we find constant solution for CLI requests
             $auth = self::SYSTEM_USER;
             return $this->repository->fetchById($auth);
         } else {

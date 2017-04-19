@@ -104,11 +104,13 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
 
     protected function updateExistingDiscs(ApplicationEntity $application, Licence $licence, Result $result)
     {
+        $this->getPidIdentityProvider()->setMasqueradedAsSystemUser(true);
         if ($application->isGoods()) {
             $this->updateExistingGoodsDiscs($application, $licence, $result);
         } else {
             $this->updateExistingPsvDiscs($licence, $result);
         }
+        $this->getPidIdentityProvider()->setMasqueradedAsSystemUser(false);
     }
 
     protected function updateExistingPsvDiscs(Licence $licence, Result $result)
