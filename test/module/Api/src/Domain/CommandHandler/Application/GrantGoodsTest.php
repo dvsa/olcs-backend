@@ -69,7 +69,7 @@ class GrantGoodsTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('CreateGrantFee');
-        $this->expectedSideEffect(CreateGrantFee::class, ['id' => 111], $result1);
+        $this->expectedSideEffectAsSystemUser(CreateGrantFee::class, ['id' => 111], $result1);
 
         $result = $this->sut->handleCommand($command);
 
@@ -110,12 +110,12 @@ class GrantGoodsTest extends CommandHandlerTestCase
         $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application)
             ->shouldReceive('save')->with($application)->once();
 
-        $this->expectedSideEffect(
+        $this->expectedSideEffectAsSystemUser(
             \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
             ['id' => 111],
             (new Result())->addMessage('CLOSE_TEX_TASK')
         );
-        $this->expectedSideEffect(
+        $this->expectedSideEffectAsSystemUser(
             \Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask::class,
             ['id' => 111],
             (new Result())->addMessage('CLOSE_FEEDUE_TASK')
@@ -127,7 +127,7 @@ class GrantGoodsTest extends CommandHandlerTestCase
 
         $result2 = new Result();
         $result2->addMessage('CancelAllInterimFees');
-        $this->expectedSideEffect(CancelAllInterimFees::class, ['id' => 111], $result2);
+        $this->expectedSideEffectAsSystemUser(CancelAllInterimFees::class, ['id' => 111], $result2);
 
         $result = $this->sut->handleCommand($command);
 

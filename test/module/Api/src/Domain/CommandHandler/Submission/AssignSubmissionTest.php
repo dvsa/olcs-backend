@@ -32,6 +32,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepo;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 
 /**
  * Assign Submission Test
@@ -56,6 +57,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
 
     public function setUp()
     {
+        // @todo the code is probably copy/pasted from CommandHandlerTestCase. need refactoring?
         $this->sut = new AssignSubmission();
         $this->mockRepo('Submission', SubmissionRepo::class);
         $this->mockRepo('User', UserRepo::class);
@@ -63,7 +65,8 @@ class AssignSubmissionTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             SubmissionGenerator::class => m::mock(SubmissionGenerator::class),
-            AuthorizationService::class => m::mock(AuthorizationService::class)
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            PidIdentityProvider::class => m::mock(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class)
         ];
 
         // copied from parent,

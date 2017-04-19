@@ -32,6 +32,9 @@
         <testsuite name="Api Misc">
             <directory>./module/Api/src</directory>
         </testsuite>
+        <testsuite name="Api Listener">
+            <directory>./module/Api/src/Listener</directory>
+        </testsuite>
         <testsuite name="OLD Olcs">
             <directory>./module/Olcs</directory>
         </testsuite>

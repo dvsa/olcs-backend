@@ -44,12 +44,18 @@ final class GrantGoods extends AbstractCommandHandler implements TransactionedIn
 
         // If Internal user grants Goods variation
         if ($application->isVariation() && $this->isInternalUser()) {
-            $result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
+            $result->merge(
+                $this->handleSideEffectAsSystemUser(CloseTexTaskCmd::create(['id' => $application->getId()]))
+            );
             // close fee due tasks, createGrantFee will create a new fee due task
-            $result->merge($this->handleSideEffect(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
+            $result->merge(
+                $this->handleSideEffectAsSystemUser(CloseFeeDueTaskCmd::create(['id' => $application->getId()]))
+            );
         }
         if ($this->isInternalUser()) {
-            $result->merge($this->handleSideEffect(CancelAllInterimFeesCmd::create(['id' => $application->getId()])));
+            $result->merge(
+                $this->handleSideEffectAsSystemUser(CancelAllInterimFeesCmd::create(['id' => $application->getId()]))
+            );
         }
 
         $result->merge($this->createGrantFee($application));
@@ -73,6 +79,6 @@ final class GrantGoods extends AbstractCommandHandler implements TransactionedIn
             'id' => $application->getId()
         ];
 
-        return $this->handleSideEffect(CreateGrantFeeCmd::create($data));
+        return $this->handleSideEffectAsSystemUser(CreateGrantFeeCmd::create($data));
     }
 }

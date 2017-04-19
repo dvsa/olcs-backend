@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 
 /**
  * @author Dmitry Golubev <dmitrij.golubev@valtech.com>
@@ -113,9 +114,17 @@ class OlcsEntityListener implements EventSubscriber, AuthAwareInterface, Factory
         if ($this->getAuthService() === null) {
             $this->setAuthService($this->sl->get(AuthorizationService::class));
         }
+        if ($this->getUserRepository() === null) {
+            $this->setUserRepository($this->sl->get('RepositoryServiceManager')->get('User'));
+        }
 
-        // get the current user
-        $currentUser = $this->getCurrentUser();
+        $masqueradedAsSystemUser = $this->sl->get(PidIdentityProvider::class)->getMasqueradedAsSystemUser();
+
+        if ($masqueradedAsSystemUser) {
+            $currentUser = $this->getSystemUser();
+        } else {
+            $currentUser = $this->getCurrentUser();
+        }
 
         return (
             (

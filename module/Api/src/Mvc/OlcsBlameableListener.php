@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Gedmo\Blameable\BlameableListener as GedmoBlameableListener;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 
 /**
  * Class OlcsBlameableListener
@@ -28,13 +29,22 @@ class OlcsBlameableListener extends GedmoBlameableListener implements AuthAwareI
      */
     public function getUserValue($meta, $field)
     {
+        $serviceLocator = $this->getServiceLocator();
         if (!$this->getAuthService()) {
             // set the Auth Service, if not yet set
-            $this->setAuthService($this->getServiceLocator()->get(AuthorizationService::class));
+            $this->setAuthService($serviceLocator->get(AuthorizationService::class));
+        }
+        if (!$this->getUserRepository()) {
+            // set the User repository service, if not yet set
+            $this->setUserRepository($serviceLocator->get('RepositoryServiceManager')->get('User'));
         }
 
-        // get the current user
-        $currentUser = $this->getCurrentUser();
+        $masquaradedAsSystemUser = $serviceLocator->get(PidIdentityProvider::class)->getMasqueradedAsSystemUser();
+        if ($masquaradedAsSystemUser) {
+            $currentUser = $this->getSystemUser();
+        } else {
+            $currentUser = $this->getCurrentUser();
+        }
 
         return (($currentUser instanceof UserEntity) && !$currentUser->isAnonymous()) ? $currentUser : null;
     }

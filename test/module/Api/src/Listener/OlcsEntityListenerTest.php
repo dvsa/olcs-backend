@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Mvc;
+namespace Dvsa\OlcsTest\Api\Listener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Dvsa\Olcs\Api\Entity;
@@ -10,6 +10,9 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * @covers \Dvsa\Olcs\Api\Listener\OlcsEntityListener
@@ -30,6 +33,12 @@ class OlcsEntityListenerTest extends MockeryTestCase
     private $mockUow;
     /** @var  m\MockInterface */
     private $mockMeta;
+    /** @var  UserRepo */
+    private $mockUserRepo;
+    /** @var  m\MockInterface */
+    private $mockRepoManager;
+    /** @var  PidIdentityProvider */
+    private $mockPidIdentityProvider;
 
     public function setUp()
     {
@@ -41,6 +50,15 @@ class OlcsEntityListenerTest extends MockeryTestCase
 
         $this->mockAuth = m::mock(AuthorizationService::class);
 
+        $this->mockUserRepo = m::mock(\Dvsa\Olcs\Api\Domain\Repository\User::class);
+
+        $this->mockRepoManager = m::mock();
+        $this->mockRepoManager->shouldReceive('get')
+            ->with('User')
+            ->andReturn($this->mockUserRepo);
+
+        $this->mockPidIdentityProvider = m::mock(PidIdentityProvider::class);
+
         $this->mockSl = m::mock(ServiceLocatorInterface::class);
         $this->mockSl
             ->shouldReceive('get')
@@ -48,6 +66,8 @@ class OlcsEntityListenerTest extends MockeryTestCase
                 function ($key) {
                     $map = [
                         AuthorizationService::class => $this->mockAuth,
+                        'RepositoryServiceManager' => $this->mockRepoManager,
+                        PidIdentityProvider::class => $this->mockPidIdentityProvider
                     ];
 
                     return $map[$key];
@@ -78,6 +98,12 @@ class OlcsEntityListenerTest extends MockeryTestCase
         $this->mockUow
             ->shouldReceive('scheduleExtraUpdate')->never();
 
+        $this->mockPidIdentityProvider
+            ->shouldReceive('getMasqueradedAsSystemUser')
+            ->andReturn(false)
+            ->once()
+            ->getMock();
+
         //  call
         $lifecycleEvent = new LifecycleEventArgs($mockEntity, $this->mockEm);
         $this->sut->preSoftDelete($lifecycleEvent);
@@ -105,6 +131,12 @@ class OlcsEntityListenerTest extends MockeryTestCase
         $this->mockUow
             ->shouldReceive('propertyChanged')->never()
             ->shouldReceive('scheduleExtraUpdate')->once();
+
+        $this->mockPidIdentityProvider
+            ->shouldReceive('getMasqueradedAsSystemUser')
+            ->andReturn(false)
+            ->once()
+            ->getMock();
 
         //  call
         $lifecycleEvent = new LifecycleEventArgs($mockEntity, $this->mockEm);
@@ -145,6 +177,12 @@ class OlcsEntityListenerTest extends MockeryTestCase
                 ]
             );
 
+        $this->mockPidIdentityProvider
+            ->shouldReceive('getMasqueradedAsSystemUser')
+            ->andReturn(false)
+            ->once()
+            ->getMock();
+
         //  call
         $lifecycleEvent = new LifecycleEventArgs($mockEntity, $this->mockEm);
         $this->sut->preSoftDelete($lifecycleEvent);
@@ -171,5 +209,53 @@ class OlcsEntityListenerTest extends MockeryTestCase
                 'expect' => null,
             ],
         ];
+    }
+
+    public function testGetModifiedByUserSystem()
+    {
+        $mockEntity = new EntityStub();
+
+        $user = new UserEntity('pid', 'system');
+        $user->setId(1);
+
+        $this->mockUserRepo
+            ->shouldReceive('fetchById')
+            ->with(1)
+            ->andReturn($user);
+
+        $field = 'lastModifiedBy';
+        $oldValue = 'unit_OldVal';
+
+        $mockPropery = m::mock()
+            ->shouldReceive('getValue')->once()->with($mockEntity)->andReturn($oldValue)
+            ->shouldReceive('setValue')->once()->with($mockEntity, $user)
+            ->getMock();
+
+        $this->mockMeta
+            ->shouldReceive('getReflectionProperty')->once()->with($field)->andReturn($mockPropery)
+            ->shouldReceive('hasAssociation')->once()->with($field)->andReturn(true);
+
+        $this->mockEm
+            ->shouldReceive('getClassMetadata')->once()->with(EntityStub::class)->andReturn($this->mockMeta)
+            ->shouldReceive('persist')->times($user ? 1 : 0)->with($user);
+
+        $this->mockUow
+            ->shouldReceive('propertyChanged')->once()->with($mockEntity, $field, $oldValue, $user)
+            ->shouldReceive('scheduleExtraUpdate')->once()->with(
+                $mockEntity,
+                [
+                    $field => [$oldValue, $user],
+                ]
+            );
+
+        $this->mockPidIdentityProvider
+            ->shouldReceive('getMasqueradedAsSystemUser')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+
+        //  call
+        $lifecycleEvent = new LifecycleEventArgs($mockEntity, $this->mockEm);
+        $this->sut->preSoftDelete($lifecycleEvent);
     }
 }

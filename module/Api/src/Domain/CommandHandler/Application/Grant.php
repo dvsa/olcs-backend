@@ -134,7 +134,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
             'duePeriod' => $duePeriod,
             'caseworkerNotes' => $caseworkerNotes
         ];
-        return $this->handleSideEffect(CreateFromGrant::create($data));
+        return $this->handleSideEffectAsSystemUser(CreateFromGrant::create($data));
     }
 
     /**
@@ -152,7 +152,9 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         $application->setRequestInspection(true);
         $application->setRequestInspectionDelay($duePeriod);
         $application->setRequestInspectionComment($caseworkerNotes);
+        $this->getPidIdentityProvider()->setMasqueradedAsSystemUser(true);
         $this->getRepo()->save($application);
+        $this->getPidIdentityProvider()->setMasqueradedAsSystemUser(false);
         $result = new Result();
         $result->addMessage('Inspection request details saved');
         return $result;
@@ -167,7 +169,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      */
     protected function publishApplication(ApplicationEntity $application)
     {
-        return $this->handleSideEffect(
+        return $this->handleSideEffectAsSystemUser(
             \Dvsa\Olcs\Transfer\Command\Publication\Application::create(
                 [
                     'id' => $application->getId(),
@@ -187,7 +189,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      */
     protected function closeTexTask(ApplicationEntity $application)
     {
-        return $this->handleSideEffect(
+        return $this->handleSideEffectAsSystemUser(
             \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::create(
                 [
                     'id' => $application->getId(),

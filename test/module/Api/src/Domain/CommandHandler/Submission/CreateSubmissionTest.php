@@ -23,6 +23,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use \Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as CommentCommand;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 
 /**
  * Create Submission Test
@@ -47,12 +48,15 @@ class CreateSubmissionTest extends CommandHandlerTestCase
 
     public function setUp()
     {
+        // @todo the code is probably copy/pasted from CommandHandlerTestCase. need refactoring?
         $this->sut = new CreateSubmission();
         $this->mockRepo('Submission', SubmissionRepo::class);
+        $this->mockRepo('User', \Dvsa\Olcs\Api\Domain\Repository\User::class);
 
         $this->mockedSmServices = [
             SubmissionGenerator::class => m::mock(SubmissionGenerator::class),
             AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
+            PidIdentityProvider::class => m::mock(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class)
         ];
 
         // copied from parent,

@@ -45,7 +45,7 @@ class CreateContinuationDetailsTest extends AbstractDbQueryTestCase
     public function paramProvider()
     {
         return [
-            ['', '', '', '']
+            [[], [], [], []]
         ];
     }
 
@@ -71,6 +71,14 @@ class CreateContinuationDetailsTest extends AbstractDbQueryTestCase
      * @dataProvider paramProvider
      */
     public function testExecute($inputParams, $inputTypes, $expectedParams, $expectedTypes)
+    {
+        $this->markTestSkipped('Not required for this test');
+    }
+
+    /**
+     * @dataProvider paramProvider
+     */
+    public function testExecuteAsSystemUser($inputParams, $inputTypes, $expectedParams, $expectedTypes)
     {
         $this->markTestSkipped('Not required for this test');
     }
