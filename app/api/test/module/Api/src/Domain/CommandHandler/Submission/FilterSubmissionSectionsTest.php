@@ -22,6 +22,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use \Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as CommentCommand;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 
 /**
  * Filter Submission Sections Test
@@ -46,11 +47,13 @@ class FilterSubmissionSectionsTest extends CommandHandlerTestCase
 
     public function setUp()
     {
+        // @todo the code is probably copy/pasted from CommandHandlerTestCase. need refactoring?
         $this->sut = new FilterSubmissionSections();
         $this->mockRepo('Submission', SubmissionRepo::class);
 
         $this->mockedSmServices = [
             SubmissionGenerator::class => m::mock(SubmissionGenerator::class),
+            PidIdentityProvider::class => m::mock(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class)
         ];
 
         // copied from parent,

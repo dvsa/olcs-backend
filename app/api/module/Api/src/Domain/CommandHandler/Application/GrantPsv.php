@@ -68,11 +68,15 @@ final class GrantPsv extends AbstractCommandHandler implements TransactionedInte
 
         // If Internal user grants PSV application or variation
         if ($this->isInternalUser()) {
-            $result->merge($this->handleSideEffectAsSystemUser(CloseTexTaskCmd::create(['id' => $application->getId()])));
-            $result->merge($this->handleSideEffectAsSystemUser(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
+            $result->merge(
+                $this->handleSideEffectAsSystemUser(CloseTexTaskCmd::create(['id' => $application->getId()]))
+            );
+            $result->merge(
+                $this->handleSideEffectAsSystemUser(CloseFeeDueTaskCmd::create(['id' => $application->getId()]))
+            );
         }
 
-        $result->merge($this->proxyCommand($command, CommonGrant::class));
+        $result->merge($this->proxyCommandAsSystemUser($command, CommonGrant::class));
 
         return $result;
     }

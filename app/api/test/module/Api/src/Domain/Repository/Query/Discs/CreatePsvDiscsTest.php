@@ -78,6 +78,14 @@ class CreatePsvDiscsTest extends AbstractDbQueryTestCase
         $this->markTestSkipped('Not required for this test');
     }
 
+    /**
+     * @dataProvider paramProvider
+     */
+    public function testExecuteAsSystemUser($inputParams, $inputTypes, $expectedParams, $expectedTypes)
+    {
+        $this->markTestSkipped('Not required for this test');
+    }
+
     public function testExecuteInsert()
     {
         $this->connection->shouldReceive('quote')->with(1102)->times(4)->andReturn("'1102'");

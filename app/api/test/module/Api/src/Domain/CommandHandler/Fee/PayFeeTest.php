@@ -191,7 +191,7 @@ class PayFeeTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('ValidateApplication');
-        $this->expectedSideEffect(ValidateApplication::class, ['id' => 222], $result1);
+        $this->expectedSideEffectAsSystemUser(ValidateApplication::class, ['id' => 222], $result1);
 
         $result = $this->sut->handleCommand($command);
 
@@ -295,7 +295,7 @@ class PayFeeTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('ValidateApplication');
-        $this->expectedSideEffect(ValidateApplication::class, ['id' => 222], $result1);
+        $this->expectedSideEffectAsSystemUser(ValidateApplication::class, ['id' => 222], $result1);
 
         $result = $this->sut->handleCommand($command);
 
@@ -410,7 +410,7 @@ class PayFeeTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('ValidateApplication');
-        $this->expectedSideEffect(ValidateApplication::class, ['id' => 222], $result1);
+        $this->expectedSideEffectAsSystemUser(ValidateApplication::class, ['id' => 222], $result1);
 
         $result = $this->sut->handleCommand($command);
 

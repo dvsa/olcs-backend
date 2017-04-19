@@ -22,6 +22,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use \Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as CommentCommand;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 
 /**
  * Refresh Submission Sections Test
@@ -51,6 +52,7 @@ class RefreshSubmissionSectionsTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             SubmissionGenerator::class => m::mock(SubmissionGenerator::class),
+            PidIdentityProvider::class => m::mock(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class)
         ];
 
         // copied from parent,

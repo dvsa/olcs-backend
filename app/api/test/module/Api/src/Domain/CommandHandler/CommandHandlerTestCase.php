@@ -24,6 +24,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Json\Json as ZendJson;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Command Handler Test Case
@@ -73,6 +75,8 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
     protected $queryHandler;
 
+    protected $pidIdentityProvider;
+
     public function setUp()
     {
         $this->repoManager = m::mock(RepositoryServiceManager::class);
@@ -85,13 +89,28 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
                 ->andReturn($service);
         }
 
+        $this->pidIdentityProvider = m::mock(PidIdentityProvider::class);
+
         $sm = m::mock(ServiceLocatorInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn(m::mock(TransactionManagerInterface::class));
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
+        $sm->shouldReceive('get')->with(PidIdentityProvider::class)->andReturn($this->pidIdentityProvider);
 
         foreach ($this->mockedSmServices as $serviceName => $service) {
             $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
+        }
+        if (array_key_exists(AuthorizationService::class, $this->mockedSmServices)) {
+            $this->repoManager
+                ->shouldReceive('get')
+                ->with('User')
+                ->andReturn(
+                    m::mock(\Dvsa\Olcs\Api\Domain\Repository\User::class)
+                    ->shouldReceive('fetchById')
+                    ->with(PidIdentityProvider::SYSTEM_USER)
+                    ->getMock()
+                )
+                ->getMock();
         }
 
         $this->commandHandler = m::mock(CommandHandlerManager::class);
@@ -180,7 +199,8 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             $this->categoryReferences,
             $this->subCategoryReferences,
             $this->initRefdata,
-            $this->mockedSmServices
+            $this->mockedSmServices,
+            $this->pidIdentityProvider
         );
     }
 
@@ -258,6 +278,18 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
                     return $result;
                 }
             );
+    }
+
+    public function expectedSideEffectAsSystemUser($class, $data, $result)
+    {
+        $this->pidIdentityProvider
+            ->shouldReceive('setMasqueradedAsSystemUser')
+            ->with(true)
+            ->shouldReceive('setMasqueradedAsSystemUser')
+            ->with(false)
+            ->getMock();
+
+        $this->expectedSideEffect($class, $data, $result);
     }
 
     public function expectedSideEffectThrowsException($class, $data, $exception)

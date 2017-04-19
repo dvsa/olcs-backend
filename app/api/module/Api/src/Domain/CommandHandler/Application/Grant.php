@@ -134,7 +134,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
             'duePeriod' => $duePeriod,
             'caseworkerNotes' => $caseworkerNotes
         ];
-        return $this->handleSideEffect(CreateFromGrant::create($data));
+        return $this->handleSideEffectAsSystemUser(CreateFromGrant::create($data));
     }
 
     /**
@@ -152,7 +152,9 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         $application->setRequestInspection(true);
         $application->setRequestInspectionDelay($duePeriod);
         $application->setRequestInspectionComment($caseworkerNotes);
+        $this->getPidIdentityProvider()->setMasqueradedAsSystemUser(true);
         $this->getRepo()->save($application);
+        $this->getPidIdentityProvider()->setMasqueradedAsSystemUser(false);
         $result = new Result();
         $result->addMessage('Inspection request details saved');
         return $result;
