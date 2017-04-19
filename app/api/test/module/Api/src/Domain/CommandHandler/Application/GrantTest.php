@@ -112,12 +112,12 @@ class GrantTest extends CommandHandlerTestCase
         $result1->addMessage('GrantGoods');
         $this->expectedSideEffect(GrantGoods::class, $data, $result1);
 
-        $this->expectedSideEffect(
+        $this->expectedSideEffectAsSystemUser(
             \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
             ['id' => 111, 'trafficArea' => 'TA', 'publicationSection' => 4],
             new Result()
         );
-        $this->expectedSideEffect(
+        $this->expectedSideEffectAsSystemUser(
             \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
             ['id' => 111],
             new Result()
@@ -165,12 +165,12 @@ class GrantTest extends CommandHandlerTestCase
         $result1->addMessage('GrantPsv');
         $this->expectedSideEffect(GrantPsv::class, $data, $result1);
 
-        $this->expectedSideEffect(
+        $this->expectedSideEffectAsSystemUser(
             \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
             ['id' => 111, 'trafficArea' => 'TA', 'publicationSection' => 4],
             new Result()
         );
-        $this->expectedSideEffect(
+        $this->expectedSideEffectAsSystemUser(
             \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
             ['id' => 111],
             new Result()
@@ -227,12 +227,12 @@ class GrantTest extends CommandHandlerTestCase
         ];
         $this->expectedSideEffect(CreateFromGrant::class, $data, $result2);
 
-        $this->expectedSideEffect(
+        $this->expectedSideEffectAsSystemUser(
             \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
             ['id' => 111, 'trafficArea' => 'TA'],
             new Result()
         );
-        $this->expectedSideEffect(
+        $this->expectedSideEffectAsSystemUser(
             \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
             ['id' => 111],
             new Result()
@@ -295,12 +295,12 @@ class GrantTest extends CommandHandlerTestCase
         $result1->addMessage('GrantGoods');
         $this->expectedSideEffect(GrantGoods::class, $data, $result1);
 
-        $this->expectedSideEffect(
+        $this->expectedSideEffectAsSystemUser(
             \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
             ['id' => 111, 'trafficArea' => 'TA', 'publicationSection' => 4],
             new Result()
         );
-        $this->expectedSideEffect(
+        $this->expectedSideEffectAsSystemUser(
             \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
             ['id' => 111],
             new Result()

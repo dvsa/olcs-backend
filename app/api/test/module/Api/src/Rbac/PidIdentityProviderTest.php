@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Pid Identity Provider Test
- */
 namespace Dvsa\OlcsTest\Api\Rbac;
 
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
@@ -76,5 +73,15 @@ class PidIdentityProviderTest extends MockeryTestCase
         $this->assertInstanceOf(Identity::class, $identity);
         $this->assertInstanceOf(User::class, $identity->getUser());
         $this->assertEquals(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER, $identity->getUser()->getId());
+    }
+
+    public function testGetMasqueradedAsSystemUser()
+    {
+        $mockRepo = m::mock(RepositoryInterface::class);
+        $mockRequest = m::mock(Request::class);
+        $sut = new PidIdentityProvider($mockRepo, $mockRequest, 'X-Pid');
+
+        $sut->setMasqueradedAsSystemUser(true);
+        $this->assertTrue($sut->getMasqueradedAsSystemUser());
     }
 }

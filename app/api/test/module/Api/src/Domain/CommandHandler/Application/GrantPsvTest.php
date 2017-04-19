@@ -76,27 +76,31 @@ class GrantPsvTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('CreateSnapshot');
-        $this->expectedSideEffect(CreateSnapshot::class, ['id' => 111, 'event' => CreateSnapshot::ON_GRANT], $result1);
+        $this->expectedSideEffectAsSystemUser(
+            CreateSnapshot::class, ['id' => 111, 'event' => CreateSnapshot::ON_GRANT], $result1
+        );
 
         $result2 = new Result();
         $result2->addMessage('CopyApplicationDataToLicence');
-        $this->expectedSideEffect(CopyApplicationDataToLicence::class, $data, $result2);
+        $this->expectedSideEffectAsSystemUser(CopyApplicationDataToLicence::class, $data, $result2);
 
         $result3 = new Result();
         $result3->addMessage('CreateDiscRecords');
         $discData = $data;
         $discData['currentTotAuth'] = 10;
-        $this->expectedSideEffect(CreateDiscRecords::class, $discData, $result3);
+        $this->expectedSideEffectAsSystemUser(CreateDiscRecords::class, $discData, $result3);
 
         $result4 = new Result();
         $result4->addMessage('ProcessApplicationOperatingCentres');
-        $this->expectedSideEffect(ProcessApplicationOperatingCentres::class, $data, $result4);
+        $this->expectedSideEffectAsSystemUser(ProcessApplicationOperatingCentres::class, $data, $result4);
 
         $result5 = new Result();
         $result5->addMessage('CommonGrant');
-        $this->expectedSideEffect(CommonGrant::class, $data, $result5);
+        $this->expectedSideEffectAsSystemUser(CommonGrant::class, $data, $result5);
 
-        $this->expectedSideEffect(CreateSvConditionUndertakingCmd::class, ['applicationId' => 111], new Result());
+        $this->expectedSideEffectAsSystemUser(
+            CreateSvConditionUndertakingCmd::class, ['applicationId' => 111], new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 
@@ -149,38 +153,42 @@ class GrantPsvTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('CreateSnapshot');
-        $this->expectedSideEffect(CreateSnapshot::class, ['id' => 111, 'event' => CreateSnapshot::ON_GRANT], $result1);
+        $this->expectedSideEffectAsSystemUser(
+            CreateSnapshot::class, ['id' => 111, 'event' => CreateSnapshot::ON_GRANT], $result1
+        );
 
         $result2 = new Result();
         $result2->addMessage('CopyApplicationDataToLicence');
-        $this->expectedSideEffect(CopyApplicationDataToLicence::class, $data, $result2);
+        $this->expectedSideEffectAsSystemUser(CopyApplicationDataToLicence::class, $data, $result2);
 
         $result3 = new Result();
         $result3->addMessage('CreateDiscRecords');
         $discData = $data;
         $discData['currentTotAuth'] = 10;
-        $this->expectedSideEffect(CreateDiscRecords::class, $discData, $result3);
+        $this->expectedSideEffectAsSystemUser(CreateDiscRecords::class, $discData, $result3);
 
         $result4 = new Result();
         $result4->addMessage('ProcessApplicationOperatingCentres');
-        $this->expectedSideEffect(ProcessApplicationOperatingCentres::class, $data, $result4);
+        $this->expectedSideEffectAsSystemUser(ProcessApplicationOperatingCentres::class, $data, $result4);
 
         $result5 = new Result();
         $result5->addMessage('CommonGrant');
         $this->expectedSideEffect(CommonGrant::class, $data, $result5);
 
-        $this->expectedSideEffect(
+        $this->expectedSideEffectAsSystemUser(
             \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
             ['id' => 111],
             (new Result())->addMessage('CLOSE_TEX_TASK')
         );
-        $this->expectedSideEffect(
+        $this->expectedSideEffectAsSystemUser(
             \Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask::class,
             ['id' => 111],
             (new Result())->addMessage('CLOSE_FEEDUE_TASK')
         );
 
-        $this->expectedSideEffect(CreateSvConditionUndertakingCmd::class, ['applicationId' => 111], new Result());
+        $this->expectedSideEffectAsSystemUser(
+            CreateSvConditionUndertakingCmd::class, ['applicationId' => 111], new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 

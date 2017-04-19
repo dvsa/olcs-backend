@@ -40,6 +40,9 @@
             <directory>./module/Api/src/Rbac</directory>
             <directory>./module/Api/src/Filesystem</directory>
         </testsuite>
+        <testsuite name="ApiListener">
+            <directory>./module/Api/src/Listener</directory>
+        </testsuite>
         <testsuite name="OLDOlcs">
             <directory>./module/Olcs</directory>
         </testsuite>

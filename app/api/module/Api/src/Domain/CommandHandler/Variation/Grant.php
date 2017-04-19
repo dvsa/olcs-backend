@@ -67,16 +67,16 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         $data = $command->getArrayCopy();
         $data['currentTotAuth'] = $currentTotAuth;
 
-        $result->merge($this->handleSideEffect(CreateDiscRecords::create($data)));
+        $result->merge($this->handleSideEffectAsSystemUser(CreateDiscRecords::create($data)));
 
-        $result->merge($this->proxyCommand($command, ProcessApplicationOperatingCentres::class));
-        $result->merge($this->proxyCommand($command, CommonGrant::class));
+        $result->merge($this->proxyCommandAsSystemUser($command, ProcessApplicationOperatingCentres::class));
+        $result->merge($this->proxyCommandAsSystemUser($command, CommonGrant::class));
 
         if (
             $application->isGoods() && $application->isVariation() &&
             $application->getCurrentInterimStatus() === ApplicationEntity::INTERIM_STATUS_INFORCE
         ) {
-            $result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
+            $result->merge($this->handleSideEffectAsSystemUser(EndInterimCmd::create(['id' => $application->getId()])));
         }
 
         return $result;
@@ -89,7 +89,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
             'event' => CreateSnapshot::ON_GRANT
         ];
 
-        return $this->handleSideEffect(CreateSnapshot::create($data));
+        return $this->handleSideEffectAsSystemUser(CreateSnapshot::create($data));
     }
 
     /**
@@ -104,11 +104,13 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
 
     protected function updateExistingDiscs(ApplicationEntity $application, Licence $licence, Result $result)
     {
+        $this->getPidIdentityProvider()->setMasqueradedAsSystemUser(true);
         if ($application->isGoods()) {
             $this->updateExistingGoodsDiscs($application, $licence, $result);
         } else {
             $this->updateExistingPsvDiscs($licence, $result);
         }
+        $this->getPidIdentityProvider()->setMasqueradedAsSystemUser(false);
     }
 
     protected function updateExistingPsvDiscs(Licence $licence, Result $result)
@@ -127,7 +129,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         ];
 
         $result->merge(
-            $this->handleSideEffect(CreatePsvDiscsCmd::create($dtoData))
+            $this->handleSideEffectAsSystemUser(CreatePsvDiscsCmd::create($dtoData))
         );
     }
 
@@ -147,7 +149,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      */
     protected function closeTexTask(ApplicationEntity $application)
     {
-        return $this->handleSideEffect(
+        return $this->handleSideEffectAsSystemUser(
             \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::create(
                 [
                     'id' => $application->getId(),
@@ -165,7 +167,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      */
     protected function publishApplication(ApplicationEntity $application)
     {
-        return $this->handleSideEffect(
+        return $this->handleSideEffectAsSystemUser(
             \Dvsa\Olcs\Transfer\Command\Publication\Application::create(
                 [
                     'id' => $application->getId(),
@@ -185,7 +187,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      */
     protected function maybeCreateSmallVehicleCondition($application)
     {
-        return $this->handleSideEffect(
+        return $this->handleSideEffectAsSystemUser(
             CreateSvConditionUndertakingCmd::create(
                 ['applicationId' => $application->getId()]
             )
