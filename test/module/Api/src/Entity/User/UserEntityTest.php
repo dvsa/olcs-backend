@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Entity\User;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
@@ -21,14 +22,19 @@ use Mockery as m;
  *
  * Initially auto-generated but won't be overridden
  */
+
+
 class UserEntityTest extends EntityTester
 {
     /**
      * Define the entity to test
      *
-     * @var string
+     * @var Entity
      */
+    protected $sut;
+
     protected $entityClass = Entity::class;
+
 
     public function setUp()
     {
@@ -675,6 +681,33 @@ class UserEntityTest extends EntityTester
     }
 
     /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testMissingRoleException()
+    {
+        $role = m::mock(RoleEntity::class)->makePartial();
+        $role->setRole('invalid_role');
+
+        $data = [
+            'userType' => 'random user type',
+            'loginId' => 'loginId',
+            'roles' => [$role],
+        ];
+
+        // create an object of different type first
+        $entity = Entity::create(
+            'pid',
+            'random user type',
+            [
+                'loginId' => 'currentLoginId',
+            ]
+        );
+
+        // update the entity
+        $entity->update($data);
+    }
+
+    /**
      * @dataProvider getPermissionProvider
      */
     public function testGetPermission($userType, $roleIds, $expected)
@@ -859,5 +892,15 @@ class UserEntityTest extends EntityTester
 
         $user->addOrganisationUsers($orgUser);
         $this->assertEquals(3, $user->getNumberOfVehicles());
+    }
+
+    public function testReturnGetNumberOfVehiclesWithNoRelatedOrg()
+    {
+        $user = new Entity('pid', Entity::USER_TYPE_INTERNAL);
+
+        $organisationUsers = new ArrayCollection();
+        $user->setOrganisationUsers($organisationUsers);
+
+        $this->assertEquals(0, $user->getNumberOfVehicles());
     }
 }
