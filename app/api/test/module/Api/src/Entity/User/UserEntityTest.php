@@ -15,7 +15,6 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 use Dvsa\Olcs\Api\Entity\User\User as Entity;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
-use Elastica\Transport\Null;
 use Mockery as m;
 
 /**
@@ -53,8 +52,7 @@ class UserEntityTest extends EntityTester
         $partnerContactDetails,
         $expected,
         $expectedIsInternal
-    )
-    {
+    ) {
         $this->entity->setTeam($team);
         $this->entity->setLocalAuthority($localAuthority);
         $this->entity->setTransportManager($transportManager);
@@ -708,6 +706,7 @@ class UserEntityTest extends EntityTester
         // update the entity
         $entity->update($data);
     }
+
     /**
      * @dataProvider getPermissionProvider
      */
@@ -893,21 +892,15 @@ class UserEntityTest extends EntityTester
 
         $user->addOrganisationUsers($orgUser);
         $this->assertEquals(3, $user->getNumberOfVehicles());
-
     }
 
-     public function testReturnGetNumberOfVehiclesWithNoRelatedOrg()
-     {
-         $user = new Entity('pid', Entity::USER_TYPE_INTERNAL);
+    public function testReturnGetNumberOfVehiclesWithNoRelatedOrg()
+    {
+        $user = new Entity('pid', Entity::USER_TYPE_INTERNAL);
 
-         $organisationUsers = new ArrayCollection();
-         $user->setOrganisationUsers($organisationUsers);
+        $organisationUsers = new ArrayCollection();
+        $user->setOrganisationUsers($organisationUsers);
 
-         $this->assertEquals(0, $user->getNumberOfVehicles());
-
-     }
-
-
-
-
+        $this->assertEquals(0, $user->getNumberOfVehicles());
+    }
 }
