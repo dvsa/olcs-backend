@@ -6,6 +6,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
  * Organisation
@@ -112,20 +113,41 @@ class Organisation extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefdata();
+        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata();
+
+        $statuses = [
+            LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+            LicenceEntity::LICENCE_STATUS_SUSPENDED,
+            LicenceEntity::LICENCE_STATUS_VALID,
+            LicenceEntity::LICENCE_STATUS_CURTAILED,
+            LicenceEntity::LICENCE_STATUS_GRANTED
+        ];
 
         $qb
             ->andWhere($qb->expr()->eq($this->alias . '.companyOrLlpNo', ':companyNumber'))
             ->setParameter('companyNumber', $companyNumber);
 
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('licences');
+
         $results = $qb->getQuery()->getResult();
 
-        if (empty($results)) {
+        $finalResults = [];
+        foreach ($results as $organisation) {
+            $licences = $organisation->getLicences();
+            foreach ($licences as $licence) {
+                if (in_array($licence->getStatus()->getId(), $statuses)) {
+                    $finalResults[] = $organisation;
+                    break;
+                }
+            }
+        }
+
+        if (empty($finalResults)) {
             throw new NotFoundException('Organisation not found for company number '.$companyNumber);
         }
 
-        return $results;
+        return $finalResults;
     }
 
     /**
