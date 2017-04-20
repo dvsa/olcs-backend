@@ -332,10 +332,17 @@ class ApplicationEntityTest extends EntityTester
         ];
     }
 
-    public function testUpdateFinancialHistoryException()
+    /**
+     * @dataProvider dpTestValidateFinancialHistory
+     */
+    public function testValidateFinancialHistory($flags, $text)
     {
+        /** @var Entity $sut */
+        $sut = m::mock($this->entity)->makePartial();
+
         try {
-            $this->entity->updateFinancialHistory('Y', 'N', 'N', 'N', 'N', 'less than required count', 1);
+            static::assertTrue($sut->validateFinancialHistory($flags, $text));
+
         } catch (ValidationException $e) {
             static::assertEquals(
                 [
@@ -347,6 +354,37 @@ class ApplicationEntityTest extends EntityTester
             );
         }
     }
+
+    public function dpTestValidateFinancialHistory()
+    {
+        $a50 = str_repeat('a', 50);
+        $b50 = str_repeat('b', 50);
+        $c45 = str_repeat('c', 45);
+
+        return [
+            [
+                'flags' => ['N'],
+                'text' => '',
+                'expect' => true,
+            ],
+            [
+                'flags' => ['Y', 'N'],
+                'text' => 'to short',
+                'expect' => false,
+            ],
+            [
+                'flags' => ['Y'],
+                'text' => $a50 . PHP_EOL . ' ' . $b50 . PHP_EOL . ' '. PHP_EOL . $c45,
+                'expect' => false,
+            ],
+            [
+                'flags' => ['Y'],
+                'text' => $a50 . PHP_EOL . ' ' . $b50 . PHP_EOL . ' ' . PHP_EOL . $a50,
+                'expect' => true,
+            ],
+        ];
+    }
+
 
     /**
      * @dataProvider dataProviderTestHasNewOperatingCentre
