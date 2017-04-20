@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Companies House CreateAlert
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -14,6 +9,8 @@ use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
+ * Companies House CreateAlert
+ *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
 final class CreateAlert extends DomainAbstractCommandHandler
@@ -23,7 +20,10 @@ final class CreateAlert extends DomainAbstractCommandHandler
     protected $extraRepos = ['Organisation'];
 
     /**
-     * @param CommandInterface $command
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -32,40 +32,43 @@ final class CreateAlert extends DomainAbstractCommandHandler
         $companyNumber = $command->getCompanyNumber();
 
         try {
-            $organisation = $this->getOrganisation($companyNumber);
+            $organisations = $this->getOrganisation($companyNumber);
         } catch (NotFoundException $e) {
-            $result->addMessage("Organisation not found for company $companyNumber, no alert created");
+            $result->addMessage("Organisation(s) not found for company $companyNumber, no alert created");
             return $result;
         }
 
-        $alert = new AlertEntity();
-        $alert
-            ->setCompanyOrLlpNo($companyNumber)
-            ->setOrganisation($organisation);
+        foreach ($organisations as $organisation) {
+            $alert = new AlertEntity();
+            $alert
+                ->setCompanyOrLlpNo($companyNumber)
+                ->setOrganisation($organisation);
 
-        foreach ($command->getReasons() as $reason) {
-            $reasonRefdata = $this->getRepo()->getRefdataReference($reason);
-            $alert->addReason($reasonRefdata);
+            foreach ($command->getReasons() as $reason) {
+                $reasonRefdata = $this->getRepo()->getRefdataReference($reason);
+                $alert->addReason($reasonRefdata);
+            }
+
+            $this->getRepo('CompaniesHouseAlert')->save($alert);
+
+            $alertId = $alert->getId();
+            $result
+                ->addId('companiesHouseAlert' . $alertId, $alertId)
+                ->addMessage('Alert created: ' . json_encode($command->getReasons()));
         }
-
-        $this->getRepo('CompaniesHouseAlert')->save($alert);
-
-        $result
-            ->addId('companiesHouseAlert', $alert->getId())
-            ->addMessage('Alert created: ' . json_encode($command->getReasons()));
 
         return $result;
     }
 
     /**
-     * @param string $companyNumber
-     * @return OrganisationEntity|false
+     * Get organisation
+     *
+     * @param string $companyNumber company number
+     *
+     * @return array
      */
     protected function getOrganisation($companyNumber)
     {
-        $results = $this->getRepo('Organisation')->getByCompanyOrLlpNo($companyNumber);
-
-        // @note returns the first matching organisation only
-        return !empty($results) ? $results[0] : false;
+        return $this->getRepo('Organisation')->getByCompanyOrLlpNo($companyNumber);
     }
 }

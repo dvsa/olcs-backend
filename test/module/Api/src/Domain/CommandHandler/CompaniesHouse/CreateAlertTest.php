@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Companies House Create Alert Command Handler Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\CreateAlert as Cmd;
@@ -46,25 +41,27 @@ class CreateAlertTest extends CommandHandlerTestCase
     {
         $companyNumber = '01234567';
 
-        $organisation = m::mock(OrganisationEntity::class)->makePartial();
+        $organisation1 = m::mock(OrganisationEntity::class)->makePartial();
+        $organisation2 = m::mock(OrganisationEntity::class)->makePartial();
 
         // expectations
         $this->repoMap['Organisation']
             ->shouldReceive('getByCompanyOrLlpNo')
             ->once()
             ->with($companyNumber)
-            ->andReturn([$organisation]);
+            ->andReturn([$organisation1, $organisation2]);
 
         /** @var AlertEntity $alert */
         $alert = null;
+        $id = 69;
         $this->repoMap['CompaniesHouseAlert']
             ->shouldReceive('save')
-            ->once()
+            ->twice()
             ->with(m::type(AlertEntity::class))
             ->andReturnUsing(
-                function (AlertEntity $a) use (&$alert) {
+                function (AlertEntity $a) use (&$alert, &$id) {
                     $alert = $a;
-                    $a->setId(69);
+                    $a->setId($id++);
                 }
             );
 
@@ -79,8 +76,14 @@ class CreateAlertTest extends CommandHandlerTestCase
 
         // assertions
         $this->assertInstanceOf(Result::class, $result);
-        $this->assertEquals(['companiesHouseAlert' => 69], $result->getIds());
-        $this->assertEquals(['Alert created: ["reason_foo","reason_bar"]'], $result->getMessages());
+        $this->assertEquals(['companiesHouseAlert69' => 69, 'companiesHouseAlert70' => 70], $result->getIds());
+        $this->assertEquals(
+            [
+                'Alert created: ["reason_foo","reason_bar"]',
+                'Alert created: ["reason_foo","reason_bar"]'
+            ],
+            $result->getMessages()
+        );
 
         $this->assertEquals($companyNumber, $alert->getCompanyOrLlpNo());
         $this->assertEquals(2, $alert->getReasons()->count());
@@ -111,7 +114,7 @@ class CreateAlertTest extends CommandHandlerTestCase
         // assertions
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(
-            ['Organisation not found for company 01234567, no alert created'],
+            ['Organisation(s) not found for company 01234567, no alert created'],
             $result->getMessages()
         );
     }
