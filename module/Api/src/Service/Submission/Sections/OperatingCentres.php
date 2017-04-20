@@ -2,10 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
-use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 
 /**
  * Class OperatingCentres
@@ -23,45 +21,27 @@ final class OperatingCentres extends AbstractSection
      */
     public function generateSection(CasesEntity $case)
     {
-        $applicationOperatingCentres = new ArrayCollection();
-        $licence = $case->getLicence();
-        $licenceOperatingCentres = $licence->getOperatingCentres();
+        $data = [];
 
-        if ($case->getCaseType()->getId() === CasesEntity::APP_CASE_TYPE) {
-            $applicationOperatingCentres = $case->getApplication()->getOperatingCentres();
-        }
-
-        $allOperatingCentres = $this->extractSortedOperatingCentres(
-            new ArrayCollection(
-                array_merge(
-                    $licenceOperatingCentres->toArray(),
-                    $applicationOperatingCentres->toArray()
-                )
-            )
+        $ocRels = $this->sortOperatingCentresRelations(
+            $this->getOperatingCentresRelations($case)
         );
 
-        $data = [];
-        for ($i = 0, $n = count($allOperatingCentres); $i < $n; $i++) {
-            /** @var OperatingCentre $operatingCentre */
-            $operatingCentre = $allOperatingCentres->current()->getOperatingCentre();
+        /** @var Entity\OperatingCentre\OperatingCentre $oc */
+        foreach ($ocRels as $ocRel) {
+            $oc = $ocRel->getOperatingCentre();
 
-            $thisEntity = array();
-
-            if (!(empty($operatingCentre))) {
-
-                $thisEntity['id'] = $operatingCentre->getId();
-                $thisEntity['version'] = $operatingCentre->getVersion();
-                $thisEntity['totAuthVehicles'] = $allOperatingCentres->current()->getNoOfVehiclesRequired();
-                $thisEntity['totAuthTrailers'] = $allOperatingCentres->current()->getNoOfTrailersRequired();
-                if (empty($operatingCentre->getAddress())) {
-                    $thisEntity['OcAddress'] = [];
-                } else {
-                    $thisEntity['OcAddress'] = $operatingCentre->getAddress()->toArray();
-                }
-                $data[] = $thisEntity;
-            }
-
-            $allOperatingCentres->next();
+            $data[] = [
+                'id' => $oc->getId(),
+                'version' => $oc->getVersion(),
+                'totAuthVehicles' => $ocRel->getNoOfVehiclesRequired(),
+                'totAuthTrailers' => $ocRel->getNoOfTrailersRequired(),
+                'OcAddress' => (
+                    $oc->getAddress() !== null
+                    ? $oc->getAddress()->toArray()
+                    : []
+                ),
+            ];
         }
 
         return [
@@ -74,35 +54,71 @@ final class OperatingCentres extends AbstractSection
     }
 
     /**
-     * Sorted operating centres by address postcode
+     * Get operation centers relations with case
      *
-     * @param ArrayCollection $ocArray Array of Operating Centres
+     * @param CasesEntity $case Case entity
      *
-     * @return ArrayCollection
+     * @return array
      */
-    private function extractSortedOperatingCentres(ArrayCollection $ocArray)
+    private function getOperatingCentresRelations(CasesEntity $case)
     {
-        $sorted = [];
-        if (!empty($ocArray)) {
-            $iterator = $ocArray->getIterator();
+        $appOcs = [];
+        $licOcs = $case->getLicence()->getOperatingCentres()->toArray();
 
-            $iterator->uasort(
-                function ($a, $b) {
-                    /** @var Entity\Application\ApplicationOperatingCentre | Entity\Licence\LicenceOperatingCentre $a */
-                    /** @var Entity\Application\ApplicationOperatingCentre | Entity\Licence\LicenceOperatingCentre $b */
-                    $aAddress = $a->getOperatingCentre()->getAddress();
-                    $aPostCode = ($aAddress !== null ? $aAddress->getPostcode() : '');
-
-                    $bAddress = $b->getOperatingCentre()->getAddress();
-                    $bPostCode = ($bAddress !== null ? $bAddress->getPostcode() : '');
-
-                    return strcmp($aPostCode, $bPostCode);
-                }
-            );
-            $sorted = iterator_to_array($iterator);
+        if ($case->getCaseType()->getId() === CasesEntity::APP_CASE_TYPE) {
+            $appOcs = $case->getApplication()->getOperatingCentres()->toArray();
         }
 
-        return new ArrayCollection($sorted);
+        //  get operation centers relations to applications and licences
+        $ocRels = array_merge($licOcs, $appOcs);
 
+        /** @var Entity\Application\ApplicationOperatingCentre | Entity\Licence\LicenceOperatingCentre $ocRel */
+        $result = [];
+
+        foreach ($ocRels as $ocRel) {
+            $oc = $ocRel->getOperatingCentre();
+            $id = $oc->getId();
+
+            if (
+                $ocRel instanceof Entity\Application\ApplicationOperatingCentre
+                && $ocRel->getAction() === Entity\Application\ApplicationOperatingCentre::ACTION_DELETE
+            ) {
+                unset($result[$id]);
+            } else {
+                $result[$id] = $ocRel;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Sort Operation centers by address
+     *
+     * @param array $ocrs List of operation centers relations to applications and licences
+     *
+     * @return array
+     */
+    private function sortOperatingCentresRelations(array $ocrs)
+    {
+        if (count($ocrs) == 0) {
+            return [];
+        }
+
+        //  sort
+        $fncSort = function ($a, $b) {
+            /** @var Entity\Application\ApplicationOperatingCentre | Entity\Licence\LicenceOperatingCentre $a */
+            /** @var Entity\Application\ApplicationOperatingCentre | Entity\Licence\LicenceOperatingCentre $b */
+            $aAddress = $a->getOperatingCentre()->getAddress();
+            $aPostCode = ($aAddress !== null ? $aAddress->getPostcode() : '');
+
+            $bAddress = $b->getOperatingCentre()->getAddress();
+            $bPostCode = ($bAddress !== null ? $bAddress->getPostcode() : '');
+
+            return strcmp($aPostCode, $bPostCode);
+        };
+        uasort($ocrs, $fncSort);
+
+        return $ocrs;
     }
 }
