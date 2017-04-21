@@ -286,7 +286,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      */
     protected function validateFinancialHistory($flags, $insolvencyDetails)
     {
-        $validator = new Validators\FHAdditionalInfo();
+        $validator = new Validators\FhAdditionalInfo();
         if ($validator->isValid($insolvencyDetails, $flags)) {
             return true;
         }
