@@ -143,6 +143,7 @@ class Search implements AuthAwareInterface
                 $terms = new Terms($filterName);
                 $terms->setField($filterName);
                 $terms->setOrder('_term', 'ASC');
+                $terms->setSize(25);
 
                 $elasticaQuery->addAggregation($terms);
             }
