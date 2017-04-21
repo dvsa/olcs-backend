@@ -79,18 +79,24 @@ final class GrantBusReg extends AbstractCommandHandler
             }
         }
 
-        //  count of printed copies: 1 - for operator, 1 - for internal use and 1 - for each LA
-        $copiesCnt = 2 + count($busReg->getLocalAuthoritys());
-
         // Print licence
-        $sideEffects[] = BusPrintLetterCmd::create(
-            [
-                'id' => $busReg->getId(),
+        $busPrintLetterData = [
+            'id' => $busReg->getId(),
+        ];
+
+        if ($busReg->isFromEbsr() === false) {
+            //  count of printed copies: 1 - for operator, 1 - for internal use and 1 - for each LA
+            $copiesCnt = 2 + count($busReg->getLocalAuthoritys());
+
+            $busPrintLetterData += [
                 'printCopiesCount' => $copiesCnt,
                 'isEnforcePrint' => 'Y',
-            ]
-        );
+            ];
+        }
 
+        $sideEffects[] = BusPrintLetterCmd::create($busPrintLetterData);
+
+        //  process side effects
         $this->handleSideEffects($sideEffects);
 
         $result = new Result();
