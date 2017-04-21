@@ -347,7 +347,7 @@ class ApplicationEntityTest extends EntityTester
             static::assertEquals(
                 [
                     'insolvencyDetails' => [
-                        Entity::ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED => 'FHAdditionalInfo.api.validation.too_short',
+                        Entity::ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED => 'FhAdditionalInfo.api.validation.too_short',
                     ],
                 ],
                 $e->getMessages()
