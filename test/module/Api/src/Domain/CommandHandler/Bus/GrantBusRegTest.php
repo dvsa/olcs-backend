@@ -119,7 +119,8 @@ class GrantBusRegTest extends CommandHandlerTestCase
             ->setStatus($status)
             ->shouldReceive('canMakeDecision')->once()->andReturn(true)
             ->shouldReceive('isGrantable')->once()->andReturn(true)
-            ->shouldReceive('getEbsrSubmissions')->andReturn(new ArrayCollection());
+            ->shouldReceive('getEbsrSubmissions')->andReturn(new ArrayCollection())
+            ->shouldReceive('getLocalAuthoritys')->andReturn([1, 2, 3]);
 
         $this->repoMap['Bus']
             ->shouldReceive('fetchUsingId')->with($command, Query::HYDRATE_OBJECT)->andReturn($this->mockBusReg)
@@ -131,7 +132,15 @@ class GrantBusRegTest extends CommandHandlerTestCase
             new Result()
         );
 
-        $this->expectedSideEffect(BusPrintLetterCmd::class, ['id' => self::BUS_REG_ID], (new Result()));
+        $this->expectedSideEffect(
+            BusPrintLetterCmd::class,
+            [
+                'id' => self::BUS_REG_ID,
+                'printCopiesCount' => 5,
+                'isEnforcePrint' => 'Y',
+            ],
+            new Result()
+        );
 
         $actual = $this->sut->handleCommand($command);
 
