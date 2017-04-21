@@ -293,7 +293,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
         $errors = [
             'insolvencyDetails' => [
-                self::ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED => 'FHAdditionalInfo.api.validation.too_short',
+                self::ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED => 'FhAdditionalInfo.api.validation.too_short',
             ]
         ];
         throw new ValidationException($errors);
