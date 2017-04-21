@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Transfer\Query\Organisation\CpidOrganisation;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as Repo;
@@ -11,6 +12,7 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\Repository\Organisation
@@ -181,11 +183,59 @@ class OrganisationTest extends RepositoryTestCase
     {
         $companyNumber = '01234567';
 
-        $result = m::mock(Organisation::class);
-        $results = [$result];
+        $licences1 = new ArrayCollection();
+        $lic1 = m::mock(LicenceEntity::class)
+            ->shouldReceive('getStatus')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(LicenceEntity::LICENCE_STATUS_VALID)
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+        $licences1->add($lic1);
+
+        $licences2 = new ArrayCollection();
+        $lic2 = m::mock(LicenceEntity::class)
+            ->shouldReceive('getStatus')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->getMock();
+        $licences2->add($lic2);
+
+        $org1 = m::mock(Organisation::class)
+            ->shouldReceive('getLicences')
+            ->andReturn($licences1)
+            ->once()
+            ->getMock();
+
+        $org2 = m::mock(Organisation::class)
+            ->shouldReceive('getLicences')
+            ->andReturn($licences2)
+            ->once()
+            ->getMock();
+
+        $results = [$org1, $org2];
 
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->with($qb)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('licences')
+            ->once()
+            ->andReturnSelf();
 
         $where = m::mock();
         $qb->shouldReceive('expr->eq')
@@ -228,10 +278,39 @@ class OrganisationTest extends RepositoryTestCase
     {
         $companyNumber = '01234567';
 
-        $results = [];
+        $licences1 = new ArrayCollection();
+        $lic1 = m::mock(LicenceEntity::class)
+            ->shouldReceive('getStatus')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->getMock();
+        $licences1->add($lic1);
+
+        $org1 = m::mock(Organisation::class)
+            ->shouldReceive('getLicences')
+            ->andReturn($licences1)
+            ->once()
+            ->getMock();
+
+        $results = [$org1];
 
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->with($qb)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('licences')
+            ->once()
+            ->andReturnSelf();
 
         $qb->shouldReceive('expr->eq');
         $qb
