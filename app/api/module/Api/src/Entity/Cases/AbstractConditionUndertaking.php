@@ -33,7 +33,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_condition_undertaking_lic_condition_variation_id",
      *     columns={"lic_condition_variation_id"}),
  *        @ORM\Index(name="ix_condition_undertaking_approval_user_id", columns={"approval_user_id"}),
- *        @ORM\Index(name="ix_condition_undertaking_s4_id", columns={"s4_id"})
+ *        @ORM\Index(name="ix_condition_undertaking_s4_id", columns={"s4_id"}),
+ *        @ORM\Index(name="ix_condition_undertaking_condition_category",
+     *     columns={"condition_category"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_condition_undertaking_olbs_key_olbs_type",
@@ -111,6 +113,16 @@ abstract class AbstractConditionUndertaking implements BundleSerializableInterfa
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=true)
      */
     protected $case;
+
+    /**
+     * Condition category
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="condition_category", referencedColumnName="id", nullable=true)
+     */
+    protected $conditionCategory;
 
     /**
      * Condition type
@@ -463,6 +475,30 @@ abstract class AbstractConditionUndertaking implements BundleSerializableInterfa
     public function getCase()
     {
         return $this->case;
+    }
+
+    /**
+     * Set the condition category
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $conditionCategory entity being set as the value
+     *
+     * @return ConditionUndertaking
+     */
+    public function setConditionCategory($conditionCategory)
+    {
+        $this->conditionCategory = $conditionCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the condition category
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getConditionCategory()
+    {
+        return $this->conditionCategory;
     }
 
     /**

@@ -43,7 +43,8 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         );
         $conditionUndertaking
             ->setAttachedTo($this->getRepo()->getRefdataReference($command->getAttachedTo()))
-            ->setNotes($command->getNotes());
+            ->setNotes($command->getNotes())
+            ->setConditionCategory($this->getRepo()->getRefdataReference($command->getConditionCategory()));
 
         // set operating centre
         if (!empty($command->getOperatingCentre())) {

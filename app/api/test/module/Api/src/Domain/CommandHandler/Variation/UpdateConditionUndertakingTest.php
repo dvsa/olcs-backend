@@ -35,6 +35,7 @@ class UpdateConditionUndertakingTest extends CommandHandlerTestCase
         $this->refData = [
             'TYPE',
             'ATTACHED_TO',
+            'cu_cat_other',
         ];
 
         $this->references = [
@@ -70,6 +71,7 @@ class UpdateConditionUndertakingTest extends CommandHandlerTestCase
             'attachedTo' => 'ATTACHED_TO',
             'fulfilled' => 'Y',
             'notes' => 'FooBar',
+            'conditionCategory' => 'cu_cat_other',
         ];
         $command = Command::create($data);
 
@@ -83,6 +85,7 @@ class UpdateConditionUndertakingTest extends CommandHandlerTestCase
         $this->repoMap['ConditionUndertaking']->shouldReceive('save')->once()->andReturnUsing(
             function (\Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking $cu) use ($data) {
                 $this->assertSame($this->refData[$data['type']], $cu->getConditionType());
+                $this->assertSame($this->refData[$data['conditionCategory']], $cu->getConditionCategory());
                 $this->assertSame($this->refData[$data['attachedTo']], $cu->getAttachedTo());
                 $this->assertSame($data['fulfilled'], $cu->getIsFulfilled());
                 $this->assertSame($data['notes'], $cu->getNotes());
@@ -106,6 +109,7 @@ class UpdateConditionUndertakingTest extends CommandHandlerTestCase
             'fulfilled' => 'Y',
             'notes' => 'FooBar',
             'operatingCentre' => 32,
+            'conditionCategory' => 'cu_cat_other',
         ];
         $command = Command::create($data);
 
@@ -119,6 +123,7 @@ class UpdateConditionUndertakingTest extends CommandHandlerTestCase
         $this->repoMap['ConditionUndertaking']->shouldReceive('save')->once()->andReturnUsing(
             function (\Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking $cu) use ($data) {
                 $this->assertSame($this->refData[$data['type']], $cu->getConditionType());
+                $this->assertSame($this->refData[$data['conditionCategory']], $cu->getConditionCategory());
                 $this->assertSame($this->refData[$data['attachedTo']], $cu->getAttachedTo());
                 $this->assertSame($data['fulfilled'], $cu->getIsFulfilled());
                 $this->assertSame($data['notes'], $cu->getNotes());
@@ -145,6 +150,7 @@ class UpdateConditionUndertakingTest extends CommandHandlerTestCase
             'attachedTo' => 'ATTACHED_TO',
             'fulfilled' => 'Y',
             'notes' => 'FooBar',
+            'conditionCategory' => 'cu_cat_other',
         ];
         $command = Command::create($data);
 
@@ -157,6 +163,7 @@ class UpdateConditionUndertakingTest extends CommandHandlerTestCase
         $this->repoMap['ConditionUndertaking']->shouldReceive('save')->once()->andReturnUsing(
             function (\Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking $cu) use ($data, $mockConditionUndertaking) {
                 $this->assertSame($this->refData[$data['type']], $cu->getConditionType());
+                $this->assertSame($this->refData[$data['conditionCategory']], $cu->getConditionCategory());
                 $this->assertSame($this->refData[$data['attachedTo']], $cu->getAttachedTo());
                 $this->assertSame($data['fulfilled'], $cu->getIsFulfilled());
                 $this->assertSame($data['notes'], $cu->getNotes());

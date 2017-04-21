@@ -53,7 +53,8 @@ final class UpdateConditionUndertaking extends AbstractCommandHandler implements
             ->setConditionType($this->getRepo()->getRefdataReference($command->getType()))
             ->setAttachedTo($this->getRepo()->getRefdataReference($command->getAttachedTo()))
             ->setIsFulfilled($command->getFulfilled())
-            ->setNotes($command->getNotes());
+            ->setNotes($command->getNotes())
+            ->setConditionCategory($this->getRepo()->getRefdataReference($command->getConditionCategory()));
 
         $oc = empty($command->getOperatingCentre()) ? null :
             $this->getRepo()->getReference(OperatingCentre::class, $command->getOperatingCentre());
