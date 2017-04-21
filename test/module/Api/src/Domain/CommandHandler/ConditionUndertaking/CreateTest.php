@@ -39,6 +39,7 @@ class CreateTest extends CommandHandlerTestCase
             'cav_case',
             'cav_lic',
             'cav_app',
+            'cu_cat_other'
         ];
 
         $this->references = [
@@ -88,6 +89,7 @@ class CreateTest extends CommandHandlerTestCase
             'notes' => 'NOTES',
             'addedVia' => 'ADDED_VIA',
             'case' => 24,
+            'conditionCategory' => 'cu_cat_other',
         ];
 
         $command = Command::create($params);
@@ -102,6 +104,7 @@ class CreateTest extends CommandHandlerTestCase
         $this->repoMap['ConditionUndertaking']->shouldReceive('save')->once()->andReturnUsing(
             function (ConditionUndertaking $cu) use ($params, $case) {
                 $this->assertSame($this->refData[$params['type']], $cu->getConditionType());
+                $this->assertSame($this->refData[$params['conditionCategory']], $cu->getConditionCategory());
                 $this->assertSame($params['fulfilled'], $cu->getIsFulfilled());
                 $this->assertSame('N', $cu->getIsDraft());
                 $this->assertSame(null, $cu->getOperatingCentre());
@@ -130,6 +133,7 @@ class CreateTest extends CommandHandlerTestCase
             'addedVia' => 'ADDED_VIA',
             'licence' => 124,
             'operatingCentre' => 34,
+            'conditionCategory' => 'cu_cat_other',
         ];
 
         $command = Command::create($params);
@@ -137,6 +141,7 @@ class CreateTest extends CommandHandlerTestCase
         $this->repoMap['ConditionUndertaking']->shouldReceive('save')->once()->andReturnUsing(
             function (ConditionUndertaking $cu) use ($params) {
                 $this->assertSame($this->refData[$params['type']], $cu->getConditionType());
+                $this->assertSame($this->refData[$params['conditionCategory']], $cu->getConditionCategory());
                 $this->assertSame($params['fulfilled'], $cu->getIsFulfilled());
                 $this->assertSame('N', $cu->getIsDraft());
                 $this->assertSame($this->references[OperatingCentre::class][34], $cu->getOperatingCentre());
@@ -163,6 +168,7 @@ class CreateTest extends CommandHandlerTestCase
             'addedVia' => 'ADDED_VIA',
             'application' => 224,
             'operatingCentre' => 34,
+            'conditionCategory' => 'cu_cat_other',
         ];
 
         $command = Command::create($params);
@@ -170,6 +176,7 @@ class CreateTest extends CommandHandlerTestCase
         $this->repoMap['ConditionUndertaking']->shouldReceive('save')->once()->andReturnUsing(
             function (ConditionUndertaking $cu) use ($params) {
                 $this->assertSame($this->refData[$params['type']], $cu->getConditionType());
+                $this->assertSame($this->refData[$params['conditionCategory']], $cu->getConditionCategory());
                 $this->assertSame($params['fulfilled'], $cu->getIsFulfilled());
                 $this->assertSame('Y', $cu->getIsDraft());
                 $this->assertSame($this->references[OperatingCentre::class][34], $cu->getOperatingCentre());

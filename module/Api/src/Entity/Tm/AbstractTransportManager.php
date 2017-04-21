@@ -161,6 +161,15 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
     protected $nysiisForename;
 
     /**
+     * Olbs key
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
+     */
+    protected $olbsKey;
+
+    /**
      * Removed date
      *
      * @var \DateTime
@@ -656,6 +665,30 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
     public function getNysiisForename()
     {
         return $this->nysiisForename;
+    }
+
+    /**
+     * Set the olbs key
+     *
+     * @param int $olbsKey new value being set
+     *
+     * @return TransportManager
+     */
+    public function setOlbsKey($olbsKey)
+    {
+        $this->olbsKey = $olbsKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the olbs key
+     *
+     * @return int
+     */
+    public function getOlbsKey()
+    {
+        return $this->olbsKey;
     }
 
     /**
