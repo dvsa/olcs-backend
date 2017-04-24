@@ -207,7 +207,7 @@ return array(
             'type' => 'yesno'
         ),
         'financial_evidence_uploaded' => array(
-            'type' => 'yesnonull'
+            'type' => 'smallint'
         ),
         'prev_has_licence' => array(
             'type' => 'yesnonull'

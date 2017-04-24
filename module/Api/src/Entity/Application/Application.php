@@ -114,6 +114,10 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
     const DATE_FORMAT = 'd M Y';
 
+    const FINANCIAL_EVIDENCE_SEND_IN_POST = 0;
+    const FINANCIAL_EVIDENCE_UPLOADED = 1;
+    const FINANCIAL_EVIDENCE_UPLOAD_LATER = 2;
+
     /**
      * Publication No
      *
