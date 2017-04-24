@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Query\Application\FinancialEvidence;
 
 /**
@@ -64,7 +65,7 @@ class ApplicationFinancialEvidenceReviewService extends AbstractReviewService
 
     private function getEvidence($data, $feData)
     {
-        if ($data['financialEvidenceUploaded'] === 'N') {
+        if ($data['financialEvidenceUploaded'] === Application::FINANCIAL_EVIDENCE_SEND_IN_POST) {
             return $this->translate('application-review-financial-evidence-evidence-post');
         }
 

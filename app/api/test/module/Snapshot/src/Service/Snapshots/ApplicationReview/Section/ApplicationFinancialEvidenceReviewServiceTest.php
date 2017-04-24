@@ -35,7 +35,7 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
     {
         $data = [
             'id' => 123,
-            'financialEvidenceUploaded' => 'N'
+            'financialEvidenceUploaded' => 0
         ];
 
         $expected = [
@@ -90,7 +90,7 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
     {
         $data = [
             'id' => 123,
-            'financialEvidenceUploaded' => 'Y'
+            'financialEvidenceUploaded' => 1
         ];
 
         $expected = [
