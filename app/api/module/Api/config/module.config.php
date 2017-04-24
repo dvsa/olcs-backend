@@ -507,6 +507,7 @@ return [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\TransportManagers::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Application\People::class,
             ],
             'process' => [
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Text1::class,
