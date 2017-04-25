@@ -134,6 +134,8 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
             if (in_array($licence->getId(), $licenceIds)) {
                 $licence->setOrganisation($organisationTo);
                 $this->getRepo('Licence')->save($licence);
+                $organisationFrom->getLicences()->removeElement($licence);
+                $organisationTo->getLicences()->add($licence);
             }
         }
 
