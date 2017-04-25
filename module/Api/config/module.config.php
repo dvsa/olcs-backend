@@ -4,6 +4,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory;
 use Dvsa\Olcs\Api\Domain\QueryPartial;
 use Dvsa\Olcs\Api\Domain\Util;
+use Dvsa\Olcs\Api\Service as ApiSrv;
 
 return [
     'router' => [
@@ -102,10 +103,10 @@ return [
             \Dvsa\Olcs\Api\Mvc\OlcsBlameableListener::class => \Dvsa\Olcs\Api\Mvc\OlcsBlameableListenerFactory::class,
             \Dvsa\Olcs\Api\Listener\OlcsEntityListener::class => \Dvsa\Olcs\Api\Listener\OlcsEntityListener::class,
 
-            \Dvsa\Olcs\Api\Service\Nysiis\NysiisSoapClient::class =>
-                \Dvsa\Olcs\Api\Service\Nysiis\NysiisSoapClientFactory::class,
-            \Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClient::class =>
-                \Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClientFactory::class,
+            ApiSrv\Nysiis\NysiisSoapClient::class => ApiSrv\Nysiis\NysiisSoapClientFactory::class,
+            ApiSrv\Nysiis\NysiisRestClient::class => ApiSrv\Nysiis\NysiisRestClientFactory::class,
+
+            ApiSrv\Document\PrintLetter::class => ApiSrv\Document\PrintLetter::class,
         ],
     ],
     'view_manager' => [

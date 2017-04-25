@@ -1,427 +1,236 @@
 <?php
 
-/**
- * Print Letter Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 
-use Dvsa\Olcs\Api\Domain\Command\Email\CreateCorrespondenceRecord;
-use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
+use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTranslateToWelshTask;
-use Dvsa\Olcs\Api\Domain\Exception\RequiresConfirmationException;
-use Mockery as m;
-use Dvsa\Olcs\Api\Entity;
-use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\PrintLetter;
-use Dvsa\Olcs\Transfer\Command\Document\PrintLetter as Cmd;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Api\Service as ApiSrv;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
- * Print Letter Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Document\PrintLetter
  */
 class PrintLetterTest extends CommandHandlerTestCase
 {
+    const LIC_ID = 8001;
+
+    const DOC_ID = 7001;
+    const DOC_DESC = 'unit test doc description';
+
+    /** @var  PrintLetter */
+    protected $sut;
+
+    /** @var  m\MockInterface */
+    private $mockDocRepo;
+    /** @var  m\MockInterface | Entity\Doc\Document */
+    private $mockDocE;
+    /** @var  m\MockInterface */
+    private $mockPrintSrv;
+
     public function setUp()
     {
+        /** @var Entity\Licence\Licence $mockLicE */
+        $mockLicE = m::mock(Entity\Licence\Licence::class)->makePartial();
+        $mockLicE->setId(self::LIC_ID);
+
+        $this->mockDocE = m::mock(Entity\Doc\Document::class)->makePartial();
+        $this->mockDocE
+            ->setId(self::DOC_ID)
+            ->setDescription(self::DOC_DESC);
+        $this->mockDocE->shouldReceive('getRelatedLicence')->andReturn($mockLicE);
+
+        $this->mockDocRepo = $this->mockRepo('Document', Repository\Document::class);
+
+        $this->mockPrintSrv = m::mock(ApiSrv\Document\PrintLetter::class);
+
+        $this->mockedSmServices[ApiSrv\Document\PrintLetter::class] = $this->mockPrintSrv;
+
         $this->sut = new PrintLetter();
-        $this->mockRepo('Document', Repository\Document::class);
-        $this->mockRepo('DocTemplate', Repository\DocTemplate::class);
 
         parent::setUp();
     }
 
     /**
-     * @dataProvider documentLicenceRelationship
-     *
-     * @param Entity\Doc\Document $document
-     * @param mixed $parentEntity The entity which contains the licence
+     * @dataProvider dpTestHandleCommand
      */
-    public function testHandleCommandShouldEmailRequireConfirmation(Entity\Doc\Document $document, $parentEntity)
+    public function testHandleCommand($method, array $canDo, array $expect)
     {
         $data = [
-            'id' => 111,
-            'shouldEmail' => null
+            'id' => self::DOC_ID,
+            'method' => $method,
         ];
+        $command = TransferCmd\Document\PrintLetter::create($data);
 
-        $command = Cmd::create($data);
+        $this->mockDocRepo->shouldReceive('fetchUsingId')->with($command)->andReturn($this->mockDocE);
 
-        $document->setMetadata('{"details":{"documentTemplate":222}}');
+        $this->mockPrintSrv
+            ->shouldReceive('canPrint')->with($this->mockDocE)->andReturn($canDo['print'])
+            ->shouldReceive('canEmail')->with($this->mockDocE)->andReturn($canDo['email']);
 
-        $this->repoMap['Document']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($document);
+        foreach ($expect['assert'] as $assert) {
+            switch ($assert) {
+                case 'sendEmail':
+                    $this->assertSendEmail();
+                    break;
+                case 'attemptPrint':
+                    $this->assertAttemptPrint();
+                    break;
+                case 'createTranslationTask':
+                    $this->assertCreateTranslationTask();
+                    break;
+                default:
+            }
+        }
 
-        /** @var Entity\Organisation\Organisation $organisation */
-        $organisation = m::mock(Entity\Organisation\Organisation::class)->makePartial();
-        $organisation->setAllowEmail(true);
+        $actual = $this->sut->handleCommand($command);
 
-        /** @var Entity\Licence\Licence $licence */
-        $licence = m::mock(Entity\Licence\Licence::class)->makePartial();
-        $licence->setOrganisation($organisation);
-
-        $parentEntity->setLicence($licence);
-
-        /** @var Entity\Doc\DocTemplate $template */
-        $template = m::mock(Entity\Doc\DocTemplate::class)->makePartial();
-        $template->setSuppressFromOp(false);
-
-        $this->repoMap['DocTemplate']->shouldReceive('fetchById')
-            ->with(222)
-            ->andReturn($template);
-
-        $this->setExpectedException(RequiresConfirmationException::class);
-
-        $this->sut->handleCommand($command);
+        static::assertEquals($expect['result'], $actual->getMessages());
     }
 
-    /**
-     * @dataProvider documentLicenceRelationship
-     *
-     * @param Entity\Doc\Document $document
-     * @param mixed $parentEntity The entity which contains the licence
-     */
-    public function testHandleCommandShouldEmailYes(Entity\Doc\Document $document, $parentEntity)
+    public function dpTestHandleCommand()
     {
-        $data = [
-            'id' => 111,
-            'shouldEmail' => 'Y'
-        ];
-
-        $command = Cmd::create($data);
-
-        $document->setId(111);
-        $document->setMetadata('{"details":{"documentTemplate":222}}');
-
-        $this->repoMap['Document']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($document);
-
-        /** @var Entity\Organisation\Organisation $organisation */
-        $organisation = m::mock(Entity\Organisation\Organisation::class)->makePartial();
-        $organisation->setAllowEmail(true);
-
-        /** @var Entity\Licence\Licence $licence */
-        $licence = m::mock(Entity\Licence\Licence::class)->makePartial();
-        $licence->setOrganisation($organisation);
-        $licence->setId(333);
-
-        $parentEntity->setLicence($licence);
-
-        /** @var Entity\Doc\DocTemplate $template */
-        $template = m::mock(Entity\Doc\DocTemplate::class)->makePartial();
-        $template->setSuppressFromOp(false);
-
-        $this->repoMap['DocTemplate']->shouldReceive('fetchById')
-            ->with(222)
-            ->andReturn($template);
-
-        $data = [
-            'licence' => 333,
-            'document' => 111,
-            'type' => CreateCorrespondenceRecord::TYPE_STANDARD
-        ];
-        $result = new Result();
-        $result->addMessage('CreateCorrespondenceRecord');
-        $this->expectedSideEffect(CreateCorrespondenceRecord::class, $data, $result);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [],
-            'messages' => [
-                'CreateCorrespondenceRecord'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-    }
-
-    /**
-     * @dataProvider documentLicenceRelationship
-     *
-     * @param Entity\Doc\Document $document
-     * @param mixed $parentEntity The entity which contains the licence
-     */
-    public function testHandleCommandShouldEmailNoTranslateToWelsh(Entity\Doc\Document $document, $parentEntity)
-    {
-        $data = [
-            'id' => 111,
-            'shouldEmail' => 'N'
-        ];
-
-        $command = Cmd::create($data);
-
-        $document->setId(111);
-        $document->setMetadata('{"details":{"documentTemplate":222}}');
-        $document->setDescription('foo');
-
-        $this->repoMap['Document']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($document);
-
-        /** @var Entity\Organisation\Organisation $organisation */
-        $organisation = m::mock(Entity\Organisation\Organisation::class)->makePartial();
-        $organisation->setAllowEmail(true);
-
-        /** @var Entity\Licence\Licence $licence */
-        $licence = m::mock(Entity\Licence\Licence::class)->makePartial();
-        $licence->setOrganisation($organisation);
-        $licence->setId(333);
-        $licence->setTranslateToWelsh(1);
-
-        $parentEntity->setLicence($licence);
-
-        /** @var Entity\Doc\DocTemplate $template */
-        $template = m::mock(Entity\Doc\DocTemplate::class)->makePartial();
-        $template->setSuppressFromOp(false);
-
-        $this->repoMap['DocTemplate']->shouldReceive('fetchById')
-            ->with(222)
-            ->andReturn($template);
-
-        $data = [
-            'description' => 'foo',
-            'licence' => 333
-        ];
-        $result = new Result();
-        $result->addMessage('CreateTranslateToWelshTask');
-        $this->expectedSideEffect(CreateTranslateToWelshTask::class, $data, $result);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [],
-            'messages' => [
-                'CreateTranslateToWelshTask'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-    }
-
-    /**
-     * @dataProvider documentLicenceRelationship
-     *
-     * @param Entity\Doc\Document $document
-     * @param mixed $parentEntity The entity which contains the licence
-     */
-    public function testHandleCommandShouldEmailNo(Entity\Doc\Document $document, $parentEntity)
-    {
-        $data = [
-            'id' => 111,
-            'shouldEmail' => 'N'
-        ];
-
-        $command = Cmd::create($data);
-
-        $document->setId(111);
-        $document->setMetadata('{"details":{"documentTemplate":222}}');
-        $document->setDescription('foo');
-        $document->setIdentifier(12345);
-
-        $this->repoMap['Document']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($document);
-
-        /** @var Entity\Organisation\Organisation $organisation */
-        $organisation = m::mock(Entity\Organisation\Organisation::class)->makePartial();
-        $organisation->setAllowEmail(true);
-
-        /** @var Entity\Licence\Licence $licence */
-        $licence = m::mock(Entity\Licence\Licence::class)->makePartial();
-        $licence->setOrganisation($organisation);
-        $licence->setId(333);
-        $licence->setTranslateToWelsh(0);
-
-        $parentEntity->setLicence($licence);
-
-        /** @var Entity\Doc\DocTemplate $template */
-        $template = m::mock(Entity\Doc\DocTemplate::class)->makePartial();
-        $template->setSuppressFromOp(false);
-
-        $this->repoMap['DocTemplate']->shouldReceive('fetchById')
-            ->with(222)
-            ->andReturn($template);
-
-        $data = [
-            'jobName' => 'foo',
-            'documentId' => 111
-        ];
-        $result = new Result();
-        $result->addMessage('Enqueue');
-        $this->expectedSideEffect(Enqueue::class, $data, $result);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [],
-            'messages' => [
-                'Enqueue'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-    }
-
-    /**
-     * @dataProvider documentLicenceRelationship
-     *
-     * @param Entity\Doc\Document $document
-     * @param mixed $parentEntity The entity which contains the licence
-     */
-    public function testHandleCommandShouldntEmailSupressed(Entity\Doc\Document $document, $parentEntity)
-    {
-        $data = [
-            'id' => 111
-        ];
-
-        $command = Cmd::create($data);
-
-        $document->setId(111);
-        $document->setMetadata('{"details":{"documentTemplate":222}}');
-        $document->setDescription('foo');
-        $document->setIdentifier(12345);
-
-        $this->repoMap['Document']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($document);
-
-        /** @var Entity\Organisation\Organisation $organisation */
-        $organisation = m::mock(Entity\Organisation\Organisation::class)->makePartial();
-        $organisation->setAllowEmail(true);
-
-        /** @var Entity\Licence\Licence $licence */
-        $licence = m::mock(Entity\Licence\Licence::class)->makePartial();
-        $licence->setOrganisation($organisation);
-        $licence->setId(333);
-        $licence->setTranslateToWelsh(0);
-
-        $parentEntity->setLicence($licence);
-
-        /** @var Entity\Doc\DocTemplate $template */
-        $template = m::mock(Entity\Doc\DocTemplate::class)->makePartial();
-        $template->setSuppressFromOp(true);
-
-        $this->repoMap['DocTemplate']->shouldReceive('fetchById')
-            ->with(222)
-            ->andReturn($template);
-
-        $data = [
-            'jobName' => 'foo',
-            'documentId' => 111
-        ];
-        $result = new Result();
-        $result->addMessage('Enqueue');
-        $this->expectedSideEffect(Enqueue::class, $data, $result);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [],
-            'messages' => [
-                'Enqueue'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-    }
-
-    /**
-     * @dataProvider documentLicenceRelationship
-     *
-     * @param Entity\Doc\Document $document
-     * @param mixed $parentEntity The entity which contains the licence
-     */
-    public function testHandleCommandShouldntEmailNoLicence(Entity\Doc\Document $document, $parentEntity)
-    {
-        $data = [
-            'id' => 111
-        ];
-
-        $command = Cmd::create($data);
-
-        $document->setId(111);
-        $document->setMetadata('{"details":{"documentTemplate":222}}');
-        $document->setDescription('foo');
-        $document->setIdentifier(12345);
-
-        $this->repoMap['Document']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($document);
-
-        /** @var Entity\Doc\DocTemplate $template */
-        $template = m::mock(Entity\Doc\DocTemplate::class)->makePartial();
-        $template->setSuppressFromOp(false);
-
-        $this->repoMap['DocTemplate']->shouldReceive('fetchById')
-            ->with(222)
-            ->andReturn($template);
-
-        $data = [
-            'jobName' => 'foo',
-            'documentId' => 111
-        ];
-        $result = new Result();
-        $result->addMessage('Enqueue');
-        $this->expectedSideEffect(Enqueue::class, $data, $result);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [],
-            'messages' => [
-                'Enqueue'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-    }
-
-    public function documentLicenceRelationship()
-    {
-        /** @var Entity\Doc\Document $docWithLicence */
-        $docWithLicence = m::mock(Entity\Doc\Document::class)->makePartial();
-
-        /** @var Entity\Application\Application $application */
-        $application = m::mock(Entity\Application\Application::class)->makePartial();
-        /** @var Entity\Doc\Document $docWithApplication */
-        $docWithApplication = m::mock(Entity\Doc\Document::class)->makePartial();
-        $docWithApplication->setApplication($application);
-
-        /** @var Entity\Cases\Cases $case */
-        $case = m::mock(Entity\Cases\Cases::class)->makePartial();
-        /** @var Entity\Doc\Document $docWithCase */
-        $docWithCase = m::mock(Entity\Doc\Document::class)->makePartial();
-        $docWithCase->setCase($case);
-
-        /** @var Entity\Bus\BusReg $busReg */
-        $busReg = m::mock(Entity\Bus\BusReg::class)->makePartial();
-        /** @var Entity\Doc\Document $docWithBusReg */
-        $docWithBusReg = m::mock(Entity\Doc\Document::class)->makePartial();
-        $docWithBusReg->setBusReg($busReg);
-
         return [
-            [
-                $docWithLicence,
-                $docWithLicence
+            'method:Email;canEmail&Print;' => [
+                'method' => TransferCmd\Document\PrintLetter::METHOD_EMAIL,
+                'canDo' => [
+                    'email' => true,
+                    'print' => true,
+                ],
+                'expect' => [
+                    'result' => ['SendEmail'],
+                    'assert' => [
+                        'sendEmail',
+                    ],
+                ],
             ],
-            [
-                $docWithApplication,
-                $application
+            'method:Print;canEmail&Print;' => [
+                'method' => TransferCmd\Document\PrintLetter::METHOD_PRINT_AND_POST,
+                'canDo' => [
+                    'email' => true,
+                    'print' => true,
+                ],
+                'expect' => [
+                    'result' => ['AttemptPrint'],
+                    'assert' => [
+                        'attemptPrint',
+                    ],
+                ],
             ],
-            [
-                $docWithCase,
-                $case
+            'method:Email;canNotEmail&Print;' => [
+                'method' => TransferCmd\Document\PrintLetter::METHOD_EMAIL,
+                'canDo' => [
+                    'email' => false,
+                    'print' => true,
+                ],
+                'expect' => [
+                    'result' => [],
+                    'assert' => [],
+                ],
             ],
-            [
-                $docWithBusReg,
-                $busReg
-            ]
+            'method:Print;canEmail&NotPrint;addTranslation' => [
+                'method' => TransferCmd\Document\PrintLetter::METHOD_PRINT_AND_POST,
+                'canDo' => [
+                    'email' => true,
+                    'print' => false,
+                ],
+                'expect' => [
+                    'result' => ['CreateTranslationTask'],
+                    'assert' => [
+                        'createTranslationTask',
+                    ],
+                ],
+            ],
+            'method:Email;canEmail&NotPrint;addTranslation' => [
+                'method' => TransferCmd\Document\PrintLetter::METHOD_EMAIL,
+                'canDo' => [
+                    'email' => true,
+                    'print' => false,
+                ],
+                'expect' => [
+                    'result' => [
+                        'CreateTranslationTask',
+                        'SendEmail',
+                    ],
+                    'assert' => [
+                        'createTranslationTask',
+                        'sendEmail',
+                    ],
+                ],
+            ],
         ];
+    }
+
+    private function assertAttemptPrint()
+    {
+        $data = [
+            'documentId' => self::DOC_ID,
+            'jobName' => self::DOC_DESC,
+        ];
+
+        $result = new Result();
+        $result->addMessage('AttemptPrint');
+
+        $this->expectedSideEffect(DomainCmd\PrintScheduler\Enqueue::class, $data, $result);
+    }
+
+    private function assertSendEmail()
+    {
+        $data = [
+            'licence' => self::LIC_ID,
+            'document' => self::DOC_ID,
+            'type' => DomainCmd\Email\CreateCorrespondenceRecord::TYPE_STANDARD,
+        ];
+
+        $result = new Result();
+        $result->addMessage('SendEmail');
+
+        $this->expectedSideEffect(DomainCmd\Email\CreateCorrespondenceRecord::class, $data, $result);
+    }
+
+    private function assertCreateTranslationTask()
+    {
+        $data = [
+            'description' => self::DOC_DESC,
+            'licence' => self::LIC_ID,
+        ];
+
+        $result = new Result();
+        $result->addMessage('CreateTranslationTask');
+
+        $this->expectedSideEffect(DomainCmd\Task\CreateTranslateToWelshTask::class, $data, $result);
+    }
+
+    public function testNulls()
+    {
+        $mockDocE = m::mock(Entity\Doc\Document::class)->makePartial();
+        $mockDocE->shouldReceive('getRelatedLicence')->andReturnNull();
+
+        $this->mockDocRepo->shouldReceive('fetchUsingId')->andReturn($mockDocE);
+
+        $this->mockPrintSrv
+            ->shouldReceive('canPrint')->andReturn(false)
+            ->shouldReceive('canEmail')->andReturn(true);
+
+        $this->commandHandler
+            ->shouldReceive('handleCommand')
+            ->never()
+            ->with(m::type(DomainCmd\Task\CreateTranslateToWelshTask::class), false)
+            ->shouldReceive('handleCommand')
+            ->never()
+            ->with(m::type(DomainCmd\Email\CreateCorrespondenceRecord::class), false);
+
+        $this->sut->handleCommand(
+            TransferCmd\Document\PrintLetter::create(
+                [
+                    'id' => self::DOC_ID,
+                    'method' => TransferCmd\Document\PrintLetter::METHOD_EMAIL,
+                ]
+            )
+        );
     }
 }

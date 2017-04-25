@@ -10,9 +10,17 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Document\CanCreateDocument;
 return [
     CommandHandler\Document\DeleteDocument::class => CanAccessDocumentWithId::class,
     CommandHandler\Document\DeleteDocuments::class => IsInternalUser::class,
-    QueryHandler\Document\Download::class => CanAccessDocumentWithId::class,
-    // No validation as these a public documents
-    QueryHandler\Document\DownloadGuide::class => NoValidationRequired::class,
     CommandHandler\Document\CreateDocument::class => CanCreateDocument::class,
     CommandHandler\Document\Upload::class => CanCreateDocument::class,
+    CommandHandler\Document\CopyDocument::class => IsInternalUser::class,
+    CommandHandler\Document\CreateLetter::class => IsInternalUser::class,
+    CommandHandler\Document\GenerateAndStore::class => IsInternalUser::class,
+    CommandHandler\Document\MoveDocument::class => IsInternalUser::class,
+    CommandHandler\Document\PrintLetter::class => CanAccessDocumentWithId::class,
+    CommandHandler\Document\UpdateDocumentLinks::class => IsInternalUser::class,
+
+    //  queries
+    QueryHandler\Document\Download::class => CanAccessDocumentWithId::class,
+    QueryHandler\Document\DownloadGuide::class => NoValidationRequired::class,
+    QueryHandler\Document\PrintLetter::class => CanAccessDocumentWithId::class,
 ];
