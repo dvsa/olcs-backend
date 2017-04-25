@@ -42,7 +42,7 @@ class LicenceVehicle extends AbstractRepository
     {
         $qb = $this->createFilteredQueryForLva($query);
 
-        $this->filterByApplicationOrLicence($qb, $applicationId, $licenceId);
+        $this->filterByApplicationOrLicenceSpecifiedOnly($qb, $applicationId, $licenceId);
 
         return $qb;
     }
@@ -289,6 +289,28 @@ class LicenceVehicle extends AbstractRepository
             $qb->expr()->orX(
                 $qb->expr()->eq('m.application', ':application'),
                 $qb->expr()->eq('m.licence', ':licence')
+            )
+        );
+        $qb->setParameter('application', $applicationId);
+        $qb->setParameter('licence', $licenceId);
+    }
+
+    /**
+     * Filter by application or licence specified only
+     *
+     * @param QueryBuilder $qb
+     * @param $applicationId
+     * @param $licenceId
+     */
+    private function filterByApplicationOrLicenceSpecifiedOnly(QueryBuilder $qb, $applicationId, $licenceId)
+    {
+        $qb->andWhere(
+            $qb->expr()->orX(
+                $qb->expr()->eq('m.application', ':application'),
+                $qb->expr()->andX(
+                    $qb->expr()->eq('m.licence', ':licence'),
+                    $qb->expr()->isNotNull('m.specifiedDate')
+                )
             )
         );
         $qb->setParameter('application', $applicationId);

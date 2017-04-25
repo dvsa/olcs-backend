@@ -34,6 +34,7 @@ class GrantTest extends CommandHandlerTestCase
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
         $this->mockRepo('GoodsDisc', \Dvsa\Olcs\Api\Domain\Repository\GoodsDisc::class);
         $this->mockRepo('PsvDisc', \Dvsa\Olcs\Api\Domain\Repository\GoodsDisc::class);
+        $this->mockRepo('LicenceVehicle', \Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle::class);
 
         parent::setUp();
     }
@@ -64,18 +65,35 @@ class GrantTest extends CommandHandlerTestCase
         $licence->setTotAuthVehicles(10);
         $licence->setTrafficArea((new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea())->setId('TA'));
 
+        $vehicle = m::mock();
+
+        $existingLicenceVehicle = m::mock(LicenceVehicle::class)->makePartial();
+        $existingLicenceVehicle->setVehicle($vehicle);
+        $existingLicenceVehicle->setRemovalDate(null);
+        $existingLicenceVehicle->setSpecifiedDate(new \DateTime());
+
+        $existingLicenceVehicles = new ArrayCollection();
+        $existingLicenceVehicles->add($existingLicenceVehicle);
+        $licence->setLicenceVehicles($existingLicenceVehicles);
+
         /* @var $application ApplicationEntity */
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
         $application->setId(111);
         $application->setLicence($licence);
 
+        $newLicenceVehicles = new ArrayCollection();
+        $newLicenceVehicle = m::mock(LicenceVehicle::class)->makePartial();
+        $newLicenceVehicle->setVehicle($vehicle);
+
+        $newLicenceVehicles->add($newLicenceVehicle);
+
         $application->shouldReceive('getCurrentInterimStatus')
             ->andReturn(ApplicationEntity::INTERIM_STATUS_INFORCE)
             ->once()
             ->shouldReceive('isGoods')
             ->andReturn(true)
-            ->once()
+            ->twice()
             ->shouldReceive('isVariation')
             ->andReturn(true)
             ->once()
@@ -85,7 +103,16 @@ class GrantTest extends CommandHandlerTestCase
             ->shouldReceive('isPsv')
             ->once()
             ->andReturn(false)
+            ->shouldReceive('getLicenceVehicles')
+            ->andReturn($newLicenceVehicles)
+            ->once()
             ->getMock();
+
+        $this->repoMap['LicenceVehicle']
+            ->shouldReceive('save')
+            ->with($newLicenceVehicle)
+            ->getMock();
+
         $this->expectedSideEffectAsSystemUser(EndInterimCmd::class, ['id' => 111], new Result());
 
         $licence->shouldReceive('copyInformationFromApplication')
@@ -176,7 +203,11 @@ class GrantTest extends CommandHandlerTestCase
             ->andReturn(false)
             ->shouldReceive('isPsv')
             ->once()
-            ->andReturn(false);
+            ->andReturn(false)
+            ->shouldReceive('getLicenceVehicles')
+            ->andReturn([])
+            ->once()
+            ->getMock();
 
         /** @var GoodsDisc $goodsDisc1 */
         $goodsDisc1 = m::mock(GoodsDisc::class)->makePartial();

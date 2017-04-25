@@ -101,7 +101,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'platedWeight' => 100,
             'specifiedDate' => null,
             'receivedDate' => '2015-01-01',
-            'confirm' => 1
+            'confirm' => 1,
+            'applicationId' => 111
         ];
         $result1 = new Result();
         $result1->addId('licenceVehicle', 123);

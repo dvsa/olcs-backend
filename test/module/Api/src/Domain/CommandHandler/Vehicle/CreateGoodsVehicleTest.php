@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Create Goods Vehicle Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Vehicle;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -58,7 +53,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $data = [
             'licence' => 111,
-            'vrm' => 'ABC123'
+            'vrm' => 'ABC123',
+            'applicationId' => null
         ];
         $command = Cmd::create($data);
 
@@ -90,7 +86,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
     {
         $data = [
             'licence' => 111,
-            'vrm' => 'ABC123'
+            'vrm' => 'ABC123',
+            'applicationId' => null
         ];
         $command = Cmd::create($data);
 
@@ -116,7 +113,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $data = [
             'licence' => 111,
-            'vrm' => 'ABC123'
+            'vrm' => 'ABC123',
+            'applicationId' => null
         ];
         $command = Cmd::create($data);
 
@@ -154,7 +152,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $data = [
             'licence' => 111,
             'vrm' => 'ABC123',
-            'identifyDuplicates' => true
+            'identifyDuplicates' => true,
+            'applicationId' => null
         ];
         $command = Cmd::create($data);
 
@@ -192,7 +191,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $data = [
             'licence' => 111,
-            'vrm' => 'ABC123'
+            'vrm' => 'ABC123',
+            'applicationId' => null
         ];
         $command = Cmd::create($data);
 
@@ -252,7 +252,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $data = [
             'licence' => 111,
             'vrm' => 'ABC123',
-            'identifyDuplicates' => true
+            'identifyDuplicates' => true,
+            'applicationId' => null
         ];
         $command = Cmd::create($data);
 
@@ -322,7 +323,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'vrm' => 'ABC123',
             'platedWeight' => 100,
             'specifiedDate' => '2015-01-01',
-            'receivedDate' => '2015-02-02'
+            'receivedDate' => '2015-02-02',
+            'applicationId' => null
         ];
         $command = Cmd::create($data);
 
@@ -392,7 +394,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'platedWeight' => 100,
             'specifiedDate' => '2015-01-01',
             'receivedDate' => '2015-02-02',
-            'identifyDuplicates' => true
+            'identifyDuplicates' => true,
+            'applicationId' => null
         ];
         $command = Cmd::create($data);
 
@@ -468,7 +471,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'vrm' => 'ABC123',
             'platedWeight' => 100,
             'specifiedDate' => '2015-01-01',
-            'receivedDate' => '2015-02-02'
+            'receivedDate' => '2015-02-02',
+            'applicationId' => null
         ];
         $command = Cmd::create($data);
 
@@ -548,7 +552,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'specifiedDate' => '2015-01-01',
             'receivedDate' => '2015-02-02',
             'identifyDuplicates' => true,
-            'confirm' => true
+            'confirm' => true,
+            'applicationId' => null
         ];
         $command = Cmd::create($data);
 
@@ -623,5 +628,288 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
         $this->assertEquals('2015-01-01', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d'));
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
+    }
+
+    public function testHandleCommandForApplication()
+    {
+        $data = [
+            'licence' => 111,
+            'vrm' => 'ABC123',
+            'platedWeight' => 100,
+            'specifiedDate' => '2015-01-01',
+            'receivedDate' => '2015-02-02',
+            'applicationId' => 999
+        ];
+        $command = Cmd::create($data);
+
+        $activeVehicle = m::mock()
+            ->shouldReceive('getVehicle')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getVrm')
+                ->andReturn('FOO')
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getApplication')
+            ->andReturn(null)
+            ->once()
+            ->getMock();
+
+        $activeVehicles = new ArrayCollection();
+        $activeVehicles->add($activeVehicle);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->shouldReceive('getActiveVehicles')
+            ->with(false)
+            ->andReturn($activeVehicles)
+            ->once();
+
+        $otherLicences = [];
+
+        $vehicle = new Vehicle();
+        $vehicle->setId(123);
+
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([$vehicle]);
+        $this->repoMap['Vehicle']->shouldReceive('save')->with($vehicle)->once()->andReturn([$vehicle]);
+        $this->repoMap['Licence']->shouldReceive('fetchById')
+            ->with(111)
+            ->andReturn($licence)
+            ->shouldReceive('fetchByVrm')
+            ->with('ABC123', true)
+            ->andReturn($otherLicences);
+
+        /** @var LicenceVehicle $savedLicenceVehicle */
+        $savedLicenceVehicle = null;
+
+        $this->repoMap['LicenceVehicle']->shouldReceive('save')
+            ->with(m::type(LicenceVehicle::class))
+            ->andReturnUsing(
+                function (LicenceVehicle $licenceVehicle) use (&$savedLicenceVehicle) {
+                    $licenceVehicle->setId(321);
+                    $savedLicenceVehicle = $licenceVehicle;
+                }
+            );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'vehicle' => 123,
+                'licenceVehicle' => 321
+            ],
+            'messages' => [
+                'Vehicle created',
+                'Licence Vehicle created'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertInstanceOf(Vehicle::class, $vehicle);
+        $this->assertInstanceOf(LicenceVehicle::class, $savedLicenceVehicle);
+        $this->assertSame($vehicle, $savedLicenceVehicle->getVehicle());
+
+        $this->assertSame($licence, $savedLicenceVehicle->getLicence());
+        $this->assertEquals('2015-01-01', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d'));
+        $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
+        $this->assertEquals(100, $vehicle->getPlatedWeight());
+    }
+
+    public function testHandleCommandForApplicationNoActivevehicles()
+    {
+        $data = [
+            'licence' => 111,
+            'vrm' => 'ABC123',
+            'platedWeight' => 100,
+            'specifiedDate' => '2015-01-01',
+            'receivedDate' => '2015-02-02',
+            'applicationId' => 999
+        ];
+        $command = Cmd::create($data);
+
+        $activeVehicles = new ArrayCollection();
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->shouldReceive('getActiveVehicles')
+            ->with(false)
+            ->andReturn($activeVehicles)
+            ->once();
+
+        $otherLicences = [];
+
+        $vehicle = new Vehicle();
+        $vehicle->setId(123);
+
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([$vehicle]);
+        $this->repoMap['Vehicle']->shouldReceive('save')->with($vehicle)->once()->andReturn([$vehicle]);
+        $this->repoMap['Licence']->shouldReceive('fetchById')
+            ->with(111)
+            ->andReturn($licence)
+            ->shouldReceive('fetchByVrm')
+            ->with('ABC123', true)
+            ->andReturn($otherLicences);
+
+        /** @var LicenceVehicle $savedLicenceVehicle */
+        $savedLicenceVehicle = null;
+
+        $this->repoMap['LicenceVehicle']->shouldReceive('save')
+            ->with(m::type(LicenceVehicle::class))
+            ->andReturnUsing(
+                function (LicenceVehicle $licenceVehicle) use (&$savedLicenceVehicle) {
+                    $licenceVehicle->setId(321);
+                    $savedLicenceVehicle = $licenceVehicle;
+                }
+            );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'vehicle' => 123,
+                'licenceVehicle' => 321
+            ],
+            'messages' => [
+                'Vehicle created',
+                'Licence Vehicle created'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertInstanceOf(Vehicle::class, $vehicle);
+        $this->assertInstanceOf(LicenceVehicle::class, $savedLicenceVehicle);
+        $this->assertSame($vehicle, $savedLicenceVehicle->getVehicle());
+
+        $this->assertSame($licence, $savedLicenceVehicle->getLicence());
+        $this->assertEquals('2015-01-01', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d'));
+        $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
+        $this->assertEquals(100, $vehicle->getPlatedWeight());
+    }
+
+    public function testHandleCommandForApplicationWithException()
+    {
+        $this->setExpectedException(ValidationException::class);
+
+        $data = [
+            'licence' => 111,
+            'vrm' => 'ABC123',
+            'platedWeight' => 100,
+            'specifiedDate' => '2015-01-01',
+            'receivedDate' => '2015-02-02',
+            'applicationId' => 999
+        ];
+        $command = Cmd::create($data);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')
+            ->with('ABC123')
+            ->once()
+            ->andReturn([]);
+
+        $this->repoMap['Licence']->shouldReceive('fetchById')
+            ->with(111)
+            ->andReturn($licence)
+            ->once();
+
+        $activeVehicles = new ArrayCollection();
+
+        $licenceVehicle = m::mock()
+            ->shouldReceive('getApplication')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(999)
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getVehicle')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getVrm')
+                ->andReturn('ABC123')
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $activeVehicles->add($licenceVehicle);
+
+        $licence->shouldReceive('getActiveVehicles')
+            ->with(false)
+            ->andReturn($activeVehicles)
+            ->once();
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandForApplicationWithExceptionAlternative()
+    {
+        $this->setExpectedException(ValidationException::class);
+
+        $data = [
+            'licence' => 111,
+            'vrm' => 'ABC123',
+            'platedWeight' => 100,
+            'specifiedDate' => '2015-01-01',
+            'receivedDate' => '2015-02-02',
+            'applicationId' => 999
+        ];
+        $command = Cmd::create($data);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')
+            ->with('ABC123')
+            ->once()
+            ->andReturn([]);
+
+        $this->repoMap['Licence']->shouldReceive('fetchById')
+            ->with(111)
+            ->andReturn($licence)
+            ->once();
+
+        $activeVehicles = new ArrayCollection();
+
+        $licenceVehicle = m::mock()
+            ->shouldReceive('getApplication')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(888)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getVehicle')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getVrm')
+                    ->andReturn('ABC123')
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getSpecifiedDate')
+            ->andReturn('01/01/2017')
+            ->once()
+            ->getMock();
+
+        $activeVehicles->add($licenceVehicle);
+
+        $licence->shouldReceive('getActiveVehicles')
+            ->with(false)
+            ->andReturn($activeVehicles)
+            ->once();
+
+        $this->sut->handleCommand($command);
     }
 }
