@@ -202,7 +202,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      *
      * @param ApplicationEntity $application application
      *
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return void
      */
     protected function checkForDuplicateVehicles($application)
     {
