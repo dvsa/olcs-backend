@@ -50,6 +50,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements Transac
 
         $dtoData = $command->getArrayCopy();
         $dtoData['licence'] = $application->getLicence()->getId();
+        $dtoData['applicationId'] = $application->getId();
 
         $vehicleResult = $this->handleSideEffect(VehicleCmd::create($dtoData));
         $result->merge($vehicleResult);
