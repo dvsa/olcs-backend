@@ -32,6 +32,7 @@ return [
     CommandHandler\Application\UpdateTypeOfLicence::class => CanAccessApplicationWithId::class,
     CommandHandler\Application\WithdrawApplication::class => CanEditApplicationWithId::class,
     CommandHandler\Application\UpdatePrivateHireLicence::class => CanAccessApplicationWithId::class,
+    CommandHandler\Application\UploadEvidence::class => CanAccessApplicationWithId::class,
 
     QueryHandler\Application\OutstandingFees::class     => CanAccessApplicationWithId::class,
     QueryHandler\Application\Application::class => CanAccessApplicationWithId::class,
@@ -43,4 +44,5 @@ return [
     QueryHandler\Application\Schedule41Approve::class => CanAccessApplicationWithId::class,
     QueryHandler\Application\Summary::class => CanAccessApplicationWithId::class,
     QueryHandler\Application\TaxiPhv::class => CanAccessApplicationWithId::class,
+    QueryHandler\Application\UploadEvidence::class => CanAccessApplicationWithId::class,
 ];

@@ -26,6 +26,10 @@ class ApplicationCompletion extends AbstractApplicationCompletion
     const STATUS_INCOMPLETE = 1;
     const STATUS_COMPLETE = 2;
 
+    // On a variation the statuses mean difference things
+    const STATUS_VARIATION_REQUIRES_ATTENTION = 1;
+    const STATUS_VARIATION_UPDATED = 2;
+
     const SECTION_PEOPLE = 'people';
     const SECTION_TRANSPORT_MANAGER = 'transport_managers';
     const SECTION_FINANCIAL_HISTORY = 'financial_history';

@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Query\Application\FinancialEvidence;
 
 /**
@@ -19,7 +20,8 @@ class ApplicationFinancialEvidenceReviewService extends AbstractReviewService
     /**
      * Format the readonly config from the given data
      *
-     * @param array $data
+     * @param array $data Application data
+     *
      * @return array
      */
     public function getConfigFromData(array $data = array())
@@ -52,19 +54,34 @@ class ApplicationFinancialEvidenceReviewService extends AbstractReviewService
         ];
     }
 
-    private function getTotalVehicles($financialEvidenceDate)
+    /**
+     * Get total number of vehicles
+     *
+     * @param array $financialEvidenceData Application financial evidence data
+     *
+     * @return int
+     */
+    private function getTotalVehicles($financialEvidenceData)
     {
-        return (isset($financialEvidenceDate['applicationVehicles']) ?
-            (int)$financialEvidenceDate['applicationVehicles'] : 0) +
-            (isset($financialEvidenceDate['otherLicenceVehicles']) ?
-            (int)$financialEvidenceDate['otherLicenceVehicles'] : 0) +
-            (isset($financialEvidenceDate['otherApplicationVehicles']) ?
-            (int)$financialEvidenceDate['otherApplicationVehicles'] : 0);
+        return (isset($financialEvidenceData['applicationVehicles']) ?
+            (int)$financialEvidenceData['applicationVehicles'] : 0) +
+            (isset($financialEvidenceData['otherLicenceVehicles']) ?
+            (int)$financialEvidenceData['otherLicenceVehicles'] : 0) +
+            (isset($financialEvidenceData['otherApplicationVehicles']) ?
+            (int)$financialEvidenceData['otherApplicationVehicles'] : 0);
     }
 
+    /**
+     * Get financial evidence document list
+     *
+     * @param array $data   Application data
+     * @param array $feData Financial evidence data
+     *
+     * @return string
+     */
     private function getEvidence($data, $feData)
     {
-        if ($data['financialEvidenceUploaded'] === 'N') {
+        if ($data['financialEvidenceUploaded'] === Application::FINANCIAL_EVIDENCE_SEND_IN_POST) {
             return $this->translate('application-review-financial-evidence-evidence-post');
         }
 
@@ -76,7 +93,8 @@ class ApplicationFinancialEvidenceReviewService extends AbstractReviewService
     /**
      * Format document list
      *
-     * @param array $documents
+     * @param array $documents Document data
+     *
      * @return string
      */
     private function formatDocumentList($documents)

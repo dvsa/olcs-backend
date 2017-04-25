@@ -3446,4 +3446,125 @@ class ApplicationEntityTest extends EntityTester
 
         $this->assertTrue($application->isPreviouslyPublished());
     }
+
+    /**
+     * @dataProvider dataProviderTestCanAddFinancialEvidence
+     */
+    public function testCanAddFinancialEvidence(
+        $expected,
+        $isVariation,
+        $trackingStatus,
+        $financialEvidenceUploaded,
+        $licenceType,
+        $completionStatus
+    ) {
+        /** @var Entity $sut */
+        $sut = $this->instantiate(Entity::class);
+        $sut->setIsVariation($isVariation);
+
+        $tracking = new Entities\Application\ApplicationTracking($sut);
+        $tracking->setFinancialEvidenceStatus($trackingStatus);
+        $sut->setApplicationTracking($tracking);
+        $sut->setFinancialEvidenceUploaded($financialEvidenceUploaded);
+        $sut->setLicenceType($licenceType);
+        $completion = new ApplicationCompletion($sut);
+        $completion->setFinancialEvidenceStatus($completionStatus);
+        $sut->setApplicationCompletion($completion);
+
+        $this->assertSame($expected, $sut->canAddFinancialEvidence());
+    }
+
+    public function dataProviderTestCanAddFinancialEvidence()
+    {
+        return [
+            [
+                true,
+                true,
+                Entities\Application\ApplicationTracking::STATUS_NOT_SET,
+                Entity::FINANCIAL_EVIDENCE_SEND_IN_POST,
+                Licence::LICENCE_TYPE_RESTRICTED,
+                ApplicationCompletion::STATUS_VARIATION_UPDATED
+            ],
+            [
+                true,
+                true,
+                Entities\Application\ApplicationTracking::STATUS_NOT_ACCEPTED,
+                Entity::FINANCIAL_EVIDENCE_SEND_IN_POST,
+                Licence::LICENCE_TYPE_RESTRICTED,
+                ApplicationCompletion::STATUS_VARIATION_UPDATED
+            ],
+            [
+                true,
+                true,
+                Entities\Application\ApplicationTracking::STATUS_NOT_ACCEPTED,
+                Entity::FINANCIAL_EVIDENCE_UPLOAD_LATER,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                ApplicationCompletion::STATUS_VARIATION_UPDATED
+            ],
+            [
+                true,
+                true,
+                Entities\Application\ApplicationTracking::STATUS_NOT_ACCEPTED,
+                Entity::FINANCIAL_EVIDENCE_UPLOAD_LATER,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                ApplicationCompletion::STATUS_VARIATION_UPDATED
+            ],
+            [
+                true,
+                false,
+                Entities\Application\ApplicationTracking::STATUS_NOT_ACCEPTED,
+                Entity::FINANCIAL_EVIDENCE_UPLOAD_LATER,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                ApplicationCompletion::STATUS_NOT_STARTED
+            ],
+            [
+                true,
+                false,
+                Entities\Application\ApplicationTracking::STATUS_NOT_ACCEPTED,
+                Entity::FINANCIAL_EVIDENCE_UPLOAD_LATER,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                ApplicationCompletion::STATUS_INCOMPLETE
+            ],
+            [
+                false,
+                false,
+                Entities\Application\ApplicationTracking::STATUS_ACCEPTED,
+                Entity::FINANCIAL_EVIDENCE_SEND_IN_POST,
+                Licence::LICENCE_TYPE_RESTRICTED,
+                ApplicationCompletion::STATUS_VARIATION_UPDATED
+            ],
+            [
+                false,
+                false,
+                Entities\Application\ApplicationTracking::STATUS_NOT_APPLICABLE,
+                Entity::FINANCIAL_EVIDENCE_SEND_IN_POST,
+                Licence::LICENCE_TYPE_RESTRICTED,
+                ApplicationCompletion::STATUS_VARIATION_UPDATED
+            ],
+            [
+                false,
+                false,
+                Entities\Application\ApplicationTracking::STATUS_NOT_SET,
+                Entity::FINANCIAL_EVIDENCE_UPLOADED,
+                Licence::LICENCE_TYPE_RESTRICTED,
+                ApplicationCompletion::STATUS_VARIATION_UPDATED
+            ],
+            [
+                false,
+                false,
+                Entities\Application\ApplicationTracking::STATUS_NOT_SET,
+                Entity::FINANCIAL_EVIDENCE_UPLOAD_LATER,
+                Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                ApplicationCompletion::STATUS_VARIATION_UPDATED
+            ],
+            [
+                false,
+                true,
+                Entities\Application\ApplicationTracking::STATUS_NOT_SET,
+                Entity::FINANCIAL_EVIDENCE_UPLOAD_LATER,
+                Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                ApplicationCompletion::STATUS_VARIATION_REQUIRES_ATTENTION
+            ],
+        ];
+    }
 }
