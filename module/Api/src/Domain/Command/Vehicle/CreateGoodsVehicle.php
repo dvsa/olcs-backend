@@ -77,7 +77,7 @@ final class CreateGoodsVehicle extends AbstractCommand
     /**
      * Get application id
      *
-     * @return id
+     * @return int
      */
     public function getApplicationId()
     {
