@@ -137,4 +137,33 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
 
         return null;
     }
+
+    /**
+     * Return licence
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Licence\Licence|null
+     */
+    public function getRelatedLicence()
+    {
+        if ($this->getLicence() !== null) {
+            return $this->getLicence();
+        }
+
+        $application = $this->getApplication();
+        if ($application !== null) {
+            return $application->getLicence();
+        }
+
+        $case = $this->getCase();
+        if ($case !== null) {
+            return $case->getLicence();
+        }
+
+        $busReg = $this->getBusReg();
+        if ($busReg !== null) {
+            return $busReg->getLicence();
+        }
+
+        return null;
+    }
 }
