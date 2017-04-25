@@ -152,9 +152,9 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Financial evidence uploaded
      *
-     * @var string
+     * @var int
      *
-     * @ORM\Column(type="yesnonull", name="financial_evidence_uploaded", nullable=true)
+     * @ORM\Column(type="smallint", name="financial_evidence_uploaded", nullable=true)
      */
     protected $financialEvidenceUploaded;
 
@@ -1171,7 +1171,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the financial evidence uploaded
      *
-     * @param string $financialEvidenceUploaded new value being set
+     * @param int $financialEvidenceUploaded new value being set
      *
      * @return Application
      */
@@ -1185,7 +1185,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the financial evidence uploaded
      *
-     * @return string
+     * @return int
      */
     public function getFinancialEvidenceUploaded()
     {

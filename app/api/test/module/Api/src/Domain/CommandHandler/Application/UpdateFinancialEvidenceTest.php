@@ -38,7 +38,7 @@ class UpdateFinancialEvidenceTest extends CommandHandlerTestCase
 
         $application = $this->getApplication()
             ->shouldReceive('setFinancialEvidenceUploaded')
-            ->with('Y')
+            ->with(\Dvsa\Olcs\Api\Entity\Application\Application::FINANCIAL_EVIDENCE_UPLOADED)
             ->once()
             ->getMock();
 
@@ -75,7 +75,7 @@ class UpdateFinancialEvidenceTest extends CommandHandlerTestCase
         $data = [
             'id' => 1,
             'version' => 1,
-            'financialEvidenceUploaded' => 'Y',
+            'financialEvidenceUploaded' => \Dvsa\Olcs\Api\Entity\Application\Application::FINANCIAL_EVIDENCE_UPLOADED,
         ];
 
         return Cmd::create($data);
