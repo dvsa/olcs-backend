@@ -32,6 +32,9 @@ final class CreateGoodsVehicle extends AbstractCommand
 
     protected $identifyDuplicates = false;
 
+    /** @var int  */
+    protected $applicationId = null;
+
     /**
      * @return mixed
      */
@@ -70,5 +73,15 @@ final class CreateGoodsVehicle extends AbstractCommand
     public function getIdentifyDuplicates()
     {
         return $this->identifyDuplicates;
+    }
+
+    /**
+     * Get application id
+     *
+     * @return int
+     */
+    public function getApplicationId()
+    {
+        return $this->applicationId;
     }
 }

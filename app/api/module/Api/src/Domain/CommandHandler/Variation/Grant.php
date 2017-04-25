@@ -29,7 +29,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
 {
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['GoodsDisc', 'PsvDisc'];
+    protected $extraRepos = ['GoodsDisc', 'PsvDisc', 'LicenceVehicle'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -67,6 +67,9 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         $data = $command->getArrayCopy();
         $data['currentTotAuth'] = $currentTotAuth;
 
+        if ($application->isGoods()) {
+            $this->checkForDuplicateVehicles($application);
+        }
         $result->merge($this->handleSideEffectAsSystemUser(CreateDiscRecords::create($data)));
 
         $result->merge($this->proxyCommandAsSystemUser($command, ProcessApplicationOperatingCentres::class));
@@ -192,5 +195,35 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
                 ['applicationId' => $application->getId()]
             )
         );
+    }
+
+    /**
+     * Remove vehicles on current application if we have same VRM vehicle specified on the licence
+     *
+     * @param ApplicationEntity $application application
+     *
+     * @return void
+     */
+    protected function checkForDuplicateVehicles($application)
+    {
+        $existingLicenceVehicles = $application->getLicence()->getLicenceVehicles();
+        $newLicenceVehicles = $application->getLicenceVehicles();
+        foreach ($newLicenceVehicles as $newLicenceVehicle) {
+            $criteria = Criteria::create();
+            $criteria->where(
+                $criteria->expr()->eq('vehicle', $newLicenceVehicle->getVehicle())
+            );
+            $criteria->andWhere(
+                $criteria->expr()->neq('specifiedDate', null)
+            );
+            $criteria->andWhere(
+                $criteria->expr()->eq('removalDate', null)
+            );
+            $sameVehicles = $existingLicenceVehicles->matching($criteria);
+            if (count($sameVehicles) > 0) {
+                $newLicenceVehicle->setRemovalDate(new DateTime());
+                $this->getRepo('LicenceVehicle')->save($newLicenceVehicle);
+            }
+        }
     }
 }

@@ -41,7 +41,12 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
         $licence = $this->getRepo()->fetchById($command->getLicence());
 
         $this->checkIfVrmIsSection26($command->getVrm());
-        $this->checkIfVrmAlreadyExistsOnLicence($licence, $command->getVrm());
+        $applicationId = $command->getApplicationId();
+        if ($applicationId !== null) {
+            $this->checkIfVrmAlreadyExistsOnApplication($licence, $command->getVrm(), $applicationId);
+        } else {
+            $this->checkIfVrmAlreadyExistsOnLicence($licence, $command->getVrm());
+        }
 
         $duplicates = [];
 
@@ -187,7 +192,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
      */
     protected function checkIfVrmAlreadyExistsOnLicence(LicenceEntity $licence, $vrm)
     {
-        $currentLicenceVehicles = $licence->getActiveVehicles(false);
+        $currentLicenceVehicles = $licence->getActiveVehicles(true);
 
         if ($currentLicenceVehicles->count() < 1) {
             return;
@@ -196,6 +201,46 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
         /** @var LicenceVehicle $licenceVehicle */
         foreach ($currentLicenceVehicles as $licenceVehicle) {
             if ($licenceVehicle->getVehicle()->getVrm() == $vrm) {
+                throw new ValidationException(
+                    [
+                        'vrm' => [
+                            Vehicle::ERROR_VRM_EXISTS => 'application.vehicle.already-exist',
+                        ],
+                    ]
+                );
+            }
+        }
+    }
+
+    /**
+     * Check whether the VRM already exist on this application
+     *
+     * @param LicenceEntity $licence       Licence
+     * @param string        $vrm           VRM
+     * @param int           $applicationId application id
+     *
+     * @return void
+     * @throws ValidationException
+     */
+    protected function checkIfVrmAlreadyExistsOnApplication(LicenceEntity $licence, $vrm, $applicationId)
+    {
+        $currentLicenceVehicles = $licence->getActiveVehicles(false);
+
+        if ($currentLicenceVehicles->count() < 1) {
+            return;
+        }
+
+        /** @var LicenceVehicle $licenceVehicle */
+        foreach ($currentLicenceVehicles as $licenceVehicle) {
+            $application = $licenceVehicle->getApplication();
+            if (
+                $licenceVehicle->getVehicle()->getVrm() === $vrm
+                &&
+                (
+                    ($application !== null && $application->getId() === $applicationId)
+                    || $licenceVehicle->getSpecifiedDate() !== null
+                )
+            ) {
                 throw new ValidationException(
                     [
                         'vrm' => [
