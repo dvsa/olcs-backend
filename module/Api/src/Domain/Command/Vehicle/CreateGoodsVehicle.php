@@ -32,6 +32,7 @@ final class CreateGoodsVehicle extends AbstractCommand
 
     protected $identifyDuplicates = false;
 
+    /** @var int  */
     protected $applicationId = null;
 
     /**
