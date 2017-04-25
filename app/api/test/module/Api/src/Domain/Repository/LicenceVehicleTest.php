@@ -143,7 +143,7 @@ class LicenceVehicleTest extends RepositoryTestCase
             . ' AND m.removalDate IS NULL'
             // Specified = Y
             . ' AND m.specifiedDate IS NOT NULL'
-            . ' AND (m.application = [[111]] OR m.licence = [[222]])';
+            . ' AND (m.application = [[111]] OR (m.licence = [[222]] AND m.specifiedDate IS NOT NULL))';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
@@ -180,7 +180,7 @@ class LicenceVehicleTest extends RepositoryTestCase
             // Include Removed = true
             // Specified = N
             . ' AND m.specifiedDate IS NULL'
-            . ' AND (m.application = [[111]] OR m.licence = [[222]])';
+            . ' AND (m.application = [[111]] OR (m.licence = [[222]] AND m.specifiedDate IS NOT NULL))';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
