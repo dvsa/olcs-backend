@@ -1,22 +1,14 @@
 <?php
 
-/**
- * Print Letter
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
-use Dvsa\Olcs\Api\Domain\Command\Email\CreateCorrespondenceRecord;
-use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTranslateToWelshTask;
+use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\Exception\RequiresConfirmationException;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity;
-use Dvsa\Olcs\Transfer\Command\Document\PrintLetter as Cmd;
-use Dvsa\Olcs\Utils\Helper\ValueHelper;
+use Dvsa\Olcs\Api\Service;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\Document\PrintLetter as PrintLetterCmd;
 
 /**
  * Print Letter
@@ -27,29 +19,35 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
 {
     protected $repoServiceName = 'Document';
 
-    protected $extraRepos = ['DocTemplate'];
+    /** @var Service\Document\PrintLetter */
+    private $srvPrintLetter;
 
+    /**
+     * Handle command
+     *
+     * @param PrintLetterCmd $command Command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         /** @var Entity\Doc\Document $document */
         $document = $this->getRepo()->fetchUsingId($command);
 
-        $licence = $this->getLicenceFromDocument($document);
-
-        $translated = false;
+        $canPrint = $this->srvPrintLetter->canPrint($document);
+        $canEmail = $this->srvPrintLetter->canEmail($document);
 
         // We always want a translation task if the translateToWelsh flag is on
-        if ($licence !== null && ValueHelper::isOn($licence->getTranslateToWelsh())) {
-            $translated = true;
+        if (!$canPrint) {
             $this->createTranslationTask($document);
         }
 
-        // If we can, and should send email -> Email
-        // Otherwise, if we are not translating to welsh -> Print
-        if ($this->shouldEmail($document, $command)) {
-            // Send the email
+        $method = $command->getMethod();
+        if ($method === PrintLetterCmd::METHOD_EMAIL && $canEmail) {
             $this->sendEmail($document);
-        } elseif (!$translated) {
+        }
+
+        if ($method === PrintLetterCmd::METHOD_PRINT_AND_POST && $canPrint) {
             $this->attemptPrint($document);
         }
 
@@ -57,148 +55,93 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
     }
 
     /**
-     * Find a related licence
-     *
-     * @param Entity\Doc\Document $document
-     * @return Entity\Licence\Licence|null
-     */
-    protected function getLicenceFromDocument(Entity\Doc\Document $document)
-    {
-        // If we have linked the doc directly to the licence
-        $licence = $document->getLicence();
-        if ($licence !== null) {
-            return $licence;
-        }
-
-        // If we have linked the doc to an application
-        $application = $document->getApplication();
-        if ($application !== null) {
-            return $application->getLicence();
-        }
-
-        // If we have linked the doc to a case
-        $case = $document->getCase();
-        if ($case !== null) {
-
-            // If the case is a licence case
-            $licence = $case->getLicence();
-            if ($licence !== null) {
-                return $licence;
-            }
-        }
-
-        // If we have linked the doc to a bus reg
-        $busReg = $document->getBusReg();
-        if ($busReg !== null) {
-
-            // If the bus reg is linked to a licence
-            $licence = $busReg->getLicence();
-            if ($licence !== null) {
-                return $licence;
-            }
-        }
-
-        // @NOTE Add other methods of determining the licence from the document record as necessary
-
-        return null;
-    }
-
-    /**
-     * Check if we SHOULD email the document to the operator
-     *
-     * @param Entity\Doc\Document $document
-     * @param Cmd $command
-     * @return bool
-     * @throws RequiresConfirmationException
-     */
-    protected function shouldEmail(Entity\Doc\Document $document, Cmd $command)
-    {
-        if ($this->canEmail($document)) {
-
-            if ($command->getShouldEmail() === null) {
-                throw new RequiresConfirmationException('Should email', 'should_email');
-            }
-
-            return $command->getShouldEmail() === 'Y';
-        }
-
-        return false;
-    }
-
-    /**
-     * Check if we CAN email the document to the operator
-     *
-     * @param Entity\Doc\Document $document
-     * @return bool
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
-    protected function canEmail(Entity\Doc\Document $document)
-    {
-        $licence = $this->getLicenceFromDocument($document);
-
-        // If we can't find a licence
-        // OR if the allow email preference is off
-        if ($licence === null || !ValueHelper::isOn($licence->getOrganisation()->getAllowEmail())) {
-            return false;
-        }
-
-        $metadata = json_decode($document->getMetadata(), true);
-
-        $templateId = $metadata['details']['documentTemplate'];
-
-        /** @var Entity\Doc\DocTemplate $template */
-        $template = $this->getRepo('DocTemplate')->fetchById($templateId);
-
-        // If the document is suppressed
-        if (ValueHelper::isOn($template->getSuppressFromOp())) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Attempt to print
      *
-     * @param Entity\Doc\Document $document
+     * @param Entity\Doc\Document $document Document
+     *
+     * @return void
      */
-    protected function attemptPrint(Entity\Doc\Document $document)
+    private function attemptPrint(Entity\Doc\Document $document)
     {
-        $dtoData = ['documentId' => $document->getId(), 'jobName' => $document->getDescription()];
+        $cmd = DomainCmd\PrintScheduler\Enqueue::create(
+            [
+                'documentId' => $document->getId(),
+                'jobName' => $document->getDescription(),
+            ]
+        );
 
-        $this->result->merge($this->handleSideEffect(Enqueue::create($dtoData)));
+        $this->result->merge(
+            $this->handleSideEffect($cmd)
+        );
     }
 
     /**
      * Create translation task
      *
-     * @param Entity\Doc\Document $document
+     * @param Entity\Doc\Document $document Document
+     *
+     * @return void
      */
-    protected function createTranslationTask(Entity\Doc\Document $document)
+    private function createTranslationTask(Entity\Doc\Document $document)
     {
-        $data = [
-            'description' => $document->getDescription(),
-            'licence' => $this->getLicenceFromDocument($document)->getId()
-        ];
+        $lic = $document->getRelatedLicence();
+        if ($lic === null) {
+            return;
+        }
 
-        $this->result->merge($this->handleSideEffect(CreateTranslateToWelshTask::create($data)));
+        $cmd = DomainCmd\Task\CreateTranslateToWelshTask::create(
+            [
+                'description' => $document->getDescription(),
+                'licence' => $lic->getId(),
+            ]
+        );
+
+        $this->result->merge(
+            $this->handleSideEffect($cmd)
+        );
     }
 
     /**
      * Send email
      *
-     * @param Entity\Doc\Document $document
+     * @param Entity\Doc\Document $document Document
+     *
+     * @return void
      */
-    protected function sendEmail(Entity\Doc\Document $document)
+    private function sendEmail(Entity\Doc\Document $document)
     {
-        $licence = $this->getLicenceFromDocument($document);
+        $licence = $document->getRelatedLicence();
+        if ($licence === null) {
+            return;
+        }
 
-        $dtoData = [
-            'licence' => $licence->getId(),
-            'document' => $document->getId(),
-            'type' => CreateCorrespondenceRecord::TYPE_STANDARD,
-        ];
+        $cmd = DomainCmd\Email\CreateCorrespondenceRecord::create(
+            [
+                'licence' => $licence->getId(),
+                'document' => $document->getId(),
+                'type' => DomainCmd\Email\CreateCorrespondenceRecord::TYPE_STANDARD,
+            ]
+        );
 
-        $this->result->merge($this->handleSideEffect(CreateCorrespondenceRecord::create($dtoData)));
+        $this->result->merge(
+            $this->handleSideEffect($cmd)
+        );
+    }
+
+    /**
+     * Create Command handler
+     *
+     * @param \Dvsa\Olcs\Api\Domain\CommandHandlerManager $serviceLocator Service Manager
+     *
+     * @return AbstractCommandHandler
+     */
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        /** @var \Zend\ServiceManager\ServiceLocatorInterface $sm  */
+        $sm = $serviceLocator->getServiceLocator();
+
+        $this->srvPrintLetter = $sm->get(Service\Document\PrintLetter::class);
+
+        return parent::createService($serviceLocator);
     }
 }
