@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ce96513c3e9240e1ab86f585533a81f4",
+    "content-hash": "33f4eb42044dc39506b64ec08bde5eb2",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -843,6 +843,61 @@
             "time": "2016-12-18T15:42:34+00:00"
         },
         {
+            "name": "elasticsearch/elasticsearch",
+            "version": "v5.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/elastic/elasticsearch-php.git",
+                "reference": "dc57bbcd4be2c9061ebe5be59058ea8bdebc904e"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/elasticsearch-elasticsearch-dc57bbcd4be2c9061ebe5be59058ea8bdebc904e-zip-81545a.tar",
+                "reference": "dc57bbcd4be2c9061ebe5be59058ea8bdebc904e",
+                "shasum": "00f52889b35ce0ac04300883f4b638fbe9572fe5"
+            },
+            "require": {
+                "guzzlehttp/ringphp": "~1.0",
+                "php": "^5.6|^7.0",
+                "psr/log": "~1.0"
+            },
+            "require-dev": {
+                "cpliakas/git-wrapper": "~1.0",
+                "doctrine/inflector": "^1.1",
+                "mockery/mockery": "0.9.4",
+                "phpunit/phpunit": "^4.7|^5.4",
+                "sami/sami": "~3.2",
+                "symfony/finder": "^2.8",
+                "symfony/yaml": "^2.8"
+            },
+            "suggest": {
+                "ext-curl": "*",
+                "monolog/monolog": "Allows for client-level logging and tracing"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Elasticsearch\\": "src/Elasticsearch/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Zachary Tong"
+                }
+            ],
+            "description": "PHP Client for Elasticsearch",
+            "keywords": [
+                "client",
+                "elasticsearch",
+                "search"
+            ],
+            "time": "2017-04-12T20:40:50+00:00"
+        },
+        {
             "name": "ezyang/htmlpurifier",
             "version": "v4.9.2",
             "source": {
@@ -968,6 +1023,107 @@
             "time": "2015-02-24T21:41:37+00:00"
         },
         {
+            "name": "guzzlehttp/ringphp",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/RingPHP.git",
+                "reference": "dbbb91d7f6c191e5e405e900e3102ac7f261bc0b"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/guzzlehttp-ringphp-dbbb91d7f6c191e5e405e900e3102ac7f261bc0b-zip-6654cd.tar",
+                "reference": "dbbb91d7f6c191e5e405e900e3102ac7f261bc0b",
+                "shasum": "aea7e4b7ce31df795980b68f37a7447b753d1c13"
+            },
+            "require": {
+                "guzzlehttp/streams": "~3.0",
+                "php": ">=5.4.0",
+                "react/promise": "~2.0"
+            },
+            "require-dev": {
+                "ext-curl": "*",
+                "phpunit/phpunit": "~4.0"
+            },
+            "suggest": {
+                "ext-curl": "Guzzle will use specific adapters if cURL is present"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Ring\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
+            "time": "2015-05-20T03:37:09+00:00"
+        },
+        {
+            "name": "guzzlehttp/streams",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/streams.git",
+                "reference": "47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/guzzlehttp-streams-47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5-zip-c67b5d.tar",
+                "reference": "47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5",
+                "shasum": "b9482a7d90dd78bf93a0211b409761edeafdc1a0"
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Stream\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Provides a simple abstraction over streams of data",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "Guzzle",
+                "stream"
+            ],
+            "time": "2014-10-12T19:18:40+00:00"
+        },
+        {
             "name": "ircmaxell/random-lib",
             "version": "v1.2.0",
             "source": {
@@ -1070,26 +1226,26 @@
         },
         {
             "name": "olcs/autoload",
-            "version": "dev-develop",
+            "version": "4.7",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-autoload.git",
-                "reference": "6efc391a310fb0a767d4a1cac2ed8a763ccd5eec"
+                "reference": "b541a8ca014821178012e4c143877139c15ba8d6"
             },
             "bin": [
                 "bin/autoload"
             ],
             "type": "library",
             "description": "OLCS optimised autoloader",
-            "time": "2017-03-23 17:59:29"
+            "time": "2017-01-24T12:54:09+00:00"
         },
         {
             "name": "olcs/companies-house",
-            "version": "dev-develop",
+            "version": "4.11",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
-                "reference": "01aa780d4c199d2b3381b5db6c6b46f4b2b15412"
+                "reference": "0d56f860395d94b0c5ff5ad32d9eeac7f0264f13"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1101,15 +1257,15 @@
                 }
             },
             "description": "Companies house library",
-            "time": "2017-04-10 15:39:19"
+            "time": "2017-04-06T14:57:23+00:00"
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "dev-develop",
+            "version": "4.12",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
-                "reference": "9d6d59f5d47d56ed4d7a6ba4294dcb982e5ff274"
+                "reference": "b2f1c433b25ca35c7c40cd8a83eff5f9a42ce1f3"
             },
             "require": {
                 "php": ">=5.4",
@@ -1135,15 +1291,15 @@
                 }
             },
             "description": "Logging Module for Olcs",
-            "time": "2017-04-10 15:39:15"
+            "time": "2017-04-20T14:07:24+00:00"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-develop",
+            "version": "4.12",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "bb67d9f6c196638b9271e791450660fe770e0d7d"
+                "reference": "a51b3473d5e51fa689e85057473385f86d384ae8"
             },
             "require": {
                 "php": ">=5.4",
@@ -1161,15 +1317,15 @@
                 }
             },
             "description": "OLCS Transfer",
-            "time": "2017-04-24 10:50:53"
+            "time": "2017-04-20T13:56:31+00:00"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "dev-develop",
+            "version": "4.12",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "05972a7254f9ba28b2adba58d074e48b09220af8"
+                "reference": "2fe5d1ecae4f3d00e542fd9c74e43e000db6ce3c"
             },
             "require": {
                 "php": ">=5.4",
@@ -1177,7 +1333,7 @@
             },
             "require-dev": {
                 "mockery/mockery": "~0.9.3",
-                "olcs/olcs-logging": "dev-develop",
+                "olcs/olcs-logging": "dev-release/4.12",
                 "phpunit/phpunit": "^4.0.0"
             },
             "type": "library",
@@ -1187,15 +1343,15 @@
                 }
             },
             "description": "OLCS Utils",
-            "time": "2017-04-10 15:39:11"
+            "time": "2017-04-20T14:06:20+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "dev-master",
+            "version": "4.12",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "a24d518a197bbf85382a5520326942cd93f1d171"
+                "reference": "73a8d77b34a772ddb078d970b20e007edb7541b9"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1216,7 +1372,7 @@
                 }
             },
             "description": "Xml tools for olcs",
-            "time": "2017-04-06 14:56:42"
+            "time": "2017-04-20T14:06:47+00:00"
         },
         {
             "name": "phprtflite/phprtflite",
@@ -1299,6 +1455,52 @@
             "time": "2016-10-10T12:19:37+00:00"
         },
         {
+            "name": "react/promise",
+            "version": "v2.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/reactphp/promise.git",
+                "reference": "62785ae604c8d69725d693eb370e1d67e94c4053"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/react-promise-62785ae604c8d69725d693eb370e1d67e94c4053-zip-8b781e.tar",
+                "reference": "62785ae604c8d69725d693eb370e1d67e94c4053",
+                "shasum": "52834ddb303c62856151f14fca069cf77f99abe1"
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "React\\Promise\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Sorgalla",
+                    "email": "jsorgalla@gmail.com"
+                }
+            ],
+            "description": "A lightweight implementation of CommonJS Promises/A for PHP",
+            "keywords": [
+                "promise",
+                "promises"
+            ],
+            "time": "2017-03-25T12:08:31+00:00"
+        },
+        {
             "name": "robrichards/xmlseclibs",
             "version": "2.0.1",
             "source": {
@@ -1341,43 +1543,42 @@
         },
         {
             "name": "ruflin/elastica",
-            "version": "v1.4.3.0",
+            "version": "5.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "bfa9363bf2aa62af5907135863661c6c78a68ee4"
+                "reference": "5244a6cfdf2caa48e710df1aba67de3081e94c92"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ruflin-elastica-bfa9363bf2aa62af5907135863661c6c78a68ee4-zip-303899.tar",
-                "reference": "bfa9363bf2aa62af5907135863661c6c78a68ee4",
-                "shasum": "8e1cca25cd319b18770feb8a6a9d96933cfed65e"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ruflin-elastica-5244a6cfdf2caa48e710df1aba67de3081e94c92-zip-126550.tar",
+                "reference": "5244a6cfdf2caa48e710df1aba67de3081e94c92",
+                "shasum": "f57f218da565eb37c70b2f5ea03c95e96dd4bd75"
             },
             "require": {
-                "php": ">=5.3.3",
+                "elasticsearch/elasticsearch": "5.2.0",
+                "php": ">=5.6.0",
                 "psr/log": "~1.0"
             },
             "require-dev": {
-                "fabpot/php-cs-fixer": "~1.4",
-                "munkie/elasticsearch-thrift-php": "1.4.*",
-                "phpunit/phpunit": "4.1.*"
+                "aws/aws-sdk-php": "~3.0",
+                "guzzlehttp/guzzle": "~6.0"
             },
             "suggest": {
+                "aws/aws-sdk-php": "Allow using IAM authentication with Amazon ElasticSearch Service",
                 "egeloen/http-adapter": "Allow using httpadapter transport",
-                "guzzlehttp/guzzle": "Allow using guzzle 4.x as the http transport (Requires php 5.4)",
-                "monolog/monolog": "Logging request",
-                "munkie/elasticsearch-thrift-php": "Allow using thrift transport"
+                "guzzlehttp/guzzle": "Allow using guzzle 6 as the http transport",
+                "monolog/monolog": "Logging request"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4.x-dev"
+                    "dev-master": "5.2.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Elastica\\": "lib/Elastica/",
-                    "Elastica\\Test\\": "test/lib/Elastica/Test/"
+                    "Elastica\\": "lib/Elastica/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1396,7 +1597,7 @@
                 "client",
                 "search"
             ],
-            "time": "2015-02-17T19:57:36+00:00"
+            "time": "2017-04-13T08:56:51+00:00"
         },
         {
             "name": "simplesamlphp/saml2",
@@ -3286,14 +3487,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "olcs/companies-house": 20,
-        "olcs/olcs-transfer": 20,
-        "olcs/olcs-utils": 20,
-        "olcs/olcs-logging": 20,
-        "olcs/autoload": 20,
-        "olcs/olcs-xmltools": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
