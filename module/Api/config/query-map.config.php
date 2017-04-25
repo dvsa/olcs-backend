@@ -85,6 +85,7 @@ return [
     TransferQuery\Application\Publish::class => QueryHandler\Application\Publish::class,
     TransferQuery\Application\Schedule41Approve::class => QueryHandler\Application\Schedule41Approve::class,
     TransferQuery\Application\Summary::class => QueryHandler\Application\Summary::class,
+    TransferQuery\Application\UploadEvidence::class => QueryHandler\Application\UploadEvidence::class,
     Query\Application\NotTakenUpList::class => QueryHandler\Application\NotTakenUpList::class,
     TransferQuery\Application\OutstandingFees::class => QueryHandler\Application\OutstandingFees::class,
 

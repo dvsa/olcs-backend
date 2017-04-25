@@ -546,6 +546,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return self::APPLICATION_TYPE_NEW_DESCRIPTION;
     }
 
+    /**
+     * Get application date
+     *
+     * @return \DateTime
+     */
     public function getApplicationDate()
     {
         if ($this->getReceivedDate() === null) {
@@ -555,6 +560,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return $this->getReceivedDate();
     }
 
+    /**
+     * Can this application be submitted
+     *
+     * @return bool
+     */
     public function canSubmit()
     {
         return $this->getStatus()->getId() === self::APPLICATION_STATUS_NOT_SUBMITTED;
@@ -713,6 +723,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return $code;
     }
 
+    /**
+     * Get number of remaining spaces eg difference between the total authorized vehicles and number of active vehicles
+     *
+     * @return int
+     */
     public function getRemainingSpaces()
     {
         $vehicles = $this->getActiveLicenceVehicles();
@@ -720,6 +735,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return $this->getTotAuthVehicles() - $vehicles->count();
     }
 
+    /**
+     * Get list of active Licence Vehicles
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
     public function getActiveLicenceVehicles()
     {
         $criteria = Criteria::create();
@@ -886,7 +906,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      * Contains rules for defining is section required attention or not
      *
      * @param string $section Section key
-     * @param int $value Flag value
+     * @param int    $value   Flag value
      *
      * @return bool
      */
@@ -905,6 +925,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return ($value === self::VARIATION_STATUS_REQUIRES_ATTENTION);
     }
 
+    /**
+     * Get active vehicle list
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
     public function getActiveVehicles()
     {
         $criteria = Criteria::create();
@@ -915,6 +940,13 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return $this->getLicenceVehicles()->matching($criteria);
     }
 
+    /**
+     * Copy information from a licence to this application
+     *
+     * @param Licence $licence Licence to copy from
+     *
+     * @return void
+     */
     public function copyInformationFromLicence(Licence $licence)
     {
         $this->setLicenceType($licence->getLicenceType());
@@ -949,6 +981,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return true;
     }
 
+    /**
+     * Get current Interim status
+     *
+     * @return null|string Refdata ID
+     */
     public function getCurrentInterimStatus()
     {
         $currentStatus = $this->getInterimStatus();
@@ -1125,8 +1162,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     /**
      * Method to return ooo as strings. Used in submission tables
      *
-     * @param string $format Format
-     *
      * @return string
      */
     public function getOutOfOppositionDateAsString()
@@ -1137,8 +1172,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
     /**
      * Method to return oor as strings. Used in submission tables
-     *
-     * @param string $format Format
      *
      * @return string
      */
@@ -1216,13 +1249,20 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return $latestPublication;
     }
 
+    /**
+     * Get count of active vehicles
+     *
+     * @return int
+     */
     public function getActiveVehiclesCount()
     {
         return $this->getActiveLicenceVehicles()->count();
     }
 
     /**
-     * @return array
+     * Get a list of active S4's
+     *
+     * @return array of S4 Entities
      */
     public function getActiveS4s()
     {
@@ -1267,11 +1307,23 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return false;
     }
 
+    /**
+     * Can this application have community licences
+     *
+     * @return bool
+     */
     public function canHaveCommunityLicences()
     {
         return ($this->isStandardInternational() || ($this->isPsv() && $this->isRestricted()));
     }
 
+    /**
+     * Get a list of operating centre that are on the application
+     *
+     * @param OperatingCentre $oc Operating centre to look for
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
     public function getDeltaAocByOc(OperatingCentre $oc)
     {
         $criteria = Criteria::create();
@@ -1280,12 +1332,19 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return $this->getOperatingCentres()->matching($criteria);
     }
 
+    /**
+     * Get the lic no prefix eg 'P' or 'O'
+     *
+     * @return string
+     */
     public function getCategoryPrefix()
     {
         return LicenceNoGen::getCategoryPrefix($this->getGoodsOrPsv());
     }
 
     /**
+     * Get publication number
+     *
      * @return int
      */
     public function getPublicationNo()
@@ -1294,7 +1353,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * @param int $publicationNo
+     * Set publication number
+     *
+     * @param int $publicationNo Publication number
+     *
+     * @return void
      */
     public function setPublicationNo($publicationNo)
     {
@@ -1909,5 +1972,45 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     {
         return (string)$this->getSignatureType() === self::SIG_DIGITAL_SIGNATURE
             && $this->getDigitalSignature() !== null;
+    }
+
+    /**
+     * Can financial evidence be added?
+     *
+     * @return bool
+     */
+    public function canAddFinancialEvidence()
+    {
+        // The financial tracking section is NOT set to 'Accepted' or 'Not applicable'
+        // (i.e. application_tracking.financial_evidence_status <> 1 or 3); AND
+        $applicationTracking = $this->getApplicationTracking()->getFinancialEvidenceStatus();
+        if ($applicationTracking === ApplicationTracking::STATUS_ACCEPTED
+            || $applicationTracking === ApplicationTracking::STATUS_NOT_APPLICABLE
+        ) {
+            return false;
+        }
+
+        // The financial evidence uploader is set to 'Upload later' or 'Send in the post'
+        // (i.e application.financial_evidence_uploaded = 0 or 2); AND
+        if ($this->getFinancialEvidenceUploaded() !== Application::FINANCIAL_EVIDENCE_SEND_IN_POST
+            && $this->getFinancialEvidenceUploaded() !== Application::FINANCIAL_EVIDENCE_UPLOAD_LATER
+        ) {
+            return false;
+        }
+
+        // The licence type is NOT special restricted; AND
+        if ((string)$this->getLicenceType() == Licence::LICENCE_TYPE_SPECIAL_RESTRICTED) {
+            return false;
+        }
+
+        // It is a new application OR it is a variation where the 'Financial evidence' section has been updated
+        $applicationCompletion = $this->getApplicationCompletion()->getFinancialEvidenceStatus();
+        if ($this->isVariation()
+            && $applicationCompletion !== ApplicationCompletion::STATUS_VARIATION_UPDATED
+        ) {
+            return false;
+        }
+
+        return true;
     }
 }
