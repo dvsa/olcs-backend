@@ -3449,11 +3449,6 @@ class ApplicationEntityTest extends EntityTester
 
     /**
      * @dataProvider dataProviderTestCanAddFinancialEvidence
-     *
-     * @param $trackingStatus
-     * @param $financialEvidenceUploaded
-     * @param $licenceType
-     * @param $completionStatus
      */
     public function testCanAddFinancialEvidence(
         $expected,
