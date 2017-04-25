@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Cases\Statement;
+use Dvsa\Olcs\Api\Entity\Doc\Document as Entity;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
@@ -13,30 +14,34 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\Doc\Document as Entity;
 use Mockery as m;
 
 /**
- * Document Entity Unit Tests
- *
- * Initially auto-generated but won't be overridden
+ * @covers \Dvsa\Olcs\Api\Entity\Doc\Document
+ * @covers \Dvsa\Olcs\Api\Entity\Doc\AbstractDocument
  */
 class DocumentEntityTest extends EntityTester
 {
-    /**
-     * Define the entity to test
-     *
-     * @var string
-     */
+    /** @var  string */
     protected $entityClass = Entity::class;
+
+    /** @var  Entity | m\MockInterface */
+    private $sut;
+
+    public function setUp()
+    {
+        /** @var Entity $entity */
+        $this->sut = m::mock(Entity::class)->makePartial();
+
+        parent::setUp();
+    }
 
     /**
      * tests the related organisation returns null when nothing is found
      */
     public function testGetRelatedOrganisationNotFound()
     {
-        $entity = m::mock(Entity::class)->makePartial();
-        $this->assertNull($entity->getRelatedOrganisation());
+        $this->assertNull($this->sut->getRelatedOrganisation());
     }
 
     /**
@@ -53,10 +58,9 @@ class DocumentEntityTest extends EntityTester
         $relation = m::mock($relationClass);
         $relation->shouldReceive('getRelatedOrganisation')->once()->andReturn($organisation);
 
-        $entity = m::mock(Entity::class)->makePartial();
-        $entity->$setterMethod($relation);
+        $this->sut->$setterMethod($relation);
 
-        $this->assertEquals($organisation, $entity->getRelatedOrganisation());
+        $this->assertEquals($organisation, $this->sut->getRelatedOrganisation());
     }
 
     /**
@@ -77,6 +81,40 @@ class DocumentEntityTest extends EntityTester
             ['setSubmission', Submission::class],
             ['setStatement', Statement::class],
             ['setEbsrSubmission', EbsrSubmission::class]
+        ];
+    }
+
+    public function testGetRelatedLicenceNull()
+    {
+        static::assertNull($this->sut->getRelatedLicence());
+    }
+
+    /**
+     * @dataProvider dpTestGetRelatedLicence
+     */
+    public function testGetRelatedLicence($relSetterMethod, $mockRelClass)
+    {
+        $mockLic = m::mock(Licence::class);
+
+        if ($mockRelClass !== Licence::class) {
+            $mockRelClass = m::mock($mockRelClass);
+            $mockRelClass->shouldReceive('getLicence')->once()->andReturn($mockLic);
+        } else {
+            $mockRelClass = $mockLic;
+        }
+
+        $this->sut->$relSetterMethod($mockRelClass);
+
+        static::assertSame($mockLic, $this->sut->getRelatedLicence());
+    }
+
+    public function dpTestGetRelatedLicence()
+    {
+        return [
+            ['setLicence', Licence::class],
+            ['setApplication', Application::class],
+            ['setCase', Cases::class],
+            ['setBusReg', BusReg::class],
         ];
     }
 }

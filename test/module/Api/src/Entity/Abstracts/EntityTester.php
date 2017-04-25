@@ -5,7 +5,6 @@ namespace Dvsa\OlcsTest\Api\Entity\Abstracts;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Instantiator\Instantiator;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Abstract entity tester
@@ -36,6 +35,7 @@ abstract class EntityTester extends MockeryTestCase
     public function tearDown()
     {
         unset($this->entity);
+        \Mockery::close();
     }
 
     protected function instantiate($entityName)
