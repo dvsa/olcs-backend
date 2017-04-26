@@ -4,7 +4,7 @@
          "must_not": [
             {
                "bool": {
-                  "filter": [
+                  "should": [
                      {
                         "terms": {
                            "lic_status": [
