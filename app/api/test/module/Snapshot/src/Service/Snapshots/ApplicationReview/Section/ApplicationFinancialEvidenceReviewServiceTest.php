@@ -1,13 +1,8 @@
 <?php
 
-/**
- * Application Financial Evidence Review Service Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
-use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use OlcsTest\Bootstrap;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -31,11 +26,14 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
         $this->sut->setServiceLocator($this->sm);
     }
 
-    public function testGetConfigFromDataWithoutDocs()
+    /**
+     * @dataProvider uploadProvider
+     */
+    public function testGetConfigFromDataWithoutDocs($uploaded, $reviewText)
     {
         $data = [
             'id' => 123,
-            'financialEvidenceUploaded' => 0
+            'financialEvidenceUploaded' => $uploaded
         ];
 
         $expected = [
@@ -52,7 +50,7 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
                     [
                         'label' => 'application-review-financial-evidence-evidence',
                         'noEscape' => true,
-                        'value' => 'application-review-financial-evidence-evidence-post-translated'
+                        'value' => $reviewText
                     ]
                 ]
             ]
@@ -86,11 +84,25 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
         $this->assertEquals($expected, $this->sut->getConfigFromData($data));
     }
 
+    public function uploadProvider()
+    {
+        return [
+            [
+                Application::FINANCIAL_EVIDENCE_SEND_IN_POST,
+                'application-review-financial-evidence-evidence-post-translated'
+            ],
+            [
+                Application::FINANCIAL_EVIDENCE_UPLOAD_LATER,
+                'application-review-financial-evidence-evidence-later-translated'
+            ]
+        ];
+    }
+
     public function testGetConfigFromDataWithDocs()
     {
         $data = [
             'id' => 123,
-            'financialEvidenceUploaded' => 1
+            'financialEvidenceUploaded' => Application::FINANCIAL_EVIDENCE_UPLOADED
         ];
 
         $expected = [
