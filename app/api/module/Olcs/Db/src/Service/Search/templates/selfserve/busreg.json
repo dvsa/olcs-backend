@@ -1,10 +1,10 @@
 {
    "query": {
       "bool": {
-         "must_not": [
+         "filter": [
             {
                "bool": {
-                  "filter": [
+                  "must_not": [
                      {
                         "terms": {
                            "lic_status": [
