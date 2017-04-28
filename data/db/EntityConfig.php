@@ -280,7 +280,7 @@ return array(
     ),
     'licence_operating_centre' => array(
         'ad_placed' => array(
-            'type' => 'yesno'
+            'type' => 'smallint'
         ),
         'sufficient_parking' => array(
             'type' => 'yesno'
@@ -303,7 +303,7 @@ return array(
     ),
     'application_operating_centre' => array(
         'ad_placed' => array(
-            'type' => 'yesnonull'
+            'type' => 'smallint'
         ),
         'publication_appropriate' => array(
             'type' => 'yesno'

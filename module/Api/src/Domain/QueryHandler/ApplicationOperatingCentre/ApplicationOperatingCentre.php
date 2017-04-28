@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Application Operating Centre
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\ApplicationOperatingCentre;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -37,7 +32,7 @@ class ApplicationOperatingCentre extends AbstractQueryHandler
                         'countryCode'
                     ],
                     'adDocuments'
-                ]
+                ],
             ],
             [
                 'isPsv' => $application->isPsv(),
@@ -45,7 +40,8 @@ class ApplicationOperatingCentre extends AbstractQueryHandler
                 'wouldIncreaseRequireAdditionalAdvertisement' => $application->isVariation(),
                 'currentVehiclesRequired' => $this->getNoOfVehiclesRequired($aoc, $application->getLicence()),
                 'currentTrailersRequired' => $this->getNoOfTrailersRequired($aoc, $application->getLicence()),
-                'niFlag' => $application->getNiFlag()
+                'niFlag' => $application->getNiFlag(),
+                'appliedVia' => $application->getAppliedVia()->getId(),
             ]
         );
     }
