@@ -211,6 +211,8 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
             $this->getRepo('Task')->save($task);
         }
 
+        $organisationTo->setIsIrfo($organisationFrom->getIsIrfo());
+
         return $result;
     }
 
