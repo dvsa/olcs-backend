@@ -118,7 +118,7 @@ class OperatingCentreHelper implements FactoryInterface
             $this->addMessage('noOfTrailersRequired', self::ERR_OC_VR_1A);
         }
 
-        if ($command->getAdPlaced() === 'Y') {
+        if ($command->getAdPlaced() === ApplicationOperatingCentre::AD_UPLOAD_NOW) {
             if ((string)$command->getAdPlacedIn() === '') {
                 $this->addMessage('adPlacedIn', self::ERR_OC_AD_IN_1);
             }
@@ -280,10 +280,10 @@ class OperatingCentreHelper implements FactoryInterface
         $ocLink->setSufficientParking($command->getSufficientParking());
 
         if ($entity->isPsv()) {
-            $ocLink->setAdPlaced(false);
+            $ocLink->setAdPlaced(ApplicationOperatingCentre::AD_POST);
         } else {
-            $ocLink->setAdPlaced($command->getAdPlaced());
-            if ($command->getAdPlaced() === 'Y') {
+            $ocLink->setAdPlaced((int) $command->getAdPlaced());
+            if ((int) $command->getAdPlaced() === ApplicationOperatingCentre::AD_UPLOAD_NOW) {
                 $ocLink->setAdPlacedIn($command->getAdPlacedIn());
                 $ocLink->setAdPlacedDate(new DateTime($command->getAdPlacedDate()));
             }

@@ -1103,7 +1103,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         // If there is an advertisement date then
-        if ($aoc->getAdPlaced() === 'Y' && $aoc->getAdPlacedDate()) {
+        if ($aoc->getAdPlaced() === ApplicationOperatingCentre::AD_UPLOAD_NOW && $aoc->getAdPlacedDate()) {
             return $aoc->getAdPlacedDate();
         }
 
