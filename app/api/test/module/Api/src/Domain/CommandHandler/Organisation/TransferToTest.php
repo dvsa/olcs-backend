@@ -1003,4 +1003,29 @@ class TransferToTest extends CommandHandlerTestCase
 
         $this->sut->handleCommand($command);
     }
+
+    public function testHandleCommandWithException()
+    {
+        $this->setExpectedException(ValidationException::class);
+        $data = [
+            'id' => 12,
+            'receivingOrganisation' => 999,
+            'licenceIds' => []
+        ];
+        $command = Cmd::create($data);
+
+        $fromOrganisation = new Organisation();
+
+        $licence1= new Licence($fromOrganisation, new RefData());
+        $fromOrganisation->addLicences($licence1);
+
+        $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
+            ->andReturn($fromOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')
+            ->with(999)
+            ->once()
+            ->andThrow(new ValidationException(['Target organisation is not found']));
+
+        $this->sut->handleCommand($command);
+    }
 }
