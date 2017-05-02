@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Application Operating Centre Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\ApplicationOperatingCentre;
 
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -58,7 +53,11 @@ class ApplicationOperatingCentreTest extends QueryHandlerTestCase
             ->shouldReceive('isVariation')
             ->andReturn(false)
             ->shouldReceive('getNiFlag')
-            ->andReturn('Y');
+            ->andReturn('Y')
+            ->shouldReceive('getAppliedVia->getId')
+            ->andReturn('foo')
+            ->once()
+            ->getMock();
 
         /** @var ApplicationOperatingCentreEntity $aoc */
         $aoc = m::mock(ApplicationOperatingCentreEntity::class)->makePartial();
@@ -82,7 +81,8 @@ class ApplicationOperatingCentreTest extends QueryHandlerTestCase
             'wouldIncreaseRequireAdditionalAdvertisement' => false,
             'currentVehiclesRequired' => null,
             'currentTrailersRequired' => null,
-            'niFlag' => 'Y'
+            'niFlag' => 'Y',
+            'appliedVia' => 'foo'
         ];
 
         $this->assertEquals($expected, $result->serialize());
@@ -105,7 +105,11 @@ class ApplicationOperatingCentreTest extends QueryHandlerTestCase
             ->shouldReceive('isVariation')
             ->andReturn(false)
             ->shouldReceive('getNiFlag')
-            ->andReturn('Y');
+            ->andReturn('Y')
+            ->shouldReceive('getAppliedVia->getId')
+            ->andReturn('foo')
+            ->once()
+            ->getMock();
 
         /** @var ApplicationOperatingCentreEntity $aoc */
         $aoc = m::mock(ApplicationOperatingCentreEntity::class)->makePartial();
@@ -137,7 +141,8 @@ class ApplicationOperatingCentreTest extends QueryHandlerTestCase
             'wouldIncreaseRequireAdditionalAdvertisement' => false,
             'currentVehiclesRequired' => 10,
             'currentTrailersRequired' => 9,
-            'niFlag' => 'Y'
+            'niFlag' => 'Y',
+            'appliedVia' => 'foo'
         ];
 
         $this->assertEquals($expected, $result->serialize());
