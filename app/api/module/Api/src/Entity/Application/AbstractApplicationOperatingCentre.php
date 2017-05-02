@@ -48,9 +48,9 @@ abstract class AbstractApplicationOperatingCentre implements BundleSerializableI
     /**
      * Ad placed
      *
-     * @var string
+     * @var int
      *
-     * @ORM\Column(type="yesnonull", name="ad_placed", nullable=false)
+     * @ORM\Column(type="smallint", name="ad_placed", nullable=false)
      */
     protected $adPlaced;
 
@@ -286,7 +286,7 @@ abstract class AbstractApplicationOperatingCentre implements BundleSerializableI
     /**
      * Set the ad placed
      *
-     * @param string $adPlaced new value being set
+     * @param int $adPlaced new value being set
      *
      * @return ApplicationOperatingCentre
      */
@@ -300,7 +300,7 @@ abstract class AbstractApplicationOperatingCentre implements BundleSerializableI
     /**
      * Get the ad placed
      *
-     * @return string
+     * @return int
      */
     public function getAdPlaced()
     {

@@ -1,16 +1,12 @@
 <?php
 
-/**
- * Goods Operating Centre Review Service Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\GoodsOperatingCentreReviewService;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 
 /**
  * Goods Operating Centre Review Service Test
@@ -133,7 +129,10 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
 
             $mockTranslator->shouldReceive('translate')
                 ->with('no-files-uploaded', 'snapshot')
-                ->andReturn('no-files-uploaded-translated');
+                ->andReturn('no-files-uploaded-translated')
+                ->shouldReceive('translate')
+                ->with($expectedAdvertisements[0]['value'], 'snapshot')
+                ->andReturn($expectedAdvertisements[0]['value']);
         }
 
         // Expectations
@@ -148,18 +147,29 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
     {
         return [
             [
-                'N',
+                ApplicationOperatingCentre::AD_POST,
                 [],
                 [
                     [
                         'label' => 'review-operating-centre-advertisement-ad-placed',
-                        'value' => 'No'
+                        'value' => 'review-operating-centre-advertisement-post'
                     ]
                 ],
-                false
+                true
             ],
             [
-                'Y',
+                ApplicationOperatingCentre::AD_UPLOAD_LATER,
+                [],
+                [
+                    [
+                        'label' => 'review-operating-centre-advertisement-ad-placed',
+                        'value' => 'review-operating-centre-advertisement-upload-later'
+                    ]
+                ],
+                true
+            ],
+            [
+                ApplicationOperatingCentre::AD_UPLOAD_NOW,
                 [
                     // This file should be ignored, as the app id doesn't match
                     [
@@ -185,7 +195,7 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                 [
                     [
                         'label' => 'review-operating-centre-advertisement-ad-placed',
-                        'value' => 'Yes'
+                        'value' => 'review-operating-centre-advertisement-upload-now'
                     ],
                     [
                         'label' => 'review-operating-centre-advertisement-newspaper',
@@ -201,15 +211,15 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                         'value' => 'file1.pdf<br>file2.pdf'
                     ]
                 ],
-                false
+                true
             ],
             [
-                'Y',
+                ApplicationOperatingCentre::AD_UPLOAD_NOW,
                 [],
                 [
                     [
                         'label' => 'review-operating-centre-advertisement-ad-placed',
-                        'value' => 'Yes'
+                        'value' => 'review-operating-centre-advertisement-upload-now'
                     ],
                     [
                         'label' => 'review-operating-centre-advertisement-newspaper',

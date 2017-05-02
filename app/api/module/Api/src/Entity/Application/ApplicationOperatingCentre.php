@@ -28,6 +28,9 @@ class ApplicationOperatingCentre extends AbstractApplicationOperatingCentre impl
     const ACTION_ADD    = 'A';
     const ACTION_UPDATE = 'U';
     const ACTION_DELETE = 'D';
+    const AD_POST = 0;
+    const AD_UPLOAD_NOW = 1;
+    const AD_UPLOAD_LATER = 2;
 
     public function __construct(Application $application, OperatingCentre $operatingCentre)
     {
