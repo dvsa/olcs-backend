@@ -43,8 +43,12 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
         /* @var Organisation $organisationFrom */
         $organisationFrom = $this->getRepo()->fetchUsingId($command);
 
-        /* @var Organisation $organisationTo */
-        $organisationTo = $this->getRepo()->fetchById($command->getReceivingOrganisation());
+        try {
+            /* @var Organisation $organisationTo */
+            $organisationTo = $this->getRepo()->fetchById($command->getReceivingOrganisation());
+        } catch (\Exception $e) {
+            throw new ValidationException(['Target organisation is not found']);
+        }
 
         $existingLicenceCount = $organisationFrom->getLicences()->count();
 
