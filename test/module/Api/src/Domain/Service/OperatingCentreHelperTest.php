@@ -1,14 +1,10 @@
 <?php
 
-/**
- * Operating Centre Helper Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -558,7 +554,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
             'noOfTrailersRequired' => 11,
             'permission' => 'Y',
             'sufficientParking' => 'Y',
-            'adPlaced' => 'Y',
+            'adPlaced' => ApplicationOperatingCentre::AD_UPLOAD_NOW,
             'adPlacedIn' => 'Foo',
             'adPlacedDate' => '2015-01-01'
         ];
@@ -582,7 +578,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
         $this->assertEquals('Y', $loc->getPermission());
         $this->assertEquals('Y', $loc->getSufficientParking());
 
-        $this->assertEquals('Y', $loc->getAdPlaced());
+        $this->assertEquals(ApplicationOperatingCentre::AD_UPLOAD_NOW, $loc->getAdPlaced());
         $this->assertEquals('Foo', $loc->getAdPlacedIn());
         $this->assertEquals('2015-01-01', $loc->getAdPlacedDate()->format('Y-m-d'));
     }
@@ -624,7 +620,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
                 [
                     'noOfVehiclesRequired' => 0,
                     'noOfTrailersRequired' => 0,
-                    'adPlaced' => 'N'
+                    'adPlaced' => ApplicationOperatingCentre::AD_POST
                 ],
                 [
                     'noOfVehiclesRequired' => [
@@ -645,7 +641,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
                 [
                     'noOfVehiclesRequired' => 0,
                     'noOfTrailersRequired' => 1,
-                    'adPlaced' => 'Y',
+                    'adPlaced' => ApplicationOperatingCentre::AD_UPLOAD_NOW,
                     'adPlacedIn' => '',
                     'adPlacedDate' => ''
                 ],
@@ -668,7 +664,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
                 [
                     'noOfVehiclesRequired' => 0,
                     'noOfTrailersRequired' => 1,
-                    'adPlaced' => 'Y',
+                    'adPlaced' => ApplicationOperatingCentre::AD_UPLOAD_NOW,
                     'adPlacedIn' => 'sasdasd',
                     'adPlacedDate' => 'asdsad'
                 ],
@@ -735,7 +731,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
                 [
                     'noOfVehiclesRequired' => 0,
                     'noOfTrailersRequired' => 0,
-                    'adPlaced' => 'N'
+                    'adPlaced' => ApplicationOperatingCentre::AD_POST
                 ],
                 [
                     'noOfVehiclesRequired' => [
@@ -766,7 +762,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
                 [
                     'noOfVehiclesRequired' => 0,
                     'noOfTrailersRequired' => 1,
-                    'adPlaced' => 'Y',
+                    'adPlaced' => ApplicationOperatingCentre::AD_UPLOAD_NOW,
                     'adPlacedIn' => '',
                     'adPlacedDate' => ''
                 ],
@@ -804,7 +800,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
                 [
                     'noOfVehiclesRequired' => 0,
                     'noOfTrailersRequired' => 1,
-                    'adPlaced' => 'Y',
+                    'adPlaced' => ApplicationOperatingCentre::AD_UPLOAD_NOW,
                     'adPlacedIn' => 'sasdasd',
                     'adPlacedDate' => 'asdsad'
                 ],
@@ -834,7 +830,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
         $data = [
             'noOfVehiclesRequired' => 10,
             'noOfTrailersRequired' => 11,
-            'adPlaced' => 'Y',
+            'adPlaced' => ApplicationOperatingCentre::AD_UPLOAD_NOW,
             'adPlacedIn' => 'Foo',
             'adPlacedDate' => '2015-01-01',
             'sufficientParking' => '',

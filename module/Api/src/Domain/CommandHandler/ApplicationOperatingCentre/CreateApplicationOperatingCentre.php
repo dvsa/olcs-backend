@@ -25,7 +25,7 @@ final class CreateApplicationOperatingCentre extends AbstractCommandHandler impl
         );
 
         $applicationOperatingCentre->setAction(ApplicationOperatingCentre::ACTION_ADD);
-        $applicationOperatingCentre->setAdPlaced('N');
+        $applicationOperatingCentre->setAdPlaced(ApplicationOperatingCentre::AD_POST);
         $applicationOperatingCentre->setNoOfVehiclesRequired($command->getNoOfVehiclesRequired());
         $applicationOperatingCentre->setNoOfTrailersRequired($command->getNoOfTrailersRequired());
         $applicationOperatingCentre->setS4(

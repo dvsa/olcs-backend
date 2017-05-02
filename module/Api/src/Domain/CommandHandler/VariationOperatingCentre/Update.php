@@ -69,7 +69,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         if ($deltaRecords->isEmpty()) {
             $aoc = new ApplicationOperatingCentre($application, $oc);
             $aoc->setAction('U');
-            $aoc->setAdPlaced(false);
+            $aoc->setAdPlaced(ApplicationOperatingCentre::AD_POST);
 
             $this->getRepo('ApplicationOperatingCentre')->save($aoc);
 
