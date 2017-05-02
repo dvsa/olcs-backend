@@ -149,11 +149,13 @@ class Summary extends AbstractQueryHandler
         }
         $evidence = [];
 
-        if ($this->isMissingOcDocuments($application)) {
+        // @todo need to remove isMissingOcDocuments and add canAddOcEvidence after OLCS-16275 & OLCS-16282 will be done
+        if (true) {
             $evidence[] = self::MISSING_EVIDENCE_OC;
         }
 
-        if ($this->isMissingFinancialEvidence($application)) {
+        // @todo need to remove isMissingFinancialEvidence method after OLCS-16275 & OLCS-16282 will be done
+        if ($application->canAddFinancialEvidence()) {
             $evidence[] = self::MISSING_EVIDENCE_FINANCIAL;
         }
 
