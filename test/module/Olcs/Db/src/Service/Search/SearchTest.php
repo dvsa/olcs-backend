@@ -123,7 +123,7 @@ class SearchTest extends MockeryTestCase
         $this->mockClient->shouldReceive('request')
             ->with(
                 '_bulk',
-                'PUT',
+                'POST',
                 '{"update":{"_id":{},"_type":{},"_index":{}}}'."\n".'{"doc":{"section_26":1}}'."\n",
                 []
             )->once()

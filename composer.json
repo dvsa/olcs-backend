@@ -45,7 +45,7 @@
         "doctrine/doctrine-orm-module": "~0.9.0",
         "doctrine/annotations": "^1.2.3",
         "gedmo/doctrine-extensions": "~2.3.9",
-        "ruflin/Elastica": "v1.4.3.0",
+        "ruflin/Elastica": "~5.1",
         "olcs/companies-house": "dev-develop",
         "olcs/olcs-transfer": "dev-develop",
         "olcs/olcs-utils": "dev-develop",
