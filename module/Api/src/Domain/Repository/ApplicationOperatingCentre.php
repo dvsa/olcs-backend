@@ -121,4 +121,26 @@ class ApplicationOperatingCentre extends AbstractRepository
 
         return $locs->first();
     }
+
+    /**
+     * Fetch list of application operating centres ordered by address
+     *
+     * @param int $applicationId Application ID
+     *
+     * -@return array of ApplicationOperatingCentre
+     */
+    public function fetchByApplicationOrderByAddress($applicationId)
+    {
+        $dqb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->modifyQuery($dqb)
+            ->withRefdata()
+            ->with('operatingCentre', 'oc')
+            ->with('oc.address', 'address');
+
+        $dqb->orderBy('address.town');
+        $dqb->andWhere($dqb->expr()->eq('aoc.application', ':applicationId'))
+            ->setParameter('applicationId', $applicationId);
+
+        return $dqb->getQuery()->getResult();
+    }
 }
