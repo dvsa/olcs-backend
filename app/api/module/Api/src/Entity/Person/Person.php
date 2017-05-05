@@ -29,11 +29,12 @@ class Person extends AbstractPerson implements OrganisationProviderInterface
     /**
      * Update person details
      *
-     * @param string $forename
-     * @param string $familyName
-     * @param RefData|null $title
-     * @param string|null $birthDate
-     * @param string|null $birthPlace
+     * @param string       $forename   First Name
+     * @param string       $familyName Surname
+     * @param RefData|null $title      Title
+     * @param string|null  $birthDate  DoB
+     * @param string|null  $birthPlace Place of Birth
+     *
      * @return $this
      */
     public function updatePerson($forename, $familyName, RefData $title = null, $birthDate = null, $birthPlace = null)
@@ -54,6 +55,8 @@ class Person extends AbstractPerson implements OrganisationProviderInterface
         if ($birthPlace !== null) {
             $this->setBirthPlace($birthPlace);
         }
+
+        return $this;
     }
 
     /**
@@ -110,7 +113,7 @@ class Person extends AbstractPerson implements OrganisationProviderInterface
         return $list;
     }
 
-    /*
+    /**
      * Get the disqualification linked to this contact details
      * NB DB schema is 1 to many, but it is only possible to have one disqualification record per contact details
      *

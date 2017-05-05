@@ -1,14 +1,11 @@
 <?php
 
-/**
- * UserTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Repository\User as Repo;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
@@ -18,13 +15,16 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider as PidIdentityProviderEntity;
 
 /**
- * UserTest
- *
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\User
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
 class UserTest extends RepositoryTestCase
 {
+    /** @var  m\MockInterface | Repository\Role */
     private $roleRepo;
+
+    /** @var  Repo */
+    protected $sut;
 
     public function setUp()
     {
@@ -32,6 +32,7 @@ class UserTest extends RepositoryTestCase
 
         $this->roleRepo = m::mock();
 
+        /** @var RepositoryServiceManager | m\MockInterface $sm */
         $sm = m::mock(RepositoryServiceManager::class);
         $sm->shouldReceive('get')->once()->with('Role')->andReturn($this->roleRepo);
 
@@ -286,5 +287,75 @@ class UserTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getSingleScalarResult')->once()->andReturn('result');
 
         $this->assertSame('result', $this->sut->fetchUsersCountByTeam(1));
+    }
+
+    public function testFindUserNameAvailable()
+    {
+        /** @var Repo | m\MockInterface $sut */
+        $sut = m::mock(Repo::class)->makePartial();
+
+        $base = 'unitLogin';
+
+        $sut
+            ->shouldReceive('disableSoftDeleteable')->once()
+            ->shouldReceive('enableSoftDeleteable')->once()
+            ->shouldReceive('fetchByLoginId')->once()->with($base . '3')->andReturn([])
+            ->shouldReceive('fetchByLoginId')->andReturn([m::mock(Entity\User\User::class)]);
+
+        $actual = $sut->findUserNameAvailable($base);
+
+        static::assertEquals('unitLogin3', $actual);
+    }
+
+    public function testFindUserNameCantGenerateSpecifiedTimes()
+    {
+        /** @var Repo | m\MockInterface $sut */
+        $sut = m::mock(Repo::class)->makePartial();
+
+        $sut
+            ->shouldReceive('disableSoftDeleteable')->once()
+            ->shouldReceive('enableSoftDeleteable')->once()
+            ->shouldReceive('fetchByLoginId')
+            ->times(10)
+            ->andReturn([m::mock(Entity\User\User::class)]);
+
+        static::assertNull($sut->findUserNameAvailable('unitLogin', null, 10));
+    }
+
+    public function testFindUserNameCustomSfxGen()
+    {
+        /** @var Repo | m\MockInterface $sut */
+        $sut = m::mock(Repo::class)->makePartial();
+
+        $fnc = function ($base, $idx) {
+            return $base . '-' . chr(ord('A') + $idx);
+        };
+
+        $mockUserE = m::mock(Entity\User\User::class);
+        $sut
+            ->shouldReceive('disableSoftDeleteable')->once()
+            ->shouldReceive('enableSoftDeleteable')->once()
+            ->shouldReceive('fetchByLoginId')->times(3)->andReturn([$mockUserE])
+            ->shouldReceive('fetchByLoginId')->andReturn([]);
+
+        static::assertEquals(
+            'unitLogin-D',
+            $sut->findUserNameAvailable('unitLogin', $fnc)
+        );
+    }
+
+    public function testFetchByLoginId()
+    {
+        $userName = 'unitUserName';
+
+        $qb = $this->createMockQb('QUERY');
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn('EXPECT');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $actual = $this->sut->fetchByLoginId($userName);
+
+        static::assertEquals('QUERY AND u.loginId = [[' . $userName . ']]', $this->query);
+        static::assertEquals('EXPECT', $actual);
     }
 }

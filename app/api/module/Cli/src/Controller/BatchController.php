@@ -365,6 +365,23 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * Create csv files for data.org.uk
+     *
+     * @return ConsoleModel
+     */
+    public function importUsersFromCsvAction()
+    {
+        $params = [
+            'csvPath' =>  $this->params('csv-path'),
+            'resultCsvPath' =>  $this->params('result-csv-path'),
+        ];
+
+        return $this->handleExitStatus(
+            $this->handleCommand([CliCommand\ImportUsersFromCsv::create($params)])
+        );
+    }
+
+    /**
      * Is verbose
      *
      * @return boolean

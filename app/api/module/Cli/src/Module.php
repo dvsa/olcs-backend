@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Cli;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport;
 use Zend\Console\Adapter\AdapterInterface as ConsoleAdapterInterface;
 use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
-use Zend\Mvc\MvcEvent;
 
 /**
  * Cli Module
@@ -65,6 +64,15 @@ class Module implements ConsoleUsageProviderInterface
             'ch-vs-olcs-diffs [--verbose|-v] [--path=<exportPath>]' =>
             'Compare data at olcs vs companies house and export to csv',
             ['--path=<exportPath>', '(optional) save export file in specified directory'],
+            //
+            'import-users-from-csv <csv-path> [--result-csv-path=<result-csv-path>] [--verbose|-v]' =>
+                'Import user from csv file',
+            ['<csv-path>', 'path to csv file with users for import'],
+            [
+                '--result-csv-path=<result-csv-path>',
+                "(optional) save result to specified file.\n" .
+                'By default, result will be saved to "<csv-path>-res.csv" file'
+            ],
         ];
     }
 

@@ -1,30 +1,24 @@
 <?php
 
-/**
- * Command Handler Test Case
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler;
 
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Json\Json as ZendJson;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
@@ -34,9 +28,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 abstract class CommandHandlerTestCase extends MockeryTestCase
 {
-    /**
-     * @var CommandHandlerInterface
-     */
+    /** @var \Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler */
     protected $sut;
 
     /**
@@ -44,9 +36,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
      */
     protected $commandHandler;
 
-    /**
-     * @var ServiceLocatorInterface
-     */
+    /** @var  m\MockInterface | RepositoryServiceManager */
     protected $repoManager;
 
     /**
@@ -73,9 +63,12 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
      */
     protected $mockedSmServices = [];
 
+    /** @var  m\MockInterface | QueryHandlerManager */
     protected $queryHandler;
-
+    /** @var  m\MockInterface | PidIdentityProvider */
     protected $pidIdentityProvider;
+    /** @var  m\MockInterface | TransactionManagerInterface */
+    protected $mockTransationMngr;
 
     public function setUp()
     {
@@ -90,10 +83,11 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         }
 
         $this->pidIdentityProvider = m::mock(PidIdentityProvider::class);
+        $this->mockTransationMngr = m::mock(TransactionManagerInterface::class);
 
         $sm = m::mock(ServiceLocatorInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
-        $sm->shouldReceive('get')->with('TransactionManager')->andReturn(m::mock(TransactionManagerInterface::class));
+        $sm->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
         $sm->shouldReceive('get')->with(PidIdentityProvider::class)->andReturn($this->pidIdentityProvider);
 
@@ -376,9 +370,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             $status = new RefData($status);
         }
 
-        $application = new Application($licence, $status, $isVariation);
-
-        return $application;
+        return new Application($licence, $status, $isVariation);
     }
 
     /**
