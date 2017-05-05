@@ -1,22 +1,20 @@
 <?php
 
-/**
- * Role Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository;
 
 /**
- * Role Test
- *
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\Role
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 class RoleTest extends RepositoryTestCase
 {
+    const ROLE = 'unit_role';
+
+    /** @var  Repository\Role */
+    protected $sut;
+
     public function setUp()
     {
         $this->setUpSut(Repository\Role::class);
@@ -24,19 +22,25 @@ class RoleTest extends RepositoryTestCase
 
     public function testFetchByRole()
     {
-        $role = 'foo';
-
         $qb = $this->createMockQb('QUERY');
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['EXPECT']);
 
         $this->mockCreateQueryBuilder($qb);
 
-        $qb->shouldReceive('getQuery->getResult')->once()->andReturn('foo');
+        $actual = $this->sut->fetchByRole(self::ROLE);
 
-        $result = $this->sut->fetchByRole($role);
+        static::assertEquals('QUERY AND m.role = [[' . self::ROLE . ']]', $this->query);
+        static::assertEquals('EXPECT', $actual);
+    }
 
-        $this->assertEquals('QUERY AND m.role = [[foo]]', $this->query);
+    public function testFetchByRoleNull()
+    {
+        $qb = $this->createMockQb('QUERY');
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn([]);
 
-        $this->assertEquals('foo', $result);
+        $this->mockCreateQueryBuilder($qb);
+
+        static::assertNull($this->sut->fetchByRole(self::ROLE));
     }
 
     public function testFetchOneByRole()

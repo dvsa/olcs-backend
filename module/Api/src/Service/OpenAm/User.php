@@ -1,8 +1,5 @@
 <?php
 
-/**
- * User
- */
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
 use RandomLib\Generator;
@@ -212,7 +209,7 @@ class User implements UserInterface
      *
      * @return string
      */
-    private function generatePassword()
+    public function generatePassword()
     {
         // make sure that generated password contains at least one upper-case, lower-case and digit
         return

@@ -8,12 +8,15 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemUser;
 use Dvsa\Olcs\Cli\Domain\CommandHandler as CliCommandHandler;
 
 return [
+    //  cli commands
     CliCommandHandler\CreateViExtractFiles::class => IsSystemUser::class,
     CliCommandHandler\SetViFlags::class => IsSystemUser::class,
     CliCommandHandler\DataGovUkExport::class => IsSystemUser::class,
     CliCommandHandler\CompaniesHouseVsOlcsDiffsExport::class => IsSystemUser::class,
     CliCommandHandler\RemoveReadAudit::class => IsSystemUser::class,
     CliCommandHandler\Bus\Expire::class => IsSystemUser::class,
+    CliCommandHandler\ImportUsersFromCsv::class => IsSystemUser::class,
+    //  api commands
     Dvsa\Olcs\Email\Domain\CommandHandler\ProcessInspectionRequestEmail::class => IsSystemUser::class,
     CommandHandler\Email\SendErruErrors::class => IsSystemUser::class,
     QueryHandler\Application\NotTakenUpList::class => IsSystemUser::class,
