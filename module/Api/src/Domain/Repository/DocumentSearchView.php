@@ -64,6 +64,14 @@ class DocumentSearchView extends AbstractReadonlyRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
+        //sometimes we want only the records which aren't linked to a particular licence, case, bus reg etc.
+        if ($query->getOnlyUnlinked() === 'Y') {
+            $qb->andWhere(
+                $qb->expr()->eq('m.identifier', ':identifier')
+            );
+            $qb->setParameter('identifier', Entity::IDENTIFIER_UNLINKED);
+        }
+
         if ($query->getIsExternal() !== null) {
             $qb->andWhere(
                 $qb->expr()->eq('m.isExternal', ':isExternal')
