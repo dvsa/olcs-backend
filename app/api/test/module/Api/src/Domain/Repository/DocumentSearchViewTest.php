@@ -6,6 +6,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Repository\DocumentSearchView as DocumentSearchViewRepo;
 use Dvsa\Olcs\Transfer\Query\Document\DocumentList;
 use Dvsa\Olcs\Utils\Constants\FilterOptions;
+use Dvsa\Olcs\Api\Entity\View\DocumentSearchView as DocumentSearchViewEntity;
 use Mockery as m;
 
 /**
@@ -56,7 +57,8 @@ class DocumentSearchViewTest extends RepositoryTestCase
             'case' => 333,
             'irfoOrganisation' => 444,
             'showDocs' => 'OTHER',
-            'format' => 'FOO'
+            'format' => 'FOO',
+            'onlyUnlinked' => 'Y'
         ];
 
         $query = DocumentList::create($data);
@@ -70,7 +72,8 @@ class DocumentSearchViewTest extends RepositoryTestCase
 
         $this->assertEquals(['foo' => 'bar'], $this->sut->fetchList($query));
 
-        $expected = '{QUERY} AND m.isExternal = [[1]]' .
+        $expected = '{QUERY} AND m.identifier = [[' . DocumentSearchViewEntity::IDENTIFIER_UNLINKED . ']]' .
+            ' AND m.isExternal = [[1]]' .
             ' AND m.category = 11' .
             ' AND m.documentSubCategory IN 22' .
             ' AND m.extension = [[FOO]]' .
