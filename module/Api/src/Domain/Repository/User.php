@@ -2,17 +2,16 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
-use Dvsa\Olcs\Api\Entity\User\User as Entity;
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
-use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Doctrine\ORM\Query\Expr;
+use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
+use Dvsa\Olcs\Api\Entity\User\User as Entity;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider as PidIdentityProviderEntity;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * User
@@ -21,6 +20,8 @@ use Dvsa\Olcs\Api\Rbac\PidIdentityProvider as PidIdentityProviderEntity;
  */
 class User extends AbstractRepository
 {
+    const USERNAME_GEN_TRY_COUNT = 100;
+
     protected $entity = Entity::class;
     protected $alias = 'u';
 
@@ -104,13 +105,13 @@ class User extends AbstractRepository
         // filter by organisation if it has been specified
         if (method_exists($query, 'getOrganisation') && !empty($query->getOrganisation())) {
             $qb->join('u.organisationUsers', 'ou', Expr\Join::WITH, 'ou.organisation = :organisation');
-            $qb->setParameter('organisation', (int) $query->getOrganisation());
+            $qb->setParameter('organisation', (int)$query->getOrganisation());
         }
 
         // filter by team if it has been specified
         if (method_exists($query, 'getTeam') && !empty($query->getTeam())) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.team', ':team'))
-                ->setParameter('team', (int) $query->getTeam());
+                ->setParameter('team', (int)$query->getTeam());
         }
 
         if (method_exists($query, 'getIsInternal') && $query->getIsInternal() == true) {
@@ -135,9 +136,9 @@ class User extends AbstractRepository
 
         $this->getQueryBuilder()->modifyQuery($qb)
             ->withRefdata()
-            ->with($this->alias .'.contactDetails', 'cd')
+            ->with($this->alias . '.contactDetails', 'cd')
             ->with('cd.person', 'cdp')
-            ->with($this->alias .'.transportManager', 'tm')
+            ->with($this->alias . '.transportManager', 'tm')
             ->byId($userId);
 
         return $qb->getQuery()->getSingleResult();
@@ -160,7 +161,6 @@ class User extends AbstractRepository
             ->innerJoin($this->alias . '.contactDetails', 'cd')
             ->andWhere($qb->expr()->eq('cd.emailAddress', ':emailAddress'))
             ->setParameter('emailAddress', $emailAddress)
-
             // match by licence number
             ->innerJoin($this->alias . '.organisationUsers', 'ou')
             ->innerJoin('ou.organisation', 'o')
@@ -254,5 +254,51 @@ class User extends AbstractRepository
         $qb->where($this->alias . '.pid = :pid')->setParameter('pid', $pid);
 
         return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * Check user name is available and if not, then generate new user name
+     *
+     * @param string        $base   User Name to check and use as base
+     * @param callable|null $fncSfx Function to change user name
+     * @param int           $tryCnt Count of try to generate new user name
+     *
+     * @return null|string
+     */
+    public function findUserNameAvailable($base, callable $fncSfx = null, $tryCnt = self::USERNAME_GEN_TRY_COUNT)
+    {
+        if ($fncSfx === null) {
+            $fncSfx = function ($base, $idx) {
+                return $base . ($idx > 0 ? (string)$idx : '');
+            };
+        }
+
+        $this->disableSoftDeleteable();
+
+        $idx = 0;
+        $test = $base;
+
+        while (
+            ($isExist = (count($this->fetchByLoginId($test)) !== 0))
+            && ++$idx < $tryCnt
+        ) {
+            $test = $fncSfx($base, $idx);
+        }
+
+        $this->enableSoftDeleteable();
+
+        return !$isExist ? $test : null;
+    }
+
+    /**
+     * Fetch by UserName|Login
+     *
+     * @param string $login UserName|Login
+     *
+     * @return array
+     */
+    public function fetchByLoginId($login)
+    {
+        return $this->fetchByX('loginId', [$login]);
     }
 }

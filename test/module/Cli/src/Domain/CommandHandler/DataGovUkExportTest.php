@@ -9,11 +9,10 @@ use Dvsa\Olcs\Cli\Domain\Command\DataGovUkExport as Cmd;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use org\bovigo\vfs\vfsStream;
 
 /**
- * @covers Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport
+ * @covers \Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport
  */
 class DataGovUkExportTest extends CommandHandlerTestCase
 {
