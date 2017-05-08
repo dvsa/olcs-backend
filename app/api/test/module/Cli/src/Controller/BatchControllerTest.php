@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Query;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Cli\Controller\BatchController;
 use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
@@ -17,11 +18,9 @@ use Zend\Console\Adapter\AdapterInterface;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\ServiceManager\ServiceManager;
-use Dvsa\Olcs\Cli\Domain\Command\Bus\Expire as ExpireBusCmd;
 
 /**
- * Batch Controller Test
- *
+ * @covers \Dvsa\Olcs\Cli\Controller\BatchController
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
 class BatchControllerTest extends MockeryTestCase
@@ -697,6 +696,32 @@ class BatchControllerTest extends MockeryTestCase
         $this->sut->processCommunityLicencesAction();
     }
 
+    public function testImportUserFromCsv()
+    {
+        $this->mockParamsPlugin(
+            [
+                'csv-path' => 'unit_source-csv-file',
+                'result-csv-path' => 'unit_result-csv-file',
+                'verbose' => true,
+            ]
+        );
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(CliCommand\ImportUsersFromCsv::class))
+            ->once()
+            ->andReturn(
+                (new Command\Result())
+                    ->addMessage('unit_message')
+            );
+
+        $this->mockConsole
+            ->shouldReceive('writeLine')->once()->with('/' . addslashes(CliCommand\ImportUsersFromCsv::class) . '$/')
+            ->shouldReceive('writeLine')->once()->with('/unit_message$/');
+
+        $this->sut->importUsersFromCsvAction();
+    }
+
     private function mockParamsPlugin(array $map)
     {
         $mockParams = m::mock(\Zend\Mvc\Controller\Plugin\Params::class)
@@ -785,7 +810,7 @@ class BatchControllerTest extends MockeryTestCase
 
         $this->mockCommandHandler
             ->shouldReceive('handleCommand')
-            ->with(m::type(ExpireBusCmd::class))
+            ->with(m::type(CliCommand\Bus\Expire::class))
             ->once()
             ->andReturn(new Command\Result());
 

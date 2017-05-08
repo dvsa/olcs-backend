@@ -183,6 +183,15 @@ return [
                         ],
                     ],
                 ],
+                'import-users-from-csv' => [
+                    'options' => [
+                        'route' => 'import-users-from-csv <csv-path> [--result-csv-path=] [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'importUsersFromCsv',
+                        ],
+                    ],
+                ],
             ]
         ]
     ],
@@ -271,6 +280,7 @@ return [
             Command\DataGovUkExport::class => CommandHandler\DataGovUkExport::class,
             Command\CompaniesHouseVsOlcsDiffsExport::class => CommandHandler\CompaniesHouseVsOlcsDiffsExport::class,
             Command\Bus\Expire::class => CommandHandler\Bus\Expire::class,
+            Command\ImportUsersFromCsv::class => CommandHandler\ImportUsersFromCsv::class,
         ],
     ],
     'batch_config' => [
