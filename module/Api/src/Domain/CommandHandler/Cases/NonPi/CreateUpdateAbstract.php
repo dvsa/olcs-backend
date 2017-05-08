@@ -23,7 +23,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Tr
     /**
      * Sets data from a create or update hearing command
      *
-     * @param Entities\Cases\Hearing                                $entity  hearing entity
+     * @param Entities\Cases\Hearing                       $entity  hearing entity
      * @param CommandInterface|CreateCommand|UpdateCommand $command update or create command
      *
      * @return void
