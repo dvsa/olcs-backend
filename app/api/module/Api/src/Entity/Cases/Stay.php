@@ -21,10 +21,59 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class Stay extends AbstractStay
 {
+    /**
+     * Stay constructor.
+     *
+     * @param Cases   $case     Case entity
+     * @param RefData $stayType Stay Type entity
+     */
     public function __construct(Cases $case, RefData $stayType)
     {
         $this->setCase($case);
         $this->setStayType($stayType);
+    }
+
+    /**
+     * Set values for the Stay entity
+     *
+     * @param \DateTime|null $requestDate    Request date
+     * @param string|null    $decisionDate   Decision date
+     * @param RefData|null   $outcome        Outcome of Stay
+     * @param string|null    $notes          Notes for stay
+     * @param int|null       $isWithdrawn    Is stay withdrawn
+     * @param string|null    $withdrawnDate  Withdrawn date
+     * @param int|null       $isDvsaNotified Is DVSA notified?
+     *
+     * @return $this
+     */
+    public function values(
+        $requestDate = null,
+        $decisionDate = null,
+        $outcome = null,
+        $notes = null,
+        $isWithdrawn = null,
+        $withdrawnDate = null,
+        $isDvsaNotified = null
+    ) {
+        // The logic to check this is in the CommandHandler (CreateStay/UpdateStay)
+        $this->setOutcome($outcome);
+
+        $this->setRequestDate($requestDate);
+
+        $decisionDate = (is_null($decisionDate))? null : new \DateTime($decisionDate);
+        $this->setDecisionDate($decisionDate);
+
+        $this->setNotes($notes);
+        $this->setDvsaNotified($isDvsaNotified);
+
+        if ($isWithdrawn === 'Y' && $withdrawnDate !== null) {
+            $withdrawnDate = new \DateTime($withdrawnDate);
+            $this->setWithdrawnDate($withdrawnDate);
+        } else {
+            $this->setWithdrawnDate(null);
+        }
+
+        return $this;
     }
 
     /**

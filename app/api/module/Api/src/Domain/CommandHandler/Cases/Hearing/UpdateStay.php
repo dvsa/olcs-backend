@@ -28,7 +28,8 @@ final class UpdateStay extends AbstractCommandHandler implements TransactionedIn
     /**
      * Updates Stay and associated entities
      *
-     * @param CommandInterface $command
+     * @param CommandInterface $command DTO request
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -47,7 +48,8 @@ final class UpdateStay extends AbstractCommandHandler implements TransactionedIn
     /**
      * Update the stay object
      *
-     * @param Cmd $command
+     * @param Cmd $command DTO request
+     *
      * @return Stay
      */
     private function createStayObject(Cmd $command)
