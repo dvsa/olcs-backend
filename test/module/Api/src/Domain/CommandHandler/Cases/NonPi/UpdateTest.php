@@ -50,10 +50,12 @@ class UpdateTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider dpWitnessProvider
+     */
+    public function testHandleCommand($inputWitnesses, $outputWitnesses)
     {
         $id = 150;
-        $case = 50;
         $version = 2;
 
         $data = [
@@ -65,7 +67,7 @@ class UpdateTest extends CommandHandlerTestCase
             "presidingStaffName" => "Ed",
             "agreedByTcDate" => "2015-01-01 12:15",
             "hearingDate" => "2015-02-01 14:15",
-            "witnessCount" => "4",
+            "witnessCount" => $inputWitnesses,
             "outcome" => "non_pio_nfa"
         ];
 
@@ -101,7 +103,7 @@ class UpdateTest extends CommandHandlerTestCase
                     ->shouldreceive('setHearingDate')
                     ->with(m::type(\DateTime::class))
                     ->shouldreceive('setWitnessCount')
-                    ->with("4")
+                    ->with($outputWitnesses)
                     ->shouldReceive('setOutcome')
                     ->andReturn(
                         m::mock(Entity\System\RefData::class)
@@ -126,5 +128,18 @@ class UpdateTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expectedResult, $result->toArray());
+    }
+
+    /**
+     * expected witness input and output values
+     */
+    public function dpWitnessProvider()
+    {
+        return [
+            [4, 4],
+            [1, 1],
+            [0, 0],
+            [null, 0]
+        ];
     }
 }
