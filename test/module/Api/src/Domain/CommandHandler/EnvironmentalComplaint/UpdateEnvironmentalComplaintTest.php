@@ -91,7 +91,7 @@ class UpdateEnvironmentalComplaintTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with(m::type(ComplaintEntity::class))
             ->andReturnUsing(
-                function (ComplaintEntity $complaint) use (&$complaint) {
+                function (ComplaintEntity $complaint) {
                     $complaint->setId(99);
                 }
             )
