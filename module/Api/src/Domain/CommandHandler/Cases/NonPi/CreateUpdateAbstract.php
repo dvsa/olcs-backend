@@ -10,6 +10,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Repository\NonPi as Repository;
 use Dvsa\Olcs\Api\Entity as Entities;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Update as UpdateCommand;
+use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Create as CreateCommand;
 
 /**
  * Create Update Abstract
@@ -18,11 +20,16 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Tr
 {
     protected $repoServiceName = 'NonPi';
 
+    /**
+     * Sets data from a create or update hearing command
+     *
+     * @param Entities\Cases\Hearing                       $entity  hearing entity
+     * @param CommandInterface|CreateCommand|UpdateCommand $command update or create command
+     *
+     * @return void
+     */
     protected function setData($entity, CommandInterface $command)
     {
-        /* @var $entity Entity For traceability */
-        /* @var $command CreateCommand For traceability */
-
         /** @var Repository $repo For traceability */
         $repo = $this->getRepo();
 
@@ -56,10 +63,9 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Tr
             $entity->setHearingDate(new \DateTime($command->getHearingDate()));
         }
 
-        // db expects integer and errors when sending empty string
-        if (!empty($command->getWitnessCount())) {
-            $entity->setWitnessCount($command->getWitnessCount());
-        }
+        //deals with witnesses field being null or empty string
+        $witnesses = is_numeric($command->getWitnessCount()) ? $command->getWitnessCount() : 0;
+        $entity->setWitnessCount($witnesses);
 
         if ($command->getOutcome() !== null) {
             $entity->setOutcome($repo->getRefdataReference($command->getOutcome()));

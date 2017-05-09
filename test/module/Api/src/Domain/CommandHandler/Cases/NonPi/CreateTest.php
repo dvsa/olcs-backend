@@ -51,10 +51,11 @@ class CreateTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider dpWitnessProvider
+     */
+    public function testHandleCommand($inputWitnesses, $outputWitnesses)
     {
-        $id = 111;
-
         $data = [
             "case" => "50",
             "nonPiType" => "non_pi_type_off_proc",
@@ -63,7 +64,7 @@ class CreateTest extends CommandHandlerTestCase
             "agreedByTcDate" => "2015-01-01 12:15",
             "hearingDate" => "2015-02-01 14:15",
             "venueOther" => "Some Other Venue",
-            "witnessCount" => "4",
+            "witnessCount" => $inputWitnesses,
             "outcome" => "non_pio_nfa"
         ];
 
@@ -96,7 +97,22 @@ class CreateTest extends CommandHandlerTestCase
 
         $this->assertEquals($expectedResult, $result->toArray());
 
+        /** @var NonPiEntity $pro */
         $this->assertEquals(111, $pro->getId());
         $this->assertEquals(50, $pro->getCase()->getId());
+        $this->assertEquals($outputWitnesses, $pro->getWitnessCount());
+    }
+
+    /**
+     * expected witness input and output values
+     */
+    public function dpWitnessProvider()
+    {
+        return [
+            [4, 4],
+            [1, 1],
+            [0, 0],
+            [null, 0]
+        ];
     }
 }
