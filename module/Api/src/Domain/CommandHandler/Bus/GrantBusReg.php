@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Transfer\Command\Bus\PrintLetter as BusPrintLetterCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Publication\Bus as PublicationBusCmd;
+use Dvsa\Olcs\Transfer\Command\Task\CloseTasks as CloseTasksCmd;
 
 /**
  * Grant BusReg
@@ -95,6 +96,7 @@ final class GrantBusReg extends AbstractCommandHandler
         }
 
         $sideEffects[] = BusPrintLetterCmd::create($busPrintLetterData);
+        $sideEffects = $this->addCloseTasksSideEffect($busReg, $sideEffects);
 
         //  process side effects
         $this->handleSideEffects($sideEffects);
@@ -104,6 +106,25 @@ final class GrantBusReg extends AbstractCommandHandler
         $result->addMessage('Bus Reg granted successfully');
 
         return $result;
+    }
+
+    /**
+     * Retrieve ids of open tasks, and add a side effect to close
+     *
+     * @param BusRegEntity $busReg      bus reg entity
+     * @param array        $sideEffects existing side effects
+     *
+     * @return array
+     */
+    private function addCloseTasksSideEffect(BusRegEntity $busReg, array $sideEffects)
+    {
+        $openTasks = $busReg->getOpenTaskIds();
+
+        if (!empty($openTasks)) {
+            $sideEffects[] = CloseTasksCmd::create(['ids' => $openTasks]);
+        }
+
+        return $sideEffects;
     }
 
     /**
