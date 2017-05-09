@@ -59,7 +59,7 @@ class DeleteTest extends CommandHandlerTestCase
             ->shouldReceive('delete')
             ->with(m::type(ConditionUndertakingEntity::class))
             ->andReturnUsing(
-                function (ConditionUndertakingEntity $conditionUndertaking) use (&$conditionUndertaking) {
+                function (ConditionUndertakingEntity $conditionUndertaking) {
                     $conditionUndertaking->setId(99);
                 }
             )
