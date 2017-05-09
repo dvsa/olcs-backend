@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
@@ -1348,5 +1349,24 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         }
 
         return false;
+    }
+
+    /**
+     * Returns the ids of an open tasks
+     *
+     * @return array
+     */
+    public function getOpenTaskIds()
+    {
+        $taskIds = [];
+
+        /** @var TaskEntity $task */
+        foreach ($this->tasks as $task) {
+            if ($task->getIsClosed() !== 'Y') {
+                $taskIds[] = $task->getId();
+            }
+        }
+
+        return $taskIds;
     }
 }
