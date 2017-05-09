@@ -20,7 +20,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="ix_entity_name", columns={"entity_name"}),
  *        @ORM\Index(name="ix_data_retention_rule_id", columns={"data_retention_rule_id"}),
- *        @ORM\Index(name="ix_delete_confirmation", columns={"delete_confirmation"}),
+ *        @ORM\Index(name="ix_delete_confirmation", columns={"action_confirmation"}),
  *        @ORM\Index(name="ix_deleted_date", columns={"deleted_date"}),
  *        @ORM\Index(name="ix_data_retention_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_data_retention_last_modified_by", columns={"last_modified_by"})
@@ -33,6 +33,33 @@ use Gedmo\Mapping\Annotation as Gedmo;
 abstract class AbstractDataRetention implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
+
+    /**
+     * Action after date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="action_after_date", nullable=true)
+     */
+    protected $actionAfterDate;
+
+    /**
+     * Action confirmation
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="action_confirmation", nullable=false)
+     */
+    protected $actionConfirmation;
+
+    /**
+     * Actioned date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="actioned_date", nullable=true)
+     */
+    protected $actionedDate;
 
     /**
      * Created by
@@ -63,18 +90,6 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
      * @ORM\JoinColumn(name="data_retention_rule_id", referencedColumnName="id", nullable=false)
      */
     protected $dataRetentionRule;
-
-    /**
-     * Delete confirmation
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean",
-     *     name="delete_confirmation",
-     *     nullable=false,
-     *     options={"default": 0})
-     */
-    protected $deleteConfirmation = 0;
 
     /**
      * Deleted date
@@ -135,22 +150,85 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     protected $lastModifiedOn;
 
     /**
-     * Postpone delete date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="postpone_delete_date", nullable=true)
-     */
-    protected $postponeDeleteDate;
-
-    /**
-     * To delete
+     * To action
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="to_delete", nullable=false, options={"default": 0})
+     * @ORM\Column(type="boolean", name="to_action", nullable=false)
      */
-    protected $toDelete = 0;
+    protected $toAction;
+
+    /**
+     * Set the action after date
+     *
+     * @param \DateTime $actionAfterDate new value being set
+     *
+     * @return DataRetention
+     */
+    public function setActionAfterDate($actionAfterDate)
+    {
+        $this->actionAfterDate = $actionAfterDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the action after date
+     *
+     * @return \DateTime
+     */
+    public function getActionAfterDate()
+    {
+        return $this->actionAfterDate;
+    }
+
+    /**
+     * Set the action confirmation
+     *
+     * @param boolean $actionConfirmation new value being set
+     *
+     * @return DataRetention
+     */
+    public function setActionConfirmation($actionConfirmation)
+    {
+        $this->actionConfirmation = $actionConfirmation;
+
+        return $this;
+    }
+
+    /**
+     * Get the action confirmation
+     *
+     * @return boolean
+     */
+    public function getActionConfirmation()
+    {
+        return $this->actionConfirmation;
+    }
+
+    /**
+     * Set the actioned date
+     *
+     * @param \DateTime $actionedDate new value being set
+     *
+     * @return DataRetention
+     */
+    public function setActionedDate($actionedDate)
+    {
+        $this->actionedDate = $actionedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the actioned date
+     *
+     * @return \DateTime
+     */
+    public function getActionedDate()
+    {
+        return $this->actionedDate;
+    }
 
     /**
      * Set the created by
@@ -222,30 +300,6 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     public function getDataRetentionRule()
     {
         return $this->dataRetentionRule;
-    }
-
-    /**
-     * Set the delete confirmation
-     *
-     * @param boolean $deleteConfirmation new value being set
-     *
-     * @return DataRetention
-     */
-    public function setDeleteConfirmation($deleteConfirmation)
-    {
-        $this->deleteConfirmation = $deleteConfirmation;
-
-        return $this;
-    }
-
-    /**
-     * Get the delete confirmation
-     *
-     * @return boolean
-     */
-    public function getDeleteConfirmation()
-    {
-        return $this->deleteConfirmation;
     }
 
     /**
@@ -393,51 +447,27 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     }
 
     /**
-     * Set the postpone delete date
+     * Set the to action
      *
-     * @param \DateTime $postponeDeleteDate new value being set
+     * @param boolean $toAction new value being set
      *
      * @return DataRetention
      */
-    public function setPostponeDeleteDate($postponeDeleteDate)
+    public function setToAction($toAction)
     {
-        $this->postponeDeleteDate = $postponeDeleteDate;
+        $this->toAction = $toAction;
 
         return $this;
     }
 
     /**
-     * Get the postpone delete date
-     *
-     * @return \DateTime
-     */
-    public function getPostponeDeleteDate()
-    {
-        return $this->postponeDeleteDate;
-    }
-
-    /**
-     * Set the to delete
-     *
-     * @param boolean $toDelete new value being set
-     *
-     * @return DataRetention
-     */
-    public function setToDelete($toDelete)
-    {
-        $this->toDelete = $toDelete;
-
-        return $this;
-    }
-
-    /**
-     * Get the to delete
+     * Get the to action
      *
      * @return boolean
      */
-    public function getToDelete()
+    public function getToAction()
     {
-        return $this->toDelete;
+        return $this->toAction;
     }
 
     /**

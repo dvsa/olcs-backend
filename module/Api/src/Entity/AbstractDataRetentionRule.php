@@ -29,6 +29,24 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
     use BundleSerializableTrait;
 
     /**
+     * Action procedure
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="action_procedure", length=64, nullable=false)
+     */
+    protected $actionProcedure;
+
+    /**
+     * Action type
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="action_type", length=8, nullable=false)
+     */
+    protected $actionType;
+
+    /**
      * Created by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -47,15 +65,6 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
      */
     protected $createdOn;
-
-    /**
-     * Delete procedure
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="delete_procedure", length=64, nullable=false)
-     */
-    protected $deleteProcedure;
 
     /**
      * Deleted date
@@ -85,6 +94,15 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * Is enabled
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_enabled", nullable=false, options={"default": 0})
+     */
+    protected $isEnabled = 0;
 
     /**
      * Last modified by
@@ -134,6 +152,54 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
     protected $retentionPeriod;
 
     /**
+     * Set the action procedure
+     *
+     * @param string $actionProcedure new value being set
+     *
+     * @return DataRetentionRule
+     */
+    public function setActionProcedure($actionProcedure)
+    {
+        $this->actionProcedure = $actionProcedure;
+
+        return $this;
+    }
+
+    /**
+     * Get the action procedure
+     *
+     * @return string
+     */
+    public function getActionProcedure()
+    {
+        return $this->actionProcedure;
+    }
+
+    /**
+     * Set the action type
+     *
+     * @param string $actionType new value being set
+     *
+     * @return DataRetentionRule
+     */
+    public function setActionType($actionType)
+    {
+        $this->actionType = $actionType;
+
+        return $this;
+    }
+
+    /**
+     * Get the action type
+     *
+     * @return string
+     */
+    public function getActionType()
+    {
+        return $this->actionType;
+    }
+
+    /**
      * Set the created by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
@@ -179,30 +245,6 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
     public function getCreatedOn()
     {
         return $this->createdOn;
-    }
-
-    /**
-     * Set the delete procedure
-     *
-     * @param string $deleteProcedure new value being set
-     *
-     * @return DataRetentionRule
-     */
-    public function setDeleteProcedure($deleteProcedure)
-    {
-        $this->deleteProcedure = $deleteProcedure;
-
-        return $this;
-    }
-
-    /**
-     * Get the delete procedure
-     *
-     * @return string
-     */
-    public function getDeleteProcedure()
-    {
-        return $this->deleteProcedure;
     }
 
     /**
@@ -275,6 +317,30 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the is enabled
+     *
+     * @param boolean $isEnabled new value being set
+     *
+     * @return DataRetentionRule
+     */
+    public function setIsEnabled($isEnabled)
+    {
+        $this->isEnabled = $isEnabled;
+
+        return $this;
+    }
+
+    /**
+     * Get the is enabled
+     *
+     * @return boolean
+     */
+    public function getIsEnabled()
+    {
+        return $this->isEnabled;
     }
 
     /**
