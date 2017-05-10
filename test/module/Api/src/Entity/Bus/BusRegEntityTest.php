@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as Entity;
 use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService as BusRegOtherServiceEntity;
@@ -2564,5 +2565,39 @@ class BusRegEntityTest extends EntityTester
             [null, '2016-12-25'],
             [null, null]
         ];
+    }
+
+    /**
+     * tests getOpenTaskIds when there are tasks
+     */
+    public function testGetOpenTaskIds()
+    {
+        $busReg = new Entity();
+
+        $task1 = m::mock(TaskEntity::class);
+        $task1->shouldReceive('getIsClosed')->once()->withNoArgs()->andReturn('N');
+        $task1->shouldReceive('getId')->once()->withNoArgs()->andReturn(1);
+
+        $task2 = m::mock(TaskEntity::class);
+        $task2->shouldReceive('getIsClosed')->once()->withNoArgs()->andReturn('Y');
+        $task2->shouldReceive('getId')->never();
+
+        $task3 = m::mock(TaskEntity::class);
+        $task3->shouldReceive('getIsClosed')->once()->withNoArgs()->andReturn('N');
+        $task3->shouldReceive('getId')->once()->withNoArgs()->andReturn(3);
+
+        $busReg->setTasks(new ArrayCollection([$task1, $task2, $task3]));
+
+        $this->assertEquals([1, 3], $busReg->getOpenTaskIds());
+    }
+
+    /**
+     * tests getOpenTaskIds with no tasks
+     */
+    public function testGetOpenTaskIdsWithEmpty()
+    {
+        $busReg = new Entity();
+        $busReg->setTasks(new ArrayCollection());
+        $this->assertEquals([], $busReg->getOpenTaskIds());
     }
 }

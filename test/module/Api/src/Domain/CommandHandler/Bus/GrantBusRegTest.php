@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
+use Dvsa\Olcs\Transfer\Command\Task\CloseTasks as CloseTasksCmd;
 use Dvsa\Olcs\Transfer\Command\Bus\GrantBusReg as BusGrantBusRegCmd;
 use Dvsa\Olcs\Transfer\Command\Bus\PrintLetter as BusPrintLetterCmd;
 use Dvsa\Olcs\Transfer\Command\Publication\Bus as PublicationBusCmd;
@@ -111,6 +112,8 @@ class GrantBusRegTest extends CommandHandlerTestCase
             ]
         );
 
+        $taskIds = [1, 2];
+
         $status = new RefDataEntity();
         $status->setId($oldStatus);
 
@@ -120,7 +123,8 @@ class GrantBusRegTest extends CommandHandlerTestCase
             ->shouldReceive('canMakeDecision')->once()->andReturn(true)
             ->shouldReceive('isGrantable')->once()->andReturn(true)
             ->shouldReceive('getEbsrSubmissions')->andReturn(new ArrayCollection())
-            ->shouldReceive('getLocalAuthoritys')->andReturn([1, 2, 3]);
+            ->shouldReceive('getLocalAuthoritys')->andReturn([1, 2, 3])
+            ->shouldReceive('getOpenTaskIds')->andReturn($taskIds);
 
         $this->repoMap['Bus']
             ->shouldReceive('fetchUsingId')->with($command, Query::HYDRATE_OBJECT)->andReturn($this->mockBusReg)
@@ -141,6 +145,8 @@ class GrantBusRegTest extends CommandHandlerTestCase
             ],
             new Result()
         );
+
+        $this->expectedSideEffect(CloseTasksCmd::class, ['ids' => $taskIds], new Result());
 
         $actual = $this->sut->handleCommand($command);
 
@@ -199,7 +205,8 @@ class GrantBusRegTest extends CommandHandlerTestCase
             ->shouldReceive('canMakeDecision')->once()->andReturn(true)
             ->shouldReceive('isGrantable')->once()->andReturn(true)
             ->shouldReceive('getEbsrSubmissions')->andReturn($ebsrSubmissions)
-            ->shouldReceive('isFromEbsr')->andReturn(true);
+            ->shouldReceive('isFromEbsr')->andReturn(true)
+            ->shouldReceive('getOpenTaskIds')->andReturn([]);
 
         $this->repoMap['Bus']
             ->shouldReceive('fetchUsingId')

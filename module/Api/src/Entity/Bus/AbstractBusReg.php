@@ -764,6 +764,15 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     protected $publicationLinks;
 
     /**
+     * Task
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Task\Task", mappedBy="busReg")
+     */
+    protected $tasks;
+
+    /**
      * Txc inbox
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -803,6 +812,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
         $this->ebsrSubmissions = new ArrayCollection();
         $this->fees = new ArrayCollection();
         $this->publicationLinks = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
         $this->txcInboxs = new ArrayCollection();
     }
 
@@ -2871,6 +2881,69 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     {
         if ($this->publicationLinks->contains($publicationLinks)) {
             $this->publicationLinks->removeElement($publicationLinks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the task
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being set as the value
+     *
+     * @return BusReg
+     */
+    public function setTasks($tasks)
+    {
+        $this->tasks = $tasks;
+
+        return $this;
+    }
+
+    /**
+     * Get the tasks
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
+    }
+
+    /**
+     * Add a tasks
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being added
+     *
+     * @return BusReg
+     */
+    public function addTasks($tasks)
+    {
+        if ($tasks instanceof ArrayCollection) {
+            $this->tasks = new ArrayCollection(
+                array_merge(
+                    $this->tasks->toArray(),
+                    $tasks->toArray()
+                )
+            );
+        } elseif (!$this->tasks->contains($tasks)) {
+            $this->tasks->add($tasks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a tasks
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being removed
+     *
+     * @return BusReg
+     */
+    public function removeTasks($tasks)
+    {
+        if ($this->tasks->contains($tasks)) {
+            $this->tasks->removeElement($tasks);
         }
 
         return $this;

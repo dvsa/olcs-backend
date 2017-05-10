@@ -101,7 +101,7 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
      *
      * @var \Dvsa\Olcs\Api\Entity\Bus\BusReg
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg", fetch="LAZY", inversedBy="tasks")
      * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
      */
     protected $busReg;

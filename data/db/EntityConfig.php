@@ -1131,6 +1131,12 @@ return array(
                 'property' => 'task'
             )
         ),
+        'bus_reg_id' => array(
+            'inversedBy' => array(
+                'entity' => 'BusReg',
+                'property' => 'task'
+            )
+        ),
         'assigned_to_team_id' => array(
             'inversedBy' => array(
                 'entity' => 'Team',
