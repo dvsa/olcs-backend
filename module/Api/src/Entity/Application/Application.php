@@ -235,12 +235,15 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * @param \Dvsa\Olcs\Api\Entity\System\Category $category
-     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory
+     * Get application documents
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\Category                 $category        category
+     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory              $subCategory     sub category
+     * @param \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre $operatingCentre operating centre
      * 
      * @return Collection
      */
-    public function getApplicationDocuments($category, $subCategory)
+    public function getApplicationDocuments($category, $subCategory, $operatingCentre = null)
     {
         $expr = Criteria::expr();
         $criteria = Criteria::create();
@@ -249,6 +252,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $criteria->andWhere(
             $expr->eq('subCategory', $subCategory)
         );
+        if ($operatingCentre !== null) {
+            $criteria->andWhere(
+                $expr->eq('operatingCentre', $operatingCentre)
+            );
+        }
 
         return $this->documents->matching($criteria);
     }
@@ -277,6 +285,22 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         if ($insolvencyConfirmation) {
             $this->setInsolvencyConfirmation('Y');
         }
+    }
+
+    /**
+     * Get application operating centre by id
+     *
+     * @param int $aocId application operating centre
+     *
+     * @return ApplicationOperatingCentre
+     */
+    public function getApplicationOperatingCentreById($aocId)
+    {
+        $expr = Criteria::expr();
+        $criteria = Criteria::create();
+
+        $criteria->where($expr->eq('id', $aocId));
+        return $this->operatingCentres->matching($criteria)->first();
     }
 
     /**
