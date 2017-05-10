@@ -252,6 +252,9 @@ class ApplicationEntityTest extends EntityTester
             ->shouldReceive('getsubCategory')
             ->andReturn('subCategory')
             ->once()
+            ->shouldReceive('getoperatingCentre')
+            ->andReturn('operatingCentre')
+            ->once()
             ->getMock();
 
         $mockDocument2 = m::mock()
@@ -261,13 +264,40 @@ class ApplicationEntityTest extends EntityTester
             ->shouldReceive('getsubCategory')
             ->andReturn('subCategory1')
             ->never()
+            ->shouldReceive('getoperatingCentre')
+            ->andReturn('operatingCentre1')
+            ->never()
             ->getMock();
 
         $documentsCollection = new ArrayCollection([$mockDocument1, $mockDocument2]);
         $expected = new ArrayCollection([$mockDocument1]);
 
         $this->entity->setDocuments($documentsCollection);
-        $this->assertEquals($expected, $this->entity->getApplicationDocuments('category', 'subCategory'));
+        $this->assertEquals(
+            $expected,
+            $this->entity->getApplicationDocuments('category', 'subCategory', 'operatingCentre')
+        );
+    }
+
+    public function testGetApplicationOperatingCentreById()
+    {
+        $mockAoc1 = m::mock()
+            ->shouldReceive('getid')
+            ->andReturn(1)
+            ->once()
+            ->getMock();
+
+        $mockAoc2 = m::mock()
+            ->shouldReceive('getid')
+            ->andReturn(2)
+            ->once()
+            ->getMock();
+
+        $aocCollection = new ArrayCollection([$mockAoc1, $mockAoc2]);
+        $this->entity->setOperatingCentres($aocCollection);
+
+        $this->assertEquals($mockAoc1, $this->entity->getApplicationOperatingCentreById(1));
+
     }
 
     /**
