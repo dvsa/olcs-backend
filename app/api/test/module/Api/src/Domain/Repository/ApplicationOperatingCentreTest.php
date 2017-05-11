@@ -204,4 +204,25 @@ class ApplicationOperatingCentreTest extends RepositoryTestCase
 
         $this->assertNull($this->sut->findCorrespondingLoc($aoc, $licence));
     }
+
+    public function testFetchByApplicationOrderByAddress()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('aoc')->once()->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('operatingCentre', 'oc')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('oc.address', 'address')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('aoc.application', ':applicationId')->once()->andReturn('EXPR');
+        $mockQb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('applicationId', 12)->once();
+        $mockQb->shouldReceive('orderBy')->with('address.town')->once();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('RESULT');
+
+        $this->assertSame('RESULT', $this->sut->fetchByApplicationOrderByAddress(12));
+    }
 }
