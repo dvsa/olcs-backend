@@ -7,6 +7,8 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 
 /**
  * Application
@@ -16,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 class Declaration extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Application';
-    protected $extraRepos = ['SystemParameter'];
+    protected $extraRepos = ['SystemParameter', 'Fee', 'FeeType'];
 
     /**
      * @var \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
@@ -68,6 +70,9 @@ class Declaration extends AbstractQueryHandler
             ];
         }
 
+        $canHaveInterimLicence = $application->canHaveInterimLicence();
+        $interimFeeAmount = $canHaveInterimLicence ? $this->getInterimFeeAmount($application) : null;
+
         return $this->result(
             $application,
             [
@@ -79,7 +84,7 @@ class Declaration extends AbstractQueryHandler
                 'applicationCompletion',
             ],
             [
-                'canHaveInterimLicence' => $application->canHaveInterimLicence(),
+                'canHaveInterimLicence' => $canHaveInterimLicence,
                 'isLicenceUpgrade' => $application->isLicenceUpgrade(),
                 'outstandingFeeTotal' => $this->feesHelper->getTotalOutstandingFeeAmountForApplication(
                     $application->getId()
@@ -90,6 +95,7 @@ class Declaration extends AbstractQueryHandler
                     (bool)$this->getRepo('SystemParameter')->fetchValue(SystemParameter::DISABLE_GDS_VERIFY_SIGNATURES),
                 'declarations' => $this->getDeclarations($application),
                 'signature' => $signatureDetails,
+                'interimFee' => $interimFeeAmount
             ]
         );
     }
@@ -108,5 +114,41 @@ class Declaration extends AbstractQueryHandler
         $data['isInternal'] = false;
 
         return $this->reviewService->getMarkup($data);
+    }
+
+    /**
+     * Get interim fee amount
+     *
+     * @param ApplicationEntity $application application
+     *
+     * @return int|null
+     */
+    protected function getInterimFeeAmount($application)
+    {
+        $existingFees = $this->getRepo('Fee')->fetchInterimFeesByApplicationId($application->getId(), true);
+        if (!empty($existingFees)) {
+            return $existingFees[0]->getGrossAmount();
+        }
+
+        $trafficArea = null;
+        if ($application->getNiFlag() === 'Y') {
+            $trafficArea = $this->getRepo()
+                ->getReference(TrafficArea::class, TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
+        }
+
+        $feeType = $this->getRepo('FeeType')->fetchLatest(
+            $this->getRepo()->getRefdataReference(FeeType::FEE_TYPE_GRANTINT),
+            $application->getGoodsOrPsv(),
+            $application->getLicenceType(),
+            $application->getCreatedOn(),
+            $trafficArea,
+            true
+        );
+
+        if ($feeType !== null) {
+            return $feeType->getFixedValue() == 0 ? $feeType->getFiveYearValue() : $feeType->getFixedValue();
+        }
+
+        return null;
     }
 }
