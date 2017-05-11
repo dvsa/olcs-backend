@@ -149,143 +149,15 @@ class Summary extends AbstractQueryHandler
         }
         $evidence = [];
 
-        if ($this->isMissingOcDocuments($application)) {
+        if ($application->canAddOperatingCentresEvidence()) {
             $evidence[] = self::MISSING_EVIDENCE_OC;
         }
 
-        if ($this->isMissingFinancialEvidence($application)) {
+        if ($application->canAddFinancialEvidence()) {
             $evidence[] = self::MISSING_EVIDENCE_FINANCIAL;
         }
 
         return $evidence;
-    }
-
-    /**
-     * Define is application not have required for operation center documetns
-     *
-     * @param Entity\Application\Application $application Application object
-     *
-     * @return bool
-     */
-    protected function isMissingOcDocuments(Entity\Application\Application $application)
-    {
-        if ($application->isPsv()) {
-            return false;
-        }
-
-        $ocs = $this->getAocsToCheck($application);
-
-        // If there are no OCs then we can return false
-        if ($ocs->isEmpty()) {
-            return false;
-        }
-
-        $criteria = Criteria::create();
-        $criteria->where($criteria->expr()->eq('application', $application));
-
-        /** @var Entity\Application\ApplicationOperatingCentre $aoc */
-        foreach ($ocs as $aoc) {
-            if (ValueHelper::isOn($aoc->getAdPlaced())) {
-                continue;
-            }
-
-            if ($this->doesAocRequireDocs($application, $aoc)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Define is Operation center required a documents
-     *
-     * @param Entity\Application\Application                $application Application object
-     * @param Entity\Application\ApplicationOperatingCentre $aoc         Operation Center object
-     *
-     * @return bool
-     */
-    protected function doesAocRequireDocs(
-        Entity\Application\Application $application,
-        Entity\Application\ApplicationOperatingCentre $aoc
-    ) {
-        // If we are not updating the OC, then we definitely need some docs, so we need to return here
-        if ($aoc->getAction() !== Entity\Application\ApplicationOperatingCentre::ACTION_UPDATE) {
-            return true;
-        }
-
-        // If we are updating the record, we need to see if we have increased auth
-        $loc = $application->getLicence()->getLocByOc($aoc->getOperatingCentre());
-
-        return (
-            $aoc->getNoOfVehiclesRequired() > $loc->getNoOfVehiclesRequired()
-            || $aoc->getNoOfTrailersRequired() > $loc->getNoOfTrailersRequired()
-        );
-    }
-
-    /**
-     * Get Operation Centers to check
-     *
-     * @param Entity\Application\Application $application Application object
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    protected function getAocsToCheck(Entity\Application\Application $application)
-    {
-        $ocs = $application->getOperatingCentres();
-
-        // Filter to just add/edit records for variation
-        if ($application->isVariation()) {
-            $criteria = Criteria::create();
-            $criteria->where($criteria->expr()->in('action', ['A', 'U']));
-
-            $ocs = $ocs->matching($criteria);
-        }
-
-        return $ocs;
-    }
-
-    /**
-     * Define is Missing Financial Evidence
-     *
-     * @param Entity\Application\Application $application Application object
-     *
-     * @return bool
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
-    protected function isMissingFinancialEvidence(Entity\Application\Application $application)
-    {
-        $updated = Entity\Application\Application::VARIATION_STATUS_UPDATED;
-
-        // If the application is a variation and the financial evidence section hasn't been updated, then we don't need
-        // evidence
-        if ($application->isVariation()
-            && $application->getApplicationCompletion()->getFinancialEvidenceStatus() !== $updated) {
-            return false;
-        }
-
-        $appCategory = $this->getRepo()->getCategoryReference(Entity\System\Category::CATEGORY_APPLICATION);
-        $digitalCategory = $this->getRepo()->getSubCategoryReference(
-            Entity\System\Category::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL
-        );
-
-        $docs = $application->getApplicationDocuments($appCategory, $digitalCategory);
-
-        if ($docs->isEmpty() === false) {
-            return false;
-        }
-
-        $assistedDigitalCategory = $this->getRepo()->getSubCategoryReference(
-            Entity\System\Category::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_ASSISTED_DIGITAL
-        );
-
-        $docs = $application->getApplicationDocuments($appCategory, $assistedDigitalCategory);
-
-        if ($docs->isEmpty() === false) {
-            return false;
-        }
-
-        return true;
     }
 
     /**

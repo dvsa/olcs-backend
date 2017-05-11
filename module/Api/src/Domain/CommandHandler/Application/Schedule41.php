@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Schedule41.php
- *
- * @author Josh Curtis <josh.curtis@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\Criteria;
@@ -17,11 +12,13 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Domain\Command\Schedule41\CreateS4;
 use Dvsa\Olcs\Api\Domain\Command\LicenceOperatingCentre\AssociateS4;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationOperatingCentre\CreateApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Domain\Command\Cases\ConditionUndertaking\CreateConditionUndertaking;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Class Schedule41
@@ -51,7 +48,7 @@ final class Schedule41 extends AbstractCommandHandler implements TransactionedIn
                 'application' => $application,
                 'licence' => $licence,
                 'surrenderLicence' => $command->getSurrenderLicence(),
-                'receivedDate' => new \DateTime()
+                'receivedDate' => new DateTime()
             ]
         );
 
@@ -86,7 +83,7 @@ final class Schedule41 extends AbstractCommandHandler implements TransactionedIn
                             's4' => $s4Result->getId('s4'),
                             'operatingCentre' => $licenceOperatingCentre->getOperatingCentre(),
                             'action' => 'A',
-                            'adPlaced' => 'N',
+                            'adPlaced' => ApplicationOperatingCentre::AD_POST,
                             'noOfVehiclesRequired' => $licenceOperatingCentre->getNoOfVehiclesRequired(),
                             'noOfTrailersRequired' => $licenceOperatingCentre->getNoOfTrailersRequired(),
                         ]

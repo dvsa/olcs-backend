@@ -83,6 +83,8 @@ class ApplicationFinancialEvidenceReviewService extends AbstractReviewService
     {
         if ($data['financialEvidenceUploaded'] === Application::FINANCIAL_EVIDENCE_SEND_IN_POST) {
             return $this->translate('application-review-financial-evidence-evidence-post');
+        } elseif ($data['financialEvidenceUploaded'] === Application::FINANCIAL_EVIDENCE_UPLOAD_LATER) {
+            return $this->translate('application-review-financial-evidence-evidence-later');
         }
 
         $documents = is_array($feData['documents']) ? $feData['documents'] : [];
