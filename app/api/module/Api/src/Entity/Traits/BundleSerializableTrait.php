@@ -243,6 +243,6 @@ trait BundleSerializableTrait
         if ($this->getId() === null) {
             return '';
         }
-        return $this->getId();
+        return (string)$this->getId();
     }
 }

@@ -322,6 +322,7 @@ return [
             'DataGovUk' => Repository\Factory\DataGovUkFactory::class,
             'CompanyHouseVsOlcsDiffs' => Repository\Factory\CompaniesHouseVsOlcsDiffsFactory::class,
             'DigitalSignature' => RepositoryFactory::class,
+            'DataRetentionRule' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

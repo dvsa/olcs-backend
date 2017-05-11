@@ -66,12 +66,18 @@ class Module implements ConsoleUsageProviderInterface
             ['--path=<exportPath>', '(optional) save export file in specified directory'],
             //
             'import-users-from-csv <csv-path> [--result-csv-path=<result-csv-path>] [--verbose|-v]' =>
-                'Import user from csv file',
+            'Import user from csv file',
             ['<csv-path>', 'path to csv file with users for import'],
             [
                 '--result-csv-path=<result-csv-path>',
                 "(optional) save result to specified file.\n" .
                 'By default, result will be saved to "<csv-path>-res.csv" file'
+            ],
+            'data-retention-rule <populate|delete> [--verbose|-v]' =>
+                'Run the data retention rules',
+            [
+                '<populate|delete>',
+                'action to perform, ie \'populate\' the data to be deleted or \'delete\' previously populated data'
             ],
         ];
     }
