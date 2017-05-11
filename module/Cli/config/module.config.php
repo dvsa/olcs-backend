@@ -192,6 +192,15 @@ return [
                         ],
                     ],
                 ],
+                'data-retention-rule' => [
+                    'options' => [
+                        'route' => 'data-retention-rule (populate|delete) [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'dataRetentionRule',
+                        ],
+                    ],
+                ],
             ]
         ]
     ],
