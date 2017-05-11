@@ -11,7 +11,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**
- * @covers Dvsa\Olcs\Api\Domain\QueryHandler\Application\Summary
+ * @covers \Dvsa\Olcs\Api\Domain\QueryHandler\Application\Summary
  */
 class SummaryTest extends QueryHandlerTestCase
 {
@@ -57,25 +57,8 @@ class SummaryTest extends QueryHandlerTestCase
         /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
-
-        $adDocs1 = new ArrayCollection();
-        $adDocs1->add(m::mock());
-
-        $adDocs2 = new ArrayCollection();
-
-        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
-        $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
-        $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs1);
-        $aoc1->setAction('A');
-
-        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc2 */
-        $aoc2 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
-        $aoc2->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs2);
-        $aoc2->setAction('A');
-
-        $aocs = new ArrayCollection();
-        $aocs->add($aoc1);
-        $aocs->add($aoc2);
+        $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(true);
+        $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(true);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -85,7 +68,6 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setId(111);
         $mockApplication->setIsVariation(0);
         $mockApplication->setAuthSignature(0);
-        $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
@@ -128,25 +110,8 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('isDigitallySigned')->andReturn(true);
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
-
-        $adDocs1 = new ArrayCollection();
-        $adDocs1->add(m::mock());
-
-        $adDocs2 = new ArrayCollection();
-
-        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
-        $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
-        $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs1);
-        $aoc1->setAction('A');
-
-        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc2 */
-        $aoc2 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
-        $aoc2->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs2);
-        $aoc2->setAction('A');
-
-        $aocs = new ArrayCollection();
-        $aocs->add($aoc1);
-        $aocs->add($aoc2);
+        $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(true);
+        $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(true);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -156,7 +121,6 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setId(111);
         $mockApplication->setIsVariation(0);
         $mockApplication->setAuthSignature(0);
-        $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
@@ -197,25 +161,8 @@ class SummaryTest extends QueryHandlerTestCase
         /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
-
-        $adDocs1 = new ArrayCollection();
-        $adDocs1->add(m::mock());
-
-        $adDocs2 = new ArrayCollection();
-
-        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
-        $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
-        $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs1);
-        $aoc1->setAction('A');
-
-        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc2 */
-        $aoc2 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
-        $aoc2->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs2);
-        $aoc2->setAction('A');
-
-        $aocs = new ArrayCollection();
-        $aocs->add($aoc1);
-        $aocs->add($aoc2);
+        $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(true);
+        $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(false);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -225,7 +172,6 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setId(111);
         $mockApplication->setIsVariation(0);
         $mockApplication->setAuthSignature(0);
-        $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
@@ -275,6 +221,8 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('isPsv')->andReturn(true);
+        $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(false);
+        $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(false);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -288,16 +236,6 @@ class SummaryTest extends QueryHandlerTestCase
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
-
-        $docs = new ArrayCollection();
-        $docs->add(m::mock());
-
-        $mockApplication->shouldReceive('getApplicationDocuments')
-            ->with(
-                Entity\System\Category::CATEGORY_APPLICATION,
-                Entity\System\Category::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL
-            )
-            ->andReturn($docs);
 
         $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
@@ -329,25 +267,8 @@ class SummaryTest extends QueryHandlerTestCase
         /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
-
-        $adDocs1 = new ArrayCollection();
-        $adDocs1->add(m::mock());
-
-        $adDocs2 = new ArrayCollection();
-
-        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
-        $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
-        $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs1);
-        $aoc1->setAction('A');
-
-        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc2 */
-        $aoc2 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
-        $aoc2->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs2);
-        $aoc2->setAction('A');
-
-        $aocs = new ArrayCollection();
-        $aocs->add($aoc1);
-        $aocs->add($aoc2);
+        $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(true);
+        $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(false);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -357,28 +278,10 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setId(111);
         $mockApplication->setIsVariation(0);
         $mockApplication->setAuthSignature(0);
-        $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
-
-        $docs = new ArrayCollection();
-        $docs->add(m::mock());
-
-        $mockApplication->shouldReceive('getApplicationDocuments')
-            ->with(
-                Entity\System\Category::CATEGORY_APPLICATION,
-                Entity\System\Category::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL
-            )
-            ->andReturn(new ArrayCollection());
-
-        $mockApplication->shouldReceive('getApplicationDocuments')
-            ->with(
-                Entity\System\Category::CATEGORY_APPLICATION,
-                Entity\System\Category::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_ASSISTED_DIGITAL
-            )
-            ->andReturn($docs);
 
         $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
@@ -414,16 +317,8 @@ class SummaryTest extends QueryHandlerTestCase
         /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
-
-        $adDocs = new ArrayCollection();
-
-        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
-        $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
-        $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs);
-        $aoc1->setAction('A');
-
-        $aocs = new ArrayCollection();
-        $aocs->add($aoc1);
+        $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(true);
+        $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(true);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -433,7 +328,6 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setId(111);
         $mockApplication->setIsVariation(0);
         $mockApplication->setAuthSignature(1);
-        $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
@@ -476,16 +370,8 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('getApplicationCompletion->getFinancialEvidenceStatus')
             ->andReturn(Entity\Application\Application::VARIATION_STATUS_UPDATED);
-
-        $adDocs = new ArrayCollection();
-
-        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
-        $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
-        $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs);
-        $aoc1->setAction('A');
-
-        $aocs = new ArrayCollection();
-        $aocs->add($aoc1);
+        $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(true);
+        $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(true);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -495,7 +381,6 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setId(111);
         $mockApplication->setIsVariation(1);
         $mockApplication->setAuthSignature(1);
-        $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
@@ -538,16 +423,8 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('getApplicationCompletion->getFinancialEvidenceStatus')
             ->andReturn(Entity\Application\Application::VARIATION_STATUS_UNCHANGED);
-
-        $adDocs = new ArrayCollection();
-
-        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
-        $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
-        $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs);
-        $aoc1->setAction('A');
-
-        $aocs = new ArrayCollection();
-        $aocs->add($aoc1);
+        $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(true);
+        $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(false);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -557,7 +434,6 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setId(111);
         $mockApplication->setIsVariation(1);
         $mockApplication->setAuthSignature(1);
-        $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
@@ -599,23 +475,14 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('getApplicationCompletion->getFinancialEvidenceStatus')
             ->andReturn(Entity\Application\Application::VARIATION_STATUS_UNCHANGED);
+        $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(true);
+        $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(false);
 
         /** @var Entity\Licence\LicenceOperatingCentre $loc */
         $loc = m::mock(Entity\Licence\LicenceOperatingCentre::class)->makePartial();
         $loc->setNoOfVehiclesRequired(10);
 
         $mockApplication->shouldReceive('getLicence->getLocByOc')->andReturn($loc);
-
-        $adDocs = new ArrayCollection();
-
-        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
-        $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
-        $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs);
-        $aoc1->setAction('U');
-        $aoc1->setNoOfVehiclesRequired(11);
-
-        $aocs = new ArrayCollection();
-        $aocs->add($aoc1);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -625,7 +492,6 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setId(111);
         $mockApplication->setIsVariation(1);
         $mockApplication->setAuthSignature(1);
-        $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
@@ -667,6 +533,8 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('getApplicationCompletion->getFinancialEvidenceStatus')
             ->andReturn(Entity\Application\Application::VARIATION_STATUS_UNCHANGED);
+        $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(false);
+        $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(false);
 
         /** @var Entity\Licence\LicenceOperatingCentre $loc */
         $loc = m::mock(Entity\Licence\LicenceOperatingCentre::class)->makePartial();
@@ -677,16 +545,6 @@ class SummaryTest extends QueryHandlerTestCase
 
         $adDocs = new ArrayCollection();
 
-        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
-        $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
-        $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs);
-        $aoc1->setAction('U');
-        $aoc1->setNoOfVehiclesRequired(10);
-        $aoc1->setNoOfTrailersRequired(10);
-
-        $aocs = new ArrayCollection();
-        $aocs->add($aoc1);
-
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
         $tms = new ArrayCollection();
@@ -695,7 +553,6 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setId(111);
         $mockApplication->setIsVariation(1);
         $mockApplication->setAuthSignature(1);
-        $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
@@ -743,6 +600,8 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setTransportManagers(new ArrayCollection());
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
+        $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(false);
+        $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(false);
 
         $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
@@ -772,25 +631,8 @@ class SummaryTest extends QueryHandlerTestCase
         /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
-
-        $adDocs1 = new ArrayCollection();
-        $adDocs1->add(m::mock());
-
-        $adDocs2 = new ArrayCollection();
-
-        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc1 */
-        $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
-        $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs1);
-        $aoc1->setAction('A');
-
-        /** @var Entity\Application\ApplicationOperatingCentre|m\MockInterface $aoc2 */
-        $aoc2 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
-        $aoc2->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs2);
-        $aoc2->setAction('A');
-
-        $aocs = new ArrayCollection();
-        $aocs->add($aoc1);
-        $aocs->add($aoc2);
+        $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(false);
+        $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(false);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -800,7 +642,6 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setId(111);
         $mockApplication->setIsVariation(0);
         $mockApplication->setAuthSignature(0);
-        $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_SPECIAL_RESTRICTED);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);

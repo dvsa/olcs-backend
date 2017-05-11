@@ -2,19 +2,16 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Application\Interim;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Application\UploadEvidence;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre as ApplicationOperatingCentreRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Transfer\Query\Application\UploadEvidence as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Entity\Category;
 use Mockery as m;
-use Zend\Feed\Reader\Collection;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
  * UploadEvidenceTest
@@ -25,6 +22,7 @@ class UploadEvidenceTest extends QueryHandlerTestCase
     {
         $this->sut = new UploadEvidence();
         $this->mockRepo('Application', ApplicationRepo::class);
+        $this->mockRepo('ApplicationOperatingCentre', ApplicationOperatingCentreRepo::class);
 
         parent::setUp();
     }
@@ -53,6 +51,15 @@ class UploadEvidenceTest extends QueryHandlerTestCase
         $this->repoMap['Application']->shouldReceive('getSubCategoryReference')
             ->with(SubCategory::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL)->once()->andReturn('SUB_CAT_REF');
 
+        $aoc1 = m::mock(ApplicationOperatingCentre::class);
+        $aoc2 = m::mock(ApplicationOperatingCentre::class);
+        $aoc2->shouldReceive('serialize')->with(['operatingCentre' => ['address', 'adDocuments']])
+            ->once()->andReturn(['OC1']);
+        $this->repoMap['ApplicationOperatingCentre']->shouldReceive('fetchByApplicationOrderByAddress')
+            ->with(111)->once()->andReturn([$aoc1, $aoc2]);
+        $application->shouldReceive('getApplicationOperatingCentresEvidenceRequired')
+            ->with([$aoc1, $aoc2])->once()->andReturn([$aoc2]);
+
         $result = $this->sut->handleQuery($query);
 
         $this->assertArraySubset(
@@ -65,7 +72,9 @@ class UploadEvidenceTest extends QueryHandlerTestCase
                         ['identifier' => 'doc3'],
                     ]
                 ],
-                'operatingCentres' => []
+                'operatingCentres' => [
+                    ['OC1']
+                ]
             ],
             $result
         );

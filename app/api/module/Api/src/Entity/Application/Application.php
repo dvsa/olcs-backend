@@ -235,12 +235,15 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * @param \Dvsa\Olcs\Api\Entity\System\Category $category
-     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory
+     * Get application documents
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\Category                 $category        category
+     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory              $subCategory     sub category
+     * @param \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre $operatingCentre operating centre
      * 
      * @return Collection
      */
-    public function getApplicationDocuments($category, $subCategory)
+    public function getApplicationDocuments($category, $subCategory, $operatingCentre = null)
     {
         $expr = Criteria::expr();
         $criteria = Criteria::create();
@@ -249,6 +252,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $criteria->andWhere(
             $expr->eq('subCategory', $subCategory)
         );
+        if ($operatingCentre !== null) {
+            $criteria->andWhere(
+                $expr->eq('operatingCentre', $operatingCentre)
+            );
+        }
 
         return $this->documents->matching($criteria);
     }
@@ -277,6 +285,22 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         if ($insolvencyConfirmation) {
             $this->setInsolvencyConfirmation('Y');
         }
+    }
+
+    /**
+     * Get application operating centre by id
+     *
+     * @param int $aocId application operating centre
+     *
+     * @return ApplicationOperatingCentre
+     */
+    public function getApplicationOperatingCentreById($aocId)
+    {
+        $expr = Criteria::expr();
+        $criteria = Criteria::create();
+
+        $criteria->where($expr->eq('id', $aocId));
+        return $this->operatingCentres->matching($criteria)->first();
     }
 
     /**
@@ -1103,7 +1127,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         // If there is an advertisement date then
-        if ($aoc->getAdPlaced() === 'Y' && $aoc->getAdPlacedDate()) {
+        if ($aoc->getAdPlaced() === ApplicationOperatingCentre::AD_UPLOAD_NOW && $aoc->getAdPlacedDate()) {
             return $aoc->getAdPlacedDate();
         }
 
@@ -2012,5 +2036,86 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         return true;
+    }
+
+    /**
+     * Can operating centre advert uploads be added
+     *
+     * @param array|null $applicationOperatingCentres List of application operating centres, optionally can be passed
+     *                                                in case custom ordering is needed
+     *
+     * @return bool
+     */
+    public function canAddOperatingCentresEvidence(array $applicationOperatingCentres = null)
+    {
+        // The operating centre tracking section is NOT set to 'Acceptable' or 'Not applicable'
+        // (i.e. application_tracking.operating_centre_status <> 1 or 3); AND
+        $applicationTracking = $this->getApplicationTracking()->getOperatingCentresStatus();
+        if ($applicationTracking === ApplicationTracking::STATUS_ACCEPTED
+            || $applicationTracking === ApplicationTracking::STATUS_NOT_APPLICABLE
+        ) {
+            return false;
+        }
+
+        // It is a new goods application or variation; AND
+        if (!$this->isGoods()) {
+            return false;
+        }
+
+        return count($this->getApplicationOperatingCentresEvidenceRequired($applicationOperatingCentres)) > 0;
+    }
+
+    /**
+     * Get a list of application operating centres that require advert evidence to be uploaded
+     *
+     * @param array|null $applicationOperatingCentres List of application operating centres, optionally can be passed
+     *                                                in case custom ordering is needed
+     *
+     * @return array of ApplicationOperatingCentre
+     */
+    public function getApplicationOperatingCentresEvidenceRequired(array $applicationOperatingCentres = null)
+    {
+        // if $applicationOperatingCentres not passed as a parameter then get from this entity
+        if ($applicationOperatingCentres === null) {
+            $applicationOperatingCentres = $this->getOperatingCentres();
+        }
+
+        $aocsEvidenceRequired = [];
+
+        // Get list of licence operating centres, using operating centre ID as the index
+        $licenceOperatingCentres = [];
+        /** @var Entity\Licence\LicenceOperatingCentre $loc */
+        foreach ($this->getLicence()->getOperatingCentres() as $loc) {
+            $licenceOperatingCentres[$loc->getOperatingCentre()->getId()] = $loc;
+        }
+
+        /** @var ApplicationOperatingCentre $aoc */
+        foreach ($applicationOperatingCentres as $aoc) {
+            // There are operating centres in the application where the advert uploader is set to 'Upload later' or
+            // 'Send in the post' (i.e application_operating_centre.ad_placed = 0 or 2); AND
+            if ($aoc->getAdPlaced() !== ApplicationOperatingCentre::AD_POST
+                && $aoc->getAdPlaced() !== ApplicationOperatingCentre::AD_UPLOAD_LATER
+            ) {
+                continue;
+            }
+            // The operating centre has been added (i.e. application_operating_centre.action = A); OR
+            if ($aoc->getAction() === ApplicationOperatingCentre::ACTION_ADD) {
+                $aocsEvidenceRequired[] = $aoc;
+                continue;
+            }
+            // The operating centre has been updated (i.e. application_operating_centre.action = U) and there has
+            // been an increase in vehicles or trailers
+            if ($aoc->getAction() === ApplicationOperatingCentre::ACTION_UPDATE) {
+                $loc = $licenceOperatingCentres[$aoc->getOperatingCentre()->getId()];
+                if ($aoc->getNoOfVehiclesRequired() > $loc->getNoOfVehiclesRequired()
+                    || $aoc->getNoOfTrailersRequired() > $loc->getNoOfTrailersRequired()
+                ) {
+                    $aocsEvidenceRequired[] = $aoc;
+                }
+                continue;
+            }
+        }
+
+        return $aocsEvidenceRequired;
     }
 }

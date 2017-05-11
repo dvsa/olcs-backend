@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
+
 /**
  * Goods Operating Centre Review Service
  *
@@ -29,15 +31,20 @@ class GoodsOperatingCentreReviewService extends AbstractReviewService
             'value' => $data['noOfTrailersRequired']
         ];
 
+        $adPlacedValue = [
+            ApplicationOperatingCentre::AD_POST => 'review-operating-centre-advertisement-post',
+            ApplicationOperatingCentre::AD_UPLOAD_NOW => 'review-operating-centre-advertisement-upload-now',
+            ApplicationOperatingCentre::AD_UPLOAD_LATER => 'review-operating-centre-advertisement-upload-later'
+        ];
         // Add the advertisements fields
         $config['multiItems']['advertisements'] = [
             [
                 'label' => 'review-operating-centre-advertisement-ad-placed',
-                'value' => $this->formatYesNo($data['adPlaced'])
+                'value' => $this->translate($adPlacedValue[$data['adPlaced']])
             ]
         ];
 
-        if ($data['adPlaced'] === 'Y') {
+        if ($data['adPlaced'] === ApplicationOperatingCentre::AD_UPLOAD_NOW) {
             $config['multiItems']['advertisements'] = array_merge(
                 $config['multiItems']['advertisements'],
                 [
