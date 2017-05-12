@@ -13,6 +13,13 @@ class AlertList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'CompaniesHouseAlert';
 
+    /**
+     * Handle query
+     *
+     * @param \Dvsa\Olcs\Transfer\Query\CompaniesHouse\AlertList $query Query
+     *
+     * @return array
+     */
     public function handleQuery(QueryInterface $query)
     {
         /** @var Repository\CompaniesHouseAlert $repo */
