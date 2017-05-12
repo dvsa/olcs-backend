@@ -16,6 +16,7 @@ use Dvsa\Olcs\Transfer\Query\Application\Declaration as Qry;
 use Dvsa\Olcs\Api\Service\FeesHelperService;
 use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * DeclarationTest
@@ -207,7 +208,7 @@ class DeclarationTest extends QueryHandlerTestCase
         $mockFeeTypeInterim = m::mock(RefDataEntity::class);
         $mockGoodsOrPsv = m::mock(RefDataEntity::class);
         $mockLicenceType = m::mock(RefDataEntity::class);
-        $createdOn = new \DateTime();
+        $createdOn = '2017-01-01';
 
         $mockApplication = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class)
             ->shouldReceive('getId')
@@ -267,7 +268,7 @@ class DeclarationTest extends QueryHandlerTestCase
                 $mockFeeTypeInterim,
                 $mockGoodsOrPsv,
                 $mockLicenceType,
-                $createdOn,
+                m::type(\DateTime::class),
                 'N',
                 true
             )
@@ -324,7 +325,7 @@ class DeclarationTest extends QueryHandlerTestCase
         $mockFeeTypeInterim = m::mock(RefDataEntity::class);
         $mockGoodsOrPsv = m::mock(RefDataEntity::class);
         $mockLicenceType = m::mock(RefDataEntity::class);
-        $createdOn = new \DateTime();
+        $createdOn = '2017-01-01';
 
         $mockApplication = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class)
             ->shouldReceive('getId')
@@ -378,7 +379,7 @@ class DeclarationTest extends QueryHandlerTestCase
                 $mockFeeTypeInterim,
                 $mockGoodsOrPsv,
                 $mockLicenceType,
-                $createdOn,
+                m::type(\DateTime::class),
                 'N',
                 true
             )
