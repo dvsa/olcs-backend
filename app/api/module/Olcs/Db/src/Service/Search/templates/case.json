@@ -34,7 +34,11 @@
                   },
                   {
                      "match": {
-                        "tm_name": "%SEARCH_TERM%"
+                       "tm_name": {
+                            "query":"%SEARCH_TERM%",
+                            "boost": 1.5
+                         }
+                     
                      }
                   },
                   {
