@@ -140,7 +140,7 @@ class Declaration extends AbstractQueryHandler
             $this->getRepo()->getRefdataReference(FeeType::FEE_TYPE_GRANTINT),
             $application->getGoodsOrPsv(),
             $application->getLicenceType(),
-            $application->getCreatedOn(),
+            new \DateTime($application->getCreatedOn()),
             $trafficArea,
             true
         );
