@@ -1,31 +1,23 @@
 <?php
 
-/**
- * Alert List Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\CompaniesHouse;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\CompaniesHouse\AlertList;
-use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseAlert as AlertRepo;
-use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\CompaniesHouse\AlertList as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**
- * Alert List Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
+ * @covers \Dvsa\Olcs\Api\Domain\QueryHandler\CompaniesHouse\AlertList
  */
 class AlertListTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
         $this->sut = new AlertList();
-        $this->mockRepo('CompaniesHouseAlert', AlertRepo::class);
+        $this->mockRepo('CompaniesHouseAlert', Repository\CompaniesHouseAlert::class);
 
         parent::setUp();
     }
