@@ -1,31 +1,25 @@
 <?php
 
-/**
- * CompaniesHouseAlert test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseAlert as CompaniesHouseAlertRepo;
-use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as CompanyEntity;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\CompaniesHouse\AlertList as AlertListQry;
 use Mockery as m;
 
 /**
- * CompaniesHouseAlert test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseAlert
  */
 class CompaniesHouseAlertTest extends RepositoryTestCase
 {
+    /** @var  Repository\CompaniesHouseAlert | m\MockInterface */
+    protected $sut;
+
     public function setUp()
     {
-        $this->setUpSut(CompaniesHouseAlertRepo::class, true);
+        $this->setUpSut(Repository\CompaniesHouseAlert::class, true);
     }
 
     public function testFetchListDefault()
@@ -49,7 +43,9 @@ class CompaniesHouseAlertTest extends RepositoryTestCase
 
         $this->assertEquals(['foo' => 'bar'], $this->sut->fetchList($query));
 
-        $expected = '{QUERY} AND ca.isClosed = 0';
+        $expected = '{QUERY} ' .
+            'INNER JOIN ca.organisation o ' .
+            'AND ca.isClosed = 0';
 
         $this->assertEquals($expected, $this->query);
     }
@@ -75,7 +71,9 @@ class CompaniesHouseAlertTest extends RepositoryTestCase
 
         $this->assertEquals(['foo' => 'bar'], $this->sut->fetchList($query));
 
-        $expected = '{QUERY} INNER JOIN ca.reasons r WITH r.reasonType = [[some_type]]';
+        $expected = '{QUERY} ' .
+            'INNER JOIN ca.organisation o ' .
+            'INNER JOIN ca.reasons r WITH r.reasonType = [[some_type]]';
 
         $this->assertEquals($expected, $this->query);
     }
@@ -106,12 +104,12 @@ class CompaniesHouseAlertTest extends RepositoryTestCase
         $qb
             ->shouldReceive('expr->eq')
             ->once()
-            ->with('r.refDataCategoryId', ':categoryId')
+            ->with('r.refDataCategoryId', ':CATEGORY_ID')
             ->andReturn($where);
         $qb
             ->shouldReceive('setParameter')
             ->once()
-            ->with('categoryId', 'ch_alert_reason')
+            ->with('CATEGORY_ID', 'ch_alert_reason')
             ->andReturnSelf();
 
         $result = [
