@@ -149,6 +149,15 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      */
     protected $publishedDate;
 
+    /**
+     * Application constructor.
+     *
+     * @param Licence $licence     Licence
+     * @param RefData $status      Application status
+     * @param bool    $isVariation Is it a variation
+     *
+     * @return void
+     */
     public function __construct(Licence $licence, RefData $status, $isVariation)
     {
         parent::__construct();
@@ -158,6 +167,15 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $this->setIsVariation($isVariation);
     }
 
+    /**
+     * Update the Type of Licence
+     *
+     * @param string  $niFlag      'Y' or 'N'
+     * @param RefData $goodsOrPsv  Goods or psv refdata
+     * @param RefData $licenceType Licence tyoe refdata
+     *
+     * @return true|null
+     */
     public function updateTypeOfLicence($niFlag, $goodsOrPsv, $licenceType)
     {
         if ($this->validateTol($niFlag, $goodsOrPsv, $licenceType)) {
@@ -170,6 +188,15 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return null;
     }
 
+    /**
+     * Is Type of Licence valid
+     *
+     * @param string  $niFlag      'Y' or 'N'
+     * @param RefData $goodsOrPsv  Goods or psv refdata
+     * @param RefData $licenceType Licence tyoe refdata
+     *
+     * @return false|null
+     */
     public function isValidTol($niFlag, $goodsOrPsv, $licenceType)
     {
         try {
@@ -261,6 +288,19 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return $this->documents->matching($criteria);
     }
 
+    /**
+     * Update Financial History
+     *
+     * @param string $bankrupt               'Y' or 'N'
+     * @param string $liquidation            'Y' or 'N'
+     * @param string $receivership           'Y' or 'N'
+     * @param string $administration         'Y' or 'N'
+     * @param string $disqualified           'Y' or 'N'
+     * @param string $insolvencyDetails      Insolvency detail text
+     * @param bool   $insolvencyConfirmation Insolvency Confirmation?
+     *
+     * @return void
+     */
     public function updateFinancialHistory(
         $bankrupt,
         $liquidation,
@@ -306,7 +346,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     /**
      * Validate Financial History data
      *
-     * @param array $flags Flags
+     * @param array  $flags             Flags
      * @param string $insolvencyDetails Details Text
      *
      * @return bool
@@ -1773,6 +1813,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             // A major upgrade has taken place
             // (ie restricted to standard national or restricted to standard international)
             if ($this->isRealUpgrade()) {
+                return true;
+            }
+
+            // if condition/undertaking changes
+            if ($this->getConditionUndertakings()->count() > 0) {
                 return true;
             }
 

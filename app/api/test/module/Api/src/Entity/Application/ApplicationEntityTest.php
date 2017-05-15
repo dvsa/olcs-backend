@@ -2991,6 +2991,34 @@ class ApplicationEntityTest extends EntityTester
         static::assertFalse($sut->isPublishable());
     }
 
+    public function testIsPublishableVariationFalse()
+    {
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods()
+            ->shouldReceive('isNew')->with()->once()->andReturn(false)
+            ->shouldReceive('hasNewOperatingCentre')->with()->once()->andReturn(false)
+            ->shouldReceive('hasIncreaseInOperatingCentre')->once()->andReturn(false)
+            ->shouldReceive('isRealUpgrade')->once()->andReturn(false)
+            ->shouldReceive('getConditionUndertakings')->once()->andReturn(new ArrayCollection())
+            ->getMock();
+
+        static::assertFalse($sut->isPublishable());
+    }
+
+    public function testIsPublishableVariationConditionUndertakingChanged()
+    {
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods()
+            ->shouldReceive('isNew')->with()->once()->andReturn(false)
+            ->shouldReceive('hasNewOperatingCentre')->with()->once()->andReturn(false)
+            ->shouldReceive('hasIncreaseInOperatingCentre')->once()->andReturn(false)
+            ->shouldReceive('isRealUpgrade')->once()->andReturn(false)
+            ->shouldReceive('getConditionUndertakings')->once()->andReturn(new ArrayCollection(['FOO']))
+            ->getMock();
+
+        static::assertTrue($sut->isPublishable());
+    }
+
     /**
      * @dataProvider dpTestIsPsvVehicleSizeSmall
      */
