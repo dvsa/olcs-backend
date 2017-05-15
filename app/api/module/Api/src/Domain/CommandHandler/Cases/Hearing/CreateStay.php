@@ -18,7 +18,7 @@ use Dvsa\Olcs\Transfer\Command\Cases\Hearing\CreateStay as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
-    /**
+/**
  * Create Stay
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
@@ -59,6 +59,7 @@ final class CreateStay extends AbstractCommandHandler implements TransactionedIn
      */
     private function createStayObject(Cmd $command)
     {
+        /** @var Cases $case */
         $case = $this->getRepo()->getReference(
             Cases::class,
             $command->getCase()
@@ -84,29 +85,26 @@ final class CreateStay extends AbstractCommandHandler implements TransactionedIn
             $this->getRepo()->getRefdataReference($command->getStayType())
         );
 
-        $stay->setRequestDate(new \DateTime($command->getRequestDate()));
-
-        if ($command->getDecisionDate() !== null) {
-            $stay->setDecisionDate(new \DateTime($command->getDecisionDate()));
+        // We do this logic here because the Entity cannot be aware of any other
+        // services.  We want to limit the processes we pass into Doctrine Entities
+        // Repositories.   This is also in:
+        // Api/src/Domain/CommandHandler/Cases/Hearing/UpdateStay.php
+        $outcome = null;
+        if (! empty($command->getOutcome())) {
+            $outcome = $this->getRepo()->getRefdataReference(
+                $command->getOutcome()
+            );
         }
 
-        if ($command->getOutcome() !== null) {
-            $stay->setOutcome($this->getRepo()->getRefdataReference($command->getOutcome()));
-        }
-
-        if ($command->getNotes() !== null) {
-            $stay->setNotes($command->getNotes());
-        }
-
-        if ($command->getIsWithdrawn() === 'Y') {
-            if ($command->getWithdrawnDate() !== null) {
-                $stay->setWithdrawnDate(new \DateTime($command->getWithdrawnDate()));
-            }
-        } else {
-            $stay->setWithdrawnDate(null);
-        }
-
-        $stay->setDvsaNotified($command->getDvsaNotified());
+        $stay->values(
+            $command->getRequestDate(),
+            $command->getDecisionDate(),
+            $outcome,
+            $command->getNotes(),
+            $command->getIsWithdrawn(),
+            $command->getWithdrawnDate(),
+            $command->getDvsaNotified()
+        );
 
         return $stay;
     }
