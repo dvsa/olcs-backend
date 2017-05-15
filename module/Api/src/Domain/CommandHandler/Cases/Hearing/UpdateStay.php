@@ -57,29 +57,26 @@ final class UpdateStay extends AbstractCommandHandler implements TransactionedIn
         /** @var Stay $stay */
         $stay = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        $stay->setRequestDate(new \DateTime($command->getRequestDate()));
-
-        if ($command->getDecisionDate() !== null) {
-            $stay->setDecisionDate(new \DateTime($command->getDecisionDate()));
+        // We do this logic here because the Entity cannot be aware of any other
+        // services.  We want to limit the processes we pass into Doctrine Entities
+        // Repositories.   This is also in:
+        // Api/src/Domain/CommandHandler/Cases/Hearing/CreateStay.php
+        $outcome = null;
+        if (! empty($command->getOutcome())) {
+            $outcome = $this->getRepo()->getRefdataReference(
+                $command->getOutcome()
+            );
         }
 
-        if ($command->getOutcome() !== null) {
-            $stay->setOutcome($this->getRepo()->getRefdataReference($command->getOutcome()));
-        }
-
-        if ($command->getNotes() !== null) {
-            $stay->setNotes($command->getNotes());
-        }
-
-        if ($command->getIsWithdrawn() === 'Y') {
-            if ($command->getWithdrawnDate() !== null) {
-                $stay->setWithdrawnDate(new \DateTime($command->getWithdrawnDate()));
-            }
-        } else {
-            $stay->setWithdrawnDate(null);
-        }
-
-        $stay->setDvsaNotified($command->getDvsaNotified());
+        $stay->values(
+            $command->getRequestDate(),
+            $command->getDecisionDate(),
+            $outcome,
+            $command->getNotes(),
+            $command->getIsWithdrawn(),
+            $command->getWithdrawnDate(),
+            $command->getDvsaNotified()
+        );
 
         return $stay;
     }
