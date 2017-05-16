@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceE;
 
 /**
  * Application
@@ -21,7 +22,11 @@ class Application extends AbstractRepository
     protected $alias = 'a';
 
     /**
-     * @param int $organisationId
+     * Fetch Active For Organisation
+     *
+     * @param int $organisationId Organisation id
+     *
+     * @return array
      */
     public function fetchActiveForOrganisation($organisationId)
     {
@@ -33,7 +38,15 @@ class Application extends AbstractRepository
         return $this->fetchByOrganisationIdAndStatuses($organisationId, $activeStatuses);
     }
 
-    public function fetchByOrganisationIdAndStatuses($organisationId, $statuses)
+    /**
+     * Prepare Query builder to Fetch by Organisation and statuses
+     *
+     * @param int   $orgId    Organisation Id
+     * @param array $statuses List of Application statuses
+     *
+     * @return QueryBuilder
+     */
+    private function prepareFetchByOrgAndStatus($orgId, array $statuses = [])
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
@@ -44,7 +57,49 @@ class Application extends AbstractRepository
         $qb
             ->innerJoin('a.licence', 'l', Join::WITH, $qb->expr()->eq('l.organisation', ':organisationId'))
             ->andWhere($qb->expr()->in($this->alias . '.status', $statuses))
-            ->setParameter('organisationId', $organisationId);
+            ->setParameter('organisationId', $orgId);
+
+        return $qb;
+    }
+
+    /**
+     * Fetch by Organisation and statuses
+     *
+     * @param int   $orgId    Organisation Id
+     * @param array $statuses List of Application statuses
+     *
+     * @return array
+     */
+    public function fetchByOrgAndStatusForActiveLicences($orgId, array $statuses = [])
+    {
+        $qb = $this->prepareFetchByOrgAndStatus($orgId, $statuses);
+
+        $qbE = $qb->expr();
+
+        $qb->andWhere(
+            $qbE->orX(
+                $qbE->eq($this->alias . '.isVariation', 0),
+                $qbE->andX(
+                    $qbE->in('l.status', LicenceE::ACTIVE_STATUSES),
+                    $qbE->eq($this->alias . '.isVariation', 1)
+                )
+            )
+        );
+
+        return $qb->getQuery()->execute();
+    }
+
+    /**
+     * Fetch by Organisation and statuses
+     *
+     * @param int   $orgId    Organisation Id
+     * @param array $statuses List of Application statuses
+     *
+     * @return array
+     */
+    public function fetchByOrganisationIdAndStatuses($orgId, array $statuses = [])
+    {
+        $qb = $this->prepareFetchByOrgAndStatus($orgId, $statuses);
 
         return $qb->getQuery()->execute();
     }
@@ -52,8 +107,10 @@ class Application extends AbstractRepository
     /**
      * Extend the default resource bundle to include licence
      *
-     * @param QueryBuilder $qb
-     * @param int $id
+     * @param QueryBuilder $qb Query Builder
+     * @param int          $id Id
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryBuilder
      */
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {
@@ -61,7 +118,11 @@ class Application extends AbstractRepository
     }
 
     /**
-     * @return \Dvsa\Olcs\Api\Entity\Application\Application
+     * Fetch With Licence And Oc
+     *
+     * @param int $applicationId Application Id
+     *
+     * @return mixed
      */
     public function fetchWithLicenceAndOc($applicationId)
     {
@@ -80,6 +141,14 @@ class Application extends AbstractRepository
         return $qb->getQuery()->getSingleResult();
     }
 
+    /**
+     * Fetch With Licence
+     *
+     * @param int $applicationId Application Id
+     *
+     * @return Entity
+     * @throws Exception\NotFoundException
+     */
     public function fetchWithLicence($applicationId)
     {
         $qb = $this->createQueryBuilder();
@@ -95,6 +164,14 @@ class Application extends AbstractRepository
         return $res[0];
     }
 
+    /**
+     * Fetch With Licence And Org
+     *
+     * @param int $applicationId Application Id
+     *
+     * @return Entity
+     * @throws Exception\NotFoundException
+     */
     public function fetchWithLicenceAndOrg($applicationId)
     {
         $qb = $this->createQueryBuilder();
@@ -111,6 +188,13 @@ class Application extends AbstractRepository
         return $res[0];
     }
 
+    /**
+     * Fetch With TM Licence
+     *
+     * @param int $applicationId Application Id
+     *
+     * @return Entity
+     */
     public function fetchWithTmLicences($applicationId)
     {
         $qb = $this->createQueryBuilder();
@@ -127,8 +211,9 @@ class Application extends AbstractRepository
     /**
      * Override parent
      *
-     * @param QueryBuilder $qb
-     * @inheritdoc
+     * @param QueryBuilder $qb Query Builder
+     *
+     * @return void
      */
     protected function applyListJoins(QueryBuilder $qb)
     {
@@ -139,8 +224,10 @@ class Application extends AbstractRepository
     /**
      * Override parent
      *
-     * @param QueryBuilder $qb
-     * @param \Dvsa\Olcs\Transfer\Query\QueryInterface $query
+     * @param QueryBuilder                             $qb    Doctrine Query Builder
+     * @param \Dvsa\Olcs\Transfer\Query\QueryInterface $query Http Query
+     *
+     * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, \Dvsa\Olcs\Transfer\Query\QueryInterface $query)
     {
@@ -150,6 +237,11 @@ class Application extends AbstractRepository
         }
     }
 
+    /**
+     * Fetch For Ntu
+     *
+     * @return array
+     */
     public function fetchForNtu()
     {
         $qb = $this->createQueryBuilder();

@@ -1,36 +1,33 @@
 <?php
 
-/**
- * Dashboard Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Organisation;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Dashboard;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Correspondence as CorrespondenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Query\Organisation\Dashboard as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Dashboard Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
+ * @covers \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Dashboard
  */
 class DashboardTest extends QueryHandlerTestCase
 {
+    /** @var  Dashboard | m\MockInterface */
+    protected $sut;
+
     public function setUp()
     {
         $this->sut = new Dashboard();
+
         $this->mockRepo('Organisation', OrganisationRepo::class);
         $this->mockRepo('Application', ApplicationRepo::class);
         $this->mockRepo('Correspondence', CorrespondenceRepo::class);
@@ -92,7 +89,7 @@ class DashboardTest extends QueryHandlerTestCase
             ->andReturn($mockOrganisation);
 
         $this->repoMap['Application']
-            ->shouldReceive('fetchByOrganisationIdAndStatuses')
+            ->shouldReceive('fetchByOrgAndStatusForActiveLicences')
             ->with(
                 $organisationId,
                 [
