@@ -1,16 +1,11 @@
 <?php
 
-/**
- * Organisation dashboard
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -24,8 +19,16 @@ class Dashboard extends AbstractQueryHandler
 
     protected $extraRepos = ['Correspondence', 'Fee', 'Application'];
 
+    /**
+     * Handle query
+     *
+     * @param \Dvsa\Olcs\Transfer\Query\Organisation\Dashboard $query Query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
+        /** @var Entity\Organisation\Organisation $organisation */
         $organisation =  $this->getRepo()->fetchUsingId($query);
 
         list($licences, $applications, $variations) = $this->filter($organisation);
@@ -67,24 +70,32 @@ class Dashboard extends AbstractQueryHandler
     }
 
     /**
-     * @param OrganisationEntity
+     * Filter
+     *
+     * @param Entity\Organisation\Organisation $organisation Organisation entity
+     *
      * @return array (licences, applications, variations)
      */
     protected function filter($organisation)
     {
+        /** @var Repository\Application $repo */
+        $repo = $this->getRepo('Application');
+
         $licences = $organisation->getActiveLicences();
 
-        $applications = $this->getRepo('Application')->fetchByOrganisationIdAndStatuses(
+        $applications = $repo->fetchByOrgAndStatusForActiveLicences(
             $organisation->getId(),
             [
                 ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
                 ApplicationEntity::APPLICATION_STATUS_GRANTED,
-                ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED
+                ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED,
             ]
         );
 
         $variations = [];
         $newApplications = [];
+
+        /** @var Entity\Application\Application $application */
         foreach ($applications as $application) {
             if ($application->isVariation()) {
                 $variations[] = $application;
@@ -93,24 +104,36 @@ class Dashboard extends AbstractQueryHandler
             }
         }
 
-        return array($licences, $newApplications, $variations);
+        return [$licences, $newApplications, $variations];
     }
 
     /**
-     * @param int $organisationId
+     * Get Correspondence Count
+     *
+     * @param int $organisationId Organisation Id
+     *
      * @return int
      */
     protected function getCorrespondenceCount($organisationId)
     {
-        return $this->getRepo('Correspondence')->getUnreadCountForOrganisation($organisationId);
+        /** @var Repository\Correspondence $repo */
+        $repo = $this->getRepo('Correspondence');
+
+        return $repo->getUnreadCountForOrganisation($organisationId);
     }
 
     /**
-     * @param int $organisationId
+     * Get Count of Fees
+     *
+     * @param int $organisationId Organisation Id
+     *
      * @return int
      */
     protected function getFeeCount($organisationId)
     {
-        return $this->getRepo('Fee')->getOutstandingFeeCountByOrganisationId($organisationId, true);
+        /** @var Repository\Fee $repo */
+        $repo = $this->getRepo('Fee');
+
+        return $repo->getOutstandingFeeCountByOrganisationId($organisationId, true);
     }
 }

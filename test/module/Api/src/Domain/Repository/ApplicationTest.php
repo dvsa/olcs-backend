@@ -1,42 +1,40 @@
 <?php
 
-
-/**
- * Application test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\DBAL\LockMode;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Doctrine\DBAL\LockMode;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\Exception\VersionConflictException;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
-use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
-use Doctrine\ORM\OptimisticLockException;
-use Dvsa\Olcs\Api\Domain\Exception\VersionConflictException;
-use Doctrine\ORM\EntityRepository;
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 
 /**
- * Application test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\Application
  */
 class ApplicationTest extends RepositoryTestCase
 {
+    const APP_ID = 8001;
+    const ORG_ID = 7001;
+
+    /** @var Repository\Application | m\MockInterface  */
+    protected $sut;
+
     public function setUp()
     {
-        $this->setUpSut(ApplicationRepo::class);
+        $this->setUpSut(Repository\Application::class);
     }
 
     public function testLockWithoutApplication()
@@ -155,6 +153,7 @@ class ApplicationTest extends RepositoryTestCase
 
     public function testFetchUsingId()
     {
+        /** @var QueryInterface | m\MockInterface $command */
         $command = m::mock(QueryInterface::class);
         $command->shouldReceive('getId')
             ->andReturn(111);
@@ -197,6 +196,7 @@ class ApplicationTest extends RepositoryTestCase
 
     public function testFetchUsingIdWithResults()
     {
+        /** @var QueryInterface | m\MockInterface $command */
         $command = m::mock(QueryInterface::class);
         $command->shouldReceive('getId')
             ->andReturn(111);
@@ -421,6 +421,38 @@ class ApplicationTest extends RepositoryTestCase
         $this->assertEquals('RESULT', $result);
     }
 
+    public function testFetchByOrgAndStatusForActiveLicences()
+    {
+        $qb = $this->createMockQb('{{QUERY}}');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->execute')->andReturn('EXPECT');
+
+        $actual = $this->sut->fetchByOrgAndStatusForActiveLicences(self::ORG_ID, ['unit1', 'unit2']);
+
+        static::assertEquals('EXPECT', $actual);
+
+        static::assertEquals(
+            '{{QUERY}} ' .
+            'INNER JOIN a.licence l WITH l.organisation = [[' . self::ORG_ID . ']] ' .
+            'AND a.status IN ["unit1","unit2"] ' .
+            'AND (' .
+                'a.isVariation = 0 ' .
+                'OR (' .
+                    'l.status IN ["lsts_suspended","lsts_valid","lsts_curtailed"] ' .
+                    'AND a.isVariation = 1' .
+                ')' .
+            ')',
+            $this->query
+        );
+    }
+
+
     public function testFetchWithLicenceNotFound()
     {
         $applicationId = 1;
@@ -461,24 +493,27 @@ class ApplicationTest extends RepositoryTestCase
 
     public function testApplyListJoins()
     {
-        $this->setUpSut(ApplicationRepo::class, true);
+        $this->setUpSut(Repository\Application::class, true);
 
         $this->sut->shouldReceive('getQueryBuilder')->with()->once()->andReturnSelf();
         $this->sut->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
 
+        /** @var QueryBuilder | m\MockInterface $mockQb */
         $mockQb = m::mock(QueryBuilder::class);
         $this->sut->applyListJoins($mockQb);
     }
 
     public function testApplyListFilters()
     {
-        $this->setUpSut(ApplicationRepo::class, true);
+        $this->setUpSut(Repository\Application::class, true);
 
+        /** @var QueryBuilder | m\MockInterface $mockQb */
         $mockQb = m::mock(QueryBuilder::class);
         $mockQb->shouldReceive('expr->eq')->with('l.organisation', ':organisation')->once()->andReturn('EXPR1');
         $mockQb->shouldReceive('setParameter')->with('organisation', 723)->once()->andReturn();
         $mockQb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
 
+        /** @var QueryInterface | m\MockInterface $mockQuery */
         $mockQuery = m::mock(QueryInterface::class);
         $mockQuery->shouldReceive('getOrganisation')->with()->andReturn(723);
 
