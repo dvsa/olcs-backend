@@ -86,6 +86,12 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     const TACH_INT = 'tach_internal';
     const TACH_NA = 'tach_na';
 
+    const ACTIVE_STATUSES = [
+        self::LICENCE_STATUS_SUSPENDED,
+        self::LICENCE_STATUS_VALID,
+        self::LICENCE_STATUS_CURTAILED,
+    ];
+
     /**
      * Licence constructor
      *
@@ -414,14 +420,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     {
         $criteria = Criteria::create();
         $criteria->andWhere(
-            $criteria->expr()->in(
-                'status',
-                [
-                    self::LICENCE_STATUS_SUSPENDED,
-                    self::LICENCE_STATUS_VALID,
-                    self::LICENCE_STATUS_CURTAILED
-                ]
-            )
+            $criteria->expr()->in('status', self::ACTIVE_STATUSES)
         );
         $criteria->andWhere(
             $criteria->expr()->eq('goodsOrPsv', $this->getGoodsOrPsv())
@@ -1118,7 +1117,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      * Get licence expiry date as a date
      *
      * @return \DateTime
-     * @see Dvsa\Olcs\Api\Entity\Types\DateTimeType
+     * @see \Dvsa\Olcs\Api\Entity\Types\DateTimeType
      */
     public function getExpiryDateAsDate()
     {
