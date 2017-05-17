@@ -15,7 +15,7 @@
 $doctrine_connection_params = [
     'host' => 'localhost',
     'port' => '3306',
-    'user' => 'olcs_be',
+    'user' => 'root',
     'password' => 'password',
     'dbname' => 'olcs_be',
 ];
@@ -24,15 +24,15 @@ return [
     // Postcode/Address service
     'address' => [
         'client' => [
-            // URI e.g. http://postcode.cit.olcs.mgt.mtpdvsa/ *Environment specific*
-            'baseuri' => 'http://postcode.cit.olcs.mgt.mtpdvsa/'
+            // URI e.g. http://address.olcs.da.nonprod.dvsa.aws/ *Environment specific*
+            'baseuri' => 'http://address.olcs.da.nonprod.dvsa.aws/'
         ]
     ],
 
     // Elastic search
     'elastic_search' => [
-        // Hostname e.g. search.olcs.da.nonprod.dvsa.aws *Environment specific*
-        'host' => 'search.olcs.da.nonprod.dvsa.aws',
+        // Hostname e.g. searchv5.olcs.da.nonprod.dvsa.aws *Environment specific*
+        'host' => 'searchv5.olcs.da.nonprod.dvsa.aws',
         // Port, e.g. 9200
         'port' => '9200'
     ],
@@ -101,7 +101,7 @@ return [
     'document_share' => [
         'client' => [
             // Document service URI *Environment specific*
-            'baseuri' => 'http://fs01.olcs.mgt.mtpdvsa:8080/hfs/',
+            'baseuri' => 'http://docman.shd.da.nonprod.dvsa.aws:8080/hfs/',
             // Document service user ID *Environment specific*
             'uuid' => 'uD12345',
             // Document service workspace "olcs"
