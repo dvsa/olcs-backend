@@ -156,6 +156,8 @@ class UpdateConditionUndertakingTest extends CommandHandlerTestCase
 
         $mockConditionUndertaking = m::mock(\Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking::class)->makePartial();
         $mockConditionUndertaking->setId(154);
+        $mockConditionUndertaking->setOlbsKey(154);
+        $mockConditionUndertaking->setOlbsType('foo');
 
         $this->repoMap['ConditionUndertaking']->shouldReceive('fetchById')->with(154, Query::HYDRATE_OBJECT, 43)->once()
             ->andReturn($mockConditionUndertaking);
@@ -173,6 +175,8 @@ class UpdateConditionUndertakingTest extends CommandHandlerTestCase
                 $this->assertSame($mockConditionUndertaking, $cu->getLicConditionVariation());
                 $this->assertSame(null, $cu->getLicence());
                 $this->assertSame($this->references[ApplicationEntity::class][64], $cu->getApplication());
+                $this->assertNull($cu->getOlbsKey());
+                $this->assertNull($cu->getOlbsType());
             }
         );
 
