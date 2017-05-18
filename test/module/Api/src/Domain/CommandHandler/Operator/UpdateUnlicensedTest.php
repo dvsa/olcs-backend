@@ -127,7 +127,7 @@ class UpdateUnlicensedTest extends CommandHandlerTestCase
             ->once();
 
         $this->repoMap['ContactDetails']
-            ->shouldReceive('populateOperatorRefDataReferences')
+            ->shouldReceive('populateRefDataReference')
             ->with($contactDetailsData)
             ->andReturn($contactDetailsData);
 
