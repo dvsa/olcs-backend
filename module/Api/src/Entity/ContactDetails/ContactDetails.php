@@ -269,12 +269,10 @@ class ContactDetails extends AbstractContactDetails
             $this->populateAddress($contactParams['address']);
         }
 
-        // populate phone contacts
-        $phoneContacts = array_intersect_key(
-            $contactParams,
-            array_flip(['mobilePhoneContact', 'businessPhoneContact', 'homePhoneContact', 'faxPhoneContact'])
-        );
-        $this->populatePhoneContacts($phoneContacts);
+        if (isset($contactParams['phoneContacts'])) {
+            // populate phone contacts
+            $this->populatePhoneContacts($contactParams['phoneContacts']);
+        }
     }
 
     /**
