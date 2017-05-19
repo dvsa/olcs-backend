@@ -53,31 +53,17 @@ class ApplicationAddressesReviewService extends AbstractReviewService
                             'multiItems' => [
                                 [
                                     [
-                                        'label' => 'application-review-addresses-correspondence-business',
+                                        'label' => 'application-review-addresses-correspondence-primary',
                                         'value' => $this->getPhoneNumber(
                                             $phoneContacts,
-                                            PhoneContact::TYPE_BUSINESS
+                                            PhoneContact::TYPE_PRIMARY
                                         )
                                     ],
                                     [
-                                        'label' => 'application-review-addresses-correspondence-home',
+                                        'label' => 'application-review-addresses-correspondence-secondary',
                                         'value' => $this->getPhoneNumber(
                                             $phoneContacts,
-                                            PhoneContact::TYPE_HOME
-                                        )
-                                    ],
-                                    [
-                                        'label' => 'application-review-addresses-correspondence-mobile',
-                                        'value' => $this->getPhoneNumber(
-                                            $phoneContacts,
-                                            PhoneContact::TYPE_MOBILE
-                                        )
-                                    ],
-                                    [
-                                        'label' => 'application-review-addresses-correspondence-fax',
-                                        'value' => $this->getPhoneNumber(
-                                            $phoneContacts,
-                                            PhoneContact::TYPE_FAX
+                                            PhoneContact::TYPE_SECONDARY
                                         )
                                     ],
                                     [
