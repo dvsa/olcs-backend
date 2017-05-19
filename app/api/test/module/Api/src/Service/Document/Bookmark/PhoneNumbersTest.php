@@ -1,6 +1,7 @@
 <?php
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
+use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\PhoneNumbers;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -47,31 +48,17 @@ class PhoneNumbersTest extends MockeryTestCase
                 'correspondenceCd' => [
                     'phoneContacts' => [
                         [
-                            'phoneNumber' => '123',
+                            'phoneNumber' => '22222',
                             'phoneContactType' => [
-                                'id' => 'phone_t_mobile',
-                                'description' => 'mobile'
+                                'id' => PhoneContact::TYPE_SECONDARY,
+                                'description' => 'Secondary'
                             ]
                         ],
                         [
-                            'phoneNumber' => '456',
+                            'phoneNumber' => '11111',
                             'phoneContactType' => [
-                                'id' => 'phone_t_home',
-                                'description' => 'home'
-                            ]
-                        ],
-                        [
-                            'phoneNumber' => '012',
-                            'phoneContactType' => [
-                                'id' => 'phone_t_fax',
-                                'description' => 'fax'
-                            ]
-                        ],
-                        [
-                            'phoneNumber' => '789',
-                            'phoneContactType' => [
-                                'id' => 'phone_t_fax',
-                                'description' => 'fax'
+                                'id' => PhoneContact::TYPE_PRIMARY,
+                                'description' => 'Primary'
                             ]
                         ],
                     ]
@@ -88,20 +75,20 @@ class PhoneNumbersTest extends MockeryTestCase
             'BOOKMARK2' => 'Number'
         ];
         $row1 = [
-            'BOOKMARK1' => 'home',
-            'BOOKMARK2' => '456'
+            'BOOKMARK1' => 'Primary',
+            'BOOKMARK2' => '11111'
         ];
         $row2 = [
-            'BOOKMARK1' => 'mobile',
-            'BOOKMARK2' => '123'
+            'BOOKMARK1' => 'Secondary',
+            'BOOKMARK2' => '22222'
         ];
         $row3 = [
-            'BOOKMARK1' => 'fax',
-            'BOOKMARK2' => '789'
+            'BOOKMARK1' => '',
+            'BOOKMARK2' => ''
         ];
         $row4 = [
-            'BOOKMARK1' => 'fax',
-            'BOOKMARK2' => '012'
+            'BOOKMARK1' => '',
+            'BOOKMARK2' => ''
         ];
         $emptyRow = [
             'BOOKMARK1' => '',
