@@ -66,7 +66,7 @@ class TaAddressPhoneTest extends \PHPUnit_Framework_TestCase
                             [
                                 'phoneNumber' => '1234',
                                 'phoneContactType' => [
-                                    'id' => 'phone_t_home'
+                                    'id' => 'foo'
                                 ]
                             ]
                         ]
