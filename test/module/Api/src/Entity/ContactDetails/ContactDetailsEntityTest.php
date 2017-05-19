@@ -23,7 +23,7 @@ class ContactDetailsEntityTest extends EntityTester
     const DEF_ADDRESS_ID = 8888;
     const DEF_PHONE_ID = 9999;
     const DEF_PHONE_NR = 'unit_PhoneNr';
-    const DEF_PHONE_TYPE = PhoneContact::TYPE_BUSINESS;
+    const DEF_PHONE_TYPE = PhoneContact::TYPE_PRIMARY;
     const DEF_COUNTRY_CODE = 'unit_CountryCode';
     const DEF_PERSON_ID = 77777;
 
