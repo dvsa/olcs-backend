@@ -40,11 +40,14 @@ class Fee extends AbstractRepository
             \Dvsa\Olcs\Api\Entity\Fee\FeeType::FEE_TYPE_GRANTINT
         );
 
-        if ($outstanding) {
+        if ($outstanding && !$paid) {
             $this->whereOutstandingFee($doctrineQb);
         }
-        if ($paid) {
+        if ($paid && !$outstanding) {
             $this->wherePaidFee($doctrineQb);
+        }
+        if ($paid && $outstanding) {
+            $this->whereOutstandingOrPaidFee($doctrineQb);
         }
 
         return $doctrineQb->getQuery()->getResult();
@@ -442,6 +445,26 @@ class Fee extends AbstractRepository
         $doctrineQb
             ->andWhere($doctrineQb->expr()->eq($this->alias.'.feeStatus', ':feeStatus'))
             ->setParameter('feeStatus', $this->getRefdataReference(Entity::STATUS_PAID));
+    }
+
+    /**
+     * Add conditions to the query builder to only select fees that are outstanding or paid
+     *
+     * @param \Doctrine\ORM\QueryBuilder $doctrineQb Doctrine Query Builder
+     *
+     * @return void
+     */
+    private function whereOutstandingOrPaidFee(\Doctrine\ORM\QueryBuilder $doctrineQb)
+    {
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->in($this->alias.'.feeStatus', ':feeStatus'))
+            ->setParameter(
+                'feeStatus',
+                [
+                    $this->getRefdataReference(Entity::STATUS_PAID),
+                    $this->getRefdataReference(Entity::STATUS_OUTSTANDING)
+                ]
+            );
     }
 
     /**
