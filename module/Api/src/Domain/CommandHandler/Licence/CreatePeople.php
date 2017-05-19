@@ -1,17 +1,14 @@
 <?php
 
-/**
- * CreatePeople
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Entity;
 
 /**
  * CreatePeople
@@ -23,13 +20,19 @@ final class CreatePeople extends AbstractCommandHandler implements Transactioned
     protected $repoServiceName = 'Licence';
     protected $extraRepos = ['OrganisationPerson', 'Person'];
 
+    /**
+     * Handle Command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Licence\CreatePeople $command Command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
-        /* @var $command \Dvsa\Olcs\Transfer\Command\Licence\CreatePeople */
-
         /* @var $licence LicenceEntity */
         $licence = $this->getRepo()->fetchUsingId($command);
 
+        //  save person
         $person = new \Dvsa\Olcs\Api\Entity\Person\Person();
         $person->updatePerson(
             $command->getForename(),
@@ -38,17 +41,25 @@ final class CreatePeople extends AbstractCommandHandler implements Transactioned
             $command->getBirthDate()
         );
         $person->setOtherName($command->getOtherName());
-        $this->getRepo('Person')->save($person);
 
-        $organisationPerson = new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson();
-        $organisationPerson->setOrganisation($licence->getOrganisation());
-        $organisationPerson->setPerson($person);
-        $this->getRepo('OrganisationPerson')->save($organisationPerson);
+        /** @var Repository\Person $personRepo */
+        $personRepo = $this->getRepo('Person');
+        $personRepo->save($person);
 
-        $result = new Result();
-        $result->addMessage('OrganisationPerson created');
-        $result->addId('organisationPerson', $organisationPerson->getId());
-        $result->addId('person', $person->getId());
-        return $result;
+        //  save organisation person relation
+        $organisationPerson = new Entity\Organisation\OrganisationPerson();
+        $organisationPerson
+            ->setOrganisation($licence->getOrganisation())
+            ->setPerson($person)
+            ->setPosition($command->getPosition());
+
+        /** @var Repository\OrganisationPerson $orgPersonRepo */
+        $orgPersonRepo = $this->getRepo('OrganisationPerson');
+        $orgPersonRepo->save($organisationPerson);
+
+        return $this->result
+            ->addMessage('OrganisationPerson created')
+            ->addId('organisationPerson', $organisationPerson->getId())
+            ->addId('person', $person->getId());
     }
 }
