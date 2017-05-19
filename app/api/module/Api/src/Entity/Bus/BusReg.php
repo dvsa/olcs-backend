@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 
 /**
  * BusReg Entity
@@ -45,6 +46,8 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
  */
 class BusReg extends AbstractBusReg implements ContextProviderInterface, OrganisationProviderInterface
 {
+    use ProcessDateTrait;
+
     const STATUS_NEW = 'breg_s_new';
     const STATUS_VAR = 'breg_s_var';
     const STATUS_CANCEL = 'breg_s_cancellation';
@@ -724,30 +727,6 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         if ($this->isShortNotice($effectiveDate, $receivedDate, $this->busNoticePeriod)) {
             $this->isShortNotice = 'Y';
         }
-    }
-
-    /**
-     * Process date
-     *
-     * @param string $date     Date
-     * @param string $format   Format
-     * @param bool   $zeroTime Zero time
-     *
-     * @return \DateTime|null
-     */
-    public function processDate($date, $format = 'Y-m-d', $zeroTime = true)
-    {
-        $dateTime = \DateTime::createFromFormat($format, $date);
-
-        if (!$dateTime instanceof \DateTime) {
-            return null;
-        }
-
-        if ($zeroTime) {
-            $dateTime->setTime(0, 0, 0);
-        }
-
-        return $dateTime;
     }
 
     /**
