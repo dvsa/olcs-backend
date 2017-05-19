@@ -4,12 +4,13 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Transfer\Query\Fee\FeeList as FeeListQry;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 
 /**
  * @covers Dvsa\Olcs\Api\Domain\Repository\Fee
@@ -39,8 +40,8 @@ class FeeTest extends RepositoryTestCase
         $mockQb->shouldReceive('andWhere')->with('bar')->once()->andReturnSelf();
 
         $this->em->shouldReceive('getReference')->with(
-            \Dvsa\Olcs\Api\Entity\System\RefData::class,
-            \Dvsa\Olcs\Api\Entity\Fee\FeeType::FEE_TYPE_GRANTINT
+            RefDataEntity::class,
+            FeeTypeEntity::FEE_TYPE_GRANTINT
         )->once()->andReturn('refdata');
         $mockQb->shouldReceive('setParameter')->with('feeTypeFeeType', 'refdata')->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('applicationId', $applicationId)->once()->andReturnSelf();
@@ -64,8 +65,8 @@ class FeeTest extends RepositoryTestCase
         $this->setupFetchInterimFeesByApplicationId($mockQb, 12);
 
         $this->em->shouldReceive('getReference')->with(
-            \Dvsa\Olcs\Api\Entity\System\RefData::class,
-            \Dvsa\Olcs\Api\Entity\Fee\Fee::STATUS_OUTSTANDING
+            RefDataEntity::class,
+            FeeEntity::STATUS_OUTSTANDING
         )->once()->andReturn('ot');
 
         $mockQb->shouldReceive('expr->eq')->with('f.feeStatus', ':feeStatus')->once()->andReturn('expr-eq');
@@ -82,8 +83,8 @@ class FeeTest extends RepositoryTestCase
         $this->setupFetchInterimFeesByApplicationId($mockQb, 12);
 
         $this->em->shouldReceive('getReference')->with(
-            \Dvsa\Olcs\Api\Entity\System\RefData::class,
-            \Dvsa\Olcs\Api\Entity\Fee\Fee::STATUS_PAID
+            RefDataEntity::class,
+            FeeEntity::STATUS_PAID
         )->once()->andReturn('ot');
 
         $mockQb->shouldReceive('expr->eq')->with('f.feeStatus', ':feeStatus')->once()->andReturn('expr-eq');
@@ -91,6 +92,29 @@ class FeeTest extends RepositoryTestCase
         $mockQb->shouldReceive('setParameter')->with('feeStatus', 'ot')->once();
 
         $this->assertSame('result', $this->sut->fetchInterimFeesByApplicationId(12, false, true));
+    }
+
+    public function testFetchInterimFeesByApplicationIdOutstandingOrPaid()
+    {
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->setupFetchInterimFeesByApplicationId($mockQb, 12);
+
+        $this->em->shouldReceive('getReference')->with(
+            RefDataEntity::class,
+            FeeEntity::STATUS_PAID
+        )->once()->andReturn('ot');
+
+        $this->em->shouldReceive('getReference')->with(
+            RefDataEntity::class,
+            FeeEntity::STATUS_OUTSTANDING
+        )->once()->andReturn('pd');
+
+        $mockQb->shouldReceive('expr->in')->with('f.feeStatus', ':feeStatus')->once()->andReturn('expr-in');
+        $mockQb->shouldReceive('andWhere')->with('expr-in')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('feeStatus', ['ot', 'pd'])->once();
+
+        $this->assertSame('result', $this->sut->fetchInterimFeesByApplicationId(12, true, true));
     }
 
     public function testFetchOutstandingFeesByOrganisationId()
@@ -623,8 +647,8 @@ class FeeTest extends RepositoryTestCase
         $this->mockCreateQueryBuilder($qb);
 
         $this->em->shouldReceive('getReference')->with(
-            \Dvsa\Olcs\Api\Entity\System\RefData::class,
-            \Dvsa\Olcs\Api\Entity\Fee\Fee::STATUS_OUTSTANDING
+            RefDataEntity::class,
+            FeeEntity::STATUS_OUTSTANDING
         )->once()->andReturn('ot');
 
         $qb->shouldReceive('getQuery')->andReturn(
@@ -691,7 +715,7 @@ class FeeTest extends RepositoryTestCase
             ->andReturn($mockQb);
 
         $this->em->shouldReceive('getReference')->with(
-            \Dvsa\Olcs\Api\Entity\System\RefData::class,
+            RefDataEntity::class,
             $feeTypeFeeType
         )->once()->andReturn($feeTypeFeeType);
 
@@ -737,7 +761,7 @@ class FeeTest extends RepositoryTestCase
         $irfoPsvAuthId = 123;
 
         $this->sut->shouldReceive('fetchFeesByPsvAuthIdAndType')
-            ->with($irfoPsvAuthId, FeeType::FEE_TYPE_IRFOPSVAPP)
+            ->with($irfoPsvAuthId, FeeTypeEntity::FEE_TYPE_IRFOPSVAPP)
             ->andReturn(['foo']);
 
         $this->assertContains(
@@ -751,7 +775,7 @@ class FeeTest extends RepositoryTestCase
         $irfoPsvAuthId = 123;
 
         $this->sut->shouldReceive('fetchFeesByPsvAuthIdAndType')
-            ->with($irfoPsvAuthId, FeeType::FEE_TYPE_IRFOPSVAPP)
+            ->with($irfoPsvAuthId, FeeTypeEntity::FEE_TYPE_IRFOPSVAPP)
             ->andReturn([]);
 
         $this->assertEmpty($this->sut->fetchApplicationFeeByPsvAuthId($irfoPsvAuthId));
@@ -810,8 +834,8 @@ class FeeTest extends RepositoryTestCase
         $this->em
             ->shouldReceive('getReference')
             ->with(
-                \Dvsa\Olcs\Api\Entity\System\RefData::class,
-                \Dvsa\Olcs\Api\Entity\Fee\Fee::STATUS_OUTSTANDING
+                RefDataEntity::class,
+                FeeEntity::STATUS_OUTSTANDING
             )
             ->once()
             ->andReturn('ot')
