@@ -108,7 +108,7 @@ class PrintLetterTest extends CommandHandlerTestCase
                 'licence' => self::LIC_ID,
                 'busReg' => self::BUS_REG_ID,
                 'category' => Category::CATEGORY_BUS_REGISTRATION,
-                'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
+                'subCategory' => Category::BUS_SUB_CATEGORY_OTHER_DOCUMENTS,
                 'isExternal' => false,
                 'dispatch' => true,
                 'printCopiesCount' => 999,
