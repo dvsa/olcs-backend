@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\CloseableInterface;
 use Dvsa\Olcs\Api\Entity\ReopenableInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 
 /**
  * Pi Entity
@@ -38,6 +39,8 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
  */
 class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
 {
+    use ProcessDateTrait;
+
     const STATUS_REGISTERED = 'pi_s_reg';
     const MSG_UPDATE_CLOSED = 'Can\'t update a closed Pi';
 
@@ -398,27 +401,6 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         }
 
         return false;
-    }
-
-    /**
-     * @param string $date
-     * @param string $format
-     * @param bool $zeroTime
-     * @return \DateTime|null
-     */
-    public function processDate($date, $format = 'Y-m-d', $zeroTime = true)
-    {
-        $dateTime = \DateTime::createFromFormat($format, $date);
-
-        if (!$dateTime instanceof \DateTime) {
-            return null;
-        }
-
-        if ($zeroTime) {
-            $dateTime->setTime(0, 0, 0);
-        }
-
-        return $dateTime;
     }
 
     /**

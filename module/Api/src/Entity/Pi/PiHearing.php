@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 
 /**
  * PiHearing Entity
@@ -29,6 +30,8 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
  */
 class PiHearing extends AbstractPiHearing
 {
+    use ProcessDateTrait;
+
     /**
      * @param PiEntity $pi
      * @param PresidingTcEntity $presidingTc
@@ -225,26 +228,5 @@ class PiHearing extends AbstractPiHearing
             $this->adjournedReason = null;
             $this->adjournedDate = null;
         }
-    }
-
-    /**
-     * @param string $date
-     * @param string $format
-     * @param bool $zeroTime
-     * @return \DateTime|null
-     */
-    private function processDate($date, $format = 'Y-m-d', $zeroTime = true)
-    {
-        $dateTime = \DateTime::createFromFormat($format, $date);
-
-        if (!$dateTime instanceof \DateTime) {
-            return null;
-        }
-
-        if ($zeroTime) {
-            $dateTime->setTime(0, 0, 0);
-        }
-
-        return $dateTime;
     }
 }
