@@ -20,7 +20,6 @@ use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
-use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 
 /**
  * BusReg Entity
@@ -46,8 +45,6 @@ use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
  */
 class BusReg extends AbstractBusReg implements ContextProviderInterface, OrganisationProviderInterface
 {
-    use ProcessDateTrait;
-
     const STATUS_NEW = 'breg_s_new';
     const STATUS_VAR = 'breg_s_var';
     const STATUS_CANCEL = 'breg_s_cancellation';

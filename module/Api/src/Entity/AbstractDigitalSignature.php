@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -25,6 +26,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 abstract class AbstractDigitalSignature implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
+    use ProcessDateTrait;
 
     /**
      * Attributes
