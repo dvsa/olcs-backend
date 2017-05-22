@@ -5,6 +5,7 @@ namespace <?php echo $details['namespace']; ?>;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
 <?php if ($details['hasCollections']): ?>
 use Doctrine\Common\Collections\ArrayCollection;
@@ -59,6 +60,7 @@ if (!empty($details['unique-constraints'])) {
 abstract class Abstract<?php echo $details['name']; ?> implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
+    use ProcessDateTrait;
 <?php foreach ($details['fields'] as $item): $field = $item['config']; ?>
 
 <?php include('property.phtml'); ?>

@@ -226,25 +226,4 @@ class PiHearing extends AbstractPiHearing
             $this->adjournedDate = null;
         }
     }
-
-    /**
-     * @param string $date
-     * @param string $format
-     * @param bool $zeroTime
-     * @return \DateTime|null
-     */
-    private function processDate($date, $format = 'Y-m-d', $zeroTime = true)
-    {
-        $dateTime = \DateTime::createFromFormat($format, $date);
-
-        if (!$dateTime instanceof \DateTime) {
-            return null;
-        }
-
-        if ($zeroTime) {
-            $dateTime->setTime(0, 0, 0);
-        }
-
-        return $dateTime;
-    }
 }

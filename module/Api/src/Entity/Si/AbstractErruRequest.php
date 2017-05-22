@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Si;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -35,6 +36,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 abstract class AbstractErruRequest implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
+    use ProcessDateTrait;
 
     /**
      * Case

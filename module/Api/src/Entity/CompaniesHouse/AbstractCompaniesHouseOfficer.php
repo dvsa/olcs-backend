@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\CompaniesHouse;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,6 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class AbstractCompaniesHouseOfficer implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
+    use ProcessDateTrait;
 
     /**
      * Companies house company

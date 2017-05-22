@@ -401,27 +401,6 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
     }
 
     /**
-     * @param string $date
-     * @param string $format
-     * @param bool $zeroTime
-     * @return \DateTime|null
-     */
-    public function processDate($date, $format = 'Y-m-d', $zeroTime = true)
-    {
-        $dateTime = \DateTime::createFromFormat($format, $date);
-
-        if (!$dateTime instanceof \DateTime) {
-            return null;
-        }
-
-        if ($zeroTime) {
-            $dateTime->setTime(0, 0, 0);
-        }
-
-        return $dateTime;
-    }
-
-    /**
      * Is this a Transport Manager Pi?
      */
     public function isTm()
