@@ -9,6 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Opposition;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Opposition\UpdateOpposition;
 use Dvsa\Olcs\Api\Domain\Repository\Opposition as OppositionRepo;
@@ -87,7 +88,7 @@ class UpdateOppositionTest extends CommandHandlerTestCase
                 "phoneContacts" => [
                     [
                         "phoneNumber" => "5525225",
-                        "phoneContactType" => "phone_t_tel"
+                        "phoneContactType" => PhoneContact::TYPE_PRIMARY
                     ]
                 ]
             ]
@@ -152,7 +153,6 @@ class UpdateOppositionTest extends CommandHandlerTestCase
             'opp_v_yes',
             'opp_ack',
             'ogf_env',
-            'phone_t_tel',
             'ct_obj'
         ];
 
