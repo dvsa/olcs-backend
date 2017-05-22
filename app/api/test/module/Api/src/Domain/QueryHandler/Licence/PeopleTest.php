@@ -1,34 +1,29 @@
 <?php
 
-/**
- * PeopleTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
 
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Licence\People as QueryHandler;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as Licence;
-use Dvsa\Olcs\Api\Domain\Repository\OrganisationPerson as OrganisationPersonRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Licence\People;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Query\Licence\People as Query;
-use ZfcRbac\Service\AuthorizationService;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
+use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
- * PeopleTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\QueryHandler\Licence\People
  */
 class PeopleTest extends QueryHandlerTestCase
 {
+    /** @var People */
+    protected $sut;
+
     public function setUp()
     {
-        $this->sut = new QueryHandler();
-        $this->mockRepo('Licence', LicenceRepo::class);
-        $this->mockRepo('OrganisationPerson', OrganisationPersonRepo::class);
+        $this->sut = new People();
+        $this->mockRepo('Licence', Repository\Licence::class);
+        $this->mockRepo('OrganisationPerson', Repository\OrganisationPerson::class);
 
         /** @var UserEntity $currentUser */
         $currentUser = m::mock(UserEntity::class)->makePartial();
@@ -50,11 +45,16 @@ class PeopleTest extends QueryHandlerTestCase
         $query = Query::create(['id' => 111]);
 
         $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
-        $organisation->setId(923)->setType(new \Dvsa\Olcs\Api\Entity\System\RefData());
+        $organisation
+            ->setId(923)
+            ->setType(new \Dvsa\Olcs\Api\Entity\System\RefData());
+
         $licence = new Licence($organisation, new \Dvsa\Olcs\Api\Entity\System\RefData());
         $licence->setId(432);
 
-        $mockOp = m::mock()->shouldReceive('serialize')->with(['person'])->once()->andReturn(['OP'])->getMock();
+        $mockOp = m::mock()
+            ->shouldReceive('serialize')->with(['person' => ['title']])->once()->andReturn(['OP'])
+            ->getMock();
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($query)->andReturn($licence);
         $this->repoMap['OrganisationPerson']->shouldReceive('fetchListForOrganisation')->with(923)
