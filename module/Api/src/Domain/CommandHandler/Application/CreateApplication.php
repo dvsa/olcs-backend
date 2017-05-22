@@ -94,6 +94,11 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
 
     private function updateApplicationCompletion($applicationId)
     {
+        if ($this->isInternalUser()) {
+            $this->handleSideEffect(
+                UpdateApplicationCompletion::create(['id' => $applicationId, 'section' => 'businessType'])
+            );
+        }
         return $this->handleSideEffect(
             UpdateApplicationCompletion::create(['id' => $applicationId, 'section' => 'typeOfLicence'])
         );
