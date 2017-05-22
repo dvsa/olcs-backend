@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -13,17 +14,28 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 class People extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
-
     protected $extraRepos = ['OrganisationPerson'];
 
+    /**
+     * Handle Query
+     *
+     * @param \Dvsa\Olcs\Transfer\Query\Licence\People $query Query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
         /* @var $licence \Dvsa\Olcs\Api\Entity\Licence\Licence */
         $licence = $this->getRepo()->fetchUsingId($query);
 
-        $organisationPersons = $this->getRepo('OrganisationPerson')->fetchListForOrganisation(
+        /** @var Repository\OrganisationPerson $orgPersonRepo */
+        $orgPersonRepo = $this->getRepo('OrganisationPerson');
+
+        $organisationPersons = $orgPersonRepo->fetchListForOrganisation(
             $licence->getOrganisation()->getId()
         );
+
+        $org = $licence->getOrganisation();
 
         return $this->result(
             $licence,
@@ -31,11 +43,10 @@ class People extends AbstractQueryHandler
                 'organisation' => ['type']
             ],
             [
-                'hasInforceLicences' => $licence->getOrganisation()->hasInforceLicences(),
-                'isExceptionalType' => $licence->getOrganisation()->isPartnership() ||
-                    $licence->getOrganisation()->isSoleTrader(),
-                'isSoleTrader' => $licence->getOrganisation()->isSoleTrader(),
-                'people' => $this->resultList($organisationPersons, ['person']),
+                'hasInforceLicences' => $org->hasInforceLicences(),
+                'isExceptionalType' => $org->isPartnership() || $org->isSoleTrader(),
+                'isSoleTrader' => $org->isSoleTrader(),
+                'people' => $this->resultList($organisationPersons, ['person' => ['title']]),
             ]
         );
     }

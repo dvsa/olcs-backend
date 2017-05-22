@@ -3,8 +3,9 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * People
@@ -20,10 +21,9 @@ class People extends AbstractQueryHandler
     /**
      * Handle query
      *
-     * @param QueryInterface $query query
+     * @param \Dvsa\Olcs\Transfer\Query\Application\People $query query
      *
      * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleQuery(QueryInterface $query)
     {
@@ -31,15 +31,21 @@ class People extends AbstractQueryHandler
         $application = $this->getRepo()->fetchUsingId($query);
         $licence = $application->getLicence();
 
-        $orgPersons = $this->getRepo('OrganisationPerson')->fetchListForOrganisation(
+        /** @var Repository\OrganisationPerson $orgPersonRepo */
+        $orgPersonRepo = $this->getRepo('OrganisationPerson');
+        $orgPersons = $orgPersonRepo->fetchListForOrganisation(
             $licence->getOrganisation()->getId()
         );
 
-        $appOrgPersons = $this->getRepo('ApplicationOrganisationPerson')->fetchListForApplication(
+        /** @var Repository\ApplicationOrganisationPerson $appOrgPersonRepo */
+        $appOrgPersonRepo = $this->getRepo('ApplicationOrganisationPerson');
+        $appOrgPersons = $appOrgPersonRepo->fetchListForApplication(
             $query->getId()
         );
 
-        $licences = $this->getRepo('Licence')->fetchByOrganisationIdAndStatuses(
+        /** @var Repository\Licence $licRepo */
+        $licRepo = $this->getRepo('Licence');
+        $licences = $licRepo->fetchByOrganisationIdAndStatuses(
             $licence->getOrganisation()->getId(),
             [
                 LicenceEntity::LICENCE_STATUS_VALID,
@@ -59,7 +65,7 @@ class People extends AbstractQueryHandler
                 'isExceptionalType' => $licence->getOrganisation()->isSoleTrader() ||
                     $licence->getOrganisation()->isPartnership(),
                 'isSoleTrader' => $licence->getOrganisation()->isSoleTrader(),
-                'people' => $this->resultList($orgPersons, ['person']),
+                'people' => $this->resultList($orgPersons, ['person' => ['title']]),
                 'application-people' => $this->resultList($appOrgPersons, ['person', 'originalPerson']),
                 'hasMoreThanOneValidCurtailedOrSuspendedLicences' =>
                     is_array($licences) && count($licences) > 1,
