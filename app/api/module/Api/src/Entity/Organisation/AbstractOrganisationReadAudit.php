@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Organisation;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,6 +30,7 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class AbstractOrganisationReadAudit implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
+    use ProcessDateTrait;
 
     /**
      * Created on

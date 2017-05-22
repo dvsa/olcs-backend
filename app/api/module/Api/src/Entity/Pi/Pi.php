@@ -13,7 +13,6 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\CloseableInterface;
 use Dvsa\Olcs\Api\Entity\ReopenableInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 
 /**
  * Pi Entity
@@ -39,8 +38,6 @@ use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
  */
 class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
 {
-    use ProcessDateTrait;
-
     const STATUS_REGISTERED = 'pi_s_reg';
     const MSG_UPDATE_CLOSED = 'Can\'t update a closed Pi';
 

@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 
 /**
  * PiHearing Entity
@@ -30,8 +29,6 @@ use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
  */
 class PiHearing extends AbstractPiHearing
 {
-    use ProcessDateTrait;
-
     /**
      * @param PiEntity $pi
      * @param PresidingTcEntity $presidingTc
