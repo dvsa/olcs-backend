@@ -8,14 +8,11 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Hearing;
 
 use Doctrine\ORM\Query;
-use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Hearing\UpdateAppeal;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Hearing\UpdateAppeal as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Appeal as AppealEntity;
-use Dvsa\Olcs\Api\Entity\Cases\Cases;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * Update Appeal Test
@@ -28,7 +25,6 @@ class UpdateAppealTest extends CommandHandlerTestCase
     {
         $this->sut = new UpdateAppeal();
         $this->mockRepo('Appeal', AppealEntity::class);
-        $this->mockRepo('Cases', Cases::class);
 
         parent::setUp();
     }
@@ -40,46 +36,75 @@ class UpdateAppealTest extends CommandHandlerTestCase
             'appeal_o_dis'
         ];
 
-        $mockAppeal = m::mock(Apppeal::class);
-        $mockCase = m::mock(Cases::class)->makePartial();
-        $mockCase->shouldReceive('getAppeals')
-            ->andReturn(new ArrayCollection([$mockAppeal]));
-
-        $this->references = [
-            Cases::class => [
-                24 => $mockCase
-            ]
-        ];
-
         parent::initReferences();
     }
 
     public function testHandleCommand()
     {
+        $id = 99;
+        $version = 2;
+        $appealDate = '2015-01-05';
+        $appealNo = '12332';
+        $outlineGround = 'dsfsfsf';
+        $reason = 'appeal_r_lic_non_pi';
+        $outcome = 'appeal_o_dis';
+        $comment = 'comment';
+        $isWithdrawn = 'Y';
+        $hearingDate = '2015-05-01';
+        $decisionDate = '2015-05-06';
+        $papersDueTcDate = '2015-05-07';
+        $papersDueDate = '2015-05-08';
+        $papersSentTcDate = '2015-05-09';
+        $papersSentDate = '2015-05-10';
+        $withdrawnDate = '2015-05-11';
+        $deadlineDate = '2015-05-12';
+        $dvsaNotified = 'Y';
+
         $command = Cmd::create(
             [
-                "id" => 99,
-                "version" => 2,
-                "appealDate" => "2015-01-05",
-                "appealNo" => "1231234",
-                "outlineGround" => 'asdfasdf',
-                "reason" => "appeal_r_lic_non_pi",
-                "outcome" => "appeal_o_dis",
-                "comment" => "booo",
-                "isWithdrawn" => "Y",
-                "hearingDate" => "2015-05-01",
-                "decisionDate" => "2015-05-05",
-                "papersDueTcDate" => "2015-05-05",
-                "papersDueDate" => "2015-05-05",
-                "papersSentTcDate" => "2015-05-05",
-                "papersSentDate" => "2015-05-05",
-                "withdrawnDate" => "2015-05-05"
+                "id" => $id,
+                "version" => $version,
+                "appealDate" => $appealDate,
+                "appealNo" => $appealNo,
+                "outlineGround" => $outlineGround,
+                "reason" => $reason,
+                "outcome" => $outcome,
+                "comment" => $comment,
+                "isWithdrawn" => $isWithdrawn,
+                "hearingDate" => $hearingDate,
+                "decisionDate" => $decisionDate,
+                "papersDueTcDate" => $papersDueTcDate,
+                "papersDueDate" => $papersDueDate,
+                "papersSentTcDate" => $papersSentTcDate,
+                "papersSentDate" => $papersSentDate,
+                "withdrawnDate" => $withdrawnDate,
+                "deadlineDate" => $deadlineDate,
+                "dvsaNotified" => $dvsaNotified
             ]
         );
 
         /** @var AppealEntity $appeal */
         $appeal = m::mock(AppealEntity::class)->makePartial();
-        $appeal->setId($command->getId());
+        $appeal->shouldReceive('update')
+            ->once()
+            ->with(
+                $this->refData[$reason],
+                $appealDate,
+                $appealNo,
+                $deadlineDate,
+                $outlineGround,
+                $hearingDate,
+                $decisionDate,
+                $papersDueDate,
+                $papersDueTcDate,
+                $papersSentDate,
+                $papersSentTcDate,
+                $comment,
+                $this->refData[$outcome],
+                $isWithdrawn,
+                $withdrawnDate,
+                $dvsaNotified
+            );
 
         $this->repoMap['Appeal']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
