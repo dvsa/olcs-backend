@@ -26,15 +26,14 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class PhoneContact extends AbstractPhoneContact
 {
-    /** @todo REMOVE THESE CONSTANTS after completing this story */
-    const TYPE_BUSINESS = 'phone_t_tel';
-    const TYPE_HOME = 'phone_t_home';
-    const TYPE_MOBILE = 'phone_t_mobile';
-    const TYPE_FAX = 'phone_t_fax';
-
     const TYPE_PRIMARY = 'phone_t_primary';
     const TYPE_SECONDARY = 'phone_t_secondary';
 
+    /**
+     * PhoneContact constructor.
+     *
+     * @param RefData $phoneContactType Phone contact type
+     */
     public function __construct(RefData $phoneContactType)
     {
         $this->phoneContactType = $phoneContactType;

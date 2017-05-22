@@ -27,7 +27,7 @@ class CreateTest extends CommandHandlerTestCase
     {
         $id = 8888;
         $contactDetailsId = 999;
-        $phoneContactType = Entity\ContactDetails\PhoneContact::TYPE_BUSINESS;
+        $phoneContactType = Entity\ContactDetails\PhoneContact::TYPE_PRIMARY;
 
         $data = [
             'phoneNumber' => 'unit_PhoneNr',
