@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Elastic;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class AbstractElasticUpdate implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
+    use ProcessDateTrait;
 
     /**
      * Identifier - Id

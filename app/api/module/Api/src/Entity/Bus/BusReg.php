@@ -727,30 +727,6 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     }
 
     /**
-     * Process date
-     *
-     * @param string $date     Date
-     * @param string $format   Format
-     * @param bool   $zeroTime Zero time
-     *
-     * @return \DateTime|null
-     */
-    public function processDate($date, $format = 'Y-m-d', $zeroTime = true)
-    {
-        $dateTime = \DateTime::createFromFormat($format, $date);
-
-        if (!$dateTime instanceof \DateTime) {
-            return null;
-        }
-
-        if ($zeroTime) {
-            $dateTime->setTime(0, 0, 0);
-        }
-
-        return $dateTime;
-    }
-
-    /**
      * Returns whether the record is short notice refused
      *
      * @return bool
