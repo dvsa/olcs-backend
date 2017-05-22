@@ -134,7 +134,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
     public function testHandleCommand($isInternal, $isExternal, $licenceStatus, $appliedVia)
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->times(3)
+            ->times(4)
             ->with(Permission::INTERNAL_USER, null)
             ->andReturn($isInternal)
             ->shouldReceive('isGranted')
@@ -172,11 +172,17 @@ class CreateApplicationTest extends CommandHandlerTestCase
 
         $result2 = new Result();
         $result2->addMessage('Section updated');
-        $this->expectedSideEffect(
-            UpdateApplicationCompletion::class,
-            ['id' => 22, 'section' => 'typeOfLicence'],
-            $result2
-        );
+        if ($isInternal) {
+            $this->commandHandler->shouldReceive('handleCommand')
+                ->with(UpdateApplicationCompletion::class, false)
+                ->andReturn($result2)
+                ->twice();
+        } else {
+            $this->commandHandler->shouldReceive('handleCommand')
+                ->with(UpdateApplicationCompletion::class, false)
+                ->andReturn($result2)
+                ->once();
+        }
 
         $result3 = new Result();
         $result3->addMessage('Licence number generated');
@@ -233,7 +239,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
     public function testHandleCommandGb($isInternal, $isExternal, $licenceStatus, $appliedVia)
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->times(3)
+            ->times(4)
             ->with(Permission::INTERNAL_USER, null)
             ->andReturn($isInternal)
             ->shouldReceive('isGranted')
@@ -272,11 +278,17 @@ class CreateApplicationTest extends CommandHandlerTestCase
 
         $result2 = new Result();
         $result2->addMessage('Section updated');
-        $this->expectedSideEffect(
-            UpdateApplicationCompletion::class,
-            ['id' => 22, 'section' => 'typeOfLicence'],
-            $result2
-        );
+        if ($isInternal) {
+            $this->commandHandler->shouldReceive('handleCommand')
+                ->with(UpdateApplicationCompletion::class, false)
+                ->andReturn($result2)
+                ->twice();
+        } else {
+            $this->commandHandler->shouldReceive('handleCommand')
+                ->with(UpdateApplicationCompletion::class, false)
+                ->andReturn($result2)
+                ->once();
+        }
 
         $result3 = new Result();
         $result3->addMessage('Licence number generated');
