@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefused;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefusedBySn;
 
 /**
  * Refuse BusReg By Short Notice
@@ -38,18 +38,21 @@ final class RefuseBusRegByShortNotice extends AbstractCommandHandler
 
         if ($busReg->isFromEbsr()) {
             $ebsrId = $busReg->getEbsrSubmissions()->first()->getId();
-            $result->merge($this->handleSideEffect($this->createEbsrRefusedCmd($ebsrId)));
+            $result->merge($this->handleSideEffect($this->createEbsrRefusedBySnCmd($ebsrId)));
         }
 
         return $result;
     }
 
     /**
-     * @param int $ebsrId
-     * @return SendEbsrRefused
+     * Create command to send confirmation of short notice refusal
+     *
+     * @param int $ebsrId ebsr submission id
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Queue\Create
      */
-    private function createEbsrRefusedCmd($ebsrId)
+    private function createEbsrRefusedBySnCmd($ebsrId)
     {
-        return $this->emailQueue(SendEbsrRefused::class, ['id' => $ebsrId], $ebsrId);
+        return $this->emailQueue(SendEbsrRefusedBySn::class, ['id' => $ebsrId], $ebsrId);
     }
 }
