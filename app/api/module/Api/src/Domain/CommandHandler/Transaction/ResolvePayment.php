@@ -81,6 +81,7 @@ final class ResolvePayment extends AbstractCommandHandler implements
             case Cpms::PAYMENT_FAILURE:
             case Cpms::PAYMENT_GATEWAY_ERROR:
             case Cpms::PAYMENT_SYSTEM_ERROR:
+            case Cpms::PAYMENT_ABANDONED:
                 // resolve any abandoned payments as 'failed'
                 $transaction->setStatus($this->getRepo()->getRefdataReference(Transaction::STATUS_FAILED));
                 break;
