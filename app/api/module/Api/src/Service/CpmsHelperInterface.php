@@ -32,6 +32,7 @@ interface CpmsHelperInterface
     const PAYMENT_CARD_PAYMENT_CONFIRMED = 827;
     const PAYMENT_SYSTEM_ERROR = 828;
     const PAYMENT_ACTIVELY_BEING_TAKEN = 830;
+    const PAYMENT_ABANDONED = 834;
 
     const RESPONSE_SUCCESS = '000';
 
