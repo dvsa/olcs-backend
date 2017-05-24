@@ -38,7 +38,9 @@ class GetListTest extends QueryHandlerTestCase
                 'application' => [
                     'status',
                     'licenceType',
-                    'licence'
+                    'licence' => [
+                        'organisation'
+                    ]
                 ],
                 'transportManager' => [
                     'homeCd' => [

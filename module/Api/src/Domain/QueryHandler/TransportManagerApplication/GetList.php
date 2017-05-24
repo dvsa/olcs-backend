@@ -15,6 +15,13 @@ class GetList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'TransportManagerApplication';
 
+    /**
+     * handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return array
+     */
     public function handleQuery(QueryInterface $query)
     {
         /* @var $query \Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetList */
@@ -29,7 +36,9 @@ class GetList extends AbstractQueryHandler
                     'application' => [
                         'status',
                         'licenceType',
-                        'licence'
+                        'licence' => [
+                            'organisation'
+                        ]
                     ],
                     'transportManager' => [
                         'homeCd' => [
