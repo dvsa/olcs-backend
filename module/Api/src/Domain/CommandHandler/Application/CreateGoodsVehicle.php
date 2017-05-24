@@ -1,21 +1,14 @@
 <?php
 
-/**
- * Create Goods Vehicle
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
+use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsVehicle as VehicleCmd;
 
 /**
  * Create Goods Vehicle
@@ -26,18 +19,21 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements Transac
 {
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['LicenceVehicle'];
-
+    /**
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Application\CreateGoodsVehicle $command Command
+     *
+     * @return Result
+     * @throws ValidationException
+     */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
-        /** @var ApplicationEntity $application */
+        /** @var \Dvsa\Olcs\Api\Entity\Application\Application $application */
         $application = $this->getRepo()->fetchUsingId($command);
 
+        // check, have we enough vehicles
         $remainingSpaces = $application->getRemainingSpaces();
-
-        // If we already have enough vehicles
         if ($remainingSpaces < 1) {
             throw new ValidationException(
                 [
@@ -52,16 +48,23 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements Transac
         $dtoData['licence'] = $application->getLicence()->getId();
         $dtoData['applicationId'] = $application->getId();
 
-        $vehicleResult = $this->handleSideEffect(VehicleCmd::create($dtoData));
-        $result->merge($vehicleResult);
+        $this->result->merge(
+            $this->handleSideEffect(
+                DomainCmd\Vehicle\CreateGoodsVehicle::create($dtoData)
+            )
+        );
 
-        $licenceVehicle = $this->getRepo('LicenceVehicle')->fetchById($vehicleResult->getId('licenceVehicle'));
-        $licenceVehicle->setApplication($application);
-        $this->getRepo('LicenceVehicle')->save($licenceVehicle);
+        $this->result->merge(
+            $this->handleSideEffect(
+                DomainCmd\Application\UpdateApplicationCompletion::create(
+                    [
+                        'id' => $command->getId(),
+                        'section' => 'vehicles',
+                    ]
+                )
+            )
+        );
 
-        $dtoData = ['id' => $command->getId(), 'section' => 'vehicles'];
-        $result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($dtoData)));
-
-        return $result;
+        return $this->result;
     }
 }
