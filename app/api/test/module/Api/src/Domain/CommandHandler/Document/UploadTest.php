@@ -377,4 +377,93 @@ class UploadTest extends CommandHandlerTestCase
 
         $this->sut->handleCommand($command);
     }
+
+    public function testHandleCommandWithAdditionalCopy()
+    {
+        $data = [
+            'content' => base64_encode(self::BODY),
+            'filename' => 'fileName.pdf',
+            'category' => 11,
+            'subCategory' => 22,
+            'isExternal' => 1,
+            'description' => 'description',
+            'user' => self::USER_ID,
+            'shouldUploadOnly' => false,
+            'transportManager' => 444,
+            'licence' => 111,
+            'application' => 222,
+            'additionalCopy' => true,
+            'additionalEntities' => ['application', 'licence']
+        ];
+
+        $command = TransferCmd\Document\Upload::create($data);
+
+        $this->mockedSmServices['DocumentNamingService']
+            ->shouldReceive('generateName')
+            ->twice()
+            ->with(
+                'description',
+                'pdf',
+                $this->categoryReferences[11],
+                $this->subCategoryReferences[22],
+                $this->references[Entity\Tm\TransportManager::class][444]
+            )
+            ->andReturn(self::IDENTIFIER);
+
+        $this->mockUploader
+            ->shouldReceive('upload')
+            ->andReturnUsing(
+                function ($fileName, DsFile $file) {
+                    static::assertSame(self::IDENTIFIER, $fileName);
+                    static::assertEquals(self::BODY, $file->getContent());
+
+                    $file->setIdentifier(self::IDENTIFIER);
+
+                    return $file;
+                }
+            )
+            ->twice();
+
+        //  mock document creation
+        $result = new Result();
+        $result->addMessage('CreateDocumentSpecific');
+        $data = [
+            'identifier' => self::IDENTIFIER,
+            'size' => strlen(self::BODY),
+            'filename' => self::IDENTIFIER,
+            'description' => 'description',
+            'isExternal' => 1,
+            'user' => self::USER_ID,
+            'transportManager' => 444
+        ];
+        $data1 = [
+            'identifier' => self::IDENTIFIER,
+            'size' => strlen(self::BODY),
+            'filename' => self::IDENTIFIER,
+            'description' => 'description',
+            'isExternal' => 1,
+            'user' => self::USER_ID,
+            'application' => 222,
+            'licence' => 111,
+        ];
+        $this->expectedSideEffect(DomainCmd\Document\CreateDocumentSpecific::class, $data, $result);
+        $this->expectedSideEffect(DomainCmd\Document\CreateDocumentSpecific::class, $data1, $result);
+
+        //  call
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'identifier' => self::IDENTIFIER,
+            ],
+            'messages' => [
+                0 => 'File uploaded',
+                1 => 'File uploaded',
+                2 => 'CreateDocumentSpecific',
+                3 => 'CreateDocumentSpecific'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
 }
