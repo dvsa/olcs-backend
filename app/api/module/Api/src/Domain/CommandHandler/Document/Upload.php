@@ -16,7 +16,6 @@ use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Utils\Helper\FileHelper;
-use Olcs\Logging\Log\Logger;
 
 /**
  * Upload
@@ -46,9 +45,9 @@ final class Upload extends AbstractCommandHandler implements
      */
     public function handleCommand(CommandInterface $command)
     {
-        $additionalCommand = null;
+        $additionalCopy = $command->getAdditionalCopy();
 
-        if ($command->getAdditionalCopy()) {
+        if (!empty($additionalCopy)) {
             $additionalCommand = $this->getAdditionalCommand($command);
         }
 
@@ -56,14 +55,14 @@ final class Upload extends AbstractCommandHandler implements
 
         $file = $this->uploadFile($command, $identifier);
 
-        if ($additionalCommand !== null) {
+        if (!empty($additionalCopy)) {
             $additionalIdentifier = $this->determineIdentifier($command);
             $additionalFile = $this->uploadFile($additionalCommand, $additionalIdentifier);
         }
 
         if (!$command->getShouldUploadOnly()) {
             $this->result->merge($this->createDocument($command, $file, $identifier));
-            if ($additionalCommand !== null) {
+            if (!empty($additionalCopy)) {
                 $this->result->merge(
                     $this->createDocument($additionalCommand, $additionalFile, $additionalIdentifier)
                 );
