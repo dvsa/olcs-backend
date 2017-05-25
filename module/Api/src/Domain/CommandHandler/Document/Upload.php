@@ -45,12 +45,28 @@ final class Upload extends AbstractCommandHandler implements
      */
     public function handleCommand(CommandInterface $command)
     {
+        $additionalCopy = $command->getAdditionalCopy();
+
+        if (!empty($additionalCopy)) {
+            $additionalCommand = $this->getAdditionalCommand($command);
+        }
+
         $identifier = $this->determineIdentifier($command);
 
         $file = $this->uploadFile($command, $identifier);
 
+        if (!empty($additionalCopy)) {
+            $additionalIdentifier = $this->determineIdentifier($command);
+            $additionalFile = $this->uploadFile($additionalCommand, $additionalIdentifier);
+        }
+
         if (!$command->getShouldUploadOnly()) {
             $this->result->merge($this->createDocument($command, $file, $identifier));
+            if (!empty($additionalCopy)) {
+                $this->result->merge(
+                    $this->createDocument($additionalCommand, $additionalFile, $additionalIdentifier)
+                );
+            }
         }
 
         return $this->result;
@@ -181,5 +197,39 @@ final class Upload extends AbstractCommandHandler implements
         array_pop($parts);
 
         return implode($parts);
+    }
+
+    /**
+     * Get additional command
+     *
+     * @param TransferCmd\Document\Upload $command Upload command
+     *
+     * @return TransferCmd\Document\Upload
+     */
+    protected function getAdditionalCommand($command)
+    {
+        // sometimes we need to upload the file twice and to attach it
+        // to different entities, here we are preparing a new command
+        // which should be exactly the same as original, apart from the target entities
+
+        // prepare new command
+        $additionalCommand = clone $command;
+
+        // clear all target entities for the new command
+        $propertiesToClear = ['application','licence','transportManager','case','busReg'];
+        foreach ($propertiesToClear as $property) {
+            $method = 'set' . ucfirst($property);
+            $additionalCommand->$method(null);
+        }
+
+        // copy necessary target entities to the new command and clear them off from original command
+        $additionalEntities = $command->getAdditionalEntities();
+        foreach ($additionalEntities as $additionalEntity) {
+            $getMethod = 'get' . ucfirst($additionalEntity);
+            $setMethod = 'set' . ucfirst($additionalEntity);
+            $additionalCommand->$setMethod($command->$getMethod());
+            $command->$setMethod(null);
+        }
+        return $additionalCommand;
     }
 }
