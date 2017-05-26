@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Abstract Readonly Repository
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -434,6 +429,14 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         return $this->getReference(SubCategory::class, $id);
     }
 
+    /**
+     * Get Reference
+     *
+     * @param string     $entityClass Entity class FQN
+     * @param string|int $id          id
+     *
+     * @return null|$entityClass
+     */
     public function getReference($entityClass, $id)
     {
         return !empty($id) ? $this->getEntityManager()->getReference($entityClass, $id) : null;

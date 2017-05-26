@@ -10,6 +10,8 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RequiresConfirmationException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -26,37 +28,52 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
     use AuthAwareTrait;
 
     protected $repoServiceName = 'Licence';
+    protected $extraRepos = ['Application', 'Vehicle', 'LicenceVehicle'];
 
-    protected $extraRepos = ['Vehicle', 'LicenceVehicle'];
+    /** @var Repository\Licence */
+    private $repo;
+    /** @var Repository\Vehicle  */
+    private $vehicleRepo;
+    /** @var Repository\LicenceVehicle */
+    private $licVehicleRepo;
 
     /**
-     * @param Cmd $command
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsVehicle $command Command
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
+        $this->repo = $this->getRepo('Licence');
+        $this->vehicleRepo = $this->getRepo('Vehicle');
+        $this->licVehicleRepo = $this->getRepo('LicenceVehicle');
+
+        $applicationId = $command->getApplicationId();
+        $vrm = $command->getVrm();
 
         /** @var LicenceEntity $licence */
-        $licence = $this->getRepo()->fetchById($command->getLicence());
+        $licence = $this->repo->fetchById($command->getLicence());
 
-        $this->checkIfVrmIsSection26($command->getVrm());
-        $applicationId = $command->getApplicationId();
+        $this->checkIfVrmIsSection26($vrm);
+
+        //  check if vehicle already assigned to licence or application
         if ($applicationId !== null) {
-            $this->checkIfVrmAlreadyExistsOnApplication($licence, $command->getVrm(), $applicationId);
+            $this->checkIfVrmAlreadyExistsOnApplication($licence, $vrm, $applicationId);
         } else {
-            $this->checkIfVrmAlreadyExistsOnLicence($licence, $command->getVrm());
+            $this->checkIfVrmAlreadyExistsOnLicence($licence, $vrm);
         }
 
+        //  process duplicates
         $duplicates = [];
 
         if ($command->getIdentifyDuplicates() === true) {
-            $duplicates = $this->getRepo('LicenceVehicle')->fetchDuplicates($licence, $command->getVrm(), false);
+            $duplicates = $this->licVehicleRepo->fetchDuplicates($licence, $vrm, false);
         }
 
         // If we haven't confirmed, then we need to check if we need to confirm
         if ($command->getConfirm() !== true) {
-
             if ($command->getIdentifyDuplicates() === true) {
                 $this->identifyDuplicates($duplicates);
             } else {
@@ -68,24 +85,33 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
             /** @var LicenceVehicle $duplicate */
             foreach ($duplicates as $duplicate) {
                 $duplicate->updateDuplicateMark();
-                $this->getRepo('LicenceVehicle')->save($duplicate);
+                $this->licVehicleRepo->save($duplicate);
             }
         }
 
-        $existedVehicle = $this->getRepo('Vehicle')->fetchByVrm($command->getVrm());
+        //  create/update vehicle
+        $existedVehicle = $this->vehicleRepo->fetchByVrm($vrm);
         if (count($existedVehicle)) {
             $vehicle = $existedVehicle[0];
         } else {
-            $vehicle = new Vehicle();
-            $vehicle->setVrm($command->getVrm());
+            $vehicle = new Entity\Vehicle\Vehicle();
+            $vehicle->setVrm($vrm);
         }
         $vehicle->setPlatedWeight($command->getPlatedWeight());
-        $this->getRepo('Vehicle')->save($vehicle);
+        $this->vehicleRepo->save($vehicle);
 
-        $result->addId('vehicle', $vehicle->getId());
-        $result->addMessage('Vehicle created');
+        $this->result
+            ->addId('vehicle', $vehicle->getId())
+            ->addMessage('Vehicle created');
 
+        //  create Licence Vehicle
         $licenceVehicle = new LicenceVehicle($licence, $vehicle);
+        if ($applicationId !== null) {
+            $licenceVehicle->setApplication(
+                $this->repo->getReference(Entity\Application\Application::class, $applicationId)
+            );
+        }
+
         if ($command->getSpecifiedDate() !== null) {
             $licenceVehicle->setSpecifiedDate(new \DateTime($command->getSpecifiedDate()));
         }
@@ -93,20 +119,27 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
             $licenceVehicle->setReceivedDate(new \DateTime($command->getReceivedDate()));
         }
 
-        $this->getRepo('LicenceVehicle')->save($licenceVehicle);
+        $this->licVehicleRepo->save($licenceVehicle);
 
-        $result->addId('licenceVehicle', $licenceVehicle->getId());
-        $result->addMessage('Licence Vehicle created');
+        $this->result
+            ->addId('licenceVehicle', $licenceVehicle->getId())
+            ->addMessage('Licence Vehicle created');
 
-        return $result;
+        return $this->result;
     }
 
     /**
      * Check if the vrm exists on any other licences
+     *
+     * @param LicenceEntity $licence Licence
+     * @param Cmd           $command Command
+     *
+     * @return void
+     * @throws RequiresConfirmationException
      */
-    protected function checkForConfirmation(LicenceEntity $licence, Cmd $command)
+    private function checkForConfirmation(LicenceEntity $licence, Cmd $command)
     {
-        $licences = $this->getRepo()->fetchByVrm($command->getVrm(), true);
+        $licences = $this->repo->fetchByVrm($command->getVrm(), true);
 
         if (empty($licences)) {
             return;
@@ -142,9 +175,14 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
     }
 
     /**
-     * Check if the vrm exists on any other licences
+     * Get list of licence/applications numbers to which vehicle already assigned
+     *
+     * @param array $duplicates List of Licence Vehicle Entities
+     *
+     * @return void
+     * @throws RequiresConfirmationException
      */
-    protected function identifyDuplicates($duplicates)
+    private function identifyDuplicates($duplicates)
     {
         if (empty($duplicates)) {
             return;
@@ -167,7 +205,14 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
         throw new RequiresConfirmationException($message, Vehicle::ERROR_VRM_OTHER_LICENCE);
     }
 
-    protected function getLicNo(LicenceEntity $licence)
+    /**
+     * Define Licence/Application number
+     *
+     * @param LicenceEntity $licence Licence Entity
+     *
+     * @return string
+     */
+    private function getLicNo(LicenceEntity $licence)
     {
         $licNo = $licence->getLicNo();
 
@@ -190,7 +235,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
      * @return void
      * @throws ValidationException
      */
-    protected function checkIfVrmAlreadyExistsOnLicence(LicenceEntity $licence, $vrm)
+    private function checkIfVrmAlreadyExistsOnLicence(LicenceEntity $licence, $vrm)
     {
         $currentLicenceVehicles = $licence->getActiveVehicles(true);
 
@@ -222,7 +267,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
      * @return void
      * @throws ValidationException
      */
-    protected function checkIfVrmAlreadyExistsOnApplication(LicenceEntity $licence, $vrm, $applicationId)
+    private function checkIfVrmAlreadyExistsOnApplication(LicenceEntity $licence, $vrm, $applicationId)
     {
         $currentLicenceVehicles = $licence->getActiveVehicles(false);
 
@@ -255,12 +300,14 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
     /**
      * Check if a vehicle has a section 26
      *
-     * @param string $vrm
+     * @param string $vrm Vehicle Registration number
+     *
+     * @return void
      * @throws ValidationException
      */
-    protected function checkIfVrmIsSection26($vrm)
+    private function checkIfVrmIsSection26($vrm)
     {
-        $vehicles = $this->getRepo('Vehicle')->fetchByVrm($vrm);
+        $vehicles = $this->vehicleRepo->fetchByVrm($vrm);
         /* @var $vehicle Vehicle */
         foreach ($vehicles as $vehicle) {
             if ($vehicle->getSection26()) {
