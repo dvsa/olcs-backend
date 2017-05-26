@@ -1,248 +1,251 @@
 <?php
 
-/**
- * GenerateOrganisatioNnameTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Organisation;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\GrantGoods;
-use Dvsa\Olcs\Api\Domain\Command\Application\GrantPsv;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Application\GenerateName as CommandHandler;
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\GenerateName;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
-use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant;
-use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Application\GenerateOrganisationName as Cmd;
+use Mockery as m;
 
 /**
- * Grant Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\GenerateName
  */
 class GenerateNameTest extends CommandHandlerTestCase
 {
+    const PERSON_ID = 8001;
+    const APP_ID = 9001;
+    const LIC_ID = 7001;
+
+    /** @var  GenerateName */
+    protected $sut;
+
+    /** @var  m\MockInterface */
+    private $mockAppRepo;
+    /** @var  m\MockInterface */
+    private $mockLicRepo;
+    /** @var  Repository\Organisation | m\MockInterface */
+    private $mockOrgRepo;
+
+    /** @var  Entity\Organisation\Organisation | m\MockInterface */
+    private $mockOrg;
+    /** @var  Entity\Licence\Licence | m\MockInterface */
+    private $mockLic;
+    /** @var  Entity\Application\Application | m\MockInterface */
+    private $mockApp;
+
     public function setUp()
     {
-        $this->sut = new CommandHandler();
-        $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
-        $this->mockRepo('Organisation', \Dvsa\Olcs\Api\Domain\Repository\Organisation::class);
+        $this->sut = new GenerateName();
+
+        //  mock Entity
+        $this->mockOrg = m::mock(Entity\Organisation\Organisation::class)->makePartial();
+
+        $this->mockLic = m::mock(Entity\Licence\Licence::class)->makePartial();
+        $this->mockLic
+            ->setId(self::LIC_ID)
+            ->setOrganisation($this->mockOrg);
+
+        $this->mockApp = m::mock(Entity\Application\Application::class)->makePartial();
+        $this->mockApp
+            ->setId(self::APP_ID)
+            ->setLicence($this->mockLic);
+
+        //  mock Repos
+        $this->mockAppRepo = $this->mockRepo('Application', Repository\Application::class);
+        $this->mockAppRepo->shouldReceive('fetchById')->with(self::APP_ID)->andReturn($this->mockApp);
+
+        $this->mockLicRepo = $this->mockRepo('Licence', Repository\Licence::class);
+        $this->mockLicRepo->shouldReceive('fetchById')->with(self::LIC_ID)->andReturn($this->mockLic);
+
+        $this->mockOrgRepo = $this->mockRepo('Organisation', Repository\Organisation::class);
 
         parent::setUp();
     }
 
     protected function initReferences()
     {
-        $this->refData = ['org_t_llp', 'org_t_st', 'org_t_p', 'org_t_rc'];
-
-        $this->references = [
-            \Dvsa\Olcs\Api\Entity\Person\Person::class => [
-                234 => m::mock(\Dvsa\Olcs\Api\Entity\Person\Person::class)
-            ]
+        $this->refData = [
+            Entity\Organisation\Organisation::ORG_TYPE_REGISTERED_COMPANY,
+            Entity\Organisation\Organisation::ORG_TYPE_LLP,
+            Entity\Organisation\Organisation::ORG_TYPE_PARTNERSHIP,
+            Entity\Organisation\Organisation::ORG_TYPE_SOLE_TRADER,
         ];
 
         parent::initReferences();
     }
 
-    public function testHandleCommandVaritaion()
+    public function testGenerateNameNull()
     {
-        $command = Cmd::create(['id' => 234]);
+        $cmd = TransferCmd\Organisation\GenerateName::create(['licence' => self::LIC_ID]);
 
-        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
-        $licence = new Licence($organisation, new \Dvsa\Olcs\Api\Entity\System\RefData());
-        $application = new ApplicationEntity($licence, new \Dvsa\Olcs\Api\Entity\System\RefData(), 1);
+        $this->mockOrg
+            ->setType($this->refData[Entity\Organisation\Organisation::ORG_TYPE_SOLE_TRADER])
+            ->setOrganisationPersons(new ArrayCollection());
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
+        $this->mockOrgRepo->shouldReceive('save')->never();
 
-        $this->setExpectedException(ValidationException::class);
+        $actual = $this->sut->handleCommand($cmd);
 
-        $this->sut->handleCommand($command);
+        static::assertEquals(['Unable to generate name'], $actual->getMessages());
     }
 
-
-    public function testHandleCommandLlp()
+    /**
+     * @dataProvider dpTestGenerateName
+     */
+    public function testGenerateName($type, $orgPersons, $expect)
     {
-        $command = Cmd::create(['id' => 234]);
+        $cmd = TransferCmd\Organisation\GenerateName::create(['licence' => self::LIC_ID]);
 
-        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
-        $organisation->setType($this->refData['org_t_llp']);
-        $licence = new Licence($organisation, new \Dvsa\Olcs\Api\Entity\System\RefData());
-        $application = new ApplicationEntity($licence, new \Dvsa\Olcs\Api\Entity\System\RefData(), 0);
+        $this->mockOrg
+            ->setType($this->refData[$type])
+            ->setOrganisationPersons(new ArrayCollection($orgPersons));
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
+        $this->mockOrgRepo
+            ->shouldReceive('save')
+            ->andReturnUsing(
+                function (Entity\Organisation\Organisation $org) use ($expect) {
+                    static::assertEquals($expect, $org->getName());
+                }
+            );
 
-        $this->setExpectedException(ValidationException::class);
-
-        $this->sut->handleCommand($command);
+        $this->sut->handleCommand($cmd);
     }
 
-    public function testHandleCommandRc()
+    public function dpTestGenerateName()
     {
-        $command = Cmd::create(['id' => 234]);
-
-        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
-        $organisation->setType($this->refData['org_t_rc']);
-        $licence = new Licence($organisation, new \Dvsa\Olcs\Api\Entity\System\RefData());
-        $application = new ApplicationEntity($licence, new \Dvsa\Olcs\Api\Entity\System\RefData(), 0);
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
-
-        $this->setExpectedException(ValidationException::class);
-
-        $this->sut->handleCommand($command);
+        return [
+            'ST' => [
+                'type' => Entity\Organisation\Organisation::ORG_TYPE_SOLE_TRADER,
+                'orgPersons' => [
+                    $this->getMockOrgPerson('unit_Fist', 'unit_Last'),
+                ],
+                'expect' => 'unit_Fist unit_Last',
+            ],
+            'Partner x 1' => [
+                'type' => Entity\Organisation\Organisation::ORG_TYPE_PARTNERSHIP,
+                'orgPersons' => [
+                    $this->getMockOrgPerson('unit_Fist', 'unit_Last'),
+                ],
+                'expect' => 'unit_Fist unit_Last',
+            ],
+            'Partner x 2' => [
+                'type' => Entity\Organisation\Organisation::ORG_TYPE_PARTNERSHIP,
+                'orgPersons' => [
+                    $this->getMockOrgPerson('unit_Fist', 'unit_Last'),
+                    $this->getMockOrgPerson('unit_Fist2', 'unit_Last2'),
+                ],
+                'expect' => 'unit_Fist unit_Last & unit_Fist2 unit_Last2',
+            ],
+            'Partner > 2' => [
+                'type' => Entity\Organisation\Organisation::ORG_TYPE_PARTNERSHIP,
+                'orgPersons' => [
+                    $this->getMockOrgPerson('unit_Fist', 'unit_Last'),
+                    $this->getMockOrgPerson('unit_Fist2', 'unit_Last2'),
+                    $this->getMockOrgPerson('unit_Fist3', 'unit_Last3'),
+                ],
+                'expect' => 'unit_Fist unit_Last & Partners',
+            ],
+        ];
     }
 
-    public function testHandleCommandStNoPerson()
+    private function getMockOrgPerson($firstName, $lastName)
     {
-        $command = Cmd::create(['id' => 234]);
+        $mockPerson = new Entity\Person\Person();
+        $mockPerson
+            ->setForename($firstName)
+            ->setFamilyName($lastName);
 
-        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
-        $organisation->setType($this->refData['org_t_st']);
-        $licence = new Licence($organisation, new \Dvsa\Olcs\Api\Entity\System\RefData());
-        $application = new ApplicationEntity($licence, new \Dvsa\Olcs\Api\Entity\System\RefData(), 0);
+        $mockRel = new Entity\Organisation\OrganisationPerson();
+        $mockRel->setPerson($mockPerson);
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
-
-        $response = $this->sut->handleCommand($command);
-
-        $this->assertSame(['Unable to generate name'], $response->getMessages());
+        return $mockRel;
     }
 
-    public function testHandleCommandSt()
+    /**
+     * @dataProvider dpTestHandleOk
+     */
+    public function testHandleOk($cmdData)
     {
-        $command = Cmd::create(['id' => 234]);
+        $cmd = TransferCmd\Organisation\GenerateName::create($cmdData);
 
-        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
-        $organisation->setType($this->refData['org_t_st']);
-        $licence = new Licence($organisation, new \Dvsa\Olcs\Api\Entity\System\RefData());
-        $application = new ApplicationEntity($licence, new \Dvsa\Olcs\Api\Entity\System\RefData(), 0);
-        $person = new \Dvsa\Olcs\Api\Entity\Person\Person();
-        $person->setForename('Fred');
-        $person->setFamilyName('Smith');
-        $organisationPerson = new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson();
-        $organisationPerson->setPerson($person);
-        $organisation->getOrganisationPersons()->add($organisationPerson);
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
-
-        $this->repoMap['Organisation']->shouldReceive('save')->once()->andReturnUsing(
-            function (\Dvsa\Olcs\Api\Entity\Organisation\Organisation $savedOrganisation) {
-                $this->assertSame('Fred Smith', $savedOrganisation->getName());
-            }
+        $orgPersons = new ArrayCollection(
+            [
+                $this->getMockOrgPerson('unit_First', 'unit_Last'),
+            ]
         );
+        $this->mockOrg
+            ->setType($this->refData[Entity\Organisation\Organisation::ORG_TYPE_SOLE_TRADER])
+            ->setOrganisationPersons($orgPersons);
 
-        $response = $this->sut->handleCommand($command);
+        $this->mockOrgRepo
+            ->shouldReceive('save')
+            ->andReturnUsing(
+                function (Entity\Organisation\Organisation $org) {
+                    static::assertEquals('unit_First unit_Last', $org->getName());
+                }
+            );
 
-        $this->assertSame(['Name succesfully generated'], $response->getMessages());
+        $actual = $this->sut->handleCommand($cmd);
+
+        static::assertEquals(['Name succesfully generated'], $actual->getMessages());
     }
 
-    public function testHandleCommandPartnershipNoPeople()
+    public function dpTestHandleOk()
     {
-        $command = Cmd::create(['id' => 234]);
-
-        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
-        $organisation->setType($this->refData['org_t_p']);
-        $licence = new Licence($organisation, new \Dvsa\Olcs\Api\Entity\System\RefData());
-        $application = new ApplicationEntity($licence, new \Dvsa\Olcs\Api\Entity\System\RefData(), 0);
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
-
-        $response = $this->sut->handleCommand($command);
-
-        $this->assertSame(['Unable to generate name'], $response->getMessages());
+        return [
+            [
+                'cmdData' => ['application' => self::APP_ID],
+            ],
+            [
+                'cmdData' => ['licence' => self::LIC_ID],
+            ],
+        ];
     }
 
-    public function testHandleCommandPartnershipOnePerson()
+    public function testHandleFailBadData()
     {
-        $command = Cmd::create(['id' => 234]);
+        $this->setExpectedException(BadRequestException::class, GenerateName::ERR_INVALID_DATA);
 
-        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
-        $organisation->setType($this->refData['org_t_p']);
-        $licence = new Licence($organisation, new \Dvsa\Olcs\Api\Entity\System\RefData());
-        $application = new ApplicationEntity($licence, new \Dvsa\Olcs\Api\Entity\System\RefData(), 0);
-        $person = new \Dvsa\Olcs\Api\Entity\Person\Person();
-        $person->setForename('Fred');
-        $person->setFamilyName('Smith');
-        $organisationPerson = new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson();
-        $organisationPerson->setPerson($person);
-        $organisation->getOrganisationPersons()->add($organisationPerson);
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
-
-        $this->repoMap['Organisation']->shouldReceive('save')->once()->andReturnUsing(
-            function (\Dvsa\Olcs\Api\Entity\Organisation\Organisation $savedOrganisation) {
-                $this->assertSame('Fred Smith', $savedOrganisation->getName());
-            }
+        $this->sut->handleCommand(
+            TransferCmd\Organisation\GenerateName::create([])
         );
-
-        $response = $this->sut->handleCommand($command);
-
-        $this->assertSame(['Name succesfully generated'], $response->getMessages());
     }
 
-    public function testHandleCommandPartnershipTwoPeople()
+    public function testHandleFailAppIsVariation()
     {
-        $command = Cmd::create(['id' => 234]);
+        $this->setExpectedException(ValidationException::class, GenerateName::ERR_ONLY_NEW_APP);
 
-        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
-        $organisation->setType($this->refData['org_t_p']);
-        $licence = new Licence($organisation, new \Dvsa\Olcs\Api\Entity\System\RefData());
-        $application = new ApplicationEntity($licence, new \Dvsa\Olcs\Api\Entity\System\RefData(), 0);
+        $this->mockApp->setIsVariation(true);
 
-        $person = (new \Dvsa\Olcs\Api\Entity\Person\Person())->setForename('Fred')->setFamilyName('Smith');
-        $organisationPerson = (new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson())->setPerson($person);
-        $organisation->getOrganisationPersons()->add($organisationPerson);
-        $person2 = (new \Dvsa\Olcs\Api\Entity\Person\Person())->setForename('Jon')->setFamilyName('Jones');
-        $organisationPerson2 = (new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson())->setPerson($person2);
-        $organisation->getOrganisationPersons()->add($organisationPerson2);
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
-
-        $this->repoMap['Organisation']->shouldReceive('save')->once()->andReturnUsing(
-            function (\Dvsa\Olcs\Api\Entity\Organisation\Organisation $savedOrganisation) {
-                $this->assertSame('Fred Smith & Jon Jones', $savedOrganisation->getName());
-            }
+        $this->sut->handleCommand(
+            TransferCmd\Organisation\GenerateName::create(['application' => self::APP_ID])
         );
-
-        $response = $this->sut->handleCommand($command);
-
-        $this->assertSame(['Name succesfully generated'], $response->getMessages());
     }
 
-    public function testHandleCommandPartnershipThreePeople()
+    public function testHandleFailOrgInvalid()
     {
-        $command = Cmd::create(['id' => 234]);
+        $this->setExpectedException(ValidationException::class, GenerateName::ERR_ORG_INVALID);
 
-        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
-        $organisation->setType($this->refData['org_t_p']);
-        $licence = new Licence($organisation, new \Dvsa\Olcs\Api\Entity\System\RefData());
-        $application = new ApplicationEntity($licence, new \Dvsa\Olcs\Api\Entity\System\RefData(), 0);
+        $this->mockLic->setOrganisation(null);
 
-        $person = (new \Dvsa\Olcs\Api\Entity\Person\Person())->setForename('Fred')->setFamilyName('Smith');
-        $organisationPerson = (new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson())->setPerson($person);
-        $organisation->getOrganisationPersons()->add($organisationPerson);
-        $person2 = (new \Dvsa\Olcs\Api\Entity\Person\Person())->setForename('Jon')->setFamilyName('Jones');
-        $organisationPerson2 = (new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson())->setPerson($person2);
-        $organisation->getOrganisationPersons()->add($organisationPerson2);
-        $person3 = (new \Dvsa\Olcs\Api\Entity\Person\Person())->setForename('Mary')->setFamilyName('Moon');
-        $organisationPerson3 = (new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson())->setPerson($person3);
-        $organisation->getOrganisationPersons()->add($organisationPerson3);
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
-
-        $this->repoMap['Organisation']->shouldReceive('save')->once()->andReturnUsing(
-            function (\Dvsa\Olcs\Api\Entity\Organisation\Organisation $savedOrganisation) {
-                $this->assertSame('Fred Smith & Partners', $savedOrganisation->getName());
-            }
+        $this->sut->handleCommand(
+            TransferCmd\Organisation\GenerateName::create(['licence' => self::LIC_ID])
         );
+    }
 
-        $response = $this->sut->handleCommand($command);
+    public function testHandleFailNotSoleTraiderOrPartnership()
+    {
+        $this->setExpectedException(ValidationException::class, GenerateName::ERR_ORG_TYPE_INVALID);
 
-        $this->assertSame(['Name succesfully generated'], $response->getMessages());
+        $this->mockOrg->setType($this->refData[Entity\Organisation\Organisation::ORG_TYPE_REGISTERED_COMPANY]);
+
+        $this->sut->handleCommand(
+            TransferCmd\Organisation\GenerateName::create(['licence' => self::LIC_ID])
+        );
     }
 }
