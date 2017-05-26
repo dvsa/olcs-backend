@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefusedBySn;
+use Dvsa\Olcs\Transfer\Command\Bus\RefuseBusRegByShortNotice as RefuseCmd;
 
 /**
  * Refuse BusReg By Short Notice
@@ -22,6 +23,13 @@ final class RefuseBusRegByShortNotice extends AbstractCommandHandler
 
     protected $repoServiceName = 'Bus';
 
+    /**
+     * handle command
+     *
+     * @param CommandInterface|RefuseCmd $command command to refuse the bus reg by short notice
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         /** @var BusRegEntity $busReg */
