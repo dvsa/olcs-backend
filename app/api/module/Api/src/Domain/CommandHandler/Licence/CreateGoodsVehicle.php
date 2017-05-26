@@ -1,21 +1,14 @@
 <?php
 
-/**
- * Create Goods Vehicle
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsVehicle as VehicleCmd;
 
 /**
  * Create Goods Vehicle
@@ -26,16 +19,21 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements Transac
 {
     protected $repoServiceName = 'Licence';
 
+    /**
+     * Handle Command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Licence\CreateGoodsVehicle $command Command
+     *
+     * @return Result
+     * @throws ValidationException
+     */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
-        /** @var LicenceEntity $licence */
+        /** @var \Dvsa\Olcs\Api\Entity\Licence\Licence $licence */
         $licence = $this->getRepo()->fetchUsingId($command);
 
+        // check, If we have enough vehicles
         $remainingSpaces = $licence->getRemainingSpaces();
-
-        // If we already have enough vehicles
         if ($remainingSpaces < 1) {
             throw new ValidationException(
                 [
@@ -46,6 +44,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements Transac
             );
         }
 
+        //  create vehicle
         $dtoData = $command->getArrayCopy();
         $dtoData['licence'] = $command->getId();
         if ($command->getSpecifiedDate() === null) {
@@ -53,15 +52,25 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements Transac
         }
         $dtoData['identifyDuplicates'] = true;
 
-        $vehicleResult = $this->handleSideEffect(VehicleCmd::create($dtoData));
-        $result->merge($vehicleResult);
+        $vehicleResult = $this->handleSideEffect(
+            DomainCmd\Vehicle\CreateGoodsVehicle::create($dtoData)
+        );
+        $this->result->merge($vehicleResult);
 
+        //  create discs
         $licenceVehicleId = $vehicleResult->getId('licenceVehicle');
 
-        $result->merge(
-            $this->handleSideEffect(CreateGoodsDiscs::create(['ids' => [$licenceVehicleId], 'isCopy' => 'N']))
+        $this->result->merge(
+            $this->handleSideEffect(
+                DomainCmd\Vehicle\CreateGoodsDiscs::create(
+                    [
+                        'ids' => [$licenceVehicleId],
+                        'isCopy' => 'N',
+                    ]
+                )
+            )
         );
 
-        return $result;
+        return $this->result;
     }
 }

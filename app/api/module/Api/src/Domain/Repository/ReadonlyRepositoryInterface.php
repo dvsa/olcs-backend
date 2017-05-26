@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Readonly Repository Interface
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
@@ -74,5 +69,13 @@ interface ReadonlyRepositoryInterface
      */
     public function getSubCategoryReference($id);
 
+    /**
+     * Get Reference
+     *
+     * @param string     $entityClass Entity class FQN
+     * @param string|int $id          id
+     *
+     * @return null|$entityClass
+     */
     public function getReference($entityClass, $id);
 }

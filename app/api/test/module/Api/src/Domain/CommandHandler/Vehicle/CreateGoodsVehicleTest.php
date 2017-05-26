@@ -3,48 +3,64 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Vehicle;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsVehicle as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\CreateGoodsVehicle;
 use Dvsa\Olcs\Api\Domain\Exception\RequiresConfirmationException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\CreateGoodsVehicle;
-use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
-use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Vehicle as VehicleRepo;
-use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsVehicle as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
- * Create Goods Vehicle Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\CreateGoodsVehicle
  */
 class CreateGoodsVehicleTest extends CommandHandlerTestCase
 {
+    const LIC_ID = 9001;
+    const APP_ID = 8001;
+    const VRM = 'UNIT VRM';
+
+    /** @var CreateGoodsVehicle  */
+    protected $sut;
+
+    /** @var  m\MockInterface */
+    private $mockAppRepo;
+
+    /** @var Entity\Application\Application | m\MockInterface */
+    private $mockApp;
+    /** @var Entity\Vehicle\Vehicle | m\MockInterface */
+    private $mockVehicle;
+    /** @var Entity\Licence\Licence | m\MockInterface */
+    private $mockLic;
+
     public function setUp()
     {
         $this->sut = new CreateGoodsVehicle();
-        $this->mockRepo('Licence', LicenceRepo::class);
-        $this->mockRepo('LicenceVehicle', LicenceVehicleRepo::class);
-        $this->mockRepo('Vehicle', VehicleRepo::class);
+
+        $this->mockRepo('Licence', Repository\Licence::class);
+        $this->mockRepo('LicenceVehicle', Repository\LicenceVehicle::class);
+        $this->mockRepo('Vehicle', Repository\Vehicle::class);
+        $this->mockAppRepo = $this->mockRepo('Application', Repository\Application::class);
 
         $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
 
+        $this->mockApp = m::mock(Entity\Application\Application::class)->makePartial();
+        $this->mockApp->setId(self::APP_ID);
+
+        $this->mockVehicle = m::mock(Entity\Vehicle\Vehicle::class)->makePartial();
+        $this->mockVehicle->setVrm(self::VRM);
+
+        $this->mockLic = m::mock(Entity\Licence\Licence::class)->makePartial();
+        $this->mockLic->setId(self::LIC_ID);
+
         parent::setUp();
-    }
-
-    protected function initReferences()
-    {
-        $this->refData = [];
-
-        $this->references = [];
-
-        parent::initReferences();
     }
 
     public function testHandleCommandAlreadyExists()
@@ -52,32 +68,24 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->setExpectedException(ValidationException::class);
 
         $data = [
-            'licence' => 111,
-            'vrm' => 'ABC123',
+            'licence' => self::LIC_ID,
+            'vrm' => self::VRM,
             'applicationId' => null
         ];
         $command = Cmd::create($data);
 
-        /** @var Vehicle $vehicle */
-        $vehicle = m::mock(Vehicle::class)->makePartial();
-        $vehicle->setVrm('ABC123');
-
         /** @var LicenceVehicle $licenceVehicle */
         $licenceVehicle = m::mock(LicenceVehicle::class)->makePartial();
-        $licenceVehicle->setVehicle($vehicle);
+        $licenceVehicle->setVehicle($this->mockVehicle);
 
         $activeVehicles = new ArrayCollection();
         $activeVehicles->add($licenceVehicle);
 
-        /** @var Licence $licence */
-        $licence = m::mock(Licence::class)->makePartial();
-        $licence->shouldReceive('getActiveVehicles')
-            ->andReturn($activeVehicles);
+        $this->mockLic->shouldReceive('getActiveVehicles')->andReturn($activeVehicles);
 
-        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([]);
-        $this->repoMap['Licence']->shouldReceive('fetchById')
-            ->with(111)
-            ->andReturn($licence);
+        $this->mockAppRepo->shouldReceive('fetchById')->never();
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with(self::VRM)->once()->andReturn([]);
+        $this->repoMap['Licence']->shouldReceive('fetchById')->with(self::LIC_ID)->andReturn($this->mockLic);
 
         $this->sut->handleCommand($command);
     }
@@ -85,20 +93,17 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
     public function testHandleCommandVrmSection26()
     {
         $data = [
-            'licence' => 111,
-            'vrm' => 'ABC123',
-            'applicationId' => null
+            'licence' => self::LIC_ID,
+            'vrm' => self::VRM,
+            'applicationId' => null,
         ];
         $command = Cmd::create($data);
 
-        /** @var Licence $licence */
-        $licence = m::mock(Licence::class)->makePartial();
+        $this->mockVehicle->setSection26(true);
 
-        $vehicle1 = new Vehicle();
-        $vehicle1->setSection26(true);
-
-        $this->repoMap['Licence']->shouldReceive('fetchById')->with(111)->once()->andReturn($licence);
-        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([$vehicle1]);
+        $this->repoMap['Licence']->shouldReceive('fetchById')->with(self::LIC_ID)->once()->andReturn($this->mockLic);
+        $this->repoMap['Vehicle']
+            ->shouldReceive('fetchByVrm')->with(self::VRM)->once()->andReturn([$this->mockVehicle]);
 
         try {
             $this->sut->handleCommand($command);
@@ -112,7 +117,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->setExpectedException(RequiresConfirmationException::class, 'Vehicle exists on other licence');
 
         $data = [
-            'licence' => 111,
+            'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'applicationId' => null
         ];
@@ -131,7 +136,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
-            ->with(111)
+            ->with(self::LIC_ID)
             ->andReturn($licence);
 
         $this->repoMap['Licence']->shouldReceive('fetchByVrm')
@@ -150,7 +155,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->setExpectedException(RequiresConfirmationException::class, 'Vehicle exists on other licence');
 
         $data = [
-            'licence' => 111,
+            'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'identifyDuplicates' => true,
             'applicationId' => null
@@ -165,7 +170,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             ->andReturn($activeVehicles);
 
         $this->repoMap['Licence']->shouldReceive('fetchById')
-            ->with(111)
+            ->with(self::LIC_ID)
             ->andReturn($licence);
 
         $licenceVehicle = m::mock(LicenceVehicle::class)->makePartial();
@@ -187,10 +192,10 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequiredConfirmationInternal()
     {
-        $this->setExpectedException(RequiresConfirmationException::class, '["OB12345678","APP-111"]');
+        $this->setExpectedException(RequiresConfirmationException::class, '["OB12345678","APP-' . self::LIC_ID . '"]');
 
         $data = [
-            'licence' => 111,
+            'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'applicationId' => null
         ];
@@ -198,7 +203,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         /** @var Application $application2 */
         $application2 = m::mock(Application::class)->makePartial();
-        $application2->setId(111);
+        $application2->setId(self::LIC_ID);
 
         $applications2 = new ArrayCollection();
         $applications2->add($application2);
@@ -231,7 +236,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
-            ->with(111)
+            ->with(self::LIC_ID)
             ->andReturn($licence);
 
         $this->repoMap['Licence']->shouldReceive('fetchByVrm')
@@ -247,10 +252,10 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequiredConfirmationInternalIdentifyDuplicates()
     {
-        $this->setExpectedException(RequiresConfirmationException::class, '["OB12345678","APP-111"]');
+        $this->setExpectedException(RequiresConfirmationException::class, '["OB12345678","APP-'.self::LIC_ID.'"]');
 
         $data = [
-            'licence' => 111,
+            'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'identifyDuplicates' => true,
             'applicationId' => null
@@ -259,7 +264,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         /** @var Application $application2 */
         $application2 = m::mock(Application::class)->makePartial();
-        $application2->setId(111);
+        $application2->setId(self::LIC_ID);
 
         $applications2 = new ArrayCollection();
         $applications2->add($application2);
@@ -290,7 +295,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
-            ->with(111)
+            ->with(self::LIC_ID)
             ->andReturn($licence);
 
         /** @var LicenceVehicle $licenceVehicle1 */
@@ -319,7 +324,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'licence' => 111,
+            'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'platedWeight' => 100,
             'specifiedDate' => '2015-01-01',
@@ -343,7 +348,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([$vehicle]);
         $this->repoMap['Vehicle']->shouldReceive('save')->with($vehicle)->once()->andReturn([$vehicle]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
-            ->with(111)
+            ->with(self::LIC_ID)
             ->andReturn($licence)
             ->shouldReceive('fetchByVrm')
             ->with('ABC123', true)
@@ -389,7 +394,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
     public function testHandleCommandIdentifyDuplicates()
     {
         $data = [
-            'licence' => 111,
+            'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'platedWeight' => 100,
             'specifiedDate' => '2015-01-01',
@@ -408,7 +413,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
-            ->with(111)
+            ->with(self::LIC_ID)
             ->andReturn($licence);
 
         /** @var Vehicle $savedVehicle */
@@ -467,7 +472,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
     public function testHandleCommandAlternative()
     {
         $data = [
-            'licence' => 111,
+            'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'platedWeight' => 100,
             'specifiedDate' => '2015-01-01',
@@ -487,7 +492,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
-            ->with(111)
+            ->with(self::LIC_ID)
             ->andReturn($licence)
             ->shouldReceive('fetchByVrm')
             ->with('ABC123', true)
@@ -546,7 +551,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
     public function testHandleCommandIdentifyDuplicatesAlternative()
     {
         $data = [
-            'licence' => 111,
+            'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'platedWeight' => 100,
             'specifiedDate' => '2015-01-01',
@@ -566,7 +571,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
-            ->with(111)
+            ->with(self::LIC_ID)
             ->andReturn($licence);
 
         /** @var Vehicle $savedVehicle */
@@ -633,12 +638,12 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
     public function testHandleCommandForApplication()
     {
         $data = [
-            'licence' => 111,
+            'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'platedWeight' => 100,
             'specifiedDate' => '2015-01-01',
             'receivedDate' => '2015-02-02',
-            'applicationId' => 999
+            'applicationId' => self::APP_ID,
         ];
         $command = Cmd::create($data);
 
@@ -660,26 +665,22 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $activeVehicles = new ArrayCollection();
         $activeVehicles->add($activeVehicle);
 
-        /** @var Licence $licence */
-        $licence = m::mock(Licence::class)->makePartial();
-        $licence->shouldReceive('getActiveVehicles')
-            ->with(false)
-            ->andReturn($activeVehicles)
-            ->once();
+        $this->mockLic->shouldReceive('getActiveVehicles')->with(false)->andReturn($activeVehicles)->once();
 
         $otherLicences = [];
 
         $vehicle = new Vehicle();
         $vehicle->setId(123);
 
-        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([$vehicle]);
-        $this->repoMap['Vehicle']->shouldReceive('save')->with($vehicle)->once()->andReturn([$vehicle]);
-        $this->repoMap['Licence']->shouldReceive('fetchById')
-            ->with(111)
-            ->andReturn($licence)
-            ->shouldReceive('fetchByVrm')
-            ->with('ABC123', true)
-            ->andReturn($otherLicences);
+        $this->mockAppRepo->shouldReceive('fetchById')->with(self::APP_ID)->once()->andReturn($this->mockApp);
+
+        $this->repoMap['Vehicle']
+            ->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([$vehicle])
+            ->shouldReceive('save')->with($vehicle)->once()->andReturn([$vehicle]);
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchById')->with(self::LIC_ID)->andReturn($this->mockLic)
+            ->shouldReceive('fetchByVrm')->with('ABC123', true)->andReturn($otherLicences);
 
         /** @var LicenceVehicle $savedLicenceVehicle */
         $savedLicenceVehicle = null;
@@ -712,7 +713,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->assertInstanceOf(LicenceVehicle::class, $savedLicenceVehicle);
         $this->assertSame($vehicle, $savedLicenceVehicle->getVehicle());
 
-        $this->assertSame($licence, $savedLicenceVehicle->getLicence());
+        $this->assertSame($this->mockLic, $savedLicenceVehicle->getLicence());
+        $this->assertSame($this->mockApp, $savedLicenceVehicle->getApplication());
         $this->assertEquals('2015-01-01', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d'));
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());
@@ -721,12 +723,12 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
     public function testHandleCommandForApplicationNoActivevehicles()
     {
         $data = [
-            'licence' => 111,
+            'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'platedWeight' => 100,
             'specifiedDate' => '2015-01-01',
             'receivedDate' => '2015-02-02',
-            'applicationId' => 999
+            'applicationId' => self::APP_ID,
         ];
         $command = Cmd::create($data);
 
@@ -744,14 +746,15 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $vehicle = new Vehicle();
         $vehicle->setId(123);
 
-        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([$vehicle]);
-        $this->repoMap['Vehicle']->shouldReceive('save')->with($vehicle)->once()->andReturn([$vehicle]);
-        $this->repoMap['Licence']->shouldReceive('fetchById')
-            ->with(111)
-            ->andReturn($licence)
-            ->shouldReceive('fetchByVrm')
-            ->with('ABC123', true)
-            ->andReturn($otherLicences);
+        $this->mockAppRepo->shouldReceive('fetchById')->with(self::APP_ID)->once()->andReturn($this->mockApp);
+
+        $this->repoMap['Vehicle']
+            ->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([$vehicle])
+            ->shouldReceive('save')->with($vehicle)->once()->andReturn([$vehicle]);
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchById')->with(self::LIC_ID)->andReturn($licence)
+            ->shouldReceive('fetchByVrm')->with('ABC123', true)->andReturn($otherLicences);
 
         /** @var LicenceVehicle $savedLicenceVehicle */
         $savedLicenceVehicle = null;
@@ -785,6 +788,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->assertSame($vehicle, $savedLicenceVehicle->getVehicle());
 
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
+        $this->assertSame($this->mockApp, $savedLicenceVehicle->getApplication());
         $this->assertEquals('2015-01-01', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d'));
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());
@@ -795,57 +799,27 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->setExpectedException(ValidationException::class);
 
         $data = [
-            'licence' => 111,
-            'vrm' => 'ABC123',
+            'licence' => self::LIC_ID,
+            'vrm' => self::VRM,
             'platedWeight' => 100,
             'specifiedDate' => '2015-01-01',
             'receivedDate' => '2015-02-02',
-            'applicationId' => 999
+            'applicationId' => self::APP_ID,
         ];
         $command = Cmd::create($data);
 
-        /** @var Licence $licence */
-        $licence = m::mock(Licence::class)->makePartial();
-
-        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')
-            ->with('ABC123')
-            ->once()
-            ->andReturn([]);
-
-        $this->repoMap['Licence']->shouldReceive('fetchById')
-            ->with(111)
-            ->andReturn($licence)
-            ->once();
-
-        $activeVehicles = new ArrayCollection();
-
         $licenceVehicle = m::mock()
-            ->shouldReceive('getApplication')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('getId')
-                ->andReturn(999)
-                ->once()
-                ->getMock()
-            )
-            ->once()
-            ->shouldReceive('getVehicle')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('getVrm')
-                ->andReturn('ABC123')
-                ->once()
-                ->getMock()
-            )
-            ->once()
+            ->shouldReceive('getApplication')->andReturn($this->mockApp)->once()
+            ->shouldReceive('getVehicle')->andReturn($this->mockVehicle)->once()
             ->getMock();
 
+        $activeVehicles = new ArrayCollection();
         $activeVehicles->add($licenceVehicle);
 
-        $licence->shouldReceive('getActiveVehicles')
-            ->with(false)
-            ->andReturn($activeVehicles)
-            ->once();
+        $this->mockLic->shouldReceive('getActiveVehicles')->with(false)->andReturn($activeVehicles)->once();
+
+        $this->repoMap['Licence']->shouldReceive('fetchById')->with(self::LIC_ID)->andReturn($this->mockLic)->once();
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with(self::VRM)->once()->andReturn([]);
 
         $this->sut->handleCommand($command);
     }
@@ -855,7 +829,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->setExpectedException(ValidationException::class);
 
         $data = [
-            'licence' => 111,
+            'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'platedWeight' => 100,
             'specifiedDate' => '2015-01-01',
@@ -873,7 +847,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             ->andReturn([]);
 
         $this->repoMap['Licence']->shouldReceive('fetchById')
-            ->with(111)
+            ->with(self::LIC_ID)
             ->andReturn($licence)
             ->once();
 
