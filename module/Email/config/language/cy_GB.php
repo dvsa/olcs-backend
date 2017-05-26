@@ -7,6 +7,7 @@ return array(
     'email.ebsr-received.subject' => 'Cais ESBR Wedi ei Dderbyn - %s - EBSR ID: %s',
     'email.ebsr-refreshed.subject' => 'Diweddariad Data EBSR Wedi ei Gwblhau  - %s - EBSR ID: %s',
     'email.ebsr-refused.subject' => 'Cais EBSR Wedi ei Wrthod- %s - EBSR ID: %s',
+    'email.ebsr-refused-by-sn.subject' => 'Cais EBSR Wedi ei Wrthod- %s - EBSR ID: %s',
     'email.ebsr-registered.subject' => 'Cais EBSR Wedi ei Gofrestru - %s - EBSR ID: %s',
     'email.ebsr-withdrawn.subject' => 'Cais EBSR Wedi ei Dynnu yn Ôl - %s - EBSR ID: %s',
     'email.ebsr-failed.subject' => 'Cais EBSR Wedi Methu  - %s - EBSR ID: %s',
