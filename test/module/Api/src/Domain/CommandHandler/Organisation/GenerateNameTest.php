@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantGoods;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantPsv;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Application\GenerateOrganisationName as CommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Application\GenerateName as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Transfer\Command\Application\GenerateOrganisationName as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class GenerateOrganisationNameTest extends CommandHandlerTestCase
+class GenerateNameTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
