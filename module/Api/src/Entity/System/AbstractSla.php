@@ -193,10 +193,16 @@ abstract class AbstractSla implements BundleSerializableInterface, JsonSerializa
     /**
      * Get the effective from
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getEffectiveFrom()
+    public function getEffectiveFrom($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->effectiveFrom);
+        }
+
         return $this->effectiveFrom;
     }
 
@@ -217,10 +223,16 @@ abstract class AbstractSla implements BundleSerializableInterface, JsonSerializa
     /**
      * Get the effective to
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getEffectiveTo()
+    public function getEffectiveTo($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->effectiveTo);
+        }
+
         return $this->effectiveTo;
     }
 

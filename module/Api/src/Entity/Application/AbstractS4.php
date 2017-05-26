@@ -213,10 +213,16 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the agreed date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getAgreedDate()
+    public function getAgreedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->agreedDate);
+        }
+
         return $this->agreedDate;
     }
 
@@ -285,10 +291,16 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -381,10 +393,16 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -453,10 +471,16 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the received date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getReceivedDate()
+    public function getReceivedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->receivedDate);
+        }
+
         return $this->receivedDate;
     }
 

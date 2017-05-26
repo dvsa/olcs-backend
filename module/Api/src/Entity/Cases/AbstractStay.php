@@ -236,10 +236,16 @@ abstract class AbstractStay implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -260,10 +266,16 @@ abstract class AbstractStay implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the decision date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDecisionDate()
+    public function getDecisionDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->decisionDate);
+        }
+
         return $this->decisionDate;
     }
 
@@ -356,10 +368,16 @@ abstract class AbstractStay implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -428,10 +446,16 @@ abstract class AbstractStay implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the request date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getRequestDate()
+    public function getRequestDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->requestDate);
+        }
+
         return $this->requestDate;
     }
 
@@ -500,10 +524,16 @@ abstract class AbstractStay implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the withdrawn date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getWithdrawnDate()
+    public function getWithdrawnDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->withdrawnDate);
+        }
+
         return $this->withdrawnDate;
     }
 

@@ -994,10 +994,16 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -1018,10 +1024,16 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the deleted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDeletedDate()
+    public function getDeletedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
         return $this->deletedDate;
     }
 
@@ -1066,10 +1078,16 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the effective date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getEffectiveDate()
+    public function getEffectiveDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->effectiveDate);
+        }
+
         return $this->effectiveDate;
     }
 
@@ -1090,10 +1108,16 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the end date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getEndDate()
+    public function getEndDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->endDate);
+        }
+
         return $this->endDate;
     }
 
@@ -1354,10 +1378,16 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -1849,10 +1879,16 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the received date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getReceivedDate()
+    public function getReceivedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->receivedDate);
+        }
+
         return $this->receivedDate;
     }
 
@@ -2065,10 +2101,16 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the status change date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getStatusChangeDate()
+    public function getStatusChangeDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->statusChangeDate);
+        }
+
         return $this->statusChangeDate;
     }
 

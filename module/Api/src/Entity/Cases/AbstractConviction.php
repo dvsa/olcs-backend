@@ -311,10 +311,16 @@ abstract class AbstractConviction implements BundleSerializableInterface, JsonSe
     /**
      * Get the birth date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getBirthDate()
+    public function getBirthDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->birthDate);
+        }
+
         return $this->birthDate;
     }
 
@@ -407,10 +413,16 @@ abstract class AbstractConviction implements BundleSerializableInterface, JsonSe
     /**
      * Get the conviction date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getConvictionDate()
+    public function getConvictionDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->convictionDate);
+        }
+
         return $this->convictionDate;
     }
 
@@ -503,10 +515,16 @@ abstract class AbstractConviction implements BundleSerializableInterface, JsonSe
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -551,10 +569,16 @@ abstract class AbstractConviction implements BundleSerializableInterface, JsonSe
     /**
      * Get the deleted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDeletedDate()
+    public function getDeletedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
         return $this->deletedDate;
     }
 
@@ -671,10 +695,16 @@ abstract class AbstractConviction implements BundleSerializableInterface, JsonSe
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -743,10 +773,16 @@ abstract class AbstractConviction implements BundleSerializableInterface, JsonSe
     /**
      * Get the offence date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getOffenceDate()
+    public function getOffenceDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->offenceDate);
+        }
+
         return $this->offenceDate;
     }
 
