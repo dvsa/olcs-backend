@@ -225,10 +225,16 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Get the closed date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getClosedDate()
+    public function getClosedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->closedDate);
+        }
+
         return $this->closedDate;
     }
 
@@ -297,10 +303,16 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -369,10 +381,16 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -417,10 +435,16 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Get the ptr agreed date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getPtrAgreedDate()
+    public function getPtrAgreedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->ptrAgreedDate);
+        }
+
         return $this->ptrAgreedDate;
     }
 

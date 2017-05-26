@@ -269,10 +269,16 @@ abstract class AbstractCommunityLic implements BundleSerializableInterface, Json
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -293,10 +299,16 @@ abstract class AbstractCommunityLic implements BundleSerializableInterface, Json
     /**
      * Get the expired date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getExpiredDate()
+    public function getExpiredDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->expiredDate);
+        }
+
         return $this->expiredDate;
     }
 
@@ -389,10 +401,16 @@ abstract class AbstractCommunityLic implements BundleSerializableInterface, Json
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -437,10 +455,16 @@ abstract class AbstractCommunityLic implements BundleSerializableInterface, Json
     /**
      * Get the licence expired date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLicenceExpiredDate()
+    public function getLicenceExpiredDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->licenceExpiredDate);
+        }
+
         return $this->licenceExpiredDate;
     }
 
@@ -533,10 +557,16 @@ abstract class AbstractCommunityLic implements BundleSerializableInterface, Json
     /**
      * Get the specified date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getSpecifiedDate()
+    public function getSpecifiedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->specifiedDate);
+        }
+
         return $this->specifiedDate;
     }
 

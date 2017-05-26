@@ -27,15 +27,32 @@
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
      * @return \Doctrine\Common\Collections\ArrayCollection<?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
      * @return \<?php echo $field['@attributes']['target-entity']; ?>
+<?php elseif ($this->getPhpTypeFromType($field['@attributes']['type']) === '\DateTime'): ?>
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?>
 <?php else: ?>
      * @return <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?>
 <?php endif; ?>
+<?php if ($item['type'] === 'field' && $this->getPhpTypeFromType($field['@attributes']['type']) === '\DateTime'): ?>
+
+     */
+    public function get<?php echo ucfirst($this->formatPropertyName($item)); ?>($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this-><?php echo $this->formatPropertyName($item); ?>);
+        }
+
+        return $this-><?php echo $this->formatPropertyName($item); ?>;
+    }
+<?php else: ?>
 
      */
     public function get<?php echo ucfirst($this->formatPropertyName($item)); ?>()
     {
         return $this-><?php echo $this->formatPropertyName($item); ?>;
     }
+<?php endif; ?>
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
 
     /**

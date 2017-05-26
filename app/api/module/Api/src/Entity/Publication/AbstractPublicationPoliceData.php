@@ -181,10 +181,16 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Get the birth date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getBirthDate()
+    public function getBirthDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->birthDate);
+        }
+
         return $this->birthDate;
     }
 
@@ -229,10 +235,16 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -349,10 +361,16 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 

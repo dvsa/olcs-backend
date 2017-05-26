@@ -248,10 +248,16 @@ abstract class AbstractInspectionEmail implements BundleSerializableInterface, J
     /**
      * Get the received date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getReceivedDate()
+    public function getReceivedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->receivedDate);
+        }
+
         return $this->receivedDate;
     }
 
