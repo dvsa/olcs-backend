@@ -30,9 +30,6 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
     /** @var CreateGoodsVehicle  */
     protected $sut;
 
-    /** @var  m\MockInterface */
-    private $mockAppRepo;
-
     /** @var Entity\Application\Application | m\MockInterface */
     private $mockApp;
     /** @var Entity\Vehicle\Vehicle | m\MockInterface */
@@ -47,7 +44,6 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->mockRepo('Licence', Repository\Licence::class);
         $this->mockRepo('LicenceVehicle', Repository\LicenceVehicle::class);
         $this->mockRepo('Vehicle', Repository\Vehicle::class);
-        $this->mockAppRepo = $this->mockRepo('Application', Repository\Application::class);
 
         $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
 
@@ -61,6 +57,19 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->mockLic->setId(self::LIC_ID);
 
         parent::setUp();
+    }
+
+    protected function initReferences()
+    {
+        $this->refData = [];
+
+        $this->references = [
+            Entity\Application\Application::class => [
+                self::APP_ID => $this->mockApp,
+            ],
+        ];
+
+        parent::initReferences();
     }
 
     public function testHandleCommandAlreadyExists()
@@ -83,7 +92,6 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->mockLic->shouldReceive('getActiveVehicles')->andReturn($activeVehicles);
 
-        $this->mockAppRepo->shouldReceive('fetchById')->never();
         $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with(self::VRM)->once()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')->with(self::LIC_ID)->andReturn($this->mockLic);
 
@@ -672,8 +680,6 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $vehicle = new Vehicle();
         $vehicle->setId(123);
 
-        $this->mockAppRepo->shouldReceive('fetchById')->with(self::APP_ID)->once()->andReturn($this->mockApp);
-
         $this->repoMap['Vehicle']
             ->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([$vehicle])
             ->shouldReceive('save')->with($vehicle)->once()->andReturn([$vehicle]);
@@ -745,8 +751,6 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $vehicle = new Vehicle();
         $vehicle->setId(123);
-
-        $this->mockAppRepo->shouldReceive('fetchById')->with(self::APP_ID)->once()->andReturn($this->mockApp);
 
         $this->repoMap['Vehicle']
             ->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([$vehicle])
