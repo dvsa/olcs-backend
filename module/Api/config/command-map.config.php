@@ -736,6 +736,7 @@ return [
     Command\Email\SendUserTemporaryPassword::class => CommandHandler\Email\SendUserTemporaryPassword::class,
     Command\Email\SendEbsrWithdrawn::class => CommandHandler\Email\SendEbsrWithdrawn::class,
     Command\Email\SendEbsrRefused::class => CommandHandler\Email\SendEbsrRefused::class,
+    Command\Email\SendEbsrRefusedBySn::class => CommandHandler\Email\SendEbsrRefusedBySn::class,
     Command\Email\SendEbsrReceived::class => CommandHandler\Email\SendEbsrReceived::class,
     Command\Email\SendEbsrRefreshed::class => CommandHandler\Email\SendEbsrRefreshed::class,
     Command\Email\SendEbsrCancelled::class => CommandHandler\Email\SendEbsrCancelled::class,
