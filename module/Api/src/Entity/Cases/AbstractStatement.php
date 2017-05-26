@@ -341,10 +341,16 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -389,10 +395,16 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Get the issued date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getIssuedDate()
+    public function getIssuedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->issuedDate);
+        }
+
         return $this->issuedDate;
     }
 
@@ -437,10 +449,16 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -533,10 +551,16 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Get the requested date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getRequestedDate()
+    public function getRequestedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->requestedDate);
+        }
+
         return $this->requestedDate;
     }
 
@@ -629,10 +653,16 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Get the stopped date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getStoppedDate()
+    public function getStoppedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->stoppedDate);
+        }
+
         return $this->stoppedDate;
     }
 

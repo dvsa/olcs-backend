@@ -209,10 +209,16 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Get the agreed date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getAgreedDate()
+    public function getAgreedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->agreedDate);
+        }
+
         return $this->agreedDate;
     }
 
@@ -257,10 +263,16 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -353,10 +365,16 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -425,10 +443,16 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Get the sent date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getSentDate()
+    public function getSentDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->sentDate);
+        }
+
         return $this->sentDate;
     }
 
@@ -497,10 +521,16 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     /**
      * Get the target date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getTargetDate()
+    public function getTargetDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->targetDate);
+        }
+
         return $this->targetDate;
     }
 

@@ -216,10 +216,16 @@ abstract class AbstractEbsrRouteReprint implements BundleSerializableInterface, 
     /**
      * Get the published timestamp
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getPublishedTimestamp()
+    public function getPublishedTimestamp($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->publishedTimestamp);
+        }
+
         return $this->publishedTimestamp;
     }
 
@@ -240,10 +246,16 @@ abstract class AbstractEbsrRouteReprint implements BundleSerializableInterface, 
     /**
      * Get the requested timestamp
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getRequestedTimestamp()
+    public function getRequestedTimestamp($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->requestedTimestamp);
+        }
+
         return $this->requestedTimestamp;
     }
 

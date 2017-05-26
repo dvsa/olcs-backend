@@ -383,10 +383,16 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Get the application sent date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getApplicationSentDate()
+    public function getApplicationSentDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->applicationSentDate);
+        }
+
         return $this->applicationSentDate;
     }
 
@@ -590,10 +596,16 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -638,10 +650,16 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Get the expiry date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getExpiryDate()
+    public function getExpiryDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->expiryDate);
+        }
+
         return $this->expiryDate;
     }
 
@@ -686,10 +704,16 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Get the in force date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getInForceDate()
+    public function getInForceDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->inForceDate);
+        }
+
         return $this->inForceDate;
     }
 
@@ -854,10 +878,16 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Get the last date copies req
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastDateCopiesReq()
+    public function getLastDateCopiesReq($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastDateCopiesReq);
+        }
+
         return $this->lastDateCopiesReq;
     }
 
@@ -902,10 +932,16 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -950,10 +986,16 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Get the renewal date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getRenewalDate()
+    public function getRenewalDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->renewalDate);
+        }
+
         return $this->renewalDate;
     }
 

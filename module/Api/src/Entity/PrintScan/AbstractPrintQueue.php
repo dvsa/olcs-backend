@@ -83,10 +83,16 @@ abstract class AbstractPrintQueue implements BundleSerializableInterface, JsonSe
     /**
      * Get the added datetime
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getAddedDatetime()
+    public function getAddedDatetime($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->addedDatetime);
+        }
+
         return $this->addedDatetime;
     }
 

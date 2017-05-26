@@ -281,10 +281,16 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Get the appeal date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getAppealDate()
+    public function getAppealDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->appealDate);
+        }
+
         return $this->appealDate;
     }
 
@@ -401,10 +407,16 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -425,10 +437,16 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Get the deadline date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDeadlineDate()
+    public function getDeadlineDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deadlineDate);
+        }
+
         return $this->deadlineDate;
     }
 
@@ -449,10 +467,16 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Get the decision date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDecisionDate()
+    public function getDecisionDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->decisionDate);
+        }
+
         return $this->decisionDate;
     }
 
@@ -497,10 +521,16 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Get the hearing date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getHearingDate()
+    public function getHearingDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->hearingDate);
+        }
+
         return $this->hearingDate;
     }
 
@@ -569,10 +599,16 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -689,10 +725,16 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Get the papers due date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getPapersDueDate()
+    public function getPapersDueDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->papersDueDate);
+        }
+
         return $this->papersDueDate;
     }
 
@@ -713,10 +755,16 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Get the papers due tc date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getPapersDueTcDate()
+    public function getPapersDueTcDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->papersDueTcDate);
+        }
+
         return $this->papersDueTcDate;
     }
 
@@ -737,10 +785,16 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Get the papers sent date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getPapersSentDate()
+    public function getPapersSentDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->papersSentDate);
+        }
+
         return $this->papersSentDate;
     }
 
@@ -761,10 +815,16 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Get the papers sent tc date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getPapersSentTcDate()
+    public function getPapersSentTcDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->papersSentTcDate);
+        }
+
         return $this->papersSentTcDate;
     }
 
@@ -833,10 +893,16 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Get the withdrawn date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getWithdrawnDate()
+    public function getWithdrawnDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->withdrawnDate);
+        }
+
         return $this->withdrawnDate;
     }
 

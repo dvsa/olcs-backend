@@ -211,10 +211,16 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Get the birth date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getBirthDate()
+    public function getBirthDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->birthDate);
+        }
+
         return $this->birthDate;
     }
 
@@ -259,10 +265,16 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Get the conviction date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getConvictionDate()
+    public function getConvictionDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->convictionDate);
+        }
+
         return $this->convictionDate;
     }
 
@@ -307,10 +319,16 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     /**
      * Get the deleted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDeletedDate()
+    public function getDeletedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
         return $this->deletedDate;
     }
 

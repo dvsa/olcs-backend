@@ -267,10 +267,16 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Get the application receipt date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getApplicationReceiptDate()
+    public function getApplicationReceiptDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->applicationReceiptDate);
+        }
+
         return $this->applicationReceiptDate;
     }
 
@@ -315,10 +321,16 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Get the close date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCloseDate()
+    public function getCloseDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->closeDate);
+        }
+
         return $this->closeDate;
     }
 
@@ -363,10 +375,16 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -387,10 +405,16 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Get the hearing date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getHearingDate()
+    public function getHearingDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->hearingDate);
+        }
+
         return $this->hearingDate;
     }
 
@@ -546,10 +570,16 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -618,10 +648,16 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Get the outcome sent date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getOutcomeSentDate()
+    public function getOutcomeSentDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->outcomeSentDate);
+        }
+
         return $this->outcomeSentDate;
     }
 
