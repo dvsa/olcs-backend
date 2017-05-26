@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class GenerateOrganisationName extends AbstractCommandHandler implements TransactionedInterface
+final class GenerateName extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Application';
     protected $extraRepos = ['Organisation'];
