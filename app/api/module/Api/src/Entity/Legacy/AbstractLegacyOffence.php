@@ -277,10 +277,16 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -397,10 +403,16 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -493,10 +505,16 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Get the offence date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getOffenceDate()
+    public function getOffenceDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->offenceDate);
+        }
+
         return $this->offenceDate;
     }
 
@@ -517,10 +535,16 @@ abstract class AbstractLegacyOffence implements BundleSerializableInterface, Jso
     /**
      * Get the offence to date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getOffenceToDate()
+    public function getOffenceToDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->offenceToDate);
+        }
+
         return $this->offenceToDate;
     }
 

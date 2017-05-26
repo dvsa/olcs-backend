@@ -292,10 +292,16 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the action date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getActionDate()
+    public function getActionDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->actionDate);
+        }
+
         return $this->actionDate;
     }
 
@@ -508,10 +514,16 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -652,10 +664,16 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 

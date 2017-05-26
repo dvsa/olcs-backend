@@ -1067,10 +1067,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -1115,10 +1121,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the deleted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDeletedDate()
+    public function getDeletedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
         return $this->deletedDate;
     }
 
@@ -1235,10 +1247,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the granted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getGrantedDate()
+    public function getGrantedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->grantedDate);
+        }
+
         return $this->grantedDate;
     }
 
@@ -1403,10 +1421,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the interim end
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getInterimEnd()
+    public function getInterimEnd($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->interimEnd);
+        }
+
         return $this->interimEnd;
     }
 
@@ -1451,10 +1475,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the interim start
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getInterimStart()
+    public function getInterimStart($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->interimStart);
+        }
+
         return $this->interimStart;
     }
 
@@ -1571,10 +1601,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -2147,10 +2183,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the received date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getReceivedDate()
+    public function getReceivedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->receivedDate);
+        }
+
         return $this->receivedDate;
     }
 
@@ -2195,10 +2237,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the refused date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getRefusedDate()
+    public function getRefusedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->refusedDate);
+        }
+
         return $this->refusedDate;
     }
 
@@ -2363,10 +2411,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the target completion date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getTargetCompletionDate()
+    public function getTargetCompletionDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->targetCompletionDate);
+        }
+
         return $this->targetCompletionDate;
     }
 
@@ -2483,10 +2537,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the withdrawn date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getWithdrawnDate()
+    public function getWithdrawnDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->withdrawnDate);
+        }
+
         return $this->withdrawnDate;
     }
 

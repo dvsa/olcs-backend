@@ -334,10 +334,16 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -358,10 +364,16 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Get the deleted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDeletedDate()
+    public function getDeletedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
         return $this->deletedDate;
     }
 
@@ -454,10 +466,16 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -526,10 +544,16 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Get the received date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getReceivedDate()
+    public function getReceivedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->receivedDate);
+        }
+
         return $this->receivedDate;
     }
 
@@ -550,10 +574,16 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Get the removal date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getRemovalDate()
+    public function getRemovalDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->removalDate);
+        }
+
         return $this->removalDate;
     }
 
@@ -574,10 +604,16 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Get the removal letter seed date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getRemovalLetterSeedDate()
+    public function getRemovalLetterSeedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->removalLetterSeedDate);
+        }
+
         return $this->removalLetterSeedDate;
     }
 
@@ -598,10 +634,16 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Get the specified date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getSpecifiedDate()
+    public function getSpecifiedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->specifiedDate);
+        }
+
         return $this->specifiedDate;
     }
 
@@ -694,10 +736,16 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Get the warning letter seed date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getWarningLetterSeedDate()
+    public function getWarningLetterSeedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->warningLetterSeedDate);
+        }
+
         return $this->warningLetterSeedDate;
     }
 
@@ -718,10 +766,16 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Get the warning letter sent date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getWarningLetterSentDate()
+    public function getWarningLetterSentDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->warningLetterSentDate);
+        }
+
         return $this->warningLetterSentDate;
     }
 

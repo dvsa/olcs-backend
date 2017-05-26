@@ -30,4 +30,23 @@ trait ProcessDateTrait
 
         return $dateTime;
     }
+
+    /**
+     * Converts (if not already) to a DateTime object
+     *
+     * @param mixed $datetime Datetime to convert
+     *
+     * @return \DateTime|null
+     */
+    public function asDateTime($datetime)
+    {
+        if ($datetime instanceof \DateTime) {
+            return $datetime;
+        }
+        if (empty($datetime)) {
+            return null;
+        }
+
+        return new \DateTime($datetime);
+    }
 }

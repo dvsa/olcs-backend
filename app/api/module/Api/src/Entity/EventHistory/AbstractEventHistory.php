@@ -420,10 +420,16 @@ abstract class AbstractEventHistory implements BundleSerializableInterface, Json
     /**
      * Get the event datetime
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getEventDatetime()
+    public function getEventDatetime($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->eventDatetime);
+        }
+
         return $this->eventDatetime;
     }
 

@@ -351,10 +351,16 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Get the deleted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDeletedDate()
+    public function getDeletedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
         return $this->deletedDate;
     }
 
@@ -375,10 +381,16 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Get the distribute end
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDistributeEnd()
+    public function getDistributeEnd($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->distributeEnd);
+        }
+
         return $this->distributeEnd;
     }
 
@@ -399,10 +411,16 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Get the distribute expire
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDistributeExpire()
+    public function getDistributeExpire($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->distributeExpire);
+        }
+
         return $this->distributeExpire;
     }
 
@@ -423,10 +441,16 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Get the distribute start
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDistributeStart()
+    public function getDistributeStart($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->distributeStart);
+        }
+
         return $this->distributeStart;
     }
 
@@ -687,10 +711,16 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Get the process end
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getProcessEnd()
+    public function getProcessEnd($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->processEnd);
+        }
+
         return $this->processEnd;
     }
 
@@ -711,10 +741,16 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Get the process start
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getProcessStart()
+    public function getProcessStart($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->processStart);
+        }
+
         return $this->processStart;
     }
 
@@ -735,10 +771,16 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Get the publish end
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getPublishEnd()
+    public function getPublishEnd($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->publishEnd);
+        }
+
         return $this->publishEnd;
     }
 
@@ -759,10 +801,16 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Get the publish start
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getPublishStart()
+    public function getPublishStart($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->publishStart);
+        }
+
         return $this->publishStart;
     }
 
@@ -807,10 +855,16 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Get the submitted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getSubmittedDate()
+    public function getSubmittedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->submittedDate);
+        }
+
         return $this->submittedDate;
     }
 
@@ -831,10 +885,16 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Get the validation end
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getValidationEnd()
+    public function getValidationEnd($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->validationEnd);
+        }
+
         return $this->validationEnd;
     }
 
@@ -855,10 +915,16 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     /**
      * Get the validation start
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getValidationStart()
+    public function getValidationStart($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->validationStart);
+        }
+
         return $this->validationStart;
     }
 

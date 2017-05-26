@@ -346,10 +346,16 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Get the cheque po date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getChequePoDate()
+    public function getChequePoDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->chequePoDate);
+        }
+
         return $this->chequePoDate;
     }
 
@@ -418,10 +424,16 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Get the completed date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCompletedDate()
+    public function getCompletedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->completedDate);
+        }
+
         return $this->completedDate;
     }
 
@@ -466,10 +478,16 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -562,10 +580,16 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -946,10 +970,16 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Get the waive recommendation date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getWaiveRecommendationDate()
+    public function getWaiveRecommendationDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->waiveRecommendationDate);
+        }
+
         return $this->waiveRecommendationDate;
     }
 
