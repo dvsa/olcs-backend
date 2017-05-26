@@ -1,95 +1,160 @@
 <?php
 
-/**
- * Generate the Organisation name, for sole traders and partnerships
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
- * Generate the Organisation name, for sole traders and partnerships
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Dmitry Golubev <dmitrij.golubev@valtech.com>
  */
-final class GenerateName extends AbstractCommandHandler implements TransactionedInterface
+class GenerateName extends AbstractCommandHandler implements TransactionedInterface
 {
-    protected $repoServiceName = 'Application';
-    protected $extraRepos = ['Organisation'];
+    const ERR_ORG_TYPE_INVALID = 'Can only generate Organisation name for a sole trader or partnership';
+    const ERR_ONLY_NEW_APP = 'Can only generate Organisation name for a new application';
+    const ERR_ORG_INVALID = 'Organisation not found';
+    const ERR_INVALID_DATA = 'Application or licence must be provided';
 
+    protected $repoServiceName = 'Organisation';
+    protected $extraRepos = ['Licence', 'Application'];
+
+    /** @var  \Dvsa\Olcs\Transfer\Command\Organisation\GenerateName */
+    private $command;
+    /** @var  Entity\Organisation\Organisation */
+    private $organisation;
+
+    /**
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Organisation\GenerateName $command Command
+     *
+     * @return Result
+     * @throws ValidationException
+     */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
+        $this->command = $command;
 
-        /* @var $application \Dvsa\Olcs\Api\Entity\Application\Application */
-        $application = $this->getRepo()->fetchUsingId($command);
-        if ($application->getIsVariation()) {
-            throw new ValidationException(['Can only generate Orgnaisation name for a new application']);
+        if ($this->command->getApplication() !== null) {
+            return $this->processApplication();
         }
 
-        $organisation = $application->getLicence()->getOrganisation();
-        if (!$organisation->isSoleTrader() && !$organisation->isPartnership()) {
-            throw new ValidationException(['Can only generate Orgnaisation name for a sole trader or partnership']);
+        if ($this->command->getLicence() !== null) {
+            return $this->processLicence();
         }
 
-        $name = $this->generateName($organisation);
-        if ($name === false) {
-            $result->addMessage('Unable to generate name');
-        } else {
-            $organisation->setName($name);
-            $this->getRepo('Organisation')->save($organisation);
-            $result->addMessage('Name succesfully generated');
+        throw new BadRequestException(self::ERR_INVALID_DATA);
+    }
+
+    /**
+     * Process For Application
+     *
+     * @return Result
+     * @throws ValidationException
+     */
+    private function processApplication()
+    {
+        /** @var Entity\Application\Application $app */
+        $app = $this->getRepo('Application')->fetchById($this->command->getApplication());
+
+        if ($app->getIsVariation()) {
+            throw new ValidationException([self::ERR_ONLY_NEW_APP]);
         }
 
-        return $result;
+        $this->organisation = $app->getLicence()->getOrganisation();
+
+        return $this->processCommon();
+    }
+
+    /**
+     * Process licence
+     *
+     * @return Result
+     */
+    private function processLicence()
+    {
+        /** @var Entity\Licence\Licence $lic */
+        $lic = $this->getRepo('Licence')->fetchById($this->command->getLicence());
+        $this->organisation = $lic->getOrganisation();
+
+        return $this->processCommon();
+    }
+
+    /**
+     * Process common
+     *
+     * @return Result
+     * @throws ValidationException
+     */
+    private function processCommon()
+    {
+        if (!$this->organisation instanceof Entity\Organisation\Organisation) {
+            throw new ValidationException([self::ERR_ORG_INVALID]);
+        }
+
+        if (!$this->organisation->isSoleTrader() && !$this->organisation->isPartnership()) {
+            throw new ValidationException([self::ERR_ORG_TYPE_INVALID]);
+        }
+
+        //  define name
+        $name = $this->generateName($this->organisation);
+        if ($name === null) {
+            return $this->result->addMessage('Unable to generate name');
+        }
+
+        //  save new name
+        $this->organisation->setName($name);
+        $this->getRepo()->save($this->organisation);
+
+        return $this->result->addMessage('Name succesfully generated');
     }
 
     /**
      * Generate the name for an organisation
      *
-     * @param Organisation $organisation
+     * @param Organisation $organisation Organistion
      *
      * @return string|boolean false if cannot generate, otherwise the generated name
      */
     private function generateName(Organisation $organisation)
     {
-        $name = false;
-        if ($organisation->isSoleTrader()) {
-            /* @var $firstPerson \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson */
-            $firstPerson = $organisation->getOrganisationPersons()->first();
-            if ($firstPerson !== false) {
-                $name = $firstPerson->getPerson()->getForename() .' '. $firstPerson->getPerson()->getFamilyName();
-            }
-        } else {
-            // must be a partnership
-            switch ($organisation->getOrganisationPersons()->count()) {
-                case 0:
-                    break;
-                case 1:
-                    $firstPerson = $organisation->getOrganisationPersons()->first()->getPerson();
-                    $name = $firstPerson->getForename() .' '. $firstPerson->getFamilyName();
-                    break;
-                case 2:
-                    $firstPerson = $organisation->getOrganisationPersons()->first()->getPerson();
-                    $secondPerson = $organisation->getOrganisationPersons()->next()->getPerson();
-                    $name = $firstPerson->getForename() .' '. $firstPerson->getFamilyName() .
-                        ' & '. $secondPerson->getForename() .' '. $secondPerson->getFamilyName();
-                    break;
-                default:
-                    $firstPerson = $organisation->getOrganisationPersons()->first()->getPerson();
-                    $name = $firstPerson->getForename() .' '. $firstPerson->getFamilyName() .' & Partners';
-                    break;
-            }
+        $orgPersons = $organisation->getOrganisationPersons();
 
+        //  check have persons
+        $cnt = $orgPersons->count();
+        if ($cnt == 0) {
+            return null;
         }
 
-        return $name;
+        //  sole traider
+        /** @var Entity\Person\Person $person */
+        if ($organisation->isSoleTrader()) {
+            $person = $orgPersons->first()->getPerson();
+
+            return $person->getForename() . ' ' . $person->getFamilyName();
+        }
+
+        // must be a partnership
+        $person = $orgPersons->first()->getPerson();
+
+        $name = [
+            $person->getForename(),
+            $person->getFamilyName(),
+        ];
+
+        if ($cnt == 2) {
+            $person = $orgPersons->next()->getPerson();
+            array_push($name, '&', $person->getForename(), $person->getFamilyName());
+        } elseif ($cnt > 2) {
+            array_push($name, '&', 'Partners');
+        }
+
+        return implode(' ', $name);
     }
 }
