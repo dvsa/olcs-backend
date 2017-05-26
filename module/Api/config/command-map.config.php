@@ -92,8 +92,6 @@ return [
     TransferCommand\Application\Schedule41Reset::class => CommandHandler\Application\Schedule41Reset::class,
     TransferCommand\Application\Schedule41Refuse::class => CommandHandler\Application\Schedule41Refuse::class,
     TransferCommand\Application\Schedule41Cancel::class => CommandHandler\Application\Schedule41Cancel::class,
-    TransferCommand\Application\GenerateOrganisationName::class =>
-        CommandHandler\Application\GenerateOrganisationName::class,
     TransferCommand\Application\PrintInterimDocument::class => CommandHandler\Application\PrintInterimDocument::class,
     TransferCommand\Application\UpdateInterim::class => CommandHandler\Application\UpdateInterim::class,
     TransferCommand\Application\RefuseInterim::class => CommandHandler\Application\RefuseInterim::class,
@@ -254,6 +252,7 @@ return [
     TransferCommand\Variation\RestoreOperatingCentre::class => CommandHandler\Variation\RestoreOperatingCentre::class,
 
     // Transfer - Organisation
+    TransferCommand\Organisation\GenerateName::class => CommandHandler\Organisation\GenerateName::class,
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
     TransferCommand\Organisation\TransferTo::class => CommandHandler\Organisation\TransferTo::class,
     Command\Organisation\ChangeBusinessType::class => CommandHandler\Organisation\ChangeBusinessType::class,

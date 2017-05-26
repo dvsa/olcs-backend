@@ -20,7 +20,6 @@ return [
     CommandHandler\Application\CreateSnapshot::class => CanAccessApplicationWithId::class,
     CommandHandler\Application\CreateTaxiPhv::class => CanAccessApplicationWithId::class,
     CommandHandler\Application\DeleteTaxiPhv::class => CanAccessApplicationWithId::class,
-    CommandHandler\Application\GenerateOrganisationName::class => CanAccessApplicationWithId::class,
     CommandHandler\Application\SubmitApplication::class => CanEditApplicationWithId::class,
     CommandHandler\Application\UpdateAddresses::class => CanAccessApplicationWithId::class,
     CommandHandler\Application\UpdateApplicationCompletion::class => CanAccessApplicationWithId::class,
