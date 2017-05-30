@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Pi;
 
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as Entity;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
@@ -17,6 +18,13 @@ use Mockery as m;
 class PiHearingEntityTest extends EntityTester
 {
     /**
+     * Holds the entity
+     *
+     * @var Entity
+     */
+    protected $entity;
+
+    /**
      * Define the entity to test
      *
      * @var string
@@ -30,12 +38,106 @@ class PiHearingEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dataProviderDecisionBeforeHearingValidate
+     */
+    public function testCreateValidationDecisionBeforeHearing($expectException, $hearingDate, $piAgreedDate)
+    {
+        $piEntity = m::mock(PiEntity::class);
+        $piEntity->shouldReceive('isClosed')->andReturn(false);
+        $piEntity->shouldReceive('getAgreedDate')->with(true)->atLeast(1)->andReturn($piAgreedDate);
+        $presidingTc = m::mock(PresidingTcEntity::class);
+        $presidedByRole = m::mock(RefData::class);
+
+        try {
+            $entity = new Entity(
+                $piEntity,
+                $presidingTc,
+                $presidedByRole,
+                $hearingDate,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            );
+
+            $this->assertInstanceOf(Entity::class, $entity);
+
+            if ($expectException === true) {
+                $this->fail('ValidationException SHOULD have been thrown');
+            }
+
+        } catch (ValidationException $e) {
+            if ($expectException === false) {
+                $this->fail('ValidationException should NOT have been thrown');
+            }
+
+            $this->assertEquals(
+                [Entity::MSG_HEARING_DATE_BEFORE_PI_DATE => $piAgreedDate->format('Y-m-d')],
+                $e->getMessages()
+            );
+        }
+    }
+
+    /**
+     * @dataProvider dataProviderDecisionBeforeHearingValidate
+     */
+    public function testUpdateValidationDecisionBeforeHearing($expectException, $hearingDate, $piAgreedDate)
+    {
+        $sut = $this->instantiate($this->entityClass);
+        $piEntity = m::mock(PiEntity::class);
+        $piEntity->shouldReceive('isClosed')->andReturn(false);
+        $piEntity->shouldReceive('getAgreedDate')->with(true)->atLeast(1)->andReturn($piAgreedDate);
+        $sut->setPi($piEntity);
+        $presidingTc = m::mock(PresidingTcEntity::class);
+        $presidedByRole = m::mock(RefData::class);
+
+        try {
+            $sut->update(
+                $presidingTc,
+                $presidedByRole,
+                $hearingDate,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            );
+
+            if ($expectException === true) {
+                $this->fail('ValidationException SHOULD have been thrown');
+            }
+
+        } catch (ValidationException $e) {
+            if ($expectException === false) {
+                $this->fail('ValidationException should NOT have been thrown');
+            }
+
+            $this->assertEquals(
+                [Entity::MSG_HEARING_DATE_BEFORE_PI_DATE => $piAgreedDate->format('Y-m-d')],
+                $e->getMessages()
+            );
+        }
+    }
+
+    /**
      * test create
      */
     public function testCreateNotAdjournedOrCancelled()
     {
         $piEntity = m::mock(PiEntity::class);
         $piEntity->shouldReceive('isClosed')->andReturn(false);
+        $piEntity->shouldReceive('getAgreedDate')->andReturn(null);
         $presidingTc = m::mock(PresidingTcEntity::class);
         $presidedByRole = m::mock(RefData::class);
         $hearingDate = m::mock(\DateTime::class);
@@ -93,6 +195,7 @@ class PiHearingEntityTest extends EntityTester
     {
         $piEntity = m::mock(PiEntity::class);
         $piEntity->shouldReceive('isClosed')->andReturn(false);
+        $piEntity->shouldReceive('getAgreedDate')->andReturn(null);
         $this->entity->setPi($piEntity);
         $presidingTc = m::mock(PresidingTcEntity::class);
         $presidedByRole = m::mock(RefData::class);
@@ -212,6 +315,17 @@ class PiHearingEntityTest extends EntityTester
         return [
             [null],
             ['2015-12-25T12:00:00+01:00']
+        ];
+    }
+
+    public function dataProviderDecisionBeforeHearingValidate()
+    {
+        return [
+            [true, new \DateTime('2012-10-09'), new \DateTime('2017-10-10')],
+            [true, new \DateTime('2017-10-09'), new \DateTime('2017-10-10')],
+            [false, new \DateTime('2017-10-10'), new \DateTime('2017-10-10')],
+            [false, new \DateTime('2017-10-11'), new \DateTime('2017-10-10')],
+            [false, new \DateTime('2027-10-10'), new \DateTime('2017-10-10')],
         ];
     }
 }
