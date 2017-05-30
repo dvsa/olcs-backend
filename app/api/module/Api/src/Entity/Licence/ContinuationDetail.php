@@ -37,4 +37,14 @@ class ContinuationDetail extends AbstractContinuationDetail
 
     const METHOD_EMAIL = 'email';
     const METHOD_POST  = 'post';
+
+    /**
+     * Get Orgainsation owner
+     *
+     * @return Organisation
+     */
+    public function getRelatedOrganisation()
+    {
+        return $this->getLicence()->getOrganisation();
+    }
 }
