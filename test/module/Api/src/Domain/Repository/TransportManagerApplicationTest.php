@@ -293,7 +293,6 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $this->assertEquals('RESULT', $this->sut->fetchByTmAndApplication(1, 2, true));
     }
 
-
     public function testFetchForResponsibilities()
     {
         $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
@@ -313,5 +312,28 @@ class TransportManagerApplicationTest extends RepositoryTestCase
 
         $mockQb->shouldReceive('getQuery->getSingleResult')->once()->andReturn(['RESULT']);
         $this->assertEquals(['RESULT'], $this->sut->fetchForResponsibilities(1));
+    }
+
+    public function testApplyListFiltersFilterOrgUser()
+    {
+        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $mockDqb->shouldReceive('join')->with('tma.transportManager', 'tm')->once();
+        $mockDqb->shouldReceive('join')->with('tm.users', 'u')->once();
+        $mockDqb->shouldReceive('join')->with('l.organisation', 'o')->once();
+        $mockDqb->shouldReceive('join')->with('o.organisationUsers', 'ou')->once();
+        $mockDqb->shouldReceive('join')->with('ou.user', 'ouu')->once();
+        $mockDqb->shouldReceive('expr->eq')->with('u.id', ':user')->once()->andReturn('EXPR');
+        $mockDqb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
+        $mockDqb->shouldReceive('setParameter')->with('user', 73)->once();
+        $mockDqb->shouldReceive('expr->eq')->with('ouu.id', ':orgUsersUser')->once()->andReturn('EXPR1');
+        $mockDqb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
+        $mockDqb->shouldReceive('setParameter')->with('orgUsersUser', 73)->once();
+
+        $query = \Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetList::create(
+            ['user' => 73, 'filterByOrgUser' => true]
+        );
+        $sut->applyListFilters($mockDqb, $query);
     }
 }

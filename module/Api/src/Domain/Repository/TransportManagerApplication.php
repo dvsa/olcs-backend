@@ -146,6 +146,14 @@ class TransportManagerApplication extends AbstractRepository
             $qb->andWhere($qb->expr()->in('a.status', ':appStatuses'))
                 ->setParameter('appStatuses', $query->getAppStatuses());
         }
+
+        if ($query->getFilterByOrgUser() && $query->getUser()) {
+            $qb->join('l.organisation', 'o');
+            $qb->join('o.organisationUsers', 'ou');
+            $qb->join('ou.user', 'ouu');
+            $qb->andWhere($qb->expr()->eq('ouu.id', ':orgUsersUser'))
+                ->setParameter('orgUsersUser', $query->getUser());
+        }
     }
 
     /**
