@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Pi;
 
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as Entity;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -197,6 +198,63 @@ class PiEntityTest extends EntityTester
         $this->assertEquals($decisionNotes, $this->entity->getDecisionNotes());
         $this->assertEquals($tmDecisions, $this->entity->getTmDecisions());
         $this->assertEquals($tmCalledWithOperator, $this->entity->getTmCalledWithOperator());
+    }
+
+    /**
+     * @dataProvider dataProviderTestUpdatePiWithDecisionDecisionBeforeHearing
+     *
+     * @param $expectException
+     * @param $decisionDate
+     * @param $hearingDate
+     */
+    public function testUpdatePiWithDecisionDecisionBeforeHearing($expectException, $decisionDate, $hearingDate)
+    {
+        $piHearing = m::mock(PiHearingEntity::class);
+        $piHearing->shouldReceive('getIsAdjourned')->andReturn('N');
+        $piHearing->shouldReceive('getIsCancelled')->andReturn('N');
+        $piHearing->shouldReceive('getHearingDate')->with(true)->andReturn($hearingDate);
+
+        $this->entity->addPiHearings($piHearing);
+
+        try {
+            $this->entity->updatePiWithDecision(
+                null,
+                m::mock(RefData::class),
+                new ArrayCollection(),
+                null,
+                null,
+                null,
+                null,
+                $decisionDate,
+                null,
+                null,
+                null,
+                new ArrayCollection()
+            );
+            if ($expectException) {
+                $this->fail('ValidationException should have been thrown');
+            }
+        } catch (ValidationException $e) {
+            if (!$expectException) {
+                $this->fail('ValidationException should NOT have been thrown');
+            }
+            $this->assertSame(
+                ['DECISION_DATE_BEFORE_HEARING_DATE' => $hearingDate->format('Y-m-d')], $e->getMessages()
+            );
+        }
+    }
+
+    public function dataProviderTestUpdatePiWithDecisionDecisionBeforeHearing()
+    {
+        return [
+            [false, null, null],
+            [false, '2010-10-10', null],
+            [false, null, '2010-10-10'],
+            [false, '2010-10-10', new \DateTime('2010-10-10')],
+            [false, '2017-02-20', new \DateTime('2010-10-10')],
+            'Decision date before hearing date' => [true, '2010-02-09', new \DateTime('2010-10-10')],
+            'Decision date before hearing date by years' => [true, '2010-02-10', new \DateTime('2017-10-10')],
+        ];
     }
 
     /**
