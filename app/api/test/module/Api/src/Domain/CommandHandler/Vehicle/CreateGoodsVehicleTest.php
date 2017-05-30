@@ -116,7 +116,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         try {
             $this->sut->handleCommand($command);
         } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
-            $this->assertSame(Vehicle::ERROR_VRM_HAS_SECTION_26, $e->getMessages()[0]);
+            $this->assertSame(['vrm' => [Vehicle::ERROR_VRM_HAS_SECTION_26]], $e->getMessages());
         }
     }
 

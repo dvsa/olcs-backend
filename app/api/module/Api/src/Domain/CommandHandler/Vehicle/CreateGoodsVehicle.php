@@ -312,9 +312,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
         foreach ($vehicles as $vehicle) {
             if ($vehicle->getSection26()) {
                 throw new ValidationException(
-                    [
-                        Vehicle::ERROR_VRM_HAS_SECTION_26
-                    ]
+                    ['vrm' => [Vehicle::ERROR_VRM_HAS_SECTION_26]]
                 );
             }
         }
