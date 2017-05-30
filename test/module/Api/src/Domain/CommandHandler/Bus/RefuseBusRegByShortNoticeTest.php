@@ -13,7 +13,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\RefuseBusRegByShortNotice as Cmd;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefused;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefusedBySn;
 
 /**
  * Refuse Bus Reg By Short Notice Test
@@ -48,7 +48,7 @@ class RefuseBusRegByShortNoticeTest extends CommandHandlerTestCase
         $busReg->shouldReceive('getId')->andReturn($id);
         $busReg->shouldReceive('isFromEbsr')->once()->andReturn(true);
         $busReg->shouldReceive('getEbsrSubmissions->first->getId')->once()->andReturn($ebsrId);
-        $this->expectedEmailQueueSideEffect(SendEbsrRefused::class, ['id' => $ebsrId], $ebsrId, new Result());
+        $this->expectedEmailQueueSideEffect(SendEbsrRefusedBySn::class, ['id' => $ebsrId], $ebsrId, new Result());
 
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT)
