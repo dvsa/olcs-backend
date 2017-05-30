@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Pi;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -29,6 +30,8 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
  */
 class PiHearing extends AbstractPiHearing
 {
+    const MSG_HEARING_DATE_BEFORE_PI_DATE = 'HEARING_DATE_BEFORE_PI';
+
     /**
      * @param PiEntity $pi
      * @param PresidingTcEntity $presidingTc
@@ -116,6 +119,12 @@ class PiHearing extends AbstractPiHearing
             throw new ForbiddenException('Can\'t create a hearing for a closed Pi');
         }
 
+        if ($hearingDate < $pi->getAgreedDate(true)) {
+            throw new ValidationException(
+                [self::MSG_HEARING_DATE_BEFORE_PI_DATE => $pi->getAgreedDate(true)->format('Y-m-d')]
+            );
+        }
+
         $this->pi = $pi;
         $this->presidingTc = $presidingTc;
         $this->presidedByRole = $presidedByRole;
@@ -170,6 +179,12 @@ class PiHearing extends AbstractPiHearing
     ) {
         if ($this->getPi()->isClosed()) {
             throw new ForbiddenException('Can\'t update a hearing for a closed Pi');
+        }
+
+        if ($hearingDate < $this->getPi()->getAgreedDate(true)) {
+            throw new ValidationException(
+                [self::MSG_HEARING_DATE_BEFORE_PI_DATE => $this->getPi()->getAgreedDate(true)->format('Y-m-d')]
+            );
         }
 
         $this->presidingTc = $presidingTc;

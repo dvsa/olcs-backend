@@ -131,6 +131,7 @@ class UpdateHearingTest extends CommandHandlerTestCase
         $pi->shouldReceive('getId')->andReturn($piId);
         $pi->shouldReceive('getCase')->andReturn($cases);
         $pi->shouldReceive('isClosed')->once()->andReturn(false);
+        $pi->shouldReceive('getAgreedDate')->once()->andReturn(null);
 
         $piHearing = m::mock(PiHearingEntity::class)->makePartial();
         $piHearing->shouldReceive('getId')->andReturn($hearingId);
