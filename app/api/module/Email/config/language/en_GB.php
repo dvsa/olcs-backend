@@ -7,6 +7,7 @@ return array(
     'email.ebsr-received.subject' => 'EBSR Application Received - %s - EBSR ID: %s',
     'email.ebsr-refreshed.subject' => 'EBSR Data Refresh Completed - %s - EBSR ID: %s',
     'email.ebsr-refused.subject' => 'EBSR Application Refused - %s - EBSR ID: %s',
+    'email.ebsr-refused-by-sn.subject' => 'EBSR Application Refused - %s - EBSR ID: %s',
     'email.ebsr-registered.subject' => 'EBSR Application Registered - %s - EBSR ID: %s',
     'email.ebsr-withdrawn.subject' => 'EBSR Application Withdrawn - %s - EBSR ID: %s',
     'email.ebsr-failed.subject' => 'EBSR Application Failed - %s - EBSR ID: %s',
