@@ -816,4 +816,36 @@ class BatchControllerTest extends MockeryTestCase
 
         $this->sut->expireBusRegistrationAction();
     }
+
+    public function testDataRetentionRuleActionPopulate()
+    {
+        $this->mockParamsPlugin(
+            [
+                'populate' => true,
+            ]
+        );
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\DataRetention\Populate::class))
+            ->once()
+            ->andReturn(new Command\Result());
+
+        $result = $this->sut->dataRetentionRuleAction();
+
+        $this->assertSame(0, $result->getErrorLevel());
+    }
+
+    public function testDataRetentionRuleActionDelete()
+    {
+        $this->mockParamsPlugin(
+            [
+                'delete' => true,
+            ]
+        );
+
+        // @todo To be done in JIRA OLCS-16626
+
+        $this->sut->dataRetentionRuleAction();
+    }
 }
