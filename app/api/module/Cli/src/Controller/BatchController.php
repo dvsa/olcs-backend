@@ -23,6 +23,23 @@ use Zend\View\Model\ConsoleModel;
 class BatchController extends AbstractConsoleController
 {
     /**
+     * Run data retention rules
+     *
+     * @return \Zend\View\Model\ConsoleModel
+     * @throws \Exception
+     */
+    public function dataRetentionRuleAction()
+    {
+        if ($this->params('populate')) {
+            return $this->handleExitStatus($this->handleCommand([Command\DataRetention\Populate::create([])]));
+        }
+
+        if ($this->params('delete')) {
+            // @todo To be done in JIRA OLCS-16626
+        }
+    }
+
+    /**
      * Expire bus registrations that have passed the end date
      *
      * @return \Zend\View\Model\ConsoleModel

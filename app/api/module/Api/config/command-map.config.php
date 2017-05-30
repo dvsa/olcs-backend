@@ -976,4 +976,7 @@ return [
     // GdsVerify
     TransferCommand\GdsVerify\ProcessSignatureResponse::class =>
         CommandHandler\GdsVerify\ProcessSignatureResponse::class,
+
+    // DataRetention
+    Command\DataRetention\Populate::class => CommandHandler\DataRetention\Populate::class,
 ];
