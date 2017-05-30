@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Pi;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
@@ -40,6 +41,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
 {
     const STATUS_REGISTERED = 'pi_s_reg';
     const MSG_UPDATE_CLOSED = 'Can\'t update a closed Pi';
+    const MSG_DECISION_DATE_BEFORE_HEARING_DATE = 'DECISION_DATE_BEFORE_HEARING_DATE';
 
     /**
      * @param CasesEntity $case
@@ -161,6 +163,16 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
             throw new ForbiddenException(self::MSG_UPDATE_CLOSED);
         }
 
+        $decisionDate = $this->processDate($decisionDate);
+        if (!empty($decisionDate)) {
+            $hearingDate = $this->getHearingDate(true);
+            if (!empty($hearingDate) && $decisionDate < $hearingDate) {
+                throw new ValidationException(
+                    [self::MSG_DECISION_DATE_BEFORE_HEARING_DATE => $hearingDate->format('Y-m-d')]
+                );
+            }
+        }
+
         $this->setDecidedByTc($decidedByTc);
         $this->decidedByTcRole = $decidedByTcRole;
         $this->decisions = $decisions;
@@ -169,7 +181,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         $this->licenceCurtailedAtPi = $licenceCurtailedAtPi;
         $this->witnesses = $witnesses;
         $this->decisionNotes = $decisionNotes;
-        $this->decisionDate = $this->processDate($decisionDate);
+        $this->decisionDate = $decisionDate;
         $this->notificationDate = $this->processDate($notificationDate);
         $this->tmCalledWithOperator = $tmCalledWithOperator;
         $this->tmDecisions = $tmDecisions;
@@ -430,15 +442,19 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
 
     /**
      * Gets the upcoming hearing date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return null|string|\DateTime
      */
-    public function getHearingDate()
+    public function getHearingDate($asDateTime = false)
     {
         if ($this->piHearings->count() > 0) {
             /** @var PiHearingEntity $hearing */
             $hearing = $this->piHearings->last();
 
             if ($hearing->getIsAdjourned() !== 'Y' && $hearing->getIsCancelled() !== 'Y') {
-                return $hearing->getHearingDate();
+                return $hearing->getHearingDate($asDateTime);
             }
         }
 
