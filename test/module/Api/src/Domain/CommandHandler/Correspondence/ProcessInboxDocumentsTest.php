@@ -50,6 +50,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $command = Command::create([]);
+        $orgName = 'org name';
 
         $cd = new ContactDetails(m::mock(RefData::class));
         $cd->setEmailAddress('foo@bar.com');
@@ -64,6 +65,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
 
         $organisation = new Organisation();
         $organisation->addOrganisationUsers($orgUser);
+        $organisation->setName($orgName);
 
         $mockLicence = m::mock()
             ->shouldReceive('getId')
@@ -130,7 +132,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
             ->with(
                 m::type(Message::class),
                 'email-inbox-reminder-continuation',
-                ['licNo' => 'licNo', 'url' => 'http://selfserve/correspondence'],
+                ['licNo' => 'licNo', 'operatorName' => $orgName, 'url' => 'http://selfserve/correspondence'],
                 'default'
             );
 
@@ -157,7 +159,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
             'id' => []
         ];
         $result = $this->sut->handleCommand($command);
-        $this->assertEquals($result->toArray(), $expected);
+        $this->assertEquals($expected, $result->toArray());
     }
 
     public function testHandleCommandFailSendEmail()

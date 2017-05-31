@@ -12,6 +12,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Validators\EmailAddress as EmailAddressValidator;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 
 /**
  * Create Correspondence Record
@@ -51,6 +52,7 @@ final class CreateCorrespondenceRecord extends AbstractCommandHandler implements
         $success = false;
 
         foreach ($licence->getOrganisation()->getAdminOrganisationUsers() as $orgUser) {
+            /** @var OrganisationUserEntity $orgUser */
             $user = $orgUser->getUser();
 
             $emailAddress = $user->getContactDetails()->getEmailAddress();
@@ -69,6 +71,7 @@ final class CreateCorrespondenceRecord extends AbstractCommandHandler implements
                 'licensing-information-' . $command->getType(),
                 [
                     'licNo' => $licence->getLicNo(),
+                    'operatorName' => $licence->getOrganisation()->getName(),
                     // @NOTE the http://selfserve part gets replaced
                     'url' => 'http://selfserve/correspondence'
                 ]
