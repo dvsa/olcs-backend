@@ -176,10 +176,16 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -344,10 +350,16 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -368,10 +380,16 @@ abstract class AbstractPublicHoliday implements BundleSerializableInterface, Jso
     /**
      * Get the public holiday date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getPublicHolidayDate()
+    public function getPublicHolidayDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->publicHolidayDate);
+        }
+
         return $this->publicHolidayDate;
     }
 

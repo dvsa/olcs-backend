@@ -627,10 +627,16 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the closed date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getClosedDate()
+    public function getClosedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->closedDate);
+        }
+
         return $this->closedDate;
     }
 
@@ -699,10 +705,16 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -723,10 +735,16 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the deleted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDeletedDate()
+    public function getDeletedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
         return $this->deletedDate;
     }
 
@@ -867,10 +885,16 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -963,10 +987,16 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the open date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getOpenDate()
+    public function getOpenDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->openDate);
+        }
+
         return $this->openDate;
     }
 

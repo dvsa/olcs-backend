@@ -213,10 +213,16 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -237,10 +243,16 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Get the deleted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDeletedDate()
+    public function getDeletedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
         return $this->deletedDate;
     }
 
@@ -261,10 +273,16 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Get the effective from
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getEffectiveFrom()
+    public function getEffectiveFrom($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->effectiveFrom);
+        }
+
         return $this->effectiveFrom;
     }
 
@@ -381,10 +399,16 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 

@@ -177,10 +177,16 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     /**
      * Get the action after date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getActionAfterDate()
+    public function getActionAfterDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->actionAfterDate);
+        }
+
         return $this->actionAfterDate;
     }
 
@@ -225,10 +231,16 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     /**
      * Get the actioned date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getActionedDate()
+    public function getActionedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->actionedDate);
+        }
+
         return $this->actionedDate;
     }
 
@@ -273,10 +285,16 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -321,10 +339,16 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     /**
      * Get the deleted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDeletedDate()
+    public function getDeletedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
         return $this->deletedDate;
     }
 
@@ -441,10 +465,16 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 

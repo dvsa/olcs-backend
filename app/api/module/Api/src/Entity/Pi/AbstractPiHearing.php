@@ -279,10 +279,16 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
     /**
      * Get the adjourned date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getAdjournedDate()
+    public function getAdjournedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->adjournedDate);
+        }
+
         return $this->adjournedDate;
     }
 
@@ -327,10 +333,16 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
     /**
      * Get the cancelled date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCancelledDate()
+    public function getCancelledDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->cancelledDate);
+        }
+
         return $this->cancelledDate;
     }
 
@@ -399,10 +411,16 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -447,10 +465,16 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
     /**
      * Get the hearing date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getHearingDate()
+    public function getHearingDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->hearingDate);
+        }
+
         return $this->hearingDate;
     }
 
@@ -591,10 +615,16 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 

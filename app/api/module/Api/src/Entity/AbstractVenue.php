@@ -215,10 +215,16 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -239,10 +245,16 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the end date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getEndDate()
+    public function getEndDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->endDate);
+        }
+
         return $this->endDate;
     }
 
@@ -311,10 +323,16 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -383,10 +401,16 @@ abstract class AbstractVenue implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the start date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getStartDate()
+    public function getStartDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->startDate);
+        }
+
         return $this->startDate;
     }
 

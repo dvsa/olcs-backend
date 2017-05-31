@@ -148,10 +148,16 @@ abstract class AbstractCompaniesHouseOfficer implements BundleSerializableInterf
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -172,10 +178,16 @@ abstract class AbstractCompaniesHouseOfficer implements BundleSerializableInterf
     /**
      * Get the date of birth
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDateOfBirth()
+    public function getDateOfBirth($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->dateOfBirth);
+        }
+
         return $this->dateOfBirth;
     }
 
@@ -220,10 +232,16 @@ abstract class AbstractCompaniesHouseOfficer implements BundleSerializableInterf
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 

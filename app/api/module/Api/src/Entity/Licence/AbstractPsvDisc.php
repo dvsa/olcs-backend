@@ -190,10 +190,16 @@ abstract class AbstractPsvDisc implements BundleSerializableInterface, JsonSeria
     /**
      * Get the ceased date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCeasedDate()
+    public function getCeasedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->ceasedDate);
+        }
+
         return $this->ceasedDate;
     }
 
@@ -238,10 +244,16 @@ abstract class AbstractPsvDisc implements BundleSerializableInterface, JsonSeria
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -358,10 +370,16 @@ abstract class AbstractPsvDisc implements BundleSerializableInterface, JsonSeria
     /**
      * Get the issued date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getIssuedDate()
+    public function getIssuedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->issuedDate);
+        }
+
         return $this->issuedDate;
     }
 
@@ -406,10 +424,16 @@ abstract class AbstractPsvDisc implements BundleSerializableInterface, JsonSeria
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 

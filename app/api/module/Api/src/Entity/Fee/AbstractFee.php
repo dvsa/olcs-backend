@@ -388,10 +388,16 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -556,10 +562,16 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Get the invoiced date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getInvoicedDate()
+    public function getInvoicedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->invoicedDate);
+        }
+
         return $this->invoicedDate;
     }
 
@@ -676,10 +688,16 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
