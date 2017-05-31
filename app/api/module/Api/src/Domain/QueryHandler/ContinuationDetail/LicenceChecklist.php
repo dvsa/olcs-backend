@@ -16,11 +16,9 @@ class LicenceChecklist extends AbstractQueryHandler
 {
     protected $repoServiceName = 'ContinuationDetail';
 
-    protected $extraRepos = ['Licence'];
-
     public function handleQuery(QueryInterface $query)
     {
-        /** @var ContinuationDetailEntity $licence */
+        /** @var ContinuationDetailEntity $continuationDetail */
         $continuationDetail = $this->getRepo()->fetchUsingId($query);
 
         return $this->result(
