@@ -364,10 +364,16 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -388,10 +394,16 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Get the deleted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDeletedDate()
+    public function getDeletedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
         return $this->deletedDate;
     }
 
@@ -412,10 +424,16 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Get the disqualification date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDisqualificationDate()
+    public function getDisqualificationDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->disqualificationDate);
+        }
+
         return $this->disqualificationDate;
     }
 
@@ -556,10 +574,16 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -652,10 +676,16 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
     /**
      * Get the purchase date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getPurchaseDate()
+    public function getPurchaseDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->purchaseDate);
+        }
+
         return $this->purchaseDate;
     }
 

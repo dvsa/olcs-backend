@@ -302,10 +302,16 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Get the check date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCheckDate()
+    public function getCheckDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->checkDate);
+        }
+
         return $this->checkDate;
     }
 
@@ -350,10 +356,16 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -374,10 +386,16 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Get the deleted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDeletedDate()
+    public function getDeletedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
         return $this->deletedDate;
     }
 
@@ -422,10 +440,16 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Get the infringement date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getInfringementDate()
+    public function getInfringementDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->infringementDate);
+        }
+
         return $this->infringementDate;
     }
 
@@ -470,10 +494,16 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 

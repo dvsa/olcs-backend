@@ -392,10 +392,16 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -416,10 +422,16 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Get the deferred date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDeferredDate()
+    public function getDeferredDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deferredDate);
+        }
+
         return $this->deferredDate;
     }
 
@@ -440,10 +452,16 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Get the due date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDueDate()
+    public function getDueDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->dueDate);
+        }
+
         return $this->dueDate;
     }
 
@@ -464,10 +482,16 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Get the from date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getFromDate()
+    public function getFromDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->fromDate);
+        }
+
         return $this->fromDate;
     }
 
@@ -584,10 +608,16 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -704,10 +734,16 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Get the request date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getRequestDate()
+    public function getRequestDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->requestDate);
+        }
+
         return $this->requestDate;
     }
 
@@ -824,10 +860,16 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Get the return date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getReturnDate()
+    public function getReturnDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->returnDate);
+        }
+
         return $this->returnDate;
     }
 
@@ -872,10 +914,16 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     /**
      * Get the to date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getToDate()
+    public function getToDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->toDate);
+        }
+
         return $this->toDate;
     }
 

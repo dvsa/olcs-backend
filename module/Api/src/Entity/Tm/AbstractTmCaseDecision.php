@@ -330,10 +330,16 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -378,10 +384,16 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Get the decision date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDecisionDate()
+    public function getDecisionDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->decisionDate);
+        }
+
         return $this->decisionDate;
     }
 
@@ -402,10 +414,16 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Get the deleted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDeletedDate()
+    public function getDeletedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
         return $this->deletedDate;
     }
 
@@ -498,10 +516,16 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -546,10 +570,16 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Get the notified date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getNotifiedDate()
+    public function getNotifiedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->notifiedDate);
+        }
+
         return $this->notifiedDate;
     }
 
@@ -681,10 +711,16 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Get the unfitness end date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getUnfitnessEndDate()
+    public function getUnfitnessEndDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->unfitnessEndDate);
+        }
+
         return $this->unfitnessEndDate;
     }
 
@@ -768,10 +804,16 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Get the unfitness start date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getUnfitnessStartDate()
+    public function getUnfitnessStartDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->unfitnessStartDate);
+        }
+
         return $this->unfitnessStartDate;
     }
 

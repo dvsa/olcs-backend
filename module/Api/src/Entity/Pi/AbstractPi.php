@@ -606,10 +606,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the agreed date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getAgreedDate()
+    public function getAgreedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->agreedDate);
+        }
+
         return $this->agreedDate;
     }
 
@@ -654,10 +660,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the brief to tc date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getBriefToTcDate()
+    public function getBriefToTcDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->briefToTcDate);
+        }
+
         return $this->briefToTcDate;
     }
 
@@ -678,10 +690,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the call up letter date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCallUpLetterDate()
+    public function getCallUpLetterDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->callUpLetterDate);
+        }
+
         return $this->callUpLetterDate;
     }
 
@@ -726,10 +744,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the closed date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getClosedDate()
+    public function getClosedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->closedDate);
+        }
+
         return $this->closedDate;
     }
 
@@ -798,10 +822,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -870,10 +900,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the decision date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDecisionDate()
+    public function getDecisionDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->decisionDate);
+        }
+
         return $this->decisionDate;
     }
 
@@ -894,10 +930,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the decision letter sent date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDecisionLetterSentDate()
+    public function getDecisionLetterSentDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->decisionLetterSentDate);
+        }
+
         return $this->decisionLetterSentDate;
     }
 
@@ -1005,10 +1047,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the deleted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDeletedDate()
+    public function getDeletedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
         return $this->deletedDate;
     }
 
@@ -1101,10 +1149,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -1197,10 +1251,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the notification date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getNotificationDate()
+    public function getNotificationDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->notificationDate);
+        }
+
         return $this->notificationDate;
     }
 
@@ -1419,10 +1479,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the tc written decision date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getTcWrittenDecisionDate()
+    public function getTcWrittenDecisionDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->tcWrittenDecisionDate);
+        }
+
         return $this->tcWrittenDecisionDate;
     }
 
@@ -1443,10 +1509,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the tc written reason date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getTcWrittenReasonDate()
+    public function getTcWrittenReasonDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->tcWrittenReasonDate);
+        }
+
         return $this->tcWrittenReasonDate;
     }
 
@@ -1602,10 +1674,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the written decision letter date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getWrittenDecisionLetterDate()
+    public function getWrittenDecisionLetterDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->writtenDecisionLetterDate);
+        }
+
         return $this->writtenDecisionLetterDate;
     }
 
@@ -1650,10 +1728,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the written reason date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getWrittenReasonDate()
+    public function getWrittenReasonDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->writtenReasonDate);
+        }
+
         return $this->writtenReasonDate;
     }
 
@@ -1674,10 +1758,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the written reason letter date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getWrittenReasonLetterDate()
+    public function getWrittenReasonLetterDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->writtenReasonLetterDate);
+        }
+
         return $this->writtenReasonLetterDate;
     }
 

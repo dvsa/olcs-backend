@@ -753,10 +753,16 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     /**
      * Get the cns date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCnsDate()
+    public function getCnsDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->cnsDate);
+        }
+
         return $this->cnsDate;
     }
 
@@ -825,10 +831,16 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     /**
      * Get the created on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
         return $this->createdOn;
     }
 
@@ -849,10 +861,16 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     /**
      * Get the curtailed date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getCurtailedDate()
+    public function getCurtailedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->curtailedDate);
+        }
+
         return $this->curtailedDate;
     }
 
@@ -936,10 +954,16 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     /**
      * Get the deleted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getDeletedDate()
+    public function getDeletedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
         return $this->deletedDate;
     }
 
@@ -1008,10 +1032,16 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     /**
      * Get the expiry date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getExpiryDate()
+    public function getExpiryDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->expiryDate);
+        }
+
         return $this->expiryDate;
     }
 
@@ -1056,10 +1086,16 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     /**
      * Get the fee date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getFeeDate()
+    public function getFeeDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->feeDate);
+        }
+
         return $this->feeDate;
     }
 
@@ -1104,10 +1140,16 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     /**
      * Get the granted date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getGrantedDate()
+    public function getGrantedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->grantedDate);
+        }
+
         return $this->grantedDate;
     }
 
@@ -1152,10 +1194,16 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     /**
      * Get the in force date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getInForceDate()
+    public function getInForceDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->inForceDate);
+        }
+
         return $this->inForceDate;
     }
 
@@ -1224,10 +1272,16 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     /**
      * Get the last modified on
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
         return $this->lastModifiedOn;
     }
 
@@ -1368,10 +1422,16 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     /**
      * Get the review date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getReviewDate()
+    public function getReviewDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->reviewDate);
+        }
+
         return $this->reviewDate;
     }
 
@@ -1392,10 +1452,16 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     /**
      * Get the revoked date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getRevokedDate()
+    public function getRevokedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->revokedDate);
+        }
+
         return $this->revokedDate;
     }
 
@@ -1536,10 +1602,16 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     /**
      * Get the surrendered date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getSurrenderedDate()
+    public function getSurrenderedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->surrenderedDate);
+        }
+
         return $this->surrenderedDate;
     }
 
@@ -1560,10 +1632,16 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     /**
      * Get the suspended date
      *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
      * @return \DateTime
      */
-    public function getSuspendedDate()
+    public function getSuspendedDate($asDateTime = false)
     {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->suspendedDate);
+        }
+
         return $this->suspendedDate;
     }
 
