@@ -60,6 +60,7 @@ use Dvsa\Olcs\Api\Domain\ValidatorManager;
  * @method bool canEditLicence($entityId)
  * @method bool canEditApplication($entityId)
  * @method bool canEditBusReg($entityId)
+ * @method bool canAccessContinuationDetail($entityId)
  */
 trait ValidationHelperTrait
 {
