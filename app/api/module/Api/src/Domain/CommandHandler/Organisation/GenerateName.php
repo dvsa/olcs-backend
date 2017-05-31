@@ -17,7 +17,6 @@ class GenerateName extends AbstractCommandHandler implements TransactionedInterf
 {
     const ERR_ORG_TYPE_INVALID = 'Can only generate Organisation name for a sole trader or partnership';
     const ERR_ONLY_NEW_APP = 'Can only generate Organisation name for a new application';
-    const ERR_ORG_INVALID = 'Organisation not found';
 
     protected $repoServiceName = 'Organisation';
     protected $extraRepos = ['Application'];
@@ -41,11 +40,8 @@ class GenerateName extends AbstractCommandHandler implements TransactionedInterf
             $this->checkForApplication();
         }
 
+        /** @var  Entity\Organisation\Organisation $organisation */
         $organisation = $this->getRepo()->fetchById($command->getOrganisation());
-
-        if (!$organisation instanceof Entity\Organisation\Organisation) {
-            throw new ValidationException([self::ERR_ORG_INVALID]);
-        }
 
         if (!$organisation->isSoleTrader() && !$organisation->isPartnership()) {
             throw new ValidationException([self::ERR_ORG_TYPE_INVALID]);
