@@ -474,6 +474,8 @@ return [
         QueryHandler\ContinuationDetail\ChecklistReminders::class,
     TransferQuery\ContinuationDetail\GetList::class =>
         QueryHandler\ContinuationDetail\GetList::class,
+    TransferQuery\ContinuationDetail\LicenceChecklist::class =>
+        QueryHandler\ContinuationDetail\LicenceChecklist::class,
 
     // System
     TransferQuery\System\FinancialStandingRate::class => QueryHandler\System\FinancialStandingRate::class,
