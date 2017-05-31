@@ -29,14 +29,12 @@ final class DeleteList extends AbstractCommandHandler implements TransactionedIn
      */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         $org = null;
         foreach ($command->getIds() as $organisationPersonId) {
             /** @var \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson $organisationPerson */
             $organisationPerson = $this->getRepo()->fetchById($organisationPersonId);
             $this->getRepo()->delete($organisationPerson);
-            $result->addMessage("OrganisationPerson ID {$organisationPersonId} deleted");
+            $this->result->addMessage("OrganisationPerson ID {$organisationPersonId} deleted");
 
             $org = $organisationPerson->getOrganisation();
             $person = $organisationPerson->getPerson();
@@ -48,7 +46,7 @@ final class DeleteList extends AbstractCommandHandler implements TransactionedIn
             if (count($organisationPersons) === 0) {
                 // if no organisation person records for this person, then person can be deleted
                 $this->getRepo('Person')->delete($person);
-                $result->addMessage("Person ID {$person->getId()} deleted");
+                $this->result->addMessage("Person ID {$person->getId()} deleted");
 
                 // remove all application_organisation_person records for this person
                 /** @var Repository\ApplicationOrganisationPerson $appOrgPersonRepo */
@@ -59,15 +57,17 @@ final class DeleteList extends AbstractCommandHandler implements TransactionedIn
 
         //  update Organisation Name
         if ($org !== null && ($org->isSoleTrader() || $org->isPartnership())) {
-            $this->result = $this->handleSideEffect(
-                TransferCmd\Organisation\GenerateName::create(
-                    [
-                        'organisation' => $org->getId(),
-                    ]
+            $this->result->merge(
+                $this->handleSideEffect(
+                    TransferCmd\Organisation\GenerateName::create(
+                        [
+                            'organisation' => $org->getId(),
+                        ]
+                    )
                 )
             );
         }
 
-        return $result;
+        return $this->result;
     }
 }

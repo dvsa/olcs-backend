@@ -56,11 +56,13 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
 
         //  update Organisation Name
         if ($org->isSoleTrader() || $org->isPartnership()) {
-            $this->result = $this->handleSideEffect(
-                TransferCmd\Organisation\GenerateName::create(
-                    [
-                        'organisation' => $org->getId(),
-                    ]
+            $this->result->merge(
+                $this->handleSideEffect(
+                    TransferCmd\Organisation\GenerateName::create(
+                        [
+                            'organisation' => $org->getId(),
+                        ]
+                    )
                 )
             );
         }
