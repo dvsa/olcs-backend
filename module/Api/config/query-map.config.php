@@ -542,4 +542,7 @@ return [
 
     // Gds Verify
     TransferQuery\GdsVerify\GetAuthRequest::class => QueryHandler\GdsVerify\GetAuthRequest::class,
+
+    // Data Service
+    TransferQuery\DataService\ApplicationStatus::class => QueryHandler\DataService\ApplicationStatus::class,
 ];
