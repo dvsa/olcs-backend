@@ -252,7 +252,9 @@ class PiEntityTest extends EntityTester
             [false, null, '2010-10-10'],
             [false, '2010-10-10', new \DateTime('2010-10-10')],
             [false, '2017-02-20', new \DateTime('2010-10-10')],
-            'Decision date before hearing date' => [true, '2010-02-09', new \DateTime('2010-10-10')],
+            'Same date, but hearing time 00:30' => [false, '2010-10-10', new \DateTime('2010-10-10 00:30')],
+            'Same date, but hearing time 23:30' => [false, '2010-10-10', new \DateTime('2010-10-10 23:30')],
+            'Decision date before hearing date' => [true, '2010-02-09', new \DateTime('2010-02-10')],
             'Decision date before hearing date by years' => [true, '2010-02-10', new \DateTime('2017-10-10')],
         ];
     }
