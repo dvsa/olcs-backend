@@ -23,7 +23,7 @@ class ContactDetailsEntityTest extends EntityTester
     const DEF_ADDRESS_ID = 8888;
     const DEF_PHONE_ID = 9999;
     const DEF_PHONE_NR = 'unit_PhoneNr';
-    const DEF_PHONE_TYPE = PhoneContact::TYPE_BUSINESS;
+    const DEF_PHONE_TYPE = PhoneContact::TYPE_PRIMARY;
     const DEF_COUNTRY_CODE = 'unit_CountryCode';
     const DEF_PERSON_ID = 77777;
 
@@ -556,25 +556,17 @@ class ContactDetailsEntityTest extends EntityTester
                         'postcode' => 'unit_PostCode',
                         'countryCode' => (new Country())->setId(self::DEF_COUNTRY_CODE),
                     ],
-                    'businessPhoneContact' => [
-                        'id' => self::DEF_PHONE_ID,
-                        'phoneContactType' => new RefData('unit_Other_PhoneContactType'),
-                        'phoneNumber' => 'unit_Phone1',
-                    ],
-                    'mobilePhoneContact' => [
-                        'id' => null,
-                        'phoneContactType' => new RefData(PhoneContact::TYPE_MOBILE),
-                        'phoneNumber' => 'unit_Phone2',
-                    ],
-                    'homePhoneContact' => [
-                        'id' => 666,
-                        'phoneContactType' => new RefData(PhoneContact::TYPE_HOME),
-                        'phoneNumber' => 'unit_Phone3',
-                    ],
-                    'faxPhoneContact' => [
-                        'id' => null,
-                        'phoneContactType' => new RefData(PhoneContact::TYPE_FAX),
-                        'phoneNumber' => 'unit_Phone4',
+                    'phoneContacts' => [
+                        [
+                            'id' => self::DEF_PHONE_ID,
+                            'phoneContactType' => new RefData('unit_PhoneContactType1'),
+                            'phoneNumber' => 'unit_Phone1',
+                        ],
+                        [
+                            'id' => null,
+                            'phoneContactType' => new RefData('unit_PhoneContactType2'),
+                            'phoneNumber' => 'unit_Phone2',
+                        ],
                     ],
                 ],
                 'expect' => [
@@ -596,18 +588,8 @@ class ContactDetailsEntityTest extends EntityTester
                         ],
                         [
                             'id' => null,
-                            'type' => PhoneContact::TYPE_MOBILE,
+                            'type' => 'unit_PhoneContactType2',
                             'number' => 'unit_Phone2',
-                        ],
-                        [
-                            'id' => null,
-                            'type' => PhoneContact::TYPE_HOME,
-                            'number' => 'unit_Phone3',
-                        ],
-                        [
-                            'id' => null,
-                            'type' => PhoneContact::TYPE_FAX,
-                            'number' => 'unit_Phone4',
                         ],
                     ],
                 ],

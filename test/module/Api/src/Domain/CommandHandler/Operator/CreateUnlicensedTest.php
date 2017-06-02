@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact as PhoneContactEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Transfer\Command\Operator\CreateUnlicensed as CreateUnlicensedCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -50,8 +51,8 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
             LicenceEntity::LICENCE_STATUS_UNLICENSED,
             LicenceEntity::LICENCE_CATEGORY_PSV,
             OrganisationEntity::ORG_TYPE_OTHER,
-            PhoneContactEntity::TYPE_BUSINESS,
-            PhoneContactEntity::TYPE_FAX,
+            PhoneContactEntity::TYPE_PRIMARY,
+            PhoneContactEntity::TYPE_SECONDARY,
         ];
 
         $this->references = [
@@ -83,23 +84,25 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
                 'town' => 'atown',
                 'postcode' => 'pc',
             ],
-            'businessPhoneContact' => [
-                'phoneNumber' => '01234567890',
-                'phoneContactType' => 'phone_t_tel',
-            ],
-            'faxPhoneContact' => [
-                'phoneNumber' => '01234567891',
-                'phoneContactType' => 'phone_t_fax',
-            ],
+            'phoneContacts' => [
+                [
+                    'phoneNumber' => '01234567890',
+                    'phoneContactType' => 'phone_t_primary',
+                ],
+                [
+                    'phoneNumber' => '01234567891',
+                    'phoneContactType' => 'phone_t_secondary',
+                ],
+            ]
         ];
 
         // map ref data references for phone contact types
         $contactDetails = $contactDetailsData;
-        $contactDetails['businessPhoneContact']['phoneContactType'] = $this->mapRefData(
-            $contactDetails['businessPhoneContact']['phoneContactType']
+        $contactDetails['phoneContacts'][0]['phoneContactType'] = $this->mapRefData(
+            $contactDetails['phoneContacts'][0]['phoneContactType']
         );
-        $contactDetails['faxPhoneContact']['phoneContactType'] = $this->mapRefData(
-            $contactDetails['faxPhoneContact']['phoneContactType']
+        $contactDetails['phoneContacts'][1]['phoneContactType'] = $this->mapRefData(
+            $contactDetails['phoneContacts'][1]['phoneContactType']
         );
 
         $data = [
@@ -126,7 +129,7 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
             ->twice(); // saved twice due to licence no. generation
 
         $this->repoMap['ContactDetails']
-            ->shouldReceive('populateOperatorRefDataReferences')
+            ->shouldReceive('populateRefDataReference')
             ->with($contactDetailsData)
             ->andReturn($contactDetails);
 
@@ -194,8 +197,8 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
         $phoneContacts = $savedLicence->getCorrespondenceCd()->getPhoneContacts();
         $this->assertEquals(2, $phoneContacts->count());
         $this->assertEquals('01234567890', $phoneContacts->get(0)->getPhoneNumber());
-        $this->assertEquals('phone_t_tel', $phoneContacts->get(0)->getPhoneContactType()->getId());
+        $this->assertEquals('phone_t_primary', $phoneContacts->get(0)->getPhoneContactType()->getId());
         $this->assertEquals('01234567891', $phoneContacts->get(1)->getPhoneNumber());
-        $this->assertEquals('phone_t_fax', $phoneContacts->get(1)->getPhoneContactType()->getId());
+        $this->assertEquals('phone_t_secondary', $phoneContacts->get(1)->getPhoneContactType()->getId());
     }
 }
