@@ -50,7 +50,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
     {
         $this->refData = [
             ContactDetailsEntity::CONTACT_TYPE_USER,
-            PhoneContactEntity::TYPE_FAX,
+            PhoneContactEntity::TYPE_PRIMARY,
             'title_mr',
         ];
 
@@ -196,7 +196,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
                 ],
                 'phoneContacts' => [
                     [
-                        'phoneContactType' => PhoneContactEntity::TYPE_FAX,
+                        'phoneContactType' => PhoneContactEntity::TYPE_PRIMARY,
                         'phoneNumber' => '111',
                     ],
                 ],
@@ -268,7 +268,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
                     $dataPhoneContacts = $data['contactDetails']['phoneContacts'][0];
                     $this->assertSame($dataPhoneContacts['phoneNumber'], $phoneContact->getPhoneNumber());
                     $this->assertSame(
-                        $this->refData[PhoneContactEntity::TYPE_FAX],
+                        $this->refData[PhoneContactEntity::TYPE_PRIMARY],
                         $phoneContact->getPhoneContactType()
                     );
                     $phoneContact->setId(755);

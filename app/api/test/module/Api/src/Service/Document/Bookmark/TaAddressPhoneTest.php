@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
+use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\TaAddressPhone;
 
 /**
@@ -65,7 +66,7 @@ class TaAddressPhoneTest extends \PHPUnit_Framework_TestCase
                             [
                                 'phoneNumber' => '1234',
                                 'phoneContactType' => [
-                                    'id' => 'phone_t_home'
+                                    'id' => 'foo'
                                 ]
                             ]
                         ]
@@ -99,7 +100,7 @@ class TaAddressPhoneTest extends \PHPUnit_Framework_TestCase
                             [
                                 'phoneNumber' => '1234',
                                 'phoneContactType' => [
-                                    'id' => 'phone_t_tel'
+                                    'id' => PhoneContact::TYPE_PRIMARY
                                 ]
                             ]
                         ]

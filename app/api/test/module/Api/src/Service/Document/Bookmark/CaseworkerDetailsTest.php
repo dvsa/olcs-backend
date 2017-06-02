@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
+use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\CaseworkerDetails;
 
 /**
@@ -72,8 +73,12 @@ class CaseworkerDetailsTest extends \PHPUnit_Framework_TestCase
                             ],
                             'phoneContacts' => [
                                 [
-                                    'phoneContactType' => ['id' => 'phone_t_tel'],
-                                    'phoneNumber' => '0113 123 1234'
+                                    'phoneContactType' => ['id' => PhoneContact::TYPE_SECONDARY],
+                                    'phoneNumber' => '0113 222 2222'
+                                ],
+                                [
+                                    'phoneContactType' => ['id' => PhoneContact::TYPE_PRIMARY],
+                                    'phoneNumber' => '0113 111 1111'
                                 ]
                             ],
                             'person' => [
@@ -84,7 +89,7 @@ class CaseworkerDetailsTest extends \PHPUnit_Framework_TestCase
                     ],
                     []
                 ],
-                "A User\nLine 1\nDirect Line: 0113 123 1234\ne-mail: a@user.com"
+                "A User\nLine 1\nDirect Line: 0113 111 1111\ne-mail: a@user.com"
             ],
             // testRenderWithTrafficAreaContactDetailsAddress
             [

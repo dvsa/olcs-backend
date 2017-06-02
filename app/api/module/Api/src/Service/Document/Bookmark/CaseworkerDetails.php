@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
+use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\UserBundle as Qry;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as QryLic;
@@ -14,9 +15,6 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as QryLic;
 class CaseworkerDetails extends DynamicBookmark
 {
     protected $params = ['user'];
-
-    // makes our ref data key a bit clearer in context
-    const TEL_DIRECT_DIAL ='phone_t_tel';
 
     /**
      * Get Query
@@ -121,9 +119,9 @@ class CaseworkerDetails extends DynamicBookmark
     }
 
     /**
-     * Fetch Direct Dial
+     * Fetch Direct Dial, contact number
      *
-     * @return null|string
+     * @return string
      */
     private function fetchDirectDial()
     {
@@ -131,11 +129,7 @@ class CaseworkerDetails extends DynamicBookmark
         if (empty($userData['contactDetails']['phoneContacts'])) {
             return '';
         }
-        foreach ($userData['contactDetails']['phoneContacts'] as $phone) {
-            if ($phone['phoneContactType']['id'] === self::TEL_DIRECT_DIAL) {
-                return $phone['phoneNumber'];
-            }
-        }
-        return null;
+
+        return Formatter\ContactNumber::format($userData['contactDetails']['phoneContacts']);
     }
 }
