@@ -324,6 +324,7 @@ return [
             'DigitalSignature' => RepositoryFactory::class,
             'DataRetentionRule' => RepositoryFactory::class,
             'DataService' => RepositoryFactory::class,
+            'DocumentToDelete' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
