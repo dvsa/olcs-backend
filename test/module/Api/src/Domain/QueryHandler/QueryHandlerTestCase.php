@@ -93,6 +93,10 @@ class QueryHandlerTestCase extends MockeryTestCase
 
     protected function mockRepo($name, $class)
     {
-        $this->repoMap[$name] = m::mock($class);
+        if (!$class instanceof m\MockInterface) {
+            $class = m::mock($class);
+        }
+
+        return $this->repoMap[$name] = $class;
     }
 }
