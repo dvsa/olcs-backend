@@ -63,7 +63,7 @@ class Container extends \SAML2\Compat\AbstractContainer
      */
     public function generateId()
     {
-        return 'GdsVerify'. microtime(true);
+        return uniqid('_', true);
     }
 
     /**

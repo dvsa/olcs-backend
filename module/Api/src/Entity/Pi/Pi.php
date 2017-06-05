@@ -166,10 +166,13 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         $decisionDate = $this->processDate($decisionDate);
         if (!empty($decisionDate)) {
             $hearingDate = $this->getHearingDate(true);
-            if (!empty($hearingDate) && $decisionDate < $hearingDate) {
-                throw new ValidationException(
-                    [self::MSG_DECISION_DATE_BEFORE_HEARING_DATE => $hearingDate->format('Y-m-d')]
-                );
+            if (!empty($hearingDate)) {
+                $interval = $hearingDate->diff($decisionDate);
+                if ($interval->days > 0 && $interval->invert === 1) {
+                    throw new ValidationException(
+                        [self::MSG_DECISION_DATE_BEFORE_HEARING_DATE => $hearingDate->format('Y-m-d')]
+                    );
+                }
             }
         }
 

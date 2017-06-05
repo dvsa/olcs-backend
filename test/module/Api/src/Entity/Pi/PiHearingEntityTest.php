@@ -38,9 +38,9 @@ class PiHearingEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dataProviderDecisionBeforeHearingValidate
+     * @dataProvider dataProviderHearingBeforeAgreedDateValidate
      */
-    public function testCreateValidationDecisionBeforeHearing($expectException, $hearingDate, $piAgreedDate)
+    public function testCreateValidationHearingBeforeAgreedDate($expectException, $hearingDate, $piAgreedDate)
     {
         $piEntity = m::mock(PiEntity::class);
         $piEntity->shouldReceive('isClosed')->andReturn(false);
@@ -85,7 +85,7 @@ class PiHearingEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dataProviderDecisionBeforeHearingValidate
+     * @dataProvider dataProviderHearingBeforeAgreedDateValidate
      */
     public function testUpdateValidationDecisionBeforeHearing($expectException, $hearingDate, $piAgreedDate)
     {
@@ -140,7 +140,7 @@ class PiHearingEntityTest extends EntityTester
         $piEntity->shouldReceive('getAgreedDate')->andReturn(null);
         $presidingTc = m::mock(PresidingTcEntity::class);
         $presidedByRole = m::mock(RefData::class);
-        $hearingDate = m::mock(\DateTime::class);
+        $hearingDate = new \DateTime();
         $venue = null;
         $venueOther = 'other venue';
         $witnesses = 2;
@@ -199,7 +199,7 @@ class PiHearingEntityTest extends EntityTester
         $this->entity->setPi($piEntity);
         $presidingTc = m::mock(PresidingTcEntity::class);
         $presidedByRole = m::mock(RefData::class);
-        $hearingDate = m::mock(\DateTime::class);
+        $hearingDate = new \DateTime();
         $venue = null;
         $venueOther = 'other venue';
         $witnesses = 2;
@@ -318,12 +318,17 @@ class PiHearingEntityTest extends EntityTester
         ];
     }
 
-    public function dataProviderDecisionBeforeHearingValidate()
+    public function dataProviderHearingBeforeAgreedDateValidate()
     {
         return [
+            // $expectException, $hearingDate, $piAgreedDate
             [true, new \DateTime('2012-10-09'), new \DateTime('2017-10-10')],
-            [true, new \DateTime('2017-10-09'), new \DateTime('2017-10-10')],
-            [false, new \DateTime('2017-10-10'), new \DateTime('2017-10-10')],
+            [true, new \DateTime('2017-10-09 23:45'), new \DateTime('2017-10-10')],
+            [false, new \DateTime('2017-10-10 00:01'), new \DateTime('2017-10-10')],
+            [false, new \DateTime('2017-10-10 23:00 '), new \DateTime('2017-10-10')],
+            [false, new \DateTime('2017-10-10 00:00 +01:00 '), new \DateTime('2017-10-10')],
+            [false, new \DateTime('2017-10-10 01:00 +01:00 '), new \DateTime('2017-10-10')],
+            [false, new \DateTime('2017-10-10 23:45 +01:00 '), new \DateTime('2017-10-10')],
             [false, new \DateTime('2017-10-11'), new \DateTime('2017-10-10')],
             [false, new \DateTime('2027-10-10'), new \DateTime('2017-10-10')],
         ];
