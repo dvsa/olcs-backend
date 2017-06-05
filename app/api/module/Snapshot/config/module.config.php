@@ -67,6 +67,7 @@ return [
             'Review\TransportManagerPreviousLicence' => TmReview\TransportManagerPreviousLicenceReviewService::class,
             'Review\TransportManagerDeclaration' => TmReview\TransportManagerDeclarationReviewService::class,
             'Review\TransportManagerSignature' => TmReview\TransportManagerSignatureReviewService::class,
+            'ContinuationReviewSnapshot' => \Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Generator::class,
         ],
     ],
     'view_manager' => [
