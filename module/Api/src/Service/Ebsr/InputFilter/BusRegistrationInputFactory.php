@@ -7,6 +7,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ServiceNo;
 
 /**
  * Class BusRegistrationInputFactory
@@ -17,8 +18,9 @@ class BusRegistrationInputFactory implements FactoryInterface
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
+     * @return Input
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -48,6 +50,7 @@ class BusRegistrationInputFactory implements FactoryInterface
             $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\EffectiveDate'));
             $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\ApplicationType'));
             $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\Licence'));
+            $validatorChain->attach($serviceLocator->get('ValidatorManager')->get(ServiceNo::class));
         }
 
         return $service;
