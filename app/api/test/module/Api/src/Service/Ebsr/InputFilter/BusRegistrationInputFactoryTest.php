@@ -56,7 +56,7 @@ class BusRegistrationInputFactoryTest extends TestCase
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
         $this->assertCount(9, $service->getFilterChain());
-        $this->assertCount(3, $service->getValidatorChain());
+        $this->assertCount(4, $service->getValidatorChain());
 
         foreach ($service->getValidatorChain()->getValidators() as $validator) {
             if ($validator['instance'] === $mockBreakValidator) {
