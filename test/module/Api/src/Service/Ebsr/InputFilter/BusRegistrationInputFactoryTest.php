@@ -8,6 +8,7 @@ use Olcs\XmlTools\Filter\MapXmlFile;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory;
 use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ServiceNo;
 
 /**
  * Class BusRegistrationInputFactoryTest
@@ -49,6 +50,7 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with('Rules\EffectiveDate')->andReturn($mockValidator);
         $mockSl->shouldReceive('get')->with('Rules\ApplicationType')->andReturn($mockValidator);
         $mockSl->shouldReceive('get')->with('Rules\Licence')->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with(ServiceNo::class)->andReturn($mockValidator);
 
         $sut = new BusRegistrationInputFactory();
         /** @var \Zend\InputFilter\Input $service */
