@@ -1,0 +1,49 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="en" class="review">
+    
+    <?php echo $this->partial('partials/review-header'); ?>
+
+    <body>
+        
+        <div class="review-header">
+            <p><?php echo $this->translate($subTitle, 'snapshot'); ?></p>
+            <h1><?php echo $this->translate($reviewTitle, 'snapshot'); ?></h1>
+            <a class="hide-print" href="javascript:window.print()">Print this page</a>
+        </div>
+        <?php $count = 0; foreach ($sections as $section): $count++; ?>
+            <div class="review-section">
+                <h2>
+                    <?php
+                        if (!isset($settings['hide-count'])) {
+                            echo $count . '. ';
+                        }
+                        echo $this->translate($section['header'], 'snapshot');
+                    ?>
+                </h2>
+                <?php
+                    if (isset($section['config'])) {
+                        echo '<table>';
+                        foreach ($section['config'] as $line) {
+                            echo '<tr>';
+                            foreach ($line as $cell) {
+                                if (isset($cell['header']) && $cell['header']) {
+                                    $openTag = '<th>';
+                                    $closeTag = '</th>';
+                                } else {
+                                    $openTag = '<td>';
+                                    $closeTag = '</td>';
+                                }
+                                echo $openTag . $this->translate($cell['value'], 'snapshot') . $closeTag;
+                            }
+                            echo '</tr>';
+                        }
+                        echo '</table>';
+                    }
+                ?>
+            </div>
+        <?php endforeach; ?>
+        
+    </body>
+    
+</html>

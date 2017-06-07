@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Abstract Generator
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots;
 
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -20,11 +15,11 @@ abstract class AbstractGenerator implements ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
 
-    protected function generateReadonly(array $config)
+    protected function generateReadonly(array $config, $template = 'review')
     {
         $model = new ViewModel($config);
         $model->setTerminal(true);
-        $model->setTemplate('layout/review');
+        $model->setTemplate('layout/' . $template);
 
         $renderer = $this->getServiceLocator()->get('ViewRenderer');
         return $renderer->render($model);
