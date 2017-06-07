@@ -64,6 +64,9 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
             'document' => 222,
             'type' => 'standard'
         ];
+
+        $orgName = 'organisation name';
+
         $command = Cmd::create($data);
 
         /** @var User $user1 */
@@ -89,6 +92,7 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
         $organisation = m::mock(Organisation::class)->makePartial();
         $organisation->shouldReceive('getAdminOrganisationUsers')
             ->andReturn([$orgUser1, $orgUser2]);
+        $organisation->shouldReceive('getName')->times($times)->withNoArgs()->andReturn($orgName);
 
         $this->references[Licence::class][111]->setOrganisation($organisation);
         $this->references[Licence::class][111]->setTranslateToWelsh(true);
@@ -109,7 +113,7 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
             ->with(
                 m::type(Message::class),
                 'licensing-information-standard',
-                ['licNo' => 'AB12345678', 'url' => 'http://selfserve/correspondence'],
+                ['licNo' => 'AB12345678', 'operatorName' => $orgName, 'url' => 'http://selfserve/correspondence'],
                 'default'
             );
 

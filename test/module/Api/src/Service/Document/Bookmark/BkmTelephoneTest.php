@@ -38,32 +38,20 @@ class BkmTelephoneTest extends \PHPUnit_Framework_TestCase
                         'phoneContacts' => [
                             [
                                 'phoneContactType' => [
-                                    'id' => PhoneContactEntity::TYPE_BUSINESS
+                                    'id' => PhoneContactEntity::TYPE_PRIMARY
                                 ],
-                                'phoneNumber' => 'tel no'
+                                'phoneNumber' => '1111'
                             ],
                             [
                                 'phoneContactType' => [
-                                    'id' => PhoneContactEntity::TYPE_HOME
+                                    'id' => PhoneContactEntity::TYPE_SECONDARY
                                 ],
-                                'phoneNumber' => 'home no'
-                            ],
-                            [
-                                'phoneContactType' => [
-                                    'id' => PhoneContactEntity::TYPE_MOBILE
-                                ],
-                                'phoneNumber' => 'mobile no'
-                            ],
-                            [
-                                'phoneContactType' => [
-                                    'id' => PhoneContactEntity::TYPE_FAX
-                                ],
-                                'phoneNumber' => 'fax no'
+                                'phoneNumber' => '2222'
                             ],
                         ]
                     ]
                 ],
-                'tel no'
+                '1111'
             ],
             [
                 [
@@ -71,10 +59,19 @@ class BkmTelephoneTest extends \PHPUnit_Framework_TestCase
                         'phoneContacts' => [
                             [
                                 'phoneContactType' => [
-                                    'id' => PhoneContactEntity::TYPE_MOBILE
+                                    'id' => PhoneContactEntity::TYPE_SECONDARY
                                 ],
-                                'phoneNumber' => 'mobile no'
+                                'phoneNumber' => '2222'
                             ],
+                        ]
+                    ]
+                ],
+                '2222'
+            ],
+            [
+                [
+                    'irfoContactDetails' => [
+                        'phoneContacts' => [
                         ]
                     ]
                 ],

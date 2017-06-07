@@ -26,7 +26,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         usleep(100);
         $num2 = $container->generateId();
 
-        $this->assertStringStartsWith('GdsVerify', $num1);
+        $this->assertStringStartsWith('_', $num1);
         $this->assertNotEquals($num1, $num2);
     }
 

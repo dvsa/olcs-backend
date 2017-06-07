@@ -55,6 +55,7 @@ class Queue extends AbstractQueue
     const TYPE_CNS = 'que_typ_cns';
     const TYPE_CNS_EMAIL = 'que_typ_cns_email';
     const TYPE_CREATE_COM_LIC = 'que_typ_create_com_lic';
+    const TYPE_REMOVE_DELETED_DOCUMENTS = 'que_typ_remove_deleted_docs';
 
     protected $types = [
         self::TYPE_COMPANIES_HOUSE_INITIAL,
@@ -77,6 +78,7 @@ class Queue extends AbstractQueue
         self::TYPE_CNS,
         self::TYPE_CNS_EMAIL,
         self::TYPE_CREATE_COM_LIC,
+        self::TYPE_REMOVE_DELETED_DOCUMENTS,
     ];
 
     /**
@@ -95,8 +97,6 @@ class Queue extends AbstractQueue
      * Constructor
      *
      * @param RefData $messageType message type
-     *
-     * @return void
      */
     public function __construct(RefData $messageType = null)
     {

@@ -5,6 +5,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\OrganisationPerson;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -27,26 +29,45 @@ final class DeleteList extends AbstractCommandHandler implements TransactionedIn
      */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
+        $org = null;
         foreach ($command->getIds() as $organisationPersonId) {
             /** @var \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson $organisationPerson */
             $organisationPerson = $this->getRepo()->fetchById($organisationPersonId);
             $this->getRepo()->delete($organisationPerson);
-            $result->addMessage("OrganisationPerson ID {$organisationPersonId} deleted");
+            $this->result->addMessage("OrganisationPerson ID {$organisationPersonId} deleted");
+
+            $org = $organisationPerson->getOrganisation();
             $person = $organisationPerson->getPerson();
-            $organisationPersons = $this->getRepo('OrganisationPerson')->fetchListForPerson($person->getId());
+
+            /** @var Repository\OrganisationPerson $orgPersonRepo */
+            $orgPersonRepo = $this->getRepo('OrganisationPerson');
+            $organisationPersons = $orgPersonRepo->fetchListForPerson($person->getId());
 
             if (count($organisationPersons) === 0) {
                 // if no organisation person records for this person, then person can be deleted
                 $this->getRepo('Person')->delete($person);
-                $result->addMessage("Person ID {$person->getId()} deleted");
+                $this->result->addMessage("Person ID {$person->getId()} deleted");
 
                 // remove all application_organisation_person records for this person
-                $this->getRepo('ApplicationOrganisationPerson')->deleteForPerson($person);
+                /** @var Repository\ApplicationOrganisationPerson $appOrgPersonRepo */
+                $appOrgPersonRepo = $this->getRepo('ApplicationOrganisationPerson');
+                $appOrgPersonRepo->deleteForPerson($person);
             }
         }
 
-        return $result;
+        //  update Organisation Name
+        if ($org !== null && ($org->isSoleTrader() || $org->isPartnership())) {
+            $this->result->merge(
+                $this->handleSideEffect(
+                    TransferCmd\Organisation\GenerateName::create(
+                        [
+                            'organisation' => $org->getId(),
+                        ]
+                    )
+                )
+            );
+        }
+
+        return $this->result;
     }
 }

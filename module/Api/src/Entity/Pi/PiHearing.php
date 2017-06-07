@@ -118,8 +118,8 @@ class PiHearing extends AbstractPiHearing
         if ($pi->isClosed()) {
             throw new ForbiddenException('Can\'t create a hearing for a closed Pi');
         }
-
-        if ($hearingDate < $pi->getAgreedDate(true)) {
+        $hearingDateNoTime = new \DateTime($hearingDate->format('Y-m-d'));
+        if ($hearingDateNoTime < $pi->getAgreedDate(true)) {
             throw new ValidationException(
                 [self::MSG_HEARING_DATE_BEFORE_PI_DATE => $pi->getAgreedDate(true)->format('Y-m-d')]
             );
@@ -181,7 +181,8 @@ class PiHearing extends AbstractPiHearing
             throw new ForbiddenException('Can\'t update a hearing for a closed Pi');
         }
 
-        if ($hearingDate < $this->getPi()->getAgreedDate(true)) {
+        $hearingDateNoTime = new \DateTime($hearingDate->format('Y-m-d'));
+        if ($hearingDateNoTime < $this->getPi()->getAgreedDate(true)) {
             throw new ValidationException(
                 [self::MSG_HEARING_DATE_BEFORE_PI_DATE => $this->getPi()->getAgreedDate(true)->format('Y-m-d')]
             );

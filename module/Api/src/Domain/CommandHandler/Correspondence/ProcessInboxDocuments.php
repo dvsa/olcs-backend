@@ -104,6 +104,7 @@ final class ProcessInboxDocuments extends AbstractCommandHandler implements Emai
                         'email-inbox-reminder-' . $emailType,
                         [
                             'licNo' => $licence->getLicNo(),
+                            'operatorName' => $licence->getOrganisation()->getName(),
                             // @NOTE the http://selfserve part gets replaced
                             'url' => 'http://selfserve/correspondence'
                         ]
