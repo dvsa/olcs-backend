@@ -44,6 +44,7 @@ return [
     'DocTemplate' => 'Doc',
     'DocTemplateBookmark' => 'Doc',
     'Document' => 'Doc',
+    'DocumentToDelete' => 'Doc',
     'EbsrRouteReprint' => 'Ebsr',
     'EbsrSubmission' => 'Ebsr',
     'TxcInbox' => 'Ebsr',

@@ -76,11 +76,11 @@ class ApplicationAddressesReviewServiceTest extends MockeryTestCase
                             ],
                             'phoneContacts' => [
                                 [
-                                    'phoneContactType' => ['id' => PhoneContact::TYPE_BUSINESS],
+                                    'phoneContactType' => ['id' => PhoneContact::TYPE_PRIMARY],
                                     'phoneNumber' => '0123456789'
                                 ],
                                 [
-                                    'phoneContactType' => ['id' => PhoneContact::TYPE_MOBILE],
+                                    'phoneContactType' => ['id' => PhoneContact::TYPE_SECONDARY],
                                     'phoneNumber' => '0765465465'
                                 ]
                             ]
@@ -118,20 +118,12 @@ class ApplicationAddressesReviewServiceTest extends MockeryTestCase
                                     'multiItems' => [
                                         [
                                             [
-                                                'label' => 'application-review-addresses-correspondence-business',
+                                                'label' => 'application-review-addresses-correspondence-primary',
                                                 'value' => '0123456789'
                                             ],
                                             [
-                                                'label' => 'application-review-addresses-correspondence-home',
-                                                'value' => ''
-                                            ],
-                                            [
-                                                'label' => 'application-review-addresses-correspondence-mobile',
+                                                'label' => 'application-review-addresses-correspondence-secondary',
                                                 'value' => '0765465465'
-                                            ],
-                                            [
-                                                'label' => 'application-review-addresses-correspondence-fax',
-                                                'value' => ''
                                             ],
                                             [
                                                 'label' => 'application-review-addresses-correspondence-email',
@@ -174,13 +166,9 @@ class ApplicationAddressesReviewServiceTest extends MockeryTestCase
                             ],
                             'phoneContacts' => [
                                 [
-                                    'phoneContactType' => ['id' => PhoneContact::TYPE_BUSINESS],
+                                    'phoneContactType' => ['id' => PhoneContact::TYPE_PRIMARY],
                                     'phoneNumber' => '0123456789'
                                 ],
-                                [
-                                    'phoneContactType' => ['id' => PhoneContact::TYPE_MOBILE],
-                                    'phoneNumber' => '0765465465'
-                                ]
                             ]
                         ],
                         'establishmentCd' => [
@@ -216,19 +204,11 @@ class ApplicationAddressesReviewServiceTest extends MockeryTestCase
                                     'multiItems' => [
                                         [
                                             [
-                                                'label' => 'application-review-addresses-correspondence-business',
+                                                'label' => 'application-review-addresses-correspondence-primary',
                                                 'value' => '0123456789'
                                             ],
                                             [
-                                                'label' => 'application-review-addresses-correspondence-home',
-                                                'value' => ''
-                                            ],
-                                            [
-                                                'label' => 'application-review-addresses-correspondence-mobile',
-                                                'value' => '0765465465'
-                                            ],
-                                            [
-                                                'label' => 'application-review-addresses-correspondence-fax',
+                                                'label' => 'application-review-addresses-correspondence-secondary',
                                                 'value' => ''
                                             ],
                                             [

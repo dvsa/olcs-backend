@@ -17,5 +17,4 @@ return [
     CommandHandler\Organisation\CpidOrganisationExport::class => Misc\IsInternalUser::class,
     CommandHandler\Organisation\TransferTo::class => Misc\IsInternalEdit::class,
     CommandHandler\Organisation\GenerateName::class => Misc\CanAccessApplicationWithApplication::class,
-    CommandHandler\Organisation\GenerateName::class => Misc\CanAccessLicenceWithLicence::class,
 ];

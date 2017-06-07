@@ -2,38 +2,56 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\OrganisationPerson;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\OrganisationPerson\Update as CommandHandler;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Transfer\Command\OrganisationPerson\Update as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\Person\Person;
-use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
 
 /**
- * OrganisationPersonTest
- *
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\OrganisationPerson\Update
  */
 class UpdateTest extends CommandHandlerTestCase
 {
+    const ORG_ID = 9001;
+    const PERSON_ID = 8001;
+    const ORG_PERSON_ID = 7001;
+    const VERSION = 666;
+
+    /** @var  CommandHandler\OrganisationPerson\Create */
+    protected $sut;
+
+    /** @var  Entity\Organisation\Organisation */
+    private $mockOrg;
+
     public function setUp()
     {
-        $this->sut = new CommandHandler();
-        $this->mockRepo('OrganisationPerson', \Dvsa\Olcs\Api\Domain\Repository\OrganisationPerson::class);
-        $this->mockRepo('Person', \Dvsa\Olcs\Api\Domain\Repository\Person::class);
+        $this->sut = new CommandHandler\OrganisationPerson\Update();
+
+        $this->mockRepo('OrganisationPerson', Repository\OrganisationPerson::class);
+        $this->mockRepo('Person', Repository\Person::class);
+
+        $this->mockOrg = m::mock(Entity\Organisation\Organisation::class)->makePartial();
+        $this->mockOrg->setId(self::ORG_ID);
 
         parent::setUp();
     }
 
     protected function initReferences()
     {
-        $this->refData = ['TITLE'];
+        $this->refData = [
+            'TITLE',
+            Entity\Organisation\Organisation::ORG_TYPE_SOLE_TRADER,
+        ];
 
         $this->references = [
-            Organisation::class => [
-                724 => m::mock(Organisation::class)
-            ]
+            Entity\Organisation\Organisation::class => [
+                self::ORG_ID => $this->mockOrg,
+            ],
         ];
 
         parent::initReferences();
@@ -43,8 +61,8 @@ class UpdateTest extends CommandHandlerTestCase
     {
         $command = Command::create(
             [
-                'id' => 724,
-                'version' => 33,
+                'id' => self::ORG_PERSON_ID,
+                'version' => self::VERSION,
                 'position' => 'POSITION',
                 'person' => [
                     'title' => 'TITLE',
@@ -56,25 +74,28 @@ class UpdateTest extends CommandHandlerTestCase
             ]
         );
 
-        $person = new Person();
+        $organisationPerson = new Entity\Organisation\OrganisationPerson();
+        $organisationPerson
+            ->setId(self::ORG_PERSON_ID)
+            ->setPerson(new Entity\Person\Person())
+            ->setOrganisation($this->mockOrg);
 
-        $organisationPerson = new OrganisationPerson();
-        $organisationPerson->setId(724);
-        $organisationPerson->setPerson($person);
-
-        $this->repoMap['OrganisationPerson']->shouldReceive('fetchUsingId')
-            ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 33)->once()->andReturn($organisationPerson);
+        $this->repoMap['OrganisationPerson']
+            ->shouldReceive('fetchUsingId')
+            ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, self::VERSION)
+            ->once()
+            ->andReturn($organisationPerson);
 
         $this->repoMap['OrganisationPerson']
             ->shouldReceive('save')->once()->andReturnUsing(
-                function (OrganisationPerson $saveOrganisationPerson) {
+                function (Entity\Organisation\OrganisationPerson $saveOrganisationPerson) {
                     $this->assertSame('POSITION', $saveOrganisationPerson->getPosition());
                 }
             );
 
         $this->repoMap['Person']
             ->shouldReceive('save')->once()->andReturnUsing(
-                function (Person $person) {
+                function (Entity\Person\Person $person) {
                     $this->assertSame($this->refData['TITLE'], $person->getTitle());
                     $this->assertSame('FORENAME', $person->getForename());
                     $this->assertSame('FAMILY_NAME', $person->getFamilyName());
@@ -83,9 +104,36 @@ class UpdateTest extends CommandHandlerTestCase
                 }
             );
 
+        //  check organisation name save
+        $this->mockOrg->setType($this->refData[Entity\Organisation\Organisation::ORG_TYPE_SOLE_TRADER]);
+
+        $result = new Result();
+        $result->addMessage('Unit Generate Name Message');
+
+        $this->expectedSideEffect(
+            TransferCmd\Organisation\GenerateName::class,
+            [
+                'organisation' => self::ORG_ID,
+            ],
+            $result
+        );
+
+        //  call & check
         $response = $this->sut->handleCommand($command);
 
-        $this->assertSame(['organisationPerson' => 724], $response->getIds());
-        $this->assertSame(['OrganisationPerson updated'], $response->getMessages());
+        $this->assertSame(
+            [
+                'organisationPerson'
+                => self::ORG_PERSON_ID,
+            ],
+            $response->getIds()
+        );
+        $this->assertSame(
+            [
+                'Unit Generate Name Message',
+                'OrganisationPerson updated',
+            ],
+            $response->getMessages()
+        );
     }
 }
