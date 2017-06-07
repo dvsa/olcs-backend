@@ -44,10 +44,12 @@ class InputTest extends TestCase
         $mockFilterChain->shouldReceive('filter')->once()->with($value2)->andReturn($filtered2);
         $sut->setFilterChain($mockFilterChain);
 
-        $sut->setValue($value);
+        $returned1 = $sut->setValue($value);
+        $this->assertInstanceOf(Input::class, $returned1);
         $this->assertEquals($filtered, $sut->getValue());
 
-        $sut->setValue($value2);
+        $returned2 = $sut->setValue($value2);
+        $this->assertInstanceOf(Input::class, $returned2);
         $this->assertEquals($filtered2, $sut->getValue());
     }
 }

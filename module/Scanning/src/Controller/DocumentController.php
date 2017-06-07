@@ -10,11 +10,11 @@ class DocumentController extends AbstractController
     /**
      * Create action
      *
-     * @param array $postData POST data
+     * @param array|null $postData POST data
      *
      * @return \Zend\Stdlib\ResponseInterface|\Zend\View\Model\JsonModel
      */
-    public function create($postData)
+    public function create($postData = null)
     {
         /** @var \Zend\Http\PhpEnvironment\Request $request */
         $request = $this->getRequest();
