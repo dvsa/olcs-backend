@@ -1,401 +1,160 @@
 <?php
 
-namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview;
+namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview;
 
 use Doctrine\Common\Collections\Criteria;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
-use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
+use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 use Zend\View\Model\ViewModel;
 
 /**
- * Application Review
+ * Continuation Review generator
  *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 class Generator extends AbstractGenerator
 {
-    protected $defaultBundle = [
-        'licence' => [
-            'organisation' => []
-        ]
-    ];
+    const PEOPLE_SECTION = 'people';
+    const TRAILERS_SECTION = 'trailers';
+    const TAXI_PHV_SECTION = 'taxi_phv';
+    const DISCS_SECTION = 'discs';
+    const COMMUNITY_LICENCES_SECTION = 'community_licences';
+    const FINANCE_SECTION = 'finance';
+    const DECLARATION_SECTION = 'declaration';
+    const CONDITIONS_UNDERTAKINGS_SECTION = 'conditions_undertakings';
 
-    protected $sharedBundles = [
-        'transport_managers' => [
-            'transportManagers' => [
-                'transportManager' => [
-                    'homeCd' => [
-                        'person' => [
-                            'title'
-                        ]
-                    ]
-                ]
-            ]
-        ],
-        'operating_centres' => [
-            'licence' => [
-                'trafficArea'
-            ],
-            'operatingCentres' => [
-                'application',
-                'operatingCentre' => [
-                    'address',
-                    'adDocuments' => [
-                        'application'
-                    ]
-                ]
-            ]
-        ],
-        'vehicles' => [
-            'licenceVehicles' => [
-                'vehicle'
-            ]
-        ],
-        'vehicles_psv' => [
-            'licenceVehicles' => [
-                'vehicle'
-            ]
-        ],
-        'convictions_penalties' => [
-            'previousConvictions' => [
-                'title'
-            ]
-        ],
-        'licence_history' => [
-            'otherLicences' => [
-                'previousLicenceType'
-            ]
-        ],
-        'financial_history' => [
-            'documents' => [
-                'category',
-                'subCategory'
-            ]
-        ],
-        'conditions_undertakings' => [
-            'conditionUndertakings' => [
-                'conditionType',
-                'attachedTo',
-                'operatingCentre' => [
-                    'address'
-                ]
-            ]
-        ]
-    ];
-
-    protected $applicationBundles = [
-        'business_type' => [
-            'licence' => [
-                'organisation' => [
-                    'type'
-                ]
-            ]
-        ],
-        'business_details' => [
-            'licence' => [
-                'companySubsidiaries',
-                'organisation' => [
-                    'type',
-                    'contactDetails' => [
-                        'address'
-                    ]
-                ],
-                'tradingNames'
-            ]
-        ],
-        'safety' => [
-            'licence' => [
-                'workshops' => [
-                    'contactDetails' => [
-                        'address'
-                    ]
-                ],
-                'tachographIns'
-            ]
-        ],
-        'addresses' => [
-            'licence' => [
-                'correspondenceCd' => [
-                    'address',
-                    'phoneContacts' => [
-                        'phoneContactType'
-                    ]
-                ],
-                'establishmentCd' => [
-                    'address'
-                ]
-            ]
-        ],
-        'taxi_phv' => [
-            'licence' => [
-                'trafficArea',
-                'privateHireLicences' => [
-                    'contactDetails' => [
-                        'address'
-                    ]
-                ]
-            ]
-        ],
-        'people' => [
-            'licence' => [
-                'organisation' => [
-                    'type',
-                    'organisationPersons' => [
-                        'person' => [
-                            'title'
-                        ]
-                    ]
-                ]
-            ],
-            'applicationOrganisationPersons' => [
-                'originalPerson',
-                'person' => [
-                    'title'
-                ]
-            ]
-        ],
-        'vehicles_declarations' => [
-            'licence' => [
-                'trafficArea'
-            ]
-        ]
-    ];
-
-    protected $variationBundles = [
-        'type_of_licence' => [
-            'licence' => [
-                'licenceType'
-            ]
-        ],
-        'people' => [
-            'licence' => [
-                'organisation' => [
-                    'type'
-                ]
-            ],
-            'applicationOrganisationPersons' => [
-                'person' => [
-                    'title'
-                ]
-            ]
-        ],
-        'conditions_undertakings' => [
-            'conditionUndertakings' => [
-                'licConditionVariation'
-            ]
-        ]
-    ];
-
-    protected $ignoredApplicationSections = [
-        'community_licences'
-    ];
-
-    protected $ignoredVariationSections = [
-        'community_licences'
-    ];
-
-    protected $displayedAlwaysVariationSections = [
-        'undertakings'
-    ];
-
-    protected $sectionMap = [
-        'declarations_internal' => 'undertakings'
-    ];
-
-    protected $lva;
-
-    public function __construct()
+    /**
+     * Generate
+     *
+     * @param ContinuationDetail $continuationDetail continuation detail
+     *
+     * @return string
+     */
+    public function generate(ContinuationDetail $continuationDetail)
     {
-        $notRemovedCriteria = Criteria::create();
-        $notRemovedCriteria->andWhere(
-            $notRemovedCriteria->expr()->isNull('removalDate')
-        );
+        $sl = $this->getServiceLocator();
+        $licence = $continuationDetail->getLicence();
 
-        $this->sharedBundles['vehicles']['licenceVehicles']['criteria'] = $notRemovedCriteria;
-        $this->sharedBundles['vehicles_psv']['licenceVehicles']['criteria'] = $notRemovedCriteria;
-    }
+        $sections = $sl->get('SectionAccessService')->getAccessibleSectionsForLicence($licence);
+        $sections = $this->alterSections(array_keys($sections), $licence);
 
-    public function generate(Application $application, $isInternal = true)
-    {
-        $sections = $this->getServiceLocator()->get('SectionAccessService')->getAccessibleSections($application);
-        $sections = array_keys($sections);
+        $sl->get('Utils\NiTextTranslation')->setLocaleForNiFlag($licence->getNiFlag());
 
-        $sections = $this->mapSections($sections);
+        $config = $this->buildReadonlyConfigForSections($sections, $continuationDetail);
 
-        // Set the NI Locale
-        $this->getServiceLocator()->get('Utils\NiTextTranslation')->setLocaleForNiFlag($application->getNiFlag());
-
-        if ($application->isVariation()) {
-
-            $this->lva = 'variation';
-            $sections = $this->filterVariationSections($sections, $application->getApplicationCompletion());
-
-            $bundle = $this->getReviewDataBundleForVariation($sections);
-        } else {
-            $this->lva = 'application';
-            $sections = $this->filterApplicationSections($sections);
-
-            $bundle = $this->getReviewDataBundleForApplication($sections);
-        }
-
-        $result = new Result(
-            $application,
-            $bundle,
-            [
-                'sections' => $sections,
-                'isGoods' => $application->isGoods(),
-                'isSpecialRestricted' => $application->isSpecialRestricted(),
-                'isInternal' => $isInternal
-            ]
-        );
-
-        $data = $result->serialize();
-
-        $config = $this->buildReadonlyConfigForSections($data['sections'], $data);
-
-        // Generate readonly markup
-        return $this->generateReadonly($config);
+        return $this->generateReadonly($config, 'continuation-review');
     }
 
     /**
-     * Maps sections to their alternative
+     * Build readonly config for sections
      *
-     * This was added when the internal only version of the undertakings section was added, this method maps the
-     * duplicate section for the snapshot
+     * @param array              $sections           sections
+     * @param ContinuationDetail $continuationDetail continuation details
      *
-     * @param $sections
-     * @return mixed
+     * @return array
      */
-    protected function mapSections($sections)
+    protected function buildReadonlyConfigForSections(array $sections, ContinuationDetail $continuationDetail)
     {
-        foreach ($sections as $k => $v) {
-            if (isset($this->sectionMap[$v])) {
-                $sections[$k] = $this->sectionMap[$v];
-            }
-        }
-
-        return $sections;
-    }
-
-    protected function buildReadonlyConfigForSections($sections, $reviewData)
-    {
-        $entity = ucfirst($this->lva);
-
         $filter = new UnderscoreToCamelCase();
 
         $sectionConfig = [];
 
         foreach ($sections as $section) {
-            $serviceName = 'Review\\' . $entity . ucfirst($filter->filter($section));
-
+            $serviceName = 'ContinuationReview\\' . ucfirst($filter->filter($section));
             $config = null;
 
             // @NOTE this check is in place while we implement each section
             // eventually we should be able to remove the if
             if ($this->getServiceLocator()->has($serviceName)) {
                 $service = $this->getServiceLocator()->get($serviceName);
-                $config = $service->getConfigFromData($reviewData);
+                $config = $service->getConfigFromData($continuationDetail);
             }
 
             $sectionConfig[] = [
-                'header' => 'review-' . $section,
+                'header' => $this->getSectionHeader($section, $continuationDetail),
                 'config' => $config
             ];
         }
 
         return [
-            'reviewTitle' => $this->getTitle($reviewData),
-            'subTitle' => $this->getSubTitle($reviewData),
+            'reviewTitle' => $this->getTitle($continuationDetail),
+            'subTitle' => 'continuation-review-subtitle',
             'sections' => $sectionConfig
         ];
     }
 
-    protected function getSubTitle($data)
-    {
-        return sprintf('%s %s/%s', $data['licence']['organisation']['name'], $data['licence']['licNo'], $data['id']);
-    }
-
-    protected function getTitle($data)
+    /**
+     * Get title
+     *
+     * @param ContinuationDetail $continuationDetail continuation detail
+     *
+     * @return string
+     */
+    protected function getTitle(ContinuationDetail $continuationDetail)
     {
         return sprintf(
-            '%s-review-title-%s%s',
-            $this->lva,
-            $data['isGoods'] ? 'gv' : 'psv',
-            $this->isNewPsvSpecialRestricted($data) ? '-sr' : ''
+            '%s %s',
+            $continuationDetail->getLicence()->getOrganisation()->getName(),
+            $continuationDetail->getLicence()->getLicNo()
         );
     }
 
-    protected function isNewPsvSpecialRestricted($data)
+    /**
+     * Get section header
+     *
+     * @param string             $section            section
+     * @param ContinuationDetail $continuationDetail continuation detail
+     *
+     * @return string
+     */
+    protected function getSectionHeader($section, ContinuationDetail $continuationDetail)
     {
-        return $this->lva === 'application' && !$data['isGoods'] && $data['isSpecialRestricted'];
+        $header = 'continuation-review-' . $section;
+
+        if ($section === self::PEOPLE_SECTION) {
+            $header .= '-' . $continuationDetail->getLicence()->getOrganisation()->getType()->getId();
+        }
+
+        return $header;
     }
 
-    protected function filterVariationSections($sections, ApplicationCompletion $completion)
+    /**
+     * Alter sections
+     *
+     * @param array   $sections sections
+     * @param Licence $licence  licence
+     *
+     * @return array
+     */
+    protected function alterSections(array $sections, Licence $licence)
     {
-        $sections = array_values(array_diff($sections, $this->ignoredVariationSections));
-
-        $filter = new UnderscoreToCamelCase();
-
-        foreach ($sections as $key => $section) {
-
-            $getter = 'get' . ucfirst($filter->filter($section)) . 'Status';
-
-            if (array_search($section, $this->displayedAlwaysVariationSections) === false &&
-                $completion->$getter() !== Application::VARIATION_STATUS_UPDATED) {
-                unset($sections[$key]);
+        $sectionsToRemove = [
+            self::TRAILERS_SECTION,
+            self::TAXI_PHV_SECTION,
+            self::DISCS_SECTION,
+            self::COMMUNITY_LICENCES_SECTION
+        ];
+        foreach ($sectionsToRemove as $sectionToRemove) {
+            if (in_array($sectionToRemove, $sections)) {
+                unset($sections[array_search($sectionToRemove, $sections)]);
             }
         }
+
+        if ($licence->getLicenceType()->getId() !== Licence::LICENCE_TYPE_SPECIAL_RESTRICTED) {
+            $sections[] = self::FINANCE_SECTION;
+        }
+
+        if (
+            count($licence->getConditionUndertakings()) === 0
+            && in_array(self::CONDITIONS_UNDERTAKINGS_SECTION, $sections)
+        ) {
+            unset($sections[array_search(self::CONDITIONS_UNDERTAKINGS_SECTION, $sections)]);
+        }
+
+        $sections[] = self::DECLARATION_SECTION;
 
         return $sections;
-    }
-
-    protected function filterApplicationSections($sections)
-    {
-        return array_values(array_diff($sections, $this->ignoredApplicationSections));
-    }
-
-    protected function getReviewDataBundleForApplication(array $sections = [])
-    {
-        return $this->getReviewBundle($sections, 'application');
-    }
-
-    /**
-     * Grab all of the review for a variation
-     *
-     * @param array $sections
-     *
-     * @return array
-     */
-    protected function getReviewDataBundleForVariation(array $sections = array())
-    {
-        return $this->getReviewBundle($sections, 'variation');
-    }
-
-    /**
-     * Dynamically build the review bundle
-     *
-     * @param array $sections
-     * @param string $lva
-     * @return array
-     */
-    protected function getReviewBundle($sections, $lva)
-    {
-        $bundle = $this->defaultBundle;
-
-        foreach ($sections as $section) {
-
-            if (isset($this->sharedBundles[$section])) {
-                $bundle = array_merge_recursive($bundle, $this->sharedBundles[$section]);
-            }
-
-            if (isset($this->{$lva . 'Bundles'}[$section])) {
-                $bundle = array_merge_recursive($bundle, $this->{$lva . 'Bundles'}[$section]);
-            }
-        }
-
-        return $bundle;
     }
 }
