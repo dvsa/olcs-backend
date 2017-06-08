@@ -172,7 +172,7 @@ return [
     'review-operating-centre-advertisement-file' => 'Ffeil hysbysebu',
     'review-operating-centre-advertisement-newspaper' => 'Enw’r papur newydd',
     'review-operating-centre-permission' => 'Un ai fi yw perchennog y safle neu cefais ganiatâd gan berchennog y safle i ddefnyddio’r safle i barcio’r nifer o gerbydau ac ôl-gerbydau a nodwyd.',
-    'review-operating-centre-sufficient-parking' => 'Cadarnhaf fod gennyf ddigon o leoedd parcio ar gael ar gyfer y cyfanswm o gerbydau ac ôl-gerbydau y dymunaf eu cadw yn y cyfeiriad hwn.',
+    //'review-operating-centre-sufficient-parking' => 'Cadarnhaf fod gennyf ddigon o leoedd parcio ar gael ar gyfer y cyfanswm o gerbydau ac ôl-gerbydau y dymunaf eu cadw yn y cyfeiriad hwn.',
     'review-operating-centre-total-trailers' => 'Cyfanswm o ôl-gerbydau',
     'review-operating-centre-total-vehicles' => 'Cyfanswm o gerbydau',
     'review-operating-centres-authorisation-community-licences' => 'Cyfanswm o drwyddedau cymunedol',

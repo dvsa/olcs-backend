@@ -58,12 +58,6 @@ class PsvOperatingCentreReviewServiceTest extends PHPUnit_Framework_TestCase
                 ],
                 [
                     [
-                        'label' => 'review-operating-centre-sufficient-parking',
-                        'value' => 'Confirmed'
-                    ]
-                ],
-                [
-                    [
                         'label' => 'review-operating-centre-permission',
                         'value' => 'Unconfirmed'
                     ]
