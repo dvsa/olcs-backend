@@ -42,7 +42,6 @@ class OperatingCentreHelper implements FactoryInterface
     const ERR_OR_R_TOO_MANY = 'ERR_OR_R_TOO_MANY';
     const ERR_OC_PC_TA_NI = 'ERR_OC_PC_TA_NI';
     const ERR_OC_PC_TA_GB = 'ERR_OC_PC_TA_GB';
-    const ERR_OC_SUFFICIENT_PARKING = 'ERR_OC_SUFFICIENT_PARKING';
     const ERR_OC_PERMISSION = 'ERR_OC_PERMISSION';
     const ERR_OC_TA_NI_APP = 'ERR_OC_TA_NI_APP';
 
@@ -102,7 +101,7 @@ class OperatingCentreHelper implements FactoryInterface
         }
 
         if ($isExternal) {
-            $this->validateConfirmations($command->getSufficientParking(), $command->getPermission());
+            $this->validateConfirmations($command->getPermission());
         }
 
         if (!empty($this->messages)) {
@@ -277,7 +276,6 @@ class OperatingCentreHelper implements FactoryInterface
     ) {
         $ocLink->setNoOfVehiclesRequired($command->getNoOfVehiclesRequired());
         $ocLink->setPermission($command->getPermission());
-        $ocLink->setSufficientParking($command->getSufficientParking());
 
         if ($entity->isPsv()) {
             $ocLink->setAdPlaced(ApplicationOperatingCentre::AD_POST);
@@ -320,11 +318,8 @@ class OperatingCentreHelper implements FactoryInterface
         );
     }
 
-    public function validateConfirmations($sufficientParking, $permission)
+    public function validateConfirmations($permission)
     {
-        if ($sufficientParking !== 'Y') {
-            $this->addMessage('sufficientParking', self::ERR_OC_SUFFICIENT_PARKING);
-        }
         if ($permission !== 'Y') {
             $this->addMessage('permission', self::ERR_OC_PERMISSION);
         }

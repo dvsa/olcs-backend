@@ -38,7 +38,6 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
             'adPlacedDate' => '2014-03-02',
             'noOfVehiclesRequired' => 10,
             'noOfTrailersRequired' => 20,
-            'sufficientParking' => 'Y',
             'permission' => 'N',
             'application' => [
                 'id' => 123
