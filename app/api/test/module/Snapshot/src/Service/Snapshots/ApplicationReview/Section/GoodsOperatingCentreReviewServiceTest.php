@@ -71,12 +71,6 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                 ],
                 [
                     [
-                        'label' => 'review-operating-centre-sufficient-parking',
-                        'value' => 'Confirmed'
-                    ]
-                ],
-                [
-                    [
                         'label' => 'review-operating-centre-permission',
                         'value' => 'Unconfirmed'
                     ]
@@ -101,12 +95,6 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                     [
                         'label' => 'review-operating-centre-total-trailers',
                         'value' => 20
-                    ]
-                ],
-                [
-                    [
-                        'label' => 'review-operating-centre-sufficient-parking',
-                        'value' => 'Confirmed'
                     ]
                 ],
                 [
