@@ -5,4 +5,5 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\ContinuationDetail\CanAccessContinu
 
 return [
     QueryHandler\ContinuationDetail\LicenceChecklist::class => CanAccessContinuationDetailWithId::class,
+    QueryHandler\ContinuationDetail\Review::class => CanAccessContinuationDetailWithId::class,
 ];
