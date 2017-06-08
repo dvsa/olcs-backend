@@ -2,6 +2,7 @@
 
 namespace OlcsTest\Db\Service\Search;
 
+use Elastica\Request;
 use Olcs\Db\Service\Search\Search as SearchService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -125,8 +126,10 @@ class SearchTest extends MockeryTestCase
                 '_bulk',
                 'POST',
                 '{"update":{"_id":{},"_type":{},"_index":{}}}'."\n".'{"doc":{"section_26":1}}'."\n",
-                []
-            )->once()
+                [],
+                Request::NDJSON_CONTENT_TYPE
+            )
+            ->once()
             ->andReturn($bulkResponse);
 
         $this->sut->updateVehicleSection26($ids, $section26Value);
