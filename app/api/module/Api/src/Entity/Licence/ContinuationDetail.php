@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * ContinuationDetail Entity
@@ -25,7 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class ContinuationDetail extends AbstractContinuationDetail
+class ContinuationDetail extends AbstractContinuationDetail implements OrganisationProviderInterface
 {
     const STATUS_PREPARED     = 'con_det_sts_prepared';
     const STATUS_PRINTING     = 'con_det_sts_printing';
