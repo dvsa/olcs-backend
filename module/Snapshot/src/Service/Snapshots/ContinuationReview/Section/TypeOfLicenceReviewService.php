@@ -27,14 +27,14 @@ class TypeOfLicenceReviewService extends AbstractReviewService
         $config = [
             [
                 ['value' => 'continuation-review-operator-location'],
-                ['value' => $this->getOperatorLocation($licence), 'header' => true]
+                ['value' => $licence->getOperatorLocation($licence), 'header' => true]
             ]
         ];
 
         if ($licence->getNiFlag() !== 'Y') {
             $config[] = [
                 ['value' => 'continuation-review-operator-type'],
-                ['value' => $this->getOperatorType($licence), 'header' => true]
+                ['value' => $licence->getOperatorType($licence), 'header' => true]
             ];
         }
 
@@ -44,31 +44,5 @@ class TypeOfLicenceReviewService extends AbstractReviewService
         ];
 
         return $config;
-    }
-
-    /**
-     * Get operator location
-     *
-     * @param Licence $licence licence
-     *
-     * @return string
-     */
-    private function getOperatorLocation($licence)
-    {
-        return $licence->getNiFlag() === 'N'
-            ? 'Great Britain'
-            : 'Northern Ireland';
-    }
-
-    /**
-     * Get operator type
-     *
-     * @param Licence $licence licence
-     *
-     * @return string
-     */
-    private function getOperatorType($licence)
-    {
-        return $licence->isGoods() ? 'Goods' : 'PSV';
     }
 }
