@@ -45,6 +45,9 @@ class OperatingCentreHelper implements FactoryInterface
     const ERR_OC_PERMISSION = 'ERR_OC_PERMISSION';
     const ERR_OC_TA_NI_APP = 'ERR_OC_TA_NI_APP';
 
+    /**
+     * @var array
+     */
     protected $messages = [];
 
     /**
@@ -67,6 +70,15 @@ class OperatingCentreHelper implements FactoryInterface
      */
     protected $docRepo;
 
+    /**
+     * Create factory for the service
+     *
+     * @param ServiceLocatorInterface $serviceLocator ZF Service locator
+     *
+     * @return $this
+     *
+     * @TODO this needs to be in a factory.  How can a factory be integrated into a service?
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->addressService = $serviceLocator->get('AddressService');
@@ -79,10 +91,14 @@ class OperatingCentreHelper implements FactoryInterface
     }
 
     /**
-     * @param Application|Licence $entity
-     * @param $command
-     * @param bool $isExternal
-     * @param LicenceOperatingCentre|ApplicationOperatingCentre|null $xoc
+     * Validate entity
+     *
+     * @param Application|Licence                                    $entity     Entity
+     * @param array                                                  $command    Requested parameters from api
+     * @param bool                                                   $isExternal Is external?
+     * @param LicenceOperatingCentre|ApplicationOperatingCentre|null $xoc        XOC
+     *
+     * @return void
      */
     public function validate($entity, $command, $isExternal = false, $xoc = null)
     {
@@ -109,6 +125,16 @@ class OperatingCentreHelper implements FactoryInterface
         }
     }
 
+    /**
+     * Validate for goods
+     *
+     * @param Application|Licence                                    $entity     Entity
+     * @param array                                                  $command    Requested parameters from api
+     * @param bool                                                   $isExternal Is external?
+     * @param LicenceOperatingCentre|ApplicationOperatingCentre|null $xoc        XOC
+     *
+     * @return void
+     */
     protected function validateForGoods($entity, $command, $isExternal = false, $xoc = null)
     {
         $sum = (int)$command->getNoOfVehiclesRequired() + (int)$command->getNoOfTrailersRequired();
@@ -141,8 +167,12 @@ class OperatingCentreHelper implements FactoryInterface
     }
 
     /**
-     * @param Application|Licence $entity
-     * @param $command
+     * Validate traffic area
+     *
+     * @param Application|Licence $entity  Application or Licence entity
+     * @param array               $command Command from API
+     *
+     * @return void
      */
     public function validateTrafficArea($entity, $command)
     {
@@ -216,9 +246,13 @@ class OperatingCentreHelper implements FactoryInterface
     }
 
     /**
-     * @param Licence|Application $entity
-     * @param OperatingCentre $operatingCentre
-     * @param DocumentRepo $documentRepo
+     * Save documents
+     *
+     * @param Licence|Application $entity          Licence or Application entity
+     * @param OperatingCentre     $operatingCentre operating Centre entity
+     * @param DocumentRepo        $documentRepo    Document Repository
+     *
+     * @return void
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function saveDocuments($entity, OperatingCentre $operatingCentre, DocumentRepo $documentRepo)
@@ -233,10 +267,13 @@ class OperatingCentreHelper implements FactoryInterface
     }
 
     /**
-     * @param $command
-     * @param CommandHandlerManager $commandHandler
-     * @param Result $result
-     * @param OcRepo $ocRepo
+     * Create operating centre
+     *
+     * @param array                 $command        API response
+     * @param CommandHandlerManager $commandHandler Command handler manager
+     * @param Result                $result         Command result
+     * @param OcRepo                $ocRepo         Operating Centre repository
+     *
      * @return OperatingCentre
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
@@ -263,10 +300,14 @@ class OperatingCentreHelper implements FactoryInterface
     }
 
     /**
-     * @param ApplicationOperatingCentre|LicenceOperatingCentre $ocLink
-     * @param Application|Licence $entity
-     * @param $command
-     * @param $repo
+     * Update Operating Centre
+     *
+     * @param ApplicationOperatingCentre|LicenceOperatingCentre $ocLink  OC link
+     * @param Application|Licence                               $entity  Entity
+     * @param array                                             $command Command
+     * @param OcRepo                                            $repo    Operating Centre Repository
+     *
+     * @return void
      */
     public function updateOperatingCentreLink(
         $ocLink,
@@ -292,11 +333,25 @@ class OperatingCentreHelper implements FactoryInterface
         $repo->save($ocLink);
     }
 
+    /**
+     * Get messages
+     *
+     * @return array
+     */
     public function getMessages()
     {
         return $this->messages;
     }
 
+    /**
+     * Add message
+     *
+     * @param string      $field       Field
+     * @param string      $messageCode Message code
+     * @param null|string $message     Message
+     *
+     * @return void
+     */
     private function addMessage($field, $messageCode, $message = null)
     {
         if ($message === null) {
@@ -307,7 +362,10 @@ class OperatingCentreHelper implements FactoryInterface
     }
 
     /**
-     * @param $postcode
+     * Fetch traffic area using postcode
+     *
+     * @param string $postcode postcode service
+     *
      * @return \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
      */
     private function fetchTrafficAreaByPostcode($postcode)
@@ -318,6 +376,13 @@ class OperatingCentreHelper implements FactoryInterface
         );
     }
 
+    /**
+     * Validate confirmation
+     *
+     * @param string $permission Permission Y or N
+     *
+     * @return void
+     */
     public function validateConfirmations($permission)
     {
         if ($permission !== 'Y') {

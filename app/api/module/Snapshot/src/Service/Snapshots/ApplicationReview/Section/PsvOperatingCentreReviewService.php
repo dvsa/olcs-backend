@@ -12,7 +12,8 @@ class PsvOperatingCentreReviewService extends AbstractReviewService
     /**
      * Format the OC config
      *
-     * @param array $data
+     * @param array $data Data from API
+     *
      * @return array
      */
     public function getConfigFromData(array $data = array())
