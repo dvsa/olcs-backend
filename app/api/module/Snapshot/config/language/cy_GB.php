@@ -261,5 +261,15 @@ return [
     'owners-signature' => 'Llofnod\\y perchennog,',
     'responsible-person-signature' => 'Llofnod\\unigolyn cyfrifol,',
     'application-review-safety-additional-information' => 'Gwybodaeth ychwanegol (dewisol)',
+    'continuation-review-type_of_licence' => 'Math o drwydded',
+    'continuation-review-business_type' => 'Math o fusnes',
+    'continuation-review-business_details' => 'Manylion busnes',
+    'continuation-review-addresses' => 'Cyfeiriadau',
+    'continuation-review-operating_centres' => 'Canolfannau gweithredu ac awdurdodi',
+    'continuation-review-transport_managers' => 'Rheolwyr trafnidiaeth',
+    'continuation-review-vehicles' => 'Cerbydau',
+    'continuation-review-vehicles_psv' => 'Cerbydau',
+    'continuation-review-safety' => 'Diogelwch a chydymffurfiad',
+    'continuation-review-conditions_undertakings' => 'Ymgymeriadau amodau',
     // Potentially unused translations
 ];

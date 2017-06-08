@@ -282,7 +282,6 @@ return [
     'continuation-review-transport_managers' => 'Transport managers',
     'continuation-review-vehicles' => 'Vehicles',
     'continuation-review-vehicles_psv' => 'Vehicles',
-    'continuation-review-trailers' => 'Trailers',
     'continuation-review-safety' => 'Safety and compliance',
     'continuation-review-conditions_undertakings' => 'Conditions and undertakings',
     'continuation-review-finance' => 'Finance',
