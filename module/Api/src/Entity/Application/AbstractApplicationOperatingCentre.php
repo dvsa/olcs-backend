@@ -234,15 +234,6 @@ abstract class AbstractApplicationOperatingCentre implements BundleSerializableI
     protected $s4;
 
     /**
-     * Sufficient parking
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false, options={"default": 0})
-     */
-    protected $sufficientParking = 0;
-
-    /**
      * Version
      *
      * @var int
@@ -739,30 +730,6 @@ abstract class AbstractApplicationOperatingCentre implements BundleSerializableI
     public function getS4()
     {
         return $this->s4;
-    }
-
-    /**
-     * Set the sufficient parking
-     *
-     * @param string $sufficientParking new value being set
-     *
-     * @return ApplicationOperatingCentre
-     */
-    public function setSufficientParking($sufficientParking)
-    {
-        $this->sufficientParking = $sufficientParking;
-
-        return $this;
-    }
-
-    /**
-     * Get the sufficient parking
-     *
-     * @return string
-     */
-    public function getSufficientParking()
-    {
-        return $this->sufficientParking;
     }
 
     /**

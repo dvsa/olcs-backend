@@ -30,7 +30,6 @@ class PsvOperatingCentreReviewServiceTest extends PHPUnit_Framework_TestCase
     {
         $data = [
             'noOfVehiclesRequired' => 10,
-            'sufficientParking' => 'Y',
             'permission' => 'N',
             'operatingCentre' => [
                 'address' => [
