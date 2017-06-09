@@ -1,10 +1,5 @@
 <?php
 
-/**
- * UpdateDetails
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Doctrine\ORM\Query;
@@ -34,7 +29,7 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
     /**
      * Handle query
      *
-     * @param CommandInterface $command command
+     * @param UpdateDetailsCommand $command command
      *
      * @return Result
      * @throws ValidationException
@@ -42,10 +37,6 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
      */
     public function handleCommand(CommandInterface $command)
     {
-        /* @var $command UpdateDetailsCommand */
-
-        $result = new Result();
-
         /* @var $tma TransportManagerApplication */
         $tma = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
@@ -66,9 +57,7 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
 
         $this->getRepo()->save($tma);
 
-        $result->addMessage("Transport Manager Application ID {$tma->getId()} updated");
-
-        return $result;
+        return $this->result->addMessage("Transport Manager Application ID {$tma->getId()} updated");
     }
 
     /**
@@ -94,13 +83,6 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
         $tma->setHoursSun((float) $command->getHoursSun());
         if ($command->getIsOwner()) {
             $tma->setIsOwner($command->getIsOwner());
-        }
-
-        $tma->getOperatingCentres()->clear();
-        foreach ($command->getOperatingCentres() as $ocId) {
-            $tma->getOperatingCentres()->add(
-                $this->getRepo()->getReference(\Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre::class, $ocId)
-            );
         }
     }
 

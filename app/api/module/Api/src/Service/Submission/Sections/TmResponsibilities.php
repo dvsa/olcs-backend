@@ -2,15 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
 
 /**
- * Class TmResponsibilities
- * @package Dvsa\Olcs\Api\Service\Submission\Sections
  * @author Shaun Lizzio <shaun.lizzio@valtech.co.uk>
  */
 final class TmResponsibilities extends AbstractSection
@@ -68,7 +64,6 @@ final class TmResponsibilities extends AbstractSection
         $thisRow['id'] = $entity->getId();
         $thisRow['version'] = $entity->getVersion();
         $thisRow['managerType'] = $case->getTransportManager()->getTmType()->getDescription();
-        $thisRow['noOpCentres'] = $entity->getOperatingCentres()->count();
         $thisRow['hrsPerWeek'] = $entity->getTotalWeeklyHours();
 
         if ($entity instanceof TransportManagerApplication) {

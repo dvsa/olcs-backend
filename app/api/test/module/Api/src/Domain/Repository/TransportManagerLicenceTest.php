@@ -1,25 +1,22 @@
 <?php
 
-/**
- * TransportManagerLicenceTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as Repo;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Mockery as m;
 
 /**
- * TransportManagerLicenceTest
- *
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence
  */
 class TransportManagerLicenceTest extends RepositoryTestCase
 {
+    /** @var  Repository\TransportManagerLicence */
+    protected $sut;
+
     public function setUp()
     {
-        $this->setUpSut(Repo::class);
+        $this->setUpSut(Repository\TransportManagerLicence::class, true);
     }
 
     public function testFetchWithContactDetailsByLicence()
@@ -54,7 +51,6 @@ class TransportManagerLicenceTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('l.organisation', 'lo')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('l.status', 'ls')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('transportManager', 'tm')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('operatingCentres', 'oc')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('expr->eq')->with('tml.transportManager', ':transportManager')->once()->andReturn('tm');
         $mockQb->shouldReceive('where')->with('tm')->once()->andReturnSelf();
@@ -80,7 +76,6 @@ class TransportManagerLicenceTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('l.status', 'lst')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('transportManager', 'tm')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('tm.tmType', 'tmty')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('operatingCentres', 'oc')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('tmType', 'tmt')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('byId')->with(1)->once()->andReturnSelf();
 
@@ -111,8 +106,6 @@ class TransportManagerLicenceTest extends RepositoryTestCase
      */
     public function testApplyListFiltersLicence()
     {
-        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
         $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $mockDqb->shouldReceive('expr->eq')->with('tml.licence', ':licence')->once()
             ->andReturn('EXPR');
@@ -120,7 +113,7 @@ class TransportManagerLicenceTest extends RepositoryTestCase
         $mockDqb->shouldReceive('setParameter')->with('licence', 73)->once();
 
         $query = \Dvsa\Olcs\Transfer\Query\TransportManagerLicence\GetList::create(['licence' => 73]);
-        $sut->applyListFilters($mockDqb, $query);
+        $this->sut->applyListFilters($mockDqb, $query);
     }
 
     /**
@@ -128,8 +121,6 @@ class TransportManagerLicenceTest extends RepositoryTestCase
      */
     public function testApplyListFiltersTransportManager()
     {
-        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
         $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $mockDqb->shouldReceive('expr->eq')->with('tml.transportManager', ':transportManager')->once()
             ->andReturn('EXPR');
@@ -137,7 +128,7 @@ class TransportManagerLicenceTest extends RepositoryTestCase
         $mockDqb->shouldReceive('setParameter')->with('transportManager', 73)->once();
 
         $query = \Dvsa\Olcs\Transfer\Query\TransportManagerLicence\GetList::create(['transportManager' => 73]);
-        $sut->applyListFilters($mockDqb, $query);
+        $this->sut->applyListFilters($mockDqb, $query);
     }
 
     public function testFetchByLicence()
