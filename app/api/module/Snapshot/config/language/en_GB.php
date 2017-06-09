@@ -174,7 +174,6 @@ return [
     'review-operating-centre-advertisement-file' => 'Advertisement file',
     'review-operating-centre-advertisement-newspaper' => 'Newspaper name',
     'review-operating-centre-permission' => 'I am either the site owner or I have permission from the site owner to use the premises to park the number of vehicles and trailers stated.',
-    'review-operating-centre-sufficient-parking' => 'I confirm that I have enough parking spaces available for the total combined number of vehicles and trailers that I want to keep at this address.',
     'review-operating-centre-total-trailers' => 'Total number of trailers',
     'review-operating-centre-total-vehicles' => 'Total number of vehicles',
     'review-operating-centres-authorisation-community-licences' => 'Total number of community licences',

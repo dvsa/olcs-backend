@@ -234,15 +234,6 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     protected $s4;
 
     /**
-     * Sufficient parking
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="sufficient_parking", nullable=false)
-     */
-    protected $sufficientParking;
-
-    /**
      * Version
      *
      * @var int
@@ -763,30 +754,6 @@ abstract class AbstractLicenceOperatingCentre implements BundleSerializableInter
     public function getS4()
     {
         return $this->s4;
-    }
-
-    /**
-     * Set the sufficient parking
-     *
-     * @param string $sufficientParking new value being set
-     *
-     * @return LicenceOperatingCentre
-     */
-    public function setSufficientParking($sufficientParking)
-    {
-        $this->sufficientParking = $sufficientParking;
-
-        return $this;
-    }
-
-    /**
-     * Get the sufficient parking
-     *
-     * @return string
-     */
-    public function getSufficientParking()
-    {
-        return $this->sufficientParking;
     }
 
     /**
