@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Delete Operating Centres Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,20 +8,21 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Transfer\Command\Licence\DeleteOperatingCentres as Cmd;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\DeleteOperatingCentres as CommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
 /**
- * Delete Operating Centres Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\DeleteOperatingCentres
  */
 class DeleteOperatingCentresTest extends CommandHandlerTestCase
 {
+    /** @var CommandHandler\Application\DeleteOperatingCentres  */
+    protected $sut;
+
     public function setUp()
     {
-        $this->sut = new CommandHandler();
+        $this->sut = new CommandHandler\Licence\DeleteOperatingCentres();
         $this->mockRepo('Licence', Repository\Licence::class);
         $this->mockRepo('LicenceOperatingCentre', Repository\LicenceOperatingCentre::class);
 
@@ -90,12 +86,6 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
         );
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteTmLinks::class,
-            ['operatingCentre' => $this->mapReference(OperatingCentre::class, 1)],
-            (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('DELETE_TM_LINKS')
-        );
-
-        $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteApplicationLinks::class,
             ['operatingCentre' => $this->mapReference(OperatingCentre::class, 1)],
             (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('DELETE_OTHER_APPLICATIONS')
@@ -107,7 +97,6 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'DELETE_CONDITIONS_UNDERTAKINGS',
-                'DELETE_TM_LINKS',
                 'DELETE_OTHER_APPLICATIONS',
                 '1 Operating Centre(s) removed'
             ]
