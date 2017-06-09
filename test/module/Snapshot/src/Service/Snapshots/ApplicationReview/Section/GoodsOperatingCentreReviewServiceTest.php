@@ -38,7 +38,6 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
             'adPlacedDate' => '2014-03-02',
             'noOfVehiclesRequired' => 10,
             'noOfTrailersRequired' => 20,
-            'sufficientParking' => 'Y',
             'permission' => 'N',
             'application' => [
                 'id' => 123
@@ -71,12 +70,6 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                 ],
                 [
                     [
-                        'label' => 'review-operating-centre-sufficient-parking',
-                        'value' => 'Confirmed'
-                    ]
-                ],
-                [
-                    [
                         'label' => 'review-operating-centre-permission',
                         'value' => 'Unconfirmed'
                     ]
@@ -101,12 +94,6 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                     [
                         'label' => 'review-operating-centre-total-trailers',
                         'value' => 20
-                    ]
-                ],
-                [
-                    [
-                        'label' => 'review-operating-centre-sufficient-parking',
-                        'value' => 'Confirmed'
                     ]
                 ],
                 [
