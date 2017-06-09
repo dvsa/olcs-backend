@@ -204,27 +204,6 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     protected $olbsKey;
 
     /**
-     * Operating centre
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre",
-     *     inversedBy="transportManagerLicences",
-     *     fetch="LAZY"
-     * )
-     * @ORM\JoinTable(name="tm_licence_oc",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="transport_manager_licence_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id")
-     *     }
-     * )
-     */
-    protected $operatingCentres;
-
-    /**
      * Tm type
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
@@ -287,7 +266,6 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
      */
     public function initCollections()
     {
-        $this->operatingCentres = new ArrayCollection();
         $this->otherLicences = new ArrayCollection();
     }
 
@@ -698,7 +676,7 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
      *
      * @param int $olbsKey new value being set
      *
-     * @return TransportManagerLicence
+     * @return $this
      */
     public function setOlbsKey($olbsKey)
     {
@@ -718,74 +696,11 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     }
 
     /**
-     * Set the operating centre
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being set as the value
-     *
-     * @return TransportManagerLicence
-     */
-    public function setOperatingCentres($operatingCentres)
-    {
-        $this->operatingCentres = $operatingCentres;
-
-        return $this;
-    }
-
-    /**
-     * Get the operating centres
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getOperatingCentres()
-    {
-        return $this->operatingCentres;
-    }
-
-    /**
-     * Add a operating centres
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being added
-     *
-     * @return TransportManagerLicence
-     */
-    public function addOperatingCentres($operatingCentres)
-    {
-        if ($operatingCentres instanceof ArrayCollection) {
-            $this->operatingCentres = new ArrayCollection(
-                array_merge(
-                    $this->operatingCentres->toArray(),
-                    $operatingCentres->toArray()
-                )
-            );
-        } elseif (!$this->operatingCentres->contains($operatingCentres)) {
-            $this->operatingCentres->add($operatingCentres);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a operating centres
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being removed
-     *
-     * @return TransportManagerLicence
-     */
-    public function removeOperatingCentres($operatingCentres)
-    {
-        if ($this->operatingCentres->contains($operatingCentres)) {
-            $this->operatingCentres->removeElement($operatingCentres);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the tm type
      *
      * @param \Dvsa\Olcs\Api\Entity\System\RefData $tmType entity being set as the value
      *
-     * @return TransportManagerLicence
+     * @return $this
      */
     public function setTmType($tmType)
     {
