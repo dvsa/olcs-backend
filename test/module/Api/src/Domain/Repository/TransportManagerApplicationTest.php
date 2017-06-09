@@ -1,25 +1,27 @@
 <?php
 
-/**
- * TransportManagerApplicationTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as Repo;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Mockery as m;
 
 /**
- * TransportManagerApplicationTest
- *
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication
  */
 class TransportManagerApplicationTest extends RepositoryTestCase
 {
+    /** @var  Repository\TransportManagerApplication | m\MockInterface */
+    protected $sut;
+
+    /** @var  m\MockInterface */
+    private $mockQb;
+
     public function setUp()
     {
-        $this->setUpSut(Repo::class);
+        $this->setUpSut(Repository\TransportManagerApplication::class, true);
+
+        $this->mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
     }
 
     public function testFetchWithContactDetailsByApplication()
@@ -115,59 +117,20 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $this->sut->fetchDetails(834);
     }
 
-    public function testFetchWithOperatingCentres()
-    {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
-
-        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tma')->once()->andReturn($mockQb);
-
-        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('tma.operatingCentres', 'oc')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('oc.address', 'add')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('add.countryCode')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('byId')->with(834)->once()->andReturnSelf();
-
-        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
-
-        $this->assertSame('RESULT', $this->sut->fetchWithOperatingCentres(834));
-    }
-
-    public function testFetchWithOperatingCentresEmpty()
-    {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
-
-        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tma')->once()->andReturn($mockQb);
-
-        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('tma.operatingCentres', 'oc')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('oc.address', 'add')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('add.countryCode')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('byId')->with(834)->once()->andReturnSelf();
-
-        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn([]);
-
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
-
-        $this->assertSame('RESULT', $this->sut->fetchWithOperatingCentres(834));
-    }
-
     /**
      * Mock SUT so that can just test the protected method
      */
     public function testApplyListJoins()
     {
-        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
         $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $mockQb = m::mock();
 
-        $sut->shouldReceive('getQueryBuilder')->with()->once()->andReturn($mockQb);
+        $this->sut->shouldReceive('getQueryBuilder')->with()->once()->andReturn($mockQb);
+
         $mockQb->shouldReceive('with')->with('application', 'a')->once()->andReturnSelf();
         $mockQb->shouldReceive('with')->with('a.licence', 'l')->once()->andReturnSelf();
 
-        $sut->applyListJoins($mockDqb);
+        $this->sut->applyListJoins($mockDqb);
     }
 
     /**
@@ -175,8 +138,6 @@ class TransportManagerApplicationTest extends RepositoryTestCase
      */
     public function testApplyListFiltersUser()
     {
-        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
         $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $mockDqb->shouldReceive('join')->with('tma.transportManager', 'tm')->once();
         $mockDqb->shouldReceive('join')->with('tm.users', 'u')->once();
@@ -185,7 +146,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $mockDqb->shouldReceive('setParameter')->with('user', 73)->once();
 
         $query = \Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetList::create(['user' => 73]);
-        $sut->applyListFilters($mockDqb, $query);
+        $this->sut->applyListFilters($mockDqb, $query);
     }
 
     /**
@@ -193,15 +154,13 @@ class TransportManagerApplicationTest extends RepositoryTestCase
      */
     public function testApplyListFiltersApplication()
     {
-        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
         $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $mockDqb->shouldReceive('expr->eq')->with('tma.application', ':application')->once()->andReturn('EXPR');
         $mockDqb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
         $mockDqb->shouldReceive('setParameter')->with('application', 73)->once();
 
         $query = \Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetList::create(['application' => 73]);
-        $sut->applyListFilters($mockDqb, $query);
+        $this->sut->applyListFilters($mockDqb, $query);
     }
 
     /**
@@ -209,8 +168,6 @@ class TransportManagerApplicationTest extends RepositoryTestCase
      */
     public function testApplyListFiltersTransportManager()
     {
-        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
         $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $mockDqb->shouldReceive('expr->eq')->with('tma.transportManager', ':transportManager')->once()
             ->andReturn('EXPR');
@@ -218,7 +175,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $mockDqb->shouldReceive('setParameter')->with('transportManager', 73)->once();
 
         $query = \Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetList::create(['transportManager' => 73]);
-        $sut->applyListFilters($mockDqb, $query);
+        $this->sut->applyListFilters($mockDqb, $query);
     }
 
     /**
@@ -226,8 +183,6 @@ class TransportManagerApplicationTest extends RepositoryTestCase
      */
     public function testApplyListFiltersAppStatuses()
     {
-        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
         $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $mockDqb->shouldReceive('expr->in')->with('a.status', ':appStatuses')->once()->andReturn('EXPR');
         $mockDqb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
@@ -236,7 +191,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $query = \Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetList::create(
             ['appStatuses' => ['st1', 'st2']]
         );
-        $sut->applyListFilters($mockDqb, $query);
+        $this->sut->applyListFilters($mockDqb, $query);
     }
 
     public function testFetchForTransportManager()
@@ -251,7 +206,6 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('al.organisation', 'alo')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('a.status', 'ast')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('transportManager', 'tm')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('operatingCentres', 'oc')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('tmApplicationStatus', 'tmast')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('expr->eq')->with('tma.transportManager', ':transportManager')->once()->andReturn('tm');
@@ -306,7 +260,6 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('a.status', 'ast')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('transportManager', 'tm')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('tm.tmType', 'tmt')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('operatingCentres', 'oc')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('tmApplicationStatus', 'tmast')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('byId')->with(1)->once()->andReturnSelf();
 
@@ -316,8 +269,6 @@ class TransportManagerApplicationTest extends RepositoryTestCase
 
     public function testApplyListFiltersFilterOrgUser()
     {
-        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
         $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $mockDqb->shouldReceive('join')->with('tma.transportManager', 'tm')->once();
         $mockDqb->shouldReceive('join')->with('tm.users', 'u')->once();
@@ -334,6 +285,6 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $query = \Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetList::create(
             ['user' => 73, 'filterByOrgUser' => true]
         );
-        $sut->applyListFilters($mockDqb, $query);
+        $this->sut->applyListFilters($mockDqb, $query);
     }
 }

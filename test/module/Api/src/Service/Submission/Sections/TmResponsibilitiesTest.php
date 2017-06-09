@@ -2,15 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 /**
- * Class TmResponsibilitiesTest
- * @author Shaun Lizzio <shaun@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Service\Submission\Sections\TmResponsibilities
  */
 class TmResponsibilitiesTest extends SubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\TmResponsibilities';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\TmResponsibilities::class;
 
     /**
      * Filter provider
@@ -29,7 +26,6 @@ class TmResponsibilitiesTest extends SubmissionSectionTest
                             'id' => 522,
                             'version' => 1,
                             'managerType' => 'tmType-desc',
-                            'noOpCentres' => 2,
                             'hrsPerWeek' => 28,
                             'applicationId' => 852,
                             'organisationName' => 'Org name',
@@ -42,7 +38,6 @@ class TmResponsibilitiesTest extends SubmissionSectionTest
                             'id' => 234,
                             'version' => 1,
                             'managerType' => 'tmType-desc',
-                            'noOpCentres' => 2,
                             'hrsPerWeek' => 28,
                             'licenceId' => 7,
                             'organisationName' => 'Org name',
