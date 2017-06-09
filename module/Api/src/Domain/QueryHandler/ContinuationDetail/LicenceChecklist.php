@@ -28,7 +28,10 @@ class LicenceChecklist extends AbstractQueryHandler
                     'licenceType',
                     'status',
                     'goodsOrPsv',
-                    'trafficArea'
+                    'trafficArea',
+                    'organisation' => [
+                        'type'
+                    ]
                 ]
             ]
         );
