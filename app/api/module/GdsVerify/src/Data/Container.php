@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\GdsVerify\Data;
 
+use Ramsey\Uuid\Uuid;
+
 /**
  * Class Container
  * @package Dvsa\Olcs\GdsVerify\Data
@@ -63,7 +65,7 @@ class Container extends \SAML2\Compat\AbstractContainer
      */
     public function generateId()
     {
-        return uniqid('_', true);
+        return '_'. Uuid::uuid4()->toString();
     }
 
     /**
