@@ -131,32 +131,6 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     protected $oppositions;
 
     /**
-     * Transport manager application
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication",
-     *     mappedBy="operatingCentres",
-     *     fetch="LAZY"
-     * )
-     */
-    protected $transportManagerApplications;
-
-    /**
-     * Transport manager licence
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence",
-     *     mappedBy="operatingCentres",
-     *     fetch="LAZY"
-     * )
-     */
-    protected $transportManagerLicences;
-
-    /**
      * Version
      *
      * @var int
@@ -216,8 +190,6 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
      */
     public function initCollections()
     {
-        $this->transportManagerLicences = new ArrayCollection();
-        $this->transportManagerApplications = new ArrayCollection();
         $this->complaints = new ArrayCollection();
         $this->oppositions = new ArrayCollection();
         $this->applications = new ArrayCollection();
@@ -526,132 +498,6 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     {
         if ($this->oppositions->contains($oppositions)) {
             $this->oppositions->removeElement($oppositions);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the transport manager application
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerApplications collection being set as the value
-     *
-     * @return OperatingCentre
-     */
-    public function setTransportManagerApplications($transportManagerApplications)
-    {
-        $this->transportManagerApplications = $transportManagerApplications;
-
-        return $this;
-    }
-
-    /**
-     * Get the transport manager applications
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getTransportManagerApplications()
-    {
-        return $this->transportManagerApplications;
-    }
-
-    /**
-     * Add a transport manager applications
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerApplications collection being added
-     *
-     * @return OperatingCentre
-     */
-    public function addTransportManagerApplications($transportManagerApplications)
-    {
-        if ($transportManagerApplications instanceof ArrayCollection) {
-            $this->transportManagerApplications = new ArrayCollection(
-                array_merge(
-                    $this->transportManagerApplications->toArray(),
-                    $transportManagerApplications->toArray()
-                )
-            );
-        } elseif (!$this->transportManagerApplications->contains($transportManagerApplications)) {
-            $this->transportManagerApplications->add($transportManagerApplications);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a transport manager applications
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerApplications collection being removed
-     *
-     * @return OperatingCentre
-     */
-    public function removeTransportManagerApplications($transportManagerApplications)
-    {
-        if ($this->transportManagerApplications->contains($transportManagerApplications)) {
-            $this->transportManagerApplications->removeElement($transportManagerApplications);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the transport manager licence
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerLicences collection being set as the value
-     *
-     * @return OperatingCentre
-     */
-    public function setTransportManagerLicences($transportManagerLicences)
-    {
-        $this->transportManagerLicences = $transportManagerLicences;
-
-        return $this;
-    }
-
-    /**
-     * Get the transport manager licences
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getTransportManagerLicences()
-    {
-        return $this->transportManagerLicences;
-    }
-
-    /**
-     * Add a transport manager licences
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerLicences collection being added
-     *
-     * @return OperatingCentre
-     */
-    public function addTransportManagerLicences($transportManagerLicences)
-    {
-        if ($transportManagerLicences instanceof ArrayCollection) {
-            $this->transportManagerLicences = new ArrayCollection(
-                array_merge(
-                    $this->transportManagerLicences->toArray(),
-                    $transportManagerLicences->toArray()
-                )
-            );
-        } elseif (!$this->transportManagerLicences->contains($transportManagerLicences)) {
-            $this->transportManagerLicences->add($transportManagerLicences);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a transport manager licences
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagerLicences collection being removed
-     *
-     * @return OperatingCentre
-     */
-    public function removeTransportManagerLicences($transportManagerLicences)
-    {
-        if ($this->transportManagerLicences->contains($transportManagerLicences)) {
-            $this->transportManagerLicences->removeElement($transportManagerLicences);
         }
 
         return $this;
