@@ -2,7 +2,6 @@
 
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion as AppCompCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Queue as QueueCommandHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSideEffect;
 
@@ -63,7 +62,6 @@ return [
     CommandHandler\LicenceOperatingCentre\DisassociateS4::class                       => IsSideEffect::class,
     CommandHandler\OperatingCentre\DeleteApplicationLinks::class                      => IsSideEffect::class,
     CommandHandler\OperatingCentre\DeleteConditionUndertakings::class                 => IsSideEffect::class,
-    CommandHandler\OperatingCentre\DeleteTmLinks::class                               => IsSideEffect::class,
     CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class       => IsSideEffect::class,
     CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertakingS4::class     => IsSideEffect::class,
     CommandHandler\Cases\Si\ComplianceEpisode::class                                  => IsSideEffect::class,
