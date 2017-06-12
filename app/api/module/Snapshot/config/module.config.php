@@ -71,6 +71,7 @@ return [
             'ContinuationReview' => \Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Generator::class,
             'ContinuationReview\TypeOfLicence' => ContinuationReview\TypeOfLicenceReviewService::class,
             'ContinuationReview\BusinessType' => ContinuationReview\BusinessTypeReviewService::class,
+            'ContinuationReview\BusinessDetails' => ContinuationReview\BusinessDetailsReviewService::class,
         ],
     ],
     'view_manager' => [

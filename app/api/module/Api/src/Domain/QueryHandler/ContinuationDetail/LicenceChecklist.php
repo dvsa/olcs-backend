@@ -31,7 +31,8 @@ class LicenceChecklist extends AbstractQueryHandler
                     'trafficArea',
                     'organisation' => [
                         'type'
-                    ]
+                    ],
+                    'tradingNames'
                 ]
             ]
         );
