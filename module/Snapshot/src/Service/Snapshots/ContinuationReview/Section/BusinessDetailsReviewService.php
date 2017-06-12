@@ -51,13 +51,13 @@ class BusinessDetailsReviewService extends AbstractReviewService
         if (in_array($organisationTypeId, $limitedCompanyTypes)) {
             $config[] = [
                 ['value' => 'continuation-review-business-details-company_number'],
-                ['value' => $organisation->getCompanyOrLlpNo(), 'header' => true]
+                ['value' => $organisation->getCompanyOrLlpNo(), 'header' => true],
             ];
         }
         if (in_array($organisationTypeId, $baseCompanyTypes)) {
             $config[] = [
                 ['value' => $organisationLabels[$organisationTypeId]],
-                ['value' => $organisation->getName(), 'header' => true]
+                ['value' => $organisation->getName(), 'header' => true],
             ];
         }
         if ($organisationTypeId !== Organisation::ORG_TYPE_OTHER) {
@@ -67,7 +67,7 @@ class BusinessDetailsReviewService extends AbstractReviewService
                 : 'continuation-review-business-details-trading_names_none_added';
             $config[] = [
                 ['value' => 'continuation-review-business-details-trading_names'],
-                ['value' => $tradingNamesAsString, 'header' => true]
+                ['value' => $tradingNamesAsString, 'header' => true],
             ];
         }
 
