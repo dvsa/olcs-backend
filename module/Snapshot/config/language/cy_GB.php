@@ -271,5 +271,11 @@ return [
     'continuation-review-vehicles_psv' => 'Cerbydau',
     'continuation-review-safety' => 'Diogelwch a chydymffurfiad',
     'continuation-review-conditions_undertakings' => 'Ymgymeriadau amodau',
+    'continuation-review-business-details-trading_names' => 'Enwau masnachu',
+    'continuation-review-business-details-company_number' => 'Rhif cwmni cofrestredig',
+    'continuation-review-business-details-trading_names_none_added' => 'Dim wedi ei ychwanegu',
+    'continuation-review-business-details-company_name' => 'Enw\'r cwmni',
+    'continuation-review-business-details-partnership_name' => 'Partneriaeth',
+    'continuation-review-business-details-organisation_name' => 'Enw’r sefydliad',
     // Potentially unused translations
 ];

@@ -286,6 +286,12 @@ return [
     'continuation-review-conditions_undertakings' => 'Conditions and undertakings',
     'continuation-review-finance' => 'Finance',
     'continuation-review-declaration' => 'Declaration',
-    'continuation-review-type-of-business' => 'Type of business'
+    'continuation-review-type-of-business' => 'Type of business',
+    'continuation-review-business-details-trading_names' => 'Trading names',
+    'continuation-review-business-details-company_number' => 'Registered company number',
+    'continuation-review-business-details-trading_names_none_added' => 'none added',
+    'continuation-review-business-details-company_name' => 'Company name',
+    'continuation-review-business-details-partnership_name' => 'Partnership name',
+    'continuation-review-business-details-organisation_name' => 'Organisation name',
     // Potentially unused translations
 ];
