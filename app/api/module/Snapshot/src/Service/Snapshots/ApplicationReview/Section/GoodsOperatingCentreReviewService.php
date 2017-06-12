@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Goods Operating Centre Review Service
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
@@ -19,7 +14,8 @@ class GoodsOperatingCentreReviewService extends AbstractReviewService
     /**
      * Format the OC config
      *
-     * @param array $data
+     * @param array $data Data from API
+     *
      * @return array
      */
     public function getConfigFromData(array $data = array())
@@ -71,7 +67,8 @@ class GoodsOperatingCentreReviewService extends AbstractReviewService
     /**
      * Format ad document list
      *
-     * @param array $data
+     * @param array $data data from API
+     *
      * @return string
      */
     private function formatAdDocumentList($data)

@@ -1,33 +1,29 @@
 <?php
 
-/**
- * Delete Operating Centres Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Transfer\Command\Application\DeleteOperatingCentres as Cmd;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Application\DeleteOperatingCentres as CommandHandler;
-use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
- * Delete Operating Centres Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Application\DeleteOperatingCentres
  */
 class DeleteOperatingCentresTest extends CommandHandlerTestCase
 {
+    /** @var CommandHandler\Application\DeleteOperatingCentres  */
+    protected $sut;
+
     public function setUp()
     {
-        $this->sut = new CommandHandler();
+        $this->sut = new CommandHandler\Application\DeleteOperatingCentres();
         $this->mockRepo('Application', Repository\Application::class);
         $this->mockRepo('ApplicationOperatingCentre', Repository\ApplicationOperatingCentre::class);
 
@@ -105,12 +101,6 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
         );
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteTmLinks::class,
-            ['operatingCentre' => $this->mapReference(OperatingCentre::class, 1)],
-            (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('DELETE_TM_LINKS')
-        );
-
-        $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteApplicationLinks::class,
             ['operatingCentre' => $this->mapReference(OperatingCentre::class, 1)],
             (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('DELETE_OTHER_APPLICATIONS')
@@ -122,7 +112,6 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'DELETE_CONDITIONS_UNDERTAKINGS',
-                'DELETE_TM_LINKS',
                 'DELETE_OTHER_APPLICATIONS',
                 '1 Operating Centre(s) removed',
                 'UPDATE_APPLICATION_COMPLETION',
@@ -232,12 +221,6 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
         );
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteTmLinks::class,
-            ['operatingCentre' => $this->mapReference(OperatingCentre::class, 1)],
-            (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('DELETE_TM_LINKS')
-        );
-
-        $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteApplicationLinks::class,
             ['operatingCentre' => $this->mapReference(OperatingCentre::class, 1)],
             (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('DELETE_OTHER_APPLICATIONS')
@@ -249,7 +232,6 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'DELETE_CONDITIONS_UNDERTAKINGS',
-                'DELETE_TM_LINKS',
                 'DELETE_OTHER_APPLICATIONS',
                 '1 Operating Centre(s) removed',
                 'Updated traffic area',

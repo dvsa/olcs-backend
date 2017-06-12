@@ -59,7 +59,8 @@
         "olcs/olcs-xmltools": "dev-develop",
         "ircmaxell/random-lib": "^1.1",
 	    "phprtflite/phprtflite": "~1.3.3",
-        "simplesamlphp/saml2": "^2.2"
+        "simplesamlphp/saml2": "^2.2",
+        "ramsey/uuid": "^3.6"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.8",

@@ -549,7 +549,6 @@ return [
         CommandHandler\OperatingCentre\DeleteApplicationLinks::class,
     Command\OperatingCentre\DeleteConditionUndertakings::class =>
         CommandHandler\OperatingCentre\DeleteConditionUndertakings::class,
-    Command\OperatingCentre\DeleteTmLinks::class => CommandHandler\OperatingCentre\DeleteTmLinks::class,
 
     // Domain - Condition Undertaking
     Command\Cases\ConditionUndertaking\CreateConditionUndertaking::class
