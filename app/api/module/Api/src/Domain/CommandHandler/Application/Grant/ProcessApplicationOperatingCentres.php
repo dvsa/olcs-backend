@@ -2,10 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant;
 
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteApplicationLinks;
 use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteConditionUndertakings;
-use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteTmLinks;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -14,7 +12,6 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre as Aoc;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre as Loc;
-use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -139,7 +136,6 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
         $this->handleSideEffects(
             [
                 DeleteConditionUndertakings::create(['operatingCentre' => $operatingCentre, 'licence' => $licence]),
-                DeleteTmLinks::create(['operatingCentre' => $operatingCentre]),
                 DeleteApplicationLinks::create(['operatingCentre' => $operatingCentre]),
             ]
         );
