@@ -6,11 +6,11 @@ use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
- * Type Of Licence Continuation Review Service
+ * Business Type Continuation Review Service
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class TypeOfLicenceReviewService extends AbstractReviewService
+class BusinessTypeReviewService extends AbstractReviewService
 {
     /**
      * Format the readonly config from the given data
@@ -26,23 +26,10 @@ class TypeOfLicenceReviewService extends AbstractReviewService
 
         $config = [
             [
-                ['value' => 'continuation-review-operator-location'],
-                ['value' => $licence->getOperatorLocation(), 'header' => true]
+                ['value' => 'continuation-review-type-of-business'],
+                ['value' => $licence->getOrganisation()->getType()->getDescription(), 'header' => true]
             ]
         ];
-
-        if ($licence->getNiFlag() !== 'Y') {
-            $config[] = [
-                ['value' => 'continuation-review-operator-type'],
-                ['value' => $licence->getOperatorType(), 'header' => true]
-            ];
-        }
-
-        $config[] = [
-            ['value' => 'continuation-review-licence-type'],
-            ['value' => $licence->getLicenceType()->getDescription(), 'header' => true]
-        ];
-
         return $config;
     }
 }
