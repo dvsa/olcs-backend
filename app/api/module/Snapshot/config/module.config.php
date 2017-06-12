@@ -70,6 +70,7 @@ return [
             'Review\TransportManagerSignature' => TmReview\TransportManagerSignatureReviewService::class,
             'ContinuationReview' => \Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Generator::class,
             'ContinuationReview\TypeOfLicence' => ContinuationReview\TypeOfLicenceReviewService::class,
+            'ContinuationReview\BusinessType' => ContinuationReview\BusinessTypeReviewService::class,
         ],
     ],
     'view_manager' => [

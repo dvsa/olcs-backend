@@ -285,5 +285,6 @@ return [
     'continuation-review-conditions_undertakings' => 'Conditions and undertakings',
     'continuation-review-finance' => 'Finance',
     'continuation-review-declaration' => 'Declaration',
+    'continuation-review-type-of-business' => 'Type of business'
     // Potentially unused translations
 ];
