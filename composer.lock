@@ -4,8 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0cceff5d6b92b1346daa7408ba47eb22",
-    "content-hash": "1700146310f2b4141f7308bef7f83220",
+    "content-hash": "639ea178d92b9c195662f391a45e70f8",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -49,7 +48,7 @@
                 "slug",
                 "transliterator"
             ],
-            "time": "2017-04-04 11:38:05"
+            "time": "2017-04-04T11:38:05+00:00"
         },
         {
             "name": "cpms/client",
@@ -85,7 +84,7 @@
                 "proprietary"
             ],
             "description": "CPMS Common Client Module",
-            "time": "2015-11-13 11:06:01"
+            "time": "2015-11-13T11:06:01+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -153,7 +152,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2017-02-24 16:22:25"
+            "time": "2017-02-24T16:22:25+00:00"
         },
         {
             "name": "doctrine/cache",
@@ -223,7 +222,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2016-10-29 11:16:17"
+            "time": "2016-10-29T11:16:17+00:00"
         },
         {
             "name": "doctrine/collections",
@@ -290,7 +289,7 @@
                 "collections",
                 "iterator"
             ],
-            "time": "2017-01-03 10:49:41"
+            "time": "2017-01-03T10:49:41+00:00"
         },
         {
             "name": "doctrine/common",
@@ -363,7 +362,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2017-01-13 14:02:13"
+            "time": "2017-01-13T14:02:13+00:00"
         },
         {
             "name": "doctrine/dbal",
@@ -434,7 +433,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2017-02-08 12:53:47"
+            "time": "2017-02-08T12:53:47+00:00"
         },
         {
             "name": "doctrine/doctrine-module",
@@ -512,7 +511,7 @@
                 "module",
                 "zf2"
             ],
-            "time": "2016-03-21 23:55:21"
+            "time": "2016-03-21T23:55:21+00:00"
         },
         {
             "name": "doctrine/doctrine-orm-module",
@@ -590,7 +589,7 @@
                 "orm",
                 "zf2"
             ],
-            "time": "2015-10-05 23:06:08"
+            "time": "2015-10-05T23:06:08+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -657,7 +656,7 @@
                 "singularize",
                 "string"
             ],
-            "time": "2015-11-06 14:35:42"
+            "time": "2015-11-06T14:35:42+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -711,7 +710,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2015-06-14 21:17:01"
+            "time": "2015-06-14T21:17:01+00:00"
         },
         {
             "name": "doctrine/lexer",
@@ -765,7 +764,7 @@
                 "lexer",
                 "parser"
             ],
-            "time": "2014-09-09 13:34:57"
+            "time": "2014-09-09T13:34:57+00:00"
         },
         {
             "name": "doctrine/orm",
@@ -841,7 +840,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2016-12-18 15:42:34"
+            "time": "2016-12-18T15:42:34+00:00"
         },
         {
             "name": "elasticsearch/elasticsearch",
@@ -896,7 +895,7 @@
                 "elasticsearch",
                 "search"
             ],
-            "time": "2017-04-12 20:40:50"
+            "time": "2017-04-12T20:40:50+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -943,7 +942,7 @@
             "keywords": [
                 "html"
             ],
-            "time": "2017-03-13 06:30:53"
+            "time": "2017-03-13T06:30:53+00:00"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -1021,7 +1020,7 @@
                 "tree",
                 "uploadable"
             ],
-            "time": "2015-02-24 21:41:37"
+            "time": "2015-02-24T21:41:37+00:00"
         },
         {
             "name": "guzzlehttp/ringphp",
@@ -1072,7 +1071,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
-            "time": "2015-05-20 03:37:09"
+            "time": "2015-05-20T03:37:09+00:00"
         },
         {
             "name": "guzzlehttp/streams",
@@ -1122,7 +1121,7 @@
                 "Guzzle",
                 "stream"
             ],
-            "time": "2014-10-12 19:18:40"
+            "time": "2014-10-12T19:18:40+00:00"
         },
         {
             "name": "ircmaxell/random-lib",
@@ -1177,7 +1176,7 @@
                 "random-numbers",
                 "random-strings"
             ],
-            "time": "2016-09-07 15:52:06"
+            "time": "2016-09-07T15:52:06+00:00"
         },
         {
             "name": "ircmaxell/security-lib",
@@ -1223,7 +1222,7 @@
             ],
             "description": "A Base Security Library",
             "homepage": "https://github.com/ircmaxell/SecurityLib",
-            "time": "2015-03-20 14:31:23"
+            "time": "2015-03-20T14:31:23+00:00"
         },
         {
             "name": "olcs/autoload",
@@ -1262,11 +1261,11 @@
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "dev-develop",
+            "version": "4.15",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
-                "reference": "403c96a97f2d79e6a290034b746dd83c9b28bfa5"
+                "reference": "3cb7d9b379f8b3363e57af2174557201142f581f"
             },
             "require": {
                 "php": ">=5.4",
@@ -1292,15 +1291,15 @@
                 }
             },
             "description": "Logging Module for Olcs",
-            "time": "2017-05-24 10:51:20"
+            "time": "2017-06-01T10:18:57+00:00"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-develop",
+            "version": "4.15",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "63fa32eec8dfc3ff36d6860bc69724d0e84cea63"
+                "reference": "a98bf5673bdd1a0abbea612bd89b26017d4bea6f"
             },
             "require": {
                 "php": ">=5.4",
@@ -1318,15 +1317,15 @@
                 }
             },
             "description": "OLCS Transfer",
-            "time": "2017-05-31 16:09:51"
+            "time": "2017-06-01T10:11:04+00:00"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "dev-develop",
+            "version": "4.15",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "b3cba33d3d9161f1262789806a006e7ec7adee89"
+                "reference": "67a075121ea13be9cc2c92e0bb070d75ac3e4219"
             },
             "require": {
                 "php": ">=5.4",
@@ -1334,7 +1333,7 @@
             },
             "require-dev": {
                 "mockery/mockery": "~0.9.3",
-                "olcs/olcs-logging": "dev-develop",
+                "olcs/olcs-logging": "dev-release/4.15",
                 "phpunit/phpunit": "^4.0.0"
             },
             "type": "library",
@@ -1344,15 +1343,15 @@
                 }
             },
             "description": "OLCS Utils",
-            "time": "2017-05-24 10:51:16"
+            "time": "2017-06-01T10:17:57+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "dev-develop",
+            "version": "4.15",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "f699aac6dd9a177d1d8ee227f7ae4b946abd96c6"
+                "reference": "5c70f3ad2e8206d0e22fe5b420c5fd1b10e6d5c7"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1373,7 +1372,55 @@
                 }
             },
             "description": "Xml tools for olcs",
-            "time": "2017-05-24 10:51:18"
+            "time": "2017-06-01T10:18:22+00:00"
+        },
+        {
+            "name": "paragonie/random_compat",
+            "version": "v2.0.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paragonie/random_compat.git",
+                "reference": "634bae8e911eefa89c1abfbf1b66da679ac8f54d"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/paragonie-random_compat-634bae8e911eefa89c1abfbf1b66da679ac8f54d-zip-1d5453.tar",
+                "reference": "634bae8e911eefa89c1abfbf1b66da679ac8f54d",
+                "shasum": "e6a7f2533880d393c6cda90e6f6e4d33ac7a0288"
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*|5.*"
+            },
+            "suggest": {
+                "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "lib/random.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paragon Initiative Enterprises",
+                    "email": "security@paragonie.com",
+                    "homepage": "https://paragonie.com"
+                }
+            ],
+            "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
+            "keywords": [
+                "csprng",
+                "pseudorandom",
+                "random"
+            ],
+            "time": "2017-03-13T16:27:32+00:00"
         },
         {
             "name": "phprtflite/phprtflite",
@@ -1406,7 +1453,7 @@
                 }
             ],
             "description": "PHPRtfLite is an API enabling developers to create rtf documents with php.",
-            "time": "2014-07-04 19:43:18"
+            "time": "2014-07-04T19:43:18+00:00"
         },
         {
             "name": "psr/log",
@@ -1453,7 +1500,89 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10 12:19:37"
+            "time": "2016-10-10T12:19:37+00:00"
+        },
+        {
+            "name": "ramsey/uuid",
+            "version": "3.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ramsey/uuid.git",
+                "reference": "4ae32dd9ab8860a4bbd750ad269cba7f06f7934e"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ramsey-uuid-4ae32dd9ab8860a4bbd750ad269cba7f06f7934e-zip-046777.tar",
+                "reference": "4ae32dd9ab8860a4bbd750ad269cba7f06f7934e",
+                "shasum": "61445de5628bbd101904a5cf49839b2bd4d6350b"
+            },
+            "require": {
+                "paragonie/random_compat": "^1.0|^2.0",
+                "php": "^5.4 || ^7.0"
+            },
+            "replace": {
+                "rhumsaa/uuid": "self.version"
+            },
+            "require-dev": {
+                "apigen/apigen": "^4.1",
+                "codeception/aspect-mock": "^1.0 | ^2.0",
+                "doctrine/annotations": "~1.2.0",
+                "goaop/framework": "1.0.0-alpha.2 | ^1.0 | ^2.1",
+                "ircmaxell/random-lib": "^1.1",
+                "jakub-onderka/php-parallel-lint": "^0.9.0",
+                "mockery/mockery": "^0.9.4",
+                "moontoast/math": "^1.1",
+                "php-mock/php-mock-phpunit": "^0.3|^1.1",
+                "phpunit/phpunit": "^4.7|>=5.0 <5.4",
+                "satooshi/php-coveralls": "^0.6.1",
+                "squizlabs/php_codesniffer": "^2.3"
+            },
+            "suggest": {
+                "ext-libsodium": "Provides the PECL libsodium extension for use with the SodiumRandomGenerator",
+                "ext-uuid": "Provides the PECL UUID extension for use with the PeclUuidTimeGenerator and PeclUuidRandomGenerator",
+                "ircmaxell/random-lib": "Provides RandomLib for use with the RandomLibAdapter",
+                "moontoast/math": "Provides support for converting UUID to 128-bit integer (in string form).",
+                "ramsey/uuid-console": "A console application for generating UUIDs with ramsey/uuid",
+                "ramsey/uuid-doctrine": "Allows the use of Ramsey\\Uuid\\Uuid as Doctrine field type."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ramsey\\Uuid\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marijn Huizendveld",
+                    "email": "marijn.huizendveld@gmail.com"
+                },
+                {
+                    "name": "Thibaud Fabre",
+                    "email": "thibaud@aztech.io"
+                },
+                {
+                    "name": "Ben Ramsey",
+                    "email": "ben@benramsey.com",
+                    "homepage": "https://benramsey.com"
+                }
+            ],
+            "description": "Formerly rhumsaa/uuid. A PHP 5.4+ library for generating RFC 4122 version 1, 3, 4, and 5 universally unique identifiers (UUID).",
+            "homepage": "https://github.com/ramsey/uuid",
+            "keywords": [
+                "guid",
+                "identifier",
+                "uuid"
+            ],
+            "time": "2017-03-26T20:37:53+00:00"
         },
         {
             "name": "react/promise",
@@ -1499,7 +1628,7 @@
                 "promise",
                 "promises"
             ],
-            "time": "2017-03-25 12:08:31"
+            "time": "2017-03-25T12:08:31+00:00"
         },
         {
             "name": "robrichards/xmlseclibs",
@@ -1540,7 +1669,7 @@
                 "xml",
                 "xmldsig"
             ],
-            "time": "2016-09-08 13:15:00"
+            "time": "2016-09-08T13:15:00+00:00"
         },
         {
             "name": "ruflin/elastica",
@@ -1598,7 +1727,7 @@
                 "client",
                 "search"
             ],
-            "time": "2017-04-13 08:56:51"
+            "time": "2017-04-13T08:56:51+00:00"
         },
         {
             "name": "simplesamlphp/saml2",
@@ -1650,7 +1779,7 @@
                 }
             ],
             "description": "SAML2 PHP library from SimpleSAMLphp",
-            "time": "2016-12-14 16:34:56"
+            "time": "2016-12-14T16:34:56+00:00"
         },
         {
             "name": "soflomo/purifier",
@@ -1703,7 +1832,7 @@
                 "purify",
                 "zf2"
             ],
-            "time": "2013-04-23 10:33:41"
+            "time": "2013-04-23T10:33:41+00:00"
         },
         {
             "name": "symfony/console",
@@ -1771,7 +1900,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2017-05-28 14:08:56"
+            "time": "2017-05-28T14:08:56+00:00"
         },
         {
             "name": "symfony/debug",
@@ -1827,7 +1956,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2017-05-27 16:02:27"
+            "time": "2017-05-27T16:02:27+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -1877,7 +2006,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2015-07-08 05:59:48"
+            "time": "2015-07-08T05:59:48+00:00"
         },
         {
             "name": "symfony/finder",
@@ -1927,7 +2056,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2015-07-09 16:02:48"
+            "time": "2015-07-09T16:02:48+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1986,7 +2115,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-11-14 01:06:16"
+            "time": "2016-11-14T01:06:16+00:00"
         },
         {
             "name": "zendframework/zendframework",
@@ -2104,7 +2233,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2015-05-11 16:03:51"
+            "time": "2015-05-11T16:03:51+00:00"
         },
         {
             "name": "zendframework/zendxml",
@@ -2149,7 +2278,7 @@
                 "xml",
                 "zf2"
             ],
-            "time": "2016-02-04 21:02:08"
+            "time": "2016-02-04T21:02:08+00:00"
         },
         {
             "name": "zf-commons/zfc-rbac",
@@ -2225,7 +2354,7 @@
                 "rbac",
                 "zf2"
             ],
-            "time": "2015-01-26 11:29:23"
+            "time": "2015-01-26T11:29:23+00:00"
         },
         {
             "name": "zfr/rbac",
@@ -2275,7 +2404,7 @@
                 "zf2",
                 "zf3"
             ],
-            "time": "2014-02-06 14:18:34"
+            "time": "2014-02-06T14:18:34+00:00"
         }
     ],
     "packages-dev": [
@@ -2322,7 +2451,7 @@
             "keywords": [
                 "test"
             ],
-            "time": "2015-05-11 14:41:42"
+            "time": "2015-05-11T14:41:42+00:00"
         },
         {
             "name": "mikey179/vfsStream",
@@ -2360,7 +2489,7 @@
                 "BSD"
             ],
             "homepage": "http://vfs.bovigo.org/",
-            "time": "2014-09-14 10:18:53"
+            "time": "2014-09-14T10:18:53+00:00"
         },
         {
             "name": "mockery/mockery",
@@ -2425,7 +2554,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2017-02-28 12:52:32"
+            "time": "2017-02-28T12:52:32+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -2479,7 +2608,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2015-12-27 11:43:31"
+            "time": "2015-12-27T11:43:31+00:00"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -2524,7 +2653,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2016-09-30 07:12:33"
+            "time": "2016-09-30T07:12:33+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -2571,7 +2700,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2016-11-25 06:54:22"
+            "time": "2016-11-25T06:54:22+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -2634,7 +2763,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2017-03-02 20:05:34"
+            "time": "2017-03-02T20:05:34+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -2696,7 +2825,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-06 15:47:00"
+            "time": "2015-10-06T15:47:00+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2743,7 +2872,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2016-10-03 07:40:28"
+            "time": "2016-10-03T07:40:28+00:00"
         },
         {
             "name": "phpunit/php-text-template",
@@ -2784,7 +2913,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2015-06-21 13:50:34"
+            "time": "2015-06-21T13:50:34+00:00"
         },
         {
             "name": "phpunit/php-timer",
@@ -2833,7 +2962,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2017-02-26 11:10:40"
+            "time": "2017-02-26T11:10:40+00:00"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -2882,7 +3011,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2017-02-27 10:12:30"
+            "time": "2017-02-27T10:12:30+00:00"
         },
         {
             "name": "phpunit/phpunit",
@@ -2954,7 +3083,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-02-06 05:18:07"
+            "time": "2017-02-06T05:18:07+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -3010,7 +3139,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-10-02 06:51:40"
+            "time": "2015-10-02T06:51:40+00:00"
         },
         {
             "name": "sebastian/comparator",
@@ -3074,7 +3203,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2017-01-29 09:50:25"
+            "time": "2017-01-29T09:50:25+00:00"
         },
         {
             "name": "sebastian/diff",
@@ -3126,7 +3255,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2017-05-22 07:24:03"
+            "time": "2017-05-22T07:24:03+00:00"
         },
         {
             "name": "sebastian/environment",
@@ -3176,7 +3305,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2016-08-18 05:49:44"
+            "time": "2016-08-18T05:49:44+00:00"
         },
         {
             "name": "sebastian/exporter",
@@ -3243,7 +3372,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2016-06-17 09:04:28"
+            "time": "2016-06-17T09:04:28+00:00"
         },
         {
             "name": "sebastian/global-state",
@@ -3294,7 +3423,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2015-10-12 03:26:01"
+            "time": "2015-10-12T03:26:01+00:00"
         },
         {
             "name": "sebastian/recursion-context",
@@ -3347,7 +3476,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2016-10-03 07:41:43"
+            "time": "2016-10-03T07:41:43+00:00"
         },
         {
             "name": "sebastian/version",
@@ -3382,7 +3511,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2015-06-21 13:59:46"
+            "time": "2015-06-21T13:59:46+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -3437,7 +3566,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-05-28 10:56:20"
+            "time": "2017-05-28T10:56:20+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -3487,18 +3616,14 @@
                 "check",
                 "validate"
             ],
-            "time": "2016-11-23 20:04:58"
+            "time": "2016-11-23T20:04:58+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "olcs/companies-house": 20,
-        "olcs/olcs-transfer": 20,
-        "olcs/olcs-utils": 20,
-        "olcs/olcs-logging": 20,
-        "olcs/autoload": 20,
-        "olcs/olcs-xmltools": 20
+        "olcs/autoload": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
