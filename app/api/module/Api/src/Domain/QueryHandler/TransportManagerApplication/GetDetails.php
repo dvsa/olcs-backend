@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Get a Transport Manager Application
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -28,18 +23,29 @@ class GetDetails extends AbstractQueryHandler
         'TmEmployment'
     ];
 
+    /**
+     * Handle Query
+     *
+     * @param \Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetDetails $query Query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication $repo */
+        $repo = $this->getRepo();
+
         /* @var $tma TransportManagerApplication */
-        $tma = $this->getRepo()->fetchDetails($query->getId());
+        $tma = $repo->fetchDetails($query->getId());
+
+        $tmId = $tma->getTransportManager()->getId();
 
         // populate the required associated entities
-        $this->getRepo()->fetchWithOperatingCentres($query->getId());
         $this->getRepo('ApplicationOperatingCentre')->fetchByApplication($tma->getApplication()->getId());
         $this->getRepo('LicenceOperatingCentre')->fetchByLicence($tma->getApplication()->getLicence()->getId());
-        $this->getRepo('PreviousConviction')->fetchByTransportManager($tma->getTransportManager()->getId());
-        $this->getRepo('OtherLicence')->fetchByTransportManager($tma->getTransportManager()->getId());
-        $this->getRepo('TmEmployment')->fetchByTransportManager($tma->getTransportManager()->getId());
+        $this->getRepo('PreviousConviction')->fetchByTransportManager($tmId);
+        $this->getRepo('OtherLicence')->fetchByTransportManager($tmId);
+        $this->getRepo('TmEmployment')->fetchByTransportManager($tmId);
 
         return $this->result(
             $tma,
@@ -61,11 +67,6 @@ class GetDetails extends AbstractQueryHandler
                                 'countryCode'
                             ]
                         ]
-                    ]
-                ],
-                'operatingCentres' => [
-                    'address' => [
-                        'countryCode'
                     ]
                 ],
                 'transportManager' => [

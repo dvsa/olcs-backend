@@ -10,7 +10,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
 
 /**
- * Transport Manager Responsibility Review Service Test
+ * @coversDefaultClass
  */
 class TransportManagerResponsibilityReviewServiceTest extends MockeryTestCase
 {
@@ -64,18 +64,6 @@ class TransportManagerResponsibilityReviewServiceTest extends MockeryTestCase
         $address2 = m::mock(Entity\ContactDetails\Address::class)->makePartial();
         $address2->setAddressLine1('Bar');
 
-        /** @var Entity\OperatingCentre\OperatingCentre $oc1 */
-        $oc1 = m::mock(Entity\OperatingCentre\OperatingCentre::class)->makePartial();
-        $oc1->setAddress($address1);
-
-        /** @var Entity\OperatingCentre\OperatingCentre $oc2 */
-        $oc2 = m::mock(Entity\OperatingCentre\OperatingCentre::class)->makePartial();
-        $oc2->setAddress($address2);
-
-        $operatingCentres1 = new ArrayCollection();
-        $operatingCentres1->add($oc1);
-        $operatingCentres1->add($oc2);
-
         /** @var Entity\Tm\TransportManagerApplication $tma1 */
         $tma1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
         $tma1->setIsOwner('Y');
@@ -90,7 +78,6 @@ class TransportManagerResponsibilityReviewServiceTest extends MockeryTestCase
         $tma1->setOtherLicences(new ArrayCollection());
         $tma1->setTmType($internalType);
         $tma1->setTransportManager($tm1);
-        $tma1->setOperatingCentres($operatingCentres1);
 
         /** @var Entity\System\Category $cat1 */
         $cat1 = m::mock(Entity\System\Category::class)->makePartial();
@@ -155,19 +142,14 @@ class TransportManagerResponsibilityReviewServiceTest extends MockeryTestCase
 
         return [
             [
-                $tma1,
-                [
+                'tma' => $tma1,
+                'expect' => [
                     'subSections' => [
                         [
                             'mainItems' => [
                                 [
                                     'multiItems' => [
                                         [
-                                            [
-                                                'label' => 'tm-review-responsibility-operating-centres',
-                                                'noEscape' => true,
-                                                'value' => 'Foo<br>Bar'
-                                            ],
                                             [
                                                 'label' => 'tm-review-responsibility-tmType',
                                                 'value' => 'Internal'
@@ -248,19 +230,14 @@ class TransportManagerResponsibilityReviewServiceTest extends MockeryTestCase
                 ]
             ],
             [
-                $tma2,
-                [
+                'tma' => $tma2,
+                'expect' => [
                     'subSections' => [
                         [
                             'mainItems' => [
                                 [
                                     'multiItems' => [
                                         [
-                                            [
-                                                'label' => 'tm-review-responsibility-operating-centres',
-                                                'noEscape' => true,
-                                                'value' => 'Foo<br>Bar'
-                                            ],
                                             [
                                                 'label' => 'tm-review-responsibility-tmType',
                                                 'value' => 'Internal'
@@ -341,19 +318,14 @@ class TransportManagerResponsibilityReviewServiceTest extends MockeryTestCase
                 ]
             ],
             [
-                $tma3,
-                [
+                'tma' => $tma3,
+                'expect' => [
                     'subSections' => [
                         [
                             'mainItems' => [
                                 [
                                     'multiItems' => [
                                         [
-                                            [
-                                                'label' => 'tm-review-responsibility-operating-centres',
-                                                'noEscape' => true,
-                                                'value' => 'Foo<br>Bar'
-                                            ],
                                             [
                                                 'label' => 'tm-review-responsibility-tmType',
                                                 'value' => 'Internal'
