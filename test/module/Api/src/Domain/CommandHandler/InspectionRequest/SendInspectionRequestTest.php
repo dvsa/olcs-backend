@@ -7,7 +7,12 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\InspectionRequest;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre;
+use Dvsa\Olcs\Api\Domain\Repository\Licence;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence;
+use Dvsa\Olcs\Api\Domain\Repository\Workshop;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\InspectionRequest as InspectionRequestRepo;
@@ -137,6 +142,7 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
     ];
 
     private $stubApplicationData = [
+        'id' => 9876,
         'licenceType' => [
             'id' => 'ltyp_si'
         ],
@@ -186,6 +192,10 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
     {
         $this->sut = new SendInspectionRequest();
         $this->mockRepo('InspectionRequest', InspectionRequestRepo::class);
+        $this->mockRepo('Workshop', Workshop::class);
+        $this->mockRepo('Licence', Licence::class);
+        $this->mockRepo('TransportManagerLicence', TransportManagerLicence::class);
+        $this->mockRepo('ApplicationOperatingCentre', ApplicationOperatingCentre::class);
 
         $this->mockedSmServices = [
             TemplateRenderer::class => m::mock(TemplateRenderer::class),
@@ -272,6 +282,15 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             ->andReturn(6)
             ->once()
             ->getMock();
+
+        $this->repoMap['Workshop']->shouldReceive('fetchForLicence')->with(77, Query::HYDRATE_ARRAY)->once()
+            ->andReturn($inspectionRequest['licence']['workshops']);
+
+        $this->repoMap['Licence']->shouldReceive('fetchByOrganisationId')->with(1)->once()
+            ->andReturn($inspectionRequest['licence']['organisation']['licences']);
+
+        $this->repoMap['TransportManagerLicence']->shouldReceive('fetchWithContactDetailsByLicence')->with(77)->once()
+            ->andReturn([['forename' => 'Bob', 'familyName' => 'Smith']]);
 
         $expected = [
             'inspectionRequestId' => $inspectionRequestId,
@@ -433,6 +452,20 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             ->andReturn(21)
             ->once()
             ->getMock();
+
+        $this->repoMap['Workshop']->shouldReceive('fetchForLicence')->with(77, Query::HYDRATE_ARRAY)->once()
+            ->andReturn($inspectionRequest['licence']['workshops']);
+
+        $this->repoMap['Licence']->shouldReceive('fetchByOrganisationId')->with(1)->once()
+            ->andReturn($inspectionRequest['licence']['organisation']['licences']);
+
+        $this->repoMap['TransportManagerLicence']->shouldReceive('fetchWithContactDetailsByLicence')->with(77)->once()
+            ->andReturn([['forename' => 'Bob', 'familyName' => 'Smith']]);
+
+        $this->repoMap['ApplicationOperatingCentre']->shouldReceive('fetchByApplication')
+            ->with(9876, Query::HYDRATE_ARRAY)
+            ->once()
+            ->andReturn($inspectionRequest['application']['operatingCentres']);
 
         $expected = [
             'inspectionRequestId' => $inspectionRequestId,

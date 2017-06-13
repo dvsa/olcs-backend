@@ -725,4 +725,17 @@ class LicenceTest extends RepositoryTestCase
 
         $this->assertSame(['result'], $this->sut->fetchByOrganisationIdAndStatuses(1, $statuses));
     }
+
+    public function testFetchByOrganisationId()
+    {
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery->getResult')->with(Query::HYDRATE_ARRAY)->once()->andReturn(['RESULTS']);
+
+        $this->assertEquals(['RESULTS'], $this->sut->fetchByOrganisationId(2017));
+
+        $expectedQuery = 'BLAH AND m.organisation = [[2017]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }

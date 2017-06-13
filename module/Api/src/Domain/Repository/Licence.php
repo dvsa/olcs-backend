@@ -542,4 +542,22 @@ class Licence extends AbstractRepository
 
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
+
+    /**
+     * Fetch by organisation id
+     *
+     * @param int $organisationId organisation id
+     *
+     * @return array
+     */
+    public function fetchByOrganisationId($organisationId)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.organisation', ':organisationId'))
+            ->setParameter('organisationId', $organisationId);
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
 }
