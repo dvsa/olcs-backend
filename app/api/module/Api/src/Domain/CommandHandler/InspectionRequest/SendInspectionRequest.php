@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\InspectionRequest;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -26,6 +27,8 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
     const SUBJECT_LINE_W = '[ Archwiliad Cynnal a Chadw] CAIS=%s,STATWS=';
 
     protected $repoServiceName = 'InspectionRequest';
+
+    protected $extraRepos = ['Licence', 'ApplicationOperatingCentre', 'TransportManagerLicence', 'Workshop'];
 
     /*
      * we don't have translation service on backend so for now I just placed translations in array
@@ -93,6 +96,9 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
 
     protected function populateInspectionRequestVariables($inspectionRequest, $locale)
     {
+        $inspectionRequest['licence']['workshops'] =
+            $this->getRepo('Workshop')->fetchForLicence($inspectionRequest['licence']['id'], Query::HYDRATE_ARRAY);
+
         $workshop = isset($inspectionRequest['licence']['workshops'][0]) ?
             $inspectionRequest['licence']['workshops'][0] : null;
         $user = $this->getCurrentUser();
@@ -183,6 +189,9 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
 
     protected function getOtherLicences($inspectionRequest)
     {
+        $inspectionRequest['licence']['organisation']['licences'] = $this->getRepo('Licence')
+            ->fetchByOrganisationId($inspectionRequest['licence']['organisation']['id']);
+
         $licenceNos = array_map(
             function ($licence) {
                 return $licence['licNo'];
@@ -204,6 +213,13 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
 
     protected function getApplicationOperatingCentres($inspectionRequest)
     {
+        if (!isset($inspectionRequest['application']['id'])) {
+            return [];
+        }
+
+        $inspectionRequest['application']['operatingCentres'] = $this->getRepo('ApplicationOperatingCentre')
+            ->fetchByApplication($inspectionRequest['application']['id'], Query::HYDRATE_ARRAY);
+
         if (!is_array($inspectionRequest['application']['operatingCentres'])) {
             return [];
         }
@@ -228,10 +244,12 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
 
     protected function getTransportManagers($inspectionRequest)
     {
+        $inspectionRequest['licence']['tmLicences'] = $this->getRepo('TransportManagerLicence')
+            ->fetchWithContactDetailsByLicence($inspectionRequest['licence']['id']);
+
         return array_map(
             function ($tmLicence) {
-                $person = $tmLicence['transportManager']['homeCd']['person'];
-                return $person['forename'].' '.$person['familyName'];
+                return $tmLicence['forename'].' '.$tmLicence['familyName'];
             },
             $inspectionRequest['licence']['tmLicences']
         );

@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre as Entity;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint;
@@ -33,11 +34,12 @@ class ApplicationOperatingCentre extends AbstractRepository
     /**
      * Fetch a list Application Operating Centres for an Application
      *
-     * @param int $applicationId
+     * @param int $applicationId Application ID
+     * @param int $hydrationMode Hydration mode Query::HYDRATE_* constant
      *
      * @return array
      */
-    public function fetchByApplication($applicationId)
+    public function fetchByApplication($applicationId, $hydrationMode = Query::HYDRATE_OBJECT)
     {
         $dqb = $this->createQueryBuilder();
         $this->getQueryBuilder()->modifyQuery($dqb)
@@ -48,7 +50,7 @@ class ApplicationOperatingCentre extends AbstractRepository
         $dqb->andWhere($dqb->expr()->eq('aoc.application', ':applicationId'))
             ->setParameter('applicationId', $applicationId);
 
-        return $dqb->getQuery()->getResult();
+        return $dqb->getQuery()->getResult($hydrationMode);
     }
 
     /**
