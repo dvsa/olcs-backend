@@ -228,27 +228,6 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     protected $olbsKey;
 
     /**
-     * Operating centre
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre",
-     *     inversedBy="transportManagerApplications",
-     *     fetch="LAZY"
-     * )
-     * @ORM\JoinTable(name="tm_application_oc",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="transport_manager_application_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id")
-     *     }
-     * )
-     */
-    protected $operatingCentres;
-
-    /**
      * Tm application status
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
@@ -321,7 +300,6 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
      */
     public function initCollections()
     {
-        $this->operatingCentres = new ArrayCollection();
         $this->otherLicences = new ArrayCollection();
     }
 
@@ -797,69 +775,6 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     public function getOlbsKey()
     {
         return $this->olbsKey;
-    }
-
-    /**
-     * Set the operating centre
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being set as the value
-     *
-     * @return TransportManagerApplication
-     */
-    public function setOperatingCentres($operatingCentres)
-    {
-        $this->operatingCentres = $operatingCentres;
-
-        return $this;
-    }
-
-    /**
-     * Get the operating centres
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getOperatingCentres()
-    {
-        return $this->operatingCentres;
-    }
-
-    /**
-     * Add a operating centres
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being added
-     *
-     * @return TransportManagerApplication
-     */
-    public function addOperatingCentres($operatingCentres)
-    {
-        if ($operatingCentres instanceof ArrayCollection) {
-            $this->operatingCentres = new ArrayCollection(
-                array_merge(
-                    $this->operatingCentres->toArray(),
-                    $operatingCentres->toArray()
-                )
-            );
-        } elseif (!$this->operatingCentres->contains($operatingCentres)) {
-            $this->operatingCentres->add($operatingCentres);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a operating centres
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being removed
-     *
-     * @return TransportManagerApplication
-     */
-    public function removeOperatingCentres($operatingCentres)
-    {
-        if ($this->operatingCentres->contains($operatingCentres)) {
-            $this->operatingCentres->removeElement($operatingCentres);
-        }
-
-        return $this;
     }
 
     /**
