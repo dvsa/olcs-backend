@@ -2,10 +2,9 @@
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section;
 
+use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
-use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
-use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
 
 /**
  * Transport Manager Responsibility Review Service
@@ -30,11 +29,6 @@ class TransportManagerResponsibilityReviewService extends AbstractReviewService
                         [
                             'multiItems' => [
                                 [
-                                    [
-                                        'label' => 'tm-review-responsibility-operating-centres',
-                                        'noEscape' => true,
-                                        'value' => $this->formatOperatingCentres($tma)
-                                    ],
                                     [
                                         'label' => 'tm-review-responsibility-tmType',
                                         'value' => $tma->getTmType() ? $tma->getTmType()->getDescription() : ''
@@ -123,25 +117,6 @@ class TransportManagerResponsibilityReviewService extends AbstractReviewService
         $hours = $this->translate('hours');
 
         return (float)$value . ' ' . $hours;
-    }
-
-    /**
-     * Format operating centres
-     *
-     * @param TransportManagerApplication $tma transport manager application
-     *
-     * @return string
-     */
-    private function formatOperatingCentres(TransportManagerApplication $tma)
-    {
-        $addresses = [];
-
-        /** @var OperatingCentre $oc */
-        foreach ($tma->getOperatingCentres() as $oc) {
-            $addresses[] = $this->formatShortAddress($oc->getAddress());
-        }
-
-        return implode('<br>', $addresses);
     }
 
     /**

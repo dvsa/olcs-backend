@@ -226,7 +226,6 @@ class SubmissionSectionTest extends MockeryTestCase
         $entity = new TransportManagerApplication($id);
         $entity->setId($id);
         $entity->setTransportManager($transportManager);
-        $entity->setOperatingCentres($this->generateArrayCollection('OperatingCentre', 2));
         $entity->setHoursMon(1);
         $entity->setHoursTue(2);
         $entity->setHoursWed(3);
@@ -253,7 +252,6 @@ class SubmissionSectionTest extends MockeryTestCase
     {
         $entity = new TransportManagerLicence($licence, $transportManager);
         $entity->setId($id);
-        $entity->setOperatingCentres($this->generateArrayCollection('OperatingCentre', 2));
         $entity->setHoursMon(1);
         $entity->setHoursTue(2);
         $entity->setHoursWed(3);

@@ -1,31 +1,32 @@
 <?php
 
-/**
- * TransportManagerLicence / UpdateForResponsibilities
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerLicence;
 
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerLicence\UpdateForResponsibilities as UpdateForResp;
-use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TransportManagerLicenceRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\TransportManagerLicence\UpdateForResponsibilities as Cmd;
-use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntity;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntity;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * TransportManagerLicence / UpdateForResponsibilities
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerLicence\UpdateForResponsibilities
  */
 class UpdateForResponsibilitiesTest extends CommandHandlerTestCase
 {
+    /** @var CommandHandler\TransportManagerLicence\UpdateForResponsibilities   */
+    protected $sut;
+
     public function setUp()
     {
-        $this->sut = new UpdateForResp();
-        $this->mockRepo('TransportManagerLicence', TransportManagerLicenceRepo::class);
+        $this->sut = new CommandHandler\TransportManagerLicence\UpdateForResponsibilities();
+
+        $this->mockRepo('TransportManagerLicence', Repository\TransportManagerLicence::class);
 
         parent::setUp();
     }
@@ -61,23 +62,11 @@ class UpdateForResponsibilitiesTest extends CommandHandlerTestCase
             'hoursSat' => 6,
             'hoursSun' => 7,
             'additionalInformation' => 'ai',
-            'operatingCentres' => [1]
         ];
 
-        $command = Cmd::create($data);
+        $command = TransferCmd\TransportManagerLicence\UpdateForResponsibilities::create($data);
 
-        $mockTmLicence = m::mock(TransportManagerLicenceEntity::class)
-            ->shouldReceive('getOperatingCentres')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('clear')
-                ->once()
-                ->shouldReceive('add')
-                ->with($this->references[OperatingCentreEntity::class][1])
-                ->once()
-                ->getMock()
-            )
-            ->twice()
+        $mockTmLicence = m::mock(Entity\Tm\TransportManagerLicence::class)
             ->shouldReceive('updateTransportManagerLicence')
             ->with(
                 $this->refData['tmType'],
