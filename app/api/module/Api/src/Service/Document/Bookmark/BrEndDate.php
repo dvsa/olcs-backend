@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
  */
 class BrEndDate extends BusRegFlatAbstract
 {
+    const DEFAULT_VALUE = 'N/A';
     const FORMATTER = 'Date';
     const FIELD  = 'endDate';
     const SRCH_FLD_KEY = 'id';
