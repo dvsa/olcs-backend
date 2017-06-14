@@ -23,11 +23,13 @@ abstract class SingleValueAbstract extends DynamicBookmark
     const SRCH_VAL_KEY = 'busRegId'; // example
     const DEFAULT_VALUE = null;
     const QUERY_CLASS = null;
+    const BUNDLE = [];
 
     public function getQuery(array $data)
     {
         $data = [
-            static::SRCH_FLD_KEY => isset($data[static::SRCH_VAL_KEY]) ? $data[static::SRCH_VAL_KEY] : null
+            static::SRCH_FLD_KEY => isset($data[static::SRCH_VAL_KEY]) ? $data[static::SRCH_VAL_KEY] : null,
+            'bundle' => static::BUNDLE
         ];
 
         $queryClass = static::QUERY_CLASS;
