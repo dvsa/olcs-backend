@@ -1,9 +1,5 @@
 <?php
-/**
- * Class
- *
- * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
- */
+
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
@@ -20,6 +16,6 @@ class BrOtherServiceNos extends SingleValueAbstract
     const FIELD  = 'otherServices';
     const SRCH_FLD_KEY = 'id';
     const SRCH_VAL_KEY = DynamicBookmark::PARAM_BUSREG_ID;
-    const BUNDLE = 'otherServices';
+    const BUNDLE = ['otherServices'];
     const QUERY_CLASS = Qry::class;
 }
