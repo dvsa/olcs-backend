@@ -35,7 +35,7 @@ class BatchController extends AbstractConsoleController
         }
 
         if ($this->params('delete')) {
-            // @todo To be done in JIRA OLCS-16626
+            return $this->handleExitStatus($this->handleCommand([Command\DataRetention\RunDelete::create([])]));
         }
     }
 
