@@ -19,8 +19,18 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
  */
 class TypeOfLicence extends AbstractQueryHandler
 {
+    /**
+     * @var string
+     */
     protected $repoServiceName = 'Licence';
 
+    /**
+     * Query handler which creates a response
+     *
+     * @param QueryInterface $query Request query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
         /* @var $licence LicenceEntity */
