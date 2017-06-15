@@ -32,7 +32,7 @@ class TypeOfLicence extends AbstractQueryHandler
             [
                 'canBecomeSpecialRestricted' => $licence->canBecomeSpecialRestricted(),
                 'canUpdateLicenceType' => $this->isGranted(Permission::CAN_UPDATE_LICENCE_LICENCE_TYPE, $licence) &&
-                    !$licence->isSpecialRestricted(),
+                    !$licence->isSpecialRestricted() && $this->isGranted(Permission::INTERNAL_USER),
                 'doesChangeRequireVariation' => $this->isGranted(Permission::SELFSERVE_USER)
             ]
         );
