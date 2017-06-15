@@ -979,4 +979,5 @@ return [
 
     // DataRetention
     Command\DataRetention\Populate::class => CommandHandler\DataRetention\Populate::class,
+    Command\DataRetention\RunDelete::class => CommandHandler\DataRetention\RunDelete::class,
 ];
