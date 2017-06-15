@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\Repository\Task
@@ -188,5 +189,34 @@ class TaskTest extends RepositoryTestCase
             ->andReturn($mockUser);
 
         static::assertEquals('EXPECT', $this->sut->getTeamReference(null, $userId));
+    }
+
+    public function testFetchByAppIdAndDescription()
+    {
+        $this->setUpSut(Repository\Task::class);
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->once()
+            ->andReturn($mockQb);
+
+        $mockQb->shouldReceive('expr->eq')->with('m.application', ':application')->once()->andReturn('EXPR1');
+        $mockQb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('application', 1)->once();
+
+        $mockQb->shouldReceive('expr->eq')->with('m.description', ':description')->once()->andReturn('EXPR2');
+        $mockQb->shouldReceive('andWhere')->with('EXPR2')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('description', 'foo')->once();
+
+        $mockQb->shouldReceive('expr->eq')->with('m.isClosed', ':isClosed')->once()->andReturn('EXPR3');
+        $mockQb->shouldReceive('andWhere')->with('EXPR3')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('isClosed', 'N')->once();
+
+        $mockQb->shouldReceive('getQuery->getResult')->andReturn(['result']);
+
+        $this->assertEquals(['result'], $this->sut->fetchByAppIdAndDescription(1, 'foo'));
     }
 }

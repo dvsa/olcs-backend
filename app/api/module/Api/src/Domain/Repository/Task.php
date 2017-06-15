@@ -170,4 +170,33 @@ class Task extends AbstractRepository
 
         return null;
     }
+
+    /**
+     * Fetch task by application id and description
+     *
+     * @param int    $applicationId application id
+     * @param string $description   description
+     * @param bool   $isClosed      is closed
+     *
+     * @return array
+     */
+    public function fetchByAppIdAndDescription($applicationId, $description, $isClosed = false)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.application', ':application'))
+            ->setParameter('application', $applicationId);
+
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.description', ':description'))
+            ->setParameter('description', $description);
+
+        $isClosedFlag = $isClosed ? 'Y' : 'N';
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.isClosed', ':isClosed'))
+            ->setParameter('isClosed', $isClosedFlag);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
 }
