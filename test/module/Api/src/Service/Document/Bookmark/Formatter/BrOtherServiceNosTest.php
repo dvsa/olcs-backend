@@ -7,40 +7,8 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\BrOtherServiceNos;
 /**
  * BrOtherServiceNos Test
  */
-class BrOtherServiceNosTest extends \PHPUnit_Framework_TestCase
+class BrOtherServiceNosTest extends AbstractArrayList
 {
-    /**
-     * @dataProvider dpTestFormat
-     */
-    public function testFormat($input, $expected)
-    {
-        $this->assertEquals($expected, BrOtherServiceNos::format($input));
-    }
-
-    /**
-     * @return array
-     */
-    public function dpTestFormat()
-    {
-        return [
-            [
-                [],
-                ''
-            ],
-            [
-                [
-                    0 => [
-                        'serviceNo' => 3
-                    ],
-                    1 => [
-                        'serviceNo' => 'abc'
-                    ],
-                    2 => [
-                        'serviceNo' => '2'
-                    ]
-                ],
-                '(3, abc, 2)'
-            ],
-        ];
-    }
+    const SUT_CLASS_NAME = BrOtherServiceNos::class;
+    const ARRAY_FIELD = 'serviceNo';
 }
