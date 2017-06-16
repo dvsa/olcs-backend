@@ -17,6 +17,14 @@ class TmCaseDecision extends AbstractRepository
 {
     protected $entity = Entity::class;
 
+    /**
+     * Fetch latest decision for a case
+     *
+     * @param QryCmd $query       Query DTO
+     * @param int    $hydrateMode Hydrate home Query::HYDRATE_* constant
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Tm\TmCaseDecision|false
+     */
     public function fetchLatestUsingCase(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
@@ -33,7 +41,7 @@ class TmCaseDecision extends AbstractRepository
         $results = $qb->getQuery()->getResult($hydrateMode);
 
         if (empty($results)) {
-            throw new Exception\NotFoundException('Resource not found');
+            return false;
         }
 
         return $results[0];

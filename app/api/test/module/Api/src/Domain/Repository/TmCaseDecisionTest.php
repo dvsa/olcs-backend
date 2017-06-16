@@ -24,10 +24,26 @@ class TmCaseDecisionTest extends RepositoryTestCase
         $this->setUpSut(Repo::class);
     }
 
-    public function testFetchLatestUsingCase()
+    public function testFetchLatestUsingCaseDataProvider()
+    {
+        return [
+            'Decision exists' => [
+                'exepected' => 'result',
+                'mockResult' => [0 => 'result']
+            ],
+            'Decision does not exist' => [
+                'exepected' => false ,
+                'mockResult' => []
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider testFetchLatestUsingCaseDataProvider
+     */
+    public function testFetchLatestUsingCase($expected, $mockResult)
     {
         $case = 24;
-        $mockResult = [0 => 'result'];
 
         $command = m::mock(QueryInterface::class);
         $command->shouldReceive('getCase')
@@ -81,6 +97,6 @@ class TmCaseDecisionTest extends RepositoryTestCase
 
         $result = $this->sut->fetchLatestUsingCase($command, Query::HYDRATE_OBJECT);
 
-        $this->assertEquals($result, $mockResult[0]);
+        $this->assertEquals($expected, $result);
     }
 }
