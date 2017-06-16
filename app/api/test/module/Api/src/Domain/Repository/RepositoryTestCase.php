@@ -150,6 +150,9 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('orderBy')
             ->andReturnUsing([$this, 'mockOrderBy']);
 
+        $this->qb->shouldReceive('groupBy')
+            ->andReturnUsing([$this, 'mockGroupBy']);
+
         $this->qb->shouldReceive('setParameter')
             ->andReturnUsing([$this, 'mockSetParameter']);
 
@@ -162,6 +165,18 @@ class RepositoryTestCase extends MockeryTestCase
     public function mockOrderBy($sort, $order)
     {
         $this->query .= ' ORDER BY ' . $sort . ' ' . $order;
+
+        return $this->qb;
+    }
+
+    public function mockGroupBy($field)
+    {
+        $fields = func_get_args();
+        if (func_num_args() === 1 && is_array($field)) {
+            $fields = $field;
+        }
+
+        $this->query .= ' GROUP BY ' . implode(', ', $fields);
 
         return $this->qb;
     }
