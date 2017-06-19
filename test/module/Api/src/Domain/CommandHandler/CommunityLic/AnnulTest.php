@@ -1,36 +1,32 @@
 <?php
 
-/**
- * Void Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CommunityLic;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Void;
-use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\CommunityLic\Void as Cmd;
-use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Licence\UpdateTotalCommunityLicences as UpdateTotalCommunityLicencesCmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
+use Dvsa\Olcs\Transfer\Command\CommunityLic\Annul as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
- * Void Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\CopyAnnul
  */
-class VoidTest extends CommandHandlerTestCase
+class AnnulTest extends CommandHandlerTestCase
 {
+    /** @var  CommandHandler\CommunityLic\Annul */
+    protected $sut;
+
     public function setUp()
     {
-        $this->sut = new Void();
-        $this->mockRepo('CommunityLic', CommunityLicRepo::class);
-        $this->mockRepo('Licence', LicenceRepo::class);
+        $this->sut = new CommandHandler\CommunityLic\Annul();
+
+        $this->mockRepo('CommunityLic', Repository\CommunityLic::class);
+        $this->mockRepo('Licence', Repository\Licence::class);
 
         parent::setUp();
     }
@@ -38,7 +34,7 @@ class VoidTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            CommunityLicEntity::STATUS_VOID
+            CommunityLicEntity::STATUS_ANNUL,
         ];
 
         parent::initReferences();
@@ -62,7 +58,7 @@ class VoidTest extends CommandHandlerTestCase
             ->andReturn(10)
             ->twice()
             ->shouldReceive('changeStatusAndExpiryDate')
-            ->with($this->refData[CommunityLicEntity::STATUS_VOID], m::type(DateTime::class))
+            ->with($this->refData[CommunityLicEntity::STATUS_ANNUL], m::type(DateTime::class))
             ->once()
             ->getMock();
 
@@ -106,7 +102,7 @@ class VoidTest extends CommandHandlerTestCase
                 'communityLic10' => 10
             ],
             'messages' => [
-                'Community Licence 10 voided'
+                'Community Licence 10 annulled',
             ]
         ];
 
@@ -133,7 +129,7 @@ class VoidTest extends CommandHandlerTestCase
             ->andReturn(10)
             ->twice()
             ->shouldReceive('changeStatusAndExpiryDate')
-            ->with($this->refData[CommunityLicEntity::STATUS_VOID], m::type(DateTime::class))
+            ->with($this->refData[CommunityLicEntity::STATUS_ANNUL], m::type(DateTime::class))
             ->once()
             ->getMock();
 
@@ -186,7 +182,7 @@ class VoidTest extends CommandHandlerTestCase
                 'communityLic10' => 10
             ],
             'messages' => [
-                'Community Licence 10 voided'
+                'Community Licence 10 annulled'
             ]
         ];
 

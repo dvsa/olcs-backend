@@ -1,34 +1,31 @@
 <?php
 
-/**
- * Reprint Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CommunityLic;
 
+use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch as GenerateBatchCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Reprint;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\CommunityLic\Reprint as Cmd;
-use Dvsa\Olcs\Transfer\Command\CommunityLic\Void as VoidCmd;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch as GenerateBatchCmd;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
+use Dvsa\Olcs\Transfer\Command\CommunityLic\Reprint as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
- * Reprint Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Reprint
  */
 class ReprintTest extends CommandHandlerTestCase
 {
+    /** @var Reprint */
+    protected $sut;
+
     public function setUp()
     {
         $this->sut = new Reprint();
+
         $this->mockRepo('CommunityLic', CommunityLicRepo::class);
         $this->mockRepo('Licence', LicenceRepo::class);
 
@@ -73,6 +70,7 @@ class ReprintTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
+        /** @var CommunityLicEntity $communityLic */
         $communityLic = null;
 
         $this->repoMap['CommunityLic']
@@ -96,7 +94,7 @@ class ReprintTest extends CommandHandlerTestCase
             ->getMock();
 
         $this->expectedSideEffect(
-            VoidCmd::class,
+            TransferCmd\CommunityLic\Annul::class,
             [
                 'licence' => $licenceId,
                 'communityLicenceIds' => $communityLicenceIds,
