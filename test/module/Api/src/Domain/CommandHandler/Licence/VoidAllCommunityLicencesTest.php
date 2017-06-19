@@ -1,34 +1,30 @@
 <?php
 
-/**
- * VoidAllCommunityLicencesTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\VoidAllCommunityLicences as CommandHandler;
+use Dvsa\Olcs\Api\Domain\Command\Licence\UpdateTotalCommunityLicences as UpdateTotalCommunityLicencesCommand;
 use Dvsa\Olcs\Api\Domain\Command\Licence\VoidAllCommunityLicences as Command;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
-use Dvsa\Olcs\Api\Domain\Command\Licence\UpdateTotalCommunityLicences as UpdateTotalCommunityLicencesCommand;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
 /**
- * VoidAllCommunityLicencesTest
- *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  *
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\VoidAllCommunityLicences
  */
 class VoidAllCommunityLicencesTest extends CommandHandlerTestCase
 {
+    /** @var CommandHandler\Licence\VoidAllCommunityLicences */
+    protected $sut;
+
     public function setUp()
     {
-        $this->sut = new CommandHandler();
+        $this->sut = new CommandHandler\Licence\VoidAllCommunityLicences();
+
         $this->mockRepo('CommunityLic', CommunityLicRepo::class);
 
         parent::setUp();
@@ -39,7 +35,7 @@ class VoidAllCommunityLicencesTest extends CommandHandlerTestCase
         $command = Command::create(['id' => 717]);
         $this->repoMap['CommunityLic']
             ->shouldReceive('expireAllForLicence')
-            ->with(717, CommunityLicEntity::STATUS_VOID)
+            ->with(717, CommunityLicEntity::STATUS_ANNUL)
             ->once();
 
         $this->expectedSideEffect(

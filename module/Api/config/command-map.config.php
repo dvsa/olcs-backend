@@ -444,7 +444,7 @@ return [
     TransferCommand\CommunityLic\Licence\Create::class => CommandHandler\CommunityLic\Licence\Create::class,
     TransferCommand\CommunityLic\Licence\CreateOfficeCopy::class =>
         CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class,
-    TransferCommand\CommunityLic\Void::class => CommandHandler\CommunityLic\Void::class,
+    TransferCommand\CommunityLic\Annul::class => CommandHandler\CommunityLic\Annul::class,
     TransferCommand\CommunityLic\Restore::class => CommandHandler\CommunityLic\Restore::class,
     TransferCommand\CommunityLic\Stop::class => CommandHandler\CommunityLic\Stop::class,
     TransferCommand\CommunityLic\Reprint::class => CommandHandler\CommunityLic\Reprint::class,
@@ -678,10 +678,7 @@ return [
     Command\CommunityLic\GenerateBatch::class => CommandHandler\CommunityLic\GenerateBatch::class,
     Command\CommunityLic\Application\CreateOfficeCopy::class =>
         CommandHandler\CommunityLic\Application\CreateOfficeCopy::class,
-    Command\CommunityLic\Licence\CreateOfficeCopy::class =>
-        CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class,
-    Command\CommunityLic\Void::class =>
-        CommandHandler\CommunityLic\Void::class,
+    Command\CommunityLic\Licence\CreateOfficeCopy::class => CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class,
 
     // Cli - CommunityLic
     CommandCli\CommunityLic\Activate::class => CommandHandlerCli\CommunityLic\Activate::class,
