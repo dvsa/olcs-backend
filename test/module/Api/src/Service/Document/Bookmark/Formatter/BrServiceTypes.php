@@ -11,5 +11,5 @@ class BrServiceTypesTest extends AbstractArrayList
 {
     const SUT_CLASS_NAME = BrServiceTypes::class;
     const ARRAY_FIELD = 'description';
-    const EXCPECTED_OUTPUT = '3, abc, 2';
+    const EXPECTED_OUTPUT = '3, abc, 2';
 }
