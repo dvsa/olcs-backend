@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter;
  */
 class BrTasNotified extends AbstractArrayList
 {
-    const FORMAT = '(%s)';
+    const FORMAT = '%s';
     const SEPARATOR = ', ';
     const COLUMN = 'name';
 }

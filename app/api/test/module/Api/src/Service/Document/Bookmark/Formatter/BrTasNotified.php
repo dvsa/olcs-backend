@@ -11,4 +11,5 @@ class BrTasNotifiedTest extends AbstractArrayList
 {
     const SUT_CLASS_NAME = BrTasNotified::class;
     const ARRAY_FIELD = 'name';
+    const EXPECTED_OUTPUT = '3, abc, 2';
 }
