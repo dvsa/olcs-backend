@@ -13,7 +13,7 @@ class AbstractArrayList extends \PHPUnit_Framework_TestCase
 {
     const SUT_CLASS_NAME = '\Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\FORMATTER_CLASS_NAME';
     const ARRAY_FIELD = '';
-    const EXCPECTED_OUTPUT = '(3, abc, 2)'; //allows differing format to be configured for each
+    const EXPECTED_OUTPUT = '(3, abc, 2)'; //allows differing format to be configured for each
 
     /**
      * @dataProvider dpTestFormat
