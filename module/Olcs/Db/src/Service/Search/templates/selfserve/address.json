@@ -11,6 +11,9 @@
                               "lsts_not_submitted",
                               "lsts_unlicenced",
                               "lsts_withdrawn"
+                           ],
+                           "app_status": [
+                              "apsts_not_submitted"
                            ]
                         }
                      },
