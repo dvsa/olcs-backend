@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Void community licences
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
@@ -22,12 +17,19 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class Void extends AbstractCommandHandler implements TransactionedInterface
+final class Annul extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'CommunityLic';
 
     protected $extraRepos = ['Licence'];
 
+    /**
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\CommunityLic\Annul $command Command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $ids = $command->getCommunityLicenceIds();
@@ -39,14 +41,17 @@ final class Void extends AbstractCommandHandler implements TransactionedInterfac
         $licences = $this->getRepo()->fetchLicencesByIds($ids);
 
         $result = new Result();
+        /** @var CommunityLicEntity $communityLicence */
         foreach ($licences as $communityLicence) {
             $id = $communityLicence->getId();
+
             $communityLicence->changeStatusAndExpiryDate(
-                $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_VOID),
+                $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_ANNUL),
                 new DateTime('now')
             );
+
             $this->getRepo()->save($communityLicence);
-            $result->addMessage("Community Licence {$id} voided");
+            $result->addMessage("Community Licence {$id} annulled");
             $result->addId('communityLic' . $id, $id);
         }
 
@@ -70,11 +75,24 @@ final class Void extends AbstractCommandHandler implements TransactionedInterfac
         return $result;
     }
 
+    /**
+     * Validate by ids to community licences from licence
+     *
+     * @param array $ids       Identitifiers
+     * @param int   $licenceId Licence Id
+     *
+     * @return void
+     * @throws ValidationException
+     */
     protected function validateLicences($ids, $licenceId)
     {
+        /** @var \Dvsa\Olcs\Api\Entity\Licence\Licence $licence */
         $licence = $this->getRepo('Licence')->fetchById($licenceId);
+
         if ($licence->hasCommunityLicenceOfficeCopy($ids)) {
             $validLicences = $this->getRepo()->fetchValidLicences($licenceId);
+
+            /** @var CommunityLicEntity $validLicence */
             foreach ($validLicences as $validLicence) {
                 if (!in_array($validLicence->getId(), $ids)) {
                     throw new ValidationException(

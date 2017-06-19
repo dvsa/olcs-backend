@@ -1,22 +1,17 @@
 <?php
 
-/**
- * Reprint community licences
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch as GenerateBatchCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Transfer\Command\CommunityLic\Void as VoidCmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch as GenerateBatchCommand;
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Reprint community licences
@@ -26,16 +21,22 @@ use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch as GenerateBatchComm
 final class Reprint extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'CommunityLic';
-
     protected $extraRepos = ['Licence'];
 
+    /**
+     * Handle Command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\CommunityLic\Reprint $command Command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $ids = $command->getCommunityLicenceIds();
         $licenceId = $command->getLicence();
 
         $this->validateLicences($ids, $licenceId);
-        $voidLicencesCommand = VoidCmd::create(
+        $voidLicencesCommand = TransferCmd\CommunityLic\Annul::create(
             [
                 'licence' => $licenceId,
                 'communityLicenceIds' => $ids,
@@ -45,6 +46,7 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
         $this->handleSideEffect($voidLicencesCommand);
         $issueNumbers = $this->getIssueNumbersByIds($ids);
 
+        /** @var LicenceEntity $licence */
         $licence = $this->getRepo('Licence')->fetchById($licenceId);
 
         $data = [
@@ -53,6 +55,7 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
             'serialNoPrefix' => $licence->getSerialNoPrefixFromTrafficArea(),
             'licence' => $this->getRepo()->getReference(LicenceEntity::class, $licenceId)
         ];
+
         $result = new Result();
         foreach ($issueNumbers as $issueNumber) {
             $data['issueNo'] = $issueNumber;
@@ -77,9 +80,12 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
     {
         $activeLicences = $this->getRepo()->fetchActiveLicences($licenceId);
         $activeIds = [];
+
+        /** @var LicenceEntity $activeLicence */
         foreach ($activeLicences as $activeLicence) {
             $activeIds[] = $activeLicence->getId();
         }
+
         $notActive = array_diff($ids, $activeIds);
         if (!empty($notActive)) {
             throw new ValidationException(
@@ -93,10 +99,19 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
         }
     }
 
+    /**
+     * Get Issue Numbers By Ids
+     *
+     * @param array $ids Licences Ids
+     *
+     * @return array
+     */
     protected function getIssueNumbersByIds($ids)
     {
         $issueNumbers = [];
         $licences = $this->getRepo()->fetchLicencesByIds($ids);
+
+        /** @var CommunityLicEntity $licence */
         foreach ($licences as $licence) {
             $issueNumbers[] = $licence->getIssueNo();
         }
