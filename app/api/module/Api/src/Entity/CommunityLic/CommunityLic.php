@@ -28,7 +28,7 @@ class CommunityLic extends AbstractCommunityLic
     const STATUS_EXPIRED = 'cl_sts_expired';
     const STATUS_WITHDRAWN = 'cl_sts_withdrawn';
     const STATUS_SUSPENDED = 'cl_sts_suspended';
-    const STATUS_VOID = 'cl_sts_annulled';
+    const STATUS_ANNUL = 'cl_sts_annulled';
     const STATUS_RETURNDED = 'cl_sts_returned';
 
     const PREFIX_GB = 'UKGB';
@@ -63,8 +63,8 @@ class CommunityLic extends AbstractCommunityLic
     /**
      * Change status and expiry date
      *
-     * @param RefData $status     status
-     * @param string  $expiryDate string
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status     status
+     * @param string                               $expiryDate string
      *
      * @return void
      */
