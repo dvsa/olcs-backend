@@ -9,24 +9,16 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 /**
  * AbstractBrRegVarOrCanc Bookmark
  */
-abstract class AbstractBrRegVarOrCanc extends DynamicBookmark
+abstract class AbstractBrRegVarOrCanc extends SingleValueAbstract
 {
+    const SRCH_FLD_KEY = 'id';
+    const SRCH_VAL_KEY = DynamicBookmark::PARAM_BUSREG_ID;
+    const BUNDLE = ['status'];
+    const QUERY_CLASS = Qry::class;
+
     protected $renderNew;
     protected $renderVar;
     protected $renderCanc;
-    protected $params = [DynamicBookmark::PARAM_BUSREG_ID];
-
-    /**
-     * Get the query to retrieve date required by the bookmark
-     *
-     * @param array $data Data
-     *
-     * @return Qry
-     */
-    public function getQuery(array $data)
-    {
-        return Qry::create(['id' => $data[DynamicBookmark::PARAM_BUSREG_ID]]);
-    }
 
     /**
      * Render the bookmark
