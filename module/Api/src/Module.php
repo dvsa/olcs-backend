@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api;
 
 use Olcs\Logging\Log\Logger;
 use Zend\EventManager\EventInterface;
-use Zend\Http\Headers;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\ResponseSender\SendResponseEvent;
@@ -38,15 +37,6 @@ class Module implements BootstrapListenerInterface
             function (SendResponseEvent $e) {
                 $this->logResponse($e->getResponse());
             }
-        );
-
-        /** @var Headers $headers */
-        $headers = $e->getResponse()->getHeaders();
-        $headers->addHeaders(
-            [
-                'X-XSS-Protection: 1; mode=block',
-                'X-Content-Type-Options: nosniff'
-            ]
         );
 
         $this->setLoggerUser($e->getApplication()->getServiceManager());
