@@ -7,8 +7,6 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Olcs\Logging\Log\Logger;
 use Zend\EventManager\Event;
-use Zend\Http\Headers;
-use Zend\Http\Response;
 use Zend\Mvc\Application;
 use Zend\Mvc\ResponseSender\SendResponseEvent;
 use Zend\ServiceManager\ServiceManager;
@@ -65,21 +63,6 @@ class ModuleTest extends MockeryTestCase
 
         $mockEvent = m::mock(Event::class);
         $mockEvent->shouldReceive('getApplication')->andReturn($mockApp);
-
-        $mockResponseHeaders = m::mock(Headers::class);
-        $mockResponseHeaders->shouldReceive('addHeaders')
-            ->with(
-                [
-                    'X-XSS-Protection: 1; mode=block',
-                    'X-Content-Type-Options: nosniff'
-                ]
-            )
-            ->andReturn(true);
-
-        $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('getHeaders')->andReturn($mockResponseHeaders);
-
-        $mockEvent->shouldReceive('getResponse')->andReturn($mockResponse);
 
         $this->sut->onBootstrap($mockEvent);
     }
