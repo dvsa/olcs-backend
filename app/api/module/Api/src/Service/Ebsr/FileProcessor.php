@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
 use Symfony\Component\Finder\Finder;
 use Zend\Filter\Decompress;
 use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
+use Zend\Filter\Exception\RuntimeException as ZendFilterRuntimeException;
 
 /**
  * Class FileProcessor
@@ -14,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
  */
 class FileProcessor implements FileProcessorInterface
 {
+    const DECOMPRESS_ERROR_PREFIX = 'There was a problem with the pack file: ';
 
     /**
      * @var Filesystem
@@ -93,9 +95,14 @@ class FileProcessor implements FileProcessorInterface
         $this->fileSystem->dumpFile($filePath, $file->getContent());
 
         $tmpDir = $this->fileSystem->createTmpDir($targetDir, 'zip');
-
         $this->decompressFilter->setTarget($tmpDir);
-        $this->decompressFilter->filter($filePath);
+
+        //attempt to decompress the zip file
+        try {
+            $this->decompressFilter->filter($filePath);
+        } catch (ZendFilterRuntimeException $e) {
+            throw new EbsrPackException(self::DECOMPRESS_ERROR_PREFIX . $e->getMessage());
+        }
 
         //transxchange runs through tomcat, therefore tomcat needs permissions on the files we've just created
         if ($isTransXchange) {

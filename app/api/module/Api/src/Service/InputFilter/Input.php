@@ -20,6 +20,8 @@ class Input extends ZendInput
     protected $hasFiltered = false;
 
     /**
+     * get value
+     *
      * @return mixed
      */
     public function getValue()
@@ -32,12 +34,15 @@ class Input extends ZendInput
     }
 
     /**
-     * @param  mixed $value
+     * set value (sets hasFiltered to false, then calls parent setValue() method)
+     *
+     * @param mixed $value value being set
+     *
      * @return Input
      */
     public function setValue($value)
     {
         $this->hasFiltered = false;
-        $this->value = $value;
+        return parent::setValue($value);
     }
 }

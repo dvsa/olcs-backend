@@ -1,22 +1,15 @@
 <?php
 
-/**
- * Delete Operating Centres
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteApplicationLinks;
 use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteConditionUndertakings;
-use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteTmLinks;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Licence\DeleteOperatingCentres as Cmd;
 
 /**
  * Delete Operating Centres
@@ -30,7 +23,10 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
     protected $extraRepos = ['LicenceOperatingCentre'];
 
     /**
-     * @param Cmd $command
+     * Handle Command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Licence\DeleteOperatingCentres $command Command
+     *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     public function handleCommand(CommandInterface $command)
@@ -53,7 +49,6 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
                 $count++;
                 $this->getRepo('LicenceOperatingCentre')->delete($loc);
                 $this->result->merge($this->deleteConditionUndertakings($loc));
-                $this->result->merge($this->deleteTransportManagerLinks($loc));
                 $this->result->merge($this->deleteFromOtherApplications($loc));
             }
         }
@@ -64,7 +59,10 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
     }
 
     /**
-     * @param LicenceOperatingCentre $loc
+     * Delete Condition Undertakings
+     *
+     * @param LicenceOperatingCentre $loc Licence Operating Centre Entity
+     *
      * @return Result
      */
     private function deleteConditionUndertakings($loc)
@@ -79,13 +77,13 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
         );
     }
 
-    private function deleteTransportManagerLinks($loc)
-    {
-        return $this->handleSideEffect(
-            DeleteTmLinks::create(['operatingCentre' => $loc->getOperatingCentre()])
-        );
-    }
-
+    /**
+     * Delete From Other Applications
+     *
+     * @param LicenceOperatingCentre $loc Licence Operating Centre Entity
+     *
+     * @return Result
+     */
     private function deleteFromOtherApplications($loc)
     {
         return $this->handleSideEffect(

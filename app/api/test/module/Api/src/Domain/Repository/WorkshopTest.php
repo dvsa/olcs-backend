@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
@@ -112,5 +113,23 @@ class WorkshopTest extends RepositoryTestCase
             ->with($result, LockMode::OPTIMISTIC, 1);
 
         $this->sut->fetchUsingId($command, Query::HYDRATE_OBJECT, 1);
+    }
+
+    public function testFetchForLicence()
+    {
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('withRefdata')->with()->once()->andReturnSelf()
+            ->shouldReceive('with')->with('contactDetails', 'cd')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('cd.address')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getResult')->with(Query::HYDRATE_OBJECT)->once()->andReturn(['RESULTS']);
+
+        $this->assertEquals(['RESULTS'], $this->sut->fetchForLicence(2017));
+
+        $expectedQuery = 'BLAH AND m.licence = [[2017]]';
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }

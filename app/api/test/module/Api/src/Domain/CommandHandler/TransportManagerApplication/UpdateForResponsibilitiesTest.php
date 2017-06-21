@@ -1,17 +1,13 @@
 <?php
 
-/**
- * TransportManagerApplication / UpdateForResponsibilities
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\UpdateForResponsibilities as UpdateForResp;
-use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
+use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateForResponsibilities as Cmd;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntity;
 use Doctrine\ORM\Query;
 
@@ -19,13 +15,18 @@ use Doctrine\ORM\Query;
  * TransportManagerApplication / UpdateForResponsibilities
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\UpdateForResponsibilities
  */
 class UpdateForResponsibilitiesTest extends CommandHandlerTestCase
 {
+    /** @var CommandHandler\TransportManagerApplication\UpdateForResponsibilities */
+    protected $sut;
+
     public function setUp()
     {
-        $this->sut = new UpdateForResp();
-        $this->mockRepo('TransportManagerApplication', TransportManagerApplicationRepo::class);
+        $this->sut = new CommandHandler\TransportManagerApplication\UpdateForResponsibilities();
+
+        $this->mockRepo('TransportManagerApplication', Repository\TransportManagerApplication::class);
 
         parent::setUp();
     }
@@ -65,20 +66,9 @@ class UpdateForResponsibilitiesTest extends CommandHandlerTestCase
             'operatingCentres' => [1]
         ];
 
-        $command = Cmd::create($data);
+        $command = TransferCmd\TransportManagerApplication\UpdateForResponsibilities::create($data);
 
-        $mockTmApplication = m::mock(TransportManagerApplicationEntity::class)
-            ->shouldReceive('getOperatingCentres')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('clear')
-                ->once()
-                ->shouldReceive('add')
-                ->with($this->references[OperatingCentreEntity::class][1])
-                ->once()
-                ->getMock()
-            )
-            ->twice()
+        $mockTmApplication = m::mock(Entity\Tm\TransportManagerApplication::class)
             ->shouldReceive('updateTransportManagerApplicationFull')
             ->with(
                 $this->refData['tmType'],

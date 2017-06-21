@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ProcessApplicationOperatingCentres as ProcessAocCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\ProcessApplicationOperatingCentres;
@@ -13,7 +12,6 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Process Application Operating Centres Test
@@ -275,11 +273,6 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteConditionUndertakings::class,
             ['operatingCentre' => $oc, 'licence' => $licence],
-            new Result()
-        );
-        $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteTmLinks::class,
-            ['operatingCentre' => $oc],
             new Result()
         );
         $this->expectedSideEffect(

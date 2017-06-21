@@ -49,7 +49,7 @@ final class Schedule41 extends AbstractCommandHandler implements AuthAwareInterf
         }
 
         if ($createTaskForLicence) {
-            $result->merge($this->createTask($aoc->getS4()->getLicence()));
+            $result->merge($this->createTask($createTaskForLicence));
         }
         $result->addMessage($count .' S4 operating centres processed');
 

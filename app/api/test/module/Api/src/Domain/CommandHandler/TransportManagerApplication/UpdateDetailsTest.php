@@ -1,13 +1,8 @@
 <?php
 
-/**
- * UpdateDetailsTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\UpdateDetails as CommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateDetails as Command;
@@ -16,17 +11,18 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
- * UpdateDetailsTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\UpdateDetails
  */
 class UpdateDetailsTest extends CommandHandlerTestCase
 {
     protected $loggedInUser;
 
+    /** @var  CommandHandler\TransportManagerApplication\UpdateDetails */
+    protected $sut;
+
     public function setUp()
     {
-        $this->sut = new CommandHandler();
+        $this->sut = new CommandHandler\TransportManagerApplication\UpdateDetails();
         $this->mockRepo('TransportManagerApplication', TransportManagerApplication::class);
         $this->mockRepo('ContactDetails', ContactDetails::class);
         $this->mockRepo('Address', \Dvsa\Olcs\Api\Domain\Repository\Address::class);
@@ -79,7 +75,6 @@ class UpdateDetailsTest extends CommandHandlerTestCase
                     'postcode' => 'W_POSTCODE',
                     'countryCode' => 'DE',
                 ],
-                'operatingCentres' => [12, 65],
                 'tmType' => 'TM_TYPE',
                 'isOwner' => 'Y',
                 'hoursMon' => 1,
@@ -147,7 +142,6 @@ class UpdateDetailsTest extends CommandHandlerTestCase
                     'postcode' => 'W_POSTCODE',
                     'countryCode' => 'DE',
                 ],
-                'operatingCentres' => [12, 65],
                 'tmType' => 'TM_TYPE',
                 'isOwner' => 'Y',
                 'hoursMon' => 1,

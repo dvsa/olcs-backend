@@ -1,30 +1,28 @@
 <?php
 
-/**
- * Update Appeal Test
- *
- * @author Shaun Lizzio <shaun@lizzio.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Hearing;
 
 use Doctrine\ORM\Query;
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Hearing\UpdateAppeal;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Cases\Hearing\UpdateAppeal as Cmd;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Cases\Appeal as AppealEntity;
+use Dvsa\Olcs\Transfer\Command as TransferCmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
- * Update Appeal Test
- *
- * @author Shaun Lizzio <shaun@lizzio.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Hearing\UpdateAppeal
  */
 class UpdateAppealTest extends CommandHandlerTestCase
 {
+    /** @var  UpdateAppeal */
+    protected $sut;
+
     public function setUp()
     {
         $this->sut = new UpdateAppeal();
-        $this->mockRepo('Appeal', AppealEntity::class);
+
+        $this->mockRepo('Appeal', Repository\Appeal::class);
 
         parent::setUp();
     }
@@ -60,7 +58,7 @@ class UpdateAppealTest extends CommandHandlerTestCase
         $deadlineDate = '2015-05-12';
         $dvsaNotified = 'Y';
 
-        $command = Cmd::create(
+        $command = TransferCmd\Cases\Hearing\UpdateAppeal::create(
             [
                 "id" => $id,
                 "version" => $version,
@@ -113,7 +111,7 @@ class UpdateAppealTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with(m::type(AppealEntity::class))
             ->andReturnUsing(
-                function (AppealEntity $appeal) use (&$appeal) {
+                function (AppealEntity $appeal) {
                     $appeal->setId(99);
                 }
             )

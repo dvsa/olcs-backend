@@ -1201,4 +1201,48 @@ class LicenceEntityTest extends EntityTester
             [false, $mockBusReg, $criteria, []]
         ];
     }
+
+    /**
+     * @dataProvider operatorLocationProvider
+     */
+    public function testGetOperatorLocation($niFlag, $expected)
+    {
+        $mockLicence = m::mock(Entity::class)->makePartial();
+        $mockLicence->shouldReceive('getNiFlag')
+            ->andReturn($niFlag)
+            ->once()
+            ->getMock();
+
+        $this->assertEquals($expected, $mockLicence->getOperatorLocation());
+    }
+
+    public function operatorLocationProvider()
+    {
+        return [
+            [
+                'Y', 'Northern Ireland'
+            ],
+            [
+                'N', 'Great Britain'
+            ]
+        ];
+    }
+
+    public function testGetOperatorType()
+    {
+        $mockLicence1 = m::mock(Entity::class)->makePartial();
+        $mockLicence1->shouldReceive('isGoods')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+
+        $mockLicence2 = m::mock(Entity::class)->makePartial();
+        $mockLicence2->shouldReceive('isGoods')
+            ->andReturn(false)
+            ->once()
+            ->getMock();
+
+        $this->assertEquals('Goods', $mockLicence1->getOperatorType());
+        $this->assertEquals('PSV', $mockLicence2->getOperatorType());
+    }
 }

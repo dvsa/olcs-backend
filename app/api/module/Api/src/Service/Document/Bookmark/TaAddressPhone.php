@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
-use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
 
 /**
@@ -13,6 +12,13 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
  */
 class TaAddressPhone extends DynamicBookmark
 {
+    /**
+     * Get Query
+     *
+     * @param array $data Known data
+     *
+     * @return Qry
+     */
     public function getQuery(array $data)
     {
         $bundle = [
@@ -28,6 +34,11 @@ class TaAddressPhone extends DynamicBookmark
         return Qry::create(['id' => $data['licence'], 'bundle' => $bundle]);
     }
 
+    /**
+     * Render bookmark
+     *
+     * @return string
+     */
     public function render()
     {
         $trafficArea = $this->data['trafficArea'];
@@ -46,16 +57,17 @@ class TaAddressPhone extends DynamicBookmark
         );
     }
 
+    /**
+     * Get contact number
+     *
+     * @return string
+     */
     private function fetchTelephone()
     {
         if (empty($this->data['trafficArea']['contactDetails']['phoneContacts'])) {
             return '';
         }
 
-        foreach ($this->data['trafficArea']['contactDetails']['phoneContacts'] as $phone) {
-            if ($phone['phoneContactType']['id'] === PhoneContact::TYPE_BUSINESS) {
-                return $phone['phoneNumber'];
-            }
-        }
+        return Formatter\ContactNumber::format($this->data['trafficArea']['contactDetails']['phoneContacts']);
     }
 }

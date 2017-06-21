@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
+use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
 
@@ -12,6 +13,13 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
  */
 class PhoneNumbers extends DynamicBookmark
 {
+    /**
+     * Get the Query to retrieve data
+     *
+     * @param array $data Known data
+     *
+     * @return Qry
+     */
     public function getQuery(array $data)
     {
         $bundle = [
@@ -24,6 +32,11 @@ class PhoneNumbers extends DynamicBookmark
         return Qry::create(['id' => $data['licence'], 'bundle' => $bundle]);
     }
 
+    /**
+     * Render bookmark
+     *
+     * @return string
+     */
     public function render()
     {
         if (empty($this->data)) {
@@ -53,10 +66,8 @@ class PhoneNumbers extends DynamicBookmark
                 $numbers,
                 function ($a, $b) {
                     $types = [
-                        'phone_t_tel' => 1,
-                        'phone_t_home' => 2,
-                        'phone_t_mobile' => 3,
-                        'phone_t_fax' => 4
+                        PhoneContact::TYPE_PRIMARY => 1,
+                        PhoneContact::TYPE_SECONDARY => 2,
                     ];
                     if ($types[$a['type']] == $types[$b['type']]) {
                         return 0;

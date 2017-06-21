@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Get a list of Transport Manager Licences and Transport Manager Applications
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\TmResponsibilities;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -23,9 +18,21 @@ class TmResponsibilitiesList extends AbstractQueryHandler
 
     protected $extraRepos = ['TransportManagerApplication'];
 
+    /**
+     * Handle Query
+     *
+     * @param \Dvsa\Olcs\Transfer\Query\TmResponsibilities\TmResponsibilitiesList $query Query
+     *
+     * @return array
+     */
     public function handleQuery(QueryInterface $query)
     {
-        $tmLicences = $this->getRepo()->fetchForTransportManager(
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence $repoTmLic */
+        $repoTmLic = $this->getRepo();
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication $repoTmApp */
+        $repoTmApp = $this->getRepo('TransportManagerApplication');
+
+        $tmLicences = $repoTmLic->fetchForTransportManager(
             $query->getTransportManager(),
             [
                 Licence::LICENCE_STATUS_VALID,
@@ -34,7 +41,7 @@ class TmResponsibilitiesList extends AbstractQueryHandler
             ]
         );
 
-        $tmApplications = $this->getRepo('TransportManagerApplication')->fetchForTransportManager(
+        $tmApplications = $repoTmApp->fetchForTransportManager(
             $query->getTransportManager(),
             [
                 Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
@@ -43,6 +50,7 @@ class TmResponsibilitiesList extends AbstractQueryHandler
             ],
             true
         );
+
         return [
             'result' => $this->resultList(
                 $tmLicences,
@@ -53,7 +61,6 @@ class TmResponsibilitiesList extends AbstractQueryHandler
                         'status'
                     ],
                     'transportManager',
-                    'operatingCentres'
                 ]
             ),
             'count' => count($tmLicences),
@@ -68,8 +75,7 @@ class TmResponsibilitiesList extends AbstractQueryHandler
                         'status'
                     ],
                     'transportManager',
-                    'operatingCentres',
-                    'tmApplicationStatus'
+                    'tmApplicationStatus',
                 ]
             ),
             'tmApplicationsCount' => count($tmApplications)

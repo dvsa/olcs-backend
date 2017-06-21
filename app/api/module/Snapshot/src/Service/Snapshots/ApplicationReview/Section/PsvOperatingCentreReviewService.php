@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Psv Operating Centre Review Service
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 /**
@@ -17,7 +12,8 @@ class PsvOperatingCentreReviewService extends AbstractReviewService
     /**
      * Format the OC config
      *
-     * @param array $data
+     * @param array $data Data from API
+     *
      * @return array
      */
     public function getConfigFromData(array $data = array())
@@ -35,12 +31,6 @@ class PsvOperatingCentreReviewService extends AbstractReviewService
                     [
                         'label' => 'review-operating-centre-total-vehicles',
                         'value' => $data['noOfVehiclesRequired']
-                    ]
-                ],
-                [
-                    [
-                        'label' => 'review-operating-centre-sufficient-parking',
-                        'value' => $this->formatConfirmed($data['sufficientParking'])
                     ]
                 ],
                 [

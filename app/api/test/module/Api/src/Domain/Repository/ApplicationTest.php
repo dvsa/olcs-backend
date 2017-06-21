@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 
@@ -452,7 +453,6 @@ class ApplicationTest extends RepositoryTestCase
         );
     }
 
-
     public function testFetchWithLicenceNotFound()
     {
         $applicationId = 1;
@@ -507,15 +507,25 @@ class ApplicationTest extends RepositoryTestCase
     {
         $this->setUpSut(Repository\Application::class, true);
 
+        $status = 'unit_status';
+        $orgId = 999;
+
         /** @var QueryBuilder | m\MockInterface $mockQb */
         $mockQb = m::mock(QueryBuilder::class);
         $mockQb->shouldReceive('expr->eq')->with('l.organisation', ':organisation')->once()->andReturn('EXPR1');
-        $mockQb->shouldReceive('setParameter')->with('organisation', 723)->once()->andReturn();
+        $mockQb->shouldReceive('setParameter')->with('organisation', $orgId)->once()->andReturn();
         $mockQb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
 
-        /** @var QueryInterface | m\MockInterface $mockQuery */
-        $mockQuery = m::mock(QueryInterface::class);
-        $mockQuery->shouldReceive('getOrganisation')->with()->andReturn(723);
+        $mockQb->shouldReceive('andWhere')->with('EXPR2')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('a.status', ':STATUS')->once()->andReturn('EXPR2');
+        $mockQb->shouldReceive('setParameter')->with('STATUS', $status)->once()->andReturn();
+
+        $mockQuery = TransferQry\Application\GetList::create(
+            [
+                'organisation' => $orgId,
+                'status' => $status,
+            ]
+        );
 
         $this->sut->applyListFilters($mockQb, $mockQuery);
     }

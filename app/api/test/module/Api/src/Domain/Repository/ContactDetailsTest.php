@@ -5,6 +5,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as Repo;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
@@ -25,7 +26,7 @@ class ContactDetailsTest extends RepositoryTestCase
         $data = [
             'address' => ['countryCode' => 'GB'],
             'phoneContacts' => [
-                ['phoneContactType' => 'phone_t_tel']
+                ['phoneContactType' => PhoneContact::TYPE_PRIMARY]
             ],
             'person' => [
                 'title' => 'title_miss'
@@ -42,7 +43,7 @@ class ContactDetailsTest extends RepositoryTestCase
 
         $this->em->shouldReceive('getReference')
             ->once()
-            ->with(RefDataEntity::class, 'phone_t_tel')
+            ->with(RefDataEntity::class, PhoneContact::TYPE_PRIMARY)
             ->andReturn($refDataEntity);
 
         $this->em->shouldReceive('getReference')

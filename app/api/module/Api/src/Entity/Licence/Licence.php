@@ -135,9 +135,9 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getLatestBusVariation(
         $regNo,
         array $notInStatus = [
-            BusReg::STATUS_REFUSED,
-            BusReg::STATUS_WITHDRAWN,
-            BusReg::STATUS_EXPIRED
+        BusReg::STATUS_REFUSED,
+        BusReg::STATUS_WITHDRAWN,
+        BusReg::STATUS_EXPIRED
         ]
     ) {
         $criteria = Criteria::create()
@@ -1131,5 +1131,25 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
             $expiryDateAsDate->setTimezone(new \DateTimeZone(date_default_timezone_get()));
         }
         return $expiryDateAsDate;
+    }
+
+    /**
+     * Get operator location
+     *
+     * @return string
+     */
+    public function getOperatorLocation()
+    {
+        return $this->getNiFlag() === 'N' ? 'Great Britain' : 'Northern Ireland';
+    }
+
+    /**
+     * Get operator type
+     *
+     * @return string
+     */
+    public function getOperatorType()
+    {
+        return $this->isGoods() ? 'Goods' : 'PSV';
     }
 }

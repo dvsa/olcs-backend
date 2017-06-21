@@ -35,7 +35,11 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                         'licenceType' => 'expected',
                         'status' => 'expected',
                         'goodsOrPsv' => 'expected',
-                        'trafficArea' => 'expected'
+                        'trafficArea' => 'expected',
+                        'organisation' => [
+                            'type' => 'expected'
+                        ],
+                        'tradingNames'
                     ]
                 ]
             )
@@ -53,7 +57,11 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                 'licenceType' => 'expected',
                 'status' => 'expected',
                 'goodsOrPsv' => 'expected',
-                'trafficArea' => 'expected'
+                'trafficArea' => 'expected',
+                'organisation' => [
+                    'type' => 'expected'
+                ],
+                'tradingNames'
             ]
         ];
         $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());

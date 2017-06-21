@@ -1,14 +1,11 @@
 <?php
 
-/**
- * TransportManagerLicence.php
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence as Entity;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * TransportManagerLicence repository
@@ -21,10 +18,14 @@ class TransportManagerLicence extends AbstractRepository
 {
     protected $alias = 'tml';
 
-    protected $entity = Entity::class;
+    protected $entity = Entity\Tm\TransportManagerLicence::class;
 
     /**
-     * @param int $licenceId
+     * Fetch By Licence Id
+     *
+     * @param int $licenceId Licence Id
+     *
+     * @return array
      */
     public function fetchForLicence($licenceId)
     {
@@ -61,6 +62,14 @@ class TransportManagerLicence extends AbstractRepository
         return $dqb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
+    /**
+     * Fetch for Transport Manager
+     *
+     * @param int        $tmId            Transport Manager Id
+     * @param array|null $licenceStatuses Licence statuses
+     *
+     * @return array
+     */
     public function fetchForTransportManager($tmId, array $licenceStatuses = null)
     {
         $qb = $this->createQueryBuilder();
@@ -71,8 +80,7 @@ class TransportManagerLicence extends AbstractRepository
             ->with('licence', 'l')
             ->with('l.organisation', 'lo')
             ->with('l.status', 'ls')
-            ->with('transportManager', 'tm')
-            ->with('operatingCentres', 'oc');
+            ->with('transportManager', 'tm');
 
         $qb->where($qb->expr()->eq($this->alias . '.transportManager', ':transportManager'));
         $qb->setParameter('transportManager', $tmId);
@@ -84,6 +92,13 @@ class TransportManagerLicence extends AbstractRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * Fetch by TM-Licence relation id
+     *
+     * @param int $id Transport Manager to Licence relation id
+     *
+     * @return Entity\Tm\TransportManagerLicence
+     */
     public function fetchForResponsibilities($id)
     {
         $qb = $this->createQueryBuilder();
@@ -96,12 +111,19 @@ class TransportManagerLicence extends AbstractRepository
             ->with('transportManager', 'tm')
             ->with('tm.tmType', 'tmty')
             ->with('tmType', 'tmt')
-            ->with('operatingCentres', 'oc')
             ->byId($id);
 
         return $qb->getQuery()->getSingleResult();
     }
 
+    /**
+     * Fetch By Tm And Licence
+     *
+     * @param int $tmId      Transport manager Id
+     * @param int $licenceId Licence id
+     *
+     * @return array
+     */
     public function fetchByTmAndLicence($tmId, $licenceId)
     {
         $qb = $this->createQueryBuilder();
@@ -114,19 +136,34 @@ class TransportManagerLicence extends AbstractRepository
         return $qb->getQuery()->getResult();
     }
 
-    protected function applyListFilters(\Doctrine\ORM\QueryBuilder $qb, \Dvsa\Olcs\Transfer\Query\QueryInterface $query)
+    /**
+     * Apply Filters for List
+     *
+     * @param QueryBuilder   $qb    Doctrine Query Builder
+     * @param QueryInterface $query Http Query
+     *
+     * @return void
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        if ($query->getLicence()) {
+        if (method_exists($query, 'getLicence') && $query->getLicence()) {
             $qb->where($qb->expr()->eq('tml.licence', ':licence'))
                 ->setParameter('licence', $query->getLicence());
         }
 
-        if ($query->getTransportManager()) {
+        if (method_exists($query, 'getTransportManager') && $query->getTransportManager()) {
             $qb->where($qb->expr()->eq('tml.transportManager', ':transportManager'))
                 ->setParameter('transportManager', $query->getTransportManager());
         }
     }
 
+    /**
+     * Fetch By Licence
+     *
+     * @param int $licenceId Licence Id
+     *
+     * @return array
+     */
     public function fetchByLicence($licenceId)
     {
         $qb = $this->createQueryBuilder();

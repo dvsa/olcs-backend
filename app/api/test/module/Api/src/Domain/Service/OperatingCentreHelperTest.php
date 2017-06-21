@@ -524,7 +524,6 @@ class OperatingCentreHelperTest extends MockeryTestCase
             'noOfVehiclesRequired' => 10,
             'noOfTrailersRequired' => 11,
             'permission' => 'Y',
-            'sufficientParking' => 'Y',
         ];
         $command = CreateOperatingCentre::create($data);
 
@@ -544,7 +543,6 @@ class OperatingCentreHelperTest extends MockeryTestCase
         $this->assertEquals(10, $loc->getNoOfVehiclesRequired());
         $this->assertNull($loc->getNoOfTrailersRequired());
         $this->assertEquals('Y', $loc->getPermission());
-        $this->assertEquals('Y', $loc->getSufficientParking());
     }
 
     public function testUpdateOperatingCentreLink()
@@ -553,7 +551,6 @@ class OperatingCentreHelperTest extends MockeryTestCase
             'noOfVehiclesRequired' => 10,
             'noOfTrailersRequired' => 11,
             'permission' => 'Y',
-            'sufficientParking' => 'Y',
             'adPlaced' => ApplicationOperatingCentre::AD_UPLOAD_NOW,
             'adPlacedIn' => 'Foo',
             'adPlacedDate' => '2015-01-01'
@@ -576,7 +573,6 @@ class OperatingCentreHelperTest extends MockeryTestCase
         $this->assertEquals(10, $loc->getNoOfVehiclesRequired());
         $this->assertEquals(11, $loc->getNoOfTrailersRequired());
         $this->assertEquals('Y', $loc->getPermission());
-        $this->assertEquals('Y', $loc->getSufficientParking());
 
         $this->assertEquals(ApplicationOperatingCentre::AD_UPLOAD_NOW, $loc->getAdPlaced());
         $this->assertEquals('Foo', $loc->getAdPlacedIn());
@@ -689,11 +685,6 @@ class OperatingCentreHelperTest extends MockeryTestCase
                             'ERR_OC_VR_1B' => 'ERR_OC_VR_1B'
                         ]
                     ],
-                    'sufficientParking' => [
-                        [
-                            'ERR_OC_SUFFICIENT_PARKING' => 'ERR_OC_SUFFICIENT_PARKING'
-                        ]
-                    ],
                     'permission' => [
                         [
                             'ERR_OC_PERMISSION' => 'ERR_OC_PERMISSION'
@@ -711,11 +702,6 @@ class OperatingCentreHelperTest extends MockeryTestCase
                     'noOfVehiclesRequired' => [
                         [
                             'ERR_OR_R_TOO_MANY' => 'ERR_OR_R_TOO_MANY'
-                        ]
-                    ],
-                    'sufficientParking' => [
-                        [
-                            'ERR_OC_SUFFICIENT_PARKING' => 'ERR_OC_SUFFICIENT_PARKING'
                         ]
                     ],
                     'permission' => [
@@ -742,11 +728,6 @@ class OperatingCentreHelperTest extends MockeryTestCase
                     'noOfTrailersRequired' => [
                         [
                             'ERR_OC_VR_1A' => 'ERR_OC_VR_1A'
-                        ]
-                    ],
-                    'sufficientParking' => [
-                        [
-                            'ERR_OC_SUFFICIENT_PARKING' => 'ERR_OC_SUFFICIENT_PARKING'
                         ]
                     ],
                     'permission' => [
@@ -782,11 +763,6 @@ class OperatingCentreHelperTest extends MockeryTestCase
                             'ERR_OC_AD_FI_1' => 'ERR_OC_AD_FI_1'
                         ]
                     ],
-                    'sufficientParking' => [
-                        [
-                            'ERR_OC_SUFFICIENT_PARKING' => 'ERR_OC_SUFFICIENT_PARKING'
-                        ]
-                    ],
                     'permission' => [
                         [
                             'ERR_OC_PERMISSION' => 'ERR_OC_PERMISSION'
@@ -810,11 +786,6 @@ class OperatingCentreHelperTest extends MockeryTestCase
                             'ERR_OC_AD_FI_1' => 'ERR_OC_AD_FI_1'
                         ]
                     ],
-                    'sufficientParking' => [
-                        [
-                            'ERR_OC_SUFFICIENT_PARKING' => 'ERR_OC_SUFFICIENT_PARKING'
-                        ]
-                    ],
                     'permission' => [
                         [
                             'ERR_OC_PERMISSION' => 'ERR_OC_PERMISSION'
@@ -833,7 +804,6 @@ class OperatingCentreHelperTest extends MockeryTestCase
             'adPlaced' => ApplicationOperatingCentre::AD_UPLOAD_NOW,
             'adPlacedIn' => 'Foo',
             'adPlacedDate' => '2015-01-01',
-            'sufficientParking' => '',
             'permission' => ''
         ];
         $entity = m::mock()
@@ -848,11 +818,6 @@ class OperatingCentreHelperTest extends MockeryTestCase
         $this->sut->validate($entity, $command, true);
 
         $errors = [
-            'sufficientParking' => [
-                [
-                    'ERR_OC_SUFFICIENT_PARKING' => 'ERR_OC_SUFFICIENT_PARKING'
-                ]
-            ],
             'permission' => [
                 [
                     'ERR_OC_PERMISSION' => 'ERR_OC_PERMISSION'
