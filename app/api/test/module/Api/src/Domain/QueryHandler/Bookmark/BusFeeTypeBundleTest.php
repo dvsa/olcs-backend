@@ -20,6 +20,13 @@ use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
  */
 class BusFeeTypeBundleTest extends QueryHandlerTestCase
 {
+    protected $refData = [
+        FeeTypeEntity::FEE_TYPE_BUSVAR,
+        FeeTypeEntity::FEE_TYPE_BUSAPP,
+        LicenceEntity::LICENCE_CATEGORY_PSV,
+        LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+    ];
+
     public function setUp()
     {
         $this->sut = new BusFeeTypeBundle();
@@ -27,18 +34,6 @@ class BusFeeTypeBundleTest extends QueryHandlerTestCase
         $this->mockRepo('FeeType', FeeTypeRepo::class);
 
         parent::setUp();
-    }
-
-    protected function initReferences()
-    {
-        $this->refData = [
-            FeeTypeEntity::FEE_TYPE_BUSVAR,
-            FeeTypeEntity::FEE_TYPE_BUSAPP,
-            LicenceEntity::LICENCE_CATEGORY_PSV,
-            LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
-        ];
-
-        parent::initReferences();
     }
 
     /**
