@@ -50,7 +50,7 @@ class AbstractArrayList extends \PHPUnit_Framework_TestCase
                         static::ARRAY_FIELD => '2'
                     ]
                 ],
-                static::EXCPECTED_OUTPUT
+                static::EXPECTED_OUTPUT
             ],
         ];
     }
