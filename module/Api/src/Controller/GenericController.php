@@ -88,8 +88,8 @@ class GenericController extends AbstractRestfulController
     /**
      * Update by passed Command Fqcl
      *
-     * @param null $id   Ignored
-     * @param null $data Ignored
+     * @param mixed $id   Ignored
+     * @param mixed $data Ignored
      *
      * @inheritdoc
      * @return Response|\Zend\View\Model\JsonModel
@@ -120,9 +120,8 @@ class GenericController extends AbstractRestfulController
     /**
      * Replace an entire resource collection by passed Command Fqcl
      *
-     * @param null $data Ignored
+     * @param mixed $data Ignored
      *
-     * @inheritdoc
      * @return Response|\Zend\View\Model\JsonModel
      */
     public function replaceList($data)
@@ -147,9 +146,8 @@ class GenericController extends AbstractRestfulController
     /**
      * Create a new resource by passed Command Fqcl
      *
-     * @param null $data Ignored
+     * @param mixed $data Ignored as we use DTO parameter
      *
-     * @inheritdoc
      * @return Response|\Zend\View\Model\JsonModel
      */
     public function create($data)
@@ -174,9 +172,8 @@ class GenericController extends AbstractRestfulController
     /**
      * Delete a resource by passed Command Fqcl
      *
-     * @param null $id Ignored
+     * @param mixed $id Ignored
      *
-     * @inheritdoc
      * @return Response|\Zend\View\Model\JsonModel
      */
     public function delete($id)
@@ -201,10 +198,11 @@ class GenericController extends AbstractRestfulController
     /**
      * Delete a resources by passed Command Fqcl
      *
-     * @inheritdoc
+     * @param mixed $data Ignored
+     *
      * @return Response|\Zend\View\Model\JsonModel
      */
-    public function deleteList()
+    public function deleteList($data = null)
     {
         $dto = $this->params('dto');
 

@@ -2,6 +2,7 @@
 
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section as Review;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section as TmReview;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section as ContinuationReview;
 
 return [
     'service_manager' => [
@@ -67,6 +68,10 @@ return [
             'Review\TransportManagerPreviousLicence' => TmReview\TransportManagerPreviousLicenceReviewService::class,
             'Review\TransportManagerDeclaration' => TmReview\TransportManagerDeclarationReviewService::class,
             'Review\TransportManagerSignature' => TmReview\TransportManagerSignatureReviewService::class,
+            'ContinuationReview' => \Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Generator::class,
+            'ContinuationReview\TypeOfLicence' => ContinuationReview\TypeOfLicenceReviewService::class,
+            'ContinuationReview\BusinessType' => ContinuationReview\BusinessTypeReviewService::class,
+            'ContinuationReview\BusinessDetails' => ContinuationReview\BusinessDetailsReviewService::class,
         ],
     ],
     'view_manager' => [

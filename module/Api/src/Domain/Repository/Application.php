@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceE;
+use Dvsa\Olcs\Transfer\Query as TransferQry;
 
 /**
  * Application
@@ -224,16 +225,24 @@ class Application extends AbstractRepository
     /**
      * Override parent
      *
-     * @param QueryBuilder                             $qb    Doctrine Query Builder
-     * @param \Dvsa\Olcs\Transfer\Query\QueryInterface $query Http Query
+     * @param QueryBuilder               $qb    Doctrine Query Builder
+     * @param TransferQry\QueryInterface $query Http Query
      *
      * @return void
      */
-    protected function applyListFilters(QueryBuilder $qb, \Dvsa\Olcs\Transfer\Query\QueryInterface $query)
+    protected function applyListFilters(QueryBuilder $qb, TransferQry\QueryInterface $query)
     {
-        if (is_numeric($query->getOrganisation())) {
+        if (method_exists($query, 'getOrganisation') && is_numeric($query->getOrganisation())) {
             $qb->andWhere($qb->expr()->eq('l.organisation', ':organisation'))
                 ->setParameter('organisation', $query->getOrganisation());
+        }
+
+        if (method_exists($query, 'getStatus') && !empty($query->getStatus())) {
+            $qb
+                ->andWhere(
+                    $qb->expr()->eq($this->alias . '.status', ':STATUS')
+                )
+                ->setParameter('STATUS', $query->getStatus());
         }
     }
 

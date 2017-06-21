@@ -191,7 +191,10 @@ class RepositoryTestCase extends MockeryTestCase
 
     public function mockAddSelect($select)
     {
-        $selects = is_array($select) ? $select : func_get_args();
+        $selects = func_get_args();
+        if (func_num_args() === 1 && is_array($select)) {
+            $selects = $select;
+        }
 
         $this->query .= ' SELECT ' . implode(', ', $selects);
 

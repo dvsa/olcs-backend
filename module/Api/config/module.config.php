@@ -323,6 +323,8 @@ return [
             'CompanyHouseVsOlcsDiffs' => Repository\Factory\CompaniesHouseVsOlcsDiffsFactory::class,
             'DigitalSignature' => RepositoryFactory::class,
             'DataRetentionRule' => RepositoryFactory::class,
+            'DataService' => RepositoryFactory::class,
+            'DocumentToDelete' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
@@ -680,6 +682,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ServiceNo::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ServiceNo::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\NewAppAlreadyExists::class =>

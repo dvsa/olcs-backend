@@ -14,7 +14,8 @@ class BkmTelephone extends DynamicBookmark
     /**
      * Gets query to retrieve data
      *
-     * @param array $data
+     * @param array $data Known data
+     *
      * @return Qry|null
      */
     public function getQuery(array $data)
@@ -44,14 +45,6 @@ class BkmTelephone extends DynamicBookmark
             return '';
         }
 
-        foreach ($this->data['irfoContactDetails']['phoneContacts'] as $phoneContact) {
-            if (!empty($phoneContact['phoneContactType']['id'])
-                && ($phoneContact['phoneContactType']['id'] === PhoneContactEntity::TYPE_BUSINESS)
-            ) {
-                return $phoneContact['phoneNumber'];
-            }
-        }
-
-        return '';
+        return Formatter\ContactNumber::format($this->data['irfoContactDetails']['phoneContacts']);
     }
 }

@@ -472,10 +472,9 @@ return [
     // Continuation Detail
     TransferQuery\ContinuationDetail\ChecklistReminders::class =>
         QueryHandler\ContinuationDetail\ChecklistReminders::class,
-    TransferQuery\ContinuationDetail\GetList::class =>
-        QueryHandler\ContinuationDetail\GetList::class,
-    TransferQuery\ContinuationDetail\LicenceChecklist::class =>
-        QueryHandler\ContinuationDetail\LicenceChecklist::class,
+    TransferQuery\ContinuationDetail\GetList::class => QueryHandler\ContinuationDetail\GetList::class,
+    TransferQuery\ContinuationDetail\LicenceChecklist::class => QueryHandler\ContinuationDetail\LicenceChecklist::class,
+    TransferQuery\ContinuationDetail\Review::class => QueryHandler\ContinuationDetail\Review::class,
 
     // System
     TransferQuery\System\FinancialStandingRate::class => QueryHandler\System\FinancialStandingRate::class,
@@ -542,4 +541,7 @@ return [
 
     // Gds Verify
     TransferQuery\GdsVerify\GetAuthRequest::class => QueryHandler\GdsVerify\GetAuthRequest::class,
+
+    // Data Service
+    TransferQuery\DataService\ApplicationStatus::class => QueryHandler\DataService\ApplicationStatus::class,
 ];

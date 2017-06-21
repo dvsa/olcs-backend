@@ -28,7 +28,7 @@ class UpdateTest extends CommandHandlerTestCase
     {
         $id = 8888;
         $contactDetailsId = 999;
-        $phoneContactType = Entity\ContactDetails\PhoneContact::TYPE_HOME;
+        $phoneContactType = Entity\ContactDetails\PhoneContact::TYPE_PRIMARY;
         $version = 222;
 
         $data = [

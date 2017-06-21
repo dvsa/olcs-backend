@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as Entity;
+use Dvsa\Olcs\Api\Entity;
 use Doctrine\ORM\Query;
 
 /**
@@ -12,7 +12,7 @@ use Doctrine\ORM\Query;
  */
 class TransportManagerApplication extends AbstractRepository
 {
-    protected $entity = Entity::class;
+    protected $entity = Entity\Tm\TransportManagerApplication::class;
     protected $alias = 'tma';
 
     /**
@@ -44,10 +44,11 @@ class TransportManagerApplication extends AbstractRepository
     }
 
     /**
+     * Fetch details
      *
      * @param int $tmaId Transport Manager Application ID
      *
-     * @return Entity
+     * @return Entity\Tm\TransportManagerApplication
      * @throws \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
      */
     public function fetchDetails($tmaId)
@@ -76,35 +77,9 @@ class TransportManagerApplication extends AbstractRepository
     }
 
     /**
-     * Fetch TMA with operating centres
-     *
-     * @param int $tmaId
-     *
-     * @return Entity
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
-     */
-    public function fetchWithOperatingCentres($tmaId)
-    {
-        $dqb = $this->createQueryBuilder();
-
-        $this->getQueryBuilder()->modifyQuery($dqb)
-            ->withRefdata()
-            ->with($this->alias .'.operatingCentres', 'oc')
-            ->with('oc.address', 'add')
-            ->with('add.countryCode')
-            ->byId($tmaId);
-
-        $results = $dqb->getQuery()->getResult();
-
-        if (empty($results)) {
-            throw new \Dvsa\Olcs\Api\Domain\Exception\NotFoundException('Resource not found');
-        }
-
-        return $results[0];
-    }
-
-    /**
      * Join Trasport Manager, Contact Details and Person entities to the query
+     *
+     * @return void
      */
     protected function joinTmContactDetails()
     {
@@ -119,8 +94,12 @@ class TransportManagerApplication extends AbstractRepository
     }
 
     /**
-     * @param \Doctrine\ORM\QueryBuilder $qb
-     * @param \Dvsa\Olcs\Transfer\Query\QueryInterface $query
+     * Apply filters
+     *
+     * @param \Doctrine\ORM\QueryBuilder               $qb    Doctrine Query Builder
+     * @param \Dvsa\Olcs\Transfer\Query\QueryInterface $query Http Query Builder
+     *
+     * @return void
      */
     protected function applyListFilters(\Doctrine\ORM\QueryBuilder $qb, \Dvsa\Olcs\Transfer\Query\QueryInterface $query)
     {
@@ -159,7 +138,9 @@ class TransportManagerApplication extends AbstractRepository
     /**
      * Add joins
      *
-     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @param \Doctrine\ORM\QueryBuilder $qb Doctrine query builder
+     *
+     * @return void
      */
     protected function applyListJoins(\Doctrine\ORM\QueryBuilder $qb)
     {
@@ -168,6 +149,15 @@ class TransportManagerApplication extends AbstractRepository
             ->with('a.licence', 'l');
     }
 
+    /**
+     * Fetch For Transport Manager
+     *
+     * @param int        $tmId                Transport manager id
+     * @param array|null $applicationStatuses Application statuses
+     * @param bool       $includeDeleted      Is include deleted
+     *
+     * @return array
+     */
     public function fetchForTransportManager($tmId, array $applicationStatuses = null, $includeDeleted = false)
     {
         $qb = $this->createQueryBuilder();
@@ -180,7 +170,6 @@ class TransportManagerApplication extends AbstractRepository
             ->with('al.organisation', 'alo')
             ->with('a.status', 'ast')
             ->with('transportManager', 'tm')
-            ->with('operatingCentres', 'oc')
             ->with('tmApplicationStatus', 'tmast');
 
         $qb->where($qb->expr()->eq($this->alias . '.transportManager', ':transportManager'));
@@ -198,6 +187,15 @@ class TransportManagerApplication extends AbstractRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * Fetch By Tm And Application
+     *
+     * @param int  $tmId          Transport manager Id
+     * @param int  $applicationId Application Id
+     * @param bool $ignoreDeleted Is ignore deleted
+     *
+     * @return array
+     */
     public function fetchByTmAndApplication($tmId, $applicationId, $ignoreDeleted = false)
     {
         $qb = $this->createQueryBuilder();
@@ -214,6 +212,13 @@ class TransportManagerApplication extends AbstractRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * Fetch For Responsibilities
+     *
+     * @param int $id Tm-App relation id
+     *
+     * @return mixed
+     */
     public function fetchForResponsibilities($id)
     {
         $qb = $this->createQueryBuilder();
@@ -227,7 +232,6 @@ class TransportManagerApplication extends AbstractRepository
             ->with('a.status', 'ast')
             ->with('transportManager', 'tm')
             ->with('tm.tmType', 'tmt')
-            ->with('operatingCentres', 'oc')
             ->with('tmApplicationStatus', 'tmast')
             ->byId($id);
 

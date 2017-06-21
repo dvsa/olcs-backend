@@ -10,6 +10,7 @@ use Mockery as m;
 use Zend\Filter\Decompress;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use org\bovigo\vfs\vfsStream;
+use Zend\Filter\Exception\RuntimeException as ZendFilterRuntimeException;
 
 /**
  * Class FileProcessorTest
@@ -119,6 +120,43 @@ class FileProcessorTest extends TestCase
         $mockFilter = m::mock(Decompress::class);
         $mockFilter->shouldReceive('setTarget')->with($extractDir);
         $mockFilter->shouldReceive('filter')->with($tmpEbsrFile);
+
+        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $tmpDir);
+
+        $sut->fetchXmlFileNameFromDocumentStore($fileIdentifier);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\EbsrPackException
+     */
+    public function testFetchXmlFileNameFromDocumentStoreWithCorruptZip()
+    {
+        vfsStream::setup();
+
+        $fileIdentifier = 'ebsr.zip';
+        $fileContent = 'contents';
+        $tmpDir = '/tmp';
+        $tmpEbsrFile = 'ebsr123';
+        $extractDir = vfsStream::url('root');
+        $exceptionMessage =
+
+        $mockFile = m::mock(File::class);
+        $mockFile->shouldReceive('getContent')->andReturn($fileContent);
+
+        $mockFileUploader = m::mock(FileUploaderInterface::class);
+        $mockFileUploader->shouldReceive('download')->with($fileIdentifier)->andReturn($mockFile);
+
+        $mockFileSystem = m::mock(Filesystem::class);
+        $mockFileSystem->shouldReceive('exists')->with($tmpDir)->andReturn(true);
+        $mockFileSystem->shouldReceive('createTmpFile')->with($tmpDir, 'ebsr')->andReturn($tmpEbsrFile);
+        $mockFileSystem->shouldReceive('dumpFile')->with($tmpEbsrFile, $fileContent);
+        $mockFileSystem->shouldReceive('createTmpDir')->with($tmpDir, 'zip')->andReturn($extractDir);
+
+        $mockFilter = m::mock(Decompress::class);
+        $mockFilter->shouldReceive('setTarget')->with($extractDir);
+        $mockFilter->shouldReceive('filter')
+            ->with($tmpEbsrFile)
+            ->andThrow(ZendFilterRuntimeException::class, $exceptionMessage);
 
         $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $tmpDir);
 
