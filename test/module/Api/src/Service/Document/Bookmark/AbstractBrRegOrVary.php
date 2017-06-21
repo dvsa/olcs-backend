@@ -77,7 +77,8 @@ class AbstractBrRegOrVary extends \PHPUnit_Framework_TestCase
      *
      * @return DynamicBookmark
      */
-    public function getBookmark($data){
+    public function getBookmark($data)
+    {
         /** @var DynamicBookmark $bookmark */
         $bookmark = new $this->bookmarkClass();
         $bookmark->setData($data);

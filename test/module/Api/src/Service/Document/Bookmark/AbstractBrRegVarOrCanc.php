@@ -15,6 +15,9 @@ class AbstractBrRegVarOrCanc extends \PHPUnit_Framework_TestCase
     protected $cancel;
     protected $bookmarkClass;
 
+    /**
+     * test getQuery
+     */
     public function testGetQuery()
     {
         $bookmark = $this->getBookmark();
@@ -97,7 +100,8 @@ class AbstractBrRegVarOrCanc extends \PHPUnit_Framework_TestCase
     /**
      * @return DynamicBookmark
      */
-    public function getBookmark(){
+    public function getBookmark()
+    {
         return new $this->bookmarkClass();
     }
 }
