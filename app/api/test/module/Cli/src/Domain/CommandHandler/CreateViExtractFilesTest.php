@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\CreateViExtractFiles;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
@@ -89,6 +90,13 @@ class CreateViExtractFilesTest extends CommandHandlerTestCase
                 'Empty file written for Vehicles'
             ]
         ];
+
         $this->assertEquals($expected, $response->toArray());
+
+        $datetime = (new DateTime())->format('YmdHis');
+        $this->assertFileExists(sprintf('%s/tanopc%s.dat', $params['path'], $datetime));
+        $this->assertFileExists(sprintf('%s/tanopo%s.dat', $params['path'], $datetime));
+        $this->assertFileExists(sprintf('%s/tantnm%s.dat', $params['path'], $datetime));
+        $this->assertFileExists(sprintf('%s/tanveh%s.dat', $params['path'], $datetime));
     }
 }
