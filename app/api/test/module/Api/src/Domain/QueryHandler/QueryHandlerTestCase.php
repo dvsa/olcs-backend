@@ -176,11 +176,22 @@ class QueryHandlerTestCase extends MockeryTestCase
             $class = m::mock($class);
         }
 
-        $class
-            ->shouldReceive('getRefdataReference')->andReturnUsing([$this, 'mapRefData'])
-            ->shouldReceive('getReference')->andReturnUsing([$this, 'mapReference'])
-            ->shouldReceive('getCategoryReference')->andReturnUsing([$this, 'mapCategoryReference'])
-            ->shouldReceive('getSubCategoryReference')->andReturnUsing([$this, 'mapSubCategoryReference']);
+        //if statements here are for BC. We have some existing tests which implement this themselves
+        if (!empty($this->refData)) {
+            $class->shouldReceive('getRefdataReference')->andReturnUsing([$this, 'mapRefData']);
+        }
+
+        if (!empty($this->references)) {
+            $class->shouldReceive('getReference')->andReturnUsing([$this, 'mapReference']);
+        }
+
+        if (!empty($this->categoryReferences)) {
+            $class->shouldReceive('getCategoryReference')->andReturnUsing([$this, 'mapCategoryReference']);
+        }
+
+        if (!empty($this->subCategoryReferences)) {
+            $class->shouldReceive('getSubCategoryReference')->andReturnUsing([$this, 'mapSubCategoryReference']);
+        }
 
         $this->repoMap[$name] = $class;
 
