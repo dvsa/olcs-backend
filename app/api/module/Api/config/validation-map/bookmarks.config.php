@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
 return [
     QueryHandler\Bookmark\ApplicationBundle::class                  => NoValidationRequired::class,
     QueryHandler\Bookmark\BusRegBundle::class                       => NoValidationRequired::class,
+    QueryHandler\Bookmark\BusFeeTypeBundle::class                   => NoValidationRequired::class,
     QueryHandler\Bookmark\CommunityLicBundle::class                 => NoValidationRequired::class,
     QueryHandler\Bookmark\ConditionsUndertakings::class             => NoValidationRequired::class,
     QueryHandler\Bookmark\DocParagraphBundle::class                 => NoValidationRequired::class,
