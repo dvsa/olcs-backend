@@ -292,5 +292,7 @@ return [
     'continuation-review-business-details-company_name' => 'Company name',
     'continuation-review-business-details-partnership_name' => 'Partnership name',
     'continuation-review-business-details-organisation_name' => 'Organisation name',
+    'continuations.people-section.table.name' => 'Name',
+    'continuations.people-section.table.date-of-birth' => 'Date of birth',
     // Potentially unused translations
 ];
