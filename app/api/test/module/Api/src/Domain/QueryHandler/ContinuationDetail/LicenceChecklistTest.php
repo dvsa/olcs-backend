@@ -37,7 +37,12 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                         'goodsOrPsv' => 'expected',
                         'trafficArea' => 'expected',
                         'organisation' => [
-                            'type' => 'expected'
+                            'type' => 'expected',
+                            'organisationPersons' => [
+                                'person' => [
+                                    'title' => 'expected'
+                                ]
+                            ]
                         ],
                         'tradingNames'
                     ]
@@ -59,7 +64,12 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                 'goodsOrPsv' => 'expected',
                 'trafficArea' => 'expected',
                 'organisation' => [
-                    'type' => 'expected'
+                    'type' => 'expected',
+                    'organisationPersons' => [
+                        'person' => [
+                            'title' => 'expected'
+                        ]
+                    ]
                 ],
                 'tradingNames'
             ]
