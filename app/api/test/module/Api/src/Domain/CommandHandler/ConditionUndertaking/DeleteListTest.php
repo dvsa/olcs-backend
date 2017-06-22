@@ -2,23 +2,29 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ConditionUndertaking;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\CommandHandler\ConditionUndertaking\DeleteList as CommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command\ConditionUndertaking\DeleteList as Command;
-use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertakingRepo;
-use Mockery as m;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
 /**
- * DeleteListTest
- *
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\ConditionUndertaking\DeleteList
  */
 class DeleteListTest extends CommandHandlerTestCase
 {
+    const CU_ID = 8001;
+    const CU2_ID = 8002;
+
+    /** @var  CommandHandler\ConditionUndertaking\DeleteList */
+    protected $sut;
+
     public function setUp()
     {
-        $this->sut = new CommandHandler();
-        $this->mockRepo('ConditionUndertaking', ConditionUndertakingRepo::class);
+        $this->sut = new CommandHandler\ConditionUndertaking\DeleteList();
+
+        $this->mockRepo('ConditionUndertaking', Repository\ConditionUndertaking::class);
 
         parent::setUp();
     }
@@ -26,36 +32,35 @@ class DeleteListTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'ids' => [73, 324]
+            'ids' => [self::CU_ID, self::CU2_ID],
         ];
+        $cntDel = 999;
+
         $command = Command::create($data);
 
-        $mockConditionUndertaking1 = new \Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking(
-            new \Dvsa\Olcs\Api\Entity\System\RefData(),
-            1,
-            1
-        );
-        $mockConditionUndertaking1->setId(73);
+        $mockCu1 = new Entity\Cases\ConditionUndertaking(new \Dvsa\Olcs\Api\Entity\System\RefData(), 1, 1);
+        $mockCu1->setId(self::CU_ID);
 
-        $mockConditionUndertaking2 = new \Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking(
-            new \Dvsa\Olcs\Api\Entity\System\RefData(),
-            0,
-            0
-        );
-        $mockConditionUndertaking2->setId(324);
+        $mockCu2 = new Entity\Cases\ConditionUndertaking(new \Dvsa\Olcs\Api\Entity\System\RefData(), 0, 0);
+        $mockCu2->setId(self::CU2_ID);
 
-        $this->repoMap['ConditionUndertaking']->shouldReceive('fetchById')->with(73)->once()
-            ->andReturn($mockConditionUndertaking1);
-        $this->repoMap['ConditionUndertaking']->shouldReceive('delete')->with($mockConditionUndertaking1)->once();
+        $this->repoMap['ConditionUndertaking']
+            ->shouldReceive('fetchById')->with(self::CU_ID)->once()->andReturn($mockCu1)
+            ->shouldReceive('delete')->with($mockCu1)->once()
 
-        $this->repoMap['ConditionUndertaking']->shouldReceive('fetchById')->with(324)->once()
-            ->andReturn($mockConditionUndertaking2);
-        $this->repoMap['ConditionUndertaking']->shouldReceive('delete')->with($mockConditionUndertaking2)->once();
+            ->shouldReceive('fetchById')->with(self::CU2_ID)->once()->andReturn($mockCu2)
+            ->shouldReceive('delete')->with($mockCu2)->once()
+
+            ->shouldReceive('deleteFromVariations')->with($command->getIds())->once()->andReturn($cntDel);
 
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals(
-            ['ConditionUndertaking ID 73 deleted', 'ConditionUndertaking ID 324 deleted'],
+            [
+                'ConditionUndertaking ID ' . self::CU_ID . ' deleted',
+                'ConditionUndertaking ID ' . self::CU2_ID . ' deleted',
+                'Deleted from variations ' . $cntDel . ' conditionUndertaking',
+            ],
             $result->getMessages()
         );
     }
