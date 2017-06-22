@@ -3,11 +3,11 @@
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 /**
- * BrRegVarOrCanc Bookmark
+ * BrRegVarOrCanc3 Bookmark
  */
-class BrRegVarOrCanc extends AbstractBrRegVarOrCanc
+class BrRegVarOrCanc3 extends BrRegVarOrCanc
 {
-    protected $renderNew = 'commence';
+    protected $renderNew = 'register';
     protected $renderVar = 'vary';
     protected $renderCanc = 'cancel';
 }

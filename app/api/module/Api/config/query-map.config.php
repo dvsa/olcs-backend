@@ -37,6 +37,7 @@ return [
     BookmarkQuery\OrganisationBundle::class => BookmarkQueryHandler\OrganisationBundle::class,
     BookmarkQuery\UserBundle::class => BookmarkQueryHandler\UserBundle::class,
     BookmarkQuery\BusRegBundle::class => BookmarkQueryHandler\BusRegBundle::class,
+    BookmarkQuery\BusFeeTypeBundle::class => BookmarkQueryHandler\BusFeeTypeBundle::class,
     BookmarkQuery\PublicationLinkBundle::class => BookmarkQueryHandler\PublicationLinkBundle::class,
     BookmarkQuery\PublicationBundle::class => BookmarkQueryHandler\PublicationBundle::class,
     BookmarkQuery\PublicationLatestByTaAndTypeBundle::class

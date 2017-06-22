@@ -14,6 +14,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Query Handler Test Case
@@ -42,6 +43,21 @@ class QueryHandlerTestCase extends MockeryTestCase
 
     /** @var m\MockInterface[]  */
     protected $mockedSmServices = [];
+
+    /** @var array  */
+    protected $refData = [];
+
+    /** @var array  */
+    protected $references = [];
+
+    /** @var array  */
+    protected $categoryReferences = [];
+
+    /** @var array  */
+    protected $subCategoryReferences = [];
+
+    /** @var bool  */
+    private $initRefdata = false;
 
     public function setUp()
     {
@@ -75,7 +91,65 @@ class QueryHandlerTestCase extends MockeryTestCase
             ->shouldReceive('getServiceLocator')
             ->andReturn($sm);
 
+        $this->initReferences();
+
         $this->sut = $this->sut->createService($this->queryHandler);
+    }
+
+    protected function initReferences()
+    {
+        if (!$this->initRefdata) {
+            foreach ($this->refData as $id => $mock) {
+                if (is_numeric($id) && is_string($mock)) {
+                    $this->refData[$mock] = m::mock(RefData::class)->makePartial()->setId($mock);
+                } else {
+                    $mock->makePartial();
+                    $mock->setId($id);
+                }
+            }
+
+            foreach ($this->categoryReferences as $id => $mock) {
+                $mock->makePartial();
+                $mock->setId($id);
+            }
+
+            foreach ($this->subCategoryReferences as $id => $mock) {
+                $mock->makePartial();
+                $mock->setId($id);
+            }
+
+            foreach ($this->references as $mocks) {
+                foreach ($mocks as $id => $mock) {
+                    if ($mock instanceof m\MockInterface) {
+                        $mock->makePartial();
+                    }
+
+                    $mock->setId($id);
+                }
+            }
+
+            $this->initRefdata = true;
+        }
+    }
+
+    public function mapRefData($key)
+    {
+        return isset($this->refData[$key]) ? $this->refData[$key] : null;
+    }
+
+    public function mapCategoryReference($key)
+    {
+        return isset($this->categoryReferences[$key]) ? $this->categoryReferences[$key] : null;
+    }
+
+    public function mapSubCategoryReference($key)
+    {
+        return isset($this->subCategoryReferences[$key]) ? $this->subCategoryReferences[$key] : null;
+    }
+
+    public function mapReference($class, $id)
+    {
+        return isset($this->references[$class][$id]) ? $this->references[$class][$id] : null;
     }
 
     public function tearDown()
@@ -87,6 +161,11 @@ class QueryHandlerTestCase extends MockeryTestCase
             $this->queryHandler,
             $this->repoManager,
             $this->repoMap,
+            $this->refData,
+            $this->references,
+            $this->categoryReferences,
+            $this->subCategoryReferences,
+            $this->initRefdata,
             $this->mockedSmServices
         );
     }
@@ -97,6 +176,25 @@ class QueryHandlerTestCase extends MockeryTestCase
             $class = m::mock($class);
         }
 
-        return $this->repoMap[$name] = $class;
+        //if statements here are for BC. We have some existing tests which implement this themselves
+        if (!empty($this->refData)) {
+            $class->shouldReceive('getRefdataReference')->andReturnUsing([$this, 'mapRefData']);
+        }
+
+        if (!empty($this->references)) {
+            $class->shouldReceive('getReference')->andReturnUsing([$this, 'mapReference']);
+        }
+
+        if (!empty($this->categoryReferences)) {
+            $class->shouldReceive('getCategoryReference')->andReturnUsing([$this, 'mapCategoryReference']);
+        }
+
+        if (!empty($this->subCategoryReferences)) {
+            $class->shouldReceive('getSubCategoryReference')->andReturnUsing([$this, 'mapSubCategoryReference']);
+        }
+
+        $this->repoMap[$name] = $class;
+
+        return $class;
     }
 }
