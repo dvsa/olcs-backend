@@ -46,6 +46,7 @@ class ConditionUndertaking extends AbstractConditionUndertaking
     const SMALL_VEHICLE_UNDERTAKINGS = 'Small vehicles undertakings';
 
     const ACTION_ADD = 'A';
+    const ACTION_UPDATE = 'U';
     const ACTION_DELETE = 'D';
 
     /**
