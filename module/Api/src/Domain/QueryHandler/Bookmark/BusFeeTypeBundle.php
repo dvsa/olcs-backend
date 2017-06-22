@@ -47,11 +47,7 @@ class BusFeeTypeBundle extends AbstractQueryHandler
             $feeTrafficArea = TrafficAreaEntity::SCOTTISH_TRAFFIC_AREA_CODE;
         }
 
-        $receivedDate = $busReg->getReceivedDate();
-
-        if (!$receivedDate instanceof \DateTime) {
-            $receivedDate = new \DateTime($receivedDate);
-        }
+        $receivedDate = $busReg->processDate($busReg->getReceivedDate());
 
         $feeType = $feeTypeRepo->fetchLatest(
             $feeTypeRepo->getRefdataReference(
