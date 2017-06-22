@@ -276,5 +276,6 @@ return [
     'continuation-review-business-details-company_name' => 'Enw\'r cwmni',
     'continuation-review-business-details-partnership_name' => 'Partneriaeth',
     'continuation-review-business-details-organisation_name' => 'Enw’r sefydliad',
+    'continuations.people-section.table.date-of-birth' => 'Ddyddiad geni',
     // Potentially unused translations
 ];
