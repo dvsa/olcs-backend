@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Abstract Command Handler
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
@@ -319,8 +314,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     /**
      * Proxy to another command as a system user, using all data from the original command
      *
-     * @param $originalCommand        original command
-     * @param $proxyCommandClassName proxy command class name
+     * @param CommandInterface $originalCommand       original command
+     * @param string           $proxyCommandClassName proxy command class name
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
