@@ -47,6 +47,7 @@ class BusFeeTypeBundleTest extends QueryHandlerTestCase
     public function testHandleQuery($variationNumber, $feeType, $isScotland, $trafficAreaCode)
     {
         $receivedDate = '2017-12-25';
+        $receivedDateTime = new \DateTime('2017-12-25');
         $feeTypeRef = $this->refData[$feeType];
         $goodsOrPsv = $this->refData[LicenceEntity::LICENCE_CATEGORY_PSV];
         $licenceType = $this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL];
@@ -64,6 +65,7 @@ class BusFeeTypeBundleTest extends QueryHandlerTestCase
         $busReg->shouldReceive('getLicence->getGoodsOrPsv')->once()->andReturn($goodsOrPsv);
         $busReg->shouldReceive('getLicence->getTrafficArea')->once()->andReturn($ta);
         $busReg->shouldReceive('getReceivedDate')->once()->andReturn($receivedDate);
+        $busReg->shouldReceive('processDate')->with($receivedDate)->once()->andReturn($receivedDateTime);
         $busReg->shouldReceive('getVariationNo')->once()->andReturn($variationNumber);
 
         /** @var m\mockInterface $feeTypeEntity */
@@ -75,7 +77,7 @@ class BusFeeTypeBundleTest extends QueryHandlerTestCase
                 $feeTypeRef,
                 $goodsOrPsv,
                 $licenceType,
-                m::type('\DateTime'),
+                $receivedDateTime,
                 $trafficAreaCode
             )
             ->once()
