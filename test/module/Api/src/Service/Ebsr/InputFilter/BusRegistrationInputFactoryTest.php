@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory;
 use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ServiceNo;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EndDate;
 
 /**
  * Class BusRegistrationInputFactoryTest
@@ -51,6 +52,7 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with('Rules\ApplicationType')->andReturn($mockValidator);
         $mockSl->shouldReceive('get')->with('Rules\Licence')->andReturn($mockValidator);
         $mockSl->shouldReceive('get')->with(ServiceNo::class)->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with(EndDate::class)->andReturn($mockValidator);
 
         $sut = new BusRegistrationInputFactory();
         /** @var \Zend\InputFilter\Input $service */
@@ -58,7 +60,7 @@ class BusRegistrationInputFactoryTest extends TestCase
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
         $this->assertCount(9, $service->getFilterChain());
-        $this->assertCount(4, $service->getValidatorChain());
+        $this->assertCount(5, $service->getValidatorChain());
 
         foreach ($service->getValidatorChain()->getValidators() as $validator) {
             if ($validator['instance'] === $mockBreakValidator) {

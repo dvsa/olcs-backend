@@ -678,6 +678,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EndDate::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EndDate::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class =>
