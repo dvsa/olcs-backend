@@ -670,8 +670,8 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 true,
                 'tmpStat' => [
                     'action' => [
-                        Entity\Tm\TransportManagerApplication::ACTION_ADD => 0,
-                        Entity\Tm\TransportManagerApplication::ACTION_DELETE => 1,
+                        Entity\Tm\TransportManagerApplication::ACTION_ADD => '0',
+                        Entity\Tm\TransportManagerApplication::ACTION_DELETE => '1',
                     ]
                 ],
                 'TM1 (Removal only)',
