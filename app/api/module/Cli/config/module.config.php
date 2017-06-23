@@ -271,6 +271,8 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\CommunityLicence\CreateForLicence::class,
             Queue::TYPE_REMOVE_DELETED_DOCUMENTS
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\RemoveDeleteDocuments::class,
+            Queue::TYPE_PROCESS_DATA_RETENTION
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\ProcessDataRetention::class,
         ],
         'factories' => [
             Queue::TYPE_CPID_EXPORT_CSV => Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,
