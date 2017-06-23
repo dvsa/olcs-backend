@@ -5,8 +5,8 @@ namespace Dvsa\Olcs\Api\Domain\Command\DataRetention;
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
 /**
- * Class RunDelete
+ * DeleteEntities
  */
-final class RunDelete extends AbstractCommand
+final class DeleteEntities extends AbstractCommand
 {
 }

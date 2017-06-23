@@ -35,7 +35,7 @@ class BatchController extends AbstractConsoleController
         }
 
         if ($this->params('delete')) {
-            return $this->handleExitStatus($this->handleCommand([Command\DataRetention\RunDelete::create([])]));
+            return $this->handleExitStatus($this->handleCommand([Command\DataRetention\DeleteEntities::create([])]));
         }
     }
 
