@@ -180,6 +180,8 @@ return [
     TransferQuery\Cases\Si\SiList::class => QueryHandler\Cases\Si\SiList::class,
     TransferQuery\Cases\PresidingTc\GetList::class => QueryHandler\Cases\PresidingTc\GetList::class,
 
+    TransferQuery\Cases\Report\OpenList::class => QueryHandler\Cases\Report\OpenList::class,
+
     TransferQuery\Venue\VenueList::class => QueryHandler\Venue\VenueList::class,
 
     // Submission

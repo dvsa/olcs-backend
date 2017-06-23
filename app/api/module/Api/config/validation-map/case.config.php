@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
  * @NOTE All Case related queries and commands have been moved here and assigned the isInternalUser handler
  */
 return [
-    QueryHandler\TmCaseDecision\GetByCase::class                            => IsInternalUser::class,
+    //  commands
     CommandHandler\Cases\CloseCase::class                                   => IsInternalUser::class,
     CommandHandler\Cases\Conviction\Create::class                           => IsInternalUser::class,
     CommandHandler\Cases\Conviction\Delete::class                           => IsInternalUser::class,
@@ -64,6 +64,9 @@ return [
     CommandHandler\Cases\Si\CreateSi::class                                 => IsInternalUser::class,
     CommandHandler\Cases\Si\DeleteSi::class                                 => IsInternalUser::class,
     CommandHandler\Cases\Si\UpdateSi::class                                 => IsInternalUser::class,
+
+    //  queries
+    QueryHandler\TmCaseDecision\GetByCase::class                            => IsInternalUser::class,
     QueryHandler\Cases\AnnualTestHistory::class                             => IsInternalUser::class,
     QueryHandler\Cases\ByLicence::class                                     => IsInternalUser::class,
     QueryHandler\Cases\ByApplication::class                                 => IsInternalUser::class,
@@ -101,5 +104,6 @@ return [
     QueryHandler\Cases\Si\Si::class                                         => IsInternalUser::class,
     QueryHandler\Cases\Si\SiList::class                                     => IsInternalUser::class,
     QueryHandler\Cases\PresidingTc\GetList::class                           => IsInternalUser::class,
+    QueryHandler\Cases\Report\OpenList::class                               => IsInternalUser::class,
     QueryHandler\Venue\VenueList::class                                     => IsInternalUser::class,
 ];
