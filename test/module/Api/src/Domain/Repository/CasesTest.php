@@ -91,8 +91,13 @@ class CasesTest extends RepositoryTestCase
 
     public function testForReportOpenListQry()
     {
-        /** @var \Dvsa\Olcs\Transfer\Query\QueryInterface  $mockQry */
+        /** @var \Dvsa\Olcs\Transfer\Query\QueryInterface |m\MockInterface $mockQry */
         $mockQry = m::mock(TransferQry\Cases\Report\OpenList::class)->makePartial();
+        $mockQry
+            ->shouldReceive('getCaseType')->twice()->andReturn('unit_CaseType')
+            ->shouldReceive('getApplicationStatus')->twice()->andReturn('unit_AppStatus')
+            ->shouldReceive('getLicenceStatus')->twice()->andReturn('unit_LicStatus')
+            ->shouldReceive('getTrafficArea')->once()->andReturn('unit_TA');
 
         $qb = $this->createMockQb('{{QUERY}}');
         $this->mockCreateQueryBuilder($qb);
@@ -102,7 +107,8 @@ class CasesTest extends RepositoryTestCase
             ->shouldReceive('withRefdata')->with()->once()->andReturnSelf()
             ->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf()
             ->shouldReceive('with')->with('application', 'a')->once()->andReturnSelf()
-            ->shouldReceive('with')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('l.trafficArea', 'ta')->once()->andReturnSelf()
+            ->shouldReceive('with')->once() ->andReturnSelf()
             ->shouldReceive('paginate')->once()->andReturnSelf();
 
         $this->sut->shouldReceive('fetchPaginatedList')->andReturn('EXPECT');
@@ -111,8 +117,38 @@ class CasesTest extends RepositoryTestCase
 
         $expected = '{{QUERY}}' .
             ' SELECT CONCAT(ct.description, m.id) as HIDDEN caseType' .
-            ' LEFT JOIN Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea ta WITH l.trafficArea = ta.id' .
-            ' AND m.closedDate IS NULL';
+            ' AND m.caseType = [[unit_CaseType]]' .
+            ' AND m.closedDate IS NULL' .
+            ' AND a.status = [[unit_AppStatus]]' .
+            ' AND l.status = [[unit_LicStatus]]' .
+            ' AND ta.id = [[unit_TA]]';
+
+        static::assertEquals($expected, $this->query);
+    }
+
+    public function testForReportOpenListQryOtherTa()
+    {
+        /** @var \Dvsa\Olcs\Transfer\Query\QueryInterface |m\MockInterface $mockQry */
+        $mockQry = m::mock(TransferQry\Cases\Report\OpenList::class)->makePartial();
+        $mockQry->shouldReceive('getTrafficArea')->once()->andReturn('OTHER');
+
+        $qb = $this->createMockQb('{{QUERY}}');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('withRefdata')->with()->once()->andReturnSelf()
+            ->shouldReceive('with')->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf();
+
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn('EXPECT');
+
+        static::assertEquals('EXPECT', $this->sut->fetchList($mockQry));
+
+        $expected = '{{QUERY}}' .
+            ' SELECT CONCAT(ct.description, m.id) as HIDDEN caseType' .
+            ' AND m.closedDate IS NULL' .
+            ' AND ta.id IS NULL';
 
         static::assertEquals($expected, $this->query);
     }
