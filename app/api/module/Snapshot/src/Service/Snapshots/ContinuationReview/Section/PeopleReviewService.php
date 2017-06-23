@@ -32,12 +32,13 @@ class PeopleReviewService extends AbstractReviewService
         /** @var OrganisationPerson $op */
         foreach ($organisationPersons as $op) {
             $person = $op->getPerson();
+            $title = $person->getTitle();
             $config[] = [
                 [
                     'value' => implode(
                         ' ',
                         [
-                            $person->getTitle()->getDescription(),
+                            $title !== null ? $title->getDescription() : '',
                             $person->getForename(),
                             $person->getFamilyName(),
                         ]
