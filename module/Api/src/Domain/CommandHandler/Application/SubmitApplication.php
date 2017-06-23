@@ -205,7 +205,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
             //  If was not added, but was removed at least ONE transport manager
             $statByAction = $stat['action'];
             if (
-                $statByAction[Entity\Tm\TransportManagerApplication::ACTION_ADD] === 0
+                (int)$statByAction[Entity\Tm\TransportManagerApplication::ACTION_ADD] === 0
                 && $statByAction[Entity\Tm\TransportManagerApplication::ACTION_DELETE] > 0
             ) {
                 $taskData['subCategory'] = CategoryEntity::TASK_SUB_CATEGORY_APPLICATION_TM1_REMOVAL_VARIATION;
