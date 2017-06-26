@@ -844,8 +844,14 @@ class BatchControllerTest extends MockeryTestCase
             ]
         );
 
-        // @todo To be done in JIRA OLCS-16626
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\DataRetention\DeleteEntities::class))
+            ->once()
+            ->andReturn(new Command\Result());
 
-        $this->sut->dataRetentionRuleAction();
+        $result = $this->sut->dataRetentionRuleAction();
+
+        $this->assertSame(0, $result->getErrorLevel());
     }
 }
