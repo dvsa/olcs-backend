@@ -1,33 +1,50 @@
 <?php
 
-/**
- * Cases
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
-use Dvsa\Olcs\Api\Entity\Cases\Cases as Entity;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\Query\Expr;
 
 /**
  * Cases
  */
 class Cases extends AbstractRepository
 {
-    protected $entity = Entity::class;
+    protected $entity = Entity\Cases\Cases::class;
+
+    /** @var  \Dvsa\Olcs\Transfer\Query\SubCategory\GetList */
+    private $query;
 
     /**
-     * Fetch the default record by it's id plus licence information
+     * Fetch data
      *
-     * @param Query|QryCmd $query
-     * @param int $hydrateMode
-     * @param null $version
+     * @param QueryInterface $query       Query Builder
+     * @param int            $hydrateMode Hydrate Mode
+     *
+     * @return \ArrayIterator|\Traversable
+     */
+    public function fetchList(QueryInterface $query, $hydrateMode = Query::HYDRATE_ARRAY)
+    {
+        $this->query = $query;
+
+        return parent::fetchList($query, $hydrateMode);
+    }
+
+    /**
+     * Fetch With Licence Using Id
+     *
+     * @param QryCmd $query       Http Query
+     * @param int    $hydrateMode Hydrate mode
+     * @param null   $version     Version
+     *
      * @return mixed
      * @throws Exception\NotFoundException
-     * @throws Exception\VersionConflictException
      */
     public function fetchWithLicenceUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
     {
@@ -56,11 +73,16 @@ class Cases extends AbstractRepository
 
     /**
      * Applies filters
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
+     *
+     * @param QueryBuilder   $qb    Doctrine Query Builder
+     * @param QueryInterface $query Http Query
+     *
+     * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
+        $expr = $qb->expr();
+
         if (method_exists($query, 'getTransportManager')) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.transportManager', ':byTransportManager'))
                 ->setParameter('byTransportManager', $query->getTransportManager());
@@ -70,8 +92,43 @@ class Cases extends AbstractRepository
             $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':byLicence'))
                 ->setParameter('byLicence', $query->getLicence());
         }
+
+        if ($this->query instanceof TransferQry\Cases\Report\OpenList) {
+            $qb->andWhere(
+                $expr->isNull($this->alias . '.closedDate')
+            );
+        }
+
     }
 
+    /**
+     * Add joins to list query
+     *
+     * @param QueryBuilder $qb Doctrine Query Builder
+     *
+     * @return void
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        if ($this->query instanceof TransferQry\Cases\Report\OpenList) {
+            $this->getQueryBuilder()
+                ->with('licence', 'l')
+                ->with('application', 'a');
+
+            $qb->leftJoin(Entity\TrafficArea\TrafficArea::class, 'ta', Expr\Join::WITH, 'l.trafficArea = ta.id');
+        }
+
+        parent::applyListJoins($qb);
+    }
+
+    /**
+     * Fetch Extended
+     *
+     * @param int $caseId Case Id
+     *
+     * @return Entity\Cases\Cases
+     * @throws Exception\NotFoundException
+     */
     public function fetchExtended($caseId)
     {
         $qb = $this->createQueryBuilder();
@@ -92,9 +149,11 @@ class Cases extends AbstractRepository
     /**
      * Define composite columns as HIDDEN to enable ordering by case type
      *
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
-     * @param array $compositeFields
+     * @param QueryBuilder   $qb              Doctrine Query Builder
+     * @param QueryInterface $query           Http Query
+     * @param array          $compositeFields Composite fields
+     *
+     * @return void
      */
     public function buildDefaultListQuery(
         \Doctrine\ORM\QueryBuilder $qb,
