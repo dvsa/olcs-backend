@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Discs;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\DataRetention;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention\Populate;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetentionRule;

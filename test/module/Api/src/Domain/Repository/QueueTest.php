@@ -184,4 +184,42 @@ class QueueTest extends RepositoryTestCase
 
         $this->assertEquals(2, $this->sut->enqueueContinuationNotSought($licences));
     }
+
+    public function testIsItemTypeQueuedTrue()
+    {
+        $qb = $this->createMockQb('[QUERY]');
+        $this->mockCreateQueryBuilder($qb);
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('order')->with('id', 'ASC')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getArrayResult')->with()->once()->andReturn(['X']);
+
+        $this->assertTrue($this->sut->isItemTypeQueued('foo'));
+
+        $now = new DateTime();
+        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] AND'.
+            ' (q.processAfterDate <= [['. $now->format(DateTime::W3C) .']] OR q.processAfterDate IS NULL) LIMIT 1'.
+            ' AND q.type = [[foo]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testIsItemTypeQueuedFalse()
+    {
+        $qb = $this->createMockQb('[QUERY]');
+        $this->mockCreateQueryBuilder($qb);
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('order')->with('id', 'ASC')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getArrayResult')->with()->once()->andReturn([]);
+
+        $this->assertFalse($this->sut->isItemTypeQueued('foo'));
+
+        $now = new DateTime();
+        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] AND'.
+            ' (q.processAfterDate <= [['. $now->format(DateTime::W3C) .']] OR q.processAfterDate IS NULL) LIMIT 1'.
+            ' AND q.type = [[foo]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }

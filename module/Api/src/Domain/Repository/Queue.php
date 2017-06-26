@@ -101,24 +101,7 @@ SQL;
      */
     public function getNextItem(array $includeTypes = [], array $excludeTypes = [])
     {
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
-        $qb = $this->createQueryBuilder();
-
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->order('id', 'ASC');
-
-        $now = new DateTime();
-        $qb
-            ->andWhere($qb->expr()->eq($this->alias . '.status', ':statusId'))
-            ->andWhere(
-                $qb->expr()->orX(
-                    $qb->expr()->lte($this->alias . '.processAfterDate', ':processAfter'),
-                    $qb->expr()->isNull($this->alias . '.processAfterDate')
-                )
-            )
-            ->setParameter('statusId', Entity::STATUS_QUEUED)
-            ->setParameter('processAfter', $now)
-            ->setMaxResults(1);
+        $qb = $this->getNextItemQueryBuilder();
 
         if (!empty($includeTypes)) {
             $qb
@@ -144,5 +127,51 @@ SQL;
         $this->save($result);
 
         return $result;
+    }
+
+    /**
+     * Is there an item of type already queued?
+     *
+     * @param string $type Queue::TYPE_ contant
+     *
+     * @return bool
+     */
+    public function isItemTypeQueued($type)
+    {
+        $qb = $this->getNextItemQueryBuilder();
+        $qb->andWhere($qb->expr()->eq($this->alias . '.type', ':type'))
+            ->setParameter('type', $type);
+
+        $results = $qb->getQuery()->getArrayResult();
+
+        return !empty($results);
+    }
+
+    /**
+     * Get the QueryBuilder for getting the next item
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function getNextItemQueryBuilder()
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->order('id', 'ASC');
+
+        $now = new DateTime();
+        $qb
+            ->andWhere($qb->expr()->eq($this->alias . '.status', ':statusId'))
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->lte($this->alias . '.processAfterDate', ':processAfter'),
+                    $qb->expr()->isNull($this->alias . '.processAfterDate')
+                )
+            )
+            ->setParameter('statusId', Entity::STATUS_QUEUED)
+            ->setParameter('processAfter', $now)
+            ->setMaxResults(1);
+
+        return $qb;
     }
 }
