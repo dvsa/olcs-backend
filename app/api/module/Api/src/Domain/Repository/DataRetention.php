@@ -28,9 +28,9 @@ class DataRetention extends AbstractRepository
 
         $qb->andWhere($qb->expr()->eq('drr.isEnabled', 1))
             ->andWhere($qb->expr()->eq($this->alias . '.toAction', 1))
+            ->andWhere($qb->expr()->eq($this->alias . '.actionConfirmation', 1))
             ->andWhere($qb->expr()->isNull($this->alias . '.actionedDate'))
-            ->andWhere($qb->expr()->gt($this->alias . '.actionAfterDate', ':now'));
-        $qb->setParameter(':now', (new DateTime())->format(DateTime::W3C));
+            ->andWhere($qb->expr()->isNull($this->alias . '.actionAfterDate'));
         $qb->setMaxResults($limit);
 
         return $qb->getQuery()->getResult();

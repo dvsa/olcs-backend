@@ -31,8 +31,8 @@ class DataRetentionTest extends RepositoryTestCase
 
         $this->assertSame(['FOO'], $result);
 
-        $expectedQuery = '[QUERY] AND drr.isEnabled = 1 AND m.toAction = 1 AND m.actionedDate IS NULL '.
-            'AND m.actionAfterDate > :now LIMIT 12';
+        $expectedQuery = '[QUERY] AND drr.isEnabled = 1 AND m.toAction = 1 AND m.actionConfirmation = 1 AND m.actionedDate IS NULL '.
+            'AND m.actionAfterDate IS NULL LIMIT 12';
         $this->assertEquals($expectedQuery, $this->query);
     }
 }
