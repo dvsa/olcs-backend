@@ -430,7 +430,8 @@ class Cases extends AbstractCases implements
             'canClose' => $this->canClose(),
             'canSendMsiResponse' => $this->canSendMsiResponse(),
             'canAddSi' => $this->canAddSi(),
-            'isErru' => $this->isErru()
+            'isErru' => $this->isErru(),
+            'organisation' => $this->getRelatedOrganisation(),
         ];
     }
 
