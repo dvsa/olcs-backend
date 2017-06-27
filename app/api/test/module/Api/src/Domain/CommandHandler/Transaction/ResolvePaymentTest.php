@@ -20,6 +20,8 @@ use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Entity\Task\Task;
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 
 /**
  * Resolve Payment Test
@@ -119,10 +121,16 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
         ];
 
+        $feeTransactions = new ArrayCollection();
+        $feeTransactions->add('feeTransaction');
+
         $fee = $this->references[FeeEntity::class][22];
         $fee->setGrossAmount($amount);
         $fee->shouldReceive('getOutstandingAmount')
-            ->andReturn('0.00');
+            ->andReturn('0.00')
+            ->shouldReceive('getFeeTransactions')
+            ->andReturn($feeTransactions)
+            ->once();
 
         $payment = m::mock(PaymentEntity::class)->makePartial();
         $payment->setId($paymentId);
@@ -194,6 +202,396 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandSuccessTotalAmountEqualToGrossAmount()
+    {
+        // set up data
+        $paymentId = 69;
+        $guid = 'OLCS-1234-ABCDE';
+        $amount = '25.00';
+
+        $data = [
+            'id' => $paymentId,
+            'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
+        ];
+
+        $feeTransaction1 = m::mock()
+            ->shouldReceive('getTransaction')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getStatus')
+                ->andReturn(
+                    m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(Transaction::STATUS_COMPLETE)
+                    ->once()
+                    ->getMock()
+                )
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getAmount')
+            ->andReturn('10.12')
+            ->once()
+            ->getMock();
+
+        $feeTransaction2 = m::mock()
+            ->shouldReceive('getTransaction')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getStatus')
+                    ->andReturn(
+                        m::mock()
+                            ->shouldReceive('getId')
+                            ->andReturn(Transaction::STATUS_COMPLETE)
+                            ->once()
+                            ->getMock()
+                    )
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getAmount')
+            ->andReturn('14.88')
+            ->once()
+            ->getMock();
+
+        $feeTransactions = new ArrayCollection();
+        $feeTransactions->add($feeTransaction1);
+        $feeTransactions->add($feeTransaction2);
+
+        $fee = $this->references[FeeEntity::class][22];
+        $fee->setGrossAmount($amount);
+        $fee->shouldReceive('getOutstandingAmount')
+            ->andReturn('0.00')
+            ->shouldReceive('getFeeTransactions')
+            ->andReturn($feeTransactions)
+            ->once();
+
+        $payment = m::mock(PaymentEntity::class)->makePartial();
+        $payment->setId($paymentId);
+        $payment->setReference($guid);
+        $payment->setFeeTransactions($this->references[FeePaymentEntity::class]);
+        $payment->setType($this->refData[PaymentEntity::TYPE_PAYMENT]);
+        $payment->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING]);
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Transaction']
+            ->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command)
+            ->andReturn($payment);
+
+        $this->mockCpmsService
+            ->shouldReceive('getPaymentStatus')
+            ->once()
+            ->with($guid, 'fee1')
+            ->andReturn(CpmsHelper::PAYMENT_SUCCESS);
+
+        $payment
+            ->shouldReceive('setStatus')
+            ->once()
+            ->with($this->refData[PaymentEntity::STATUS_PAID])
+            ->passthru()
+            ->andReturnSelf()
+            ->globally()
+            ->ordered()
+            ->shouldReceive('getFees')
+            ->andReturn(['fee1', 'fee2'])
+            ->once();
+
+        $this->repoMap['Fee']
+            ->shouldReceive('save')
+            ->once()
+            ->with($fee)
+            ->globally()
+            ->ordered();
+
+        $this->repoMap['Transaction']
+            ->shouldReceive('save')
+            ->once()
+            ->with($payment);
+
+        $updateData = ['id' => 22];
+        $result2 = new Result();
+        $this->expectedSideEffect(PayFeeCmd::class, $updateData, $result2);
+
+        $now = new DateTime();
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertEquals('FEE PAID', $fee->getFeeStatus()->getDescription());
+        $this->assertEquals($guid, $payment->getReference());
+        $this->assertEquals($now->format('Y-m-d'), $payment->getCompletedDate()->format('Y-m-d'));
+
+        $expected = [
+            'id' => [
+                'transaction' => 69,
+            ],
+            'messages' => [
+                'Fee ID 22 updated as paid',
+                'Transaction 69 resolved as PAYMENT PAID',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    /**
+     * @dataProvider irfoDataProfider
+     */
+    public function testHandleCommandSuccessTotalAmountGreaterThenGrossAmount($type)
+    {
+        // set up data
+        $paymentId = 69;
+        $guid = 'OLCS-1234-ABCDE';
+        $amount = '25.00';
+
+        $data = [
+            'id' => $paymentId,
+            'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
+        ];
+
+        $feeTransaction1 = m::mock()
+            ->shouldReceive('getTransaction')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getStatus')
+                    ->andReturn(
+                        m::mock()
+                            ->shouldReceive('getId')
+                            ->andReturn(Transaction::STATUS_COMPLETE)
+                            ->once()
+                            ->getMock()
+                    )
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getAmount')
+            ->andReturn('10.12')
+            ->once()
+            ->getMock();
+
+        $feeTransaction2 = m::mock()
+            ->shouldReceive('getTransaction')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getStatus')
+                    ->andReturn(
+                        m::mock()
+                            ->shouldReceive('getId')
+                            ->andReturn(Transaction::STATUS_COMPLETE)
+                            ->once()
+                            ->getMock()
+                    )
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getAmount')
+            ->andReturn('15.88')
+            ->once()
+            ->getMock();
+
+        $feeTransactions = new ArrayCollection();
+        $feeTransactions->add($feeTransaction1);
+        $feeTransactions->add($feeTransaction2);
+
+        $fee = $this->references[FeeEntity::class][22];
+        $fee->setGrossAmount($amount);
+        $fee->shouldReceive('getOutstandingAmount')
+            ->andReturn('0.00')
+            ->shouldReceive('getFeeTransactions')
+            ->andReturn($feeTransactions)
+            ->once()
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(10)
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getApplication')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(20)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getBusReg')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(30)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getFeeType')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getFeeType')
+                ->andReturn(
+                    m::mock()
+                    ->shouldReceive('getDescription')
+                    ->andReturn('[type]')
+                    ->once()
+                    ->getMock()
+                )
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        if ($type === 'PSV') {
+            $fee->shouldReceive('getIrfoPsvAuth')
+                ->andReturn(
+                    m::mock()
+                        ->shouldReceive('getOrganisation')
+                        ->andReturn(
+                            m::mock()
+                                ->shouldReceive('getId')
+                                ->andReturn(40)
+                                ->once()
+                                ->getMock()
+                        )
+                        ->once()
+                        ->getMock()
+                )
+                ->once()
+                ->shouldReceive('getIrfoGvPermit')
+                ->andReturnNull()
+                ->once()
+                ->getMock();
+        } else {
+            $fee->shouldReceive('getIrfoGvPermit')
+                ->andReturn(
+                    m::mock()
+                        ->shouldReceive('getOrganisation')
+                        ->andReturn(
+                            m::mock()
+                                ->shouldReceive('getId')
+                                ->andReturn(40)
+                                ->once()
+                                ->getMock()
+                        )
+                        ->once()
+                        ->getMock()
+                )
+                ->once()
+                ->shouldReceive('getIrfoPsvAuth')
+                ->andReturnNull()
+                ->once()
+               ->getMock();
+        }
+
+        $createTaskData = [
+            'category' => Task::CATEGORY_LICENSING,
+            'subCategory' => Task::SUBCATEGORY_LICENSING_GENERAL_TASK,
+            'description' => sprintf(
+                Task::TASK_DESCRIPTION_DUPLICATED,
+                '[type]',
+                22
+            ),
+            'actionDate' => (new DateTime('now'))->format(\DateTime::W3C),
+            'isClosed' => 0,
+            'urgent' => 1,
+            'licence' => 10,
+            'application' => 20,
+            'busReg' => 30,
+            'irfoOrganisation' => 40
+        ];
+        $this->expectedSideEffect(CreateTask::class, $createTaskData, new Result());
+
+        $payment = m::mock(PaymentEntity::class)->makePartial();
+        $payment->setId($paymentId);
+        $payment->setReference($guid);
+        $payment->setFeeTransactions($this->references[FeePaymentEntity::class]);
+        $payment->setType($this->refData[PaymentEntity::TYPE_PAYMENT]);
+        $payment->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING]);
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Transaction']
+            ->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command)
+            ->andReturn($payment);
+
+        $this->mockCpmsService
+            ->shouldReceive('getPaymentStatus')
+            ->once()
+            ->with($guid, 'fee1')
+            ->andReturn(CpmsHelper::PAYMENT_SUCCESS);
+
+        $payment
+            ->shouldReceive('setStatus')
+            ->once()
+            ->with($this->refData[PaymentEntity::STATUS_PAID])
+            ->passthru()
+            ->andReturnSelf()
+            ->globally()
+            ->ordered()
+            ->shouldReceive('getFees')
+            ->andReturn(['fee1', 'fee2'])
+            ->once();
+
+        $this->repoMap['Fee']
+            ->shouldReceive('save')
+            ->once()
+            ->with($fee)
+            ->globally()
+            ->ordered();
+
+        $this->repoMap['Transaction']
+            ->shouldReceive('save')
+            ->once()
+            ->with($payment);
+
+        $updateData = ['id' => 22];
+        $result2 = new Result();
+        $this->expectedSideEffect(PayFeeCmd::class, $updateData, $result2);
+
+        $now = new DateTime();
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertEquals('FEE PAID', $fee->getFeeStatus()->getDescription());
+        $this->assertEquals($guid, $payment->getReference());
+        $this->assertEquals($now->format('Y-m-d'), $payment->getCompletedDate()->format('Y-m-d'));
+
+        $expected = [
+            'id' => [
+                'transaction' => 69,
+            ],
+            'messages' => [
+                'Fee ID 22 updated as paid',
+                'Transaction 69 resolved as PAYMENT PAID',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function irfoDataProfider()
+    {
+        return [
+            ['PSV'],
+            ['GV']
+        ];
     }
 
     /**
@@ -299,7 +697,6 @@ class ResolvePaymentTest extends CommandHandlerTestCase
     }
 
     /**
-     *
      * @param int    $cpmsStatus
      * @param string $expectedMessage
      *

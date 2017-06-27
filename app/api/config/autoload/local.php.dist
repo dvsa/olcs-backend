@@ -180,6 +180,8 @@ return [
     'cpms' => [
         // Prefix added to invoice numbers went sent to CPMS
         'invoice_prefix' => 'LOCAL-',
+        // Timeout in seconds after which we allow user to repeat payment for the same fee
+        'pending_payments_timeout' => 3600,
     ],
 
     // Email config

@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as Cpms;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -133,7 +134,9 @@ final class ResolvePayment extends AbstractCommandHandler implements
 
         $paidStatusRef = $this->getRepo()->getRefdataReference(Fee::STATUS_PAID);
 
+        /** @var FeeTransaction $ft */
         foreach ($transaction->getFeeTransactions() as $ft) {
+            /** @var Fee $fee */
             $fee = $ft->getFee();
             $outstanding = Fee::amountToPence($fee->getOutstandingAmount()); // convert to integer pence for comparison
             if ($outstanding <= 0) {
@@ -144,6 +147,10 @@ final class ResolvePayment extends AbstractCommandHandler implements
                 $result->merge(
                     $this->handleSideEffect(PayFeeCmd::create(['id' => $fee->getId()]))
                 );
+                $createTaskResult = $this->checkForOrphanedPaymentsAndCreateTask($fee);
+                if ($createTaskResult !== null) {
+                    $result->merge($createTaskResult);
+                }
             } elseif ($fee->getTask() === null) {
                 $result->merge($this->handleSideEffect($this->createCreateTaskCommand($ft)));
                 $fee->setTask(
@@ -174,5 +181,61 @@ final class ResolvePayment extends AbstractCommandHandler implements
         ];
 
         return CreateTask::create($data);
+    }
+
+    /**
+     * Check for orphaned payments and create task if needed
+     *
+     * @param Fee $fee fee
+     *
+     * @return null|\Dvsa\Olcs\Api\Domain\Command\Task\CreateTask
+     */
+    protected function checkForOrphanedPaymentsAndCreateTask(Fee $fee)
+    {
+        $feeTransactions = $fee->getFeeTransactions();
+        if ($feeTransactions->count() === 1) {
+            return null;
+        }
+        $totalAmount = 0;
+        /** @var FeeTransaction $feeTransaction */
+        foreach ($feeTransactions as $feeTransaction) {
+            /** @var Transaction $txn */
+            $txn = $feeTransaction->getTransaction();
+            if ($txn->getStatus()->getId() === Transaction::STATUS_COMPLETE) {
+                $totalAmount += Fee::amountToPence($feeTransaction->getAmount());
+            }
+        }
+        if ($totalAmount > Fee::amountToPence($fee->getGrossAmount())) {
+            $feeLicence = $fee->getLicence();
+            $feeApplication = $fee->getApplication();
+            $feeBusReg = $fee->getBusReg();
+            $feeIrfoGvPermit = $fee->getIrfoGvPermit();
+            $feeIrfoPsvAuth = $fee->getIrfoPsvAuth();
+            $irfoOrganisationId = null;
+            if ($feeIrfoGvPermit !== null) {
+                $irfoOrganisationId = $feeIrfoGvPermit->getOrganisation()->getId();
+            } elseif ($feeIrfoPsvAuth !== null) {
+                $irfoOrganisationId = $feeIrfoPsvAuth->getOrganisation()->getId();
+            }
+            $data = [
+                'category' => Task::CATEGORY_LICENSING,
+                'subCategory' => Task::SUBCATEGORY_LICENSING_GENERAL_TASK,
+                'description' => sprintf(
+                    Task::TASK_DESCRIPTION_DUPLICATED,
+                    $fee->getFeeType()->getFeeType()->getDescription(),
+                    $fee->getId()
+                ),
+                'actionDate' => (new DateTime('now'))->format(\DateTime::W3C),
+                'isClosed' => 0,
+                'urgent' => 1,
+                'licence' => $feeLicence !== null ? $feeLicence->getId() : null,
+                'application' => $feeApplication !== null ? $feeApplication->getId() : null,
+                'busReg' => $feeBusReg !== null ? $feeBusReg->getId() : null,
+                'irfoOrganisation' => $irfoOrganisationId
+            ];
+
+            return $this->handleSideEffect(CreateTask::create($data));
+        }
+        return null;
     }
 }

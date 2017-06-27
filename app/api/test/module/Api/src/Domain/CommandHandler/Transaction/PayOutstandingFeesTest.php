@@ -1489,6 +1489,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $waive->shouldReceive('getId')->andReturn(123);
         $waive->shouldReceive('getPaymentMethod')->andReturn($this->mapRefData(FeeEntity::METHOD_WAIVE));
         $waive->shouldReceive('isPaid')->andReturn(false);
+        $waive->shouldReceive('getCreatedOn')->andReturn(new DateTime('2017-01-01'));
         $waive->shouldReceive('isComplete')->andReturn(false);
         $waiveFeeTransaction = m::mock(FeePaymentEntity::class)
             ->shouldReceive('getTransaction')
