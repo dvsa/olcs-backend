@@ -28,6 +28,7 @@ return [
     CommandHandler\TransportManagerApplication\CreateForResponsibilities::class => Misc\IsInternalUser::class,
     CommandHandler\TransportManagerApplication\DeleteForResponsibilities::class => Misc\IsInternalUser::class,
     CommandHandler\TransportManagerApplication\UpdateForResponsibilities::class => Misc\IsInternalUser::class,
+    CommandHandler\TransportManagerLicence\Delete::class => Handler\TransportManagerLicence\Delete::class,
     CommandHandler\TransportManagerLicence\DeleteForResponsibilities::class     => Misc\IsInternalUser::class,
     CommandHandler\TransportManagerLicence\UpdateForResponsibilities::class     => Misc\IsInternalUser::class,
 
