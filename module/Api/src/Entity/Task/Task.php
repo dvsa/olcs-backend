@@ -62,6 +62,7 @@ class Task extends AbstractTask
     const TASK_DESCRIPTION_FEE_DUE = 'Fee due (Part)';
     const TASK_DESCRIPTION_FINANCIAL_EVIDENCE_UPLOADED = 'Financial evidence uploaded';
     const TASK_DESCRIPTION_OC_EVIDENCE_UPLOADED = 'Operating centre advert(s) uploaded';
+    const TASK_DESCRIPTION_DUPLICATED = 'Duplicate payment on %s fee: %s';
 
     const ACTION_DATE_FORMAT = 'Y-m-d';
 
