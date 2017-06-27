@@ -18,8 +18,6 @@ class OpenList extends AbstractListQueryHandler
             'status',
         ],
         'application' => [
-            'organisation',
-            'trafficArea',
             'status',
         ],
         'transportManager' => [
