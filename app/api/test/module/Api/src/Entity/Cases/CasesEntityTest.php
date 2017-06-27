@@ -453,8 +453,7 @@ class CasesEntityTest extends EntityTester
         $sut = m::mock(Entity::class)->makePartial();
         $sut
             ->shouldReceive('canClose')->once()->andReturn('unit_CanClose')
-            ->shouldReceive('canSendMsiResponse')->once()->andReturn('unit_CanSendMsi')
-            ->shouldReceive('getRelatedOrganisation')->once()->andReturn('unit_Org');
+            ->shouldReceive('canSendMsiResponse')->once()->andReturn('unit_CanSendMsi');
 
         $expected = [
             'isClosed' => false,
@@ -463,7 +462,6 @@ class CasesEntityTest extends EntityTester
             'canSendMsiResponse' => 'unit_CanSendMsi',
             'canAddSi' => false,
             'isErru' => false,
-            'organisation' => 'unit_Org',
         ];
 
         $this->assertEquals($expected, $sut->getCalculatedBundleValues());

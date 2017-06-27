@@ -307,6 +307,7 @@ class Cases extends AbstractCases implements
         }
         $stays = $this->getStays();
         if (!empty($stays)) {
+            /** @var Stay $stay */
             foreach ($stays as $stay) {
                 if (!$stay->isOutstanding()) {
                     $errors[] = 'close-case.validation.error.outstanding-stay';
@@ -431,7 +432,6 @@ class Cases extends AbstractCases implements
             'canSendMsiResponse' => $this->canSendMsiResponse(),
             'canAddSi' => $this->canAddSi(),
             'isErru' => $this->isErru(),
-            'organisation' => $this->getRelatedOrganisation(),
         ];
     }
 
@@ -450,7 +450,7 @@ class Cases extends AbstractCases implements
                     $expr->in(
                         'addedVia',
                         [
-                            ConditionUndertaking::ADDED_VIA_CASE
+                            ConditionUndertaking::ADDED_VIA_CASE,
                         ]
                     ),
                     $expr->eq('deletedDate', null)
