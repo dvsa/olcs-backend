@@ -842,6 +842,8 @@ return [
     TransferCommand\Continuation\Create::class => CommandHandler\Continuation\Create::class,
 
     // Transport Manager Licence
+    TransferCommand\TransportManagerLicence\Delete::class
+    => CommandHandler\TransportManagerLicence\Delete::class,
     TransferCommand\TransportManagerLicence\UpdateForResponsibilities::class =>
         CommandHandler\TransportManagerLicence\UpdateForResponsibilities::class,
     TransferCommand\TransportManagerLicence\DeleteForResponsibilities::class =>
