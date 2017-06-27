@@ -9,7 +9,6 @@ use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Doctrine\ORM\Query\Expr;
 
 /**
  * Cases
@@ -17,6 +16,10 @@ use Doctrine\ORM\Query\Expr;
 class Cases extends AbstractRepository
 {
     protected $entity = Entity\Cases\Cases::class;
+
+    private static $aliasLic = 'l';
+    private static $aliasApp = 'a';
+    private static $aliasTa = 'ta';
 
     /** @var  \Dvsa\Olcs\Transfer\Query\SubCategory\GetList */
     private $query;
@@ -93,12 +96,40 @@ class Cases extends AbstractRepository
                 ->setParameter('byLicence', $query->getLicence());
         }
 
-        if ($this->query instanceof TransferQry\Cases\Report\OpenList) {
+        if (method_exists($query, 'getCaseType') && !empty($query->getCaseType())) {
+            $qb->andWhere($expr->eq($this->alias . '.caseType', ':CASE_TYPE'))
+                ->setParameter('CASE_TYPE', $query->getCaseType());
+        }
+
+        if ($query instanceof TransferQry\Cases\Report\OpenList) {
             $qb->andWhere(
                 $expr->isNull($this->alias . '.closedDate')
             );
-        }
 
+            if (!empty($query->getApplicationStatus())) {
+                $qb->andWhere($expr->eq(self::$aliasApp . '.status', ':APP_STATUS'))
+                    ->setParameter('APP_STATUS', $query->getApplicationStatus());
+            }
+
+            if (!empty($query->getLicenceStatus())) {
+                $qb->andWhere($expr->eq(self::$aliasLic . '.status', ':LIC_STATUS'))
+                    ->setParameter('LIC_STATUS', $query->getLicenceStatus());
+            }
+
+            // filter by traffic area
+            $trafficArea = $query->getTrafficArea();
+
+            if ($trafficArea === 'OTHER') {
+                $qb->andWhere(
+                    $expr->isNull(self::$aliasTa . '.id')
+                );
+            } elseif (!empty($trafficArea)) {
+                $qb->andWhere(
+                    $expr->eq(self::$aliasTa . '.id', ':TRAFFIC_AREA')
+                )
+                ->setParameter('TRAFFIC_AREA', $trafficArea);
+            }
+        }
     }
 
     /**
@@ -112,10 +143,9 @@ class Cases extends AbstractRepository
     {
         if ($this->query instanceof TransferQry\Cases\Report\OpenList) {
             $this->getQueryBuilder()
-                ->with('licence', 'l')
-                ->with('application', 'a');
-
-            $qb->leftJoin(Entity\TrafficArea\TrafficArea::class, 'ta', Expr\Join::WITH, 'l.trafficArea = ta.id');
+                ->with('licence', self::$aliasLic)
+                ->with('application', self::$aliasApp)
+                ->with(self::$aliasLic . '.trafficArea', self::$aliasTa);
         }
 
         parent::applyListJoins($qb);
