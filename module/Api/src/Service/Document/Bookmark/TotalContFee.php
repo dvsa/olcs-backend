@@ -18,6 +18,13 @@ class TotalContFee extends DynamicBookmark implements DateHelperAwareInterface
 {
     use DateHelperAwareTrait;
 
+    /**
+     * Request data from API
+     *
+     * @param array $data Parameters
+     *
+     * @return \Dvsa\Olcs\Transfer\Query\QueryInterface
+     */
     public function getQuery(array $data)
     {
         return Qry::create(
@@ -33,6 +40,11 @@ class TotalContFee extends DynamicBookmark implements DateHelperAwareInterface
         );
     }
 
+    /**
+     * Render
+     *
+     * @return string
+     */
     public function render()
     {
         if (isset($this->data)) {
