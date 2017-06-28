@@ -21,24 +21,6 @@ class Cases extends AbstractRepository
     private static $aliasApp = 'a';
     private static $aliasTa = 'ta';
 
-    /** @var  \Dvsa\Olcs\Transfer\Query\SubCategory\GetList */
-    private $query;
-
-    /**
-     * Fetch data
-     *
-     * @param QueryInterface $query       Query Builder
-     * @param int            $hydrateMode Hydrate Mode
-     *
-     * @return \ArrayIterator|\Traversable
-     */
-    public function fetchList(QueryInterface $query, $hydrateMode = Query::HYDRATE_ARRAY)
-    {
-        $this->query = $query;
-
-        return parent::fetchList($query, $hydrateMode);
-    }
-
     /**
      * Fetch With Licence Using Id
      *
