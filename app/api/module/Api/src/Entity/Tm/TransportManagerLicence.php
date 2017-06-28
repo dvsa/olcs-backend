@@ -34,6 +34,9 @@ class TransportManagerLicence extends AbstractTransportManagerLicence implements
     const ERROR_SAT = 'err_sat';
     const ERROR_SUN = 'err_sun';
 
+    const DESC_TM_REMOVED = 'Transport manager removed';
+    const DESC_TM_REMOVED_LAST = 'Last transport manager removed';
+
     /**
      * TransportManagerLicence constructor.
      *
