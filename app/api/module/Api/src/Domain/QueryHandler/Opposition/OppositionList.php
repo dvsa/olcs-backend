@@ -14,6 +14,13 @@ final class OppositionList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Opposition';
 
+    /**
+     * Handle Query
+     *
+     * @param \Dvsa\Olcs\Transfer\Query\Opposition\OppositionList $query Query
+     *
+     * @return array
+     */
     public function handleQuery(QueryInterface $query)
     {
         /** @var OppositionRepo $repo */
