@@ -19,22 +19,7 @@ class Category extends AbstractRepository
     protected $entity = Entity::class;
 
     /** @var  \Dvsa\Olcs\Transfer\Query\Category\GetList */
-    private $query;
-
-    /**
-     * Fetch data
-     *
-     * @param QueryInterface $query       Query Builder
-     * @param int            $hydrateMode Hidrate Mode
-     *
-     * @return \ArrayIterator|\Traversable
-     */
-    public function fetchList(QueryInterface $query, $hydrateMode = Query::HYDRATE_ARRAY)
-    {
-        $this->query = $query;
-
-        return parent::fetchList($query, $hydrateMode);
-    }
+    protected $query;
 
     /**
      * Attach filters to query

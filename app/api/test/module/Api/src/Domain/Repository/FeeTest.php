@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 
 /**
- * @covers Dvsa\Olcs\Api\Domain\Repository\Fee
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\Fee
  */
 class FeeTest extends RepositoryTestCase
 {
